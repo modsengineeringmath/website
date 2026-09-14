@@ -61,7 +61,7 @@ const config: Config = {
         indexPages: true,
         indexDocSidebarParentCategories: 2,
         includeParentCategoriesInPageTitle: true,
-        language: ['en', 'th'],
+        language: 'en',
         maxSearchResults: 10,
         lunr: {
           b: 0.75,
