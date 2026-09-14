@@ -24,21 +24,21 @@ keywords:
 
 ### Foundations
 
-- [Derivative from Definition](./calculus/derivative-by-definition)
-- [Inverse Matrix](./linear-algebra/inverse-matrix)
-- [Differential Equations](./differential-equations/introduction)
+- [Derivative from Definition](/learn/calculus/derivative-by-definition)
+- [Inverse Matrix](/learn/linear-algebra/inverse-matrix)
+- [Differential Equations](/learn/differential-equations/introduction)
 
 ### Transform and modeling
 
-- [Introduction to Laplace Transform](./laplace/introduction)
-- [Inverse Laplace Transform](./laplace/inverse-laplace-transform)
-- [DC Motor Mathematical Model](./modeling/dc-motor)
+- [Introduction to Laplace Transform](/learn/laplace/introduction)
+- [Inverse Laplace Transform](/learn/laplace/inverse-laplace-transform)
+- [DC Motor Mathematical Model](/learn/modeling/dc-motor)
 
 ### Systems and applications
 
-- [First-Order Control System](./control/first-order-system)
-- [Standard Signals](./signals/standard-signals)
-- [RLC Circuit Model](./electrical/rlc-circuit)
+- [First-Order Control System](/learn/control/first-order-system)
+- [Standard Signals](/learn/signals/standard-signals)
+- [RLC Circuit Model](/learn/electrical/rlc-circuit)
 
 ## เส้นทางความรู้ที่แนะนำ
 
