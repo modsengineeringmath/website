@@ -9,7 +9,7 @@ This project lives on the `docusaurus-v2` branch so the current website on `main
 - Docusaurus 3.10.2 + TypeScript + React
 - Markdown/MDX knowledge hub
 - KaTeX mathematics
-- Real build-time local search with `@easyops-cn/docusaurus-search-local`
+- Real build-time local search with `@cmfcmf/docusaurus-search-local`
 - Responsive Docusaurus navbar with a functional mobile hamburger drawer
 - SEO, sitemap, robots.txt, JSON-LD and llms.txt
 - Static output for Cloudflare Pages Free Plan
