@@ -13,7 +13,11 @@ const config: Config = {
   projectName: 'website',
   trailingSlash: false,
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
   i18n: {
     defaultLocale: 'th',
     locales: ['th'],
@@ -50,17 +54,23 @@ const config: Config = {
   ],
   plugins: [
     [
-      require.resolve('@easyops-cn/docusaurus-search-local'),
+      '@cmfcmf/docusaurus-search-local',
       {
-        hashed: true,
-        language: ['en', 'th'],
         indexDocs: true,
-        indexPages: true,
         indexBlog: false,
-        docsRouteBasePath: '/learn',
-        highlightSearchTermsOnTargetPage: true,
-        searchResultLimits: 10,
-        searchResultContextMaxLength: 70,
+        indexPages: true,
+        indexDocSidebarParentCategories: 2,
+        includeParentCategoriesInPageTitle: true,
+        language: ['en', 'th'],
+        maxSearchResults: 10,
+        lunr: {
+          b: 0.75,
+          k1: 1.2,
+          titleBoost: 5,
+          contentBoost: 1,
+          tagsBoost: 3,
+          parentCategoriesBoost: 2,
+        },
       },
     ],
   ],
@@ -68,7 +78,6 @@ const config: Config = {
     {
       href: 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css',
       type: 'text/css',
-      integrity: 'sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP',
       crossorigin: 'anonymous',
     },
   ],
@@ -122,6 +131,12 @@ const config: Config = {
           label: 'YouTube',
           position: 'right',
           className: 'navbar-youtube',
+        },
+        {
+          href: 'https://facebook.com/modsengineeringmath',
+          label: 'Facebook',
+          position: 'right',
+          className: 'navbar-facebook',
         },
       ],
     },
