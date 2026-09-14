@@ -1,10 +1,16 @@
 export type CheckoutKind = 'course' | 'resource';
 
-export const paymentConfig = {
+type PaymentConfig = {
+  currency: string;
+  courseCheckoutUrl: string;
+  resourceCheckoutUrl: string;
+};
+
+export const paymentConfig: PaymentConfig = {
   currency: 'THB',
   courseCheckoutUrl: '',
   resourceCheckoutUrl: '',
-} as const;
+};
 
 export function getCheckoutUrl(kind: CheckoutKind, slug: string): string | null {
   const base =
