@@ -1,0 +1,137 @@
+<!--meta
+{
+  "title": "เมทริกซ์และดีเทอร์มิแนนต์: วิธีหา det อินเวอร์ส และกฎของคราเมอร์ | อาจารย์มด",
+  "h1": "เมทริกซ์และดีเทอร์มิแนนต์ สำหรับแก้ระบบสมการเชิงเส้น",
+  "description": "สรุปเมทริกซ์และดีเทอร์มิแนนต์ภาษาไทย การคูณเมทริกซ์ วิธีหาดีเทอร์มิแนนต์ 2×2 และ 3×3 อินเวอร์ส และกฎของคราเมอร์ พร้อมตัวอย่างแก้กระแสในวงจรสองเมช",
+  "lesson": "matrix-determinant",
+  "nav": "learn",
+  "published": "2026-10-07",
+  "updated": "2026-10-07",
+  "about": ["Matrix", "Determinant", "Cramer's Rule", "Mesh Analysis"],
+  "faq": [
+    {"q": "ดีเทอร์มิแนนต์เป็นศูนย์หมายความว่าอะไร?", "a": "เมทริกซ์นั้นไม่มีอินเวอร์ส และระบบสมการ \\(A\\mathbf{x} = \\mathbf{b}\\) ไม่มีคำตอบเดียว อาจไม่มีคำตอบเลยหรือมีคำตอบไม่จำกัด ในวงจรมักเกิดจากการเขียนสมการซ้ำกันหรือสมการไม่เป็นอิสระต่อกัน"},
+    {"q": "กฎของคราเมอร์ควรใช้เมื่อไร?", "a": "เหมาะกับระบบเล็ก 2 ถึง 3 ตัวแปรที่ต้องคำนวณด้วยมือ สำหรับระบบใหญ่กว่านั้น การกำจัดแบบเกาส์ (Gaussian elimination) หรือโปรแกรมคอมพิวเตอร์จะเร็วกว่ามาก"},
+    {"q": "เมทริกซ์ใช้ทำอะไรในวิศวกรรมไฟฟ้า?", "a": "ใช้เขียนและแก้สมการจากการวิเคราะห์โนด (nodal analysis) และการวิเคราะห์เมช (mesh analysis) ใช้ในแบบจำลองปริภูมิสถานะ (state-space) ของระบบควบคุม และการวิเคราะห์ระบบไฟฟ้ากำลัง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>เมทริกซ์และดีเทอร์มิแนนต์</li></ol>
+      <p class="eyebrow">// บทที่ 3 · คณิตศาสตร์วิศวกรรม</p>
+      <h1>เมทริกซ์และดีเทอร์มิแนนต์ สำหรับแก้ระบบสมการเชิงเส้น</h1>
+      <p class="lede">เมื่อวิเคราะห์วงจรที่มีหลายลูป เราจะได้สมการหลายสมการที่ต้องแก้พร้อมกัน เมทริกซ์ช่วยจัดสมการเหล่านั้นให้เป็นระเบียบ และดีเทอร์มิแนนต์บอกได้ทันทีว่าระบบมีคำตอบเดียวหรือไม่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ระบบสมการเชิงเส้นเขียนสั้น ๆ ได้เป็น \(A\mathbf{x} = \mathbf{b}\)</li>
+          <li>ดีเทอร์มิแนนต์ 2×2: \(\det A = ad - bc\)</li>
+          <li>ถ้า \(\det A \ne 0\) ระบบมีคำตอบเดียว และหาได้ด้วยกฎของคราเมอร์ \(x_i = \det A_i / \det A\)</li>
+          <li>ใช้แก้กระแสในวงจรหลายลูปได้โดยตรง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <h2 id="matrix">เมทริกซ์คืออะไร</h2>
+    <p>เมทริกซ์คือตารางตัวเลขที่เรียงเป็นแถวและหลัก เมทริกซ์ขนาด \(m\times n\) มี \(m\) แถว \(n\) หลัก และเรียกสมาชิกแถวที่ \(i\) หลักที่ \(j\) ว่า \(a_{ij}\) ประโยชน์หลักคือเขียนระบบสมการให้กระชับ</p>
+    \[ \begin{aligned} 2x + 3y &= 8 \\ x - y &= -1 \end{aligned} \quad\Longleftrightarrow\quad \underbrace{\begin{pmatrix} 2 & 3 \\ 1 & -1 \end{pmatrix}}_{A} \underbrace{\begin{pmatrix} x \\ y \end{pmatrix}}_{\mathbf{x}} = \underbrace{\begin{pmatrix} 8 \\ -1 \end{pmatrix}}_{\mathbf{b}} \]
+
+    <h2 id="operations">การดำเนินการของเมทริกซ์</h2>
+    <ul>
+      <li><strong>บวก ลบ และคูณด้วยสเกลาร์</strong> ทำทีละสมาชิก เมทริกซ์ต้องมีขนาดเท่ากัน</li>
+      <li><strong>คูณเมทริกซ์</strong> \(AB\) ทำได้เมื่อจำนวนหลักของ \(A\) เท่ากับจำนวนแถวของ \(B\) สมาชิกแต่ละตัวคือแถวของ \(A\) "คูณจุด" กับหลักของ \(B\): \((AB)_{ij} = \sum_k a_{ik}b_{kj}\)</li>
+      <li>โดยทั่วไป \(AB \ne BA\) ลำดับการคูณจึงสำคัญ</li>
+      <li><strong>เมทริกซ์เอกลักษณ์</strong> \(I\) มี 1 บนเส้นทแยงมุมหลัก และ \(AI = IA = A\)</li>
+    </ul>
+
+    <h2 id="determinant">วิธีหาดีเทอร์มิแนนต์</h2>
+    <p>ดีเทอร์มิแนนต์เป็นตัวเลขหนึ่งตัวที่คำนวณจากเมทริกซ์จัตุรัส สำหรับขนาด 2×2</p>
+    <figure class="formula">
+      \[ \det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc \]
+    </figure>
+    <p>สำหรับขนาด 3×3 ใช้การกระจายโคแฟกเตอร์ตามแถวแรก โดยเครื่องหมายสลับ \(+,-,+\)</p>
+    <figure class="formula">
+      \[ \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix} = a_{11}\begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix} - a_{12}\begin{vmatrix} a_{21} & a_{23} \\ a_{31} & a_{33} \end{vmatrix} + a_{13}\begin{vmatrix} a_{21} & a_{22} \\ a_{31} & a_{32} \end{vmatrix} \]
+    </figure>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 1</span>
+      <h3>หา \(\det A\) เมื่อ \(A = \begin{pmatrix} 2 & 1 & 3 \\ 0 & -1 & 4 \\ 1 & 2 & 0 \end{pmatrix}\)</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ \det A = 2\begin{vmatrix} -1 & 4 \\ 2 & 0 \end{vmatrix} - 1\begin{vmatrix} 0 & 4 \\ 1 & 0 \end{vmatrix} + 3\begin{vmatrix} 0 & -1 \\ 1 & 2 \end{vmatrix} \]
+        \[ = 2(0 - 8) - 1(0 - 4) + 3(0 + 1) = -16 + 4 + 3 = -9 \]
+        <p class="answer">\(\det A = -9\) ตรวจซ้ำได้ด้วยวิธีของซาร์รัส (Sarrus) ซึ่งให้ผลเท่ากัน</p>
+      </details>
+    </div>
+    <h3>สมบัติที่ควรรู้</h3>
+    <ul>
+      <li>\(\det(AB) = \det A \cdot \det B\) และ \(\det(A^T) = \det A\)</li>
+      <li>สลับสองแถวกัน ดีเทอร์มิแนนต์เปลี่ยนเครื่องหมาย</li>
+      <li>ถ้ามีแถวที่เป็นศูนย์ทั้งแถว หรือมีสองแถวเป็นสัดส่วนกัน ดีเทอร์มิแนนต์เท่ากับ 0</li>
+    </ul>
+
+    <h2 id="inverse">อินเวอร์สของเมทริกซ์</h2>
+    <p>เมทริกซ์จัตุรัส \(A\) มีอินเวอร์ส \(A^{-1}\) ก็ต่อเมื่อ \(\det A \ne 0\) และเมื่อมีอินเวอร์ส คำตอบของระบบคือ \(\mathbf{x} = A^{-1}\mathbf{b}\) สำหรับขนาด 2×2 มีสูตรสำเร็จ</p>
+    <figure class="formula">
+      \[ \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix} \]
+      <figcaption>สลับสมาชิกบนเส้นทแยงหลัก เปลี่ยนเครื่องหมายเส้นทแยงรอง แล้วหารด้วยดีเทอร์มิแนนต์</figcaption>
+    </figure>
+
+    <h2 id="cramer">กฎของคราเมอร์ และตัวอย่างวงจร</h2>
+    <p>กฎของคราเมอร์ให้คำตอบของ \(A\mathbf{x} = \mathbf{b}\) ทีละตัวแปร โดย \(A_i\) คือเมทริกซ์ \(A\) ที่แทนหลักที่ \(i\) ด้วย \(\mathbf{b}\)</p>
+    <figure class="formula">
+      \[ x_i = \frac{\det A_i}{\det A} \qquad (\det A \ne 0) \]
+    </figure>
+    <figure class="circuit">
+      <svg viewBox="0 0 480 240" role="img" aria-label="วงจรสองเมช แหล่งจ่าย 12 โวลต์ R1 2 โอห์ม R2 4 โอห์ม ตรงกลาง R3 6 โอห์มด้านขวา">
+        <defs><marker id="arrM" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mt" d="M0 0 L10 5 L0 10z"/></marker></defs>
+        <path class="w" d="M60 100 V40 H110 M190 40 H420 V80 M420 160 V200 H60 V140 M240 40 V80 M240 160 V200"/>
+        <path class="w" d="M110 40 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l10 16 l5 -8"/>
+        <path class="w" d="M240 80 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l8 5"/>
+        <path class="w" d="M420 80 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l8 5"/>
+        <circle class="w" cx="60" cy="120" r="20"/>
+        <text x="55" y="114">+</text><text x="56" y="133">−</text>
+        <text x="8" y="124">12 V</text>
+        <text x="122" y="22">R₁ = 2 Ω</text>
+        <text x="250" y="70">R₂ = 4 Ω</text>
+        <text x="436" y="112">R₃</text><text x="436" y="130">6 Ω</text>
+        <path class="m" d="M150 92 A28 28 0 1 1 122 120" marker-end="url(#arrM)"/>
+        <text class="mt" x="141" y="125">I₁</text>
+        <path class="m" d="M330 92 A28 28 0 1 1 302 120" marker-end="url(#arrM)"/>
+        <text class="mt" x="321" y="125">I₂</text>
+      </svg>
+      <figcaption>วงจรสองเมช กระแสเมช \(I_1\) และ \(I_2\) วนตามเข็มนาฬิกา</figcaption>
+    </figure>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 2 · วงจร</span>
+      <h3>หากระแสเมช \(I_1\) และ \(I_2\)</h3>
+      <p>เขียนกฎแรงดันของเคียร์ชอฟฟ์ (KVL) รอบแต่ละเมช โดย \(R_2\) อยู่ร่วมกันทั้งสองเมช</p>
+      \[ \begin{aligned} (2+4)I_1 - 4I_2 &= 12 \\ -4I_1 + (4+6)I_2 &= 0 \end{aligned} \]
+      \[ \begin{pmatrix} 6 & -4 \\ -4 & 10 \end{pmatrix}\begin{pmatrix} I_1 \\ I_2 \end{pmatrix} = \begin{pmatrix} 12 \\ 0 \end{pmatrix} \]
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ \det A = (6)(10) - (-4)(-4) = 60 - 16 = 44 \]
+        \[ I_1 = \frac{\begin{vmatrix} 12 & -4 \\ 0 & 10 \end{vmatrix}}{44} = \frac{120}{44} = \frac{30}{11} \approx 2.73\ \text{A} \]
+        \[ I_2 = \frac{\begin{vmatrix} 6 & 12 \\ -4 & 0 \end{vmatrix}}{44} = \frac{48}{44} = \frac{12}{11} \approx 1.09\ \text{A} \]
+        <p>กระแสผ่าน \(R_2\) คือ \(I_1 - I_2 = \tfrac{18}{11} \approx 1.64\) A</p>
+        <p><strong>ตรวจคำตอบ</strong> แรงดันคร่อม \(R_2\) คือ \(4 \times \tfrac{18}{11} = \tfrac{72}{11}\) V และคร่อม \(R_3\) คือ \(6 \times \tfrac{12}{11} = \tfrac{72}{11}\) V เท่ากันพอดี ซึ่งต้องเป็นเช่นนั้นเพราะเมชที่ 2 ไม่มีแหล่งจ่าย</p>
+        <p class="answer">\(I_1 = \tfrac{30}{11} \approx 2.73\) A และ \(I_2 = \tfrac{12}{11} \approx 1.09\) A</p>
+      </details>
+    </div>
+
+    <h2 id="next">ต่อยอดไปบทถัดไป</h2>
+    <p>วงจรในตัวอย่างมีแต่ตัวต้านทาน จึงได้สมการพีชคณิตธรรมดา ถ้าเพิ่มตัวเก็บประจุหรือตัวเหนี่ยวนำ สมการจะกลายเป็นสมการเชิงอนุพันธ์ บทถัดไป <a href="/learn/laplace-transform/">การแปลงลาปลาซ</a> จะเปลี่ยนสมการเหล่านั้นกลับมาเป็นพีชคณิต แล้วใช้เมทริกซ์แก้ได้เหมือนเดิม</p>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
