@@ -77,6 +77,13 @@ export const TOPICS = [
     sym: "τ",
     summary: "แล็บโต้ตอบ: ปรับค่าคงตัวเวลา τ หรือ R, C, L แล้วดูผลตอบสนอง สเกลลอการิทึม ระนาบ s และ Bode พร้อมเส้นช่วยวิเคราะห์",
   },
+  {
+    slug: "second-order-system",
+    title: "ระบบอันดับสอง",
+    en: "Second-Order System · Lab",
+    sym: "ζ",
+    summary: "แล็บโต้ตอบ: ζ กำหนดรูปร่าง ωn กำหนดความเร็ว ลากขั้วบนระนาบ s แล้วดูผลตอบสนองเวลา เปลือก %OS และ Bode เปลี่ยนพร้อมกัน",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -344,6 +351,7 @@ Thai-language engineering mathematics lessons by Teerawut Savangboon (อาจ�
 - About / profile (bio, projects, current status): ${SITE}/about/
 - Knowledge library (hub): ${SITE}/learn/
 - First-order system lab (interactive time-constant simulator: step/impulse/ramp/sine, RC/RL, log view, s-plane, Bode): ${SITE}/learn/first-order-system/
+- Second-order system lab (interactive ζ and ωn explorer: draggable poles, envelope, %OS, Bode, phase portrait, RLC mode): ${SITE}/learn/second-order-system/
 - Lesson editor (online tool: write Markdown + LaTeX lessons, export .md / HTML / PDF): ${SITE}/tools/lesson-editor/
 
 ## Lessons (reading order)

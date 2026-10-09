@@ -1,0 +1,318 @@
+<!--meta
+{
+  "title": "ระบบอันดับสอง (Second-Order System): แล็บ ζ และ ωn แบบโต้ตอบ | อาจารย์มด",
+  "h1": "ระบบอันดับสอง อัตราส่วนการหน่วง ζ และความถี่ธรรมชาติ ωn",
+  "description": "แล็บโต้ตอบระบบอันดับสอง G(s) = ωn²/(s² + 2ζωn s + ωn²) ปรับ ζ และ ωn หรือค่า R, L, C แล้วดูผลตอบสนองเวลา เปลือกเอกซ์โพเนนเชียล ตำแหน่งขั้วที่ลากได้ Bode plot ระนาบเฟส และ %OS พร้อมกันทุกมุม",
+  "lesson": "second-order-system",
+  "nav": "sos",
+  "katex": true,
+  "bodyClass": "lab-page",
+  "published": "2026-10-09",
+  "updated": "2026-10-09",
+  "about": ["Second-Order System", "Damping Ratio", "Natural Frequency", "Percent Overshoot", "Pole Location", "Bode Plot", "RLC Circuit"],
+  "scripts": ["/assets/vendor/katex.min.js", "/assets/sos.js"],
+  "jsonld": [
+    {
+      "@type": "LearningResource",
+      "name": "แล็บระบบอันดับสอง: ζ และ ωn แบบโต้ตอบ",
+      "url": "https://modsengineeringmath.com/learn/second-order-system/",
+      "learningResourceType": ["Interactive simulation", "Lesson"],
+      "interactivityType": "active",
+      "educationalLevel": "Undergraduate",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "teaches": ["Damping ratio", "Natural frequency", "Second-order step response", "Percent overshoot and settling time", "Pole location and time response", "Resonant peak and bandwidth"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "อัตราส่วนการหน่วง ζ คืออะไร?", "a": "เป็นตัวเลขไร้หน่วยที่บอกว่าระบบสูญเสียพลังงานเร็วแค่ไหนเมื่อเทียบกับการแกว่ง ζ เพียงตัวเดียวกำหนดรูปร่างของผลตอบสนอง ได้แก่ ไม่หน่วง (ζ = 0) หน่วงน้อย (0 < ζ < 1) หน่วงวิกฤต (ζ = 1) และหน่วงมาก (ζ > 1) และกำหนดเปอร์เซ็นต์พุ่งเกินโดยตรง"},
+    {"q": "ทำไมนิยมออกแบบให้ ζ ≈ 0.707?", "a": "เพราะเป็นค่าที่สมดุลระหว่างความเร็วกับการพุ่งเกิน พุ่งเกินเพียงประมาณ 4.3% ไม่มียอดเรโซแนนซ์ใน Bode plot และขั้วอยู่ที่มุม 45° พอดี"},
+    {"q": "ζ กับ ωn ตัวไหนทำให้ระบบเร็วขึ้น?", "a": "ωn ทำหน้าที่ยืดหรือหดแกนเวลาเท่านั้น เพิ่ม ωn เป็นสองเท่า ทุกอย่างเกิดเร็วขึ้นสองเท่าโดยรูปร่างเหมือนเดิม ส่วน ζ เปลี่ยนรูปร่าง เวลาเข้าที่ประมาณ \\(4/(\\zeta\\omega_n)\\) จึงขึ้นกับผลคูณ \\(\\zeta\\omega_n\\) ซึ่งคือระยะของขั้วจากแกนจินตภาพ"},
+    {"q": "ωn กับ ωd ต่างกันอย่างไร?", "a": "ωn คือความถี่ที่ระบบจะแกว่งถ้าไม่มีการหน่วงเลย ส่วน ωd = \\(\\omega_n\\sqrt{1-\\zeta^2}\\) คือความถี่ที่แกว่งจริงเมื่อมีการหน่วง บนระนาบ s ωn คือระยะจากจุดกำเนิดถึงขั้ว และ ωd คือส่วนจินตภาพของขั้ว"}
+  ]
+}
+-->
+<header class="app-head">
+  <div class="wrap app-wrap">
+    <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>ระบบอันดับสอง</li></ol>
+    <p class="eyebrow">// บทที่ 6 · ระบบควบคุม · แล็บโต้ตอบ</p>
+    <h1>ระบบอันดับสอง: ζ และ ωn</h1>
+    <p class="lede">ζ กำหนด <strong>รูปร่าง</strong> ของผลตอบสนอง ส่วน ωn กำหนด <strong>ความเร็ว</strong> ปรับค่าทั้งสอง หรือค่า R, L, C ของวงจรจริง หรือลากขั้วบนระนาบ s แล้วดูกราฟเวลา เปลือกเอกซ์โพเนนเชียล Bode plot และระนาบเฟสเปลี่ยนไปพร้อมกัน <a href="#theory">อ่านทฤษฎีด้านล่าง ↓</a></p>
+  </div>
+</header>
+
+<section class="fos-lab" id="lab2" aria-label="แล็บระบบอันดับสอง">
+  <div class="wrap app-wrap lab-grid">
+    <aside class="lab-panel" aria-label="ตั้งค่าระบบ">
+      <div class="ctl">
+        <h2 class="ctl-h">วิธีกำหนดระบบ</h2>
+        <div class="seg seg-sm" id="modeSeg2" role="group" aria-label="วิธีกำหนดระบบ">
+          <button type="button" data-v="zw">กำหนด ζ, ωn</button>
+          <button type="button" data-v="rlc">วงจร RLC อนุกรม</button>
+        </div>
+        <div data-mode2="rlc" hidden>
+          <div class="row"><label for="sR2">R <output id="vR2"></output></label><input type="range" id="sR2" min="0" max="1000" step="1"></div>
+          <div class="row"><label for="sL2">L <output id="vL2"></output></label><input type="range" id="sL2" min="0" max="1000" step="1"></div>
+          <div class="row"><label for="sC2">C <output id="vC2"></output></label><input type="range" id="sC2" min="0" max="1000" step="1"></div>
+          <p class="tau-read mono" id="rlcRead"></p>
+        </div>
+      </div>
+
+      <div class="ctl ctl-key">
+        <h2 class="ctl-h">ζ อัตราส่วนการหน่วง · กำหนดรูปร่าง</h2>
+        <div class="presets" id="zPresets" role="group" aria-label="ค่า ζ สำเร็จรูป">
+          <button type="button" data-z="0">0<small>ไม่หน่วง</small></button>
+          <button type="button" data-z="0.2">0.2<small>หน่วงน้อย</small></button>
+          <button type="button" data-z="0.5">0.5</button>
+          <button type="button" data-z="0.707">0.707<small>นิยม</small></button>
+          <button type="button" data-z="1">1<small>วิกฤต</small></button>
+          <button type="button" data-z="2">2<small>หน่วงมาก</small></button>
+        </div>
+        <div class="row"><label for="sZ">ζ</label><div class="rng"><input type="range" id="sZ" min="0" max="1000" step="1"><input type="number" id="nZ" class="num" min="0" step="any" aria-label="ค่า ζ"></div></div>
+        <h2 class="ctl-h" style="margin-top:16px">ωn ความถี่ธรรมชาติ · กำหนดความเร็ว</h2>
+        <div class="row"><label for="sWn">ωn (rad/s)</label><div class="rng"><input type="range" id="sWn" min="0" max="1000" step="1"><input type="number" id="nWn" class="num" min="0.001" step="any" aria-label="ค่า ωn"></div></div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">สัญญาณอินพุต</h2>
+        <div class="seg" id="inSeg2" role="group" aria-label="ชนิดอินพุต">
+          <button type="button" data-v="step">ขั้นบันได</button>
+          <button type="button" data-v="impulse">อิมพัลส์</button>
+          <button type="button" data-v="sine">ไซน์</button>
+          <button type="button" data-v="natural">ค่าเริ่มต้น</button>
+        </div>
+        <div class="row"><label for="sK2">อัตราขยาย K <output id="vK2"></output></label><input type="range" id="sK2" min="0.1" max="5" step="0.1"></div>
+        <div class="row" data-for2="step impulse sine"><label for="sA2">ขนาดอินพุต A <output id="vA2"></output></label><input type="range" id="sA2" min="-5" max="5" step="0.1"></div>
+        <div class="row" data-for2="sine"><label for="sW2">ความถี่อินพุต ω <output id="vW2"></output></label><input type="range" id="sW2" min="0" max="1000" step="1"></div>
+        <div class="row" data-for2="natural"><label for="sY02">y(0) <output id="vY02"></output></label><input type="range" id="sY02" min="-5" max="5" step="0.1"></div>
+        <div class="row" data-for2="natural"><label for="sV02">y′(0) <output id="vV02"></output></label><input type="range" id="sV02" min="-20" max="20" step="0.5"></div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">เส้นช่วยวิเคราะห์</h2>
+        <div class="checks">
+          <label><input type="checkbox" id="h2_env"> เปลือกเอกซ์โพเนนเชียล</label>
+          <label><input type="checkbox" id="h2_tau"> เส้นแบ่งทุก τ (1τ–5τ)</label>
+          <label><input type="checkbox" id="h2_peak"> จุดยอดและ %OS</label>
+          <label><input type="checkbox" id="h2_final"> ค่าสุดท้าย / ส่วนคงตัว</label>
+          <label><input type="checkbox" id="h2_input"> สัญญาณอินพุต</label>
+          <label><input type="checkbox" id="h2_band"> แถบเข้าที่ ±2% และ tₛ</label>
+          <label><input type="checkbox" id="h2_rise"> เวลาขึ้น 10→90%</label>
+          <label><input type="checkbox" id="h2_period"> ยอด/ร่องทุกครึ่งคาบ และ T_d</label>
+          <label><input type="checkbox" id="h2_fam"> ชุดกราฟ ζ = 0.1 … 2</label>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">แกนเวลา</h2>
+        <div class="seg seg-sm" id="axisSeg2" role="group" aria-label="หน่วยแกนเวลา">
+          <button type="button" data-v="time">เวลาจริง t</button>
+          <button type="button" data-v="norm">เวลาปรับมาตรฐาน ωₙt</button>
+        </div>
+        <div class="row inline"><label for="nTmax2" id="tmaxLabel2">แสดงถึง (วินาที)</label><input type="number" id="nTmax2" class="num" min="0.0001" step="any"><button type="button" class="btn btn-ghost btn-sm" id="fitBtn2">พอดีกราฟ</button></div>
+        <p class="hint">บนแกน ωₙt กราฟขึ้นกับ ζ อย่างเดียว ลองกด "กวาด ωn" แล้วจะเห็นว่ากราฟไม่เปลี่ยนเลย</p>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">เปรียบเทียบ</h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="pinBtn2">＋ เก็บเส้นนี้ไว้เทียบ (สูงสุด 2)</button>
+        <div class="pins" id="pinList2"></div>
+      </div>
+      <div class="ctl ctl-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="shareBtn2">คัดลอกลิงก์การตั้งค่านี้</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="resetBtn2">ค่าเริ่มต้น</button>
+      </div>
+    </aside>
+
+    <div class="lab-main">
+      <div class="eqbar">
+        <div><span class="mono">ฟังก์ชันถ่ายโอน</span><div id="eqG2"></div></div>
+        <div><span class="mono">พารามิเตอร์</span><div id="eqP2"></div><p class="regime"><span id="regime2"></span> <span id="regimeNote2" class="muted"></span></p></div>
+        <div class="eq-wide"><span class="mono">ผลตอบสนอง</span><div id="eqY2"></div></div>
+      </div>
+
+      <article class="vcard vmain">
+        <header class="vhead">
+          <div><h3>ผลตอบสนองทางเวลา y(t)</h3><div class="legend" id="legend2"></div></div>
+          <div class="vbtns">
+            <button type="button" class="btn btn-primary btn-sm" id="playBtn2">▶ เล่นตามเวลา</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="sweepZ">กวาด ζ 0 → 1.5</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="sweepW">กวาด ωn ×½ → ×2</button>
+          </div>
+        </header>
+        <div id="chartMain2" class="chart"></div>
+        <p class="vnote">ชี้หรือแตะที่กราฟเพื่ออ่านค่า จุดบนระนาบเฟสและกราฟลอการิทึมจะเลื่อนตามไปด้วย เส้นประสองเส้นที่หุ้มกราฟคือเปลือก \(e^{-\zeta\omega_n t}\) ซึ่งกำหนดว่าการแกว่งลดลงเร็วแค่ไหน</p>
+      </article>
+
+      <div class="miles" id="miles2" aria-label="ค่าทุกช่วง τ"></div>
+      <p class="miles-note mono" id="milesNote2"></p>
+      <div class="stats" id="stats2" aria-label="ค่าสำคัญของระบบ"></div>
+
+      <div class="vgrid">
+        <article class="vcard">
+          <header class="vhead"><div><h3>ตำแหน่งขั้วบนระนาบ s</h3><p>ระยะจากจุดกำเนิด = ωn · cos θ = ζ · ส่วนจริง −ζωn กำหนดการลดลง · ส่วนจินตภาพ ωd กำหนดการแกว่ง</p></div></header>
+          <div id="chartS2" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>ผลตอบสนองเชิงความถี่ (Bode)</h3><p>ที่ ω = ωn เฟสเป็น −90° เสมอ และขนาดเท่ากับ 1/(2ζ) ζ ยิ่งน้อย ยอดเรโซแนนซ์ยิ่งสูง</p></div></header>
+          <div id="chartBode2" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>โครงสร้างเอกซ์โพเนนเชียล</h3><p>ส่วนชั่วครู่บนสเกลลอการิทึม ยอดทุกยอดเรียงบนเส้นตรงความชัน −ζωn</p></div></header>
+          <div id="chartLog2" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>ระนาบเฟส (y กับ ẏ/ωn)</h3><p>ไม่หน่วงเป็นวงกลม หน่วงน้อยหมุนเป็นเกลียวเข้าหาจุดสมดุล หน่วงมากวิ่งเข้าตรง ๆ</p></div></header>
+          <div id="chartPhase2" class="chart"></div>
+        </article>
+        <article class="vcard span-all">
+          <header class="vhead"><div><h3>เปอร์เซ็นต์พุ่งเกินขึ้นกับ ζ อย่างเดียว</h3><p>%OS = e^(−ζπ/√(1−ζ²)) ไม่มี ωn อยู่ในสูตร เส้นจาก ζ เดียวกันบนระนาบ s จึงให้ %OS เท่ากัน</p></div></header>
+          <div id="chartOS2" class="chart"></div>
+        </article>
+      </div>
+
+      <details class="vcard table-view">
+        <summary>ดูค่าเป็นตาราง</summary>
+        <div class="table-wrap">
+          <table id="tbl2">
+            <thead><tr><th>จุด</th><th>เวลา t</th><th>ωₙt</th><th>y(t)</th><th>dy/dt</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<div class="wrap lesson-wrap lesson-layout" id="theory">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <p class="eyebrow">// ทฤษฎีประกอบแล็บ</p>
+      <h2 class="lesson-title" style="margin:0">ระบบอันดับสองทำงานอย่างไร</h2>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(G(s) = \dfrac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}\) มีพารามิเตอร์แค่สองตัว</li>
+          <li><strong>ζ กำหนดรูปร่าง:</strong> %OS, จำนวนครั้งที่แกว่ง, ยอดเรโซแนนซ์ ขึ้นกับ ζ อย่างเดียว</li>
+          <li><strong>ωn กำหนดความเร็ว:</strong> แค่ยืดหรือหดแกนเวลา</li>
+          <li>ขั้วอยู่บนวงกลมรัศมี ωn ที่มุม θ โดย \(\cos\theta = \zeta\) การแกว่งลดลงตามเปลือก \(e^{-\zeta\omega_n t}\) ซึ่งมีค่าคงตัวเวลา \(\tau = 1/(\zeta\omega_n)\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <h2 id="standard-form">รูปมาตรฐานและที่มา</h2>
+    <p>ระบบที่มีตัวเก็บพลังงานสองตัวซึ่งแลกพลังงานกันไปมา เช่น ตัวเหนี่ยวนำกับตัวเก็บประจุในวงจร RLC หรือมวลกับสปริง จะได้สมการเชิงอนุพันธ์อันดับสอง เขียนในรูปมาตรฐานได้ว่า</p>
+    <figure class="formula">
+      \[ \ddot y + 2\zeta\omega_n\,\dot y + \omega_n^2\,y = K\omega_n^2\,u(t) \quad\xrightarrow{\ \mathcal{L}\ }\quad G(s) = \frac{K\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2} \]
+    </figure>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ระบบ</th><th>ωn</th><th>ζ</th></tr></thead>
+        <tbody>
+          <tr><td>วงจร RLC อนุกรม (เอาต์พุต \(v_C\))</td><td>\(\dfrac{1}{\sqrt{LC}}\)</td><td>\(\dfrac{R}{2}\sqrt{\dfrac{C}{L}}\)</td></tr>
+          <tr><td>มวล–สปริง–ตัวหน่วง</td><td>\(\sqrt{k/m}\)</td><td>\(\dfrac{c}{2\sqrt{km}}\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="zeta-wn">ζ กับ ωn ทำหน้าที่ต่างกัน</h2>
+    <p>แทนเวลาด้วยเวลาปรับมาตรฐาน \(t' = \omega_n t\) จะได้ \(\dfrac{d}{dt} = \omega_n\dfrac{d}{dt'}\) แทนลงในสมการแล้วหารด้วย \(\omega_n^2\)</p>
+    \[ \frac{d^2y}{dt'^2} + 2\zeta\,\frac{dy}{dt'} + y = K\,u \]
+    <p>ωn หายไปจากสมการทั้งหมด เหลือเพียง ζ แปลว่า <strong>รูปร่างของกราฟเมื่อพล็อตเทียบกับ \(\omega_n t\) ขึ้นกับ ζ อย่างเดียว</strong> ส่วน ωn ทำหน้าที่เพียงยืดหรือหดแกนเวลา ในแล็บด้านบน ลองเลือกแกน "เวลาปรับมาตรฐาน ωₙt" แล้วกด "กวาด ωn" กราฟจะนิ่งสนิท จากนั้นกด "กวาด ζ" จะเห็นรูปร่างเปลี่ยนตั้งแต่แกว่งมากจนถึงค่อย ๆ ขึ้นช้า ๆ</p>
+
+    <h2 id="regimes">สี่กรณีของ ζ</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ζ</th><th>ชื่อ</th><th>ขั้ว</th><th>ผลตอบสนองขั้นบันได</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>ไม่หน่วง</td><td>\(\pm j\omega_n\) บนแกนจินตภาพ</td><td>แกว่งตลอดไป พุ่งเกิน 100%</td></tr>
+          <tr><td>0 &lt; ζ &lt; 1</td><td>หน่วงน้อย</td><td>คู่สังยุค \(-\zeta\omega_n \pm j\omega_d\)</td><td>พุ่งเกินแล้วแกว่งลดลงตามเปลือก</td></tr>
+          <tr><td>1</td><td>หน่วงวิกฤต</td><td>ขั้วซ้ำที่ \(-\omega_n\)</td><td>เร็วที่สุดโดยไม่พุ่งเกิน</td></tr>
+          <tr><td>&gt; 1</td><td>หน่วงมาก</td><td>ขั้วจริงสองตัว</td><td>ไม่พุ่งเกิน ช้า ถูกครอบงำด้วยขั้วที่ใกล้แกนจินตภาพ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="poles">ตำแหน่งขั้วบอกทุกอย่าง</h2>
+    <figure class="formula">
+      \[ s_{1,2} = -\zeta\omega_n \pm j\,\omega_n\sqrt{1-\zeta^2} = -\sigma \pm j\omega_d \qquad |s| = \omega_n,\quad \cos\theta = \zeta \]
+    </figure>
+    <ul>
+      <li><strong>ระยะจากจุดกำเนิด</strong> คือ ωn ขั้วที่อยู่บนวงกลมเดียวกันมีความเร็วโดยรวมเท่ากัน</li>
+      <li><strong>มุม θ</strong> วัดจากแกนจริงลบ กำหนด ζ จึงกำหนด %OS เส้นรัศมีที่มุมเดียวกันให้ %OS เท่ากัน</li>
+      <li><strong>ส่วนจริง σ = ζωn</strong> กำหนดอัตราการลดลง เปลือก \(e^{-\sigma t}\) มีค่าคงตัวเวลา \(\tau = 1/\sigma\) และเวลาเข้าที่ \(t_s \approx 4\tau\)</li>
+      <li><strong>ส่วนจินตภาพ ωd</strong> กำหนดความถี่การแกว่ง คาบ \(T_d = 2\pi/\omega_d\) และเวลาถึงยอด \(t_p = \pi/\omega_d\)</li>
+    </ul>
+    <p>ในแล็บ ลากขั้วบนระนาบ s ไปตามวงกลม (ωn คงที่) แล้วดูรูปร่างเปลี่ยน หรือลากออกไปตามเส้นรัศมี (ζ คงที่) แล้วดูว่ากราฟเร็วขึ้นโดย %OS เท่าเดิม</p>
+
+    <h2 id="specs">สเปกในโดเมนเวลา</h2>
+    <figure class="formula">
+      \[ \%OS = 100\,e^{-\zeta\pi/\sqrt{1-\zeta^2}} \qquad t_p = \frac{\pi}{\omega_d} \qquad t_s \approx \frac{4}{\zeta\omega_n} \]
+      <figcaption>สูตร \(t_s\) มาจากเปลือก \(e^{-\zeta\omega_n t}\) ลดลงเหลือประมาณ 2% เมื่อผ่านไป 4τ ค่าจริงอาจต่างเล็กน้อย แล็บแสดงทั้งสองค่าให้เทียบ</figcaption>
+    </figure>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 1</span>
+      <h3>ระบบมี ζ = 0.5 และ ωn = 4 rad/s จงหา %OS, tₚ และ tₛ</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ \omega_d = 4\sqrt{1 - 0.25} = 3.46\ \text{rad/s} \qquad \%OS = 100\,e^{-0.5\pi/0.866} = 16.3\% \]
+        \[ t_p = \frac{\pi}{3.46} = 0.907\ \text{s} \qquad t_s \approx \frac{4}{0.5 \times 4} = 2\ \text{s} \]
+        <p class="answer">%OS = 16.3%, tₚ = 0.907 s, tₛ ≈ 2 s ลองตั้ง ζ = 0.5 และ ωn = 4 ในแล็บแล้วเปิด "แถบเข้าที่ ±2%" เพื่อเทียบค่า tₛ จริงกับสูตร</p>
+      </details>
+    </div>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 2 · ออกแบบ</span>
+      <h3>ต้องการให้พุ่งเกินไม่เกิน 5% ต้องใช้ ζ อย่างน้อยเท่าใด</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        <p>กลับสูตร %OS โดยให้ \(L = -\ln(0.05)\)</p>
+        \[ \zeta = \frac{-\ln(\%OS/100)}{\sqrt{\pi^2 + \ln^2(\%OS/100)}} = \frac{2.996}{\sqrt{9.870 + 8.974}} = 0.690 \]
+        <p class="answer">ζ ≥ 0.69 ซึ่งตรงกับมุมขั้ว θ ≤ 46.4° บนระนาบ s</p>
+      </details>
+    </div>
+
+    <h2 id="frequency">ผลตอบสนองเชิงความถี่</h2>
+    \[ \lvert G(j\omega)\rvert = \frac{\omega_n^2}{\sqrt{(\omega_n^2-\omega^2)^2 + (2\zeta\omega_n\omega)^2}} \qquad \angle G(j\omega) = -\tan^{-1}\frac{2\zeta\omega_n\omega}{\omega_n^2 - \omega^2} \]
+    <ul>
+      <li>ที่ \(\omega = \omega_n\) เฟสเท่ากับ −90° เสมอ และขนาดเท่ากับ \(1/(2\zeta)\)</li>
+      <li>ถ้า \(\zeta &lt; 0.707\) มียอดเรโซแนนซ์ \(M_r = \dfrac{1}{2\zeta\sqrt{1-\zeta^2}}\) ที่ \(\omega_r = \omega_n\sqrt{1-2\zeta^2}\)</li>
+      <li>เหนือ ωn ขนาดลดลง 40 dB ต่อทศวรรษ (สองเท่าของระบบอันดับหนึ่ง)</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ζ</th><th>มุมขั้ว θ</th><th>%OS</th><th>ยอดเรโซแนนซ์ Mr</th></tr></thead>
+        <tbody>
+          <tr><td>0.3</td><td>72.5°</td><td>37.2%</td><td>4.85 dB</td></tr>
+          <tr><td>0.5</td><td>60°</td><td>16.3%</td><td>1.25 dB</td></tr>
+          <tr><td>0.707</td><td>45°</td><td>4.3%</td><td>0 dB (ไม่มียอด)</td></tr>
+          <tr><td>1</td><td>0°</td><td>0%</td><td>ไม่มียอด</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>ตารางนี้คือหัวใจของบท ζ ตัวเดียวผูกมุมขั้ว การพุ่งเกินในโดเมนเวลา และยอดเรโซแนนซ์ในโดเมนความถี่เข้าด้วยกัน</p>
+
+    <h2 id="rlc-example">ตัวอย่างวงจร RLC</h2>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 3 · วงจร</span>
+      <h3>วงจร RLC อนุกรม R = 20 Ω, L = 100 mH, C = 100 µF ป้อนแรงดันขั้นบันได จงหา ωn, ζ, %OS และ tₛ ของแรงดันตัวเก็บประจุ</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ \omega_n = \frac{1}{\sqrt{(0.1)(100\times10^{-6})}} = 316\ \text{rad/s} \qquad \zeta = \frac{20}{2}\sqrt{\frac{100\times10^{-6}}{0.1}} = 0.316 \]
+        \[ \%OS = 100\,e^{-0.316\pi/\sqrt{1-0.1}} = 35.1\% \qquad \tau = \frac{1}{\zeta\omega_n} = 10\ \text{ms} \qquad t_s \approx 4\tau = 40\ \text{ms} \]
+        <p class="answer">ωn = 316 rad/s, ζ = 0.316, พุ่งเกิน 35.1% และเข้าที่ประมาณ 40 ms เลือก "วงจร RLC อนุกรม" ในแล็บ ค่าเริ่มต้นคือวงจรนี้พอดี ลองเพิ่ม R จะเห็น ζ เพิ่มขึ้นและการพุ่งเกินลดลง</p>
+      </details>
+    </div>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
