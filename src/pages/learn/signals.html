@@ -1,0 +1,313 @@
+<!--meta
+{
+  "title": "สัญญาณเบื้องต้น (Signals): แล็บสัญญาณต่อเนื่องและไม่ต่อเนื่อง การแปลงเวลา และคอนโวลูชัน | อาจารย์มด",
+  "h1": "สัญญาณเบื้องต้น: เห็นหน้าตาสัญญาณ แปลงเวลา และดำเนินการระหว่างสัญญาณ",
+  "description": "แล็บโต้ตอบพื้นฐานวิชาสัญญาณและระบบ พิมพ์สมการสัญญาณเองได้ ทั้งสัญญาณเวลาต่อเนื่อง x(t) และไม่ต่อเนื่อง x[n] ดูอนุพันธ์ อินทิกรัล ส่วนคู่คี่ พลังงาน สเปกตรัม การเลื่อน สเกล กลับเวลา และคอนโวลูชันแบบกลับและเลื่อน",
+  "lesson": "signals",
+  "nav": "sig",
+  "katex": true,
+  "bodyClass": "lab-page",
+  "published": "2026-10-09",
+  "updated": "2026-10-09",
+  "about": ["Signals and Systems", "Continuous-time signal", "Discrete-time signal", "Unit step", "Impulse", "Time shifting and scaling", "Even and odd signals", "Signal energy and power", "Convolution"],
+  "scripts": ["/assets/vendor/katex.min.js", "/assets/sigexpr.js", "/assets/sig.js"],
+  "jsonld": [
+    {
+      "@type": "LearningResource",
+      "name": "แล็บสัญญาณเบื้องต้น",
+      "url": "https://modsengineeringmath.com/learn/signals/",
+      "learningResourceType": ["Interactive simulation", "Lesson"],
+      "interactivityType": "active",
+      "educationalLevel": "Undergraduate",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "teaches": ["Continuous-time and discrete-time signals", "Elementary signals: step, ramp, impulse, rectangular pulse, exponential, sinusoid", "Time shifting, scaling and reversal", "Even and odd decomposition", "Energy and power signals", "Convolution"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "สัญญาณเวลาต่อเนื่องกับสัญญาณไม่ต่อเนื่องทางเวลาต่างกันอย่างไร?", "a": "สัญญาณเวลาต่อเนื่อง \\(x(t)\\) มีค่าทุกขณะเวลา ส่วนสัญญาณไม่ต่อเนื่องทางเวลา \\(x[n]\\) มีค่าเฉพาะที่จำนวนเต็ม n มักได้จากการสุ่ม \\(x[n] = x(nT_s)\\) สัญญาณเวลาต่อเนื่องอาจมีจุดกระโดดได้ เช่น \\(u(t)\\) จึงต้องแยกคำว่าเวลาต่อเนื่องออกจากคำว่าต่อเนื่องทางคณิตศาสตร์"},
+    {"q": "ทำไมอิมพัลส์ δ(t) จึงวาดเป็นลูกศร?", "a": "เพราะ \\(\\delta(t)\\) ไม่ใช่ฟังก์ชันธรรมดา มีความกว้างเป็นศูนย์แต่มีพื้นที่เท่ากับ 1 ความสูงจึงวาดตามจริงไม่ได้ ลูกศรแทนตำแหน่ง และตัวเลขในวงเล็บบอกพื้นที่หรือน้ำหนักของอิมพัลส์"},
+    {"q": "x(2t − 4) เลื่อนไปกี่หน่วย?", "a": "เลื่อนไปทางขวา 2 หน่วย ไม่ใช่ 4 เพราะ \\(x(2t-4) = x(2(t-2))\\) ให้จัดรูปเป็น \\(x(a(t-t_0))\\) ก่อนเสมอ จุดที่ \\(\\tau\\) ของสัญญาณเดิมจะไปอยู่ที่ \\(t = t_0 + \\tau/a\\)"},
+    {"q": "คอนโวลูชันใช้ทำอะไร?", "a": "ใช้หาผลตอบสนองของระบบเชิงเส้นไม่แปรตามเวลา ถ้ารู้ผลตอบสนองอิมพัลส์ \\(h(t)\\) ของระบบ เอาต์พุตสำหรับอินพุตใด ๆ คือ \\(y = x * h\\) เช่น ระบบอันดับหนึ่งมี \\(h(t) = \\tfrac{1}{\\tau}e^{-t/\\tau}u(t)\\)"}
+  ]
+}
+-->
+<header class="app-head">
+  <div class="wrap app-wrap">
+    <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>สัญญาณเบื้องต้น</li></ol>
+    <p class="eyebrow">// บทที่ 7 · สัญญาณและระบบ · แล็บโต้ตอบ</p>
+    <h1>สัญญาณเบื้องต้น</h1>
+    <p class="lede">พิมพ์สมการสัญญาณเองได้ หรือเลือกจากสัญญาณพื้นฐาน แล้วดูหน้าตาของสัญญาณพร้อมกันหลายมุม ทั้งอนุพันธ์ อินทิกรัล ส่วนคู่คี่ พลังงาน และสเปกตรัม ลองเลื่อน สเกล และกลับเวลา หรือนำสัญญาณสองตัวมาบวก คูณ และคอนโวลูชัน ใช้ได้ทั้งเวลาต่อเนื่อง x(t) และไม่ต่อเนื่อง x[n] <a href="#theory">อ่านทฤษฎีด้านล่าง ↓</a></p>
+  </div>
+</header>
+
+<section class="fos-lab sig-lab" id="sigLab" aria-label="แล็บสัญญาณ">
+  <div class="wrap app-wrap">
+    <div class="sig-top">
+      <div class="seg seg-lg" id="sgMode" role="group" aria-label="โหมดของแล็บ">
+        <button type="button" data-v="explore">① สำรวจสัญญาณ</button>
+        <button type="button" data-v="transform">② แปลงทางเวลา</button>
+        <button type="button" data-v="ops">③ ดำเนินการระหว่างสัญญาณ</button>
+      </div>
+      <div class="seg" id="sgDom" role="group" aria-label="ชนิดเวลา">
+        <button type="button" data-v="ct">เวลาต่อเนื่อง x(t)</button>
+        <button type="button" data-v="dt">ไม่ต่อเนื่อง x[n]</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap app-wrap lab-grid">
+    <aside class="lab-panel" aria-label="ตั้งค่าสัญญาณ">
+      <div class="ctl">
+        <h2 class="ctl-h">สัญญาณ</h2>
+        <label class="expr-l" for="in_x1" id="lab_x1">x(t) =</label>
+        <input class="expr" id="in_x1" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="err_x1">
+        <p class="expr-err" id="err_x1" role="alert"></p>
+        <select class="pre" id="pre_x1" aria-label="เลือกสัญญาณพื้นฐานสำหรับ x"></select>
+        <div class="fnbar" id="sgFn" aria-label="แทรกฟังก์ชัน">
+          <button type="button" data-ins="u(t)">u</button><button type="button" data-ins="r(t)">r</button><button type="button" data-ins="delta(t)">δ</button>
+          <button type="button" data-ins="rect(t)">rect</button><button type="button" data-ins="tri(t)">tri</button><button type="button" data-ins="exp(-t)">exp</button>
+          <button type="button" data-ins="cos(2*pi*t)">cos</button><button type="button" data-ins="sin(2*pi*t)">sin</button><button type="button" data-ins="sinc(t)">sinc</button>
+        </div>
+        <details class="fnhelp">
+          <summary>ฟังก์ชันที่ใช้ได้</summary>
+          <p>u(t) ขั้นบันได · r(t) แรมป์ · delta(t) อิมพัลส์ · rect(t) พัลส์กว้าง 1 · tri(t) สามเหลี่ยมฐาน 2 · sinc(t) = sin(πt)/(πt) · sgn(t) · sq(x) คลื่นสี่เหลี่ยม · saw(x) ฟันเลื่อย · sin cos tan exp ln sqrt abs floor mod(a,b) min max · ค่าคงที่ pi, e · ยกกำลังด้วย ^ · เขียน 2t หรือ 2pi t ได้ · ในโหมด x[n] ใช้ตัวแปร n</p>
+        </details>
+      </div>
+
+      <div class="ctl" data-show="mode:ops">
+        <h2 class="ctl-h">สัญญาณตัวที่สอง</h2>
+        <label class="expr-l" for="in_x2" id="lab_x2">x₂(t) =</label>
+        <input class="expr" id="in_x2" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="err_x2">
+        <p class="expr-err" id="err_x2" role="alert"></p>
+        <select class="pre" id="pre_x2" aria-label="เลือกสัญญาณพื้นฐานสำหรับ x₂"></select>
+        <h2 class="ctl-h" style="margin-top:14px">การดำเนินการ</h2>
+        <div class="seg" id="sgOp" role="group" aria-label="การดำเนินการ">
+          <button type="button" data-v="add">บวก +</button><button type="button" data-v="sub">ลบ −</button>
+          <button type="button" data-v="mul">คูณ ×</button><button type="button" data-v="conv">คอนโวลูชัน ∗</button>
+        </div>
+      </div>
+
+      <div class="ctl ctl-key" data-show="mode:transform">
+        <h2 class="ctl-h">y = A·x(a(t − t₀)) + C</h2>
+        <div class="row"><label for="sT0">เลื่อนเวลา t₀ <output id="vT0"></output></label><input type="range" id="sT0" min="-5" max="5" step="0.1"></div>
+        <div class="row" id="sA_ct"><label for="sa">สเกลเวลา a (ลบ = กลับเวลา) <output id="va"></output></label><input type="range" id="sa" min="-3" max="3" step="0.05"></div>
+        <div class="row" id="sAsel" hidden>
+          <label for="sAselIn">สเกลเวลา a</label>
+          <select id="sAselIn" class="pre" aria-label="สเกลเวลา a สำหรับ x[n]"><option value="1">1</option><option value="-1">−1 (กลับเวลา)</option><option value="2">2 (ลดอัตรา)</option><option value="-2">−2</option><option value="3">3</option><option value="0.5">½ (เพิ่มอัตรา แทรกศูนย์)</option></select>
+        </div>
+        <div class="row"><label for="sA">แอมพลิจูด A <output id="vA"></output></label><input type="range" id="sA" min="-3" max="3" step="0.1"></div>
+        <div class="row"><label for="sC">เลื่อนแนวตั้ง C <output id="vC"></output></label><input type="range" id="sC" min="-3" max="3" step="0.1"></div>
+        <div class="checks" style="margin-top:12px">
+          <label><input type="checkbox" id="hs_steps"> แสดงขั้นกลาง</label>
+          <label><input type="checkbox" id="hs_map"> ลูกศรติดตามจุดอ้างอิง</label>
+        </div>
+      </div>
+
+      <div class="ctl" data-show="mode:explore">
+        <h2 class="ctl-h">เส้นช่วยวิเคราะห์</h2>
+        <div class="checks">
+          <label><input type="checkbox" id="hs_grid"> เส้นทุกหน่วยเวลา</label>
+          <label data-show="dom:ct"><input type="checkbox" id="hs_zero"> จุดตัดศูนย์</label>
+          <label><input type="checkbox" id="hs_peak"> จุดยอด/ร่อง</label>
+          <label data-show="dom:ct"><input type="checkbox" id="hs_disc"> จุดกระโดด (ไม่ต่อเนื่อง)</label>
+          <label><input type="checkbox" id="hs_mean"> ค่าเฉลี่ย (DC)</label>
+          <label><input type="checkbox" id="hs_rms"> ระดับ ±RMS</label>
+          <label data-show="dom:ct"><input type="checkbox" id="hs_samp"> จุดสุ่ม x(nTs)</label>
+        </div>
+        <div class="row" data-show="dom:ct"><label for="sTs">คาบการสุ่ม Ts <output id="vTs"></output></label><input type="range" id="sTs" min="0.05" max="2" step="0.05"></div>
+      </div>
+      <div class="ctl" data-show="mode:ops op:mul">
+        <div class="checks"><label><input type="checkbox" id="hs_env"> เปลือก ±|x₁|</label></div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h" id="winLabel">ช่วงเวลา t</h2>
+        <div class="row inline win"><input type="number" id="nTmin" class="num" step="any" aria-label="เริ่ม"><span>ถึง</span><input type="number" id="nTmax" class="num" step="any" aria-label="สิ้นสุด"></div>
+        <div class="row" data-show="dom:ct"><label for="sFmax">สเปกตรัมถึงความถี่ f <output id="vFmax"></output></label><input type="range" id="sFmax" min="0.5" max="10" step="0.5"></div>
+      </div>
+      <div class="ctl ctl-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="sgShare">คัดลอกลิงก์การตั้งค่านี้</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="sgReset">ค่าเริ่มต้น</button>
+      </div>
+    </aside>
+
+    <div class="lab-main">
+      <div class="eqbar">
+        <div><span class="mono">สัญญาณ</span><div id="sgEq1"></div></div>
+        <div><span class="mono">ตัวที่สอง / ผลการแปลง</span><div id="sgEq2"></div></div>
+        <div class="eq-wide"><span class="mono">ผลลัพธ์</span><div id="sgEq3"></div></div>
+      </div>
+
+      <article class="vcard vmain">
+        <header class="vhead">
+          <div><h3 id="sgMainTitle">หน้าตาของสัญญาณ</h3><div class="legend" id="sgLegend"></div></div>
+          <div class="vbtns"><span class="stage mono" id="sgStage"></span><button type="button" class="btn btn-primary btn-sm" id="sgPlay">▶ เดินตามเวลา</button></div>
+        </header>
+        <div id="sgMain" class="chart"></div>
+        <p class="vnote" data-show="mode:explore">จุดโปร่งที่รอยต่อคือระดับก่อนกระโดด จุดทึบคือค่า ณ ขณะกระโดด ลูกศรคืออิมพัลส์ ตัวเลขในวงเล็บคือพื้นที่ ชี้หรือแตะที่กราฟเพื่ออ่านค่า ทุกกราฟด้านล่างจะชี้ตำแหน่งเวลาเดียวกัน</p>
+        <p class="vnote" data-show="mode:transform">เส้นประคือขั้นกลาง ลูกศรติดตามว่าจุด τ ของสัญญาณเดิมไปอยู่ที่ t = t₀ + τ/a ของสัญญาณใหม่ กด "แปลงทีละขั้น" เพื่อดูการเลื่อน → สเกล → ขยายแอมพลิจูด ตามลำดับ</p>
+        <p class="vnote" data-show="mode:ops">ชี้ที่กราฟเพื่อเลือกเวลา t ในโหมดคอนโวลูชัน แผงด้านล่างจะแสดงการกลับและเลื่อน x₂ และพื้นที่ผลคูณซึ่งเท่ากับ y(t)</p>
+      </article>
+
+      <article class="vcard" id="sgConvCard" data-show="mode:ops op:conv">
+        <header class="vhead"><div><h3>กลับแล้วเลื่อน (flip and slide)</h3><p id="convNote"></p></div></header>
+        <div id="sgConv" class="chart"></div>
+      </article>
+
+      <div class="stats" id="sgStats" aria-label="สมบัติของสัญญาณ"></div>
+
+      <div class="vgrid" data-show="mode:explore">
+        <article class="vcard"><header class="vhead"><div><h3 data-show="dom:ct">อนุพันธ์ dx/dt</h3><h3 data-show="dom:dt">ผลต่างลำดับแรก x[n] − x[n−1]</h3><p>ความชัน ณ แต่ละเวลา จุดกระโดดกลายเป็นอิมพัลส์ขนาดเท่ากับการกระโดด</p></div></header><div id="sgDer" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3 data-show="dom:ct">อินทิกรัลสะสม ∫x dτ</h3><h3 data-show="dom:dt">ผลรวมสะสม Σ x[k]</h3><p>พื้นที่สะสมจากต้นช่วง ลองดู δ → u → r</p></div></header><div id="sgInt" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3 data-show="dom:ct">ส่วนคู่ xₑ = ½[x(t) + x(−t)]</h3><h3 data-show="dom:dt">ส่วนคู่ xₑ[n] = ½(x[n] + x[−n])</h3><p>เส้นจางคือสัญญาณเดิม</p></div></header><div id="sgEven" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3 data-show="dom:ct">ส่วนคี่ xₒ = ½[x(t) − x(−t)]</h3><h3 data-show="dom:dt">ส่วนคี่ xₒ[n] = ½(x[n] − x[−n])</h3><p>x = xₑ + xₒ เสมอ</p></div></header><div id="sgOdd" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3>พลังงานสะสม</h3><p>เส้นจางคือ |x|² เส้นทึบคือพื้นที่สะสม ถ้าเส้นทึบนิ่ง แปลว่าพลังงานจำกัด</p></div></header><div id="sgEnergy" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3>สเปกตรัมขนาด</h3><p>สัญญาณประกอบด้วยความถี่ใดบ้าง (คำนวณจากช่วงที่แสดง) จะได้เรียนต่อในเรื่องฟูริเยร์</p></div></header><div id="sgSpec" class="chart"></div></article>
+      </div>
+
+      <div class="vgrid three" data-show="mode:transform">
+        <article class="vcard"><header class="vhead"><div><h3>ขั้น 1 · เลื่อน</h3><p>x(t − t₀): t₀ บวก เลื่อนไปขวา</p></div></header><div id="sgT1" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3>ขั้น 2 · สเกล/กลับ</h3><p>|a| &gt; 1 บีบ · |a| &lt; 1 ยืด · a &lt; 0 กลับเวลา</p></div></header><div id="sgT2" class="chart"></div></article>
+        <article class="vcard"><header class="vhead"><div><h3>ขั้น 3 · แอมพลิจูด</h3><p>คูณ A แล้วบวก C</p></div></header><div id="sgT3" class="chart"></div></article>
+        <article class="vcard span-all"><header class="vhead"><div><h3>สเปกตรัมก่อนและหลังแปลง</h3><p>บีบในเวลา (|a| &gt; 1) ทำให้สเปกตรัมแผ่กว้าง การเลื่อนเวลาไม่เปลี่ยนขนาดสเปกตรัม</p></div></header><div id="sgTSpec" class="chart"></div></article>
+      </div>
+
+      <div class="vgrid" data-show="mode:ops">
+        <article class="vcard span-all"><header class="vhead"><div><h3>สเปกตรัมของ x₁, x₂ และผลลัพธ์</h3><p>เส้นบางคือ x₁ และ x₂ เส้นหนาคือ y</p></div></header><div id="sgOSpec" class="chart"></div></article>
+      </div>
+
+      <details class="vcard table-view">
+        <summary>ดูค่าเป็นตาราง</summary>
+        <div class="table-wrap"><table id="sgTbl"><thead><tr></tr></thead><tbody></tbody></table></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<div class="wrap lesson-wrap lesson-layout" id="theory">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <p class="eyebrow">// ทฤษฎีประกอบแล็บ</p>
+      <h2 class="lesson-title" style="margin:0">พื้นฐานของสัญญาณ</h2>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สัญญาณคือฟังก์ชันของเวลา: \(x(t)\) เวลาต่อเนื่อง หรือ \(x[n]\) ไม่ต่อเนื่องทางเวลา</li>
+          <li>สัญญาณพื้นฐานผูกกันด้วยแคลคูลัส: \(\delta \xrightarrow{\int} u \xrightarrow{\int} r\)</li>
+          <li>\(y(t) = x(a(t - t_0))\): จุด τ เดิมไปอยู่ที่ \(t = t_0 + \tau/a\)</li>
+          <li>คอนโวลูชัน = กลับ เลื่อน คูณ แล้วหาพื้นที่ ใช้หาเอาต์พุตของระบบ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <h2 id="what">สัญญาณคืออะไร</h2>
+    <p>สัญญาณคือปริมาณที่เปลี่ยนไปตามเวลาและเก็บข้อมูลบางอย่างไว้ เช่น แรงดันไฟบ้าน กระแสมอเตอร์ หรือค่าจากเซนเซอร์ เราเขียนเป็นฟังก์ชันของเวลาได้สองแบบ</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ชนิด</th><th>สัญลักษณ์</th><th>นิยามอยู่ที่</th><th>ตัวอย่าง</th></tr></thead>
+        <tbody>
+          <tr><td>เวลาต่อเนื่อง</td><td>\(x(t)\)</td><td>ทุกค่าจริง t</td><td>แรงดันบนสายไฟ</td></tr>
+          <tr><td>ไม่ต่อเนื่องทางเวลา</td><td>\(x[n]\)</td><td>เฉพาะจำนวนเต็ม n</td><td>ค่าที่ไมโครคอนโทรลเลอร์อ่านได้ทุก \(T_s\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>สัญญาณไม่ต่อเนื่องทางเวลามักได้จากการสุ่ม \(x[n] = x(nT_s)\) เปิด "จุดสุ่ม x(nTs)" ในแล็บแล้วลองปรับ \(T_s\) ดู และระวังคำว่า "ต่อเนื่อง" สองความหมาย สัญญาณเวลาต่อเนื่องอาจ <strong>ไม่ต่อเนื่องทางคณิตศาสตร์</strong> ได้ เช่น \(u(t)\) กระโดดที่ \(t = 0\) แล็บแสดงจุดกระโดดด้วยจุดทึบและจุดโปร่ง</p>
+
+    <h2 id="basic">สัญญาณพื้นฐาน</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ชื่อ</th><th>นิยาม</th><th>พิมพ์ในแล็บ</th></tr></thead>
+        <tbody>
+          <tr><td>ขั้นบันได</td><td>\(u(t) = 1\) เมื่อ \(t \ge 0\), 0 เมื่อ \(t &lt; 0\)</td><td><code>u(t)</code></td></tr>
+          <tr><td>แรมป์</td><td>\(r(t) = t\,u(t)\)</td><td><code>r(t)</code></td></tr>
+          <tr><td>อิมพัลส์</td><td>\(\delta(t) = 0\) เมื่อ \(t \ne 0\) และ \(\int\delta(t)\,dt = 1\)</td><td><code>delta(t)</code></td></tr>
+          <tr><td>พัลส์สี่เหลี่ยม</td><td>\(\operatorname{rect}(t) = 1\) เมื่อ \(|t| &lt; \tfrac12\)</td><td><code>rect(t)</code></td></tr>
+          <tr><td>เอกซ์โพเนนเชียล</td><td>\(e^{-at}u(t)\)</td><td><code>exp(-a*t)*u(t)</code></td></tr>
+          <tr><td>ไซน์</td><td>\(A\cos(2\pi f t + \phi)\)</td><td><code>A*cos(2*pi*f*t + phi)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>สามตัวแรกผูกกันด้วยแคลคูลัส</p>
+    \[ r(t) = \int_{-\infty}^{t} u(\tau)\,d\tau \qquad u(t) = \int_{-\infty}^{t} \delta(\tau)\,d\tau \qquad \delta(t) = \frac{du}{dt} \]
+    <p>ในแล็บ เลือก \(u(t)\) แล้วดูกราฟอนุพันธ์ (ได้อิมพัลส์) และกราฟอินทิกรัลสะสม (ได้แรมป์) สมบัติสำคัญของอิมพัลส์คือการกรอง (sifting): \(\int x(t)\,\delta(t - t_0)\,dt = x(t_0)\)</p>
+
+    <h2 id="transform">การแปลงตัวแปรเวลา</h2>
+    <p>เขียนทุกการแปลงให้อยู่ในรูปเดียว</p>
+    <figure class="formula">
+      \[ y(t) = A\,x\big(a(t - t_0)\big) + C \qquad\text{จุด } \tau \text{ ของ } x \text{ ไปอยู่ที่ } t = t_0 + \frac{\tau}{a} \]
+    </figure>
+    <ul>
+      <li>\(t_0 &gt; 0\) เลื่อนไปทางขวา (ล่าช้า) · \(t_0 &lt; 0\) เลื่อนไปทางซ้าย</li>
+      <li>\(|a| &gt; 1\) บีบเข้า · \(|a| &lt; 1\) ยืดออก · \(a &lt; 0\) กลับเวลา</li>
+    </ul>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 1 · จุดที่มักพลาด</span>
+      <h3>สัญญาณ \(x(2t - 4)\) เลื่อนไปกี่หน่วยเมื่อเทียบกับ \(x(t)\)</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ x(2t - 4) = x\big(2(t - 2)\big) \quad\Rightarrow\quad a = 2,\ t_0 = 2 \]
+        <p class="answer">บีบเข้า 2 เท่า แล้วเลื่อนไปทางขวา <strong>2</strong> หน่วย ไม่ใช่ 4 จุด τ = 0 ของสัญญาณเดิมไปอยู่ที่ t = 2 และจุด τ = 1 ไปอยู่ที่ t = 2.5 ลองตั้ง a = 2, t₀ = 2 ในโหมด "แปลงทางเวลา" แล้วดูลูกศร</p>
+      </details>
+    </div>
+
+    <h2 id="even-odd">สัญญาณคู่และสัญญาณคี่</h2>
+    \[ x_e(t) = \tfrac12\big[x(t) + x(-t)\big] \qquad x_o(t) = \tfrac12\big[x(t) - x(-t)\big] \qquad x(t) = x_e(t) + x_o(t) \]
+    <p>สัญญาณคู่สมมาตรรอบแกนตั้ง เช่น \(\cos t\) สัญญาณคี่สมมาตรรอบจุดกำเนิด เช่น \(\sin t\) ทุกสัญญาณแยกเป็นผลรวมของสองส่วนนี้ได้เสมอ แล็บแสดงทั้งสองส่วนและสัดส่วนพลังงาน</p>
+
+    <h2 id="energy-power">พลังงานและกำลังของสัญญาณ</h2>
+    \[ E = \int_{-\infty}^{\infty} |x(t)|^2\,dt \qquad P = \lim_{T\to\infty}\frac{1}{2T}\int_{-T}^{T} |x(t)|^2\,dt \]
+    <ul>
+      <li><strong>สัญญาณพลังงาน</strong>: E จำกัด (P = 0) เช่น \(e^{-t}u(t)\) มี \(E = \int_0^\infty e^{-2t}\,dt = \tfrac12\)</li>
+      <li><strong>สัญญาณกำลัง</strong>: E ไม่จำกัดแต่ P จำกัด เช่น \(A\cos\omega t\) มี \(P = A^2/2\)</li>
+    </ul>
+    <p>ลองเลือก <code>exp(-t)*u(t)</code> ในแล็บ ค่า E จะออกมาใกล้ 0.5 และเส้นพลังงานสะสมจะนิ่ง ส่วนโคไซน์เส้นจะเพิ่มขึ้นเรื่อย ๆ</p>
+
+    <h2 id="periodic">สัญญาณคาบ</h2>
+    <p>สัญญาณเป็นคาบเมื่อ \(x(t + T) = x(t)\) ทุก t ผลรวมไซน์หลายตัวเป็นคาบเมื่ออัตราส่วนความถี่เป็นจำนวนตรรกยะ สำหรับเวลาไม่ต่อเนื่องมีข้อควรระวัง \(\cos(\omega_0 n)\) เป็นคาบก็ต่อเมื่อ \(\omega_0/2\pi\) เป็นจำนวนตรรกยะ</p>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 2</span>
+      <h3>\(\cos(\pi n/4)\) และ \(\cos(n)\) เป็นคาบหรือไม่</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        <p>\(\cos(\pi n/4)\): \(\omega_0/2\pi = 1/8\) เป็นตรรกยะ คาบพื้นฐาน \(N_0 = 8\)</p>
+        <p>\(\cos(n)\): \(\omega_0/2\pi = 1/(2\pi)\) เป็นอตรรกยะ จึง <strong>ไม่เป็นคาบ</strong> แม้ \(\cos t\) จะเป็นคาบก็ตาม</p>
+        <p class="answer">ในแล็บโหมด x[n] ลองพิมพ์ <code>cos(pi*n/4)</code> จะพบ N₀ = 8 ส่วน <code>cos(n)</code> จะไม่พบคาบ</p>
+      </details>
+    </div>
+
+    <h2 id="operations">การดำเนินการระหว่างสัญญาณ</h2>
+    <p>การบวกและคูณทำทีละเวลา การคูณสัญญาณช้ากับสัญญาณเร็วคือการมอดูเลต ผลลัพธ์ถูกจำกัดอยู่ในเปลือกของตัวคูณ ส่วนคอนโวลูชันคือหัวใจของวิชาสัญญาณและระบบ</p>
+    <figure class="formula">
+      \[ y(t) = (x_1 * x_2)(t) = \int_{-\infty}^{\infty} x_1(\tau)\,x_2(t - \tau)\,d\tau \qquad y[n] = \sum_{k} x_1[k]\,x_2[n-k] \]
+      <figcaption>อ่านเป็นขั้นตอน: กลับ \(x_2\) → เลื่อนไปที่ t → คูณกับ \(x_1\) → หาพื้นที่</figcaption>
+    </figure>
+    <ul>
+      <li>พื้นที่ใต้ y เท่ากับพื้นที่ใต้ \(x_1\) คูณพื้นที่ใต้ \(x_2\)</li>
+      <li>ความยาวของ y เท่ากับความยาวของ \(x_1\) บวกความยาวของ \(x_2\)</li>
+      <li>คอนโวลูชันกับ \(\delta(t - t_0)\) คือการเลื่อนสัญญาณไป \(t_0\)</li>
+    </ul>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 3</span>
+      <h3>หา \(\operatorname{rect}(t) * \operatorname{rect}(t)\) และ \(u[n] * u[n]\)</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        <p>พัลส์กว้าง 1 สองตัวซ้อนกันมากที่สุดที่ t = 0 และเหลื่อมกันเป็นเส้นตรงเมื่อเลื่อนออก จึงได้สามเหลี่ยมฐานกว้าง 2 พื้นที่ 1 × 1 = 1</p>
+        \[ \operatorname{rect}(t) * \operatorname{rect}(t) = \operatorname{tri}(t) \qquad u[n] * u[n] = \sum_{k=0}^{n} 1 = (n+1)\,u[n] \]
+        <p class="answer">ลองในโหมด "ดำเนินการระหว่างสัญญาณ" ตั้ง x₁ = x₂ = <code>rect(t)</code> แล้วกด "เลื่อน t" จะเห็นพื้นที่แรเงาโตขึ้นแล้วเล็กลงเป็นรูปสามเหลี่ยม</p>
+      </details>
+    </div>
+    <p>คอนโวลูชันเชื่อมกับบทก่อนหน้าโดยตรง เอาต์พุตของระบบคือคอนโวลูชันระหว่างอินพุตกับผลตอบสนองอิมพัลส์ \(h(t)\) ลองตั้ง x₁ = <code>u(t)</code> และ x₂ = <code>exp(-t)*u(t)</code> จะได้ \(1 - e^{-t}\) ซึ่งคือผลตอบสนองขั้นบันไดใน <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a> ที่ τ = 1</p>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
