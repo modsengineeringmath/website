@@ -20,6 +20,15 @@ fs.copyFileSync(path.join(KATEX_SRC, "katex.min.css"), path.join(KATEX_DST, "kat
 for (const f of fs.readdirSync(path.join(KATEX_SRC, "fonts")).filter((f) => f.endsWith(".woff2")))
   fs.copyFileSync(path.join(KATEX_SRC, "fonts", f), path.join(KATEX_DST, "fonts", f));
 const KATEX_CSS = `/assets/katex/katex.min.css?v=${katex.version}`;
+// Browser-side libraries for the lesson editor, self-hosted under /assets/vendor/
+const VENDOR_DST = path.join(ROOT, "assets/vendor");
+fs.mkdirSync(VENDOR_DST, { recursive: true });
+for (const [src, name] of [
+  ["katex/dist/katex.min.js", "katex.min.js"],
+  ["katex/dist/contrib/auto-render.min.js", "katex-auto-render.min.js"],
+  ["marked/marked.min.js", "marked.min.js"],
+  ["dompurify/dist/purify.min.js", "purify.min.js"],
+]) fs.copyFileSync(path.join(ROOT, "node_modules", src), path.join(VENDOR_DST, name));
 const PERSON_ID = `${SITE}/#mod`;
 import crypto from "node:crypto";
 const ASSET_V = crypto.createHash("sha1").update(
@@ -327,6 +336,7 @@ Thai-language engineering mathematics lessons by Teerawut Savangboon (อาจ�
 - Home: ${SITE}/
 - About / profile (bio, projects, current status): ${SITE}/about/
 - Knowledge library (hub): ${SITE}/learn/
+- Lesson editor (online tool: write Markdown + LaTeX lessons, export .md / HTML / PDF): ${SITE}/tools/lesson-editor/
 
 ## Lessons (reading order)
 ${TOPICS.map((t, i) => `${i + 1}. ${t.en} (${t.title}) — ${t.summary}: ${SITE}/learn/${t.slug}/`).join("\n")}

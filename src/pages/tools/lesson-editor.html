@@ -1,0 +1,110 @@
+<!--meta
+{
+  "title": "เครื่องมือเขียนบทเรียนคณิตศาสตร์ออนไลน์ Markdown + LaTeX | Mod's Engineering Mathematics",
+  "description": "เขียนบทเรียนคณิตศาสตร์ด้วย Markdown และสูตร LaTeX เห็นผลทันที บันทึกเป็นไฟล์ .md ส่งออก HTML หรือพิมพ์เป็น PDF ใช้ฟรีในเบราว์เซอร์ ไม่ต้องติดตั้ง โดยอาจารย์มด",
+  "ogTitle": "เครื่องมือเขียนบทเรียนคณิตศาสตร์ — Markdown + LaTeX",
+  "nav": "tools",
+  "katex": true,
+  "bodyClass": "editor-page",
+  "updated": "2026-10-09",
+  "scripts": [
+    "/assets/vendor/katex.min.js",
+    "/assets/vendor/katex-auto-render.min.js",
+    "/assets/vendor/marked.min.js",
+    "/assets/vendor/purify.min.js",
+    "/assets/editor.js"
+  ],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://modsengineeringmath.com/tools/lesson-editor/#app",
+      "name": "เครื่องมือเขียนบทเรียนคณิตศาสตร์ (Mathematics Lesson Editor)",
+      "url": "https://modsengineeringmath.com/tools/lesson-editor/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB"},
+      "featureList": ["Markdown + LaTeX editor with live preview", "Save and open .md files", "Export standalone HTML", "Print or save as PDF", "Mobile preview", "Autosave draft in the browser"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "หน้าแรก", "item": "https://modsengineeringmath.com/"},
+        {"@type": "ListItem", "position": 2, "name": "เครื่องมือเขียนบทเรียน", "item": "https://modsengineeringmath.com/tools/lesson-editor/"}
+      ]
+    }
+  ]
+}
+-->
+<header class="app-head">
+  <div class="wrap app-wrap">
+    <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li>เครื่องมือ</li><li>เขียนบทเรียน</li></ol>
+    <div class="app-title">
+      <div>
+        <p class="eyebrow">// เครื่องมือ · Lesson Editor</p>
+        <h1>เครื่องมือเขียนบทเรียนคณิตศาสตร์</h1>
+        <p class="lede">เขียนด้วย Markdown และสูตร LaTeX เห็นผลทันทีทางขวา แล้วบันทึกเป็นไฟล์ .md ส่งออกเป็นหน้า HTML หรือพิมพ์เป็น PDF ทุกอย่างทำงานในเบราว์เซอร์ของคุณ ไม่มีการส่งเนื้อหาขึ้นเซิร์ฟเวอร์</p>
+      </div>
+      <details class="cheat">
+        <summary>วิธีเขียนสูตรและหัวข้อ</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ต้องการ</th><th>พิมพ์</th></tr></thead>
+            <tbody>
+              <tr><td>สูตรในบรรทัด</td><td><code>$x^2 + 1$</code></td></tr>
+              <tr><td>สูตรแยกบรรทัด</td><td><code>$$ \int_0^1 x\,dx $$</code></td></tr>
+              <tr><td>หลายบรรทัดจัดแนว</td><td><code>\begin{aligned} a &amp;= b \\ &amp;= c \end{aligned}</code></td></tr>
+              <tr><td>หัวข้อ</td><td><code># บท</code> · <code>## หัวข้อ</code> · <code>### หัวข้อย่อย</code></td></tr>
+              <tr><td>ตัวหนา / ตัวเอียง</td><td><code>**หนา**</code> · <code>*เอียง*</code></td></tr>
+              <tr><td>กล่องหมายเหตุ</td><td><code>&gt; ข้อความ</code></td></tr>
+              <tr><td>รายการ</td><td><code>- ข้อ</code> หรือ <code>1. ข้อ</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mono">กด Ctrl + S (หรือ ⌘ + S) เพื่อบันทึกไฟล์ .md</p>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="editor-app" id="editorApp">
+  <div class="wrap app-wrap">
+    <div class="toolbar" role="toolbar" aria-label="คำสั่งของเครื่องมือ">
+      <button class="btn btn-primary btn-sm" type="button" id="saveMd">บันทึก .md</button>
+      <label class="btn btn-ghost btn-sm" for="openMd">เปิดไฟล์ .md</label>
+      <input id="openMd" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
+      <button class="btn btn-ghost btn-sm" type="button" id="exportHtml">ส่งออก HTML</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="printPdf">พิมพ์ / บันทึก PDF</button>
+      <span class="tb-gap"></span>
+      <button class="btn btn-ghost btn-sm" type="button" id="mobileBtn" aria-pressed="false">ดูแบบมือถือ</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="resetBtn">เริ่มจากตัวอย่าง</button>
+    </div>
+    <div class="workspace" id="workspace">
+      <section class="pane" id="editorPane" aria-label="ต้นฉบับ">
+        <div class="panehead"><b>ต้นฉบับ</b><span class="mono">Markdown + LaTeX</span></div>
+        <textarea id="source" spellcheck="false" aria-label="แก้ไขบทเรียน"></textarea>
+      </section>
+      <section class="pane" aria-label="ตัวอย่างบทเรียน">
+        <div class="panehead"><b>ตัวอย่าง</b><span class="mono">อัปเดตอัตโนมัติ</span></div>
+        <article class="preview lesson" id="preview" aria-live="off"></article>
+      </section>
+    </div>
+    <p class="app-status mono" id="status" role="status">กำลังโหลด…</p>
+  </div>
+</div>
+
+<section class="block band app-more">
+  <div class="wrap">
+    <div class="sec-head-row">
+      <div class="sec-head" style="margin:0">
+        <p class="eyebrow">// อ่านตัวอย่างบทเรียนจริง</p>
+        <h2>บทเรียนในคลังความรู้</h2>
+        <p class="lede">บทเรียนในคลังความรู้เขียนด้วยรูปแบบเดียวกัน ใช้เป็นแนวทางจัดหัวข้อ ตัวอย่าง และสูตรได้</p>
+      </div>
+      <a class="btn btn-ghost" href="/learn/">ไปที่คลังความรู้ →</a>
+    </div>
+    <!--topic-cards-->
+  </div>
+</section>
