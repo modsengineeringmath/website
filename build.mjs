@@ -70,6 +70,13 @@ export const TOPICS = [
     summary: "นิยาม ตาราง เศษส่วนย่อย และการแก้วงจร RC ใน s-domain",
     playlist: "PLAJhR5azwWpLgWalcHsCEE8q_bPJv0Eaa",
   },
+  {
+    slug: "first-order-system",
+    title: "ระบบอันดับหนึ่ง",
+    en: "First-Order System · Lab",
+    sym: "τ",
+    summary: "แล็บโต้ตอบ: ปรับค่าคงตัวเวลา τ หรือ R, C, L แล้วดูผลตอบสนอง สเกลลอการิทึม ระนาบ s และ Bode พร้อมเส้นช่วยวิเคราะห์",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -336,6 +343,7 @@ Thai-language engineering mathematics lessons by Teerawut Savangboon (อาจ�
 - Home: ${SITE}/
 - About / profile (bio, projects, current status): ${SITE}/about/
 - Knowledge library (hub): ${SITE}/learn/
+- First-order system lab (interactive time-constant simulator: step/impulse/ramp/sine, RC/RL, log view, s-plane, Bode): ${SITE}/learn/first-order-system/
 - Lesson editor (online tool: write Markdown + LaTeX lessons, export .md / HTML / PDF): ${SITE}/tools/lesson-editor/
 
 ## Lessons (reading order)

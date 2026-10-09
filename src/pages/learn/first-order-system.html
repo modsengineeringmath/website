@@ -1,0 +1,290 @@
+<!--meta
+{
+  "title": "ระบบอันดับหนึ่ง (First-Order System): แล็บค่าคงตัวเวลา τ แบบโต้ตอบ | อาจารย์มด",
+  "h1": "ระบบอันดับหนึ่งและค่าคงตัวเวลา τ",
+  "description": "แล็บโต้ตอบระบบอันดับหนึ่ง G(s) = K/(τs+1) ปรับค่าคงตัวเวลา τ หรือค่า R, C, L แล้วดูผลตอบสนองขั้นบันได อิมพัลส์ แรมป์ และไซน์ พร้อมเส้นแบ่งทุกช่วง τ เส้นสัมผัส สเกลลอการิทึม ระนาบ s และ Bode plot",
+  "lesson": "first-order-system",
+  "nav": "fos",
+  "katex": true,
+  "bodyClass": "lab-page",
+  "published": "2026-10-09",
+  "updated": "2026-10-09",
+  "about": ["First-Order System", "Time Constant", "Step Response", "RC Circuit", "Bode Plot"],
+  "scripts": ["/assets/vendor/katex.min.js", "/assets/fos.js"],
+  "jsonld": [
+    {
+      "@type": "LearningResource",
+      "name": "แล็บระบบอันดับหนึ่ง: ค่าคงตัวเวลา τ แบบโต้ตอบ",
+      "url": "https://modsengineeringmath.com/learn/first-order-system/",
+      "learningResourceType": ["Interactive simulation", "Lesson"],
+      "interactivityType": "active",
+      "educationalLevel": "Undergraduate",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "teaches": ["Time constant", "First-order step response", "Exponential decay", "Pole location", "Bode plot of a first-order system"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "ค่าคงตัวเวลา τ คืออะไร?", "a": "เป็นเวลาที่ระบบอันดับหนึ่งใช้ในการเปลี่ยนแปลงไปได้ 63.2% ของการเปลี่ยนแปลงทั้งหมด หรือเวลาที่ส่วนชั่วครู่ลดลงเหลือ \\(1/e\\) ของค่าเริ่มต้น สำหรับวงจร RC มีค่าเท่ากับ \\(RC\\) และวงจร RL มีค่าเท่ากับ \\(L/R\\)"},
+    {"q": "ทำไมต้องเป็น 63.2%?", "a": "เพราะผลตอบสนองเป็นเอกซ์โพเนนเชียล ที่ \\(t = \\tau\\) ส่วนที่เหลือคือ \\(e^{-1} \\approx 0.368\\) ส่วนที่เปลี่ยนไปแล้วจึงเป็น \\(1 - 0.368 = 0.632\\) หรือ 63.2% ตัวเลขนี้ไม่ขึ้นกับค่า K หรือขนาดของอินพุต"},
+    {"q": "ระบบอันดับหนึ่งเข้าที่ภายในกี่ τ?", "a": "นิยมใช้ 4τ สำหรับเกณฑ์ 2% (ค่าแม่นยำคือ \\(\\tau\\ln 50 \\approx 3.91\\tau\\)) และ 3τ สำหรับเกณฑ์ 5% หลังจาก 5τ ระบบเปลี่ยนไปแล้ว 99.3% ในทางปฏิบัติถือว่าเข้าที่สมบูรณ์"},
+    {"q": "หาค่า τ จากกราฟที่วัดได้จริงอย่างไร?", "a": "วิธีที่ง่ายที่สุดคืออ่านเวลาที่สัญญาณไปถึง 63.2% ของการเปลี่ยนแปลงทั้งหมด หรือลากเส้นสัมผัสที่จุดเริ่มต้นไปตัดเส้นค่าสุดท้าย เวลาที่ตัดคือ τ วิธีที่แม่นที่สุดคือพล็อตลอการิทึมของส่วนที่เหลือเทียบกับเวลา จะได้เส้นตรงที่มีความชัน \\(-1/\\tau\\)"}
+  ]
+}
+-->
+<header class="app-head">
+  <div class="wrap app-wrap">
+    <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>ระบบอันดับหนึ่ง</li></ol>
+    <p class="eyebrow">// บทที่ 5 · ระบบควบคุม · แล็บโต้ตอบ</p>
+    <h1>ระบบอันดับหนึ่งและค่าคงตัวเวลา τ</h1>
+    <p class="lede">ปรับค่าคงตัวเวลา หรือค่า R, C, L ของวงจรจริง แล้วดูผลตอบสนองพร้อมกันหลายมุม ทั้งกราฟเวลา สเกลลอการิทึม อัตราการเปลี่ยนแปลง ระนาบ s และ Bode plot ชี้หรือแตะที่กราฟเพื่ออ่านค่า หรือกดเล่นเพื่อดูระบบเดินผ่านทีละช่วง τ <a href="#theory">อ่านทฤษฎีด้านล่าง ↓</a></p>
+  </div>
+</header>
+
+<section class="fos-lab" id="lab" aria-label="แล็บระบบอันดับหนึ่ง">
+  <div class="wrap app-wrap lab-grid">
+    <!-- CONTROLS -->
+    <aside class="lab-panel" aria-label="ตั้งค่าระบบ">
+      <div class="ctl">
+        <h2 class="ctl-h">สัญญาณอินพุต</h2>
+        <div class="seg" id="inSeg" role="group" aria-label="ชนิดอินพุต">
+          <button type="button" data-v="step">ขั้นบันได</button>
+          <button type="button" data-v="impulse">อิมพัลส์</button>
+          <button type="button" data-v="ramp">แรมป์</button>
+          <button type="button" data-v="sine">ไซน์</button>
+          <button type="button" data-v="natural">ปล่อยประจุ</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">ค่าคงตัวเวลา</h2>
+        <div class="seg seg-sm" id="modeSeg" role="group" aria-label="วิธีกำหนด τ">
+          <button type="button" data-v="tau">กำหนด τ</button>
+          <button type="button" data-v="rc">วงจร RC</button>
+          <button type="button" data-v="rl">วงจร RL</button>
+        </div>
+        <div data-mode="tau" class="row">
+          <label for="sTau">τ (วินาที)</label>
+          <div class="rng"><input type="range" id="sTau" min="0" max="1000" step="1"><input type="number" id="nTau" class="num" min="0.001" step="any" aria-label="ค่า τ เป็นวินาที"></div>
+        </div>
+        <div data-mode="rc" hidden>
+          <div class="row"><label for="sR">R <output id="vR"></output></label><input type="range" id="sR" min="0" max="1000" step="1"></div>
+          <div class="row"><label for="sC">C <output id="vC"></output></label><input type="range" id="sC" min="0" max="1000" step="1"></div>
+        </div>
+        <div data-mode="rl" hidden>
+          <div class="row"><label for="sRR">R <output id="vRR"></output></label><input type="range" id="sRR" min="0" max="1000" step="1"></div>
+          <div class="row"><label for="sL">L <output id="vL"></output></label><input type="range" id="sL" min="0" max="1000" step="1"></div>
+        </div>
+        <p class="tau-read mono" id="tauRead" aria-live="polite"></p>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">พารามิเตอร์</h2>
+        <div class="row"><label for="sK">อัตราขยาย K <output id="vK"></output></label><input type="range" id="sK" min="0.1" max="5" step="0.1"></div>
+        <div class="row" data-for="step impulse ramp sine"><label for="sA">ขนาดอินพุต A <output id="vA"></output></label><input type="range" id="sA" min="-5" max="5" step="0.1"></div>
+        <div class="row" data-for="sine"><label for="sW">ความถี่ ω <output id="vW"></output></label><input type="range" id="sW" min="0" max="1000" step="1"></div>
+        <div class="row"><label for="sY0">ค่าเริ่มต้น y(0) <output id="vY0"></output></label><input type="range" id="sY0" min="-5" max="5" step="0.1"></div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">เส้นช่วยวิเคราะห์</h2>
+        <div class="checks">
+          <label><input type="checkbox" id="h_tau"> เส้นแบ่งทุก τ (1τ–5τ)</label>
+          <label><input type="checkbox" id="h_tan0"> เส้นสัมผัสที่ t = 0</label>
+          <label><input type="checkbox" id="h_tanCur"> เส้นสัมผัสที่ตำแหน่งชี้</label>
+          <label><input type="checkbox" id="h_final"> ค่าสุดท้าย / เส้นกำกับ</label>
+          <label><input type="checkbox" id="h_input"> สัญญาณอินพุต</label>
+          <label><input type="checkbox" id="h_band"> แถบเข้าที่ ±2%</label>
+          <label><input type="checkbox" id="h_rise"> เวลาขึ้น 10→90%</label>
+          <label><input type="checkbox" id="h_half"> จุดครึ่งทาง 50%</label>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">แกนเวลา</h2>
+        <div class="seg seg-sm" id="axisSeg" role="group" aria-label="หน่วยแกนเวลา">
+          <button type="button" data-v="time">เวลาจริง</button>
+          <button type="button" data-v="norm">เทียบกับ τ (t/τ)</button>
+        </div>
+        <div class="row inline"><label for="nTmax">แสดงถึง (วินาที)</label><input type="number" id="nTmax" class="num" min="0.0001" step="any"><button type="button" class="btn btn-ghost btn-sm" id="fitBtn">พอดี 6τ</button></div>
+        <p class="hint">แกนเวลาจริงคงที่ไว้ เพื่อให้เห็นว่า τ ที่เปลี่ยนทำให้กราฟเร็วหรือช้าลง ส่วนแกน t/τ จะทำให้ทุก τ ซ้อนเป็นเส้นเดียวกัน</p>
+      </div>
+
+      <div class="ctl">
+        <h2 class="ctl-h">เปรียบเทียบ</h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="pinBtn">＋ เก็บเส้นนี้ไว้เทียบ (สูงสุด 2)</button>
+        <div class="pins" id="pinList"></div>
+      </div>
+
+      <div class="ctl ctl-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="shareBtn">คัดลอกลิงก์การตั้งค่านี้</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="resetBtn">ค่าเริ่มต้น</button>
+      </div>
+    </aside>
+
+    <!-- VIEWS -->
+    <div class="lab-main">
+      <div class="eqbar" aria-label="สมการของระบบตามค่าที่ตั้ง">
+        <div><span class="mono">ฟังก์ชันถ่ายโอน</span><div id="eqG"></div></div>
+        <div><span class="mono">อินพุต</span><div id="eqU"></div></div>
+        <div class="eq-wide"><span class="mono">ผลตอบสนอง</span><div id="eqY"></div></div>
+      </div>
+
+      <article class="vcard vmain">
+        <header class="vhead">
+          <div><h3>ผลตอบสนองทางเวลา y(t)</h3><div class="legend" id="legend"></div></div>
+          <button type="button" class="btn btn-primary btn-sm" id="playBtn">▶ เล่น 0 → 5τ</button>
+        </header>
+        <div id="chartMain" class="chart"></div>
+        <p class="vnote">ชี้หรือแตะที่กราฟ (หรือกดปุ่มลูกศรเมื่อกราฟถูกเลือก) เพื่ออ่านค่า เส้นสัมผัส ณ ตำแหน่งที่ชี้จะไปถึงค่าสุดท้ายหลังจากนั้น τ เสมอ</p>
+      </article>
+
+      <div class="miles" id="miles" aria-label="ค่าที่ทุกช่วง τ"></div>
+      <p class="miles-note mono">% = สัดส่วนของการเปลี่ยนแปลงที่เกิดขึ้นแล้ว (ส่วนชั่วครู่ที่หายไป)</p>
+
+      <div class="stats" id="stats" aria-label="ค่าสำคัญของระบบ"></div>
+
+      <div class="vgrid">
+        <article class="vcard">
+          <header class="vhead"><div><h3>โครงสร้างเอกซ์โพเนนเชียล</h3><p>ส่วนชั่วครู่บนสเกลลอการิทึมเป็นเส้นตรง ทุก ๆ τ ลดลงเหลือ 1/e</p></div></header>
+          <div id="chartLog" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>อัตราการเปลี่ยนแปลง dy/dt</h3><p>จากสมการ dy/dt = (K·u − y)/τ ชันที่สุดตอนเริ่ม แล้วลดลงแบบเอกซ์โพเนนเชียลเช่นกัน</p></div></header>
+          <div id="chartRate" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>ตำแหน่งขั้วบนระนาบ s</h3><p>ระบบมีขั้วเดียวที่ s = −1/τ ยิ่ง τ เล็ก ขั้วยิ่งอยู่ไกลไปทางซ้าย</p></div></header>
+          <div id="chartS" class="chart"></div>
+        </article>
+        <article class="vcard">
+          <header class="vhead"><div><h3>ผลตอบสนองเชิงความถี่ (Bode)</h3><p>ความถี่มุม ωc = 1/τ ขนาดลดลง 3 dB และเฟสล้าหลัง 45° พอดี</p></div></header>
+          <div id="chartBode" class="chart"></div>
+        </article>
+      </div>
+
+      <details class="vcard table-view">
+        <summary>ดูค่าเป็นตาราง</summary>
+        <div class="table-wrap">
+          <table id="tbl">
+            <thead><tr><th>t/τ</th><th>เวลา t</th><th>y(t)</th><th>ส่วนชั่วครู่ที่เหลือ</th><th>dy/dt</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- THEORY -->
+<div class="wrap lesson-wrap lesson-layout" id="theory">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <p class="eyebrow">// ทฤษฎีประกอบแล็บ</p>
+      <h2 class="lesson-title" style="margin:0">ระบบอันดับหนึ่งทำงานอย่างไร</h2>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ระบบอันดับหนึ่ง: \(\tau\,\dfrac{dy}{dt} + y = K\,u(t)\) หรือ \(G(s) = \dfrac{K}{\tau s + 1}\)</li>
+          <li>ทุก ๆ τ ส่วนที่ยังไม่เปลี่ยนจะเหลือ \(1/e \approx 36.8\%\) จึงได้ 63.2%, 86.5%, 95.0%, 98.2%, 99.3%</li>
+          <li>เส้นสัมผัสจากจุดใดก็ตาม ไปถึงค่าสุดท้ายหลังจากนั้น τ เสมอ</li>
+          <li>วงจร RC: \(\tau = RC\) · วงจร RL: \(\tau = L/R\) · ความถี่มุม \(\omega_c = 1/\tau\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <h2 id="equation">สมการและฟังก์ชันถ่ายโอน</h2>
+    <p>ระบบที่มีตัวเก็บพลังงานเพียงตัวเดียว เช่น ตัวเก็บประจุหนึ่งตัวในวงจร RC หรือตัวเหนี่ยวนำหนึ่งตัวในวงจร RL อธิบายได้ด้วยสมการเชิงอนุพันธ์อันดับหนึ่ง</p>
+    <figure class="formula">
+      \[ \tau\,\frac{dy}{dt} + y = K\,u(t) \quad\xrightarrow{\ \mathcal{L}\ }\quad G(s) = \frac{Y(s)}{U(s)} = \frac{K}{\tau s + 1} \]
+      <figcaption>\(K\) คืออัตราขยายสถานะคงตัว และ \(\tau\) คือค่าคงตัวเวลา มีหน่วยเป็นวินาที</figcaption>
+    </figure>
+    <p>เมื่อป้อนอินพุตขั้นบันไดขนาด \(A\) และ \(y(0) = 0\) จะได้ \(Y(s) = \dfrac{KA}{s(\tau s + 1)}\) แยกเศษส่วนย่อยแล้วแปลงกลับ (ดูวิธีใน <a href="/learn/laplace-transform/#rc-circuit">บทการแปลงลาปลาซ</a>)</p>
+    <figure class="formula">
+      \[ y(t) = KA\left(1 - e^{-t/\tau}\right) \qquad\text{และในกรณีทั่วไป}\qquad y(t) = y_\infty + \big(y(0) - y_\infty\big)\,e^{-t/\tau} \]
+      <figcaption>ทุกผลตอบสนองของระบบอันดับหนึ่ง = ส่วนคงตัว + ส่วนชั่วครู่ที่ลดลงแบบ \(e^{-t/\tau}\)</figcaption>
+    </figure>
+
+    <h2 id="tau">ความหมายของค่าคงตัวเวลา τ</h2>
+    <p>แทน \(t = k\tau\) ลงในส่วนชั่วครู่ \(e^{-t/\tau}\) จะได้ \(e^{-k}\) ซึ่งไม่ขึ้นกับ K, A หรือหน่วยใด ๆ ตัวเลขชุดนี้จึงใช้ได้กับระบบอันดับหนึ่งทุกระบบ</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>เวลา</th><th>ส่วนที่เหลือ \(e^{-k}\)</th><th>เปลี่ยนไปแล้ว</th><th>ความหมายในทางปฏิบัติ</th></tr></thead>
+        <tbody>
+          <tr><td>1τ</td><td>36.8%</td><td><b>63.2%</b></td><td>นิยามของ τ</td></tr>
+          <tr><td>2τ</td><td>13.5%</td><td>86.5%</td><td></td></tr>
+          <tr><td>3τ</td><td>5.0%</td><td>95.0%</td><td>เข้าที่ตามเกณฑ์ 5%</td></tr>
+          <tr><td>4τ</td><td>1.8%</td><td>98.2%</td><td>เข้าที่ตามเกณฑ์ 2%</td></tr>
+          <tr><td>5τ</td><td>0.7%</td><td>99.3%</td><td>ถือว่าเข้าที่สมบูรณ์</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>ในแล็บด้านบน การ์ด 1τ ถึง 5τ ใต้กราฟแสดงค่าชุดนี้พร้อมเวลาจริงตามค่า τ ที่ตั้ง ลองกด "เล่น" แล้วดูการ์ดสว่างขึ้นทีละใบ</p>
+
+    <h2 id="helpers">เส้นช่วยวิเคราะห์โครงสร้างเอกซ์โพเนนเชียล</h2>
+    <h3>1. เส้นสัมผัส: ถึงค่าสุดท้ายหลังจากนั้น τ เสมอ</h3>
+    <p>จัดสมการใหม่ให้อยู่ในรูปอัตราการเปลี่ยนแปลง (กรณีอินพุตคงที่ ค่าสุดท้ายคือ \(y_\infty = KA\))</p>
+    \[ \frac{dy}{dt} = \frac{y_\infty - y}{\tau} \]
+    <p>ถ้าลากเส้นสัมผัสจากจุด \((t_0, y(t_0))\) ด้วยความชันนี้ เส้นจะไปถึงระดับ \(y_\infty\) เมื่อ \(\Delta t \cdot \dfrac{y_\infty - y}{\tau} = y_\infty - y\) นั่นคือ \(\Delta t = \tau\) พอดี ไม่ว่าเริ่มจากจุดไหนของกราฟ เปิดตัวเลือก "เส้นสัมผัสที่ตำแหน่งชี้" แล้วเลื่อนเมาส์ไปตามกราฟเพื่อดูสมบัตินี้</p>
+    <h3>2. สเกลลอการิทึม: เอกซ์โพเนนเชียลกลายเป็นเส้นตรง</h3>
+    \[ \ln\lvert y_\infty - y(t)\rvert = \ln\lvert y_\infty - y(0)\rvert - \frac{t}{\tau} \]
+    <p>พล็อตส่วนที่เหลือบนแกนลอการิทึมจะได้เส้นตรงที่มีความชัน \(-1/\tau\) ถ้าข้อมูลจากการวัดจริงไม่เป็นเส้นตรงบนกราฟนี้ แปลว่าระบบไม่ใช่อันดับหนึ่งล้วน เช่น มีตัวเก็บพลังงานมากกว่าหนึ่งตัว</p>
+    <h3>3. เวลาที่ใช้บ่อย</h3>
+    <ul>
+      <li>ครึ่งทาง 50%: \(t_{50} = \tau\ln 2 \approx 0.693\tau\)</li>
+      <li>เวลาขึ้น 10% → 90%: \(t_r = \tau\ln 9 \approx 2.20\tau\)</li>
+      <li>เวลาเข้าที่ 2%: \(t_s = \tau\ln 50 \approx 3.91\tau\) (นิยมปัดเป็น 4τ) และ 5%: \(\tau\ln 20 \approx 3.00\tau\)</li>
+    </ul>
+
+    <h2 id="measure">หาค่า τ จากข้อมูลที่วัดได้</h2>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 1 · วัดจากออสซิลโลสโคป</span>
+      <h3>ป้อนแรงดันขั้นบันได 5 V ให้วงจร RC ที่ไม่มีประจุ วัดได้ว่าที่ \(t = 10\) ms แรงดันตัวเก็บประจุเท่ากับ 2 V จงหา τ</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        <p>ส่วนที่เหลือคือ \(\dfrac{5 - 2}{5} = 0.6\) และต้องเท่ากับ \(e^{-t/\tau}\)</p>
+        \[ e^{-10\,\text{ms}/\tau} = 0.6 \quad\Rightarrow\quad \tau = \frac{10\ \text{ms}}{\ln(1/0.6)} = \frac{10\ \text{ms}}{0.511} \approx 19.6\ \text{ms} \]
+        <p class="answer">\(\tau \approx 19.6\) ms วิธีนี้ใช้จุดวัดเพียงจุดเดียว ถ้ามีหลายจุด ให้ใช้ความชันบนกราฟลอการิทึมจะลดผลของสัญญาณรบกวน</p>
+      </details>
+    </div>
+
+    <h2 id="circuits">วงจร RC และ RL</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>วงจร</th><th>ค่าคงตัวเวลา</th><th>ตัวแปรที่ต่อเนื่อง</th></tr></thead>
+        <tbody>
+          <tr><td>RC อนุกรม</td><td>\(\tau = RC\)</td><td>แรงดันตัวเก็บประจุ \(v_C(t)\)</td></tr>
+          <tr><td>RL อนุกรม</td><td>\(\tau = L/R\)</td><td>กระแสตัวเหนี่ยวนำ \(i_L(t)\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="example">
+      <span class="mono">ตัวอย่างที่ 2 · วงจร RL</span>
+      <h3>ตัวเหนี่ยวนำ 50 mH ต่ออนุกรมกับตัวต้านทาน 10 Ω ป้อนแรงดัน 12 V จงหา τ และกระแสที่ \(t = \tau\)</h3>
+      <details>
+        <summary>ดูวิธีทำ</summary>
+        \[ \tau = \frac{L}{R} = \frac{50\times10^{-3}}{10} = 5\ \text{ms} \qquad I_\infty = \frac{V}{R} = \frac{12}{10} = 1.2\ \text{A} \]
+        \[ i(\tau) = 1.2\left(1 - e^{-1}\right) \approx 0.759\ \text{A} \]
+        <p class="answer">\(\tau = 5\) ms กระแสถึง 0.759 A (63.2% ของ 1.2 A) ใน 5 ms และเข้าที่ 2% ภายในประมาณ 20 ms ลองตั้งค่า "วงจร RL" ในแล็บด้วย R = 10 Ω และ L = 50 mH</p>
+      </details>
+    </div>
+
+    <h2 id="frequency">มุมมองเชิงความถี่</h2>
+    <p>แทน \(s = j\omega\) ลงในฟังก์ชันถ่ายโอน จะได้ขนาดและเฟส</p>
+    \[ \lvert G(j\omega)\rvert = \frac{K}{\sqrt{1 + \omega^2\tau^2}} \qquad \angle G(j\omega) = -\tan^{-1}(\omega\tau) \]
+    <p>ที่ความถี่มุม \(\omega_c = 1/\tau\) ขนาดเหลือ \(K/\sqrt2\) (ลดลง 3 dB) และเฟสล้าหลัง 45° เหนือความถี่นี้ขนาดลดลง 20 dB ต่อทศวรรษ ระบบอันดับหนึ่งจึงเป็นวงจรกรองความถี่ต่ำผ่าน (low-pass filter) โดยธรรมชาติ</p>
+    <div class="note"><b>เวลาและความถี่ผูกกันด้วย τ ตัวเดียว:</b> เวลาขึ้น \(t_r = 2.2\tau\) และแบนด์วิดท์ \(f_c = \dfrac{1}{2\pi\tau}\) คูณกันได้ \(t_r f_c \approx 0.35\) เสมอ ระบบที่ตอบสนองเร็วจึงต้องมีแบนด์วิดท์กว้าง ลองเลือกอินพุตแบบไซน์ในแล็บ แล้วดูจุด "ω อินพุต" บน Bode plot เทียบกับแอมพลิจูดที่ได้ในกราฟเวลา</div>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
