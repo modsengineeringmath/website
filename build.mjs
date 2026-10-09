@@ -41,6 +41,13 @@ const ASSET_V = crypto.createHash("sha1").update(
 // ---------------------------------------------------------------------------
 export const TOPICS = [
   {
+    slug: "trigonometry",
+    title: "สูตรตรีโกณมิติและตารางค่า",
+    en: "Trigonometric Identities & Table",
+    sym: "θ",
+    summary: "วงกลมหนึ่งหน่วยแบบโต้ตอบ สูตรครบทุกหมวดพร้อมชื่ออังกฤษ และตาราง sin cos tan ทุก 0.05° ตั้งแต่ 0° ถึง 90° ทั้งองศาและเรเดียน",
+  },
+  {
     slug: "calculus-basics",
     title: "แคลคูลัสเบื้องต้น",
     en: "Basic Calculus",
@@ -199,6 +206,30 @@ function videoFacade(t) {
 </section>`;
 }
 
+// Trig table: sin, cos, tan every 0.05° from 0° to 90° (1,801 rows), grouped one <tbody> per degree
+const TRIG_SPECIAL = { 0: "0", 15: "π/12", 18: "π/10", 22.5: "π/8", 30: "π/6", 36: "π/5", 45: "π/4", 54: "3π/10", 60: "π/3", 67.5: "3π/8", 72: "2π/5", 75: "5π/12", 90: "π/2" };
+export const trigDegId = (i) => "deg-" + (i % 20 === 0 ? String(i / 20) : (i / 20).toFixed(2));
+export const fmtTan = (v) => { const a = Math.abs(v); return v.toFixed(a < 10 ? 6 : a < 100 ? 5 : a < 1000 ? 4 : 3); };
+function trigTable() {
+  let rows = "";
+  for (let d = 0; d <= 90; d++) {
+    rows += "<tbody>";
+    for (let k = 0; k < 20; k++) {
+      const i = d * 20 + k;
+      if (i > 1800) break;
+      const deg = i / 20, rad = (i * Math.PI) / 3600;
+      const sp = TRIG_SPECIAL[deg];
+      const tan = i === 1800 ? '<td class="undef">∞<small>ไม่นิยาม</small></td>' : `<td>${fmtTan(Math.tan(rad))}</td>`;
+      rows += `<tr id="${trigDegId(i)}"${sp ? ' class="sp"' : ""}><th scope="row">${deg.toFixed(2)}°</th><td>${rad.toFixed(6)}${sp ? `<small>${sp}</small>` : ""}</td><td>${Math.sin(rad).toFixed(6)}</td><td>${(i === 1800 ? 0 : Math.cos(rad)).toFixed(6)}</td>${tan}</tr>`;
+    }
+    rows += "</tbody>\n";
+  }
+  return `<table class="tt" id="trigTable">
+<caption>ค่า sin, cos และ tan ของมุม 0° ถึง 90° ทุก 0.05° (1,801 แถว) ค่าปัดเป็นทศนิยม 6 ตำแหน่ง tan มีเลขนัยสำคัญ 7 หลัก</caption>
+<thead><tr><th scope="col">องศา<small>θ (°)</small></th><th scope="col">เรเดียน<small>θ (rad)</small></th><th scope="col">sin θ</th><th scope="col">cos θ</th><th scope="col">tan θ</th></tr></thead>
+${rows}</table>`;
+}
+
 function updatesData() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, "data/updates.json"), "utf8"));
 }
@@ -286,6 +317,7 @@ for (const file of walk(pagesDir)) {
 
   const fragments = {
     "<!--topic-cards-->": () => topicCards(),
+    "<!--trig-table-->": () => trigTable(),
     "<!--faq-->": () => faqHtml(meta.faq),
     "<!--video-->": () => videoFacade(topic),
     "<!--pager-->": () => (topic ? pager(topic.slug) : ""),
@@ -360,6 +392,7 @@ Thai-language engineering mathematics lessons by Teerawut Savangboon (อาจ�
 - First-order system lab (interactive time-constant simulator: step/impulse/ramp/sine, RC/RL, log view, s-plane, Bode): ${SITE}/learn/first-order-system/
 - Second-order system lab (interactive ζ and ωn explorer: draggable poles, envelope, %OS, Bode, phase portrait, RLC mode): ${SITE}/learn/second-order-system/
 - Signals lab (type any signal x(t) or x[n]; derivative, integral, even/odd, energy, spectrum, time shift/scale/reversal, add/multiply/convolution with flip-and-slide): ${SITE}/learn/signals/
+- Trigonometry reference (interactive unit circle, every identity with English names, sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians): ${SITE}/learn/trigonometry/
 - Lesson editor (online tool: write Markdown + LaTeX lessons, export .md / HTML / PDF): ${SITE}/tools/lesson-editor/
 
 ## Lessons (reading order)
