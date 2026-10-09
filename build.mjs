@@ -242,7 +242,7 @@ function nowHtml(data) {
 
 function feedHtml(data) {
   return [...(data.updates || [])]
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .sort((a, b) => b.date.localeCompare(a.date))
     .map(
       (u) => `<li class="post" data-tag="${esc(u.tag || "")}">
   <div class="post-meta">${u.tag ? `<span class="tag">${esc(u.tag)}</span>` : ""}<time datetime="${esc(u.date)}">${thaiDate(u.date)}</time></div>
@@ -255,7 +255,7 @@ function feedHtml(data) {
 // ---------------------------------------------------------------------------
 // Structured data
 // ---------------------------------------------------------------------------
-function lessonSchema(meta, url, topic) {
+function lessonSchema(meta, url, topic, ogImageUrl) {
   const graph = [
     {
       "@type": "Article",
@@ -271,7 +271,9 @@ function lessonSchema(meta, url, topic) {
       publisher: { "@id": PERSON_ID },
       about: meta.about || [topic.en],
       isPartOf: { "@id": `${SITE}/learn/#library` },
-      ...(topic.playlist ? { video: { "@type": "VideoObject", name: topic.en + " — เพลย์ลิสต์", embedUrl: `https://www.youtube.com/embed/videoseries?list=${topic.playlist}` } } : {}),
+      image: [ogImageUrl],
+      educationalLevel: "Undergraduate",
+      ...(topic.playlist ? { citation: `https://www.youtube.com/playlist?list=${topic.playlist}` } : {}),
     },
     {
       "@type": "BreadcrumbList",
@@ -296,12 +298,62 @@ function lessonSchema(meta, url, topic) {
 }
 
 // ---------------------------------------------------------------------------
+// Share bar (lesson pages), plain-text export for llms-full.txt
+// ---------------------------------------------------------------------------
+function shareHtml(url, title) {
+  const u = encodeURIComponent(url), t = encodeURIComponent(title);
+  return `<div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=${u}" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=${u}&amp;text=${t}" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="${esc(url)}" data-share-title="${esc(title)}">คัดลอกลิงก์</button>
+</div>`;
+}
+
+// remove one balanced element that starts at the first match of `open` (e.g. /<div class="trig-lab"/)
+function removeBlock(html, open) {
+  const m = open.exec(html);
+  if (!m) return html;
+  const tag = /^<(\w+)/.exec(m[0])[1];
+  const re = new RegExp(`<${tag}\\b|</${tag}>`, "g");
+  re.lastIndex = m.index;
+  let depth = 0, x;
+  while ((x = re.exec(html))) {
+    depth += x[0][1] === "/" ? -1 : 1;
+    if (depth === 0) return html.slice(0, m.index) + html.slice(re.lastIndex);
+  }
+  return html;
+}
+
+function htmlToText(html) {
+  let h = html;
+  const theory = h.indexOf('id="theory"');
+  if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/])
+    for (let i = 0; i < 3; i++) h = removeBlock(h, re);
+  h = h
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<(script|style|svg|button|select|textarea|aside)\b[\s\S]*?<\/\1>/g, "")
+    .replace(/<input[^>]*>/g, "")
+    .replace(/\\\(([\s\S]+?)\\\)/g, (_, t) => "$" + t.trim() + "$")
+    .replace(/\\\[([\s\S]+?)\\\]/g, (_, t) => "\n$$" + t.trim() + "$$\n")
+    .replace(/<h1[^>]*>/g, "\n# ").replace(/<h2[^>]*>/g, "\n\n## ").replace(/<h3[^>]*>/g, "\n\n### ")
+    .replace(/<li[^>]*>/g, "\n- ").replace(/<tr[^>]*>/g, "\n| ").replace(/<\/t[dh]>/g, " | ")
+    .replace(/<br\s*\/?>/g, "\n").replace(/<summary[^>]*>/g, "\n").replace(/<\/(p|div|figure|details|summary|h\d|ul|ol|table|section|header|figcaption)>/g, "\n")
+    .replace(/<[^>]+>/g, "");
+  return decode(h).replace(/&nbsp;/g, " ").replace(/&#39;/g, "'").replace(/[ \t]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+// ---------------------------------------------------------------------------
 // Build
 // ---------------------------------------------------------------------------
 const layout = fs.readFileSync(path.join(ROOT, "src/layout.html"), "utf8");
 const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
 const updates = updatesData();
+const fullText = []; // for llms-full.txt
+const ogManifest = []; // for scripts/og.py (social share images)
 
 for (const file of walk(pagesDir)) {
   const rel = path.relative(pagesDir, file);
@@ -314,24 +366,40 @@ for (const file of walk(pagesDir)) {
   const url = SITE + route;
   const topic = meta.lesson ? TOPICS.find((t) => t.slug === meta.lesson) : null;
   if (meta.lesson && !topic) throw new Error(`Unknown lesson slug "${meta.lesson}" in ${rel}`);
+  const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
+  const ogFile = `/images/og/${key}.jpg`;
+  const ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
+  if (!meta.noindex) {
+    const og = meta.og || {};
+    const n = topic ? TOPICS.indexOf(topic) + 1 : 0;
+    ogManifest.push({
+      key,
+      title: og.title || (topic ? topic.title : meta.h1 || meta.title),
+      sub: og.sub || (topic ? topic.summary : meta.description),
+      eyebrow: og.eyebrow || (topic ? `บทที่ ${n} · ${topic.en}` : "Mod's Engineering Mathematics"),
+      sym: og.sym || (topic ? topic.sym : "∿"),
+    });
+  }
 
   const fragments = {
     "<!--topic-cards-->": () => topicCards(),
     "<!--trig-table-->": () => trigTable(),
     "<!--faq-->": () => faqHtml(meta.faq),
     "<!--video-->": () => videoFacade(topic),
-    "<!--pager-->": () => (topic ? pager(topic.slug) : ""),
+    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title) + pager(topic.slug) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
     "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
+  if (!meta.noindex && !meta.noLlms)
+    fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text: htmlToText(body), faq: meta.faq || [] });
   const tocHtml = toc(body);
   body = body.split("<!--toc-->").join(tocHtml);
   body = renderMath(body, rel);
 
   let graph = [...(meta.jsonld || [])];
-  if (topic) graph = graph.concat(lessonSchema(meta, url, topic));
+  if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage));
   const jsonld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`
     : "";
@@ -350,7 +418,8 @@ for (const file of walk(pagesDir)) {
     ogTitle: esc(meta.ogTitle || meta.title),
     ogDescription: esc(meta.ogDescription || meta.description),
     ogType: topic ? "article" : meta.ogType || "website",
-    ogImage: SITE + (meta.ogImage || "/images/cover.jpg"),
+    ogImage: SITE + ogImage,
+    ogImageAlt: esc(meta.ogTitle || meta.h1 || meta.title),
     headExtra,
     jsonld,
     content: body,
@@ -362,7 +431,7 @@ for (const file of walk(pagesDir)) {
   // Mark the active nav item
   out = out.replace(/data-nav="(\w+)"/g, (_, k) => (k === meta.nav ? 'aria-current="page"' : ""));
 
-  const outPath = route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
+  const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
   if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic ? "0.8" : "0.9" });
@@ -378,36 +447,99 @@ fs.writeFileSync(
     "\n</urlset>\n"
 );
 
-// llms.txt
+// llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
+const LABS = [
+  ["Trigonometry formulas & table", "trigonometry", "interactive unit circle; 91 identities with English and Thai names; sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians (1,801 rows) with angle and inverse lookup"],
+  ["First-order system lab", "first-order-system", "time-constant simulator: step/impulse/ramp/sine input, RC and RL circuits, log view, s-plane, Bode plot"],
+  ["Second-order system lab", "second-order-system", "damping ratio ζ and natural frequency ωn explorer: draggable poles, envelope, %OS, settling time, Bode, RLC mode"],
+  ["Signals lab", "signals", "type any x(t) or x[n]; derivative, integral, even/odd parts, energy/power, spectrum, time shift/scale/reversal, convolution with flip-and-slide"],
+];
 fs.writeFileSync(
   path.join(ROOT, "llms.txt"),
   `# Mod's Engineering Mathematics
 
-Thai-language engineering mathematics lessons by Teerawut Savangboon (อาจารย์มด), lecturer in Electrical Engineering, Faculty of Science and Technology, Dhonburi Rajabhat University, Samut Prakan campus.
+> Free Thai-language engineering mathematics lessons, interactive labs and reference tables for electrical engineering students, written by Teerawut Savangboon (ธีรวุฒิ แสวงบุญ, "อาจารย์มด", Ajarn Mod), lecturer in Electrical Engineering, Faculty of Science and Technology, Dhonburi Rajabhat University, Samut Prakan campus, Thailand.
 
-## Pages
-- Home: ${SITE}/
-- About / profile (bio, projects, current status): ${SITE}/about/
-- Knowledge library (hub): ${SITE}/learn/
-- First-order system lab (interactive time-constant simulator: step/impulse/ramp/sine, RC/RL, log view, s-plane, Bode): ${SITE}/learn/first-order-system/
-- Second-order system lab (interactive ζ and ωn explorer: draggable poles, envelope, %OS, Bode, phase portrait, RLC mode): ${SITE}/learn/second-order-system/
-- Signals lab (type any signal x(t) or x[n]; derivative, integral, even/odd, energy, spectrum, time shift/scale/reversal, add/multiply/convolution with flip-and-slide): ${SITE}/learn/signals/
-- Trigonometry reference (interactive unit circle, every identity with English names, sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians): ${SITE}/learn/trigonometry/
-- Lesson editor (online tool: write Markdown + LaTeX lessons, export .md / HTML / PDF): ${SITE}/tools/lesson-editor/
+The site teaches mathematics the way an electrical engineer uses it: every lesson ends in a real circuit or system (RC/RL circuits, mesh analysis, transfer functions, control systems, power electronics). Content is in Thai with English technical terms. All pages are free to read, link to and cite. Math is written in LaTeX notation in the full-text file.
+
+When citing, please name "Mod's Engineering Mathematics (อาจารย์มด)" and link the page URL.
 
 ## Lessons (reading order)
-${TOPICS.map((t, i) => `${i + 1}. ${t.en} (${t.title}) — ${t.summary}: ${SITE}/learn/${t.slug}/`).join("\n")}
+${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}`).join("\n")}
 
-## Video playlists
-- Matrix and Determinant: https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO
-- Laplace Transforms: https://www.youtube.com/playlist?list=PLAJhR5azwWpLgWalcHsCEE8q_bPJv0Eaa
-- Feedback Control: https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka
-- Power Electronics: Buck Converter: https://www.youtube.com/playlist?list=PLAJhR5azwWpJEprWclikULegqCgddv0PF
+## Interactive labs and references
+${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug}/): ${d}`).join("\n")}
+- [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
 
-Language: Thai
-YouTube: https://www.youtube.com/@modsengineeringmath
-Facebook: https://www.facebook.com/modsengineeringmath
-University profile: https://sci.dru.ac.th/electrical-engineering/teerawutsavangboon.html
+## About
+- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, feedback control and buck converters
+- [About อาจารย์มด](${SITE}/about/): profile, teaching, current projects and status updates
+- [Knowledge library](${SITE}/learn/): index of all lessons, books in progress and video series
+- [Updates feed (RSS)](${SITE}/feed.xml)
+
+## Video playlists (YouTube, Thai)
+- [Matrix and Determinant](https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO)
+- [Laplace Transforms](https://www.youtube.com/playlist?list=PLAJhR5azwWpLgWalcHsCEE8q_bPJv0Eaa)
+- [Feedback Control](https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka)
+- [Power Electronics: Buck Converter](https://www.youtube.com/playlist?list=PLAJhR5azwWpJEprWclikULegqCgddv0PF)
+
+## Optional
+- [Full text of every lesson](${SITE}/llms-full.txt): all lesson and lab theory text in one file, math as LaTeX
+- [YouTube channel](https://www.youtube.com/@modsengineeringmath)
+- [Facebook page](https://www.facebook.com/modsengineeringmath)
+- [University profile](https://sci.dru.ac.th/electrical-engineering/teerawutsavangboon.html)
 `
 );
-console.log("built sitemap.xml, llms.txt");
+
+// llms-full.txt — the readable text of every indexable page
+const order = (u) => (u === SITE + "/" ? 0 : u.includes("/learn/") && u !== SITE + "/learn/" ? 2 : 1);
+fullText.sort((a, b) => order(a.url) - order(b.url) || a.url.localeCompare(b.url));
+fs.writeFileSync(
+  path.join(ROOT, "llms-full.txt"),
+  `# Mod's Engineering Mathematics — full text\n\n> Thai engineering mathematics lessons by อาจารย์มด (Teerawut Savangboon). Source: ${SITE}/ · Math in LaTeX ($...$ inline, $$...$$ display). Generated ${TODAY}.\n\n` +
+    fullText
+      .map((p) => {
+        let t = p.text.replace(/^#[^#].*\n?/, "");
+        if (p.url.endsWith("/trigonometry/")) t += `\n\n(The full 1,801-row sin/cos/tan table, 0°–90° every 0.05°, is on the page: ${p.url}#table — it can also be downloaded there as CSV.)`;
+        const faq = p.faq.length ? "\n\n## FAQ\n" + p.faq.map((f) => `\n**${f.q}**\n${f.a.replace(/\\\(([\s\S]+?)\\\)/g, (_, x) => "$" + x.trim() + "$").replace(/<[^>]+>/g, "")}`).join("\n") : "";
+        return `---\n\n# ${p.title}\n\nURL: ${p.url}\n${p.updated ? `Updated: ${p.updated}\n` : ""}Summary: ${p.description}\n\n${t}${faq}\n`;
+      })
+      .join("\n")
+);
+
+// feed.xml (RSS 2.0) from data/updates.json
+const rfc822 = (d) => new Date(d + "T09:00:00+07:00").toUTCString();
+const xmlEsc = (x) => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const items = [...updates.updates].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30);
+fs.writeFileSync(
+  path.join(ROOT, "feed.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Mod's Engineering Mathematics — อัปเดตล่าสุด</title>
+  <link>${SITE}/</link>
+  <description>บทเรียน แล็บโต้ตอบ และความเคลื่อนไหวล่าสุดจากอาจารย์มด คณิตศาสตร์วิศวกรรมภาษาไทย</description>
+  <language>th</language>
+  <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+  <atom:link href="${SITE}/feed.xml" rel="self" type="application/rss+xml"/>
+${items
+  .map((u) => {
+    const link = u.link ? (u.link.startsWith("http") ? u.link : SITE + u.link) : SITE + "/about/#feed";
+    const title = u.text.length > 70 ? u.text.slice(0, 68).replace(/\s+\S*$/, "") + "…" : u.text;
+    return `  <item>
+    <title>${xmlEsc((u.tag ? "[" + u.tag + "] " : "") + title)}</title>
+    <link>${xmlEsc(link)}</link>
+    <guid isPermaLink="false">${xmlEsc(SITE + "/#update-" + u.date + "-" + crypto.createHash("sha1").update(u.text).digest("hex").slice(0, 8))}</guid>
+    <pubDate>${rfc822(u.date)}</pubDate>
+    <description>${xmlEsc(u.text)}</description>
+  </item>`;
+  })
+  .join("\n")}
+</channel>
+</rss>
+`
+);
+
+// social-card manifest for scripts/og.py
+fs.writeFileSync(path.join(ROOT, "src/og-manifest.json"), JSON.stringify(ogManifest, null, 2) + "\n");
+console.log("built sitemap.xml, llms.txt, llms-full.txt, feed.xml");

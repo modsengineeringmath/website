@@ -30,7 +30,7 @@
       }).join("");
     }
     if (!feed) return;
-    var items = (data.updates || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var items = (data.updates || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
     feed.innerHTML = items.map(function (u) {
       var rel = ago(u.date);
       return '<li class="post" data-tag="' + esc(u.tag) + '"><div class="post-meta">' +

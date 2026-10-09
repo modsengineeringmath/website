@@ -75,6 +75,23 @@
     document.body.removeChild(t);
   }
 
+  // share buttons: native share sheet on phones, otherwise copy the link
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-share-url]");
+    if (!b) return;
+    var url = b.getAttribute("data-share-url"), title = b.getAttribute("data-share-title") || document.title;
+    var done = function () {
+      var old = b.textContent;
+      b.textContent = "คัดลอกลิงก์แล้ว ✓";
+      setTimeout(function () { b.textContent = old; }, 1800);
+    };
+    if (navigator.share && matchMedia("(pointer:coarse)").matches) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () { fallback(url); done(); });
+    } else { fallback(url); done(); }
+  });
+
   // print buttons
   document.addEventListener("click", function (e) {
     if (e.target.closest("[data-print]")) window.print();

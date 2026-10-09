@@ -20,3 +20,9 @@ Run the build occasionally so the pre-rendered copy (for search engines) matches
 3. `npm install` (first time) then `node build.mjs`, commit everything, push.
 
 The new page appears in the library, on the home page, in the prev/next links, sitemap.xml and llms.txt automatically.
+
+## SEO and AI visibility (added 2026-10-09)
+- `node build.mjs` also writes `llms.txt`, `llms-full.txt` (plain text of every page for AI assistants), `feed.xml` (RSS from `data/updates.json`), `sitemap.xml` and `404.html`.
+- Social share images: `python3 scripts/og.py && node build.mjs` renders `images/og/<page>.jpg` (1200×630) from `src/og-manifest.json`. Run it after adding a page or changing a title. A page can set `"og": {"title","sub","eyebrow","sym"}` in its meta block.
+- `robots.txt` explicitly allows AI crawlers; `_headers` sets UTF-8 for text files and `noindex` on source files.
+- Lesson pages get a share bar (LINE, Facebook, X, copy link) automatically.
