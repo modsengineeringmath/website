@@ -51,8 +51,15 @@ export const TOPICS = [
     slug: "calculus-basics",
     title: "แคลคูลัสเบื้องต้น",
     en: "Basic Calculus",
-    sym: "∫",
+    sym: "f′",
     summary: "ลิมิต อนุพันธ์ และปริพันธ์ พร้อมตัวอย่างกระแสในตัวเก็บประจุและค่า RMS",
+  },
+  {
+    slug: "integral-calculus",
+    title: "อินทิกรัล: สูตรและวิธีทำ",
+    en: "Integral Calculus",
+    sym: "∫",
+    summary: "สูตรอินทิเกรตพร้อมชื่อสากล คุณสมบัติ สูตรสำเร็จ และวิธีทำทีละขั้น: เปลี่ยนตัวแปร u หารยาว เศษส่วนย่อย ทีละส่วน และอินทิกรัลจำกัดเขต",
   },
   {
     slug: "vector-algebra",
@@ -122,10 +129,20 @@ function routeFor(rel) {
   return "/" + noExt + "/";
 }
 
+// Lecture-note markup inside math: \hlF{} formula used, \hlP{} property used, \hlU{} the u-substitution,
+// \hlC{} constant of integration, \rc{} red strike-through (cancel), \carry{} small red value written above a cancel
+const KATEX_MACROS = {
+  "\\hlF": "\\htmlClass{hl-f}{#1}",
+  "\\hlP": "\\htmlClass{hl-p}{#1}",
+  "\\hlU": "\\htmlClass{hl-u}{#1}",
+  "\\hlC": "\\htmlClass{hl-c}{#1}",
+  "\\rc": "\\htmlClass{rc}{\\cancel{#1}}",
+  "\\carry": "\\overset{\\htmlClass{carry}{#1}}{\\htmlClass{rc}{\\cancel{#2}}}",
+};
 function renderMath(html, file) {
   const render = (tex, displayMode) => {
     try {
-      return katex.renderToString(decode(tex.trim()), { displayMode, throwOnError: true, strict: "ignore" });
+      return katex.renderToString(decode(tex.trim()), { displayMode, throwOnError: true, strict: "ignore", trust: (c) => c.command === "\\htmlClass", macros: KATEX_MACROS });
     } catch (e) {
       throw new Error(`KaTeX error in ${file}: ${e.message}\n  in: ${tex.trim()}`);
     }
@@ -336,6 +353,9 @@ function htmlToText(html) {
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<(script|style|svg|button|select|textarea|aside)\b[\s\S]*?<\/\1>/g, "")
     .replace(/<input[^>]*>/g, "")
+    .replace(/\\carry\{([^{}]*)\}\{/g, "\\cancel{")
+    .replace(/\\(hlF|hlP|hlU|hlC)\{/g, "{")
+    .replace(/\\rc\{/g, "\\cancel{")
     .replace(/\\\(([\s\S]+?)\\\)/g, (_, t) => "$" + t.trim() + "$")
     .replace(/\\\[([\s\S]+?)\\\]/g, (_, t) => "\n$$" + t.trim() + "$$\n")
     .replace(/<h1[^>]*>/g, "\n# ").replace(/<h2[^>]*>/g, "\n\n## ").replace(/<h3[^>]*>/g, "\n\n### ")
@@ -449,6 +469,7 @@ fs.writeFileSync(
 
 // llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
 const LABS = [
+  ["Integral calculus formulas & worked solutions", "integral-calculus", "every basic and standard integral with international names (power rule, linearity, u-substitution, integration by parts, partial fractions, FTC, definite-integral properties); step-by-step lecture-style solutions with highlighted formulas, red cancellations and polynomial long division; Riemann-sum visualiser"],
   ["Trigonometry formulas & table", "trigonometry", "interactive unit circle; 91 identities with English and Thai names; sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians (1,801 rows) with angle and inverse lookup"],
   ["First-order system lab", "first-order-system", "time-constant simulator: step/impulse/ramp/sine input, RC and RL circuits, log view, s-plane, Bode plot"],
   ["Second-order system lab", "second-order-system", "damping ratio ζ and natural frequency ωn explorer: draggable poles, envelope, %OS, settling time, Bode, RLC mode"],
