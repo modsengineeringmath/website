@@ -122,6 +122,35 @@ export const TOPICS = [
     sym: "∿",
     summary: "แล็บโต้ตอบ: พิมพ์สมการสัญญาณเอง ทั้ง x(t) และ x[n] ดูอนุพันธ์ ส่วนคู่คี่ พลังงาน สเปกตรัม การแปลงเวลา และคอนโวลูชัน",
   },
+  {
+    // A series with a full virtual bench: hub at src/pages/learn/function-generator/index.html
+    slug: "function-generator",
+    title: "แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป",
+    en: "Function Generator & Oscilloscope Lab",
+    sym: "Hz",
+    summary: "แล็บจำลองเสมือนจริง: เครื่องกำเนิดสัญญาณคู่กับออสซิลโลสโคป 2 ช่อง ปรับได้ทุกปุ่ม พร้อมทฤษฎี Vpp Vrms ทริกเกอร์ โพรบ การวัดเฟส Bode วงจร RC RLC ไดโอด ออปแอมป์ และการสร้างเครื่องเอง ตั้งแต่ ม.ปลาย ถึง ป.โท",
+    fxHint: "พิมพ์ เช่น vrms, duty, 50, trigger, probe, rise, phase, Q, slew, 555",
+    sub: [
+      { slug: "waveforms", short: "อ่านค่าสัญญาณ", title: "สัญญาณพื้นฐานและการอ่านค่า: Vp Vpp Vrms ความถี่ ดิวตี้ และเฟส", en: "Waveforms & Their Values", sym: "Vpp", prefix: "W",
+        summary: "ไซน์ สี่เหลี่ยม สามเหลี่ยม พัลส์ ค่ายอด ยอดถึงยอด RMS ค่าเฉลี่ย ออฟเซต DC คาบ ความถี่ ดิวตี้ เฟส และเดซิเบล พร้อมตารางสูตร RMS ทุกรูปคลื่น" },
+      { slug: "generator", short: "เครื่องกำเนิดสัญญาณ", title: "เครื่องกำเนิดสัญญาณ (Function Generator): ปุ่ม เอาต์พุต 50 Ω มอดูเลชัน และ DDS", en: "The Function Generator", sym: "∿", prefix: "V",
+        summary: "ทุกปุ่มบนแผงหน้า ความต้านทานขาออก 50 Ω โหลด High-Z กับ 50 Ω ขีดจำกัดแอมพลิจูด AM FM PWM Sweep Burst Sync และหลักการ DDS" },
+      { slug: "oscilloscope", short: "ออสซิลโลสโคป", title: "ออสซิลโลสโคป: V/div Time/div ทริกเกอร์ โพรบ และแบนด์วิดท์", en: "The Oscilloscope", sym: "V/t", prefix: "O",
+        summary: "อ่านกราติคูล ตั้งทริกเกอร์ให้ภาพนิ่ง โพรบ 1× 10× การชดเชยโพรบ คัปปลิง AC DC แบนด์วิดท์ เวลาขาขึ้น อัตราสุ่ม อเลียสซิง FFT และความปลอดภัยเรื่องกราวด์" },
+      { slug: "simulator", short: "แล็บจำลอง", title: "แล็บจำลองเครื่องกำเนิดสัญญาณ + ออสซิลโลสโคป เสมือนจริง", en: "FG + Oscilloscope Simulator", sym: "▶",
+        summary: "โต๊ะแล็บเสมือนจริง: เครื่องกำเนิดสัญญาณ บอร์ดวงจร 15 แบบ และสโคป 2 ช่อง ปุ่มหมุนครบ วัดอัตโนมัติ เคอร์เซอร์ XY FFT พร้อมใบงาน 16 การทดลอง" },
+      { slug: "measurements", short: "เทคนิคการวัด", title: "เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)", en: "Measurement Techniques", sym: "φ", prefix: "B",
+        summary: "วัดจากกราติคูลและเคอร์เซอร์ ความคลาดเคลื่อน วัดเฟสจาก Δt และวงรีลิสซาจู วัด Bode ทีละความถี่ กวาดความถี่ และวัดอิมพีแดนซ์" },
+      { slug: "rc-rlc", short: "RC · RLC", title: "วงจร RC RL RLC กับคลื่นสี่เหลี่ยมและไซน์", en: "RC, RL & RLC on the Bench", sym: "τ", prefix: "R",
+        summary: "หา τ จากกราฟ ความถี่ตัด −3 dB เฟส −45° อินทิเกรเตอร์และดิฟเฟอเรนชิเอเตอร์แบบพาสซีฟ เรโซแนนซ์ Q แบนด์วิดท์ และการแกว่งเมื่อป้อนคลื่นสี่เหลี่ยม" },
+      { slug: "op-amp", short: "ออปแอมป์", title: "ออปแอมป์บนโต๊ะแล็บ: ขยาย อินทิเกรต ดิฟเฟอเรนชิเอต คอมพาเรเตอร์ และชมิตต์ทริกเกอร์", en: "Op-Amp Lab", sym: "▷", prefix: "U",
+        summary: "เกนกลับเฟสและไม่กลับเฟส GBW สลูว์เรต แบนด์วิดท์กำลังเต็ม การอิ่มตัว อินทิเกรเตอร์ ดิฟเฟอเรนชิเอเตอร์ คอมพาเรเตอร์ และฮิสเทอรีซิสของชมิตต์ทริกเกอร์" },
+      { slug: "build", short: "สร้างเครื่องเอง", title: "สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833", en: "Build Your Own Signal Generator", sym: "555", prefix: "K",
+        summary: "ออสซิลเลเตอร์ผ่อนคลายด้วยออปแอมป์ ไอซี 555 วงจร Wien bridge XR2206 DAC R-2R และ DDS AD9833 กับ Arduino/ESP32 พร้อมภาคขาออกและสโคปทำเอง" },
+      { slug: "applications", short: "งานประยุกต์", title: "งานประยุกต์และโจทย์ที่เจอเสมอ: เรกติไฟเออร์ PWM คลิปเปอร์ และการวัด L C", en: "Engineering Applications", sym: "Σ", prefix: "X",
+        summary: "รูปแบบงานจริงที่เจอบ่อย: แรงดันริปเปิล PWM กับค่าเฉลี่ย คลิปเปอร์ แคลมเปอร์ หา C และ L จากการวัด ความต้านทานขาออก ทดสอบเครื่องขยายเสียง และสัญญาณเซนเซอร์" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -228,11 +257,11 @@ function seriesNav(t, cur) {
 function seriesCards(t) {
   return '<div class="la-cards">' + t.sub.map((s, i) => `
   <a class="la-card" href="${seriesUrl(t, s)}">
-    <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${t.slug === "linear-algebra" ? "5." : ""}${i + 1}</span></span>
+    <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${TOPICS.indexOf(t) + 1}.${i + 1}</span></span>
     <b>${esc(s.title)}</b>
     <span class="tc-en">${esc(s.en)}</span>
     <span class="tc-sum">${esc(s.summary)}</span>
-    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">สูตร ${s.prefix}1, ${s.prefix}2, …</span></span>
+    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">${s.prefix ? `สูตร ${s.prefix}1, ${s.prefix}2, …` : "แล็บโต้ตอบ"}</span></span>
   </a>`).join("") + "\n</div>";
 }
 
@@ -276,10 +305,10 @@ function formulaIndex(t) {
   return `<div class="fx-index" id="fxIndex">
   <div class="tf-filter fx-tools" role="search">
     <label for="fxFilter">ค้นหาสูตร</label>
-    <input id="fxFilter" type="search" placeholder="พิมพ์ เช่น inverse, det, eigen, คราเมอร์, ทรานสโพส, rank, 2x2" autocomplete="off">
+    <input id="fxFilter" type="search" placeholder="${esc(t.fxHint || "พิมพ์ เช่น inverse, det, eigen, คราเมอร์, ทรานสโพส, rank, 2x2")}" autocomplete="off">
     <span class="tf-count mono" id="fxCount" aria-live="polite">ทั้งหมด ${out.length} สูตร</span>
   </div>
-  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${t.sub.map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug}">${s.prefix} · ${esc(s.short)}</button>`).join("")}</div>
+  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${t.sub.filter((s) => s.prefix).map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug}">${s.prefix} · ${esc(s.short)}</button>`).join("")}</div>
   <ol class="fx-list">
 ${out.map((f) => `    <li class="fx" data-p="${f.s.slug}" data-k="${esc(hay(f))}"><a class="fx-h" href="${seriesUrl(t, f.s)}#${f.id}"><span class="fid">${f.id}</span><b>${f.en}</b><span class="fx-th">${esc(f.th)}</span></a>${f.tex ? `<div class="fx-f">${f.tex}</div>` : ""}</li>`).join("\n")}
   </ol>
@@ -443,7 +472,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -580,6 +609,10 @@ const LABS = [
   ["First-order system lab", "first-order-system", "time-constant simulator: step/impulse/ramp/sine input, RC and RL circuits, log view, s-plane, Bode plot"],
   ["Second-order system lab", "second-order-system", "damping ratio ζ and natural frequency ωn explorer: draggable poles, envelope, %OS, settling time, Bode, RLC mode"],
   ["Signals lab", "signals", "type any x(t) or x[n]; derivative, integral, even/odd parts, energy/power, spectrum, time shift/scale/reversal, convolution with flip-and-slide"],
+  ["Function generator + oscilloscope simulator (virtual bench)", "function-generator/simulator", "free browser-based virtual lab bench: 25 MHz function generator (sine, square, ramp, pulse, noise, arbitrary; AM, FM, PWM, sweep, burst; 50 Ω output with High-Z/50 Ω load setting) driving 15 circuits (RC, RL, RLC, half/full-wave rectifier, clipper, clamper, op-amp inverting/non-inverting/integrator/differentiator/comparator/Schmitt with real GBW, slew rate and saturation) into a 2-channel 100 MHz 8-bit digital oscilloscope with edge trigger (auto/normal/single), 1×/10× probes with compensation trimmer, AC/DC coupling, bandwidth limit, aliasing, automatic measurements, cursors, XY Lissajous, math and FFT; 16 guided worksheets; every setup shareable as a link"],
+  ["Function generator & oscilloscope formula index", "function-generator", "every waveform, generator, oscilloscope, measurement, RC/RLC, op-amp, oscillator and application formula with a citable ID (W1…, V1…, O1…, B1…, R1…, U1…, K1…, X1…) in one searchable list"],
+  ["Op-amp lab", "function-generator/op-amp", "inverting and non-inverting gain, gain-bandwidth product, slew rate and full-power bandwidth, clipping, integrator, differentiator, comparator and Schmitt trigger hysteresis, each with an embedded oscilloscope"],
+  ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
 ];
 fs.writeFileSync(
   path.join(ROOT, "llms.txt"),
@@ -597,6 +630,7 @@ ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug}/): ${d}`).join("\n")}
 - [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
+- Lab presets can be opened directly, e.g. ${SITE}/learn/function-generator/simulator/#preset=rc-square (RC low-pass with a square wave), #preset=probe-comp, #preset=lissajous, #preset=opamp-slew, #preset=aliasing
 
 ## About
 - [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, feedback control and buck converters

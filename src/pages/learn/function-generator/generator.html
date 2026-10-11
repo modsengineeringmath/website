@@ -1,0 +1,273 @@
+<!--meta
+{
+  "title": "เครื่องกำเนิดสัญญาณ (Function Generator) คืออะไร ใช้อย่างไร: 50 Ω High-Z AM FM Sweep Burst DDS | อาจารย์มด",
+  "h1": "เครื่องกำเนิดสัญญาณ (Function Generator): ปุ่ม เอาต์พุต 50 Ω มอดูเลชัน และ DDS",
+  "description": "คู่มือเครื่องกำเนิดสัญญาณภาษาไทยครบทุกปุ่ม: ตั้งความถี่ แอมพลิจูด ออฟเซต ดิวตี้ สมมาตร ความต้านทานขาออก 50 Ω ทำไมสโคปแสดงค่าเป็นสองเท่า การตั้ง Load High-Z กับ 50 Ω AM FM PWM Sweep Burst ขั้ว Sync และหลักการ DDS พร้อมสูตร ตัวอย่าง และเครื่องจำลองให้ลองหมุนเอง",
+  "ogTitle": "Function Generator ครบทุกปุ่ม: 50 Ω, High-Z, AM FM Sweep Burst และ DDS",
+  "lesson": "function-generator",
+  "sub": "generator",
+  "nav": "fg",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["Function generator", "Arbitrary waveform generator", "Output impedance", "50 ohm termination", "Amplitude modulation", "Frequency modulation", "Frequency sweep", "Burst mode", "Direct digital synthesis"],
+  "scripts": ["/assets/lesson.js", "/assets/fgcalc.js", "/assets/fgs-core.js", "/assets/fgs-scope.js", "/assets/fgs-ui.js", "/assets/fgs-app.js"],
+  "faq": [
+    {"q": "ทำไมตั้งเครื่องกำเนิดสัญญาณ 1 Vpp แต่สโคปวัดได้ 2 Vpp?", "a": "เพราะตั้ง Load ในเครื่องไว้ที่ 50 Ω แต่ต่อเข้าสโคปที่มีอินพุต 1 MΩ เครื่องคิดว่าจะมีโหลด 50 Ω มาแบ่งแรงดันครึ่งหนึ่ง จึงสร้าง emf ภายในเป็นสองเท่า เมื่อไม่มีโหลดมาแบ่ง สโคปจึงเห็นสองเท่า แก้โดยตั้ง Load เป็น High-Z หรือต่อเทอร์มิเนเตอร์ 50 Ω ที่ปลายสาย"},
+    {"q": "High-Z หมายถึงอะไร?", "a": "High-Z (high impedance) คือการบอกเครื่องว่าโหลดมีความต้านทานสูงมากเมื่อเทียบกับ 50 Ω เช่น อินพุตสโคป 1 MΩ หรืออินพุตออปแอมป์ เครื่องจะแสดงค่าเท่ากับแรงดันขณะเปิดวงจร ค่าที่ตั้งจึงตรงกับที่สโคปวัดได้"},
+    {"q": "ขั้ว SYNC ใช้ทำอะไร?", "a": "ขั้ว SYNC ให้พัลส์ลอจิกที่ตรงกับจุดเริ่มคาบ จุดเริ่มกวาด หรือจุดเริ่มเบิสต์ นำไปต่อเข้าขั้ว EXT TRIG ของสโคปเพื่อให้ภาพนิ่งแม้สัญญาณจะซับซ้อน เช่น AM หรือสัญญาณที่ผ่านวงจรที่มีนอยส์"},
+    {"q": "เครื่องกำเนิดสัญญาณจ่ายกระแสได้เท่าไร?", "a": "ไม่มาก เพราะมีความต้านทานขาออก 50 Ω ภายใน ที่ 20 Vpp ลัดวงจรได้กระแสยอดประมาณ 10/50 = 0.2 A และกำลังบนโหลด 50 Ω สูงสุดราว 0.25 W ถ้าต้องขับลำโพงหรือขดลวด ให้ต่อผ่านภาคขยายกำลัง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="fgArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/function-generator/">แล็บ FG + สโคป</a></li><li>เครื่องกำเนิดสัญญาณ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 10.2 · แล็บ FG + สโคป · Function Generator</p>
+      <h1>เครื่องกำเนิดสัญญาณ (Function Generator): ปุ่ม เอาต์พุต 50 Ω มอดูเลชัน และ DDS</h1>
+      <p class="lede">เครื่องกำเนิดสัญญาณคือแหล่งจ่ายแรงดันที่เราสั่งรูปร่างได้ ใช้ป้อนสัญญาณทดสอบเข้าวงจรเพื่อดูว่าวงจรตอบสนองอย่างไร หน้านี้อธิบายทุกปุ่มตั้งแต่ตั้งความถี่ไปจนถึงเรื่องที่คนงงมากที่สุด คือทำไมค่าบนจอสโคปไม่ตรงกับค่าที่ตั้ง แล้วต่อด้วยมอดูเลชัน กวาดความถี่ เบิสต์ และหลักการ DDS ที่อยู่ข้างในเครื่อง สูตรใช้รหัส V</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#output">ทำไมค่าไม่ตรง (50 Ω)</a>
+        <a class="btn btn-ghost btn-sm" href="#panel">ปุ่มบนแผงหน้า</a>
+        <a class="btn btn-ghost btn-sm" href="#modulation">AM FM PWM</a>
+        <a class="btn btn-ghost btn-sm" href="#sweep">Sweep Burst</a>
+        <a class="btn btn-ghost btn-sm" href="#dds">DDS</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ขาออกคือแหล่ง \(e\) อนุกรมกับ 50 Ω แรงดันที่โหลดเห็น \(= e\,R_L/(R_L + 50)\)</li>
+          <li>Load = High-Z: ค่าที่ตั้งตรงกับที่สโคป 1 MΩ วัดได้ · Load = 50 Ω: ต้องมีโหลด 50 Ω จริง ไม่อย่างนั้นได้สองเท่า</li>
+          <li>|Offset| + Vpp/2 ต้องไม่เกิน 10 V (High-Z) หรือ 5 V (50 Ω)</li>
+          <li>ภาพไม่นิ่งเพราะสัญญาณซับซ้อน ให้ต่อ SYNC เข้า EXT TRIG ของสโคป</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น 50, high-z, load, am, carson, sweep, dds" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="panel">
+    <h2 id="panel">ปุ่มบนแผงหน้าเครื่อง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เครื่องทุกยี่ห้อ ทั้ง Rigol, Siglent, Keysight, GW Instek หรือ Tektronix ใช้ลำดับการตั้งค่าแบบเดียวกัน: เลือกรูปคลื่น เลือกพารามิเตอร์ที่จะแก้ ใส่ค่า แล้วกด OUTPUT ให้ขั้วจ่ายสัญญาณจริง หลายคนลืมขั้นสุดท้าย ไฟ OUTPUT ไม่ติดก็ไม่มีสัญญาณออก</p>
+    <figure class="fgfig">
+      <svg viewBox="0 0 640 270" role="img" aria-label="แผงหน้าเครื่องกำเนิดสัญญาณ: จอแสดงค่า ปุ่มเลือกรูปคลื่น ปุ่มเลือกพารามิเตอร์ ปุ่มหมุน ปุ่มมอดูเลชัน ขั้วเอาต์พุต 50 โอห์มพร้อมปุ่ม ON และขั้ว SYNC"><defs><marker id="v1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="bx" x="10" y="10" width="620" height="250" rx="14"/><rect class="scr" x="30" y="30" width="250" height="120" rx="8"/><text x="42" y="54" class="st">Sine · Continuous · Load High-Z</text><text x="42" y="98" style="font:600 30px var(--mono);fill:#e6f6ff">1.000 <tspan style="font-size:15px">kHz</tspan></text><line class="acc" x1="84" y1="103" x2="100" y2="103"/><text x="42" y="124" class="st">Ampl 2.000 Vpp  Offset 0 V</text><text x="42" y="140" class="st">Phase 0°</text><rect class="bx2" x="30" y="165" width="78" height="28" rx="6"/><text x="69" y="184" text-anchor="middle">Sine</text><rect class="bx2" x="114" y="165" width="78" height="28" rx="6"/><text x="153" y="184" text-anchor="middle">Square</text><rect class="bx2" x="198" y="165" width="78" height="28" rx="6"/><text x="237" y="184" text-anchor="middle">Ramp</text><rect class="bx2" x="30" y="201" width="78" height="28" rx="6"/><text x="69" y="220" text-anchor="middle">Pulse</text><rect class="bx2" x="114" y="201" width="78" height="28" rx="6"/><text x="153" y="220" text-anchor="middle">Noise</text><rect class="bx2" x="198" y="201" width="78" height="28" rx="6"/><text x="237" y="220" text-anchor="middle">Arb</text><rect class="bx" x="295" y="30" width="70" height="20" rx="4"/><text x="330" y="44" class="s" text-anchor="middle">Freq</text><rect class="bx" x="295" y="54" width="70" height="20" rx="4"/><text x="330" y="68" class="s" text-anchor="middle">Ampl</text><rect class="bx" x="295" y="78" width="70" height="20" rx="4"/><text x="330" y="92" class="s" text-anchor="middle">Offset</text><rect class="bx" x="295" y="102" width="70" height="20" rx="4"/><text x="330" y="116" class="s" text-anchor="middle">Phase</text><rect class="bx" x="295" y="126" width="70" height="20" rx="4"/><text x="330" y="140" class="s" text-anchor="middle">Duty</text><circle class="bx" cx="440" cy="85" r="38"/><circle class="bx2" cx="440" cy="85" r="30"/><line class="acc" x1="440" y1="85" x2="440" y2="60"/><text x="440" y="140" class="s" text-anchor="middle">ปุ่มหมุน + ◀ ▶</text><rect class="bx" x="500" y="30" width="110" height="24" rx="5"/><text x="555" y="47" class="s" text-anchor="middle">Mod</text><rect class="bx" x="500" y="60" width="110" height="24" rx="5"/><text x="555" y="77" class="s" text-anchor="middle">Sweep</text><rect class="bx" x="500" y="90" width="110" height="24" rx="5"/><text x="555" y="107" class="s" text-anchor="middle">Burst</text><rect class="bx" x="500" y="120" width="110" height="24" rx="5"/><text x="555" y="137" class="s" text-anchor="middle">Utility</text><circle class="bx" cx="470" cy="215" r="16"/><circle class="ar-h" cx="470" cy="215" r="6"/><text x="470" y="250" class="t" text-anchor="middle">OUTPUT 50 Ω</text><rect class="bx2" x="500" y="195" width="46" height="22" rx="5"/><text x="523" y="210" class="s" text-anchor="middle">ON</text><circle class="bx" cx="580" cy="215" r="14"/><circle class="ar-h" cx="580" cy="215" r="5"/><text x="580" y="250" class="s" text-anchor="middle">SYNC (TTL)</text><text x="330" y="168" class="s" text-anchor="middle">แป้นตัวเลข / หน่วย</text><rect class="bx" x="300" y="176" width="18" height="18" rx="3"/><rect class="bx" x="322" y="176" width="18" height="18" rx="3"/><rect class="bx" x="344" y="176" width="18" height="18" rx="3"/><rect class="bx" x="300" y="198" width="18" height="18" rx="3"/><rect class="bx" x="322" y="198" width="18" height="18" rx="3"/><rect class="bx" x="344" y="198" width="18" height="18" rx="3"/><rect class="bx" x="300" y="220" width="18" height="18" rx="3"/><rect class="bx" x="322" y="220" width="18" height="18" rx="3"/><rect class="bx" x="344" y="220" width="18" height="18" rx="3"/></svg>
+      <figcaption>แผงหน้าแบบทั่วไป: เลือกรูปคลื่น → เลือกพารามิเตอร์ → ใส่ค่าด้วยแป้นหรือปุ่มหมุน → กด OUTPUT ON</figcaption>
+    </figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ปุ่ม / เมนู</th><th>หน้าที่</th><th>ข้อควรรู้</th></tr></thead>
+      <tbody>
+        <tr><td>Sine, Square, Ramp, Pulse</td><td>เลือกรูปคลื่นหลัก</td><td>ความถี่สูงสุดของแต่ละรูปไม่เท่ากัน Ramp มักได้แค่ราว 1 MHz</td></tr>
+        <tr><td>Noise</td><td>สัญญาณสุ่มแบบเกาส์</td><td>ใช้ทดสอบความทนนอยส์ของวงจร หรือหาผลตอบสนองแบบสุ่ม</td></tr>
+        <tr><td>Arb</td><td>รูปคลื่นที่ผู้ใช้วาดหรือเลือกจากคลัง</td><td>ความถี่สูงสุดขึ้นกับจำนวนจุดและอัตรา DAC</td></tr>
+        <tr><td>Freq / Period</td><td>ความถี่หรือคาบ</td><td>ใส่อย่างใดอย่างหนึ่ง เครื่องคำนวณอีกค่าให้ <a href="/learn/function-generator/waveforms/#W1">W1</a></td></tr>
+        <tr><td>Ampl / High Level</td><td>แอมพลิจูดเป็น Vpp, Vrms หรือ dBm</td><td>หรือกำหนดเป็นระดับสูงต่ำโดยตรง เหมาะกับลอจิก</td></tr>
+        <tr><td>Offset / Low Level</td><td>ระดับ DC ที่บวกเข้าไป</td><td>มีขีดจำกัดร่วมกับแอมพลิจูด <a href="#V5">V5</a></td></tr>
+        <tr><td>Phase</td><td>เลื่อนเฟสเริ่มต้น</td><td>มีผลเมื่อเทียบกับ SYNC หรือกับอีกช่องของเครื่องสองช่อง</td></tr>
+        <tr><td>Duty / Symmetry / Width</td><td>ดิวตี้ของสี่เหลี่ยม สมมาตรของแรมป์ ความกว้างพัลส์</td><td>แรมป์สมมาตร 50 % คือสามเหลี่ยม 100 % คือฟันเลื่อยขาขึ้น</td></tr>
+        <tr><td>Lead / Trail Edge</td><td>เวลาขอบขึ้นลงของพัลส์</td><td>ทดสอบวงจรที่ไวต่อขอบช้า เช่น ลอจิก CMOS</td></tr>
+        <tr><td>Mod / Sweep / Burst</td><td>มอดูเลต กวาดความถี่ ปล่อยเป็นชุด</td><td>ดูหัวข้อด้านล่าง</td></tr>
+        <tr><td>Utility → Load</td><td>บอกเครื่องว่าโหลดเป็น 50 Ω หรือ High-Z</td><td>ต้นเหตุของค่าที่ไม่ตรงอันดับหนึ่ง <a href="#V2">V2</a></td></tr>
+        <tr><td>OUTPUT ON/OFF</td><td>ต่อหรือตัดรีเลย์ขาออก</td><td>ปิดก่อนต่อหรือถอดวงจรเสมอ</td></tr>
+        <tr><td>SYNC</td><td>พัลส์ลอจิกตรงกับคาบหรือจุดเริ่มกวาด</td><td>ต่อเข้า EXT TRIG ของสโคปเพื่อภาพนิ่ง</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tf-grid">
+      <div class="tf" id="V6" data-k="duty width pulse ramp symmetry ดิวตี้ ความกว้าง สมมาตร"><p class="tf-n"><b><span class="fid">V6</span> Pulse width and ramp symmetry</b> ความกว้างพัลส์และสมมาตรของแรมป์</p>
+        \[ W = D\,T, \qquad S = \frac{t_{rise}}{T}\times 100\% \]
+        <p class="tf-x">\(S = 50\%\) ได้สามเหลี่ยม \(S = 100\%\) ได้ฟันเลื่อยขาขึ้น \(S = 0\%\) ได้ฟันเลื่อยขาลง</p></div>
+      <div class="tf" id="V7" data-k="rise time square edge harmonics bandwidth 0.35 ขอบขาขึ้น"><p class="tf-n"><b><span class="fid">V7</span> Edge time and bandwidth</b> เวลาขอบกับแบนด์วิดท์</p>
+        \[ t_{r} \approx \frac{0.35}{f_{BW}} \]
+        <p class="tf-x">ขอบ 8 ns ต้องใช้แบนด์วิดท์ราว 44 MHz เครื่อง 25 MHz จึงทำคลื่นสี่เหลี่ยมได้คมที่สุดราว 8–10 ns</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="output">
+    <h2 id="output">ความต้านทานขาออก 50 Ω และการตั้ง Load <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ภายในเครื่องมีตัวต้านทาน 50 Ω อนุกรมอยู่ที่ขั้วขาออกเสมอ เพื่อให้แมตช์กับสายโคแอกซ์ 50 Ω และกันขาออกเสียเมื่อลัดวงจร ผลคือแรงดันที่ขั้วขึ้นกับโหลด ถ้าโหลดเป็น 50 Ω พอดี แรงดันจะเหลือครึ่งหนึ่งของแรงดันภายใน เครื่องจึงต้องถามว่าเราจะต่อโหลดอะไร (Utility → Load) แล้วชดเชยให้ค่าบนจอตรงกับโหลดที่บอกไว้</p>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 220" role="img" aria-label="แบบจำลองเทวินินของเครื่องกำเนิดสัญญาณ แหล่งแรงดัน e อนุกรมกับ 50 โอห์ม ต่อกับโหลด R_L แรงดันบนโหลดเป็นตัวแบ่งแรงดัน"><defs><marker id="v3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="bx" x="20" y="30" width="230" height="160" rx="12"/><text x="135" y="22" class="s" text-anchor="middle">ภายในเครื่องกำเนิดสัญญาณ</text><path class="sw" d="M62 110 a18 18 0 1 0 36 0 a18 18 0 1 0 -36 0 M70 110 q5 -10 10 0 t10 0 M80 92 V60 H120 M120 60 l5 -7 l8 14 l8 -14 l8 14 l8 -14 l8 14 l5 -7 M170 60 H250 M80 128 V170 H250"/><text x="42" y="114" class="t" text-anchor="end">e</text><text x="145" y="46" class="s" text-anchor="middle">R_s = 50 Ω</text><path class="sw" d="M250 60 H420 M250 170 H420 M420 60 V90 M420 90 l7 5 l-14 8 l14 8 l-14 8 l14 8 l-14 8 l7 5 M420 140 V170"/><circle class="bx" cx="250" cy="60" r="5"/><circle class="bx" cx="250" cy="170" r="5"/><text x="436" y="120" class="t">R_L (โหลด)</text><line class="ar" x1="320" y1="150" x2="320" y2="78" marker-end="url(#v3a)"/><text x="328" y="118" class="a">V_L</text><text x="560" y="70" text-anchor="end">V_L = e·R_L/(R_L + 50)</text><text x="600" y="110" class="s" text-anchor="end">R_L = 50 Ω → V_L = e/2</text><text x="600" y="130" class="s" text-anchor="end">R_L ≫ 50 Ω (High-Z) → V_L ≈ e</text><path class="sw" d="M330 170 v6 M320 176 h20 M324 180 h12 M328 184 h4"/></svg>
+      <figcaption>ขาออกของเครื่องกำเนิดสัญญาณคือแหล่งแรงดัน \(e\) อนุกรมกับ 50 Ω แรงดันที่โหลดเห็นจึงขึ้นกับ \(R_L\)</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf" id="V1" data-k="thevenin output model source resistance 50 ohm emf แบบจำลอง เทวินิน"><p class="tf-n"><b><span class="fid">V1</span> Output model (Thévenin)</b> แบบจำลองขาออก</p>
+        \[ v_{out} = e - R_s\,i, \qquad R_s = 50\ \Omega \]</div>
+      <div class="tf" id="V2" data-k="load setting high-z 50 ohm emf double set value ตั้งโหลด สองเท่า"><p class="tf-n"><b><span class="fid">V2</span> Internal emf from the setting</b> แรงดันภายในจากค่าที่ตั้ง</p>
+        \[ e = k\,V_{set},\quad k = \begin{cases} 1 & \text{High-Z} \\ 2 & 50\ \Omega \end{cases} \]</div>
+      <div class="tf" id="V4" data-k="voltage across load divider actual displayed mismatch แรงดันบนโหลด"><p class="tf-n"><b><span class="fid">V4</span> Voltage across any load</b> แรงดันจริงบนโหลด</p>
+        \[ V_L = k\,V_{set}\,\frac{R_L}{R_L + 50} \]
+        <p class="tf-x">ตั้ง 50 Ω + โหลด 50 Ω → ตรง · ตั้ง High-Z + โหลด 1 MΩ → ตรง · ตั้ง 50 Ω + โหลด 1 MΩ → เกือบ 2 เท่า · ตั้ง High-Z + โหลด 50 Ω → ครึ่งเดียว</p></div>
+      <div class="tf" id="V3" data-k="measure output resistance half voltage method วัดความต้านทานขาออก"><p class="tf-n"><b><span class="fid">V3</span> Measuring output resistance</b> วัดความต้านทานขาออก</p>
+        \[ R_s = R_L\left(\frac{V_{open}}{V_L} - 1\right) \]
+        <p class="tf-x">วัดแรงดันตอนเปิดวงจรและตอนต่อ \(R_L\) ที่รู้ค่า ใช้ได้กับแหล่งจ่ายทุกชนิด ไม่เฉพาะเครื่องกำเนิดสัญญาณ</p></div>
+      <div class="tf" id="V5" data-k="amplitude offset limit 10 V 5 V maximum ขีดจำกัด"><p class="tf-n"><b><span class="fid">V5</span> Amplitude + offset limit</b> ขีดจำกัดแอมพลิจูดรวมออฟเซต</p>
+        \[ |V_{DC}| + \tfrac12 V_{pp} \le V_{max} \]
+        <p class="tf-x">เครื่องทั่วไป \(V_{max} = 10\) V ในโหมด High-Z และ 5 V ในโหมด 50 Ω ถ้าเกิน เครื่องจะไม่ยอมรับค่าหรือลดค่าให้</p></div>
+    </div>
+    <p>ลองด้วยตัวเอง: สโคปจำลองนี้ต่อเครื่องกำเนิดสัญญาณ 2 Vpp เข้า CH1 เปลี่ยน Load ที่ตั้งในเครื่อง และเปลี่ยนโหลดจริงที่ต่อ แล้วดู Vpp ที่วัดได้</p>
+    <div class="fgs-mini" data-preset="load-mismatch" data-ch="1" data-ctl="load,term,amp" data-meas="vpp,vrms,freq" data-theory><noscript>ต้องเปิด JavaScript เพื่อใช้สโคปจำลอง</noscript></div>
+    <div class="fg-calc" data-calc="load"></div>
+    <div class="wx" id="ex-v1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-1 · ลืมตั้ง Load</span><h3>ตั้ง 1 Vpp โหมด High-Z แล้วต่อเข้าเครื่องขยาย RF ที่อินพุต 50 Ω แรงดันจริงเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>โหมด High-Z: \(e = V_{set}\) <a class="tag tf" href="#V2">V2</a></p>\[ e = 1\ \text{Vpp} \]</li>
+        <li><p>แบ่งแรงดันกับ 50 Ω ภายใน <a class="tag tf" href="#V4">V4</a></p>\[ V_L = 1 \times \frac{50}{50 + 50} = 0.5\ \text{Vpp} \]</li>
+      </ol>
+      <p class="answer">ได้แค่ 0.5 Vpp (ต่ำกว่าที่ตั้ง 6 dB) แก้โดยตั้ง Load = 50 Ω</p>
+    </div>
+    <div class="wx" id="ex-v2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-2 · โหลดค่ากลาง ๆ</span><h3>ตั้ง 2 Vpp โหมด 50 Ω ขับวงจรที่มีอินพุต 1 kΩ ได้แรงดันจริงเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>\(e = 2 \times 2 = 4\) Vpp <a class="tag tf" href="#V2">V2</a></p></li>
+        <li><p>แบ่งแรงดัน <a class="tag tf" href="#V4">V4</a></p>\[ V_L = 4 \times \frac{1000}{1050} = 3.81\ \text{Vpp} \]</li>
+      </ol>
+      <p class="answer">3.81 Vpp ไม่ใช่ 2 Vpp วงจรอินพุตความต้านทานต่ำ ควรวัดแรงดันที่ขาเข้าวงจรจริงด้วยสโคปเสมอ</p>
+    </div>
+    <div class="wx" id="ex-v3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-3 · วัดความต้านทานขาออก</span><h3>เปิดวงจรวัดได้ 4.00 Vpp ต่อตัวต้านทาน 47 Ω แล้วเหลือ 1.94 Vpp หา \(R_s\)</h3></div>
+      <ol class="steps">
+        <li><p>แทนสูตร <a class="tag tf" href="#V3">V3</a></p>\[ R_s = 47\left(\frac{4.00}{1.94} - 1\right) = 47 \times 1.062 = 49.9\ \Omega \]</li>
+      </ol>
+      <p class="answer">\(R_s \approx 50\ \Omega\) ตรงตามสเปก ถ้าได้ค่าเพี้ยนมาก อาจเป็นเพราะเปิดโหมดเอาต์พุตอิมพีแดนซ์ต่ำ หรือขาออกเสีย</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="sync">
+    <h2 id="sync">ขั้ว SYNC และการทริกเกอร์สโคป <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ขั้ว SYNC (บางรุ่นเรียก TTL Out หรือ Trig Out) ให้พัลส์ลอจิก 0/3.3 V หรือ 0/5 V ที่ขอบขึ้นตรงกับจุดเริ่มต้นของแต่ละคาบ ในโหมดมอดูเลชันจะตรงกับคลื่นมอดูเลต ในโหมดกวาดตรงกับจุดเริ่มกวาด และในโหมดเบิสต์ตรงกับจุดเริ่มแต่ละชุด เมื่อนำไปต่อเข้า EXT TRIG ของสโคป ภาพจะล็อกนิ่งเสมอ เพราะสโคปไม่ต้องเดาจากรูปสัญญาณเองอีกต่อไป วิธีนี้สำคัญมากเมื่อสัญญาณที่ปลายวงจรมีนอยส์หรือรูปร่างเปลี่ยนไปมา</p>
+    <div class="note"><b>ลองในแล็บจำลอง:</b> <a data-fgs-open="am" href="/learn/function-generator/simulator/">AM ที่ทริกเกอร์จาก EXT</a> ภาพนิ่ง ลองเปลี่ยนแหล่งทริกเกอร์เป็น CH1 แล้วดูว่าเปลือกเลื่อนไปมาอย่างไร</div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="modulation">
+    <h2 id="modulation">AM, FM และ PWM <span class="lv lv-i">กลาง</span></h2>
+    <p>มอดูเลชันคือการให้คลื่นช้า (คลื่นมอดูเลต ความถี่ \(f_m\)) ไปควบคุมพารามิเตอร์ตัวหนึ่งของคลื่นเร็ว (คลื่นพาหะ ความถี่ \(f_c\)) AM คุมแอมพลิจูด FM คุมความถี่ PWM คุมดิวตี้ เครื่องกำเนิดสัญญาณใช้จำลองสัญญาณวิทยุ ทดสอบวงจรดีมอดูเลเตอร์ หรือทดสอบตัวควบคุมมอเตอร์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="V8" data-k="am amplitude modulation carrier modulation index มอดูเลตแอมพลิจูด"><p class="tf-n"><b><span class="fid">V8</span> Amplitude modulation</b> การมอดูเลตแอมพลิจูด</p>
+        \[ v(t) = A_c\left[1 + m\sin(2\pi f_m t)\right]\sin(2\pi f_c t) \]</div>
+      <div class="tf" id="V9" data-k="modulation index from scope envelope vmax vmin am ดัชนีมอดูเลชัน"><p class="tf-n"><b><span class="fid">V9</span> Modulation index from the scope</b> ดัชนีมอดูเลชันจากจอ</p>
+        \[ m = \frac{V_{max} - V_{min}}{V_{max} + V_{min}} \]
+        <p class="tf-x">\(V_{max}, V_{min}\) คือยอดถึงยอดของเปลือกช่วงกว้างสุดและแคบสุด \(m > 1\) คือมอดูเลตเกิน เปลือกพับ</p></div>
+      <div class="tf" id="V10" data-k="am spectrum sidebands carrier bandwidth แถบข้าง"><p class="tf-n"><b><span class="fid">V10</span> AM spectrum</b> สเปกตรัมของ AM</p>
+        \[ f_c,\ f_c \pm f_m,\quad A_{SB} = \tfrac{m}{2}A_c,\quad B = 2f_m \]</div>
+      <div class="tf" id="V11" data-k="fm frequency modulation deviation beta carson bandwidth มอดูเลตความถี่"><p class="tf-n"><b><span class="fid">V11</span> Frequency modulation, Carson's rule</b> FM และกฎของคาร์สัน</p>
+        \[ f(t) = f_c + \Delta f\sin(2\pi f_m t),\quad \beta = \frac{\Delta f}{f_m} \]
+        \[ B \approx 2(\Delta f + f_m) \]</div>
+      <div class="tf" id="V12" data-k="pwm duty modulation deviation pulse width modulation มอดูเลตความกว้าง"><p class="tf-n"><b><span class="fid">V12</span> Pulse-width modulation</b> การมอดูเลตความกว้างพัลส์</p>
+        \[ D(t) = D_0 + \Delta D\sin(2\pi f_m t) \]
+        <p class="tf-x">ผ่านตัวกรองต่ำผ่านแล้วได้ \(V_{avg}(t) = D(t)\,V_H\) กลับมาเป็นคลื่นมอดูเลต <a href="/learn/function-generator/applications/#pwm">ดูงานประยุกต์</a></p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 240" role="img" aria-label="สัญญาณ AM ดัชนีมอดูเลชัน 0.5 เส้นประคือเปลือก วัด Vmax เป็นยอดถึงยอดของเปลือกช่วงกว้างสุด และ Vmin ช่วงแคบสุด"><defs><marker id="v4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="gr" x1="40" y1="120" x2="600" y2="120"/><path class="w1" d="M40 120 L43.2 67.8 L44.5 57.8 L45.2 56.7 L45.8 58.1 L46.9 66.6 L48 82 L52.9 173.9 L54.2 187.1 L54.9 189.9 L55.5 189.4 L56.6 182 L57.9 163.6 L63 60.1 L64.3 46.5 L64.8 44.3 L65.2 44.1 L65.4 44.4 L66.5 51.6 L67.8 70.8 L72.9 182.6 L74.2 198 L74.7 200.8 L75.1 201.2 L75.3 201 L76.4 194.1 L77.7 174.4 L82.9 52.6 L84.1 38.7 L84.6 35.4 L85.2 34.7 L86.3 41.1 L87.6 60.9 L92.8 188.1 L94.1 204.9 L94.7 207.8 L95.1 208.3 L95.3 208.1 L96.4 200.5 L97.7 179.2 L102.7 52.4 L104 34.4 L104.6 31 L105.1 30.3 L106.3 37.1 L107.6 57.9 L112.8 189.3 L113.9 204.8 L114.5 208.7 L115 209.8 L115.6 208.2 L116.3 201.8 L117.7 180.2 L122.7 53.5 L123.8 37.5 L124.4 33.3 L124.9 31.7 L125.5 32.9 L126.1 36.7 L127.2 51.9 L132.4 179.1 L133.7 198.9 L134.8 205.3 L135.4 204.6 L135.9 201.3 L137.1 187.4 L142.3 65.6 L143.6 45.9 L144.3 40.2 L144.9 38.8 L145.5 39.9 L146 43.4 L147.1 57.4 L152.2 169.2 L153.5 188.4 L154.2 194.2 L154.8 195.9 L155.4 195.3 L155.9 192.3 L157 179.9 L162.3 73.2 L163.6 56.2 L164.3 51.3 L164.9 50.1 L165.4 51 L166 54.1 L167.1 66.1 L172.2 161 L173.5 177.1 L174.2 181.9 L174.8 183.3 L175.3 182.8 L175.9 180.3 L177 170 L182.2 82.2 L183.5 68.3 L184.3 64.3 L184.9 63.3 L185.4 64.1 L186 66.6 L187.3 78.4 L192.7 158.6 L193.8 167.4 L194.4 169.5 L194.9 170.1 L195.9 167.7 L197 159.6 L202.2 90.7 L203.5 79.9 L204.6 76 L205.2 76.2 L205.8 77.6 L206.9 84.3 L212.3 146.5 L213.6 155.7 L214.3 158.3 L214.9 158.8 L216 156.3 L217.1 149.5 L222.2 97.4 L223.5 88.7 L224.6 85.5 L225.2 85.5 L225.7 86.6 L227 92.8 L232.3 141.1 L233.6 148.9 L234.3 151.1 L234.9 151.7 L235.4 151.3 L236 149.9 L237.3 143.4 L242 102.3 L243.1 94.9 L244.2 90.7 L245 89.8 L245.5 90.2 L247 95.7 L252.4 140.7 L253.7 147.8 L254.5 149.8 L255 150.2 L255.6 149.7 L256.3 147.6 L257.7 140.5 L263.1 94.3 L264.4 89.1 L264.9 88.3 L265.5 88.6 L266.6 92 L267.9 100.3 L273 147.2 L274.1 152.9 L274.6 154.2 L275.2 154.6 L275.8 153.9 L276.5 151.3 L277.8 142.6 L283 89.1 L284.3 82.3 L284.9 81.3 L285.5 81.4 L286.6 85.3 L287.9 95.3 L292.9 154.2 L294.1 161.6 L294.6 163.5 L295.2 164.1 L295.7 163.3 L296.5 160.1 L297.8 149.3 L303 80.4 L304.1 72.3 L304.7 70.3 L305.3 69.9 L305.8 71 L306.6 74.9 L307.9 87.7 L312.9 163.7 L314 173.4 L314.6 175.9 L315.1 176.7 L315.7 175.7 L316.5 171.7 L317.8 157.8 L323 70 L324.1 59.7 L324.7 57.2 L325.2 56.7 L325.8 58.1 L326.5 62.9 L327.8 79 L332.9 173.9 L334 185.9 L334.6 189 L335.1 189.9 L335.7 188.7 L336.4 183.8 L337.7 166.8 L343 60.1 L344.1 47.7 L344.6 44.7 L345.2 44.1 L345.8 45.8 L346.5 51.6 L347.8 70.8 L352.9 182.6 L354 196.6 L354.5 200.1 L355.1 201.2 L355.7 199.8 L356.2 195.9 L357.3 181.2 L362.6 59.1 L363.9 40.3 L365 34.6 L365.5 35.7 L366.1 39.3 L367.2 54.1 L372.5 181.1 L373.8 201.4 L374.5 207.1 L375.1 208.3 L375.6 206.7 L376.2 202.5 L377.3 186.5 L382.3 59.8 L383.7 38.2 L384.4 31.8 L385 30.2 L385.5 31.3 L386.1 35.2 L387.2 50.7 L392.4 182.1 L393.7 202.9 L394.9 209.7 L395.4 209 L396 205.6 L397.1 190.9 L402.3 60.8 L403.6 39.5 L404.4 33.3 L404.9 31.7 L405.5 32.9 L406.1 36.7 L407.2 51.9 L412.4 179.1 L413.7 198.9 L414.8 205.3 L415.4 204.6 L415.9 201.3 L417.1 187.4 L422.3 65.6 L423.6 45.9 L424.3 40.2 L424.9 38.8 L425.5 39.9 L426 43.4 L427.1 57.4 L432.2 169.2 L433.5 188.4 L434.2 194.2 L434.8 195.9 L435.4 195.3 L435.9 192.3 L437 179.9 L442.3 73.2 L443.6 56.2 L444.3 51.3 L444.9 50.1 L445.4 51 L446 54.1 L447.1 66.1 L452.2 161 L453.5 177.1 L454.2 181.9 L454.8 183.3 L455.3 182.8 L455.9 180.3 L457 170 L462.2 82.2 L463.5 68.3 L464.3 64.3 L464.9 63.3 L465.4 64.1 L466 66.6 L467.1 76.3 L472.1 152.3 L473.4 165.1 L474.2 169 L474.7 170.1 L475.3 169.7 L475.9 167.7 L477 159.6 L482.2 90.7 L483.5 79.9 L484.3 76.7 L484.8 75.9 L485.4 76.5 L485.9 78.4 L487.1 85.8 L492.1 144.7 L493.4 154.7 L494.7 158.8 L495.3 158.5 L495.8 157.1 L497 150.9 L502.2 97.4 L503.5 88.7 L504.2 86.1 L504.8 85.4 L505.4 85.8 L505.9 87.1 L507 92.8 L512.3 141.1 L513.6 148.9 L514.3 151.1 L514.9 151.7 L515.4 151.3 L516 149.9 L517.1 144.6 L522.3 99.5 L523.7 92.4 L524.8 89.9 L525.3 90 L525.9 91.1 L527.2 96.8 L532.4 140.7 L533.7 147.8 L534.5 149.8 L535 150.2 L535.6 149.7 L536.3 147.6 L537.7 140.5 L543.1 94.3 L544.4 89.1 L545.1 88.3 L545.7 88.9 L546.8 92.9 L547.9 100.3 L552.8 145.9 L554.1 152.9 L554.6 154.2 L555.2 154.6 L555.8 153.9 L556.5 151.3 L557.8 142.6 L563 89.1 L564.3 82.3 L564.9 81.3 L565.5 81.4 L566.6 85.3 L567.9 95.3 L572.9 154.2 L574.1 161.6 L574.6 163.5 L575.2 164.1 L575.7 163.3 L576.5 160.1 L577.8 149.3 L583 80.4 L584.3 71.5 L584.9 70 L585.4 70.1 L586.6 74.9 L587.9 87.7 L592.9 163.7 L594 173.4 L595 176.6 L595.5 176.2 L596.1 174.1 L597.2 164.8 L600 120"/><path class="dsh" d="M40 60 L65.2 43.9 L75 38.8 L84.8 34.7 L94.6 31.8 L103 30.4 L111.4 30 L119.8 30.7 L126.8 32.1 L135.2 34.7 L150.6 41.6 L164.6 49.8 L199.6 72.8 L209.4 78.4 L219.2 83.1 L229 86.7 L237.4 88.8 L247.2 89.9 L255.6 89.8 L262.6 88.8 L271 86.7 L279.4 83.7 L287.8 79.8 L303.2 71 L339.6 47.2 L357.8 37.5 L366.2 34.2 L374.6 31.8 L383 30.4 L390 30 L398.4 30.5 L406.8 32.1 L415.2 34.7 L423.6 38.1 L440.4 47.2 L475.4 70.2 L489.4 78.4 L504.8 85.3 L513.2 87.9 L520.2 89.3 L528.6 90 L537 89.6 L545.4 88.2 L555.2 85.3 L565 81.2 L574.8 76.1 L600 60"/><path class="dsh" d="M40 180 L62.4 194.5 L79.2 203.1 L87.6 206.3 L94.6 208.2 L103 209.6 L110 210 L117 209.6 L125.4 208.2 L133.8 205.8 L142.2 202.5 L160.4 192.8 L196.8 169 L212.2 160.2 L220.6 156.3 L229 153.3 L237.4 151.2 L245.8 150.1 L254.2 150.1 L262.6 151.2 L271 153.3 L280.8 156.9 L299 166.4 L336.8 191 L352.2 199.8 L360.6 203.7 L369 206.7 L377.4 208.8 L384.4 209.8 L392.8 209.9 L402.6 208.8 L411 206.7 L420.8 203.1 L430.6 198.4 L440.4 192.8 L475.4 169.8 L489.4 161.6 L504.8 154.7 L513.2 152.1 L520.2 150.7 L528.6 150 L537 150.4 L545.4 151.8 L555.2 154.7 L565 158.8 L574.8 163.9 L600 180"/><line class="ar" x1="102" y1="210" x2="102" y2="30" marker-end="url(#v4a)" marker-start="url(#v4a)"/><text x="96" y="124" class="a" text-anchor="end">V_max</text><line class="ar" x1="258" y1="150" x2="258" y2="90" marker-end="url(#v4a)" marker-start="url(#v4a)"/><text x="264" y="124" class="a">V_min</text><text x="460" y="22" class="t" text-anchor="middle">m = (V_max − V_min)/(V_max + V_min) = 0.5</text></svg>
+      <figcaption>AM ที่ \(m = 0.5\): วัดยอดถึงยอดของเปลือกช่วงกว้างสุด \(V_{max}\) และช่วงแคบสุด \(V_{min}\) แล้วแทนสูตร V9</figcaption>
+    </figure>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 200" role="img" aria-label="สัญญาณ FM ความถี่ของพาหะเพิ่มขึ้นเมื่อคลื่นมอดูเลตสูง และลดลงเมื่อคลื่นมอดูเลตต่ำ แอมพลิจูดคงที่"><defs><marker id="v5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="w1" d="M40 78.2 L42.1 54.1 L43.7 40.4 L45.2 35.2 L46 35.3 L46.7 37.5 L48 45.8 L49.3 59.5 L55.1 141.1 L56.6 152.5 L57.4 154.8 L57.9 154.9 L59.2 149.4 L60.7 134.3 L66.3 47.2 L67.6 36.9 L68.2 35.2 L68.7 35.2 L69.9 40.4 L71.2 54.7 L76.4 142.7 L77.5 152.5 L78.1 154.7 L78.6 154.8 L79.8 149.2 L81.1 133.4 L85.7 49.1 L86.9 38 L87.4 35.5 L88 35.1 L89.1 41 L90.2 54.8 L94.9 141.8 L96 152.6 L96.6 154.8 L96.9 154.9 L98.1 149.2 L99.2 135.1 L103.7 49.3 L104.8 37.8 L105.3 35.3 L105.7 35 L106.8 40.5 L107.9 54.7 L112.4 140.9 L113.5 152.4 L114.1 154.7 L114.5 155 L115.6 149.3 L116.7 135.1 L121.2 49.4 L122.3 37.9 L123.3 35 L124.4 40.1 L125.5 53.6 L130.2 140.6 L131.3 151.9 L132.2 155 L132.8 153.9 L133.3 150.7 L134.6 135.7 L139.5 48.7 L140.6 38.1 L141.5 35 L142.5 37.5 L143.6 47.3 L148.8 135.3 L150.1 149.6 L150.9 153.8 L151.4 155 L152 154.4 L152.7 151 L154.1 138.5 L159.8 49 L161.1 38.2 L162.3 35 L163 36 L163.8 39.5 L165.3 53 L171.6 140.8 L173.1 151.7 L173.8 154.3 L174.4 155 L175.1 154.2 L176.1 150.6 L177.8 137.8 L183.2 70.9 L185.2 50 L187.1 38.4 L187.8 36 L188.8 35 L189.7 36 L190.6 38.9 L192.7 51.2 L199.4 116.8 L202 138 L204.5 150.5 L205.6 153.6 L206.9 155 L208.2 154.1 L209.5 151.2 L212.3 139.2 L221.8 73.7 L225.5 52.6 L227.4 45 L229.3 39.5 L231 36.4 L232.8 35 L234.5 35.6 L236.4 38 L238.2 42.3 L240.3 48.7 L244.8 67.8 L254.1 116.7 L258.2 135.6 L260.5 143.8 L262.7 150.1 L264.7 153.7 L266.6 155 L267.7 154.8 L268.7 154.1 L270.5 151 L272.4 145.7 L274.3 138.2 L278.2 116.3 L287.5 51.9 L290.3 39.3 L291.6 36.1 L292.7 35 L294.1 35.8 L295.2 38.3 L297.8 50.7 L300.4 71.5 L307.3 138.8 L309.4 151.1 L310.3 154 L311.2 155 L312.2 154 L312.9 151.6 L314.8 140 L316.8 119.1 L322.2 52.2 L323.9 39.4 L324.7 36.3 L325.4 35 L326.2 35.7 L326.9 38.3 L328.4 49.2 L334.7 137 L336.2 150.5 L337 154 L337.5 155 L338.1 154.6 L338.9 151.8 L340.2 141 L345.8 53.9 L347.1 40.3 L347.8 36.2 L348.4 35 L348.9 35.6 L349.5 37.9 L350.8 49.8 L356 138 L357.3 151.4 L357.9 154.2 L358.5 155 L359.4 151.9 L360.5 141.3 L365.4 54.3 L366.7 39.3 L367.2 36.1 L367.8 35 L368.7 38.1 L369.8 49.4 L374.5 136.4 L375.6 149.9 L376.7 155 L377.7 152.1 L378.8 140.6 L383.3 54.9 L384.4 40.7 L385.5 35 L385.9 35.3 L386.5 37.6 L387.6 49.1 L392.1 135.3 L393.2 149.5 L394.3 155 L394.7 154.7 L395.2 152.2 L396.3 140.7 L400.8 54.9 L401.9 40.8 L403.1 35.1 L403.4 35.2 L404 37.4 L405.1 48.2 L409.8 135.2 L411.1 150.6 L411.7 153.9 L412.2 155 L412.8 153.9 L413.3 150.7 L414.6 135.7 L419.5 48.7 L420.6 38.1 L421.5 35 L422.5 37.5 L423.6 47.3 L428.8 135.3 L430.1 149.6 L430.9 153.8 L431.4 155 L432 154.4 L432.7 151 L434.1 138.5 L439.8 49 L441.1 38.2 L442.3 35 L443 36 L443.8 39.5 L445.3 53 L451.6 140.8 L453.1 151.7 L453.8 154.3 L454.4 155 L455.1 154.2 L456.1 150.6 L457.8 137.8 L463.2 70.9 L465.2 50 L466.9 39.2 L467.7 36.5 L468.6 35 L469.5 35.6 L470.6 38.9 L472.7 51.2 L479.4 116.8 L482 138 L484.5 150.5 L485.6 153.6 L486.7 154.9 L488 154.4 L489.3 151.8 L492.3 139.2 L501.6 74.9 L505.4 53.5 L508.7 40.9 L510.2 37.5 L511.9 35.4 L512.8 35 L513.8 35.1 L515.8 37.1 L517.9 41.3 L520.1 48 L524.8 67.8 L534.1 116.7 L538 134.8 L540.3 143.2 L542.3 149.2 L544.2 152.9 L546.1 154.8 L547.2 155 L548.3 154.4 L550.3 151.4 L552.4 145.7 L554.5 137.4 L558.4 115.1 L567.1 54 L569.6 42 L571.8 35.9 L572.6 35.1 L573.3 35.1 L574.8 37.3 L576.1 41.7 L577.6 49.5 L580.4 71.5 L586.9 135.8 L588.8 148.5 L590.5 154.4 L591 155 L591.6 154.8 L592.5 152.9 L594.6 141.5 L596.8 119.1 L600 78.2"/><path class="w2" d="M40 176 L62.4 168.8 L79.2 164.4 L94.6 161.9 L110 161 L125.4 161.9 L142.2 164.7 L160.4 169.6 L196.8 181.5 L212.2 185.9 L229 189.4 L245.8 190.9 L262.6 190.4 L280.8 187.6 L299 182.8 L336.8 170.5 L352.2 166.1 L369 162.6 L384.4 161.1 L402.6 161.6 L420.8 164.4 L440.4 169.6 L489.4 185.2 L504.8 188.7 L520.2 190.6 L537 190.8 L555.2 188.7 L574.8 184 L600 176"/><text x="110" y="186" class="s" text-anchor="middle">ความถี่สูงสุดตรงยอดคลื่นมอดูเลต</text><text x="280" y="186" class="s" text-anchor="middle">ต่ำสุดตรงร่อง</text></svg>
+      <figcaption>FM: แอมพลิจูดคงที่ แต่ระยะห่างของลูกคลื่นเปลี่ยนตามคลื่นมอดูเลต (เส้นสีฟ้าด้านล่าง)</figcaption>
+    </figure>
+    <div class="wx" id="ex-v4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-4 · วัด m จากจอ</span><h3>เปลือก AM กว้างสุด 3.0 Vpp แคบสุด 1.0 Vpp หาดัชนีมอดูเลชันและขนาดแถบข้าง</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#V9">V9</a></p>\[ m = \frac{3.0 - 1.0}{3.0 + 1.0} = 0.5 \]</li>
+        <li><p>พาหะมีค่ายอด \(A_c = (3.0 + 1.0)/4 = 1.0\) V แถบข้างแต่ละข้าง <a class="tag tf" href="#V10">V10</a></p>\[ A_{SB} = \frac{0.5}{2}\times 1.0 = 0.25\ \text{V} \Rightarrow 20\log_{10}0.25 = -12\ \text{dB ต่ำกว่าพาหะ} \]</li>
+      </ol>
+      <p class="answer">\(m = 0.5\) (50 %) แถบข้างสูง 0.25 V ต่ำกว่าพาหะ 12 dB เปิด <a data-fgs-open="am" href="/learn/function-generator/simulator/">พรีเซต AM</a> แล้วลอง FFT</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="sweep">
+    <h2 id="sweep">กวาดความถี่ (Sweep) และเบิสต์ (Burst) <span class="lv lv-i">กลาง</span></h2>
+    <p>โหมด Sweep เปลี่ยนความถี่จาก \(f_1\) ไป \(f_2\) ในเวลา \(T_s\) แล้ววนใหม่ ถ้าป้อนเข้าวงจรกรองและให้สโคปทริกเกอร์จาก SYNC จอจะวาดเปลือกที่มีรูปร่างเหมือนกราฟขนาดของผลตอบสนองความถี่ทันที เป็นวิธีหาเรโซแนนซ์ที่เร็วที่สุด โหมด Burst ปล่อยคลื่น \(N\) ลูกแล้วหยุด ใช้ทดสอบเซนเซอร์อัลตราโซนิก ลำโพง หรือวงจรที่ต้องดูการตั้งต้นและการหยุด</p>
+    <div class="tf-grid">
+      <div class="tf" id="V13" data-k="linear sweep log sweep frequency time start stop กวาดความถี่"><p class="tf-n"><b><span class="fid">V13</span> Linear and logarithmic sweep</b> การกวาดเชิงเส้นและลอการิทึม</p>
+        \[ f_{lin}(t) = f_1 + (f_2 - f_1)\frac{t}{T_s} \]
+        \[ f_{log}(t) = f_1\left(\frac{f_2}{f_1}\right)^{t/T_s} \]
+        <p class="tf-x">แบบลอการิทึมใช้เวลาเท่ากันต่อหนึ่งดีเคด เหมาะกับการดู Bode</p></div>
+      <div class="tf" id="V14" data-k="burst cycles period on time duty เบิสต์"><p class="tf-n"><b><span class="fid">V14</span> Burst timing</b> เวลาของเบิสต์</p>
+        \[ t_{on} = \frac{N}{f}, \qquad D_{burst} = \frac{N}{f\,T_{burst}} \]</div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 640 220" role="img" aria-label="ซ้าย สัญญาณกวาดความถี่ที่ความถี่เพิ่มขึ้นเรื่อย ๆ พร้อมพัลส์ซิงก์ตอนเริ่มกวาด ขวา เบิสต์สามลูกต่อคาบเบิสต์ พร้อมพัลส์ซิงก์"><defs><marker id="v6a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="20" y="20" class="t">Sweep เชิงเส้น 1 → 8 รอบต่อช่วง</text><path class="w1" d="M20 80 L33.7 51.3 L39.4 41.3 L42.3 37.7 L45.1 35.6 L47.6 35 L50.2 36 L52.5 38.4 L54.8 42.1 L59.4 53.9 L63.6 68.6 L72.3 103.8 L76.1 116.3 L78 120.7 L79.7 123.5 L81.5 124.9 L83.1 124.8 L84.7 123.2 L86.5 119.9 L89.9 108.8 L93.2 93.7 L100 57 L103.1 44.1 L105.8 36.8 L107.1 35.3 L108.4 35.1 L109.8 36.4 L111.2 39.4 L114.1 50.3 L116.7 65.1 L122.5 102.3 L125.2 115.9 L127.5 123.1 L128.7 124.7 L129.7 124.9 L130.9 123.7 L132.2 120.6 L134.6 110 L142 58 L144.4 44.5 L146.3 37.3 L147.4 35.4 L148.3 35 L149.2 35.9 L150.2 37.9 L152.1 46.1 L154.3 60.4 L160.8 111.2 L163 121.7 L164.1 124.3 L165 125 L165.8 124.4 L166.7 122.4 L168.6 114.2 L170.7 99.4 L176.6 48.9 L178.6 38.5 L179.5 35.9 L180.3 35 L181.1 35.4 L182.1 37.5 L183.8 45.8 L191.2 111 L193 121 L193.9 124 L194.7 125 L195.5 124.5 L196.3 122.5 L197.9 114.2 L204.9 49 L206.5 39 L207.3 36.2 L208.2 35 L208.8 35.4 L209.7 37.4 L211.2 45.4 L217.8 110.8 L219.4 121.3 L220.2 124.1 L220.9 125 L221.6 124.5 L222.3 122.6 L223.8 114.1 L230.1 48.8 L231.6 38.7 L232.3 36.1 L233 35 L233.7 35.5 L234.4 37.5 L235.8 45.8 L241.7 110.6 L243.1 120.7 L243.8 123.6 L244.5 124.9 L245 124.7 L245.7 123 L247.1 114.6 L252.8 49.8 L254.2 39.2 L255.5 35.1 L256.1 35.2 L256.8 37.1 L258.1 45.9 L263.6 110.6 L264.9 120.7 L266.2 124.9 L266.7 124.7 L267.4 122.6 L268.7 114 L273.9 49.6 L275.2 39.2 L276.4 35.1 L276.9 35.3 L277.5 36.9 L278.8 45.2 L283.9 110.1 L285.1 120.2 L286.2 124.8 L286.8 124.8 L287.4 123.2 L288.7 114.6 L293.5 50.5 L294.7 39.9 L295.7 35.4 L296.3 35.1 L297 37 L298.3 46.2 L302.8 108.1 L303.9 118.6 L304.8 123.9 L305.4 125 L305.9 124.3 L307.1 117.9 L310 80"/><path class="w2" d="M20 160 h2 v-22 h2 v22 H310"/><text x="20" y="190" class="s">SYNC: พัลส์ตอนเริ่มกวาด</text><text x="340" y="20" class="t">Burst N = 3 ทุกคาบเบิสต์</text><path class="w1" d="M340 80 L342.1 55.6 L343.7 42.2 L345.2 35.8 L345.8 35 L346.6 36 L347.8 41.4 L349.2 52.1 L354.9 114.4 L356.5 123.3 L357.2 124.9 L357.9 124.7 L359.3 120 L360.7 109.1 L366.5 45.8 L368 37.2 L368.8 35.2 L369.5 35.1 L370.8 39.3 L372.3 49.7 L378.3 115 L379.8 123.1 L380.4 124.7 L381.1 124.9 L382.4 120.8 L383.9 110.5 L390 45.2 L391.4 36.9 L392.1 35.3 L392.8 35.1 L394.1 39.1 L395.6 49.4 L401.6 114.7 L402.9 122.6 L403.6 124.5 L404.3 125 L405.5 122 L406.8 114.5 L410 80 L480 80 L483.2 45.5 L484.6 37.5 L485.3 35.5 L485.8 35 L486.4 35.5 L487.1 37.4 L488.4 45.3 L494.4 110.6 L495.9 120.9 L496.7 123.9 L497.4 125 L498 124.5 L498.7 122.7 L500 114.8 L506.1 49.5 L507.6 39.2 L508.3 36.1 L509 35 L509.7 35.4 L510.4 37.3 L511.7 45 L517.7 110.3 L519.2 120.7 L520 123.8 L520.7 124.9 L521.3 124.6 L522 122.8 L523.3 115.1 L529.5 48.9 L531 38.8 L531.7 35.9 L532.4 35 L533.1 35.6 L533.8 37.6 L535.1 45.6 L541.2 111 L542.6 121.1 L543.4 124 L544.1 125 L544.6 124.7 L545.3 122.9 L546.6 115.4 L550 80 L620 80"/><path class="w2" d="M340 160 h2 v-22 h2 v22 H480 h2 v-22 h2 v22 H620"/><line class="ar" x1="340" y1="128" x2="480" y2="128" marker-end="url(#v6a)" marker-start="url(#v6a)"/><text x="410" y="122" class="s" text-anchor="middle">T_burst</text></svg>
+      <figcaption>Sweep เปลี่ยนความถี่ตามเวลา Burst ปล่อยคลื่น \(N\) ลูกแล้วหยุด ทั้งสองแบบมีพัลส์ SYNC ไว้ทริกเกอร์สโคป</figcaption>
+    </figure>
+    <div class="note"><b>ลองในแล็บจำลอง:</b> <a data-fgs-open="rlc-sweep" href="/learn/function-generator/simulator/">กวาด 1–10 kHz เข้าวงจร RLC</a> จะเห็นเปลือกพองตรงความถี่เรโซแนนซ์ 5 kHz · <a data-fgs-open="burst" href="/learn/function-generator/simulator/">เบิสต์ 3 ลูก</a></div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="dds">
+    <h2 id="dds">ข้างในเครื่อง: หลักการ DDS <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เครื่องรุ่นใหม่ใช้ Direct Digital Synthesis (DDS) แทนออสซิลเลเตอร์แอนะล็อก ตัวสะสมเฟสขนาด \(N\) บิตบวกเลข \(M\) เข้าไปทุกสัญญาณนาฬิกา บิตบนของเฟสใช้เปิดตารางค่าไซน์ (LUT) ส่งเข้า DAC แล้วผ่านตัวกรองต่ำผ่านเพื่อลบขั้นบันได ความถี่จึงปรับได้ละเอียดมาก และเปลี่ยนความถี่ได้ทันทีโดยเฟสต่อเนื่อง</p>
+    <figure class="fgfig">
+      <svg viewBox="0 0 660 200" role="img" aria-label="บล็อกไดอะแกรมเครื่องกำเนิดสัญญาณแบบ DDS: ตัวสะสมเฟส ตาราง LUT DAC ตัวกรอง ภาคขยายและออฟเซต ตัวลดทอน แล้วผ่านความต้านทาน 50 โอห์มออกขั้ว"><defs><marker id="v2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="bx2" x="10" y="60" width="88" height="60" rx="8"/><text x="54" y="86" class="t" text-anchor="middle">ตัวสะสมเฟส</text><text x="54" y="104" class="s" text-anchor="middle">N บิต</text><rect class="bx2" x="112" y="60" width="88" height="60" rx="8"/><text x="156" y="86" class="t" text-anchor="middle">ตาราง LUT</text><text x="156" y="104" class="s" text-anchor="middle">เฟส → แอมพลิจูด</text><line class="ar" x1="98" y1="90" x2="111" y2="90" marker-end="url(#v2a)"/><rect class="bx" x="214" y="60" width="88" height="60" rx="8"/><text x="258" y="86" class="t" text-anchor="middle">DAC</text><text x="258" y="104" class="s" text-anchor="middle">14 บิต</text><line class="ar" x1="200" y1="90" x2="213" y2="90" marker-end="url(#v2a)"/><rect class="bx" x="316" y="60" width="88" height="60" rx="8"/><text x="360" y="86" class="t" text-anchor="middle">ตัวกรอง</text><text x="360" y="104" class="s" text-anchor="middle">ต่ำผ่าน</text><line class="ar" x1="302" y1="90" x2="315" y2="90" marker-end="url(#v2a)"/><rect class="bx" x="418" y="60" width="88" height="60" rx="8"/><text x="462" y="86" class="t" text-anchor="middle">ขยาย + ออฟเซต</text><text x="462" y="104" class="s" text-anchor="middle"></text><line class="ar" x1="404" y1="90" x2="417" y2="90" marker-end="url(#v2a)"/><rect class="bx" x="520" y="60" width="88" height="60" rx="8"/><text x="564" y="86" class="t" text-anchor="middle">ลดทอน</text><text x="564" y="104" class="s" text-anchor="middle">0/20/40 dB</text><line class="ar" x1="506" y1="90" x2="519" y2="90" marker-end="url(#v2a)"/><text x="54" y="40" class="s" text-anchor="middle">นาฬิกา f_clk</text><line class="ar" x1="54" y1="46" x2="54" y2="58" marker-end="url(#v2a)"/><text x="54" y="145" class="s" text-anchor="middle">M (เลขปรับความถี่)</text><line class="ar" x1="54" y1="135" x2="54" y2="122" marker-end="url(#v2a)"/><path class="sw" d="M622 90 h20"/><rect class="bx" x="600" y="140" width="50" height="30" rx="5"/><text x="625" y="160" class="s" text-anchor="middle">50 Ω</text><path class="sw" d="M570 120 V155 H600 M650 155 H656 V178"/><circle class="ar-h" cx="656" cy="182" r="5"/><text x="600" y="196" class="s" text-anchor="end">OUTPUT</text></svg>
+      <figcaption>เครื่องรุ่นใหม่เกือบทุกรุ่นเป็นแบบ DDS: ดิจิทัลสร้างรูปคลื่น แล้วภาคแอนะล็อกขยาย ปรับออฟเซต และลดทอน ก่อนผ่าน 50 Ω ออกขั้ว</figcaption>
+    </figure>
+    <figure class="fgfig">
+      <svg viewBox="0 0 640 250" role="img" aria-label="หลักการ DDS วงล้อเฟส 16 ช่องเพิ่มทีละ 3 ทุกสัญญาณนาฬิกา ค่าเฟสเปิดตารางไซน์ได้แรงดันแบบขั้นบันได ซึ่งกรองแล้วเป็นไซน์ความถี่ 3 ส่วน 16 ของความถี่นาฬิกา"><defs><marker id="v7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><circle class="bx" cx="110" cy="125" r="80"/><line class="ax" x1="184" y1="125" x2="190" y2="125"/><line class="ax" x1="178.4" y1="96.7" x2="183.9" y2="94.4"/><line class="ax" x1="162.3" y1="72.7" x2="166.6" y2="68.4"/><line class="ax" x1="138.3" y1="56.6" x2="140.6" y2="51.1"/><line class="ax" x1="110" y1="51" x2="110" y2="45"/><line class="ax" x1="81.7" y1="56.6" x2="79.4" y2="51.1"/><line class="ax" x1="57.7" y1="72.7" x2="53.4" y2="68.4"/><line class="ax" x1="41.6" y1="96.7" x2="36.1" y2="94.4"/><line class="ax" x1="36" y1="125" x2="30" y2="125"/><line class="ax" x1="41.6" y1="153.3" x2="36.1" y2="155.6"/><line class="ax" x1="57.7" y1="177.3" x2="53.4" y2="181.6"/><line class="ax" x1="81.7" y1="193.4" x2="79.4" y2="198.9"/><line class="ax" x1="110" y1="199" x2="110" y2="205"/><line class="ax" x1="138.3" y1="193.4" x2="140.6" y2="198.9"/><line class="ax" x1="162.3" y1="177.3" x2="166.6" y2="181.6"/><line class="ax" x1="178.4" y1="153.3" x2="183.9" y2="155.6"/><circle class="ar-h" cx="190" cy="125" r="5"/><text x="206" y="129" class="s" text-anchor="middle">0</text><circle class="ar-h" cx="140.6" cy="51.1" r="5"/><text x="146.7" y="40.3" class="s" text-anchor="middle">1</text><circle class="ar-h" cx="53.4" cy="68.4" r="5"/><text x="42.1" y="61.1" class="s" text-anchor="middle">2</text><circle class="ar-h" cx="36.1" cy="155.6" r="5"/><text x="21.3" y="165.7" class="s" text-anchor="middle">3</text><circle class="ar-h" cx="110" cy="205" r="5"/><text x="110" y="225" class="s" text-anchor="middle">4</text><circle class="ar-h" cx="183.9" cy="155.6" r="5"/><text x="198.7" y="165.7" class="s" text-anchor="middle">5</text><line class="ar" x1="110" y1="125" x2="136.8" y2="60.3" marker-end="url(#v7a)"/><text x="110" y="240" class="s" text-anchor="middle">ตัวสะสม 4 บิต (16 ช่อง) เพิ่มทีละ M = 3</text><line class="gr" x1="250" y1="125" x2="610" y2="125"/><path class="dsh" d="M250 125 L255.4 87.5 L259.6 65.9 L261.4 59.9 L263.2 56.2 L265 55 L266.8 56.2 L269.8 63.7 L273.4 80.4 L284.2 154.8 L288.4 178.9 L290.8 188.3 L292.6 192.8 L294.4 194.9 L296.2 194.4 L298 191.6 L299.8 186.3 L303.4 169.6 L314.2 95.2 L318.4 71.1 L322 58.4 L323.8 55.6 L325.6 55.1 L327.4 57.2 L329.2 61.7 L332.8 77.1 L344.8 158.7 L348.4 178.9 L352 191.6 L353.8 194.4 L355.6 194.9 L357.4 192.8 L359.2 188.3 L362.8 172.9 L374.8 91.3 L378.4 71.1 L382 58.4 L383.8 55.6 L385.6 55.1 L387.4 57.2 L389.2 61.7 L392.8 77.1 L404.8 158.7 L408.4 178.9 L412 191.6 L413.8 194.4 L415.6 194.9 L417.4 192.8 L419.2 188.3 L422.8 172.9 L434.8 91.3 L438.4 71.1 L442 58.4 L443.8 55.6 L445.6 55.1 L447.4 57.2 L449.2 61.7 L452.8 77.1 L464.8 158.7 L468.4 178.9 L472 191.6 L473.8 194.4 L475.6 194.9 L477.4 192.8 L479.2 188.3 L482.8 172.9 L494.8 91.3 L498.4 71.1 L502 58.4 L503.8 55.6 L505.6 55.1 L507.4 57.2 L509.2 61.7 L512.8 77.1 L524.8 158.7 L528.4 178.9 L532 191.6 L533.8 194.4 L535 195 L536.2 194.4 L538 191.6 L541.6 178.9 L545.2 158.7 L557.2 77.1 L561.4 59.9 L563.2 56.2 L565 55 L566.8 56.2 L568.6 59.9 L572.2 74 L575.8 95.2 L586.6 169.6 L590.2 186.3 L593.2 193.8 L595 195 L596.8 193.8 L598.6 190.1 L600.4 184.1 L604.6 162.5 L610 125"/><path class="w1" d="M250 125 L261.2 125 L261.2 60.3 L272.5 60.3 L272.5 75.5 L283.8 75.5 L283.8 151.8 L295 151.8 L295 195 L306.2 195 L306.2 151.8 L317.5 151.8 L317.5 75.5 L328.8 75.5 L328.8 60.3 L340 60.3 L340 125 L351.2 125 L351.2 189.7 L362.5 189.7 L362.5 174.5 L373.8 174.5 L373.8 98.2 L385 98.2 L385 55 L396.2 55 L396.2 98.2 L407.5 98.2 L407.5 174.5 L418.8 174.5 L418.8 189.7 L430 189.7 L430 125 L441.2 125 L441.2 60.3 L452.5 60.3 L452.5 75.5 L463.8 75.5 L463.8 151.8 L475 151.8 L475 195 L486.2 195 L486.2 151.8 L497.5 151.8 L497.5 75.5 L508.8 75.5 L508.8 60.3 L520 60.3 L520 125 L531.2 125 L531.2 189.7 L542.5 189.7 L542.5 174.5 L553.8 174.5 L553.8 98.2 L565 98.2 L565 55 L576.2 55 L576.2 98.2 L587.5 98.2 L587.5 174.5 L598.8 174.5 L598.8 189.7 L610 189.7"/><text x="430" y="230" class="s" text-anchor="middle">ทุกนาฬิกา: เฟส += M → LUT → DAC (ขั้นบันได) → กรองได้ไซน์</text><text x="430" y="30" class="t" text-anchor="middle">f_out = M·f_clk / 2^N = 3/16 f_clk</text></svg>
+      <figcaption>DDS: ตัวสะสมเฟสเดินทีละ \(M\) ช่องทุกสัญญาณนาฬิกา ยิ่ง \(M\) มาก วงล้อยิ่งหมุนเร็ว ความถี่ขาออกจึงเป็นสัดส่วนกับ \(M\)</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf" id="V15" data-k="dds output frequency tuning word phase accumulator ความถี่ขาออก"><p class="tf-n"><b><span class="fid">V15</span> DDS output frequency</b> ความถี่ขาออกของ DDS</p>
+        \[ f_{out} = \frac{M\,f_{clk}}{2^N} \]</div>
+      <div class="tf" id="V16" data-k="dds resolution frequency step ความละเอียด"><p class="tf-n"><b><span class="fid">V16</span> Frequency resolution</b> ความละเอียดความถี่</p>
+        \[ \Delta f = \frac{f_{clk}}{2^N} \]
+        <p class="tf-x">AD9833: \(25\ \text{MHz}/2^{28} = 0.093\) Hz</p></div>
+      <div class="tf" id="V17" data-k="nyquist image alias sinc droop dac reconstruction ภาพสะท้อน"><p class="tf-n"><b><span class="fid">V17</span> Images and sinc roll-off</b> ภาพสะท้อนและการลดทอนแบบ sinc</p>
+        \[ f_{img} = k f_{clk} \pm f_{out}, \quad |H| = \left|\frac{\sin(\pi f/f_{clk})}{\pi f/f_{clk}}\right| \]
+        <p class="tf-x">ใช้งานจริงไม่เกินราว \(0.4\,f_{clk}\) ให้ตัวกรองแยกภาพสะท้อนออกได้</p></div>
+      <div class="tf" id="V18" data-k="dac quantization snr bits 6.02 1.76 ความละเอียดบิต"><p class="tf-n"><b><span class="fid">V18</span> Ideal DAC SNR</b> SNR ของ DAC อุดมคติ</p>
+        \[ \text{SNR} = 6.02\,n + 1.76\ \text{dB} \]
+        <p class="tf-x">DAC 14 บิต: ประมาณ 86 dB · 10 บิต (AD9833): ประมาณ 62 dB</p></div>
+    </div>
+    <div class="fg-calc" data-calc="dds"></div>
+    <div class="wx" id="ex-v5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-5 · คำนวณเลขปรับความถี่</span><h3>DDS นาฬิกา 25 MHz ตัวสะสม 28 บิต ต้องการ 1 kHz ต้องตั้ง M เท่าไร ได้ความถี่จริงเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>จัดรูป <a class="tag tf" href="#V15">V15</a></p>\[ M = \frac{f_{out}\,2^N}{f_{clk}} = \frac{1000 \times 268\,435\,456}{25\,000\,000} = 10\,737.4 \]</li>
+        <li><p>ปัดเป็นจำนวนเต็ม \(M = 10\,737\)</p>\[ f_{out} = \frac{10\,737 \times 25 \times 10^6}{2^{28}} = 999.96\ \text{Hz} \]</li>
+      </ol>
+      <p class="answer">\(M = 10\,737\) ได้ 999.96 Hz คลาดเคลื่อนไม่เกินครึ่งหนึ่งของ \(\Delta f\) <a class="tag tf" href="#V16">V16</a> ดูวิธีเขียนค่านี้ลง AD9833 ที่หน้า <a href="/learn/function-generator/build/#dds">สร้างเครื่องเอง</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="specs">
+    <h2 id="specs">อ่านสเปกเครื่องให้เป็น <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สเปก</th><th>ค่าทั่วไป (เครื่อง 25 MHz)</th><th>มีผลกับอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>ช่วงความถี่ไซน์ / สี่เหลี่ยม</td><td>1 µHz – 25 MHz</td><td>ความถี่สูงสุดที่ทดสอบได้</td></tr>
+        <tr><td>อัตรา DAC / ความละเอียด</td><td>125 MSa/s, 14 บิต</td><td>ความเรียบของรูปคลื่น Arb และนอยส์</td></tr>
+        <tr><td>เวลาขาขึ้นคลื่นสี่เหลี่ยม</td><td>&lt; 10 ns</td><td>ใช้ทดสอบเวลาขาขึ้นของวงจรได้แค่ช้ากว่านี้มาก</td></tr>
+        <tr><td>ความเพี้ยนฮาร์มอนิก (ไซน์)</td><td>&lt; −50 dBc</td><td>ทดสอบเครื่องขยายเสียงที่ THD ต่ำมากไม่ได้</td></tr>
+        <tr><td>ความราบเรียบแอมพลิจูด</td><td>±0.2 dB ถึง 10 MHz</td><td>แอมพลิจูดคงที่เมื่อกวาดความถี่</td></tr>
+        <tr><td>ความแม่นยำความถี่</td><td>±1–2 ppm</td><td>ใช้เป็นแหล่งอ้างอิงตั้งเวลาได้ดีกว่าสโคปส่วนใหญ่</td></tr>
+        <tr><td>แอมพลิจูด (High-Z)</td><td>2 mVpp – 20 Vpp</td><td>ขีดจำกัด <a href="#V5">V5</a></td></tr>
+        <tr><td>ความต้านทานขาออก</td><td>50 Ω</td><td><a href="#V4">V4</a></td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>ความปลอดภัยของเครื่อง:</b> อย่าต่อขาออกเข้าจุดที่มีแหล่งจ่ายภายนอกอยู่แล้ว เช่น ขาออกของแหล่งจ่ายไฟหรือขั้วแบตเตอรี่ กราวด์ของขั้ว BNC ต่อกับกราวด์สายไฟบ้าน ห้ามคลิปกราวด์ไปแตะจุดที่ไม่ใช่กราวด์ของวงจร และควรใส่ตัวเก็บประจุกั้น DC เมื่อป้อนเข้าลำโพงที่ตั้งออฟเซตไว้</div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

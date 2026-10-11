@@ -44,3 +44,22 @@ with `"lesson": "linear-algebra", "sub": "<sub>"` in its meta block. The build a
   `<div class="mx-prod" data-a=… data-b=…>` (product explainer). A button `<button class="wx-btn calc-go" data-calc="mode=inv&amp;A=…">`
   inside a worked example fills the page's calculator.
 - Old URL `/learn/matrix-determinant/` redirects to `/learn/linear-algebra/` (`_redirects`).
+
+## Function generator & oscilloscope lab (added 2026-10-12)
+Series `function-generator` in `TOPICS` (build.mjs): hub `src/pages/learn/function-generator/index.html` + 9 sub-pages
+(waveforms W, generator V, oscilloscope O, simulator, measurements B, rc-rlc R, op-amp U, build K, applications X).
+Formula cards use the same markup as linear algebra, so every card appears in the hub's formula index automatically.
+- Virtual bench: `assets/fgs-core.js` (generator + circuit engine), `fgs-scope.js` (probe, ADC, trigger, measurements, FFT),
+  `fgs-ui.js` (knobs, generator panel, circuit board), `fgs-app.js` (bench, embedded scopes, presets, share links).
+  Full bench: `<div class="fgs-bench" data-preset="sine-basic">`. Embedded scope in a lesson:
+  `<div class="fgs-mini" data-preset="rc-tau" data-ch="1" data-ctl="R,C,tdiv" data-meas="vpp,rise" data-theory>`
+  (controls: wave freq amp offset duty sym phase load term noise tdiv vdiv1 vdiv2 pos1 level slope tmode tsrc coup1 coup2
+  comp1 probe2 xy math avg R C L Cf RL Rf op out; ranges via data-fmin/fmax, data-rmin/rmax, data-cmin/cmax).
+  Presets live in `P` at the top of `fgs-app.js`; any page can link `/learn/function-generator/simulator/#preset=<name>`,
+  and on the simulator page `<button data-fgs-preset="<name>">` loads one in place.
+- Calculators: `<div class="fg-calc" data-calc="vconv|load|scope|rc|rlc|opamp|schmitt|ripple|relax|555|wien|dds">` (`assets/fgcalc.js`).
+- DDS phase-accumulator visualiser: `<div class="dds-lab" data-n="5" data-m="3" data-b="4">` (`assets/fgdds.js`).
+- Figures are generated, not hand-drawn: `python3 scripts/fg_figs.py` rewrites every `<!--FIG:key-->…<!--/FIG-->` block in
+  the series pages and the home page from the functions in `scripts/fg_figs.py` (helpers in `scripts/svglib.py`).
+  Run it before `node build.mjs` after editing a figure.
+- Short URLs (`/oscilloscope`, `/simulator`, `/op-amp`, `/bode`, `/ad9833` …) are in `_redirects`.

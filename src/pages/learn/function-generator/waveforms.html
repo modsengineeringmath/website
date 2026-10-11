@@ -1,0 +1,280 @@
+<!--meta
+{
+  "title": "Vpp Vrms คืออะไร: อ่านค่าสัญญาณไซน์ สี่เหลี่ยม สามเหลี่ยม พัลส์ ดิวตี้ ออฟเซต เฟส dB | อาจารย์มด",
+  "h1": "สัญญาณพื้นฐานและการอ่านค่า: Vp Vpp Vrms ความถี่ ดิวตี้ และเฟส",
+  "description": "อธิบายค่าที่อ่านจากออสซิลโลสโคปและตั้งบนเครื่องกำเนิดสัญญาณ: ค่ายอด Vp ค่ายอดถึงยอด Vpp ค่า RMS ค่าเฉลี่ย ออฟเซต DC คาบ ความถี่ ดิวตี้ไซเคิล เฟส crest factor เดซิเบล dBV dBm และอนุกรมฟูริเยร์ พร้อมตารางสูตร RMS ทุกรูปคลื่น ตัวอย่างวิธีทำ และสโคปจำลองให้ลองเอง",
+  "ogTitle": "Vp Vpp Vrms Vavg ดิวตี้ เฟส: อ่านค่าสัญญาณให้ถูกตั้งแต่ครั้งแรก",
+  "lesson": "function-generator",
+  "sub": "waveforms",
+  "nav": "fg",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["Waveform", "Peak-to-peak voltage", "RMS voltage", "Average value", "Duty cycle", "DC offset", "Phase difference", "Crest factor", "Decibel", "Fourier series"],
+  "scripts": ["/assets/lesson.js", "/assets/fgs-core.js", "/assets/fgs-scope.js", "/assets/fgs-ui.js", "/assets/fgs-app.js"],
+  "faq": [
+    {"q": "Vpp กับ Vrms ต่างกันอย่างไร?", "a": "Vpp คือระยะจากยอดล่างถึงยอดบน อ่านได้ตรง ๆ จากจอสโคป ส่วน Vrms คือค่าที่ให้กำลังเท่ากับไฟ DC ขนาดเดียวกัน มิเตอร์ส่วนใหญ่แสดง Vrms สำหรับไซน์ \\(V_{rms} = V_{pp}/(2\\sqrt2) \\approx 0.354\\,V_{pp}\\) เช่น 2 Vpp เท่ากับ 0.707 Vrms"},
+    {"q": "ทำไมมัลติมิเตอร์วัดคลื่นสี่เหลี่ยมหรือพัลส์ได้ค่าไม่ตรง?", "a": "มิเตอร์ราคาประหยัดแบบ average-responding วัดค่าเฉลี่ยของสัญญาณที่เรียงกระแสแล้วคูณด้วย 1.111 ซึ่งถูกเฉพาะไซน์ ถ้าเป็นรูปคลื่นอื่นต้องใช้มิเตอร์ True RMS หรือคำนวณจากสูตรในหน้านี้ และควรเช็กว่ามิเตอร์วัดเฉพาะส่วน AC หรือรวม DC ด้วย"},
+    {"q": "ตั้งเครื่องกำเนิดสัญญาณเป็น Vrms ได้ไหม?", "a": "ได้ เครื่องส่วนใหญ่มีหน่วย Vpp, Vrms และ dBm ให้เลือก ค่า Vrms ที่เครื่องคำนวณให้ถูกต้องสำหรับไซน์ ถ้าเป็นรูปคลื่นอื่นให้ใช้ Vpp แล้วคำนวณ RMS เองตามตาราง W12"},
+    {"q": "ดิวตี้ไซเคิล 25 % ของคลื่น 0–5 V ให้แรงดันเฉลี่ยเท่าไร?", "a": "\\(V_{avg} = D\\,V_H = 0.25 \\times 5 = 1.25\\) V ส่วน \\(V_{rms} = V_H\\sqrt D = 2.5\\) V ค่าเฉลี่ยใช้กับงานแบบ PWM ที่มีการกรอง ส่วน RMS ใช้คำนวณความร้อนในตัวต้านทาน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="fgArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/function-generator/">แล็บ FG + สโคป</a></li><li>อ่านค่าสัญญาณ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 10.1 · แล็บ FG + สโคป · Waveforms</p>
+      <h1>สัญญาณพื้นฐานและการอ่านค่า: Vp Vpp Vrms ความถี่ ดิวตี้ และเฟส</h1>
+      <p class="lede">ก่อนจะหมุนปุ่มเครื่องกำเนิดสัญญาณหรือออสซิลโลสโคป ต้องรู้ก่อนว่าตัวเลขแต่ละตัวหมายถึงอะไร เครื่องกำเนิดตั้งค่าเป็น Vpp มิเตอร์อ่านเป็น Vrms จอสโคปให้ทั้งสองอย่าง ถ้าแปลงผิดครั้งเดียว ทั้งการทดลองก็ผิดตาม หน้านี้รวมทุกค่าที่ต้องใช้ พร้อมสูตรรหัส W</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">ลองบนสโคปจำลอง</a>
+        <a class="btn btn-ghost btn-sm" href="#rms">RMS</a>
+        <a class="btn btn-ghost btn-sm" href="#table">ตารางทุกรูปคลื่น</a>
+        <a class="btn btn-ghost btn-sm" href="#phase">เฟส</a>
+        <a class="btn btn-ghost btn-sm" href="#db">เดซิเบล</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f = 1/T\) · ไซน์: \(V_{pp} = 2V_p\), \(V_{rms} = V_p/\sqrt2 \approx 0.707V_p\)</li>
+          <li>พัลส์ 0 ถึง \(V_H\) ดิวตี้ \(D\): \(V_{avg} = DV_H\), \(V_{rms} = V_H\sqrt D\)</li>
+          <li>มี DC ปนอยู่: \(V_{rms} = \sqrt{V_{DC}^2 + V_{ac,rms}^2}\)</li>
+          <li>เฟสจากจอ: \(\varphi = 360^\circ \cdot \Delta t / T\) · ขยาย 10 เท่า = 20 dB</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น rms, duty, offset, phase, dBm, crest" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="time">
+    <h2 id="time">คาบ ความถี่ และความถี่เชิงมุม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สัญญาณที่ซ้ำรูปเดิมทุกช่วงเวลา \(T\) เรียกว่า<strong>สัญญาณคาบ</strong> (periodic signal) ช่วงเวลา \(T\) คือ<strong>คาบ</strong> หน่วยวินาที จำนวนรอบต่อวินาทีคือ<strong>ความถี่</strong> หน่วยเฮิรตซ์ (Hz) บนจอสโคป คาบอ่านจากระยะระหว่างจุดเดียวกันของสองลูกที่ติดกัน เช่น จุดตัดศูนย์ขาขึ้นถึงจุดตัดศูนย์ขาขึ้นถัดไป</p>
+    <div class="tf-grid">
+      <div class="tf" id="W1" data-k="period frequency angular omega hz คาบ ความถี่"><p class="tf-n"><b><span class="fid">W1</span> Period, frequency, angular frequency</b> คาบ ความถี่ ความถี่เชิงมุม</p>
+        \[ f = \frac{1}{T}, \qquad \omega = 2\pi f = \frac{2\pi}{T} \]
+        <p class="tf-x">\(\omega\) หน่วย rad/s ใช้ในสมการวงจร เช่น \(X_C = 1/(\omega C)\) ระวังสับสน 1 kHz ไม่ใช่ 1000 rad/s แต่เป็น 6283 rad/s</p></div>
+      <div class="tf" id="W2" data-k="sinusoid sine general equation amplitude phase offset สมการไซน์"><p class="tf-n"><b><span class="fid">W2</span> General sinusoid</b> สมการไซน์ทั่วไป</p>
+        \[ v(t) = V_{DC} + V_p \sin(2\pi f t + \varphi) \]
+        <p class="tf-x">สี่ตัวแปรนี้ตรงกับปุ่ม Offset, Ampl (ครึ่งหนึ่งของ Vpp), Freq และ Phase บนเครื่องกำเนิดสัญญาณพอดี</p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 290" role="img" aria-label="คลื่นไซน์ แสดงค่ายอด Vp ค่ายอดถึงยอด Vpp เส้นค่า RMS ที่ 0.707 เท่าของค่ายอด และคาบ T"><defs><marker id="w1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="ax" x1="60" y1="20" x2="60" y2="270"/><line class="ax" x1="50" y1="145" x2="496.3" y2="145"/><text x="500.3" y="149" class="s">t</text><text x="54" y="18" class="s" text-anchor="end">v(t)</text><line class="dsh" x1="60" y1="45" x2="502.8" y2="45"/><line class="dsh" x1="60" y1="245" x2="502.8" y2="245"/><line class="dsh" x1="60" y1="74.3" x2="502.8" y2="74.3" stroke-dasharray="10 4"/><path class="w1" d="M60 145 L70.8 114.1 L79.4 91.4 L87 74.3 L94.6 60.6 L102.1 50.9 L108.6 46.2 L111.8 45.2 L115.1 45 L118.3 45.8 L121.6 47.4 L127 52 L133.4 60.6 L138.8 70 L145.3 83.7 L156.1 111.1 L183.1 187.6 L190.7 206.3 L198.2 222.1 L205.8 234.1 L212.3 241 L216.6 243.8 L219.8 244.8 L223.1 245 L226.3 244.2 L231.7 241 L238.2 234.1 L244.7 224 L251.2 211.1 L263 181.8 L291.1 102.4 L298.7 83.7 L305.2 70 L311.6 58.9 L318.1 50.9 L324.6 46.2 L330 45 L333.2 45.4 L336.5 46.8 L343 52 L349.4 60.6 L355.9 72.1 L362.4 86.2 L368.9 102.4 L395.9 178.9 L406.7 206.3 L413.2 220 L418.6 229.4 L425 238 L430.4 242.6 L433.7 244.2 L436.9 245 L440.2 244.8 L443.4 243.8 L449.9 239.1 L457.4 229.4 L465 215.7 L472.6 198.6 L481.2 175.9 L492 145"/><line class="ar" x1="114" y1="145" x2="114" y2="47" marker-end="url(#w1a)"/><text x="120" y="95" class="a">Vp</text><line class="ar" x1="517.9" y1="245" x2="517.9" y2="45" marker-end="url(#w1a)" marker-start="url(#w1a)"/><text x="526.6" y="149" class="a">Vpp = 2Vp</text><text x="509.3" y="68.3" class="s">Vrms ≈ 0.707 Vp</text><line class="ar" x1="276" y1="262" x2="492" y2="262" marker-end="url(#w1a)" marker-start="url(#w1a)"/><text x="384" y="255" class="t" text-anchor="middle">คาบ T = 1/f</text><line class="dsh" x1="276" y1="145" x2="276" y2="268"/><line class="dsh" x1="492" y1="145" x2="492" y2="268"/><text x="54" y="49" class="s" text-anchor="end">+Vp</text><text x="54" y="249" class="s" text-anchor="end">−Vp</text><text x="54" y="149" class="s" text-anchor="end">0</text></svg>
+      <figcaption>คลื่นไซน์สองลูก: ค่ายอด \(V_p\) ค่ายอดถึงยอด \(V_{pp}\) ค่า RMS (เส้นประยาว) และคาบ \(T\)</figcaption>
+    </figure>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="amplitude">
+    <h2 id="amplitude">ค่ายอด ค่ายอดถึงยอด และออฟเซต DC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p><strong>ค่ายอด</strong> \(V_p\) (peak, amplitude) วัดจากเส้นกึ่งกลางถึงยอด <strong>ค่ายอดถึงยอด</strong> \(V_{pp}\) (peak-to-peak) วัดจากยอดล่างสุดถึงยอดบนสุด ค่านี้อ่านจากจอสโคปง่ายที่สุดเพราะไม่ต้องรู้ว่าเส้นศูนย์อยู่ตรงไหน เครื่องกำเนิดสัญญาณเกือบทุกยี่ห้อจึงตั้งแอมพลิจูดเป็น Vpp เป็นค่าเริ่มต้น</p>
+    <div class="tf-grid">
+      <div class="tf" id="W3" data-k="peak peak-to-peak vpp vmax vmin amplitude ค่ายอด ยอดถึงยอด"><p class="tf-n"><b><span class="fid">W3</span> Peak and peak-to-peak</b> ค่ายอดและค่ายอดถึงยอด</p>
+        \[ V_{pp} = V_{max} - V_{min} \]
+        \[ V_p = \tfrac12 V_{pp} \]
+        <p class="tf-x">สูตรบรรทัดที่สองใช้ได้เมื่อรูปคลื่นสมมาตรรอบเส้นกึ่งกลาง</p></div>
+      <div class="tf" id="W4" data-k="offset dc level vmax vmin ออฟเซต ระดับดีซี"><p class="tf-n"><b><span class="fid">W4</span> DC offset</b> ออฟเซต DC</p>
+        \[ V_{max} = V_{DC} + V_p \]
+        \[ V_{min} = V_{DC} - V_p \]
+        <p class="tf-x">สำหรับรูปสมมาตร ออฟเซตคือค่าเฉลี่ย: \(V_{DC} = (V_{max} + V_{min})/2\)</p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 250" role="img" aria-label="ไซน์ที่มีออฟเซต DC ยกทั้งรูปขึ้น ค่าสูงสุดเท่ากับออฟเซตบวกค่ายอด ค่าต่ำสุดเท่ากับออฟเซตลบค่ายอด"><defs><marker id="w5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="ax" x1="60" y1="15" x2="60" y2="235"/><line class="ax" x1="50" y1="175" x2="485.8" y2="175"/><line class="dsh" x1="60" y1="123" x2="485.8" y2="123"/><line class="dsh" x1="60" y1="19" x2="485.8" y2="19"/><line class="dsh" x1="60" y1="227" x2="485.8" y2="227"/><path class="w1" d="M60 123 L70.4 90.9 L78.7 67.3 L86 49.5 L93.2 35.2 L100.5 25.1 L103.6 22.3 L106.7 20.3 L109.8 19.2 L113 19.1 L116.1 19.8 L119.2 21.5 L124.4 26.3 L130.6 35.2 L135.8 45 L142 59.3 L152.4 87.8 L178.4 167.3 L185.7 186.7 L192.9 203.1 L200.2 215.7 L206.4 222.9 L210.6 225.7 L213.7 226.8 L216.8 226.9 L219.9 226.2 L225.1 222.9 L231.3 215.7 L237.6 205.2 L243.8 191.8 L255.2 161.3 L282.2 78.7 L289.5 59.3 L295.7 45 L302 33.5 L308.2 25.1 L311.3 22.3 L314.4 20.3 L319.6 19 L322.7 19.5 L325.8 20.8 L332.1 26.3 L338.3 35.2 L344.5 47.2 L350.8 61.9 L357 78.7 L383 158.2 L393.3 186.7 L399.6 201 L404.8 210.8 L411 219.7 L416.2 224.5 L419.3 226.2 L422.4 226.9 L425.5 226.8 L428.7 225.7 L431.8 223.7 L434.9 220.9 L442.2 210.8 L449.4 196.5 L456.7 178.7 L465 155.1 L475.4 123"/><text x="492" y="23" class="s">Vmax = V_DC + Vp</text><text x="492" y="127" class="a">V_DC (ออฟเซต)</text><text x="492" y="231" class="s">Vmin = V_DC − Vp</text><text x="54" y="179" class="s" text-anchor="end">0</text><line class="ar" x1="319.6" y1="123" x2="319.6" y2="21" marker-end="url(#w5a)"/><text x="325.6" y="71" class="a">Vp</text></svg>
+      <figcaption>ออฟเซต DC ยกสัญญาณทั้งรูป: \(V_{max} = V_{DC}+V_p\) และ \(V_{min} = V_{DC}-V_p\)</figcaption>
+    </figure>
+    <div class="note"><b>กับดักที่เจอบ่อย:</b> ตั้งคลื่นสี่เหลี่ยม 5 Vpp แล้วต่อเข้าไมโครคอนโทรลเลอร์ทันที ได้สัญญาณ −2.5 V ถึง +2.5 V ซึ่งติดลบ อาจทำขาอินพุตเสีย ถ้าต้องการลอจิก 0–5 V ให้ตั้ง Ampl 5 Vpp และ Offset +2.5 V หรือใช้ปุ่ม High/Low level ของเครื่อง</div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="rms">
+    <h2 id="rms">ค่า RMS และค่าเฉลี่ย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ค่า RMS (root mean square, ค่าประสิทธิผล) คือแรงดัน DC ที่ทำให้ตัวต้านทานร้อนเท่ากัน มาจากกำลัง \(P = v^2/R\) ที่ต้องเฉลี่ย \(v^2\) ไม่ใช่เฉลี่ย \(v\) อ่านชื่อย้อนหลังได้เป็นขั้นตอน: ยกกำลังสอง (square) เฉลี่ย (mean) แล้วถอดราก (root) ไฟบ้าน 220 V ก็เป็นค่า RMS ค่ายอดจริงคือ \(220\sqrt2 \approx 311\) V</p>
+    <div class="tf-grid">
+      <div class="tf" id="W5" data-k="rms definition root mean square effective ค่าประสิทธิผล นิยาม"><p class="tf-n"><b><span class="fid">W5</span> RMS value (definition)</b> นิยามค่า RMS</p>
+        \[ V_{rms} = \sqrt{\frac{1}{T}\int_{0}^{T} v^2(t)\,dt} \]</div>
+      <div class="tf" id="W6" data-k="average mean dc value ค่าเฉลี่ย"><p class="tf-n"><b><span class="fid">W6</span> Average (DC) value</b> ค่าเฉลี่ย</p>
+        \[ V_{avg} = \frac{1}{T}\int_{0}^{T} v(t)\,dt \]
+        <p class="tf-x">คือส่วน DC ของสัญญาณ ไซน์ที่ไม่มีออฟเซตมีค่าเฉลี่ยเป็นศูนย์</p></div>
+      <div class="tf" id="W7" data-k="rms sine 0.707 sqrt2 ไซน์"><p class="tf-n"><b><span class="fid">W7</span> RMS of a sine</b> RMS ของไซน์</p>
+        \[ V_{rms} = \frac{V_p}{\sqrt2} = \frac{V_{pp}}{2\sqrt2} \approx 0.707\,V_p \]
+        <p class="tf-x">พิสูจน์: \(\overline{\sin^2} = \tfrac12\) ดู <a href="/learn/calculus-basics/">แคลคูลัสเบื้องต้น</a></p></div>
+      <div class="tf" id="W8" data-k="rms dc ac total offset รวม dc"><p class="tf-n"><b><span class="fid">W8</span> RMS with a DC component</b> RMS เมื่อมี DC ปน</p>
+        \[ V_{rms} = \sqrt{V_{DC}^2 + V_{ac,rms}^2} \]
+        <p class="tf-x">มิเตอร์ที่ตั้งย่าน AC ส่วนใหญ่แสดงเฉพาะ \(V_{ac,rms}\) สโคปแสดงทั้ง Vrms และ Vrms (AC)</p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 640 330" role="img" aria-label="เทียบสี่รูปคลื่นที่ค่ายอดเท่ากัน ไซน์มี Vrms เท่ากับ Vp หาร รากสอง สี่เหลี่ยมเท่ากับ Vp สามเหลี่ยมและฟันเลื่อยเท่ากับ Vp หาร รากสาม"><defs><marker id="w3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="bx" x="20" y="20" width="300" height="140" rx="10"/><line class="gr" x1="60" y1="90" x2="305" y2="90"/><line class="dsh" x1="60" y1="53.2" x2="305" y2="53.2" stroke-dasharray="10 4"/><path class="w1" d="M60 90 L70.8 62.1 L75 53.2 L78.9 46.5 L82.8 41.7 L86.4 38.9 L90 38 L93.9 39.1 L96.9 41.4 L100.2 45.2 L107.1 57.5 L113.4 72.4 L128.7 112.9 L136.5 129.5 L140.7 136 L144.6 139.9 L148.5 141.8 L152.4 141.6 L155.7 139.7 L159.3 136 L162.9 130.6 L166.5 123.8 L173.1 108.4 L188.7 67.1 L196.2 51 L199.8 45.2 L203.4 41.1 L206.7 38.8 L210 38 L213.3 38.8 L216.9 41.4 L220.5 45.7 L224.1 51.5 L231.6 67.9 L246.3 106.8 L252.6 121.9 L259.5 134.3 L262.8 138.3 L265.8 140.7 L269.7 142 L273.3 141.2 L277.2 138.3 L281.1 133.5 L285 126.8 L289.2 117.9 L300 90"/><text x="32" y="42" class="t">ไซน์</text><text x="308" y="48.2" class="a" text-anchor="end">Vrms = Vp/√2</text><rect class="bx" x="335" y="20" width="300" height="140" rx="10"/><line class="gr" x1="375" y1="90" x2="620" y2="90"/><line class="dsh" x1="375" y1="38" x2="620" y2="38" stroke-dasharray="10 4"/><path class="w1" d="M375 38 L434.7 38 L435 142 L494.7 142 L495 38 L554.7 38 L555 142 L614.7 142 L615 38"/><text x="347" y="42" class="t">สี่เหลี่ยม</text><text x="623" y="33" class="a" text-anchor="end">Vrms = Vp</text><rect class="bx" x="20" y="175" width="300" height="140" rx="10"/><line class="gr" x1="60" y1="245" x2="305" y2="245"/><line class="dsh" x1="60" y1="215" x2="305" y2="215" stroke-dasharray="10 4"/><path class="w1" d="M60 245 L90 193 L150 297 L210 193 L270 297 L300 245"/><text x="32" y="197" class="t">สามเหลี่ยม</text><text x="308" y="210" class="a" text-anchor="end">Vrms = Vp/√3</text><rect class="bx" x="335" y="175" width="300" height="140" rx="10"/><line class="gr" x1="375" y1="245" x2="620" y2="245"/><line class="dsh" x1="375" y1="215" x2="620" y2="215" stroke-dasharray="10 4"/><path class="w1" d="M375 245 L434.7 193.3 L435 297 L554.7 193.3 L555 297 L615 245"/><text x="347" y="197" class="t">ฟันเลื่อย</text><text x="623" y="210" class="a" text-anchor="end">Vrms = Vp/√3</text></svg>
+      <figcaption>ค่ายอดเท่ากันทั้งสี่รูป แต่ RMS ต่างกัน เพราะเวลาที่สัญญาณอยู่ใกล้ยอดไม่เท่ากัน</figcaption>
+    </figure>
+    <div class="wx" id="ex-w1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-1 · อ่านจากจอสโคป</span><h3>ไซน์สูง 3.4 ช่องที่ 2 V/div คาบ 4 ช่องที่ 0.5 ms/div หา Vpp, Vp, Vrms และ f</h3></div>
+      <ol class="steps">
+        <li><p>คูณจำนวนช่องกับสเกลแนวตั้ง <a class="tag tf" href="#W3">W3</a></p>\[ V_{pp} = 3.4\ \text{div} \times 2\ \text{V/div} = 6.8\ \text{V}, \quad V_p = 3.4\ \text{V} \]</li>
+        <li><p>RMS ของไซน์ <a class="tag tf" href="#W7">W7</a></p>\[ V_{rms} = \frac{3.4}{\sqrt2} = 2.404\ \text{V} \]</li>
+        <li><p>คาบจากแกนเวลา แล้วกลับเป็นความถี่ <a class="tag tf" href="#W1">W1</a></p>\[ T = 4 \times 0.5\ \text{ms} = 2\ \text{ms}, \quad f = \frac{1}{2\ \text{ms}} = 500\ \text{Hz} \]</li>
+      </ol>
+      <p class="answer">\(V_{pp} = 6.8\) V, \(V_p = 3.4\) V, \(V_{rms} \approx 2.40\) V, \(f = 500\) Hz</p>
+    </div>
+    <div class="wx" id="ex-w2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-2 · ไซน์มีออฟเซต</span><h3>ตั้งไซน์ 4 Vpp ออฟเซต +1 V หา Vmax, Vmin และ Vrms รวม</h3></div>
+      <ol class="steps">
+        <li><p>ค่ายอด \(V_p = 2\) V <a class="tag tf" href="#W4">W4</a></p>\[ V_{max} = 1 + 2 = 3\ \text{V}, \quad V_{min} = 1 - 2 = -1\ \text{V} \]</li>
+        <li><p>ส่วน AC: \(V_{ac,rms} = 2/\sqrt2 = \sqrt2\) V แล้วรวมกับ DC <a class="tag tf" href="#W8">W8</a></p>\[ V_{rms} = \sqrt{1^2 + (\sqrt2)^2} = \sqrt3 \approx 1.732\ \text{V} \]</li>
+      </ol>
+      <p class="answer">\(V_{max} = 3\) V, \(V_{min} = -1\) V, \(V_{rms} \approx 1.73\) V (มิเตอร์ย่าน AC จะอ่านได้ 1.41 V)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="duty">
+    <h2 id="duty">คลื่นสี่เหลี่ยม พัลส์ และดิวตี้ไซเคิล <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ดิวตี้ไซเคิล (duty cycle) คือสัดส่วนเวลาที่สัญญาณอยู่ระดับสูงต่อหนึ่งคาบ เป็นหัวใจของ PWM ที่ใช้คุมความเร็วมอเตอร์ หรี่ไฟ LED และวงจรบั๊กคอนเวอร์เตอร์ ค่าเฉลี่ยของพัลส์จึงปรับได้ด้วยดิวตี้โดยไม่ต้องเปลี่ยนแรงดัน</p>
+    <div class="tf-grid">
+      <div class="tf" id="W9" data-k="duty cycle pulse width pwm ดิวตี้ ความกว้างพัลส์"><p class="tf-n"><b><span class="fid">W9</span> Duty cycle</b> ดิวตี้ไซเคิล</p>
+        \[ D = \frac{t_H}{T} \times 100\% \]</div>
+      <div class="tf" id="W10" data-k="pulse average pwm mean duty ค่าเฉลี่ยพัลส์"><p class="tf-n"><b><span class="fid">W10</span> Average of a pulse train</b> ค่าเฉลี่ยของพัลส์</p>
+        \[ V_{avg} = V_L + D\,(V_H - V_L) \]
+        \[ V_L = 0:\quad V_{avg} = D\,V_H \]</div>
+      <div class="tf" id="W11" data-k="pulse rms pwm duty square root rms พัลส์"><p class="tf-n"><b><span class="fid">W11</span> RMS of a pulse train</b> RMS ของพัลส์</p>
+        \[ V_{rms} = \sqrt{D\,V_H^2 + (1 - D)\,V_L^2} \]
+        \[ V_L = 0:\quad V_{rms} = V_H\sqrt D \]
+        <p class="tf-x">สี่เหลี่ยมสมมาตร \(\pm V_p\): \(V_{rms} = V_p\) และ \(V_{avg} = 0\)</p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 250" role="img" aria-label="คลื่นพัลส์ระดับ 0 ถึง V_H ดิวตี้ 30 เปอร์เซ็นต์ เส้นค่าเฉลี่ยอยู่ที่ 0.3 V_H"><defs><marker id="w2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="ax" x1="60" y1="20" x2="60" y2="225"/><line class="ax" x1="50" y1="200" x2="600" y2="200"/><path class="w1" d="M60 60 L102.2 60 L102.4 200 L250.6 200 L250.8 60 L314.2 60 L314.4 200 L462.6 200 L462.8 60 L526.2 60 L526.4 200 L590 200"/><line class="dsh" x1="60" y1="158" x2="590" y2="158"/><text x="176.6" y="152" class="a" text-anchor="middle">Vavg = 0.3 V_H</text><line class="ar" x1="250.8" y1="40" x2="314.4" y2="40" marker-end="url(#w2a)" marker-start="url(#w2a)"/><text x="282.6" y="32" class="t" text-anchor="middle">t_H</text><line class="ar" x1="250.8" y1="232" x2="462.8" y2="232" marker-end="url(#w2a)" marker-start="url(#w2a)"/><text x="356.8" y="226" class="t" text-anchor="middle">T</text><line class="dsh" x1="250.8" y1="60" x2="250.8" y2="236"/><line class="dsh" x1="462.8" y1="60" x2="462.8" y2="236"/><text x="54" y="64" class="s" text-anchor="end">V_H</text><text x="54" y="204" class="s" text-anchor="end">0</text><text x="388.6" y="80" class="t" text-anchor="middle">D = t_H/T = 30 %</text></svg>
+      <figcaption>พัลส์ดิวตี้ 30 %: ช่วงสูง \(t_H\) ต่อคาบ \(T\) และค่าเฉลี่ยที่เท่ากับ \(D\cdot V_H\)</figcaption>
+    </figure>
+    <div class="wx" id="ex-w3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-3 · PWM ขับมอเตอร์</span><h3>พัลส์ 0–5 V ดิวตี้ 30 % ป้อนตัวต้านทาน 10 Ω หาแรงดันเฉลี่ย Vrms และกำลังเฉลี่ย</h3></div>
+      <ol class="steps">
+        <li><p>ค่าเฉลี่ย <a class="tag tf" href="#W10">W10</a></p>\[ V_{avg} = 0.3 \times 5 = 1.5\ \text{V} \]</li>
+        <li><p>RMS <a class="tag tf" href="#W11">W11</a></p>\[ V_{rms} = 5\sqrt{0.3} = 2.739\ \text{V} \]</li>
+        <li><p>กำลังเฉลี่ยใช้ RMS ไม่ใช่ค่าเฉลี่ย</p>\[ P = \frac{V_{rms}^2}{R} = \frac{2.739^2}{10} = 0.75\ \text{W} \]</li>
+      </ol>
+      <p class="answer">\(V_{avg} = 1.5\) V, \(V_{rms} \approx 2.74\) V, \(P = 0.75\) W (ถ้าใช้ \(V_{avg}^2/R\) จะได้ 0.225 W ซึ่งผิด)</p>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">ลองเอง: เส้นบอกค่าบนจอสโคป <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สโคปจำลองนี้ต่อเครื่องกำเนิดสัญญาณตรงเข้า CH1 เส้นประสีแดงคือ Vmax และ Vmin สีเขียวคือค่าเฉลี่ย สีฟ้าคือ Vrms ลองเปลี่ยนรูปคลื่นที่แอมพลิจูดเท่ากัน แล้วดูว่าเส้น RMS ขยับไปไหน หรือเลื่อนดิวตี้ของคลื่นสี่เหลี่ยมแล้วดูค่าเฉลี่ย ตารางด้านขวาคือค่าที่สโคปวัดได้จริง มีทั้งนอยส์และความละเอียด 8 บิตเหมือนเครื่องจริง</p>
+    <div class="fgs-mini" data-preset="square-duty" data-ch="1" data-ctl="wave,amp,offset,duty,freq,tdiv,vdiv1" data-annot="levels" data-meas="vpp,vmax,vmin,avg,rms,acrms,freq,duty" data-fmin="10" data-fmax="100000"><noscript>ต้องเปิด JavaScript เพื่อใช้สโคปจำลอง</noscript></div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางค่าเฉลี่ยและ RMS ของทุกรูปคลื่น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf" id="W12" data-k="rms table average crest form factor triangle sawtooth rectified half wave full wave ตาราง"><p class="tf-n"><b><span class="fid">W12</span> RMS and average of common waveforms</b> ตาราง RMS และค่าเฉลี่ย (ค่ายอด \(V_p\))</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>รูปคลื่น</th><th>\(V_{avg}\)</th><th>\(V_{rms}\)</th><th>Crest factor</th></tr></thead>
+        <tbody>
+          <tr><td>ไซน์ \(\pm V_p\)</td><td>0</td><td>\(V_p/\sqrt2\)</td><td>1.414</td></tr>
+          <tr><td>สี่เหลี่ยม \(\pm V_p\)</td><td>0</td><td>\(V_p\)</td><td>1</td></tr>
+          <tr><td>สามเหลี่ยม \(\pm V_p\)</td><td>0</td><td>\(V_p/\sqrt3\)</td><td>1.732</td></tr>
+          <tr><td>ฟันเลื่อย \(\pm V_p\)</td><td>0</td><td>\(V_p/\sqrt3\)</td><td>1.732</td></tr>
+          <tr><td>พัลส์ 0 ถึง \(V_p\) ดิวตี้ \(D\)</td><td>\(DV_p\)</td><td>\(V_p\sqrt D\)</td><td>\(1/\sqrt D\)</td></tr>
+          <tr><td>ไซน์เรียงกระแสครึ่งคลื่น</td><td>\(V_p/\pi\)</td><td>\(V_p/2\)</td><td>2</td></tr>
+          <tr><td>ไซน์เรียงกระแสเต็มคลื่น</td><td>\(2V_p/\pi\)</td><td>\(V_p/\sqrt2\)</td><td>1.414</td></tr>
+          <tr><td>สามเหลี่ยม 0 ถึง \(V_p\)</td><td>\(V_p/2\)</td><td>\(V_p/\sqrt3\)</td><td>1.732</td></tr>
+        </tbody>
+      </table></div></div>
+    <div class="tf-grid">
+      <div class="tf" id="W13" data-k="crest factor form factor peak rms average rectified 1.111 1.414"><p class="tf-n"><b><span class="fid">W13</span> Crest factor and form factor</b> แฟกเตอร์ยอดและแฟกเตอร์รูปร่าง</p>
+        \[ \text{CF} = \frac{V_p}{V_{rms}}, \qquad \text{FF} = \frac{V_{rms}}{\overline{|v|}} \]
+        <p class="tf-x">ไซน์: \(\overline{|v|} = 2V_p/\pi\), FF \(= 1.111\) มิเตอร์แบบไม่ใช่ True RMS คูณค่าเฉลี่ยที่เรียงกระแสด้วย 1.111 จึงถูกเฉพาะไซน์</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="phase">
+    <h2 id="phase">เฟสและความต่างเฟส <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อป้อนไซน์เข้าวงจรที่มีตัวเก็บประจุหรือตัวเหนี่ยวนำ เอาต์พุตยังเป็นไซน์ความถี่เดิม แต่ขนาดและเฟสเปลี่ยน เฟสอ่านจากจอสโคปได้โดยวัดระยะ \(\Delta t\) ระหว่างจุดเดียวกันของสองช่อง แล้วเทียบกับคาบ ถ้า CH2 เกิดทีหลังเรียกว่า<strong>ตามหลัง</strong> (lag) เฟสเป็นลบ ถ้าเกิดก่อนเรียกว่า<strong>นำหน้า</strong> (lead) เฟสเป็นบวก</p>
+    <div class="tf" id="W14" data-k="phase difference lead lag delta t degrees เฟส นำหน้า ตามหลัง"><p class="tf-n"><b><span class="fid">W14</span> Phase difference from a time delay</b> ความต่างเฟสจากเวลาหน่วง</p>
+      \[ \varphi = -360^\circ \cdot \frac{\Delta t}{T} = -360^\circ f\,\Delta t \qquad (\Delta t > 0 \text{ เมื่อ CH2 เกิดทีหลัง}) \]
+      <p class="tf-x">สโคปบางยี่ห้อแสดงเครื่องหมายกลับกัน ให้ดูจากภาพเสมอว่าสัญญาณไหนเกิดก่อน วิธีวัดละเอียดอยู่ในหน้า <a href="/learn/function-generator/measurements/#phase">เทคนิคการวัด</a></p></div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 250" role="img" aria-label="สัญญาณสองช่อง ช่องสองตามหลังช่องหนึ่ง Δt เท่ากับหนึ่งในแปดของคาบ คิดเป็นเฟสลบ 45 องศา"><defs><marker id="w4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="ax" x1="50" y1="20" x2="50" y2="220"/><line class="ax" x1="40" y1="120" x2="600" y2="120"/><path class="w1" d="M50 120 L62.1 95 L71.6 77.1 L79.7 63.9 L87.8 53.1 L95.9 45.4 L102.7 41.5 L109.4 40 L113.5 40.3 L117.5 41.5 L124.2 45.5 L131 51.8 L137.8 60.2 L144.5 70.5 L156.7 92.6 L187.7 155.8 L195.8 170 L203.9 182 L212 191.3 L220.1 197.3 L224.1 199.1 L228.2 199.9 L234.9 199.3 L241.7 196.3 L248.4 190.8 L255.2 183.2 L263.3 171.5 L276.8 147.1 L307.9 84 L316 69.7 L324 57.8 L332.1 48.6 L338.9 43.4 L343 41.4 L347 40.2 L353.8 40.4 L360.5 43 L367.2 48 L374 55.3 L382.1 66.6 L395.6 90.6 L428 156.3 L436.1 170.5 L442.9 180.6 L451 190.3 L457.7 195.9 L461.8 198.1 L465.8 199.5 L472.6 199.8 L479.3 197.6 L487.4 191.8 L494.1 184.5 L502.2 173.1 L515.8 149.2 L548.2 83.4 L556.2 69.2 L563 59.2 L569.8 51 L576.5 44.9 L583.2 41.2 L590 40"/><path class="w2" d="M50 159.6 L63.5 143.4 L94.6 99.2 L102.7 88.7 L109.4 81 L117.5 73.4 L125.6 67.9 L133.7 64.8 L141.8 64.1 L148.6 65.4 L156.7 69.2 L163.4 74.2 L171.5 82 L185 98.6 L218.8 146.4 L226.8 156.2 L234.9 164.4 L243 170.6 L251.1 174.5 L259.2 176 L267.4 175 L274.1 172.2 L280.9 167.9 L287.6 162 L294.4 154.8 L306.5 139.4 L337.6 95.2 L345.6 85.2 L352.4 78 L360.5 71.1 L367.2 67.1 L374 64.7 L380.8 64 L387.5 65.1 L395.6 68.6 L403.7 74.4 L411.8 82.3 L425.3 99 L457.7 145 L465.8 155 L473.9 163.4 L482 169.9 L488.8 173.6 L496.9 175.8 L503.6 175.8 L510.4 174 L517.1 170.5 L523.8 165.4 L532 157.5 L545.5 140.8 L576.5 96.6 L590 80.4"/><line class="dsh" x1="290" y1="25" x2="290" y2="140"/><line class="dsh" x1="320" y1="25" x2="320" y2="140"/><line class="ar" x1="290" y1="30" x2="320" y2="30" marker-end="url(#w4a)" marker-start="url(#w4a)"/><text x="304.4" y="22" class="a" text-anchor="middle">Δt</text><line class="ar" x1="50" y1="236" x2="290" y2="236" marker-end="url(#w4a)" marker-start="url(#w4a)"/><text x="170" y="230" class="t" text-anchor="middle">T</text><text x="114.8" y="34" class="c1">CH1 v₁</text><text x="182" y="56.4" class="c2">CH2 v₂</text><text x="458" y="40" class="t" text-anchor="middle">φ = −360° · Δt/T = −45°</text><text x="458" y="58" class="s" text-anchor="middle">(v₂ ตามหลัง v₁)</text></svg>
+      <figcaption>วัดเฟสจากระยะห่างของจุดตัดศูนย์ขาขึ้น: \(\varphi = -360^\circ\,\Delta t/T\)</figcaption>
+    </figure>
+    <div class="wx" id="ex-w4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-4 · วัดเฟส</span><h3>ไซน์ 1 kHz ที่ CH2 ตัดศูนย์ขาขึ้นช้ากว่า CH1 อยู่ 0.25 ms หาเฟส</h3></div>
+      <ol class="steps">
+        <li><p>\(T = 1/1000 = 1\) ms แล้วแทนสูตร <a class="tag tf" href="#W14">W14</a></p>\[ \varphi = -360^\circ \times \frac{0.25}{1} = -90^\circ \]</li>
+      </ol>
+      <p class="answer">CH2 ตามหลัง CH1 อยู่ 90° (ถ้าวงจรเป็น RC ต่ำผ่าน แปลว่าความถี่สูงกว่าความถี่ตัดมาก)</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="db">
+    <h2 id="db">เดซิเบล dB, dBV และ dBm <span class="lv lv-i">กลาง</span></h2>
+    <p>เดซิเบลใช้บอกอัตราส่วนแบบลอการิทึม ทำให้คูณกลายเป็นบวก เกนของระบบหลายภาคต่อกันจึงบวกกันได้ทันที เครื่องกำเนิดสัญญาณ RF และหน้าจอ FFT ของสโคปแสดงระดับเป็น dBm หรือ dBV</p>
+    <div class="tf-grid">
+      <div class="tf" id="W15" data-k="decibel db gain ratio voltage power 20log 10log เดซิเบล"><p class="tf-n"><b><span class="fid">W15</span> Decibel (voltage ratio)</b> อัตราส่วนแรงดันเป็นเดซิเบล</p>
+        \[ A_{dB} = 20\log_{10}\frac{V_2}{V_1} = 10\log_{10}\frac{P_2}{P_1} \]
+        <p class="tf-x">\(\times 2 \approx +6\) dB · \(\times 10 = +20\) dB · \(1/\sqrt2 \approx -3\) dB</p></div>
+      <div class="tf" id="W16" data-k="dbv dbm dbu absolute level 50 ohm 0.2236 0.632 ระดับสัมบูรณ์"><p class="tf-n"><b><span class="fid">W16</span> Absolute levels dBV and dBm (50 Ω)</b> ระดับสัมบูรณ์</p>
+        \[ \text{dBV} = 20\log_{10}\frac{V_{rms}}{1\ \text{V}} \]
+        \[ \text{dBm} = 10\log_{10}\frac{V_{rms}^2/(50\ \Omega)}{1\ \text{mW}} \]
+        <p class="tf-x">0 dBm บนโหลด 50 Ω \(= 0.2236\) Vrms \(= 0.632\) Vpp (ไซน์) · 0 dBV = 1 Vrms · dBu อ้างอิง 0.775 Vrms</p></div>
+    </div>
+    <div class="wx" id="ex-w5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-5 · dBm กับ Vpp</span><h3>ตั้งเครื่องกำเนิดสัญญาณ +10 dBm โหลด 50 Ω ได้แรงดันกี่ Vpp</h3></div>
+      <ol class="steps">
+        <li><p>แปลง dBm เป็นกำลัง <a class="tag tf" href="#W16">W16</a></p>\[ P = 1\ \text{mW} \times 10^{10/10} = 10\ \text{mW} \]</li>
+        <li>\[ V_{rms} = \sqrt{PR} = \sqrt{0.01 \times 50} = 0.7071\ \text{V} \]</li>
+        <li><p>ไซน์ <a class="tag tf" href="#W7">W7</a></p>\[ V_{pp} = 2\sqrt2 \times 0.7071 = 2.0\ \text{V} \]</li>
+      </ol>
+      <p class="answer">+10 dBm บน 50 Ω = 2 Vpp ถ้าเปิดวงจร (High-Z) จะวัดได้ 4 Vpp ดูเหตุผลที่ <a href="/learn/function-generator/generator/#V4">V4</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="fourier">
+    <h2 id="fourier">ทำไมคลื่นสี่เหลี่ยมมีหลายความถี่: อนุกรมฟูริเยร์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สัญญาณคาบทุกรูปเขียนเป็นผลรวมของไซน์ที่ความถี่เป็นจำนวนเต็มเท่าของความถี่หลักได้ คลื่นสี่เหลี่ยมสมมาตรมีเฉพาะฮาร์มอนิกคี่ที่ลดลงแบบ \(1/n\) ส่วนสามเหลี่ยมลดลงเร็วกว่าแบบ \(1/n^2\) จึงดูนุ่มกว่า ผลนี้อธิบายว่าทำไมคลื่นสี่เหลี่ยมผ่านวงจรต่ำผ่านแล้วขอบมน และทำไมหน้าจอ FFT ของสโคปเห็นยอดที่ 3, 5, 7 เท่าของความถี่หลัก ดูต่อที่ <a href="/learn/signals/">แล็บสัญญาณ</a></p>
+    <div class="tf-grid">
+      <div class="tf" id="W17" data-k="fourier series square wave odd harmonics 4/pi 1/n ฟูริเยร์ ฮาร์มอนิก"><p class="tf-n"><b><span class="fid">W17</span> Fourier series of a square wave</b> อนุกรมฟูริเยร์ของคลื่นสี่เหลี่ยม</p>
+        \[ v(t) = \frac{4V_p}{\pi}\sum_{n = 1,3,5,\dots}\frac{\sin(n\omega t)}{n} \]
+        <p class="tf-x">ฮาร์มอนิกที่ 3 ต่ำกว่าตัวหลัก \(20\log(1/3) = -9.54\) dB ฮาร์มอนิกที่ 5 ต่ำกว่า −13.98 dB</p></div>
+      <div class="tf" id="W18" data-k="fourier series triangle wave odd harmonics 8/pi^2 1/n^2 สามเหลี่ยม"><p class="tf-n"><b><span class="fid">W18</span> Fourier series of a triangle wave</b> อนุกรมฟูริเยร์ของคลื่นสามเหลี่ยม</p>
+        \[ v(t) = \frac{8V_p}{\pi^2}\sum_{n = 1,3,5,\dots}\frac{(-1)^{(n-1)/2}}{n^2}\sin(n\omega t) \]</div>
+      <div class="tf" id="W19" data-k="parseval power harmonics rms sum thd พาร์เซวาล"><p class="tf-n"><b><span class="fid">W19</span> Parseval: RMS from harmonics, THD</b> RMS จากฮาร์มอนิก และความเพี้ยนรวม</p>
+        \[ V_{rms}^2 = V_0^2 + \sum_{n\ge1}\frac{V_n^2}{2}, \qquad \text{THD} = \frac{\sqrt{\sum_{n\ge2} V_n^2}}{V_1} \]
+        <p class="tf-x">\(V_n\) คือค่ายอดของฮาร์มอนิกที่ \(n\) คลื่นสี่เหลี่ยมอุดมคติมี THD \(\approx 48.3\%\)</p></div>
+    </div>
+    <figure class="fgfig">
+      <svg viewBox="0 0 620 250" role="img" aria-label="คลื่นสี่เหลี่ยมเกิดจากผลรวมของไซน์ความถี่คี่ ฮาร์มอนิกแรกสูง 4 ส่วนพาย ยิ่งรวมหลายตัวยิ่งเหลี่ยม และมีหูเกินที่ขอบ"><defs><marker id="w6a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar-h" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="ax" x1="50" y1="20" x2="50" y2="230"/><line class="ax" x1="40" y1="125" x2="600" y2="125"/><path class="dsh" d="M50 55 L184.7 55 L185 195 L319.7 195 L320 55 L454.7 55 L455 195 L589.7 195 L590 55"/><path class="w2" d="M50 125 L64 96.4 L73.8 78.2 L83.5 62.4 L92.1 51 L100.8 42.6 L105.1 39.6 L109.4 37.5 L113.7 36.2 L118 35.9 L122.4 36.4 L126.7 37.9 L133.2 41.7 L140.7 48.6 L148.3 57.8 L155.8 69.1 L169.9 94.3 L204.4 164 L214.2 180.9 L222.8 193.7 L232.5 204.7 L241.2 211 L245.5 212.9 L249.8 214 L254.1 214.1 L258.4 213.3 L266 209.8 L273.6 203.6 L281.1 195.1 L289.8 182.7 L304.9 155.7 L339.4 86 L348.1 70.8 L356.7 57.8 L364.3 48.6 L371.8 41.7 L379.4 37.5 L387 35.9 L394.5 37.1 L398.8 39 L403.2 41.7 L410.7 48.6 L419.4 59.3 L428 72.6 L436.6 88.1 L470.1 155.7 L484.2 180.9 L491.7 192.2 L499.3 201.4 L506.8 208.3 L513.3 212.1 L517.6 213.6 L522 214.1 L526.3 213.8 L530.6 212.5 L534.9 210.4 L539.2 207.4 L547.9 199 L556.5 187.6 L566.2 171.8 L576 153.6 L590 125"/><path class="w3" d="M50 125 L56.1 88.6 L60.8 65.5 L65.5 49.9 L67.5 45.8 L70.2 42.6 L73 41.8 L76.3 43.7 L87.8 59 L90.5 61.5 L93.2 63 L95.9 63.2 L99.3 61.8 L111.4 50.3 L114.8 48.3 L117.5 47.8 L120.2 48.3 L122.9 49.8 L134.4 60.8 L137.1 62.6 L139.8 63.2 L142.5 62.7 L145.2 61 L148.6 57.3 L158 44.4 L160.7 42.3 L163.4 41.9 L166.1 43.9 L168.8 48.4 L171.5 55.6 L174.2 65.5 L179.6 92.4 L193.8 175.4 L199.2 196.5 L201.2 201.6 L203.9 206.1 L205.2 207.4 L207.3 208.2 L210.7 206.9 L214 203.2 L222.8 191 L225.5 188.5 L228.2 187 L230.9 186.8 L234.3 188.2 L246.4 199.7 L249.8 201.7 L252.5 202.2 L255.2 201.7 L258.6 199.7 L270.7 188.2 L273.4 187 L275.4 186.8 L278.1 187.6 L281.5 190.3 L293.7 206.3 L296.4 208 L298.4 208.1 L301.1 206.1 L303.8 201.6 L306.5 194.4 L309.2 184.5 L314.6 157.6 L328.8 74.6 L334.2 53.5 L336.2 48.4 L338.9 43.9 L340.2 42.6 L342.3 41.8 L345.6 43.1 L349 46.8 L357.8 59 L360.5 61.5 L363.2 63 L365.9 63.2 L369.3 61.8 L381.4 50.3 L384.8 48.3 L387.5 47.8 L390.2 48.3 L393.6 50.3 L405.7 61.8 L408.4 63 L410.4 63.2 L413.1 62.4 L415.9 60.4 L427.3 45.1 L430 42.6 L432.7 41.8 L435.4 43.1 L438.1 47 L440.8 53.5 L443.5 62.8 L448.9 88.6 L459.7 153.7 L465.1 181.6 L467.8 192.2 L470.5 200.1 L473.2 205.3 L475.9 207.8 L478.6 208 L481.3 206.3 L493.5 190.3 L496.9 187.6 L500.2 186.8 L502.9 187.4 L505.6 189.2 L517.1 200.2 L519.8 201.7 L522.5 202.2 L525.2 201.7 L528.6 199.7 L540.7 188.2 L544.1 186.8 L546.8 187 L549.5 188.5 L552.2 191 L563.7 206.3 L567 208.2 L569.8 207.4 L572.5 204.2 L574.5 200.1 L579.2 184.5 L583.9 161.4 L590 125"/><path class="w1" d="M50 125 L51.7 63.9 L52.4 49.8 L53.4 42.5 L55.7 58.6 L56.8 61.8 L59.5 51.3 L60.1 50.3 L62.8 57.9 L63.5 58.6 L66.9 52.1 L70.2 57.4 L73.6 52.9 L77 56.9 L80.4 53.3 L83.8 56.6 L87.1 53.5 L90.5 56.4 L93.9 53.7 L97.2 56.2 L100.6 53.8 L104 56.2 L107.4 53.9 L110.8 56.1 L114.1 53.9 L117.5 56.1 L120.2 54.1 L121.2 53.9 L124.2 56.1 L127.6 53.9 L131 56.2 L134.4 53.8 L137.8 56.2 L141.1 53.7 L144.5 56.4 L147.9 53.5 L151.2 56.6 L154.6 53.3 L158 56.9 L161.4 52.9 L164.8 57.4 L168.1 52.1 L171.5 58.6 L172.2 57.9 L174.9 50.3 L175.6 51.3 L178.2 61.8 L179.3 58.6 L181.6 42.5 L182.6 49.8 L183.3 63.9 L186.7 186.1 L187.4 200.2 L188.4 207.5 L190.7 191.4 L191.8 188.2 L194.5 198.7 L195.1 199.7 L197.8 192.1 L198.5 191.4 L201.9 197.9 L205.2 192.6 L208.6 197.1 L212 193.1 L215.4 196.7 L218.8 193.4 L222.1 196.5 L225.5 193.6 L228.9 196.3 L232.2 193.8 L235.6 196.2 L239 193.8 L242.4 196.1 L245.8 193.9 L249.1 196.1 L252.5 193.9 L255.2 195.9 L256.2 196.1 L259.2 193.9 L262.6 196.1 L266 193.8 L269.4 196.2 L272.8 193.8 L276.1 196.3 L279.5 193.6 L282.9 196.5 L286.2 193.4 L289.6 196.7 L293 193.1 L296.4 197.1 L299.8 192.6 L303.1 197.9 L306.5 191.4 L307.2 192.1 L309.9 199.7 L310.6 198.7 L313.2 188.2 L314.3 191.4 L316.6 207.5 L317.6 200.2 L318.3 186.1 L321.7 63.9 L322.4 49.8 L323.4 42.5 L325.7 58.6 L326.8 61.8 L329.4 51.3 L330.1 50.3 L332.8 57.9 L333.5 58.6 L336.9 52.1 L340.2 57.4 L343.6 52.9 L347 56.9 L350.4 53.3 L353.8 56.6 L357.1 53.5 L360.5 56.4 L363.9 53.7 L367.2 56.2 L370.6 53.8 L374 56.2 L377.4 53.9 L380.8 56.1 L384.1 53.9 L387.5 56.1 L390.2 54.1 L391.2 53.9 L394.2 56.1 L397.6 53.9 L401 56.2 L404.4 53.8 L407.8 56.2 L411.1 53.7 L414.5 56.4 L417.9 53.5 L421.2 56.6 L424.6 53.3 L428 56.9 L431.4 52.9 L434.8 57.4 L438.1 52.1 L441.5 58.6 L442.2 57.9 L444.9 50.3 L445.6 51.3 L448.2 61.8 L449.3 58.6 L451.6 42.5 L452.6 49.8 L453.3 63.9 L456.7 186.1 L457.4 200.2 L458.4 207.5 L460.7 191.4 L461.8 188.2 L464.4 198.7 L465.1 199.7 L467.8 192.1 L468.5 191.4 L471.9 197.9 L475.2 192.6 L478.6 197.1 L482 193.1 L485.4 196.7 L488.8 193.4 L492.1 196.5 L495.5 193.6 L498.9 196.3 L502.2 193.8 L505.6 196.2 L509 193.8 L512.4 196.1 L515.8 193.9 L519.1 196.1 L522.5 193.9 L525.2 195.9 L526.2 196.1 L529.2 193.9 L532.6 196.1 L536 193.8 L539.4 196.2 L542.8 193.8 L546.1 196.3 L549.5 193.6 L552.9 196.5 L556.2 193.4 L559.6 196.7 L563 193.1 L566.4 197.1 L569.8 192.6 L573.1 197.9 L576.5 191.4 L577.2 192.1 L579.9 199.7 L580.6 198.7 L583.2 188.2 L584.3 191.4 L586.6 207.5 L587.6 200.2 L588.3 186.1 L590 125"/><text x="122.9" y="30.1" class="c2">ฮาร์มอนิกที่ 1 สูง 4/π</text><text x="333.5" y="228" class="s">1+3+5 (ส้ม) · ถึงฮาร์มอนิกที่ 39 (เหลือง)</text></svg>
+      <figcaption>อนุกรมฟูริเยร์ของคลื่นสี่เหลี่ยม: รวมเฉพาะฮาร์มอนิกคี่ ยิ่งรวมมากยิ่งเหลี่ยม แต่หูที่ขอบ (Gibbs) สูงราว 9 % ไม่หายไป</figcaption>
+    </figure>
+    <div class="wx" id="ex-w6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-6 · ฮาร์มอนิกบน FFT</span><h3>คลื่นสี่เหลี่ยม ±1 V 1 kHz บนหน้าจอ FFT ยอดที่ 1 kHz และ 3 kHz ควรสูงกี่ dBV</h3></div>
+      <ol class="steps">
+        <li><p>ค่ายอดฮาร์มอนิกที่ 1 <a class="tag tf" href="#W17">W17</a></p>\[ V_1 = \frac{4}{\pi} = 1.273\ \text{V} \Rightarrow V_{1,rms} = 0.900\ \text{V} = -0.91\ \text{dBV} \]</li>
+        <li><p>ฮาร์มอนิกที่ 3 เล็กกว่า 3 เท่า</p>\[ -0.91 + 20\log_{10}\tfrac13 = -0.91 - 9.54 = -10.45\ \text{dBV} \]</li>
+      </ol>
+      <p class="answer">1 kHz ≈ −0.9 dBV, 3 kHz ≈ −10.5 dBV, 5 kHz ≈ −14.9 dBV ลองเปิด <a data-fgs-open="fft-square" href="/learn/function-generator/simulator/">พรีเซต FFT ในแล็บจำลอง</a> แล้วเทียบค่า</p>
+    </div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

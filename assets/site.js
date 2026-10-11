@@ -29,7 +29,7 @@
     document.addEventListener("click", function (e) {
       if (header.hasAttribute("data-open") && !header.contains(e.target)) setMenu(false);
     });
-    matchMedia("(min-width:1240px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
+    matchMedia("(min-width:1440px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
   }
 
   // footer year
