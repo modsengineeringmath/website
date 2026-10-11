@@ -1,0 +1,408 @@
+<!--meta
+{
+  "title": "เมทริกซ์ (Matrix): ชนิด การบวก การคูณเมทริกซ์ ทรานสโพส เทรซ พร้อมวิธีทำ | อาจารย์มด",
+  "h1": "เมทริกซ์และการดำเนินการ (Matrices & Matrix Operations)",
+  "description": "สรุปเมทริกซ์ครบตั้งแต่ ม.ปลายถึงมหาวิทยาลัย นิยาม ขนาด ชนิดของเมทริกซ์ การบวก ลบ คูณด้วยสเกลาร์ การคูณเมทริกซ์ทีละช่อง ทรานสโพส เทรซ กำลังของเมทริกซ์ และเมทริกซ์บล็อก ทุกสูตรมีรหัสอ้างอิงและชื่อภาษาอังกฤษ",
+  "ogTitle": "เมทริกซ์: ชนิด การคูณ ทรานสโพส เทรซ พร้อมวิธีทำทีละขั้น",
+  "lesson": "linear-algebra",
+  "sub": "matrices",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Matrix", "Matrix multiplication", "Transpose", "Trace", "Identity matrix", "Symmetric matrix", "Orthogonal matrix", "Block matrix"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "คูณเมทริกซ์ได้เมื่อไร?", "a": "คูณ \\(AB\\) ได้เมื่อจำนวนหลักของ \\(A\\) เท่ากับจำนวนแถวของ \\(B\\) ถ้า \\(A\\) ขนาด \\(m\\times n\\) และ \\(B\\) ขนาด \\(n\\times p\\) ผลคูณมีขนาด \\(m\\times p\\) จำง่าย ๆ ว่าตัวเลขด้านในต้องเท่ากัน ตัวเลขด้านนอกคือขนาดคำตอบ"},
+    {"q": "ทำไม AB ไม่เท่ากับ BA?", "a": "เพราะสมาชิกของ \\(AB\\) มาจากแถวของ \\(A\\) คูณหลักของ \\(B\\) ส่วน \\(BA\\) มาจากแถวของ \\(B\\) คูณหลักของ \\(A\\) เป็นการจับคู่ตัวเลขคนละชุด บางครั้งขนาดยังไม่เท่ากันด้วยซ้ำ ในความหมายเชิงเรขาคณิต \\(AB\\) คือทำการแปลง \\(B\\) ก่อนแล้วตามด้วย \\(A\\) ลำดับจึงสำคัญ"},
+    {"q": "ทรานสโพสของผลคูณคืออะไร?", "a": "\\((AB)^T = B^T A^T\\) ลำดับกลับด้านเสมอ เหมือนใส่ถุงเท้าแล้วใส่รองเท้า ตอนถอดต้องถอดรองเท้าก่อน"},
+    {"q": "เทรซ (trace) ใช้ทำอะไร?", "a": "เทรซคือผลบวกสมาชิกบนเส้นทแยงมุมหลัก เท่ากับผลบวกของค่าเฉพาะทุกตัว ใช้ตรวจคำตอบค่าเฉพาะได้ทันที และในระบบอันดับสองเทรซของเมทริกซ์สถานะบอกค่าการหน่วง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>เมทริกซ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.1 · พีชคณิตเชิงเส้น · Matrices</p>
+      <h1>เมทริกซ์และการดำเนินการ (Matrices &amp; Matrix Operations)</h1>
+      <p class="lede">เมทริกซ์คือภาษากลางของวิศวกรรม ระบบสมการจากวงจรสิบลูป สมการสถานะของมอเตอร์ หรือการแปลงสามเฟส ล้วนเขียนเป็นเมทริกซ์ได้ หน้านี้รวบรวมนิยาม ชนิด และการดำเนินการทุกแบบที่ต้องใช้ ทุกสูตรมีรหัส M กำกับไว้ให้อ้างอิง ตัวอย่างทำให้ดูทีละขั้น</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#multiplication">การคูณเมทริกซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#types">ชนิดของเมทริกซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#transpose">ทรานสโพส</a>
+        <a class="btn btn-ghost btn-sm" href="#mistakes">ข้อผิดพลาดที่พบบ่อย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เมทริกซ์ \(m\times n\) มี \(m\) แถว \(n\) หลัก สมาชิกแถว \(i\) หลัก \(j\) เขียนว่า \(a_{ij}\)</li>
+          <li>บวก ลบ ทำทีละช่อง ขนาดต้องเท่ากัน ส่วนการคูณ \(AB\) ต้องให้ “หลักของ A = แถวของ B” แล้วเอาแถวคูณจุดกับหลัก</li>
+          <li>โดยทั่วไป \(AB \ne BA\) และ \((AB)^T = B^TA^T\) ลำดับสำคัญเสมอ</li>
+          <li>\(I\) ทำหน้าที่เหมือนเลข 1: \(AI = IA = A\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น transpose, trace, identity, สมมาตร, AB" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="what">
+    <h2 id="what">เมทริกซ์คืออะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เมทริกซ์ (matrix) คือตัวเลขที่จัดเรียงเป็นตารางสี่เหลี่ยม มีแถว (row) เรียงตามแนวนอน และหลัก (column) เรียงตามแนวตั้ง เราบอกขนาดเป็น “จำนวนแถว × จำนวนหลัก” เสมอ ตัวอักษรใหญ่ใช้แทนทั้งเมทริกซ์ ตัวอักษรเล็กที่มีดัชนีสองตัวใช้แทนสมาชิกหนึ่งตัว</p>
+    <figure class="la-fig">
+      <svg viewBox="0 0 560 250" role="img" aria-label="เมทริกซ์ขนาด 3 คูณ 4 แถวที่ 2 ระบายสีฟ้า หลักที่ 3 ระบายสีส้ม จุดตัดคือสมาชิก a สองสาม">
+        <rect class="f-row" x="138" y="96" width="282" height="42" rx="8"/>
+        <rect class="f-col" x="288" y="38" width="70" height="162" rx="8"/>
+        <path class="f-br" d="M136 36 h-12 v166 h12 M424 36 h12 v166 h-12"/>
+        <g class="f-ent">
+          <text x="185" text-anchor="middle" y="74">a₁₁</text><text x="255" text-anchor="middle" y="74">a₁₂</text><text x="323" text-anchor="middle" y="74">a₁₃</text><text x="391" text-anchor="middle" y="74">a₁₄</text>
+          <text x="185" text-anchor="middle" y="124">a₂₁</text><text x="255" text-anchor="middle" y="124">a₂₂</text><text class="hot" x="323" text-anchor="middle" y="124">a₂₃</text><text x="391" text-anchor="middle" y="124">a₂₄</text>
+          <text x="185" text-anchor="middle" y="174">a₃₁</text><text x="255" text-anchor="middle" y="174">a₃₂</text><text x="323" text-anchor="middle" y="174">a₃₃</text><text x="391" text-anchor="middle" y="174">a₃₄</text>
+        </g>
+        <circle class="f-ring" cx="323" cy="118" r="26"/>
+        <text class="t-th c-p1" x="16" y="122">แถวที่ 2 →</text>
+        <text class="t-th c-cur" x="262" y="24">หลักที่ 3 ↓</text>
+        <text class="t-th" x="452" y="110">A = [aᵢⱼ]</text>
+        <text class="t-th" x="452" y="134">3 × 4</text>
+        <text class="t-sm" x="452" y="156">m แถว × n หลัก</text>
+        <text class="t-th" x="128" y="232">aᵢⱼ : i = เลขแถว (ตัวแรก) · j = เลขหลัก (ตัวหลัง)</text>
+      </svg>
+      <figcaption>ดัชนีตัวแรกคือแถว ตัวที่สองคือหลัก เสมอ จำว่า “แถวก่อน หลักทีหลัง” (row then column)</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="M1" data-k="matrix notation size order element entry m x n ขนาด มิติ สมาชิก นิยาม">
+        <p class="tf-n"><b><span class="fid">M1</span> Matrix and its entries</b> นิยามและสัญลักษณ์ของเมทริกซ์</p>
+        \[ A = [a_{ij}]_{m\times n} = \begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{pmatrix} \]
+        <p class="tf-x">ขนาด (size, order) \(m\times n\) อ่านว่า “m คูณ n” · เมทริกซ์ \(1\times n\) เรียกเวกเตอร์แถว (row vector) · \(m\times 1\) เรียกเวกเตอร์หลัก (column vector) · ถ้า \(m = n\) เรียกเมทริกซ์จัตุรัส (square matrix) และสมาชิก \(a_{11}, a_{22}, \dots, a_{nn}\) คือเส้นทแยงมุมหลัก (main diagonal)</p>
+      </div>
+      <div class="tf wide" id="M2" data-k="equality equal matrices เท่ากัน การเท่ากัน">
+        <p class="tf-n"><b><span class="fid">M2</span> Equality of matrices</b> การเท่ากันของเมทริกซ์</p>
+        \[ A = B \iff \text{ขนาดเท่ากัน และ } a_{ij} = b_{ij} \ \text{ทุก } i, j \]
+        <p class="tf-x">ใช้ตั้งสมการหาตัวแปร เช่น \(\begin{pmatrix} x+y & 2 \\ 3 & x-y\end{pmatrix} = \begin{pmatrix} 5 & 2 \\ 3 & 1\end{pmatrix}\) ให้ \(x + y = 5,\ x - y = 1\) จึงได้ \(x = 3,\ y = 2\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-m0">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-0 · อ่านขนาดและสมาชิก</span><h3>ให้ \(A = \begin{pmatrix} 3 & -1 & 0 & 2 \\ 5 & 4 & 7 & -6 \end{pmatrix}\) จงบอกขนาด \(a_{13}\), \(a_{24}\) และ \(a_{31}\)</h3></div>
+      <ol class="steps">
+        <li><p>นับแถวได้ 2 นับหลักได้ 4 ขนาดจึงเป็น \(2\times 4\) <a class="tag tf" href="#M1">M1</a></p></li>
+        <li><p>\(a_{13}\) คือแถวที่ 1 หลักที่ 3 ได้ \(0\) และ \(a_{24}\) คือแถวที่ 2 หลักที่ 4 ได้ \(-6\)</p></li>
+        <li><p>\(a_{31}\) ต้องอยู่แถวที่ 3 แต่เมทริกซ์มีแค่ 2 แถว จึง<strong>ไม่มีสมาชิกนี้</strong></p></li>
+      </ol>
+      <p class="answer">ขนาด \(2\times4\) · \(a_{13} = 0\) · \(a_{24} = -6\) · \(a_{31}\) ไม่นิยาม</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">ชนิดของเมทริกซ์ (Types of Matrices) <span class="lv lv-b">พื้นฐาน → ขั้นสูง</span></h2>
+    <p>ชื่อเฉพาะเหล่านี้โผล่ในโจทย์และตำราตลอด รู้ชื่อแล้วรู้สมบัติทันที เช่น เห็นคำว่า “สามเหลี่ยม” ก็รู้ว่าดีเทอร์มิแนนต์คือผลคูณเส้นทแยง เห็นคำว่า “เชิงตั้งฉาก” ก็รู้ว่าอินเวอร์สคือทรานสโพส</p>
+    <div class="table-wrap">
+      <table class="la-types">
+        <thead><tr><th>ชื่อ</th><th>เงื่อนไข</th><th>ตัวอย่าง</th><th>ระดับ</th></tr></thead>
+        <tbody>
+          <tr><td><b>จัตุรัส</b><br><small>square</small></td><td>\(m = n\)</td><td>\(\begin{pmatrix}1&2\\3&4\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>ศูนย์</b><br><small>zero, \(O\)</small></td><td>ทุกสมาชิกเป็น 0</td><td>\(\begin{pmatrix}0&0\\0&0\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>เอกลักษณ์</b><br><small>identity, \(I_n\)</small></td><td>\(a_{ii} = 1\), นอกเส้นทแยงเป็น 0</td><td>\(\begin{pmatrix}1&0\\0&1\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>ทแยงมุม</b><br><small>diagonal</small></td><td>\(a_{ij} = 0\) เมื่อ \(i \ne j\)</td><td>\(\begin{pmatrix}2&0\\0&-5\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>สเกลาร์</b><br><small>scalar</small></td><td>ทแยงมุมที่ทุกตัวเท่ากัน \(= kI\)</td><td>\(\begin{pmatrix}3&0\\0&3\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>สามเหลี่ยมบน</b><br><small>upper triangular</small></td><td>\(a_{ij} = 0\) เมื่อ \(i \gt j\)</td><td>\(\begin{pmatrix}1&4&2\\0&3&5\\0&0&6\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>สามเหลี่ยมล่าง</b><br><small>lower triangular</small></td><td>\(a_{ij} = 0\) เมื่อ \(i \lt j\)</td><td>\(\begin{pmatrix}1&0\\7&2\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>สมมาตร</b><br><small>symmetric</small></td><td>\(A^T = A\) คือ \(a_{ij} = a_{ji}\)</td><td>\(\begin{pmatrix}6&-4\\-4&10\end{pmatrix}\)</td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td><b>สมมาตรเสมือน</b><br><small>skew-symmetric</small></td><td>\(A^T = -A\) (ทแยงเป็น 0)</td><td>\(\begin{pmatrix}0&3\\-3&0\end{pmatrix}\)</td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td><b>เชิงตั้งฉาก</b><br><small>orthogonal</small></td><td>\(Q^TQ = I\) ดังนั้น \(Q^{-1} = Q^T\)</td><td>\(\begin{pmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{pmatrix}\)</td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td><b>เอกฐาน</b><br><small>singular</small></td><td>\(\det A = 0\) ไม่มีอินเวอร์ส</td><td>\(\begin{pmatrix}1&2\\2&4\end{pmatrix}\)</td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td><b>ฉายซ้ำคงเดิม</b><br><small>idempotent</small></td><td>\(A^2 = A\)</td><td>\(\begin{pmatrix}1&0\\0&0\end{pmatrix}\)</td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+          <tr><td><b>นิลโพเทนต์</b><br><small>nilpotent</small></td><td>\(A^k = O\) สำหรับบาง \(k\)</td><td>\(\begin{pmatrix}0&1\\0&0\end{pmatrix}\)</td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+          <tr><td><b>เฮอร์มิเชียน</b><br><small>Hermitian</small></td><td>\(A^H = A\) (สมมาตรแบบเชิงซ้อน)</td><td>\(\begin{pmatrix}2&1-j\\1+j&3\end{pmatrix}\)</td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+          <tr><td><b>ยูนิแทรี</b><br><small>unitary</small></td><td>\(U^HU = I\)</td><td>\(\tfrac{1}{\sqrt2}\begin{pmatrix}1&j\\j&1\end{pmatrix}\)</td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tf-grid">
+      <div class="tf" id="M3" data-k="identity matrix unit เอกลักษณ์ I">
+        <p class="tf-n"><b><span class="fid">M3</span> Identity matrix</b> เมทริกซ์เอกลักษณ์</p>
+        \[ I_n = \begin{pmatrix} 1 & 0 & \cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots & & \ddots & \vdots \\ 0 & 0 & \cdots & 1 \end{pmatrix}, \quad AI = IA = A \]
+        <p class="tf-x">ทำหน้าที่เหมือนเลข 1 ของการคูณ ถ้า \(A\) ไม่จัตุรัส ขนาด \(I\) ทางซ้ายและขวาจะต่างกัน: \(I_mA = AI_n = A\)</p>
+      </div>
+      <div class="tf" id="M4" data-k="symmetric skew decomposition สมมาตร สมมาตรเสมือน แยก">
+        <p class="tf-n"><b><span class="fid">M4</span> Symmetric + skew-symmetric split</b> แยกเป็นส่วนสมมาตรและสมมาตรเสมือน</p>
+        \[ A = \underbrace{\tfrac12(A + A^T)}_{\text{สมมาตร}} + \underbrace{\tfrac12(A - A^T)}_{\text{สมมาตรเสมือน}} \]
+        <p class="tf-x">เมทริกซ์จัตุรัสทุกตัวแยกแบบนี้ได้แบบเดียว ในรูปกำลังสอง \(\mathbf x^TA\mathbf x\) มีแต่ส่วนสมมาตรที่มีผล</p>
+      </div>
+      <div class="tf" id="M5" data-k="orthogonal rotation matrix เชิงตั้งฉาก หมุน inverse transpose">
+        <p class="tf-n"><b><span class="fid">M5</span> Orthogonal matrix</b> เมทริกซ์เชิงตั้งฉาก</p>
+        \[ Q^TQ = QQ^T = I \iff Q^{-1} = Q^T \]
+        <p class="tf-x">หลักทุกหลักยาว 1 และตั้งฉากกัน รักษาความยาวและมุม \(\det Q = \pm 1\) ตัวอย่างสำคัญคือเมทริกซ์หมุน \(R(\theta)\) ที่ใช้ในการแปลงพาร์ก (Park transform)</p>
+      </div>
+      <div class="tf" id="M6" data-k="conjugate transpose hermitian complex เชิงซ้อน สังยุค A^H">
+        <p class="tf-n"><b><span class="fid">M6</span> Conjugate transpose</b> ทรานสโพสสังยุค (สำหรับเมทริกซ์เชิงซ้อน)</p>
+        \[ A^H = \overline{A}^{\,T}, \qquad (A^H)_{ij} = \overline{a_{ji}} \]
+        <p class="tf-x">ใช้กับวงจร AC ที่สมาชิกเป็นอิมพีแดนซ์เชิงซ้อน กำลังเชิงซ้อน \(S = \mathbf V^T\overline{\mathbf I}\) เขียนในรูปนี้ บางตำราเขียน \(A^*\) หรือ \(A^\dagger\)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="add">
+    <h2 id="add">บวก ลบ และคูณด้วยสเกลาร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สองการดำเนินการนี้ทำ<strong>ทีละช่อง</strong> (element-wise) ช่องตรงกันจับคู่กัน จึงต้องมีขนาดเท่ากันทุกประการ</p>
+    <div class="tf-grid">
+      <div class="tf" id="M7" data-k="addition subtraction sum บวก ลบ">
+        <p class="tf-n"><b><span class="fid">M7</span> Matrix addition</b> การบวกและลบ</p>
+        \[ (A \pm B)_{ij} = a_{ij} \pm b_{ij} \]
+        <p class="tf-x">ใช้ได้เมื่อ \(A\) และ \(B\) ขนาดเท่ากันเท่านั้น</p>
+      </div>
+      <div class="tf" id="M8" data-k="scalar multiplication คูณสเกลาร์ ค่าคงที่ kA">
+        <p class="tf-n"><b><span class="fid">M8</span> Scalar multiplication</b> การคูณด้วยสเกลาร์</p>
+        \[ (kA)_{ij} = k\,a_{ij} \]
+        <p class="tf-x">คูณ \(k\) เข้าไปทุกช่อง (ต่างจากดีเทอร์มิแนนต์ที่คูณแค่แถวเดียว ดู <a href="/learn/linear-algebra/determinants/#D7">D7</a>)</p>
+      </div>
+      <div class="tf wide" id="M9" data-k="properties addition commutative associative distributive สมบัติ การบวก สลับที่ เปลี่ยนกลุ่ม แจกแจง">
+        <p class="tf-n"><b><span class="fid">M9</span> Properties of addition and scalar multiplication</b> สมบัติการบวกและการคูณสเกลาร์</p>
+        \[ \begin{gathered} A + B = B + A \qquad (A + B) + C = A + (B + C) \qquad A + O = A \\ k(A + B) = kA + kB \qquad (k + l)A = kA + lA \qquad k(lA) = (kl)A \end{gathered} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-m1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-1 · บวกลบและคูณสเกลาร์</span><h3>ให้ \(A = \begin{pmatrix} 1 & -2 \\ 3 & 0 \end{pmatrix},\ B = \begin{pmatrix} 2 & 1 \\ -1 & 4 \end{pmatrix}\) จงหา \(2A - 3B\)</h3></div>
+      <ol class="steps">
+        <li><p>คูณสเกลาร์เข้าทุกช่อง <a class="tag tf" href="#M8">M8</a></p>
+          \[ 2A = \begin{pmatrix} 2 & -4 \\ 6 & 0 \end{pmatrix}, \qquad 3B = \begin{pmatrix} 6 & 3 \\ -3 & 12 \end{pmatrix} \]</li>
+        <li><p>ลบช่องต่อช่อง <a class="tag tf" href="#M7">M7</a></p>
+          \[ 2A - 3B = \begin{pmatrix} 2-6 & -4-3 \\ 6-(-3) & 0-12 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(2A - 3B = \begin{pmatrix} -4 & -7 \\ 9 & -12 \end{pmatrix}\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="multiplication">
+    <h2 id="multiplication">การคูณเมทริกซ์ (Matrix Multiplication) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>การคูณเมทริกซ์ไม่ได้คูณทีละช่อง สมาชิกแต่ละตัวของผลคูณได้จาก<strong>แถวของตัวหน้า “คูณจุด” กับหลักของตัวหลัง</strong> คือคูณตัวที่ตรงกันแล้วบวกรวม ก่อนคูณต้องเช็กขนาดก่อนเสมอ</p>
+    <figure class="la-fig">
+      <svg viewBox="0 0 580 170" role="img" aria-label="กฎขนาดการคูณเมทริกซ์ m คูณ n คูณกับ n คูณ p ได้ m คูณ p ตัวเลขด้านในต้องเท่ากัน ด้านนอกคือขนาดผลลัพธ์">
+        <text class="t-big" x="88" y="48" text-anchor="middle">A</text><text class="t-big" x="200" y="48" text-anchor="middle">B</text><text class="t-big" x="362" y="48" text-anchor="middle">AB</text>
+        <text class="t-mx " x="40" y="96" text-anchor="middle">(</text><text class="t-mx c-cur" x="62" y="96" text-anchor="middle">m</text><text class="t-mx " x="88" y="96" text-anchor="middle">×</text><text class="t-mx c-p2" x="114" y="96" text-anchor="middle">n</text><text class="t-mx " x="136" y="96" text-anchor="middle">)</text><text class="t-mx " x="152" y="96" text-anchor="middle">(</text><text class="t-mx c-p2" x="174" y="96" text-anchor="middle">n</text><text class="t-mx " x="200" y="96" text-anchor="middle">×</text><text class="t-mx c-cur" x="226" y="96" text-anchor="middle">p</text><text class="t-mx " x="248" y="96" text-anchor="middle">)</text><text class="t-mx " x="282" y="96" text-anchor="middle">=</text><text class="t-mx " x="314" y="96" text-anchor="middle">(</text><text class="t-mx c-cur" x="336" y="96" text-anchor="middle">m</text><text class="t-mx " x="362" y="96" text-anchor="middle">×</text><text class="t-mx c-cur" x="388" y="96" text-anchor="middle">p</text><text class="t-mx " x="410" y="96" text-anchor="middle">)</text>
+        <path class="ln ln-p2" d="M114 108 C114 146, 174 146, 174 108"/>
+        <text class="t-th c-p2" x="144" y="162" text-anchor="middle">ด้านในต้องเท่ากัน</text>
+        <text class="t-th c-cur" x="362" y="132" text-anchor="middle">ด้านนอก = ขนาดผลลัพธ์</text>
+        <text class="t-th" x="450" y="56">ตัวอย่าง</text>
+        <text class="t-sm" x="450" y="84">(2×3)(3×2) → 2×2 ✓</text>
+        <text class="t-sm" x="450" y="108">(3×2)(2×3) → 3×3 ✓</text>
+        <text class="t-sm" x="450" y="132">(2×3)(2×3) ✗</text>
+        <text class="t-sm" x="450" y="152">คูณไม่ได้</text>
+      </svg>
+      <figcaption>เขียนขนาดเรียงกันแล้วดูตัวเลขด้านใน ถ้าไม่เท่ากันให้หยุด คูณไม่ได้</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="M10" data-k="matrix product multiplication row column dot คูณเมทริกซ์ แถวคูณหลัก AB">
+        <p class="tf-n"><b><span class="fid">M10</span> Matrix product</b> นิยามการคูณเมทริกซ์</p>
+        \[ (AB)_{ij} = \sum_{k=1}^{n} a_{ik}\,b_{kj} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj} \]
+        <p class="tf-x">\(A\) ขนาด \(m\times n\), \(B\) ขนาด \(n\times p\) ได้ \(AB\) ขนาด \(m\times p\) · ช่อง \((i,j)\) = แถวที่ \(i\) ของ \(A\) คูณจุดกับหลักที่ \(j\) ของ \(B\)</p>
+      </div>
+    </div>
+
+    <div class="mx-prod" id="mxProd" data-a="2,-1,3;0,4,1" data-b="1,2;3,0;-2,5">
+      <p class="mxp-h"><b>ลองแตะช่องคำตอบ</b> แล้วดูว่ามาจากแถวไหนคูณหลักไหน</p>
+      <div class="mxp-row" aria-live="polite"></div>
+      <p class="mxp-sum"></p>
+    </div>
+
+    <div class="wx" id="ex-m2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-2 · คูณเมทริกซ์ 2×3 กับ 3×2</span><h3>ให้ \(A = \begin{pmatrix} 2 & -1 & 3 \\ 0 & 4 & 1 \end{pmatrix},\ B = \begin{pmatrix} 1 & 2 \\ 3 & 0 \\ -2 & 5 \end{pmatrix}\) จงหา \(AB\) และ \(BA\)</h3></div>
+      <ol class="steps">
+        <li><p>เช็กขนาด \((2\times\hlF{3})(\hlF{3}\times 2)\) ด้านในเท่ากัน คูณได้ ผลลัพธ์ขนาด \(2\times 2\)</p></li>
+        <li><p>ช่อง \((1,1)\): แถว 1 ของ A คูณจุดหลัก 1 ของ B <a class="tag tf" href="#M10">M10</a></p>
+          \[ c_{11} = (2)(1) + (-1)(3) + (3)(-2) = 2 - 3 - 6 = -7 \]</li>
+        <li><p>ช่อง \((1,2)\): แถว 1 คูณจุดหลัก 2</p>
+          \[ c_{12} = (2)(2) + (-1)(0) + (3)(5) = 4 + 0 + 15 = 19 \]</li>
+        <li><p>ช่อง \((2,1)\) และ \((2,2)\): แถว 2 คูณจุดหลัก 1 และหลัก 2</p>
+          \[ \begin{aligned} c_{21} &= (0)(1) + (4)(3) + (1)(-2) = 10 \\ c_{22} &= (0)(2) + (4)(0) + (1)(5) = 5 \end{aligned} \]</li>
+        <li><p>ส่วน \(BA\) มีขนาด \((3\times\hlF{2})(\hlF{2}\times3) = 3\times 3\) คำนวณแบบเดียวกันได้</p>
+          \[ BA = \begin{pmatrix} 2 & 7 & 5 \\ 6 & -3 & 9 \\ -4 & 22 & -1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(AB = \begin{pmatrix} -7 & 19 \\ 10 & 5 \end{pmatrix}\) ขนาด 2×2 แต่ \(BA\) ขนาด 3×3 สองตัวนี้ไม่มีทางเท่ากัน</p>
+    </div>
+
+    <h3 id="properties-mult">สมบัติของการคูณเมทริกซ์</h3>
+    <div class="tf-grid">
+      <div class="tf wide" id="M11" data-k="properties multiplication associative distributive สมบัติ การคูณ เปลี่ยนกลุ่ม แจกแจง">
+        <p class="tf-n"><b><span class="fid">M11</span> Properties of matrix multiplication</b> สมบัติที่ใช้ได้</p>
+        \[ \begin{gathered} (AB)C = A(BC) \qquad A(B + C) = AB + AC \qquad (A + B)C = AC + BC \\ k(AB) = (kA)B = A(kB) \qquad I_mA = AI_n = A \end{gathered} \]
+      </div>
+      <div class="tf wide warn" id="M12" data-k="not commutative AB BA zero divisor cancellation ข้อห้าม ระวัง สลับที่ไม่ได้ ตัดไม่ได้">
+        <p class="tf-n"><b><span class="fid">M12</span> What does NOT hold</b> สิ่งที่ใช้กับเมทริกซ์ไม่ได้ (ต่างจากตัวเลข)</p>
+        \[ \begin{gathered} AB \ne BA \ \text{(โดยทั่วไป)} \qquad AB = O \not\Rightarrow A = O \text{ หรือ } B = O \\ AB = AC \not\Rightarrow B = C \qquad (A + B)^2 = A^2 + AB + BA + B^2 \ne A^2 + 2AB + B^2 \end{gathered} \]
+        <p class="tf-x">ตัดเมทริกซ์ทั้งสองข้างได้ก็ต่อเมื่อ \(A\) มีอินเวอร์ส (\(\det A \ne 0\)) แล้วคูณ \(A^{-1}\) ทางซ้ายทั้งสองข้าง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-m3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-3 · ลำดับการคูณสำคัญ</span><h3>ให้ \(A = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix},\ B = \begin{pmatrix} 1 & 0 \\ 3 & 1 \end{pmatrix}\) แสดงว่า \(AB \ne BA\)</h3></div>
+      <ol class="steps">
+        <li>\[ AB = \begin{pmatrix} 1\cdot1 + 2\cdot3 & 1\cdot0 + 2\cdot1 \\ 0\cdot1 + 1\cdot3 & 0\cdot0 + 1\cdot1 \end{pmatrix} = \begin{pmatrix} 7 & 2 \\ 3 & 1 \end{pmatrix} \]</li>
+        <li>\[ BA = \begin{pmatrix} 1\cdot1 + 0\cdot0 & 1\cdot2 + 0\cdot1 \\ 3\cdot1 + 1\cdot0 & 3\cdot2 + 1\cdot1 \end{pmatrix} = \begin{pmatrix} 1 & 2 \\ 3 & 7 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">ขนาดเท่ากันแต่ค่าต่างกัน จึง \(AB \ne BA\) <a class="tag tf" href="#M12">M12</a></p>
+      <p class="check">ตัวอย่างที่น่าตกใจกว่า: \(\begin{pmatrix}1&1\\1&1\end{pmatrix}\begin{pmatrix}1&-1\\-1&1\end{pmatrix} = \begin{pmatrix}0&0\\0&0\end{pmatrix}\) ทั้งที่ไม่มีตัวไหนเป็นเมทริกซ์ศูนย์</p>
+    </div>
+
+    <h3 id="views">มองการคูณสามแบบ <span class="lv lv-i">กลาง</span></h3>
+    <p>สูตร M10 เป็นวิธีคำนวณ แต่การ “มองออก” ว่าการคูณหมายถึงอะไรช่วยมากในบทหลัง โดยเฉพาะมุมมองแบบหลัก ซึ่งเป็นหัวใจของระบบสมการและค่าเฉพาะ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M13" data-k="linear combination columns column view Ax ผลรวมเชิงเส้น หลัก">
+        <p class="tf-n"><b><span class="fid">M13</span> Column view: Ax is a combination of columns</b> \(A\mathbf x\) คือผลรวมเชิงเส้นของหลัก</p>
+        \[ A\mathbf x = \begin{pmatrix} | & | & & | \\ \mathbf a_1 & \mathbf a_2 & \cdots & \mathbf a_n \\ | & | & & | \end{pmatrix}\begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} = x_1\mathbf a_1 + x_2\mathbf a_2 + \cdots + x_n\mathbf a_n \]
+        <p class="tf-x">การแก้ \(A\mathbf x = \mathbf b\) จึงคือการถามว่า “ผสมหลักของ A ด้วยปริมาณเท่าไรจึงได้ \(\mathbf b\)” ถ้าหลักขึ้นต่อกันเชิงเส้น (\(\det A = 0\)) อาจผสมไม่ได้หรือผสมได้หลายแบบ</p>
+      </div>
+      <div class="tf" id="M14" data-k="row view dot product แถว คูณจุด">
+        <p class="tf-n"><b><span class="fid">M14</span> Row view</b> มุมมองแถว</p>
+        \[ (A\mathbf x)_i = \mathbf r_i \cdot \mathbf x \]
+        <p class="tf-x">แต่ละแถวคือสมการหนึ่งสมการ เช่น KVL หนึ่งลูป</p>
+      </div>
+      <div class="tf" id="M15" data-k="outer product sum rank one ผลคูณภายนอก">
+        <p class="tf-n"><b><span class="fid">M15</span> Outer-product view</b> ผลรวมผลคูณภายนอก</p>
+        \[ AB = \sum_{k=1}^{n} (\text{หลัก } k \text{ ของ } A)(\text{แถว } k \text{ ของ } B) \]
+        <p class="tf-x">แต่ละพจน์เป็นเมทริกซ์แรงก์หนึ่ง เป็นพื้นฐานของ SVD และการบีบอัดข้อมูล</p>
+      </div>
+    </div>
+    <div class="note"><b>ระบบสมการคือการคูณเมทริกซ์:</b> \(\begin{aligned}2x + 3y &= 8\\ x - y &= -1\end{aligned}\) เขียนเป็น \(\begin{pmatrix}2&3\\1&-1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \begin{pmatrix}8\\-1\end{pmatrix}\) หรือ \(A\mathbf x = \mathbf b\) ทุกวิธีในหน้าถัด ๆ ไปคือวิธีหา \(\mathbf x\) ตัวนี้ <a href="/learn/linear-algebra/linear-systems/">ไปหน้าระบบสมการ →</a></div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="transpose">
+    <h2 id="transpose">ทรานสโพส (Transpose) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทรานสโพสคือการพลิกเมทริกซ์ตามเส้นทแยงมุมหลัก แถวกลายเป็นหลัก หลักกลายเป็นแถว เมทริกซ์ \(m\times n\) จึงกลายเป็น \(n\times m\) ภาษาไทยเรียกเมทริกซ์สลับเปลี่ยน</p>
+    <div class="tf-grid">
+      <div class="tf" id="M16" data-k="transpose definition flip ทรานสโพส สลับเปลี่ยน A^T">
+        <p class="tf-n"><b><span class="fid">M16</span> Transpose</b> นิยามทรานสโพส</p>
+        \[ (A^T)_{ij} = a_{ji}, \qquad \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}^{\!T} = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix} \]
+      </div>
+      <div class="tf" id="M17" data-k="properties of transpose product reverse order สมบัติ ทรานสโพส ผลคูณ กลับลำดับ (AB)^T">
+        <p class="tf-n"><b><span class="fid">M17</span> Properties of transpose</b> สมบัติของทรานสโพส</p>
+        \[ \begin{gathered} (A^T)^T = A \qquad (A + B)^T = A^T + B^T \\ (kA)^T = kA^T \qquad \hlF{(AB)^T = B^TA^T} \end{gathered} \]
+        <p class="tf-x">ทรานสโพสของผลคูณ<strong>กลับลำดับ</strong> ขยายได้: \((ABC)^T = C^TB^TA^T\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-m4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-4 · ตรวจ (AB)ᵀ = BᵀAᵀ</span><h3>ใช้ \(A, B\) จากตัวอย่าง M-2 ตรวจว่า \((AB)^T = B^TA^T\)</h3></div>
+      <ol class="steps">
+        <li><p>จากตัวอย่าง M-2 ได้ \(AB = \begin{pmatrix} -7 & 19 \\ 10 & 5 \end{pmatrix}\) จึง \((AB)^T = \begin{pmatrix} -7 & 10 \\ 19 & 5 \end{pmatrix}\)</p></li>
+        <li><p>คำนวณ \(B^TA^T\) โดยขนาด \((2\times3)(3\times2) = 2\times2\)</p>
+          \[ B^TA^T = \begin{pmatrix} 1 & 3 & -2 \\ 2 & 0 & 5 \end{pmatrix}\begin{pmatrix} 2 & 0 \\ -1 & 4 \\ 3 & 1 \end{pmatrix} = \begin{pmatrix} 2 - 3 - 6 & 0 + 12 - 2 \\ 4 + 0 + 15 & 0 + 0 + 5 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(B^TA^T = \begin{pmatrix} -7 & 10 \\ 19 & 5 \end{pmatrix} = (AB)^T\) ✓ ส่วน \(A^TB^T\) มีขนาด 3×3 จึงผิดตั้งแต่ขนาด</p>
+    </div>
+    <div class="note"><b>เกร็ดที่ใช้บ่อย:</b> \(A^TA\) และ \(AA^T\) สมมาตรเสมอ เพราะ \((A^TA)^T = A^T(A^T)^T = A^TA\) เมทริกซ์นี้ปรากฏในวิธีกำลังสองน้อยสุด <a href="/learn/linear-algebra/linear-systems/#L10">L10</a></div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="trace">
+    <h2 id="trace">เทรซ (Trace) <span class="lv lv-i">กลาง</span></h2>
+    <p>เทรซคือผลบวกสมาชิกบนเส้นทแยงมุมหลักของเมทริกซ์จัตุรัส ดูเหมือนเล็กน้อย แต่เท่ากับผลบวกค่าเฉพาะทุกตัว จึงเป็นเครื่องมือตรวจคำตอบที่เร็วที่สุด</p>
+    <div class="tf-grid">
+      <div class="tf" id="M18" data-k="trace tr sum diagonal เทรซ รอย ผลบวกทแยง">
+        <p class="tf-n"><b><span class="fid">M18</span> Trace</b> นิยามเทรซ</p>
+        \[ \operatorname{tr}A = \sum_{i=1}^{n} a_{ii} = a_{11} + a_{22} + \cdots + a_{nn} \]
+      </div>
+      <div class="tf" id="M19" data-k="trace properties tr(AB)=tr(BA) cyclic สมบัติ เทรซ">
+        <p class="tf-n"><b><span class="fid">M19</span> Properties of trace</b> สมบัติของเทรซ</p>
+        \[ \begin{gathered} \operatorname{tr}(A + B) = \operatorname{tr}A + \operatorname{tr}B \qquad \operatorname{tr}(kA) = k\operatorname{tr}A \\ \operatorname{tr}(A^T) = \operatorname{tr}A \qquad \hlF{\operatorname{tr}(AB) = \operatorname{tr}(BA)} \end{gathered} \]
+        <p class="tf-x">ข้อสุดท้ายจริงแม้ \(AB\) กับ \(BA\) ขนาดต่างกัน และ \(\operatorname{tr}A = \lambda_1 + \cdots + \lambda_n\) <a href="/learn/linear-algebra/eigenvalues/#E6">E6</a></p>
+      </div>
+    </div>
+    <p>ตรวจด้วยตัวอย่าง M-2: \(\operatorname{tr}(AB) = -7 + 5 = -2\) และ \(\operatorname{tr}(BA) = 2 + (-3) + (-1) = -2\) เท่ากันจริง แม้ตัวหนึ่ง 2×2 อีกตัว 3×3</p>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="powers">
+    <h2 id="powers">กำลังของเมทริกซ์ (Matrix Powers) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="M20" data-k="power A^n exponent กำลัง ยกกำลัง">
+        <p class="tf-n"><b><span class="fid">M20</span> Matrix power</b> กำลังของเมทริกซ์จัตุรัส</p>
+        \[ A^0 = I, \quad A^k = \underbrace{AA\cdots A}_{k \text{ ตัว}}, \quad A^mA^n = A^{m+n}, \quad (A^m)^n = A^{mn} \]
+        <p class="tf-x">นิยามได้เฉพาะเมทริกซ์จัตุรัส และโดยทั่วไป \((AB)^k \ne A^kB^k\)</p>
+      </div>
+      <div class="tf" id="M21" data-k="diagonal power ทแยงมุม ยกกำลัง D^k">
+        <p class="tf-n"><b><span class="fid">M21</span> Power of a diagonal matrix</b> กำลังของเมทริกซ์ทแยงมุม</p>
+        \[ \begin{pmatrix} d_1 & & \\ & \ddots & \\ & & d_n \end{pmatrix}^{\!k} = \begin{pmatrix} d_1^k & & \\ & \ddots & \\ & & d_n^k \end{pmatrix} \]
+        <p class="tf-x">นี่คือเหตุผลที่อยากทำเมทริกซ์ให้เป็นทแยงมุม: \(A^k = PD^kP^{-1}\) <a href="/learn/linear-algebra/eigenvalues/#E10">E10</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-m5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-5 · หารูปแบบของ Aⁿ</span><h3>ให้ \(A = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\) จงหา \(A^n\)</h3></div>
+      <ol class="steps">
+        <li><p>ลองคำนวณกำลังน้อย ๆ ก่อน</p>
+          \[ A^2 = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & \hlF{2} \\ 0 & 1 \end{pmatrix}, \qquad A^3 = A^2A = \begin{pmatrix} 1 & \hlF{3} \\ 0 & 1 \end{pmatrix} \]</li>
+        <li><p>เดาว่า \(A^n = \begin{pmatrix} 1 & n \\ 0 & 1 \end{pmatrix}\) แล้วพิสูจน์ด้วยอุปนัย: ถ้าจริงที่ \(n\) จะได้</p>
+          \[ A^{n+1} = A^nA = \begin{pmatrix} 1 & n \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & n+1 \\ 0 & 1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(A^n = \begin{pmatrix} 1 & n \\ 0 & 1 \end{pmatrix}\) (เมทริกซ์เฉือน shear ที่เฉือนสะสมทีละหนึ่งหน่วย)</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="block">
+    <h2 id="block">เมทริกซ์บล็อก (Block Matrices) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เมทริกซ์ใหญ่แบ่งเป็นบล็อกย่อยได้ แล้วคูณบล็อกเหมือนคูณตัวเลข (แต่ต้องรักษาลำดับ) ใช้มากในระบบที่ประกอบจากระบบย่อย เช่น การวิเคราะห์โนดดัดแปลง (MNA) ใน SPICE ที่มีรูป \(\begin{pmatrix} G & B \\ C & D\end{pmatrix}\) และแบบจำลองปริภูมิสถานะของระบบหลายส่วน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M22" data-k="block matrix multiplication partition บล็อก แบ่งส่วน">
+        <p class="tf-n"><b><span class="fid">M22</span> Block multiplication</b> การคูณแบบบล็อก</p>
+        \[ \begin{pmatrix} A & B \\ C & D \end{pmatrix}\begin{pmatrix} E & F \\ G & H \end{pmatrix} = \begin{pmatrix} AE + BG & AF + BH \\ CE + DG & CF + DH \end{pmatrix} \]
+        <p class="tf-x">ขนาดของบล็อกต้องคูณกันได้ทุกคู่ · บล็อกทแยงมุม \(\operatorname{diag}(A_1, A_2)\) ยกกำลัง หาอินเวอร์ส และหาดีเทอร์มิแนนต์แยกบล็อกได้เลย</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="tsec" aria-labelledby="vectors">
+    <h2 id="vectors">เวกเตอร์ในรูปเมทริกซ์ <span class="lv lv-i">กลาง</span></h2>
+    <p>เวกเตอร์หลัก \(\mathbf x\) คือเมทริกซ์ \(n\times 1\) การคูณจุดและความยาวเขียนเป็นการคูณเมทริกซ์ได้ ทำให้สูตรของเวกเตอร์กับเมทริกซ์ใช้ภาษาเดียวกัน (ทบทวนเวกเตอร์ที่ <a href="/learn/vector-algebra/">พีชคณิตของเวกเตอร์</a>)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M23" data-k="dot product inner product norm length orthogonal ผลคูณภายใน ความยาว ตั้งฉาก x^T y">
+        <p class="tf-n"><b><span class="fid">M23</span> Inner product, norm and outer product</b> ผลคูณภายใน ความยาว และผลคูณภายนอก</p>
+        \[ \mathbf x^T\mathbf y = \sum_{i} x_iy_i, \qquad \lVert\mathbf x\rVert = \sqrt{\mathbf x^T\mathbf x}, \qquad \mathbf x \perp \mathbf y \iff \mathbf x^T\mathbf y = 0, \qquad \mathbf x\mathbf y^T = [x_iy_j] \]
+        <p class="tf-x">\(\mathbf x^T\mathbf y\) เป็นตัวเลข (1×1) ส่วน \(\mathbf x\mathbf y^T\) เป็นเมทริกซ์ \(n\times n\) ลำดับต่างกันผลต่างกันมาก กำลังไฟฟ้ารวมในวงจร \(P = \mathbf v^T\mathbf i\)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="note warn"><b>เช็กลิสต์ก่อนส่งคำตอบ</b>
+      <ul class="la-check">
+        <li>คูณเมทริกซ์ทีละช่องเหมือนการบวก → ผิด ต้องแถวคูณจุดหลัก <a class="tag tf" href="#M10">M10</a></li>
+        <li>ลืมเช็กขนาดก่อนคูณ → เขียนขนาดเรียงกันทุกครั้ง ด้านในต้องเท่ากัน</li>
+        <li>สลับลำดับ \(AB\) เป็น \(BA\) โดยไม่รู้ตัว → ผิด เว้นแต่โจทย์บอกว่าสลับที่ได้ <a class="tag tf" href="#M12">M12</a></li>
+        <li>เขียน \((AB)^T = A^TB^T\) → ผิด ต้องกลับลำดับเป็น \(B^TA^T\) <a class="tag tf" href="#M17">M17</a></li>
+        <li>กระจาย \((A + B)^2 = A^2 + 2AB + B^2\) → ผิด ต้องเป็น \(A^2 + AB + BA + B^2\)</li>
+        <li>สับสน \(a_{ij}\) ว่าตัวไหนแถว → ตัวแรกแถว ตัวหลังหลัก เสมอ <a class="tag tf" href="#M1">M1</a></li>
+      </ul>
+    </div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>เมื่อเขียนระบบเป็น \(A\mathbf x = \mathbf b\) ได้แล้ว คำถามแรกคือ “ระบบนี้มีคำตอบเดียวไหม” ตัวเลขที่ตอบคำถามนี้ได้ทันทีคือ <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a> ส่วนตัวอย่างการเขียนเมทริกซ์จากวงจรจริงอยู่ในหน้า <a href="/learn/linear-algebra/ee-applications/">ประยุกต์ในวิศวกรรมไฟฟ้า</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

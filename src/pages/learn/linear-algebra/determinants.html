@@ -1,0 +1,372 @@
+<!--meta
+{
+  "title": "ดีเทอร์มิแนนต์ (Determinant): วิธีหา 2×2 3×3 ซาร์รัส โคแฟกเตอร์ 4×4 และสมบัติ | อาจารย์มด",
+  "h1": "ดีเทอร์มิแนนต์ (Determinants): วิธีหา สมบัติ และความหมาย",
+  "description": "วิธีหาดีเทอร์มิแนนต์ครบทุกแบบ 2×2 กฎของซาร์รัส 3×3 ไมเนอร์ โคแฟกเตอร์ การกระจายลาปลาซ 4×4 วิธีลดแถว สมบัติของดีเทอร์มิแนนต์ตามการดำเนินการแถว ความหมายเชิงพื้นที่ พื้นที่สามเหลี่ยมจากพิกัด และแวนเดอร์มอนด์ พร้อมแล็บลากเวกเตอร์",
+  "ogTitle": "ดีเทอร์มิแนนต์: 2×2 ซาร์รัส โคแฟกเตอร์ ลดแถว และสมบัติครบ",
+  "lesson": "linear-algebra",
+  "sub": "determinants",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["Determinant", "Rule of Sarrus", "Minor", "Cofactor", "Laplace expansion", "Row reduction", "Vandermonde determinant", "Schur complement"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "กฎของซาร์รัสใช้กับ 4×4 ได้ไหม?", "a": "ไม่ได้ กฎของซาร์รัส (คัดลอกสองหลักแรกแล้วคูณเส้นทแยง) ใช้ได้กับ 3×3 เท่านั้น ถ้าใช้กับ 4×4 จะได้แค่ 8 พจน์จากทั้งหมด 24 พจน์ ขนาดตั้งแต่ 4×4 ขึ้นไปให้กระจายโคแฟกเตอร์ตามแถวที่มีศูนย์มาก หรือลดแถวให้เป็นสามเหลี่ยม"},
+    {"q": "ดีเทอร์มิแนนต์เป็นศูนย์หมายความว่าอะไร?", "a": "เมทริกซ์นั้นไม่มีอินเวอร์ส แถวหรือหลักขึ้นต่อกันเชิงเส้น เชิงเรขาคณิตคือการแปลงบีบพื้นที่หรือปริมาตรให้แบนเหลือศูนย์ และระบบ \\(A\\mathbf x = \\mathbf b\\) ไม่มีคำตอบเดียว (อาจไม่มีคำตอบหรือมีไม่จำกัด)"},
+    {"q": "det(2A) เท่ากับ 2 det A ใช่ไหม?", "a": "ไม่ใช่ เพราะ \\(2A\\) คูณ 2 เข้าไปทุกแถว แต่ละแถวดึง 2 ออกมาได้หนึ่งครั้ง ถ้า \\(A\\) ขนาด \\(n\\times n\\) จะได้ \\(\\det(2A) = 2^n\\det A\\) เช่น 3×3 ได้ \\(8\\det A\\)"},
+    {"q": "ควรกระจายโคแฟกเตอร์ตามแถวไหน?", "a": "เลือกแถวหรือหลักที่มีศูนย์มากที่สุด เพราะพจน์ที่คูณศูนย์หายไปทันที ถ้าไม่มีศูนย์เลย ให้ใช้การดำเนินการแถวแบบบวกพหุคูณ (ไม่เปลี่ยนค่าดีเทอร์มิแนนต์) สร้างศูนย์ก่อน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ดีเทอร์มิแนนต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.2 · พีชคณิตเชิงเส้น · Determinants</p>
+      <h1>ดีเทอร์มิแนนต์ (Determinants): วิธีหา สมบัติ และความหมาย</h1>
+      <p class="lede">ดีเทอร์มิแนนต์คือตัวเลขหนึ่งตัวที่สรุปเมทริกซ์จัตุรัสทั้งก้อน บอกได้ทันทีว่ามีอินเวอร์สไหม ระบบสมการมีคำตอบเดียวไหม และการแปลงขยายพื้นที่กี่เท่า หน้านี้รวมทุกวิธีคำนวณตั้งแต่ 2×2 ถึง n×n พร้อมสมบัติที่ทำให้คำนวณเร็วขึ้นหลายเท่า สูตรใช้รหัส D</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#two">2×2</a>
+        <a class="btn btn-ghost btn-sm" href="#sarrus">3×3 ซาร์รัส</a>
+        <a class="btn btn-ghost btn-sm" href="#cofactor">โคแฟกเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#properties">สมบัติ</a>
+        <a class="btn btn-ghost btn-sm" href="#row-reduction">ลดแถว</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>2×2: \(\det A = ad - bc\) · 3×3: ซาร์รัสหรือกระจายโคแฟกเตอร์ · ใหญ่กว่านั้น: ลดแถวเป็นสามเหลี่ยมแล้วคูณเส้นทแยง</li>
+          <li>สลับแถว เปลี่ยนเครื่องหมาย · คูณแถวด้วย k ค่าคูณ k · บวกพหุคูณของแถวอื่น ค่าไม่เปลี่ยน</li>
+          <li>\(\det A \ne 0 \iff A\) มีอินเวอร์ส \(\iff\) ระบบ \(A\mathbf x = \mathbf b\) มีคำตอบเดียว</li>
+          <li>\(|\det A|\) คืออัตราขยายพื้นที่ (2D) หรือปริมาตร (3D) ของการแปลง \(A\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น sarrus, cofactor, swap, triangular, พื้นที่" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="meaning">
+    <h2 id="meaning">ดีเทอร์มิแนนต์คืออะไร: มองเป็นพื้นที่ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เมทริกซ์ 2×2 เปลี่ยนรูปสี่เหลี่ยมจัตุรัสหนึ่งหน่วยให้กลายเป็นสี่เหลี่ยมด้านขนาน ด้านทั้งสองคือหลักของเมทริกซ์ ค่าดีเทอร์มิแนนต์คือ<strong>พื้นที่มีเครื่องหมาย</strong>ของสี่เหลี่ยมด้านขนานนั้น ถ้าบวกแปลว่าการวางทิศเดิม ถ้าลบแปลว่ารูปถูกพลิก ถ้าเป็นศูนย์แปลว่ารูปถูกบีบจนแบน</p>
+    <div class="la-lab" data-mode="det" data-m="3,1;1,2" id="detLab">
+      <p class="hint">กำลังโหลดแล็บ ลากหัวลูกศรของหลักที่ 1 (ส้ม) และหลักที่ 2 (ฟ้า) เพื่อดูพื้นที่เปลี่ยน</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="D13" data-k="geometric meaning area volume orientation scale factor ความหมาย พื้นที่ ปริมาตร ทิศ">
+        <p class="tf-n"><b><span class="fid">D13</span> Geometric meaning</b> ความหมายเชิงเรขาคณิต</p>
+        \[ \text{พื้นที่ (หรือปริมาตร) หลังแปลง} = |\det A| \times \text{พื้นที่ (หรือปริมาตร) เดิม} \]
+        <p class="tf-x">\(\det A \gt 0\) รักษาการวางทิศ · \(\det A \lt 0\) พลิกกลับด้าน (เหมือนส่องกระจก) · \(\det A = 0\) บีบมิติหายไปหนึ่งมิติขึ้นไป จึงย้อนกลับไม่ได้ (ไม่มีอินเวอร์ส)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="two">
+    <h2 id="two">ดีเทอร์มิแนนต์ 2×2 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="D1" data-k="2x2 determinant ad-bc สองคูณสอง">
+        <p class="tf-n"><b><span class="fid">D1</span> 2×2 determinant</b> ดีเทอร์มิแนนต์ขนาด 2×2</p>
+        \[ \det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{vmatrix} a & b \\ c & d \end{vmatrix} = \hlF{ad} - \hlP{bc} \]
+        <p class="tf-x">เส้นทแยงลงขวา (หลัก) ลบ เส้นทแยงขึ้นขวา (รอง) · สัญลักษณ์ \(|A|\) คือดีเทอร์มิแนนต์ ไม่ใช่ค่าสัมบูรณ์ ผลอาจติดลบได้</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-1 · 2×2</span><h3>หา \(\begin{vmatrix} 3 & 5 \\ 2 & 4 \end{vmatrix}\) และ \(\begin{vmatrix} 1 & 2 \\ 2 & 4 \end{vmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>ทแยงหลักลบทแยงรอง <a class="tag tf" href="#D1">D1</a></p>
+          \[ \begin{vmatrix} 3 & 5 \\ 2 & 4 \end{vmatrix} = (3)(4) - (5)(2) = 12 - 10 = 2 \]</li>
+        <li>\[ \begin{vmatrix} 1 & 2 \\ 2 & 4 \end{vmatrix} = (1)(4) - (2)(2) = 0 \]
+          <p>แถวที่ 2 เป็นสองเท่าของแถวที่ 1 พอดี ดีเทอร์มิแนนต์จึงเป็นศูนย์ <a class="tag tp" href="#D9">D9</a></p></li>
+      </ol>
+      <p class="answer">ค่าแรก \(= 2\) (มีอินเวอร์ส) · ค่าที่สอง \(= 0\) (เมทริกซ์เอกฐาน ไม่มีอินเวอร์ส)</p>
+    </div>
+    <div class="wx" id="ex-d2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-2 · หาค่าตัวแปรที่ทำให้ det = 0</span><h3>หาค่า \(x\) ที่ทำให้ \(\begin{vmatrix} x & 2 \\ 3 & x - 1 \end{vmatrix} = 0\)</h3></div>
+      <ol class="steps">
+        <li>\[ x(x - 1) - (2)(3) = x^2 - x - 6 = 0 \]</li>
+        <li>\[ (x - 3)(x + 2) = 0 \]</li>
+      </ol>
+      <p class="answer">\(x = 3\) หรือ \(x = -2\)</p>
+      <p class="check">โจทย์แบบนี้คือแก่นของการหาค่าเฉพาะ: หาค่า \(\lambda\) ที่ทำให้ \(\det(A - \lambda I) = 0\) <a href="/learn/linear-algebra/eigenvalues/#E2">E2</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="sarrus">
+    <h2 id="sarrus">ดีเทอร์มิแนนต์ 3×3 ด้วยกฎของซาร์รัส <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>คัดลอกสองหลักแรกไปต่อท้ายทางขวา แล้วคูณตามเส้นทแยง สามเส้นลงขวาเป็นบวก สามเส้นขึ้นขวาเป็นลบ วิธีนี้เร็วที่สุดสำหรับ 3×3 แต่<strong>ใช้ได้กับ 3×3 เท่านั้น</strong></p>
+    <figure class="la-fig">
+      <svg viewBox="0 0 560 214" role="img" aria-label="กฎของซาร์รัส คัดลอกหลักที่หนึ่งและสองไปทางขวา เส้นทแยงลงสามเส้นบวก เส้นทแยงขึ้นสามเส้นลบ">
+        <path class="f-br" d="M88 38 h-12 v140 h12 M268 38 h12 v140 h-12"/>
+        <g class="f-ent">
+          <text x="112" y="66" text-anchor="middle" dominant-baseline="central">a₁₁</text><text x="176" y="66" text-anchor="middle" dominant-baseline="central">a₁₂</text><text x="240" y="66" text-anchor="middle" dominant-baseline="central">a₁₃</text><text class="ghost" x="304" y="66" text-anchor="middle" dominant-baseline="central">a₁₁</text><text class="ghost" x="368" y="66" text-anchor="middle" dominant-baseline="central">a₁₂</text>
+          <text x="112" y="108" text-anchor="middle" dominant-baseline="central">a₂₁</text><text x="176" y="108" text-anchor="middle" dominant-baseline="central">a₂₂</text><text x="240" y="108" text-anchor="middle" dominant-baseline="central">a₂₃</text><text class="ghost" x="304" y="108" text-anchor="middle" dominant-baseline="central">a₂₁</text><text class="ghost" x="368" y="108" text-anchor="middle" dominant-baseline="central">a₂₂</text>
+          <text x="112" y="150" text-anchor="middle" dominant-baseline="central">a₃₁</text><text x="176" y="150" text-anchor="middle" dominant-baseline="central">a₃₂</text><text x="240" y="150" text-anchor="middle" dominant-baseline="central">a₃₃</text><text class="ghost" x="304" y="150" text-anchor="middle" dominant-baseline="central">a₃₁</text><text class="ghost" x="368" y="150" text-anchor="middle" dominant-baseline="central">a₃₂</text>
+        </g>
+        <g class="ln ln-p1"><path d="M96 55.5 L256 160.5"/><path d="M160 55.5 L320 160.5"/><path d="M224 55.5 L384 160.5"/></g>
+        <g class="ln ln-cur dash"><path d="M96 160.5 L256 55.5"/><path d="M160 160.5 L320 55.5"/><path d="M224 160.5 L384 55.5"/></g>
+        <text class="t-th c-p1" x="200" y="200">ลงขวา: + a₁₁a₂₂a₃₃ + a₁₂a₂₃a₃₁ + a₁₃a₂₁a₃₂</text>
+        <text class="t-th c-cur" x="200" y="24">ขึ้นขวา: − a₁₃a₂₂a₃₁ − a₁₁a₂₃a₃₂ − a₁₂a₂₁a₃₃</text>
+        <text class="t-sm" x="400" y="118">สำเนาหลัก 1, 2</text>
+      </svg>
+      <figcaption>เส้นทึบสีฟ้าบวก เส้นประสีส้มลบ ใช้ได้กับ 3×3 เท่านั้น</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="D2" data-k="sarrus rule 3x3 diagonal ซาร์รัส สามคูณสาม">
+        <p class="tf-n"><b><span class="fid">D2</span> Rule of Sarrus (3×3 only)</b> กฎของซาร์รัส</p>
+        \[ \det A = \hlP{a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}} - \hlF{a_{13}a_{22}a_{31} - a_{11}a_{23}a_{32} - a_{12}a_{21}a_{33}} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-3 · 3×3 ด้วยซาร์รัส</span><h3>หา \(\det A\) เมื่อ \(A = \begin{pmatrix} 2 & 1 & 3 \\ 0 & -1 & 4 \\ 1 & 2 & 0 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=det&amp;A=2,1,3;0,-1,4;1,2,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>เส้นลงขวาสามเส้น (บวก) <a class="tag tf" href="#D2">D2</a></p>
+          \[ \hlP{(2)(-1)(0) + (1)(4)(1) + (3)(0)(2)} = 0 + 4 + 0 = 4 \]</li>
+        <li><p>เส้นขึ้นขวาสามเส้น (นำไปลบ)</p>
+          \[ \hlF{(3)(-1)(1) + (2)(4)(2) + (1)(0)(0)} = -3 + 16 + 0 = 13 \]</li>
+        <li>\[ \det A = 4 - 13 = -9 \]</li>
+      </ol>
+      <p class="answer">\(\det A = -9\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="cofactor">
+    <h2 id="cofactor">ไมเนอร์ โคแฟกเตอร์ และการกระจายลาปลาซ <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <p>วิธีนี้ใช้ได้กับทุกขนาด แนวคิดคือย่อยดีเทอร์มิแนนต์ \(n\times n\) ให้เป็นผลรวมของดีเทอร์มิแนนต์ \((n-1)\times(n-1)\) หลายตัว ทำซ้ำจนเหลือ 2×2</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D3" data-k="minor cofactor sign checkerboard ไมเนอร์ โคแฟกเตอร์ ตัวประกอบร่วมเกี่ยว เครื่องหมาย">
+        <p class="tf-n"><b><span class="fid">D3</span> Minor and cofactor</b> ไมเนอร์และโคแฟกเตอร์</p>
+        \[ M_{ij} = \det(A \text{ ที่ตัดแถว } i \text{ และหลัก } j \text{ ออก}), \qquad C_{ij} = (-1)^{i+j}M_{ij}, \qquad \text{เครื่องหมาย: } \begin{pmatrix} + & - & + & \cdots \\ - & + & - & \\ + & - & + & \\ \vdots & & & \ddots \end{pmatrix} \]
+        <p class="tf-x">เครื่องหมายสลับแบบกระดานหมากรุก ช่องมุมซ้ายบนเป็น + เสมอ ภาษาไทยเรียกโคแฟกเตอร์ว่าตัวประกอบร่วมเกี่ยว</p>
+      </div>
+      <div class="tf wide" id="D4" data-k="laplace cofactor expansion along row column กระจาย โคแฟกเตอร์ ลาปลาซ แถว หลัก">
+        <p class="tf-n"><b><span class="fid">D4</span> Laplace (cofactor) expansion</b> การกระจายโคแฟกเตอร์ตามแถวหรือหลักใดก็ได้</p>
+        \[ \det A = \sum_{j=1}^{n} a_{ij}C_{ij} \ \ (\text{ตามแถว } i) \qquad = \sum_{i=1}^{n} a_{ij}C_{ij} \ \ (\text{ตามหลัก } j) \]
+        <p class="tf-x">ทุกแถวทุกหลักให้คำตอบเท่ากัน จึงเลือกแถวที่มี<strong>ศูนย์มากที่สุด</strong> เพราะพจน์ที่ \(a_{ij} = 0\) หายไปเลย</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-4 · 3×3 ด้วยโคแฟกเตอร์ (เลือกหลักที่มีศูนย์)</span><h3>หา \(\det A\) ของเมทริกซ์ในตัวอย่าง D-3 โดยกระจายตามหลักที่ 1</h3></div>
+      <ol class="steps">
+        <li><p>หลักที่ 1 คือ \((2, 0, 1)\) มีศูนย์หนึ่งตัว เครื่องหมายของหลัก 1 คือ \(+, -, +\) <a class="tag tf" href="#D4">D4</a></p>
+          \[ \det A = \hlF{+2}\begin{vmatrix} -1 & 4 \\ 2 & 0 \end{vmatrix} \hlF{- 0}\begin{vmatrix} 1 & 3 \\ 2 & 0 \end{vmatrix} \hlF{+ 1}\begin{vmatrix} 1 & 3 \\ -1 & 4 \end{vmatrix} \]</li>
+        <li><p>พจน์กลางคูณศูนย์ หายไปเลย ไม่ต้องคำนวณ <a class="tag tf" href="#D1">D1</a></p>
+          \[ = 2\,(0 - 8) - \rc{0\cdot(\cdots)} + 1\,(4 + 3) = -16 + 7 \]</li>
+      </ol>
+      <p class="answer">\(\det A = -9\) ตรงกับวิธีซาร์รัส</p>
+    </div>
+    <div class="wx" id="ex-d5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-5 · 4×4 ที่มีศูนย์เยอะ</span><h3>หา \(\det\begin{pmatrix} 1 & 0 & 2 & 0 \\ 3 & 1 & 0 & 1 \\ 0 & 0 & 4 & 0 \\ 2 & 0 & 1 & 3 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=det&amp;A=1,0,2,0;3,1,0,1;0,0,4,0;2,0,1,3">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>แถวที่ 3 คือ \((0, 0, 4, 0)\) มีตัวไม่ใช่ศูนย์ตัวเดียวที่ตำแหน่ง \((3,3)\) เครื่องหมาย \((-1)^{3+3} = +\) <a class="tag tf" href="#D3">D3</a></p>
+          \[ \det A = +\hlF{4}\cdot M_{33} = 4\begin{vmatrix} 1 & 0 & 0 \\ 3 & 1 & 1 \\ 2 & 0 & 3 \end{vmatrix} \]</li>
+        <li><p>ไมเนอร์ 3×3 มีแถวแรกเป็น \((1, 0, 0)\) กระจายตามแถวแรกต่อได้เลย</p>
+          \[ M_{33} = 1\cdot\begin{vmatrix} 1 & 1 \\ 0 & 3 \end{vmatrix} = 1\cdot(3 - 0) = 3 \]</li>
+      </ol>
+      <p class="answer">\(\det A = 4 \times 3 = 12\) ถ้ากระจายตามแถวแรกตรง ๆ จะต้องคำนวณ 3×3 สองตัว เสียเวลากว่าสองเท่า</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติของดีเทอร์มิแนนต์ <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <p>สมบัติเหล่านี้ทำให้หาค่าได้โดยแทบไม่ต้องคำนวณ และเป็นพื้นฐานของวิธีลดแถว ทุกข้อที่พูดถึง “แถว” ใช้กับ “หลัก” ได้ด้วยเพราะ D5</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>การดำเนินการแถว</th><th>ผลต่อดีเทอร์มิแนนต์</th><th>สูตร</th></tr></thead>
+        <tbody>
+          <tr><td>สลับสองแถว \(R_i \leftrightarrow R_j\)</td><td>เปลี่ยนเครื่องหมาย</td><td><a class="tag tp" href="#D6">D6</a></td></tr>
+          <tr><td>คูณแถวด้วย \(k\): \(R_i \leftarrow kR_i\)</td><td>คูณด้วย \(k\)</td><td><a class="tag tp" href="#D7">D7</a></td></tr>
+          <tr><td>บวกพหุคูณของแถวอื่น \(R_i \leftarrow R_i + kR_j\)</td><td><strong>ไม่เปลี่ยน</strong></td><td><a class="tag tp" href="#D8">D8</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tf-grid">
+      <div class="tf" id="D5" data-k="transpose determinant det(A^T) ทรานสโพส">
+        <p class="tf-n"><b><span class="fid">D5</span> Transpose</b> ทรานสโพสไม่เปลี่ยนค่า</p>
+        \[ \det(A^T) = \det A \]
+      </div>
+      <div class="tf" id="D6" data-k="swap rows interchange sign สลับแถว เปลี่ยนเครื่องหมาย">
+        <p class="tf-n"><b><span class="fid">D6</span> Row swap</b> สลับสองแถว</p>
+        \[ R_i \leftrightarrow R_j \ \Rightarrow\ \det \to -\det \]
+      </div>
+      <div class="tf" id="D7" data-k="scale row multiply k det(kA)=k^n det A คูณแถว ค่าคงที่ ดึงตัวร่วม">
+        <p class="tf-n"><b><span class="fid">D7</span> Row scaling</b> คูณแถวเดียวด้วย k</p>
+        \[ R_i \leftarrow kR_i \Rightarrow \det \to k\det, \qquad \hlF{\det(kA) = k^n\det A} \]
+        <p class="tf-x">ดึงตัวร่วมออกจากแถวเดียวได้ทีละแถว \(kA\) คูณ \(k\) ทุกแถว จึงได้ \(k^n\)</p>
+      </div>
+      <div class="tf" id="D8" data-k="add multiple of row replacement unchanged บวก พหุคูณ ไม่เปลี่ยน">
+        <p class="tf-n"><b><span class="fid">D8</span> Row replacement</b> บวกพหุคูณของแถวอื่น</p>
+        \[ R_i \leftarrow R_i + kR_j \ (i \ne j) \Rightarrow \det \text{ เท่าเดิม} \]
+        <p class="tf-x">เครื่องมือหลักของการสร้างศูนย์โดยไม่ทำให้ค่าเปลี่ยน</p>
+      </div>
+      <div class="tf" id="D9" data-k="zero row equal rows proportional dependent แถวศูนย์ แถวซ้ำ เป็นสัดส่วน ขึ้นต่อกัน">
+        <p class="tf-n"><b><span class="fid">D9</span> Zero determinant tests</b> กรณีที่ได้ศูนย์ทันที</p>
+        \[ \det A = 0 \ \text{ถ้ามีแถว (หลัก) ศูนย์ทั้งแถว หรือสองแถวเท่ากัน หรือเป็นสัดส่วนกัน} \]
+        <p class="tf-x">กรณีทั่วไปคือแถวหนึ่งเป็นผลรวมเชิงเส้นของแถวอื่น (ขึ้นต่อกันเชิงเส้น)</p>
+      </div>
+      <div class="tf" id="D10" data-k="triangular diagonal product สามเหลี่ยม ทแยงมุม ผลคูณ">
+        <p class="tf-n"><b><span class="fid">D10</span> Triangular matrix</b> เมทริกซ์สามเหลี่ยมและทแยงมุม</p>
+        \[ \det\begin{pmatrix} a_{11} & * & * \\ 0 & a_{22} & * \\ 0 & 0 & a_{33} \end{pmatrix} = a_{11}a_{22}\cdots a_{nn} \]
+        <p class="tf-x">ทั้งสามเหลี่ยมบน ล่าง และทแยงมุม ใช้ผลคูณเส้นทแยงหลักได้เลย ดังนั้น \(\det I = 1\)</p>
+      </div>
+      <div class="tf wide" id="D11" data-k="product rule det(AB) inverse power ผลคูณ อินเวอร์ส กำลัง">
+        <p class="tf-n"><b><span class="fid">D11</span> Product, inverse and power</b> ผลคูณ อินเวอร์ส และกำลัง</p>
+        \[ \det(AB) = \det A\,\det B, \qquad \det(A^{-1}) = \frac{1}{\det A}, \qquad \det(A^k) = (\det A)^k \]
+        <p class="tf-x">แม้ \(AB \ne BA\) แต่ \(\det(AB) = \det(BA)\) เสมอ</p>
+      </div>
+      <div class="tf wide warn" id="D12" data-k="linearity one row sum not additive det(A+B) เชิงเส้น ผลบวก ข้อห้าม">
+        <p class="tf-n"><b><span class="fid">D12</span> Linear in one row, NOT additive</b> เชิงเส้นทีละแถว แต่บวกทั้งเมทริกซ์ไม่ได้</p>
+        \[ \begin{vmatrix} a + a' & b + b' \\ c & d \end{vmatrix} = \begin{vmatrix} a & b \\ c & d \end{vmatrix} + \begin{vmatrix} a' & b' \\ c & d \end{vmatrix}, \qquad \text{แต่ } \det(A + B) \ne \det A + \det B \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-6 · ใช้สมบัติล้วน ไม่ต้องรู้สมาชิก</span><h3>ให้ \(A\) เป็นเมทริกซ์ 3×3 ที่ \(\det A = 5\) จงหา \(\det(2A)\), \(\det(A^{-1})\), \(\det(A^TA)\), \(\det(-A)\) และดีเทอร์มิแนนต์ของ \(B\) ที่ได้จากการสลับแถว 1 กับ 3 ของ \(A\) แล้วคูณแถว 2 ด้วย 3</h3></div>
+      <ol class="steps">
+        <li><p>\(\det(2A) = 2^3\det A = 8\times5 = 40\) <a class="tag tp" href="#D7">D7</a></p></li>
+        <li><p>\(\det(A^{-1}) = 1/5\) และ \(\det(A^TA) = \det A^T\det A = 5\times5 = 25\) <a class="tag tp" href="#D11">D11</a> <a class="tag tp" href="#D5">D5</a></p></li>
+        <li><p>\(\det(-A) = (-1)^3\det A = -5\) (สำหรับ 2×2 จะได้ \(+5\))</p></li>
+        <li><p>สลับแถวเปลี่ยนเครื่องหมาย แล้วคูณแถวด้วย 3: \(\det B = 3\times(-5) = -15\) <a class="tag tp" href="#D6">D6</a></p></li>
+      </ol>
+      <p class="answer">\(40,\ \tfrac15,\ 25,\ -5,\ -15\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="row-reduction">
+    <h2 id="row-reduction">หาดีเทอร์มิแนนต์ด้วยการลดแถว <span class="lv lv-i">กลาง</span></h2>
+    <p>สำหรับ 4×4 ขึ้นไป ให้ใช้ D8 สร้างศูนย์ใต้เส้นทแยงจนเป็นเมทริกซ์สามเหลี่ยม แล้วคูณเส้นทแยงตาม D10 ถ้าระหว่างทางสลับแถวให้กลับเครื่องหมาย ถ้าคูณแถวให้หารกลับ วิธีนี้ใช้การคูณประมาณ \(n^3/3\) ครั้ง ขณะที่กระจายโคแฟกเตอร์ตรง ๆ ใช้ราว \(n!\) ครั้ง ที่ \(n = 10\) คือ 333 ครั้งเทียบกับ 3.6 ล้านครั้ง</p>
+    <div class="wx" id="ex-d7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-7 · 4×4 ด้วยการลดแถว</span><h3>หา \(\det\begin{pmatrix} 1 & 2 & 1 & 0 \\ 2 & 5 & 3 & 1 \\ -1 & 0 & 2 & 4 \\ 3 & 6 & 4 & 3 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=det&amp;A=1,2,1,0;2,5,3,1;-1,0,2,4;3,6,4,3">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>ใช้ \(\hlP{1}\) ที่มุมซ้ายบนเป็นตัวหลัก (pivot) สร้างศูนย์ในหลักที่ 1 ด้วยการบวกพหุคูณ ค่าไม่เปลี่ยน <a class="tag tp" href="#D8">D8</a></p>
+          \[ \xrightarrow[R_4 \leftarrow R_4 - 3R_1]{R_2 \leftarrow R_2 - 2R_1,\ R_3 \leftarrow R_3 + R_1} \begin{pmatrix} \hlP{1} & 2 & 1 & 0 \\ 0 & \hlP{1} & 1 & 1 \\ 0 & 2 & 3 & 4 \\ 0 & 0 & 1 & 3 \end{pmatrix} \]</li>
+        <li><p>ใช้ \(\hlP{1}\) ในแถว 2 สร้างศูนย์ใต้มัน</p>
+          \[ \xrightarrow{R_3 \leftarrow R_3 - 2R_2} \begin{pmatrix} 1 & 2 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 0 & \hlP{1} & 2 \\ 0 & 0 & 1 & 3 \end{pmatrix} \]</li>
+        <li>\[ \xrightarrow{R_4 \leftarrow R_4 - R_3} \begin{pmatrix} 1 & 2 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 0 & 1 & 2 \\ 0 & 0 & 0 & \hlP{1} \end{pmatrix} \]</li>
+        <li><p>ได้เมทริกซ์สามเหลี่ยมบน ไม่มีการสลับหรือคูณแถว จึงไม่ต้องปรับค่า <a class="tag tp" href="#D10">D10</a></p>
+          \[ \det A = (1)(1)(1)(1) = 1 \]</li>
+      </ol>
+      <p class="answer">\(\det A = 1\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="invertible">
+    <h2 id="invertible">ดีเทอร์มิแนนต์กับการมีคำตอบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="D20" data-k="invertible nonsingular criterion unique solution rank มีอินเวอร์ส คำตอบเดียว เอกฐาน">
+        <p class="tf-n"><b><span class="fid">D20</span> Determinant test</b> เกณฑ์ดีเทอร์มิแนนต์</p>
+        \[ \det A \ne 0 \iff A^{-1} \text{ มีจริง} \iff A\mathbf x = \mathbf b \text{ มีคำตอบเดียวทุก } \mathbf b \iff \operatorname{rank}A = n \]
+        <p class="tf-x">ถ้า \(\det A = 0\) ระบบอาจไม่มีคำตอบหรือมีคำตอบไม่จำกัด ต้องตรวจด้วยการลดแถว <a href="/learn/linear-algebra/linear-systems/#L6">L6</a> ดูรายการเงื่อนไขที่สมมูลกันทั้งหมดใน <a href="/learn/linear-algebra/inverse/#I10">I10</a></p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="geometry">
+    <h2 id="geometry">งานเรขาคณิตด้วยดีเทอร์มิแนนต์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="D17" data-k="area triangle coordinates shoelace พื้นที่ สามเหลี่ยม พิกัด">
+        <p class="tf-n"><b><span class="fid">D17</span> Area of a triangle</b> พื้นที่สามเหลี่ยมจากพิกัดจุดยอด</p>
+        \[ \text{พื้นที่} = \frac12\left|\det\begin{pmatrix} x_1 & y_1 & 1 \\ x_2 & y_2 & 1 \\ x_3 & y_3 & 1 \end{pmatrix}\right| \]
+      </div>
+      <div class="tf" id="D18" data-k="collinear points line through two points เส้นตรง ร่วมเส้น สามจุด">
+        <p class="tf-n"><b><span class="fid">D18</span> Collinearity and line equation</b> สามจุดอยู่บนเส้นตรงเดียวกัน</p>
+        \[ \begin{vmatrix} x & y & 1 \\ x_1 & y_1 & 1 \\ x_2 & y_2 & 1 \end{vmatrix} = 0 \]
+        <p class="tf-x">แทนจุดที่สามแล้วได้ 0 แปลว่าร่วมเส้น ปล่อย \((x, y)\) เป็นตัวแปรจะได้สมการเส้นตรงผ่านสองจุด</p>
+      </div>
+      <div class="tf wide" id="D19" data-k="cross product determinant vector i j k ผลคูณไขว้ เวกเตอร์">
+        <p class="tf-n"><b><span class="fid">D19</span> Cross product as a determinant</b> ผลคูณไขว้</p>
+        \[ \vec A \times \vec B = \begin{vmatrix} \hat i & \hat j & \hat k \\ A_x & A_y & A_z \\ B_x & B_y & B_z \end{vmatrix}, \qquad \vec A\cdot(\vec B\times\vec C) = \begin{vmatrix} A_x & A_y & A_z \\ B_x & B_y & B_z \\ C_x & C_y & C_z \end{vmatrix} \]
+        <p class="tf-x">ผลคูณสเกลาร์สามชั้นคือปริมาตรของทรงสี่เหลี่ยมด้านขนาน (D13 ใน 3 มิติ) ดูการใช้งานกับแรงบนตัวนำที่ <a href="/learn/vector-algebra/">พีชคณิตของเวกเตอร์</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-8 · พื้นที่สามเหลี่ยม (โจทย์ ม.ปลาย)</span><h3>หาพื้นที่สามเหลี่ยมที่มีจุดยอด \((1, 2), (4, 6), (6, 1)\)</h3></div>
+      <ol class="steps">
+        <li><p>เรียงพิกัดพร้อมหลักของเลข 1 <a class="tag tf" href="#D17">D17</a></p>
+          \[ \det\begin{pmatrix} 1 & 2 & 1 \\ 4 & 6 & 1 \\ 6 & 1 & 1 \end{pmatrix} \]</li>
+        <li><p>ซาร์รัส: ลงขวา \((1)(6)(1) + (2)(1)(6) + (1)(4)(1) = 6 + 12 + 4 = 22\) ขึ้นขวา \((1)(6)(6) + (1)(1)(1) + (2)(4)(1) = 36 + 1 + 8 = 45\) <a class="tag tf" href="#D2">D2</a></p>
+          \[ \det = 22 - 45 = -23 \]</li>
+      </ol>
+      <p class="answer">พื้นที่ \(= \tfrac12|-23| = 11.5\) ตารางหน่วย (เครื่องหมายลบแค่บอกว่าเรียงจุดตามเข็มนาฬิกา)</p>
+    </div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="tsec" aria-labelledby="special">
+    <h2 id="special">ดีเทอร์มิแนนต์พิเศษ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="D14" data-k="block triangular schur complement บล็อก ชัวร์">
+        <p class="tf-n"><b><span class="fid">D14</span> Block triangular and Schur complement</b> เมทริกซ์บล็อก</p>
+        \[ \det\begin{pmatrix} A & B \\ O & D \end{pmatrix} = \det A\,\det D, \qquad \det\begin{pmatrix} A & B \\ C & D \end{pmatrix} = \det A\cdot\det(D - CA^{-1}B) \ \ (A^{-1} \text{ มีจริง}) \]
+        <p class="tf-x">\(D - CA^{-1}B\) เรียก Schur complement ของ \(A\) ใช้ลดรูปวงจรด้วยการกำจัดโนด (Kron reduction) ในระบบไฟฟ้ากำลัง</p>
+      </div>
+      <div class="tf" id="D15" data-k="vandermonde polynomial interpolation แวนเดอร์มอนด์">
+        <p class="tf-n"><b><span class="fid">D15</span> Vandermonde determinant</b> ดีเทอร์มิแนนต์แวนเดอร์มอนด์</p>
+        \[ \begin{vmatrix} 1 & x_1 & x_1^2 \\ 1 & x_2 & x_2^2 \\ 1 & x_3 & x_3^2 \end{vmatrix} = (x_2 - x_1)(x_3 - x_1)(x_3 - x_2) \]
+        <p class="tf-x">ทั่วไป \(\prod_{i\lt j}(x_j - x_i)\) ไม่เป็นศูนย์เมื่อ \(x_i\) ต่างกันทั้งหมด จึงลากพหุนามผ่านจุดที่ \(x\) ต่างกันได้แบบเดียวเสมอ ตัวอย่าง \(x = 1, 2, 3\) ได้ \((1)(2)(1) = 2\)</p>
+      </div>
+      <div class="tf" id="D16" data-k="product of eigenvalues det = lambda ค่าเฉพาะ ผลคูณ">
+        <p class="tf-n"><b><span class="fid">D16</span> Determinant and eigenvalues</b> ผลคูณค่าเฉพาะ</p>
+        \[ \det A = \lambda_1\lambda_2\cdots\lambda_n \]
+        <p class="tf-x">นับค่าซ้ำตามจำนวนครั้ง จึง \(\det A = 0\) ก็ต่อเมื่อมีค่าเฉพาะเป็น 0 <a href="/learn/linear-algebra/eigenvalues/#E6">E6</a></p>
+      </div>
+      <div class="tf wide" id="D21" data-k="leibniz permutation formula definition เลบนิซ การเรียงสับเปลี่ยน นิยาม">
+        <p class="tf-n"><b><span class="fid">D21</span> Leibniz formula (definition)</b> นิยามแบบการเรียงสับเปลี่ยน</p>
+        \[ \det A = \sum_{\sigma \in S_n}\operatorname{sgn}(\sigma)\prod_{i=1}^{n}a_{i,\sigma(i)} \]
+        <p class="tf-x">ผลรวม \(n!\) พจน์ แต่ละพจน์เลือกสมาชิกแถวละหนึ่งตัวและหลักละหนึ่งตัว 2×2 มี 2 พจน์ 3×3 มี 6 พจน์ (ซาร์รัสคือการเขียน 6 พจน์นี้) 4×4 มี 24 พจน์</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="note warn"><b>ระวังจุดเหล่านี้</b>
+      <ul class="la-check">
+        <li>ใช้ซาร์รัสกับ 4×4 → ผิด ใช้ได้เฉพาะ 3×3</li>
+        <li>ลืมเครื่องหมายกระดานหมากรุกตอนกระจายโคแฟกเตอร์ โดยเฉพาะเมื่อกระจายตามแถว 2 ซึ่งเริ่มด้วยลบ <a class="tag tf" href="#D3">D3</a></li>
+        <li>คิดว่า \(\det(kA) = k\det A\) → ต้องเป็น \(k^n\det A\) <a class="tag tp" href="#D7">D7</a></li>
+        <li>ลดแถวแล้วลืมกลับเครื่องหมายเมื่อสลับแถว หรือลืมหารคืนเมื่อคูณแถว <a class="tag tp" href="#D6">D6</a></li>
+        <li>ใช้ \(R_i \leftarrow kR_i + R_j\) (คูณแถวที่ถูกแทนที่) โดยไม่รู้ว่าค่าเปลี่ยนไป \(k\) เท่า แบบที่ปลอดภัยคือ \(R_i \leftarrow R_i + kR_j\)</li>
+        <li>อ่าน \(|A|\) เป็นค่าสัมบูรณ์ → ดีเทอร์มิแนนต์ติดลบได้</li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขดีเทอร์มิแนนต์แสดงวิธีทำ</h2>
+    <p>ใส่เมทริกซ์ขนาด 2×2 ถึง 4×4 รับเลขเศษส่วนเช่น <code>3/4</code> และทศนิยม คำนวณแบบเศษส่วนแม่นยำ 2×2 และ 3×3 แสดงการกระจายโคแฟกเตอร์ 4×4 แสดงการลดแถวทีละขั้น</p>
+    <div class="mx-calc" data-modes="det,inv,solve,eig" data-mode="det" data-n="3" data-a="2,1,3;0,-1,4;1,2,0"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ดีเทอร์มิแนนต์บอกว่า “มีคำตอบเดียวไหม” แต่ยังไม่ได้ให้คำตอบ หน้าถัดไป <a href="/learn/linear-algebra/linear-systems/">ระบบสมการเชิงเส้น</a> สอนวิธีลดแถวที่ทั้งหาคำตอบและบอกได้ด้วยว่าเมื่อ \(\det A = 0\) ระบบไม่มีคำตอบหรือมีไม่จำกัด ส่วนการใช้ดีเทอร์มิแนนต์แก้ระบบโดยตรงอยู่ที่ <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

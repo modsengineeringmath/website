@@ -1,0 +1,382 @@
+<!--meta
+{
+  "title": "ค่าเฉพาะและเวกเตอร์เฉพาะ (Eigenvalue & Eigenvector): วิธีหา 2×2 3×3 ค่าซ้ำ ค่าเชิงซ้อน | อาจารย์มด",
+  "h1": "ค่าเฉพาะและเวกเตอร์เฉพาะ (Eigenvalues & Eigenvectors)",
+  "description": "วิธีหาค่าเฉพาะ (eigenvalue) และเวกเตอร์เฉพาะ (eigenvector) ทีละขั้น สมการลักษณะเฉพาะ det(A − λI) = 0 สูตรลัด 2×2 ตัวอย่าง 3×3 ค่าซ้ำ ภาวะไม่ครบ (defective) ค่าเชิงซ้อน การทำให้เป็นเมทริกซ์ทแยงมุม Aⁿ เมทริกซ์สมมาตร เคย์ลีย์-แฮมิลตัน e^{At} และเสถียรภาพของวงจร พร้อมแล็บ 2×2 แบบลากได้",
+  "ogTitle": "ค่าเฉพาะและเวกเตอร์เฉพาะ: วิธีหาทีละขั้น ตั้งแต่ 2×2 ถึงเสถียรภาพระบบ",
+  "lesson": "linear-algebra",
+  "sub": "eigenvalues",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Eigenvalue", "Eigenvector", "Characteristic equation", "Diagonalization", "Algebraic multiplicity", "Geometric multiplicity", "Spectral theorem", "Cayley–Hamilton theorem", "Matrix exponential", "Stability"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "หาเวกเตอร์เฉพาะแล้วลดแถวได้ทุกแถวไม่เป็นศูนย์ ทำอย่างไร?", "a": "แปลว่าค่า \\(\\lambda\\) ที่ใช้ผิด เพราะเมื่อ \\(\\lambda\\) เป็นค่าเฉพาะจริง \\(\\det(A - \\lambda I) = 0\\) ลดแถวแล้วต้องมีแถวศูนย์อย่างน้อยหนึ่งแถวเสมอ ให้กลับไปตรวจสมการลักษณะเฉพาะและการแยกตัวประกอบ"},
+    {"q": "เวกเตอร์เฉพาะที่ได้ไม่ตรงกับเฉลย ผิดไหม?", "a": "ไม่จำเป็นต้องผิด เวกเตอร์เฉพาะคูณด้วยค่าคงที่ใด ๆ ที่ไม่เป็นศูนย์ก็ยังเป็นเวกเตอร์เฉพาะ เช่น \\((1, 2)\\), \\((2, 4)\\) และ \\((-1, -2)\\) ใช้แทนกันได้ ตรวจด้วย \\(A\\mathbf v = \\lambda\\mathbf v\\) จะรู้ทันที"},
+    {"q": "ค่าเฉพาะเป็นศูนย์ได้ไหม แล้วเวกเตอร์เฉพาะเป็นศูนย์ได้ไหม?", "a": "ค่าเฉพาะเป็นศูนย์ได้ (แปลว่าเมทริกซ์ไม่มีอินเวอร์ส) แต่เวกเตอร์เฉพาะเป็นเวกเตอร์ศูนย์ไม่ได้ตามนิยาม เพราะ \\(A\\mathbf 0 = \\lambda\\mathbf 0\\) จริงกับทุก \\(\\lambda\\) จึงไม่ให้ข้อมูลอะไร"},
+    {"q": "ค่าเฉพาะเกี่ยวกับวงจรไฟฟ้าอย่างไร?", "a": "ค่าเฉพาะของเมทริกซ์สถานะ \\(A\\) คือขั้ว (poles) ของวงจร ส่วนจริงบอกอัตราการลดลง ส่วนจินตภาพบอกความถี่การแกว่ง ถ้าทุกค่ามีส่วนจริงเป็นลบ วงจรเสถียร ค่าเฉพาะจริงสองตัวคือหน่วงเกิน ค่าเชิงซ้อนคู่คือหน่วงน้อยแบบแกว่ง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ค่าเฉพาะและเวกเตอร์เฉพาะ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.6 · พีชคณิตเชิงเส้น · Eigenvalues &amp; Eigenvectors</p>
+      <h1>ค่าเฉพาะและเวกเตอร์เฉพาะ (Eigenvalues &amp; Eigenvectors)</h1>
+      <p class="lede">เมทริกซ์ส่วนใหญ่หมุนและบิดเวกเตอร์ แต่จะมีบางทิศที่ถูกยืดหรือหดอย่างเดียวโดยไม่เปลี่ยนแนว ทิศนั้นคือเวกเตอร์เฉพาะ อัตราการยืดคือค่าเฉพาะ ในวงจรไฟฟ้าค่าเฉพาะคือขั้วที่กำหนดว่าระบบตอบสนองเร็วแค่ไหน แกว่งหรือไม่ และเสถียรไหม หน้านี้พาไปตั้งแต่วิธีหาแบบโจทย์สอบจนถึง \(e^{At}\) สูตรใช้รหัส E</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#procedure">วิธีหาทีละขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#three">ตัวอย่าง 3×3</a>
+        <a class="btn btn-ghost btn-sm" href="#repeated">ค่าซ้ำ</a>
+        <a class="btn btn-ghost btn-sm" href="#complex">ค่าเชิงซ้อน</a>
+        <a class="btn btn-ghost btn-sm" href="#diagonalization">Aⁿ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(A\mathbf v = \lambda\mathbf v,\ \mathbf v \ne \mathbf 0\): \(\mathbf v\) ไม่เปลี่ยนแนว ถูกคูณด้วย \(\lambda\) อย่างเดียว</li>
+          <li>หา \(\lambda\) จาก \(\det(A - \lambda I) = 0\) แล้วหา \(\mathbf v\) จาก \((A - \lambda I)\mathbf v = \mathbf 0\)</li>
+          <li>2×2: \(\lambda^2 - (\operatorname{tr}A)\lambda + \det A = 0\) · ตรวจ: \(\sum\lambda = \operatorname{tr}A\), \(\prod\lambda = \det A\)</li>
+          <li>มีเวกเตอร์เฉพาะอิสระครบ \(n\) ตัว ทำ \(A = PDP^{-1}\) ได้ แล้ว \(A^k = PD^kP^{-1}\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ"><b class="mono">อ่านวิธีทำ</b><span><i class="lg-c"></i>ค่า λ</span><span><i class="lg-p"></i>ตัวหลัก (pivot)</span><span><i class="lg-u"></i>เวกเตอร์เฉพาะ</span><span><i class="lg-f"></i>สูตรที่ใช้</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น characteristic, 2x2, trace, diagonal, symmetric, e^At" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="meaning">
+    <h2 id="meaning">ความหมาย: ทิศที่ไม่ถูกหมุน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ลองลากเวกเตอร์ \(\mathbf v\) (ดำ) ไปรอบวงกลม แล้วดูผล \(A\mathbf v\) (ส้ม) ส่วนใหญ่ \(A\mathbf v\) ชี้ไปคนละทิศกับ \(\mathbf v\) แต่จะมีบางทิศที่ \(A\mathbf v\) อยู่บนเส้นเดียวกับ \(\mathbf v\) พอดี เส้นประสีเขียวคือทิศเหล่านั้น</p>
+    <div class="la-lab" data-mode="eig" data-m="2,1;1,2" id="eigLab">
+      <p class="hint">กำลังโหลดแล็บ ลากจุดดำบนวงกลมเพื่อหมุน v หรือลากหัวลูกศรของหลัก เพื่อเปลี่ยนเมทริกซ์</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="E1" data-k="definition eigenvalue eigenvector av = lambda v นิยาม ค่าเฉพาะ เวกเตอร์เฉพาะ ค่าลักษณะเฉพาะ">
+        <p class="tf-n"><b><span class="fid">E1</span> Eigenvalue and eigenvector</b> นิยามค่าเฉพาะและเวกเตอร์เฉพาะ</p>
+        \[ A\mathbf v = \hlC{\lambda}\mathbf v, \qquad \mathbf v \ne \mathbf 0 \]
+        <p class="tf-x">\(\lambda\) (แลมบ์ดา) คือค่าเฉพาะ หรือค่าลักษณะเฉพาะ (eigenvalue) · \(\mathbf v\) คือเวกเตอร์เฉพาะ (eigenvector) · \(\lambda \gt 1\) ยืด · \(0 \lt \lambda \lt 1\) หด · \(\lambda \lt 0\) กลับทิศ · \(\lambda = 0\) บีบเป็นศูนย์ · เวกเตอร์เฉพาะคูณค่าคงที่ไม่เป็นศูนย์ใด ๆ ยังเป็นเวกเตอร์เฉพาะ</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="characteristic">
+    <h2 id="characteristic">สมการลักษณะเฉพาะ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ย้ายข้างได้ \(A\mathbf v - \lambda\mathbf v = (A - \lambda I)\mathbf v = \mathbf 0\) นี่คือระบบเอกพันธ์ ต้องการคำตอบที่ \(\mathbf v \ne \mathbf 0\) ซึ่งมีได้ก็ต่อเมื่อเมทริกซ์ \(A - \lambda I\) ไม่มีอินเวอร์ส (<a href="/learn/linear-algebra/linear-systems/#L7">L7</a>) นั่นคือดีเทอร์มิแนนต์ต้องเป็นศูนย์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E2" data-k="characteristic equation polynomial det(A - lambda I) = 0 สมการลักษณะเฉพาะ พหุนามลักษณะเฉพาะ">
+        <p class="tf-n"><b><span class="fid">E2</span> Characteristic equation</b> สมการลักษณะเฉพาะ</p>
+        \[ \det(A - \lambda I) = 0, \qquad p(\lambda) = \det(\lambda I - A) = \lambda^n - (\operatorname{tr}A)\lambda^{n-1} + \cdots + (-1)^n\det A \]
+        <p class="tf-x">\(A - \lambda I\) คือลบ \(\lambda\) ออกจาก<strong>เส้นทแยงหลักเท่านั้น</strong> · พหุนามดีกรี \(n\) จึงมีราก \(n\) ตัว (นับซ้ำ รวมจำนวนเชิงซ้อน)</p>
+      </div>
+      <div class="tf wide" id="E3" data-k="2x2 shortcut trace determinant quadratic formula สองคูณสอง สูตรลัด เทรซ">
+        <p class="tf-n"><b><span class="fid">E3</span> 2×2 shortcut</b> สูตรลัด 2×2</p>
+        \[ \lambda^2 - (\operatorname{tr}A)\,\lambda + \det A = 0 \ \Rightarrow\ \lambda = \frac{\operatorname{tr}A \pm \sqrt{(\operatorname{tr}A)^2 - 4\det A}}{2} \]
+        <p class="tf-x">สำหรับ \(A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}\): \(\operatorname{tr}A = a + d,\ \det A = ad - bc\) · ตัวในรากเป็นบวก: ค่าจริงต่างกัน · เป็นศูนย์: ค่าซ้ำ · เป็นลบ: ค่าเชิงซ้อนคู่สังยุค</p>
+      </div>
+      <div class="tf wide" id="E4" data-k="2x2 eigenvector shortcut formula b lambda - a เวกเตอร์เฉพาะ สูตรลัด">
+        <p class="tf-n"><b><span class="fid">E4</span> 2×2 eigenvector shortcut</b> เวกเตอร์เฉพาะ 2×2 แบบเร็ว</p>
+        \[ \mathbf v = \begin{pmatrix} b \\ \lambda - a \end{pmatrix} \ (b \ne 0) \qquad \text{หรือ} \qquad \mathbf v = \begin{pmatrix} \lambda - d \\ c \end{pmatrix} \ (c \ne 0) \]
+        <p class="tf-x">ได้จากแถวแรกของ \((A - \lambda I)\mathbf v = \mathbf 0\): \((a - \lambda)v_1 + bv_2 = 0\) · ถ้า \(b = c = 0\) เมทริกซ์เป็นทแยงมุม เวกเตอร์เฉพาะคือ \((1,0)\) และ \((0,1)\)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="procedure">
+    <h2 id="procedure">วิธีหาทีละขั้น <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="flow la-flow" aria-label="ขั้นตอนการหาค่าเฉพาะและเวกเตอร์เฉพาะ">
+      <div><b>ขั้น 1</b>เขียน \(A - \lambda I\)</div><i aria-hidden="true">→</i>
+      <div><b>ขั้น 2</b>\(\det = 0\) แก้หา \(\lambda\)</div><i aria-hidden="true">→</i>
+      <div><b>ขั้น 3</b>แต่ละ \(\lambda\) ลดแถว \((A - \lambda I)\mathbf v = \mathbf 0\)</div>
+    </div>
+    <p>ขั้นที่ 4 ที่ห้ามข้าม: ตรวจ \(A\mathbf v = \lambda\mathbf v\) และ \(\sum\lambda = \operatorname{tr}A\) ใช้เวลาไม่ถึงนาทีแต่จับข้อผิดพลาดได้เกือบทุกจุด</p>
+    <div class="wx" id="ex-e1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-1 · 2×2 ครบทุกขั้น</span><h3>หาค่าเฉพาะและเวกเตอร์เฉพาะของ \(A = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=4,1;2,3">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(\operatorname{tr}A = 4 + 3 = 7,\ \det A = 12 - 2 = 10\) แทนสูตรลัด <a class="tag tf" href="#E3">E3</a></p>
+          \[ \lambda^2 - 7\lambda + 10 = 0 \ \Rightarrow\ (\lambda - 5)(\lambda - 2) = 0 \ \Rightarrow\ \hlC{\lambda_1 = 5},\ \hlC{\lambda_2 = 2} \]</li>
+        <li><p>\(\lambda_1 = 5\): ลบ 5 ออกจากทแยงแล้วลดแถว ต้องได้แถวศูนย์</p>
+          \[ A - 5I = \begin{pmatrix} -1 & 1 \\ 2 & -2 \end{pmatrix} \xrightarrow{R_2 \leftarrow R_2 + 2R_1} \begin{pmatrix} \hlP{-1} & 1 \\ 0 & 0 \end{pmatrix} \ \Rightarrow\ -v_1 + v_2 = 0 \ \Rightarrow\ \hlU{\mathbf v_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}} \]</li>
+        <li><p>\(\lambda_2 = 2\)</p>
+          \[ A - 2I = \begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix} \xrightarrow{R_2 \leftarrow R_2 - R_1} \begin{pmatrix} \hlP{2} & 1 \\ 0 & 0 \end{pmatrix} \ \Rightarrow\ 2v_1 + v_2 = 0 \ \Rightarrow\ \hlU{\mathbf v_2 = \begin{pmatrix} 1 \\ -2 \end{pmatrix}} \]</li>
+        <li><p>ตรวจด้วยการคูณจริง</p>
+          \[ A\mathbf v_1 = \begin{pmatrix} 5 \\ 5 \end{pmatrix} = 5\mathbf v_1 ✓, \qquad A\mathbf v_2 = \begin{pmatrix} 2 \\ -4 \end{pmatrix} = 2\mathbf v_2 ✓ \]</li>
+      </ol>
+      <p class="answer">\(\lambda = 5\) คู่กับ \((1, 1)\) และ \(\lambda = 2\) คู่กับ \((1, -2)\) (หรือพหุคูณใดก็ได้ เช่น \((-1, 2)\))</p>
+      <p class="check">ตรวจเร็ว: \(5 + 2 = 7 = \operatorname{tr}A\) ✓ · \(5 \times 2 = 10 = \det A\) ✓ · ใช้สูตรลัด E4: \(\lambda = 5\) ได้ \((b, \lambda - a) = (1, 1)\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="three">
+    <h2 id="three">ตัวอย่าง 3×3 ค่าเฉพาะต่างกันทั้งหมด <span class="lv lv-i">กลาง</span></h2>
+    <p>3×3 ได้พหุนามดีกรีสาม เทคนิคสำคัญคือ<strong>อย่ากระจายทุกอย่างทันที</strong> ให้หาตัวร่วมระหว่างทาง และถ้าแยกตัวประกอบไม่ออก ให้ลองแทนตัวหารของพจน์คงที่ (ทฤษฎีบทรากตรรกยะ)</p>
+    <div class="wx" id="ex-e2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-2 · 3×3</span><h3>หาค่าเฉพาะและเวกเตอร์เฉพาะของ \(A = \begin{pmatrix} 1 & 2 & 1 \\ 6 & -1 & 0 \\ -1 & -2 & -1 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=1,2,1;6,-1,0;-1,-2,-1">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>กระจาย \(\det(A - \lambda I)\) ตามแถว 1 <a class="tag tf" href="#E2">E2</a></p>
+          \[ \begin{vmatrix} 1 - \lambda & 2 & 1 \\ 6 & -1 - \lambda & 0 \\ -1 & -2 & -1 - \lambda \end{vmatrix} = (1 - \lambda)(\lambda + 1)^2 - 2\,[-6(1 + \lambda)] + 1\,[-12 - (1 + \lambda)] \]</li>
+        <li><p>กระจายแล้วรวมพจน์</p>
+          \[ = (-\lambda^3 - \lambda^2 + \lambda + 1) + (12\lambda + 12) + (-\lambda - 13) = -\lambda^3 - \lambda^2 + 12\lambda \]</li>
+        <li><p>ดึง \(-\lambda\) ออกแล้วแยกตัวประกอบ</p>
+          \[ -\lambda(\lambda^2 + \lambda - 12) = -\lambda(\lambda + 4)(\lambda - 3) = 0 \ \Rightarrow\ \hlC{\lambda = 0,\ 3,\ -4} \]</li>
+        <li><p>\(\lambda = 3\): ลดแถว \(A - 3I\) <a class="tag tp" href="/learn/linear-algebra/linear-systems/#L4">L4</a></p>
+          \[ \begin{pmatrix} -2 & 2 & 1 \\ 6 & -4 & 0 \\ -1 & -2 & -4 \end{pmatrix} \to \cdots \to \begin{pmatrix} \hlP{1} & 0 & 1 \\ 0 & \hlP{1} & \tfrac32 \\ 0 & 0 & 0 \end{pmatrix} \Rightarrow \begin{aligned} v_1 &= -v_3 \\ v_2 &= -\tfrac32v_3 \end{aligned} \]
+          <p>เลือก \(v_3 = -2\) ให้เป็นจำนวนเต็ม: \(\hlU{\mathbf v = (2, 3, -2)}\)</p></li>
+        <li><p>ทำแบบเดียวกันกับ \(\lambda = 0\) และ \(\lambda = -4\)</p>
+          \[ \lambda = 0:\ \hlU{\mathbf v = (1, 6, -13)}, \qquad \lambda = -4:\ \hlU{\mathbf v = (-1, 2, 1)} \]</li>
+      </ol>
+      <p class="answer">\(\lambda = 3,\ 0,\ -4\) คู่กับ \((2, 3, -2),\ (1, 6, -13),\ (-1, 2, 1)\)</p>
+      <p class="check">ตรวจ: \(3 + 0 - 4 = -1 = \operatorname{tr}A = 1 - 1 - 1\) ✓ · \(3\cdot0\cdot(-4) = 0 = \det A\) ✓ (มีค่าเฉพาะศูนย์ จึงไม่มีอินเวอร์ส) · \(A(-1, 2, 1)^T = (4, -8, -4)^T = -4(-1, 2, 1)^T\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติที่ใช้ตรวจและลัดคำตอบ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="E6" data-k="sum product trace determinant check ผลบวก ผลคูณ เทรซ ดีเทอร์มิแนนต์ ตรวจคำตอบ">
+        <p class="tf-n"><b><span class="fid">E6</span> Trace and determinant</b> ผลบวกและผลคูณของค่าเฉพาะ</p>
+        \[ \lambda_1 + \lambda_2 + \cdots + \lambda_n = \operatorname{tr}A, \qquad \lambda_1\lambda_2\cdots\lambda_n = \det A \]
+      </div>
+      <div class="tf wide" id="E7" data-k="properties triangular transpose power inverse shift scalar polynomial สามเหลี่ยม ทรานสโพส กำลัง อินเวอร์ส เลื่อน">
+        <p class="tf-n"><b><span class="fid">E7</span> Eigenvalues of related matrices</b> ค่าเฉพาะของเมทริกซ์ที่เกี่ยวข้อง (\(\mathbf v\) เดิม ยกเว้น \(A^T\))</p>
+        \[ \begin{array}{c|ccccccc} \text{เมทริกซ์} & A & A^k & A^{-1} & A + cI & kA & p(A) & A^T \\ \hline \text{ค่าเฉพาะ} & \lambda & \lambda^k & 1/\lambda & \lambda + c & k\lambda & p(\lambda) & \lambda \end{array} \]
+        <p class="tf-x">เมทริกซ์สามเหลี่ยมหรือทแยงมุม: ค่าเฉพาะคือสมาชิกบนเส้นทแยงหลักเลย · \(A^T\) มีค่าเฉพาะเท่าเดิมแต่เวกเตอร์เฉพาะต่างกัน</p>
+      </div>
+      <div class="tf" id="E13" data-k="similar matrices similarity invariant same eigenvalues คล้าย">
+        <p class="tf-n"><b><span class="fid">E13</span> Similarity invariance</b> เมทริกซ์คล้ายมีค่าเฉพาะเท่ากัน</p>
+        \[ B = P^{-1}AP \ \Rightarrow\ \det(B - \lambda I) = \det(A - \lambda I) \]
+        <p class="tf-x">เปลี่ยนตัวแปรสถานะ (เช่น เลือก \(i_L, v_C\) หรือ \(q, i\)) ค่าเฉพาะ ซึ่งก็คือขั้วของวงจร ไม่เปลี่ยน</p>
+      </div>
+      <div class="tf" id="E5" data-k="algebraic geometric multiplicity repeated eigenvalue ค่าซ้ำ ภาวะรากซ้ำ จำนวนเวกเตอร์">
+        <p class="tf-n"><b><span class="fid">E5</span> Algebraic vs geometric multiplicity</b> ภาวะรากซ้ำเชิงพีชคณิตและเชิงเรขาคณิต</p>
+        \[ 1 \le \underbrace{\dim N(A - \lambda I)}_{\text{เชิงเรขาคณิต}} \le \underbrace{\text{จำนวนครั้งที่ราก } \lambda \text{ ซ้ำ}}_{\text{เชิงพีชคณิต}} \]
+        <p class="tf-x">เชิงเรขาคณิต \(= n - \operatorname{rank}(A - \lambda I)\) = จำนวนเวกเตอร์เฉพาะอิสระของค่านั้น</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="repeated">
+    <h2 id="repeated">ค่าเฉพาะซ้ำ: ครบหรือไม่ครบ <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อรากซ้ำ จำนวนเวกเตอร์เฉพาะอาจเท่ากับจำนวนที่ซ้ำ (ครบ ทำเป็นทแยงมุมได้) หรือน้อยกว่า (ไม่ครบ เรียก defective) ตัดสินด้วยแรงก์ของ \(A - \lambda I\)</p>
+    <div class="wx" id="ex-e3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-3 · รากซ้ำที่มีเวกเตอร์ครบ</span><h3>หาค่าเฉพาะและเวกเตอร์เฉพาะของ \(A = \begin{pmatrix} -2 & 2 & -3 \\ 2 & 1 & -6 \\ -1 & -2 & 0 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=-2,2,-3;2,1,-6;-1,-2,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>สมการลักษณะเฉพาะ (กระจายแล้ว)</p>
+          \[ -\lambda^3 - \lambda^2 + 21\lambda + 45 = 0 \]</li>
+        <li><p>ลองแทนตัวหารของ 45: \(\lambda = 5\) ได้ \(-125 - 25 + 105 + 45 = 0\) ✓ หารสังเคราะห์ออก</p>
+          \[ -(\lambda - 5)(\lambda^2 + 6\lambda + 9) = -(\lambda - 5)(\lambda + 3)^2 \ \Rightarrow\ \hlC{\lambda = 5},\ \hlC{\lambda = -3\ (\text{ซ้ำสองครั้ง})} \]</li>
+        <li><p>\(\lambda = -3\): ทุกแถวของ \(A + 3I\) เป็นพหุคูณของแถวแรก แรงก์ 1 จึงมีตัวแปรอิสระ \(3 - 1 = 2\) ตัว <a class="tag tf" href="#E5">E5</a></p>
+          \[ A + 3I = \begin{pmatrix} 1 & 2 & -3 \\ 2 & 4 & -6 \\ -1 & -2 & 3 \end{pmatrix} \to \begin{pmatrix} \hlP{1} & 2 & -3 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} \Rightarrow v_1 = -2v_2 + 3v_3 \]
+          \[ \hlU{\mathbf v = v_2\begin{pmatrix} -2 \\ 1 \\ 0 \end{pmatrix} + v_3\begin{pmatrix} 3 \\ 0 \\ 1 \end{pmatrix}} \]</li>
+        <li><p>\(\lambda = 5\): ลดแถว \(A - 5I\) ได้ \(\hlU{\mathbf v = (1, 2, -1)}\)</p></li>
+      </ol>
+      <p class="answer">\(\lambda = -3\) ซ้ำสองครั้งและมีเวกเตอร์เฉพาะอิสระสองตัว \((-2,1,0), (3,0,1)\) ส่วน \(\lambda = 5\) คู่กับ \((1, 2, -1)\) ครบ 3 ตัว ทำเป็นทแยงมุมได้</p>
+      <p class="check">ตรวจ: \(5 - 3 - 3 = -1 = \operatorname{tr}A\) ✓ · \(5(-3)(-3) = 45 = \det A\) ✓</p>
+    </div>
+    <div class="wx" id="ex-e4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-4 · รากซ้ำที่เวกเตอร์ไม่ครบ (defective)</span><h3>เทียบ \(A = \begin{pmatrix} 2 & 1 \\ 0 & 2 \end{pmatrix}\) กับ \(B = \begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>ทั้งคู่เป็นสามเหลี่ยม ค่าเฉพาะคือเส้นทแยง: \(\lambda = 2\) ซ้ำสองครั้ง <a class="tag tf" href="#E7">E7</a></p></li>
+        <li><p>\(A - 2I = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}\) แรงก์ 1 ได้ \(v_2 = 0\) เวกเตอร์เฉพาะมีแค่ \((1, 0)\) แนวเดียว</p></li>
+        <li><p>\(B - 2I = O\) แรงก์ 0 ทุกเวกเตอร์เป็นเวกเตอร์เฉพาะ ได้สองตัวอิสระ</p></li>
+      </ol>
+      <p class="answer">\(A\) ไม่ครบ (defective) ทำเป็นทแยงมุมไม่ได้ ต้องใช้รูปแบบจอร์แดน (E18) ส่วน \(B\) ครบ ในวงจร RLC กรณีนี้คือ<strong>หน่วงวิกฤต</strong> (critically damped) ที่ผลตอบสนองมีพจน์ \(te^{\lambda t}\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">ค่าเฉพาะเชิงซ้อน: การหมุนและการแกว่ง <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าตัวในรากของ E3 เป็นลบ ค่าเฉพาะเป็นเชิงซ้อน ไม่มีทิศจริงทิศไหนที่ไม่ถูกหมุน (ลองกด “หมุน” ในแล็บด้านบน) ในวงจรคือระบบที่<strong>แกว่ง</strong></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E8" data-k="complex eigenvalues conjugate pair rotation oscillation เชิงซ้อน สังยุค หมุน แกว่ง">
+        <p class="tf-n"><b><span class="fid">E8</span> Complex eigenvalues of a real matrix</b> ค่าเฉพาะเชิงซ้อนของเมทริกซ์จริง</p>
+        \[ \lambda = \sigma \pm j\omega, \qquad \mathbf v_{\bar\lambda} = \overline{\mathbf v_\lambda}, \qquad \begin{pmatrix} \sigma & -\omega \\ \omega & \sigma \end{pmatrix} = r\begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} \]
+        <p class="tf-x">มาเป็นคู่สังยุคเสมอ (เวกเตอร์ก็สังยุคกัน) · \(|\lambda| = r\) คืออัตราขยาย \(\theta = \arg\lambda\) คือมุมหมุน · ในระบบพลวัต \(\sigma\) คืออัตราลด \(\omega\) คือความถี่แกว่ง (rad/s)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-5 · ค่าเฉพาะเชิงซ้อน</span><h3>หาค่าเฉพาะและเวกเตอร์เฉพาะของ \(A = \begin{pmatrix} 1 & -2 \\ 1 & 3 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=1,-2;1,3">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(\operatorname{tr}A = 4,\ \det A = 3 + 2 = 5\) <a class="tag tf" href="#E3">E3</a></p>
+          \[ \lambda^2 - 4\lambda + 5 = 0 \ \Rightarrow\ \lambda = \frac{4 \pm \sqrt{16 - 20}}{2} = \hlC{2 \pm j} \]</li>
+        <li><p>\(\lambda = 2 + j\) ใช้สูตรลัด \((b, \lambda - a)\) <a class="tag tf" href="#E4">E4</a></p>
+          \[ \hlU{\mathbf v = \begin{pmatrix} -2 \\ 1 + j \end{pmatrix}} \]</li>
+        <li><p>ตรวจแถวที่ 2 ของ \((A - \lambda I)\mathbf v\): \(1\cdot(-2) + (3 - 2 - j)(1 + j) = -2 + (1 - j)(1 + j) = -2 + 2 = 0\) ✓</p></li>
+      </ol>
+      <p class="answer">\(\lambda = 2 \pm j\) · \(\mathbf v = (-2,\ 1 \pm j)\) (เครื่องหมายตรงกัน)</p>
+      <p class="check">โปรแกรมบางตัวตอบ \((-1 + j,\ 1)\) ซึ่งเท่ากับ \(\tfrac{1 - j}{2}\) คูณคำตอบของเรา จึงถูกทั้งคู่ · \(|\lambda| = \sqrt5\) การแปลงนี้หมุน \(\arctan(1/2) \approx 26.6^\circ\) และขยาย \(\sqrt5\) เท่าในพิกัดที่เหมาะสม</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="diagonalization">
+    <h2 id="diagonalization">การทำให้เป็นเมทริกซ์ทแยงมุม และ Aⁿ <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้ามีเวกเตอร์เฉพาะอิสระครบ \(n\) ตัว ให้ใช้เป็นแกนพิกัดใหม่ ในพิกัดนั้นการแปลง \(A\) เหลือแค่ยืดหดตามแกน คือเมทริกซ์ทแยงมุม \(D\) งานยาก ๆ อย่างยกกำลังร้อยครั้งจึงเหลือแค่ยกกำลังตัวเลขบนเส้นทแยง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E9" data-k="diagonalization pdp^-1 eigen decomposition ทำให้เป็นทแยงมุม แยกค่าเฉพาะ">
+        <p class="tf-n"><b><span class="fid">E9</span> Diagonalization</b> การทำให้เป็นเมทริกซ์ทแยงมุม</p>
+        \[ A = PDP^{-1}, \qquad P = \begin{pmatrix} | & & | \\ \mathbf v_1 & \cdots & \mathbf v_n \\ | & & | \end{pmatrix}, \quad D = \begin{pmatrix} \lambda_1 & & \\ & \ddots & \\ & & \lambda_n \end{pmatrix} \]
+        <p class="tf-x">เรียงหลักของ \(P\) ให้ตรงลำดับกับ \(\lambda\) ใน \(D\) · ทำได้ก็ต่อเมื่อเวกเตอร์เฉพาะอิสระครบ \(n\) ตัว · ค่าเฉพาะต่างกันทั้งหมดรับประกันว่าทำได้</p>
+      </div>
+      <div class="tf wide" id="E10" data-k="matrix power a^n a^k pdp diagonal power กำลัง ยกกำลัง">
+        <p class="tf-n"><b><span class="fid">E10</span> Powers via diagonalization</b> ยกกำลังผ่านทแยงมุม</p>
+        \[ A^k = PD^kP^{-1} = P\begin{pmatrix} \lambda_1^k & & \\ & \ddots & \\ & & \lambda_n^k \end{pmatrix}P^{-1} \]
+        <p class="tf-x">ใช้กับ \(f(A)\) ใด ๆ ได้ เช่น \(e^{At} = Pe^{Dt}P^{-1}\) · เมื่อ \(k\) ใหญ่ ค่าเฉพาะที่ \(|\lambda|\) ใหญ่สุดครอบงำ (dominant)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-6 · สูตรทั่วไปของ Aⁿ</span><h3>หา \(A^n\) ของ \(A = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}\) (ตัวอย่าง E-1)</h3></div>
+      <ol class="steps">
+        <li><p>จาก E-1 วางเวกเตอร์เฉพาะเป็นหลัก <a class="tag tf" href="#E9">E9</a></p>
+          \[ P = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix}, \quad D = \begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}, \quad P^{-1} = \frac{1}{-3}\begin{pmatrix} -2 & -1 \\ -1 & 1 \end{pmatrix} = \frac13\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix} \]</li>
+        <li><p>ยกกำลังเฉพาะเส้นทแยง <a class="tag tf" href="#E10">E10</a></p>
+          \[ A^n = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix}\begin{pmatrix} 5^n & 0 \\ 0 & 2^n \end{pmatrix}\frac13\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix} = \frac13\begin{pmatrix} 5^n & 2^n \\ 5^n & -2\cdot2^n \end{pmatrix}\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(A^n = \dfrac13\begin{pmatrix} 2\cdot5^n + 2^n & 5^n - 2^n \\ 2\cdot5^n - 2\cdot2^n & 5^n + 2\cdot2^n \end{pmatrix}\)</p>
+      <p class="check">ตรวจ \(n = 1\): \(\tfrac13\begin{pmatrix} 12 & 3 \\ 6 & 9 \end{pmatrix} = A\) ✓ · \(n = 3\): \(\begin{pmatrix} 86 & 39 \\ 78 & 47 \end{pmatrix}\) ตรงกับการคูณตรงสามครั้ง ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="tsec" aria-labelledby="symmetric">
+    <h2 id="symmetric">เมทริกซ์สมมาตรและทฤษฎีบทสเปกตรัม <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เมทริกซ์สมมาตรพบบ่อยในวิศวกรรม (เมทริกซ์เมชและโนดของวงจรที่ไม่มีแหล่งจ่ายไม่อิสระ เมทริกซ์ความแข็งแกร่ง เมทริกซ์ความแปรปรวนร่วม) และมีสมบัติที่ดีที่สุด</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E11" data-k="symmetric spectral theorem orthogonal eigenvectors real eigenvalues สมมาตร สเปกตรัม ตั้งฉาก">
+        <p class="tf-n"><b><span class="fid">E11</span> Spectral theorem</b> ทฤษฎีบทสเปกตรัม (\(A = A^T\))</p>
+        \[ A = Q\Lambda Q^T = \sum_{i=1}^{n}\lambda_i\,\mathbf q_i\mathbf q_i^T, \qquad Q^TQ = I \]
+        <p class="tf-x">ค่าเฉพาะเป็นจำนวนจริงทุกตัว · เวกเตอร์เฉพาะของค่าต่างกันตั้งฉากกัน · ทำเป็นทแยงมุมได้เสมอด้วยเมทริกซ์เชิงตั้งฉาก (ไม่ต้องหาอินเวอร์ส ใช้ทรานสโพส)</p>
+      </div>
+      <div class="tf wide" id="E12" data-k="positive definite quadratic form energy definiteness บวกแน่นอน รูปกำลังสอง พลังงาน">
+        <p class="tf-n"><b><span class="fid">E12</span> Definiteness test</b> ความเป็นบวกแน่นอน</p>
+        \[ \mathbf x^TA\mathbf x \gt 0 \ \ \forall\mathbf x \ne \mathbf 0 \iff \text{ค่าเฉพาะทุกตัวของ } A = A^T \text{ เป็นบวก} \]
+        <p class="tf-x">กำลังที่ตัวต้านทานในวงจรดูดกลืน \(P = \mathbf i^TR\,\mathbf i \gt 0\) เมทริกซ์ความต้านทานเมชของวงจรตัวต้านทานล้วนจึงบวกแน่นอนเสมอ ใช้พิสูจน์ว่าวงจรแบบนี้มีคำตอบเดียวเสมอ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-7 · แยกสเปกตรัม</span><h3>เขียน \(A = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}\) ในรูป \(Q\Lambda Q^T\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=2,1;1,2">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(\lambda^2 - 4\lambda + 3 = 0\) ได้ \(\lambda = 3, 1\) คู่กับ \((1, 1)\) และ \((1, -1)\) ซึ่งตั้งฉากกันจริง: \(1 - 1 = 0\)</p></li>
+        <li><p>ทำให้ยาว 1 (หารด้วย \(\sqrt2\)) แล้ววางเป็นหลักของ \(Q\) <a class="tag tf" href="#E11">E11</a></p>
+          \[ Q = \frac{1}{\sqrt2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}, \qquad \Lambda = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(A = Q\Lambda Q^T\) และเพราะค่าเฉพาะ \(3, 1\) เป็นบวกทั้งคู่ \(A\) จึงบวกแน่นอน <a class="tag tf" href="#E12">E12</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="tsec" aria-labelledby="cayley">
+    <h2 id="cayley">ทฤษฎีบทเคย์ลีย์-แฮมิลตัน <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="E14" data-k="cayley hamilton theorem characteristic polynomial matrix satisfies เคย์ลีย์ แฮมิลตัน">
+        <p class="tf-n"><b><span class="fid">E14</span> Cayley–Hamilton theorem</b> เมทริกซ์ทุกตัวเป็นรากของพหุนามลักษณะเฉพาะของตัวเอง</p>
+        \[ p(\lambda) = \det(\lambda I - A) \ \Rightarrow\ p(A) = O, \qquad \text{2×2: } A^2 - (\operatorname{tr}A)A + (\det A)I = O \]
+        <p class="tf-x">ใช้ลดกำลังสูงให้เหลือดีกรี \(n - 1\) และหาอินเวอร์สโดยไม่ลดแถว <a href="/learn/linear-algebra/inverse/#I14">I14</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-8 · หา A⁻¹ ด้วยเคย์ลีย์-แฮมิลตัน</span><h3>ใช้ \(A = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>จาก E-1: \(p(\lambda) = \lambda^2 - 7\lambda + 10\) จึง \(A^2 - 7A + 10I = O\) <a class="tag tf" href="#E14">E14</a></p></li>
+        <li><p>คูณ \(A^{-1}\) ทั้งสองข้าง: \(A - 7I + 10A^{-1} = O\)</p>
+          \[ A^{-1} = \frac{7I - A}{10} = \frac{1}{10}\begin{pmatrix} 3 & -1 \\ -2 & 4 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(A^{-1} = \tfrac{1}{10}\begin{pmatrix} 3 & -1 \\ -2 & 4 \end{pmatrix}\) ตรงกับสูตร 2×2 และยังได้ \(A^2 = 7A - 10I = \begin{pmatrix} 18 & 7 \\ 14 & 11 \end{pmatrix}\) โดยไม่ต้องคูณเมทริกซ์</p>
+    </div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="tsec" aria-labelledby="dynamics">
+    <h2 id="dynamics">ค่าเฉพาะกับระบบพลวัต: \(e^{At}\) และเสถียรภาพ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>นี่คือเหตุผลหลักที่วิศวกรไฟฟ้าต้องรู้จักค่าเฉพาะ วงจร RLC มอเตอร์ และระบบควบคุมเขียนเป็นสมการสถานะ \(\dot{\mathbf x} = A\mathbf x\) ได้ คำตอบประกอบจาก “โหมด” ซึ่งแต่ละโหมดคือเวกเตอร์เฉพาะที่โตหรือหดตาม \(e^{\lambda t}\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E15" data-k="matrix exponential state space ode modes natural response e^At สมการสถานะ โหมด ผลตอบสนองธรรมชาติ">
+        <p class="tf-n"><b><span class="fid">E15</span> Solution of ẋ = Ax by modes</b> คำตอบในรูปโหมด</p>
+        \[ \mathbf x(t) = e^{At}\mathbf x(0) = \sum_{i=1}^{n}c_i\,e^{\lambda_it}\,\mathbf v_i, \qquad \mathbf x(0) = \sum c_i\mathbf v_i \ \ (\mathbf c = P^{-1}\mathbf x(0)) \]
+        <p class="tf-x">\(e^{At} = Pe^{Dt}P^{-1}\) เมื่อทำเป็นทแยงมุมได้ · ค่าคงตัวเวลาของโหมดจริงคือ \(\tau_i = -1/\lambda_i\)</p>
+      </div>
+      <div class="tf wide" id="E16" data-k="stability poles real part negative left half plane เสถียรภาพ ขั้ว ครึ่งระนาบซ้าย">
+        <p class="tf-n"><b><span class="fid">E16</span> Stability criterion</b> เกณฑ์เสถียรภาพ</p>
+        \[ \dot{\mathbf x} = A\mathbf x \text{ เสถียรเชิงเส้นกำกับ} \iff \operatorname{Re}\lambda_i \lt 0 \ \text{ทุก } i \]
+        <p class="tf-x">ค่าเฉพาะของ \(A\) คือขั้วของฟังก์ชันถ่ายโอน ต้องอยู่ครึ่งระนาบซ้ายของระนาบ s (ระบบไม่ต่อเนื่อง \(\mathbf x_{k+1} = A\mathbf x_k\) ต้องการ \(|\lambda_i| \lt 1\)) ดูภาพขั้วบนระนาบ s ได้ที่ <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-9 · แก้ระบบสมการเชิงอนุพันธ์คู่</span><h3>แก้ \(\dot{\mathbf x} = \begin{pmatrix} -3 & 1 \\ 1 & -3 \end{pmatrix}\mathbf x\) เมื่อ \(\mathbf x(0) = (2, 0)\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\operatorname{tr} = -6,\ \det = 8\): \(\lambda^2 + 6\lambda + 8 = 0\) ได้ \(\lambda = -2, -4\) คู่กับ \((1, 1)\) และ \((1, -1)\)</p></li>
+        <li><p>กระจายค่าเริ่มต้นบนเวกเตอร์เฉพาะ: \(c_1(1,1) + c_2(1,-1) = (2, 0)\) ได้ \(c_1 = c_2 = 1\) <a class="tag tf" href="#E15">E15</a></p></li>
+        <li>\[ \mathbf x(t) = e^{-2t}\begin{pmatrix} 1 \\ 1 \end{pmatrix} + e^{-4t}\begin{pmatrix} 1 \\ -1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(x_1 = e^{-2t} + e^{-4t},\ x_2 = e^{-2t} - e^{-4t}\) ทั้งสองโหมดลดลง ระบบเสถียร (\(\lambda \lt 0\)) โหมด \((1,1)\) ช้ากว่า (\(\tau = 0.5\)) จึงเหลืออยู่นานกว่า</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="E18" data-k="jordan form defective generalized eigenvector จอร์แดน เวกเตอร์เฉพาะวางนัยทั่วไป">
+        <p class="tf-n"><b><span class="fid">E18</span> Jordan form (defective case)</b> รูปแบบจอร์แดน</p>
+        \[ A = PJP^{-1}, \quad J = \begin{pmatrix} \lambda & 1 \\ 0 & \lambda \end{pmatrix} \ \Rightarrow\ e^{Jt} = e^{\lambda t}\begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix} \]
+        <p class="tf-x">เมื่อเวกเตอร์เฉพาะไม่ครบ ใช้เวกเตอร์เฉพาะวางนัยทั่วไป \((A - \lambda I)\mathbf w = \mathbf v\) เป็นที่มาของพจน์ \(te^{\lambda t}\) ในวงจรหน่วงวิกฤต</p>
+      </div>
+      <div class="tf wide" id="E17" data-k="power iteration method numerical dominant eigenvalue วิธีกำลัง เชิงตัวเลข ค่าเด่น">
+        <p class="tf-n"><b><span class="fid">E17</span> Power iteration</b> วิธีกำลัง (หาค่าเฉพาะเด่นเชิงตัวเลข)</p>
+        \[ \mathbf x_{k+1} = \frac{A\mathbf x_k}{\lVert A\mathbf x_k\rVert} \ \longrightarrow\ \mathbf v_{\max}, \qquad \lambda_{\max} \approx \frac{\mathbf x_k^TA\mathbf x_k}{\mathbf x_k^T\mathbf x_k} \]
+        <p class="tf-x">ตัวอย่าง \(A = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}\) เริ่ม \((1, 0)\) อัตราส่วนที่ได้ \(4,\ 4.5,\ 4.78,\ 4.91,\ 4.96 \to 5\) ลู่เข้าเร็วตาม \(|\lambda_2/\lambda_1| = 0.4\) ต่อรอบ หลักการเดียวกับ PageRank ของ Google</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 12 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ติดตรงไหน ดูตรงนี้</h2>
+    <div class="note warn"><b>อาการที่พบบ่อยและวิธีแก้</b>
+      <ul class="la-check">
+        <li><b>ลดแถว \(A - \lambda I\) แล้วไม่มีแถวศูนย์</b> → \(\lambda\) ผิด กลับไปตรวจสมการลักษณะเฉพาะ</li>
+        <li><b>ได้เวกเตอร์เฉพาะ \(\mathbf 0\)</b> → ผิดตามนิยาม เลือกตัวแปรอิสระเป็นค่าไม่ศูนย์</li>
+        <li><b>คำตอบไม่ตรงเฉลย</b> → อาจต่างกันแค่ตัวคูณ ตรวจด้วย \(A\mathbf v = \lambda\mathbf v\)</li>
+        <li><b>ลบ \(\lambda\) ทุกช่อง</b> → ผิด ลบเฉพาะเส้นทแยงหลัก (\(A - \lambda I\))</li>
+        <li><b>ผลบวกค่าเฉพาะไม่เท่าเทรซ</b> → มีจุดผิดแน่นอน <a class="tag tf" href="#E6">E6</a></li>
+        <li><b>3×3 แยกตัวประกอบไม่ออก</b> → แทนตัวหารของพจน์คงที่ \((\pm1, \pm2, \dots)\) หาราก แล้วหารสังเคราะห์</li>
+        <li><b>ค่าเชิงซ้อนแล้วงง</b> → หาเวกเตอร์ของค่าเดียว อีกค่าเป็นสังยุคของมัน <a class="tag tf" href="#E8">E8</a></li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขค่าเฉพาะแสดงวิธีทำ</h2>
+    <p>ใส่เมทริกซ์ 2×2 ถึง 4×4 เครื่องจะหาพหุนามลักษณะเฉพาะแบบแม่นตรง หารากตรรกยะแบบแม่นตรง (รากอื่นแสดงเป็นรูปรากที่สองหรือทศนิยม รวมค่าเชิงซ้อน) และหาเวกเตอร์เฉพาะด้วยการลดแถว \(A - \lambda I\) พร้อมบอกภาวะรากซ้ำทั้งสองแบบ</p>
+    <div class="mx-calc" data-modes="eig,det,inv,solve" data-mode="eig" data-n="3" data-a="1,2,1;6,-1,0;-1,-2,-1"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ตัวอย่างวงจรจริงที่ใช้ค่าเฉพาะ ตั้งแต่วงจร RLC ที่ค่าเฉพาะบอกว่าหน่วงเกิน หน่วงวิกฤต หรือแกว่ง ไปจนถึงองค์ประกอบสมมาตรในระบบสามเฟส ซึ่งแท้จริงคือเวกเตอร์เฉพาะของเมทริกซ์อิมพีแดนซ์ อยู่ในหน้า <a href="/learn/linear-algebra/ee-applications/">ประยุกต์ในวิศวกรรมไฟฟ้า</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

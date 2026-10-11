@@ -1,0 +1,329 @@
+<!--meta
+{
+  "title": "กฎของคราเมอร์ (Cramer's Rule): แก้ระบบสมการ 2×2 3×3 พร้อมโจทย์วงจรเมช AC | อาจารย์มด",
+  "h1": "กฎของคราเมอร์ (Cramer's Rule) แก้ระบบสมการด้วยดีเทอร์มิแนนต์",
+  "description": "กฎของคราเมอร์ครบ สูตร x = Δx/Δ สำหรับ 2×2 และ 3×3 วิธีแทนหลักด้วยค่าคงที่ ที่มาของสูตร กรณี Δ = 0 ใช้กับจำนวนเชิงซ้อนและตัวแปร s ได้ พร้อมโจทย์วงจรที่เจอบ่อย หากระแสเมชเดียวในวงจรสามลูป วงจร AC เฟเซอร์ และฟังก์ชันถ่ายโอน",
+  "ogTitle": "กฎของคราเมอร์: 2×2 3×3 และโจทย์วงจรที่ออกสอบบ่อย",
+  "lesson": "linear-algebra",
+  "sub": "cramers-rule",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Cramer's rule", "Determinant", "Mesh analysis", "Phasor", "Transfer function", "Characteristic equation"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "กฎของคราเมอร์ใช้ไม่ได้เมื่อไร?", "a": "เมื่อ \\(\\Delta = \\det A = 0\\) หรือเมื่อเมทริกซ์ไม่จัตุรัส (จำนวนสมการไม่เท่าจำนวนตัวแปร) ระบบที่ \\(\\Delta = 0\\) อาจไม่มีคำตอบหรือมีคำตอบไม่จำกัด ต้องตรวจด้วยการลดแถว"},
+    {"q": "ถ้า Δ = 0 และ Δx = Δy = Δz = 0 แปลว่ามีคำตอบไม่จำกัดใช่ไหม?", "a": "ไม่เสมอไป สำหรับ 2×2 ที่ไม่ใช่เมทริกซ์ศูนย์ใช่ แต่ตั้งแต่ 3×3 ขึ้นไปไม่จริง เช่น \\(x + y + z = 1,\\ x + y + z = 2,\\ x + y + z = 3\\) มีดีเทอร์มิแนนต์ทุกตัวเป็นศูนย์ แต่ระบบไม่มีคำตอบ ต้องลดแถวตรวจเสมอ"},
+    {"q": "คราเมอร์กับอินเวอร์สต่างกันอย่างไร?", "a": "ให้คำตอบเท่ากันเสมอ คราเมอร์คือการเขียนสูตรอินเวอร์สแบบแอดจอยต์คูณกับ b ทีละตัวแปร ข้อดีคือหาตัวแปรเดียวได้โดยไม่ต้องหาอินเวอร์สทั้งเมทริกซ์ เหมาะกับโจทย์ที่ถามกระแสเพียงลูปเดียว"},
+    {"q": "ใช้คราเมอร์กับวงจร AC ได้ไหม?", "a": "ได้ ทุกขั้นตอนใช้แค่บวก ลบ คูณ หาร จึงใช้กับอิมพีแดนซ์จำนวนเชิงซ้อนได้ตรง ๆ คำนวณดีเทอร์มิแนนต์แบบเชิงซ้อนแล้วหาร ตอบในรูปเชิงขั้ว (ขนาดและมุม)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>กฎของคราเมอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.5 · พีชคณิตเชิงเส้น · Cramer's Rule</p>
+      <h1>กฎของคราเมอร์ (Cramer's Rule) แก้ระบบสมการด้วยดีเทอร์มิแนนต์</h1>
+      <p class="lede">กฎของคราเมอร์ให้สูตรตรงของตัวแปรแต่ละตัว ไม่ต้องลดแถว ไม่ต้องหาอินเวอร์ส เหมาะที่สุดกับโจทย์วงจร 2–3 ลูปที่ถามกระแสเพียงตัวเดียว และใช้ได้ทั้งกับตัวเลขจริง อิมพีแดนซ์เชิงซ้อน และตัวแปร \(s\) ของลาปลาซ สูตรใช้รหัส C</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#rule">สูตร</a>
+        <a class="btn btn-ghost btn-sm" href="#three">3×3</a>
+        <a class="btn btn-ghost btn-sm" href="#mesh">วงจรสามลูป</a>
+        <a class="btn btn-ghost btn-sm" href="#ac">วงจร AC</a>
+        <a class="btn btn-ghost btn-sm" href="#zero">เมื่อ Δ = 0</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(x_i = \Delta_i/\Delta\) โดย \(\Delta = \det A\) และ \(\Delta_i\) คือ \(\det\) ของ \(A\) ที่<strong>แทนหลักที่ \(i\) ด้วย \(\mathbf b\)</strong></li>
+          <li>ใช้ได้เมื่อ \(A\) จัตุรัสและ \(\Delta \ne 0\) เท่านั้น</li>
+          <li>หาตัวแปรเดียวใช้ดีเทอร์มิแนนต์แค่สองตัว จึงเร็วมากสำหรับโจทย์วงจรที่ถามกระแสลูปเดียว</li>
+          <li>ใช้กับอิมพีแดนซ์เชิงซ้อนและตัวแปร \(s\) ได้ และ \(\Delta(s) = 0\) คือสมการลักษณะเฉพาะของวงจร</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ"><b class="mono">อ่านวิธีทำ</b><span><i class="lg-u"></i>หลักที่ถูกแทนด้วย b</span><span><i class="lg-f"></i>สูตรที่ใช้</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น 2x2, 3x3, delta, complex, s-domain" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="rule">
+    <h2 id="rule">สูตรกฎของคราเมอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ขั้นตอนมีแค่สามอย่าง: หา \(\Delta\) ของเมทริกซ์สัมประสิทธิ์ แทนหลักของตัวแปรที่ต้องการด้วยค่าคงที่ทางขวาแล้วหาดีเทอร์มิแนนต์ใหม่ แล้วหารกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C1" data-k="cramer rule general formula delta determinant replace column คราเมอร์ แทนหลัก">
+        <p class="tf-n"><b><span class="fid">C1</span> Cramer's rule</b> กฎของคราเมอร์</p>
+        \[ x_i = \frac{\Delta_i}{\Delta} = \frac{\det A_i}{\det A}, \qquad \Delta = \det A \ne 0 \]
+        <p class="tf-x">\(A_i\) คือ \(A\) ที่แทนหลักที่ \(i\) ด้วย \(\mathbf b\) ทั้งหลัก หลักอื่นคงเดิม · ตัวอย่างสำหรับ 3×3:</p>
+        \[ A_2 = \begin{pmatrix} a_{11} & \hlU{b_1} & a_{13} \\ a_{21} & \hlU{b_2} & a_{23} \\ a_{31} & \hlU{b_3} & a_{33} \end{pmatrix} \]
+      </div>
+      <div class="tf wide" id="C2" data-k="2x2 cramer explicit formula สองตัวแปร">
+        <p class="tf-n"><b><span class="fid">C2</span> Cramer's rule for 2×2</b> สูตรสำเร็จสองตัวแปร</p>
+        \[ \begin{aligned} a_1x + b_1y &= c_1 \\ a_2x + b_2y &= c_2 \end{aligned} \ \Rightarrow\ x = \frac{\begin{vmatrix} \hlU{c_1} & b_1 \\ \hlU{c_2} & b_2 \end{vmatrix}}{\begin{vmatrix} a_1 & b_1 \\ a_2 & b_2 \end{vmatrix}} = \frac{c_1b_2 - b_1c_2}{a_1b_2 - b_1a_2}, \quad y = \frac{\begin{vmatrix} a_1 & \hlU{c_1} \\ a_2 & \hlU{c_2} \end{vmatrix}}{\begin{vmatrix} a_1 & b_1 \\ a_2 & b_2 \end{vmatrix}} = \frac{a_1c_2 - c_1a_2}{a_1b_2 - b_1a_2} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-1 · 2×2</span><h3>แก้ \(\begin{aligned} 3x + 2y &= 7 \\ x - y &= -1 \end{aligned}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=3,2;1,-1&amp;b=7,-1">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li>\[ \Delta = \begin{vmatrix} 3 & 2 \\ 1 & -1 \end{vmatrix} = -3 - 2 = -5 \]</li>
+        <li><p>แทนหลัก \(x\) และหลัก \(y\) ด้วย \((7, -1)\) <a class="tag tf" href="#C2">C2</a></p>
+          \[ \Delta_x = \begin{vmatrix} \hlU{7} & 2 \\ \hlU{-1} & -1 \end{vmatrix} = -7 + 2 = -5, \qquad \Delta_y = \begin{vmatrix} 3 & \hlU{7} \\ 1 & \hlU{-1} \end{vmatrix} = -3 - 7 = -10 \]</li>
+        <li>\[ x = \frac{-5}{-5} = 1, \qquad y = \frac{-10}{-5} = 2 \]</li>
+      </ol>
+      <p class="answer">\((x, y) = (1, 2)\)</p>
+      <p class="check">ตรวจ: \(3 + 4 = 7\) ✓ · \(1 - 2 = -1\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="three">
+    <h2 id="three">กฎของคราเมอร์ 3×3 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C3" data-k="3x3 cramer three variables x y z สามตัวแปร">
+        <p class="tf-n"><b><span class="fid">C3</span> Cramer's rule for 3×3</b> สามตัวแปร</p>
+        \[ x = \frac{\Delta_x}{\Delta}, \quad y = \frac{\Delta_y}{\Delta}, \quad z = \frac{\Delta_z}{\Delta}, \qquad \Delta_x = \begin{vmatrix} \hlU{b_1} & a_{12} & a_{13} \\ \hlU{b_2} & a_{22} & a_{23} \\ \hlU{b_3} & a_{32} & a_{33} \end{vmatrix},\ \dots \]
+        <p class="tf-x">ใช้ดีเทอร์มิแนนต์ 3×3 สี่ตัว หาด้วยซาร์รัส <a href="/learn/linear-algebra/determinants/#D2">D2</a> หรือกระจายตามหลักที่มีศูนย์ <a href="/learn/linear-algebra/determinants/#D4">D4</a> · ตรวจคำตอบด้วยการแทนกลับทุกครั้ง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-c2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-2 · 3×3 ครบทุกตัวแปร</span><h3>แก้ \(\begin{aligned} 2x + y - z &= 1 \\ x - y + 2z &= 5 \\ 3x + 2y + z &= 10 \end{aligned}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=2,1,-1;1,-1,2;3,2,1&amp;b=1,5,10">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(\Delta\) ด้วยซาร์รัส: ลงขวา \((2)(-1)(1) + (1)(2)(3) + (-1)(1)(2) = 2\) · ขึ้นขวา \((-1)(-1)(3) + (2)(2)(2) + (1)(1)(1) = 12\)</p>
+          \[ \Delta = \begin{vmatrix} 2 & 1 & -1 \\ 1 & -1 & 2 \\ 3 & 2 & 1 \end{vmatrix} = 2 - 12 = -10 \]</li>
+        <li><p>แทนหลักที่ 1 ด้วย \((1, 5, 10)\): ลงขวา \(-1 + 20 - 10 = 9\) · ขึ้นขวา \(10 + 4 + 5 = 19\)</p>
+          \[ \Delta_x = \begin{vmatrix} \hlU{1} & 1 & -1 \\ \hlU{5} & -1 & 2 \\ \hlU{10} & 2 & 1 \end{vmatrix} = 9 - 19 = -10 \]</li>
+        <li><p>แทนหลักที่ 2: ลงขวา \(10 + 6 - 10 = 6\) · ขึ้นขวา \(-15 + 40 + 1 = 26\)</p>
+          \[ \Delta_y = \begin{vmatrix} 2 & \hlU{1} & -1 \\ 1 & \hlU{5} & 2 \\ 3 & \hlU{10} & 1 \end{vmatrix} = 6 - 26 = -20 \]</li>
+        <li><p>แทนหลักที่ 3: ลงขวา \(-20 + 15 + 2 = -3\) · ขึ้นขวา \(-3 + 20 + 10 = 27\)</p>
+          \[ \Delta_z = \begin{vmatrix} 2 & 1 & \hlU{1} \\ 1 & -1 & \hlU{5} \\ 3 & 2 & \hlU{10} \end{vmatrix} = -3 - 27 = -30 \]</li>
+        <li>\[ x = \frac{-10}{-10} = 1, \qquad y = \frac{-20}{-10} = 2, \qquad z = \frac{-30}{-10} = 3 \]</li>
+      </ol>
+      <p class="answer">\((x, y, z) = (1, 2, 3)\)</p>
+      <p class="check">ตรวจ: \(2 + 2 - 3 = 1\) ✓ · \(1 - 2 + 6 = 5\) ✓ · \(3 + 4 + 3 = 10\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมสูตรนี้ถูก <span class="lv lv-i">กลาง</span></h2>
+    <p>พิสูจน์ได้ในสองบรรทัดด้วยสมบัติของดีเทอร์มิแนนต์ ให้ \(X_i\) คือเมทริกซ์เอกลักษณ์ที่แทนหลักที่ \(i\) ด้วย \(\mathbf x\) แล้ว \(AX_i\) จะมีหลักที่ \(i\) เป็น \(A\mathbf x = \mathbf b\) และหลักอื่นเป็นหลักของ \(A\) ตามเดิม นั่นคือ \(AX_i = A_i\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C4" data-k="proof derivation why cramer works พิสูจน์ ที่มา">
+        <p class="tf-n"><b><span class="fid">C4</span> Proof sketch</b> ที่มาของสูตร</p>
+        \[ AX_i = A_i \ \Rightarrow\ \det A\cdot\det X_i = \det A_i, \qquad \det X_i = x_i \ (\text{กระจายตามแถว } i) \ \Rightarrow\ x_i = \frac{\det A_i}{\det A} \]
+      </div>
+      <div class="tf wide" id="C6" data-k="relation adjugate inverse cofactor ความสัมพันธ์ แอดจอยต์">
+        <p class="tf-n"><b><span class="fid">C6</span> Relation to the adjugate</b> คราเมอร์คือแอดจอยต์คูณ b</p>
+        \[ \mathbf x = A^{-1}\mathbf b = \frac{\operatorname{adj}A\,\mathbf b}{\det A}, \qquad x_i = \frac{\sum_j C_{ji}b_j}{\det A} = \frac{\det A_i}{\det A} \]
+        <p class="tf-x">\(\sum_j C_{ji}b_j\) คือการกระจายโคแฟกเตอร์ของ \(A_i\) ตามหลักที่ \(i\) พอดี คราเมอร์กับอินเวอร์สจึงให้คำตอบเท่ากันเสมอ</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="zero">
+    <h2 id="zero">เมื่อ Δ = 0 <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide warn" id="C5" data-k="delta zero singular no solution infinite fails ใช้ไม่ได้ ไม่มีคำตอบ ไม่จำกัด">
+        <p class="tf-n"><b><span class="fid">C5</span> When Δ = 0</b> กรณีดีเทอร์มิแนนต์เป็นศูนย์</p>
+        \[ \Delta = 0 \ \Rightarrow\ \text{คราเมอร์ใช้ไม่ได้: ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด} \]
+        <p class="tf-x">ถ้า \(\Delta = 0\) แต่มี \(\Delta_i \ne 0\) สักตัว แน่ใจได้ว่า<strong>ไม่มีคำตอบ</strong> · ถ้าทุก \(\Delta_i = 0\) <strong>ยังสรุปไม่ได้</strong> (ตั้งแต่ 3×3 ขึ้นไป) ต้องลดแถว <a href="/learn/linear-algebra/linear-systems/#L6">L6</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-c3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-3 · ดีเทอร์มิแนนต์เป็นศูนย์ทุกตัว แต่ไม่มีคำตอบ</span><h3>พิจารณา \(\begin{aligned} x + y + z &= 1 \\ x + y + z &= 2 \\ x + y + z &= 3 \end{aligned}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\Delta = 0\) เพราะสามแถวเท่ากัน และ \(\Delta_x, \Delta_y, \Delta_z\) มีสองหลักที่เป็น \((1,1,1)\) เหมือนกัน จึงเป็นศูนย์ทั้งหมด <a href="/learn/linear-algebra/determinants/#D9">D9</a></p></li>
+        <li><p>แต่สมการพูดว่า \(x + y + z\) เท่ากับ 1, 2 และ 3 พร้อมกัน ซึ่งเป็นไปไม่ได้</p></li>
+      </ol>
+      <p class="answer">ระบบไม่มีคำตอบ ทั้งที่ “\(0/0\)” ทุกตัว บทเรียนคือ \(\Delta = 0\) ให้หันไปลดแถวทันที</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="mesh">
+    <h2 id="mesh">โจทย์วงจรที่เจอบ่อย: หากระแสลูปเดียวในวงจรสามลูป <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>รูปแบบนี้ออกสอบแทบทุกเทอม เขียนสมการเมชด้วยการมอง (by inspection): สมาชิกทแยง = ผลรวมความต้านทานรอบลูปนั้น สมาชิกนอกทแยง = ลบความต้านทานที่ใช้ร่วมกัน ด้านขวา = ผลรวมแหล่งจ่ายที่ดันกระแสไปทางเดียวกับลูป (ดูที่มาเต็มใน <a href="/learn/linear-algebra/ee-applications/#A1">A1</a>)</p>
+    <figure class="circuit">
+      <svg viewBox="0 0 560 250" role="img" aria-label="วงจรสามเมช แหล่งจ่าย 24 โวลต์ทางซ้าย R1 2 โอห์มด้านบนเมชแรก R2 4 โอห์มตรงกลางระหว่างเมช 1 และ 2 R3 2 โอห์มด้านบนเมชสอง R4 6 โอห์มระหว่างเมช 2 และ 3 R5 3 โอห์มด้านขวา">
+        <defs><marker id="arC" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mt" d="M0 0 L10 5 L0 10z"/></marker></defs>
+        <path class="w" d="M60 110 V50 H100 M170 50 H250 M320 50 H510 V95 M510 165 V210 H60 V150 M210 50 V95 M210 165 V210 M360 50 V95 M360 165 V210"/>
+        <path class="w" d="M100 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M250 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M210 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <path class="w" d="M360 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <path class="w" d="M510 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <circle class="w" cx="60" cy="130" r="20"/>
+        <text x="55" y="124">+</text><text x="56" y="143">−</text>
+        <text x="4" y="134">24 V</text>
+        <text x="110" y="28">R₁ = 2 Ω</text>
+        <text x="260" y="28">R₃ = 2 Ω</text>
+        <text x="224" y="124">R₂</text><text x="224" y="142">4 Ω</text>
+        <text x="374" y="124">R₄</text><text x="374" y="142">6 Ω</text>
+        <text x="524" y="124">R₅</text><text x="524" y="142">3 Ω</text>
+        <path class="m" d="M135 102 A28 28 0 1 1 107 130" marker-end="url(#arC)"/><text class="mt" x="126" y="135">I₁</text>
+        <path class="m" d="M285 102 A28 28 0 1 1 257 130" marker-end="url(#arC)"/><text class="mt" x="276" y="135">I₂</text>
+        <path class="m" d="M435 102 A28 28 0 1 1 407 130" marker-end="url(#arC)"/><text class="mt" x="426" y="135">I₃</text>
+      </svg>
+      <figcaption>กระแสเมชทั้งสามวนตามเข็มนาฬิกา \(R_2\) อยู่ร่วมเมช 1–2 และ \(R_4\) อยู่ร่วมเมช 2–3</figcaption>
+    </figure>
+    <div class="wx" id="ex-c4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-4 · หาเฉพาะ I₂</span><h3>จากวงจรข้างบน หากระแส \(I_2\) ที่ไหลผ่าน \(R_3\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=6,-4,0;-4,12,-6;0,-6,9&amp;b=24,0,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>เขียนเมทริกซ์ด้วยการมอง: ทแยง \(2 + 4 = 6\), \(4 + 2 + 6 = 12\), \(6 + 3 = 9\) · นอกทแยง \(-4\) (R₂), \(-6\) (R₄)</p>
+          \[ \begin{pmatrix} 6 & -4 & 0 \\ -4 & 12 & -6 \\ 0 & -6 & 9 \end{pmatrix}\begin{pmatrix} I_1 \\ I_2 \\ I_3 \end{pmatrix} = \begin{pmatrix} 24 \\ 0 \\ 0 \end{pmatrix} \]</li>
+        <li><p>\(\Delta\) กระจายตามแถว 1 (มีศูนย์หนึ่งตัว) <a href="/learn/linear-algebra/determinants/#D4">D4</a></p>
+          \[ \Delta = 6\begin{vmatrix} 12 & -6 \\ -6 & 9 \end{vmatrix} - (-4)\begin{vmatrix} -4 & -6 \\ 0 & 9 \end{vmatrix} + 0 = 6(108 - 36) + 4(-36) = 432 - 144 = 288 \]</li>
+        <li><p>แทนหลักที่ 2 ด้วย \((24, 0, 0)\) แถว 3 เหลือ 9 ตัวเดียวที่ตำแหน่ง (3,3) กระจายตามแถว 3 ได้เลย <a class="tag tf" href="#C1">C1</a></p>
+          \[ \Delta_2 = \begin{vmatrix} 6 & \hlU{24} & 0 \\ -4 & \hlU{0} & -6 \\ 0 & \hlU{0} & 9 \end{vmatrix} = +9\begin{vmatrix} 6 & 24 \\ -4 & 0 \end{vmatrix} = 9(0 + 96) = 864 \]</li>
+        <li>\[ I_2 = \frac{\Delta_2}{\Delta} = \frac{864}{288} = 3\ \text{A} \]</li>
+      </ol>
+      <p class="answer">\(I_2 = 3\) A ใช้ดีเทอร์มิแนนต์แค่สองตัว (ถ้าหาครบจะได้ \(I_1 = 6\) A, \(I_3 = 2\) A)</p>
+      <p class="check">ตรวจกำลัง: แหล่งจ่าย \(24 \times 6 = 144\) W · ตัวต้านทาน \(2(6)^2 + 4(3)^2 + 2(3)^2 + 6(1)^2 + 3(2)^2 = 72 + 36 + 18 + 6 + 12 = 144\) W ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="ac">
+    <h2 id="ac">คราเมอร์กับจำนวนเชิงซ้อน: วงจร AC <span class="lv lv-i">กลาง</span></h2>
+    <p>ในสถานะคงตัวไซน์ (sinusoidal steady state) ตัวเหนี่ยวนำมีอิมพีแดนซ์ \(jX_L\) และตัวเก็บประจุ \(-jX_C\) สมการเมชหน้าตาเหมือน DC ทุกอย่าง แค่ตัวเลขเป็นเชิงซ้อน กฎของคราเมอร์ใช้ได้ตรง ๆ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C7" data-k="complex phasor impedance s-domain symbolic field เชิงซ้อน เฟเซอร์ อิมพีแดนซ์ ตัวแปร s">
+        <p class="tf-n"><b><span class="fid">C7</span> Works over complex numbers and in s</b> ใช้กับเชิงซ้อนและตัวแปร s ได้</p>
+        \[ \mathbf Z\,\mathbf I = \mathbf V \ \Rightarrow\ I_k = \frac{\Delta_k}{\Delta}, \qquad \Delta,\ \Delta_k \in \mathbb C \ \text{หรือเป็นพหุนามของ } s \]
+        <p class="tf-x">คำนวณดีเทอร์มิแนนต์ด้วยกฎของจำนวนเชิงซ้อน \(j^2 = -1\) แล้วหาร (คูณด้วยสังยุคของตัวส่วน) ตอบในรูปเชิงขั้ว \(|I|\angle\theta\)</p>
+      </div>
+    </div>
+    <figure class="circuit">
+      <svg viewBox="0 0 520 250" role="img" aria-label="วงจร AC สองเมช แหล่งจ่าย 10 โวลต์มุมศูนย์ R1 4 โอห์ม ตัวเก็บประจุลบ j4 โอห์มตรงกลาง ตัวเหนี่ยวนำ j8 โอห์มด้านบนเมชสอง R2 4 โอห์มด้านขวา">
+        <defs><marker id="arA" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mt" d="M0 0 L10 5 L0 10z"/></marker></defs>
+        <path class="w" d="M60 110 V50 H100 M170 50 H290 M370 50 H440 V95 M440 165 V210 H60 V150 M230 50 V124 M230 136 V210"/>
+        <path class="w" d="M100 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M218 124 H242 M218 136 H242"/>
+        <path class="w" d="M290 50 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0"/>
+        <path class="w" d="M440 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <circle class="w" cx="60" cy="130" r="20"/>
+        <path class="w" d="M50 130 q5 -9 10 0 t10 0"/>
+        <text x="4" y="100">10∠0°</text>
+        <text x="104" y="28">R₁ = 4 Ω</text>
+        <text x="252" y="116">−j4 Ω</text>
+        <text x="300" y="28">j8 Ω</text>
+        <text x="454" y="124">R₂</text><text x="454" y="142">4 Ω</text>
+        <path class="m" d="M150 102 A28 28 0 1 1 122 130" marker-end="url(#arA)"/><text class="mt" x="141" y="135">I₁</text>
+        <path class="m" d="M345 102 A28 28 0 1 1 317 130" marker-end="url(#arA)"/><text class="mt" x="336" y="135">I₂</text>
+      </svg>
+      <figcaption>วงจร AC สองเมช ค่าอิมพีแดนซ์ที่ความถี่ใช้งาน ตัวเก็บประจุอยู่ร่วมทั้งสองเมช</figcaption>
+    </figure>
+    <div class="wx" id="ex-c5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-5 · กระแสเมชในวงจร AC</span><h3>หา \(\mathbf I_1\) และ \(\mathbf I_2\) ของวงจรข้างบน</h3></div>
+      <ol class="steps">
+        <li><p>ทแยง: \(4 - j4\) และ \(-j4 + j8 + 4 = 4 + j4\) · นอกทแยง: \(-(-j4) = +j4\)</p>
+          \[ \begin{pmatrix} 4 - j4 & j4 \\ j4 & 4 + j4 \end{pmatrix}\begin{pmatrix} \mathbf I_1 \\ \mathbf I_2 \end{pmatrix} = \begin{pmatrix} 10 \\ 0 \end{pmatrix} \]</li>
+        <li><p>ดีเทอร์มิแนนต์เชิงซ้อน ใช้ \((4 - j4)(4 + j4) = 16 + 16\) และ \((j4)^2 = -16\)</p>
+          \[ \Delta = (4 - j4)(4 + j4) - (j4)(j4) = 32 - (-16) = 48 \]</li>
+        <li><p>แทนหลักแล้วหาร <a class="tag tf" href="#C7">C7</a></p>
+          \[ \mathbf I_1 = \frac{\begin{vmatrix} \hlU{10} & j4 \\ \hlU{0} & 4 + j4 \end{vmatrix}}{48} = \frac{40 + j40}{48}, \qquad \mathbf I_2 = \frac{\begin{vmatrix} 4 - j4 & \hlU{10} \\ j4 & \hlU{0} \end{vmatrix}}{48} = \frac{-j40}{48} \]</li>
+        <li><p>แปลงเป็นเชิงขั้ว</p>
+          \[ \mathbf I_1 = 0.833 + j0.833 = 1.18\angle 45^\circ\ \text{A}, \qquad \mathbf I_2 = -j0.833 = 0.833\angle{-90^\circ}\ \text{A} \]</li>
+      </ol>
+      <p class="answer">\(\mathbf I_1 = 1.18\angle45^\circ\) A · \(\mathbf I_2 = 0.833\angle{-90^\circ}\) A</p>
+      <p class="check">ตรวจ KVL เมช 2: แรงดันคร่อมตัวเก็บประจุ \((-j4)(\mathbf I_1 - \mathbf I_2) = (-j4)(0.833 + j1.667) = 6.67 - j3.33\) V เท่ากับ \((4 + j8)\mathbf I_2 = 6.67 - j3.33\) V ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="s-domain">
+    <h2 id="s-domain">คราเมอร์ในโดเมน s: ฟังก์ชันถ่ายโอนและสมการลักษณะเฉพาะ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>หลังแปลงลาปลาซ (ทบทวนที่ <a href="/learn/laplace-transform/">การแปลงลาปลาซ</a>) ตัวเก็บประจุกลายเป็น \(1/sC\) สมการโนดหรือเมชกลายเป็นเมทริกซ์ที่สมาชิกเป็นพหุนามของ \(s\) คราเมอร์ให้ฟังก์ชันถ่ายโอนเป็นอัตราส่วนดีเทอร์มิแนนต์ และ<strong>รากของ \(\Delta(s)\) คือขั้วของวงจร</strong></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C8" data-k="transfer function poles characteristic equation delta(s) ฟังก์ชันถ่ายโอน ขั้ว สมการลักษณะเฉพาะ">
+        <p class="tf-n"><b><span class="fid">C8</span> Transfer function and natural frequencies</b> ฟังก์ชันถ่ายโอนและความถี่ธรรมชาติ</p>
+        \[ H(s) = \frac{X_k(s)}{U(s)} = \frac{\Delta_k(s)/U(s)}{\Delta(s)}, \qquad \Delta(s) = 0 \ \text{คือสมการลักษณะเฉพาะ ให้ขั้วของวงจร} \]
+      </div>
+    </div>
+    <figure class="circuit">
+      <svg viewBox="0 0 520 220" role="img" aria-label="วงจร RC สองชั้น แหล่งจ่าย u ผ่าน R ไปโนด 1 มี C ลงกราวด์ แล้วผ่าน R อีกตัวไปโนด 2 มี C ลงกราวด์">
+        <path class="w" d="M60 90 V40 H110 M180 40 H270 M340 40 H420 M230 40 V102 M230 114 V180 M420 40 V102 M420 114 V180 M60 130 V180 H420"/>
+        <path class="w" d="M110 40 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M270 40 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M218 102 H242 M218 114 H242 M408 102 H432 M408 114 H432"/>
+        <circle class="w" cx="60" cy="110" r="20"/>
+        <text x="55" y="104">+</text><text x="56" y="123">−</text><text x="18" y="114">u</text>
+        <text x="128" y="20">R</text><text x="288" y="20">R</text>
+        <text x="250" y="112">C</text><text x="440" y="112">C</text>
+        <circle class="mt" cx="230" cy="40" r="4"/><text class="mt" x="214" y="62">v₁</text>
+        <circle class="mt" cx="420" cy="40" r="4"/><text class="mt" x="430" y="62">v₂ (เอาต์พุต)</text>
+      </svg>
+      <figcaption>วงจรกรองผ่านต่ำ RC สองชั้น ให้ \(\tau = RC\)</figcaption>
+    </figure>
+    <div class="wx" id="ex-c6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-6 · หาฟังก์ชันถ่ายโอนด้วยคราเมอร์</span><h3>หา \(H(s) = V_2(s)/U(s)\) ของวงจร RC สองชั้น</h3></div>
+      <ol class="steps">
+        <li><p>KCL ที่โนด 1 และ 2 ในโดเมน s แล้วคูณทุกพจน์ด้วย \(R\) (ใช้ \(sRC = \tau s\))</p>
+          \[ \begin{aligned} \tfrac{V_1 - U}{R} + sCV_1 + \tfrac{V_1 - V_2}{R} &= 0 \\ \tfrac{V_2 - V_1}{R} + sCV_2 &= 0 \end{aligned} \ \Rightarrow\ \begin{pmatrix} 2 + \tau s & -1 \\ -1 & 1 + \tau s \end{pmatrix}\begin{pmatrix} V_1 \\ V_2 \end{pmatrix} = \begin{pmatrix} U \\ 0 \end{pmatrix} \]</li>
+        <li>\[ \Delta(s) = (2 + \tau s)(1 + \tau s) - 1 = \tau^2s^2 + 3\tau s + 1 \]</li>
+        <li><p>หา \(V_2\) โดยแทนหลักที่ 2 <a class="tag tf" href="#C8">C8</a></p>
+          \[ V_2 = \frac{\begin{vmatrix} 2 + \tau s & \hlU{U} \\ -1 & \hlU{0} \end{vmatrix}}{\Delta(s)} = \frac{U}{\tau^2s^2 + 3\tau s + 1} \]</li>
+        <li><p>ขั้วคือรากของ \(\Delta(s) = 0\)</p>
+          \[ \tau s = \frac{-3 \pm \sqrt5}{2} \ \Rightarrow\ s_1 = -\frac{0.382}{\tau},\quad s_2 = -\frac{2.618}{\tau} \]</li>
+      </ol>
+      <p class="answer">\(H(s) = \dfrac{1}{\tau^2s^2 + 3\tau s + 1}\) ขั้วจริงลบสองตัว ระบบหน่วงเกิน (overdamped) ค่าคงตัวเวลา \(2.618\tau\) และ \(0.382\tau\) (สังเกตอัตราส่วนทองคำ \(\varphi^2 = 2.618\))</p>
+      <p class="check">ขั้วสองตัวนี้คือ<strong>ค่าเฉพาะ</strong>ของเมทริกซ์สถานะของวงจรเดียวกันพอดี ดูการคำนวณอีกมุมใน <a href="/learn/linear-algebra/ee-applications/#rc-ladder">การประยุกต์: RC สองชั้น</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="cost">
+    <h2 id="cost">ข้อดี ข้อจำกัด และต้นทุนการคำนวณ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C9" data-k="cost operations complexity efficiency compare ต้นทุน จำนวนการคำนวณ เปรียบเทียบ">
+        <p class="tf-n"><b><span class="fid">C9</span> Computational cost</b> ต้นทุนการคำนวณ</p>
+        \[ \text{คราเมอร์ครบทุกตัวแปร} = (n + 1) \text{ ดีเทอร์มิแนนต์ } n\times n \qquad \text{เทียบ} \qquad \text{เกาส์} \approx \tfrac{n^3}{3} \text{ การคูณ} \]
+        <p class="tf-x">ทำมือ 2×2 และ 3×3 คราเมอร์สะดวกที่สุด · หาตัวแปรเดียวใช้แค่ 2 ดีเทอร์มิแนนต์ · ตั้งแต่ 4×4 ขึ้นไปให้ลดแถว · คอมพิวเตอร์ไม่ใช้คราเมอร์แก้ระบบใหญ่</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ใช้คราเมอร์เมื่อ</th><th>เลี่ยงคราเมอร์เมื่อ</th></tr></thead>
+        <tbody>
+          <tr><td>2–3 ตัวแปร ทำมือ</td><td>4 ตัวแปรขึ้นไป</td></tr>
+          <tr><td>ต้องการตัวแปรเดียว เช่น กระแสลูปเดียว</td><td>\(\Delta = 0\) หรือใกล้ศูนย์มาก</td></tr>
+          <tr><td>สัมประสิทธิ์เป็นตัวอักษร เช่น \(R\), \(s\), \(k\) ต้องการสูตรทั่วไป</td><td>สมการไม่เท่าตัวแปร</td></tr>
+          <tr><td>อิมพีแดนซ์เชิงซ้อน 2×2</td><td>ต้องการความแม่นยำเชิงตัวเลขในโปรแกรม</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขคราเมอร์แสดงวิธีทำ</h2>
+    <p>เลือกโหมด “แก้ระบบ” ใส่ \(A\) และ \(\mathbf b\) ถ้า \(\det A \ne 0\) เครื่องจะแสดง \(\Delta\), \(\Delta_1, \Delta_2, \dots\) และคำตอบเป็นเศษส่วน พร้อมวิธีลดแถวให้เทียบ</p>
+    <div class="mx-calc" data-modes="solve,det,inv,eig" data-mode="solve" data-n="3" data-a="6,-4,0;-4,12,-6;0,-6,9" data-b="24,0,0"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ตัวอย่าง C-6 แสดงว่า \(\Delta(s) = 0\) ให้ขั้วของวงจร คำถามเดียวกันในภาษาเมทริกซ์คือ “ค่า \(\lambda\) ใดทำให้ \(\det(A - \lambda I) = 0\)” นั่นคือ <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะและเวกเตอร์เฉพาะ</a> ซึ่งบอกว่าวงจรตอบสนองเร็ว ช้า หรือแกว่งแค่ไหน</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

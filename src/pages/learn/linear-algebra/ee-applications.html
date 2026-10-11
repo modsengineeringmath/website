@@ -1,0 +1,410 @@
+<!--meta
+{
+  "title": "พีชคณิตเชิงเส้นในวิศวกรรมไฟฟ้า: เมช โนด เฟเซอร์ ปริภูมิสถานะ RLC สองพอร์ต องค์ประกอบสมมาตร | อาจารย์มด",
+  "h1": "ประยุกต์พีชคณิตเชิงเส้นในวิศวกรรมไฟฟ้า: รูปแบบโจทย์ที่เจอเสมอ",
+  "description": "รวมรูปแบบโจทย์วิศวกรรมไฟฟ้าที่ใช้เมทริกซ์ เขียนสมการเมชและโนดด้วยการมอง แหล่งจ่ายไม่อิสระ วงจร AC เฟเซอร์ ปริภูมิสถานะวงจร RLC กับค่าเฉพาะ วงจร RC สองชั้น เมทริกซ์ ABCD สองพอร์ต องค์ประกอบสมมาตร การแปลงคลาร์กและพาร์ก และ Y-bus พร้อมวิธีทำทีละขั้นและวงจรประกอบ",
+  "ogTitle": "เมทริกซ์ในงานไฟฟ้า: เมช โนด RLC สองพอร์ต สามเฟส ทีละขั้น",
+  "lesson": "linear-algebra",
+  "sub": "ee-applications",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Mesh analysis", "Nodal analysis", "Dependent source", "Phasor analysis", "State-space model", "RLC circuit", "Two-port network", "ABCD parameters", "Symmetrical components", "Clarke transformation", "Park transformation", "Bus admittance matrix"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "ทำไมเมทริกซ์เมชของวงจรตัวต้านทานล้วนสมมาตร?", "a": "เพราะตัวต้านทานที่อยู่ร่วมระหว่างเมช i กับ j ปรากฏในสมการของทั้งสองเมชด้วยค่าเดียวกัน \\(r_{ij} = r_{ji} = -R_{\\text{ร่วม}}\\) วงจรแบบนี้เป็นวงจรส่วนกลับ (reciprocal) ถ้ามีแหล่งจ่ายไม่อิสระ ความสมมาตรจะหายไป"},
+    {"q": "ค่าเฉพาะของวงจร RLC บอกอะไร?", "a": "ค่าเฉพาะของเมทริกซ์สถานะคือขั้วของวงจร ถ้าเป็นจริงลบต่างกันคือหน่วงเกิน จริงลบซ้ำกันคือหน่วงวิกฤต เชิงซ้อนคู่ส่วนจริงลบคือหน่วงน้อยแบบแกว่ง ส่วนจริงบอกอัตราการลดลง ส่วนจินตภาพบอกความถี่แกว่ง"},
+    {"q": "Y-bus หาอินเวอร์สไม่ได้เมื่อไร?", "a": "เมื่อไม่มีกิ่งใดต่อลงกราวด์เลย ผลรวมสมาชิกในแต่ละแถวเป็นศูนย์ เวกเตอร์ (1, 1, …, 1) จึงทำให้ Y-bus คูณแล้วเป็นศูนย์ ดีเทอร์มิแนนต์เป็นศูนย์ ต้องมีกิ่งลงกราวด์อย่างน้อยหนึ่งกิ่ง เช่นอิมพีแดนซ์ของเครื่องกำเนิดไฟฟ้า จึงจะได้ Z-bus"},
+    {"q": "องค์ประกอบสมมาตรเกี่ยวกับค่าเฉพาะอย่างไร?", "a": "เมทริกซ์อิมพีแดนซ์ของสายส่งสามเฟสที่สมมาตร (ค่าตัวเองเท่ากัน ค่าร่วมเท่ากัน) มีเวกเตอร์เฉพาะคือหลักของเมทริกซ์ Fortescue พอดี การแปลงเป็นองค์ประกอบสมมาตรจึงทำให้เมทริกซ์เป็นทแยงมุม แยกวงจรลำดับศูนย์ บวก และลบออกจากกันได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ประยุกต์ในวิศวกรรมไฟฟ้า</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.7 · พีชคณิตเชิงเส้น · Applications in Electrical Engineering</p>
+      <h1>ประยุกต์พีชคณิตเชิงเส้นในวิศวกรรมไฟฟ้า: รูปแบบโจทย์ที่เจอเสมอ</h1>
+      <p class="lede">โจทย์วงจรและระบบไฟฟ้ามีรูปแบบตายตัวไม่กี่แบบ เมื่อเห็นวงจรแล้วรู้ว่าจะได้เมทริกซ์หน้าตาแบบไหน และควรใช้เครื่องมือใด (คราเมอร์ อินเวอร์ส ลดแถว หรือค่าเฉพาะ) โจทย์ก็เหลือแค่การคำนวณ หน้านี้รวบรวมรูปแบบเหล่านั้นตั้งแต่วงจร DC ปี 1 จนถึงระบบไฟฟ้ากำลังและอิเล็กทรอนิกส์กำลัง สูตรใช้รหัส A</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#patterns">ตารางรูปแบบโจทย์</a>
+        <a class="btn btn-ghost btn-sm" href="#mesh">เมช</a>
+        <a class="btn btn-ghost btn-sm" href="#nodal">โนด</a>
+        <a class="btn btn-ghost btn-sm" href="#rlc">RLC กับค่าเฉพาะ</a>
+        <a class="btn btn-ghost btn-sm" href="#sequence">สามเฟส</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>วงจรตัวต้านทาน + แหล่งจ่ายอิสระ: \(R\mathbf I = \mathbf V\) หรือ \(G\mathbf V = \mathbf I\) เขียนได้ด้วยการมอง เมทริกซ์สมมาตร</li>
+          <li>มีแหล่งจ่ายไม่อิสระ: เมทริกซ์ไม่สมมาตร · วงจร AC: สมาชิกเป็นจำนวนเชิงซ้อน · หลังลาปลาซ: สมาชิกเป็นพหุนามของ \(s\)</li>
+          <li>วงจรมี L และ C: \(\dot{\mathbf x} = A\mathbf x + B\mathbf u\) ค่าเฉพาะของ \(A\) คือขั้ว บอกการหน่วงและการแกว่ง</li>
+          <li>สองพอร์ตต่อเรียง = คูณเมทริกซ์ ABCD · สามเฟสไม่สมดุล = แปลงด้วยเมทริกซ์ Fortescue</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น mesh, nodal, RLC, ABCD, fortescue, park, Y-bus" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 0 ============ -->
+    <section class="tsec" aria-labelledby="patterns">
+    <h2 id="patterns">ตารางรูปแบบโจทย์: เห็นวงจรแล้วรู้ว่าจะใช้อะไร</h2>
+    <div class="table-wrap">
+      <table class="la-patterns">
+        <thead><tr><th>สถานการณ์</th><th>รูปเมทริกซ์</th><th>เครื่องมือที่เหมาะ</th><th>ดู</th></tr></thead>
+        <tbody>
+          <tr><td>วงจร DC หลายลูป ถามกระแสลูปเดียว</td><td>\(R\mathbf I = \mathbf V\) สมมาตร</td><td>คราเมอร์ (2 ดีเทอร์มิแนนต์)</td><td><a class="tag tf" href="#A1">A1</a></td></tr>
+          <tr><td>วงจร DC หลายโนด แหล่งจ่ายกระแส</td><td>\(G\mathbf V = \mathbf I\) สมมาตร</td><td>ลดแถว / อินเวอร์ส</td><td><a class="tag tf" href="#A2">A2</a></td></tr>
+          <tr><td>วงจรเดิม เปลี่ยนแหล่งจ่ายหลายแบบ</td><td>\(\mathbf x = A^{-1}\mathbf b\)</td><td>อินเวอร์สครั้งเดียว / LU</td><td><a href="/learn/linear-algebra/inverse/#ex-i6">I-6</a></td></tr>
+          <tr><td>มีแหล่งจ่ายไม่อิสระ</td><td>ไม่สมมาตร</td><td>คราเมอร์ / ลดแถว</td><td><a class="tag tf" href="#A3">A3</a></td></tr>
+          <tr><td>วงจร AC สถานะคงตัว</td><td>\(\mathbf Z\mathbf I = \mathbf V\) เชิงซ้อน</td><td>คราเมอร์เชิงซ้อน</td><td><a class="tag tf" href="#A4">A4</a></td></tr>
+          <tr><td>หาฟังก์ชันถ่ายโอน</td><td>สมาชิกเป็นพหุนาม \(s\)</td><td>คราเมอร์ \(H = \Delta_k/\Delta\)</td><td><a href="/learn/linear-algebra/cramers-rule/#C8">C8</a></td></tr>
+          <tr><td>ผลตอบสนองชั่วครู่ RLC</td><td>\(\dot{\mathbf x} = A\mathbf x + B\mathbf u\)</td><td>ค่าเฉพาะ เวกเตอร์เฉพาะ</td><td><a class="tag tf" href="#A5">A5</a></td></tr>
+          <tr><td>วงจรต่อเรียงหลายชั้น สายส่ง</td><td>ABCD</td><td>คูณเมทริกซ์</td><td><a class="tag tf" href="#A7">A7</a></td></tr>
+          <tr><td>ฟอลต์ ระบบสามเฟสไม่สมดุล</td><td>Fortescue</td><td>แปลงฐาน (ค่าเฉพาะของเมทริกซ์วนรอบ)</td><td><a class="tag tf" href="#A8">A8</a></td></tr>
+          <tr><td>ควบคุมมอเตอร์ อินเวอร์เตอร์</td><td>คลาร์ก พาร์ก</td><td>เมทริกซ์หมุน (เชิงตั้งฉาก)</td><td><a class="tag tf" href="#A9">A9</a></td></tr>
+          <tr><td>การไหลของกำลัง ฟอลต์ในระบบใหญ่</td><td>Y-bus, Z-bus</td><td>เมทริกซ์ห่าง LU</td><td><a class="tag tf" href="#A10">A10</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="mesh">
+    <h2 id="mesh">การวิเคราะห์เมชด้วยการมอง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เขียน KVL รอบทุกเมชโดยให้กระแสเมชวนทิศเดียวกัน (ตามเข็มนาฬิกา) จะได้รูปแบบที่ตายตัว จนเขียนเมทริกซ์ได้โดยไม่ต้องเขียน KVL ทีละสมการ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="A1" data-k="mesh analysis inspection kvl resistance matrix การวิเคราะห์เมช ลูป การมอง">
+        <p class="tf-n"><b><span class="fid">A1</span> Mesh equations by inspection</b> สมการเมชด้วยการมอง (วงจรตัวต้านทาน + แหล่งแรงดันอิสระ)</p>
+        \[ R\,\mathbf I = \mathbf V, \qquad r_{kk} = \sum R \text{ รอบเมช } k, \quad r_{kj} = -\sum R \text{ ที่ใช้ร่วมระหว่าง } k, j, \quad V_k = \sum \text{แหล่งจ่ายที่ดันตามทิศ } I_k \]
+        <p class="tf-x">ทุกเมชวนทิศเดียวกัน · \(R\) สมมาตรและบวกแน่นอน <a href="/learn/linear-algebra/eigenvalues/#E12">E12</a> · แหล่งจ่ายที่ขั้วบวกอยู่ด้านที่กระแสเมชไหลออก นับเป็นบวก · มีแหล่งกระแสให้ใช้ซูเปอร์เมช (supermesh) หรือเพิ่มสมการเงื่อนไข</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-1 · วงจรสามเมชจากหน้าคราเมอร์ ด้วยการมองและอินเวอร์ส</span><h3>วงจร: 24 V, \(R_1 = 2\), \(R_2 = 4\) (ร่วม 1–2), \(R_3 = 2\), \(R_4 = 6\) (ร่วม 2–3), \(R_5 = 3\ \Omega\) (<a href="/learn/linear-algebra/cramers-rule/#mesh">ดูรูปวงจร</a>) หากระแสเมชทั้งหมดและกระแสผ่าน \(R_2\), \(R_4\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=inv&amp;A=6,-4,0;-4,12,-6;0,-6,9">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>มองวงจรแล้วเขียนได้ทันที <a class="tag tf" href="#A1">A1</a></p>
+          \[ \begin{pmatrix} 2+4 & -4 & 0 \\ -4 & 4+2+6 & -6 \\ 0 & -6 & 6+3 \end{pmatrix}\begin{pmatrix} I_1 \\ I_2 \\ I_3 \end{pmatrix} = \begin{pmatrix} 24 \\ 0 \\ 0 \end{pmatrix} \]</li>
+        <li><p>อินเวอร์ส (\(\det R = 288\)) คำนวณด้วยแอดจอยต์ <a href="/learn/linear-algebra/inverse/#I3">I3</a></p>
+          \[ R^{-1} = \frac{1}{288}\begin{pmatrix} 72 & 36 & 24 \\ 36 & 54 & 36 \\ 24 & 36 & 56 \end{pmatrix} \]</li>
+        <li><p>\(\mathbf b\) มีค่าแค่ตัวแรก จึงได้ 24 เท่าของหลักแรก</p>
+          \[ \mathbf I = \frac{24}{288}\begin{pmatrix} 72 \\ 36 \\ 24 \end{pmatrix} = \begin{pmatrix} 6 \\ 3 \\ 2 \end{pmatrix}\text{ A} \]</li>
+      </ol>
+      <p class="answer">\(I_1 = 6,\ I_2 = 3,\ I_3 = 2\) A · กระแสผ่าน \(R_2 = I_1 - I_2 = 3\) A และผ่าน \(R_4 = I_2 - I_3 = 1\) A</p>
+      <p class="check">\(R^{-1}\) สมมาตรด้วย (อินเวอร์สของเมทริกซ์สมมาตรสมมาตรเสมอ) · ความต้านทานที่แหล่งจ่ายมองเห็น \(= 1/(R^{-1})_{11} = 288/72 = 4\ \Omega\) ตรวจ: \(24/4 = 6\) A ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="nodal">
+    <h2 id="nodal">การวิเคราะห์โนดด้วยการมอง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A2" data-k="nodal analysis inspection kcl conductance matrix การวิเคราะห์โนด ความนำ">
+        <p class="tf-n"><b><span class="fid">A2</span> Nodal equations by inspection</b> สมการโนดด้วยการมอง (ตัวต้านทาน + แหล่งกระแสอิสระ)</p>
+        \[ G\,\mathbf V = \mathbf I, \qquad g_{kk} = \sum G \text{ ที่ต่อกับโนด } k, \quad g_{kj} = -\sum G \text{ ระหว่างโนด } k, j, \quad I_k = \sum \text{กระแสที่ฉีดเข้าโนด } k \]
+        <p class="tf-x">\(G = 1/R\) หน่วยซีเมนส์ · ถ้าเศษส่วนเยอะ ให้คูณทั้งระบบด้วย ค.ร.น. ของตัวส่วนก่อน คำตอบไม่เปลี่ยน · วงจรบันได (ladder) ได้เมทริกซ์สามแนวทแยง (tridiagonal) แก้ได้เร็วด้วยการแทนค่าต่อเนื่อง</p>
+      </div>
+    </div>
+    <figure class="circuit">
+      <svg viewBox="0 0 540 240" role="img" aria-label="วงจรสามโนด แหล่งกระแส 10 แอมป์ฉีดเข้าโนด 1 Ra 1 โอห์มลงกราวด์ Rb 2 โอห์มระหว่างโนด 1 และ 2 Rc 4 โอห์มลงกราวด์ Rd 2 โอห์มระหว่างโนด 2 และ 3 Re 2 โอห์มลงกราวด์">
+        <defs><marker id="arN" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="currentColor"/></marker></defs>
+        <path class="w" d="M60 105 V50 H190 M260 50 H340 M410 50 H470 V95 M470 165 V200 H60 V145 M150 50 V95 M150 165 V200 M300 50 V95 M300 165 V200"/>
+        <path class="w" d="M190 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M340 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M150 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <path class="w" d="M300 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <path class="w" d="M470 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <circle class="w" cx="60" cy="125" r="20"/>
+        <path class="w" d="M60 137 V113" marker-end="url(#arN)"/>
+        <text x="6" y="129">10 A</text>
+        <path class="w" d="M250 200 v10 M238 210 h24 M243 216 h14 M248 222 h4"/>
+        <circle class="mt" cx="150" cy="50" r="4"/><text class="mt" x="138" y="36">v₁</text>
+        <circle class="mt" cx="300" cy="50" r="4"/><text class="mt" x="288" y="36">v₂</text>
+        <circle class="mt" cx="470" cy="50" r="4"/><text class="mt" x="458" y="36">v₃</text>
+        <text x="162" y="124">Ra</text><text x="162" y="142">1 Ω</text>
+        <text x="204" y="30">Rb = 2 Ω</text>
+        <text x="312" y="124">Rc</text><text x="312" y="142">4 Ω</text>
+        <text x="354" y="30">Rd = 2 Ω</text>
+        <text x="484" y="124">Re</text><text x="484" y="142">2 Ω</text>
+      </svg>
+      <figcaption>วงจรบันไดสามโนด กราวด์อยู่ด้านล่าง</figcaption>
+    </figure>
+    <div class="wx" id="ex-a2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-2 · วงจรบันไดสามโนด</span><h3>หาแรงดันโนด \(v_1, v_2, v_3\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=6,-2,0;-2,5,-2;0,-2,4&amp;b=40,0,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>ความนำ: \(G_a = 1,\ G_b = 0.5,\ G_c = 0.25,\ G_d = 0.5,\ G_e = 0.5\) S เขียนด้วยการมอง <a class="tag tf" href="#A2">A2</a></p>
+          \[ \begin{pmatrix} 1 + 0.5 & -0.5 & 0 \\ -0.5 & 0.5 + 0.25 + 0.5 & -0.5 \\ 0 & -0.5 & 0.5 + 0.5 \end{pmatrix}\begin{pmatrix} v_1 \\ v_2 \\ v_3 \end{pmatrix} = \begin{pmatrix} 10 \\ 0 \\ 0 \end{pmatrix} \]</li>
+        <li><p>คูณทั้งระบบด้วย 4 กำจัดทศนิยม</p>
+          \[ \begin{pmatrix} 6 & -2 & 0 \\ -2 & 5 & -2 \\ 0 & -2 & 4 \end{pmatrix}\begin{pmatrix} v_1 \\ v_2 \\ v_3 \end{pmatrix} = \begin{pmatrix} 40 \\ 0 \\ 0 \end{pmatrix} \]</li>
+        <li><p>สามแนวทแยง จึงแทนค่าต่อเนื่องจากแถวล่าง: แถว 3 ได้ \(v_2 = 2v_3\) · แถว 2: \(-2v_1 + 10v_3 - 2v_3 = 0\) ได้ \(v_1 = 4v_3\)</p></li>
+        <li><p>แถว 1: \(6(4v_3) - 2(2v_3) = 20v_3 = 40\)</p>
+          \[ v_3 = 2,\quad v_2 = 4,\quad v_1 = 8\ \text{V} \]</li>
+      </ol>
+      <p class="answer">\(\mathbf v = (8,\ 4,\ 2)\) V</p>
+      <p class="check">KCL โนด 1: กระแสลง \(R_a\) \(= 8\) A ผ่าน \(R_b\) \(= (8 - 4)/2 = 2\) A รวม 10 A ✓ · การใช้ \(G^{-1}\) กับแหล่งจ่ายหลายแบบดูที่ <a href="/learn/linear-algebra/inverse/#ex-i6">ตัวอย่าง I-6</a></p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="A11" data-k="modified nodal analysis mna spice voltage source การวิเคราะห์โนดดัดแปลง">
+        <p class="tf-n"><b><span class="fid">A11</span> Modified nodal analysis (MNA)</b> การวิเคราะห์โนดดัดแปลง (สิ่งที่ SPICE ทำ)</p>
+        \[ \begin{pmatrix} G & B \\ C & D \end{pmatrix}\begin{pmatrix} \mathbf v \\ \mathbf i_V \end{pmatrix} = \begin{pmatrix} \mathbf i_s \\ \mathbf e \end{pmatrix} \]
+        <p class="tf-x">เพิ่มกระแสของแหล่งแรงดันเป็นตัวแปรใหม่ \(\mathbf i_V\) ทำให้รองรับแหล่งแรงดันและแหล่งไม่อิสระทุกแบบ เมทริกซ์ใหญ่แต่ห่าง (sparse) แก้ด้วย LU <a href="/learn/linear-algebra/linear-systems/#L9">L9</a></p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="dependent">
+    <h2 id="dependent">วงจรที่มีแหล่งจ่ายไม่อิสระ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A3" data-k="dependent source controlled ccvs vccs nonsymmetric แหล่งจ่ายไม่อิสระ ควบคุม ไม่สมมาตร">
+        <p class="tf-n"><b><span class="fid">A3</span> Dependent sources</b> แหล่งจ่ายไม่อิสระทำให้เมทริกซ์ไม่สมมาตร</p>
+        \[ \text{เขียน KVL/KCL ตามปกติ} \to \text{ย้ายพจน์ที่มีตัวแปรควบคุมไปซ้าย} \to R\mathbf I = \mathbf V \text{ แต่ } R \ne R^T \]
+        <p class="tf-x">ห้ามใช้ “การมอง” ตรง ๆ กับตัวควบคุม ต้องเขียน KVL ก่อนแล้วจัดรูป · วงจรแบบนี้ไม่เป็นส่วนกลับ (non-reciprocal) เช่นวงจรจำลองทรานซิสเตอร์และออปแอมป์</p>
+      </div>
+    </div>
+    <figure class="circuit">
+      <svg viewBox="0 0 520 250" role="img" aria-label="วงจรสองเมช แหล่งจ่าย 12 โวลต์ R1 2 โอห์ม R2 4 โอห์มร่วม R3 4 โอห์มด้านบนเมชสอง และแหล่งแรงดันควบคุมด้วยกระแสค่า 2 I1 ด้านขวา ขั้วบวกด้านล่าง">
+        <defs><marker id="arD" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mt" d="M0 0 L10 5 L0 10z"/></marker></defs>
+        <path class="w" d="M60 110 V50 H100 M170 50 H290 M360 50 H440 V100 M440 160 V210 H60 V150 M230 50 V95 M230 165 V210"/>
+        <path class="w" d="M100 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M290 50 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M230 95 l8 5 l-16 10 l16 10 l-16 10 l16 10 l-16 10 l16 10 l-8 5"/>
+        <path class="w" d="M440 100 l22 30 l-22 30 l-22 -30 z"/>
+        <text x="435" y="124">−</text><text x="434" y="148">+</text>
+        <text x="470" y="134">2I₁</text>
+        <circle class="w" cx="60" cy="130" r="20"/>
+        <text x="55" y="124">+</text><text x="56" y="143">−</text>
+        <text x="6" y="134">12 V</text>
+        <text x="104" y="28">R₁ = 2 Ω</text><text x="294" y="28">R₃ = 4 Ω</text>
+        <text x="244" y="124">R₂</text><text x="244" y="142">4 Ω</text>
+        <path class="m" d="M145 102 A28 28 0 1 1 117 130" marker-end="url(#arD)"/><text class="mt" x="136" y="135">I₁</text>
+        <path class="m" d="M345 102 A28 28 0 1 1 317 130" marker-end="url(#arD)"/><text class="mt" x="336" y="135">I₂</text>
+      </svg>
+      <figcaption>แหล่งแรงดันควบคุมด้วยกระแส (CCVS) ค่า \(2I_1\) โวลต์ ขั้วบวกด้านล่าง จึงดันกระแสตามทิศ \(I_2\)</figcaption>
+    </figure>
+    <div class="wx" id="ex-a3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-3 · CCVS ในเมชที่สอง</span><h3>หา \(I_1\) และ \(I_2\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=6,-4;-6,8&amp;b=12,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>KVL เมช 1 (ปกติ): \(2I_1 + 4(I_1 - I_2) = 12\) → \(6I_1 - 4I_2 = 12\)</p></li>
+        <li><p>KVL เมช 2: แรงดันตกบนตัวต้านทาน = แรงดันที่แหล่งไม่อิสระดันขึ้น</p>
+          \[ 4(I_2 - I_1) + 4I_2 = 2I_1 \ \Rightarrow\ \hlF{-6}I_1 + 8I_2 = 0 \]</li>
+        <li><p>เมทริกซ์ไม่สมมาตร (\(-4 \ne -6\)) <a class="tag tf" href="#A3">A3</a> แก้ด้วยคราเมอร์ <a href="/learn/linear-algebra/cramers-rule/#C2">C2</a></p>
+          \[ \begin{pmatrix} 6 & -4 \\ -6 & 8 \end{pmatrix}\begin{pmatrix} I_1 \\ I_2 \end{pmatrix} = \begin{pmatrix} 12 \\ 0 \end{pmatrix}, \quad \Delta = 48 - 24 = 24 \]
+          \[ I_1 = \frac{(12)(8) - (-4)(0)}{24} = 4, \qquad I_2 = \frac{(6)(0) - (12)(-6)}{24} = 3 \]</li>
+      </ol>
+      <p class="answer">\(I_1 = 4\) A · \(I_2 = 3\) A · แหล่งไม่อิสระมีแรงดัน \(2I_1 = 8\) V</p>
+      <p class="check">ตรวจเมช 2: \(4(3 - 4) + 4(3) = 8 = 2I_1\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="ac">
+    <h2 id="ac">วงจร AC แบบเฟเซอร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A4" data-k="ac phasor impedance matrix complex z jωl 1/jωc เฟเซอร์ อิมพีแดนซ์ ไฟสลับ">
+        <p class="tf-n"><b><span class="fid">A4</span> Phasor mesh/nodal equations</b> สมการเมช/โนดแบบเฟเซอร์</p>
+        \[ \mathbf Z\,\mathbf I = \mathbf V, \qquad Z_R = R,\quad Z_L = j\omega L,\quad Z_C = \frac{1}{j\omega C} = -\frac{j}{\omega C} \]
+        <p class="tf-x">กฎการมองใช้ได้เหมือน A1 แต่ใช้อิมพีแดนซ์ · \(\mathbf Z\) สมมาตรแต่เป็นเชิงซ้อน (ไม่ใช่เฮอร์มิเชียน) · กำลังเชิงซ้อนที่แหล่งจ่ายส่งให้วงจร \(S = \tfrac12\mathbf V^T\overline{\mathbf I}\) เมื่อใช้ค่ายอด (ถ้าใช้ค่า RMS ไม่ต้องมี \(\tfrac12\)) · ตัวอย่างเต็มอยู่ที่ <a href="/learn/linear-algebra/cramers-rule/#ex-c5">C-5</a></p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="rlc">
+    <h2 id="rlc">วงจร RLC ในปริภูมิสถานะและค่าเฉพาะ <span class="lv lv-i">กลาง → ขั้นสูง</span></h2>
+    <p>เลือกตัวแปรที่ “มีความจำ” เป็นสถานะ คือกระแสตัวเหนี่ยวนำและแรงดันตัวเก็บประจุ แล้วเขียนอนุพันธ์ของแต่ละตัว จะได้ระบบอันดับหนึ่งในรูปเมทริกซ์ ค่าเฉพาะของ \(A\) คือขั้วตัวเดียวกับที่ได้จาก \(\Delta(s) = 0\)</p>
+    <figure class="circuit">
+      <svg viewBox="0 0 520 220" role="img" aria-label="วงจร RLC อนุกรม แหล่งจ่าย u ตัวต้านทาน R ตัวเหนี่ยวนำ L ด้านบน ตัวเก็บประจุ C ด้านขวา กระแส i L ไหลตามเข็มนาฬิกา">
+        <defs><marker id="arR" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mt" d="M0 0 L10 5 L0 10z"/></marker></defs>
+        <path class="w" d="M60 90 V40 H110 M180 40 H240 M320 40 H420 V104 M420 116 V180 H60 V130"/>
+        <path class="w" d="M110 40 l5 -8 l10 16 l10 -16 l10 16 l10 -16 l10 16 l10 -16 l5 8"/>
+        <path class="w" d="M240 40 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0 a10 10 0 0 1 20 0"/>
+        <path class="w" d="M408 104 H432 M408 116 H432"/>
+        <circle class="w" cx="60" cy="110" r="20"/>
+        <text x="55" y="104">+</text><text x="56" y="123">−</text><text x="20" y="114">u</text>
+        <text x="136" y="20">R</text><text x="274" y="20">L</text>
+        <text x="440" y="114">C</text>
+        <text class="mt" x="440" y="94">+</text><text class="mt" x="440" y="140">−</text><text class="mt" x="456" y="120">v_C</text>
+        <path class="m" d="M340 58 H390" marker-end="url(#arR)"/><text class="mt" x="350" y="76">i_L</text>
+      </svg>
+      <figcaption>RLC อนุกรม สถานะ \(\mathbf x = (i_L,\ v_C)\)</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="A5" data-k="series rlc state space matrix eigenvalues damping ratio natural frequency ปริภูมิสถานะ อาร์แอลซี อัตราส่วนการหน่วง ความถี่ธรรมชาติ">
+        <p class="tf-n"><b><span class="fid">A5</span> Series RLC in state space</b> RLC อนุกรมในปริภูมิสถานะ</p>
+        \[ \frac{d}{dt}\begin{pmatrix} i_L \\ v_C \end{pmatrix} = \underbrace{\begin{pmatrix} -R/L & -1/L \\ 1/C & 0 \end{pmatrix}}_{A}\begin{pmatrix} i_L \\ v_C \end{pmatrix} + \begin{pmatrix} 1/L \\ 0 \end{pmatrix}u, \qquad \lambda^2 + \frac{R}{L}\lambda + \frac{1}{LC} = 0 \]
+        \[ \omega_n = \frac{1}{\sqrt{LC}},\quad \zeta = \frac{R}{2}\sqrt{\frac{C}{L}},\quad \lambda_{1,2} = -\zeta\omega_n \pm \omega_n\sqrt{\zeta^2 - 1} \]
+        <p class="tf-x">\(\operatorname{tr}A = -R/L = -2\zeta\omega_n\) (การหน่วง) · \(\det A = 1/LC = \omega_n^2\) <a href="/learn/linear-algebra/eigenvalues/#E6">E6</a> · \(\zeta \gt 1\) จริงต่างกัน (หน่วงเกิน) · \(\zeta = 1\) ซ้ำ (วิกฤต, defective) · \(\zeta \lt 1\) เชิงซ้อน (หน่วงน้อย แกว่ง) ดูแล็บ <a href="/learn/second-order-system/">ระบบอันดับสอง</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-4 · ผลตอบสนองธรรมชาติของ RLC ด้วยเวกเตอร์เฉพาะ</span><h3>\(R = 6\ \Omega,\ L = 1\) H, \(C = 0.2\) F, \(u = 0\) เริ่มต้น \(i_L(0) = 0,\ v_C(0) = 4\) V หา \(i_L(t)\) และ \(v_C(t)\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=-6,-1;5,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>แทนค่าใน A5: \(A = \begin{pmatrix} -6 & -1 \\ 5 & 0 \end{pmatrix}\), \(\operatorname{tr} = -6\), \(\det = 5\) <a class="tag tf" href="#A5">A5</a></p>
+          \[ \lambda^2 + 6\lambda + 5 = (\lambda + 1)(\lambda + 5) = 0 \ \Rightarrow\ \lambda = -1,\ -5 \]</li>
+        <li><p>เวกเตอร์เฉพาะด้วยสูตรลัด \((b,\ \lambda - a)\) โดย \(a = -6,\ b = -1\) <a href="/learn/linear-algebra/eigenvalues/#E4">E4</a></p>
+          \[ \lambda = -1:\ \mathbf v_1 = \begin{pmatrix} -1 \\ -1 + 6 \end{pmatrix} \sim \begin{pmatrix} 1 \\ -5 \end{pmatrix}, \qquad \lambda = -5:\ \mathbf v_2 = \begin{pmatrix} -1 \\ -5 + 6 \end{pmatrix} \sim \begin{pmatrix} 1 \\ -1 \end{pmatrix} \]</li>
+        <li><p>กระจายค่าเริ่มต้น \(c_1(1, -5) + c_2(1, -1) = (0, 4)\) ได้ \(c_1 = -1,\ c_2 = 1\) <a href="/learn/linear-algebra/eigenvalues/#E15">E15</a></p>
+          \[ \begin{pmatrix} i_L \\ v_C \end{pmatrix} = -e^{-t}\begin{pmatrix} 1 \\ -5 \end{pmatrix} + e^{-5t}\begin{pmatrix} 1 \\ -1 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(i_L(t) = -e^{-t} + e^{-5t}\) A · \(v_C(t) = 5e^{-t} - e^{-5t}\) V (หน่วงเกิน \(\zeta = 3\sqrt{0.2} \approx 1.34\))</p>
+      <p class="check">ตรวจ \(i_L = C\,dv_C/dt = 0.2(-5e^{-t} + 5e^{-5t}) = -e^{-t} + e^{-5t}\) ✓ · ถ้าเปลี่ยนเป็น \(R = 2\ \Omega\) จะได้ \(\lambda^2 + 2\lambda + 5 = 0\), \(\lambda = -1 \pm j2\): แกว่งที่ 2 rad/s ใต้เปลือก \(e^{-t}\) (\(\zeta \approx 0.447\))</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="rc-ladder">
+    <h2 id="rc-ladder">วงจร RC สองชั้น: ค่าเฉพาะคือค่าคงตัวเวลา <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>วงจรเดียวกับ <a href="/learn/linear-algebra/cramers-rule/#ex-c6">ตัวอย่าง C-6</a> คราวนี้มองผ่านปริภูมิสถานะ จะเห็นว่าค่าเฉพาะกับขั้วจากฟังก์ชันถ่ายโอนเป็นตัวเดียวกัน และเวกเตอร์เฉพาะบอก “รูปร่าง” ของแต่ละโหมดด้วย</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="A6" data-k="rc ladder two stage eigenvalues time constants golden ratio modes อาร์ซีสองชั้น ค่าคงตัวเวลา อัตราส่วนทอง">
+        <p class="tf-n"><b><span class="fid">A6</span> Two-stage RC ladder</b> RC สองชั้น (\(R_1 = R_2 = R,\ C_1 = C_2 = C,\ \tau = RC\))</p>
+        \[ \dot{\mathbf v} = \frac{1}{\tau}\begin{pmatrix} -2 & 1 \\ 1 & -1 \end{pmatrix}\mathbf v + \frac{1}{\tau}\begin{pmatrix} 1 \\ 0 \end{pmatrix}u, \qquad \lambda\tau = \frac{-3 \pm \sqrt5}{2} = -0.382,\ -2.618 \]
+        <p class="tf-x">ค่าคงตัวเวลาของโหมด \(\tau_i = -1/\lambda_i = 2.618\tau\) และ \(0.382\tau\) · ผลคูณ \(= \tau^2\) (\(= 1/\det A\)) ผลบวก \(= 3\tau\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-5 · อ่านความหมายของเวกเตอร์เฉพาะ</span><h3>หาเวกเตอร์เฉพาะของ \(\tau A = \begin{pmatrix} -2 & 1 \\ 1 & -1 \end{pmatrix}\) แล้วตีความ</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=-2,1;1,-1">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(\operatorname{tr} = -3,\ \det = 1\): \(\mu^2 + 3\mu + 1 = 0\) ได้ \(\mu = -0.382,\ -2.618\) (โดย \(\mu = \lambda\tau\))</p></li>
+        <li><p>สูตรลัด \((b, \mu - a) = (1,\ \mu + 2)\) <a href="/learn/linear-algebra/eigenvalues/#E4">E4</a></p>
+          \[ \mu = -0.382:\ \mathbf v_{\text{ช้า}} = \begin{pmatrix} 1 \\ 1.618 \end{pmatrix}, \qquad \mu = -2.618:\ \mathbf v_{\text{เร็ว}} = \begin{pmatrix} 1 \\ -0.618 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">โหมดช้า: ตัวเก็บประจุทั้งสองตัวเปลี่ยนแรงดัน<strong>ไปทางเดียวกัน</strong> (ชาร์จทั้งวงจร) · โหมดเร็ว: แรงดัน<strong>สวนทางกัน</strong> (ประจุไหลถ่ายเทระหว่างสองตัวเก็บประจุผ่าน \(R_2\)) จึงหายไปเร็วกว่าเกือบ 7 เท่า</p>
+      <p class="check">\(A\) สมมาตร เวกเตอร์เฉพาะจึงตั้งฉากกัน: \((1)(1) + (1.618)(-0.618) = 1 - 1 = 0\) ✓ <a href="/learn/linear-algebra/eigenvalues/#E11">E11</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="two-port">
+    <h2 id="two-port">วงจรสองพอร์ตและเมทริกซ์ ABCD <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจรที่มีขาเข้าและขาออกอย่างละคู่ (ตัวกรอง สายส่ง หม้อแปลง แอมป์) อธิบายด้วยเมทริกซ์ 2×2 ได้ ข้อดีของเมทริกซ์ ABCD (transmission parameters) คือ<strong>ต่อเรียงกัน = คูณเมทริกซ์ตามลำดับ</strong></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="A7" data-k="two port abcd transmission parameters cascade series shunt reciprocal สองพอร์ต ต่อเรียง ส่วนกลับ">
+        <p class="tf-n"><b><span class="fid">A7</span> ABCD (transmission) matrix</b> เมทริกซ์ ABCD</p>
+        \[ \begin{pmatrix} V_1 \\ I_1 \end{pmatrix} = \begin{pmatrix} A & B \\ C & D \end{pmatrix}\begin{pmatrix} V_2 \\ I_2 \end{pmatrix}, \quad \underbrace{\begin{pmatrix} 1 & Z \\ 0 & 1 \end{pmatrix}}_{\text{อนุกรม } Z}, \quad \underbrace{\begin{pmatrix} 1 & 0 \\ Y & 1 \end{pmatrix}}_{\text{ขนาน } Y}, \quad T_{\text{รวม}} = T_1T_2\cdots T_k \]
+        <p class="tf-x">\(I_2\) นิยามไหลออกจากพอร์ต 2 · วงจรส่วนกลับ (R, L, C, หม้อแปลง) มี \(AD - BC = 1\) · อัตราขยายแรงดันเปิดวงจร \(V_2/V_1 = 1/A\) · พารามิเตอร์ Z และ Y สัมพันธ์กันด้วย \(\mathbf Y = \mathbf Z^{-1}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-6 · ต่อเรียงตัวแบ่งแรงดันสองชั้น</span><h3>แต่ละชั้นคือ \(Z = 10\ \Omega\) อนุกรม ตามด้วย \(Y = 0.05\) S (20 Ω) ขนาน หา ABCD ของหนึ่งชั้นและสองชั้น แล้วหาอัตราขยายแรงดันเมื่อปลายเปิด</h3></div>
+      <ol class="steps">
+        <li><p>หนึ่งชั้น = อนุกรมคูณขนาน (ตามลำดับที่สัญญาณผ่าน) <a class="tag tf" href="#A7">A7</a></p>
+          \[ T = \begin{pmatrix} 1 & 10 \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 0 \\ 0.05 & 1 \end{pmatrix} = \begin{pmatrix} 1.5 & 10 \\ 0.05 & 1 \end{pmatrix} \]</li>
+        <li><p>สองชั้นต่อเรียง = \(T^2\)</p>
+          \[ T^2 = \begin{pmatrix} 1.5(1.5) + 10(0.05) & 1.5(10) + 10(1) \\ 0.05(1.5) + 1(0.05) & 0.05(10) + 1(1) \end{pmatrix} = \begin{pmatrix} 2.75 & 25 \\ 0.125 & 1.5 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">หนึ่งชั้น \(V_2/V_1 = 1/1.5 = 0.667\) (ตรงกับตัวแบ่ง \(20/30\)) · สองชั้น \(1/2.75 = 0.364\) ไม่ใช่ \(0.667^2 = 0.444\) เพราะชั้นที่สองโหลดชั้นแรก เมทริกซ์จัดการผลโหลดให้อัตโนมัติ</p>
+      <p class="check">\(\det T = 1.5 - 0.5 = 1\) และ \(\det T^2 = 4.125 - 3.125 = 1\) ✓ (วงจรส่วนกลับ และสอดคล้องกับ \(\det(AB) = \det A\det B\))</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="sequence">
+    <h2 id="sequence">องค์ประกอบสมมาตรในระบบสามเฟส <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ระบบสามเฟสที่ไม่สมดุล (เช่นเกิดฟอลต์เฟสเดียวลงดิน) แยกเป็นสามระบบสมดุลได้ด้วยการแปลง Fortescue ให้ \(a = 1\angle120^\circ = -\tfrac12 + j\tfrac{\sqrt3}{2}\) ซึ่งมีสมบัติ \(a^3 = 1\) และ \(1 + a + a^2 = 0\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="A8" data-k="symmetrical components fortescue sequence zero positive negative unbalanced fault องค์ประกอบสมมาตร ลำดับศูนย์ ลำดับบวก ลำดับลบ ฟอลต์">
+        <p class="tf-n"><b><span class="fid">A8</span> Symmetrical components (Fortescue)</b> การแปลงองค์ประกอบสมมาตร</p>
+        \[ \begin{pmatrix} V_a \\ V_b \\ V_c \end{pmatrix} = \begin{pmatrix} 1 & 1 & 1 \\ 1 & a^2 & a \\ 1 & a & a^2 \end{pmatrix}\begin{pmatrix} V_0 \\ V_1 \\ V_2 \end{pmatrix}, \qquad \begin{pmatrix} V_0 \\ V_1 \\ V_2 \end{pmatrix} = \frac13\begin{pmatrix} 1 & 1 & 1 \\ 1 & a & a^2 \\ 1 & a^2 & a \end{pmatrix}\begin{pmatrix} V_a \\ V_b \\ V_c \end{pmatrix} \]
+        <p class="tf-x">ใช้ได้ทั้งแรงดันและกระแส · 0 = ลำดับศูนย์ 1 = ลำดับบวก 2 = ลำดับลบ · อินเวอร์สคือสังยุคทรานสโพสหารสาม (\(\tfrac{1}{\sqrt3}\mathbf A\) เป็นยูนิแทรี)</p>
+      </div>
+      <div class="tf wide" id="A12" data-k="circulant impedance matrix eigenvectors diagonalize decouple sequence networks เมทริกซ์วนรอบ แยกวงจรลำดับ">
+        <p class="tf-n"><b><span class="fid">A12</span> Why it works: eigenvectors of the phase-impedance matrix</b> เหตุผลเบื้องหลัง: เวกเตอร์เฉพาะ</p>
+        \[ \mathbf Z_{abc} = \begin{pmatrix} Z_s & Z_m & Z_m \\ Z_m & Z_s & Z_m \\ Z_m & Z_m & Z_s \end{pmatrix} \ \Rightarrow\ \mathbf A^{-1}\mathbf Z_{abc}\mathbf A = \begin{pmatrix} Z_s + 2Z_m & & \\ & Z_s - Z_m & \\ & & Z_s - Z_m \end{pmatrix} \]
+        <p class="tf-x">หลักของ \(\mathbf A\) คือ \((1,1,1)\), \((1, a^2, a)\), \((1, a, a^2)\) เป็นเวกเตอร์เฉพาะของ \(\mathbf Z_{abc}\) พอดี จึงทำเป็นทแยงมุมได้ <a href="/learn/linear-algebra/eigenvalues/#E9">E9</a> ได้อิมพีแดนซ์ลำดับศูนย์ \(Z_0 = Z_s + 2Z_m\) และลำดับบวก/ลบ \(Z_1 = Z_2 = Z_s - Z_m\) วงจรสามเฟสที่ผูกกันจึงแยกเป็นสามวงจรอิสระ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-7 · ฟอลต์เฟสเดียวลงดิน</span><h3>กระแสฟอลต์ \(I_a = 30\angle0^\circ\) A, \(I_b = I_c = 0\) หาองค์ประกอบสมมาตรของกระแส</h3></div>
+      <ol class="steps">
+        <li><p>คูณด้วยเมทริกซ์ผกผัน <a class="tag tf" href="#A8">A8</a></p>
+          \[ \begin{pmatrix} I_0 \\ I_1 \\ I_2 \end{pmatrix} = \frac13\begin{pmatrix} 1 & 1 & 1 \\ 1 & a & a^2 \\ 1 & a^2 & a \end{pmatrix}\begin{pmatrix} 30 \\ 0 \\ 0 \end{pmatrix} = \frac13\begin{pmatrix} 30 \\ 30 \\ 30 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(I_0 = I_1 = I_2 = 10\angle0^\circ\) A นี่คือเหตุผลที่ฟอลต์เฟสเดียวลงดินต่อวงจรลำดับศูนย์ บวก และลบ<strong>อนุกรมกัน</strong> และ \(I_f = 3I_0\)</p>
+      <p class="check">ระบบสมดุลลำดับบวก \(V_a = 100,\ V_b = 100a^2,\ V_c = 100a\) จะได้ \(V_1 = \tfrac13(100 + a\cdot100a^2 + a^2\cdot100a) = 100\) และ \(V_0 = V_2 = 0\) เพราะ \(1 + a + a^2 = 0\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="tsec" aria-labelledby="clarke-park">
+    <h2 id="clarke-park">การแปลงคลาร์กและพาร์ก (ควบคุมมอเตอร์) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>อินเวอร์เตอร์ขับมอเตอร์ทุกตัวที่ใช้การควบคุมแบบ field-oriented (FOC) ทำการแปลงสองขั้นนี้หลายหมื่นครั้งต่อวินาที เพื่อเปลี่ยนสัญญาณไซน์สามเฟสให้กลายเป็นค่าคงที่สองค่าที่ควบคุมด้วย PI ได้ง่าย</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="A9" data-k="clarke park transform alpha beta dq rotation motor control foc คลาร์ก พาร์ก มอเตอร์ หมุน">
+        <p class="tf-n"><b><span class="fid">A9</span> Clarke and Park transforms</b> การแปลงคลาร์ก (abc → αβ) และพาร์ก (αβ → dq)</p>
+        \[ \begin{pmatrix} v_\alpha \\ v_\beta \end{pmatrix} = \frac23\begin{pmatrix} 1 & -\tfrac12 & -\tfrac12 \\ 0 & \tfrac{\sqrt3}{2} & -\tfrac{\sqrt3}{2} \end{pmatrix}\begin{pmatrix} v_a \\ v_b \\ v_c \end{pmatrix}, \qquad \begin{pmatrix} v_d \\ v_q \end{pmatrix} = \begin{pmatrix} \cos\theta & \sin\theta \\ -\sin\theta & \cos\theta \end{pmatrix}\begin{pmatrix} v_\alpha \\ v_\beta \end{pmatrix} \]
+        <p class="tf-x">รูปแบบคงขนาด (amplitude-invariant) · ระบบสมดุล \(v_a = V_m\cos\theta\) จะได้ \(v_\alpha = V_m\cos\theta,\ v_\beta = V_m\sin\theta\) แล้ว \(v_d = V_m,\ v_q = 0\) เป็นค่าคงที่ · เมทริกซ์พาร์กเป็นเชิงตั้งฉาก อินเวอร์สจึงเป็นแค่ทรานสโพส <a href="/learn/linear-algebra/matrices/#M5">M5</a> · รูปแบบคงกำลัง (power-invariant) ใช้ \(\sqrt{2/3}\) แทน \(2/3\) ทำให้เมทริกซ์ 3×3 ทั้งก้อนเป็นเชิงตั้งฉาก</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="tsec" aria-labelledby="ybus">
+    <h2 id="ybus">Y-bus และ Z-bus ในระบบไฟฟ้ากำลัง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A10" data-k="y-bus bus admittance matrix z-bus power flow fault singular ground วายบัส แอดมิตแตนซ์ การไหลของกำลัง">
+        <p class="tf-n"><b><span class="fid">A10</span> Bus admittance matrix</b> เมทริกซ์แอดมิตแตนซ์บัส</p>
+        \[ \mathbf I_{\text{bus}} = \mathbf Y_{\text{bus}}\mathbf V_{\text{bus}}, \qquad Y_{kk} = \sum_{\text{ต่อกับบัส } k} y, \quad Y_{kj} = -y_{kj}, \qquad \mathbf Z_{\text{bus}} = \mathbf Y_{\text{bus}}^{-1} \]
+        <p class="tf-x">คือการวิเคราะห์โนด A2 ด้วยแอดมิตแตนซ์เชิงซ้อน · ระบบจริงมีหลายพันบัสแต่แต่ละบัสต่อกับไม่กี่บัส \(\mathbf Y_{\text{bus}}\) จึงห่างมาก (sparse) · <strong>ถ้าไม่มีกิ่งใดลงกราวด์ ผลรวมแต่ละแถวเป็น 0 \(\mathbf Y_{\text{bus}}\) เอกฐาน หา \(\mathbf Z_{\text{bus}}\) ไม่ได้</strong> · การกำจัดบัสที่ไม่มีโหลด (Kron reduction) คือ Schur complement <a href="/learn/linear-algebra/determinants/#D14">D14</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-8 · สร้าง Y-bus สามบัส</span><h3>สายส่ง \(y_{12} = -j10\), \(y_{13} = -j4\), \(y_{23} = -j5\) pu และเครื่องกำเนิดที่บัส 1 มีแอดมิตแตนซ์ลงกราวด์ \(y_{10} = -j5\) pu เขียน \(\mathbf Y_{\text{bus}}\)</h3></div>
+      <ol class="steps">
+        <li><p>ทแยง = ผลรวมแอดมิตแตนซ์ทุกตัวที่ต่อกับบัส (รวมกิ่งลงกราวด์) <a class="tag tf" href="#A10">A10</a></p>
+          \[ Y_{11} = -j(10 + 4 + 5) = -j19, \quad Y_{22} = -j(10 + 5) = -j15, \quad Y_{33} = -j(4 + 5) = -j9 \]</li>
+        <li><p>นอกทแยง = ลบแอดมิตแตนซ์ระหว่างบัส</p>
+          \[ \mathbf Y_{\text{bus}} = \begin{pmatrix} -j19 & j10 & j4 \\ j10 & -j15 & j5 \\ j4 & j5 & -j9 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">ได้ \(\mathbf Y_{\text{bus}}\) สมมาตร ถ้าตัด \(y_{10}\) ออก แถวที่ 1 จะรวมเป็น \(-j14 + j10 + j4 = 0\) ทุกแถวรวมเป็นศูนย์ เมทริกซ์จะเอกฐานทันที</p>
+    </div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="tsec" aria-labelledby="summary">
+    <h2 id="summary">สรุป: ภาษาเมทริกซ์ ↔ ภาษาวงจร</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ภาษาเมทริกซ์</th><th>ความหมายในวงจร</th></tr></thead>
+        <tbody>
+          <tr><td>\(\det A = 0\)</td><td>เขียนสมการซ้ำ / ขาดกิ่งลงกราวด์ / วงจรลอย ไม่มีคำตอบเดียว</td></tr>
+          <tr><td>\(A\) สมมาตร</td><td>วงจรส่วนกลับ (reciprocal) ไม่มีแหล่งไม่อิสระ</td></tr>
+          <tr><td>\(A\) บวกแน่นอน</td><td>วงจรดูดกลืนพลังงาน (passive) มีคำตอบเดียวเสมอ</td></tr>
+          <tr><td>หลักที่ \(j\) ของ \(A^{-1}\)</td><td>ผลตอบสนองทุกจุดเมื่อมีแหล่งจ่ายหนึ่งหน่วยที่ตำแหน่ง \(j\)</td></tr>
+          <tr><td>\(\Delta(s) = \det(sI - A) = 0\)</td><td>สมการลักษณะเฉพาะ ขั้วของวงจร</td></tr>
+          <tr><td>ค่าเฉพาะจริงลบ / เชิงซ้อน / ส่วนจริงบวก</td><td>หน่วงเกิน / แกว่ง / ไม่เสถียร</td></tr>
+          <tr><td>เวกเตอร์เฉพาะ</td><td>รูปร่างของโหมด (สัดส่วนกระแสและแรงดันในโหมดนั้น)</td></tr>
+          <tr><td>คูณเมทริกซ์ ABCD</td><td>ต่อวงจรเรียงกัน รวมผลโหลดอัตโนมัติ</td></tr>
+          <tr><td>เปลี่ยนฐานให้เป็นทแยงมุม</td><td>แยกระบบที่ผูกกันให้เป็นระบบย่อยอิสระ (องค์ประกอบสมมาตร โหมด)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">ลองกับวงจรของคุณ</h2>
+    <p>เขียนเมทริกซ์จากวงจรด้วยการมอง แล้วใส่ในเครื่องคิดเลขด้านล่าง เลือก “แก้ระบบ” เพื่อหากระแสหรือแรงดัน หรือ “ค่าเฉพาะ” เพื่อดูขั้วของวงจรจากเมทริกซ์สถานะ</p>
+    <div class="mx-calc" data-modes="solve,eig,inv,det" data-mode="solve" data-n="3" data-a="6,-2,0;-2,5,-2;0,-2,4" data-b="40,0,0"></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

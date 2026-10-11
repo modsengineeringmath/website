@@ -69,12 +69,29 @@ export const TOPICS = [
     summary: "ผลคูณจุด ผลคูณไขว้ และแรงที่กระทำต่อตัวนำในสนามแม่เหล็ก",
   },
   {
-    slug: "matrix-determinant",
-    title: "เมทริกซ์และดีเทอร์มิแนนต์",
-    en: "Matrix & Determinant",
+    // A series: hub page at src/pages/learn/linear-algebra/index.html, sub-pages at src/pages/learn/linear-algebra/<sub>.html
+    slug: "linear-algebra",
+    title: "พีชคณิตเชิงเส้น",
+    en: "Linear Algebra",
     sym: "⊞",
-    summary: "แก้ระบบสมการเชิงเส้นด้วยกฎของคราเมอร์ พร้อมตัวอย่างวงจรสองเมช",
+    summary: "เมทริกซ์ ดีเทอร์มิแนนต์ ระบบสมการ อินเวอร์ส กฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ พร้อมโจทย์วงจรไฟฟ้า ตั้งแต่ ม.ปลาย ถึง ป.โท",
     playlist: "PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO",
+    sub: [
+      { slug: "matrices", short: "เมทริกซ์", title: "เมทริกซ์และการดำเนินการ", en: "Matrices & Matrix Operations", sym: "[ ]", prefix: "M",
+        summary: "ชนิดของเมทริกซ์ บวก ลบ คูณ ทรานสโพส เทรซ กำลัง และเมทริกซ์บล็อก พร้อมตัวช่วยดูการคูณทีละช่อง" },
+      { slug: "determinants", short: "ดีเทอร์มิแนนต์", title: "ดีเทอร์มิแนนต์", en: "Determinants", sym: "|A|", prefix: "D",
+        summary: "2×2 ซาร์รัส ไมเนอร์ โคแฟกเตอร์ กระจายลาปลาซ สมบัติตามการดำเนินการแถว ความหมายเชิงพื้นที่ และวิธีลดแถว" },
+      { slug: "linear-systems", short: "ระบบสมการ", title: "ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์", en: "Systems of Linear Equations", sym: "Ax=b", prefix: "L",
+        summary: "เมทริกซ์แต่งเติม การดำเนินการแถว เกาส์ เกาส์-จอร์แดน ลำดับชั้น (rank) คำตอบเดียว ไม่มีคำตอบ อนันต์ LU และกำลังสองน้อยสุด" },
+      { slug: "inverse", short: "อินเวอร์ส", title: "อินเวอร์สของเมทริกซ์", en: "Matrix Inverse", sym: "A⁻¹", prefix: "I",
+        summary: "สูตร 2×2 วิธีแอดจอยต์ วิธีเกาส์-จอร์แดน [A | I] สมบัติ ทฤษฎีบทเมทริกซ์หาอินเวอร์สได้ และการแก้ x = A⁻¹b" },
+      { slug: "cramers-rule", short: "คราเมอร์", title: "กฎของคราเมอร์", en: "Cramer's Rule", sym: "Δᵢ/Δ", prefix: "C",
+        summary: "แก้ระบบสมการทีละตัวแปรด้วยดีเทอร์มิแนนต์ 2×2 และ 3×3 กรณี Δ = 0 จำนวนเชิงซ้อน และตัวแปร s" },
+      { slug: "eigenvalues", short: "ค่าเฉพาะ λ", title: "ค่าเฉพาะและเวกเตอร์เฉพาะ", en: "Eigenvalues & Eigenvectors", sym: "λ", prefix: "E",
+        summary: "สมการลักษณะเฉพาะ ค่าซ้ำ ค่าเชิงซ้อน การทำให้เป็นเมทริกซ์ทแยงมุม เมทริกซ์สมมาตร เคย์ลีย์-แฮมิลตัน และเมทริกซ์เอกซ์โพเนนเชียล" },
+      { slug: "ee-applications", short: "งานไฟฟ้า", title: "ประยุกต์ในวิศวกรรมไฟฟ้า", en: "Applications in Electrical Engineering", sym: "Ω", prefix: "A",
+        summary: "เมช โนด แหล่งจ่ายไม่อิสระ เฟเซอร์ AC ฟังก์ชันถ่ายโอน ปริภูมิสถานะ RLC สองพอร์ต องค์ประกอบสมมาตร และ Y-bus" },
+    ],
   },
   {
     slug: "laplace-transform",
@@ -174,21 +191,100 @@ function topicCards() {
     <b>${esc(t.title)}</b>
     <span class="tc-en">${esc(t.en)}</span>
     <span class="tc-sum">${esc(t.summary)}</span>
-    <span class="tc-foot"><span class="tc-go">อ่านบทเรียน →</span>${t.playlist ? '<span class="tc-vid">▶ มีวิดีโอ</span>' : ""}</span>
+    <span class="tc-foot"><span class="tc-go">${t.sub ? `${t.sub.length} หน้าย่อย →` : "อ่านบทเรียน →"}</span>${t.playlist ? '<span class="tc-vid">▶ มีวิดีโอ</span>' : ""}</span>
   </a>`
     ).join("") +
     "\n</div>"
   );
 }
 
+// level badges inside headings: <span class="lv lv-b">…</span> (b = basic, i = intermediate, a = advanced)
+const LV_RE = /<span class="lv lv-([bia])"[^>]*>[\s\S]*?<\/span>/g;
 function toc(html) {
   const items = [...html.matchAll(/<h2 id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)];
   if (!items.length) return "";
   return (
     '<nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol>' +
-    items.map(([, id, t]) => `<li><a href="#${id}">${stripTags(t)}</a></li>`).join("") +
+    items.map(([, id, t]) => {
+      const lv = /<span class="lv lv-([bia])"/.exec(t);
+      return `<li><a href="#${id}">${stripTags(t.replace(LV_RE, ""))}${lv ? `<i class="toc-lv lv-${lv[1]}" aria-hidden="true"></i>` : ""}</a></li>`;
+    }).join("") +
     "</ol></details></nav>"
   );
+}
+
+// ---------------------------------------------------------------------------
+// Series (a topic with sub-pages, e.g. linear algebra)
+// ---------------------------------------------------------------------------
+const seriesUrl = (t, s) => `/learn/${t.slug}/${s ? s.slug + "/" : ""}`;
+
+function seriesNav(t, cur) {
+  const items = [{ short: "ภาพรวม", slug: null }, ...t.sub];
+  return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}"><span class="sn-title mono">${esc(t.en)}</span><div class="sn-list">` +
+    items.map((s, i) => `<a href="${seriesUrl(t, s.slug ? s : null)}"${(cur ? cur.slug : null) === s.slug ? ' aria-current="page"' : ""}><span class="sn-n">${i}</span>${esc(s.short)}</a>`).join("") +
+    "</div></nav>";
+}
+
+function seriesCards(t) {
+  return '<div class="la-cards">' + t.sub.map((s, i) => `
+  <a class="la-card" href="${seriesUrl(t, s)}">
+    <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${t.slug === "linear-algebra" ? "5." : ""}${i + 1}</span></span>
+    <b>${esc(s.title)}</b>
+    <span class="tc-en">${esc(s.en)}</span>
+    <span class="tc-sum">${esc(s.summary)}</span>
+    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">สูตร ${s.prefix}1, ${s.prefix}2, …</span></span>
+  </a>`).join("") + "\n</div>";
+}
+
+function seriesPager(t, s) {
+  const i = t.sub.indexOf(s), prev = t.sub[i - 1], next = t.sub[i + 1];
+  const ti = TOPICS.indexOf(t), nextTopic = TOPICS[ti + 1];
+  const a = (href, dir, label, title) => `<a class="pager-${dir}" href="${href}"><span class="mono">${label}</span><b>${esc(title)}</b></a>`;
+  return `<nav class="pager" aria-label="หน้าถัดไป">${
+    prev ? a(seriesUrl(t, prev), "prev", "← หน้าก่อนหน้า", prev.title) : a(seriesUrl(t), "prev", "← ภาพรวม", t.title)
+  }${
+    next ? a(seriesUrl(t, next), "next", "หน้าถัดไป →", next.title) : nextTopic ? a(`/learn/${nextTopic.slug}/`, "next", "บทถัดไป →", nextTopic.title) : a("/learn/", "next", "ไปต่อ →", "คลังความรู้ทั้งหมด")
+  }</nav>`;
+}
+
+// number of formula cards (id="X1") or worked examples (class="wx") across a series' sub-pages
+function seriesCount(t, kind) {
+  return t.sub.reduce((n, s) => {
+    const file = path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
+    if (!fs.existsSync(file)) return n;
+    const src = fs.readFileSync(file, "utf8");
+    return n + (src.match(kind === "formula" ? /<div class="tf[^"]*" id="[A-Z]\d+[a-z]?"/g : /<div class="wx"/g) || []).length;
+  }, 0);
+}
+
+// Formula index for a series: every <div class="tf…" id="X1" data-k="…"> card on its sub-pages, with its first display formula.
+// Card format: <div class="tf" id="M9" data-k="keywords"><p class="tf-n"><b><span class="fid">M9</span> English</b> ไทย</p> \[ … \]
+function formulaIndex(t) {
+  const out = [];
+  t.sub.forEach((s) => {
+    const file = path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
+    if (!fs.existsSync(file)) return;
+    const src = fs.readFileSync(file, "utf8");
+    const re = /<div class="tf[^"]*" id="([A-Z]\d+[a-z]?)" data-k="([^"]*)">\s*<p class="tf-n"><b><span class="fid">[^<]*<\/span>\s*([\s\S]*?)<\/b>([\s\S]*?)<\/p>\s*(\\\[[\s\S]*?\\\])?/g;
+    let m;
+    while ((m = re.exec(src))) {
+      const [, id, keys, en, th, tex] = m;
+      out.push({ id, keys, en: en.trim(), th: stripTags(th), tex: tex || "", s });
+    }
+  });
+  const hay = (f) => (f.id + " " + f.keys + " " + stripTags(f.en) + " " + f.th + " " + f.s.short + " " + f.tex.replace(/\\[[\]()]/g, " ").replace(/\\([a-zA-Z]+)/g, " $1 ")).toLowerCase().replace(/"/g, "").replace(/\s+/g, " ");
+  return `<div class="fx-index" id="fxIndex">
+  <div class="tf-filter fx-tools" role="search">
+    <label for="fxFilter">ค้นหาสูตร</label>
+    <input id="fxFilter" type="search" placeholder="พิมพ์ เช่น inverse, det, eigen, คราเมอร์, ทรานสโพส, rank, 2x2" autocomplete="off">
+    <span class="tf-count mono" id="fxCount" aria-live="polite">ทั้งหมด ${out.length} สูตร</span>
+  </div>
+  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${t.sub.map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug}">${s.prefix} · ${esc(s.short)}</button>`).join("")}</div>
+  <ol class="fx-list">
+${out.map((f) => `    <li class="fx" data-p="${f.s.slug}" data-k="${esc(hay(f))}"><a class="fx-h" href="${seriesUrl(t, f.s)}#${f.id}"><span class="fid">${f.id}</span><b>${f.en}</b><span class="fx-th">${esc(f.th)}</span></a>${f.tex ? `<div class="fx-f">${f.tex}</div>` : ""}</li>`).join("\n")}
+  </ol>
+  <p class="fx-empty" id="fxEmpty" hidden>ไม่พบสูตรที่ตรงกัน ลองพิมพ์คำอื่น หรือใช้ภาษาอังกฤษ เช่น inverse, determinant, eigenvalue</p>
+</div>`;
 }
 
 function faqHtml(faq) {
@@ -272,7 +368,13 @@ function feedHtml(data) {
 // ---------------------------------------------------------------------------
 // Structured data
 // ---------------------------------------------------------------------------
-function lessonSchema(meta, url, topic, ogImageUrl) {
+function lessonSchema(meta, url, topic, ogImageUrl, sub) {
+  const crumbs = [
+    { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
+    { "@type": "ListItem", position: 2, name: "คลังความรู้", item: SITE + "/learn/" },
+    { "@type": "ListItem", position: 3, name: topic.title, item: SITE + `/learn/${topic.slug}/` },
+  ];
+  if (sub) crumbs.push({ "@type": "ListItem", position: 4, name: sub.title, item: url });
   const graph = [
     {
       "@type": "Article",
@@ -286,20 +388,14 @@ function lessonSchema(meta, url, topic, ogImageUrl) {
       dateModified: meta.updated || TODAY,
       author: { "@id": PERSON_ID },
       publisher: { "@id": PERSON_ID },
-      about: meta.about || [topic.en],
-      isPartOf: { "@id": `${SITE}/learn/#library` },
+      about: meta.about || [sub ? sub.en : topic.en],
+      isPartOf: sub ? { "@id": SITE + `/learn/${topic.slug}/#article` } : { "@id": `${SITE}/learn/#library` },
+      ...(!sub && topic.sub ? { hasPart: topic.sub.map((s) => ({ "@id": SITE + seriesUrl(topic, s) + "#article" })) } : {}),
       image: [ogImageUrl],
-      educationalLevel: "Undergraduate",
+      educationalLevel: meta.level || "Undergraduate",
       ...(topic.playlist ? { citation: `https://www.youtube.com/playlist?list=${topic.playlist}` } : {}),
     },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
-        { "@type": "ListItem", position: 2, name: "คลังความรู้", item: SITE + "/learn/" },
-        { "@type": "ListItem", position: 3, name: topic.title, item: url },
-      ],
-    },
+    { "@type": "BreadcrumbList", itemListElement: crumbs },
   ];
   if (meta.faq?.length) {
     graph.push({
@@ -347,7 +443,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -386,18 +482,21 @@ for (const file of walk(pagesDir)) {
   const url = SITE + route;
   const topic = meta.lesson ? TOPICS.find((t) => t.slug === meta.lesson) : null;
   if (meta.lesson && !topic) throw new Error(`Unknown lesson slug "${meta.lesson}" in ${rel}`);
+  const sub = meta.sub ? topic?.sub?.find((s) => s.slug === meta.sub) : null;
+  if (meta.sub && !sub) throw new Error(`Unknown sub-page "${meta.sub}" in ${rel}`);
   const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   const ogFile = `/images/og/${key}.jpg`;
   const ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
   if (!meta.noindex) {
     const og = meta.og || {};
     const n = topic ? TOPICS.indexOf(topic) + 1 : 0;
+    const k = sub ? topic.sub.indexOf(sub) + 1 : 0;
     ogManifest.push({
       key,
-      title: og.title || (topic ? topic.title : meta.h1 || meta.title),
-      sub: og.sub || (topic ? topic.summary : meta.description),
-      eyebrow: og.eyebrow || (topic ? `บทที่ ${n} · ${topic.en}` : "Mod's Engineering Mathematics"),
-      sym: og.sym || (topic ? topic.sym : "∿"),
+      title: og.title || (sub ? sub.title : topic ? topic.title : meta.h1 || meta.title),
+      sub: og.sub || (sub ? sub.summary : topic ? topic.summary : meta.description),
+      eyebrow: og.eyebrow || (sub ? `บทที่ ${n}.${k} · ${sub.en}` : topic ? `บทที่ ${n} · ${topic.en}` : "Mod's Engineering Mathematics"),
+      sym: og.sym || (sub ? sub.sym : topic ? topic.sym : "∿"),
     });
   }
 
@@ -406,12 +505,17 @@ for (const file of walk(pagesDir)) {
     "<!--trig-table-->": () => trigTable(),
     "<!--faq-->": () => faqHtml(meta.faq),
     "<!--video-->": () => videoFacade(topic),
-    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title) + pager(topic.slug) : ""),
+    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) : ""),
+    "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
     "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
+  // <!--series-cards:slug--> and <!--formula-index:slug--> can be used on any page (hub, home)
+  body = body.replace(/<!--series-cards:([\w-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
+  body = body.replace(/<!--formula-index:([\w-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
+  body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
   if (!meta.noindex && !meta.noLlms)
     fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text: htmlToText(body), faq: meta.faq || [] });
   const tocHtml = toc(body);
@@ -419,7 +523,7 @@ for (const file of walk(pagesDir)) {
   body = renderMath(body, rel);
 
   let graph = [...(meta.jsonld || [])];
-  if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage));
+  if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
   const jsonld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`
     : "";
@@ -469,6 +573,8 @@ fs.writeFileSync(
 
 // llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
 const LABS = [
+  ["Linear algebra formula index & matrix calculator", "linear-algebra", "every matrix, determinant, linear-system, inverse, Cramer and eigenvalue formula with a citable ID (M1…, D1…, L1…, I1…, C1…, E1…, A1…) in one searchable list; exact-fraction calculator for determinant, inverse, Gauss–Jordan / Cramer solutions and eigenvalues/eigenvectors with step-by-step working"],
+  ["2×2 transformation & eigenvector lab", "linear-algebra/eigenvalues", "drag a 2×2 matrix's columns: grid and unit circle transform, determinant as signed area, eigen-directions and Av vs v shown live"],
   ["Integral calculus formulas & worked solutions", "integral-calculus", "every basic and standard integral with international names (power rule, linearity, u-substitution, integration by parts, partial fractions, FTC, definite-integral properties); step-by-step lecture-style solutions with highlighted formulas, red cancellations and polynomial long division; Riemann-sum visualiser"],
   ["Trigonometry formulas & table", "trigonometry", "interactive unit circle; 91 identities with English and Thai names; sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians (1,801 rows) with angle and inverse lookup"],
   ["First-order system lab", "first-order-system", "time-constant simulator: step/impulse/ramp/sine input, RC and RL circuits, log view, s-plane, Bode plot"],
@@ -486,7 +592,7 @@ The site teaches mathematics the way an electrical engineer uses it: every lesso
 When citing, please name "Mod's Engineering Mathematics (อาจารย์มด)" and link the page URL.
 
 ## Lessons (reading order)
-${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}`).join("\n")}
+${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}` + (t.sub ? "\n" + t.sub.map((s) => `  - [${s.en} — ${s.title}](${SITE}${seriesUrl(t, s)}): ${s.summary}`).join("\n") : "")).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug}/): ${d}`).join("\n")}

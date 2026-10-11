@@ -29,3 +29,18 @@ The new page appears in the library, on the home page, in the prev/next links, s
 
 ## Lecture-style math markup (integral page and future lessons)
 Inside `\( \)` / `\[ \]` you can use: `\hlF{..}` formula used (amber), `\hlP{..}` property used (blue), `\hlU{..}` u-substitution (green), `\hlC{..}` constant C (purple), `\rc{..}` red strike-through, `\carry{2}{6}` strike 6 and write 2 above in red. Worked examples use `<div class="wx">` with `<ol class="steps">`; formula cards use ids (F2, P1, Q11…) so `<a class="tag tf" href="#F2">` links back to them. Polynomial long division uses the `.ldiv` grid (see `src/pages/learn/integral-calculus.html`).
+
+## Linear algebra series (added 2026-10-12)
+A topic can have sub-pages. `linear-algebra` in `TOPICS` (build.mjs) has a `sub` list; the hub is
+`src/pages/learn/linear-algebra/index.html` and each sub-page is `src/pages/learn/linear-algebra/<sub>.html`
+with `"lesson": "linear-algebra", "sub": "<sub>"` in its meta block. The build adds the series strip
+(`<!--series-nav-->`), prev/next within the series, breadcrumbs and llms.txt entries.
+- Formula cards: `<div class="tf" id="M10" data-k="keywords"><p class="tf-n"><b><span class="fid">M10</span> English</b> ไทย</p> \[ … \]`.
+  IDs are permanent and citable (M matrices, D determinants, L systems, I inverse, C Cramer, E eigen, A applications).
+  Every card is collected into the searchable index on the hub (`<!--formula-index:linear-algebra-->`).
+- Level badge in a heading: `<span class="lv lv-b">พื้นฐาน</span>` (`lv-i` กลาง, `lv-a` ขั้นสูง).
+- Interactive parts live in `assets/linalg.js`: `<div class="mx-calc" data-modes="solve,det,inv,eig" data-mode="det" data-n="3" data-a="1,2;3,4" data-b="5,6">`
+  (exact-fraction calculator with steps), `<div class="la-lab" data-mode="det|eig" data-m="a,b;c,d">` (2×2 lab),
+  `<div class="mx-prod" data-a=… data-b=…>` (product explainer). A button `<button class="wx-btn calc-go" data-calc="mode=inv&amp;A=…">`
+  inside a worked example fills the page's calculator.
+- Old URL `/learn/matrix-determinant/` redirects to `/learn/linear-algebra/` (`_redirects`).

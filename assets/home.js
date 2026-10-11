@@ -54,7 +54,7 @@
 
   /* ---------- playlists ---------- */
   var PL = [
-    { id: "PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO", en: "Matrix & Determinant", th: "ตัวกำหนด ดีเทอร์มิแนนต์ และเมทริกซ์", eq: "Ax = b  ⇒  x = A⁻¹b", sub: "สำหรับการแก้ระบบสมการเชิงเส้น", lesson: "/learn/matrix-determinant/" },
+    { id: "PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO", en: "Matrix & Determinant", th: "ตัวกำหนด ดีเทอร์มิแนนต์ และเมทริกซ์", eq: "Ax = b  ⇒  x = A⁻¹b", sub: "สำหรับการแก้ระบบสมการเชิงเส้น", lesson: "/learn/linear-algebra/" },
     { id: "PLAJhR5azwWpLgWalcHsCEE8q_bPJv0Eaa", en: "Laplace Transform", th: "การแปลงลาปลาซ", eq: "F(s) = ∫₀^∞ f(t) e^{−st} dt", sub: "Laplace และ Inverse Laplace สำหรับแก้สมการเชิงอนุพันธ์", lesson: "/learn/laplace-transform/" },
     { id: "PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka", en: "Feedback Control", th: "การควบคุมป้อนกลับ", eq: "T(s) = G(s) / (1 + G(s)H(s))", sub: "ระบบควบคุมแบบป้อนกลับและข้อดีของการป้อนกลับ" },
     { id: "PLAJhR5azwWpJEprWclikULegqCgddv0PF", en: "Buck Converter", th: "อิเล็กทรอนิกส์กำลัง วงจรบั๊กคอนเวอร์เตอร์", eq: "V_o = D · V_in", sub: "Power Electronics: วงจรแปลงแรงดัน DC-DC" }

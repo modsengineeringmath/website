@@ -1,0 +1,300 @@
+<!--meta
+{
+  "title": "อินเวอร์สของเมทริกซ์ (Inverse Matrix): สูตร 2×2 วิธีแอดจอยต์ และเกาส์-จอร์แดน 3×3 | อาจารย์มด",
+  "h1": "อินเวอร์สของเมทริกซ์ (Matrix Inverse): วิธีหาและสมบัติ",
+  "description": "วิธีหาอินเวอร์สของเมทริกซ์ครบทุกวิธี สูตรลัด 2×2 วิธีเมทริกซ์ผูกพัน (adjoint/adjugate) จากโคแฟกเตอร์ วิธีเกาส์-จอร์แดน [A | I] สมบัติของอินเวอร์ส ทฤษฎีบทเมทริกซ์หาอินเวอร์สได้ การแก้ x = A⁻¹b สมการเมทริกซ์ AX = B และสูตรขั้นสูง Sherman–Morrison อินเวอร์สเทียม พร้อมตัวอย่างวงจร",
+  "ogTitle": "อินเวอร์สของเมทริกซ์: 2×2 แอดจอยต์ เกาส์-จอร์แดน และสมบัติครบ",
+  "lesson": "linear-algebra",
+  "sub": "inverse",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["Inverse matrix", "Adjugate matrix", "Cofactor matrix", "Gauss–Jordan elimination", "Invertible matrix theorem", "Sherman–Morrison formula", "Moore–Penrose pseudoinverse", "Nodal analysis"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "เมทริกซ์แบบไหนไม่มีอินเวอร์ส?", "a": "เมทริกซ์ที่ไม่จัตุรัส และเมทริกซ์จัตุรัสที่ \\(\\det A = 0\\) (เมทริกซ์เอกฐาน) เช่นมีแถวหนึ่งเป็นพหุคูณหรือผลรวมของแถวอื่น ในวิธีเกาส์-จอร์แดนจะเห็นแถวศูนย์โผล่ในครึ่งซ้าย ทำให้เป็น \\(I\\) ไม่ได้"},
+    {"q": "ทำไม (AB)⁻¹ = B⁻¹A⁻¹ ไม่ใช่ A⁻¹B⁻¹?", "a": "เพราะต้องย้อนลำดับการกระทำ ตรวจได้จาก \\((AB)(B^{-1}A^{-1}) = A(BB^{-1})A^{-1} = AIA^{-1} = I\\) ถ้าสลับเป็น \\(A^{-1}B^{-1}\\) จะได้ \\(ABA^{-1}B^{-1}\\) ซึ่งไม่เท่ากับ \\(I\\) โดยทั่วไป"},
+    {"q": "วิธีแอดจอยต์กับเกาส์-จอร์แดนใช้วิธีไหนดี?", "a": "2×2 ใช้สูตรลัด 3×3 ใช้ได้ทั้งสองวิธี แอดจอยต์เป็นระบบตายตัวต้องคำนวณดีเทอร์มิแนนต์ย่อย 9 ตัว เกาส์-จอร์แดนเร็วกว่าเมื่อเมทริกซ์มีศูนย์หรือมีเลข 1 ให้ใช้เป็นตัวหลัก ตั้งแต่ 4×4 ขึ้นไปใช้เกาส์-จอร์แดนเสมอ"},
+    {"q": "แก้ระบบสมการควรหาอินเวอร์สก่อนไหม?", "a": "ถ้าแก้ครั้งเดียว ลดแถวตรง ๆ เร็วกว่า แต่ถ้าเมทริกซ์ A เดิมแต่ค่าทางขวาเปลี่ยนหลายครั้ง เช่นวงจรเดิมที่เปลี่ยนแหล่งจ่าย หาอินเวอร์ส (หรือแยก LU) ครั้งเดียวแล้วคูณซ้ำจะคุ้มกว่า และหลักของ A⁻¹ ยังมีความหมายทางวงจรด้วย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>อินเวอร์ส</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.4 · พีชคณิตเชิงเส้น · Matrix Inverse</p>
+      <h1>อินเวอร์สของเมทริกซ์ (Matrix Inverse): วิธีหาและสมบัติ</h1>
+      <p class="lede">เมทริกซ์ไม่มีการหาร แต่มีอินเวอร์สทำหน้าที่แทน ถ้า \(A\mathbf x = \mathbf b\) และ \(A\) มีอินเวอร์ส คำตอบคือ \(\mathbf x = A^{-1}\mathbf b\) หน้านี้รวมสามวิธีหาอินเวอร์ส สมบัติที่ต้องจำ และสูตรขั้นสูงที่วิศวกรใช้เมื่อวงจรเปลี่ยนไปเพียงเล็กน้อย สูตรใช้รหัส I</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#two">สูตร 2×2</a>
+        <a class="btn btn-ghost btn-sm" href="#adjugate">วิธีแอดจอยต์</a>
+        <a class="btn btn-ghost btn-sm" href="#gauss-jordan">เกาส์-จอร์แดน</a>
+        <a class="btn btn-ghost btn-sm" href="#properties">สมบัติ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(AA^{-1} = A^{-1}A = I\) มีได้เฉพาะเมทริกซ์จัตุรัสที่ \(\det A \ne 0\)</li>
+          <li>2×2: สลับทแยงหลัก เปลี่ยนเครื่องหมายทแยงรอง หารด้วย \(\det\)</li>
+          <li>n×n: \(A^{-1} = \dfrac{\operatorname{adj}A}{\det A}\) หรือลดแถว \([A\mid I] \to [I\mid A^{-1}]\)</li>
+          <li>\((AB)^{-1} = B^{-1}A^{-1}\) และ \(\mathbf x = A^{-1}\mathbf b\) (คูณทางซ้ายเสมอ)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ"><b class="mono">อ่านวิธีทำ</b><span><i class="lg-p"></i>ตัวหลัก (pivot)</span><span><i class="lg-f"></i>ค่าที่กำลังเปลี่ยน · สูตรที่ใช้</span><span><i class="lg-u"></i>คำตอบ</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น 2x2, adjoint, adj, (AB)^-1, orthogonal, pseudo" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">อินเวอร์สคืออะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สำหรับตัวเลข \(a \ne 0\) มี \(a^{-1} = 1/a\) ที่ทำให้ \(a\cdot a^{-1} = 1\) เมทริกซ์ก็เช่นกัน อินเวอร์ส (inverse, เมทริกซ์ผกผัน) คือเมทริกซ์ที่คูณแล้วได้ \(I\) เชิงเรขาคณิตคือการแปลงที่ “ย้อนกลับ” การแปลงของ \(A\) ซึ่งทำได้ก็ต่อเมื่อ \(A\) ไม่ได้บีบพื้นที่จนแบน (\(\det A \ne 0\))</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="I1" data-k="definition inverse invertible nonsingular นิยาม อินเวอร์ส ผกผัน มีอินเวอร์ส">
+        <p class="tf-n"><b><span class="fid">I1</span> Definition of the inverse</b> นิยามอินเวอร์ส</p>
+        \[ AA^{-1} = A^{-1}A = I, \qquad A^{-1} \text{ มีจริง} \iff \det A \ne 0 \]
+        <p class="tf-x">ใช้ได้เฉพาะเมทริกซ์จัตุรัส · ถ้ามีอินเวอร์ส มีได้ตัวเดียว (unique) · เรียก \(A\) ว่า invertible หรือ nonsingular ส่วน \(\det A = 0\) เรียก singular (เอกฐาน) · \(A^{-1}\) ไม่ได้แปลว่า \(1/a_{ij}\) ทีละช่อง</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="two">
+    <h2 id="two">สูตรลัด 2×2 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="I2" data-k="2x2 inverse formula swap negate divide สองคูณสอง สูตรลัด">
+        <p class="tf-n"><b><span class="fid">I2</span> 2×2 inverse</b> อินเวอร์ส 2×2</p>
+        \[ \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} \hlF{d} & \hlP{-b} \\ \hlP{-c} & \hlF{a} \end{pmatrix}, \qquad ad - bc \ne 0 \]
+        <p class="tf-x">จำสามคำ: <b>สลับ</b> \(a\) กับ \(d\) · <b>เปลี่ยนเครื่องหมาย</b> \(b\) กับ \(c\) · <b>หาร</b>ด้วยดีเทอร์มิแนนต์</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-1 · อินเวอร์ส 2×2</span><h3>หา \(A^{-1}\) เมื่อ \(A = \begin{pmatrix} 4 & 7 \\ 2 & 6 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=inv&amp;A=4,7;2,6">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>หาดีเทอร์มิแนนต์ก่อนเสมอ ถ้าเป็นศูนย์หยุดได้เลย <a class="tag tf" href="/learn/linear-algebra/determinants/#D1">D1</a></p>
+          \[ \det A = (4)(6) - (7)(2) = 24 - 14 = 10 \ne 0 \]</li>
+        <li><p>สลับ เปลี่ยนเครื่องหมาย หาร <a class="tag tf" href="#I2">I2</a></p>
+          \[ A^{-1} = \frac{1}{10}\begin{pmatrix} \hlF{6} & \hlP{-7} \\ \hlP{-2} & \hlF{4} \end{pmatrix} = \begin{pmatrix} 0.6 & -0.7 \\ -0.2 & 0.4 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(A^{-1} = \dfrac{1}{10}\begin{pmatrix} 6 & -7 \\ -2 & 4 \end{pmatrix}\)</p>
+      <p class="check">ตรวจ: \(\begin{pmatrix} 4 & 7 \\ 2 & 6 \end{pmatrix}\begin{pmatrix} 0.6 & -0.7 \\ -0.2 & 0.4 \end{pmatrix} = \begin{pmatrix} 2.4 - 1.4 & -2.8 + 2.8 \\ 1.2 - 1.2 & -1.4 + 2.4 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="adjugate">
+    <h2 id="adjugate">วิธีเมทริกซ์ผูกพัน (Adjugate / Adjoint) <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <p>หาโคแฟกเตอร์ทุกตัว (ทบทวน <a href="/learn/linear-algebra/determinants/#D3">D3</a>) เรียงเป็นเมทริกซ์โคแฟกเตอร์ แล้วทรานสโพส ได้เมทริกซ์ผูกพัน \(\operatorname{adj}A\) (ตำราเก่าเรียก adjoint) จากนั้นหารด้วยดีเทอร์มิแนนต์ สูตร 2×2 ข้างบนก็คือกรณีพิเศษของวิธีนี้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="I3" data-k="adjugate adjoint cofactor matrix transpose adj แอดจอยต์ ผูกพัน โคแฟกเตอร์">
+        <p class="tf-n"><b><span class="fid">I3</span> Adjugate formula</b> สูตรเมทริกซ์ผูกพัน</p>
+        \[ \operatorname{adj}A = C^T = [C_{ji}], \qquad A^{-1} = \frac{1}{\det A}\operatorname{adj}A, \qquad A\operatorname{adj}A = (\det A)\,I \]
+        <p class="tf-x">\(C = [C_{ij}]\) คือเมทริกซ์โคแฟกเตอร์ · <strong>อย่าลืมทรานสโพส</strong> ซึ่งเป็นจุดที่ผิดบ่อยที่สุด · ตรวจ \(\det A\) ได้ฟรีจากแถวแรก: \(\det A = a_{11}C_{11} + a_{12}C_{12} + a_{13}C_{13}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-2 · อินเวอร์ส 3×3 ด้วยแอดจอยต์</span><h3>หา \(A^{-1}\) เมื่อ \(A = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{pmatrix}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=inv&amp;A=1,2,3;0,1,4;5,6,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>โคแฟกเตอร์แถว 1 (เครื่องหมาย \(+,-,+\)) <a class="tag tf" href="/learn/linear-algebra/determinants/#D3">D3</a></p>
+          \[ C_{11} = +\begin{vmatrix} 1 & 4 \\ 6 & 0 \end{vmatrix} = -24, \quad C_{12} = -\begin{vmatrix} 0 & 4 \\ 5 & 0 \end{vmatrix} = 20, \quad C_{13} = +\begin{vmatrix} 0 & 1 \\ 5 & 6 \end{vmatrix} = -5 \]</li>
+        <li><p>ได้ \(\det A\) ทันทีจากแถว 1</p>
+          \[ \det A = (1)(-24) + (2)(20) + (3)(-5) = -24 + 40 - 15 = 1 \]</li>
+        <li><p>โคแฟกเตอร์แถว 2 (เครื่องหมาย \(-,+,-\)) และแถว 3 (\(+,-,+\))</p>
+          \[ \begin{aligned} C_{21} &= -\begin{vmatrix} 2 & 3 \\ 6 & 0 \end{vmatrix} = 18, & C_{22} &= +\begin{vmatrix} 1 & 3 \\ 5 & 0 \end{vmatrix} = -15, & C_{23} &= -\begin{vmatrix} 1 & 2 \\ 5 & 6 \end{vmatrix} = 4 \\ C_{31} &= +\begin{vmatrix} 2 & 3 \\ 1 & 4 \end{vmatrix} = 5, & C_{32} &= -\begin{vmatrix} 1 & 3 \\ 0 & 4 \end{vmatrix} = -4, & C_{33} &= +\begin{vmatrix} 1 & 2 \\ 0 & 1 \end{vmatrix} = 1 \end{aligned} \]</li>
+        <li><p>เรียงเป็นเมทริกซ์โคแฟกเตอร์แล้ว<strong>ทรานสโพส</strong> <a class="tag tf" href="#I3">I3</a></p>
+          \[ C = \begin{pmatrix} -24 & 20 & -5 \\ 18 & -15 & 4 \\ 5 & -4 & 1 \end{pmatrix} \ \xrightarrow{\ T\ }\ \operatorname{adj}A = \begin{pmatrix} -24 & 18 & 5 \\ 20 & -15 & -4 \\ -5 & 4 & 1 \end{pmatrix} \]</li>
+        <li>\[ A^{-1} = \frac{1}{\det A}\operatorname{adj}A = \frac{1}{1}\operatorname{adj}A \]</li>
+      </ol>
+      <p class="answer">\(A^{-1} = \begin{pmatrix} -24 & 18 & 5 \\ 20 & -15 & -4 \\ -5 & 4 & 1 \end{pmatrix}\)</p>
+      <p class="check">ตรวจแถว 1 ของ \(A\) คูณหลัก 1 ของ \(A^{-1}\): \((1)(-24) + (2)(20) + (3)(-5) = 1\) ✓ และแถว 1 คูณหลัก 2: \(18 - 30 + 12 = 0\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="gauss-jordan">
+    <h2 id="gauss-jordan">วิธีเกาส์-จอร์แดน [A | I] <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <p>วาง \(I\) ไว้ข้าง \(A\) แล้วลดแถวทั้งก้อนจนด้านซ้ายกลายเป็น \(I\) ด้านขวาจะเป็น \(A^{-1}\) เอง ถ้าระหว่างทางด้านซ้ายมีแถวศูนย์ แปลว่า \(\det A = 0\) ไม่มีอินเวอร์ส</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="I4" data-k="gauss jordan augmented identity row reduce เกาส์ จอร์แดน ลดแถว A|I">
+        <p class="tf-n"><b><span class="fid">I4</span> Gauss–Jordan inversion</b> หาอินเวอร์สด้วยการลดแถว</p>
+        \[ [\,A \mid I\,] \ \xrightarrow{\text{การดำเนินการตามแถว}}\ [\,I \mid A^{-1}\,] \]
+      </div>
+      <div class="tf wide" id="I7" data-k="elementary matrix why gauss jordan works เมทริกซ์มูลฐาน ทำไม">
+        <p class="tf-n"><b><span class="fid">I7</span> Why it works: elementary matrices</b> ทำไมวิธีนี้ได้ผล</p>
+        \[ E_k\cdots E_2E_1A = I \ \Rightarrow\ A^{-1} = E_k\cdots E_2E_1 = E_k\cdots E_2E_1\,I \]
+        <p class="tf-x">การดำเนินการแถวแต่ละครั้งเท่ากับคูณทางซ้ายด้วยเมทริกซ์มูลฐาน \(E\) (ได้จากทำการดำเนินการนั้นกับ \(I\)) ทำกับ \(A\) และ \(I\) พร้อมกัน ด้านขวาจึงสะสมผลคูณ \(E_k\cdots E_1\) ซึ่งก็คือ \(A^{-1}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-3 · เมทริกซ์เดิม ด้วยเกาส์-จอร์แดน</span><h3>หา \(A^{-1}\) ของ \(A = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{pmatrix}\) โดยลดแถว \([A\mid I]\)</h3></div>
+      <ol class="steps">
+        <li>\[ \left[\begin{array}{ccc|ccc} \hlP{1} & 2 & 3 & 1 & 0 & 0 \\ 0 & 1 & 4 & 0 & 1 & 0 \\ 5 & 6 & 0 & 0 & 0 & 1 \end{array}\right] \xrightarrow{R_3 \leftarrow R_3 - 5R_1} \left[\begin{array}{ccc|ccc} 1 & 2 & 3 & 1 & 0 & 0 \\ 0 & \hlP{1} & 4 & 0 & 1 & 0 \\ \hlF{0} & \hlF{-4} & \hlF{-15} & \hlF{-5} & \hlF{0} & \hlF{1} \end{array}\right] \]</li>
+        <li>\[ \xrightarrow{R_3 \leftarrow R_3 + 4R_2} \left[\begin{array}{ccc|ccc} 1 & 2 & 3 & 1 & 0 & 0 \\ 0 & 1 & 4 & 0 & 1 & 0 \\ 0 & 0 & \hlP{1} & \hlF{-5} & \hlF{4} & \hlF{1} \end{array}\right] \]
+          <p>ตัวหลักแถว 3 เป็น 1 พอดี (เพราะ \(\det A = 1\)) ไม่ต้องหาร</p></li>
+        <li><p>ล้างเหนือตัวหลักของหลักที่ 3</p>
+          \[ \xrightarrow[R_1 \leftarrow R_1 - 3R_3]{R_2 \leftarrow R_2 - 4R_3} \left[\begin{array}{ccc|ccc} 1 & 2 & 0 & 16 & -12 & -3 \\ 0 & \hlP{1} & 0 & 20 & -15 & -4 \\ 0 & 0 & 1 & -5 & 4 & 1 \end{array}\right] \]</li>
+        <li>\[ \xrightarrow{R_1 \leftarrow R_1 - 2R_2} \left[\begin{array}{ccc|ccc} 1 & 0 & 0 & \hlU{-24} & \hlU{18} & \hlU{5} \\ 0 & 1 & 0 & \hlU{20} & \hlU{-15} & \hlU{-4} \\ 0 & 0 & 1 & \hlU{-5} & \hlU{4} & \hlU{1} \end{array}\right] \]</li>
+      </ol>
+      <p class="answer">ด้านขวาคือ \(A^{-1}\) ตรงกับวิธีแอดจอยต์ทุกตัว ใช้ห้าการดำเนินการแถว เทียบกับดีเทอร์มิแนนต์ 2×2 เก้าตัว</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติของอินเวอร์ส <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="I5" data-k="properties inverse product transpose scalar power สมบัติ อินเวอร์ส ผลคูณ ถุงเท้า รองเท้า (AB)^-1">
+        <p class="tf-n"><b><span class="fid">I5</span> Properties of the inverse</b> สมบัติของอินเวอร์ส</p>
+        \[ \begin{gathered} (A^{-1})^{-1} = A \qquad \hlF{(AB)^{-1} = B^{-1}A^{-1}} \qquad (A^T)^{-1} = (A^{-1})^T \\ (kA)^{-1} = \tfrac1k A^{-1}\ (k \ne 0) \qquad (A^k)^{-1} = (A^{-1})^k \qquad \det(A^{-1}) = \frac{1}{\det A} \end{gathered} \]
+        <p class="tf-x">กฎถุงเท้า-รองเท้า: ใส่ถุงเท้า (B) แล้วใส่รองเท้า (A) ตอนถอดต้องถอดรองเท้าก่อน · <strong>ไม่มีสูตร</strong> \((A + B)^{-1}\) แบบง่าย</p>
+      </div>
+      <div class="tf wide" id="I6" data-k="special inverses diagonal orthogonal triangular block diagonal ทแยงมุม เชิงตั้งฉาก สามเหลี่ยม">
+        <p class="tf-n"><b><span class="fid">I6</span> Inverses you can write immediately</b> อินเวอร์สที่เขียนได้ทันที</p>
+        \[ \begin{gathered} \operatorname{diag}(d_1, \dots, d_n)^{-1} = \operatorname{diag}\!\left(\tfrac{1}{d_1}, \dots, \tfrac{1}{d_n}\right) \qquad Q^{-1} = Q^T \ (\text{เชิงตั้งฉาก}) \\ \begin{pmatrix} A & O \\ O & D \end{pmatrix}^{-1} = \begin{pmatrix} A^{-1} & O \\ O & D^{-1} \end{pmatrix} \qquad \begin{pmatrix} 1 & k \\ 0 & 1 \end{pmatrix}^{-1} = \begin{pmatrix} 1 & -k \\ 0 & 1 \end{pmatrix} \end{gathered} \]
+        <p class="tf-x">อินเวอร์สของสามเหลี่ยมบน (ล่าง) ยังเป็นสามเหลี่ยมบน (ล่าง) · เมทริกซ์หมุน \(R(\theta)^{-1} = R(-\theta) = R(\theta)^T\)</p>
+      </div>
+      <div class="tf wide" id="I10" data-k="invertible matrix theorem equivalent conditions det rank pivot independent columns eigenvalue zero ทฤษฎีบท เงื่อนไขสมมูล">
+        <p class="tf-n"><b><span class="fid">I10</span> Invertible matrix theorem</b> ทฤษฎีบทเมทริกซ์หาอินเวอร์สได้ (สำหรับ \(A\) ขนาด \(n\times n\) ข้อความต่อไปนี้สมมูลกัน)</p>
+        \[ \begin{gathered} A^{-1} \text{ มีจริง} \iff \det A \ne 0 \iff \operatorname{rank}A = n \iff \operatorname{RREF}(A) = I \\ \iff A\mathbf x = \mathbf 0 \text{ มีแต่คำตอบ } \mathbf 0 \iff A\mathbf x = \mathbf b \text{ มีคำตอบเดียวทุก } \mathbf b \\ \iff \text{หลัก (แถว) ของ } A \text{ อิสระเชิงเส้น} \iff 0 \text{ ไม่เป็นค่าเฉพาะของ } A \end{gathered} \]
+        <p class="tf-x">รู้ข้อเดียวรู้ทั้งหมด เช่น ถ้าเห็นค่าเฉพาะเป็นศูนย์ ก็รู้ทันทีว่าไม่มีอินเวอร์สและระบบไม่มีคำตอบเดียว</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="solving">
+    <h2 id="solving">แก้ระบบและสมการเมทริกซ์ด้วยอินเวอร์ส <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="I8" data-k="solve system x = A^-1 b แก้ระบบ คูณอินเวอร์ส">
+        <p class="tf-n"><b><span class="fid">I8</span> Solving with the inverse</b> แก้ระบบด้วยอินเวอร์ส</p>
+        \[ A\mathbf x = \mathbf b \ \Rightarrow\ \mathbf x = A^{-1}\mathbf b \]
+        <p class="tf-x">คูณ \(A^{-1}\) <strong>ทางซ้าย</strong>ทั้งสองข้าง ไม่ใช่ \(\mathbf bA^{-1}\) (ขนาดไม่เข้ากัน)</p>
+      </div>
+      <div class="tf" id="I9" data-k="matrix equation AX=B XA=B order left right สมการเมทริกซ์ ซ้าย ขวา">
+        <p class="tf-n"><b><span class="fid">I9</span> Matrix equations</b> สมการเมทริกซ์</p>
+        \[ AX = B \Rightarrow X = A^{-1}B, \qquad XA = B \Rightarrow X = BA^{-1} \]
+        <p class="tf-x">\(A^{-1}\) ต้องอยู่ฝั่งเดียวกับที่ \(A\) อยู่ · สองคำตอบนี้ต่างกันโดยทั่วไป</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-4 · แก้ระบบด้วย A⁻¹</span><h3>แก้ \(\begin{aligned} x + 2y + 3z &= 1 \\ y + 4z &= 2 \\ 5x + 6y &= 3 \end{aligned}\) โดยใช้ \(A^{-1}\) จากตัวอย่าง I-2</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1,2,3;0,1,4;5,6,0&amp;b=1,2,3">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li>\[ \mathbf x = A^{-1}\mathbf b = \begin{pmatrix} -24 & 18 & 5 \\ 20 & -15 & -4 \\ -5 & 4 & 1 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix} = \begin{pmatrix} -24 + 36 + 15 \\ 20 - 30 - 12 \\ -5 + 8 + 3 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\((x, y, z) = (27, -22, 6)\)</p>
+      <p class="check">ตรวจ: \(27 - 44 + 18 = 1\) ✓ · \(-22 + 24 = 2\) ✓ · \(135 - 132 = 3\) ✓</p>
+    </div>
+    <div class="wx" id="ex-i5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-5 · AX = B กับ XA = B ไม่เหมือนกัน</span><h3>ให้ \(A = \begin{pmatrix} 4 & 7 \\ 2 & 6 \end{pmatrix},\ B = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}\) หา \(X\) ที่ทำให้ \(AX = B\) และ \(Y\) ที่ทำให้ \(YA = B\)</h3></div>
+      <ol class="steps">
+        <li><p>\(A^{-1} = \tfrac{1}{10}\begin{pmatrix} 6 & -7 \\ -2 & 4 \end{pmatrix}\) จากตัวอย่าง I-1 · \(AX = B\) คูณ \(A^{-1}\) ทางซ้าย <a class="tag tf" href="#I9">I9</a></p>
+          \[ X = A^{-1}B = \frac{1}{10}\begin{pmatrix} 12 & -15 \\ -4 & 10 \end{pmatrix} = \begin{pmatrix} 1.2 & -1.5 \\ -0.4 & 1 \end{pmatrix} \]</li>
+        <li><p>\(YA = B\) คูณ \(A^{-1}\) ทางขวา</p>
+          \[ Y = BA^{-1} = \frac{1}{10}\begin{pmatrix} 10 & -10 \\ -6 & 12 \end{pmatrix} = \begin{pmatrix} 1 & -1 \\ -0.6 & 1.2 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(X \ne Y\) ทั้งที่ “หน้าตาโจทย์” คล้ายกัน ลำดับการคูณจึงต้องเขียนให้ชัดทุกครั้ง</p>
+    </div>
+    <div class="wx" id="ex-i6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-6 · งานวงจร: หาอินเวอร์สครั้งเดียว ใช้ได้กับทุกแหล่งจ่าย</span><h3>วงจรสามโนดมีสมการโนด \(G\mathbf v = \mathbf i\) โดย \(G = \begin{pmatrix} 1.5 & -0.5 & 0 \\ -0.5 & 1.25 & -0.5 \\ 0 & -0.5 & 1 \end{pmatrix}\) S และ \(G^{-1} = \begin{pmatrix} 0.8 & 0.4 & 0.2 \\ 0.4 & 1.2 & 0.6 \\ 0.2 & 0.6 & 1.3 \end{pmatrix}\ \Omega\) หาแรงดันโนดเมื่อ (ก) ฉีดกระแส 10 A เข้าโนด 1 (ข) ฉีด 2 A เข้าโนด 3 (ค) ทั้งสองพร้อมกัน</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\mathbf i = (10, 0, 0)^T\) ได้ 10 เท่าของหลักที่ 1 ของ \(G^{-1}\) <a class="tag tf" href="#I8">I8</a></p>
+          \[ \mathbf v = 10\begin{pmatrix} 0.8 \\ 0.4 \\ 0.2 \end{pmatrix} = \begin{pmatrix} 8 \\ 4 \\ 2 \end{pmatrix}\text{ V} \]</li>
+        <li><p>(ข) \(\mathbf i = (0, 0, 2)^T\) ได้ 2 เท่าของหลักที่ 3</p>
+          \[ \mathbf v = 2\begin{pmatrix} 0.2 \\ 0.6 \\ 1.3 \end{pmatrix} = \begin{pmatrix} 0.4 \\ 1.2 \\ 2.6 \end{pmatrix}\text{ V} \]</li>
+        <li><p>(ค) เชิงเส้นจึงบวกกันได้เลย (หลักการซ้อนทับ superposition)</p>
+          \[ \mathbf v = \begin{pmatrix} 8.4 \\ 5.2 \\ 4.6 \end{pmatrix}\text{ V} \]</li>
+      </ol>
+      <p class="answer">หลักที่ \(j\) ของ \(G^{-1}\) คือแรงดันทุกโนดเมื่อฉีดกระแส 1 A เข้าโนด \(j\) ค่าบนเส้นทแยง \(0.8,\ 1.2,\ 1.3\ \Omega\) จึงเป็นความต้านทานขาเข้า (driving-point resistance) ของแต่ละโนดเทียบกราวด์</p>
+      <p class="check">ที่มาของวงจรนี้อยู่ใน <a href="/learn/linear-algebra/ee-applications/#nodal">การวิเคราะห์โนด</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">สูตรอินเวอร์สขั้นสูง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="I11" data-k="sherman morrison rank one update change one element อัปเดต แรงก์หนึ่ง">
+        <p class="tf-n"><b><span class="fid">I11</span> Sherman–Morrison formula</b> อัปเดตอินเวอร์สเมื่อเมทริกซ์เปลี่ยนแรงก์หนึ่ง</p>
+        \[ (A + \mathbf u\mathbf v^T)^{-1} = A^{-1} - \frac{A^{-1}\mathbf u\,\mathbf v^TA^{-1}}{1 + \mathbf v^TA^{-1}\mathbf u}, \qquad 1 + \mathbf v^TA^{-1}\mathbf u \ne 0 \]
+        <p class="tf-x">เปลี่ยนตัวต้านทานตัวเดียวในวงจร \(G\) เปลี่ยนแบบแรงก์หนึ่งพอดี จึงได้แรงดันใหม่โดยไม่ต้องหาอินเวอร์สใหม่ (ใช้ในการวิเคราะห์ความไว และ contingency analysis ในระบบไฟฟ้ากำลัง)</p>
+      </div>
+      <div class="tf wide" id="I12" data-k="block inverse schur complement บล็อก ชัวร์">
+        <p class="tf-n"><b><span class="fid">I12</span> Block inverse (Schur complement)</b> อินเวอร์สแบบบล็อก</p>
+        \[ \begin{pmatrix} A & B \\ C & D \end{pmatrix}^{-1} = \begin{pmatrix} A^{-1} + A^{-1}BS^{-1}CA^{-1} & -A^{-1}BS^{-1} \\ -S^{-1}CA^{-1} & S^{-1} \end{pmatrix}, \qquad S = D - CA^{-1}B \]
+      </div>
+      <div class="tf" id="I13" data-k="neumann series iterative spectral radius อนุกรม นอยมันน์ วนซ้ำ">
+        <p class="tf-n"><b><span class="fid">I13</span> Neumann series</b> อนุกรมนอยมันน์</p>
+        \[ (I - A)^{-1} = I + A + A^2 + A^3 + \cdots \]
+        <p class="tf-x">ลู่เข้าเมื่อค่าเฉพาะทุกตัวมี \(|\lambda| \lt 1\) เป็นที่มาของวิธีวนซ้ำแบบจาโคบีและเกาส์-ไซเดล และของสูตรป้อนกลับ \(T = G/(1 + GH)\)</p>
+      </div>
+      <div class="tf" id="I14" data-k="cayley hamilton inverse polynomial เคย์ลีย์ แฮมิลตัน">
+        <p class="tf-n"><b><span class="fid">I14</span> Inverse from Cayley–Hamilton (2×2)</b> อินเวอร์สจากพหุนามลักษณะเฉพาะ</p>
+        \[ A^2 - (\operatorname{tr}A)A + (\det A)I = O \ \Rightarrow\ A^{-1} = \frac{(\operatorname{tr}A)I - A}{\det A} \]
+        <p class="tf-x">ขยายได้ทุกขนาด ดู <a href="/learn/linear-algebra/eigenvalues/#E14">E14</a></p>
+      </div>
+      <div class="tf wide" id="I15" data-k="pseudo inverse moore penrose least squares overdetermined อินเวอร์สเทียม มัวร์ เพนโรส">
+        <p class="tf-n"><b><span class="fid">I15</span> Moore–Penrose pseudo-inverse</b> อินเวอร์สเทียม (เมทริกซ์ไม่จัตุรัส)</p>
+        \[ A^{+} = (A^TA)^{-1}A^T \ \ (\text{หลักอิสระ}), \qquad A^{+} = A^T(AA^T)^{-1} \ \ (\text{แถวอิสระ}), \qquad A^{+} = V\Sigma^{+}U^T \ \ (\text{ทั่วไป ผ่าน SVD}) \]
+        <p class="tf-x">\(\hat{\mathbf x} = A^{+}\mathbf b\) ให้คำตอบกำลังสองน้อยสุด (สมการเกิน) หรือคำตอบที่บรรทัดฐานน้อยสุด (สมการขาด) <a href="/learn/linear-algebra/linear-systems/#L10">L10</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-7 · เปลี่ยนตัวต้านทานหนึ่งตัว ไม่ต้องหาอินเวอร์สใหม่</span><h3>ในวงจรของตัวอย่าง I-6 เปลี่ยนตัวต้านทานจากโนด 3 ลงกราวด์จาก 2 Ω เป็น 1 Ω (ความนำเพิ่ม 0.5 S) ขณะฉีด 10 A เข้าโนด 1 หาแรงดันใหม่</h3></div>
+      <ol class="steps">
+        <li><p>\(G\) ใหม่ \(= G + 0.5\,\mathbf e_3\mathbf e_3^T\) ในสูตรจึงให้ \(A = G,\ \mathbf u = 0.5\mathbf e_3,\ \mathbf v = \mathbf e_3\) โดย \(\mathbf e_3 = (0, 0, 1)^T\) <a class="tag tf" href="#I11">I11</a></p>
+          \[ A^{-1}\mathbf u = 0.5\begin{pmatrix} 0.2 \\ 0.6 \\ 1.3 \end{pmatrix} = \begin{pmatrix} 0.1 \\ 0.3 \\ 0.65 \end{pmatrix}, \qquad 1 + \mathbf v^TA^{-1}\mathbf u = 1 + 0.65 = 1.65 \]</li>
+        <li><p>คูณสูตรเข้ากับ \(\mathbf i\) โดยตรง: \(\mathbf v^TA^{-1}\mathbf i = v_3^{\text{เดิม}} = 2\)</p>
+          \[ \mathbf v_{\text{ใหม่}} = \begin{pmatrix} 8 \\ 4 \\ 2 \end{pmatrix} - \frac{2}{1.65}\begin{pmatrix} 0.1 \\ 0.3 \\ 0.65 \end{pmatrix} = \begin{pmatrix} 8 - 0.121 \\ 4 - 0.364 \\ 2 - 0.788 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">\(\mathbf v \approx (7.879,\ 3.636,\ 1.212)\) V (ค่าแม่นตรง \(\tfrac{260}{33}, \tfrac{40}{11}, \tfrac{40}{33}\)) ใช้แค่การคูณเวกเตอร์ ไม่ต้องลดแถวใหม่</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="note warn"><b>ระวังจุดเหล่านี้</b>
+      <ul class="la-check">
+        <li>ลืมทรานสโพสเมทริกซ์โคแฟกเตอร์ในวิธีแอดจอยต์ <a class="tag tf" href="#I3">I3</a></li>
+        <li>ไม่เช็ก \(\det A\) ก่อน แล้วพยายามหาอินเวอร์สของเมทริกซ์เอกฐาน</li>
+        <li>เขียน \((AB)^{-1} = A^{-1}B^{-1}\) → ต้องกลับลำดับ <a class="tag tf" href="#I5">I5</a></li>
+        <li>เขียน \((A + B)^{-1} = A^{-1} + B^{-1}\) → ผิด ไม่มีสูตรนี้</li>
+        <li>เขียน \(\mathbf x = \mathbf bA^{-1}\) หรือ “หาร” ด้วยเมทริกซ์ \(\mathbf b/A\) → ไม่มีนิยาม ต้องเป็น \(A^{-1}\mathbf b\)</li>
+        <li>ในเกาส์-จอร์แดนทำการดำเนินการแถวกับครึ่งซ้ายแต่ลืมทำกับครึ่งขวา</li>
+        <li>ไม่ตรวจคำตอบ: คูณ \(AA^{-1}\) แค่แถวแรกกับหลักแรกก็จับข้อผิดพลาดได้เกือบทุกครั้ง</li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขอินเวอร์สแสดงวิธีทำ</h2>
+    <p>ใส่เมทริกซ์ 2×2 ถึง 4×4 เครื่องจะเช็กดีเทอร์มิแนนต์ แล้วลดแถว \([A\mid I]\) ทีละขั้นด้วยเศษส่วนแม่นยำ พร้อมตรวจ \(AA^{-1} = I\)</p>
+    <div class="mx-calc" data-modes="inv,det,solve,eig" data-mode="inv" data-n="3" data-a="1,2,3;0,1,4;5,6,0"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ถ้าต้องการแค่ตัวแปรเดียว เช่น กระแสในลูปเดียว ไม่จำเป็นต้องหาอินเวอร์สทั้งก้อน <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a> ให้สูตรตรงของตัวแปรแต่ละตัวด้วยดีเทอร์มิแนนต์สองตัว ซึ่งจริง ๆ แล้วก็คือสูตรแอดจอยต์ I3 ที่คูณกับ \(\mathbf b\) แล้วนั่นเอง</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

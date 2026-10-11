@@ -1,0 +1,322 @@
+<!--meta
+{
+  "title": "ระบบสมการเชิงเส้น: การกำจัดแบบเกาส์ เกาส์-จอร์แดน แรงก์ คำตอบไม่จำกัด LU | อาจารย์มด",
+  "h1": "ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)",
+  "description": "แก้ระบบสมการเชิงเส้นด้วยเมทริกซ์แต่งเติม การดำเนินการตามแถว การกำจัดแบบเกาส์ เกาส์-จอร์แดน รูปแบบขั้นบันได REF และ RREF แรงก์ เงื่อนไขมีคำตอบเดียว ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด ระบบเอกพันธ์ การแยก LU ระบบป่วย และวิธีกำลังสองน้อยสุด พร้อมวิธีทำทีละขั้น",
+  "ogTitle": "ระบบสมการเชิงเส้น: เกาส์ เกาส์-จอร์แดน แรงก์ และ LU ทีละขั้น",
+  "lesson": "linear-algebra",
+  "sub": "linear-systems",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["System of linear equations", "Augmented matrix", "Gaussian elimination", "Gauss–Jordan elimination", "Row echelon form", "Rank", "Rouché–Capelli theorem", "LU decomposition", "Least squares", "Condition number"],
+  "scripts": ["/assets/linalg.js"],
+  "faq": [
+    {"q": "รู้ได้อย่างไรว่าระบบสมการไม่มีคำตอบ?", "a": "ลดแถวเมทริกซ์แต่งเติม \\([A\\mid\\mathbf b]\\) ถ้าเจอแถว \\([0\\ 0\\ \\cdots\\ 0\\mid c]\\) ที่ \\(c \\ne 0\\) แปลว่า \\(0 = c\\) เป็นไปไม่ได้ ระบบจึงไม่มีคำตอบ ในภาษาแรงก์คือ \\(\\operatorname{rank}A \\lt \\operatorname{rank}[A\\mid\\mathbf b]\\)"},
+    {"q": "คำตอบไม่จำกัดเขียนอย่างไร?", "a": "ลดแถวเป็น RREF หลักที่ไม่มีตัวหลัก (pivot) คือตัวแปรอิสระ ตั้งให้เป็นพารามิเตอร์ เช่น \\(z = t\\) แล้วเขียนตัวแปรอื่นในรูป \\(t\\) จำนวนพารามิเตอร์เท่ากับจำนวนตัวแปรลบแรงก์"},
+    {"q": "เกาส์กับเกาส์-จอร์แดนต่างกันอย่างไร?", "a": "เกาส์ลดแถวจนเป็นขั้นบันได (สามเหลี่ยมบน) แล้วแทนค่าย้อนกลับจากล่างขึ้นบน เกาส์-จอร์แดนลดต่อจนตัวหลักเป็น 1 และเหนือ-ใต้ตัวหลักเป็นศูนย์หมด อ่านคำตอบได้ทันที เกาส์ใช้การคำนวณน้อยกว่าเล็กน้อย เกาส์-จอร์แดนเหมาะกับการหาอินเวอร์ส"},
+    {"q": "ทำไมโปรแกรมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์?", "a": "เพราะต้องหาดีเทอร์มิแนนต์ \\(n+1\\) ตัว ซึ่งช้ากว่าการลดแถวมากเมื่อ \\(n\\) ใหญ่ โปรแกรมอย่าง MATLAB, NumPy และ SPICE ใช้การแยก LU พร้อมการสลับแถว (partial pivoting) ซึ่งทั้งเร็วและเสถียรเชิงตัวเลข"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ระบบสมการเชิงเส้น</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.3 · พีชคณิตเชิงเส้น · Systems of Linear Equations</p>
+      <h1>ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)</h1>
+      <p class="lede">การลดแถว (row reduction) คือวิธีที่ทรงพลังที่สุดของพีชคณิตเชิงเส้น ใช้ได้กับทุกระบบ ทุกขนาด ทั้งที่มีคำตอบเดียว ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด และเป็นวิธีที่โปรแกรมจำลองวงจรอย่าง SPICE ใช้จริง หน้านี้เริ่มจากภาพของเส้นตรงตัดกันแบบ ม.ปลาย ไปจนถึงแรงก์ การแยก LU และกำลังสองน้อยสุด สูตรใช้รหัส L</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#gauss">การกำจัดแบบเกาส์</a>
+        <a class="btn btn-ghost btn-sm" href="#rank">มีคำตอบไหม (แรงก์)</a>
+        <a class="btn btn-ghost btn-sm" href="#infinite">คำตอบไม่จำกัด</a>
+        <a class="btn btn-ghost btn-sm" href="#methods">เลือกวิธีไหนดี</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เขียนระบบเป็นเมทริกซ์แต่งเติม \([A\mid\mathbf b]\) แล้วลดแถวด้วยการดำเนินการสามแบบ: สลับแถว คูณแถว บวกพหุคูณ</li>
+          <li>ลดจนเป็นขั้นบันได (REF) แล้วแทนค่าย้อนกลับ หรือลดต่อเป็น RREF แล้วอ่านคำตอบ</li>
+          <li>แถว \([0\ \cdots\ 0\mid c\ne0]\) = ไม่มีคำตอบ · ตัวหลักครบทุกหลัก = คำตอบเดียว · มีหลักไม่มีตัวหลัก = คำตอบไม่จำกัด</li>
+          <li>แรงก์ = จำนวนตัวหลัก และจำนวนพารามิเตอร์อิสระ = จำนวนตัวแปร − แรงก์</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ"><b class="mono">อ่านวิธีทำ</b><span><i class="lg-p"></i>ตัวหลัก (pivot)</span><span><i class="lg-f"></i>ค่าที่กำลังเปลี่ยน</span><span><i class="lg-u"></i>คำตอบ</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น rank, REF, RREF, LU, homogeneous, ไม่มีคำตอบ" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="picture">
+    <h2 id="picture">ภาพของระบบสมการ: สามกรณีที่เป็นไปได้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ระบบสองสมการสองตัวแปรคือเส้นตรงสองเส้น คำตอบคือจุดที่เส้นทั้งสองตัดกัน ซึ่งมีได้แค่สามแบบ และสามแบบนี้เป็นจริงกับระบบทุกขนาด ไม่มีระบบเชิงเส้นไหนมีคำตอบสองหรือสามคำตอบพอดี</p>
+    <figure class="la-fig">
+      <svg viewBox="0 0 600 220" role="img" aria-label="สามกรณีของระบบสองสมการ เส้นตัดกันจุดเดียว เส้นขนานไม่มีจุดตัด และเส้นทับกันมีจุดตัดไม่จำกัด">
+        <g transform="translate(10,10)">
+          <rect class="f-panel" width="180" height="170" rx="10"/>
+          <line class="ax" x1="10" y1="140" x2="170" y2="140"/><line class="ax" x1="30" y1="10" x2="30" y2="160"/>
+          <line class="ln ln-cur" x1="20" y1="150" x2="170" y2="30"/><line class="ln ln-p1" x1="20" y1="40" x2="170" y2="130"/>
+          <circle class="dot" cx="98.6" cy="87.1" r="6"/>
+          <text class="t-th" x="90" y="198" text-anchor="middle">ตัดกันจุดเดียว</text>
+        </g>
+        <g transform="translate(210,10)">
+          <rect class="f-panel" width="180" height="170" rx="10"/>
+          <line class="ax" x1="10" y1="140" x2="170" y2="140"/><line class="ax" x1="30" y1="10" x2="30" y2="160"/>
+          <line class="ln ln-cur" x1="20" y1="120" x2="170" y2="30"/><line class="ln ln-p1" x1="20" y1="160" x2="170" y2="70"/>
+          <text class="t-th" x="90" y="198" text-anchor="middle">ขนาน ไม่มีคำตอบ</text>
+        </g>
+        <g transform="translate(410,10)">
+          <rect class="f-panel" width="180" height="170" rx="10"/>
+          <line class="ax" x1="10" y1="140" x2="170" y2="140"/><line class="ax" x1="30" y1="10" x2="30" y2="160"/>
+          <line class="ln ln-cur thick" x1="20" y1="150" x2="170" y2="40"/><line class="ln ln-p1 dash" x1="20" y1="150" x2="170" y2="40"/>
+          <text class="t-th" x="90" y="198" text-anchor="middle">ทับกัน คำตอบไม่จำกัด</text>
+        </g>
+      </svg>
+      <figcaption>สามมิติก็เหมือนกัน แต่เป็นระนาบตัดกัน: ตัดกันที่จุดเดียว ไม่มีจุดร่วม หรือตัดกันเป็นเส้น/ระนาบ (ไม่จำกัด)</figcaption>
+    </figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="matrix form augmented matrix Ax=b เมทริกซ์แต่งเติม รูปเมทริกซ์">
+        <p class="tf-n"><b><span class="fid">L1</span> Matrix form and augmented matrix</b> รูปเมทริกซ์และเมทริกซ์แต่งเติม</p>
+        \[ \begin{aligned} a_{11}x_1 + \cdots + a_{1n}x_n &= b_1 \\ &\ \,\vdots \\ a_{m1}x_1 + \cdots + a_{mn}x_n &= b_m \end{aligned} \iff A\mathbf x = \mathbf b \iff \left[\begin{array}{ccc|c} a_{11} & \cdots & a_{1n} & b_1 \\ \vdots & & \vdots & \vdots \\ a_{m1} & \cdots & a_{mn} & b_m \end{array}\right] \]
+        <p class="tf-x">\(A\) เมทริกซ์สัมประสิทธิ์ (coefficient matrix) \(m\times n\) · \(\mathbf x\) เวกเตอร์ตัวแปร · \(\mathbf b\) ค่าคงที่ทางขวา · เส้นตั้งแยก A กับ b ไว้เพื่อเตือนว่าหลักขวาสุดคือค่าคงที่</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="row-ops">
+    <h2 id="row-ops">การดำเนินการตามแถวเบื้องต้น <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สามการดำเนินการนี้คือสิ่งที่ทำกับสมการได้อยู่แล้วตั้งแต่ ม.ต้น: สลับลำดับสมการ คูณสมการด้วยค่าไม่เป็นศูนย์ และเอาสมการหนึ่งบวกด้วยพหุคูณของอีกสมการ ทำแล้วคำตอบไม่เปลี่ยน ระบบใหม่จึง “สมมูล” กับระบบเดิม</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L2" data-k="elementary row operations swap scale replacement การดำเนินการตามแถว สลับ คูณ บวก R">
+        <p class="tf-n"><b><span class="fid">L2</span> Elementary row operations</b> การดำเนินการตามแถวเบื้องต้น</p>
+        \[ \text{(1) } R_i \leftrightarrow R_j \qquad \text{(2) } R_i \leftarrow kR_i \ (k \ne 0) \qquad \text{(3) } R_i \leftarrow R_i + kR_j \ (i \ne j) \]
+        <p class="tf-x">เขียนกำกับไว้บนลูกศรทุกครั้ง เช่น \(\xrightarrow{R_2 \leftarrow R_2 - 2R_1}\) ช่วยให้ตรวจย้อนได้ และเป็นวิธีที่อาจารย์ให้คะแนนวิธีทำ</p>
+      </div>
+      <div class="tf" id="L3" data-k="row echelon form REF staircase pivot leading entry ขั้นบันได ตัวหลัก">
+        <p class="tf-n"><b><span class="fid">L3</span> Row echelon form (REF)</b> รูปแบบขั้นบันไดแถว</p>
+        \[ \begin{pmatrix} \hlP{\blacksquare} & * & * & * \\ 0 & \hlP{\blacksquare} & * & * \\ 0 & 0 & 0 & \hlP{\blacksquare} \\ 0 & 0 & 0 & 0 \end{pmatrix} \]
+        <p class="tf-x">ตัวหลัก (pivot, ■ ไม่เป็นศูนย์) แต่ละแถวอยู่ขวาของแถวบน · ใต้ตัวหลักเป็นศูนย์ · แถวศูนย์อยู่ล่างสุด</p>
+      </div>
+      <div class="tf" id="L4" data-k="reduced row echelon form RREF gauss jordan ขั้นบันไดลดรูป">
+        <p class="tf-n"><b><span class="fid">L4</span> Reduced row echelon form (RREF)</b> รูปแบบขั้นบันไดแถวลดรูป</p>
+        \[ \begin{pmatrix} \hlP{1} & 0 & * & 0 \\ 0 & \hlP{1} & * & 0 \\ 0 & 0 & 0 & \hlP{1} \\ 0 & 0 & 0 & 0 \end{pmatrix} \]
+        <p class="tf-x">เพิ่มจาก REF: ตัวหลักเป็น 1 และ<strong>เหนือ</strong>ตัวหลักเป็นศูนย์ด้วย RREF ของเมทริกซ์หนึ่งมีแบบเดียว (unique)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="gauss">
+    <h2 id="gauss">การกำจัดแบบเกาส์ (Gaussian Elimination) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L8" data-k="gaussian elimination algorithm back substitution กำจัดแบบเกาส์ แทนค่าย้อนกลับ ขั้นตอน">
+        <p class="tf-n"><b><span class="fid">L8</span> Gaussian elimination + back substitution</b> ขั้นตอนการกำจัดแบบเกาส์</p>
+        \[ [A\mid\mathbf b] \ \xrightarrow{\text{สร้างศูนย์ใต้ตัวหลักทีละหลัก}} \ [U\mid\mathbf c] \ \xrightarrow{\text{แทนค่าย้อนกลับ ล่าง → บน}} \ \mathbf x \]
+        <p class="tf-x">ทีละหลักจากซ้ายไปขวา: (1) เลือกตัวหลักที่ไม่เป็นศูนย์ ถ้าเป็น 0 ให้สลับแถว (2) ใช้ \(R_i \leftarrow R_i - \tfrac{a_{ik}}{a_{kk}}R_k\) ล้างทุกตัวใต้ตัวหลัก (3) ขยับไปหลักถัดไป · เคล็ดลับทำมือ: ถ้ามีแถวที่ขึ้นต้นด้วย 1 ให้สลับขึ้นมาเป็นตัวหลัก เลี่ยงเศษส่วน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · เกาส์ 3×3</span><h3>แก้ระบบ \(\begin{aligned} x + y + z &= 6 \\ 2x - y + z &= 3 \\ x + 2y - z &= 2 \end{aligned}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1,1,1;2,-1,1;1,2,-1&amp;b=6,3,2">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>เขียนเมทริกซ์แต่งเติม <a class="tag tf" href="#L1">L1</a></p>
+          \[ \left[\begin{array}{ccc|c} \hlP{1} & 1 & 1 & 6 \\ 2 & -1 & 1 & 3 \\ 1 & 2 & -1 & 2 \end{array}\right] \]</li>
+        <li><p>ใช้ \(\hlP{1}\) มุมซ้ายบนล้างหลักที่ 1 <a class="tag tp" href="#L2">L2</a></p>
+          \[ \xrightarrow[R_3 \leftarrow R_3 - R_1]{R_2 \leftarrow R_2 - 2R_1} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 0 & \hlF{-3} & \hlF{-1} & \hlF{-9} \\ 0 & \hlF{1} & \hlF{-2} & \hlF{-4} \end{array}\right] \]</li>
+        <li><p>แถว 3 ขึ้นต้นด้วย 1 สลับขึ้นมาเป็นตัวหลักจะไม่มีเศษส่วน</p>
+          \[ \xrightarrow{R_2 \leftrightarrow R_3} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 0 & \hlP{1} & -2 & -4 \\ 0 & -3 & -1 & -9 \end{array}\right] \]</li>
+        <li>\[ \xrightarrow{R_3 \leftarrow R_3 + 3R_2} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 0 & 1 & -2 & -4 \\ 0 & 0 & \hlF{-7} & \hlF{-21} \end{array}\right] \]
+          <p>ได้รูปขั้นบันได <a class="tag tp" href="#L3">L3</a></p></li>
+        <li><p>แทนค่าย้อนกลับจากแถวล่าง</p>
+          \[ \begin{aligned} -7z &= -21 &&\Rightarrow\ \hlU{z = 3} \\ y - 2(3) &= -4 &&\Rightarrow\ \hlU{y = 2} \\ x + 2 + 3 &= 6 &&\Rightarrow\ \hlU{x = 1} \end{aligned} \]</li>
+      </ol>
+      <p class="answer">\((x, y, z) = (1, 2, 3)\)</p>
+      <p class="check">ตรวจ: \(1 + 2 + 3 = 6\) ✓ · \(2 - 2 + 3 = 3\) ✓ · \(1 + 4 - 3 = 2\) ✓</p>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2 · ลดต่อเป็น RREF (เกาส์-จอร์แดน)</span><h3>ทำต่อจากขั้นบันไดของตัวอย่าง L-1 จนอ่านคำตอบได้ทันที</h3></div>
+      <ol class="steps">
+        <li>\[ \xrightarrow{R_3 \leftarrow -\frac17R_3} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 0 & 1 & -2 & -4 \\ 0 & 0 & \hlP{1} & 3 \end{array}\right] \]</li>
+        <li><p>ล้าง<strong>เหนือ</strong>ตัวหลักของหลักที่ 3</p>
+          \[ \xrightarrow[R_1 \leftarrow R_1 - R_3]{R_2 \leftarrow R_2 + 2R_3} \left[\begin{array}{ccc|c} 1 & 1 & 0 & 3 \\ 0 & \hlP{1} & 0 & 2 \\ 0 & 0 & 1 & 3 \end{array}\right] \]</li>
+        <li>\[ \xrightarrow{R_1 \leftarrow R_1 - R_2} \left[\begin{array}{ccc|c} 1 & 0 & 0 & \hlU{1} \\ 0 & 1 & 0 & \hlU{2} \\ 0 & 0 & 1 & \hlU{3} \end{array}\right] \]
+          <p>ด้านซ้ายกลายเป็น \(I\) ด้านขวาคือคำตอบ <a class="tag tp" href="#L4">L4</a></p></li>
+      </ol>
+      <p class="answer">อ่านได้เลย \(x = 1,\ y = 2,\ z = 3\) ถ้าวางหลัก \(I\) ทางขวาแทน \(\mathbf b\) จะได้อินเวอร์สด้วยวิธีเดียวกัน <a href="/learn/linear-algebra/inverse/#gauss-jordan">ดูหน้าอินเวอร์ส</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="rank">
+    <h2 id="rank">แรงก์และเงื่อนไขการมีคำตอบ <span class="lv lv-i">กลาง</span></h2>
+    <p>หลังลดแถวแล้วไม่ต้องเดาอีก ทุกอย่างอ่านจากตำแหน่งของตัวหลัก จำนวนตัวหลักมีชื่อเรียกว่า<strong>แรงก์</strong> (rank, ลำดับชั้น)</p>
+    <div class="tf-grid">
+      <div class="tf" id="L5" data-k="rank pivots independent rows แรงก์ ลำดับชั้น จำนวนตัวหลัก">
+        <p class="tf-n"><b><span class="fid">L5</span> Rank</b> แรงก์</p>
+        \[ \operatorname{rank}A = \text{จำนวนตัวหลักใน REF ของ } A \]
+        <p class="tf-x">เท่ากับจำนวนแถวที่อิสระเชิงเส้น = จำนวนหลักที่อิสระเชิงเส้น · \(\operatorname{rank}A \le \min(m, n)\) · \(\operatorname{rank}A^T = \operatorname{rank}A\)</p>
+      </div>
+      <div class="tf" id="L7" data-k="homogeneous null space trivial nontrivial rank nullity เอกพันธ์ ปริภูมิศูนย์ คำตอบชัด">
+        <p class="tf-n"><b><span class="fid">L7</span> Homogeneous system and rank–nullity</b> ระบบเอกพันธ์</p>
+        \[ A\mathbf x = \mathbf 0 \text{ มีคำตอบไม่ชัด} \iff \operatorname{rank}A \lt n, \qquad \dim N(A) = n - \operatorname{rank}A \]
+        <p class="tf-x">ระบบเอกพันธ์มีคำตอบ \(\mathbf x = \mathbf 0\) เสมอ (trivial) ถ้า \(A\) จัตุรัส มีคำตอบอื่นด้วยก็ต่อเมื่อ \(\det A = 0\) ซึ่งเป็นหัวใจของการหาเวกเตอร์เฉพาะ</p>
+      </div>
+      <div class="tf wide" id="L6" data-k="rouche capelli consistency existence uniqueness unique infinite no solution มีคำตอบ ไม่มีคำตอบ คำตอบเดียว ไม่จำกัด โรเช">
+        <p class="tf-n"><b><span class="fid">L6</span> Rouché–Capelli theorem</b> เงื่อนไขการมีคำตอบ (ตัวแปร \(n\) ตัว)</p>
+        \[ \begin{cases} \operatorname{rank}A \lt \operatorname{rank}[A\mid\mathbf b] & \text{ไม่มีคำตอบ (inconsistent)} \\ \operatorname{rank}A = \operatorname{rank}[A\mid\mathbf b] = n & \text{มีคำตอบเดียว} \\ \operatorname{rank}A = \operatorname{rank}[A\mid\mathbf b] = r \lt n & \text{มีคำตอบไม่จำกัด มีพารามิเตอร์อิสระ } n - r \text{ ตัว} \end{cases} \]
+        <p class="tf-x">อ่านง่าย ๆ จาก REF: เจอแถว \([0\ \cdots\ 0\mid c\ne0]\) = ไม่มีคำตอบ · ไม่เจอ และทุกหลักของ A มีตัวหลัก = คำตอบเดียว · ไม่เจอ แต่บางหลักไม่มีตัวหลัก = ไม่จำกัด</p>
+      </div>
+      <div class="tf wide" id="L12" data-k="general solution particular homogeneous superposition คำตอบทั่วไป คำตอบเฉพาะ ซ้อนทับ">
+        <p class="tf-n"><b><span class="fid">L12</span> Structure of the general solution</b> โครงสร้างของคำตอบทั่วไป</p>
+        \[ \mathbf x = \mathbf x_p + \mathbf x_h, \qquad A\mathbf x_p = \mathbf b, \quad A\mathbf x_h = \mathbf 0 \]
+        <p class="tf-x">คำตอบเฉพาะหนึ่งตัวบวกคำตอบทุกตัวของระบบเอกพันธ์ โครงสร้างเดียวกับคำตอบสมการเชิงอนุพันธ์ในวงจร (ผลตอบสนองบังคับ + ผลตอบสนองธรรมชาติ)</p>
+      </div>
+    </div>
+
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · ระบบที่ไม่มีคำตอบ</span><h3>แก้ระบบ \(\begin{aligned} x + y + z &= 3 \\ x + 2y + 3z &= 5 \\ 2x + 3y + 4z &= 9 \end{aligned}\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1,1,1;1,2,3;2,3,4&amp;b=3,5,9">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li>\[ \left[\begin{array}{ccc|c} 1 & 1 & 1 & 3 \\ 1 & 2 & 3 & 5 \\ 2 & 3 & 4 & 9 \end{array}\right] \xrightarrow[R_3 \leftarrow R_3 - 2R_1]{R_2 \leftarrow R_2 - R_1} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 3 \\ 0 & 1 & 2 & 2 \\ 0 & 1 & 2 & 3 \end{array}\right] \]</li>
+        <li>\[ \xrightarrow{R_3 \leftarrow R_3 - R_2} \left[\begin{array}{ccc|c} 1 & 1 & 1 & 3 \\ 0 & 1 & 2 & 2 \\ \hlF{0} & \hlF{0} & \hlF{0} & \hlF{1} \end{array}\right] \]</li>
+        <li><p>แถวสุดท้ายอ่านว่า \(0x + 0y + 0z = 1\) คือ \(0 = 1\) เป็นไปไม่ได้ · \(\operatorname{rank}A = 2 \lt \operatorname{rank}[A\mid\mathbf b] = 3\) <a class="tag tp" href="#L6">L6</a></p></li>
+      </ol>
+      <p class="answer">ระบบไม่มีคำตอบ (สมการที่ 3 ขัดกับผลบวกของสมการ 1 และ 2 ซึ่งให้ \(2x + 3y + 4z = 8\))</p>
+    </div>
+
+    <div class="wx" id="ex-l4">
+      <div class="wx-head" id="infinite"><span class="mono">ตัวอย่าง L-4 · ระบบที่มีคำตอบไม่จำกัด</span><h3>เปลี่ยนค่าคงที่สมการที่ 3 เป็น 8: \(\ 2x + 3y + 4z = 8\)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1,1,1;1,2,3;2,3,4&amp;b=3,5,8">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>ลดแถวเหมือนเดิม แถวสุดท้ายกลายเป็นศูนย์ทั้งแถว แล้วลดต่อเป็น RREF</p>
+          \[ \left[\begin{array}{ccc|c} 1 & 1 & 1 & 3 \\ 0 & 1 & 2 & 2 \\ 0 & 0 & 0 & 0 \end{array}\right] \xrightarrow{R_1 \leftarrow R_1 - R_2} \left[\begin{array}{ccc|c} \hlP{1} & 0 & -1 & 1 \\ 0 & \hlP{1} & 2 & 2 \\ 0 & 0 & 0 & 0 \end{array}\right] \]</li>
+        <li><p>หลักที่ 3 (ของ \(z\)) ไม่มีตัวหลัก → \(z\) เป็นตัวแปรอิสระ ตั้ง \(z = t\) · จำนวนพารามิเตอร์ \(= 3 - 2 = 1\) <a class="tag tp" href="#L6">L6</a></p>
+          \[ x - z = 1 \Rightarrow x = 1 + t, \qquad y + 2z = 2 \Rightarrow y = 2 - 2t \]</li>
+        <li><p>เขียนในรูปเวกเตอร์ แยกส่วนคงที่กับส่วนที่คูณ \(t\) <a class="tag tp" href="#L12">L12</a></p>
+          \[ \begin{pmatrix} x \\ y \\ z \end{pmatrix} = \underbrace{\begin{pmatrix} 1 \\ 2 \\ 0 \end{pmatrix}}_{\mathbf x_p} + t\underbrace{\begin{pmatrix} 1 \\ -2 \\ 1 \end{pmatrix}}_{\mathbf x_h}, \quad t \in \mathbb R \]</li>
+      </ol>
+      <p class="answer">คำตอบไม่จำกัด เป็นเส้นตรงในปริภูมิสามมิติ เช่น \(t = 0\) ได้ \((1, 2, 0)\) และ \(t = 1\) ได้ \((2, 0, 1)\)</p>
+      <p class="check">ตรวจ \(\mathbf x_h\): \(A\mathbf x_h = (1 - 2 + 1,\ 1 - 4 + 3,\ 2 - 6 + 4) = (0, 0, 0)\) ✓ คำตอบที่เขียนต่างกัน (เช่นเลือก \(x = s\) เป็นพารามิเตอร์) ก็ถูกได้ ถ้าแทนกลับแล้วสอดคล้องทุกสมการ</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="methods">
+    <h2 id="methods">เลือกวิธีไหนดี <span class="lv lv-b">พื้นฐาน → กลาง</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>วิธี</th><th>เหมาะกับ</th><th>ข้อจำกัด</th><th>จำนวนการคูณโดยประมาณ</th></tr></thead>
+        <tbody>
+          <tr><td><b>แทนค่า/กำจัดตัวแปร</b> (ม.ต้น)</td><td>2 ตัวแปร</td><td>เกิน 3 ตัวแปรสับสนง่าย</td><td>—</td></tr>
+          <tr><td><b><a href="/learn/linear-algebra/cramers-rule/">คราเมอร์</a></b></td><td>2–3 ตัวแปร ต้องการตัวแปรเดียว มีพารามิเตอร์ตัวอักษร</td><td>ต้อง \(\det A \ne 0\) ช้ามากเมื่อ n ใหญ่</td><td>\((n+1)\) ดีเทอร์มิแนนต์</td></tr>
+          <tr><td><b><a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a></b> \(\mathbf x = A^{-1}\mathbf b\)</td><td>\(A\) เดิม แต่ \(\mathbf b\) เปลี่ยนหลายรอบ</td><td>ต้อง \(\det A \ne 0\) หาอินเวอร์สแพงกว่าแก้ตรง</td><td>\(\approx n^3\)</td></tr>
+          <tr><td><b>เกาส์ / เกาส์-จอร์แดน</b></td><td>ทุกกรณี บอกได้ว่าไม่มีหรือไม่จำกัด</td><td>ทำมือนานเมื่อ n ใหญ่</td><td>\(\approx n^3/3\)</td></tr>
+          <tr><td><b>LU</b> (คอมพิวเตอร์)</td><td>ระบบใหญ่ \(\mathbf b\) หลายชุด</td><td>ต้องสลับแถวเพื่อความเสถียร</td><td>\(\approx n^3/3\) ครั้งเดียว แล้ว \(n^2\) ต่อ \(\mathbf b\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="lu">
+    <h2 id="lu">การแยก LU (LU Decomposition) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>การกำจัดแบบเกาส์คือการแยก \(A\) เป็นผลคูณของสามเหลี่ยมล่าง \(L\) (เก็บตัวคูณที่ใช้ล้างแถว) กับสามเหลี่ยมบน \(U\) (ผลลัพธ์ขั้นบันได) แยกครั้งเดียวแล้วแก้ \(\mathbf b\) ใหม่ได้เร็วมาก วงจรเดิมที่เปลี่ยนแหล่งจ่ายหลายรอบจึงใช้ LU</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L9" data-k="lu decomposition doolittle forward back substitution แยก LU สามเหลี่ยม">
+        <p class="tf-n"><b><span class="fid">L9</span> LU decomposition</b> การแยก LU (แบบ Doolittle)</p>
+        \[ A = LU \quad\Rightarrow\quad A\mathbf x = \mathbf b \iff \begin{cases} L\mathbf y = \mathbf b & \text{(แทนค่าไปข้างหน้า บน → ล่าง)} \\ U\mathbf x = \mathbf y & \text{(แทนค่าย้อนกลับ ล่าง → บน)} \end{cases} \]
+        <p class="tf-x">\(L\) มี 1 บนเส้นทแยง และ \(l_{ik}\) = ตัวคูณที่ใช้ใน \(R_i \leftarrow R_i - l_{ik}R_k\) · ถ้าต้องสลับแถวจะได้ \(PA = LU\) โดย \(P\) คือเมทริกซ์สลับแถว · \(\det A = \pm\prod u_{ii}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-5 · แยก LU แล้วแก้ระบบ</span><h3>แยก \(A = \begin{pmatrix} 2 & 1 & 1 \\ 4 & 3 & 3 \\ 8 & 7 & 9 \end{pmatrix}\) แล้วแก้ \(A\mathbf x = (4, 10, 24)^T\)</h3></div>
+      <ol class="steps">
+        <li><p>ล้างหลัก 1 ด้วยตัวคูณ \(l_{21} = 4/2 = \hlF{2}\) และ \(l_{31} = 8/2 = \hlF{4}\)</p>
+          \[ \begin{pmatrix} 2 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 3 & 5 \end{pmatrix} \]</li>
+        <li><p>ล้างหลัก 2 ด้วย \(l_{32} = 3/1 = \hlF{3}\) ได้ \(U\) แล้วเก็บตัวคูณลง \(L\) <a class="tag tf" href="#L9">L9</a></p>
+          \[ U = \begin{pmatrix} 2 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 2 \end{pmatrix}, \qquad L = \begin{pmatrix} 1 & 0 & 0 \\ \hlF{2} & 1 & 0 \\ \hlF{4} & \hlF{3} & 1 \end{pmatrix} \]</li>
+        <li><p>แทนค่าไปข้างหน้า \(L\mathbf y = \mathbf b\)</p>
+          \[ y_1 = 4, \quad 2(4) + y_2 = 10 \Rightarrow y_2 = 2, \quad 4(4) + 3(2) + y_3 = 24 \Rightarrow y_3 = 2 \]</li>
+        <li><p>แทนค่าย้อนกลับ \(U\mathbf x = \mathbf y\)</p>
+          \[ 2x_3 = 2 \Rightarrow x_3 = 1, \quad x_2 + 1 = 2 \Rightarrow x_2 = 1, \quad 2x_1 + 1 + 1 = 4 \Rightarrow x_1 = 1 \]</li>
+      </ol>
+      <p class="answer">\(\mathbf x = (1, 1, 1)^T\) และได้ \(\det A = 2\cdot1\cdot2 = 4\) มาฟรี</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="conditioning">
+    <h2 id="conditioning">ระบบป่วยและการสลับแถวเชิงตัวเลข <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>บนกระดาษ \(\det A \ne 0\) ก็พอ แต่ในงานจริงค่าที่วัดมีความคลาดเคลื่อน ถ้าเส้นตรงสองเส้นเกือบขนานกัน ขยับข้อมูลนิดเดียวจุดตัดเลื่อนไปไกล ระบบแบบนี้เรียก<strong>ระบบป่วย</strong> (ill-conditioned)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L11" data-k="condition number ill conditioned sensitivity pivoting ระบบป่วย ความไว เลขเงื่อนไข">
+        <p class="tf-n"><b><span class="fid">L11</span> Condition number</b> เลขเงื่อนไข</p>
+        \[ \kappa(A) = \lVert A\rVert\,\lVert A^{-1}\rVert, \qquad \frac{\lVert\delta\mathbf x\rVert}{\lVert\mathbf x\rVert} \le \kappa(A)\,\frac{\lVert\delta\mathbf b\rVert}{\lVert\mathbf b\rVert} \]
+        <p class="tf-x">ความคลาดเคลื่อนสัมพัทธ์ของ \(\mathbf b\) ถูกขยายได้ถึง \(\kappa\) เท่า · \(\kappa \approx 10^k\) แปลว่าเสียความแม่นยำราว \(k\) หลัก · การลดแถวด้วยคอมพิวเตอร์ต้องเลือกตัวหลักที่มีขนาดใหญ่สุดในหลัก (partial pivoting) เพื่อไม่ขยายความคลาดเคลื่อนจากการปัดเศษ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-6 · เห็นระบบป่วยด้วยตา</span><h3>เปรียบเทียบ \(\begin{aligned} x + y &= 2 \\ x + 1.0001y &= 2.0001 \end{aligned}\) กับระบบที่เปลี่ยนค่าขวาของสมการที่ 2 เป็น \(2.0002\)</h3></div>
+      <ol class="steps">
+        <li><p>ระบบแรก: ลบสมการได้ \(0.0001y = 0.0001\) จึง \(y = 1,\ x = 1\)</p></li>
+        <li><p>ระบบที่สอง: \(0.0001y = 0.0002\) จึง \(y = 2,\ x = 0\)</p></li>
+        <li><p>ค่าขวาเปลี่ยนแค่ 0.005% แต่คำตอบเปลี่ยนจาก \((1,1)\) เป็น \((0,2)\) · เลขเงื่อนไขของระบบนี้ \(\kappa \approx 4\times10^4\) <a class="tag tf" href="#L11">L11</a></p></li>
+      </ol>
+      <p class="answer">สองเส้นเกือบทับกัน จุดตัดจึงไวมาก ในการวัดจริงต้องออกแบบการทดลองให้สมการ “ตัดกันชัด ๆ” หรือใช้ข้อมูลหลายจุดด้วยวิธีกำลังสองน้อยสุด</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="least-squares">
+    <h2 id="least-squares">สมการมากกว่าตัวแปร: กำลังสองน้อยสุด <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ในห้องแล็บเราวัดข้อมูลมากกว่าจำนวนตัวแปรที่ต้องการเสมอ ระบบจึงมีสมการเกินและไม่มีคำตอบที่ตรงทุกสมการ (ข้อมูลมีสัญญาณรบกวน) วิธีกำลังสองน้อยสุดหา \(\mathbf x\) ที่ทำให้ผลรวมกำลังสองของความคลาดเคลื่อนน้อยที่สุด</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L10" data-k="least squares normal equations overdetermined regression fit กำลังสองน้อยสุด สมการปกติ ฟิตเส้นตรง">
+        <p class="tf-n"><b><span class="fid">L10</span> Least squares (normal equations)</b> สมการปกติ</p>
+        \[ \min_{\mathbf x}\lVert A\mathbf x - \mathbf b\rVert^2 \iff A^TA\,\hat{\mathbf x} = A^T\mathbf b \iff \hat{\mathbf x} = (A^TA)^{-1}A^T\mathbf b \]
+        <p class="tf-x">\(A^TA\) จัตุรัสและสมมาตรเสมอ หาอินเวอร์สได้เมื่อหลักของ \(A\) อิสระเชิงเส้น · \((A^TA)^{-1}A^T\) คืออินเวอร์สเทียม (pseudo-inverse) <a href="/learn/linear-algebra/inverse/#I15">I15</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-7 · หาค่าความต้านทานจากข้อมูลวัด</span><h3>วัดกระแสและแรงดันตกคร่อมตัวต้านทานได้ \((I, V)\) = (1 mA, 2.1 V), (2 mA, 3.9 V), (3 mA, 6.2 V), (4 mA, 7.8 V) ฟิต \(V = RI + V_0\)</h3></div>
+      <ol class="steps">
+        <li><p>ตั้งสมการ 4 สมการ 2 ตัวแปร \((R, V_0)\) โดย \(I\) หน่วย mA จึงได้ \(R\) หน่วย kΩ</p>
+          \[ \underbrace{\begin{pmatrix} 1 & 1 \\ 2 & 1 \\ 3 & 1 \\ 4 & 1 \end{pmatrix}}_{A}\begin{pmatrix} R \\ V_0 \end{pmatrix} \approx \underbrace{\begin{pmatrix} 2.1 \\ 3.9 \\ 6.2 \\ 7.8 \end{pmatrix}}_{\mathbf b} \]</li>
+        <li><p>คำนวณ \(A^TA\) และ \(A^T\mathbf b\) <a class="tag tf" href="#L10">L10</a></p>
+          \[ A^TA = \begin{pmatrix} \sum I^2 & \sum I \\ \sum I & 4 \end{pmatrix} = \begin{pmatrix} 30 & 10 \\ 10 & 4 \end{pmatrix}, \qquad A^T\mathbf b = \begin{pmatrix} \sum IV \\ \sum V \end{pmatrix} = \begin{pmatrix} 59.7 \\ 20 \end{pmatrix} \]</li>
+        <li><p>แก้ระบบ 2×2 ด้วยคราเมอร์ \(\det = 120 - 100 = 20\)</p>
+          \[ R = \frac{(59.7)(4) - (10)(20)}{20} = \frac{38.8}{20} = 1.94, \qquad V_0 = \frac{(30)(20) - (10)(59.7)}{20} = 0.15 \]</li>
+      </ol>
+      <p class="answer">\(R \approx 1.94\ \text{k}\Omega\) และ \(V_0 \approx 0.15\) V (ค่าชดเชยของเครื่องวัด)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขแก้ระบบสมการแสดงวิธีทำ</h2>
+    <p>ใส่ \(A\) และ \(\mathbf b\) เครื่องจะลดแถวแบบเกาส์-จอร์แดนเป็นเศษส่วนทีละขั้น บอกว่ามีคำตอบเดียว ไม่มีคำตอบ หรือไม่จำกัด (พร้อมคำตอบในรูปพารามิเตอร์) และถ้ามีคำตอบเดียวจะแสดงวิธีคราเมอร์ให้เทียบด้วย</p>
+    <div class="mx-calc" data-modes="solve,det,inv,eig" data-mode="solve" data-n="3" data-a="1,1,1;2,-1,1;1,2,-1" data-b="6,3,2"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ถ้าวาง \(I\) ไว้ทางขวาแทน \(\mathbf b\) แล้วลดแถวแบบเกาส์-จอร์แดน ด้านขวาจะกลายเป็น \(A^{-1}\) นั่นคือหัวข้อของ <a href="/learn/linear-algebra/inverse/">อินเวอร์สของเมทริกซ์</a> ส่วนระบบเอกพันธ์ \((A - \lambda I)\mathbf v = \mathbf 0\) คือประตูสู่ <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะและเวกเตอร์เฉพาะ</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
