@@ -1,0 +1,266 @@
+<!--meta
+{
+  "title": "ตัวชดเชย Lead, Lag และ Lag-Lead: ออกแบบด้วยโบดและรูทโลคัสทีละขั้น พร้อมวงจรออปแอมป์ | อาจารย์มด",
+  "h1": "ตัวชดเชย Lead, Lag และ Lag-Lead",
+  "description": "ออกแบบตัวชดเชยเฟสนำ (lead) เฟสล้าหลัง (lag) และ lag-lead ทีละขั้น ด้วยโบดไดอะแกรม (เฟสมาร์จิน ค่าคงตัวความผิดพลาด) และด้วยรูทโลคัส (เงื่อนไขมุม การชดเชยมุม) สูตร α φmax ωm การวางศูนย์และขั้ว ตัวอย่างที่ตรวจด้วยการจำลองแล้ว เปรียบเทียบกับ PD PI PID วงจร RC และออปแอมป์ที่สร้างได้จริง",
+  "ogTitle": "ตัวชดเชย Lead Lag ออกแบบทีละขั้น ด้วยโบดและรูทโลคัส",
+  "lesson": "control-systems",
+  "sub": "compensators",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Lead compensator", "Lag compensator", "Lag–lead compensator", "Phase margin", "Static velocity error constant", "Root locus design", "Bode plot design", "Operational amplifier"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js"],
+  "faq": [
+    {"q": "Lead กับ Lag ต่างกันอย่างไรสั้น ๆ?", "a": "Lead (ศูนย์อยู่ก่อนขั้ว) เพิ่มเฟสบวกใกล้ความถี่ครอสโอเวอร์ ทำให้เฟสมาร์จินดีขึ้นและตอบสนองเร็วขึ้น เหมาะกับการแก้ overshoot และความเร็ว Lag (ขั้วอยู่ก่อนศูนย์ ใกล้จุดกำเนิด) เพิ่มเกนความถี่ต่ำ ทำให้ความผิดพลาดอยู่ตัวลดลงโดยแทบไม่แตะช่วงครอสโอเวอร์ เหมาะกับการแก้ความแม่นยำ"},
+    {"q": "ทำไมออกแบบ lead ต้องบวกเฟสเผื่อ 5–12°?", "a": "เพราะ lead เพิ่มเกนที่ความถี่สูงด้วย ทำให้ความถี่ครอสโอเวอร์ขยับไปทางขวา ซึ่งเฟสของพลานต์ที่ตำแหน่งใหม่ต่ำกว่าเดิม จึงต้องเผื่อเฟสไว้ชดเชยส่วนที่หายไปนี้ ถ้าคำนวณแล้ว PM ยังไม่ถึง ให้เพิ่มค่าเผื่อแล้วทำซ้ำ"},
+    {"q": "Lead เพิ่มเฟสได้มากสุดเท่าไร?", "a": "ในทางทฤษฎีเกือบ 90° เมื่อ α เข้าใกล้ 0 แต่ในทางปฏิบัตินิยมไม่เกิน 60–65° ต่อหนึ่งตัว (α ≥ 0.07) เพราะ α เล็กมากทำให้เกนความถี่สูงเพิ่ม 1/α เท่า ขยายสัญญาณรบกวน ถ้าต้องการเฟสมากกว่านั้นใช้ lead สองตัวต่ออนุกรม"},
+    {"q": "Lag ทำให้ระบบช้าลงไหม?", "a": "ช่วงต้นแทบไม่ แต่คู่ขั้ว-ศูนย์ใกล้จุดกำเนิดสร้างขั้ววงปิดช้าที่เกือบถูกหักล้างด้วยศูนย์ ทำให้ผลตอบสนองมีหางยาวค่อย ๆ เข้าที่ (slow tail) ยิ่งวางคู่นี้ใกล้จุดกำเนิดมาก หางยิ่งยาวแต่เล็กลง เป็นการแลกเปลี่ยนที่ต้องพิจารณา"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>Lead · Lag</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.15 · ระบบควบคุม · Lead, Lag &amp; Lag-Lead Compensators</p>
+      <h1>ตัวชดเชย Lead, Lag และ Lag-Lead</h1>
+      <p class="lede">เมื่อปรับเกนอย่างเดียวแล้วได้แค่ “เร็วแต่แกว่ง” หรือ “นิ่งแต่ช้าและไม่แม่น” ทางออกคือเพิ่มขั้วและศูนย์อย่างมีชั้นเชิงเพื่อดัดรูปทรงของรูทโลคัสและโบด <strong>Lead แก้ปัญหาช่วงความถี่กลาง (ความเร็ว เสถียรภาพ) Lag แก้ปัญหาความถี่ต่ำ (ความแม่นยำ)</strong> หน้านี้ออกแบบทั้งสองแบบทีละขั้นด้วยทั้งโบดและรูทโลคัส ตรวจทุกคำตอบด้วยการจำลอง และจบที่วงจรออปแอมป์ที่สร้างได้จริง สูตรใช้รหัส C</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lead-bode">Lead ด้วยโบด</a>
+        <a class="btn btn-ghost btn-sm" href="#lag-bode">Lag ด้วยโบด</a>
+        <a class="btn btn-ghost btn-sm" href="#lead-rl">Lead ด้วยรูทโลคัส</a>
+        <a class="btn btn-ghost btn-sm" href="#circuits">วงจรจริง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>Lead: \(\dfrac{Ts + 1}{\alpha Ts + 1},\ \alpha \lt 1\) เฟสสูงสุด \(\sin\phi_m = \frac{1 - \alpha}{1 + \alpha}\) ที่ \(\omega_m = \frac{1}{T\sqrt\alpha}\) วางให้ \(\omega_m\) = ครอสโอเวอร์ใหม่</li>
+          <li>Lag: \(\dfrac{Ts + 1}{\beta Ts + 1},\ \beta \gt 1\) วางศูนย์ต่ำกว่าครอสโอเวอร์ 1 เดคาด เพิ่มเกนความถี่ต่ำ \(\beta\) เท่า</li>
+          <li>รูทโลคัส: lead ชดเชย “มุมที่ขาด” ให้โลคัสผ่านจุดที่ต้องการ · lag คู่ขั้ว-ศูนย์ใกล้ 0 เพิ่ม \(K_v\) โดยไม่ย้ายโลคัส</li>
+          <li>Lead ≈ PD + ฟิลเตอร์ · Lag ≈ PI · Lag-lead ≈ PID</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> แนวคิด</span><span><span class="lv lv-i">กลาง</span> ออกแบบ</span><span><span class="lv lv-a">ขั้นสูง</span> งานจริง</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น lead, alpha, phi max, lag, beta, angle deficiency, op-amp" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="lead">
+    <h2 id="lead">ตัวชดเชยเฟสนำ (Lead) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ศูนย์อยู่ใกล้จุดกำเนิดกว่าขั้ว ช่วงระหว่างศูนย์กับขั้ว เฟสเป็นบวก (“นำ”) และเกนค่อย ๆ เพิ่มขึ้น \(1/\alpha\) เท่า ใช้เฟสบวกนี้เติมเฟสมาร์จินตรงครอสโอเวอร์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C1" data-k="lead compensator transfer function alpha T zero pole phase lead ตัวชดเชยเฟสนำ">
+        <p class="tf-n"><b><span class="fid">C1</span> Lead compensator</b> ตัวชดเชยเฟสนำ</p>
+        \[ G_c(s) = K_c\frac{Ts + 1}{\alpha Ts + 1} = K_c\alpha\,\frac{s + 1/T}{s + 1/(\alpha T)}, \qquad 0 \lt \alpha \lt 1 \]
+        <p class="tf-x">ศูนย์ที่ \(-1/T\) ขั้วที่ \(-1/(\alpha T)\) (ไกลกว่า \(1/\alpha\) เท่า) · รูปแบบนี้ไม่เปลี่ยนเกน DC (\(G_c(0) = K_c\)) ทำให้ใช้ \(K_c\) ตั้งความผิดพลาดอยู่ตัวแยกจากเรื่องเฟสได้</p>
+      </div>
+      <div class="tf wide" id="C2" data-k="maximum phase lead phi max alpha sin wm geometric mean 10 log 1/alpha เฟสนำสูงสุด">
+        <p class="tf-n"><b><span class="fid">C2</span> Maximum phase lead</b> เฟสนำสูงสุดและตำแหน่ง</p>
+        \[ \sin\phi_m = \frac{1 - \alpha}{1 + \alpha} \iff \alpha = \frac{1 - \sin\phi_m}{1 + \sin\phi_m}, \qquad \omega_m = \frac{1}{T\sqrt\alpha}, \qquad \left|\frac{j\omega_mT + 1}{j\omega_m\alpha T + 1}\right| = \frac{1}{\sqrt\alpha} \]
+        <p class="tf-x">\(\omega_m\) คือค่าเฉลี่ยเรขาคณิตของศูนย์และขั้ว (กึ่งกลางบนแกน log) · เกนที่ \(\omega_m\) เพิ่ม \(10\log(1/\alpha)\) dB · ตาราง: \(\phi_m\) = 30° → α = 0.333 · 40° → 0.217 · 50° → 0.132 · 60° → 0.072</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="lead-bode">
+    <h2 id="lead-bode">ออกแบบ Lead ด้วยโบด ทีละขั้น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C3" data-k="lead design procedure bode steps kv phase margin crossover ขั้นตอนออกแบบ lead โบด">
+        <p class="tf-n"><b><span class="fid">C3</span> Lead design procedure (Bode)</b> ขั้นตอนออกแบบ lead ด้วยโบด</p>
+        <ol>
+          <li>เลือก \(K_c\) ให้ได้ \(K_v\) (หรือ \(K_p, K_a\)) ตามสเปก วาดโบดของ \(K_cG\) หา PM เดิม</li>
+          <li>เฟสที่ต้องเติม \(\phi_m = \text{PM}_{\text{ต้องการ}} - \text{PM}_{\text{เดิม}} + (5^\circ\text{ ถึง }12^\circ)\) หา α จาก <a class="tag tf" href="#C2">C2</a></li>
+          <li>ครอสโอเวอร์ใหม่ \(\omega_m\) คือความถี่ที่ \(|K_cG(j\omega)| = -10\log(1/\alpha)\) dB (lead จะยกขึ้นมาเป็น 0 dB พอดี)</li>
+          <li>\(T = \dfrac{1}{\omega_m\sqrt\alpha}\) · ศูนย์ \(1/T\) ขั้ว \(1/(\alpha T)\)</li>
+          <li>ตรวจ PM, GM และผลตอบสนองจริง ถ้าไม่ถึงให้เพิ่มค่าเผื่อแล้วทำซ้ำ</li>
+        </ol>
+      </div>
+    </div>
+    <div class="wx" id="ex-c1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-1 · Lead ด้วยโบด</span><h3>พลานต์ \(G(s) = \dfrac{4}{s(s+2)}\) ต้องการ \(K_v = 20\ \text{s}^{-1}\) และ PM ≥ 50°</h3></div>
+      <ol class="steps">
+        <li><p>\(K_v = \lim_{s\to0} sK_cG(s) = \dfrac{4K_c}{2} = 20 \Rightarrow K_c = 10\) ได้ \(K_cG = \dfrac{40}{s(s+2)}\)</p></li>
+        <li><p>PM เดิม: \(\omega_{gc} = 6.17\), PM = 18.0° น้อยเกินไป (step แกว่ง overshoot 60%)</p></li>
+        <li><p>เฟสที่ต้องเติม: \(50^\circ - 18^\circ + 6^\circ = 38^\circ\) <a class="tag tf" href="#C2">C2</a></p>
+          \[ \alpha = \frac{1 - \sin38^\circ}{1 + \sin38^\circ} = \frac{0.384}{1.616} = 0.2375 \quad (\text{lead เพิ่มเกน } 10\log\tfrac{1}{0.2375} = 6.24 \text{ dB}) \]</li>
+        <li><p>หาความถี่ที่ \(|K_cG| = -6.24\) dB: \(\dfrac{40}{\omega\sqrt{\omega^2 + 4}} = 0.488 \Rightarrow \omega_m = 8.95\) rad/s</p></li>
+        <li><p>\(T = \dfrac{1}{8.95\sqrt{0.2375}} = 0.229\) · ศูนย์ \(-4.36\) ขั้ว \(-18.4\)</p>
+          \[ G_c(s) = 10\,\frac{0.229s + 1}{0.0545s + 1} = \hlC{42.1\,\frac{s + 4.36}{s + 18.4}} \]</li>
+      </ol>
+      <p class="answer">PM = 50.6° ที่ \(\omega_{gc} = 8.95\) rad/s, GM = ∞ · overshoot ลดจาก 60% เหลือ 21.5% และ \(t_s\) จาก 3.69 s เหลือ 0.62 s (เร็วขึ้น 6 เท่า) โดย \(K_v = 20\) ตามสเปก</p>
+      <p class="check">ตรวจด้วย python-control ทุกค่า ✓ · ครอสโอเวอร์ขยับจาก 6.17 ไป 8.95 rad/s คือเหตุผลที่ต้องเผื่อเฟส · ลองใส่ \(L = 42.1(s+4.36)/(s(s+2)(s+18.4))\) ในแล็บท้ายหน้า</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="lag">
+    <h2 id="lag">ตัวชดเชยเฟสล้าหลัง (Lag) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ขั้วอยู่ใกล้จุดกำเนิดกว่าศูนย์ ไม่ได้ใช้เฟส (ซึ่งเป็นลบ) แต่ใช้<strong>เกนที่ลดลง \(\beta\) เท่าที่ความถี่สูง</strong> หรือมองกลับกัน: เพิ่มเกน DC \(\beta\) เท่าโดยไม่ไปแตะช่วงครอสโอเวอร์ ความผิดพลาดอยู่ตัวจึงลดลง \(\beta\) เท่า</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C4" data-k="lag compensator beta transfer function zero pole near origin ตัวชดเชยเฟสล้าหลัง">
+        <p class="tf-n"><b><span class="fid">C4</span> Lag compensator</b> ตัวชดเชยเฟสล้าหลัง</p>
+        \[ G_c(s) = K_c\frac{Ts + 1}{\beta Ts + 1} = \frac{K_c}{\beta}\cdot\frac{s + 1/T}{s + 1/(\beta T)}, \qquad \beta \gt 1 \]
+        <p class="tf-x">ที่ความถี่สูง เกนลดลง \(\beta\) เท่า (\(-20\log\beta\) dB) · วางศูนย์ \(1/T \approx \omega_{gc}/10\) เพื่อให้เฟสล้าหลังที่ครอสโอเวอร์เหลือแค่ประมาณ 5°</p>
+      </div>
+      <div class="tf wide" id="C5" data-k="lag design procedure bode steps attenuation steady state error ขั้นตอนออกแบบ lag โบด">
+        <p class="tf-n"><b><span class="fid">C5</span> Lag design procedure (Bode)</b> ขั้นตอนออกแบบ lag ด้วยโบด</p>
+        <ol>
+          <li>เลือก \(K_c\) ให้ได้ค่าคงตัวความผิดพลาดตามสเปก</li>
+          <li>หาความถี่ \(\omega_{gc}'\) ที่เฟสของ \(K_cG\) เท่ากับ \(-180^\circ + \text{PM}_{\text{ต้องการ}} + (5^\circ\text{ ถึง }12^\circ)\)</li>
+          <li>\(\beta = |K_cG(j\omega_{gc}')|\) (ลดให้เหลือ 0 dB ที่ความถี่นั้น)</li>
+          <li>ศูนย์ \(1/T = \omega_{gc}'/10\) · ขั้ว \(1/(\beta T)\)</li>
+        </ol>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lag-bode">
+    <h2 id="lag-bode">ออกแบบ Lag ด้วยโบด <span class="lv lv-i">กลาง</span></h2>
+    <div class="wx" id="ex-c2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-2 · Lag ด้วยโบด</span><h3>พลานต์ \(G(s) = \dfrac{1}{s(s+1)(0.5s+1)}\) ต้องการ \(K_v = 5\ \text{s}^{-1}\), PM ≥ 40°, GM ≥ 10 dB</h3></div>
+      <ol class="steps">
+        <li><p>\(K_v = K_c = 5\) · ปิดวงด้วยเกนนี้: GM = −4.4 dB, PM = −13° <strong>ไม่เสถียร</strong> (lead ไม่ช่วย เพราะเฟสลงเร็วมาก ต้องใช้ lag)</p></li>
+        <li><p>ต้องการเฟส \(-180^\circ + 40^\circ + 12^\circ = -128^\circ\): \(-90^\circ - \tan^{-1}\omega - \tan^{-1}0.5\omega = -128^\circ \Rightarrow \omega_{gc}' = 0.465\) rad/s</p></li>
+        <li><p>\(|K_cG(j0.465)| = 9.5\) (19.6 dB) ได้ \(\beta \approx 10\) <a class="tag tf" href="#C5">C5</a></p></li>
+        <li><p>ศูนย์ \(\approx 0.465/10 \approx 0.05\) · ขั้ว \(0.05/10 = 0.005\)</p>
+          \[ G_c(s) = 5\,\frac{20s + 1}{200s + 1} = \hlC{0.5\,\frac{s + 0.05}{s + 0.005}} \]</li>
+      </ol>
+      <p class="answer">PM = 47.5° ที่ \(\omega_{gc} = 0.448\), GM = 15.0 dB และ \(K_v = 5\) ตามสเปก · แลกกับความเร็ว: ครอสโอเวอร์ลดจาก 1.8 เหลือ 0.45 rad/s</p>
+      <p class="check">python-control: PM 47.5°, GM 14.96 dB ✓ · เลือกปัดศูนย์เป็นเลขกลม ๆ ได้ ผลเปลี่ยนเล็กน้อย ถ้าใช้ศูนย์ 0.1 ขั้ว 0.01 PM เหลือ 41.6° (ยังผ่าน แต่หมิ่นเหม่)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="lead-rl">
+    <h2 id="lead-rl">ออกแบบ Lead ด้วยรูทโลคัส: ชดเชยมุมที่ขาด <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าสเปกให้มาเป็น \(\zeta\) และ \(\omega_n\) (หรือ \(M_p\) และ \(t_s\)) จะได้จุดที่ต้องการ \(s_d\) บนระนาบ \(s\) ทันที ถ้ารูทโลคัสเดิมไม่ผ่าน \(s_d\) แปลว่า<a href="/learn/control-systems/root-locus/#L2">เงื่อนไขมุม</a>ไม่ครบ 180° lead ต้องเติมมุมส่วนที่ขาด</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C6" data-k="angle deficiency root locus lead design desired pole phi c zero pole placement bisector มุมที่ขาด ชดเชยมุม">
+        <p class="tf-n"><b><span class="fid">C6</span> Angle deficiency</b> มุมที่ตัวชดเชยต้องเติม</p>
+        \[ \phi_c = -180^\circ - \angle G(s_d), \qquad \angle(s_d + z_c) - \angle(s_d + p_c) = \phi_c, \qquad K = \frac{1}{|G_c(s_d)G(s_d)|} \]
+        <p class="tf-x">มีศูนย์-ขั้วหลายคู่ที่ให้ \(\phi_c\) เท่ากัน วิธีที่นิยม: (1) วางศูนย์ใต้ \(s_d\) หรือหักล้างขั้วพลานต์ที่สองแล้วหาขั้ว (2) วิธีเส้นแบ่งครึ่งมุม (bisector) ของ Ogata ซึ่งให้ \(\alpha\) ใหญ่ที่สุด</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-c3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-3 · Lead ด้วยรูทโลคัส</span><h3>พลานต์ \(G(s) = \dfrac{1}{s(s+2)}\) ต้องการขั้ววงปิดที่ \(\zeta = 0.5,\ \omega_n = 4\) rad/s</h3></div>
+      <ol class="steps">
+        <li><p>\(s_d = -\zeta\omega_n \pm j\omega_n\sqrt{1 - \zeta^2} = -2 \pm j3.464\) · โลคัสเดิมเป็นเส้นดิ่ง \(\sigma = -1\) ไม่ผ่าน</p></li>
+        <li><p>มุมของพลานต์ที่ \(s_d\): จาก 0 คือ \(120^\circ\) จาก −2 คือ \(90^\circ\) ได้ \(\angle G = -210^\circ\) มุมที่ขาด \(\phi_c = -180^\circ + 210^\circ = 30^\circ\) <a class="tag tf" href="#C6">C6</a></p></li>
+        <li><p>วางศูนย์หักล้างขั้ว −2 ของพลานต์ แล้วหาขั้ว \(p_c\) ให้มุมรวมถูก: ต้องการ \(-120^\circ - \theta_p = -180^\circ \Rightarrow \theta_p = 60^\circ\)</p>
+          \[ p_c = -2 - \frac{3.464}{\tan60^\circ} = -4 \]</li>
+        <li><p>เกนจากเงื่อนไขขนาด: \(L = \dfrac{K}{s(s+4)}\) ที่ \(s_d\): \(K = |s_d||s_d + 4| = 4 \times 4 = 16\)</p></li>
+      </ol>
+      <p class="answer">\(G_c(s) = \hlC{16\,\dfrac{s + 2}{s + 4}}\) วงปิด \(s^2 + 4s + 16\) ได้ \(\zeta = 0.5,\ \omega_n = 4\) พอดี · overshoot 16.3%, \(t_s = 2.0\) s · \(K_v = 16/4 = 4\)</p>
+      <p class="check">python-control: ขั้ววงปิด \(-2 \pm j3.464\) ✓ · การหักล้างขั้วใช้ได้เพราะขั้ว −2 เสถียร และแม้ค่าจริงจะคลาดเล็กน้อย คู่ขั้ว-ศูนย์ที่เหลือจะอยู่ใกล้กันจนแทบไม่มีผล</p>
+    </div>
+
+    <div class="wx" id="ex-c4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-4 · เติม Lag ให้แม่นขึ้น 5 เท่า</span><h3>จากผลของ C-3 (\(K_v = 4\)) ต้องการ \(K_v = 20\) โดยขั้วเด่นแทบไม่เปลี่ยน</h3></div>
+      <ol class="steps">
+        <li><p>ต้องเพิ่ม \(K_v\) 5 เท่า: \(\beta = 5\) <a class="tag tf" href="#C4">C4</a></p></li>
+        <li><p>วางคู่ศูนย์-ขั้วใกล้จุดกำเนิดมาก ๆ เทียบกับ \(|s_d| = 4\): ศูนย์ −0.1 ขั้ว −0.02 (มุมที่เสียที่ \(s_d\) ไม่ถึง 1.2°)</p>
+          \[ L(s) = \frac{16}{s(s+4)}\cdot\frac{s + 0.1}{s + 0.02}, \qquad K_v = \frac{16}{4}\cdot\frac{0.1}{0.02} = 20 \]</li>
+      </ol>
+      <p class="answer">ขั้ววงปิด \(-1.96 \pm j3.44\) (แทบไม่ขยับ) และขั้วช้า \(-0.102\) ที่เกือบหักล้างกับศูนย์ \(-0.1\) · ความผิดพลาดต่อแรมป์ลดจาก 0.25 เหลือ 0.05</p>
+      <p class="check">จำลอง: overshoot 18.9% (จาก 16.3%) และ \(t_s\) (2%) 2.86 s เพราะหางช้าจากขั้ว −0.102 คือราคาของ lag ที่ต้องรู้</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="lag-lead">
+    <h2 id="lag-lead">Lag-Lead และความสัมพันธ์กับ PID <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C7" data-k="lag-lead compensator combined both pid equivalence ตัวชดเชย lag-lead PID">
+        <p class="tf-n"><b><span class="fid">C7</span> Lag-lead and PID</b> lag-lead กับ PID</p>
+        \[ G_c(s) = K_c\underbrace{\frac{T_1s + 1}{\beta T_1s + 1}}_{\text{lag}}\ \underbrace{\frac{T_2s + 1}{\alpha T_2s + 1}}_{\text{lead}}, \qquad \beta \to \infty,\ \alpha \to 0:\ \ \text{PID แบบอนุกรม} \]
+        <p class="tf-x">ออกแบบทีละส่วน: lead ก่อนเพื่อเฟสมาร์จินและความเร็ว แล้ว lag เพื่อความแม่นยำ · lag ที่ขั้วอยู่ที่ 0 พอดีคือ PI · lead ที่ขั้วอยู่อนันต์คือ PD · ใช้ใน Type III compensator ของ<a href="/learn/control-systems/power-electronics-control/">พาวเวอร์ซัพพลาย</a></p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Lead</th><th>Lag</th><th>Lag-lead / PID</th></tr></thead>
+        <tbody>
+          <tr><td>แก้ปัญหา</td><td>overshoot มาก ช้า PM น้อย</td><td>ความผิดพลาดอยู่ตัว</td><td>ทั้งสองอย่าง</td></tr>
+          <tr><td>บนโบด</td><td>เติมเฟสที่ครอสโอเวอร์ ครอสโอเวอร์สูงขึ้น</td><td>ลดเกนความถี่สูง ครอสโอเวอร์ต่ำลง</td><td>รวมกัน</td></tr>
+          <tr><td>บนรูทโลคัส</td><td>ดึงโลคัสไปทางซ้าย</td><td>โลคัสเดิมแทบไม่เปลี่ยน</td><td>ดึงไปซ้าย + แม่นขึ้น</td></tr>
+          <tr><td>แบนด์วิดท์</td><td>กว้างขึ้น (ไวต่อสัญญาณรบกวน)</td><td>แคบลง</td><td>ปรับได้</td></tr>
+          <tr><td>เทียบเท่า</td><td>PD + ฟิลเตอร์</td><td>PI (โดยประมาณ)</td><td>PID + ฟิลเตอร์</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="circuits">
+    <h2 id="circuits">สร้างจริง: วงจร RC และออปแอมป์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C8" data-k="op-amp lead lag circuit inverting r1 c1 r2 c2 วงจรออปแอมป์ lead lag">
+        <p class="tf-n"><b><span class="fid">C8</span> Op-amp lead/lag</b> วงจรออปแอมป์ตัวเดียว (\(Z_i = R_1 \parallel C_1\), \(Z_f = R_2 \parallel C_2\))</p>
+        \[ \frac{V_o}{V_i} = -\frac{R_2}{R_1}\cdot\frac{R_1C_1s + 1}{R_2C_2s + 1} \qquad \begin{cases} R_1C_1 \gt R_2C_2 & \text{lead} \\ R_1C_1 \lt R_2C_2 & \text{lag} \end{cases} \]
+        <p class="tf-x">\(T = R_1C_1\), \(\alpha T\) (หรือ \(\beta T\)) \(= R_2C_2\) · เกน DC \(= R_2/R_1\) · ต่อออปแอมป์อินเวอร์เตอร์อีกตัวเพื่อกลับเครื่องหมายและปรับเกน · ทดลองในแล็บ<a href="/learn/function-generator/op-amp/">ออปแอมป์</a></p>
+      </div>
+      <div class="tf wide" id="C9" data-k="passive rc lead network attenuation r1 r2 c alpha วงจร RC passive lead">
+        <p class="tf-n"><b><span class="fid">C9</span> Passive RC lead network</b> วงจร RC แบบพาสซีฟ</p>
+        \[ \frac{V_o}{V_i} = \alpha\,\frac{R_1Cs + 1}{\alpha R_1Cs + 1}, \qquad \alpha = \frac{R_2}{R_1 + R_2} \]
+        <p class="tf-x">\(R_1 \parallel C\) อนุกรม แล้ว \(R_2\) ลงกราวด์ · ลดทอน \(\alpha\) เท่า ต้องชดเชยด้วยแอมป์ · ต้องการโหลดอิมพีแดนซ์สูงตามหลัง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-c5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-5 · ทำ C-3 ด้วยออปแอมป์</span><h3>สร้าง \(G_c(s) = 16\dfrac{s + 2}{s + 4} = 8\dfrac{0.5s + 1}{0.25s + 1}\) โดยใช้ \(C_1 = C_2 = 10\ \mu\text{F}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(R_1C_1 = 0.5 \Rightarrow R_1 = 50\ \text{k}\Omega\) · \(R_2C_2 = 0.25 \Rightarrow R_2 = 25\ \text{k}\Omega\) <a class="tag tf" href="#C8">C8</a></p></li>
+        <li><p>เกน DC ของวงจร \(R_2/R_1 = 0.5\) ต้องการ 8 ใช้อินเวอร์เตอร์เกน \(-16\) (เช่น \(R_f = 160\ \text{k}\Omega,\ R_i = 10\ \text{k}\Omega\))</p></li>
+      </ol>
+      <p class="answer">ออปแอมป์ตัวแรก \(R_1 = 50\) k, \(C_1 = 10\) µF, \(R_2 = 25\) k, \(C_2 = 10\) µF ตามด้วยอินเวอร์เตอร์เกน 16 ได้ \(+16\dfrac{s+2}{s+4}\)</p>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ก่อนและหลังชดเชย</h2>
+    <p>เลือกรายการ “ก่อน” และ “หลัง” ของแต่ละตัวอย่างเทียบกัน ดู PM GM และผลตอบสนองขั้นบันไดเปลี่ยน ในมุมมองรูทโลคัสจะเห็น lead ดึงโลคัสไปทางซ้าย ส่วน lag แทบไม่เปลี่ยนรูป</p>
+    <div class="cs-lab" data-tf="40/(s(s+2))" data-views="rl,bode,step" data-k="1" data-presets='[{"n":"C-1 ก่อน: 40/(s(s+2))","tf":"40/(s(s+2))","k":1},{"n":"C-1 หลัง: + lead","tf":"42.1(s+4.36)/(s(s+2)(s+18.4))","k":1},{"n":"C-2 ก่อน: 5/(s(s+1)(0.5s+1))","tf":"5/(s(s+1)(0.5s+1))","k":1},{"n":"C-2 หลัง: + lag","tf":"5(20s+1)/(s(s+1)(0.5s+1)(200s+1))","k":1},{"n":"C-3 ก่อน: 1/(s(s+2))","tf":"1/(s(s+2))","k":16},{"n":"C-3 หลัง: lead 16(s+2)/(s+4)","tf":"(s+2)/(s(s+2)(s+4))","k":16},{"n":"C-4: lead + lag","tf":"(s+0.1)/(s(s+4)(s+0.02))","k":16}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="tf warn">
+      <ul>
+        <li><b>วาง \(\omega_m\) ไว้ที่ครอสโอเวอร์เดิม</b> → lead ยกเกนทำให้ครอสโอเวอร์ย้าย ต้องวางที่ครอสโอเวอร์ใหม่ (ขั้น 3 ของ C3)</li>
+        <li><b>ลืมเฟสเผื่อ</b> → ได้ PM ต่ำกว่าสเปกเล็กน้อยเสมอ</li>
+        <li><b>ใช้ lead กับระบบที่เฟสลงเร็วมาก</b> → เติมเฟสไม่ทัน (ตัวอย่าง C-2) ใช้ lag หรือ lag-lead</li>
+        <li><b>วาง lag ใกล้ครอสโอเวอร์เกินไป</b> → กินเฟสมาร์จิน วางศูนย์ต่ำกว่าอย่างน้อย 1 เดคาด</li>
+        <li><b>สับสนเกนสองรูปแบบ</b> → \(K_c\frac{Ts+1}{\alpha Ts+1} = K_c\alpha\,\frac{s + 1/T}{s + 1/(\alpha T)}\) เกนหน้าวงเล็บต่างกัน \(\alpha\) เท่า ตรวจด้วยเกน DC ทุกครั้ง</li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ตัวชดเชยที่นิยมที่สุดในอุตสาหกรรมคือ<a href="/learn/control-systems/pid/">PID</a> ซึ่งก็คือ lag-lead ในอีกรูปหนึ่ง และเมื่อเข้าใจหน้านี้ ตัวชดเชย <a href="/learn/control-systems/power-electronics-control/">Type II และ Type III ของพาวเวอร์ซัพพลาย</a>ก็คือ lead/lag ที่ใส่อินทิเกรเตอร์เพิ่ม ออกแบบด้วยขั้นตอนเดียวกันทุกประการ</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

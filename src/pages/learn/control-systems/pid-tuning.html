@@ -1,0 +1,208 @@
+<!--meta
+{
+  "title": "การจูน PID: Ziegler–Nichols, Cohen–Coon, SIMC/IMC, relay auto-tune และวิธีจูนหน้างาน | อาจารย์มด",
+  "h1": "การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และงานจริง",
+  "description": "วิธีจูน PID เมื่อไม่มีแบบจำลอง Ziegler–Nichols แบบเกนวิกฤต (ultimate gain) และแบบกราฟตอบสนองขั้นบันได (reaction curve) Tyreus–Luyben Cohen–Coon การจูนแบบ IMC/Lambda และ SIMC ของ Skogestad relay auto-tune ของ Åström–Hägglund ระบุแบบจำลอง FOPDT จากกราฟ เปรียบเทียบผลจำลองจริง และขั้นตอนจูนด้วยมือหน้างาน",
+  "ogTitle": "จูน PID: Ziegler–Nichols ถึง SIMC เปรียบเทียบผลจริง",
+  "lesson": "control-systems",
+  "sub": "pid-tuning",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["PID tuning", "Ziegler–Nichols method", "Cohen–Coon method", "Internal model control", "Lambda tuning", "SIMC tuning", "Relay feedback", "First-order plus dead time"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js", "/assets/cs-pid.js"],
+  "faq": [
+    {"q": "Ziegler–Nichols ยังใช้ได้ไหมในปัจจุบัน?", "a": "ใช้เป็นจุดเริ่มต้นได้ดีและเร็ว แต่ค่าที่ได้ดุดัน ออกแบบให้ลดทอนการแกว่งหนึ่งในสี่ต่อรอบ overshoot มักเกิน 40% และเฟสมาร์จินต่ำ ในงานจริงนิยมลดเกนลง หรือใช้กฎใหม่กว่า เช่น Tyreus–Luyben, SIMC หรือ AMIGO ที่ทนทานกว่า"},
+    {"q": "FOPDT คืออะไร ทำไมกฎจูนส่วนใหญ่ใช้?", "a": "First-Order Plus Dead Time คือแบบจำลอง K e^{-Ls}/(Ts + 1) ที่มีแค่สามพารามิเตอร์ เกน K หน่วงเวลา L และค่าคงเวลา T กระบวนการส่วนใหญ่ (อุณหภูมิ ระดับ การไหล) ประมาณด้วยรูปนี้ได้ดีจากการทดลองขั้นบันไดครั้งเดียว จึงเป็นฐานของกฎจูนเกือบทั้งหมด"},
+    {"q": "ทำการทดลองหาเกนวิกฤตกับระบบจริงอันตรายไหม?", "a": "อาจอันตราย เพราะต้องดันให้ระบบแกว่งค้างที่ขอบเสถียร ซึ่งเครื่องจักรหรือกระบวนการบางอย่างทนไม่ได้ วิธีที่ปลอดภัยกว่าคือ relay test ที่ควบคุมขนาดการแกว่งได้ หรือใช้การทดลองขั้นบันไดแบบวงเปิด"},
+    {"q": "ควรจูนอะไรก่อนระหว่าง P I D?", "a": "เริ่มจาก P อย่างเดียวจนได้ความเร็วที่พอใจโดยยังไม่แกว่งมาก จากนั้นเพิ่ม I ช้า ๆ จนความผิดพลาดค้างหายในเวลาที่ยอมรับได้ (ลด K_P ลงเล็กน้อยถ้าเริ่มแกว่ง) สุดท้ายเพิ่ม D ถ้าต้องการลด overshoot และสัญญาณวัดสะอาดพอ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>จูน PID</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.17 · ระบบควบคุม · PID Tuning</p>
+      <h1>การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และงานจริง</h1>
+      <p class="lede">ในโรงงาน เรามักไม่มีสมการของพลานต์ แต่มีพลานต์ตัวจริงให้ทดลอง ปี 1942 ซีเกลอร์และนิโคลส์ (Ziegler &amp; Nichols) เสนอวิธีหาเกน PID จากการทดลองง่าย ๆ สองแบบ จากนั้นมีกฎที่ดีขึ้นเรื่อย ๆ หน้านี้รวบรวมกฎที่ใช้จริง พร้อม<strong>ผลจำลองเปรียบเทียบ</strong>ว่าแต่ละกฎให้ระบบดุดันหรือนุ่มนวลแค่ไหน แล้วจบที่ขั้นตอนจูนหน้างาน สูตรใช้รหัส Z</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#ultimate">เกนวิกฤต (ZN)</a>
+        <a class="btn btn-ghost btn-sm" href="#reaction">กราฟขั้นบันได</a>
+        <a class="btn btn-ghost btn-sm" href="#simc">SIMC · IMC</a>
+        <a class="btn btn-ghost btn-sm" href="#relay">Relay auto-tune</a>
+        <a class="btn btn-ghost btn-sm" href="#manual">จูนหน้างาน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ZN เกนวิกฤต: เพิ่ม \(K_P\) จนแกว่งค้าง ได้ \(K_u, T_u\) → PID: \(0.6K_u,\ T_u/2,\ T_u/8\)</li>
+          <li>ZN กราฟขั้นบันได: วัด \(K, L, T\) ของแบบจำลอง FOPDT → PID: \(1.2T/(KL),\ 2L,\ 0.5L\)</li>
+          <li>ZN และ Cohen–Coon ดุดัน (overshoot 40–80%) · SIMC/IMC นุ่มและทนทาน (PM ~60°) เหมาะเป็นค่าเริ่มต้นในงานจริง</li>
+          <li>Relay test หา \(K_u = 4d/(\pi a)\) ได้ปลอดภัยและอัตโนมัติ</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ใช้ตาราง</span><span><span class="lv lv-i">กลาง</span> เข้าใจที่มา</span><span><span class="lv lv-a">ขั้นสูง</span> งานจริง</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ziegler, ultimate, reaction curve, fopdt, cohen, simc, lambda, relay" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="ultimate">
+    <h2 id="ultimate">Ziegler–Nichols แบบเกนวิกฤต (Ultimate Gain) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ปิดวงด้วย P อย่างเดียว (\(K_I = K_D = 0\)) แล้วค่อย ๆ เพิ่ม \(K_P\) จนเอาต์พุตแกว่งค้างคงที่ จดเกนนั้น \(K_u\) และคาบการแกว่ง \(T_u\) ถ้ามีแบบจำลองก็หาได้จาก<a href="/learn/control-systems/routh-hurwitz/#R10">เราท์</a> (\(K_u = K_{cr}\), \(T_u = 2\pi/\omega_{cr}\))</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Z1" data-k="ziegler nichols ultimate gain table ku tu closed loop method ตารางซีเกลอร์นิโคลส์ เกนวิกฤต คาบวิกฤต">
+        <p class="tf-n"><b><span class="fid">Z1</span> Ziegler–Nichols (ultimate-gain method)</b> ตาราง ZN แบบเกนวิกฤต (รูปแบบมาตรฐาน <a href="/learn/control-systems/pid/#P2">P2</a>)</p>
+        \[ \begin{array}{l|ccc} & K_P & T_i & T_d \\ \hline \text{P} & 0.5K_u & - & - \\ \text{PI} & 0.45K_u & T_u/1.2 & - \\ \text{PID} & 0.6K_u & T_u/2 & T_u/8 \\ \text{PID (Tyreus–Luyben)} & K_u/2.2 & 2.2T_u & T_u/6.3 \end{array} \]
+        <p class="tf-x">ZN ออกแบบให้การแกว่งลดลงเหลือ 1/4 ทุกรอบ (quarter-amplitude decay) ค่อนข้างดุ · Tyreus–Luyben นุ่มกว่ามาก นิยมในกระบวนการเคมี</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-z1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Z-1 · ZN เกนวิกฤต</span><h3>จูน PID ให้ \(G(s) = \dfrac{1}{(s+1)^3}\) ด้วย ZN และ Tyreus–Luyben</h3></div>
+      <ol class="steps">
+        <li><p>\(s^3 + 3s^2 + 3s + 1 + K = 0\) สูตรลัด: \(9 \gt 1 + K \Rightarrow K_u = 8\) · \(3\omega^2 = 9 \Rightarrow \omega_u = \sqrt3\), \(T_u = 2\pi/\sqrt3 = 3.63\) s</p></li>
+        <li><p>ZN-PID <a class="tag tf" href="#Z1">Z1</a>: \(K_P = 4.8,\ T_i = 1.81,\ T_d = 0.453\) → \(K_I = 2.65,\ K_D = 2.18\)</p></li>
+        <li><p>Tyreus–Luyben: \(K_P = 3.64,\ T_i = 7.98,\ T_d = 0.576\) → \(K_I = 0.456,\ K_D = 2.09\)</p></li>
+      </ol>
+      <div class="table-wrap"><table>
+        <thead><tr><th>กฎ</th><th>K<sub>P</sub></th><th>K<sub>I</sub></th><th>K<sub>D</sub></th><th>Overshoot</th><th>t<sub>s</sub> (2%)</th><th>PM</th></tr></thead>
+        <tbody>
+          <tr><td>P (0.5K<sub>u</sub>)</td><td>4</td><td>0</td><td>0</td><td>54%</td><td>–</td><td>27°</td></tr>
+          <tr><td>ZN-PI</td><td>3.6</td><td>1.19</td><td>0</td><td>56%</td><td>30.8 s</td><td>15°</td></tr>
+          <tr><td>ZN-PID</td><td>4.8</td><td>2.65</td><td>2.18</td><td>40%</td><td>9.4 s</td><td>31°</td></tr>
+          <tr><td>Tyreus–Luyben PID</td><td>3.64</td><td>0.456</td><td>2.09</td><td>2.9%</td><td>20.5 s</td><td>56°</td></tr>
+        </tbody>
+      </table></div>
+      <p class="check">จำลองด้วย python-control (D อุดมคติ ค่าอ้างอิงเข้าทุกเทอม) · P อย่างเดียวค้างที่ 0.8 ไม่ถึง 1 · ลองค่าเหล่านี้ใน<a href="#lab">แล็บ</a>แล้วเปิด “D จากเอาต์พุต” จะเห็น overshoot ของ ZN-PID ลดลงชัดเจน</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="reaction">
+    <h2 id="reaction">Ziegler–Nichols แบบกราฟขั้นบันได (Reaction Curve) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เปิดวง (ตัวควบคุมโหมด manual) แล้วสั่งเอาต์พุตตัวควบคุมเป็นขั้นบันไดขนาด \(\Delta u\) บันทึกกราฟเอาต์พุต กระบวนการส่วนใหญ่ให้กราฟรูปตัว S ลากเส้นสัมผัสที่จุดชันที่สุด อ่านค่าสามตัวมาสร้างแบบจำลอง FOPDT</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Z2" data-k="fopdt first order plus dead time model identification tangent k l t reaction curve แบบจำลองอันดับหนึ่งบวกหน่วงเวลา">
+        <p class="tf-n"><b><span class="fid">Z2</span> FOPDT model from a step test</b> แบบจำลอง FOPDT จากการทดลองขั้นบันได</p>
+        \[ G(s) \approx \frac{Ke^{-Ls}}{Ts + 1}, \qquad K = \frac{\Delta y_\infty}{\Delta u}, \quad L = \text{จุดที่เส้นสัมผัสตัดระดับเริ่มต้น}, \quad T = \text{ช่วงจาก } L \text{ ถึงจุดตัดระดับสุดท้าย} \]
+        <p class="tf-x">วิธีสองจุด (แม่นกว่าเส้นสัมผัส): หาเวลา \(t_{28}\) และ \(t_{63}\) ที่เอาต์พุตขึ้น 28.3% และ 63.2% ได้ \(T = 1.5(t_{63} - t_{28})\), \(L = t_{63} - T\)</p>
+      </div>
+      <div class="tf wide" id="Z3" data-k="ziegler nichols open loop reaction curve table k l t ตาราง ZN วงเปิด">
+        <p class="tf-n"><b><span class="fid">Z3</span> Ziegler–Nichols (reaction-curve method)</b> ตาราง ZN แบบกราฟขั้นบันได</p>
+        \[ \begin{array}{l|ccc} & K_P & T_i & T_d \\ \hline \text{P} & \dfrac{T}{KL} & - & - \\ \text{PI} & \dfrac{0.9T}{KL} & \dfrac{L}{0.3} & - \\ \text{PID} & \dfrac{1.2T}{KL} & 2L & 0.5L \end{array} \]
+        <p class="tf-x">ใช้ได้ดีเมื่อ \(0.1 \lt L/T \lt 1\) · ถ้า \(L/T\) เล็กมาก เกนจะสูงเกิน ถ้าใหญ่ (หน่วงเวลาครอบงำ) ใช้ SIMC หรือ Smith predictor</p>
+      </div>
+      <div class="tf wide" id="Z4" data-k="cohen coon tuning rules fopdt table cohen-coon">
+        <p class="tf-n"><b><span class="fid">Z4</span> Cohen–Coon (PID)</b> กฎของโคเฮน–คูน</p>
+        \[ K_P = \frac{T}{KL}\left(\frac43 + \frac{L}{4T}\right), \qquad T_i = L\,\frac{32 + 6L/T}{13 + 8L/T}, \qquad T_d = \frac{4L}{11 + 2L/T} \]
+        <p class="tf-x">ปรับปรุงจาก ZN ให้ดีขึ้นเมื่อหน่วงเวลามาก แต่ยังดุดันพอกัน</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="simc">
+    <h2 id="simc">IMC, Lambda และ SIMC: จูนแบบตั้งความเร็วเอง <span class="lv lv-i">กลาง</span></h2>
+    <p>แนวคิดสมัยใหม่: เลือก<strong>ค่าคงเวลาวงปิดที่ต้องการ</strong> \(\tau_c\) (หรือ \(\lambda\)) เอง แล้วคำนวณเกนให้ได้ตามนั้น ปรับความดุ–นุ่มได้ด้วยตัวแปรเดียว Skogestad (2003) เสนอ SIMC ที่ใช้ง่ายและทนทาน ค่าเริ่มต้นที่แนะนำคือ \(\tau_c = L\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Z5" data-k="simc skogestad imc lambda tuning tau c pi rule closed loop time constant การจูน SIMC IMC แลมบ์ดา">
+        <p class="tf-n"><b><span class="fid">Z5</span> SIMC PI rule (Skogestad)</b> กฎ SIMC สำหรับ PI</p>
+        \[ K_P = \frac{1}{K}\cdot\frac{T}{\tau_c + L}, \qquad T_i = \min\{T,\ 4(\tau_c + L)\}, \qquad \tau_c = L \text{ (ค่าแนะนำ)} \]
+        <p class="tf-x">\(\tau_c\) เล็ก = เร็วแต่ทนทานน้อย · \(\tau_c\) ใหญ่ = ช้าแต่ทนทาน · IMC/Lambda tuning ใช้ \(K_P = \frac{T}{K(\lambda + L)}\), \(T_i = T\) (เหมือนกันเมื่อ \(T\) ไม่ใหญ่มาก) · ใช้ \(T_i = 4(\tau_c + L)\) เมื่อ \(T\) ใหญ่มาก (พลานต์เกือบเป็นอินทิเกรเตอร์) เพื่อต้านการรบกวนที่โหลดได้เร็ว</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-z2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Z-2 · เทียบกฎกับฮีตเตอร์</span><h3>ฮีตเตอร์มีแบบจำลอง \(G(s) = \dfrac{e^{-s}}{5s + 1}\) (\(K = 1,\ L = 1,\ T = 5\)) เทียบ ZN, Cohen–Coon และ SIMC</h3></div>
+      <ol class="steps">
+        <li><p>ZN-PID <a class="tag tf" href="#Z3">Z3</a>: \(K_P = \frac{1.2(5)}{1} = 6,\ T_i = 2,\ T_d = 0.5\)</p></li>
+        <li><p>ZN-PI: \(K_P = 4.5,\ T_i = 3.33\)</p></li>
+        <li><p>Cohen–Coon PID <a class="tag tf" href="#Z4">Z4</a>: \(K_P = 5\left(\tfrac43 + \tfrac{1}{20}\right) = 6.92,\ T_i = \tfrac{33.2}{14.6} = 2.27,\ T_d = \tfrac{4}{11.4} = 0.351\)</p></li>
+        <li><p>SIMC PI <a class="tag tf" href="#Z5">Z5</a> (\(\tau_c = L = 1\)): \(K_P = \tfrac{5}{2} = 2.5,\ T_i = \min(5, 8) = 5\)</p></li>
+      </ol>
+      <div class="table-wrap"><table>
+        <thead><tr><th>กฎ</th><th>K<sub>P</sub></th><th>T<sub>i</sub></th><th>T<sub>d</sub></th><th>Overshoot</th><th>t<sub>s</sub> (2%)</th><th>PM</th><th>GM</th></tr></thead>
+        <tbody>
+          <tr><td>ZN-PI</td><td>4.5</td><td>3.33</td><td>–</td><td>54%</td><td>11.7 s</td><td>31°</td><td>4.4 dB</td></tr>
+          <tr><td>ZN-PID</td><td>6</td><td>2</td><td>0.5</td><td>73%</td><td>8.7 s</td><td>41°</td><td>3.1 dB</td></tr>
+          <tr><td>Cohen–Coon PID</td><td>6.92</td><td>2.27</td><td>0.351</td><td>81%</td><td>9.0 s</td><td>28°</td><td>2.8 dB</td></tr>
+          <tr><td><b>SIMC PI</b></td><td>2.5</td><td>5</td><td>–</td><td><b>4.1%</b></td><td><b>6.1 s</b></td><td><b>61°</b></td><td><b>9.9 dB</b></td></tr>
+        </tbody>
+      </table></div>
+      <p class="answer">กฎเก่าให้ GM เพียง 3–4 dB (ถ้าพลานต์เปลี่ยนเกนแค่ 1.5 เท่าก็แทบไม่เสถียร) ส่วน SIMC PI เข้าที่เร็วกว่า overshoot น้อย และทนทานกว่ามาก แม้ไม่มีเทอม D</p>
+      <p class="check">จำลองด้วยพาเดอันดับ 10 แทนหน่วงเวลา python-control · ลองในแล็บ: เลือกพลานต์ “ฮีตเตอร์ + หน่วงเวลา” แล้วใส่ \(K_P = 2.5,\ K_I = 0.5\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="relay">
+    <h2 id="relay">Relay auto-tune: หาเกนวิกฤตอย่างปลอดภัย <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>Åström และ Hägglund (1984) แทนตัวควบคุมชั่วคราวด้วยรีเลย์ (on–off ขนาด \(\pm d\)) ระบบจะแกว่งค้างที่ความถี่วิกฤตเองโดยอัตโนมัติ และขนาดการแกว่งถูกจำกัดด้วย \(d\) จึงปลอดภัย เป็นหลักการของปุ่ม “Auto-tune” ในตัวควบคุมอุณหภูมิและไดรฟ์มอเตอร์เกือบทุกยี่ห้อ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Z6" data-k="relay feedback auto tune describing function ku = 4d / pi a astrom hagglund รีเลย์ ออโต้จูน">
+        <p class="tf-n"><b><span class="fid">Z6</span> Relay feedback test</b> การทดลองรีเลย์</p>
+        \[ K_u \approx \frac{4d}{\pi a}, \qquad T_u = \text{คาบการแกว่งที่วัดได้} \]
+        <p class="tf-x">\(d\) = ขนาดเอาต์พุตรีเลย์ · \(a\) = แอมพลิจูดของเอาต์พุตระบบ · มาจาก<a href="/learn/control-systems/nonlinear-robust/">ฟังก์ชันพรรณนา (describing function)</a> ของรีเลย์ \(N(a) = 4d/(\pi a)\) · ได้ \(K_u, T_u\) แล้วใช้ตาราง Z1</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-z3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Z-3 · ออโต้จูนเตาอบ</span><h3>ทดลองรีเลย์ด้วยกำลังฮีตเตอร์ \(\pm1\) (หน่วยปกติ) อุณหภูมิแกว่ง \(\pm0.25\) หน่วย คาบ 40 s หาเกน PI แบบ ZN</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#Z6">Z6</a>: \(K_u = \dfrac{4(1)}{\pi(0.25)} = 5.09\), \(T_u = 40\) s</p></li>
+        <li><p>ZN-PI <a class="tag tf" href="#Z1">Z1</a>: \(K_P = 0.45(5.09) = 2.29\), \(T_i = 40/1.2 = 33.3\) s → \(K_I = 0.069\ \text{s}^{-1}\)</p></li>
+      </ol>
+      <p class="answer">\(K_P \approx 2.3,\ T_i \approx 33\) s เป็นค่าเริ่มต้น แล้วปรับละเอียดหน้างาน · การแกว่งระหว่างทดลองมีแค่ ±0.25 หน่วย ไม่ทำให้ชิ้นงานเสีย</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="manual">
+    <h2 id="manual">ขั้นตอนจูนด้วยมือหน้างาน <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="Z7" data-k="manual tuning procedure field practical steps checklist จูนด้วยมือ หน้างาน ขั้นตอน">
+        <p class="tf-n"><b><span class="fid">Z7</span> Field tuning checklist</b> เช็กลิสต์จูนหน้างาน</p>
+        <ol>
+          <li>ตรวจทิศทาง (direct/reverse acting) เซนเซอร์ หน่วย และขีดจำกัดตัวขับก่อนเสมอ เปิด anti-windup</li>
+          <li>เริ่มด้วยค่าจากกฎ (SIMC หรือ ZN ลดเกนลงครึ่งหนึ่ง) หรือ P อย่างเดียวเกนต่ำ</li>
+          <li>ทดสอบด้วยการเปลี่ยนค่าอ้างอิงเล็ก ๆ และการรบกวน (ถ้าทำได้) ทีละครั้ง</li>
+          <li>แกว่งมาก → ลด \(K_P\) หรือเพิ่ม \(T_i\) · ช้าเกิน → เพิ่ม \(K_P\) · ค้างนาน → ลด \(T_i\) · overshoot ต่อค่าอ้างอิงมากแต่ต้านการรบกวนดี → ใช้ setpoint weighting \(b \lt 1\)</li>
+          <li>เพิ่ม \(T_d\) ทีละน้อย (เริ่ม \(T_i/6\) ถึง \(T_i/4\)) ถ้าสัญญาณวัดสะอาด พร้อมฟิลเตอร์ \(N = 8\) ถึง 10</li>
+          <li>บันทึกค่าและทดสอบที่จุดทำงานอื่น (โหลดต่ำ/สูง) ถ้าต่างกันมากพิจารณา gain scheduling</li>
+        </ol>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ลองค่าจากแต่ละกฎ</h2>
+    <p>รายการพลานต์ด้านล่างตั้งเกนไว้ตามกฎในตัวอย่าง เลือกแล้วกด “ปักกราฟไว้เทียบ” ก่อนเปลี่ยนไปกฎอื่น จะเห็นความต่างระหว่างดุดันกับนุ่มนวลชัดเจน เปิด “จำกัด |u|” เพื่อดูผลของ windup</p>
+    <div class="pid-lab" data-presets='[{"n":"1/(s+1)^3 · ZN-PID (Z-1)","plant":"1/(s+1)^3","kp":4.8,"ki":2.65,"kd":2.18,"tend":30},{"n":"1/(s+1)^3 · Tyreus–Luyben","plant":"1/(s+1)^3","kp":3.64,"ki":0.456,"kd":2.09,"tend":30},{"n":"1/(s+1)^3 · P = K_u (แกว่งค้าง)","plant":"1/(s+1)^3","kp":8,"ki":0,"kd":0,"tend":30},{"n":"ฮีตเตอร์ · ZN-PID (Z-2)","plant":"e^(-1s)/(5s+1)","kp":6,"ki":3,"kd":3,"tend":30},{"n":"ฮีตเตอร์ · SIMC PI (Z-2)","plant":"e^(-1s)/(5s+1)","kp":2.5,"ki":0.5,"kd":0,"tend":30}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>PID ที่จูนแล้วต้องอยู่ในไมโครคอนโทรลเลอร์ ดู<a href="/learn/control-systems/digital-control/">ควบคุมดิจิทัล</a> สำหรับการแปลงและเลือกคาบสุ่ม และ<a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>สำหรับการจูนลูปซ้อน (กระแส ความเร็ว ตำแหน่ง) ที่ใช้ในมอเตอร์และหุ่นยนต์</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
