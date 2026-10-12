@@ -1,0 +1,207 @@
+<!--meta
+{
+  "title": "ปรากฏการณ์กิบส์ ทฤษฎีบทพาร์เซวาล ค่า RMS จากฮาร์มอนิก และการลู่เข้าของอนุกรมฟูเรียร์ | อาจารย์มด",
+  "h1": "การลู่เข้า ปรากฏการณ์กิบส์ ทฤษฎีบทพาร์เซวาล และอัตราลดของฮาร์มอนิก",
+  "description": "อนุกรมฟูเรียร์ลู่เข้าเมื่อใด: เงื่อนไขดีริชเลต์ ค่าที่จุดกระโดด ปรากฏการณ์กิบส์ (Gibbs) ที่พุ่งเกิน 8.95 % เสมอ ตัวคูณซิกมาของแลนโซส ทฤษฎีบทพาร์เซวาล (Parseval) ใช้หาค่า RMS และ THD จากฮาร์มอนิก กำลังที่อยู่ในฮาร์มอนิกหลัก ความเรียบกับอัตราลด 1/n 1/n² 1/n³ การอินทิเกรตทีละพจน์ และควรรวมกี่ฮาร์มอนิกในงานจริง",
+  "ogTitle": "กิบส์ 9 % และพาร์เซวาล: อนุกรมฟูเรียร์ลู่เข้าอย่างไร",
+  "lesson": "fourier-series",
+  "sub": "convergence-parseval",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Gibbs phenomenon", "Parseval's theorem", "Dirichlet conditions", "Convergence of Fourier series", "Root mean square", "Total harmonic distortion", "Lanczos sigma factor"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "ปรากฏการณ์กิบส์คืออะไร?", "a": "เมื่อรวมอนุกรมฟูเรียร์ถึงจำนวนพจน์จำกัด ใกล้รอยกระโดดจะมียอดพุ่งเกินประมาณ 8.95 % ของขนาดรอยกระโดด เพิ่มพจน์เท่าไรยอดก็ไม่เตี้ยลง แค่แคบลงและเข้าใกล้รอยกระโดดมากขึ้น เป็นเหตุให้ตัวกรองที่ตัดความถี่คมเกิดการแกว่ง (ringing)"},
+    {"q": "ทฤษฎีบทพาร์เซวาลใช้ทำอะไรในงานไฟฟ้า?", "a": "ใช้หาค่า RMS จากค่า RMS ของแต่ละฮาร์มอนิก \\(V_{rms} = \\sqrt{V_0^2 + V_1^2 + V_2^2 + \\cdots}\\) ซึ่งเป็นวิธีที่เครื่องวิเคราะห์กำลังใช้ และใช้นิยาม THD ว่าเป็นสัดส่วน RMS ของฮาร์มอนิกทั้งหมดเทียบกับฮาร์มอนิกหลัก"},
+    {"q": "ทำไมสามเหลี่ยมลู่เข้าเร็วกว่าสี่เหลี่ยม?", "a": "ความเรียบกำหนดอัตราลด รูปที่มีรอยกระโดด (สี่เหลี่ยม) ลดตาม 1/n หรือ −20 dB/decade รูปที่ต่อเนื่องแต่มุมหัก (สามเหลี่ยม) ลดตาม 1/n² หรือ −40 dB/decade รูปที่อนุพันธ์แรกต่อเนื่องลดตาม 1/n³"},
+    {"q": "วัดฮาร์มอนิกถึงลำดับที่เท่าไรจึงพอ?", "a": "งานคุณภาพไฟฟ้าตามมาตรฐาน IEEE 519 และ IEC 61000-4-7 ใช้ถึงลำดับที่ 50 (2.5 kHz ที่ 50 Hz) งานอินเวอร์เตอร์ PWM ต้องดูถึงอย่างน้อยสองถึงสามเท่าของความถี่สวิตชิ่ง งาน EMI ดูถึงหลายสิบ MHz ตามเวลาขาขึ้นของสัญญาณ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>กิบส์ · พาร์เซวาล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.5 · อนุกรมฟูเรียร์ · Convergence, Gibbs &amp; Parseval</p>
+      <h1>การลู่เข้า ปรากฏการณ์กิบส์ ทฤษฎีบทพาร์เซวาล และอัตราลดของฮาร์มอนิก</h1>
+      <p class="lede">อนุกรมฟูเรียร์เป็นผลรวมไม่รู้จบ แต่งานจริงรวมได้แค่จำนวนจำกัด หน้านี้ตอบว่ารวมแค่ N ตัวแล้วผิดไปเท่าไร ตรงไหนผิดมากที่สุด และพลังงานกระจายอยู่ในฮาร์มอนิกอย่างไร คำตอบสุดท้ายคือทฤษฎีบทพาร์เซวาล ซึ่งเป็นฐานของนิยาม RMS และ THD ที่เครื่องวัดทุกเครื่องใช้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#parseval">พาร์เซวาล → RMS</a>
+        <a class="btn btn-ghost btn-sm" href="#gibbs">กิบส์</a>
+        <a class="btn btn-ghost btn-sm" href="#decay">อัตราลด</a>
+        <a class="btn btn-ghost btn-sm" href="#how-many">กี่ฮาร์มอนิกจึงพอ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ที่รอยกระโดด อนุกรมให้ค่ากึ่งกลาง ใกล้ ๆ รอยกระโดดพุ่งเกิน 8.95 % ของขนาดกระโดดเสมอ (กิบส์)</li>
+          <li>พาร์เซวาล: \(X_{rms}^2 = a_0^2 + \sum A_n^2/2\) → \(X_{rms} = \sqrt{X_0^2 + X_1^2 + X_2^2 + \cdots}\) (ใช้ RMS ของแต่ละตัว)</li>
+          <li>THD = \(\sqrt{X_{rms}^2 - X_0^2 - X_1^2}\,/\,X_1\) · สี่เหลี่ยม 48.3 % สามเหลี่ยม 12.1 %</li>
+          <li>มีรอยกระโดด → ลดตาม 1/n · มุมหัก → 1/n² · อนุพันธ์ต่อเนื่อง → 1/n³</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น parseval, rms, gibbs, dirichlet, decay, thd" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="dirichlet">
+    <h2 id="dirichlet">อนุกรมลู่เข้าเมื่อไร: เงื่อนไขของดีริชเลต์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P1" data-k="dirichlet conditions convergence bounded finite discontinuities extrema เงื่อนไขดีริชเลต์ การลู่เข้า"><p class="tf-n"><b><span class="fid">P1</span> Dirichlet conditions</b> เงื่อนไขของดีริชเลต์</p>
+        \[ \int_T |x(t)|\,dt \lt \infty,\quad \text{ในหนึ่งคาบมีจุดสูงสุด/ต่ำสุดจำกัด และรอยกระโดดจำกัด (แต่ละรอยมีขนาดจำกัด)} \]
+        <p class="tf-x">สัญญาณไฟฟ้าจริงทุกตัวผ่านเงื่อนไขนี้ เป็นเงื่อนไขพอเพียง (ไม่จำเป็น) ฟังก์ชันประหลาดทางคณิตศาสตร์บางตัวเท่านั้นที่ไม่ผ่าน</p></div>
+      <div class="tf wide" id="P2" data-k="pointwise convergence jump midpoint continuous uniform convergence ลู่เข้ารายจุด กึ่งกลาง"><p class="tf-n"><b><span class="fid">P2</span> What the series converges to</b> ผลรวมลู่เข้าสู่อะไร</p>
+        \[ \lim_{N\to\infty}\Big[a_0 + \sum_{n=1}^{N}(a_n\cos n\omega_0 t + b_n\sin n\omega_0 t)\Big] = \begin{cases} x(t) & \text{จุดที่ต่อเนื่อง} \\[2pt] \tfrac12\big[x(t^-) + x(t^+)\big] & \text{จุดกระโดด} \end{cases} \]
+        <p class="tf-x">ถ้า x ต่อเนื่องทุกจุดและเป็นคาบ อนุกรมลู่เข้าแบบเอกรูป (ผิดไม่เกินค่าหนึ่งทุกจุดพร้อมกัน) ถ้ามีรอยกระโดด ลู่เข้ารายจุดเท่านั้น ใกล้รอยกระโดดยังผิดมากเสมอ (ดูกิบส์)</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="gibbs">
+    <h2 id="gibbs">ปรากฏการณ์กิบส์: ยอดเกิน 9 % ที่ไม่ยอมหาย <span class="lv lv-i">กลาง</span></h2>
+    <p>ลองรวมอนุกรมของสี่เหลี่ยมให้มากขึ้นเรื่อย ๆ ส่วนกลางเรียบขึ้น มุมคมขึ้น แต่ข้างรอยกระโดดมี “หู” แหลมขึ้นไปเกินค่าจริงเสมอ หูนี้แคบลงและเข้าใกล้รอยกระโดดตามจำนวนพจน์ แต่ความสูงไม่ลดลงเลย ค้นพบโดย Wilbraham (1848) และอธิบายโดย Gibbs (1899)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P3" data-k="gibbs phenomenon overshoot 8.95% 9% jump ringing wilbraham กิบส์ พุ่งเกิน หู"><p class="tf-n"><b><span class="fid">P3</span> Gibbs overshoot</b> ขนาดและตำแหน่งของหูกิบส์</p>
+        \[ \text{overshoot} \to \Big(\frac{1}{\pi}\mathrm{Si}(\pi) - \frac12\Big)\Delta = 0.0895\,\Delta, \qquad t_{peak} \approx \frac{T}{2(N+1)} \text{ จากรอยกระโดด} \]
+        <p class="tf-x">\(\Delta\) คือขนาดรอยกระโดด \(\mathrm{Si}(\pi) = \int_0^\pi \frac{\sin u}{u}du = 1.8519\) · สี่เหลี่ยม ±1 (Δ = 2) จึงพุ่งถึง 1.179 ไม่ว่า N จะมากเท่าไร</p></div>
+      <div class="tf wide" id="P4" data-k="lanczos sigma factor window smoothing reduce gibbs ringing ซิกมา แลนโซส ลดหู หน้าต่าง"><p class="tf-n"><b><span class="fid">P4</span> Lanczos σ-factors</b> ลดหูกิบส์ด้วยการถ่วงน้ำหนัก</p>
+        \[ x_N^{\sigma}(t) = a_0 + \sum_{n=1}^{N} \mathrm{sinc}\!\Big(\frac{n}{N+1}\Big)\big[a_n\cos n\omega_0 t + b_n\sin n\omega_0 t\big] \]
+        <p class="tf-x">ค่อย ๆ ลดน้ำหนักฮาร์มอนิกสูงแทนการตัดทิ้งทันที หูเหลือราว 1 % แลกกับขอบที่มนลง หลักการเดียวกับ “หน้าต่าง” ใน FFT และการออกแบบตัวกรอง FIR ลองติ๊ก “ลดหูกิบส์ (σ)” ในแล็บ</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-gibbs--><svg viewBox="0 0 660 270" role="img" aria-label="ผลรวมอนุกรมของคลื่นสี่เหลี่ยมถึงฮาร์มอนิกที่ 9 สีฟ้าและที่ 49 สีส้ม ยอดเกินใกล้รอยกระโดดสูงราว 1.18 เท่ากันทั้งสองเส้น แค่แคบลง เส้นประที่ 1.179 คือขีดจำกัดของกิบส์"><defs><marker id="fs-gibbs-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="gr" x1="50" y1="206.8" x2="590" y2="206.8"/><text class="tk" x="44" y="210.8" text-anchor="end">−1</text><line class="gr" x1="50" y1="129" x2="590" y2="129"/><text class="tk" x="44" y="133" text-anchor="end">0</text><line class="gr" x1="50" y1="51.2" x2="590" y2="51.2"/><text class="tk" x="44" y="55.2" text-anchor="end">1</text><line class="ax" x1="50" y1="129" x2="600" y2="129" marker-end="url(#fs-gibbs-a)"/><text class="lb" x="602" y="133">t</text><path class="w0" d="M50 206.8L112.3 206.8L112.3 51.2L527.7 51.2L527.7 206.8L590 206.8"/><path class="w2" d="M50 208.6L57.6 214.8L61.9 217.9L65.1 219.6L68.4 220.7L71.6 220.9L73.8 220.5L75.9 219.7L78.1 218.3L80.2 216.3L82.4 213.8L84.6 210.8L86.7 207.1L88.9 202.9L91 198.1L93.2 192.8L95.4 187L97.5 180.7L100.8 170.5L104 159.4L108.3 143.9L115.9 115.7L120.2 100L123.4 88.9L126.7 78.6L128.8 72.2L131 66.3L133.2 60.8L135.3 56L137.5 51.6L139.6 47.9L141.8 44.7L144 42.1L146.1 40.1L148.3 38.6L150.4 37.6L152.6 37.1L155.8 37.2L159.1 38.2L162.3 39.9L166.6 42.9L176.4 50.9L180.7 54.1L185 56.7L188.2 58.1L191.5 58.9L194.7 59.3L199 59L203.4 57.9L208.8 55.7L220.6 49.6L226 47.3L230.4 46L234.7 45.3L239 45.3L243.3 45.9L248.7 47.4L262.8 53L268.2 54.8L273.6 56L277.9 56.4L282.2 56.2L287.6 55.2L294.1 53.2L304.9 49.2L310.3 47.6L315.7 46.6L320 46.3L325.4 46.7L330.8 47.9L339.4 50.8L348.1 53.9L353.5 55.4L358.9 56.3L363.2 56.3L367.5 55.8L372.9 54.5L380.5 51.7L389.1 48.2L394.5 46.4L398.8 45.5L403.2 45.2L407.5 45.6L411.8 46.5L417.2 48.6L431.2 55.7L435.6 57.5L439.9 58.8L444.2 59.3L447.4 59.1L450.7 58.4L453.9 57.2L458.2 54.8L463.6 50.9L472.3 43.7L476.6 40.5L479.8 38.7L483.1 37.5L486.3 37L488.5 37.3L490.6 38L492.8 39.3L495 41L497.1 43.3L499.3 46.2L501.4 49.7L503.6 53.7L505.8 58.3L507.9 63.5L510.1 69.2L512.2 75.3L515.5 85.4L518.7 96.2L523 111.7L531.7 143.9L536 159.4L539.2 170.5L542.5 180.7L544.6 187L546.8 192.8L549 198.1L551.1 202.9L553.3 207.1L555.4 210.8L557.6 213.8L559.8 216.3L561.9 218.3L564.1 219.7L566.2 220.5L568.4 220.9L571.6 220.7L574.9 219.6L578.1 217.9L582.4 214.8L590 208.6"/><path class="w1" d="M50 206.9L53.1 208.9L55.4 208.8L60.8 204.6L63.1 204.2L65.8 206.1L68.9 209.2L70.8 210L72.8 209.1L77 204L78.9 202.8L80.9 203.7L85.5 210.7L87 211.9L88.6 211.4L90.5 208.4L93.6 201.4L95.1 199.4L96.3 199.4L97.4 201L99 205.4L101.7 215.9L102.8 219.3L104 220.7L104.8 220L105.5 217.7L106.3 213.7L107.1 207.9L107.9 200.3L108.6 190.9L109.4 179.9L110.6 161L113.6 104.4L114.8 84.6L115.6 72.8L116.3 62.6L117.1 54L117.9 47.2L118.7 42.2L119.4 39L120.2 37.5L121 37.4L122.1 39.5L125.6 52.5L127.1 56.9L128.3 58.6L129.5 58.6L131 56.7L134.5 48.9L136 46.6L137.6 46.1L139.5 47.8L143 53.3L144.9 55L146.8 54.7L151.4 49.3L153.4 48.1L155.7 48.8L159.9 53L162.2 53.9L164.9 52.6L168.4 49.6L170.7 48.9L173.8 50.5L177.3 53L180 53.1L185.4 49.7L188.1 49.5L193.9 52.6L196.6 52.7L202 50L205.1 49.9L210.5 52.4L213.5 52.4L218.9 50L222 50.1L227 52.3L230.1 52.3L235.5 50.2L239 50.4L244 52.3L247.5 52L252.5 50.2L256.4 50.7L261 52.3L265.2 51.5L269.5 50.2L277.6 52.2L281.8 51.5L286.1 50.2L294.2 52.2L298.4 51.5L302.6 50.3L310.7 52.2L315 51.5L319.2 50.3L327.3 52.1L331.6 51.5L335.8 50.3L340.4 51.1L344.7 52.2L352.4 50.3L356.6 50.9L360.9 52.2L369 50.2L373.2 50.9L377.5 52.3L381.7 51.5L386 50.1L393.7 52.3L397.1 51.9L401.8 50.1L405.2 50.4L410.3 52.4L413.7 52L418.4 50L421.4 50.2L426.5 52.4L429.5 52.4L434.9 49.9L438 50L443 52.6L445.7 52.8L451.5 49.6L454.2 49.6L459.6 52.9L462.3 53.1L467.7 49.4L470 48.9L473.1 50.8L476.2 53.4L478.5 53.8L481.2 51.9L484.3 48.8L486.2 48L488.2 49L492.4 54.1L494.3 55.2L496.3 54.2L500.5 47.8L502.1 46.2L503.6 46.3L505.1 48.2L509 56.7L510.5 58.6L511.7 58.6L512.9 56.9L514.4 52.5L517.1 42L518.3 38.6L519.4 37.3L520.2 38.1L521 40.4L521.7 44.5L522.5 50.3L523.3 58L524 67.5L524.8 78.5L526 97.5L529.1 154.2L530.2 173.9L531 185.6L531.8 195.8L532.5 204.3L533.3 211.1L534.1 216L534.8 219.1L535.6 220.5L536.4 220.5L537.5 218.4L541 205.4L542.6 201L543.7 199.4L544.9 199.4L546.4 201.4L549.9 209.2L551.4 211.4L553 211.9L554.9 210.2L558.4 204.6L560.3 203L562.2 203.3L566.9 208.7L568.8 209.9L571.1 209.2L575.3 205L577.7 204.1L580.4 205.4L583.8 208.4L586.1 209.1L589.2 207.5L590 206.9"/><line class="dsh" x1="50" y1="37.3" x2="590" y2="37.3"/><text class="tk" x="596" y="41.3" text-anchor="start">1.179</text><text class="tk" x="112.3" y="248" text-anchor="middle">0</text><text class="tk" x="320" y="248" text-anchor="middle">T/4</text><text class="tk" x="527.7" y="248" text-anchor="middle">T/2</text><line class="w2" x1="380" y1="258" x2="402" y2="258"/><text class="th" x="408" y="262">N = 9</text><line class="w1" x1="472" y1="258" x2="494" y2="258"/><text class="th" x="500" y="262">N = 49</text><line class="w0" x1="564" y1="258" x2="586" y2="258"/><text class="th" x="592" y="262">สี่เหลี่ยม</text></svg><!--/FIG-->
+      <figcaption>ผลรวมอนุกรมของสี่เหลี่ยม ±1 ถึงฮาร์มอนิกที่ 9 (สีฟ้า) และ 49 (สีส้ม) หูยังสูงราว 1.18 เท่ากัน แค่แคบลง เส้นประบน 1.179 คือขีดจำกัดของกิบส์</figcaption>
+    </figure>
+    <div class="wx" id="ex-p1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-1 · หูกิบส์ของสี่เหลี่ยม</span><h3>สี่เหลี่ยม ±1 V รวมถึงฮาร์มอนิกที่ 9 และที่ 99 ค่าสูงสุดของผลรวมเท่าไร และอยู่ห่างจากรอยกระโดดเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#P3">P3</a> ทำนาย: \(1 + 0.0895 \times 2 = 1.179\) V ตำแหน่ง \(T/(2 \times 10) = 0.05T\) และ \(T/200 = 0.005T\)</p></li>
+        <li><p>คำนวณจริงด้วยตัวเลข: N = 9 ได้ยอด 1.1823 V ที่ \(0.050T\) · N = 99 ได้ 1.1790 V ที่ \(0.005T\)</p></li>
+      </ol>
+      <p class="answer">ยอดเกินเกือบ 18 % ของแอมพลิจูด (9 % ของ Δ) ทั้งสองกรณี ต่างกันแค่ความกว้าง นี่คือเหตุผลที่ตัวกรองผ่านต่ำแบบ “brick-wall” ทำให้ขอบสี่เหลี่ยมมีการแกว่งราว 9 % เสมอ</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="parseval">
+    <h2 id="parseval">ทฤษฎีบทพาร์เซวาล: กำลังรวม = ผลรวมกำลังของแต่ละฮาร์มอนิก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ยกกำลังสองอนุกรมแล้วเฉลี่ยตลอดคาบ ผลคูณไขว้ของฮาร์มอนิกต่างความถี่หายหมดตามความตั้งฉาก (<a href="/learn/fourier-series/coefficients/#T1">T1–T3</a>) เหลือแค่กำลังสองของแต่ละตัว นี่แปลว่าฮาร์มอนิกแต่ละตัวส่งกำลังเข้าตัวต้านทานแยกกันโดยไม่รบกวนกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P5" data-k="parseval theorem power mean square sum of squares cn rms total พาร์เซวาล กำลังเฉลี่ย"><p class="tf-n"><b><span class="fid">P5</span> Parseval's theorem</b> ทฤษฎีบทพาร์เซวาล</p>
+        \[ \frac{1}{T}\int_T x^2(t)\,dt = a_0^2 + \frac12\sum_{n=1}^{\infty}\big(a_n^2 + b_n^2\big) = a_0^2 + \sum_{n=1}^{\infty}\frac{A_n^2}{2} = \sum_{n=-\infty}^{\infty}|c_n|^2 \]</div>
+      <div class="tf" id="P6" data-k="rms from harmonics true rms sqrt sum squares ค่า rms จากฮาร์มอนิก"><p class="tf-n"><b><span class="fid">P6</span> RMS from harmonic RMS values</b> RMS จากค่า RMS ของแต่ละตัว</p>
+        \[ X_{rms} = \sqrt{X_0^2 + X_1^2 + X_2^2 + X_3^2 + \cdots}, \qquad X_n = \frac{A_n}{\sqrt2} \]
+        <p class="tf-x">DC ใช้ค่าเต็ม ฮาร์มอนิกใช้ค่า RMS ของตัวเอง ไม่ใช่ผลรวมตรง ๆ แบบเลขคณิต</p></div>
+      <div class="tf" id="P7" data-k="thd parseval fundamental power fraction distortion THD สัดส่วนกำลัง ฮาร์มอนิกหลัก"><p class="tf-n"><b><span class="fid">P7</span> THD and power in the fundamental</b> THD จากพาร์เซวาล</p>
+        \[ \mathrm{THD} = \frac{\sqrt{X_{rms}^2 - X_0^2 - X_1^2}}{X_1}, \qquad \frac{X_1^2}{X_{rms}^2} = \frac{1}{1 + \mathrm{THD}^2} \;(X_0 = 0) \]
+        <p class="tf-x">ใช้ RMS ทั้งก้อนแทนการบวกฮาร์มอนิกทีละตัว จึงหา THD แบบแม่นยำของรูปคลื่นในตารางได้ด้วยอินทิกรัลตัวเดียว</p></div>
+    </div>
+    <div class="wx" id="ex-p2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-2 · THD ของสี่เหลี่ยมแบบแม่นยำ</span><h3>สี่เหลี่ยม ±A มีกำลังในฮาร์มอนิกหลักกี่ % และ THD เท่าไร ถ้ารวมถึงฮาร์มอนิกที่ 5, 9, 49 ได้กำลังกี่ %</h3></div>
+      <ol class="steps">
+        <li><p>\(X_{rms} = A\) (สี่เหลี่ยมยกกำลังสองได้ \(A^2\) ตลอด) · \(X_1 = \frac{4A}{\pi\sqrt2} = 0.9003A\)</p></li>
+        <li><p>สัดส่วนกำลัง \(X_1^2/X_{rms}^2 = 8/\pi^2 = 81.06\) %</p></li>
+        <li><p><a class="tag tf" href="#P7">P7</a>: \(\mathrm{THD} = \sqrt{1/0.8106 - 1} = \sqrt{\pi^2/8 - 1} = 48.34\) %</p></li>
+        <li><p>สะสม \(\frac{8}{\pi^2}\sum_{n\,\text{คี่} \le N}\frac{1}{n^2}\): ถึง 5 → 93.31 % · ถึง 9 → 95.96 % · ถึง 49 → 99.19 %</p></li>
+      </ol>
+      <p class="answer">ฮาร์มอนิกหลัก 81.1 % ของกำลัง THD 48.3 % · ต้องรวมถึงฮาร์มอนิกที่ 49 จึงได้ 99 % นี่คือเหตุผลที่เครื่องวิเคราะห์อ่าน THD ได้ราว 47–48 % จากสี่เหลี่ยม (นับถึงลำดับ 40 หรือ 50) ไม่ถึง 48.3 % พอดี</p>
+    </div>
+    <div class="wx" id="ex-p3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-3 · แรงดันไฟเพี้ยนเล็กน้อย</span><h3>แรงดันในอาคาร: ฮาร์มอนิกหลัก 230 V, ที่ 5 = 11.5 V, ที่ 7 = 6.9 V, ที่ 11 = 4.6 V (RMS) หา \(V_{rms}\) และ THD</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#P6">P6</a>: \(V_{rms} = \sqrt{230^2 + 11.5^2 + 6.9^2 + 4.6^2} = 230.44\) V</p></li>
+        <li><p>THD \(= \sqrt{11.5^2 + 6.9^2 + 4.6^2}/230 = \sqrt{5^2 + 3^2 + 2^2}\,\% = 6.16\) %</p></li>
+      </ol>
+      <p class="answer">THD 6.2 % (เกินเกณฑ์ กฟภ. 5 % ที่ 0.4 kV) แต่ RMS เพิ่มขึ้นแค่ 0.19 % มิเตอร์จึงแทบไม่เห็นความเปลี่ยนแปลง ต้องดูที่สเปกตรัม <a href="/learn/fourier-series/power-harmonics/#limits">ดูขีดจำกัด</a></p>
+    </div>
+    <div class="wx" id="ex-p4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-4 · ผลพลอยได้ทางคณิตศาสตร์</span><h3>ใช้พาร์เซวาลกับฟันเลื่อย \(x = t\) บน \(-\pi \lt t \lt \pi\) หาค่า \(\sum_{n=1}^{\infty} 1/n^2\)</h3></div>
+      <ol class="steps">
+        <li><p>จาก <a href="/learn/fourier-series/symmetry/#ex-s5">S-5</a>: \(b_n = 2(-1)^{n+1}/n\)</p></li>
+        <li><p>ซ้าย: \(\frac{1}{2\pi}\int_{-\pi}^{\pi}t^2dt = \frac{\pi^2}{3}\) · ขวา: \(\frac12\sum\frac{4}{n^2} = 2\sum\frac{1}{n^2}\)</p></li>
+      </ol>
+      <p class="answer">\(\sum 1/n^2 = \pi^2/6\) (ปัญหาบาเซิล) ทำแบบเดียวกันกับสามเหลี่ยมได้ \(\sum_{n\,\text{คี่}} 1/n^4 = \pi^4/96\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="decay">
+    <h2 id="decay">ความเรียบกำหนดอัตราลดของฮาร์มอนิก <span class="lv lv-i">กลาง</span></h2>
+    <p>ดูรูปคลื่นแล้วบอกความชันของสเปกตรัมบนกราฟ log–log ได้ทันที ยิ่งรูปเรียบ ฮาร์มอนิกสูงยิ่งน้อย ข้อนี้ใช้ออกแบบ EMI (ทำขอบให้ช้าลง) และอธิบายว่าทำไมแรงดันอินเวอร์เตอร์ที่มีขอบคมต้องใช้ฟิลเตอร์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P8" data-k="decay rate smoothness 1/n 1/n^2 1/n^3 -20 dB/decade -40 dB/decade jump kink อัตราลด ความเรียบ"><p class="tf-n"><b><span class="fid">P8</span> Smoothness ↔ decay</b> ความเรียบกับอัตราลด</p>
+        \[ \text{มีรอยกระโดด: } A_n \sim \frac{1}{n}\;(-20\ \text{dB/dec}) \quad \text{มุมหัก: } \frac{1}{n^2}\;(-40) \quad \text{อนุพันธ์แรกต่อเนื่อง: } \frac{1}{n^3}\;(-60) \]
+        <p class="tf-x">เหตุผล: ดิฟหนึ่งครั้งคูณสัมประสิทธิ์ด้วย n (<a href="/learn/fourier-series/complex-spectrum/#C10">C10</a>) รูปที่ต้องดิฟ k ครั้งจึงจะเกิดรอยกระโดด มีสัมประสิทธิ์ลดตาม \(1/n^{k+1}\)</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-decay--><svg viewBox="0 0 660 292" role="img" aria-label="แอมพลิจูดเป็นเดซิเบลเทียบลำดับฮาร์มอนิกแบบลอการิทึม: สี่เหลี่ยมลด 1 ส่วน n หรือ ลบ 20 dB ต่อดีเคด สามเหลี่ยมลด 1 ส่วน n กำลังสอง ลบ 40 dB ต่อดีเคด และพาราโบลาต่อกันลด 1 ส่วน n กำลังสาม ลบ 60 dB ต่อดีเคด"><defs><marker id="fs-decay-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="gr" x1="60" y1="31.6" x2="560" y2="31.6"/><text class="tk" x="54" y="35.6" text-anchor="end">0</text><line class="gr" x1="60" y1="77.9" x2="560" y2="77.9"/><text class="tk" x="54" y="81.9" text-anchor="end">−20</text><line class="gr" x1="60" y1="124.2" x2="560" y2="124.2"/><text class="tk" x="54" y="128.2" text-anchor="end">−40</text><line class="gr" x1="60" y1="170.5" x2="560" y2="170.5"/><text class="tk" x="54" y="174.5" text-anchor="end">−60</text><line class="gr" x1="60" y1="216.8" x2="560" y2="216.8"/><text class="tk" x="54" y="220.8" text-anchor="end">−80</text><line class="gr" x1="60" y1="20" x2="60" y2="240"/><line class="gr" x1="341.2" y1="20" x2="341.2" y2="240"/><text class="tk" x="60" y="254" text-anchor="middle">1</text><text class="tk" x="194.2" y="254" text-anchor="middle">3</text><text class="tk" x="256.5" y="254" text-anchor="middle">5</text><text class="tk" x="341.2" y="254" text-anchor="middle">10</text><text class="tk" x="425.8" y="254" text-anchor="middle">20</text><text class="tk" x="537.7" y="254" text-anchor="middle">50</text><text class="tk" x="566" y="254">n</text><text class="tk" x="20" y="14">dB</text><path class="w2" d="M60 31.6L194.2 53.7L256.5 64L297.6 70.7L328.3 75.8L352.8 79.8L373.2 83.2L390.7 86.1L406 88.6L419.6 90.8L431.8 92.8L442.9 94.6L453.1 96.3L462.5 97.9L471.2 99.3L479.4 100.7L487 101.9L494.2 103.1L501 104.2L507.4 105.3L513.5 106.3L519.3 107.2L524.9 108.1L530.2 109L535.3 109.9L540.2 110.7L544.9 111.4L549.4 112.2L553.7 112.9L557.9 113.6"/><circle class="dot" cx="60" cy="31.6" r="2.6"/><circle class="dot" cx="194.2" cy="53.7" r="2.6"/><circle class="dot" cx="256.5" cy="64" r="2.6"/><circle class="dot" cx="297.6" cy="70.7" r="2.6"/><circle class="dot" cx="328.3" cy="75.8" r="2.6"/><circle class="dot" cx="352.8" cy="79.8" r="2.6"/><circle class="dot" cx="373.2" cy="83.2" r="2.6"/><circle class="dot" cx="390.7" cy="86.1" r="2.6"/><line class="w2" x1="100" y1="172" x2="124" y2="172"/><text class="th" x="130" y="176">สี่เหลี่ยม 1/n · −20 dB/dec</text><path class="w3" d="M60 31.6L194.2 75.8L256.5 96.3L297.6 109.9L328.3 120L352.8 128L373.2 134.8L390.7 140.5L406 145.6L419.6 150L431.8 154.1L442.9 157.7L453.1 161.1L462.5 164.2L471.2 167L479.4 169.7L487 172.2L494.2 174.6L501 176.8L507.4 179L513.5 181L519.3 182.9L524.9 184.7L530.2 186.5L535.3 188.1L540.2 189.8L544.9 191.3L549.4 192.8L553.7 194.2L557.9 195.6"/><circle class="dot" cx="60" cy="31.6" r="2.6"/><circle class="dot" cx="194.2" cy="75.8" r="2.6"/><circle class="dot" cx="256.5" cy="96.3" r="2.6"/><circle class="dot" cx="297.6" cy="109.9" r="2.6"/><circle class="dot" cx="328.3" cy="120" r="2.6"/><circle class="dot" cx="352.8" cy="128" r="2.6"/><circle class="dot" cx="373.2" cy="134.8" r="2.6"/><circle class="dot" cx="390.7" cy="140.5" r="2.6"/><line class="w3" x1="100" y1="194" x2="124" y2="194"/><text class="th" x="130" y="198">สามเหลี่ยม 1/n² · −40 dB/dec</text><path class="w4" d="M60 31.6L194.2 97.9L256.5 128.7L297.6 149L328.3 164.2L352.8 176.3L373.2 186.4L390.7 195L406 202.5L419.6 209.3L431.8 215.3L442.9 220.8L453.1 225.8L462.5 230.5L471.2 234.8L479.4 238.8"/><circle class="dot" cx="60" cy="31.6" r="2.6"/><circle class="dot" cx="194.2" cy="97.9" r="2.6"/><circle class="dot" cx="256.5" cy="128.7" r="2.6"/><circle class="dot" cx="297.6" cy="149" r="2.6"/><circle class="dot" cx="328.3" cy="164.2" r="2.6"/><circle class="dot" cx="352.8" cy="176.3" r="2.6"/><circle class="dot" cx="373.2" cy="186.4" r="2.6"/><circle class="dot" cx="390.7" cy="195" r="2.6"/><line class="w4" x1="100" y1="216" x2="124" y2="216"/><text class="th" x="130" y="220">t(π − t) 1/n³ · −60 dB/dec</text><text class="th" x="64" y="284">ยิ่งเรียบ (ไม่กระโดด ไม่หักมุม) ยิ่งลดเร็ว → ฮาร์มอนิกน้อย</text></svg><!--/FIG-->
+      <figcaption>แอมพลิจูดเป็น dB เทียบลำดับ n แบบลอการิทึม: สี่เหลี่ยม (1/n) สามเหลี่ยม (1/n²) และพาราโบลาต่อกัน \(t(\pi - t)\) ขยายแบบคี่ (1/n³) ความชัน −20, −40, −60 dB ต่อดีเคด</figcaption>
+    </figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รูปคลื่น</th><th>ลักษณะที่ “ไม่เรียบ”</th><th>อัตราลด</th><th>ผลในงานจริง</th></tr></thead>
+      <tbody>
+        <tr><td>สี่เหลี่ยม พัลส์ PWM ฟันเลื่อย</td><td>รอยกระโดด</td><td>1/n</td><td>EMI สูง ต้องฟิลเตอร์</td></tr>
+        <tr><td>สามเหลี่ยม ไซน์เรียงกระแส กระแสตัวเหนี่ยวนำ</td><td>มุมหัก</td><td>1/n²</td><td>ฮาร์มอนิกสูงน้อย ริปเปิลเกือบเป็นไซน์</td></tr>
+        <tr><td>พัลส์คางหมู (มีเวลาขาขึ้น)</td><td>รอยกระโดดถูกทำให้เป็นมุม</td><td>1/n แล้ว 1/n²</td><td>หักมุมที่ \(f = 1/(\pi t_r)\) <a href="/learn/fourier-series/dc-dc-converters/#B9">B9</a></td></tr>
+        <tr><td>ไซน์บริสุทธิ์</td><td>เรียบทุกอันดับ</td><td>ไม่มีฮาร์มอนิก</td><td>อุดมคติ</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="termwise">
+    <h2 id="termwise">อินทิเกรตและดิฟอนุกรมทีละพจน์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P9" data-k="term by term integration differentiation series validity ทีละพจน์ อินทิเกรต ดิฟ"><p class="tf-n"><b><span class="fid">P9</span> Term-by-term operations</b> เมื่อไรทำได้</p>
+        \[ \int x\,dt:\ \text{ทำได้เสมอ (ถ้า } a_0 = 0\text{) ลู่เข้าดีขึ้น} \qquad \frac{dx}{dt}:\ \text{ทำได้เมื่อ } x \text{ ต่อเนื่องและ } x' \text{ ผ่านดีริชเลต์} \]
+        <p class="tf-x">ดิฟอนุกรมของสี่เหลี่ยมทีละพจน์ได้ \(\frac{4A\omega_0}{\pi}\sum\cos n\omega_0 t\) ซึ่งไม่ลู่เข้าแบบปกติ เพราะอนุพันธ์จริงคือขบวนอิมพัลส์ (<a href="/learn/fourier-series/complex-spectrum/#ex-c3">C-3</a>)</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="how-many">
+    <h2 id="how-many">ในงานจริงต้องรวมกี่ฮาร์มอนิก <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="P10" data-k="bandwidth rise time 0.35 harmonics needed แบนด์วิดท์ เวลาขาขึ้น จำนวนฮาร์มอนิก"><p class="tf-n"><b><span class="fid">P10</span> Bandwidth from rise time</b> แบนด์วิดท์ที่ต้องใช้</p>
+        \[ f_{BW} \approx \frac{0.35}{t_r} \]
+        <p class="tf-x">สัญญาณที่มีเวลาขาขึ้น \(t_r\) มีพลังงานสำคัญถึงราว \(0.35/t_r\) ใช้เลือกแบนด์วิดท์สโคป (<a href="/learn/function-generator/oscilloscope/#bandwidth">O8</a>) และจำนวนฮาร์มอนิกที่ต้องจำลอง</p></div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>งาน</th><th>ดูถึง</th><th>ที่มา</th></tr></thead>
+      <tbody>
+        <tr><td>คุณภาพไฟฟ้า (THD, IEEE 519)</td><td>ลำดับที่ 50 (2.5 kHz ที่ 50 Hz)</td><td>IEEE 519-2022, IEC 61000-4-7 · เครื่อง Class S ใช้ถึง 40</td></tr>
+        <tr><td>เครื่องใช้ไฟฟ้า ≤ 16 A</td><td>ลำดับที่ 40</td><td>IEC 61000-3-2</td></tr>
+        <tr><td>อินเวอร์เตอร์ PWM</td><td>อย่างน้อย 2–3 เท่าของ \(m_f\)</td><td>ไซด์แบนด์อยู่รอบ \(m_f\), \(2m_f\), \(3m_f\) <a href="/learn/fourier-series/inverters-pwm/#spwm">V6</a></td></tr>
+        <tr><td>เสียง (THD+N)</td><td>20 kHz</td><td>ขอบการได้ยิน</td></tr>
+        <tr><td>EMI นำทาง (conducted)</td><td>150 kHz – 30 MHz</td><td>มาตรฐานตระกูล CISPR</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: กิบส์และพาร์เซวาล <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เปิดค่าเริ่มต้น N = 99 แล้วดูหูกิบส์ อ่าน “หูกิบส์” ในแผงข้างล่าง (≈ 9 % ของ p-p) ติ๊ก “ลดหูกิบส์ (σ)” เพื่อดูผล P4 และเลื่อน N ลงแล้วดู “กำลังที่รวมแล้ว” เทียบกับตัวอย่าง P-2</p>
+    <div class="fs-lab" data-tabs="synth" data-preset="square-gibbs" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

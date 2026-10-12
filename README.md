@@ -85,3 +85,35 @@ nonlinear-robust U, mechatronics K, robotics A, power-electronics-control H, exa
   `scripts/cs_figs.py` (root loci, Bode, Nyquist, step responses, block diagrams); `--all` redraws every figure.
 - Every worked-example number was checked with python-control / sympy before publishing.
 - Short URLs (`/control`, `/routh`, `/root-locus`, `/bode-plot`, `/pid`, `/robotics` …) are in `_redirects`.
+
+## Fourier series & harmonic analysis (added 2026-10-12)
+Series `fourier-series` in `TOPICS` (build.mjs), topic 12, 4 parts × 14 sub-pages: introduction F, coefficients T,
+symmetry S, complex-spectrum C, convergence-parseval P, waveform-table W, circuit-analysis A, power-harmonics H,
+rectifiers R, inverters-pwm V, dc-dc-converters B, mitigation M, dft-fft D, analyzer-lab (the full lab page).
+Formula cards use the same markup as the other series; in the waveform table a thumbnail may sit between the title and
+the formula (`<div class="wtfig"><!--FIG:fs-wt-…--><!--/FIG--></div>`) and the formula index still picks the formula up.
+- Engine `assets/fs-core.js` (UMD, `window.FSCore` / `require`): complex helpers, exact piecewise Fourier coefficients
+  (`coefSegs`), the waveform library `WAVES` (13 shapes + typed `x(t)` via `sigexpr.js`), symmetry detection,
+  `waveStats` (RMS, THD, Parseval, Gibbs), circuits `CIRCUITS` with per-harmonic `circuitHarmonics` and the exact periodic
+  ODE solution `circuitExact`, load models `LOADS`/`loadModel` (R, RL, SMPS bridge + C, bridge + choke, TRIAC, PFC,
+  6/12-pulse with α and overlap, VFD, custom spectrum), the network solver `solveNetwork` (source Isc/IL and X/R, line
+  reactor, plain/detuned/tuned capacitor, active filter, damping branch) and `metrics` (P Q1 S D PF DPF THD TDD K In),
+  plus IEEE 519-2022 / IEC 61000-3-2 limit tables.
+- UI `assets/fs-lab.js`: `<div class="fs-lab" data-tabs="synth,circuit,power" data-tab="power" data-preset="smps"
+  data-compact data-open="steps" data-full-link data-waves="square,pulse" data-hash>` — tabs ① Fourier synthesis/analysis
+  with step-by-step working, ② circuit harmonic by harmonic, ③ oscilloscope + power analyzer with automatic diagnosis.
+  `<button data-fs-preset="<name>" [data-fs-target="<lab id>"]>` loads a preset into a lab on the page (or opens the
+  full lab). Presets are in `PRESETS` near the top of `fs-lab.js`; links `/learn/fourier-series/analyzer-lab/#preset=<name>`
+  and the share link `#lab=<state>` open a configured lab.
+- Figures: `python3 scripts/fs_figs.py` fills empty `<!--FIG:key--><!--/FIG-->` blocks in the series pages and the two
+  Fourier figures on the home page (`fs-home`, `fs-home-lab`); `--all` redraws every figure. Unknown keys owned by
+  `fg_figs.py` / `cs_figs.py` are left alone, and vice versa.
+- Markdown for AI assistants (llmstxt.org convention): every page in `MD_SERIES` (build.mjs) also gets
+  `<page>/index.html.md` and a `<link rel="alternate" type="text/markdown">`; the hand-written guide
+  `src/md/fourier-series.md` is published as `/learn/fourier-series/guide.md` (`MD_GUIDES`, `{{updated}}` is filled from the
+  hub's meta). Both are listed in llms.txt, and build.mjs regenerates the block between `# BEGIN generated: markdown copies`
+  and `# END generated` in `_headers` (text/markdown + `Link: rel="canonical"` to the HTML page). Add a series to
+  `MD_SERIES` to give it Markdown copies too.
+- Worked-example numbers were checked with numpy/scipy/sympy and against the lab engine (Node) before publishing.
+- Short URLs (`/fourier`, `/harmonics`, `/thd`, `/ieee519`, `/harmonic-analyzer`, `/power-analyzer`, `/parseval`, `/gibbs`,
+  `/spwm`, `/fft` …) are in `_redirects`.

@@ -1152,7 +1152,9 @@ def inject(paths):
         def rep(m):
             key = m.group(1)
             if key not in FIGS:
-                raise SystemExit(f"unknown figure {key} in {p}")
+                if "function-generator" in p:
+                    raise SystemExit(f"unknown figure {key} in {p}")
+                return m.group(0)  # a figure owned by another script (fs_figs.py)
             return f"<!--FIG:{key}-->" + FIGS[key]() + "<!--/FIG-->"
         out, n = re.subn(r"<!--FIG:([\w-]+)-->(?:<svg[\s\S]*?</svg><!--/FIG-->)?", rep, src)
         if out != src:

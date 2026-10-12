@@ -1,0 +1,225 @@
+<!--meta
+{
+  "title": "แก้ปัญหาฮาร์มอนิก: รีแอกเตอร์ เรโซแนนซ์คาปาซิเตอร์ ดีจูน 7 % ฟิลเตอร์จูน ฟิลเตอร์แอกทีฟ PFC พร้อมวิธีออกแบบ | อาจารย์มด",
+  "h1": "แก้ปัญหาฮาร์มอนิก: รีแอกเตอร์ เรโซแนนซ์ คาปาซิเตอร์ดีจูน ฟิลเตอร์จูน ฟิลเตอร์แอกทีฟ และ PFC",
+  "description": "วิธีลดฮาร์มอนิกในระบบไฟฟ้าด้วยอนุกรมฟูเรียร์: รีแอกเตอร์ไลน์ 3 % 5 % และโช้ก DC ของไดรฟ์ เรโซแนนซ์ขนานระหว่างคาปาซิเตอร์แก้ PF กับหม้อแปลง hr = √(Ssc/Qc) คาปาซิเตอร์ดีจูน 7 % และ 14 % ความถี่จูน 189 Hz แรงดันตกคร่อมคาปาซิเตอร์ ออกแบบฟิลเตอร์จูนที่ 4.7 ทีละขั้น 12 พัลส์ ฟิลเตอร์แอกทีฟ Active PFC หม้อแปลง K-rated และเช็กลิสต์แก้ปัญหาหน้างานพร้อมแล็บเครื่องวิเคราะห์กำลัง",
+  "ogTitle": "แก้ฮาร์มอนิกให้ถูกวิธี: รีแอกเตอร์ ดีจูน ฟิลเตอร์ และ PFC",
+  "lesson": "fourier-series",
+  "sub": "mitigation",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Harmonic mitigation", "Line reactor", "Parallel resonance", "Detuned capacitor bank", "Passive harmonic filter", "Active harmonic filter", "Power factor correction", "K-factor transformer"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "ทำไมคาปาซิเตอร์แก้ PF ระเบิดหรือฟิวส์ขาดบ่อยในโรงงานที่มีไดรฟ์?", "a": "คาปาซิเตอร์กับรีแอกแตนซ์ของหม้อแปลงเกิดเรโซแนนซ์ขนานที่ \\(h_r = \\sqrt{S_{sc}/Q_c}\\) ถ้า h_r ใกล้ฮาร์มอนิกที่ 5 หรือ 7 ที่ไดรฟ์ปล่อยออกมา กระแสฮาร์มอนิกจะถูกขยายหลายเท่าไหลวนระหว่างคาปาซิเตอร์กับหม้อแปลง คาปาซิเตอร์ร้อนเกินและแรงดันเพี้ยนสูง แก้ด้วยคาปาซิเตอร์ดีจูน"},
+    {"q": "คาปาซิเตอร์ดีจูน 7 % คืออะไร?", "a": "คือคาปาซิเตอร์ที่ต่อรีแอกเตอร์อนุกรมให้ \\(X_L = 7\\%\\) ของ \\(X_C\\) ทำให้ชุดนี้เรโซแนนซ์อนุกรมที่ \\(1/\\sqrt{0.07} = 3.78\\) เท่าของความถี่หลัก (189 Hz ที่ 50 Hz) ต่ำกว่าฮาร์มอนิกที่ 5 ชุดคาปาซิเตอร์จึงเป็นอินดักทีฟที่ 250 Hz ขึ้นไป ไม่เกิดเรโซแนนซ์กับฮาร์มอนิกของไดรฟ์ ใช้ 14 % เมื่อมีฮาร์มอนิกที่ 3 มาก"},
+    {"q": "รีแอกเตอร์ไลน์ 3 % ลด THD ของไดรฟ์ได้เท่าไร?", "a": "ไดรฟ์ 6 พัลส์ที่มีตัวเก็บประจุ DC และไม่มีรีแอกเตอร์มี THD กระแสราว 80–100 % ขึ้นกับความแข็งของระบบ รีแอกเตอร์ 3 % ลดเหลือราว 35–40 % และ 5 % ราว 30–35 % ในแล็บของชุดนี้ไดรฟ์ 11 kW ที่ Isc/IL = 100 ได้ 83.5 %, 34.5 % และ 32.0 %"},
+    {"q": "ฟิลเตอร์จูนทำไมจูนที่ 4.7 ไม่ใช่ 5 พอดี?", "a": "เผื่อความคลาดเคลื่อนของค่า C ที่ลดลงตามอายุ (ทำให้ความถี่จูนเลื่อนขึ้น) และเพื่อไม่ให้เรโซแนนซ์ขนานที่อยู่ต่ำกว่าความถี่จูนเลื่อนมาชนฮาร์มอนิกที่ 5 พอดี จูนต่ำกว่าเล็กน้อยยังดักกระแสที่ 5 ได้ดีและปลอดภัยกว่า"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>แก้ฮาร์มอนิก</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.12 · อนุกรมฟูเรียร์ · Harmonic Mitigation</p>
+      <h1>แก้ปัญหาฮาร์มอนิก: รีแอกเตอร์ เรโซแนนซ์ คาปาซิเตอร์ดีจูน ฟิลเตอร์จูน ฟิลเตอร์แอกทีฟ และ PFC</h1>
+      <p class="lede">ทุกวิธีแก้ฮาร์มอนิกคือการจัดการกับอิมพีแดนซ์ที่แต่ละความถี่ เพิ่มอิมพีแดนซ์ในทางที่ฮาร์มอนิกจะไหลไปหาการไฟฟ้า หรือสร้างทางอิมพีแดนซ์ต่ำให้มันไหลวนอยู่ใกล้โหลด หรือหักล้างมันด้วยกระแสตรงข้าม หน้านี้เริ่มจากความผิดพลาดที่พบบ่อยที่สุดในโรงงานไทย คือการใส่คาปาซิเตอร์แก้ PF ในระบบที่มีไดรฟ์ แล้วไล่ไปทุกวิธีพร้อมตัวเลขจากแล็บ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#checklist">เช็กลิสต์หน้างาน</a>
+        <a class="btn btn-ghost btn-sm" href="#resonance">เรโซแนนซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#detuned">ดีจูน 7 %</a>
+        <a class="btn btn-ghost btn-sm" href="#tuned-filter">ฟิลเตอร์จูน</a>
+        <a class="btn btn-ghost btn-sm" href="#active">แอกทีฟ · PFC</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>รีแอกเตอร์ 3–5 % ลด THD ของไดรฟ์จาก ~80 % เหลือ ~35 % ราคาถูกที่สุด ทำก่อน</li>
+          <li>คาปาซิเตอร์เปล่า + หม้อแปลง → เรโซแนนซ์ที่ \(h_r = \sqrt{S_{sc}/Q_c}\) อันตรายถ้าใกล้ 5, 7, 11</li>
+          <li>ดีจูน: \(p = X_L/X_C\), จูนที่ \(h_t = 1/\sqrt p\) (7 % → 3.78) ฟิลเตอร์จูน: \(X_L = X_C/h_t^2\) จูนที่ 4.7</li>
+          <li>ต้องการ THD &lt; 5–8 %: 12/18 พัลส์ ฟิลเตอร์แอกทีฟ หรือ Active Front End / PFC</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น reactor, resonance, detuned, 7%, tuned filter, active filter, pfc, k-factor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="overview">
+    <h2 id="overview">ภาพรวม: ลดที่ต้นเหตุ ปิดทาง หรือดักไว้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วิธี</th><th>หลักการ (มุมมองฟูเรียร์)</th><th>THD กระแสที่ได้ (โดยประมาณ)</th><th>ข้อควรระวัง</th></tr></thead>
+      <tbody>
+        <tr><td>รีแอกเตอร์ไลน์ / โช้ก DC</td><td>เพิ่ม \(jhX\) ทำให้พัลส์กว้างขึ้น ฮาร์มอนิกลด</td><td>30–40 %</td><td>แรงดันตก 3–5 %</td></tr>
+        <tr><td>12 / 18 พัลส์</td><td>หักล้างด้วยการเลื่อนเฟส 30° / 20°</td><td>8–15 %</td><td>ต้องโหลดสมดุล หม้อแปลงพิเศษ</td></tr>
+        <tr><td>ฟิลเตอร์จูน (passive)</td><td>ทางอิมพีแดนซ์ต่ำที่ \(h_t\) ใกล้โหลด</td><td>10–20 %</td><td>ให้ kvar ด้วย อาจ PF นำหน้าตอนโหลดเบา</td></tr>
+        <tr><td>คาปาซิเตอร์ดีจูน</td><td>ย้ายเรโซแนนซ์ไปต่ำกว่า 5th</td><td>ไม่ลดมาก แต่ไม่ขยาย</td><td>ใช้แทนคาปาซิเตอร์เปล่าเสมอเมื่อมีไดรฟ์</td></tr>
+        <tr><td>ฟิลเตอร์แอกทีฟ</td><td>ฉีดกระแส \(-i_h\) หักล้างทุกฮาร์มอนิก</td><td>&lt; 5–8 %</td><td>ราคาสูง ต้องเลือกพิกัดกระแสพอ</td></tr>
+        <tr><td>Active PFC / Active Front End</td><td>บังคับให้กระแสเป็นไซน์ตามแรงดัน</td><td>&lt; 5 %</td><td>ต้องเปลี่ยนตัวอุปกรณ์</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="reactor">
+    <h2 id="reactor">รีแอกเตอร์ไลน์และโช้ก DC <span class="lv lv-i">กลาง</span></h2>
+    <p>ไดรฟ์ที่มีตัวเก็บประจุ DC ชาร์จเป็นพัลส์แคบเพราะมีแค่อิมพีแดนซ์สายกั้น เพิ่มความเหนี่ยวนำทำให้กระแสเพิ่มช้าลง พัลส์กว้างและเตี้ยลง ตามหลักความเรียบ (<a href="/learn/fourier-series/convergence-parseval/#P8">P8</a>) ฮาร์มอนิกจึงลดลงมาก</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M1" data-k="line reactor percent impedance 3% 5% inductance sizing dc choke reactor %Z รีแอกเตอร์ไลน์ โช้ก DC"><p class="tf-n"><b><span class="fid">M1</span> Line reactor sizing</b> ขนาดรีแอกเตอร์จาก %Z</p>
+        \[ X_r = \frac{\%Z}{100}\cdot\frac{V_{ph}}{I_{rated}},\qquad L_r = \frac{X_r}{2\pi f} \]
+        <p class="tf-x">%Z คือแรงดันตกคร่อมรีแอกเตอร์ที่กระแสพิกัดเทียบแรงดันเฟส · โช้ก DC ให้ผลใกล้เคียงรีแอกเตอร์ 3–5 % ไม่มีแรงดันตกด้าน AC และตัวเล็กกว่า</p></div>
+    </div>
+    <div class="wx" id="ex-m1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-1 · ไดรฟ์ 11 kW 400 V</span><h3>ไดรฟ์ 11 kW กระแสฮาร์มอนิกหลักพิกัด 15.9 A ต้องการรีแอกเตอร์ 3 % หาค่า L และผลต่อ THD (Isc/IL = 100)</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#M1">M1</a>: \(X_r = 0.03 \times \frac{230}{15.9} = 0.433\ \Omega\) → \(L_r = \frac{0.433}{314.2} = 1.38\) mH ต่อเฟส</p></li>
+        <li><p>จำลองในแล็บ (VFD, C = 1000 µF): ไม่มีรีแอกเตอร์ THD 83.5 % PF 0.75 · รีแอกเตอร์ 3 % THD 34.5 % PF 0.94 · 5 % THD 32.0 % · โช้ก DC 2 mH THD 37.2 %</p></li>
+      </ol>
+      <p class="answer">1.38 mH ลด THD จาก 84 % เหลือ 35 % และ PF จาก 0.75 เป็น 0.94 จาก 3 % ไป 5 % ได้เพิ่มน้อย (กฎผลตอบแทนลดลง) ยังไม่ผ่าน IEEE 519 ถ้าไดรฟ์เป็นโหลดหลักของหม้อแปลง</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="resonance">
+    <h2 id="resonance">เรโซแนนซ์ขนาน: เมื่อคาปาซิเตอร์แก้ PF กลายเป็นตัวขยายฮาร์มอนิก <span class="lv lv-i">กลาง</span></h2>
+    <p>มองจากโหลดที่ปล่อยกระแสฮาร์มอนิก มีสองทางให้ไหล: ไปทางหม้อแปลง (\(jhX_s\) โตตาม h) หรือเข้าคาปาซิเตอร์ (\(-jX_C/h\) เล็กลงตาม h) สองทางนี้ขนานกัน ที่ความถี่ที่รีแอกแตนซ์เท่ากันพอดี อิมพีแดนซ์ขนานพุ่งสูงมาก กระแสฮาร์มอนิกเพียงเล็กน้อยสร้างแรงดันฮาร์มอนิกมหาศาล และกระแสไหลวนระหว่างคาปาซิเตอร์กับหม้อแปลงมากกว่ากระแสที่โหลดปล่อยออกมาหลายเท่า</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M2" data-k="parallel resonance capacitor bank transformer hr = sqrt(Ssc/Qc) sqrt(Xc/Xs) short circuit kvar เรโซแนนซ์ขนาน คาปาซิเตอร์ หม้อแปลง"><p class="tf-n"><b><span class="fid">M2</span> Parallel resonance order</b> ลำดับฮาร์มอนิกที่เกิดเรโซแนนซ์</p>
+        \[ h_r = \sqrt{\frac{X_C}{X_s}} = \sqrt{\frac{S_{sc}}{Q_c}} \approx \sqrt{\frac{S_{tr}}{Q_c\,z_{tr}}} \]
+        <p class="tf-x">\(S_{sc}\) กำลังลัดวงจรที่จุดต่อ \(Q_c\) ขนาดคาปาซิเตอร์ \(z_{tr}\) อิมพีแดนซ์หม้อแปลง (ต่อหน่วย) · คาปาซิเตอร์แบบสเต็ป (APFC) ทำให้ \(h_r\) เปลี่ยนตามจำนวนสเต็ปที่เปิด ต้องตรวจทุกสเต็ป</p></div>
+      <div class="tf" id="M3" data-k="amplification factor resonance quality factor damping resistive load ขยาย ตัวคูณ เรโซแนนซ์"><p class="tf-n"><b><span class="fid">M3</span> Amplification near resonance</b> ตัวคูณการขยาย</p>
+        \[ \frac{I_{src,h}}{I_{load,h}} = \Big|\frac{Z_C}{Z_s + Z_C}\Big| \approx \frac{1}{|1 - (h/h_r)^2|} \]
+        <p class="tf-x">ไม่คิดการหน่วง ที่ \(h = h_r\) เป็นอนันต์ จริง ๆ ถูกจำกัดด้วยความต้านทานและโหลดเชิงเส้นอื่น มักได้ 3–10 เท่า</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-mit-imp--><svg viewBox="0 0 660 290" role="img" aria-label="อิมพีแดนซ์ที่กระแสฮาร์มอนิกของโหลดมองเห็นเทียบลำดับฮาร์มอนิก หม้อแปลงอย่างเดียวเป็นเส้นประเพิ่มขึ้นตาม h คาปาซิเตอร์เปล่าสีแดงมียอดเรโซแนนซ์ที่ h ราว 5.3 ใกล้ฮาร์มอนิกที่ 5 คาปาซิเตอร์ดีจูน 7 เปอร์เซ็นต์สีฟ้ามียอดถูกย้ายไปต่ำกว่า 3.78 ที่ไม่มีฮาร์มอนิกของไดรฟ์"><defs><marker id="fs-mit-imp-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="gr" x1="70" y1="195.6" x2="570" y2="195.6"/><text class="tk" x="64" y="199.6" text-anchor="end">0.05</text><line class="gr" x1="70" y1="166.5" x2="570" y2="166.5"/><text class="tk" x="64" y="170.5" text-anchor="end">0.1</text><line class="gr" x1="70" y1="137.5" x2="570" y2="137.5"/><text class="tk" x="64" y="141.5" text-anchor="end">0.2</text><line class="gr" x1="70" y1="99.1" x2="570" y2="99.1"/><text class="tk" x="64" y="103.1" text-anchor="end">0.5</text><line class="gr" x1="70" y1="70" x2="570" y2="70"/><text class="tk" x="64" y="74" text-anchor="end">1</text><line class="gr" x1="70" y1="41" x2="570" y2="41"/><text class="tk" x="64" y="45" text-anchor="end">2</text><text class="tk" x="22" y="16">|Z| (pu)</text><line class="dsh" x1="223.8" y1="24" x2="223.8" y2="234"/><line class="dsh" x1="300.8" y1="24" x2="300.8" y2="234"/><line class="dsh" x1="454.6" y1="24" x2="454.6" y2="234"/><line class="dsh" x1="531.5" y1="24" x2="531.5" y2="234"/><text class="tk" x="70" y="248" text-anchor="middle">1</text><text class="tk" x="146.9" y="248" text-anchor="middle">3</text><text class="tk" x="223.8" y="248" text-anchor="middle">5</text><text class="tk" x="300.8" y="248" text-anchor="middle">7</text><text class="tk" x="377.7" y="248" text-anchor="middle">9</text><text class="tk" x="454.6" y="248" text-anchor="middle">11</text><text class="tk" x="531.5" y="248" text-anchor="middle">13</text><text class="tk" x="576" y="248">h</text><line class="ax" x1="70" y1="234" x2="570" y2="234"/><line class="ax" x1="70" y1="234" x2="70" y2="24"/><path class="w0" d="M70 187.7L72.5 185.1L77.5 180.3L82.5 176.1L87.5 172.2L92.5 168.7L97.5 165.4L102.5 162.4L110 158.3L117.5 154.5L125 151.1L132.5 147.9L142.5 144L152.5 140.5L162.5 137.2L175 133.5L187.5 130.1L200 126.9L215 123.5L230 120.3L247.5 116.9L265 113.8L285 110.6L307.5 107.3L330 104.2L355 101.1L382.5 98.1L412.5 95L445 92L480 89.1L517.5 86.3L557.5 83.6L570 82.8"/><path class="w6" d="M70 186.1L76.7 179L84.2 171.9L93.3 164.1L105 155.2L123.3 142.5L152.5 123L168.3 111.8L180.8 102.3L192.5 92.6L213.3 73.9L219.2 69.1L224.2 65.6L228.3 63.5L232.5 62.3L236.7 62.2L240.8 63L245.8 65.1L252.5 69.1L270.8 81.7L281.7 88.5L293.3 94.9L305.8 100.9L320 106.8L335.8 112.4L354.2 117.9L375.8 123.5L400.8 129.1L430 134.6L464.2 140L505 145.6L552.5 151.2L570 153"/><path class="w2" d="M70 185.9L76.7 178.6L85.8 169.6L106.7 150.9L114.2 143.8L120 137.6L125 131.5L129.2 125.5L132.5 119.9L135 115L137.5 109.3L140 102.7L142.5 95L145 87L145.8 84.7L146.7 83L147.5 82L148.3 82.2L149.2 83.5L150 85.9L150.8 89.2L152.5 97.6L156.7 120.9L164.2 160.6L165.8 169.7L167.5 179.6L169.2 190.4L170 196.3L170.8 202.8L171.7 209.8L172.5 217.7L173.3 226.7L174.2 234L180 234L180.8 231.8L181.7 225.3L182.5 219.8L183.3 215L184.2 210.9L185.8 203.9L187.5 198.3L189.2 193.6L191.7 187.7L194.2 183L197.5 177.7L200.8 173.4L205 169L210 164.5L215.8 160.3L223.3 155.7L232.5 151.2L244.2 146.5L258.3 141.7L275.8 136.9L297.5 131.9L324.2 126.7L356.7 121.4L395 116.2L440.8 110.8L495 105.5L558.3 100.2L570 99.3"/><text class="lb" x="244.2" y="54.2">h_r = 5.27</text><text class="lb" x="142.2" y="78.1" text-anchor="end">3.03</text><text class="tk" x="182.9" y="223">h_t = 3.78</text><text class="tk" x="223.8" y="18">ฮาร์มอนิกของไดรฟ์ 5 7 11 13</text><line class="w0" x1="70" y1="274" x2="94" y2="274"/><text class="th" x="100" y="278">หม้อแปลง 6 %</text><line class="w6" x1="230" y1="274" x2="254" y2="274"/><text class="th" x="260" y="278">+ คาปาซิเตอร์ 600 kvar</text><line class="w2" x1="430" y1="274" x2="454" y2="274"/><text class="th" x="460" y="278">+ ดีจูน 7 %</text></svg><!--/FIG-->
+      <figcaption>อิมพีแดนซ์ที่กระแสฮาร์มอนิกของโหลดเห็น เทียบลำดับ h: หม้อแปลงอย่างเดียว (เส้นประ) เพิ่มคาปาซิเตอร์เปล่า (สีแดง: ยอดเรโซแนนซ์ใกล้ 5) และคาปาซิเตอร์ดีจูน 7 % (สีฟ้า: ยอดถูกย้ายไปต่ำกว่า 3.78 ที่ไม่มีฮาร์มอนิก)</figcaption>
+    </figure>
+    <div class="wx" id="ex-m2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-2 · หม้อแปลง 1000 kVA กับคาปาซิเตอร์ 400 และ 600 kvar</span><h3>หม้อแปลง 1000 kVA อิมพีแดนซ์ 6 % (ไม่คิดต้นทาง) ต่อคาปาซิเตอร์ (ก) 400 kvar (ข) 600 kvar เรโซแนนซ์ที่ฮาร์มอนิกไหน</h3></div>
+      <ol class="steps">
+        <li><p>\(S_{sc} = 1000/0.06 = 16.7\) MVA</p></li>
+        <li><p><a class="tag tf" href="#M2">M2</a>: (ก) \(\sqrt{16.7/0.4} = 6.45\) → ระหว่าง 5 กับ 7 · (ข) \(\sqrt{16.7/0.6} = 5.27\) → ชิดฮาร์มอนิกที่ 5</p></li>
+        <li><p><a class="tag tf" href="#M3">M3</a> ที่ h = 5 กรณี (ข): \(1/|1 - (5/5.27)^2| = 10\) เท่า (ก่อนการหน่วง)</p></li>
+      </ol>
+      <p class="answer">ยิ่งเพิ่มสเต็ปคาปาซิเตอร์ (kvar มากขึ้น) เรโซแนนซ์ยิ่งเลื่อนลงมาหา 5 ซึ่งเป็นฮาร์มอนิกที่ไดรฟ์ปล่อยมากที่สุด อาการหน้างาน: คาปาซิเตอร์ร้อน บวม ฟิวส์ขาดเป็นประจำ แรงดันเพี้ยนเมื่อสเต็ปเพิ่ม แก้โดยเปลี่ยนเป็นดีจูน</p>
+    </div>
+    <div class="wx" id="ex-m3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-3 · ทดลองในแล็บ</span><h3>ไดรฟ์ไทริสเตอร์ 100 kW α = 45° (Isc/IL = 25) ใส่คาปาซิเตอร์ 100 kvar แบบเปล่า เทียบกับดีจูน 7 % และฟิลเตอร์จูน 4.7</h3></div>
+      <ol class="steps">
+        <li><p>ไม่มีคาปาซิเตอร์: PF 0.67, THD กระแส 29 %, THD แรงดัน 13.2 %</p></li>
+        <li><p>คาปาซิเตอร์เปล่า: เรโซแนนซ์ที่ h = 5.99 · กระแสที่ 5 และ 7 ที่ฝั่งการไฟฟ้าขยาย 2.9 และ 2.4 เท่า · THD กระแส 94 % THD แรงดัน 15.4 % · PF ขึ้นแค่ 0.70</p></li>
+        <li><p>ดีจูน 7 %: THD กระแส 26 % THD แรงดัน 9.5 % PF 0.96</p></li>
+        <li><p>ฟิลเตอร์จูน 4.7: กระแสที่ 5 เหลือ 17 % ของที่โหลดปล่อย THD กระแส 18 % THD แรงดัน 8.0 % PF 0.98</p></li>
+      </ol>
+      <p class="answer">kvar เท่ากัน แต่ผลต่างกันสุดขั้ว คาปาซิเตอร์เปล่าแทบไม่ช่วย PF (เพราะความเพี้ยนเพิ่ม D) และทำให้ทุกอย่างแย่ลง ดีจูนและฟิลเตอร์จูนให้ทั้ง kvar และลดฮาร์มอนิก กดปุ่มด้านล่างเพื่อลองเอง</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="detuned">
+    <h2 id="detuned">คาปาซิเตอร์ดีจูน 7 % และ 14 % <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="M4" data-k="detuned capacitor reactor 7% 14% tuning frequency 189 Hz 134 Hz p = XL/XC capacitor voltage rise V/(1-p) ดีจูน รีแอกเตอร์อนุกรม 7%"><p class="tf-n"><b><span class="fid">M4</span> Detuned capacitor bank</b> ชุดคาปาซิเตอร์ดีจูน</p>
+        \[ p = \frac{X_L}{X_C},\qquad h_t = \frac{1}{\sqrt p},\qquad Q_{net} = \frac{V^2}{X_C - X_L} = \frac{V^2}{X_C(1 - p)},\qquad V_C = \frac{V}{1 - p} \]
+        <p class="tf-x">p = 7 % → \(h_t\) = 3.78 (189 Hz) · p = 14 % → 2.67 (134 Hz, ใช้เมื่อมีฮาร์มอนิกที่ 3 เยอะ) · แรงดันคร่อมคาปาซิเตอร์สูงกว่าไฟ 7.5 % (p = 7 %) จึงต้องใช้คาปาซิเตอร์พิกัด 440–480 V ในระบบ 400 V และ kvar บนป้ายจะไม่ใช่ kvar ที่ได้จริง</p></div>
+    </div>
+    <div class="wx" id="ex-m4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-4 · ออกแบบสเต็ปดีจูน 50 kvar</span><h3>ระบบ 400 V ต้องการ 50 kvar สุทธิต่อสเต็ป ใช้ดีจูน 7 % หา \(X_C\), \(X_L\), L, C (ต่อเฟสแบบ Y) แรงดันคร่อม C และ kvar บนป้ายถ้าใช้คาปาซิเตอร์พิกัด 480 V</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#M4">M4</a>: \(X_C - X_L = \frac{400^2}{50\,000} = 3.20\ \Omega\) → \(X_C = \frac{3.20}{0.93} = 3.441\ \Omega\), \(X_L = 0.241\ \Omega\)</p></li>
+        <li><p>\(L = \frac{0.241}{314.2} = 0.767\) mH · \(C = \frac{1}{314.2 \times 3.441} = 925\ \mu\)F (Y เทียบเท่า)</p></li>
+        <li><p>\(V_C = 400/0.93 = 430\) V · kvar บนป้ายที่ 480 V: \(\frac{480^2}{3.441} = 67.0\) kvar</p></li>
+        <li><p>จูนที่ \(50/\sqrt{0.07} = 189\) Hz ต่ำกว่า 250 Hz ของฮาร์มอนิกที่ 5</p></li>
+      </ol>
+      <p class="answer">L = 0.77 mH, C = 925 µF/เฟส (Y), สั่งคาปาซิเตอร์ 67 kvar 480 V + รีแอกเตอร์ 7 % ได้ 50 kvar จริงที่ 400 V · ผู้ผลิตขายเป็นชุดสำเร็จ แต่ต้องรู้ที่มาเพื่อตรวจสเปกได้</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="tuned-filter">
+    <h2 id="tuned-filter">ฟิลเตอร์จูนเดี่ยว (single-tuned): ออกแบบทีละขั้น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="M5" data-k="single tuned filter design tuning 4.7 XL = XC/ht^2 quality factor R = ht XL/Q passive harmonic filter ฟิลเตอร์จูน ออกแบบ"><p class="tf-n"><b><span class="fid">M5</span> Single-tuned filter</b> ฟิลเตอร์จูนเดี่ยว</p>
+        \[ X_C = \frac{V^2}{Q_c}\Big(1 - \frac{1}{h_t^2}\Big)^{-1},\qquad X_L = \frac{X_C}{h_t^2},\qquad R = \frac{h_tX_L}{Q_f},\qquad Z_f(h) = R + j\Big(hX_L - \frac{X_C}{h}\Big) \]
+        <p class="tf-x">เลือก \(Q_c\) จาก kvar ที่ต้องการแก้ PF ก่อน แล้วจูนที่ \(h_t\) ≈ 0.94–0.96 ของฮาร์มอนิกเป้าหมาย (4.7 สำหรับ 5th) · \(Q_f\) 30–100</p></div>
+      <div class="tf" id="M6" data-k="filter current division harmonic share Zs/(Zs+Zf) filter rating fundamental plus harmonic current แบ่งกระแส ฟิลเตอร์ พิกัด"><p class="tf-n"><b><span class="fid">M6</span> How much the filter absorbs</b> สัดส่วนกระแสที่ฟิลเตอร์ดักได้</p>
+        \[ I_{f,h} = I_h\frac{Z_s(h)}{Z_s(h) + Z_f(h)},\qquad I_{src,h} = I_h\frac{Z_f(h)}{Z_s(h) + Z_f(h)} \]
+        <p class="tf-x">ฟิลเตอร์ต้องทนกระแสหลัก \(Q_c/(\sqrt3V)\) บวกฮาร์มอนิกที่ดักไว้ (รวมแบบ RMS) และฮาร์มอนิกที่ “ไหลมาจากโหลดอื่น” ในระบบด้วย</p></div>
+    </div>
+    <div class="wx" id="ex-m5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-5 · ฟิลเตอร์ 5th 100 kvar</span><h3>ไดรฟ์ไทริสเตอร์ 100 kW (Q₁ ≈ 100 kvar) ระบบ 400 V ออกแบบฟิลเตอร์จูนที่ 4.7 ขนาด 100 kvar \(Q_f\) = 40</h3></div>
+      <ol class="steps">
+        <li><p>\(1/h_t^2 = 0.04527\) · <a class="tag tf" href="#M5">M5</a>: \(X_C = \frac{400^2}{100\,000}\cdot\frac{1}{0.9547} = 1.676\ \Omega\) · \(X_L = 1.676/22.09 = 0.0759\ \Omega\)</p></li>
+        <li><p>\(L = 0.2415\) mH · \(C = 1899\ \mu\)F (Y เทียบเท่า) · \(R = 4.7(0.0759)/40 = 8.9\) mΩ</p></li>
+        <li><p>แรงดันคร่อม C: \(400/0.9547 = 419\) V → ใช้คาปาซิเตอร์พิกัด 440 V ขึ้นไป · กระแสหลัก \(100\,000/(\sqrt3 \cdot 400) = 144\) A</p></li>
+        <li><p>แล็บ (Isc/IL = 25): ฟิลเตอร์ดักกระแสที่ 5 ได้ 35 A กระแสที่ 5 ที่เหลือไปหาการไฟฟ้า 17 % THD กระแส 18 % PF 0.98</p></li>
+      </ol>
+      <p class="answer">L = 0.24 mH, C = 1.9 mF/เฟส, R ≈ 9 mΩ, กระแสพิกัด ≈ √(144² + 35²) ≈ 148 A · ฮาร์มอนิกที่ 7 ยังเหลือ ถ้าต้องการต่ำกว่านี้เพิ่มฟิลเตอร์ 7th หรือ high-pass</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="active">
+    <h2 id="active">ฟิลเตอร์แอกทีฟ Active PFC และ Active Front End <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="M7" data-k="active harmonic filter injection cancellation rating current I1 THD shunt active filter ฟิลเตอร์แอกทีฟ ฉีดกระแส"><p class="tf-n"><b><span class="fid">M7</span> Shunt active filter</b> ฟิลเตอร์แอกทีฟขนาน</p>
+        \[ i_{AF}(t) = -\sum_{h=2}^{h_{max}} i_h(t),\qquad I_{AF,rated} \gtrsim I_1\cdot\mathrm{THD}_i \]
+        <p class="tf-x">อินเวอร์เตอร์ที่วัดกระแสโหลด แยกฟูเรียร์ (หรือวิธีเทียบเท่าในเวลาจริง) แล้วจ่ายกระแสตรงข้าม เหลือแค่ฮาร์มอนิกหลักไหลไปหาการไฟฟ้า แล็บ: VFD 11 kW THD 84 % → 8 % ที่ประสิทธิผล 90 %</p></div>
+      <div class="tf" id="M8" data-k="active pfc boost power factor correction sinusoidal current input current shaping AFE active front end PFC แอกทีฟ บูสต์"><p class="tf-n"><b><span class="fid">M8</span> Active PFC / Active Front End</b> บังคับให้กระแสเป็นไซน์</p>
+        \[ i_{in}(t) = \frac{P}{V_{rms}^2}\,v(t) \;\Rightarrow\; \mathrm{THD}_i \to 0,\;\; \mathrm{PF} \to 1 \]
+        <p class="tf-x">บูสต์คอนเวอร์เตอร์ด้านเข้าควบคุมกระแสตามรูปแรงดัน จำเป็นสำหรับเครื่องใช้ไฟฟ้ากำลังสูงที่ต้องผ่าน IEC 61000-3-2 · แล็บ: SMPS มี PFC THD 3.6 % PF 0.999</p></div>
+      <div class="tf wide" id="M9" data-k="k-rated transformer oversized neutral zigzag transformer triplen trap derating หม้อแปลง K-rated นิวทรัลใหญ่ ซิกแซก"><p class="tf-n"><b><span class="fid">M9</span> Living with harmonics</b> รองรับฮาร์มอนิกแทนการลด</p>
+        \[ K_{tr} \ge K_{load}\;(\text{H9}),\qquad A_{neutral} \ge 2A_{phase}\;(\text{นิวทรัล 200 \%}),\qquad \text{zig-zag: } Z_0 \text{ ต่ำ ดักลำดับศูนย์} \]
+        <p class="tf-x">อาคารสำนักงานที่โหลดเป็นอิเล็กทรอนิกส์ทั้งหมด มักเลือกหม้อแปลง K-13 และเดินนิวทรัลขนาดสองเท่า หม้อแปลงซิกแซกดักฮาร์มอนิกที่ 3, 9 ไม่ให้ไหลกลับไปที่หม้อแปลงหลัก <a href="/learn/fourier-series/power-harmonics/#H9">H9</a> <a href="/learn/fourier-series/power-harmonics/#H10">H10</a></p></div>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">เช็กลิสต์แก้ปัญหาหน้างาน: อาการ → วัดอะไร → สาเหตุ → แก้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ใช้เครื่องวิเคราะห์กำลังไฟฟ้า (หรือแล็บด้านล่างเพื่อฝึก) วัดทีละจุด อ่านสเปกตรัม แล้วไล่ตามตารางนี้</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการ</th><th>วัดอะไร</th><th>ถ้าเห็นแบบนี้ → สาเหตุ</th><th>แก้</th><th>ลองในแล็บ</th></tr></thead>
+      <tbody>
+        <tr><td>สายนิวทรัลร้อน</td><td>\(I_N\), \(I_3\) ทุกเฟส</td><td>\(I_N\) &gt; กระแสเฟส, h = 3 เด่น → โหลดอิเล็กทรอนิกส์ 1 เฟส</td><td>นิวทรัล 200 %, ซิกแซก, PFC</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="neutral">นิวทรัล</button></td></tr>
+        <tr><td>หม้อแปลงร้อน แต่ kW ไม่เต็ม</td><td>THD<sub>I</sub>, K-factor, S</td><td>K &gt; 4, S ≫ P → กระแสวนจากฮาร์มอนิก</td><td>K-rated, ลดพิกัด, ลด THD</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="smps">SMPS</button></td></tr>
+        <tr><td>คาปาซิเตอร์บวม ฟิวส์ขาด</td><td>THD<sub>V</sub> เมื่อเปิดแต่ละสเต็ป, \(I_C\)</td><td>THD<sub>V</sub> เพิ่มเมื่อเพิ่มสเต็ป → เรโซแนนซ์ M2</td><td>ดีจูน 7 %/14 %</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="cap-resonance">เรโซแนนซ์</button></td></tr>
+        <tr><td>PF ต่ำ ทั้งที่ติดคาปาซิเตอร์แล้ว</td><td>PF เทียบ DPF</td><td>DPF ≈ 1 แต่ PF ต่ำ → ความเพี้ยน (D)</td><td>ลดฮาร์มอนิก ไม่ใช่เพิ่ม kvar</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="smps">SMPS</button></td></tr>
+        <tr><td>ไม่ผ่าน IEEE 519 ที่ PCC</td><td>TDD, \(I_h\) % ของ \(I_L\)</td><td>5, 7 เด่น → ไดรฟ์ 6 พัลส์</td><td>รีแอกเตอร์ → ฟิลเตอร์ → AF/AFE</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd">VFD</button></td></tr>
+        <tr><td>มิเตอร์สองเครื่องอ่านไม่ตรงกัน</td><td>crest factor</td><td>CF &gt; 2 → เครื่องหนึ่งไม่ใช่ True RMS</td><td>ใช้ True RMS</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="led">LED</button></td></tr>
+        <tr><td>มอเตอร์ร้อน สั่น ทั้งที่โหลดปกติ</td><td>THD<sub>V</sub>, \(V_5\)</td><td>\(V_5\) ลำดับลบ → แรงบิดต้าน</td><td>ลดแหล่งฮาร์มอนิก ฟิลเตอร์</td><td><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="flat-top">แรงดันยอดแบน</button></td></tr>
+        <tr><td>มีฮาร์มอนิกคู่หรือ DC</td><td>\(I_2\), \(I_0\)</td><td>ไม่สมมาตรครึ่งคลื่น → ไดโอดเสีย/เรียงกระแสครึ่งคลื่น</td><td>ตรวจอุปกรณ์ <a href="/learn/fourier-series/symmetry/#half-wave">S4</a></td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ลองแก้เองทีละวิธี <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เริ่มจาก “⚠ คาปาซิเตอร์แก้ PF เรโซแนนซ์” อ่านแผงแปลผลอัตโนมัติ แล้วเปิดเมนู “แก้ปัญหาฮาร์มอนิก” เปลี่ยนเป็นดีจูน 7 % หรือฟิลเตอร์จูน ดูสเปกตรัมและ THD เปลี่ยน ลองไดรฟ์ VFD แล้วเพิ่มรีแอกเตอร์ โช้ก DC และฟิลเตอร์แอกทีฟ เปรียบเทียบกับขีดจำกัด IEEE 519 บนกราฟ</p>
+    <div class="fs-lab" data-tabs="power" data-preset="cap-resonance" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <p><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="cap-resonance">คาปาซิเตอร์เปล่า</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="detuned">ดีจูน 7 %</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="tuned-filter">ฟิลเตอร์จูน 4.7</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd">VFD</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd-reactor">VFD + รีแอกเตอร์</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd-choke">VFD + โช้ก DC</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="active-filter">ฟิลเตอร์แอกทีฟ</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="twelve">12 พัลส์</button></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

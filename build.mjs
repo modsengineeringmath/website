@@ -227,6 +227,52 @@ export const TOPICS = [
         summary: "รวมระบบควบคุมรอบตัวพร้อมตัวแปรที่ควบคุม แอคชูเอเตอร์ เซนเซอร์ ชนิดตัวควบคุม และบทเรียนที่เกี่ยวข้อง ใช้เป็นโจทย์โปรเจกต์ ไอเดียสอน และแรงบันดาลใจ" },
     ],
   },
+  {
+    // Topic 12: Fourier series → harmonics in circuits → power electronics → measurement, with the harmonic lab
+    // (assets/fs-core.js + fs-lab.js). Same series machinery as control-systems (parts, live(), formula index).
+    slug: "fourier-series",
+    title: "อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก",
+    en: "Fourier Series & Harmonic Analysis",
+    sym: "Σ",
+    summary: "อนุกรมฟูเรียร์ทีละขั้นจนใช้งานจริง: หาสัมประสิทธิ์ สมมาตร สเปกตรัม พาร์เซวาล วิเคราะห์วงจรทีละฮาร์มอนิก THD PF และกำลังไฟฟ้า เรกติไฟเออร์ อินเวอร์เตอร์ PWM บั๊กคอนเวอร์เตอร์ การแก้ฮาร์มอนิก และ FFT พร้อมแล็บออสซิลโลสโคปและเครื่องวิเคราะห์กำลังไฟฟ้าเสมือน",
+    fxHint: "พิมพ์ เช่น euler, a0, bn, odd, half-wave, parseval, gibbs, sinc, thd, pf, neutral, 6k±1, spwm, ripple, resonance, fft",
+    parts: [
+      { id: "math", n: 1, title: "คณิตศาสตร์ของอนุกรมฟูเรียร์", en: "The Mathematics", blurb: "จากคลื่นคาบสู่ผลรวมของไซน์: หาสัมประสิทธิ์ ใช้สมมาตรลดงาน อ่านสเปกตรัม และรู้ว่าอนุกรมลู่เข้าอย่างไร" },
+      { id: "circuits", n: 2, title: "ฮาร์มอนิกในวงจรไฟฟ้า", en: "Harmonics in Circuits & Power", blurb: "ใช้ฟูเรียร์แก้วงจร คำนวณ RMS กำลัง THD และเพาเวอร์แฟกเตอร์เมื่อกระแสไม่ใช่ไซน์" },
+      { id: "power-electronics", n: 3, title: "อิเล็กทรอนิกส์กำลัง", en: "Power Electronics", blurb: "ตัวแปลงกำลังทุกชนิดคือเครื่องสร้างฮาร์มอนิก: เรกติไฟเออร์ อินเวอร์เตอร์ PWM บั๊กคอนเวอร์เตอร์ และวิธีแก้" },
+      { id: "lab", n: 4, title: "การวัดและแล็บ", en: "Measurement & Lab", blurb: "เครื่องมือวัดคำนวณฮาร์มอนิกอย่างไร และแล็บเสมือนสำหรับทดลอง วิเคราะห์ และแก้ปัญหาด้วยตัวเอง" },
+    ],
+    sub: [
+      { slug: "introduction", part: "math", short: "ฟูเรียร์คืออะไร", title: "อนุกรมฟูเรียร์คืออะไร: ทุกคลื่นคาบคือผลรวมของไซน์", en: "What Is a Fourier Series?", sym: "∿", prefix: "F",
+        summary: "สัญญาณคาบ ฮาร์มอนิก สเปกตรัม การสังเคราะห์และการวิเคราะห์ ทำไมวิศวกรไฟฟ้าต้องรู้ และแผนที่การเรียนทั้งชุด" },
+      { slug: "coefficients", part: "math", short: "หา a₀ aₙ bₙ", title: "หาสัมประสิทธิ์ฟูเรียร์ทีละขั้น: ความตั้งฉากและสูตรออยเลอร์", en: "Finding the Fourier Coefficients", sym: "aₙ", prefix: "T",
+        summary: "ความตั้งฉากของไซน์ สูตรออยเลอร์ a₀ aₙ bₙ อินทิกรัลที่ใช้บ่อย ขั้นตอน 6 ขั้น ตัวอย่างสี่เหลี่ยม พัลส์ ฟันเลื่อย สามเหลี่ยม เรียงกระแส และข้อผิดพลาดที่เจอบ่อย" },
+      { slug: "symmetry", part: "math", short: "สมมาตร", title: "ทางลัดด้วยสมมาตร: ฟังก์ชันคู่ คี่ ครึ่งคลื่น เสี้ยวคลื่น และการเลื่อน", en: "Symmetry Shortcuts", sym: "±", prefix: "S",
+        summary: "รู้ก่อนอินทิเกรตว่าพจน์ไหนเป็นศูนย์ สมมาตรครึ่งคลื่นกับฮาร์มอนิกคู่ เสี้ยวคลื่นของอินเวอร์เตอร์ การเลื่อนเวลา การตัดยอด และอนุกรมครึ่งช่วง" },
+      { slug: "complex-spectrum", part: "math", short: "เชิงซ้อน · สเปกตรัม", title: "รูปเชิงซ้อน สเปกตรัมขนาด–เฟส และสมบัติของอนุกรมฟูเรียร์", en: "Complex Form & Spectrum", sym: "cₙ", prefix: "C",
+        summary: "cₙ จากสูตรออยเลอร์ รูปแอมพลิจูด–เฟส สเปกตรัมด้านเดียวและสองด้าน พัลส์กับเอนเวโลป sinc สมบัติการเลื่อน อนุพันธ์ ปริพันธ์ และเฟเซอร์ของแต่ละฮาร์มอนิก" },
+      { slug: "convergence-parseval", part: "math", short: "กิบส์ · พาร์เซวาล", title: "การลู่เข้า ปรากฏการณ์กิบส์ ทฤษฎีบทพาร์เซวาล และอัตราลดของฮาร์มอนิก", en: "Convergence, Gibbs & Parseval", sym: "Σ²", prefix: "P",
+        summary: "เงื่อนไขดีริชเลต์ ค่าที่จุดกระโดด หูกิบส์ 9 % พาร์เซวาลกับค่า RMS และ THD ความเรียบกับอัตราลด 1/n 1/n² และควรรวมกี่ฮาร์มอนิกในงานจริง" },
+      { slug: "waveform-table", part: "circuits", short: "ตารางรูปคลื่น", title: "ตารางอนุกรมฟูเรียร์ของรูปคลื่นในงานไฟฟ้าและอิเล็กทรอนิกส์กำลัง", en: "Fourier Series Table of Common Waveforms", sym: "⊓", prefix: "W",
+        summary: "18 รูปคลื่นพร้อมอนุกรม RMS และ THD: สี่เหลี่ยม พัลส์ สามเหลี่ยม ฟันเลื่อย เรียงกระแส quasi-square six-step กระแส 6 พัลส์ SPWM คางหมู ไตรแอก ตัดยอด และริปเปิลตัวเหนี่ยวนำ" },
+      { slug: "circuit-analysis", part: "circuits", short: "วิเคราะห์วงจร", title: "วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์: ซูเปอร์โพซิชันทีละฮาร์มอนิก", en: "Circuit Analysis with Fourier Series", sym: "H(jnω)", prefix: "A",
+        summary: "แยก คูณ H(jnω₀) แล้วรวม: สี่เหลี่ยมเข้า RC อินเวอร์เตอร์ป้อนโหลด RL ฟิลเตอร์ LC ของเรียงกระแส RLC คัดฮาร์มอนิก กำลังเฉลี่ยจากฮาร์มอนิก และข้อจำกัดของวิธี" },
+      { slug: "power-harmonics", part: "circuits", short: "THD · PF · กำลัง", title: "กำลังไฟฟ้าเมื่อมีฮาร์มอนิก: RMS THD PF DPF P Q S D และมาตรฐาน IEEE 519", en: "Power, THD & Power Factor with Harmonics", sym: "THD", prefix: "H",
+        summary: "True RMS THD TDD crest factor กำลังจริง Q₁ และกำลังความเพี้ยน D เพาเวอร์แฟกเตอร์ที่แก้ด้วยคาปาซิเตอร์ไม่ได้ K-factor ลำดับเฟสกับนิวทรัลร้อน แรงดันเพี้ยนที่ PCC และขีดจำกัด IEEE 519-2022" },
+      { slug: "rectifiers", part: "power-electronics", short: "เรกติไฟเออร์", title: "ฮาร์มอนิกของวงจรเรียงกระแส: 1 เฟส 3 เฟส 6 พัลส์ 12 พัลส์ และตัวเก็บประจุ", en: "Rectifier Harmonics", sym: "6k±1", prefix: "R",
+        summary: "ฝั่ง DC และฝั่ง AC ของบริดจ์ 1 เฟส บริดจ์ + ตัวเก็บประจุของ SMPS และ VFD กฎ h = kp ± 1 ช่วงทับซ้อน μ ไทริสเตอร์กับ cos α และการหักล้างฮาร์มอนิกด้วย 12 และ 18 พัลส์" },
+      { slug: "inverters-pwm", part: "power-electronics", short: "อินเวอร์เตอร์ · PWM", title: "สเปกตรัมของอินเวอร์เตอร์: สี่เหลี่ยม quasi-square six-step SHE และ SPWM", en: "Inverter & PWM Spectra", sym: "m_f", prefix: "V",
+        summary: "อินเวอร์เตอร์คลื่นสี่เหลี่ยม กำจัดฮาร์มอนิกด้วยมุม α six-step 3 เฟส SHE SPWM ไบโพลาร์และยูนิโพลาร์ mₐ m_f ตำแหน่งไซด์แบนด์ WTHD และผลต่อมอเตอร์" },
+      { slug: "dc-dc-converters", part: "power-electronics", short: "บั๊ก · ริปเปิล · EMI", title: "ฟูเรียร์ในคอนเวอร์เตอร์ DC-DC: บั๊ก ริปเปิล ฟิลเตอร์ LC และ EMI", en: "DC-DC Converters: Ripple & EMI", sym: "D", prefix: "B",
+        summary: "โหนดสวิตช์คือพัลส์ DC = DV_in ประมาณริปเปิลด้วยฮาร์มอนิกแรกเทียบสูตรจริง กระแสตัวเหนี่ยวนำ ตัวเก็บประจุอินพุต เอนเวโลปคางหมูกับ EMI และการเลือกความถี่สวิตช์" },
+      { slug: "mitigation", part: "power-electronics", short: "แก้ฮาร์มอนิก", title: "แก้ปัญหาฮาร์มอนิก: รีแอกเตอร์ เรโซแนนซ์ คาปาซิเตอร์ดีจูน ฟิลเตอร์จูน ฟิลเตอร์แอกทีฟ และ PFC", en: "Harmonic Mitigation", sym: "LC", prefix: "M",
+        summary: "รีแอกเตอร์ไลน์และโช้ก DC เรโซแนนซ์ขนาน h_r = √(S_sc/Q_c) คาปาซิเตอร์ดีจูน 7 % 14 % ออกแบบฟิลเตอร์จูนทีละขั้น 12 พัลส์ ฟิลเตอร์แอกทีฟ PFC และเช็กลิสต์แก้ปัญหาหน้างาน" },
+      { slug: "dft-fft", part: "lab", short: "DFT · FFT", title: "จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร", en: "From Fourier Series to DFT & FFT", sym: "X[k]", prefix: "D",
+        summary: "สุ่มสัญญาณแล้วได้ cₙ ความละเอียดความถี่ อเลียสซิง การรั่วของสเปกตรัมและหน้าต่าง มาตรฐาน IEC 61000-4-7 การใช้ FFT บนสโคป และ Goertzel บนไมโครคอนโทรลเลอร์" },
+      { slug: "analyzer-lab", part: "lab", short: "แล็บเสมือน", title: "แล็บวิเคราะห์ฮาร์มอนิก: ออสซิลโลสโคปเสมือน + เครื่องวิเคราะห์กำลังไฟฟ้า", en: "Harmonic Analyzer Lab (Virtual Oscilloscope & Power Analyzer)", sym: "▶", tag: "แล็บโต้ตอบ + ใบงาน 16 ชุด",
+        summary: "สังเคราะห์และวิเคราะห์ฟูเรียร์ ป้อนคลื่นเข้าวงจรทีละฮาร์มอนิก และวัดโหลดจริง 10 แบบด้วยสโคปกับเครื่องวิเคราะห์กำลัง พร้อมแปลผลอัตโนมัติ วิธีคำนวณทีละขั้น ใบงาน และกรณีศึกษาหน้างาน" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -415,7 +461,7 @@ function formulaIndex(t) {
     const file = path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
     if (!fs.existsSync(file)) return;
     const src = fs.readFileSync(file, "utf8");
-    const re = /<div class="tf[^"]*" id="([A-Z]\d+[a-z]?)" data-k="([^"]*)">\s*<p class="tf-n"><b><span class="fid">[^<]*<\/span>\s*([\s\S]*?)<\/b>([\s\S]*?)<\/p>\s*(\\\[[\s\S]*?\\\])?/g;
+    const re = /<div class="tf[^"]*" id="([A-Z]\d+[a-z]?)" data-k="([^"]*)">\s*<p class="tf-n"><b><span class="fid">[^<]*<\/span>\s*([\s\S]*?)<\/b>([\s\S]*?)<\/p>\s*(?:<div class="wtfig">[\s\S]*?<\/div>\s*)?(\\\[[\s\S]*?\\\])?/g;
     let m;
     while ((m = re.exec(src))) {
       const [, id, keys, en, th, tex] = m;
@@ -593,7 +639,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -619,6 +665,10 @@ const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
+// Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
+const MD_SERIES = ["fourier-series"];
+const MD_GUIDES = [{ src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)" }];
+const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
 
 for (const file of walk(pagesDir)) {
@@ -666,8 +716,27 @@ for (const file of walk(pagesDir)) {
   body = body.replace(/<!--series-cards:([\w-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--formula-index:([\w-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
-  if (!meta.noindex && !meta.noLlms)
-    fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text: htmlToText(body), faq: meta.faq || [] });
+  const mdExport = !meta.noindex && topic && MD_SERIES.includes(topic.slug);
+  if (!meta.noindex && !meta.noLlms) {
+    const text = htmlToText(body);
+    fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text, faq: meta.faq || [] });
+    if (mdExport) {
+      const faqMd = (meta.faq || []).length
+        ? "\n\n## คำถามที่พบบ่อย (FAQ)\n" + meta.faq.map((f) => `\n**${f.q}**\n${f.a.replace(/\\\(([\s\S]+?)\\\)/g, (_, x) => "$" + x.trim() + "$").replace(/<[^>]+>/g, "")}`).join("\n")
+        : "";
+      const guide = MD_GUIDES.find((g) => g.page === route);
+      const md =
+        `---\ntitle: "${(meta.h1 || meta.title).replace(/"/g, "'")}"\nurl: ${url}\nsite: "Mod's Engineering Mathematics (อาจารย์มด)"\nlanguage: th\n${meta.updated ? `updated: ${meta.updated}\n` : ""}---\n\n` +
+        `> ${meta.description}\n\n` +
+        `ฉบับ Markdown ของ ${url} สำหรับผู้ช่วย AI และเครื่องมือค้นหา สูตรเขียนเป็น LaTeX ($…$ และ $$…$$) แล็บโต้ตอบและรูปมีเฉพาะในหน้าเว็บ` +
+        (guide ? ` · คู่มือฉบับสมบูรณ์ของชุดนี้: ${SITE}/${guide.out}` : "") + "\n\n" +
+        `# ${meta.h1 || meta.title}\n\n` + text.split("\n").filter((l, i, arr) => !(l.startsWith("# ") && arr.findIndex((x) => x.startsWith("# ")) === i)).join("\n").trim() + faqMd + "\n";
+      const mdRel = (route === "/" ? "" : route.replace(/^\//, "")) + "index.html.md";
+      fs.mkdirSync(path.join(ROOT, path.dirname(mdRel)), { recursive: true });
+      fs.writeFileSync(path.join(ROOT, mdRel), md);
+      mdFiles.push({ path: "/" + mdRel, canonical: url });
+    }
+  }
   const tocHtml = toc(body);
   body = body.split("<!--toc-->").join(tocHtml);
   body = renderMath(body, rel);
@@ -681,7 +750,9 @@ for (const file of walk(pagesDir)) {
   const headExtra = [
     meta.katex || /class="katex/.test(body) ? `<link rel="stylesheet" href="${KATEX_CSS}">` : "",
     meta.noindex ? '<meta name="robots" content="noindex">' : "",
-  ].join("\n");
+    mdExport ? `<link rel="alternate" type="text/markdown" href="${url}index.html.md" title="Markdown">` : "",
+    ...MD_GUIDES.filter((g) => g.page === route).map((g) => `<link rel="alternate" type="text/markdown" href="${SITE}/${g.out}" title="${esc(g.title)}">`),
+  ].filter(Boolean).join("\n");
 
   const scripts = (meta.scripts || []).map((s) => `<script src="${s}?v=${ASSET_V}" defer></script>`).join("\n");
 
@@ -737,6 +808,9 @@ const LABS = [
   ["Routh–Hurwitz calculator with steps", "control-systems/routh-hurwitz", "Routh array for any characteristic polynomial or 1 + K·G(s) written as an expression; entries kept as rational functions of K, epsilon method and auxiliary-polynomial special cases, stable K range, critical gain and oscillation frequency, cross-checked against the actual roots"],
   ["PID simulation lab", "control-systems/pid", "time-domain PID loop around a typed plant (with dead time): log-scaled Kp Ki Kd sliders, derivative filter N, derivative on measurement, actuator saturation with/without anti-windup, load disturbance, overshoot / settling / IAE readouts and a pinned comparison trace"],
   ["Control systems formula index", "control-systems#formulas", "every control-systems formula with a citable ID (F1… modeling M, block diagrams B, time response T, steady-state error E, stability S, Routh R, root locus L/W/J, frequency Q, Bode D, margins G, Nyquist N, compensators C, PID P, tuning Z, state space X, controllability O, state feedback V, digital Y, nonlinear/robust U, mechatronics K, robotics A, power converters H) in one searchable list"],
+  ["Harmonic analyzer lab: virtual oscilloscope + power analyzer", "fourier-series/analyzer-lab", "free browser-based power-quality bench in three tabs: (1) Fourier synthesis/analysis of 13 waveforms or any typed x(t) with closed-form coefficients, partial sums, Gibbs and σ-smoothing, amplitude/%/dB/phase spectrum and step-by-step working (symmetry, Euler formulas, coefficient table, Parseval check); (2) periodic waveform into RC/RL/LC/RLC solved harmonic by harmonic and compared with the exact periodic steady state; (3) oscilloscope + power analyzer for 10 loads (resistor, RL motor, SMPS/LED capacitor-input bridge, bridge + choke, TRIAC, active PFC, 6-pulse with α and overlap, 12-pulse, VFD, custom spectrum) reading U, I, I1, CF, P, Q1, S, D, PF, DPF, THD-U, THD-I, TDD, K-factor and neutral current, harmonic bars against IEEE 519-2022 / PEA-MEA / IEC 61000-3-2 limits, source strength Isc/IL and X/R, mitigation (line reactor, DC choke, plain/detuned capacitor, tuned filter, active filter) with automatic diagnosis; 16 worksheets with answers and 6 field case studies; presets via #preset=<name>"],
+  ["Fourier series formula index", "fourier-series#formulas", "every Fourier-series and harmonics formula with a citable ID (F basics, T coefficients, S symmetry, C complex/spectrum, P convergence/Parseval, W waveform table, A circuit analysis, H power/THD/PF/IEEE 519, R rectifiers, V inverters/PWM, B DC-DC converters, M mitigation, D DFT/FFT) in one searchable list"],
+  ["Fourier series table of 18 waveforms", "fourier-series/waveform-table", "Fourier series, RMS and THD of square, pulse, triangle, sawtooth, half/full-wave rectified sine, 6-pulse line current, TRIAC phase control, clipped sine, SMPS current, quasi-square, six-step, SPWM, trapezoid and inductor-ripple waveforms, each with a thumbnail and a link to its derivation"],
   ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
 ];
 fs.writeFileSync(
@@ -756,9 +830,14 @@ ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}
 - [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
 - Lab presets can be opened directly, e.g. ${SITE}/learn/function-generator/simulator/#preset=rc-square (RC low-pass with a square wave), #preset=probe-comp, #preset=lissajous, #preset=opamp-slew, #preset=aliasing
+- Harmonic lab presets, e.g. ${SITE}/learn/fourier-series/analyzer-lab/#preset=smps (SMPS without PFC), #preset=neutral (hot neutral), #preset=six (6-pulse rectifier), #preset=cap-resonance (PF capacitor resonance), #preset=detuned (7 % detuned bank), #preset=square-gibbs, #preset=lc-buck
+
+## Markdown versions (for AI assistants)
+${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ`).join("\n")}
+${TOPICS.filter((t) => MD_SERIES.includes(t.slug)).map((t) => [`- [${t.en} — hub (Markdown)](${SITE}/learn/${t.slug}/index.html.md)`, ...live(t).map((s) => `- [${s.en} (Markdown)](${SITE}${seriesUrl(t, s)}index.html.md)`)].join("\n")).join("\n")}
 
 ## About
-- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics) and buck converters
+- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters) and buck converters
 - [About อาจารย์มด](${SITE}/about/): profile, teaching, current projects and status updates
 - [Knowledge library](${SITE}/learn/): index of all lessons, books in progress and video series
 - [Updates feed (RSS)](${SITE}/feed.xml)
@@ -776,6 +855,26 @@ ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug
 - [University profile](https://sci.dru.ac.th/electrical-engineering/teerawutsavangboon.html)
 `
 );
+
+// hand-written Markdown guides (src/md/*.md → public .md next to the series)
+for (const g of MD_GUIDES) {
+  const hub = path.join(ROOT, "src/pages", g.page.replace(/^\/|\/$/g, ""), "index.html");
+  const hm = fs.existsSync(hub) ? JSON.parse(fs.readFileSync(hub, "utf8").match(/^<!--meta\s*([\s\S]*?)-->/)[1]) : {};
+  const md = fs.readFileSync(path.join(ROOT, g.src), "utf8").split("{{updated}}").join(hm.updated || TODAY);
+  fs.mkdirSync(path.dirname(path.join(ROOT, g.out)), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, g.out), md);
+  mdFiles.push({ path: "/" + g.out, canonical: SITE + g.page });
+}
+// _headers: Markdown copies are served as text/markdown and point to the HTML page as canonical (no duplicate content)
+{
+  const hp = path.join(ROOT, "_headers");
+  const begin = "# BEGIN generated: markdown copies (build.mjs)", end = "# END generated: markdown copies";
+  let h = fs.readFileSync(hp, "utf8");
+  const i = h.indexOf(begin), j = h.indexOf(end);
+  if (i >= 0 && j > i) h = h.slice(0, i).replace(/\n+$/, "\n") + h.slice(j + end.length).replace(/^\n+/, "");
+  const block = [begin, ...mdFiles.map((f) => `${f.path}\n  Content-Type: text/markdown; charset=utf-8\n  Link: <${f.canonical}>; rel="canonical"\n  Cache-Control: public, max-age=600, must-revalidate\n`), end].join("\n");
+  fs.writeFileSync(hp, h.replace(/\n*$/, "\n\n") + block + "\n");
+}
 
 // llms-full.txt — the readable text of every indexable page
 const order = (u) => (u === SITE + "/" ? 0 : u.includes("/learn/") && u !== SITE + "/learn/" ? 2 : 1);

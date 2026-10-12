@@ -1,0 +1,224 @@
+<!--meta
+{
+  "title": "ตารางอนุกรมฟูเรียร์ของรูปคลื่น: สี่เหลี่ยม สามเหลี่ยม ฟันเลื่อย เรียงกระแส six-step กระแส 6 พัลส์ พร้อม RMS และ THD | อาจารย์มด",
+  "h1": "ตารางอนุกรมฟูเรียร์ของรูปคลื่นในงานไฟฟ้าและอิเล็กทรอนิกส์กำลัง",
+  "description": "ตารางสูตรอนุกรมฟูเรียร์สำเร็จรูป 18 รูปคลื่นพร้อมค่า RMS THD และ crest factor: คลื่นสี่เหลี่ยม พัลส์ดิวตี้ D สามเหลี่ยม ฟันเลื่อย ไซน์เรียงกระแสครึ่งคลื่นและเต็มคลื่น quasi-square อินเวอร์เตอร์ six-step กระแสเรกติไฟเออร์ 6 พัลส์ SPWM พัลส์คางหมู ไตรแอกตัดเฟส ไซน์ตัดยอด กระแส SMPS และริปเปิลตัวเหนี่ยวนำ ทุกสูตรตรวจด้วยการคำนวณแบบปิด ใช้อ้างอิงได้ด้วยรหัส W1–W18",
+  "ogTitle": "ตารางอนุกรมฟูเรียร์ 18 รูปคลื่น พร้อม RMS และ THD",
+  "lesson": "fourier-series",
+  "sub": "waveform-table",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Fourier series", "Square wave", "Triangle wave", "Sawtooth wave", "Rectifier", "Six-step inverter", "Pulse-width modulation", "Total harmonic distortion", "Crest factor"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "อนุกรมฟูเรียร์ของคลื่นสี่เหลี่ยมคืออะไร?", "a": "คลื่นสี่เหลี่ยมสูง ±A เริ่มขาขึ้นที่ t = 0 คือ \\(\\frac{4A}{\\pi}\\big[\\sin\\omega_0t + \\frac13\\sin3\\omega_0t + \\frac15\\sin5\\omega_0t + \\cdots\\big]\\) มีเฉพาะฮาร์มอนิกคี่ ลดลงตาม 1/n ค่า RMS เท่ากับ A และ THD 48.3 %"},
+    {"q": "กระแสของเรกติไฟเออร์ 3 เฟส 6 พัลส์มีฮาร์มอนิกอะไร?", "a": "ถ้ากระแส DC เรียบ กระแสไลน์เป็นบล็อกกว้าง 120° มีเฉพาะ \\(h = 6k \\pm 1\\) คือ 5, 7, 11, 13, … ขนาด \\(I_h = I_1/h\\) โดย \\(I_1 = (\\sqrt6/\\pi)I_d = 0.780I_d\\) ค่า RMS \\(0.816I_d\\) THD 31.1 % ไม่มีฮาร์มอนิกที่ 3"},
+    {"q": "THD ของรูปคลื่นมาตรฐานเท่าไร?", "a": "สี่เหลี่ยม 48.3 % ฟันเลื่อย 80.3 % สามเหลี่ยม 12.1 % six-step และกระแส 6 พัลส์ 31.1 % ไซน์เรียงกระแสครึ่งคลื่น (ไม่นับ DC) 43.5 % กระแส SMPS ไม่มี PFC ทั่วไป 100–150 %"},
+    {"q": "ใช้ตารางนี้อ้างอิงในรายงานได้อย่างไร?", "a": "ทุกสูตรมีรหัสถาวร W1 ถึง W18 อ้างเป็น Mod's Engineering Mathematics, ตารางอนุกรมฟูเรียร์ W12 พร้อมลิงก์ /learn/fourier-series/waveform-table/#W12 ทุกสูตรตรวจกับการอินทิเกรตแบบปิดในแล็บแล้ว"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>ตารางรูปคลื่น</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.6 · อนุกรมฟูเรียร์ · Fourier Series Table</p>
+      <h1>ตารางอนุกรมฟูเรียร์ของรูปคลื่นในงานไฟฟ้าและอิเล็กทรอนิกส์กำลัง</h1>
+      <p class="lede">งานจริงไม่มีเวลาอินทิเกรตใหม่ทุกครั้ง ตารางนี้รวบรวมรูปคลื่นที่วิศวกรไฟฟ้าเจอซ้ำ ๆ พร้อมอนุกรม ค่า RMS THD และ crest factor ทุกสูตรตรวจกับการอินทิเกรตแบบปิดของแล็บในชุดนี้แล้ว เลือกจุด t = 0 ตามที่ระบุในแต่ละการ์ด ถ้าวางต่างไป ใช้สมบัติการเลื่อน (<a href="/learn/fourier-series/symmetry/#S6">S6</a>) ขนาดเท่าเดิม เปลี่ยนแค่เฟส</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#summary">ตารางสรุป</a>
+        <a class="btn btn-ghost btn-sm" href="#basic">พื้นฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#rectified">เรียงกระแส</a>
+        <a class="btn btn-ghost btn-sm" href="#inverter">อินเวอร์เตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#switching">สวิตชิ่ง</a>
+      </div>
+      <div class="tldr">
+        <b>วิธีใช้</b>
+        <ul>
+          <li>หาสูตรจากรหัส W ในกล่องค้นหา หรือพิมพ์ชื่อ เช่น six-step, triac, ripple</li>
+          <li>\(A_n\) คือค่ายอดของฮาร์มอนิก ค่า RMS ของฮาร์มอนิก = \(A_n/\sqrt2\)</li>
+          <li>รูปซับซ้อน = ผลรวมของรูปในตาราง (เชิงเส้น <a href="/learn/fourier-series/complex-spectrum/#C8">C8</a>)</li>
+          <li>ทุกรูปเปิดดูในแล็บได้ทันที เลือกจากรายการรูปคลื่นท้ายหน้า</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น square, w12, rectifier, six-step, triac, ripple, rms" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ SUMMARY ============ -->
+    <section class="tsec" aria-labelledby="summary">
+    <h2 id="summary">ตารางสรุปในหน้าเดียว <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รหัส</th><th>รูปคลื่น</th><th>ฮาร์มอนิกที่มี</th><th>ขนาด \(A_n\)</th><th>RMS</th><th>THD</th><th>CF</th></tr></thead>
+      <tbody>
+        <tr><td><a href="#W1">W1</a></td><td>สี่เหลี่ยม ±A</td><td>คี่</td><td>\(4A/(n\pi)\)</td><td>\(A\)</td><td>48.3 %</td><td>1.00</td></tr>
+        <tr><td><a href="#W2">W2</a></td><td>สี่เหลี่ยม 0–A</td><td>DC + คี่</td><td>\(2A/(n\pi)\)</td><td>\(A/\sqrt2\)</td><td>48.3 %*</td><td>1.41</td></tr>
+        <tr><td><a href="#W3">W3</a></td><td>พัลส์ดิวตี้ D</td><td>DC + ทุก n ยกเว้น \(k/D\)</td><td>\(2AD|\mathrm{sinc}\,nD|\)</td><td>\(A\sqrt D\)</td><td>ขึ้นกับ D</td><td>\(1/\sqrt D\)</td></tr>
+        <tr><td><a href="#W5">W5</a></td><td>สามเหลี่ยม ±A</td><td>คี่</td><td>\(8A/(\pi^2n^2)\)</td><td>\(A/\sqrt3\)</td><td>12.1 %</td><td>1.73</td></tr>
+        <tr><td><a href="#W6">W6</a></td><td>ฟันเลื่อย ±A</td><td>ทุก n</td><td>\(2A/(n\pi)\)</td><td>\(A/\sqrt3\)</td><td>80.3 %</td><td>1.73</td></tr>
+        <tr><td><a href="#W7">W7</a></td><td>เรียงกระแสครึ่งคลื่น</td><td>DC, 1, คู่</td><td>\(2V_m/(\pi(n^2 - 1))\)</td><td>\(V_m/2\)</td><td>43.5 %*</td><td>2.00</td></tr>
+        <tr><td><a href="#W8">W8</a></td><td>เรียงกระแสเต็มคลื่น</td><td>DC + คู่</td><td>\(4V_m/(\pi(n^2 - 1))\)</td><td>\(V_m/\sqrt2\)</td><td>ริปเปิล 48.3 %</td><td>1.41</td></tr>
+        <tr><td><a href="#W9">W9</a></td><td>quasi-square มุม α</td><td>คี่</td><td>\(4A|\cos n\alpha|/(n\pi)\)</td><td>\(A\sqrt{1 - 2\alpha/\pi}\)</td><td>ขึ้นกับ α</td><td>—</td></tr>
+        <tr><td><a href="#W10">W10</a></td><td>six-step แรงดันเฟส</td><td>\(6k\pm1\)</td><td>\(2V_{dc}/(n\pi)\)</td><td>\(0.471V_{dc}\)</td><td>31.1 %</td><td>1.41</td></tr>
+        <tr><td><a href="#W11">W11</a></td><td>six-step แรงดันไลน์</td><td>\(6k\pm1\)</td><td>\(2\sqrt3V_{dc}/(n\pi)\)</td><td>\(0.816V_{dc}\)</td><td>31.1 %</td><td>1.22</td></tr>
+        <tr><td><a href="#W12">W12</a></td><td>กระแส 6 พัลส์ (อุดมคติ)</td><td>\(6k\pm1\)</td><td>\(2\sqrt3I_d/(n\pi)\)</td><td>\(0.816I_d\)</td><td>31.1 %</td><td>1.22</td></tr>
+        <tr><td><a href="#W13">W13</a></td><td>SPWM ไบโพลาร์</td><td>1 + ไซด์แบนด์รอบ \(jm_f\)</td><td>\(m_aV_{dc}/2\) (หลัก)</td><td>\(V_{dc}/2\)</td><td>สูง (ก่อนกรอง)</td><td>1.00</td></tr>
+        <tr><td><a href="#W14">W14</a></td><td>พัลส์คางหมู</td><td>เหมือน W3</td><td>\(\times|\mathrm{sinc}(nt_r/T)|\)</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td><a href="#W15">W15</a></td><td>ไตรแอกตัดเฟส α</td><td>คี่</td><td>ดูการ์ด</td><td>ดูการ์ด</td><td>64 % (α = 90°)</td><td>—</td></tr>
+        <tr><td><a href="#W16">W16</a></td><td>ไซน์ตัดยอดสมมาตร</td><td>คี่</td><td>ดูการ์ด</td><td>—</td><td>13.8 % (ตัดที่ 70 %)</td><td>—</td></tr>
+        <tr><td><a href="#W17">W17</a></td><td>กระแส SMPS ไม่มี PFC</td><td>คี่</td><td>ไม่มีรูปปิด</td><td>—</td><td>100–150 %</td><td>2.5–3.5</td></tr>
+        <tr><td><a href="#W18">W18</a></td><td>สามเหลี่ยมไม่สมมาตร (ริปเปิล L)</td><td>ทุก n</td><td>\(\Delta I|\sin n\pi D|/(\pi^2n^2D(1-D))\)</td><td>\(\Delta I/\sqrt{12}\) (AC)</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p class="mono" style="color:var(--ink-3)">* ไม่นับ DC · CF = crest factor = ค่ายอด/RMS · ไซน์บริสุทธิ์ CF = 1.414 THD = 0</p>
+    </section>
+
+    <!-- ============ BASIC ============ -->
+    <section class="tsec" aria-labelledby="basic">
+    <h2 id="basic">รูปคลื่นพื้นฐาน: สี่เหลี่ยม พัลส์ สามเหลี่ยม ฟันเลื่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="W1" data-k="square wave odd harmonics 4A/npi bipolar สี่เหลี่ยม คลื่นสี่เหลี่ยม"><p class="tf-n"><b><span class="fid">W1</span> Square wave ±A</b> สี่เหลี่ยม (ขาขึ้นที่ t = 0)</p>
+        <div class="wtfig"><!--FIG:fs-wt-square--><svg viewBox="0 0 300 78" role="img" aria-label="คลื่นสี่เหลี่ยมบวกลบ A ขาขึ้นที่ t เท่ากับ 0"><defs><marker id="fs-wt-square-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 12.4L78.9 12.4L78.9 63.6L149 63.6L149 12.4L219.1 12.4L219.1 63.6L289.2 63.6"/></svg><!--/FIG--></div>
+        \[ x(t) = \frac{4A}{\pi}\sum_{n=1,3,5}^{\infty}\frac{\sin n\omega_0 t}{n} \]
+        <p class="tf-x">RMS = A · \(X_1 = 0.900A\) · THD 48.3 % · ที่มา <a href="/learn/fourier-series/coefficients/#ex-t1">T-1</a></p></div>
+      <div class="tf" id="W2" data-k="square wave unipolar 0 to A logic clock dc offset 50% สี่เหลี่ยม ลอจิก นาฬิกา"><p class="tf-n"><b><span class="fid">W2</span> Square wave 0 to A (50 %)</b> สี่เหลี่ยมลอจิก</p>
+        <div class="wtfig"><!--FIG:fs-wt-square01--><svg viewBox="0 0 300 78" role="img" aria-label="คลื่นสี่เหลี่ยม 0 ถึง A ดิวตี้ 50 เปอร์เซ็นต์"><defs><marker id="fs-wt-square01-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="57.6" x2="292" y2="57.6"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 16.3L78.9 16.3L78.9 57.6L149 57.6L149 16.3L219.1 16.3L219.1 57.6L289.2 57.6"/></svg><!--/FIG--></div>
+        \[ x(t) = \frac{A}{2} + \frac{2A}{\pi}\sum_{n=1,3,5}^{\infty}\frac{\sin n\omega_0 t}{n} \]
+        <p class="tf-x">= W1 ที่ A/2 บวก DC A/2 (<a href="/learn/fourier-series/symmetry/#S9">S9</a>) · RMS \(A/\sqrt2\) · นาฬิกา 3.3 V 10 MHz มีฮาร์มอนิกที่ 30, 50 MHz ขนาด 0.70, 0.42 V</p></div>
+      <div class="tf" id="W3" data-k="pulse train duty cycle sinc pwm starting at zero พัลส์ ดิวตี้ PWM"><p class="tf-n"><b><span class="fid">W3</span> Pulse train, duty D</b> พัลส์สูง A กว้าง DT เริ่มที่ t = 0</p>
+        <div class="wtfig"><!--FIG:fs-wt-pulse--><svg viewBox="0 0 300 78" role="img" aria-label="พัลส์ดิวตี้ D 25 เปอร์เซ็นต์ เริ่มที่ t เท่ากับ 0"><defs><marker id="fs-wt-pulse-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="57.6" x2="292" y2="57.6"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 16.3L43.9 16.3L43.9 57.6L149 57.6L149 16.3L184 16.3L184 57.6L289.2 57.6"/></svg><!--/FIG--></div>
+        \[ a_0 = AD,\quad a_n = \frac{A}{n\pi}\sin 2\pi nD,\quad b_n = \frac{A}{n\pi}(1 - \cos 2\pi nD),\quad A_n = \frac{2A}{n\pi}|\sin n\pi D| \]
+        <p class="tf-x">RMS \(A\sqrt D\) · ไม่มีฮาร์มอนิกที่ \(n = k/D\) · ที่มา <a href="/learn/fourier-series/coefficients/#ex-t2">T-2</a> <a href="/learn/fourier-series/complex-spectrum/#C7">C7</a></p></div>
+      <div class="tf" id="W4" data-k="pulse train centered even cosine series duty พัลส์ สมมาตร โคไซน์"><p class="tf-n"><b><span class="fid">W4</span> Pulse train, centred at t = 0</b> พัลส์วางกึ่งกลาง (ฟังก์ชันคู่)</p>
+        \[ x(t) = AD + \sum_{n=1}^{\infty}\frac{2A}{n\pi}\sin(n\pi D)\cos n\omega_0 t \]
+        <p class="tf-x">ขนาดเท่า W3 ทุกตัว แต่เป็นโคไซน์ล้วน สะดวกเมื่อคูณกับฟังก์ชันคู่อื่น</p></div>
+      <div class="tf" id="W5" data-k="triangle wave odd harmonics 1/n^2 8A/pi^2 สามเหลี่ยม"><p class="tf-n"><b><span class="fid">W5</span> Triangle wave ±A</b> สามเหลี่ยม (ขาขึ้นผ่าน 0 ที่ t = 0)</p>
+        <div class="wtfig"><!--FIG:fs-wt-triangle--><svg viewBox="0 0 300 78" role="img" aria-label="คลื่นสามเหลี่ยมบวกลบ A ขาขึ้นผ่าน 0 ที่ t เท่ากับ 0"><defs><marker id="fs-wt-triangle-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 38L43.9 12.4L114 63.6L184 12.4L254.1 63.6L289.2 38"/></svg><!--/FIG--></div>
+        \[ x(t) = \frac{8A}{\pi^2}\sum_{n=1,3,5}^{\infty}\frac{(-1)^{(n-1)/2}}{n^2}\sin n\omega_0 t \]
+        <p class="tf-x">RMS \(A/\sqrt3\) · THD 12.1 % · CF 1.73 · ที่มา <a href="/learn/fourier-series/symmetry/#ex-s1">S-1</a></p></div>
+      <div class="tf" id="W6" data-k="sawtooth wave all harmonics ramp odd function ฟันเลื่อย แรมป์"><p class="tf-n"><b><span class="fid">W6</span> Sawtooth ±A</b> ฟันเลื่อย (ผ่าน 0 ขาขึ้นที่ t = 0)</p>
+        <div class="wtfig"><!--FIG:fs-wt-sawtooth--><svg viewBox="0 0 300 78" role="img" aria-label="คลื่นฟันเลื่อยบวกลบ A ผ่าน 0 ขาขึ้นที่ t เท่ากับ 0"><defs><marker id="fs-wt-sawtooth-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 38L78.9 12.4L78.9 63.6L219.1 12.4L219.1 63.6L289.2 38"/></svg><!--/FIG--></div>
+        \[ x(t) = \frac{2A}{\pi}\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin n\omega_0 t \]
+        <p class="tf-x">RMS \(A/\sqrt3\) · THD 80.3 % · มีทั้งคู่และคี่ · ที่มา <a href="/learn/fourier-series/coefficients/#ex-t3">T-3</a></p></div>
+    </div>
+    </section>
+
+    <!-- ============ RECTIFIED ============ -->
+    <section class="tsec" aria-labelledby="rectified">
+    <h2 id="rectified">วงจรเรียงกระแสและโหลดไม่เชิงเส้น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="W7" data-k="half-wave rectified sine dc even harmonics Vm/pi Vm/2 เรียงกระแสครึ่งคลื่น"><p class="tf-n"><b><span class="fid">W7</span> Half-wave rectified sine</b> ไซน์เรียงกระแสครึ่งคลื่น</p>
+        <div class="wtfig"><!--FIG:fs-wt-halfwave--><svg viewBox="0 0 300 78" role="img" aria-label="ไซน์เรียงกระแสครึ่งคลื่น"><defs><marker id="fs-wt-halfwave-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 29.4L19.3 25.4L22.8 21.6L26.3 18.3L29.8 15.5L33.3 13.2L36.8 11.5L40.3 10.5L43.9 10.2L47.4 10.5L50.9 11.5L54.4 13.2L57.9 15.5L61.4 18.3L64.9 21.6L68.4 25.4L73.6 31.5L84.2 44.5L89.4 50.6L92.9 54.4L96.4 57.7L99.9 60.5L103.4 62.8L106.9 64.5L110.4 65.5L114 65.8L117.5 65.5L121 64.5L124.5 62.8L128 60.5L131.5 57.7L135 54.4L138.5 50.6L143.7 44.5L154.3 31.5L159.5 25.4L163 21.6L166.5 18.3L170 15.5L173.5 13.2L177 11.5L180.5 10.5L184 10.2L187.6 10.5L191.1 11.5L194.6 13.2L198.1 15.5L201.6 18.3L205.1 21.6L208.6 25.4L213.8 31.5L224.4 44.5L229.6 50.6L233.1 54.4L236.6 57.7L240.1 60.5L243.6 62.8L247.1 64.5L250.6 65.5L254.1 65.8L257.7 65.5L261.2 64.5L264.7 62.8L268.2 60.5L271.7 57.7L275.2 54.4L278.7 50.6L283.9 44.5L289.2 38"/><path class="w1" d="M8.8 38L16.3 28.8L21.9 22.6L26.6 18.1L30.3 15.2L34 12.8L37.8 11.2L41.5 10.3L45.3 10.2L49 10.9L52.7 12.3L56.5 14.5L60.2 17.3L64.9 21.6L70.5 27.8L78.9 38L149 38L156.5 28.8L162.1 22.6L166.8 18.1L170.5 15.2L174.2 12.8L178 11.2L181.7 10.3L185.5 10.2L189.2 10.9L192.9 12.3L196.7 14.5L200.4 17.3L205.1 21.6L210.7 27.8L219.1 38L289.2 38"/></svg><!--/FIG--></div>
+        \[ v = \frac{V_m}{\pi} + \frac{V_m}{2}\sin\omega_0 t - \frac{2V_m}{\pi}\sum_{n=2,4,6}^{\infty}\frac{\cos n\omega_0 t}{n^2 - 1} \]
+        <p class="tf-x">RMS \(V_m/2\) · DC \(0.318V_m\) · THD (ไม่นับ DC) 43.5 % · ที่มา <a href="/learn/fourier-series/coefficients/#ex-t4">T-4</a></p></div>
+      <div class="tf" id="W8" data-k="full-wave rectified sine bridge even harmonics only 100 Hz ripple 2Vm/pi เรียงกระแสเต็มคลื่น ริปเปิล"><p class="tf-n"><b><span class="fid">W8</span> Full-wave rectified sine</b> ไซน์เรียงกระแสเต็มคลื่น (ω₀ = ความถี่แหล่งจ่าย)</p>
+        <div class="wtfig"><!--FIG:fs-wt-fullwave--><svg viewBox="0 0 300 78" role="img" aria-label="ไซน์เรียงกระแสเต็มคลื่น"><defs><marker id="fs-wt-fullwave-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 29.4L19.3 25.4L22.8 21.6L26.3 18.3L29.8 15.5L33.3 13.2L36.8 11.5L40.3 10.5L43.9 10.2L47.4 10.5L50.9 11.5L54.4 13.2L57.9 15.5L61.4 18.3L64.9 21.6L68.4 25.4L73.6 31.5L84.2 44.5L89.4 50.6L92.9 54.4L96.4 57.7L99.9 60.5L103.4 62.8L106.9 64.5L110.4 65.5L114 65.8L117.5 65.5L121 64.5L124.5 62.8L128 60.5L131.5 57.7L135 54.4L138.5 50.6L143.7 44.5L154.3 31.5L159.5 25.4L163 21.6L166.5 18.3L170 15.5L173.5 13.2L177 11.5L180.5 10.5L184 10.2L187.6 10.5L191.1 11.5L194.6 13.2L198.1 15.5L201.6 18.3L205.1 21.6L208.6 25.4L213.8 31.5L224.4 44.5L229.6 50.6L233.1 54.4L236.6 57.7L240.1 60.5L243.6 62.8L247.1 64.5L250.6 65.5L254.1 65.8L257.7 65.5L261.2 64.5L264.7 62.8L268.2 60.5L271.7 57.7L275.2 54.4L278.7 50.6L283.9 44.5L289.2 38"/><path class="w1" d="M8.8 38L16.3 28.8L21.9 22.6L26.6 18.1L30.3 15.2L34 12.8L37.8 11.2L41.5 10.3L45.3 10.2L49 10.9L52.7 12.3L56.5 14.5L60.2 17.3L64.9 21.6L70.5 27.8L78.9 38L86.4 28.8L92 22.6L96.7 18.1L100.4 15.2L104.1 12.8L107.9 11.2L111.6 10.3L115.4 10.2L119.1 10.9L122.8 12.3L126.6 14.5L130.3 17.3L135 21.6L140.6 27.8L149 38L156.5 28.8L162.1 22.6L166.8 18.1L170.5 15.2L174.2 12.8L178 11.2L181.7 10.3L185.5 10.2L189.2 10.9L192.9 12.3L196.7 14.5L200.4 17.3L205.1 21.6L210.7 27.8L219.1 38L226.6 28.8L232.2 22.6L236.9 18.1L240.6 15.2L244.3 12.8L248.1 11.2L251.8 10.3L255.5 10.2L259.3 10.9L263 12.3L266.8 14.5L270.5 17.3L275.2 21.6L280.8 27.8L289.2 38"/></svg><!--/FIG--></div>
+        \[ v = \frac{2V_m}{\pi} - \frac{4V_m}{\pi}\sum_{n=2,4,6}^{\infty}\frac{\cos n\omega_0 t}{n^2 - 1} \]
+        <p class="tf-x">DC \(0.637V_m\) · ฮาร์มอนิกที่ 2 (100 Hz) \(0.424V_m\) · RMS ริปเปิล/DC = 48.3 % (ripple factor)</p></div>
+      <div class="tf" id="W12" data-k="six pulse rectifier line current 120 degree blocks 6k±1 harmonics Id 0.78 three phase bridge กระแส 6 พัลส์ เรกติไฟเออร์ 3 เฟส"><p class="tf-n"><b><span class="fid">W12</span> 6-pulse rectifier line current (ideal)</b> กระแสไลน์ของบริดจ์ 3 เฟส (I_d เรียบ, วางกึ่งกลางบล็อกที่ t = 0)</p>
+        <div class="wtfig"><!--FIG:fs-wt-sixpulse--><svg viewBox="0 0 300 78" role="img" aria-label="กระแสไลน์ของเรกติไฟเออร์ 6 พัลส์ บล็อก 120 องศา"><defs><marker id="fs-wt-sixpulse-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 12.4L12.3 12.7L15.8 13.7L19.3 15.2L22.8 17.3L26.3 19.9L29.8 23L33.3 26.4L38.6 32L49.1 44L54.4 49.6L57.9 53L61.4 56.1L64.9 58.7L68.4 60.8L71.9 62.3L75.4 63.3L78.9 63.6L82.4 63.3L85.9 62.3L89.4 60.8L92.9 58.7L96.4 56.1L99.9 53L103.4 49.6L108.7 44L119.2 32L124.5 26.4L128 23L131.5 19.9L135 17.3L138.5 15.2L142 13.7L145.5 12.7L149 12.4L152.5 12.7L156 13.7L159.5 15.2L163 17.3L166.5 19.9L170 23L173.5 26.4L178.8 32L189.3 44L194.6 49.6L198.1 53L201.6 56.1L205.1 58.7L208.6 60.8L212.1 62.3L215.6 63.3L219.1 63.6L222.6 63.3L226.1 62.3L229.6 60.8L233.1 58.7L236.6 56.1L240.1 53L243.6 49.6L248.9 44L259.4 32L264.7 26.4L268.2 23L271.7 19.9L275.2 17.3L278.7 15.2L282.2 13.7L285.7 12.7L289.2 12.4"/><path class="w1" d="M8.8 12.4L32.2 12.4L32.2 38L55.5 38L55.5 63.6L102.3 63.6L102.3 38L125.6 38L125.6 12.4L172.4 12.4L172.4 38L195.7 38L195.7 63.6L242.5 63.6L242.5 38L265.8 38L265.8 12.4L289.2 12.4"/></svg><!--/FIG--></div>
+        \[ i_a = \frac{2\sqrt3 I_d}{\pi}\Big[\cos\omega t - \tfrac15\cos5\omega t + \tfrac17\cos7\omega t - \tfrac1{11}\cos11\omega t + \tfrac1{13}\cos13\omega t - \cdots\Big] \]
+        <p class="tf-x">\(I_1 = \frac{\sqrt6}{\pi}I_d = 0.780I_d\) (RMS) · \(I_h = I_1/h\) · RMS \(\sqrt{2/3}\,I_d = 0.816I_d\) · THD 31.1 % · รายละเอียดและผลของช่วงทับซ้อนที่ <a href="/learn/fourier-series/rectifiers/#R7">R7</a></p></div>
+      <div class="tf" id="W15" data-k="triac phase control dimmer firing angle alpha resistive load odd harmonics ไตรแอก ตัดเฟส หรี่ไฟ มุมจุดชนวน"><p class="tf-n"><b><span class="fid">W15</span> Phase-controlled (TRIAC) current, R load</b> ไตรแอกตัดเฟส \(i = I_m\sin\theta\) เมื่อ \(\alpha \lt \theta \lt \pi\) (และครึ่งลบ)</p>
+        <div class="wtfig"><!--FIG:fs-wt-triac--><svg viewBox="0 0 300 78" role="img" aria-label="กระแสไตรแอกตัดเฟสที่มุม 90 องศา โหลดตัวต้านทาน"><defs><marker id="fs-wt-triac-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 30.1L19.3 26.4L22.8 23L26.3 19.9L29.8 17.3L33.3 15.2L36.8 13.7L40.3 12.7L43.9 12.4L47.4 12.7L50.9 13.7L54.4 15.2L57.9 17.3L61.4 19.9L64.9 23L68.4 26.4L73.6 32L84.2 44L89.4 49.6L92.9 53L96.4 56.1L99.9 58.7L103.4 60.8L106.9 62.3L110.4 63.3L114 63.6L117.5 63.3L121 62.3L124.5 60.8L128 58.7L131.5 56.1L135 53L138.5 49.6L143.7 44L154.3 32L159.5 26.4L163 23L166.5 19.9L170 17.3L173.5 15.2L177 13.7L180.5 12.7L184 12.4L187.6 12.7L191.1 13.7L194.6 15.2L198.1 17.3L201.6 19.9L205.1 23L208.6 26.4L213.8 32L224.4 44L229.6 49.6L233.1 53L236.6 56.1L240.1 58.7L243.6 60.8L247.1 62.3L250.6 63.3L254.1 63.6L257.7 63.3L261.2 62.3L264.7 60.8L268.2 58.7L271.7 56.1L275.2 53L278.7 49.6L283.9 44L289.2 38"/><path class="w1" d="M8.8 38L43.9 38L43.9 12.4L48.1 12.9L51.8 14L55.5 15.8L60.2 19L64.9 23L70.5 28.6L78.9 38L114 38L114 63.6L118.2 63.1L121.9 62L125.6 60.2L130.3 57L135 53L140.6 47.4L149 38L184 38L184 12.4L188.3 12.9L192 14L195.7 15.8L200.4 19L205.1 23L210.7 28.6L219.1 38L254.1 38L254.1 63.6L258.4 63.1L262.1 62L265.8 60.2L270.5 57L275.2 53L280.8 47.4L289.2 38"/></svg><!--/FIG--></div>
+        \[ a_1 = \frac{I_m}{2\pi}(\cos 2\alpha - 1),\quad b_1 = \frac{I_m}{2\pi}\big(2(\pi - \alpha) + \sin 2\alpha\big) \]
+        \[ a_n = \frac{I_m}{\pi}\Big[\frac{\cos(n+1)\alpha - 1}{n+1} - \frac{\cos(n-1)\alpha - 1}{n-1}\Big],\quad b_n = \frac{I_m}{\pi}\Big[\frac{\sin(n+1)\alpha}{n+1} - \frac{\sin(n-1)\alpha}{n-1}\Big]\;\;(n\text{ คี่} \ge 3) \]
+        <p class="tf-x">\(I_{rms} = I_m\sqrt{\frac{\pi - \alpha}{2\pi} + \frac{\sin 2\alpha}{4\pi}}\) · \(a_1 \ne 0\) → ฮาร์มอนิกหลักล้าหลัง DPF &lt; 1 แม้โหลดเป็นตัวต้านทาน · α = 90°: THD 64 % PF 0.707</p></div>
+      <div class="tf" id="W16" data-k="clipped sine symmetric clipping saturation odd harmonics amplifier ตัดยอด อิ่มตัว"><p class="tf-n"><b><span class="fid">W16</span> Symmetrically clipped sine</b> ไซน์ตัดยอดที่ระดับ \(cA\), \(\theta_c = \sin^{-1}c\)</p>
+        <div class="wtfig"><!--FIG:fs-wt-clipped--><svg viewBox="0 0 300 78" role="img" aria-label="ไซน์ตัดยอดสมมาตรที่ระดับ 0.7"><defs><marker id="fs-wt-clipped-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 30.1L19.3 26.4L22.8 23L26.3 19.9L29.8 17.3L33.3 15.2L36.8 13.7L40.3 12.7L43.9 12.4L47.4 12.7L50.9 13.7L54.4 15.2L57.9 17.3L61.4 19.9L64.9 23L68.4 26.4L73.6 32L84.2 44L89.4 49.6L92.9 53L96.4 56.1L99.9 58.7L103.4 60.8L106.9 62.3L110.4 63.3L114 63.6L117.5 63.3L121 62.3L124.5 60.8L128 58.7L131.5 56.1L135 53L138.5 49.6L143.7 44L154.3 32L159.5 26.4L163 23L166.5 19.9L170 17.3L173.5 15.2L177 13.7L180.5 12.7L184 12.4L187.6 12.7L191.1 13.7L194.6 15.2L198.1 17.3L201.6 19.9L205.1 23L208.6 26.4L213.8 32L224.4 44L229.6 49.6L233.1 53L236.6 56.1L240.1 58.7L243.6 60.8L247.1 62.3L250.6 63.3L254.1 63.6L257.7 63.3L261.2 62.3L264.7 60.8L268.2 58.7L271.7 56.1L275.2 53L278.7 49.6L283.9 44L289.2 38"/><path class="w1" d="M8.8 38L16.3 29.6L21.9 23.8L25.6 20.5L26.6 20.1L61.1 20.1L62.1 20.5L66.8 24.7L73.3 31.6L85.4 45.4L91.1 51.3L95.7 55.5L96.7 55.9L131.2 55.9L132.2 55.5L136.8 51.3L143.4 44.4L155.5 30.6L161.2 24.7L165.8 20.5L166.8 20.1L201.3 20.1L202.3 20.5L206.9 24.7L213.5 31.6L225.6 45.4L231.2 51.3L235.9 55.5L236.9 55.9L271.4 55.9L272.4 55.5L277 51.3L283.6 44.4L289.2 38"/></svg><!--/FIG--></div>
+        \[ b_1 = \frac{2A}{\pi}\big(\theta_c + \sin\theta_c\cos\theta_c\big),\quad b_n = \frac{2A}{\pi}\Big[\frac{\sin(n-1)\theta_c}{n-1} - \frac{\sin(n+1)\theta_c}{n+1}\Big] + \frac{4cA}{n\pi}\cos n\theta_c \]
+        <p class="tf-x">n คี่ (n ≥ 3) · c = 0.7: \(b_1 = 0.812A\), \(b_3 = 0.108A\) THD 13.8 % · ตัดไม่สมมาตรดู <a href="/learn/fourier-series/symmetry/#ex-s4">S-4</a></p></div>
+      <div class="tf" id="W17" data-k="smps capacitor input rectifier current pulse no pfc computer led thd 100 150 crest factor กระแส SMPS คอมพิวเตอร์ LED"><p class="tf-n"><b><span class="fid">W17</span> Capacitor-input rectifier current (SMPS without PFC)</b> กระแสของบริดจ์ + ตัวเก็บประจุ</p>
+        <div class="wtfig"><!--FIG:fs-wt-smps--><svg viewBox="0 0 300 78" role="img" aria-label="กระแสพัลส์แหลมของ SMPS ไม่มี PFC ที่ยอดแรงดัน"><defs><marker id="fs-wt-smps-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 32.1L21.1 28L24.6 25.5L28.1 23.4L31.6 21.6L35.1 20.3L38.6 19.3L42.1 18.9L45.6 18.9L49.1 19.3L52.6 20.3L56.1 21.6L59.6 23.4L63.1 25.5L68.4 29.3L73.6 33.5L84.2 42.5L89.4 46.7L92.9 49.3L96.4 51.6L99.9 53.5L103.4 55.1L106.9 56.3L110.4 57L114 57.2L117.5 57L121 56.3L124.5 55.1L128 53.5L131.5 51.6L135 49.3L140.2 45.3L154.3 33.5L159.5 29.3L163 26.7L166.5 24.4L170 22.5L173.5 20.9L177 19.7L180.5 19L184 18.8L187.6 19L191.1 19.7L194.6 20.9L198.1 22.5L201.6 24.4L205.1 26.7L210.3 30.7L224.4 42.5L229.6 46.7L233.1 49.3L236.6 51.6L240.1 53.5L243.6 55.1L247.1 56.3L250.6 57L254.1 57.2L257.7 57L261.2 56.3L264.7 55.1L268.2 53.5L271.7 51.6L275.2 49.3L280.4 45.3L289.2 38"/><path class="w1" d="M8.8 38L27.9 38L29 37.7L30.1 36.2L31.2 33.5L32.9 28.1L35.2 20L36.3 16.6L37.4 14L38.5 12.6L39.6 12.5L40.8 13.7L41.9 16.1L43.6 21.3L46.4 31.3L47.5 34.5L48.6 36.8L49.7 37.9L98 38L99.1 38.3L100.2 39.8L101.3 42.5L103 47.9L105.3 56L106.4 59.4L107.5 62L108.6 63.4L109.7 63.5L110.9 62.3L112 59.9L113.7 54.7L116.5 44.7L117.6 41.5L118.7 39.2L119.8 38.1L168.1 38L169.2 37.7L170.3 36.2L171.4 33.5L173.1 28.1L175.4 20L176.5 16.6L177.6 14L178.7 12.6L179.8 12.5L181 13.7L182.1 16.1L183.8 21.3L186.6 31.3L187.7 34.5L188.8 36.8L189.9 37.9L238.2 38L239.3 38.3L240.4 39.8L241.5 42.5L243.2 47.9L245.5 56L246.6 59.4L247.7 62L248.8 63.4L249.9 63.5L251.1 62.3L252.2 59.9L253.9 54.7L256.7 44.7L257.8 41.5L258.9 39.2L260 38.1L289.2 38"/></svg><!--/FIG--></div>
+        \[ I_3 \approx 0.8\text{–}0.95\,I_1,\quad I_5 \approx 0.6\text{–}0.85\,I_1,\quad I_7 \approx 0.4\text{–}0.7\,I_1,\quad \text{THD} \approx 100\text{–}150\,\% \]
+        <p class="tf-x">ไม่มีรูปปิด ขึ้นกับ C อิมพีแดนซ์สายและ NTC จำลองในแล็บ (300 W, 220 µF, อิมพีแดนซ์ปลั๊ก 0.35 Ω): 90.8 / 74.3 / 53.7 / 33.0 % ของ \(I_1\) ที่ h = 3, 5, 7, 9 THD 134 % PF 0.59 CF 3.0 <a href="/learn/fourier-series/rectifiers/#capacitor-input">R4</a></p></div>
+    </div>
+    </section>
+
+    <!-- ============ INVERTER ============ -->
+    <section class="tsec" aria-labelledby="inverter">
+    <h2 id="inverter">อินเวอร์เตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="W9" data-k="quasi-square three level notch angle alpha cos n alpha harmonic elimination inverter สี่เหลี่ยมสามระดับ มุมรอยบาก"><p class="tf-n"><b><span class="fid">W9</span> Quasi-square (3-level) wave</b> สี่เหลี่ยมสามระดับ มุมศูนย์ α ที่ขอบแต่ละด้าน</p>
+        <div class="wtfig"><!--FIG:fs-wt-quasi--><svg viewBox="0 0 300 78" role="img" aria-label="คลื่นสี่เหลี่ยมสามระดับ quasi-square มุม alpha 30 องศา"><defs><marker id="fs-wt-quasi-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 38L20.5 38L20.5 12.4L67.2 12.4L67.2 38L90.6 38L90.6 63.6L137.3 63.6L137.3 38L160.7 38L160.7 12.4L207.4 12.4L207.4 38L230.8 38L230.8 63.6L277.5 63.6L277.5 38L289.2 38"/></svg><!--/FIG--></div>
+        \[ x(t) = \frac{4A}{\pi}\sum_{n=1,3,5}^{\infty}\frac{\cos n\alpha}{n}\sin n\omega_0 t \]
+        <p class="tf-x">RMS \(A\sqrt{1 - 2\alpha/\pi}\) · α = 30° ไม่มี 3, 9, 15 · α = 18° ไม่มี 5 · ที่มา <a href="/learn/fourier-series/symmetry/#ex-s2">S-2</a></p></div>
+      <div class="tf" id="W10" data-k="six-step inverter phase voltage line to neutral 6k±1 2Vdc/pi six step อินเวอร์เตอร์ แรงดันเฟส"><p class="tf-n"><b><span class="fid">W10</span> Six-step inverter, phase voltage</b> แรงดันเฟส (ขั้น \(V_{dc}/3\), \(2V_{dc}/3\))</p>
+        <div class="wtfig"><!--FIG:fs-wt-sixstep--><svg viewBox="0 0 300 78" role="img" aria-label="แรงดันเฟสของอินเวอร์เตอร์ six-step ขั้น 1 ส่วน 3 และ 2 ส่วน 3 ของ Vdc"><defs><marker id="fs-wt-sixstep-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w0" d="M8.8 38L15.8 30.4L21.1 25.2L24.6 22.1L28.1 19.4L31.6 17.2L35.1 15.4L38.6 14.2L42.1 13.6L45.6 13.6L49.1 14.2L52.6 15.4L56.1 17.2L59.6 19.4L63.1 22.1L66.6 25.2L71.9 30.4L84.2 43.7L89.4 49.1L92.9 52.4L96.4 55.3L99.9 57.8L103.4 59.8L106.9 61.2L110.4 62.1L114 62.4L117.5 62.1L121 61.2L124.5 59.8L128 57.8L131.5 55.3L135 52.4L138.5 49.1L143.7 43.7L154.3 32.3L159.5 26.9L163 23.6L166.5 20.7L170 18.2L173.5 16.2L177 14.8L180.5 13.9L184 13.6L187.6 13.9L191.1 14.8L194.6 16.2L198.1 18.2L201.6 20.7L205.1 23.6L208.6 26.9L213.8 32.3L224.4 43.7L229.6 49.1L233.1 52.4L236.6 55.3L240.1 57.8L243.6 59.8L247.1 61.2L250.6 62.1L254.1 62.4L257.7 62.1L261.2 61.2L264.7 59.8L268.2 57.8L271.7 55.3L275.2 52.4L278.7 49.1L283.9 43.7L289.2 38"/><path class="w1" d="M8.8 25.2L32.2 25.2L32.2 12.4L55.5 12.4L55.5 25.2L78.9 25.2L78.9 50.8L102.3 50.8L102.3 63.6L125.6 63.6L125.6 50.8L149 50.8L149 25.2L172.4 25.2L172.4 12.4L195.7 12.4L195.7 25.2L219.1 25.2L219.1 50.8L242.5 50.8L242.5 63.6L265.8 63.6L265.8 50.8L289.2 50.8"/></svg><!--/FIG--></div>
+        \[ v_{aN} = \frac{2V_{dc}}{\pi}\Big[\sin\omega t + \tfrac15\sin5\omega t + \tfrac17\sin7\omega t + \tfrac1{11}\sin11\omega t + \cdots\Big] \]
+        <p class="tf-x">RMS \(\frac{\sqrt2}{3}V_{dc} = 0.471V_{dc}\) · ฮาร์มอนิกหลัก (RMS) \(0.450V_{dc}\) · THD 31.1 %</p></div>
+      <div class="tf" id="W11" data-k="six-step line voltage 120 degree quasi square sqrt3 2 sqrt3 Vdc/pi แรงดันไลน์ six-step"><p class="tf-n"><b><span class="fid">W11</span> Six-step inverter, line voltage</b> แรงดันไลน์ = quasi-square α = 30° สูง \(V_{dc}\)</p>
+        \[ |V_{ab,n}| = \frac{2\sqrt3\,V_{dc}}{n\pi}\;\;(n = 6k\pm1),\qquad V_{ab,1,rms} = \frac{\sqrt6}{\pi}V_{dc} = 0.780V_{dc} \]
+        <p class="tf-x">RMS \(0.816V_{dc}\) · หน้าตาเดียวกับกระแส 6 พัลส์ (W12) จึงมีสเปกตรัมเดียวกัน</p></div>
+      <div class="tf" id="W13" data-k="spwm sinusoidal pwm bipolar modulation index frequency ratio sidebands ma mf SPWM ดัชนีมอดูเลชัน"><p class="tf-n"><b><span class="fid">W13</span> Sinusoidal PWM (bipolar, ±V<sub>dc</sub>/2)</b> SPWM แบบไบโพลาร์</p>
+        <div class="wtfig"><!--FIG:fs-wt-spwm--><svg viewBox="0 0 300 78" role="img" aria-label="PWM ไบโพลาร์ที่สร้างจากไซน์ ma 0.8 mf 9"><defs><marker id="fs-wt-spwm-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="11.5" y1="6" x2="11.5" y2="70"/><path class="w1" d="M11.5 63.6L18.2 63.6L18.2 12.4L29 12.4L29 63.6L32 63.6L32 12.4L45.1 12.4L45.1 63.6L46.6 63.6L46.6 12.4L59.8 12.4L59.8 63.6L62.8 63.6L62.8 12.4L73.5 12.4L73.5 63.6L80.2 63.6L80.2 12.4L87 12.4L87 63.6L97.7 63.6L97.7 12.4L100.7 12.4L100.7 63.6L113.9 63.6L113.9 12.4L115.4 12.4L115.4 63.6L128.6 63.6L128.6 12.4L131.5 12.4L131.5 63.6L142.3 63.6L142.3 12.4L149 12.4L149 63.6L155.7 63.6L155.7 12.4L166.5 12.4L166.5 63.6L169.5 63.6L169.5 12.4L182.6 12.4L182.6 63.6L184.1 63.6L184.1 12.4L197.3 12.4L197.3 63.6L200.3 63.6L200.3 12.4L211 12.4L211 63.6L217.8 63.6L217.8 12.4L224.5 12.4L224.5 63.6L235.2 63.6L235.2 12.4L238.2 12.4L238.2 63.6L251.4 63.6L251.4 12.4L252.9 12.4L252.9 63.6L266.1 63.6L266.1 12.4L269 12.4L269 63.6L279.8 63.6L279.8 12.4L286.5 12.4"/><path class="w0" d="M11.5 38L18.4 31.7L23.5 27.3L27 24.7L30.4 22.4L33.8 20.5L37.3 19.1L40.7 18.1L44.2 17.6L47.6 17.6L51 18.1L54.5 19.1L57.9 20.5L61.3 22.4L64.8 24.7L68.2 27.3L73.4 31.7L85.4 42.8L90.6 47.3L94 50L97.4 52.5L100.9 54.6L104.3 56.2L107.8 57.5L111.2 58.2L114.6 58.5L118.1 58.2L121.5 57.5L124.9 56.2L128.4 54.6L131.8 52.5L135.2 50L140.4 45.8L154.2 33.2L159.3 28.7L162.8 26L166.2 23.5L169.6 21.4L173.1 19.8L176.5 18.5L179.9 17.8L183.4 17.5L186.8 17.8L190.2 18.5L193.7 19.8L197.1 21.4L200.6 23.5L204 26L209.2 30.2L222.9 42.8L228.1 47.3L231.5 50L234.9 52.5L238.4 54.6L241.8 56.2L245.2 57.5L248.7 58.2L252.1 58.5L255.6 58.2L259 57.5L262.4 56.2L265.9 54.6L269.3 52.5L272.8 50L277.9 45.8L286.5 38"/></svg><!--/FIG--></div>
+        \[ V_1 = m_a\frac{V_{dc}}{2}\;(m_a \le 1),\qquad h = j\,m_f \pm k\;\;(j \text{ คี่ → } k \text{ คู่},\; j \text{ คู่ → } k \text{ คี่}) \]
+        <p class="tf-x">ตารางขนาดไซด์แบนด์และแบบยูนิโพลาร์ที่ <a href="/learn/fourier-series/inverters-pwm/#V6">V6</a> · เปิดในแล็บ: “SPWM”</p></div>
+    </div>
+    </section>
+
+    <!-- ============ SWITCHING ============ -->
+    <section class="tsec" aria-labelledby="switching">
+    <h2 id="switching">คอนเวอร์เตอร์สวิตชิ่งและ EMI <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="W14" data-k="trapezoidal pulse rise time sinc sinc emi envelope 1/(pi tr) คางหมู เวลาขาขึ้น EMI"><p class="tf-n"><b><span class="fid">W14</span> Trapezoidal pulse</b> พัลส์คางหมู: ดิวตี้ D (วัดที่ 50 %) เวลาขึ้น = ลง = \(t_r\)</p>
+        <div class="wtfig"><!--FIG:fs-wt-trapezoid--><svg viewBox="0 0 300 78" role="img" aria-label="พัลส์คางหมูมีเวลาขาขึ้นและขาลง"><defs><marker id="fs-wt-trapezoid-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="57.6" x2="292" y2="57.6"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 57.6L16.6 16.3L66.8 16.3L74.6 57.6L149 57.6L156.8 16.3L207 16.3L214.8 57.6L289.2 57.6"/></svg><!--/FIG--></div>
+        \[ A_n = 2AD\,\big|\mathrm{sinc}(nD)\big|\,\Big|\mathrm{sinc}\Big(\frac{n t_r}{T}\Big)\Big| \]
+        <p class="tf-x">เอนเวโลปหักมุมที่ \(1/(\pi\tau)\) และ \(1/(\pi t_r)\) · ใช้ประเมิน EMI <a href="/learn/fourier-series/dc-dc-converters/#B9">B9</a></p></div>
+      <div class="tf" id="W18" data-k="asymmetric triangle inductor ripple current buck duty delta I harmonics สามเหลี่ยมไม่สมมาตร ริปเปิลกระแส ตัวเหนี่ยวนำ"><p class="tf-n"><b><span class="fid">W18</span> Asymmetric triangle (inductor ripple)</b> ขึ้นช่วง DT ลงช่วง (1−D)T ยอดถึงยอด ΔI</p>
+        <div class="wtfig"><!--FIG:fs-wt-asymtri--><svg viewBox="0 0 300 78" role="img" aria-label="สามเหลี่ยมไม่สมมาตร ริปเปิลกระแสตัวเหนี่ยวนำ ดิวตี้ 0.3"><defs><marker id="fs-wt-asymtri-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="6" y1="38" x2="292" y2="38"/><line class="gr" x1="8.8" y1="6" x2="8.8" y2="70"/><path class="w1" d="M8.8 63.6L50.9 12.4L149 63.6L191.1 12.4L289.2 63.6"/></svg><!--/FIG--></div>
+        \[ A_n = \frac{\Delta I\,|\sin n\pi D|}{\pi^2 n^2 D(1 - D)},\qquad I_{ac,rms} = \frac{\Delta I}{\sqrt{12}} \]
+        <p class="tf-x">D = 0.5 ได้สามเหลี่ยมสมมาตร (W5 ที่ \(A = \Delta I/2\)) · ใช้หาความสูญเสียแกนและทองแดงที่ความถี่สวิตชิ่ง <a href="/learn/fourier-series/dc-dc-converters/#B7">B7</a></p></div>
+    </div>
+    </section>
+
+    <!-- ============ USE ============ -->
+    <section class="tsec" aria-labelledby="use">
+    <h2 id="use">ใช้ตารางแก้โจทย์จริง <span class="lv lv-i">กลาง</span></h2>
+    <div class="wx" id="ex-w1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-1 · กระแสไดรฟ์ 6 พัลส์</span><h3>เรกติไฟเออร์ 6 พัลส์กระแส DC 100 A (เรียบ) หากระแสไลน์ RMS ฮาร์มอนิกหลัก ที่ 5, 7, 11, 13 และ THD</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#W12">W12</a>: \(I_{rms} = 0.816 \times 100 = 81.6\) A · \(I_1 = 0.780 \times 100 = 78.0\) A</p></li>
+        <li><p>\(I_5 = 78.0/5 = 15.6\) A · \(I_7 = 11.1\) A · \(I_{11} = 7.09\) A · \(I_{13} = 6.00\) A</p></li>
+        <li><p>THD จากพาร์เซวาล <a class="tag tf" href="/learn/fourier-series/convergence-parseval/#P7">P7</a>: \(\sqrt{81.65^2 - 77.97^2}/77.97 = 31.1\) %</p></li>
+      </ol>
+      <p class="answer">81.6 A RMS, หลัก 78.0 A, ฮาร์มอนิก 15.6 / 11.1 / 7.1 / 6.0 A, THD 31.1 % (ค่าจริงต่ำกว่านี้เล็กน้อยเพราะช่วงทับซ้อน <a href="/learn/fourier-series/rectifiers/#R9">R9</a>)</p>
+    </div>
+    <div class="wx" id="ex-w2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง W-2 · รวมรูปจากตาราง</span><h3>แรงดันมีสี่เหลี่ยม ±10 V ซ้อนกับ DC 4 V หา DC, \(A_1\), \(A_3\) และ RMS</h3></div>
+      <ol class="steps">
+        <li><p>เชิงเส้น: DC = 4 V · <a class="tag tf" href="#W1">W1</a>: \(A_1 = 40/\pi = 12.73\) V · \(A_3 = 4.24\) V</p></li>
+        <li><p>RMS: DC กับ AC ตั้งฉากกัน \(\sqrt{4^2 + 10^2} = 10.77\) V</p></li>
+      </ol>
+      <p class="answer">DC 4 V, \(A_1\) 12.73 V, \(A_3\) 4.24 V, RMS 10.77 V</p>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: เปิดทุกรูปในตาราง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกรูปคลื่นจากรายการ ตัวเลขในแผงวิธีคิดคำนวณด้วยการอินทิเกรตแบบปิดของแต่ละช่วง ไม่ใช่ FFT จึงตรงกับสูตรในตารางทุกหลัก</p>
+    <div class="fs-lab" data-tabs="synth" data-preset="sixstep" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

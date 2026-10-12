@@ -1,0 +1,213 @@
+<!--meta
+{
+  "title": "ฮาร์มอนิกของวงจรเรียงกระแส: บริดจ์ 1 เฟส 3 เฟส 6 พัลส์ 12 พัลส์ h = kp ± 1 ช่วงทับซ้อน และ SMPS | อาจารย์มด",
+  "h1": "ฮาร์มอนิกของวงจรเรียงกระแส: 1 เฟส 3 เฟส 6 พัลส์ 12 พัลส์ และตัวเก็บประจุ",
+  "description": "วิเคราะห์ฮาร์มอนิกของเรกติไฟเออร์ด้วยอนุกรมฟูเรียร์: บริดจ์ 1 เฟสฝั่ง DC และฝั่ง AC บริดจ์ + ตัวเก็บประจุของ SMPS และ VFD มุมนำกระแสและกระแสยอด บริดจ์ 3 เฟส 6 พัลส์ กระแส I1 = 0.78 Id ฮาร์มอนิกลักษณะเฉพาะ h = kp ± 1 แรงดัน DC 1.35 VLL ริปเปิลที่ 6f ช่วงทับซ้อน μ ไทริสเตอร์ DPF = cos α และการหักล้างฮาร์มอนิกด้วย 12 พัลส์ 18 พัลส์ พร้อมตัวอย่างวิธีทำและแล็บ",
+  "ogTitle": "เรกติไฟเออร์กับฮาร์มอนิก: 6k ± 1, 12k ± 1 และ SMPS",
+  "lesson": "fourier-series",
+  "sub": "rectifiers",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Rectifier", "Characteristic harmonics", "Six-pulse rectifier", "Twelve-pulse rectifier", "Commutation overlap", "Thyristor converter", "Switched-mode power supply", "Variable-frequency drive"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "ฮาร์มอนิกลักษณะเฉพาะของเรกติไฟเออร์คืออะไร?", "a": "เรกติไฟเออร์ p พัลส์ในอุดมคติสร้างฮาร์มอนิกด้าน AC เฉพาะลำดับ \\(h = kp \\pm 1\\) และด้าน DC เฉพาะ \\(h = kp\\) บริดจ์ 3 เฟส (p = 6) จึงมี 5, 7, 11, 13 ด้าน AC และ 6, 12 (300, 600 Hz) ด้าน DC ขนาดประมาณ \\(I_h = I_1/h\\)"},
+    {"q": "ทำไม 12 พัลส์ลดฮาร์มอนิกที่ 5 และ 7 ได้?", "a": "ใช้หม้อแปลงสองชุดที่แรงดันต่างเฟสกัน 30° (Y-Y กับ Y-Δ) ฮาร์มอนิกลำดับ 6k ± 1 ที่ k คี่ (5, 7, 17, 19) ของสองบริดจ์จะมีเฟสตรงข้ามกันพอดีเมื่ออ้างกลับไปด้านปฐมภูมิ จึงหักล้างกัน เหลือ 12k ± 1 THD ลดจากราว 31 % เหลือราว 15 %"},
+    {"q": "ไทริสเตอร์ที่มุมจุดชนวน α ทำให้ PF เป็นอย่างไร?", "a": "ฮาร์มอนิกหลักของกระแสล้าหลังแรงดันประมาณ α ทำให้ DPF ≈ cos α (ถ้าคิดช่วงทับซ้อน ≈ cos(α + μ/2)) PF จริงยังคูณด้วย distortion factor 0.955 ของกระแส 6 พัลส์ ที่ α = 45° PF ≈ 0.675 และกินกำลังรีแอกทีฟเท่ากับกำลังจริง"},
+    {"q": "ทำไมกระแสของ SMPS และไดรฟ์ที่มีตัวเก็บประจุ DC มี THD สูงกว่า 6 พัลส์แบบมีโช้ก?", "a": "ตัวเก็บประจุชาร์จได้เฉพาะช่วงที่แรงดันไฟสูงกว่าแรงดันตัวเก็บประจุ ซึ่งสั้นมากใกล้ยอดแรงดัน กระแสจึงเป็นพัลส์แคบสูง มีฮาร์มอนิกมาก ใส่รีแอกเตอร์ด้าน AC หรือโช้กด้าน DC ทำให้พัลส์กว้างขึ้น THD ลดลงอย่างมาก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>เรกติไฟเออร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.9 · อนุกรมฟูเรียร์ · Rectifier Harmonics</p>
+      <h1>ฮาร์มอนิกของวงจรเรียงกระแส: 1 เฟส 3 เฟส 6 พัลส์ 12 พัลส์ และตัวเก็บประจุ</h1>
+      <p class="lede">วงจรเรียงกระแสเป็นแหล่งกำเนิดฮาร์มอนิกอันดับหนึ่งของระบบไฟฟ้า อยู่หน้าไดรฟ์ทุกตัว UPS เครื่องชาร์จ และแหล่งจ่ายไฟทุกชนิด วงจรเดียวมีสองด้านให้วิเคราะห์ ด้าน DC ที่อยากได้ DC เรียบ และด้าน AC ที่การไฟฟ้าเห็นกระแสเพี้ยน อนุกรมฟูเรียร์ตอบได้ทั้งสองด้านและบอกวิธีลดฮาร์มอนิกด้วยการเพิ่มจำนวนพัลส์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#three-phase">6 พัลส์</a>
+        <a class="btn btn-ghost btn-sm" href="#single-phase">1 เฟส</a>
+        <a class="btn btn-ghost btn-sm" href="#capacitor-input">+ ตัวเก็บประจุ</a>
+        <a class="btn btn-ghost btn-sm" href="#multipulse">12 · 18 พัลส์</a>
+        <a class="btn btn-ghost btn-sm" href="#compare">เปรียบเทียบ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>p พัลส์: ด้าน AC มี \(h = kp \pm 1\) ด้าน DC มี \(h = kp\) · ขนาดอุดมคติ \(I_h = I_1/h\)</li>
+          <li>6 พัลส์: \(V_{d0} = 1.35V_{LL}\), \(I_1 = 0.780I_d\), \(I_{rms} = 0.816I_d\), THD 31 %</li>
+          <li>ไทริสเตอร์: \(V_d \propto \cos\alpha\), DPF ≈ \(\cos(\alpha + \mu/2)\) · ช่วงทับซ้อน μ ลดฮาร์มอนิกสูง</li>
+          <li>มีตัวเก็บประจุ DC (SMPS, VFD): พัลส์แคบ THD 80–150 % แก้ด้วยรีแอกเตอร์/โช้ก</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น 6k±1, kp, 1.35, overlap, thyristor, 12-pulse, capacitor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="single-phase">
+    <h2 id="single-phase">บริดจ์ 1 เฟส: ด้าน DC และด้าน AC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้าด้าน DC มีตัวเหนี่ยวนำใหญ่จนกระแส \(I_d\) แทบเรียบ ไดโอดสองคู่สลับกันนำทุกครึ่งคาบ กระแสด้าน AC จึงเป็นสี่เหลี่ยม \(\pm I_d\) ในเฟสเดียวกับแรงดัน ส่วนแรงดันด้าน DC คือไซน์เรียงกระแสเต็มคลื่น</p>
+    <div class="tf-grid">
+      <div class="tf" id="R1" data-k="single phase bridge dc side output voltage 0.9 V ripple 2f full wave บริดจ์ 1 เฟส ด้าน DC"><p class="tf-n"><b><span class="fid">R1</span> Single-phase bridge, DC side</b> ด้าน DC</p>
+        \[ V_{d0} = \frac{2\sqrt2}{\pi}V = 0.900\,V,\qquad v_d \text{ มีฮาร์มอนิกที่ } 2f, 4f, \dots \]
+        <p class="tf-x">อนุกรมเต็มคือ <a href="/learn/fourier-series/waveform-table/#W8">W8</a> ฮาร์มอนิกที่ 2 (100 Hz) ใหญ่ที่สุด ขนาด \(0.424V_m\) ใช้ออกแบบฟิลเตอร์ <a href="/learn/fourier-series/circuit-analysis/#ex-a3">A-3</a></p></div>
+      <div class="tf" id="R2" data-k="single phase bridge ac current square wave large inductor 0.9 Id odd harmonics thd 48% บริดจ์ 1 เฟส กระแสด้าน AC สี่เหลี่ยม"><p class="tf-n"><b><span class="fid">R2</span> Single-phase bridge, AC current</b> ด้าน AC (I<sub>d</sub> เรียบ)</p>
+        \[ I_1 = \frac{2\sqrt2}{\pi}I_d = 0.900\,I_d,\qquad I_h = \frac{I_1}{h}\;(h\ \text{คี่}),\qquad I_{rms} = I_d \]
+        <p class="tf-x">สี่เหลี่ยม (<a href="/learn/fourier-series/waveform-table/#W1">W1</a>) THD 48.3 % · DPF = 1 · PF = 0.900 · มีฮาร์มอนิกที่ 3 ซึ่งไปบวกในนิวทรัล</p></div>
+      <div class="tf wide" id="R3" data-k="single phase commutation overlap source inductance mu voltage drop 2X Id/pi ช่วงทับซ้อน 1 เฟส"><p class="tf-n"><b><span class="fid">R3</span> Commutation overlap (single phase)</b> ช่วงทับซ้อนเพราะอิมพีแดนซ์สาย</p>
+        \[ \cos\alpha - \cos(\alpha + \mu) = \frac{2X_sI_d}{V_m},\qquad \Delta V_d = \frac{2}{\pi}X_sI_d \]
+        <p class="tf-x">กระแสสายเปลี่ยนจาก \(-I_d\) เป็น \(+I_d\) ไม่ได้ทันที เพราะ \(L_s\) ขอบสี่เหลี่ยมกลายเป็นช่วงโค้งกว้าง μ ฮาร์มอนิกสูงจึงลดลง (ความเรียบ <a href="/learn/fourier-series/convergence-parseval/#P8">P8</a>)</p></div>
+    </div>
+    <div class="wx" id="ex-r1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-1 · เครื่องชาร์จแบตเตอรี่ 1 เฟส</span><h3>บริดจ์ 1 เฟส 230 V มีโช้ก DC ใหญ่ \(I_d\) = 10 A หากระแสสาย RMS ฮาร์มอนิก 1, 3, 5, 7 และ PF</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#R2">R2</a>: \(I_{rms} = I_d = 10.0\) A · \(I_1 = 0.900(10) = 9.00\) A</p></li>
+        <li><p>\(I_3 = 3.00\) A, \(I_5 = 1.80\) A, \(I_7 = 1.29\) A</p></li>
+        <li><p>PF = DPF × \(I_1/I_{rms}\) = 1 × 0.900 <a class="tag tf" href="/learn/fourier-series/power-harmonics/#H7">H7</a> · กำลัง \(P = 230 \times 9.00 = 2.07\) kW</p></li>
+      </ol>
+      <p class="answer">10 A RMS, หลัก 9.0 A, ฮาร์มอนิก 3.0 / 1.8 / 1.3 A, PF 0.90 · ฮาร์มอนิกที่ 3 ขนาด 1/3 ของหลัก ถ้ามีหลายเครื่องในสามเฟสจะบวกกันในนิวทรัล</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="capacitor-input">
+    <h2 id="capacitor-input">บริดจ์ + ตัวเก็บประจุ: SMPS, LED และไดรฟ์ VFD <span class="lv lv-i">กลาง</span></h2>
+    <p>อุปกรณ์อิเล็กทรอนิกส์เกือบทั้งหมดไม่มีโช้ก ใช้ตัวเก็บประจุใหญ่หลังบริดจ์ ตัวเก็บประจุชาร์จเฉพาะตอนแรงดันไฟสูงกว่าแรงดันของมัน ซึ่งเกิดช่วงสั้น ๆ ก่อนยอดแรงดัน กระแสจึงเป็นพัลส์แคบสูง (รูปใน <a href="/learn/fourier-series/waveform-table/#W17">W17</a>)</p>
+    <div class="tf-grid">
+      <div class="tf" id="R4" data-k="capacitor input rectifier ripple voltage I/(2fC) smps bulk capacitor ริปเปิล ตัวเก็บประจุ SMPS"><p class="tf-n"><b><span class="fid">R4</span> Ripple of a capacitor-input bridge</b> แรงดันริปเปิล (ประมาณ)</p>
+        \[ \Delta V \approx \frac{I_{dc}}{2fC} \]
+        <p class="tf-x">ตัวเก็บประจุจ่ายโหลดเกือบทั้งครึ่งคาบ (1/2f) แล้วถูกชาร์จคืนในพัลส์สั้น ๆ ดูสูตรเดียวกันที่<a href="/learn/function-generator/applications/#X2">แล็บ FG X2</a></p></div>
+      <div class="tf" id="R5" data-k="conduction angle peak current charge balance pulse width capacitor input มุมนำกระแส กระแสยอด"><p class="tf-n"><b><span class="fid">R5</span> Conduction angle &amp; peak current</b> มุมนำกระแสและกระแสยอด (อิมพีแดนซ์สายเป็นศูนย์)</p>
+        \[ \theta_c \approx \cos^{-1}\Big(1 - \frac{\Delta V}{V_m}\Big),\qquad \hat I \approx \frac{2\,I_{dc}\,(T/2)}{\theta_c/\omega} \]
+        <p class="tf-x">ประจุที่ใช้ไปครึ่งคาบต้องเติมคืนในเวลา \(\theta_c/\omega\) (พัลส์สามเหลี่ยม) เป็นค่าบนสุด อิมพีแดนซ์สาย NTC และไดโอดทำให้พัลส์กว้างและเตี้ยลงจริง</p></div>
+    </div>
+    <div class="wx" id="ex-r2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-2 · SMPS 300 W</span><h3>SMPS 300 W จากไฟ 230 V แรงดัน DC ราว 300 V (\(I_{dc}\) = 1.0 A) ตัวเก็บประจุ 220 µF ประมาณริปเปิล มุมนำกระแส และกระแสยอด</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#R4">R4</a>: \(\Delta V = \frac{1.0}{2(50)(220\times10^{-6})} = 45.5\) V</p></li>
+        <li><p><a class="tag tf" href="#R5">R5</a>: \(\theta_c = \cos^{-1}(1 - 45.5/325.3) = 30.7^\circ\) → นำกระแส 1.70 ms จากครึ่งคาบ 10 ms</p></li>
+        <li><p>\(\hat I \approx \frac{2(1.0)(0.010)}{0.00170} = 11.7\) A (กรณีสายแข็งมาก)</p></li>
+      </ol>
+      <p class="answer">กระแสเป็นพัลส์กว้างราว 17 % ของครึ่งคาบ ยอดหลายแอมแปร์ทั้งที่กระแสเฉลี่ยแค่ 1 A แล็บที่คิดอิมพีแดนซ์ปลั๊ก 0.35 Ω และความต้านทานภายในได้ยอดราว 7 A, THD 134 %, PF 0.59, crest factor 3.0 · เลือก “SMPS 300 W” ในแล็บด้านล่าง</p>
+    </div>
+    <div class="note"><b>ไดรฟ์ VFD 3 เฟส</b> ก็เป็นบริดจ์ + ตัวเก็บประจุเช่นกัน กระแสแต่ละเฟสเป็นพัลส์คู่ (สองหนอก) ต่อครึ่งคาบ เพราะเฟสนั้นจับคู่กับอีกสองเฟสสลับกัน ไม่มีฮาร์มอนิกที่ 3 (สามสายไม่มีนิวทรัล) แต่ 5 และ 7 สูงมาก ถ้าไม่มีรีแอกเตอร์อาจเกิน 80 % ของหลัก จำลองในแล็บ: “ไดรฟ์ VFD 11 kW” แล้วเพิ่มรีแอกเตอร์ 3 % ดู THD ลดลงเหลือราว 35 %</div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="three-phase">
+    <h2 id="three-phase">บริดจ์ 3 เฟส 6 พัลส์ และกฎ h = kp ± 1 <span class="lv lv-i">กลาง</span></h2>
+    <p>แรงดันด้าน DC ของบริดจ์ 3 เฟสคือยอดของแรงดันไลน์ทั้งหกคู่ที่สลับกันนำ เกิดหกลูกต่อหนึ่งคาบ (p = 6) กระแสแต่ละเฟสนำ 120° บวก แล้วพัก 60° แล้วนำ 120° ลบ ได้รูปที่มีสมมาตรเสี้ยวคลื่นและไม่มีฮาร์มอนิกที่หารด้วย 3 ลงตัว</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R6" data-k="characteristic harmonics h = kp ± 1 ac side kp dc side p pulse 6k±1 12k±1 ฮาร์มอนิกลักษณะเฉพาะ พัลส์"><p class="tf-n"><b><span class="fid">R6</span> Characteristic harmonics of a p-pulse converter</b> ฮาร์มอนิกลักษณะเฉพาะ</p>
+        \[ \text{ด้าน AC: } h = kp \pm 1,\qquad \text{ด้าน DC: } h = kp,\qquad k = 1, 2, 3, \dots \]
+        <p class="tf-x">p = 6: AC 5, 7, 11, 13, 17, 19 · DC 6, 12, 18 (300, 600, 900 Hz) · p = 12: AC 11, 13, 23, 25 · ฮาร์มอนิกอื่นที่วัดได้ (เช่น 3 หรือคู่) เรียก non-characteristic มาจากแรงดันไม่สมดุลหรือการจุดชนวนไม่เท่ากัน</p></div>
+      <div class="tf" id="R7" data-k="six pulse ideal line current I1 0.78 Id Ih = I1/h Irms 0.816 thd 31% กระแสไลน์ 6 พัลส์"><p class="tf-n"><b><span class="fid">R7</span> Ideal 6-pulse line current</b> กระแสไลน์อุดมคติ</p>
+        \[ I_1 = \frac{\sqrt6}{\pi}I_d = 0.780\,I_d,\quad I_h = \frac{I_1}{h},\quad I_{rms} = \sqrt{\tfrac23}\,I_d = 0.816\,I_d \]
+        <p class="tf-x">อนุกรมเต็ม <a href="/learn/fourier-series/waveform-table/#W12">W12</a> · THD 31.1 % (30.0 % ถ้านับถึง h = 50) · distortion factor 0.955</p></div>
+      <div class="tf" id="R8" data-k="dc voltage 1.35 VLL six pulse ripple 6f 300 Hz Vd0 3 sqrt2/pi แรงดัน DC 1.35 ริปเปิล 300 Hz"><p class="tf-n"><b><span class="fid">R8</span> 6-pulse DC voltage &amp; ripple</b> แรงดัน DC และริปเปิล (ไดโอด)</p>
+        \[ V_{d0} = \frac{3\sqrt2}{\pi}V_{LL} = 1.35\,V_{LL},\qquad \hat V_{6k} = \frac{2V_{d0}}{(6k)^2 - 1} \]
+        <p class="tf-x">400 V: \(V_{d0} = 540\) V ริปเปิลที่ 300 Hz ยอด 30.9 V ที่ 600 Hz 7.6 V เล็กกว่าเรียงกระแส 1 เฟสมาก ไดรฟ์จึงใช้ตัวเก็บประจุ DC ขนาดเล็กกว่าได้</p></div>
+      <div class="tf wide" id="R9" data-k="commutation overlap angle mu three phase source reactance voltage drop 3/pi X Id ช่วงทับซ้อน มุม mu"><p class="tf-n"><b><span class="fid">R9</span> Commutation overlap (3-phase bridge)</b> ช่วงทับซ้อนและแรงดันตก</p>
+        \[ \cos\alpha - \cos(\alpha + \mu) = \frac{2X_sI_d}{\sqrt2\,V_{LL}},\qquad V_d = V_{d0}\cos\alpha - \frac{3}{\pi}X_sI_d \]
+        <p class="tf-x">ขอบของบล็อก 120° กลายเป็นช่วงโค้งกว้าง μ ทำให้ \(I_{11}, I_{13}, \dots\) ลดลงชัดเจน แต่ \(I_5, I_7\) ลดเล็กน้อย เป็นเหตุให้ค่าวัดจริงต่ำกว่า \(1/h\) โดยเฉพาะฮาร์มอนิกสูง</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-rect-6p--><svg viewBox="0 0 660 270" role="img" aria-label="ซ้าย: กระแสเฟส a ของบริดจ์ 6 พัลส์ บล็อก 120 องศาอุดมคติเป็นเส้นประ และเมื่อมีช่วงทับซ้อน 20 องศาเป็นเส้นสีส้ม ขวา: สเปกตรัมเป็นเปอร์เซ็นต์ของฮาร์มอนิกหลัก ที่ h เท่ากับ 5 7 11 13 17 19 23 25 แท่งจางคือ 1 ส่วน h แท่งเข้มคือเมื่อมีช่วงทับซ้อน"><defs><marker id="fs-rect-6p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="40" y1="121" x2="302" y2="121"/><line class="ax" x1="171" y1="32" x2="171" y2="206"/><path class="w0" d="M40 186.4L83.7 186.4L83.7 121L127.3 121L127.3 55.6L214.7 55.6L214.7 121L258.3 121L258.3 186.4L302 186.4"/><path class="w1" d="M40 186.4L83.7 186.4L85.4 185.4L87.2 182.6L88.9 177.8L90.7 171.2L92.4 162.7L94.1 152.3L95.9 140.1L97.6 126.1L98.1 122.3L98.5 121L127.3 121L129.1 120L130.8 117.2L132.6 112.5L134.3 105.8L136.1 97.3L137.8 86.9L139.6 74.7L141.3 60.7L141.7 56.9L142.2 55.6L214.7 55.6L216.4 56.6L218.2 59.4L219.9 64.2L221.7 70.8L223.4 79.3L225.1 89.7L226.9 101.9L228.6 115.9L229.1 119.7L229.5 121L258.3 121L260.1 122L261.8 124.8L263.6 129.5L265.3 136.2L267.1 144.7L268.8 155.1L270.6 167.3L272.3 181.3L272.7 185.1L273.2 186.4L302 186.4"/><text class="tk" x="40" y="220" text-anchor="middle">−180°</text><text class="tk" x="127.3" y="220" text-anchor="middle">−60°</text><text class="tk" x="214.7" y="220" text-anchor="middle">60°</text><text class="tk" x="302" y="220" text-anchor="middle">180°</text><text class="lb" x="40" y="24">iₐ / I_d · μ = 20°</text><line class="gr" x1="370" y1="206" x2="630" y2="206"/><text class="tk" x="364" y="210" text-anchor="end">0 %</text><line class="gr" x1="370" y1="125" x2="630" y2="125"/><text class="tk" x="364" y="129" text-anchor="end">10 %</text><line class="gr" x1="370" y1="44.1" x2="630" y2="44.1"/><text class="tk" x="364" y="48.1" text-anchor="end">20 %</text><line class="ax" x1="370" y1="206" x2="630" y2="206"/><rect class="barg" x="413" y="44.2" width="7" height="161.8"/><rect class="barg" x="433" y="90.3" width="7" height="115.7"/><rect class="barg" x="473" y="132.5" width="7" height="73.5"/><rect class="barg" x="493" y="143.7" width="7" height="62.3"/><rect class="barg" x="533" y="158.4" width="7" height="47.6"/><rect class="barg" x="553" y="163.3" width="7" height="42.7"/><rect class="barg" x="593" y="170.9" width="7" height="35.1"/><rect class="barg" x="613" y="173.6" width="7" height="32.4"/><rect class="bar" x="420" y="56.9" width="7" height="149.1"/><rect class="bar" x="440" y="108" width="7" height="98"/><rect class="bar" x="480" y="157.8" width="7" height="48.2"/><rect class="bar" x="500" y="171.8" width="7" height="34.2"/><rect class="bar" x="540" y="189.1" width="7" height="16.9"/><rect class="bar" x="560" y="193.9" width="7" height="12.1"/><rect class="bar" x="600" y="198.3" width="7" height="7.7"/><rect class="bar" x="620" y="199" width="7" height="7"/><text class="tk" x="420" y="222" text-anchor="middle">5</text><text class="tk" x="440" y="222" text-anchor="middle">7</text><text class="tk" x="480" y="222" text-anchor="middle">11</text><text class="tk" x="500" y="222" text-anchor="middle">13</text><text class="tk" x="540" y="222" text-anchor="middle">17</text><text class="tk" x="560" y="222" text-anchor="middle">19</text><text class="tk" x="600" y="222" text-anchor="middle">23</text><text class="tk" x="620" y="222" text-anchor="middle">25</text><text class="tk" x="634" y="222" text-anchor="end">h</text><text class="tk" x="428" y="52.9">18.4</text><text class="tk" x="448" y="104">12.1</text><rect class="barg" x="380" y="248" width="12" height="10"/><text class="tk" x="398" y="257">อุดมคติ 1/h</text><rect class="bar" x="500" y="248" width="12" height="10"/><text class="tk" x="518" y="257">μ = 20°</text></svg><!--/FIG-->
+      <figcaption>กระแสเฟส a ของบริดจ์ 6 พัลส์: บล็อก 120° อุดมคติ (เส้นประ) และเมื่อมีช่วงทับซ้อน μ = 20° (สีส้ม) ขวาคือสเปกตรัม เทียบ 1/h (แท่งจาง) กับเมื่อมีช่วงทับซ้อน (แท่งเข้ม) ฮาร์มอนิกสูงลดลงมากกว่า</figcaption>
+    </figure>
+    <div class="wx" id="ex-r3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-3 · ไดรฟ์ DC 30 kW จากไฟ 400 V</span><h3>บริดจ์ไดโอด 6 พัลส์ 400 V โหลด DC 30 kW (มีโช้ก \(I_d\) เรียบ) หา \(V_{d0}\), \(I_d\), \(I_1\), \(I_5\) ถึง \(I_{13}\), \(I_{rms}\) แล้วดูผลเมื่อ \(L_s\) = 0.3 mH</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#R8">R8</a>: \(V_{d0} = 1.3505 \times 400 = 540.2\) V → \(I_d = 30\,000/540.2 = 55.5\) A</p></li>
+        <li><p><a class="tag tf" href="#R7">R7</a>: \(I_1 = 0.780 \times 55.5 = 43.3\) A · \(I_5 = 8.66\), \(I_7 = 6.19\), \(I_{11} = 3.94\), \(I_{13} = 3.33\) A · \(I_{rms} = 45.3\) A</p></li>
+        <li><p>มี \(L_s\) = 0.3 mH (\(X_s\) = 0.094 Ω) <a class="tag tf" href="#R9">R9</a>: \(1 - \cos\mu = \frac{2(0.094)(56.3)}{\sqrt2(400)}\) → μ ≈ 11° และ \(V_d\) ลดราว 5 V</p></li>
+        <li><p>เมื่อคิดช่วงทับซ้อน (แล็บ): \(I_5/I_1\) = 19.5 %, \(I_7/I_1\) = 13.6 %, \(I_{11}/I_1\) = 8.0 %, \(I_{13}/I_1\) = 6.4 % (อุดมคติ 20, 14.3, 9.1, 7.7 %) THD 26.8 %</p></li>
+      </ol>
+      <p class="answer">43.3 A ฮาร์มอนิกหลัก, 45.3 A RMS · ช่วงทับซ้อนเพียง 11° ลด THD จาก 30 % เป็น 27 % และกดฮาร์มอนิกที่ 13 ลง 17 % · ลองใน “6 พัลส์ 30 kW” ปรับ Isc/IL ในเมนูต้นทาง (ระบบอ่อนลง = Ls มากขึ้น)</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="thyristor">
+    <h2 id="thyristor">ไทริสเตอร์ควบคุมมุม α: แรงดันลดลง DPF ลดตาม <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="R10" data-k="thyristor firing angle alpha dc voltage cos alpha displacement power factor reactive power phase controlled ไทริสเตอร์ มุมจุดชนวน DPF cos alpha"><p class="tf-n"><b><span class="fid">R10</span> Phase-controlled bridge</b> บริดจ์ไทริสเตอร์</p>
+        \[ V_d = 1.35V_{LL}\cos\alpha - \frac{3}{\pi}X_sI_d,\qquad \mathrm{DPF} \approx \cos\!\Big(\alpha + \frac{\mu}{2}\Big),\qquad Q_1 \approx P\tan\!\Big(\alpha + \frac{\mu}{2}\Big) \]
+        <p class="tf-x">บล็อกกระแสเลื่อนไปทั้งก้อน α องศา (สเปกตรัมขนาดเท่าเดิม <a href="/learn/fourier-series/symmetry/#S6">S6</a>) ฮาร์มอนิกหลักจึงล้าหลังแรงดัน α องศา ไดรฟ์ DC และเครื่องชาร์จแบบไทริสเตอร์ที่ทำงานแรงดันต่ำกินกำลังรีแอกทีฟมาก</p></div>
+    </div>
+    <div class="wx" id="ex-r4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-4 · ไดรฟ์ DC ที่ α = 45°</span><h3>บริดจ์ไทริสเตอร์ 400 V \(I_d\) = 100 A α = 45° (ไม่คิด \(X_s\)) หา \(V_d\), P, \(I_1\), \(S_1\), \(Q_1\) และ PF</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#R10">R10</a>: \(V_d = 540.2\cos 45^\circ = 382\) V → P = 382 × 100 = 38.2 kW</p></li>
+        <li><p>\(I_1 = 0.780 \times 100 = 78.0\) A → \(S_1 = \sqrt3(400)(78.0) = 54.0\) kVA · \(Q_1 = S_1\sin 45^\circ = 38.2\) kvar</p></li>
+        <li><p>PF = DPF × \(I_1/I_{rms}\) = 0.707 × (0.780/0.816) = 0.675</p></li>
+      </ol>
+      <p class="answer">P = 38.2 kW, Q₁ = 38.2 kvar (เท่ากับ P), PF 0.675 · ต้องชดเชย Q ด้วยคาปาซิเตอร์ดีจูนหรือฟิลเตอร์จูนที่ให้ kvar ด้วยในตัว ห้ามใช้คาปาซิเตอร์เปล่า (<a href="/learn/fourier-series/mitigation/#resonance">เรโซแนนซ์</a>) ลองในแล็บ “6 พัลส์ไทริสเตอร์ α = 45°”</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="multipulse">
+    <h2 id="multipulse">12 พัลส์ 18 พัลส์: หักล้างฮาร์มอนิกด้วยการเลื่อนเฟส <span class="lv lv-i">กลาง</span></h2>
+    <p>ป้อนบริดจ์ 6 พัลส์สองชุดจากหม้อแปลงสองขดที่แรงดันต่างเฟส 30° (Y-Y กับ Y-Δ) เมื่ออ้างกระแสกลับไปด้านปฐมภูมิ ฮาร์มอนิกลำดับบวกหมุน −30° ลำดับลบหมุน +30° ผลลัพธ์ทำให้บางฮาร์มอนิกของสองชุดตรงข้ามกันพอดี</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R11" data-k="twelve pulse phase shift 30 degrees y delta transformer cancellation 5 7 17 19 12k±1 eighteen pulse 20 degrees 12 พัลส์ 18 พัลส์ หม้อแปลงเลื่อนเฟส"><p class="tf-n"><b><span class="fid">R11</span> Phase-shift cancellation</b> ทำไม 5 และ 7 หายไป</p>
+        \[ h = 6k \pm 1:\quad \text{ชุดที่สองเลื่อน } h\cdot 30^\circ \mp 30^\circ = k\cdot 180^\circ \;\Rightarrow\; I_h^{(12)} = I_h^{(Y)}\big(1 + (-1)^k\big) \]
+        <p class="tf-x">k คี่ (h = 5, 7, 17, 19) หักล้างกัน k คู่ (11, 13, 23, 25) บวกกัน เหลือ 12k ± 1 · 18 พัลส์ใช้สามชุดเลื่อน 20° เหลือ 18k ± 1 · หักล้างได้ดีเมื่อโหลดสองชุดเท่ากันและอิมพีแดนซ์หม้อแปลงเท่ากัน</p></div>
+      <div class="tf" id="R12" data-k="ideal thd p pulse 31% 15% 10% 7.6% sum 1/h^2 THD อุดมคติ จำนวนพัลส์"><p class="tf-n"><b><span class="fid">R12</span> Ideal THD vs pulse number</b> THD อุดมคติตามจำนวนพัลส์</p>
+        \[ \mathrm{THD}_p = \sqrt{\sum_{k\ge1}\Big[\frac{1}{(kp - 1)^2} + \frac{1}{(kp + 1)^2}\Big]} \]
+        <p class="tf-x">p = 6: 31.1 % · 12: 15.2 % · 18: 10.1 % · 24: 7.6 % (นับไม่จำกัด) ค่าจริงต่ำกว่าเพราะช่วงทับซ้อน</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-rect-12p--><svg viewBox="0 0 660 270" role="img" aria-label="กระแสด้านปฐมภูมิของเรกติไฟเออร์ 12 พัลส์ สีส้ม คือผลรวมของกระแสบริดจ์ Y-Y สีฟ้าซึ่งเป็นบล็อก 120 องศา กับกระแสบริดจ์ Y-Delta สีเขียวซึ่งเป็นขั้นบันได ผลรวมเป็นขั้นบันไดใกล้ไซน์ ฮาร์มอนิกที่ 5 และ 7 หักล้างกัน"><defs><marker id="fs-rect-12p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="40" y1="130" x2="510" y2="130"/><line class="ax" x1="275" y1="26" x2="275" y2="230"/><path class="w2" d="M40 171.7L118.3 171.7L118.3 130L196.7 130L196.7 88.3L353.3 88.3L353.3 130L431.7 130L431.7 171.7L510 171.7"/><path class="w3" d="M40 178.1L79.2 178.1L79.2 154.1L157.5 154.1L157.5 105.9L235.8 105.9L235.8 81.9L314.2 81.9L314.2 105.9L392.5 105.9L392.5 154.1L470.8 154.1L470.8 178.1L510 178.1"/><path class="w1" d="M40 219.8L79.2 219.8L79.2 195.7L118.3 195.7L118.3 154.1L157.5 154.1L157.5 105.9L196.7 105.9L196.7 64.3L235.8 64.3L235.8 40.2L314.2 40.2L314.2 64.3L353.3 64.3L353.3 105.9L392.5 105.9L392.5 154.1L431.7 154.1L431.7 195.7L470.8 195.7L470.8 219.8L510 219.8"/><path class="w0" d="M40 221.9L44.7 221.7L49.4 221.2L54.1 220.3L58.8 219L63.5 217.4L68.2 215.4L72.9 213.1L77.6 210.5L82.3 207.6L87 204.3L91.7 200.8L96.4 197L101.1 192.9L105.8 188.6L110.5 184L117.6 176.8L124.6 169.1L131.7 161.1L141.1 150L155.2 132.9L169.2 115.6L178.7 104.4L185.7 96.2L192.8 88.3L199.8 80.8L204.5 76L209.2 71.4L213.9 67.1L218.6 63L223.3 59.2L228 55.7L232.7 52.4L237.4 49.5L242.1 46.9L246.8 44.6L251.5 42.6L256.2 41L260.9 39.7L265.6 38.8L270.3 38.3L275 38.1L279.7 38.3L284.4 38.8L289.1 39.7L293.8 41L298.5 42.6L303.2 44.6L307.9 46.9L312.6 49.5L317.3 52.4L322 55.7L326.7 59.2L331.4 63L336.1 67.1L340.8 71.4L345.5 76L352.6 83.2L359.6 90.9L366.7 98.9L376.1 110L390.1 127.1L404.2 144.4L413.7 155.6L420.7 163.8L427.8 171.7L434.8 179.2L439.5 184L444.2 188.6L448.9 192.9L453.6 197L458.3 200.8L463 204.3L467.7 207.6L472.4 210.5L477.1 213.1L481.8 215.4L486.5 217.4L491.2 219L495.9 220.3L500.6 221.2L505.3 221.7L510 221.9"/><text class="tk" x="40" y="244" text-anchor="middle">−180°</text><text class="tk" x="157.5" y="244" text-anchor="middle">−90°</text><text class="tk" x="392.5" y="244" text-anchor="middle">90°</text><text class="tk" x="510" y="244" text-anchor="middle">180°</text><line class="w2" x1="528" y1="50" x2="552" y2="50"/><text class="th" x="558" y="54">บริดจ์ Y-Y</text><line class="w3" x1="528" y1="76" x2="552" y2="76"/><text class="th" x="558" y="80">บริดจ์ Y-Δ</text><line class="w1" x1="528" y1="102" x2="552" y2="102"/><text class="th" x="558" y="106">รวม 12 พัลส์</text><line class="w0" x1="528" y1="128" x2="552" y2="128"/><text class="th" x="558" y="132">ฮาร์มอนิกหลัก</text><text class="lb" x="528" y="170">เหลือ h = 12k ± 1</text><text class="tk" x="528" y="190">11, 13, 23, 25 …</text></svg><!--/FIG-->
+      <figcaption>กระแสด้านปฐมภูมิของ 12 พัลส์ (สีส้ม) คือผลรวมของบริดจ์ Y-Y (สีฟ้า) กับบริดจ์ Y-Δ (สีเขียว) รูปขั้นบันไดใกล้ไซน์มากขึ้น</figcaption>
+    </figure>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">เปรียบเทียบเรกติไฟเออร์แต่ละแบบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ฮาร์มอนิกเด่น</th><th>THD กระแส (โดยประมาณ)</th><th>PF</th><th>ใช้ที่ไหน</th></tr></thead>
+      <tbody>
+        <tr><td>1 เฟส + ตัวเก็บประจุ</td><td>3, 5, 7, 9</td><td>100–150 %</td><td>0.55–0.65</td><td>คอมพิวเตอร์ LED อุปกรณ์เล็ก</td></tr>
+        <tr><td>1 เฟส + โช้ก</td><td>3, 5, 7</td><td>48 % (อุดมคติ)</td><td>0.90</td><td>เครื่องชาร์จ ไดรฟ์ DC เล็ก</td></tr>
+        <tr><td>3 เฟส + ตัวเก็บประจุ (ไม่มีรีแอกเตอร์)</td><td>5, 7</td><td>80–150 %</td><td>0.55–0.75</td><td>VFD ขนาดเล็ก–กลาง</td></tr>
+        <tr><td>3 เฟส + ตัวเก็บประจุ + รีแอกเตอร์ 3–5 %</td><td>5, 7</td><td>30–45 %</td><td>0.90–0.95</td><td>VFD ทั่วไป</td></tr>
+        <tr><td>6 พัลส์ + โช้ก DC ใหญ่</td><td>5, 7, 11, 13</td><td>25–31 %</td><td>0.95 × cos α</td><td>ไดรฟ์ DC อิเล็กโทรไลซิส</td></tr>
+        <tr><td>12 พัลส์</td><td>11, 13</td><td>10–15 %</td><td>0.99 × cos α</td><td>ไดรฟ์ใหญ่ UPS ใหญ่</td></tr>
+        <tr><td>18 พัลส์</td><td>17, 19</td><td>5–10 %</td><td>~0.99</td><td>ไดรฟ์ใหญ่ที่ต้องผ่าน IEEE 519</td></tr>
+        <tr><td>Active Front End / PFC</td><td>รอบความถี่สวิตชิ่ง</td><td>&lt; 5 %</td><td>~1.0</td><td>ไดรฟ์รุ่นใหม่ เครื่องชาร์จ EV</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: วัดกระแสเรกติไฟเออร์ทุกแบบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สลับการทดลองด้วยปุ่มด้านล่าง ดูรูปกระแสบนสโคป สเปกตรัม และตัวเลข THD, PF, DPF บนเครื่องวิเคราะห์ ลองเพิ่มมุม α ของ 6 พัลส์แล้วดู DPF ลดตาม cos α หรือใส่รีแอกเตอร์ให้ VFD แล้วดูพัลส์กว้างขึ้น</p>
+    <div class="fs-lab" data-tabs="power" data-preset="six" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <p><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="bridge-l">บริดจ์ 1 เฟส + โช้ก</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="smps">SMPS 300 W</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="six">6 พัลส์</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="six-alpha">6 พัลส์ α = 45°</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="twelve">12 พัลส์</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd">VFD</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="vfd-reactor">VFD + รีแอกเตอร์ 3 %</button></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,216 @@
+<!--meta
+{
+  "title": "วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์: คลื่นสี่เหลี่ยมเข้า RC RL LC RLC ทีละฮาร์มอนิก พร้อมตัวอย่างวิธีทำ | อาจารย์มด",
+  "h1": "วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์: ซูเปอร์โพซิชันทีละฮาร์มอนิก",
+  "description": "วิธีวิเคราะห์วงจรไฟฟ้าที่ถูกป้อนด้วยสัญญาณไม่ใช่ไซน์: แยกเป็นอนุกรมฟูเรียร์ คูณผลตอบสนองความถี่ H(jnω0) ทีละฮาร์มอนิก แล้วรวมกลับ ตัวอย่างวิธีทำ คลื่นสี่เหลี่ยมเข้าวงจร RC อินเวอร์เตอร์คลื่นสี่เหลี่ยมป้อนโหลด RL ฟิลเตอร์ LC ของวงจรเรียงกระแสเต็มคลื่น 230 V วงจร RLC คัดฮาร์มอนิกที่ 3 กำลังเฉลี่ยจากฮาร์มอนิก และข้อจำกัดของวิธี",
+  "ogTitle": "แยก คูณ รวม: วิเคราะห์วงจรทีละฮาร์มอนิกด้วยอนุกรมฟูเรียร์",
+  "lesson": "fourier-series",
+  "sub": "circuit-analysis",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate"],
+  "about": ["Fourier series", "Superposition", "Frequency response", "RC circuit", "RL circuit", "LC filter", "RLC circuit", "Average power"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "วิเคราะห์วงจรที่ป้อนด้วยคลื่นสี่เหลี่ยมอย่างไร?", "a": "เขียนคลื่นสี่เหลี่ยมเป็นอนุกรมฟูเรียร์ แต่ละฮาร์มอนิกคือแหล่งจ่าย AC ความถี่ \\(nf_0\\) หาเฟเซอร์ขาออกด้วยอิมพีแดนซ์ที่ความถี่นั้น \\(Y_n = H(jn\\omega_0)X_n\\) แล้วรวมผลในโดเมนเวลา ใช้ได้เพราะวงจร RLC เป็นเชิงเส้น ซูเปอร์โพซิชันจึงใช้ได้"},
+    {"q": "ทำไมกระแสในมอเตอร์ที่ป้อนด้วยอินเวอร์เตอร์คลื่นสี่เหลี่ยมเกือบเป็นไซน์?", "a": "รีแอกแตนซ์ของขดลวด \\(n\\omega L\\) โตตาม n ฮาร์มอนิกที่ 3 จึงเจออิมพีแดนซ์ราว 3 เท่า แรงดันฮาร์มอนิกที่ 3 มีขนาด 1/3 กระแสจึงเหลือราว 1/9 ของฮาร์มอนิกหลัก ตัวอย่างในหน้านี้แรงดัน THD 48 % แต่กระแส THD เหลือราว 13 %"},
+    {"q": "วิธีอนุกรมฟูเรียร์ใช้กับวงจรไดโอดได้ไหม?", "a": "ใช้กับวงจรทั้งก้อนไม่ได้ เพราะไดโอดไม่เป็นเชิงเส้น ซูเปอร์โพซิชันไม่จริง แต่ถ้ารู้รูปคลื่นที่จุดใดจุดหนึ่งแล้ว (เช่นแรงดันหลังบริดจ์ที่นำกระแสต่อเนื่อง) ส่วนที่ตามหลังซึ่งเป็นเชิงเส้นใช้วิธีนี้ได้ ส่วนวงจรไม่เชิงเส้นต้องจำลองในโดเมนเวลาหรือใช้ harmonic balance"},
+    {"q": "กำลังเฉลี่ยเมื่อแรงดันและกระแสมีหลายฮาร์มอนิกคำนวณอย่างไร?", "a": "\\(P = V_0I_0 + \\sum V_nI_n\\cos\\theta_n\\) โดย \\(V_n, I_n\\) เป็นค่า RMS และ \\(\\theta_n\\) คือมุมระหว่างแรงดันกับกระแสของฮาร์มอนิกเดียวกัน แรงดันกับกระแสต่างความถี่ไม่ให้กำลังเฉลี่ย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>วิเคราะห์วงจร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.7 · อนุกรมฟูเรียร์ · Circuit Analysis</p>
+      <h1>วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์: ซูเปอร์โพซิชันทีละฮาร์มอนิก</h1>
+      <p class="lede">วิชาวงจรไฟฟ้าสอนเฟเซอร์ที่ใช้ได้กับไซน์ความถี่เดียว แต่วงจรจริงถูกป้อนด้วยคลื่นสี่เหลี่ยม แรงดันเรียงกระแส และ PWM อนุกรมฟูเรียร์ทำให้ปัญหาเหล่านี้กลายเป็นปัญหาเฟเซอร์ธรรมดาหลายปัญหา ความถี่ละหนึ่งข้อ หน้านี้ใช้วิธีเดียวแก้ห้าวงจรที่เจอบ่อยที่สุด และตรวจทุกคำตอบด้วยการจำลองในโดเมนเวลา</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#method">วิธี 3 ขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#rc">สี่เหลี่ยม → RC</a>
+        <a class="btn btn-ghost btn-sm" href="#rl">อินเวอร์เตอร์ → RL</a>
+        <a class="btn btn-ghost btn-sm" href="#lc">ฟิลเตอร์ LC</a>
+        <a class="btn btn-ghost btn-sm" href="#power">กำลังเฉลี่ย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><strong>แยก</strong>: \(x(t) \to \mathbf X_n = a_n - jb_n\) · <strong>คูณ</strong>: \(\mathbf Y_n = H(jn\omega_0)\,\mathbf X_n\) · <strong>รวม</strong>: \(y = Y_0 + \sum |\mathbf Y_n|\cos(n\omega_0 t + \angle\mathbf Y_n)\)</li>
+          <li>ที่ฮาร์มอนิก n: \(Z_L = jn\omega_0 L\) โตขึ้น \(Z_C = 1/(jn\omega_0 C)\) เล็กลง</li>
+          <li>ตัวเหนี่ยวนำกรองกระแส ตัวเก็บประจุกรองแรงดัน ฮาร์มอนิกที่ |H| ≈ 0 หายไป</li>
+          <li>\(P = V_0I_0 + \sum V_nI_n\cos\theta_n\) (RMS) ต่างความถี่ไม่ให้กำลัง</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น superposition, H(jw), impedance, rc, power, tanh" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="method">
+    <h2 id="method">หลักการ: แยก คูณ รวม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>วงจรที่มีแต่ R, L, C และแหล่งจ่ายควบคุมเชิงเส้นเป็นระบบเชิงเส้นไม่แปรตามเวลา ไซน์เข้าแล้วได้ไซน์ความถี่เดิมออก ขนาดและเฟสเปลี่ยนตาม \(H(j\omega)\) และผลรวมของอินพุตให้ผลรวมของเอาต์พุต (ซูเปอร์โพซิชัน) สองข้อนี้รวมกับอนุกรมฟูเรียร์ได้วิธีที่ใช้ได้กับทุกอินพุตที่เป็นคาบ</p>
+    <div class="tf-grid">
+      <div class="tf" id="A1" data-k="decompose input harmonics phasor step 1 แยกฮาร์มอนิก เฟเซอร์"><p class="tf-n"><b><span class="fid">A1</span> Step 1 · Decompose</b> แยกอินพุตเป็นเฟเซอร์ของแต่ละฮาร์มอนิก</p>
+        \[ x(t) = a_0 + \sum_n \mathrm{Re}\{\mathbf X_n e^{jn\omega_0 t}\},\qquad \mathbf X_n = a_n - jb_n \]
+        <p class="tf-x">ใช้<a href="/learn/fourier-series/waveform-table/">ตาราง W</a> แทนการอินทิเกรตใหม่ เฟเซอร์นิยามตาม <a href="/learn/fourier-series/complex-spectrum/#C13">C13</a></p></div>
+      <div class="tf" id="A2" data-k="multiply frequency response H(jnw0) each harmonic output phasor superposition คูณ ผลตอบสนองความถี่ ทีละฮาร์มอนิก"><p class="tf-n"><b><span class="fid">A2</span> Step 2 · Multiply by H(jnω₀)</b> คูณผลตอบสนองความถี่ที่ความถี่ของแต่ละตัว</p>
+        \[ \mathbf Y_n = H(jn\omega_0)\,\mathbf X_n, \qquad Y_0 = H(0)\,a_0 \]
+        <p class="tf-x">\(H\) หาจากวงจรแบบเดียวกับที่ทำในวิชาวงจร AC แค่แทน \(\omega\) ด้วย \(n\omega_0\) ทุกครั้ง ทบทวน \(H(s)\) ที่<a href="/learn/laplace-transform/#transfer-function">ลาปลาซ</a></p></div>
+      <div class="tf wide" id="A3" data-k="reconstruct sum time domain output step 3 รวมกลับ โดเมนเวลา"><p class="tf-n"><b><span class="fid">A3</span> Step 3 · Reconstruct</b> รวมกลับในโดเมนเวลา</p>
+        \[ y(t) = Y_0 + \sum_{n=1}^{\infty} |\mathbf Y_n|\cos\big(n\omega_0 t + \angle\mathbf Y_n\big) \]
+        <p class="tf-x">ห้ามบวกเฟเซอร์ของต่างความถี่เข้าด้วยกัน เฟเซอร์ใช้ได้ที่ความถี่ของตัวเองเท่านั้น รวมกันได้เฉพาะในโดเมนเวลา หรือใช้พาร์เซวาลหาค่า RMS</p></div>
+      <div class="tf" id="A4" data-k="impedance at harmonic n inductive reactance increases capacitive decreases jn w L อิมพีแดนซ์ ฮาร์มอนิก รีแอกแตนซ์"><p class="tf-n"><b><span class="fid">A4</span> Impedance at the n-th harmonic</b> อิมพีแดนซ์ที่ฮาร์มอนิกที่ n</p>
+        \[ Z_R = R,\qquad Z_L(n) = jn\omega_0 L = jnX_{L1},\qquad Z_C(n) = \frac{1}{jn\omega_0 C} = \frac{X_{C1}}{jn} \]
+        <p class="tf-x">รู้รีแอกแตนซ์ที่ฮาร์มอนิกหลักแล้ว คูณหรือหารด้วย n ได้ทันที เป็นหัวใจของการวิเคราะห์ฮาร์มอนิกในระบบไฟฟ้ากำลัง</p></div>
+      <div class="tf" id="A5" data-k="dc component inductor short capacitor open H(0) ดีซี ตัวเหนี่ยวนำลัดวงจร ตัวเก็บประจุเปิดวงจร"><p class="tf-n"><b><span class="fid">A5</span> The DC term</b> พจน์ DC</p>
+        \[ n = 0:\quad L \to \text{ลัดวงจร},\quad C \to \text{เปิดวงจร},\quad Y_0 = H(0)\,a_0 \]
+        <p class="tf-x">ฟิลเตอร์ LC ของแหล่งจ่ายไฟให้ DC ผ่านเต็มที่ \(H(0) = 1\) ตัวเก็บประจุคัปปลิงตัด DC ทิ้ง \(H(0) = 0\)</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-ca-flow--><svg viewBox="0 0 660 270" role="img" aria-label="แผนภาพการวิเคราะห์วงจรด้วยอนุกรมฟูเรียร์: อินพุตคลื่นสี่เหลี่ยมถูกแยกเป็น DC และไซน์ที่ n เท่ากับ 1 3 5 แต่ละตัวคูณ H ของ j n omega ศูนย์ของตัวเอง แล้วรวมกันที่ขาออก"><defs><marker id="fs-ca-flow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="18" y1="137" x2="108" y2="137"/><path class="w1" d="M18 117.8L40.5 117.8L40.5 156.2L63 156.2L63 117.8L85.5 117.8L85.5 156.2L108 156.2"/><text class="lb" x="18" y="100">x(t)</text><rect class="blk" x="122" y="104" width="70" height="66" rx="8"/><text class="th" x="157" y="132" text-anchor="middle">แยก</text><text class="tk" x="157" y="150" text-anchor="middle">T6</text><path class="wire" d="M192 137L214 137L214 56L236 56" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="240" y1="56" x2="310" y2="56"/><path class="w2" d="M240 48.6L310 48.6"/><text class="tk" x="240" y="36">DC</text><line class="wire" x1="316" y1="56" x2="340" y2="56" marker-end="url(#fs-ca-flow-a)"/><rect class="blk" x="344" y="40" width="104" height="32" rx="6"/><text class="lb" x="396" y="61" text-anchor="middle">H(0)</text><line class="wire" x1="448" y1="56" x2="470" y2="56" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="474" y1="56" x2="534" y2="56"/><path class="w3" d="M474 48.6L534 48.6"/><path class="wire" d="M538 56L556 56L556 137L570 137"/><path class="wire" d="M192 137L214 137L214 110L236 110" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="240" y1="110" x2="310" y2="110"/><path class="w2" d="M240 110L245.8 103.8L249.9 100.4L253.4 98.5L256.9 97.7L260.4 98.1L263.9 99.7L268 102.8L279.7 115L284.3 119.1L287.8 121.2L291.3 122.2L294.8 122L298.3 120.7L302.4 117.7L308.8 111.3L310 110"/><text class="tk" x="240" y="90">n = 1</text><line class="wire" x1="316" y1="110" x2="340" y2="110" marker-end="url(#fs-ca-flow-a)"/><rect class="blk" x="344" y="94" width="104" height="32" rx="6"/><text class="lb" x="396" y="115" text-anchor="middle">H(j1ω₀)</text><line class="wire" x1="448" y1="110" x2="470" y2="110" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="474" y1="110" x2="534" y2="110"/><path class="w3" d="M474 115.5L480 112.4L489 106.5L494 104.2L498.5 103.5L503 104.1L508.5 106.6L519 113.5L524 115.8L528.5 116.5L533 115.9L534 115.5"/><path class="wire" d="M538 110L556 110L556 137L570 137"/><path class="wire" d="M192 137L214 137L214 166L236 166" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="240" y1="166" x2="310" y2="166"/><path class="w2" d="M240 166L241.8 160.4L242.9 157.3L244.1 155L245.2 153.8L246.4 153.8L247.6 155L248.8 157.3L250.5 162.2L253.4 171.6L254.6 174.7L255.8 177L256.9 178.2L258.1 178.2L259.2 177L260.4 174.7L262.2 169.8L265.1 160.4L266.2 157.3L267.4 155L268.6 153.8L269.8 153.8L270.9 155L272.1 157.3L273.8 162.2L276.8 171.6L277.9 174.7L279.1 177L280.2 178.2L281.4 178.2L282.6 177L283.8 174.7L285.5 169.8L288.4 160.4L289.6 157.3L290.8 155L291.9 153.8L293.1 153.8L294.2 155L295.4 157.3L297.2 162.2L300.1 171.6L301.2 174.7L302.4 177L303.6 178.2L304.8 178.2L305.9 177L307.1 174.7L308.8 169.8L310 166"/><text class="tk" x="240" y="146">n = 3</text><line class="wire" x1="316" y1="166" x2="340" y2="166" marker-end="url(#fs-ca-flow-a)"/><rect class="blk" x="344" y="150" width="104" height="32" rx="6"/><text class="lb" x="396" y="171" text-anchor="middle">H(j3ω₀)</text><line class="wire" x1="448" y1="166" x2="470" y2="166" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="474" y1="166" x2="534" y2="166"/><path class="w3" d="M474 168.5L477 167L481 164.1L483.5 163.5L486 164.3L491 167.9L493.5 168.5L496 167.7L501 164.1L503.5 163.5L506 164.3L511 167.9L513.5 168.5L516 167.7L521 164.1L523.5 163.5L526 164.3L531 167.9L533.5 168.5L534 168.5"/><path class="wire" d="M538 166L556 166L556 137L570 137"/><path class="wire" d="M192 137L214 137L214 222L236 222" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="240" y1="222" x2="310" y2="222"/><path class="w2" d="M240 222L241.2 215.8L242.3 211.3L242.9 210.1L243.5 209.7L244.1 210.1L244.7 211.3L245.8 215.8L248.2 228.2L249.3 232.7L249.9 233.9L250.5 234.3L251.1 233.9L251.7 232.7L252.8 228.2L255.2 215.8L256.3 211.3L256.9 210.1L257.5 209.7L258.1 210.1L258.7 211.3L259.8 215.8L262.2 228.2L263.3 232.7L263.9 233.9L264.5 234.3L265.1 233.9L265.7 232.7L266.8 228.2L269.2 215.8L270.3 211.3L270.9 210.1L271.5 209.7L272.1 210.1L272.7 211.3L273.8 215.8L276.2 228.2L277.3 232.7L277.9 233.9L278.5 234.3L279.1 233.9L279.7 232.7L280.8 228.2L283.2 215.8L284.3 211.3L284.9 210.1L285.5 209.7L286.1 210.1L286.7 211.3L287.8 215.8L290.2 228.2L291.3 232.7L291.9 233.9L292.5 234.3L293.1 233.9L293.7 232.7L294.8 228.2L297.2 215.8L298.3 211.3L298.9 210.1L299.5 209.7L300.1 210.1L300.7 211.3L301.8 215.8L304.2 228.2L305.3 232.7L305.9 233.9L306.5 234.3L307.1 233.9L307.7 232.7L308.8 228.2L310 222"/><text class="tk" x="240" y="202">n = 5</text><line class="wire" x1="316" y1="222" x2="340" y2="222" marker-end="url(#fs-ca-flow-a)"/><rect class="blk" x="344" y="206" width="104" height="32" rx="6"/><text class="lb" x="396" y="227" text-anchor="middle">H(j5ω₀)</text><line class="wire" x1="448" y1="222" x2="470" y2="222" marker-end="url(#fs-ca-flow-a)"/><line class="ax" x1="474" y1="222" x2="534" y2="222"/><path class="w3" d="M474 223.5L478.5 220.8L480.5 220.6L484.5 223.2L486.5 223.4L490.5 220.8L492.5 220.6L496.5 223.2L498.5 223.4L502.5 220.8L504.5 220.6L508.5 223.2L510.5 223.4L514.5 220.8L516.5 220.6L520.5 223.2L522.5 223.4L526.5 220.8L528.5 220.6L532.5 223.2L534 223.5"/><path class="wire" d="M538 222L556 222L556 137L570 137"/><circle class="blk" cx="584" cy="137" r="14"/><text class="lb" x="584" y="142" text-anchor="middle">Σ</text><line class="wire" x1="598" y1="137" x2="618" y2="137" marker-end="url(#fs-ca-flow-a)"/><text class="lb" x="622" y="141">y(t)</text><text class="th" x="157" y="254" text-anchor="middle">① แยก (A1)</text><text class="th" x="396" y="254" text-anchor="middle">② คูณทีละความถี่ (A2)</text><text class="th" x="584" y="254" text-anchor="middle">③ รวม (A3)</text></svg><!--/FIG-->
+      <figcaption>แผนภาพของวิธี: อินพุตที่ไม่ใช่ไซน์ถูกแยกเป็นไซน์หลายความถี่ แต่ละตัวผ่าน \(H(jn\omega_0)\) ของตัวเอง แล้วรวมกันที่ขาออก</figcaption>
+    </figure>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="rc">
+    <h2 id="rc">คลื่นสี่เหลี่ยมเข้าวงจร RC กรองผ่านต่ำ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นี่คือการทดลองแรกของทุกแล็บวงจร (ดู<a href="/learn/function-generator/rc-rlc/#periodic">แล็บ RC</a>) ในโดเมนเวลาเห็นขอบที่โค้งเป็นเอกซ์โพเนนเชียล ในโดเมนความถี่คือฮาร์มอนิกสูงถูกลดทอนมากกว่าฮาร์มอนิกต่ำ</p>
+    <div class="tf-grid">
+      <div class="tf" id="A6" data-k="rc low pass square wave steady state peak tanh T/4tau exact สี่เหลี่ยม RC ค่ายอด tanh"><p class="tf-n"><b><span class="fid">A6</span> Square wave through RC: exact peak</b> ค่ายอดในสถานะคงตัว (ใช้ตรวจคำตอบ)</p>
+        \[ v_{C,peak} = A\tanh\frac{T}{4\tau},\qquad \tau = RC \]
+        <p class="tf-x">ได้จากการแก้ในโดเมนเวลาแบบคาบ ใช้เทียบกับผลรวมฮาร์มอนิกว่ารวมกี่ตัวจึงพอ</p></div>
+    </div>
+    <div class="wx" id="ex-a1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-1 · สี่เหลี่ยม 1 kHz เข้า RC</span><h3>สี่เหลี่ยม ±5 V 1 kHz ป้อน R = 1 kΩ, C = 100 nF หาแรงดันตัวเก็บประจุของฮาร์มอนิกที่ 1, 3, 5, 7 แล้วเทียบค่ายอดถึงยอดกับคำตอบจริง</h3></div>
+      <ol class="steps">
+        <li><p>\(f_c = \frac{1}{2\pi RC} = 1592\) Hz · \(H(jn\omega_0) = \frac{1}{1 + j(nf_0/f_c)}\) · อินพุต \(A_n = \frac{20}{n\pi}\) <a class="tag tf" href="/learn/fourier-series/waveform-table/#W1">W1</a></p></li>
+        <li><p><a class="tag tf" href="#A2">A2</a> ทีละตัว</p>
+          <div class="table-wrap"><table class="exact"><thead><tr><th>n</th><th>\(A_n\) เข้า (V)</th><th>\(|H|\)</th><th>\(\angle H\)</th><th>\(A_n\) ออก (V)</th></tr></thead><tbody>
+            <tr><td>1</td><td>6.366</td><td>0.8467</td><td>−32.1°</td><td>5.390</td></tr>
+            <tr><td>3</td><td>2.122</td><td>0.4686</td><td>−62.1°</td><td>0.994</td></tr>
+            <tr><td>5</td><td>1.273</td><td>0.3033</td><td>−72.3°</td><td>0.386</td></tr>
+            <tr><td>7</td><td>0.909</td><td>0.2217</td><td>−77.2°</td><td>0.202</td></tr>
+          </tbody></table></div></li>
+        <li><p>รวมสี่ตัวในโดเมนเวลา <a class="tag tf" href="#A3">A3</a> ได้ยอดถึงยอด 10.21 V</p></li>
+        <li><p>คำตอบจริง <a class="tag tf" href="#A6">A6</a>: \(2 \times 5\tanh\frac{1\ \text{ms}}{4(0.1\ \text{ms})} = 10\tanh 2.5 = 9.866\) V</p></li>
+      </ol>
+      <p class="answer">ฮาร์มอนิกที่ 3 ลดเหลือ 18 % ของหลัก (อินพุต 33 %) ขาออกจึงใกล้ไซน์ขึ้น สี่ตัวแรกให้ยอดถึงยอดเกินจริง 3.5 % เพราะยังมีมุมหักที่ต้องใช้ฮาร์มอนิกสูง รวม 1,000 ตัวได้ 9.868 V ตรงกับ 9.866 V</p>
+      <p class="check">ในแล็บด้านล่าง เลือก “สี่เหลี่ยม 1 kHz → RC” แล้วเลื่อน N ดูเส้นส้มเข้าหาเส้นประ (คำตอบจริงจาก ODE) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="rl">
+    <h2 id="rl">อินเวอร์เตอร์คลื่นสี่เหลี่ยมป้อนโหลด RL <span class="lv lv-i">กลาง</span></h2>
+    <p>อินเวอร์เตอร์ราคาประหยัดหรือ UPS แบบ square wave จ่ายแรงดันสี่เหลี่ยม ถ้าโหลดเป็นมอเตอร์หรือหม้อแปลง (มีความเหนี่ยวนำ) กระแสจะดูดีกว่าแรงดันมาก เพราะตัวเหนี่ยวนำ “กรองกระแส”</p>
+    <div class="wx" id="ex-a2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-2 · สี่เหลี่ยม ±311 V 50 Hz เข้า R = 10 Ω, L = 100 mH</span><h3>หากระแสฮาร์มอนิก 1, 3, 5, 7 THD ของกระแส ค่ายอด และกำลังที่ตัวต้านทาน</h3></div>
+      <ol class="steps">
+        <li><p>แรงดัน \(A_n = \frac{4(311)}{n\pi}\): 396.0, 132.0, 79.2, 56.6 V · \(X_{L1} = 2\pi(50)(0.1) = 31.42\ \Omega\)</p></li>
+        <li><p><a class="tag tf" href="#A4">A4</a>: \(|Z_n| = \sqrt{10^2 + (31.42n)^2}\) = 32.97, 94.78, 157.4, 220.1 Ω</p></li>
+        <li><p>กระแสค่ายอด \(A_n/|Z_n|\): 12.01, 1.393, 0.503, 0.257 A ลดลงตาม \(1/n^2\) โดยประมาณ</p></li>
+        <li><p>THD กระแส (แรงดัน 48.3 %)</p>\[ \mathrm{THD}_i = \frac{\sqrt{1.393^2 + 0.503^2 + 0.257^2 + \cdots}}{12.01} = 12.6\ \% \]</li>
+        <li><p>กำลัง: \(I_{rms}^2 R\) รวมทุกฮาร์มอนิก \(I_{rms} = 8.56\) A → \(P = 733\) W (ฮาร์มอนิกหลักอย่างเดียว 721 W)</p></li>
+      </ol>
+      <p class="answer">กระแสเกือบเป็นไซน์ (THD 12.6 %) ค่ายอดจริงจากการจำลอง 14.37 A (ไม่ใช่ 12.01 A เพราะฮาร์มอนิกเสริมกันที่ยอด) ฮาร์มอนิกที่เหลือยังสร้างความร้อนในมอเตอร์ 12 W และแรงบิดกระเพื่อม <a href="/learn/fourier-series/inverters-pwm/#motor">ผลต่อมอเตอร์</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="lc">
+    <h2 id="lc">ฟิลเตอร์ LC หลังวงจรเรียงกระแสเต็มคลื่น <span class="lv lv-i">กลาง</span></h2>
+    <p>แหล่งจ่ายไฟเชิงเส้นแบบ choke-input ใช้ L อนุกรมกับ C ขนานโหลด ถ้ากระแสในตัวเหนี่ยวนำไม่เคยลดถึงศูนย์ แรงดันหลังบริดจ์จะเป็นไซน์เรียงกระแสเต็มคลื่นพอดี (W8) วงจรที่เหลือเป็นเชิงเส้น วิเคราะห์ด้วยฟูเรียร์ได้</p>
+    <div class="tf-grid">
+      <div class="tf" id="A7" data-k="critical inductance choke input filter continuous conduction L >= R/(3w) ตัวเหนี่ยวนำวิกฤต กระแสต่อเนื่อง"><p class="tf-n"><b><span class="fid">A7</span> Continuous-conduction condition</b> เงื่อนไขกระแสต่อเนื่องของ choke-input</p>
+        \[ L \ge L_{crit} = \frac{R}{3\omega} \]
+        <p class="tf-x">มาจากให้กระแส DC \(\frac{2V_m}{\pi R}\) มากกว่าค่ายอดของกระแสฮาร์มอนิกที่ 2 \(\frac{4V_m}{3\pi(2\omega L)}\) ถ้าไม่ผ่าน ไดโอดหยุดนำบางช่วง วิธีนี้ใช้ไม่ได้</p></div>
+    </div>
+    <div class="wx" id="ex-a3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-3 · ริปเปิล 100 Hz</span><h3>ไฟ 230 V เรียงกระแสเต็มคลื่น ฟิลเตอร์ L = 100 mH, C = 1000 µF โหลด R = 50 Ω หาแรงดัน DC และริปเปิล</h3></div>
+      <ol class="steps">
+        <li><p>ตรวจ <a class="tag tf" href="#A7">A7</a>: \(L_{crit} = 50/(3 \times 314.2) = 53\) mH &lt; 100 mH ✓</p></li>
+        <li><p>อินพุต <a class="tag tf" href="/learn/fourier-series/waveform-table/#W8">W8</a> (\(V_m = 325.3\) V): DC 207.1 V · ที่ 2 (100 Hz) 138.0 V · ที่ 4 (200 Hz) 27.6 V</p></li>
+        <li><p>\(H = \frac{Z_p}{j\omega L + Z_p}\), \(Z_p = R \parallel \frac{1}{j\omega C}\) · ที่ 100 Hz \(|H| = 0.0260\) · ที่ 200 Hz \(|H| = 0.00637\) (ลดลงราว 4 เท่าต่อการเพิ่มความถี่ 2 เท่า คือ −40 dB/dec)</p></li>
+        <li><p>ขาออก: DC 207.0 V · ริปเปิลที่ 100 Hz \(138.0 \times 0.0260 = 3.59\) V ยอด · ที่ 200 Hz 0.18 V</p></li>
+      </ol>
+      <p class="answer">DC ≈ 207 V ริปเปิล ≈ 7.2 V ยอดถึงยอด (การจำลองจริง 7.25 V) เกือบทั้งหมดมาจาก 100 Hz ฮาร์มอนิกเดียว นี่คือเหตุผลที่สูตรออกแบบฟิลเตอร์แหล่งจ่ายไฟคิดแค่ฮาร์มอนิกที่ 2</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="resonance">
+    <h2 id="resonance">เรโซแนนซ์คัดฮาร์มอนิก: วงจรจูน และเรโซแนนซ์ที่ไม่ต้องการ <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้า \(H\) มียอดแหลมที่ความถี่หนึ่ง ฮาร์มอนิกที่ตกตรงยอดจะถูกขยายเทียบกับตัวอื่น ใช้ประโยชน์ได้ (คูณความถี่ ฟิลเตอร์ดักฮาร์มอนิก) และเป็นอันตรายได้ (คาปาซิเตอร์แก้ PF เรโซแนนซ์กับหม้อแปลง <a href="/learn/fourier-series/mitigation/#resonance">M2</a>)</p>
+    <div class="tf-grid">
+      <div class="tf" id="A8" data-k="series rlc band pass resonance quality factor Q selectivity harmonic selection เรโซแนนซ์ อนุกรม RLC คัดเลือก"><p class="tf-n"><b><span class="fid">A8</span> Series RLC band-pass</b> คัดเลือกฮาร์มอนิกด้วยเรโซแนนซ์</p>
+        \[ H(j\omega) = \frac{R}{R + j\big(\omega L - \frac{1}{\omega C}\big)},\quad f_r = \frac{1}{2\pi\sqrt{LC}},\quad Q = \frac{1}{R}\sqrt{\frac{L}{C}} \]
+        <p class="tf-x">จูน \(f_r = kf_0\) ได้ฮาร์มอนิกที่ k ออกมาเกือบเต็ม ตัวอื่นถูกลดทอนตาม Q</p></div>
+    </div>
+    <div class="wx" id="ex-a4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-4 · ตัวคูณความถี่ 3 เท่า</span><h3>สี่เหลี่ยม ±5 V 1 kHz ป้อน RLC อนุกรม R = 10 Ω, L = 10 mH, C = 281.4 nF วัดแรงดันที่ R ได้อะไร</h3></div>
+      <ol class="steps">
+        <li><p>\(f_r = 3000\) Hz, \(Q = 18.9\) <a class="tag tf" href="#A8">A8</a></p></li>
+        <li><p>n = 3: \(|H| = 1.00\) → 2.122 V · n = 1: \(\omega L - \frac{1}{\omega C} = -502.7\ \Omega\) → \(|H| = 0.0199\) → 0.127 V · n = 5: \(|H| = 0.0497\) → 0.063 V</p></li>
+      </ol>
+      <p class="answer">ขาออกเป็นไซน์ 3 kHz ยอด 2.12 V มีฮาร์มอนิกหลักปนเพียง 6 % ได้ “ตัวคูณความถี่” จากคลื่นสี่เหลี่ยม · ลองเปลี่ยน C ให้ \(f_r\) = 5 kHz (C = 101.3 nF) จะได้ฮาร์มอนิกที่ 5 แทน</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="power">
+    <h2 id="power">กำลังเฉลี่ยและค่า RMS จากฮาร์มอนิก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A9" data-k="average power harmonics sum Vn In cos theta same frequency rms กำลังเฉลี่ย ฮาร์มอนิก ความถี่เดียวกัน"><p class="tf-n"><b><span class="fid">A9</span> Average power with harmonics</b> กำลังเฉลี่ยเมื่อมีหลายฮาร์มอนิก</p>
+        \[ P = \frac{1}{T}\int_T v\,i\,dt = V_0I_0 + \sum_{n=1}^{\infty} V_nI_n\cos(\theta_{v,n} - \theta_{i,n}) \quad (V_n, I_n \text{ เป็นค่า RMS}) \]
+        <p class="tf-x">ผลคูณของแรงดันกับกระแสต่างความถี่เฉลี่ยเป็นศูนย์ (ความตั้งฉาก <a href="/learn/fourier-series/coefficients/#T1">T1</a>) ใช้ต่อในงานไฟฟ้ากำลังที่ <a href="/learn/fourier-series/power-harmonics/#H4">H4</a></p></div>
+    </div>
+    <div class="wx" id="ex-a5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-5 · โจทย์มาตรฐานในข้อสอบ</span><h3>\(v = 10 + 20\sin\omega t + 8\sin(3\omega t + 30^\circ)\) V, \(i = 2 + 3\sin(\omega t - 40^\circ) + \sin(3\omega t - 20^\circ)\) A หา P, \(V_{rms}\), \(I_{rms}\), S และ PF</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#A9">A9</a> (แปลงค่ายอดเป็น RMS: \(V_nI_n = \frac{V_{mn}I_{mn}}{2}\))</p>\[ P = 10(2) + \frac{20(3)}{2}\cos 40^\circ + \frac{8(1)}{2}\cos 50^\circ = 20 + 22.98 + 2.57 = 45.55\ \text{W} \]</li>
+        <li><p><a class="tag tf" href="/learn/fourier-series/convergence-parseval/#P6">P6</a>: \(V_{rms} = \sqrt{10^2 + \frac{20^2}{2} + \frac{8^2}{2}} = 18.22\) V · \(I_{rms} = \sqrt{2^2 + \frac{3^2}{2} + \frac{1^2}{2}} = 3.00\) A</p></li>
+        <li><p>\(S = 18.22 \times 3.00 = 54.66\) VA · PF = 45.55/54.66 = 0.833</p></li>
+      </ol>
+      <p class="answer">P = 45.6 W, \(V_{rms}\) = 18.2 V, \(I_{rms}\) = 3.00 A, S = 54.7 VA, PF = 0.833 · สังเกตว่า PF ไม่เท่ากับ cos ของมุมใดมุมหนึ่ง เมื่อมีฮาร์มอนิก PF ต้องนิยามจาก P/S</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="limits">
+    <h2 id="limits">ใช้ได้เมื่อไร และใช้ไม่ได้เมื่อไร <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><strong>ต้องเป็นเชิงเส้น</strong> ไดโอด ทรานซิสเตอร์อิ่มตัว แกนเหล็กอิ่มตัว ใช้ตรง ๆ ไม่ได้ แต่ถ้ารู้รูปคลื่นที่ขาเข้าของส่วนเชิงเส้นแล้ว (เช่น A-3) ใช้กับส่วนนั้นได้</li>
+      <li><strong>ได้เฉพาะสถานะคงตัว</strong> ช่วงเปิดเครื่องใช้<a href="/learn/laplace-transform/">ลาปลาซ</a>หรือจำลอง ODE (แล็บด้านล่างใช้ ODE เป็นคำตอบอ้างอิง)</li>
+      <li><strong>โหลดไม่เชิงเส้นในระบบไฟฟ้า</strong> นิยมแทนด้วย “แหล่งจ่ายกระแสฮาร์มอนิก” แล้วใช้ A2 กับโครงข่ายที่เหลือ เรียก harmonic load flow ซึ่งเป็นวิธีของแล็บในหน้า <a href="/learn/fourier-series/analyzer-lab/">12.14</a></li>
+      <li><strong>อยากได้ฮาร์มอนิกหลักอย่างเดียว</strong> ในระบบไม่เชิงเส้นที่ส่วนเชิงเส้นกรองฮาร์มอนิกสูงทิ้ง ใช้ฟังก์ชันพรรณนา (describing function) <a href="/learn/control-systems/nonlinear-robust/#U1">U1</a></li>
+    </ul>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: แยก คูณ รวม ทีละขั้น <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกการทดลองสำเร็จรูป (สี่เหลี่ยม → RC, อินเวอร์เตอร์ → RL, เรียงกระแส → LC, RLC คัดฮาร์มอนิก, บั๊ก 12 → 5 V) ตารางในแผงวิธีคิดคือขั้น A1–A3 ของทุกฮาร์มอนิก เส้นประคือคำตอบจริงจากการแก้สมการอนุพันธ์ ใช้ตรวจว่ารวมฮาร์มอนิกพอหรือยัง</p>
+    <div class="fs-lab" data-tabs="circuit" data-preset="rc-square" data-compact data-open="steps" data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

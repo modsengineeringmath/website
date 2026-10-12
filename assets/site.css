@@ -82,7 +82,7 @@ h2{font-size:clamp(1.6rem,3.6vw,2.3rem)}
 .nav-links a.nav-sub{display:none}
 
 /* desktop */
-@media (min-width:1440px){
+@media (min-width:1600px){
   .nav .wrap{max-width:1300px}
   .nav-links{display:flex;gap:16px;margin-left:auto;font-size:.92rem}
   .nav-links a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--accent)}
@@ -90,7 +90,7 @@ h2{font-size:clamp(1.6rem,3.6vw,2.3rem)}
   .menu-btn{display:none}
 }
 /* mobile: hamburger */
-@media (max-width:1439px){
+@media (max-width:1599px){
   .menu-btn{display:grid;gap:4px;align-content:center;justify-items:center}
   .menu-btn span{display:block;width:18px;height:2px;border-radius:2px;background:var(--ink);transition:transform .2s,opacity .2s}
   .nav[data-open] .menu-btn span:nth-child(1){transform:translateY(6px) rotate(45deg)}
@@ -710,7 +710,7 @@ section.block{padding:72px 0}
 .lab-teaser .t-dot{fill:var(--accent);stroke:var(--card);stroke-width:2}
 .lab-teaser text{font:500 12px var(--mono);fill:var(--ink-2)}
 .lab-teaser text.acc{fill:var(--signal)}
-@media (min-width:1440px){.nav-links .nav-home{display:none}}
+@media (min-width:1600px){.nav-links .nav-home{display:none}}
 @media (min-width:1000px){.topic-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}}
 /* lab on narrow screens: chart first, then controls, then the other views */
 @media (max-width:1099px){
@@ -1354,9 +1354,9 @@ table.tt tr:target :is(th,td),table.tt tr.hit :is(th,td){background:color-mix(in
 @media print{.mx-calc,.la-lab,.series-nav,.fx-tools,.fx-chips,.mxp-h{display:none!important}}
 
 /* desktop nav: one more top-level link (พีชคณิตเชิงเส้น) — tighten on mid-size screens, widen the bar on large ones */
-/* 2026-10-12: one more link (แล็บ FG + สโคป) — the inline menu starts at 1440 px, hamburger below that */
-@media (min-width:1440px) and (max-width:1599px){.nav .wrap{padding:0 20px;max-width:none}.nav-links{gap:11px;font-size:.86rem}.brand small{display:none}}
-@media (min-width:1600px){.nav .wrap{max-width:1560px}}
+/* 2026-10-12: more top-level links (แล็บ FG + สโคป, อนุกรมฟูเรียร์) — the inline menu starts at 1600 px, hamburger below that */
+@media (min-width:1600px) and (max-width:1799px){.nav .wrap{padding:0 20px;max-width:none}.nav-links{gap:11px;font-size:.86rem}.brand small{display:none}}
+@media (min-width:1800px){.nav .wrap{max-width:1760px}}
 
 /* ==========================================================================
    FG + OSCILLOSCOPE LAB (/learn/function-generator/)
@@ -1746,3 +1746,180 @@ table.cs-gal td:last-child{white-space:nowrap}
 .cs-f-tf{flex:1 1 220px}
 .pid-lab > *,.cs-lab > *,.rh-calc > *{min-width:0}
 .cs-tf{width:100%}
+
+/* ==========================================================================
+   FOURIER SERIES & HARMONIC LAB (/learn/fourier-series/) — assets/fs-core.js + fs-lab.js
+   ========================================================================== */
+.fs-lab{--c1:#f6d32d;--c2:#2ed3e6;--cm:#ff6bd6;--lcd:#0c1b24;margin:20px 0;border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:14px;display:grid;gap:12px;min-width:0}
+.fs-lab:not(.fsl-ready){min-height:320px}
+.fs-lab > *{min-width:0}
+.fs-lab noscript{display:block;padding:12px;color:var(--ink-3)}
+.fsl-bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.fsl-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin;max-width:100%}
+.fsl-tabs button{flex:none;font:600 .86rem var(--sans);padding:7px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.fsl-tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fsl-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+.fsl-pre{font:inherit;font-size:.88rem;padding:7px 8px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);max-width:100%;min-width:0}
+.fsl-btn{font:600 .8rem var(--sans);padding:7px 12px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);color:var(--signal);cursor:pointer;text-decoration:none;white-space:nowrap}
+.fsl-btn:hover{border-color:var(--signal)}
+.fsl-pane{display:grid;gap:12px;min-width:0}
+.fsl-pane > *{min-width:0}
+.fsl-ctl{display:grid;gap:8px;padding:10px 12px;border:1px solid var(--rule);border-radius:12px;background:var(--paper)}
+.fsl-row{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;min-width:0}
+.fsl-row[hidden]{display:none}
+.fsl-f{display:inline-flex;align-items:center;gap:8px;font-size:.88rem;min-width:0;max-width:100%}
+.fsl-f select,.fsl-f input{font:inherit;font-size:.9rem;padding:6px 8px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--ink);min-width:0;max-width:100%}
+.fsl-f input{font-family:var(--mono)}
+.fsl-wsel{flex:1 1 300px}.fsl-wsel select{flex:1}
+.fsl-tnum input{width:96px}
+.fsl-expr{flex:1 1 320px}.fsl-expr input{flex:1;width:100%}
+.fsl-l{color:var(--ink-3);font-size:.8rem;white-space:nowrap}
+.fsl-sl{display:grid;grid-template-columns:minmax(0,auto) minmax(90px,1fr) auto;gap:8px;align-items:center;font-size:.86rem;flex:1 1 260px;min-width:0}
+.fsl-sl .fsl-l{white-space:normal}
+.fsl-sl input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}
+.fsl-sl output{font:600 .8rem var(--mono);min-width:4.5em;text-align:right;color:var(--ink)}
+.fsl-chk{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:var(--ink-2);cursor:pointer}
+.fsl-chk input{accent-color:var(--accent);width:16px;height:16px}
+.fsl-hint{font-size:.76rem;color:var(--ink-3);flex:1 1 100%}
+.fsl-nrow .fsl-sl{flex:1 1 320px}
+.fsl-more{border-top:1px dashed var(--rule);padding-top:6px}
+.fsl-more > summary{cursor:pointer;font-size:.86rem;font-weight:600;color:var(--signal);padding:2px 0}
+.fsl-more > .fsl-row{margin-top:8px}
+.fsl-views{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1080px){.lab-page .fsl-views{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fsl-plot{margin:0;border:1px solid var(--rule);border-radius:10px;padding:8px 8px 4px;background:var(--paper);min-width:0;position:relative}
+.fsl-plot figcaption{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:.78rem;color:var(--ink-3);margin:0 2px 4px}
+.fsl-plot figcaption b{color:var(--ink-2)}
+.fsl-svg{width:100%;height:auto;display:block}
+.fsl-svg.fsl-hidden{filter:blur(9px);opacity:.5;pointer-events:none}
+.fsl-reveal{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);font:600 .9rem var(--sans);padding:9px 16px;border-radius:999px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.fsl-seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;margin-left:auto}
+.fsl-seg button{font:500 .74rem var(--sans);padding:3px 10px;border:0;background:var(--card);color:var(--ink-2);cursor:pointer}
+.fsl-seg button + button{border-left:1px solid var(--rule)}
+.fsl-seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.fsl-key{display:inline-flex;align-items:center;gap:5px}
+.fsl-key::before{content:"";width:18px;height:0;border-top:2.5px solid currentColor}
+.fsl-key.k-orig{color:var(--ink-2)}.fsl-key.k-orig::before{border-top-style:dashed}
+.fsl-key.k-sum{color:var(--accent)}.fsl-key.k-comp{color:var(--b1)}.fsl-key.k-in{color:#b39400}
+.fsl-key.k-lim{color:var(--bad)}.fsl-key.k-lim::before{border-top-width:2px}
+.fsl-key.k-over{color:var(--bad)}.fsl-key.k-over::before{border-top-width:9px;width:10px}
+.fsl-box{fill:none;stroke:var(--ink-3);stroke-width:1}
+.fsl-gr{stroke:var(--rule);stroke-width:1}
+.fsl-zero{stroke:var(--ink-3);stroke-width:1.2}
+.fsl-tk{font:500 10.5px var(--mono);fill:var(--ink-3)}
+.fsl-axl{font:600 11px var(--mono);fill:var(--ink-2)}
+.fsl-orig{fill:none;stroke:var(--ink-2);stroke-width:1.6;stroke-dasharray:6 4}
+.fsl-sum{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round}
+.fsl-in{fill:none;stroke:#d9a400;stroke-width:1.8}
+.fsl-err{fill:none;stroke:var(--bad);stroke-width:1.2;opacity:.8}
+.fsl-cmp{fill:none;stroke-width:1.4;opacity:.85}
+.fsl-cmp.c0{stroke:var(--b1)}.fsl-cmp.c1{stroke:var(--b3)}.fsl-cmp.c2{stroke:var(--b4)}.fsl-cmp.c3{stroke:var(--b5)}.fsl-cmp.c4{stroke:var(--b6)}
+.fsl-ctag{font:600 10.5px var(--mono)}
+.fsl-ctag.c0{fill:var(--b1)}.fsl-ctag.c1{fill:var(--b3)}.fsl-ctag.c2{fill:var(--b4)}.fsl-ctag.c3{fill:var(--b5)}.fsl-ctag.c4{fill:var(--b6)}
+.fsl-b{fill:var(--signal)}
+.fsl-b.off{fill:color-mix(in srgb,var(--signal) 22%,var(--paper))}
+.fsl-b.dc{fill:var(--b4)}
+.fsl-b.in{fill:#d9a400;opacity:.75}
+.fsl-b.fsl-ph{fill:var(--b3)}.fsl-b.fsl-ph.off{fill:color-mix(in srgb,var(--b3) 25%,var(--paper))}
+.fsl-zbar{fill:var(--ink-3);opacity:.5}
+.fsl-hline{fill:none;stroke:var(--ink-2);stroke-width:1.4;stroke-dasharray:4 3}
+.fsl-b.fund{fill:var(--ink-3)}
+.fsl-b.seqp{fill:var(--b1)}.fsl-b.seqn{fill:var(--b2)}.fsl-b.seq0{fill:var(--b4)}
+.fsl-b.over{fill:var(--bad)}
+.fsl-lim{fill:none;stroke:var(--bad);stroke-width:2}
+.fsl-read{display:grid;gap:8px}
+.fsl-badges{display:flex;flex-wrap:wrap;gap:6px}
+.fsl-badge{font-size:.8rem;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--b3) 12%,var(--card));border:1px solid color-mix(in srgb,var(--b3) 35%,var(--rule))}
+.fsl-rds{display:flex;flex-wrap:wrap;gap:6px 8px}
+.fsl-rd{display:inline-flex;align-items:baseline;gap:6px;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;font-size:.86rem}
+.fsl-rd i{font-style:normal;color:var(--ink-3);font-size:.74rem}
+.fsl-rd b{font-family:var(--mono);font-weight:600;font-size:.84rem}
+.fsl-err-msg{margin:0;padding:6px 10px;border-radius:8px;background:color-mix(in srgb,var(--bad) 10%,var(--card));border:1px solid color-mix(in srgb,var(--bad) 40%,var(--rule));font-size:.88rem}
+.fsl-steps{border:1px solid var(--rule);border-radius:12px;background:var(--paper);padding:0}
+.fsl-steps > summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.92rem;color:var(--ink)}
+.fsl-steps > summary::marker{color:var(--accent)}
+.fsl-steps-b{padding:0 14px 12px;font-size:.9rem}
+.lesson .fsl-ol{margin:0;padding-left:20px}
+.lesson .fsl-ol > li{margin-bottom:8px}
+.fsl-ol ul{margin:4px 0 0;padding-left:18px}
+.fsl-ol a{color:var(--signal);font-family:var(--mono);font-size:.8rem}
+.fsl-tw{overflow-x:auto;margin:6px 0}
+table.fsl-tab{border-collapse:collapse;font-size:.82rem;min-width:100%;background:var(--card)}
+table.fsl-tab th,table.fsl-tab td{padding:4px 9px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap;font-family:var(--mono)}
+table.fsl-tab th{font:500 .7rem var(--mono);color:var(--ink-3);background:var(--paper-2);text-align:right}
+table.fsl-tab tr.off td{opacity:.45}
+table.fsl-tab td:first-child,table.fsl-tab th:first-child{text-align:center}
+/* power view: scope + analyzer */
+.fsl-dash{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1080px){.lab-page .fsl-dash{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+.fsl-inst{background:color-mix(in srgb,var(--card) 70%,var(--paper-2));border:1px solid var(--rule);border-radius:14px;padding:10px;box-shadow:var(--shadow);min-width:0;display:grid;gap:8px;align-content:start}
+.fsl-inst-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 2px}
+.fsl-inst-h b{font:600 .8rem var(--mono);letter-spacing:.08em}
+.fsl-inst-h .mono{color:var(--ink-3);font-size:.7rem}
+.fsl-scope{width:100%;height:auto;display:block;border-radius:10px;border:3px solid #1b232b}
+.fsl-scr{fill:#0b1014}
+.fsl-sg{stroke:rgba(200,210,220,.17);stroke-width:1;stroke-dasharray:1 4}
+.fsl-sgc{stroke:rgba(200,210,220,.35);stroke-width:1}
+.fsl-t1{fill:none;stroke:var(--c1);stroke-width:2.2;stroke-linejoin:round}
+.fsl-t2{fill:none;stroke:var(--c2);stroke-width:2.2;stroke-linejoin:round}
+.fsl-t2f{fill:none;stroke:var(--c2);stroke-width:1.6;stroke-dasharray:6 5;opacity:.75}
+.fsl-tm{fill:none;stroke:var(--cm);stroke-width:1.6;opacity:.9}
+.fsl-st{font:600 13px var(--mono);fill:#e6edf3}
+.fsl-st.c1{fill:var(--c1)}.fsl-st.c2{fill:var(--c2)}.fsl-st.cm{fill:var(--cm)}
+.fsl-scope-txt{font-size:.72rem;color:var(--ink-3)}
+.fsl-scope-txt .c1{color:#b39400}.fsl-scope-txt .c2{color:#0e8fa0}
+.fsl-scope-ctl{gap:6px 14px}
+.fsl-nums{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(min(100%,128px),1fr))}
+.fsl-num{background:var(--lcd);border-radius:8px;padding:6px 10px;border-left:4px solid #2f4554;display:grid;gap:0}
+.fsl-num i{font:500 .68rem var(--mono);font-style:normal;color:#7fb7c9;letter-spacing:.02em}
+.fsl-num b{font:600 1.02rem/1.35 var(--mono);color:#e6f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fsl-num.ok{border-left-color:#3fb950}.fsl-num.warn{border-left-color:#e3a008}.fsl-num.bad{border-left-color:#f85149}
+.fsl-num.bad b{color:#ffb3ad}
+.fsl-diag{display:grid;gap:6px}
+.lesson .fsl-dh{margin:0 0 2px;font:600 .92rem var(--sans)}
+.fsl-msg{display:grid;gap:2px;padding:8px 12px;border-radius:10px;border:1px solid var(--rule);border-left-width:4px;background:var(--paper);font-size:.88rem}
+.fsl-msg b{font-weight:600}
+.fsl-msg span{color:var(--ink-2)}
+.fsl-msg a{color:var(--signal)}
+.fsl-msg.ok{border-left-color:var(--ok)}.fsl-msg.warn{border-left-color:var(--warnc)}.fsl-msg.bad{border-left-color:var(--bad);background:color-mix(in srgb,var(--bad) 5%,var(--paper))}
+@media (max-width:560px){.fs-lab{padding:10px}.fsl-sl{grid-template-columns:1fr auto;flex-basis:100%}.fsl-sl input[type=range]{grid-column:1/-1;grid-row:2}.fsl-sl output{grid-row:1;grid-column:2}.fsl-wsel{flex-basis:100%}.fsl-f{flex-wrap:wrap}.fsl-tools{width:100%}.fsl-pre{flex:1}.fsl-seg{margin-left:0}}
+@media print{.fs-lab .fsl-ctl,.fs-lab .fsl-bar{display:none}}
+/* lesson figures for the Fourier series */
+.fsfig{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:14px;margin:16px 0;color:var(--ink)}
+.fsfig svg{width:100%;max-width:680px;height:auto;margin:0 auto;display:block}
+.fsfig figcaption{font-size:.84rem;color:var(--ink-3);text-align:center;margin-top:8px}
+.fsfig .ax{stroke:var(--ink-3);stroke-width:1.2;fill:none}
+.fsfig .gr{stroke:var(--rule);stroke-width:1;fill:none}
+.fsfig .tk{font:500 11px var(--mono);fill:var(--ink-3)}
+.fsfig .lb{font:600 12.5px var(--mono);fill:var(--ink-2)}
+.fsfig .lba{font:600 12.5px var(--mono);fill:var(--accent)}
+.fsfig .th{font:500 13px var(--sans);fill:var(--ink-2)}
+.fsfig .w0{fill:none;stroke:var(--ink-2);stroke-width:1.6;stroke-dasharray:6 4}
+.fsfig .w1{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.fsfig .w2{fill:none;stroke:var(--b1);stroke-width:2;stroke-linejoin:round}
+.fsfig .w3{fill:none;stroke:var(--b3);stroke-width:2;stroke-linejoin:round}
+.fsfig .w4{fill:none;stroke:var(--b4);stroke-width:2;stroke-linejoin:round}
+.fsfig .w5{fill:none;stroke:var(--b5);stroke-width:2;stroke-linejoin:round}
+.fsfig .bar{fill:var(--signal)}
+.fsfig .bar2{fill:var(--accent)}
+.fsfig .bar0{fill:var(--b4)}
+.fsfig .barg{fill:color-mix(in srgb,var(--signal) 25%,var(--paper))}
+.fsfig .dsh{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:5 4}
+.fsfig .env{fill:none;stroke:var(--bad);stroke-width:1.6;stroke-dasharray:6 4}
+.fsfig .fill1{fill:color-mix(in srgb,var(--accent) 16%,transparent)}
+.fsfig .fill2{fill:color-mix(in srgb,var(--signal) 14%,transparent)}
+.fsfig .blk{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+.fsfig .wire{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.fsfig .arh{fill:var(--ink)}
+.fsfig .dot{fill:var(--accent);stroke:var(--card);stroke-width:1.5}
+.fsfig .w6{fill:none;stroke:var(--bad);stroke-width:2.2;stroke-linejoin:round}
+/* waveform thumbnails inside formula cards (waveform-table) */
+.tf .wtfig{margin:4px 0 8px}
+.tf .wtfig svg{width:100%;max-width:300px;height:auto;display:block}
+.wtfig .ax{stroke:var(--ink-3);stroke-width:1;fill:none}
+.wtfig .gr{stroke:var(--rule);stroke-width:1;fill:none}
+.wtfig .w0{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:4 3}
+.wtfig .w1{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.wtfig .arh{fill:var(--ink)}
+.lab-card .fsfig.lab-fig svg{background:var(--paper)}
+@media (max-width:1599px){.nav-links a.nav-sub{white-space:normal}}

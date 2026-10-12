@@ -1,0 +1,198 @@
+<!--meta
+{
+  "title": "อนุกรมฟูเรียร์รูปเชิงซ้อน cn สเปกตรัมขนาดและเฟส sinc และสมบัติการเลื่อน อนุพันธ์ ปริพันธ์ | อาจารย์มด",
+  "h1": "รูปเชิงซ้อน สเปกตรัมขนาด–เฟส และสมบัติของอนุกรมฟูเรียร์",
+  "description": "อนุกรมฟูเรียร์รูปเชิงซ้อน (exponential Fourier series) จากสูตรออยเลอร์: cn = (an − jbn)/2 รูปแอมพลิจูด–เฟส สเปกตรัมด้านเดียวและสองด้าน ค่า RMS ของแต่ละฮาร์มอนิก พัลส์ดิวตี้ D กับเอนเวโลป sinc ศูนย์ของสเปกตรัม สมบัติการเลื่อนเวลา อนุพันธ์ ปริพันธ์ ออปแอมป์อินทิเกรเตอร์ และเฟเซอร์ของแต่ละฮาร์มอนิกสำหรับวิเคราะห์วงจร",
+  "ogTitle": "รูปเชิงซ้อน cₙ และสเปกตรัม: ภาษาที่ FFT และเครื่องวิเคราะห์ใช้",
+  "lesson": "fourier-series",
+  "sub": "complex-spectrum",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Complex Fourier series", "Euler's formula", "Amplitude spectrum", "Phase spectrum", "Sinc function", "Pulse train", "Phasor"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "cn กับ an bn สัมพันธ์กันอย่างไร?", "a": "\\(c_0 = a_0\\), \\(c_n = (a_n - jb_n)/2\\) และ \\(c_{-n} = c_n^*\\) สำหรับสัญญาณจริง ขนาด \\(|c_n| = A_n/2\\) แอมพลิจูดของไซน์ที่ความถี่ \\(nf_0\\) จึงเท่ากับ \\(2|c_n|\\) เพราะมาจากสองเส้นคือ \\(+nf_0\\) และ \\(-nf_0\\)"},
+    {"q": "สเปกตรัมสองด้านมีความถี่ติดลบได้อย่างไร?", "a": "ความถี่ติดลบเป็นเรื่องทางคณิตศาสตร์ ไซน์จริงหนึ่งตัวเขียนเป็นผลรวมของเฟเซอร์หมุนทวนเข็ม \\(e^{j\\omega t}\\) กับตามเข็ม \\(e^{-j\\omega t}\\) อย่างละครึ่ง เครื่องวัดและสโคปแสดงสเปกตรัมด้านเดียว (เฉพาะความถี่บวก) ซึ่งเท่ากับสองเท่าของสองด้าน"},
+    {"q": "ทำไมพัลส์ดิวตี้ 20 % ไม่มีฮาร์มอนิกที่ 5?", "a": "สเปกตรัมของพัลส์มีเอนเวโลป \\(\\mathrm{sinc}(nD)\\) ซึ่งเป็นศูนย์เมื่อ \\(nD\\) เป็นจำนวนเต็ม D = 0.2 จึงไม่มีฮาร์มอนิกที่ 5, 10, 15 ทั่วไปฮาร์มอนิกที่ \\(k/D\\) หายไป"},
+    {"q": "สมบัติอนุพันธ์ของอนุกรมฟูเรียร์ใช้ทำอะไร?", "a": "อนุพันธ์คูณสัมประสิทธิ์ด้วย \\(jn\\omega_0\\) ปริพันธ์หารด้วย \\(jn\\omega_0\\) จึงหาอนุกรมของสามเหลี่ยมจากสี่เหลี่ยมได้ทันที และอธิบายว่าทำไมอินทิเกรเตอร์ทำให้ฮาร์มอนิกสูงลดลง (ขอบมน) ส่วนดิฟเฟอเรนชิเอเตอร์ขยายฮาร์มอนิกสูง (ขยายนอยส์)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>เชิงซ้อน · สเปกตรัม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.4 · อนุกรมฟูเรียร์ · Complex Form &amp; Spectrum</p>
+      <h1>รูปเชิงซ้อน สเปกตรัมขนาด–เฟส และสมบัติของอนุกรมฟูเรียร์</h1>
+      <p class="lede">สามสูตรของ \(a_0\), \(a_n\), \(b_n\) รวมเป็นสูตรเดียวได้ด้วยเลขชี้กำลังเชิงซ้อน รูปนี้คือภาษาของ FFT การแปลงฟูเรียร์ และการวิเคราะห์วงจรด้วยเฟเซอร์ เมื่อเข้าใจแล้วจะอ่านสเปกตรัมบนจอเครื่องวัดได้ถูก และใช้สมบัติไม่กี่ข้อหาอนุกรมของรูปใหม่ได้โดยไม่ต้องอินทิเกรต</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#relations">cₙ ↔ aₙ bₙ</a>
+        <a class="btn btn-ghost btn-sm" href="#spectrum">สเปกตรัม</a>
+        <a class="btn btn-ghost btn-sm" href="#sinc">พัลส์ · sinc</a>
+        <a class="btn btn-ghost btn-sm" href="#properties">สมบัติ</a>
+        <a class="btn btn-ghost btn-sm" href="#phasor">เฟเซอร์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(x(t) = \sum_{n=-\infty}^{\infty} c_n e^{jn\omega_0 t}\), \(c_n = \frac{1}{T}\int_T x(t)e^{-jn\omega_0 t}dt\)</li>
+          <li>\(c_n = \tfrac12(a_n - jb_n)\), \(c_{-n} = c_n^*\), \(A_n = 2|c_n|\), \(\varphi_n = \angle c_n\)</li>
+          <li>พัลส์ดิวตี้ D: \(|c_n| = AD|\mathrm{sinc}(nD)|\) ศูนย์ที่ \(n = k/D\)</li>
+          <li>เลื่อน \(t_0\): คูณ \(e^{-jn\omega_0t_0}\) · อนุพันธ์: คูณ \(jn\omega_0\) · ปริพันธ์: หาร \(jn\omega_0\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น cn, euler, phase, sinc, shift, derivative, phasor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="exponential">
+    <h2 id="exponential">จากสูตรออยเลอร์สู่อนุกรมเชิงซ้อน <span class="lv lv-i">กลาง</span></h2>
+    <p>โคไซน์หนึ่งตัวคือเฟเซอร์สองตัวหมุนสวนกัน ตัวหนึ่งที่ความถี่ \(+\omega\) อีกตัวที่ \(-\omega\) ส่วนจินตภาพหักกันพอดีเหลือค่าจริง เมื่อเขียนทุกฮาร์มอนิกแบบนี้ อนุกรมทั้งก้อนกลายเป็นผลรวมของเลขชี้กำลังเพียงชนิดเดียว ทบทวนสูตรออยเลอร์ที่<a href="/learn/trigonometry/#euler">หน้าตรีโกณมิติ</a></p>
+    <div class="tf-grid">
+      <div class="tf" id="C1" data-k="euler formula exponential cos sin e^jθ สูตรออยเลอร์ เลขชี้กำลังเชิงซ้อน"><p class="tf-n"><b><span class="fid">C1</span> Euler's formula</b> สูตรออยเลอร์</p>
+        \[ e^{j\theta} = \cos\theta + j\sin\theta, \quad \cos\theta = \frac{e^{j\theta} + e^{-j\theta}}{2}, \quad \sin\theta = \frac{e^{j\theta} - e^{-j\theta}}{2j} \]</div>
+      <div class="tf" id="C2" data-k="complex exponential fourier series cn formula two-sided อนุกรมฟูเรียร์เชิงซ้อน cn"><p class="tf-n"><b><span class="fid">C2</span> Complex (exponential) Fourier series</b> อนุกรมฟูเรียร์รูปเชิงซ้อน</p>
+        \[ x(t) = \sum_{n=-\infty}^{\infty} c_n\, e^{jn\omega_0 t}, \qquad c_n = \frac{1}{T}\int_{T} x(t)\, e^{-jn\omega_0 t}\, dt \]
+        <p class="tf-x">สูตรเดียวใช้ได้ทุก n รวมทั้ง n = 0 (\(c_0\) คือค่าเฉลี่ย) และ n ติดลบ ไม่ต้องแยก 1/T กับ 2/T</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="relations">
+    <h2 id="relations">ความสัมพันธ์ระหว่าง cₙ, aₙ, bₙ, Aₙ และ φₙ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="C3" data-k="amplitude phase form An phi atan2 cosine form รูปแอมพลิจูดเฟส มุมเฟส"><p class="tf-n"><b><span class="fid">C3</span> Amplitude–phase (cosine) form</b> รูปแอมพลิจูด–เฟส</p>
+        \[ a_n\cos n\omega_0 t + b_n\sin n\omega_0 t = A_n\cos(n\omega_0 t + \varphi_n), \qquad A_n = \sqrt{a_n^2 + b_n^2}, \quad \varphi_n = \operatorname{atan2}(-b_n,\, a_n) \]
+        <p class="tf-x">ใช้ atan2 (ดูเครื่องหมายทั้งสองตัว) ไม่ใช่ \(\tan^{-1}(b/a)\) ธรรมดา ซึ่งผิดในจตุภาคที่ 2 และ 3 · ตัวอย่าง \(b_n\) บวก \(a_n = 0\) → \(\varphi_n = -90^\circ\) คือ \(\cos(\cdot - 90^\circ) = \sin(\cdot)\)</p></div>
+      <div class="tf" id="C4" data-k="cn an bn relation conjugate symmetry |cn| = An/2 c-n ความสัมพันธ์ สังยุค"><p class="tf-n"><b><span class="fid">C4</span> cₙ from aₙ, bₙ</b> แปลงไปมา</p>
+        \[ c_0 = a_0,\quad c_n = \frac{a_n - jb_n}{2},\quad c_{-n} = c_n^*,\quad |c_n| = \frac{A_n}{2},\quad \angle c_n = \varphi_n \]
+        <p class="tf-x">ย้อนกลับ: \(a_n = 2\,\mathrm{Re}\,c_n\), \(b_n = -2\,\mathrm{Im}\,c_n\)</p></div>
+      <div class="tf" id="C5" data-k="sine reference form power engineering psi atan2(a,b) รูปไซน์ อ้างอิงไซน์ ไฟฟ้ากำลัง"><p class="tf-n"><b><span class="fid">C5</span> Sine-referenced form</b> รูปอ้างอิงไซน์ (นิยมในไฟฟ้ากำลัง)</p>
+        \[ A_n\sin(n\omega_0 t + \psi_n), \qquad \psi_n = \operatorname{atan2}(a_n,\, b_n) = \varphi_n + 90^\circ \]
+        <p class="tf-x">เมื่อแรงดันเขียนเป็น \(V_m\sin\omega t\) มุม \(\psi_1\) ของกระแสคือมุมเฟสที่ใช้คำนวณ DPF โดยตรง</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="spectrum">
+    <h2 id="spectrum">สเปกตรัมขนาดและเฟส: ด้านเดียวกับสองด้าน <span class="lv lv-i">กลาง</span></h2>
+    <p>ตำราคณิตศาสตร์และการแปลงฟูเรียร์วาด \(|c_n|\) ทั้งความถี่บวกและลบ (สมมาตรกัน) เครื่องวัดจริงแสดงด้านเดียว และส่วนใหญ่แสดงเป็นค่า RMS หรือ dB ต้องรู้ว่าจอแสดงแบบไหนก่อนอ่านตัวเลข</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C6" data-k="one-sided two-sided spectrum rms dbv amplitude spectrum สเปกตรัมด้านเดียว สองด้าน dBV"><p class="tf-n"><b><span class="fid">C6</span> Reading a spectrum</b> อ่านสเปกตรัมให้ถูกชนิด</p>
+        \[ \text{สองด้าน: } |c_n| \qquad \text{ด้านเดียว (ค่ายอด): } A_n = 2|c_n| \qquad \text{ด้านเดียว (RMS): } \frac{A_n}{\sqrt2} = \sqrt2\,|c_n| \qquad L_n = 20\log_{10}\frac{A_n/\sqrt2}{1\ \text{V}}\ \text{dBV} \]
+        <p class="tf-x">FFT บนออสซิลโลสโคปแสดงด้านเดียว หน่วย dBV (RMS) เครื่องวิเคราะห์กำลังแสดงด้านเดียวเป็น A หรือ V RMS หรือ % ของฮาร์มอนิกหลัก <a href="/learn/fourier-series/dft-fft/#scope-fft">วิธีอ่าน FFT บนสโคป</a></p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-cs-sided--><svg viewBox="0 0 660 320" role="img" aria-label="สเปกตรัมของคลื่นสี่เหลี่ยมบวกลบหนึ่ง: บนเป็นสเปกตรัมสองด้านขนาดของ cn ที่ n บวกและลบ แต่ละเส้นสูง 2 ส่วน pi n ล่างเป็นสเปกตรัมด้านเดียว An เท่ากับ 4 ส่วน pi n สูงเป็นสองเท่า"><defs><marker id="fs-cs-sided-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="50" y1="130" x2="610" y2="130"/><rect class="bar" x="68.8" y="125.7" width="9" height="4.3"/><rect class="bar" x="115.5" y="124.8" width="9" height="5.2"/><rect class="bar" x="162.2" y="123.3" width="9" height="6.7"/><rect class="bar" x="208.8" y="120.6" width="9" height="9.4"/><rect class="bar" x="255.5" y="114.3" width="9" height="15.7"/><rect class="bar" x="302.2" y="82.8" width="9" height="47.2"/><rect class="bar" x="348.8" y="82.8" width="9" height="47.2"/><rect class="bar" x="395.5" y="114.3" width="9" height="15.7"/><rect class="bar" x="442.2" y="120.6" width="9" height="9.4"/><rect class="bar" x="488.8" y="123.3" width="9" height="6.7"/><rect class="bar" x="535.5" y="124.8" width="9" height="5.2"/><rect class="bar" x="582.2" y="125.7" width="9" height="4.3"/><text class="tk" x="73.3" y="146" text-anchor="middle">−11</text><text class="tk" x="120" y="146" text-anchor="middle">−9</text><text class="tk" x="166.7" y="146" text-anchor="middle">−7</text><text class="tk" x="213.3" y="146" text-anchor="middle">−5</text><text class="tk" x="260" y="146" text-anchor="middle">−3</text><text class="tk" x="306.7" y="146" text-anchor="middle">−1</text><text class="tk" x="353.3" y="146" text-anchor="middle">1</text><text class="tk" x="400" y="146" text-anchor="middle">3</text><text class="tk" x="446.7" y="146" text-anchor="middle">5</text><text class="tk" x="493.3" y="146" text-anchor="middle">7</text><text class="tk" x="540" y="146" text-anchor="middle">9</text><text class="tk" x="586.7" y="146" text-anchor="middle">11</text><text class="th" x="50" y="22">สองด้าน |cₙ| (ความถี่ลบ + บวก)</text><text class="tk" x="361.3" y="80.8">0.637</text><text class="tk" x="298.7" y="80.8" text-anchor="end">0.637</text><line class="ax" x1="50" y1="286" x2="610" y2="286"/><line class="dsh" x1="330" y1="186" x2="330" y2="286"/><rect class="bar2" x="348.8" y="191.7" width="9" height="94.3"/><rect class="bar2" x="395.5" y="254.6" width="9" height="31.4"/><rect class="bar2" x="442.2" y="267.1" width="9" height="18.9"/><rect class="bar2" x="488.8" y="272.5" width="9" height="13.5"/><rect class="bar2" x="535.5" y="275.5" width="9" height="10.5"/><rect class="bar2" x="582.2" y="277.4" width="9" height="8.6"/><text class="tk" x="353.3" y="302" text-anchor="middle">1</text><text class="tk" x="400" y="302" text-anchor="middle">3</text><text class="tk" x="446.7" y="302" text-anchor="middle">5</text><text class="tk" x="493.3" y="302" text-anchor="middle">7</text><text class="tk" x="540" y="302" text-anchor="middle">9</text><text class="tk" x="586.7" y="302" text-anchor="middle">11</text><text class="th" x="50" y="178">ด้านเดียว Aₙ = 2|cₙ| (ที่เครื่องวัดแสดง)</text><text class="tk" x="361.3" y="195.7">1.273</text><text class="tk" x="190" y="241.6" text-anchor="middle">ไม่มีความถี่ลบ</text><text class="tk" x="616" y="140">n</text><text class="tk" x="616" y="296">n</text></svg><!--/FIG-->
+      <figcaption>คลื่นสี่เหลี่ยม ±1: สเปกตรัมสองด้าน \(|c_n|\) (บน) แบ่งพลังงานครึ่งหนึ่งไปไว้ที่ความถี่ลบ สเปกตรัมด้านเดียว \(A_n\) (ล่าง) คือสิ่งที่เครื่องวัดแสดง สูงเป็นสองเท่า</figcaption>
+    </figure>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="sinc">
+    <h2 id="sinc">พัลส์และเอนเวโลป sinc: ดิวตี้กำหนดรูปสเปกตรัม <span class="lv lv-i">กลาง</span></h2>
+    <p>พัลส์สี่เหลี่ยมเป็นรูปคลื่นที่สำคัญที่สุดในอิเล็กทรอนิกส์กำลังและดิจิทัล ทั้ง PWM นาฬิกาลอจิก และแรงดันโหนดสวิตช์ของบั๊กคอนเวอร์เตอร์ รูปเชิงซ้อนให้คำตอบในบรรทัดเดียว</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C7" data-k="pulse train sinc duty cycle spectrum envelope zeros k/D PWM clock พัลส์ ดิวตี้ ซิงค์ เอนเวโลป"><p class="tf-n"><b><span class="fid">C7</span> Pulse train: sinc envelope</b> พัลส์สูง A ดิวตี้ D เริ่มที่ t = 0</p>
+        \[ c_n = \frac{1}{T}\int_0^{DT} A e^{-jn\omega_0 t}dt = AD\,\mathrm{sinc}(nD)\,e^{-j\pi nD}, \qquad \mathrm{sinc}(u) = \frac{\sin \pi u}{\pi u}, \qquad A_n = 2AD\,|\mathrm{sinc}(nD)| \]
+        <p class="tf-x">เส้นสเปกตรัมห่างกัน \(f_0 = 1/T\) แต่รูปเอนเวโลปขึ้นกับความกว้างพัลส์ \(\tau = DT\) เท่านั้น ศูนย์แรกที่ \(f = 1/\tau\) พัลส์ยิ่งแคบ สเปกตรัมยิ่งกว้างและแบน</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-cs-sinc--><svg viewBox="0 0 660 330" role="img" aria-label="แอมพลิจูดฮาร์มอนิกของพัลส์ดิวตี้ 0.25 ด้านบนและ 0.1 ด้านล่าง เส้นประคือเอนเวโลป sinc ฮาร์มอนิกที่ 4 และ 8 ของดิวตี้ 0.25 และที่ 10 และ 20 ของดิวตี้ 0.1 หายไปเพราะตกที่ศูนย์ของ sinc"><defs><marker id="fs-cs-sinc-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="50" y1="140" x2="610" y2="140"/><path class="env" d="M50.2 49.1L54.7 49.5L59.2 50.7L63.7 52.5L68.1 55.1L72.6 58.3L77.1 62.2L81.6 66.5L87.2 72.7L93.9 80.9L101.7 91.3L117.4 112.9L125.2 123.3L131.9 131.6L137.5 137.8L138.6 139L139.8 139.8L145.3 134.6L149.8 130.9L154.3 127.7L158.8 125.2L163.3 123.1L167.7 121.6L172.2 120.7L176.7 120.3L182.3 120.5L187.9 121.3L193.5 122.8L200.2 125.3L209.1 129.5L228.2 139.5L229.3 140L238.2 135.7L246.1 132.6L252.8 130.6L259.5 129.2L266.2 128.5L272.9 128.4L279.6 128.9L287.5 130.3L296.4 132.6L318.8 140L330 136.5L339 134.2L346.8 132.7L354.6 131.9L362.5 131.7L370.3 132.1L379.2 133.3L390.4 135.5L408.3 140L421.8 136.8L431.8 135L440.8 134L449.7 133.6L458.7 133.8L468.8 134.7L481.1 136.6L497.9 140L513.5 137.1L524.7 135.6L534.8 134.9L544.9 134.8L554.9 135.3L567.3 136.7L587.4 140L604.2 137.4L609.8 136.8"/><rect class="bar" x="68.4" y="58.2" width="8" height="81.8"/><rect class="bar" x="90.8" y="82.1" width="8" height="57.9"/><rect class="bar" x="113.2" y="112.7" width="8" height="27.3"/><rect class="bar" x="158" y="123.6" width="8" height="16.4"/><rect class="bar" x="180.4" y="120.7" width="8" height="19.3"/><rect class="bar" x="202.8" y="128.3" width="8" height="11.7"/><rect class="bar" x="247.6" y="130.9" width="8" height="9.1"/><rect class="bar" x="270" y="128.4" width="8" height="11.6"/><rect class="bar" x="292.4" y="132.6" width="8" height="7.4"/><rect class="bar" x="337.2" y="133.7" width="8" height="6.3"/><rect class="bar" x="359.6" y="131.7" width="8" height="8.3"/><rect class="bar" x="382" y="134.5" width="8" height="5.5"/><rect class="bar" x="426.8" y="135.2" width="8" height="4.8"/><rect class="bar" x="449.2" y="133.6" width="8" height="6.4"/><rect class="bar" x="471.6" y="135.7" width="8" height="4.3"/><rect class="bar" x="516.4" y="136.1" width="8" height="3.9"/><rect class="bar" x="538.8" y="134.7" width="8" height="5.3"/><rect class="bar" x="561.2" y="136.4" width="8" height="3.6"/><text class="tk" x="94.8" y="156" text-anchor="middle">2</text><text class="tk" x="139.6" y="156" text-anchor="middle">4</text><text class="tk" x="184.4" y="156" text-anchor="middle">6</text><text class="tk" x="229.2" y="156" text-anchor="middle">8</text><text class="tk" x="274" y="156" text-anchor="middle">10</text><text class="tk" x="318.8" y="156" text-anchor="middle">12</text><text class="tk" x="363.6" y="156" text-anchor="middle">14</text><text class="tk" x="408.4" y="156" text-anchor="middle">16</text><text class="tk" x="453.2" y="156" text-anchor="middle">18</text><text class="tk" x="498" y="156" text-anchor="middle">20</text><text class="tk" x="542.8" y="156" text-anchor="middle">22</text><text class="tk" x="587.6" y="156" text-anchor="middle">24</text><text class="th" x="50" y="32">D = 0.25: A₁ = 0.450A · ศูนย์ที่ n = 4, 8, 12 …</text><text class="lba" x="139.6" y="136" text-anchor="middle">×</text><text class="lba" x="229.2" y="136" text-anchor="middle">×</text><text class="lba" x="318.8" y="136" text-anchor="middle">×</text><text class="lba" x="408.4" y="136" text-anchor="middle">×</text><text class="lba" x="498" y="136" text-anchor="middle">×</text><text class="lba" x="587.6" y="136" text-anchor="middle">×</text><text class="tk" x="616" y="142">n</text><line class="ax" x1="50" y1="298" x2="610" y2="298"/><path class="env" d="M50.2 261.6L63.6 262L77 263L90.5 264.6L105 266.9L121.8 270.4L142 275.3L192.3 288.9L212.5 294L230.4 297.9L248.3 294.8L264 292.6L279.6 291.1L295.3 290.3L311 290.1L327.8 290.5L347.9 291.7L375.9 294.3L410.6 297.9L440.8 295.4L462.1 294.1L483.3 293.4L504.6 293.4L528.1 294.1L560.6 295.9L591.9 298L609.8 296.9"/><rect class="bar" x="64.6" y="262.2" width="7" height="35.8"/><rect class="bar" x="82.6" y="264" width="7" height="34"/><rect class="bar" x="100.7" y="266.8" width="7" height="31.2"/><rect class="bar" x="118.8" y="270.5" width="7" height="27.5"/><rect class="bar" x="136.8" y="274.9" width="7" height="23.1"/><rect class="bar" x="154.9" y="279.7" width="7" height="18.3"/><rect class="bar" x="173" y="284.6" width="7" height="13.4"/><rect class="bar" x="191" y="289.5" width="7" height="8.5"/><rect class="bar" x="209.1" y="294" width="7" height="4"/><rect class="bar" x="245.2" y="294.7" width="7" height="3.3"/><rect class="bar" x="263.3" y="292.3" width="7" height="5.7"/><rect class="bar" x="281.3" y="290.8" width="7" height="7.2"/><rect class="bar" x="299.4" y="290.1" width="7" height="7.9"/><rect class="bar" x="317.5" y="290.3" width="7" height="7.7"/><rect class="bar" x="335.5" y="291.1" width="7" height="6.9"/><rect class="bar" x="353.6" y="292.5" width="7" height="5.5"/><rect class="bar" x="371.7" y="294.2" width="7" height="3.8"/><rect class="bar" x="389.7" y="296.1" width="7" height="1.9"/><rect class="bar" x="425.9" y="296.3" width="7" height="1.7"/><rect class="bar" x="443.9" y="294.9" width="7" height="3.1"/><rect class="bar" x="462" y="293.9" width="7" height="4.1"/><rect class="bar" x="480" y="293.4" width="7" height="4.6"/><rect class="bar" x="498.1" y="293.4" width="7" height="4.6"/><rect class="bar" x="516.2" y="293.8" width="7" height="4.2"/><rect class="bar" x="534.2" y="294.5" width="7" height="3.5"/><rect class="bar" x="552.3" y="295.6" width="7" height="2.4"/><rect class="bar" x="570.4" y="296.8" width="7" height="1.2"/><text class="tk" x="140.3" y="314" text-anchor="middle">5</text><text class="tk" x="230.6" y="314" text-anchor="middle">10</text><text class="tk" x="321" y="314" text-anchor="middle">15</text><text class="tk" x="411.3" y="314" text-anchor="middle">20</text><text class="tk" x="501.6" y="314" text-anchor="middle">25</text><text class="tk" x="591.9" y="314" text-anchor="middle">30</text><text class="th" x="50" y="190">D = 0.1: A₁ = 0.197A · ศูนย์ที่ n = 10, 20, 30 …</text><text class="lba" x="230.6" y="294" text-anchor="middle">×</text><text class="lba" x="411.3" y="294" text-anchor="middle">×</text><text class="lba" x="591.9" y="294" text-anchor="middle">×</text><text class="tk" x="616" y="300">n</text></svg><!--/FIG-->
+      <figcaption>แอมพลิจูดของพัลส์ D = 0.25 (บน) และ D = 0.1 (ล่าง) เส้นประคือเอนเวโลป \(2AD|\mathrm{sinc}(f\tau)|\) แท่งที่ n = 4, 8 (บน) และ n = 10, 20 (ล่าง) หายไปเพราะตกที่ศูนย์ของ sinc</figcaption>
+    </figure>
+    <div class="wx" id="ex-c1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-1 · สเปกตรัมของ PWM</span><h3>สัญญาณ PWM 0–5 V ความถี่ 20 kHz ดิวตี้ 20 % หา DC แอมพลิจูดและมุมเฟสของฮาร์มอนิก 1–4 และบอกว่าความถี่ใดไม่มีพลังงาน</h3></div>
+      <ol class="steps">
+        <li><p>\(c_0 = AD = 1.00\) V (ถ้าต่อ RC กรองจะได้ DC 1 V)</p></li>
+        <li><p><a class="tag tf" href="#C7">C7</a>: \(A_n = 2(5)(0.2)\,|\mathrm{sinc}(0.2n)|\), มุม \(\varphi_n = -\pi nD = -36^\circ n\) (ตราบที่ sinc ยังเป็นบวก)</p>
+          <div class="table-wrap"><table class="exact"><thead><tr><th>n</th><th>ความถี่</th><th>sinc(0.2n)</th><th>\(A_n\) (V ยอด)</th><th>\(\varphi_n\)</th></tr></thead><tbody>
+            <tr><td>1</td><td>20 kHz</td><td>0.9355</td><td>1.871</td><td>−36°</td></tr>
+            <tr><td>2</td><td>40 kHz</td><td>0.7568</td><td>1.514</td><td>−72°</td></tr>
+            <tr><td>3</td><td>60 kHz</td><td>0.5046</td><td>1.009</td><td>−108°</td></tr>
+            <tr><td>4</td><td>80 kHz</td><td>0.2339</td><td>0.468</td><td>−144°</td></tr>
+          </tbody></table></div></li>
+        <li><p>ศูนย์ของ sinc ที่ \(nD = 1, 2, \dots\) → n = 5, 10, 15 คือ 100, 200, 300 kHz</p></li>
+      </ol>
+      <p class="answer">DC 1 V · ฮาร์มอนิก 1.87, 1.51, 1.01, 0.47 V ที่ 20–80 kHz · ไม่มีพลังงานที่ 100, 200, 300 kHz · ถ้าใช้ PWM ขับมอเตอร์หรือ LED ฮาร์มอนิกพวกนี้คือเสียงหวีดและสัญญาณรบกวน</p>
+      <p class="check">ตรวจในแล็บ: “พัลส์ 0 ถึง A” A = 5, D = 20 % ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติที่ใช้แก้โจทย์โดยไม่ต้องอินทิเกรต <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ถ้า \(x(t)\) มีสัมประสิทธิ์ \(c_n\) แล้ว รูปที่ได้จากการบวก เลื่อน ดิฟ หรืออินทิเกรต \(x(t)\) ก็มีสัมประสิทธิ์ที่หาได้ทันที</p>
+    <div class="tf-grid">
+      <div class="tf" id="C8" data-k="linearity superposition sum ความเป็นเชิงเส้น ซูเปอร์โพซิชัน"><p class="tf-n"><b><span class="fid">C8</span> Linearity</b> ความเป็นเชิงเส้น</p>
+        \[ \alpha x(t) + \beta y(t) \;\leftrightarrow\; \alpha c_n + \beta d_n \]
+        <p class="tf-x">รูปซับซ้อน = ผลรวมของรูปในตาราง สัมประสิทธิ์ก็บวกกันได้ตรง ๆ</p></div>
+      <div class="tf" id="C9" data-k="time shift exponential phase delay e^-jnw0t0 เลื่อนเวลา หน่วง"><p class="tf-n"><b><span class="fid">C9</span> Time shift</b> เลื่อนเวลา</p>
+        \[ x(t - t_0) \;\leftrightarrow\; c_n\,e^{-jn\omega_0 t_0} \]
+        <p class="tf-x">ขนาดคงเดิม เฟสลดลง \(n\omega_0 t_0\) (ใน <a href="/learn/fourier-series/symmetry/#S6">S6</a> คือข้อนี้)</p></div>
+      <div class="tf" id="C10" data-k="derivative differentiation jnω0 multiply อนุพันธ์ ดิฟเฟอเรนชิเอต"><p class="tf-n"><b><span class="fid">C10</span> Differentiation</b> อนุพันธ์</p>
+        \[ \frac{dx}{dt} \;\leftrightarrow\; jn\omega_0\, c_n \]
+        <p class="tf-x">ฮาร์มอนิกสูงถูกขยาย n เท่า ดิฟเฟอเรนชิเอเตอร์จึงขยายนอยส์ และขอบคมของสัญญาณให้สเปกตรัมกว้าง</p></div>
+      <div class="tf" id="C11" data-k="integration divide jnω0 integrator triangle from square ปริพันธ์ อินทิเกรเตอร์"><p class="tf-n"><b><span class="fid">C11</span> Integration (zero-mean x)</b> ปริพันธ์</p>
+        \[ \int x\,dt \;\leftrightarrow\; \frac{c_n}{jn\omega_0},\quad n \ne 0 \]
+        <p class="tf-x">ต้องให้ \(c_0 = 0\) ก่อน ไม่อย่างนั้นอินทิกรัลโตไม่จำกัด (ไม่เป็นคาบ) ค่าเฉลี่ยของผลลัพธ์กำหนดจากเงื่อนไขเริ่มต้นแยกต่างหาก</p></div>
+      <div class="tf wide" id="C12" data-k="multiplication modulation convolution frequency shift mixing chopper sideband คูณ มอดูเลชัน ไซด์แบนด์"><p class="tf-n"><b><span class="fid">C12</span> Multiplication &amp; modulation</b> การคูณสัญญาณ</p>
+        \[ x(t)\,e^{jm\omega_0 t} \;\leftrightarrow\; c_{n-m}, \qquad x(t)\,y(t) \;\leftrightarrow\; \sum_{k} c_k\, d_{n-k} \]
+        <p class="tf-x">คูณกับไซน์ = เลื่อนสเปกตรัมไปทั้งสองข้าง (เกิดไซด์แบนด์) อธิบายฮาร์มอนิกรอบความถี่สวิตชิ่งของ PWM และวงจรชอปเปอร์ <a href="/learn/fourier-series/inverters-pwm/#V6">V6</a></p></div>
+    </div>
+    <div class="wx" id="ex-c2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-2 · ออปแอมป์อินทิเกรเตอร์ทำสี่เหลี่ยมให้เป็นสามเหลี่ยม</span><h3>ป้อนสี่เหลี่ยม ±5 V 1 kHz เข้าอินทิเกรเตอร์ \(v_o = -\frac{1}{RC}\int v_{in}dt\) ที่ \(RC = 1\) ms หาแอมพลิจูดฮาร์มอนิกหลักของขาออก และเทียบกับค่ายอดของสามเหลี่ยม</h3></div>
+      <ol class="steps">
+        <li><p>สี่เหลี่ยม: \(A_1 = \frac{4(5)}{\pi} = 6.366\) V <a class="tag tf" href="/learn/fourier-series/waveform-table/#W1">W1</a></p></li>
+        <li><p><a class="tag tf" href="#C11">C11</a>: แต่ละฮาร์มอนิกหารด้วย \(n\omega_0 RC\) และเลื่อนเฟส (เครื่องหมายลบกับ \(1/j\))</p>\[ A_{1,out} = \frac{6.366}{(2\pi \cdot 1000)(0.001)} = \frac{6.366}{6.283} = 1.013\ \text{V} \]</li>
+        <li><p>ในโดเมนเวลา: ครึ่งคาบ 0.5 ms ขาออกเปลี่ยน \(\frac{1}{RC}(5)(0.5\text{ ms}) = 2.5\) V ยอดถึงยอด → สามเหลี่ยมยอด 1.25 V ซึ่งมีฮาร์มอนิกหลัก \(\frac{8(1.25)}{\pi^2} = 1.013\) V ✓</p></li>
+      </ol>
+      <p class="answer">ฮาร์มอนิกที่ n ของขาออกลดลงตาม \(1/n^2\) (สี่เหลี่ยม 1/n หารด้วย n อีกครั้ง) ได้สามเหลี่ยมยอด 1.25 V ทดลองจริงได้ที่ <a href="/learn/function-generator/op-amp/#integrator">แล็บออปแอมป์อินทิเกรเตอร์</a></p>
+    </div>
+    <div class="wx" id="ex-c3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-3 · ขบวนอิมพัลส์</span><h3>หาอนุกรมฟูเรียร์ของ \(\delta_T(t) = \sum_k \delta(t - kT)\)</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#C2">C2</a> อินทิเกรตช่วง \(-T/2\) ถึง \(T/2\) มีอิมพัลส์ตัวเดียวที่ t = 0: \(c_n = \frac1T\int \delta(t)e^{-jn\omega_0 t}dt = \frac1T\)</p></li>
+      </ol>
+      <p class="answer">\(\delta_T(t) = \frac{1}{T}\sum_n e^{jn\omega_0 t}\) ทุกฮาร์มอนิกเท่ากันหมด สเปกตรัมแบนราบ ข้อนี้คือหัวใจของการสุ่มสัญญาณ (sampling) และที่มาของอเลียสซิง <a href="/learn/fourier-series/dft-fft/#aliasing">12.13</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="phasor">
+    <h2 id="phasor">เฟเซอร์ของแต่ละฮาร์มอนิก: สะพานสู่การวิเคราะห์วงจร <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจร AC ที่เรียนมาใช้เฟเซอร์ที่ความถี่เดียว อนุกรมฟูเรียร์ทำให้สัญญาณที่ไม่ใช่ไซน์กลายเป็นปัญหาเฟเซอร์หลายปัญหา ความถี่ละหนึ่งปัญหา แต่ละปัญหาแก้ด้วยอิมพีแดนซ์ที่ความถี่นั้นแล้วนำมารวมกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C13" data-k="harmonic phasor peak rms X_n = a_n - j b_n impedance เฟเซอร์ ฮาร์มอนิก"><p class="tf-n"><b><span class="fid">C13</span> Harmonic phasor</b> เฟเซอร์ของฮาร์มอนิกที่ n</p>
+        \[ x_n(t) = \mathrm{Re}\{\mathbf{X}_n e^{jn\omega_0 t}\},\qquad \mathbf{X}_n = a_n - jb_n = 2c_n = A_n\angle\varphi_n \;(\text{ยอด}),\qquad \mathbf{X}_{n,rms} = \mathbf{X}_n/\sqrt2 \]
+        <p class="tf-x">แล็บในชุดนี้ใช้นิยามนี้ทุกที่ ตัวอย่างการใช้ <a href="/learn/fourier-series/circuit-analysis/#A2">A2</a>: \(\mathbf{Y}_n = H(jn\omega_0)\mathbf{X}_n\)</p></div>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ดูสเปกตรัมขนาดและเฟส <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สลับปุ่มเหนือกราฟสเปกตรัมระหว่าง “แอมพลิจูด” “dB” และ “เฟส” เลื่อนดิวตี้ของพัลส์แล้วดูศูนย์ของ sinc ขยับ ลองพัลส์ 10 % ในโหมด dB จะเห็นเอนเวโลปชัดเจน</p>
+    <div class="fs-lab" data-tabs="synth" data-preset="pulse" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

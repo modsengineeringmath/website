@@ -1,0 +1,212 @@
+<!--meta
+{
+  "title": "จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวิเคราะห์กำลังและสโคปคำนวณฮาร์มอนิกอย่างไร อเลียสซิง leakage Goertzel | อาจารย์มด",
+  "h1": "จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร",
+  "description": "เชื่อมอนุกรมฟูเรียร์กับ DFT/FFT ที่เครื่องวัดใช้จริง: สุ่มสัญญาณ N จุดต่อคาบได้สัมประสิทธิ์ cn = X[k]/N ความละเอียดความถี่ fs/N อเลียสซิงของฮาร์มอนิกสูง การรั่วของสเปกตรัม (leakage) เมื่อความถี่ไม่ตรง หน้าต่าง Hann และ flat-top มาตรฐาน IEC 61000-4-7 หน้าต่าง 10 คาบ 200 ms ช่องละ 5 Hz การรวมกลุ่มฮาร์มอนิก การอ่าน dBV จาก FFT บนออสซิลโลสโคป และอัลกอริทึม Goertzel พร้อมโค้ดสำหรับไมโครคอนโทรลเลอร์ ESP32",
+  "ogTitle": "DFT และ FFT: อนุกรมฟูเรียร์ในเครื่องวัดจริง",
+  "lesson": "fourier-series",
+  "sub": "dft-fft",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Discrete Fourier transform", "Fast Fourier transform", "Aliasing", "Spectral leakage", "Window function", "IEC 61000-4-7", "Goertzel algorithm", "Power analyzer"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "DFT กับอนุกรมฟูเรียร์เกี่ยวกันอย่างไร?", "a": "ถ้าสุ่มสัญญาณคาบจำนวน N จุดเท่ากันพอดีในหนึ่งคาบ (หรือจำนวนเต็มคาบ) DFT ของข้อมูลนั้นหารด้วย N คือสัมประสิทธิ์ฟูเรียร์ \\(c_k\\) ตรงตัว ตราบที่สัญญาณไม่มีฮาร์มอนิกเกินครึ่งหนึ่งของความถี่สุ่ม FFT เป็นแค่วิธีคำนวณ DFT ที่เร็ว"},
+    {"q": "ทำไมเครื่องวิเคราะห์กำลังใช้หน้าต่าง 10 คาบ?", "a": "IEC 61000-4-7 กำหนดหน้าต่าง 10 คาบที่ 50 Hz (12 คาบที่ 60 Hz) ประมาณ 200 ms ได้ความละเอียด 5 Hz ฮาร์มอนิกที่ h อยู่ช่องที่ 10h และช่องระหว่างนั้นใช้วัดอินเตอร์ฮาร์มอนิก การสุ่มต้องซิงก์กับความถี่ไฟจริงเพื่อไม่ให้เกิด leakage"},
+    {"q": "spectral leakage คืออะไร?", "a": "ถ้าหน้าต่างไม่ครอบจำนวนเต็มคาบพอดี DFT มองว่าสัญญาณมีรอยต่อที่ขอบหน้าต่าง พลังงานของฮาร์มอนิกจึงรั่วไปช่องข้างเคียง ค่าแอมพลิจูดผิดและเกิดเส้นปลอม แก้ด้วยการซิงก์อัตราสุ่มกับความถี่ (PLL) ใช้หน้าต่าง Hann หรือ flat-top และการรวมกลุ่มช่อง"},
+    {"q": "Goertzel ดีกว่า FFT เมื่อไร?", "a": "เมื่อต้องการแค่ไม่กี่ความถี่ เช่นฮาร์มอนิก 1 ถึง 15 ของไฟ 50 Hz บนไมโครคอนโทรลเลอร์ Goertzel คำนวณแต่ละช่องด้วยลูปเดียว ใช้หน่วยความจำน้อย ทำได้ทีละตัวอย่างระหว่างสุ่ม ส่วน FFT คุ้มกว่าเมื่อต้องการทุกช่อง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>DFT · FFT</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.13 · อนุกรมฟูเรียร์ · From Fourier Series to DFT &amp; FFT</p>
+      <h1>จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร</h1>
+      <p class="lede">เครื่องวิเคราะห์กำลังไฟฟ้า ฟังก์ชัน FFT บนสโคป และเครื่องวัดพลังงานที่ทำเองด้วยไมโครคอนโทรลเลอร์ ไม่ได้อินทิเกรตแบบในตำรา มันสุ่มตัวอย่างแล้วรวมผลคูณ ซึ่งก็คืออินทิกรัลของสูตรออยเลอร์ในรูปผลบวก หน้านี้บอกว่าผลบวกนั้นตรงกับอนุกรมฟูเรียร์เมื่อไร และผิดได้อย่างไรบ้าง เพื่อให้อ่านตัวเลขบนเครื่องวัดได้อย่างเข้าใจ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#from-series">อนุกรม → DFT</a>
+        <a class="btn btn-ghost btn-sm" href="#aliasing">อเลียสซิง</a>
+        <a class="btn btn-ghost btn-sm" href="#leakage">Leakage</a>
+        <a class="btn btn-ghost btn-sm" href="#iec">IEC 61000-4-7</a>
+        <a class="btn btn-ghost btn-sm" href="#goertzel">Goertzel + โค้ด</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สุ่ม N จุดพอดีจำนวนเต็มคาบ: \(c_k = X[k]/N\) · \(A_k = 2|X[k]|/N\) · RMS \(= \sqrt2|X[k]|/N\)</li>
+          <li>ความละเอียด \(\Delta f = f_s/N = 1/T_w\) · ฮาร์มอนิกที่เกิน \(f_s/2\) พับลงมาทับฮาร์มอนิกต่ำ (อเลียสซิง)</li>
+          <li>หน้าต่างไม่ครบคาบ → leakage แก้ด้วยซิงก์ (PLL) หน้าต่าง Hann/flat-top หรือรวมกลุ่มช่อง</li>
+          <li>IEC 61000-4-7: 10 คาบ (200 ms) ช่องละ 5 Hz ฮาร์มอนิก h อยู่ช่อง 10h</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น dft, bin, resolution, nyquist, leakage, hann, iec, goertzel, dbv" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="from-series">
+    <h2 id="from-series">จากอินทิกรัลสู่ผลบวก: DFT คืออนุกรมฟูเรียร์ของข้อมูลที่สุ่มมา <span class="lv lv-i">กลาง</span></h2>
+    <p>แทนอินทิกรัลใน <a href="/learn/fourier-series/complex-spectrum/#C2">C2</a> ด้วยผลรวมสี่เหลี่ยมผืนผ้าของ N ตัวอย่างที่ห่างกัน \(T/N\) ได้สูตร DFT ทันที และถ้าสัญญาณมีฮาร์มอนิกไม่เกิน N/2 ผลรวมนี้ไม่ใช่ค่าประมาณ มันตรงทุกหลัก เพราะไซน์ที่สุ่มครบคาบยังตั้งฉากกันแบบไม่ต่อเนื่อง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D1" data-k="dft definition discrete fourier transform X[k] sum x[n] e^-j2pikn/N ดีเอฟที นิยาม"><p class="tf-n"><b><span class="fid">D1</span> Discrete Fourier transform</b> นิยาม DFT</p>
+        \[ X[k] = \sum_{n=0}^{N-1} x[n]\,e^{-j2\pi kn/N},\qquad k = 0, 1, \dots, N-1 \]
+        <p class="tf-x">เทียบกับ \(c_k = \frac1T\int_T x(t)e^{-jk\omega_0 t}dt\): แทน \(t = nT/N\), \(dt \to T/N\) ได้ \(c_k \approx X[k]/N\)</p></div>
+      <div class="tf wide" id="D2" data-k="fourier coefficients from dft amplitude rms dc bin scaling 2|X|/N แปลง DFT เป็นแอมพลิจูด RMS"><p class="tf-n"><b><span class="fid">D2</span> From DFT bins to harmonic values</b> แปลงผล DFT เป็นค่าฮาร์มอนิก (หน้าต่างครบ m คาบพอดี)</p>
+        \[ \text{DC} = \frac{X[0]}{N},\qquad A_h = \frac{2|X[mh]|}{N},\qquad V_{h,rms} = \frac{\sqrt2\,|X[mh]|}{N},\qquad \varphi_h = \angle X[mh] \]
+        <p class="tf-x">m = จำนวนคาบในหน้าต่าง ฮาร์มอนิกที่ h อยู่ช่อง \(k = mh\) · ตรงทุกหลักถ้าไม่มีความถี่เกิน \(f_s/2\)</p></div>
+      <div class="tf" id="D3" data-k="frequency resolution bin width fs/N 1/Tw window length ความละเอียดความถี่ ช่อง"><p class="tf-n"><b><span class="fid">D3</span> Frequency resolution</b> ความละเอียดความถี่</p>
+        \[ \Delta f = \frac{f_s}{N} = \frac{1}{T_w} \]
+        <p class="tf-x">ขึ้นกับความยาวหน้าต่าง \(T_w\) เท่านั้น ไม่ขึ้นกับอัตราสุ่ม อยากแยกความถี่ใกล้กันต้องเก็บข้อมูลนานขึ้น</p></div>
+      <div class="tf" id="D4" data-k="fft cooley tukey complexity N log N power of two radix 2 เอฟเอฟที ความเร็ว"><p class="tf-n"><b><span class="fid">D4</span> FFT</b> คำนวณ DFT เร็ว</p>
+        \[ N^2 \;\to\; \tfrac{N}{2}\log_2 N \;\text{ การคูณเชิงซ้อน} \]
+        <p class="tf-x">N = 2048: จาก 4.2 ล้านเหลือ 11,264 ครั้ง (Cooley–Tukey, N เป็นกำลังของ 2) ผลลัพธ์เหมือน DFT ทุกประการ</p></div>
+    </div>
+    <div class="wx" id="ex-d1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-1 · DFT ด้วยมือ</span><h3>สุ่มไซน์ \(\sin\omega_0 t\) 4 จุดต่อคาบได้ \(x = [0, 1, 0, -1]\) หา \(X[1]\) แอมพลิจูดและมุม</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#D1">D1</a>: \(e^{-j2\pi n/4} = 1, -j, -1, j\) → \(X[1] = 0(1) + 1(-j) + 0(-1) + (-1)(j) = -2j\)</p></li>
+        <li><p><a class="tag tf" href="#D2">D2</a>: \(A_1 = 2|{-2j}|/4 = 1\) · มุม −90° (คือ \(\cos(\omega t - 90^\circ) = \sin\omega t\))</p></li>
+      </ol>
+      <p class="answer">แอมพลิจูด 1 มุม −90° ตรงกับไซน์ที่สุ่มมาพอดี แม้มีแค่ 4 จุด เพราะสัญญาณมีความถี่เดียวซึ่งต่ำกว่า \(f_s/2\)</p>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="aliasing">
+    <h2 id="aliasing">อเลียสซิง: ฮาร์มอนิกสูงพับลงมาทับฮาร์มอนิกต่ำ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="D5" data-k="aliasing nyquist folding harmonic above fs/2 alias N - h anti alias filter อเลียสซิง ไนควิสต์ พับ"><p class="tf-n"><b><span class="fid">D5</span> Harmonic aliasing</b> ฮาร์มอนิกที่เกิน Nyquist</p>
+        \[ f_s \gt 2f_{max},\qquad h \gt \frac{N}{2} \;\Rightarrow\; \text{ไปปรากฏที่ช่อง } |h - \ell N| \text{ ที่ใกล้ที่สุด} \]
+        <p class="tf-x">คลื่นที่มีรอยกระโดด (สี่เหลี่ยม PWM) มีฮาร์มอนิกไม่สิ้นสุด จึงต้องมีตัวกรองกันอเลียสซิงก่อน ADC หรือสุ่มเร็วมาก · เชื่อมกับการสุ่มในสโคป <a href="/learn/function-generator/oscilloscope/#O12">O12</a> และขบวนอิมพัลส์ <a href="/learn/fourier-series/complex-spectrum/#ex-c3">C-3</a></p></div>
+    </div>
+    <div class="wx" id="ex-d2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-2 · สี่เหลี่ยมสุ่มน้อยเกินไป</span><h3>สุ่มสี่เหลี่ยม ±1 จำนวน 8 จุดและ 64 จุดต่อคาบ DFT ให้ \(A_1\), \(A_3\) เท่าไร เทียบค่าจริง \(4/\pi = 1.2732\) และ \(4/(3\pi) = 0.4244\)</h3></div>
+      <ol class="steps">
+        <li><p>8 จุด: \(A_1 = 1.3066\) (+2.6 %) · \(A_3 = 0.5412\) (+27.5 %) เพราะฮาร์มอนิกที่ 5 พับลงมาที่ 3 (\(8 - 5 = 3\)), 7 พับลงที่ 1, 9 พับที่ 1, …</p></li>
+        <li><p>64 จุด: \(A_1 = 1.2738\) · \(A_3 = 0.4260\) ดีขึ้นมาก แต่ \(A_{31}\) (ใกล้ Nyquist) ได้ 0.0626 ทั้งที่จริง 0.0411</p></li>
+      </ol>
+      <p class="answer">ฮาร์มอนิกต่ำแม่นเมื่อสุ่มหนาแน่น แต่ช่องที่ใกล้ \(f_s/2\) ผิดเสมอ เครื่องวิเคราะห์จึงสุ่ม 256 จุดต่อคาบขึ้นไปและรายงานแค่ถึงลำดับ 50</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="leakage">
+    <h2 id="leakage">การรั่วของสเปกตรัม (spectral leakage) และหน้าต่าง <span class="lv lv-i">กลาง</span></h2>
+    <p>DFT สมมติว่าข้อมูลในหน้าต่างซ้ำไปเรื่อย ๆ ถ้าหน้าต่างไม่ครบจำนวนเต็มคาบ ต่อปลายกับต้นแล้วเกิดรอยกระโดดที่ไม่มีอยู่จริง (<a href="/learn/fourier-series/convergence-parseval/#P8">P8</a>) พลังงานจึงกระจายไปทุกช่อง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D6" data-k="spectral leakage non integer cycles window hann flat top coherent gain scalloping loss sync pll การรั่ว หน้าต่าง Hann flat-top"><p class="tf-n"><b><span class="fid">D6</span> Leakage and windows</b> การรั่วและหน้าต่าง</p>
+        \[ \text{สี่เหลี่ยม: } |X[k]| \propto |\mathrm{sinc}(k - k_0)| \qquad \text{Hann: } w[n] = \tfrac12\Big(1 - \cos\frac{2\pi n}{N}\Big),\; \text{ขยายแอมพลิจูด} \times 2 \]
+        <p class="tf-x">\(k_0\) = ตำแหน่งจริงของความถี่ (ไม่เป็นจำนวนเต็ม) · หน้าต่าง Hann ลดการรั่วไปช่องไกล แต่กว้างขึ้น · flat-top อ่านแอมพลิจูดแม่นที่สุดแม้ความถี่อยู่ระหว่างช่อง · ทางที่ดีที่สุดในงานไฟฟ้าคือซิงก์อัตราสุ่มกับความถี่ไฟ (PLL) ให้หน้าต่างครบคาบพอดี</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-dft-leak--><svg viewBox="0 0 660 330" role="img" aria-label="สเปกตรัม DFT ช่อง 0 ถึง 20 ของไซน์ 50.0 เฮิรตซ์ด้านบนและ 50.5 เฮิรตซ์ด้านล่าง ในหน้าต่าง 200 มิลลิวินาที หน้าต่างสี่เหลี่ยม ความละเอียด 5 เฮิรตซ์ต่อช่อง 50.0 เฮิรตซ์มีช่องเดียวคือช่อง 10 ส่วน 50.5 เฮิรตซ์รั่วไปช่อง 9 และ 11 และไกลออกไป"><defs><marker id="fs-dft-leak-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="gr" x1="60" y1="40.8" x2="580" y2="40.8"/><text class="tk" x="54" y="44.8" text-anchor="end">0</text><line class="gr" x1="60" y1="72.5" x2="580" y2="72.5"/><text class="tk" x="54" y="76.5" text-anchor="end">−20</text><line class="gr" x1="60" y1="104.3" x2="580" y2="104.3"/><text class="tk" x="54" y="108.3" text-anchor="end">−40</text><line class="gr" x1="60" y1="136" x2="580" y2="136"/><text class="tk" x="54" y="140" text-anchor="end">−60</text><rect class="bar" x="314" y="40.8" width="12" height="95.2"/><text class="tk" x="74.7" y="152" text-anchor="middle">0</text><text class="tk" x="123.8" y="152" text-anchor="middle">2</text><text class="tk" x="172.8" y="152" text-anchor="middle">4</text><text class="tk" x="221.9" y="152" text-anchor="middle">6</text><text class="tk" x="270.9" y="152" text-anchor="middle">8</text><text class="tk" x="320" y="152" text-anchor="middle">10</text><text class="tk" x="369.1" y="152" text-anchor="middle">12</text><text class="tk" x="418.1" y="152" text-anchor="middle">14</text><text class="tk" x="467.2" y="152" text-anchor="middle">16</text><text class="tk" x="516.2" y="152" text-anchor="middle">18</text><text class="tk" x="565.3" y="152" text-anchor="middle">20</text><text class="th" x="60" y="28">ไซน์ 50.0 Hz · หน้าต่าง 200 ms (Δf = 5 Hz) · ช่อง 10 = 1.000 (ตรง)</text><text class="tk" x="586" y="150">k</text><text class="tk" x="20" y="42">dB</text><line class="gr" x1="60" y1="200.8" x2="580" y2="200.8"/><text class="tk" x="54" y="204.8" text-anchor="end">0</text><line class="gr" x1="60" y1="232.5" x2="580" y2="232.5"/><text class="tk" x="54" y="236.5" text-anchor="end">−20</text><line class="gr" x1="60" y1="264.3" x2="580" y2="264.3"/><text class="tk" x="54" y="268.3" text-anchor="end">−40</text><line class="gr" x1="60" y1="296" x2="580" y2="296"/><text class="tk" x="54" y="300" text-anchor="end">−60</text><rect class="bar2" x="68.7" y="272.7" width="12" height="23.3"/><rect class="bar2" x="93.2" y="271.8" width="12" height="24.2"/><rect class="bar2" x="117.8" y="269.5" width="12" height="26.5"/><rect class="bar2" x="142.3" y="266.5" width="12" height="29.5"/><rect class="bar2" x="166.8" y="263.1" width="12" height="32.9"/><rect class="bar2" x="191.4" y="259.4" width="12" height="36.6"/><rect class="bar2" x="215.9" y="255.3" width="12" height="40.7"/><rect class="bar2" x="240.4" y="250.5" width="12" height="45.5"/><rect class="bar2" x="264.9" y="244.4" width="12" height="51.6"/><rect class="bar2" x="289.5" y="234.7" width="12" height="61.3"/><rect class="bar2" x="314" y="201" width="12" height="95"/><rect class="bar2" x="338.5" y="230.8" width="12" height="65.2"/><rect class="bar2" x="363.1" y="240.6" width="12" height="55.4"/><rect class="bar2" x="387.6" y="246" width="12" height="50"/><rect class="bar2" x="412.1" y="249.7" width="12" height="46.3"/><rect class="bar2" x="436.6" y="252.5" width="12" height="43.5"/><rect class="bar2" x="461.2" y="254.7" width="12" height="41.3"/><rect class="bar2" x="485.7" y="256.6" width="12" height="39.4"/><rect class="bar2" x="510.2" y="258.2" width="12" height="37.8"/><rect class="bar2" x="534.8" y="259.6" width="12" height="36.4"/><rect class="bar2" x="559.3" y="260.8" width="12" height="35.2"/><text class="tk" x="74.7" y="312" text-anchor="middle">0</text><text class="tk" x="123.8" y="312" text-anchor="middle">2</text><text class="tk" x="172.8" y="312" text-anchor="middle">4</text><text class="tk" x="221.9" y="312" text-anchor="middle">6</text><text class="tk" x="270.9" y="312" text-anchor="middle">8</text><text class="tk" x="320" y="312" text-anchor="middle">10</text><text class="tk" x="369.1" y="312" text-anchor="middle">12</text><text class="tk" x="418.1" y="312" text-anchor="middle">14</text><text class="tk" x="467.2" y="312" text-anchor="middle">16</text><text class="tk" x="516.2" y="312" text-anchor="middle">18</text><text class="tk" x="565.3" y="312" text-anchor="middle">20</text><text class="th" x="60" y="188">ไซน์ 50.5 Hz · หน้าต่าง 200 ms (Δf = 5 Hz) · ช่อง 10 = 0.979 · ช่อง 9, 11 = -21.4, -18.9 dB</text><text class="tk" x="586" y="310">k</text><text class="tk" x="20" y="202">dB</text></svg><!--/FIG-->
+      <figcaption>ไซน์ 50.0 Hz (บน) กับ 50.5 Hz (ล่าง) ในหน้าต่าง 200 ms หน้าต่างสี่เหลี่ยม: 50.0 Hz มีช่องเดียว (10) ส่วน 50.5 Hz รั่วไปช่อง 9 และ 11 และไกลออกไป</figcaption>
+    </figure>
+    <div class="wx" id="ex-d3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-3 · ความถี่ไฟเพี้ยนไป 0.5 Hz</span><h3>เครื่องวัดสุ่ม 10.24 kHz จำนวน 2048 จุด (200 ms) แต่ไฟจริง 50.5 Hz 230 V หน้าต่างสี่เหลี่ยม อ่านค่าที่ช่อง 9, 10, 11 ได้เท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>หน้าต่างครอบ 10.1 คาบ ไม่ครบจำนวนเต็ม <a class="tag tf" href="#D6">D6</a></p></li>
+        <li><p>คำนวณ DFT: ช่อง 10 (50 Hz) 225.3 V (−2.0 %) · ช่อง 9 (45 Hz) 19.6 V · ช่อง 11 (55 Hz) 26.0 V ซึ่งไม่มีอยู่จริง</p></li>
+        <li><p>รวมกลุ่มช่อง 9–11 แบบพาร์เซวาล \(\sqrt{19.6^2 + 225.3^2 + 26.0^2} = 227.6\) V (−1.0 %)</p></li>
+      </ol>
+      <p class="answer">ความถี่คลาดเพียง 1 % ทำให้ค่าหลักผิด 2 % และเกิดอินเตอร์ฮาร์มอนิกปลอม 8–11 % มาตรฐานจึงบังคับให้ซิงก์กับความถี่ไฟ และใช้การรวมกลุ่ม (grouping) เพื่อลดผลที่เหลือ</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="iec">
+    <h2 id="iec">มาตรฐานการวัด: IEC 61000-4-7 และ 61000-4-30 <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="D7" data-k="power analyzer settings sample rate 10.24 kHz 2048 points 200 ms 5 Hz bins harmonic at bin 10h ตั้งค่าเครื่องวิเคราะห์"><p class="tf-n"><b><span class="fid">D7</span> A typical analyzer setting</b> ตัวอย่างการตั้งค่าเครื่องวิเคราะห์</p>
+        \[ f_s = 10.24\ \text{kHz},\quad N = 2048 \;\Rightarrow\; T_w = 200\ \text{ms} = 10 \text{ คาบ},\quad \Delta f = 5\ \text{Hz},\quad h \to k = 10h \]
+        <p class="tf-x">Nyquist 5.12 kHz สูงกว่าฮาร์มอนิกที่ 50 (2.5 kHz) สองเท่า เผื่อให้ตัวกรองกันอเลียสซิง</p></div>
+      <div class="tf wide" id="D8" data-k="iec 61000-4-7 10 cycles 12 cycles 200 ms harmonic grouping subgroup interharmonic iec 61000-4-30 class a 3 s 10 min aggregation มาตรฐานการวัดฮาร์มอนิก"><p class="tf-n"><b><span class="fid">D8</span> IEC 61000-4-7 / 61000-4-30 essentials</b> หลักของมาตรฐานการวัด</p>
+        \[ T_w = 10 \text{ คาบ (50 Hz) หรือ } 12 \text{ คาบ (60 Hz)} \approx 200\ \text{ms},\qquad G_h = \sqrt{\sum_{k=10h-1}^{10h+1} V_k^2}\;(\text{harmonic subgroup}) \]
+        <p class="tf-x">อัตราสุ่มซิงก์กับความถี่ไฟ · ค่าราย 200 ms รวมเป็นค่าราย 150 คาบ (≈ 3 s) และ 10 นาที (Class A ของ 61000-4-30) แล้วจึงนำไปเทียบขีดจำกัด เช่น IEEE 519 ใช้เปอร์เซ็นไทล์ของค่าราย 3 s และ 10 นาที (<a href="/learn/fourier-series/power-harmonics/#H13">H13</a>) · ช่องระหว่างฮาร์มอนิกคืออินเตอร์ฮาร์มอนิก</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="scope-fft">
+    <h2 id="scope-fft">ใช้ FFT บนออสซิลโลสโคปวัดฮาร์มอนิกให้ถูก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><strong>เลือก time/div</strong> ให้จอมีหลายคาบ (ความละเอียด \(\Delta f = 1/T_{จอ}\)) แต่ไม่ช้าจนอัตราสุ่มตก (<a href="/learn/function-generator/oscilloscope/#O13">O13</a>)</li>
+      <li><strong>หน้าต่าง</strong>: Hanning สำหรับดูทั่วไป Flat-top เมื่อต้องการแอมพลิจูดแม่น Rectangular เฉพาะเมื่อซิงก์ครบคาบ</li>
+      <li><strong>หน่วย</strong>: ส่วนใหญ่แสดง dBV (RMS) แปลงด้วย D9 แล้วคำนวณ THD เอง หรือใช้ <a href="/learn/function-generator/applications/#X10">X10</a></li>
+      <li><strong>กระแส</strong>: ใช้โพรบกระแสหรือ shunt + โพรบดิฟเฟอเรนเชียล ห้ามหนีบกราวด์โพรบที่ไฟบ้าน (<a href="/learn/function-generator/oscilloscope/#safety">ความปลอดภัย</a>)</li>
+    </ul>
+    <div class="tf-grid">
+      <div class="tf" id="D9" data-k="dbv to volts rms 10^(L/20) thd from fft levels scope แปลง dBV เป็นโวลต์"><p class="tf-n"><b><span class="fid">D9</span> dBV ↔ V<sub>rms</sub></b> แปลงหน่วยบนจอ FFT</p>
+        \[ V_{rms} = 10^{L/20}\ \text{V},\qquad L = 20\log_{10}V_{rms}\ \text{dBV} \]</div>
+    </div>
+    <div class="wx" id="ex-d4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-4 · THD จากจอ FFT</span><h3>FFT ของขาออกเครื่องขยายอ่านได้: หลัก 14 dBV ที่ 3 −2 dBV ที่ 5 −8 dBV หา THD</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#D9">D9</a>: \(V_1 = 10^{0.7} = 5.01\) V · \(V_3 = 10^{-0.1} = 0.794\) V · \(V_5 = 10^{-0.4} = 0.398\) V</p></li>
+        <li><p><a class="tag tf" href="/learn/fourier-series/power-harmonics/#H2">H2</a>: THD \(= \sqrt{0.794^2 + 0.398^2}/5.01 = 17.7\) %</p></li>
+      </ol>
+      <p class="answer">THD 17.7 % มีแต่ฮาร์มอนิกคี่ → ขาออกถูกตัดยอดแบบสมมาตร (<a href="/learn/fourier-series/symmetry/#S7">S7</a>) ลดแอมพลิจูดขาเข้าหรือเพิ่มแรงดันไฟเลี้ยง</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="goertzel">
+    <h2 id="goertzel">คำนวณฮาร์มอนิกบนไมโครคอนโทรลเลอร์: อัลกอริทึม Goertzel <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เครื่องวัดพลังงานที่ทำเองด้วย ESP32 ไม่จำเป็นต้องใช้ FFT ทั้งก้อน ถ้าต้องการแค่ฮาร์มอนิกที่ 1–15 Goertzel คำนวณทีละช่องด้วยตัวกรอง IIR อันดับสองหนึ่งตัว ทำงานไปพร้อมกับการสุ่มได้ ใช้หน่วยความจำแค่สองตัวแปรต่อช่อง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D10" data-k="goertzel algorithm recursion second order iir single bin s[n] = x[n] + 2cos(w) s[n-1] - s[n-2] microcontroller esp32 กอร์ทเซล"><p class="tf-n"><b><span class="fid">D10</span> Goertzel recursion</b> อัลกอริทึม Goertzel</p>
+        \[ s[n] = x[n] + 2\cos\omega_k\,s[n-1] - s[n-2],\qquad X[k] = s[N-1] - e^{-j\omega_k}s[N-2],\qquad \omega_k = \frac{2\pi k}{N} \]
+        <p class="tf-x">เท่ากับ DFT ช่องที่ k ทุกประการ (ต่างกันแค่มุมเฟสคงที่) คูณจริงหนึ่งครั้งต่อตัวอย่าง · หน้าต่างต้องครบคาบ ใช้การวัดความถี่ไฟแล้วปรับอัตราสุ่ม หรือปรับ N ให้ครบ 10 คาบ</p></div>
+    </div>
+<pre class="code"><span class="c">// Goertzel: แอมพลิจูด (ค่ายอด) ของช่อง k จาก N ตัวอย่าง — ตรงกับ D2 และ D10</span>
+#include &lt;math.h&gt;
+float goertzel_amp(const float *x, int N, int k) {
+  float w = 2.0f * (float)M_PI * k / N, c = 2.0f * cosf(w);
+  float s1 = 0.0f, s2 = 0.0f;
+  for (int n = 0; n &lt; N; n++) {
+    float s0 = x[n] + c * s1 - s2;
+    s2 = s1; s1 = s0;
+  }
+  float re = s1 - s2 * cosf(w), im = s2 * sinf(w);
+  return 2.0f * sqrtf(re * re + im * im) / N;
+}
+
+<span class="c">// สุ่ม 128 จุดต่อคาบของ 50 Hz (fs = 6.4 kHz) นาน 10 คาบ → N = 1280, ฮาร์มอนิก h อยู่ช่อง k = 10h</span>
+float thd_percent(const float *x) {
+  const int N = 1280, M = 10;
+  float a1 = goertzel_amp(x, N, M * 1), sum = 0.0f;
+  for (int h = 2; h &lt;= 15; h++) { float a = goertzel_amp(x, N, M * h); sum += a * a; }
+  return 100.0f * sqrtf(sum) / a1;   <span class="c">// THD จนถึงฮาร์มอนิกที่ 15 (Nyquist = ฮาร์มอนิกที่ 64)</span>
+}</pre>
+    <p class="hint mono" style="color:var(--ink-3)">ลบค่าเฉลี่ย (DC offset ของ ADC) ออกจาก x ก่อน และกรองกันอเลียสซิงด้วย RC ก่อนเข้า ADC ชิปวัดพลังงานบางรุ่นมีวงจร DFT ในตัว ให้ค่าฮาร์มอนิกโดยตรง</p>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: สเปกตรัมแบบเครื่องวัด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>แล็บในชุดนี้คำนวณสเปกตรัมแบบปิด (อินทิเกรตแต่ละช่วงตรง ๆ) จึงไม่มีอเลียสซิงหรือ leakage ใช้เป็น “คำตอบอ้างอิง” เทียบกับ FFT บนสโคปจริงของคุณ ส่วนแล็บเครื่องกำเนิดสัญญาณมี FFT แบบสโคปจริงที่เกิดอเลียสซิงได้ <a href="/learn/function-generator/simulator/#preset=aliasing">ลองอเลียสซิง</a></p>
+    <div class="fs-lab" data-tabs="synth,power" data-preset="square" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

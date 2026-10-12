@@ -1,0 +1,208 @@
+<!--meta
+{
+  "title": "ฮาร์มอนิกของอินเวอร์เตอร์และ PWM: คลื่นสี่เหลี่ยม quasi-square six-step SHE SPWM ma mf ไซด์แบนด์ | อาจารย์มด",
+  "h1": "สเปกตรัมของอินเวอร์เตอร์: สี่เหลี่ยม quasi-square six-step SHE และ SPWM",
+  "description": "วิเคราะห์แรงดันขาออกของอินเวอร์เตอร์ด้วยอนุกรมฟูเรียร์: อินเวอร์เตอร์คลื่นสี่เหลี่ยม 4Vdc/π กำจัดฮาร์มอนิกด้วยมุม α ของ quasi-square อินเวอร์เตอร์ 3 เฟส six-step ไม่มีฮาร์มอนิกที่ 3 selective harmonic elimination (SHE) พร้อมมุมที่แก้แล้ว Sinusoidal PWM ดัชนีมอดูเลชัน ma อัตราส่วนความถี่ mf ตารางไซด์แบนด์แบบไบโพลาร์และยูนิโพลาร์ โอเวอร์มอดูเลชัน WTHD ฟิลเตอร์ LC และผลต่อมอเตอร์",
+  "ogTitle": "อินเวอร์เตอร์และ PWM: ฮาร์มอนิกอยู่ที่ไหน กรองอย่างไร",
+  "lesson": "fourier-series",
+  "sub": "inverters-pwm",
+  "nav": "fs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Inverter", "Pulse-width modulation", "Sinusoidal PWM", "Six-step inverter", "Selective harmonic elimination", "Modulation index", "Harmonic spectrum", "LC filter"],
+  "scripts": ["/assets/lesson.js", "/assets/sigexpr.js", "/assets/fs-core.js", "/assets/fs-lab.js"],
+  "faq": [
+    {"q": "SPWM มีฮาร์มอนิกที่ความถี่อะไร?", "a": "แบบไบโพลาร์ฮาร์มอนิกอยู่เป็นกลุ่ม (ไซด์แบนด์) รอบ \\(m_f\\), \\(2m_f\\), \\(3m_f\\) เท่าของความถี่ขาออก เช่น \\(m_f\\) และ \\(m_f \\pm 2\\), \\(2m_f \\pm 1\\) แบบยูนิโพลาร์ (เต็มบริดจ์) กลุ่มแรกที่ \\(m_f\\) หายไป เหลือรอบ \\(2m_f\\) เหมือนความถี่สวิตชิ่งเพิ่มเป็นสองเท่า ฮาร์มอนิกต่ำ (3, 5, 7) ไม่มีถ้า \\(m_a \\le 1\\)"},
+    {"q": "ทำไมเลือก mf เป็นเลขคี่และหารด้วย 3 ลงตัว?", "a": "\\(m_f\\) จำนวนเต็ม (synchronous PWM) ทำให้รูปคลื่นเป็นคาบพอดี ไม่มีอินเตอร์ฮาร์มอนิก \\(m_f\\) คี่ทำให้ได้สมมาตรครึ่งคลื่น ไม่มีฮาร์มอนิกคู่ และในอินเวอร์เตอร์ 3 เฟส \\(m_f\\) ที่หารด้วย 3 ลงตัวทำให้ฮาร์มอนิกที่ \\(m_f\\) ของสามเฟสอยู่ในเฟสเดียวกันจึงหายไปในแรงดันไลน์"},
+    {"q": "แรงดันขาออกของอินเวอร์เตอร์ SPWM คำนวณอย่างไร?", "a": "ในช่วงเชิงเส้น \\(m_a \\le 1\\) ฮาร์มอนิกหลักครึ่งบริดจ์มียอด \\(m_aV_{dc}/2\\) เต็มบริดจ์ \\(m_aV_{dc}\\) และแรงดันไลน์ 3 เฟส RMS \\(0.612\\,m_aV_{dc}\\) เช่น \\(V_{dc}\\) = 540 V, \\(m_a\\) = 0.9 ได้ราว 298 V ไลน์"},
+    {"q": "quasi-square กำจัดฮาร์มอนิกที่ 3 ได้อย่างไร?", "a": "ฮาร์มอนิกที่ n ของ quasi-square มีขนาด \\(\\frac{4V_{dc}}{n\\pi}\\cos n\\alpha\\) เลือก α = 30° ทำให้ cos 90° = 0 ฮาร์มอนิกที่ 3, 9, 15 หายทั้งหมด α = 18° กำจัดที่ 5 ส่วนวิธี SHE ใช้หลายมุมพร้อมกันกำจัดได้หลายฮาร์มอนิก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="fsArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></li><li>อินเวอร์เตอร์ · PWM</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 12.10 · อนุกรมฟูเรียร์ · Inverter &amp; PWM Spectra</p>
+      <h1>สเปกตรัมของอินเวอร์เตอร์: สี่เหลี่ยม quasi-square six-step SHE และ SPWM</h1>
+      <p class="lede">อินเวอร์เตอร์สร้างไซน์จากสวิตช์ที่เปิดปิดได้แค่สองหรือสามระดับ ทุกเทคนิคตั้งแต่คลื่นสี่เหลี่ยมถึง PWM คือการเลือกจังหวะสวิตช์ให้ฮาร์มอนิกหลักได้ขนาดที่ต้องการ แล้วย้ายฮาร์มอนิกที่เหลือไปอยู่ที่ที่กรองง่ายที่สุด อนุกรมฟูเรียร์บอกได้แม่นยำว่าแต่ละวิธีย้ายไปไว้ที่ไหน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#spwm">SPWM</a>
+        <a class="btn btn-ghost btn-sm" href="#square">สี่เหลี่ยม</a>
+        <a class="btn btn-ghost btn-sm" href="#quasi">quasi-square</a>
+        <a class="btn btn-ghost btn-sm" href="#six-step">six-step</a>
+        <a class="btn btn-ghost btn-sm" href="#she">SHE</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สี่เหลี่ยมเต็มบริดจ์: \(V_1 = \frac{4V_{dc}}{\pi}\) ฮาร์มอนิก \(1/n\) · quasi-square: \(\frac{4V_{dc}}{n\pi}\cos n\alpha\) เลือก α ฆ่าฮาร์มอนิกได้</li>
+          <li>six-step 3 เฟส: เหลือ 6k ± 1 · \(V_{LL1} = 0.780V_{dc}\) (RMS)</li>
+          <li>SPWM: \(V_1 = m_a\frac{V_{dc}}{2}\) (ครึ่งบริดจ์) ฮาร์มอนิกย้ายไปรอบ \(m_f\), \(2m_f\) · ยูนิโพลาร์ย้ายไปรอบ \(2m_f\)</li>
+          <li>3 เฟส: \(V_{LL1,rms} = 0.612\,m_aV_{dc}\) · \(m_f\) คี่ หารด้วย 3 ลงตัว</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปวส. · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น spwm, ma, mf, sideband, unipolar, six-step, she, wthd" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="square">
+    <h2 id="square">อินเวอร์เตอร์คลื่นสี่เหลี่ยม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="V1" data-k="square wave inverter full bridge half bridge fundamental 4Vdc/pi 0.9 Vdc อินเวอร์เตอร์คลื่นสี่เหลี่ยม เต็มบริดจ์ ครึ่งบริดจ์"><p class="tf-n"><b><span class="fid">V1</span> Square-wave inverter</b> อินเวอร์เตอร์คลื่นสี่เหลี่ยม</p>
+        \[ \text{เต็มบริดจ์ } (\pm V_{dc}):\; V_n = \frac{4V_{dc}}{n\pi},\; V_{1,rms} = 0.900V_{dc} \qquad \text{ครึ่งบริดจ์ } (\pm V_{dc}/2):\; V_n = \frac{2V_{dc}}{n\pi} \]
+        <p class="tf-x">ใช้ <a href="/learn/fourier-series/waveform-table/#W1">W1</a> ตรง ๆ · ปรับขนาดฮาร์มอนิกหลักไม่ได้นอกจากเปลี่ยน \(V_{dc}\) THD 48 % · โหลดเหนี่ยวนำช่วยกรองกระแส (<a href="/learn/fourier-series/circuit-analysis/#ex-a2">A-2</a>)</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="quasi">
+    <h2 id="quasi">quasi-square: ปรับแรงดันและกำจัดฮาร์มอนิกด้วยมุมเดียว <span class="lv lv-i">กลาง</span></h2>
+    <p>เต็มบริดจ์สร้างระดับศูนย์ได้ด้วย (สวิตช์บนทั้งสองหรือล่างทั้งสองนำพร้อมกัน) ใส่ช่วงศูนย์กว้าง α ที่ขอบทั้งสองของแต่ละครึ่งคาบ ได้รูปเสี้ยวคลื่นสมมาตรที่วิเคราะห์ไว้แล้วใน <a href="/learn/fourier-series/symmetry/#ex-s2">S-2</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="V2" data-k="quasi square notch angle alpha cos n alpha eliminate 3rd 30 degrees 5th 18 degrees voltage control quasi-square มุม alpha กำจัด"><p class="tf-n"><b><span class="fid">V2</span> Quasi-square inverter</b> ปรับด้วยมุม α</p>
+        \[ V_n = \frac{4V_{dc}}{n\pi}\cos n\alpha,\qquad \alpha = \frac{90^\circ}{n} \;\Rightarrow\; V_n = 0 \;\;(\alpha = 30^\circ:\ n = 3 \quad \alpha = 18^\circ:\ n = 5 \quad \alpha = 12.86^\circ:\ n = 7) \]
+        <p class="tf-x">มุมเดียวทำได้สองงานไม่พร้อมกัน: ปรับขนาด \(V_1\) หรือกำจัดฮาร์มอนิกหนึ่งตัว ต้องการมากกว่านั้นใช้ SHE หรือ PWM</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-inv-quasi--><svg viewBox="0 0 660 252" role="img" aria-label="รูปคลื่นสี่เหลี่ยมสามระดับ quasi-square มุม alpha 30 องศาสีส้ม และฮาร์มอนิกหลักสีฟ้า ช่วงศูนย์กว้าง 30 องศาที่ขอบแต่ละด้านทำให้ฮาร์มอนิกที่ 3 หายไป"><defs><marker id="fs-inv-quasi-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><rect class="fill2" x="40" y="26" width="43.3" height="180"/><rect class="fill2" x="256.7" y="26" width="86.7" height="180"/><rect class="fill2" x="516.7" y="26" width="43.3" height="180"/><line class="ax" x1="40" y1="116" x2="570" y2="116" marker-end="url(#fs-inv-quasi-a)"/><text class="lb" x="572" y="120">ωt</text><line class="ax" x1="40" y1="206" x2="40" y2="16" marker-end="url(#fs-inv-quasi-a)"/><path class="w1" d="M40 116L83.3 116L83.3 51.7L256.7 51.7L256.7 116L343.3 116L343.3 180.3L516.7 180.3L516.7 116L560 116"/><path class="w2" d="M40 116L55.6 102.7L66 94.1L73.8 87.8L81.6 81.9L89.4 76.2L97.2 70.8L102.4 67.5L107.6 64.3L112.8 61.4L118 58.7L123.2 56.1L128.4 53.9L133.6 51.9L138.8 50.1L144 48.6L149.2 47.3L154.4 46.4L159.6 45.7L164.8 45.3L170 45.1L175.2 45.3L180.4 45.7L185.6 46.4L190.8 47.3L196 48.6L201.2 50.1L206.4 51.9L211.6 53.9L216.8 56.1L222 58.7L227.2 61.4L232.4 64.3L237.6 67.5L242.8 70.8L250.6 76.2L258.4 81.9L266.2 87.8L274 94.1L284.4 102.7L313 127.1L323.4 135.8L331.2 142.1L339 148.2L346.8 154L354.6 159.4L359.8 162.9L365 166.1L370.2 169.2L375.4 172L380.6 174.6L385.8 177L391 179.2L396.2 181.1L401.4 182.7L406.6 184.1L411.8 185.2L417 186L422.2 186.6L427.4 186.9L432.6 186.9L437.8 186.6L443 186L448.2 185.2L453.4 184.1L458.6 182.7L463.8 181.1L469 179.2L474.2 177L479.4 174.6L484.6 172L489.8 169.2L495 166.1L500.2 162.9L508 157.7L515.8 152.1L523.6 146.2L531.4 140L541.8 131.5L560 116"/><line class="gr" x1="40" y1="51.7" x2="560" y2="51.7"/><text class="lba" x="61.7" y="40" text-anchor="middle">α</text><text class="lba" x="300" y="40" text-anchor="middle">2α</text><text class="tk" x="83.3" y="220" text-anchor="middle">30°</text><text class="tk" x="256.7" y="220" text-anchor="middle">150°</text><text class="tk" x="343.3" y="220" text-anchor="middle">210°</text><text class="tk" x="516.7" y="220" text-anchor="middle">330°</text><text class="tk" x="568" y="55.7">V_dc</text><text class="lb" x="40" y="246">A₁ = (4V_dc/π)cos 30° = 1.10V_dc · A₃ = (4V_dc/3π)cos 90° = 0</text></svg><!--/FIG-->
+      <figcaption>quasi-square α = 30° (สีส้ม) และฮาร์มอนิกหลักของมัน (สีฟ้า) ช่วงศูนย์กว้าง 30° ที่ขอบแต่ละด้าน ทำให้ฮาร์มอนิกที่ 3 หายไปพอดี</figcaption>
+    </figure>
+    <div class="wx" id="ex-v1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-1 · อินเวอร์เตอร์สำรองไฟแบบ modified sine</span><h3>เต็มบริดจ์ \(V_{dc}\) = 311 V ใช้ quasi-square α = 30° หาแรงดันฮาร์มอนิกหลัก (ยอดและ RMS) ฮาร์มอนิกที่ 5, 7 และค่า RMS รวม</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#V2">V2</a>: \(V_1 = \frac{4(311)}{\pi}\cos 30^\circ = 342.9\) V ยอด = 242.5 V RMS</p></li>
+        <li><p>\(V_5 = \frac{4(311)}{5\pi}|\cos 150^\circ| = 68.6\) V · \(V_7 = 49.0\) V (ยอด) · \(V_3 = 0\)</p></li>
+        <li><p>RMS รวม <a class="tag tf" href="/learn/fourier-series/waveform-table/#W9">W9</a>: \(311\sqrt{1 - 1/3} = 253.9\) V</p></li>
+      </ol>
+      <p class="answer">ได้ราว 242 V RMS ที่ 50 Hz (ใกล้ไฟบ้าน) ไม่มีฮาร์มอนิกที่ 3 THD 31 % · ขาย UPS แบบนี้ในชื่อ “modified sine wave” อุปกรณ์ที่มีตัวเก็บประจุด้านเข้าหรือมอเตอร์บางชนิดทำงานได้แต่ร้อนกว่า</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="six-step">
+    <h2 id="six-step">อินเวอร์เตอร์ 3 เฟส six-step <span class="lv lv-i">กลาง</span></h2>
+    <p>สามขา (leg) แต่ละขาเป็นสี่เหลี่ยม ±V<sub>dc</sub>/2 เลื่อนกัน 120° แรงดันไลน์คือผลต่างของสองขา ได้ quasi-square α = 30° โดยอัตโนมัติ ฮาร์มอนิกที่ 3 ของแต่ละขาอยู่ในเฟสเดียวกัน (ลำดับศูนย์ <a href="/learn/fourier-series/power-harmonics/#H10">H10</a>) จึงหักล้างกันในแรงดันไลน์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="V3" data-k="six step three phase inverter line voltage phase voltage 0.78 Vdc 0.45 Vdc 6k±1 no triplen six-step 3 เฟส แรงดันไลน์"><p class="tf-n"><b><span class="fid">V3</span> Six-step inverter</b> อินเวอร์เตอร์ six-step</p>
+        \[ V_{LL1,rms} = \frac{\sqrt6}{\pi}V_{dc} = 0.780V_{dc},\qquad V_{ph1,rms} = \frac{\sqrt2}{\pi}V_{dc} = 0.450V_{dc},\qquad V_h = \frac{V_1}{h},\; h = 6k \pm 1 \]
+        <p class="tf-x">รูปคลื่นแรงดันเฟส <a href="/learn/fourier-series/waveform-table/#W10">W10</a> แรงดันไลน์ <a href="/learn/fourier-series/waveform-table/#W11">W11</a> · ให้แรงดันสูงสุดที่ \(V_{dc}\) ทำได้ (สูงกว่า SPWM เชิงเส้น 27 %) ไดรฟ์ใช้ในย่านความเร็วสูงสุด</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="she">
+    <h2 id="she">Selective Harmonic Elimination (SHE) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ขยายแนวคิดของ quasi-square: ใส่ช่วงศูนย์หลายช่วงในหนึ่งในสี่คาบ ได้มุมสวิตช์ k มุม จึงตั้งสมการได้ k สมการ ใช้หนึ่งสมการกำหนดขนาด \(V_1\) ที่เหลือบังคับให้ฮาร์มอนิกที่ไม่ต้องการเป็นศูนย์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="V4" data-k="selective harmonic elimination she switching angles nonlinear equations modulation index three level อินเวอร์เตอร์ กำจัดฮาร์มอนิกแบบเลือก มุมสวิตช์"><p class="tf-n"><b><span class="fid">V4</span> SHE equations (3-level, quarter-wave)</b> สมการ SHE</p>
+        \[ V_n = \frac{4V_{dc}}{n\pi}\sum_{k=1}^{K}(-1)^{k+1}\cos n\alpha_k,\qquad 0 \lt \alpha_1 \lt \alpha_2 \lt \cdots \lt \alpha_K \lt 90^\circ \]
+        <p class="tf-x">ไม่เชิงเส้น ต้องแก้เชิงตัวเลข (นิวตัน) แล้วเก็บเป็นตารางมุมในไมโครคอนโทรลเลอร์ ใช้ในอินเวอร์เตอร์กำลังสูงที่ความถี่สวิตช์ต่ำ</p></div>
+    </div>
+    <div class="wx" id="ex-v2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-2 · กำจัด 5 และ 7 พร้อมกัน</span><h3>ใช้สามมุม ต้องการ \(V_1 = 0.8 \times \frac{4V_{dc}}{\pi}\) และ \(V_5 = V_7 = 0\) หามุมและฮาร์มอนิกที่เหลือ</h3></div>
+      <ol class="steps">
+        <li><p>สมการ: \(\cos\alpha_1 - \cos\alpha_2 + \cos\alpha_3 = 0.8\) · \(\cos 5\alpha_1 - \cos 5\alpha_2 + \cos 5\alpha_3 = 0\) · \(\cos 7\alpha_1 - \cos 7\alpha_2 + \cos 7\alpha_3 = 0\)</p></li>
+        <li><p>แก้ด้วยวิธีนิวตัน: \(\alpha_1 = 23.63^\circ\), \(\alpha_2 = 38.06^\circ\), \(\alpha_3 = 47.84^\circ\)</p></li>
+        <li><p>แทนกลับ (% ของ \(V_1\)): \(V_3\) 2.8 % · \(V_5 = V_7 = 0\) · \(V_9\) 20.3 % · \(V_{11}\) 18.9 % · \(V_{13}\) 11.2 %</p></li>
+      </ol>
+      <p class="answer">สามมุมฆ่า 5 และ 7 ได้จริง ในระบบ 3 เฟสแรงดันไลน์ตัด 3 และ 9 ทิ้งเอง ฮาร์มอนิกแรกที่เหลือคือ 11 และ 13 ซึ่งกรองง่ายกว่ามาก ตรวจด้วยแล็บโหมด “พิมพ์สมการเอง” ได้</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="spwm">
+    <h2 id="spwm">Sinusoidal PWM: ย้ายฮาร์มอนิกไปความถี่สวิตชิ่ง <span class="lv lv-i">กลาง</span></h2>
+    <p>เทียบสัญญาณอ้างอิงไซน์ (ความถี่ขาออก \(f_1\)) กับคลื่นพาหะสามเหลี่ยม (ความถี่ \(f_s\)) สวิตช์บนเปิดเมื่ออ้างอิงสูงกว่าพาหะ ค่าเฉลี่ยเฉพาะที่ของพัลส์ (local average) ติดตามไซน์ ฮาร์มอนิกหลักจึงแปรตรงกับขนาดของอ้างอิง ส่วนฮาร์มอนิกที่เหลือเป็นไซด์แบนด์รอบความถี่พาหะ (การคูณสัญญาณ <a href="/learn/fourier-series/complex-spectrum/#C12">C12</a>)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="V5" data-k="spwm modulation index ma frequency ratio mf fundamental ma Vdc/2 linear range half bridge full bridge ดัชนีมอดูเลชัน อัตราส่วนความถี่"><p class="tf-n"><b><span class="fid">V5</span> SPWM fundamentals</b> นิยามและฮาร์มอนิกหลัก</p>
+        \[ m_a = \frac{\hat v_{ref}}{\hat v_{tri}},\qquad m_f = \frac{f_s}{f_1},\qquad \hat V_1 = m_a\frac{V_{dc}}{2}\;(\text{ครึ่งบริดจ์}),\qquad \hat V_1 = m_aV_{dc}\;(\text{เต็มบริดจ์}),\qquad m_a \le 1 \]</div>
+      <div class="tf wide" id="V6" data-k="spwm harmonic sidebands bipolar unipolar mf 2mf location j mf ± k table ไซด์แบนด์ ไบโพลาร์ ยูนิโพลาร์ ตำแหน่งฮาร์มอนิก"><p class="tf-n"><b><span class="fid">V6</span> Where the PWM harmonics are</b> ตำแหน่งไซด์แบนด์</p>
+        \[ h = j\,m_f \pm k:\quad \text{ไบโพลาร์: } j \text{ คี่} \to k \text{ คู่ (0, 2, 4)},\; j \text{ คู่} \to k \text{ คี่ (1, 3)} \qquad \text{ยูนิโพลาร์: กลุ่ม } j \text{ คี่หายหมด เหลือ } 2m_f \pm 1, 2m_f \pm 3, \dots \]
+        <p class="tf-x">ฮาร์มอนิกต่ำกว่า \(m_f - 4\) แทบไม่มีเมื่อ \(m_a \le 1\) ตัวกรองจึงออกแบบที่ \(f_s\) (หรือ \(2f_s\) สำหรับยูนิโพลาร์) ไม่ใช่ที่ 150 Hz</p></div>
+    </div>
+    <figure class="fsfig"><!--FIG:fs-inv-spwm--><svg viewBox="0 0 660 360" role="img" aria-label="บน: สัญญาณอ้างอิงไซน์สีส้ม ma 0.8 เทียบพาหะสามเหลี่ยม mf 15 ได้พัลส์ไบโพลาร์สีฟ้า ล่าง: สเปกตรัมของแรงดันขาออก ฮาร์มอนิกหลัก 0.8 แล้วว่างไปจนถึงกลุ่มไซด์แบนด์รอบ 15 และ 30 และ 45"><defs><marker id="fs-inv-spwm-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker></defs><line class="ax" x1="40" y1="75" x2="600" y2="75"/><path class="w0" d="M40 75L49.3 27.2L68 122.8L77.3 75L86.7 27.2L105.3 122.8L114.7 75L124 27.2L142.7 122.8L152 75L161.3 27.2L180 122.8L189.3 75L198.7 27.2L217.3 122.8L226.7 75L236 27.2L254.7 122.8L264 75L273.3 27.2L292 122.8L301.3 75L310.7 27.2L329.3 122.8L338.7 75L348 27.2L366.7 122.8L376 75L385.3 27.2L404 122.8L413.3 75L422.7 27.2L441.3 122.8L450.7 75L460 27.2L478.7 122.8L488 75L497.3 27.2L516 122.8L525.3 75L534.7 27.2L553.3 122.8L562.7 75L572 27.2L590.7 122.8L600 75"/><path class="w1" d="M40 75L41.1 74.5L42.2 74.1L43.3 73.6L44.4 73.1L45.5 72.7L46.6 72.2L47.7 71.7L48.8 71.2L49.8 70.8L50.9 70.3L52 69.9L53.1 69.4L54.2 68.9L55.3 68.5L56.4 68L57.5 67.5L58.6 67.1L59.7 66.6L60.8 66.2L61.9 65.7L63 65.2L64.1 64.8L65.2 64.3L66.2 63.9L67.3 63.4L68.4 63L69.5 62.6L70.6 62.1L71.7 61.7L72.8 61.2L73.9 60.8L75 60.4L76.1 59.9L77.2 59.5L78.3 59.1L79.4 58.6L80.5 58.2L81.6 57.8L82.7 57.4L83.8 57L84.8 56.6L85.9 56.1L87 55.7L88.1 55.3L89.2 54.9L90.3 54.5L91.4 54.1L92.5 53.7L93.6 53.4L94.7 53L95.8 52.6L96.9 52.2L98 51.8L99.1 51.5L100.2 51.1L101.2 50.7L102.3 50.4L103.4 50L104.5 49.7L105.6 49.3L106.7 49L107.8 48.6L108.9 48.3L110 47.9L111.1 47.6L112.2 47.3L113.3 47L114.4 46.7L115.5 46.3L116.6 46L117.7 45.7L118.8 45.4L119.8 45.1L120.9 44.8L122 44.6L123.1 44.3L124.2 44L125.3 43.7L126.4 43.5L127.5 43.2L128.6 42.9L129.7 42.7L130.8 42.4L131.9 42.2L133 41.9L134.1 41.7L135.2 41.5L136.2 41.3L137.3 41L138.4 40.8L139.5 40.6L140.6 40.4L141.7 40.2L142.8 40L143.9 39.8L145 39.7L146.1 39.5L147.2 39.3L148.3 39.1L149.4 39L150.5 38.8L151.6 38.7L152.7 38.5L153.8 38.4L154.8 38.3L155.9 38.1L157 38L158.1 37.9L159.2 37.8L160.3 37.7L161.4 37.6L162.5 37.5L163.6 37.4L164.7 37.3L165.8 37.2L166.9 37.2L168 37.1L169.1 37L170.2 37L171.2 36.9L172.3 36.9L173.4 36.8L174.5 36.8L175.6 36.8L176.7 36.8L177.8 36.8L178.9 36.7L180 36.7L181.1 36.7L182.2 36.8L183.3 36.8L184.4 36.8L185.5 36.8L186.6 36.8L187.7 36.9L188.8 36.9L189.8 37L190.9 37L192 37.1L193.1 37.2L194.2 37.2L195.3 37.3L196.4 37.4L197.5 37.5L198.6 37.6L199.7 37.7L200.8 37.8L201.9 37.9L203 38L204.1 38.1L205.2 38.3L206.2 38.4L207.3 38.5L208.4 38.7L209.5 38.8L210.6 39L211.7 39.1L212.8 39.3L213.9 39.5L215 39.7L216.1 39.8L217.2 40L218.3 40.2L219.4 40.4L220.5 40.6L221.6 40.8L222.7 41L223.8 41.3L224.8 41.5L225.9 41.7L227 41.9L228.1 42.2L229.2 42.4L230.3 42.7L231.4 42.9L232.5 43.2L233.6 43.5L234.7 43.7L235.8 44L236.9 44.3L238 44.6L239.1 44.8L240.2 45.1L241.2 45.4L242.3 45.7L243.4 46L244.5 46.3L245.6 46.7L246.7 47L247.8 47.3L248.9 47.6L250 47.9L251.1 48.3L252.2 48.6L253.3 49L254.4 49.3L255.5 49.7L256.6 50L257.7 50.4L258.8 50.7L259.8 51.1L260.9 51.5L262 51.8L263.1 52.2L264.2 52.6L265.3 53L266.4 53.4L267.5 53.7L268.6 54.1L269.7 54.5L270.8 54.9L271.9 55.3L273 55.7L274.1 56.1L275.2 56.6L276.2 57L277.3 57.4L278.4 57.8L279.5 58.2L280.6 58.6L281.7 59.1L282.8 59.5L283.9 59.9L285 60.4L286.1 60.8L287.2 61.2L288.3 61.7L289.4 62.1L290.5 62.6L291.6 63L292.7 63.4L293.8 63.9L294.8 64.3L295.9 64.8L297 65.2L298.1 65.7L299.2 66.2L300.3 66.6L301.4 67.1L302.5 67.5L303.6 68L304.7 68.5L305.8 68.9L306.9 69.4L308 69.9L309.1 70.3L310.2 70.8L311.2 71.2L312.3 71.7L313.4 72.2L314.5 72.7L315.6 73.1L316.7 73.6L317.8 74.1L318.9 74.5L320 75L321.1 75.5L322.2 75.9L323.3 76.4L324.4 76.9L325.5 77.3L326.6 77.8L327.7 78.3L328.8 78.8L329.8 79.2L330.9 79.7L332 80.1L333.1 80.6L334.2 81.1L335.3 81.5L336.4 82L337.5 82.5L338.6 82.9L339.7 83.4L340.8 83.8L341.9 84.3L343 84.8L344.1 85.2L345.2 85.7L346.2 86.1L347.3 86.6L348.4 87L349.5 87.4L350.6 87.9L351.7 88.3L352.8 88.8L353.9 89.2L355 89.6L356.1 90.1L357.2 90.5L358.3 90.9L359.4 91.4L360.5 91.8L361.6 92.2L362.7 92.6L363.8 93L364.8 93.4L365.9 93.9L367 94.3L368.1 94.7L369.2 95.1L370.3 95.5L371.4 95.9L372.5 96.3L373.6 96.6L374.7 97L375.8 97.4L376.9 97.8L378 98.2L379.1 98.5L380.2 98.9L381.2 99.3L382.3 99.6L383.4 100L384.5 100.3L385.6 100.7L386.7 101L387.8 101.4L388.9 101.7L390 102.1L391.1 102.4L392.2 102.7L393.3 103L394.4 103.3L395.5 103.7L396.6 104L397.7 104.3L398.8 104.6L399.8 104.9L400.9 105.2L402 105.4L403.1 105.7L404.2 106L405.3 106.3L406.4 106.5L407.5 106.8L408.6 107.1L409.7 107.3L410.8 107.6L411.9 107.8L413 108.1L414.1 108.3L415.2 108.5L416.2 108.7L417.3 109L418.4 109.2L419.5 109.4L420.6 109.6L421.7 109.8L422.8 110L423.9 110.2L425 110.3L426.1 110.5L427.2 110.7L428.3 110.9L429.4 111L430.5 111.2L431.6 111.3L432.7 111.5L433.8 111.6L434.8 111.7L435.9 111.9L437 112L438.1 112.1L439.2 112.2L440.3 112.3L441.4 112.4L442.5 112.5L443.6 112.6L444.7 112.7L445.8 112.8L446.9 112.8L448 112.9L449.1 113L450.2 113L451.2 113.1L452.3 113.1L453.4 113.2L454.5 113.2L455.6 113.2L456.7 113.2L457.8 113.2L458.9 113.3L460 113.3L461.1 113.3L462.2 113.2L463.3 113.2L464.4 113.2L465.5 113.2L466.6 113.2L467.7 113.1L468.8 113.1L469.8 113L470.9 113L472 112.9L473.1 112.8L474.2 112.8L475.3 112.7L476.4 112.6L477.5 112.5L478.6 112.4L479.7 112.3L480.8 112.2L481.9 112.1L483 112L484.1 111.9L485.2 111.7L486.2 111.6L487.3 111.5L488.4 111.3L489.5 111.2L490.6 111L491.7 110.9L492.8 110.7L493.9 110.5L495 110.3L496.1 110.2L497.2 110L498.3 109.8L499.4 109.6L500.5 109.4L501.6 109.2L502.7 109L503.8 108.7L504.8 108.5L505.9 108.3L507 108.1L508.1 107.8L509.2 107.6L510.3 107.3L511.4 107.1L512.5 106.8L513.6 106.5L514.7 106.3L515.8 106L516.9 105.7L518 105.4L519.1 105.2L520.2 104.9L521.2 104.6L522.3 104.3L523.4 104L524.5 103.7L525.6 103.3L526.7 103L527.8 102.7L528.9 102.4L530 102.1L531.1 101.7L532.2 101.4L533.3 101L534.4 100.7L535.5 100.3L536.6 100L537.7 99.6L538.8 99.3L539.8 98.9L540.9 98.5L542 98.2L543.1 97.8L544.2 97.4L545.3 97L546.4 96.6L547.5 96.3L548.6 95.9L549.7 95.5L550.8 95.1L551.9 94.7L553 94.3L554.1 93.9L555.2 93.4L556.2 93L557.3 92.6L558.4 92.2L559.5 91.8L560.6 91.4L561.7 90.9L562.8 90.5L563.9 90.1L565 89.6L566.1 89.2L567.2 88.8L568.3 88.3L569.4 87.9L570.5 87.4L571.6 87L572.7 86.6L573.8 86.1L574.8 85.7L575.9 85.2L577 84.8L578.1 84.3L579.2 83.8L580.3 83.4L581.4 82.9L582.5 82.5L583.6 82L584.7 81.5L585.8 81.1L586.9 80.6L588 80.1L589.1 79.7L590.2 79.2L591.2 78.8L592.3 78.3L593.4 77.8L594.5 77.3L595.6 76.9L596.7 76.4L597.8 75.9L598.9 75.5"/><line class="ax" x1="40" y1="165" x2="600" y2="165"/><path class="w2" d="M40 185.8L57.2 185.8L57.2 144.2L80.6 144.2L80.6 185.8L91.9 185.8L91.9 144.2L120.5 144.2L120.5 185.8L127.2 185.8L127.2 144.2L159.3 144.2L159.3 185.8L163.3 185.8L163.3 144.2L196.7 144.2L196.7 185.8L200.7 185.8L200.7 144.2L232.9 144.2L232.9 185.8L239.5 185.8L239.5 144.2L268.1 144.2L268.1 185.8L279.4 185.8L279.4 144.2L302.8 144.2L302.8 185.8L320 185.8L320 144.2L337.2 144.2L337.2 185.8L360.6 185.8L360.6 144.2L371.9 144.2L371.9 185.8L400.5 185.8L400.5 144.2L407.2 144.2L407.2 185.8L439.3 185.8L439.3 144.2L443.3 144.2L443.3 185.8L476.7 185.8L476.7 144.2L480.7 144.2L480.7 185.8L512.9 185.8L512.9 144.2L519.5 144.2L519.5 185.8L548.1 185.8L548.1 144.2L559.4 144.2L559.4 185.8L582.8 185.8L582.8 144.2L600 144.2"/><text class="tk" x="606" y="64">vᵣ, v_tri</text><text class="tk" x="606" y="170">vₐₒ</text><line class="gr" x1="40" y1="322" x2="600" y2="322"/><text class="tk" x="34" y="326" text-anchor="end">0</text><line class="gr" x1="40" y1="277.6" x2="600" y2="277.6"/><text class="tk" x="34" y="281.6" text-anchor="end">0.4</text><line class="gr" x1="40" y1="233.1" x2="600" y2="233.1"/><text class="tk" x="34" y="237.1" text-anchor="end">0.8</text><line class="ax" x1="40" y1="322" x2="600" y2="322"/><rect class="bar" x="48" y="233.1" width="6" height="88.9"/><rect class="bar" x="157.8" y="321.2" width="6" height="0.8"/><rect class="bar" x="179.7" y="297.6" width="6" height="24.4"/><rect class="bar" x="201.7" y="231.1" width="6" height="90.9"/><rect class="bar" x="223.7" y="297.6" width="6" height="24.4"/><rect class="bar" x="245.6" y="321.1" width="6" height="0.9"/><rect class="bar" x="311.5" y="320.6" width="6" height="1.4"/><rect class="bar" x="333.5" y="306.5" width="6" height="15.5"/><rect class="bar" x="355.4" y="287.1" width="6" height="34.9"/><rect class="bar" x="377.4" y="287.1" width="6" height="34.9"/><rect class="bar" x="399.4" y="306.5" width="6" height="15.5"/><rect class="bar" x="421.3" y="320.6" width="6" height="1.4"/><rect class="bar" x="465.2" y="320.2" width="6" height="1.8"/><rect class="bar" x="487.2" y="310.4" width="6" height="11.6"/><rect class="bar" x="509.2" y="302.4" width="6" height="19.6"/><rect class="bar" x="531.1" y="303.1" width="6" height="18.9"/><rect class="bar" x="553.1" y="302.4" width="6" height="19.6"/><rect class="bar" x="575" y="310.4" width="6" height="11.6"/><text class="tk" x="51" y="338" text-anchor="middle">1</text><text class="tk" x="204.7" y="338" text-anchor="middle">m_f</text><text class="tk" x="369.4" y="338" text-anchor="middle">2m_f</text><text class="tk" x="534.1" y="338" text-anchor="middle">3m_f</text><text class="tk" x="59" y="237.1">0.80</text><text class="tk" x="212.7" y="235.1">0.82</text><text class="tk" x="606" y="338">h</text><text class="th" x="40" y="214">สเปกตรัม (หน่วย V_dc/2)</text></svg><!--/FIG-->
+      <figcaption>บน: สัญญาณอ้างอิงไซน์ (สีส้ม) เทียบพาหะสามเหลี่ยม \(m_f\) = 15 ได้พัลส์ไบโพลาร์ (สีฟ้า) · ล่าง: สเปกตรัม ฮาร์มอนิกหลัก \(m_a\) = 0.8 แล้วว่างไปจนถึงกลุ่มรอบ \(m_f\) และ \(2m_f\)</figcaption>
+    </figure>
+    <div class="table-wrap"><table class="exact">
+      <caption>ขนาดฮาร์มอนิกของ SPWM ไบโพลาร์ (ค่ายอดหารด้วย \(V_{dc}/2\)) คำนวณแบบปิดในแล็บที่ \(m_f\) = 51 · ยูนิโพลาร์ใช้คอลัมน์ \(2m_f \pm 1\), \(2m_f \pm 3\) เดียวกันแต่หารด้วย \(V_{dc}\) และไม่มีกลุ่ม \(m_f\), \(3m_f\)</caption>
+      <thead><tr><th>\(m_a\)</th><th>1</th><th>\(m_f\)</th><th>\(m_f \pm 2\)</th><th>\(m_f \pm 4\)</th><th>\(2m_f \pm 1\)</th><th>\(2m_f \pm 3\)</th><th>\(3m_f\)</th><th>\(3m_f \pm 2\)</th><th>\(3m_f \pm 4\)</th></tr></thead>
+      <tbody>
+        <tr><td>0.2</td><td>0.200</td><td>1.242</td><td>0.016</td><td>0.000</td><td>0.190</td><td>0.003</td><td>0.335</td><td>0.044</td><td>0.001</td></tr>
+        <tr><td>0.4</td><td>0.400</td><td>1.151</td><td>0.061</td><td>0.001</td><td>0.326</td><td>0.024</td><td>0.123</td><td>0.139</td><td>0.012</td></tr>
+        <tr><td>0.6</td><td>0.600</td><td>1.006</td><td>0.131</td><td>0.003</td><td>0.370</td><td>0.071</td><td>0.083</td><td>0.203</td><td>0.047</td></tr>
+        <tr><td>0.8</td><td>0.800</td><td>0.818</td><td>0.220</td><td>0.008</td><td>0.314</td><td>0.139</td><td>0.171</td><td>0.176</td><td>0.104</td></tr>
+        <tr><td>1.0</td><td>1.000</td><td>0.601</td><td>0.318</td><td>0.018</td><td>0.181</td><td>0.212</td><td>0.113</td><td>0.062</td><td>0.157</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tf-grid">
+      <div class="tf" id="V7" data-k="choose mf odd integer multiple of 3 synchronous pwm three phase triplen cancel เลือก mf คี่ หารด้วย 3"><p class="tf-n"><b><span class="fid">V7</span> Choosing m<sub>f</sub></b> เลือก m<sub>f</sub></p>
+        \[ m_f \in \mathbb Z,\quad m_f \text{ คี่},\quad m_f = 3k \;(\text{3 เฟส}) \]
+        <p class="tf-x">จำนวนเต็ม: เป็นคาบพอดี ไม่มีอินเตอร์ฮาร์มอนิก · คี่: สมมาตรครึ่งคลื่น ไม่มีคู่ · 3k: กลุ่มที่ \(m_f\) ของสามเฟสเป็นลำดับศูนย์ หายจากแรงดันไลน์ (เหลือ \(m_f \pm 2\)) · เมื่อ \(m_f\) > 21 ข้อเหล่านี้สำคัญน้อยลง</p></div>
+      <div class="tf" id="V8" data-k="overmodulation ma > 1 low order harmonics 3 5 7 square wave limit 4/pi โอเวอร์มอดูเลชัน"><p class="tf-n"><b><span class="fid">V8</span> Overmodulation</b> โอเวอร์มอดูเลชัน \(m_a \gt 1\)</p>
+        \[ m_a\frac{V_{dc}}{2} \lt \hat V_1 \le \frac{4}{\pi}\cdot\frac{V_{dc}}{2} \]
+        <p class="tf-x">พัลส์บางช่วงหายไป \(V_1\) เพิ่มไม่เป็นเชิงเส้นจนเข้าใกล้คลื่นสี่เหลี่ยม ฮาร์มอนิกต่ำ 3, 5, 7 กลับมา ลองตั้ง \(m_a\) = 1.3 ในแล็บ</p></div>
+      <div class="tf" id="V9" data-k="three phase spwm line voltage 0.612 ma Vdc rms sqrt3/(2 sqrt2) 3 เฟส แรงดันไลน์ SPWM"><p class="tf-n"><b><span class="fid">V9</span> Three-phase SPWM</b> แรงดันไลน์</p>
+        \[ V_{LL1,rms} = \frac{\sqrt3}{2\sqrt2}\,m_aV_{dc} = 0.612\,m_aV_{dc} \]
+        <p class="tf-x">ฉีดฮาร์มอนิกที่ 3 ในอ้างอิง (หรือใช้ SVPWM) เพิ่มได้อีก 15.5 % เพราะฮาร์มอนิกที่ 3 หายในแรงดันไลน์ (<a href="/learn/fourier-series/power-harmonics/#H10">ลำดับศูนย์</a>)</p></div>
+    </div>
+    <div class="wx" id="ex-v3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง V-3 · อินเวอร์เตอร์ 1 เฟส 220 V พร้อมฟิลเตอร์</span><h3>เต็มบริดจ์ยูนิโพลาร์ \(V_{dc}\) = 400 V, \(m_a\) = 0.8, \(f_1\) = 50 Hz, \(m_f\) = 21 (สวิตช์ 1.05 kHz) ฟิลเตอร์ L = 3 mH, C = 20 µF โหลด 20 Ω หาแรงดันขาออกและ THD</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#V5">V5</a>: \(\hat V_1 = 0.8 \times 400 = 320\) V (226 V RMS) · THD ก่อนกรอง 72 %</p></li>
+        <li><p><a class="tag tf" href="#V6">V6</a> ยูนิโพลาร์: ไม่มีกลุ่มที่ 21 · กลุ่มใหญ่ที่ 41, 43 (2050, 2150 Hz) ยอด 125.7 V และ 39, 45 ยอด 55.8 V</p></li>
+        <li><p>ฟิลเตอร์ \(f_0 = \frac{1}{2\pi\sqrt{LC}} = 650\) Hz · <a class="tag tf" href="/learn/fourier-series/circuit-analysis/#A2">A2</a> ที่ 2050 Hz \(|H| = 0.109\) → ฮาร์มอนิกที่ 41 เหลือ 13.7 V</p></li>
+        <li><p>รวมทุกฮาร์มอนิกที่ขาออก: \(V_1\) = 227 V RMS (ฟิลเตอร์ยกขึ้นเล็กน้อย) THD = 6.4 %</p></li>
+      </ol>
+      <p class="answer">ได้ 227 V RMS THD 6.4 % ยังเกิน 5 % ทางเลือก: เพิ่ม \(m_f\) (สวิตช์เร็วขึ้น ฮาร์มอนิกย้ายไกลขึ้น ลดลงตาม \(f^2\)) หรือเพิ่ม LC · เปิดแล็บวงจร “SPWM → ฟิลเตอร์ LC ได้ไซน์” เพื่อลองปรับ</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="V10" data-k="wthd weighted total harmonic distortion current distortion inductive load 1/h WTHD"><p class="tf-n"><b><span class="fid">V10</span> Weighted THD</b> WTHD: ความเพี้ยนของกระแสในโหลดเหนี่ยวนำ</p>
+        \[ \mathrm{WTHD} = \frac{\sqrt{\sum_{h\ge2}(V_h/h)^2}}{V_1} \]
+        <p class="tf-x">กระแสในโหลด L ∝ \(V_h/(hX_1)\) WTHD จึงทำนาย THD ของกระแสมอเตอร์ได้ดีกว่า THD ของแรงดัน ใช้เปรียบเทียบวิธี PWM ต่าง ๆ</p></div>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="motor">
+    <h2 id="motor">ฮาร์มอนิกของอินเวอร์เตอร์กับมอเตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ฮาร์มอนิก</th><th>ลำดับเฟส</th><th>ผลต่อมอเตอร์เหนี่ยวนำ</th></tr></thead>
+      <tbody>
+        <tr><td>5</td><td>ลบ</td><td>สนามหมุนกลับทาง แรงบิดต้าน ความร้อนในโรเตอร์</td></tr>
+        <tr><td>7</td><td>บวก</td><td>สนามหมุนทางเดียวกันที่ 7 เท่า</td></tr>
+        <tr><td>5 กับ 7 รวมกัน</td><td>—</td><td>แรงบิดกระเพื่อมที่ 6f (300 Hz ที่ 50 Hz) เสียงและการสั่น</td></tr>
+        <tr><td>รอบ \(m_f\)</td><td>ผสม</td><td>ความสูญเสียในแกนเหล็ก เสียงหวีดที่ความถี่สวิตชิ่ง</td></tr>
+        <tr><td>ขอบ dv/dt สูง</td><td>—</td><td>แรงดันสะท้อนในสายยาว กระแสแบริ่ง (ดูเอนเวโลปขอบ <a href="/learn/fourier-series/dc-dc-converters/#emi">B9</a>)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ดูสเปกตรัมของ PWM <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือก SPWM แล้วเปลี่ยน \(m_a\) เทียบกับตารางด้านบน สลับยูนิโพลาร์แล้วดูกลุ่มที่ \(m_f\) หายไป ลอง \(m_a\) = 1.3 ดูฮาร์มอนิกต่ำโผล่ หรือเลือก quasi-square แล้วหามุม α ที่ฆ่าฮาร์มอนิกที่ 5</p>
+    <div class="fs-lab" data-tabs="synth,circuit" data-preset="spwm" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <p><button type="button" class="btn btn-ghost btn-sm" data-fs-preset="spwm">SPWM ไบโพลาร์</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="spwm-uni">SPWM ยูนิโพลาร์</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="quasi-30">quasi α = 30°</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="sixstep">six-step</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="spwm-lc">SPWM → ฟิลเตอร์ LC</button> <button type="button" class="btn btn-ghost btn-sm" data-fs-preset="rl-sixstep">six-step → มอเตอร์ RL</button></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
