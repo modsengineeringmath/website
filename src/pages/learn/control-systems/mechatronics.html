@@ -1,0 +1,174 @@
+<!--meta
+{
+  "title": "ระบบควบคุมเมคาทรอนิกส์: มอเตอร์ เซนเซอร์ ไดรเวอร์ และลูปคาสเคด กระแส-ความเร็ว-ตำแหน่ง | อาจารย์มด",
+  "h1": "ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด",
+  "description": "ระบบควบคุมในงานเมคาทรอนิกส์ องค์ประกอบ เซนเซอร์ (เอนโค้ดเดอร์ Hall IMU วัดกระแส) แอคชูเอเตอร์ (มอเตอร์ DC BLDC สเต็ปเปอร์ เซอร์โว) ไดรเวอร์ H-bridge และ PWM ออกแบบลูปคาสเคดกระแส ความเร็ว ตำแหน่งทีละขั้นพร้อมตัวเลขจริง feedforward แรงเสียดทาน backlash เรโซแนนซ์และฟิลเตอร์ notch ความละเอียดเอนโค้ดเดอร์ และไอเดียโปรเจกต์เมคาทรอนิกส์มากมาย",
+  "ogTitle": "เมคาทรอนิกส์: ออกแบบลูปกระแส ความเร็ว ตำแหน่ง ของเซอร์โวจริง",
+  "lesson": "control-systems",
+  "sub": "mechatronics",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Mechatronics", "Servomechanism", "Cascade control", "DC motor", "Brushless DC motor", "Rotary encoder", "H-bridge", "Pulse-width modulation", "Feedforward control", "Notch filter"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js", "/assets/cs-pid.js"],
+  "faq": [
+    {"q": "ทำไมเซอร์โวไดรฟ์ใช้ลูปซ้อนสามชั้น?", "a": "เพราะแต่ละชั้นจัดการปัญหาคนละความเร็ว ลูปกระแสในสุด (kHz) คุมแรงบิดและป้องกันกระแสเกิน ลูปความเร็ว (หลักร้อย Hz) ต้านการรบกวนจากโหลด ลูปตำแหน่งนอกสุด (หลักสิบ Hz) ทำให้ถึงเป้า ลูปในที่เร็วทำให้ลูปนอกเห็นพลานต์ที่ง่ายขึ้น และจำกัดค่าแต่ละชั้นได้อย่างปลอดภัย"},
+    {"q": "แบนด์วิดท์ของแต่ละลูปควรห่างกันเท่าไร?", "a": "กฎทั่วไปคือ 5 ถึง 10 เท่า เช่น ลูปกระแส 1–2 kHz ลูปความเร็ว 100–200 Hz ลูปตำแหน่ง 10–30 Hz ถ้าห่างน้อยกว่านั้น ลูปในจะเพิ่มเฟสล่าช้าให้ลูปนอกจนมาร์จินลดลง"},
+    {"q": "เลือกมอเตอร์สำหรับโปรเจกต์อย่างไร?", "a": "สเต็ปเปอร์เหมาะกับงานตำแหน่งเบา ๆ ไม่ต้องมีเซนเซอร์ (เครื่องพิมพ์ 3 มิติ) แต่หลุดขั้นได้ถ้าโหลดเกิน มอเตอร์ DC มีแปรงถ่านควบคุมง่าย ราคาถูก เหมาะกับหุ่นยนต์ล้อ BLDC/PMSM มีประสิทธิภาพสูงและเร็ว ต้องใช้ไดรเวอร์ FOC เหมาะกับโดรนและแขนกล ส่วนเซอร์โว RC รวมมอเตอร์ เกียร์ และตัวควบคุมตำแหน่งไว้ในตัว"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>เมคาทรอนิกส์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.23 · ระบบควบคุม · Mechatronic Systems Control</p>
+      <h1>ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด</h1>
+      <p class="lede">เมคาทรอนิกส์คือจุดที่กลไก ไฟฟ้า อิเล็กทรอนิกส์ และซอฟต์แวร์มาบรรจบกัน และ<strong>ระบบควบคุมคือกาวที่ยึดทุกอย่างไว้</strong> เครื่อง CNC เครื่องพิมพ์ 3 มิติ กิมบอลกล้อง สายพานลำเลียง แขนกล และหุ่นยนต์ทุกตัว มีหัวใจเดียวกัน: มอเตอร์ที่ถูกคุมด้วยลูปซ้อนกระแส–ความเร็ว–ตำแหน่ง หน้านี้ออกแบบเซอร์โวจริงตั้งแต่เลือกเซนเซอร์จนถึงตั้งเกนทุกลูป ด้วยตัวเลขจากมอเตอร์ใน<a href="/learn/control-systems/modeling/#ex-m2">ตัวอย่าง M-2</a> สูตรใช้รหัส K</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>คาสเคด: กระแส (kHz) ⊂ ความเร็ว (100 Hz) ⊂ ตำแหน่ง (10 Hz) ห่างกัน 5–10 เท่า</li>
+          <li>ลูปกระแส PI: \(K_P = L\omega_{ci},\ K_I = R\omega_{ci}\) (ศูนย์หักล้างขั้วไฟฟ้า)</li>
+          <li>ลูปความเร็ว PI: \(K_P = J\omega_{cs}/K_t\) ศูนย์ที่ \(\omega_{cs}/5\) · ลูปตำแหน่ง P: \(K_P = \omega_{cp}\)</li>
+          <li>Feedforward ความเร็ว/ความเร่ง ลดความผิดพลาดขณะเคลื่อนที่ได้มากกว่าเพิ่มเกน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น cascade, current loop, speed loop, encoder, feedforward, notch, PWM" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="components">
+    <h2 id="components">องค์ประกอบ: เซนเซอร์ แอคชูเอเตอร์ ไดรเวอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ส่วน</th><th>ตัวเลือก</th><th>ข้อควรรู้ด้านการควบคุม</th></tr></thead>
+        <tbody>
+          <tr><td>เซนเซอร์ตำแหน่ง</td><td>เอนโค้ดเดอร์ incremental/absolute, โพเทนชิโอมิเตอร์, resolver, Hall</td><td>ความละเอียดจำกัด → ควอนไทซ์ · อนุพันธ์ของตำแหน่งได้ความเร็วที่มีสัญญาณรบกวน</td></tr>
+          <tr><td>เซนเซอร์ความเร็ว/มุม</td><td>แทโคเจเนอเรเตอร์, ไจโร (IMU), คำนวณจากเอนโค้ดเดอร์</td><td>ไจโรมีดริฟต์ ต้องหลอมรวมกับ accelerometer (complementary/Kalman)</td></tr>
+          <tr><td>เซนเซอร์กระแส</td><td>ตัวต้านทาน shunt + แอมป์, Hall-effect</td><td>สุ่มกลางพัลส์ PWM เพื่อเลี่ยงริปเปิล</td></tr>
+          <tr><td>แอคชูเอเตอร์</td><td>DC มีแปรง, BLDC/PMSM, สเต็ปเปอร์, เซอร์โว RC, โซลินอยด์, นิวแมติก</td><td>แบบจำลอง <a href="/learn/control-systems/modeling/#M7">M7</a> · BLDC ใช้ FOC ทำให้เหมือน DC</td></tr>
+          <tr><td>ไดรเวอร์</td><td>H-bridge (MOSFET), อินเวอร์เตอร์สามเฟส</td><td>PWM ≥ 20 kHz (เกินช่วงได้ยิน) · dead-time ทำให้เกิด dead-zone · เกน \(V_{bus}\)</td></tr>
+          <tr><td>ตัวควบคุม</td><td>MCU (STM32, ESP32, Arduino), DSP, FPGA, PLC</td><td>คาบสุ่ม หน่วงคำนวณ ความละเอียด PWM (<a href="/learn/control-systems/digital-control/">ดิจิทัล</a>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="K1" data-k="encoder resolution quadrature counts per revolution speed resolution sampling ความละเอียดเอนโค้ดเดอร์">
+        <p class="tf-n"><b><span class="fid">K1</span> Encoder resolution</b> ความละเอียดเอนโค้ดเดอร์</p>
+        \[ \Delta\theta = \frac{360^\circ}{4N_{PPR}}, \qquad \Delta\omega_{\min} = \frac{2\pi}{4N_{PPR}\,T_s} \ \text{rad/s (วิธีนับพัลส์ต่อคาบ)} \]
+        <p class="tf-x">ตัวคูณ 4 จาก quadrature (นับทุกขอบของ A และ B) · ความเร็วต่ำใช้วิธีจับเวลาระหว่างพัลส์ (T-method) หรือผสม (M/T method)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-k1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-1 · เอนโค้ดเดอร์ 1000 PPR</span><h3>ความละเอียดมุมและความเร็วเป็นเท่าไร ถ้าคำนวณความเร็วทุก 1 ms</h3></div>
+      <ol class="steps">
+        <li><p>\(4 \times 1000 = 4000\) นับต่อรอบ: \(\Delta\theta = 0.09^\circ\) <a class="tag tf" href="#K1">K1</a></p></li>
+        <li><p>1 นับต่อ 1 ms = \(\frac{1}{4000}\) รอบ ต่อ 1 ms = 0.25 รอบ/วินาที = 15 rpm</p></li>
+      </ol>
+      <p class="answer">มุมละเอียด 0.09° แต่ความเร็วละเอียดแค่ 15 rpm ที่ 1 kHz: ที่ความเร็วต่ำค่าจะกระโดด 0, 15, 0, 15 rpm ทำให้ลูปความเร็วสั่น ต้องเพิ่มคาบคำนวณ ใช้ T-method หรือใช้<a href="/learn/control-systems/state-feedback/#observer">ตัวสังเกต</a>ประมาณความเร็ว</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cascade">
+    <h2 id="cascade">ออกแบบลูปคาสเคดทีละชั้น <span class="lv lv-i">กลาง</span></h2>
+    <p>ออกแบบจากในออกนอก แต่ละลูปถือว่าลูปในเร็วพอจนเป็น 1 (ตามหลักแบนด์วิดท์ห่าง 5–10 เท่า) หลักการเดียวกับ<a href="/learn/control-systems/block-diagrams/#cascade">ลูปแทโค</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K2" data-k="current loop pi design cancel electrical pole kp = L wc ki = R wc torque loop ลูปกระแส">
+        <p class="tf-n"><b><span class="fid">K2</span> Current (torque) loop</b> ลูปกระแส</p>
+        \[ \frac{I}{V} \approx \frac{1}{Ls + R}, \qquad C_i(s) = K_{P}\frac{s + R/L}{s}:\ \ K_P = L\,\omega_{ci},\ \ K_I = R\,\omega_{ci} \ \Rightarrow\ \frac{I}{I^*} = \frac{\omega_{ci}}{s + \omega_{ci}} \]
+        <p class="tf-x">ศูนย์ของ PI หักล้างขั้วไฟฟ้า \(-R/L\) วงปิดเป็นอันดับหนึ่งที่แบนด์วิดท์ \(\omega_{ci}\) · แรง EMF ต้านช้ามากเทียบกับลูปนี้ (มองเป็นการรบกวน)</p>
+      </div>
+      <div class="tf wide" id="K3" data-k="speed loop pi design inertia torque constant crossover zero placement velocity loop ลูปความเร็ว">
+        <p class="tf-n"><b><span class="fid">K3</span> Speed loop</b> ลูปความเร็ว</p>
+        \[ \frac{\Omega}{I^*} \approx \frac{K_t}{Js}, \qquad C_\omega(s) = K_P + \frac{K_I}{s}:\ \ K_P = \frac{J\omega_{cs}}{K_t},\ \ K_I = K_P\frac{\omega_{cs}}{5} \]
+        <p class="tf-x">ครอสโอเวอร์ที่ \(\omega_{cs}\) ศูนย์ PI ต่ำกว่า 5 เท่า (PM ≈ 70°) · \(J\) ต้องรวมโหลดที่สะท้อนผ่านเกียร์ (<a href="/learn/control-systems/modeling/#M10">M10</a>) ไม่อย่างนั้นแบนด์วิดท์จริงจะต่ำกว่าที่ออกแบบ</p>
+      </div>
+      <div class="tf wide" id="K4" data-k="position loop proportional gain feedforward velocity acceleration following error ลูปตำแหน่ง feedforward">
+        <p class="tf-n"><b><span class="fid">K4</span> Position loop + feedforward</b> ลูปตำแหน่งและป้อนไปข้างหน้า</p>
+        \[ \omega^* = K_{P\theta}(\theta^* - \theta) + \dot\theta^*, \qquad i^* = C_\omega(\omega^* - \omega) + \frac{J}{K_t}\ddot\theta^*, \qquad K_{P\theta} = \omega_{cp} \]
+        <p class="tf-x">ลูปตำแหน่ง P พอ เพราะพลานต์มีอินทิเกรเตอร์อยู่แล้ว (ชนิด 1) · feedforward ความเร็วและความเร่งจากวิถีที่วางแผนไว้ ทำให้ following error เกือบเป็นศูนย์ขณะเคลื่อนที่ โดยไม่ต้องเพิ่มเกน (ไม่เสียเสถียรภาพ)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-k2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-2 · ตั้งเกนเซอร์โวทั้งสามชั้น</span><h3>มอเตอร์ \(R = 2\ \Omega,\ L = 1\) mH, \(J = 10^{-5}\) kg·m², \(K_t = 0.02\) N·m/A ต้องการแบนด์วิดท์ กระแส 1 kHz ความเร็ว 100 Hz ตำแหน่ง 10 Hz</h3></div>
+      <ol class="steps">
+        <li><p>กระแส <a class="tag tf" href="#K2">K2</a>: \(\omega_{ci} = 2\pi(1000) = 6283\) → \(K_P = 10^{-3}(6283) = 6.28\) V/A, \(K_I = 2(6283) = 12566\) V/(A·s)</p></li>
+        <li><p>ความเร็ว <a class="tag tf" href="#K3">K3</a>: \(\omega_{cs} = 628\) → \(K_P = \dfrac{10^{-5}(628)}{0.02} = 0.314\) A·s/rad, \(K_I = 0.314 \times 628/5 = 39.5\) A/rad</p></li>
+        <li><p>ตำแหน่ง <a class="tag tf" href="#K4">K4</a>: \(K_{P\theta} = 2\pi(10) = 62.8\) (rad/s)/rad</p></li>
+      </ol>
+      <p class="answer">จำลองแบบเต็ม (รวม EMF และไดนามิกทุกลูป): ลูปกระแส PM 90° แบนด์วิดท์ 1.0 kHz · ลูปความเร็ว PM 73° ครอสโอเวอร์ 101 Hz · ลูปตำแหน่ง PM 89° ครอสโอเวอร์ 10.4 Hz ไม่มี overshoot เข้าที่ใน 64 ms</p>
+      <p class="check">python-control ✓ · ในงานจริงจำกัด \(i^*\) ไม่เกินกระแสสูงสุดของมอเตอร์ และจำกัด \(\omega^*\) ด้วย พร้อม anti-windup ทุกชั้น</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="real-world">
+    <h2 id="real-world">ปัญหาจริง: แรงเสียดทาน backlash และเรโซแนนซ์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="K5" data-k="mechanical resonance two mass system notch filter anti resonance compliance เรโซแนนซ์ทางกล ฟิลเตอร์ notch">
+        <p class="tf-n"><b><span class="fid">K5</span> Mechanical resonance and notch filter</b> เรโซแนนซ์ทางกลและฟิลเตอร์ notch</p>
+        \[ \omega_r = \sqrt{k\left(\frac{1}{J_m} + \frac{1}{J_L}\right)}, \qquad N(s) = \frac{s^2 + 2\zeta_z\omega_0s + \omega_0^2}{s^2 + 2\zeta_p\omega_0s + \omega_0^2},\ \ \zeta_z \ll \zeta_p \]
+        <p class="tf-x">เพลาหรือสายพานยืดหยุ่น (\(k\)) ทำให้มอเตอร์กับโหลดเป็นสองมวลที่สั่นใส่กัน ยอดเรโซแนนซ์บน<a href="/learn/control-systems/bode-plot/#second-order">โบด</a>ทำให้ GM หาย · วาง notch ที่ \(\omega_0 = \omega_r\) หรือจำกัดแบนด์วิดท์ลูปความเร็วให้ต่ำกว่า \(\omega_r/3\)</p>
+      </div>
+      <div class="tf wide" id="K6" data-k="friction compensation coulomb viscous stribeck feedforward dither แรงเสียดทาน ชดเชย">
+        <p class="tf-n"><b><span class="fid">K6</span> Friction compensation</b> ชดเชยแรงเสียดทาน</p>
+        \[ T_f = T_c\operatorname{sign}(\omega) + b\,\omega, \qquad i_{ff} = \frac{\hat T_c\operatorname{sign}(\omega^*) + \hat b\,\omega^*}{K_t} \]
+        <p class="tf-x">ใช้ \(\omega^*\) (ค่าสั่ง) แทน \(\omega\) วัด เพื่อไม่ให้สั่นรอบความเร็วศูนย์ · ชดเชยไม่ครบ ปล่อยให้เทอม I จัดการส่วนที่เหลือ</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ลูปความเร็วของมอเตอร์</h2>
+    <p>พลานต์คือมอเตอร์จาก M-2 (\(\frac{49.8}{0.05s + 1}\) rad/s ต่อ V) และแบบมีโหลดเฉื่อยมากขึ้น ลองตั้ง PI แล้วดูการรบกวนจากโหลดครึ่งทาง เปิด “จำกัด |u|” ที่ 12 V เพื่อเห็นข้อจำกัดของแหล่งจ่าย</p>
+    <div class="pid-lab" data-presets='[{"n":"มอเตอร์ M-2 ความเร็ว · PI","plant":"49.8/(0.0498s+1)","kp":0.05,"ki":2,"kd":0,"tend":0.3,"umax":12},{"n":"มอเตอร์ + โหลดเฉื่อย 5 เท่า","plant":"49.8/(0.25s+1)","kp":0.05,"ki":2,"kd":0,"tend":1,"umax":12},{"n":"มอเตอร์ตำแหน่ง · PD","plant":"49.8/(s(0.0498s+1))","kp":1,"ki":0,"kd":0.02,"tend":0.4,"umax":12},{"n":"มอเตอร์ + เพลายืดหยุ่น (ζ=0.05 ที่ 200 rad/s)","plant":"49.8*40000/((0.0498s+1)(s^2+20s+40000))","kp":0.05,"ki":2,"kd":0,"tend":0.3,"umax":12}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="projects">
+    <h2 id="projects">ไอเดียโปรเจกต์เมคาทรอนิกส์ (จากง่ายไปยาก)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>โปรเจกต์</th><th>สิ่งที่ได้เรียน</th><th>หน้าที่เกี่ยวข้อง</th><th>ระดับ</th></tr></thead>
+        <tbody>
+          <tr><td>คุมความเร็วพัดลม/มอเตอร์ DC ด้วยเอนโค้ดเดอร์</td><td>PI, PWM, วัดความเร็ว</td><td><a href="/learn/control-systems/pid/">PID</a></td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td>คุมอุณหภูมิกล่อง/หัวแร้ง/เตาอบรีโฟลว์</td><td>FOPDT, จูน PID, anti-windup</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td>หุ่นยนต์เดินตามเส้น</td><td>PD, เซนเซอร์อาร์เรย์, ความเร็วล้อ</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td><td><span class="lv lv-b">พื้นฐาน</span></td></tr>
+          <tr><td>เซอร์โวตำแหน่งจากมอเตอร์ DC</td><td>คาสเคด, feedforward</td><td>หน้านี้</td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td>Ball-and-beam / ball-on-plate</td><td>ระบบชนิด 2, lead, กล้อง</td><td><a href="/learn/control-systems/compensators/">lead</a></td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td>ลอยแม่เหล็ก (maglev)</td><td>พลานต์ไม่เสถียร, ทำให้เป็นเชิงเส้น, lead</td><td><a href="/learn/control-systems/modeling/#linearize">ทำเป็นเชิงเส้น</a></td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td>กิมบอลกล้องสองแกน</td><td>IMU, sensor fusion, PI อัตราหมุน</td><td><a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td><td><span class="lv lv-i">กลาง</span></td></tr>
+          <tr><td>ลูกตุ้มกลับหัวบนรถ / Furuta pendulum</td><td>ปริภูมิสถานะ, LQR, swing-up</td><td><a href="/learn/control-systems/state-feedback/">LQR</a></td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+          <tr><td>เครื่อง CNC / พล็อตเตอร์ 2 แกน</td><td>วางแผนวิถี, ประสานหลายแกน</td><td><a href="/learn/control-systems/robotics/#trajectory">วิถี</a></td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+          <tr><td>ไดรฟ์ BLDC แบบ FOC</td><td>Clarke–Park, ลูปกระแส dq</td><td><a href="/learn/linear-algebra/ee-applications/">คลาร์ก-พาร์ก</a></td><td><span class="lv lv-a">ขั้นสูง</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>ไอเดียเพิ่มเติมอีกหลายสิบระบบ พร้อมเซนเซอร์และตัวขับ อยู่ใน<a href="/learn/control-systems/examples/">คลังไอเดียระบบควบคุม</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>รวมมอเตอร์หลายตัวเข้าด้วยกันเป็นแขนกลหรือหุ่นยนต์เคลื่อนที่ ต้องเพิ่มจลนศาสตร์และพลศาสตร์หลายข้อต่อ ไปต่อที่<a href="/learn/control-systems/robotics/">โรโบติกส์</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

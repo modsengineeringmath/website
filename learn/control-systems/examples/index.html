@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คลังไอเดียระบบควบคุม 70 ระบบ: จากหัวแร้งถึงโดรน หุ่นยนต์ และอินเวอร์เตอร์โซลาร์ | อาจารย์มด</title>
+<meta name="description" content="รวมตัวอย่างระบบควบคุมป้อนกลับ 70 ระบบ จัดเป็นหมวด ไฟฟ้าและอิเล็กทรอนิกส์ อิเล็กทรอนิกส์กำลังและพลังงาน มอเตอร์และเมคาทรอนิกส์ หุ่นยนต์ ยานยนต์ อากาศยาน กระบวนการและอาคาร ชีวการแพทย์ แต่ละระบบระบุตัวแปรที่ควบคุม เซนเซอร์ ตัวขับ ชนิดตัวควบคุมที่นิยม และบทเรียนที่เกี่ยวข้อง ใช้เป็นไอเดียโปรเจกต์ ตัวอย่างสอน และแบบฝึกวิเคราะห์">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/control-systems/examples/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/control-systems/examples/">
+<meta property="og:title" content="70 ระบบควบคุมรอบตัว: ไอเดียโปรเจกต์และตัวอย่างสอน">
+<meta property="og:description" content="รวมตัวอย่างระบบควบคุมป้อนกลับ 70 ระบบ จัดเป็นหมวด ไฟฟ้าและอิเล็กทรอนิกส์ อิเล็กทรอนิกส์กำลังและพลังงาน มอเตอร์และเมคาทรอนิกส์ หุ่นยนต์ ยานยนต์ อากาศยาน กระบวนการและอาคาร ชีวการแพทย์ แต่ละระบบระบุตัวแปรที่ควบคุม เซนเซอร์ ตัวขับ ชนิดตัวควบคุมที่นิยม และบทเรียนที่เกี่ยวข้อง ใช้เป็นไอเดียโปรเจกต์ ตัวอย่างสอน และแบบฝึกวิเคราะห์">
+<meta property="og:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="70 ระบบควบคุมรอบตัว: ไอเดียโปรเจกต์และตัวอย่างสอน">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="70 ระบบควบคุมรอบตัว: ไอเดียโปรเจกต์และตัวอย่างสอน">
+<meta name="twitter:description" content="รวมตัวอย่างระบบควบคุมป้อนกลับ 70 ระบบ จัดเป็นหมวด ไฟฟ้าและอิเล็กทรอนิกส์ อิเล็กทรอนิกส์กำลังและพลังงาน มอเตอร์และเมคาทรอนิกส์ หุ่นยนต์ ยานยนต์ อากาศยาน กระบวนการและอาคาร ชีวการแพทย์ แต่ละระบบระบุตัวแปรที่ควบคุม เซนเซอร์ ตัวขับ ชนิดตัวควบคุมที่นิยม และบทเรียนที่เกี่ยวข้อง ใช้เป็นไอเดียโปรเจกต์ ตัวอย่างสอน และแบบฝึกวิเคราะห์">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/control-systems/examples/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/control-systems/examples/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=d84cb134">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/examples/#article","headline":"คลังไอเดียระบบควบคุม 70 ระบบ: ตั้งแต่ชักโครกถึงจรวด","description":"รวมตัวอย่างระบบควบคุมป้อนกลับ 70 ระบบ จัดเป็นหมวด ไฟฟ้าและอิเล็กทรอนิกส์ อิเล็กทรอนิกส์กำลังและพลังงาน มอเตอร์และเมคาทรอนิกส์ หุ่นยนต์ ยานยนต์ อากาศยาน กระบวนการและอาคาร ชีวการแพทย์ แต่ละระบบระบุตัวแปรที่ควบคุม เซนเซอร์ ตัวขับ ชนิดตัวควบคุมที่นิยม และบทเรียนที่เกี่ยวข้อง ใช้เป็นไอเดียโปรเจกต์ ตัวอย่างสอน และแบบฝึกวิเคราะห์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/examples/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/examples/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Control system","Feedback control","Mechatronics","Robotics","Power electronics","Process control","Automotive control","Engineering project ideas"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/cover.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"คลังไอเดียระบบควบคุม 60+ ระบบ: ตั้งแต่เทอร์โมสตัทถึงโดรน","item":"https://modsengineeringmath.com/learn/control-systems/examples/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"จะเลือกโปรเจกต์ระบบควบคุมสำหรับนักศึกษาอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เริ่มจากระบบที่มีพลานต์อันดับหนึ่งและวัดง่าย เช่น ความเร็วมอเตอร์ อุณหภูมิ หรือระดับน้ำ ฝึก PI และการจูนให้คล่อง จากนั้นขยับไปยังระบบอันดับสองหรือไม่เสถียรวงเปิด เช่น ball-and-beam ลอยแม่เหล็ก หรือหุ่นยนต์ทรงตัว ซึ่งต้องใช้ lead หรือป้อนกลับสถานะ"}},{"@type":"Question","name":"ทำไมเกือบทุกระบบใช้ PI หรือ PID?","acceptedAnswer":{"@type":"Answer","text":"เพราะ PID ต้องการแบบจำลองน้อย จูนได้จากการทดลอง เข้าใจง่ายสำหรับช่างเทคนิค และพอสำหรับพลานต์อันดับต่ำส่วนใหญ่ ระบบที่ต้องการมากกว่านั้น เช่น หลายตัวแปรผูกกัน ไม่เสถียรวงเปิด หรือมีข้อจำกัดเข้มงวด จึงใช้ป้อนกลับสถานะ LQR หรือ MPC"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/trigonometry/" >ตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/" >อินทิกรัล</a>
+      <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น</a>
+      <a href="/learn/first-order-system/" >ระบบอันดับ 1</a>
+      <a href="/learn/second-order-system/" >ระบบอันดับ 2</a>
+      <a href="/learn/signals/" >สัญญาณ</a>
+      <a href="/learn/function-generator/" >แล็บ FG + สโคป</a>
+      <a class="nav-sub" href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง (แล็บเสมือนจริง)</a>
+      <a class="nav-sub" href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/" aria-current="page">ระบบควบคุม</a>
+      <a class="nav-sub" href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+      <a class="nav-sub" href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a class="nav-sub" href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+      <a class="nav-sub" href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+      <a class="nav-sub" href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+      <a class="nav-sub" href="/learn/control-systems/robotics/">โรโบติกส์</a>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#how">วิธีใช้ตารางนี้</a></li><li><a href="#electronics">ไฟฟ้าและอิเล็กทรอนิกส์ 10 ระบบ</a></li><li><a href="#power">อิเล็กทรอนิกส์กำลังและพลังงาน 10 ระบบ</a></li><li><a href="#motion">มอเตอร์และเมคาทรอนิกส์ 12 ระบบ</a></li><li><a href="#robotics">หุ่นยนต์ 10 ระบบ</a></li><li><a href="#vehicles">ยานยนต์และการขนส่ง 8 ระบบ</a></li><li><a href="#aero">อากาศยานและอวกาศ 5 ระบบ</a></li><li><a href="#process">กระบวนการ อาคาร และเกษตร 8 ระบบ</a></li><li><a href="#life">ชีวการแพทย์และชีวิตประจำวัน 7 ระบบ</a></li><li><a href="#patterns">รูปแบบที่ซ้ำกันข้ามสาขา</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>คลังไอเดีย</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในระบบควบคุม (Control Systems Engineering)"><span class="sn-title mono">Control Systems Engineering</span><div class="sn-list"><a href="/learn/control-systems/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/control-systems/mechatronics/"><span class="sn-n">23</span>เมคาทรอนิกส์</a><a href="/learn/control-systems/robotics/"><span class="sn-n">24</span>โรโบติกส์</a><a href="/learn/control-systems/power-electronics-control/"><span class="sn-n">25</span>สะพานสู่อิเล็กทรอนิกส์กำลัง</a><a href="/learn/control-systems/examples/" aria-current="page"><span class="sn-n">26</span>คลังตัวอย่าง</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 26 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · ภาพรวมและแบบจำลอง</span><div class="sn-list"><a href="/learn/control-systems/introduction/"><span class="sn-n">1</span>ภาพรวมป้อนกลับ</a><a href="/learn/control-systems/modeling/"><span class="sn-n">2</span>แบบจำลอง</a><a href="/learn/control-systems/block-diagrams/"><span class="sn-n">3</span>บล็อกไดอะแกรม</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · สมรรถนะของระบบ</span><div class="sn-list"><a href="/learn/control-systems/time-response/"><span class="sn-n">4</span>ตอบสนองเวลา</a><a href="/learn/control-systems/steady-state-error/"><span class="sn-n">5</span>ความผิดพลาดอยู่ตัว</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · เสถียรภาพ</span><div class="sn-list"><a href="/learn/control-systems/stability/"><span class="sn-n">6</span>เสถียรภาพ</a><a href="/learn/control-systems/routh-hurwitz/"><span class="sn-n">7</span>เราท์–เฮอร์วิตซ์</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · รูทโลคัส</span><div class="sn-list"><a href="/learn/control-systems/root-locus/"><span class="sn-n">8</span>รูทโลคัส</a><a href="/learn/control-systems/root-locus-sketching/"><span class="sn-n">9</span>วาดรูทโลคัส</a><a href="/learn/control-systems/root-locus-design/"><span class="sn-n">10</span>ออกแบบด้วยรูทโลคัส</a></div></div><div class="sn-part"><span class="sn-pt mono">5 · ตอบสนองความถี่</span><div class="sn-list"><a href="/learn/control-systems/frequency-response/"><span class="sn-n">11</span>ตอบสนองความถี่</a><a href="/learn/control-systems/bode-plot/"><span class="sn-n">12</span>โบดไดอะแกรม</a><a href="/learn/control-systems/margins/"><span class="sn-n">13</span>เกนและเฟสมาร์จิน</a><a href="/learn/control-systems/nyquist/"><span class="sn-n">14</span>ไนควิสต์</a></div></div><div class="sn-part"><span class="sn-pt mono">6 · ออกแบบตัวควบคุม</span><div class="sn-list"><a href="/learn/control-systems/compensators/"><span class="sn-n">15</span>Lead · Lag</a><a href="/learn/control-systems/pid/"><span class="sn-n">16</span>P · PI · PD · PID</a><a href="/learn/control-systems/pid-tuning/"><span class="sn-n">17</span>จูน PID</a></div></div><div class="sn-part"><span class="sn-pt mono">7 · ระบบควบคุมสมัยใหม่</span><div class="sn-list"><a href="/learn/control-systems/state-space/"><span class="sn-n">18</span>ปริภูมิสถานะ</a><a href="/learn/control-systems/controllability-observability/"><span class="sn-n">19</span>ควบคุมได้ · สังเกตได้</a><a href="/learn/control-systems/state-feedback/"><span class="sn-n">20</span>ป้อนกลับสถานะ</a></div></div><div class="sn-part"><span class="sn-pt mono">8 · ดิจิทัลและขั้นสูง</span><div class="sn-list"><a href="/learn/control-systems/digital-control/"><span class="sn-n">21</span>ควบคุมดิจิทัล</a><a href="/learn/control-systems/nonlinear-robust/"><span class="sn-n">22</span>ไม่เชิงเส้น · ทนทาน</a></div></div><div class="sn-part"><span class="sn-pt mono">9 · งานประยุกต์</span><div class="sn-list"><a href="/learn/control-systems/mechatronics/"><span class="sn-n">23</span>เมคาทรอนิกส์</a><a href="/learn/control-systems/robotics/"><span class="sn-n">24</span>โรโบติกส์</a><a href="/learn/control-systems/power-electronics-control/"><span class="sn-n">25</span>สะพานสู่อิเล็กทรอนิกส์กำลัง</a><a href="/learn/control-systems/examples/" aria-current="page"><span class="sn-n">26</span>คลังตัวอย่าง</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 11.26 · ระบบควบคุม · Control Systems Examples Gallery</p>
+      <h1>คลังไอเดียระบบควบคุม 70 ระบบ: ตั้งแต่ชักโครกถึงจรวด</h1>
+      <p class="lede">เมื่อเข้าใจลูปป้อนกลับหนึ่งลูป คุณจะเริ่มเห็นมันทุกที่ ตารางนี้รวบรวมระบบควบคุมจริง 70 ระบบ ตั้งแต่วงจรในห้องแล็บไฟฟ้า พาวเวอร์ซัพพลาย มอเตอร์ หุ่นยนต์ ไปจนถึงรถยนต์ เครื่องบิน และร่างกายมนุษย์ ทุกแถวตอบสี่คำถามเดียวกัน: <strong>ควบคุมอะไร วัดด้วยอะไร ขับด้วยอะไร และใช้ตัวควบคุมแบบไหน</strong> พร้อมลิงก์ไปบทเรียนที่เกี่ยวข้อง ใช้เป็นไอเดียโปรเจกต์ ตัวอย่างสอน หรือโจทย์ฝึกวาดบล็อกไดอะแกรมก็ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-12">12 ต.ค. 2569</time></span></div>
+      <div class="cs-gal-search">
+        <label for="galFilter" class="mono">ค้นหาระบบ</label>
+        <input id="galFilter" type="search" placeholder="พิมพ์ เช่น มอเตอร์, IMU, PID, LQR, อุณหภูมิ, โซลาร์" autocomplete="off">
+        <span class="mono" id="galCount" aria-live="polite"></span>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#how">วิธีใช้ตารางนี้</a></li><li><a href="#electronics">ไฟฟ้าและอิเล็กทรอนิกส์ 10 ระบบ</a></li><li><a href="#power">อิเล็กทรอนิกส์กำลังและพลังงาน 10 ระบบ</a></li><li><a href="#motion">มอเตอร์และเมคาทรอนิกส์ 12 ระบบ</a></li><li><a href="#robotics">หุ่นยนต์ 10 ระบบ</a></li><li><a href="#vehicles">ยานยนต์และการขนส่ง 8 ระบบ</a></li><li><a href="#aero">อากาศยานและอวกาศ 5 ระบบ</a></li><li><a href="#process">กระบวนการ อาคาร และเกษตร 8 ระบบ</a></li><li><a href="#life">ชีวการแพทย์และชีวิตประจำวัน 7 ระบบ</a></li><li><a href="#patterns">รูปแบบที่ซ้ำกันข้ามสาขา</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="how">
+    <h2 id="how">วิธีใช้ตารางนี้</h2>
+    <ul>
+      <li><b>ฝึกวาดบล็อกไดอะแกรม:</b> เลือกหนึ่งแถว วาดลูปแบบ<a href="/learn/control-systems/introduction/#anatomy">ลูปมาตรฐาน</a> ระบุ r, e, C, u, G, d, H, y ให้ครบ</li>
+      <li><b>ฝึกสร้างแบบจำลอง:</b> เขียนฟังก์ชันถ่ายโอนของพลานต์อย่างง่าย (<a href="/learn/control-systems/modeling/">แบบจำลอง</a>) แล้วลองปิดวงในแล็บ</li>
+      <li><b>เลือกโปรเจกต์:</b> ระบบที่มีคำว่า PI/PID เหมาะเริ่มต้น · lead, LQR, ไม่เสถียรวงเปิด เหมาะโปรเจกต์ปีสุดท้ายหรือบัณฑิตศึกษา</li>
+      <li><b>สอน:</b> ใช้ระบบใกล้ตัว (แอร์ ครูสคอนโทรล หัวแร้ง) เปิดชั่วโมงแรกของวิชา</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="electronics">
+    <h2 id="electronics">ไฟฟ้าและอิเล็กทรอนิกส์ <span class="mono" style="font-size:.7em;color:var(--ink-3)">10 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>แอมป์ออปแอมป์เกนคงที่</b></td><td>แรงดันเอาต์พุต</td><td>ตัวแบ่งแรงดัน (β)</td><td>ออปแอมป์</td><td>ป้อนกลับลบ เกน 1/β</td><td><a href="/learn/control-systems/modeling/">แบบจำลอง</a> · <a href="/learn/control-systems/bode-plot/">โบด</a></td></tr>
+          <tr><td><b>LDO เรกูเลเตอร์</b></td><td>แรงดันเอาต์พุต</td><td>ตัวแบ่งแรงดัน</td><td>ทรานซิสเตอร์ผ่าน</td><td>แอมป์ผิดพลาด + ชดเชยด้วย ESR</td><td><a href="/learn/control-systems/margins/">มาร์จิน</a> · <a href="/learn/control-systems/bode-plot/">โบด</a></td></tr>
+          <tr><td><b>PLL สังเคราะห์ความถี่</b></td><td>เฟส/ความถี่</td><td>phase detector</td><td>VCO</td><td>ลูปฟิลเตอร์ type 2 (PI)</td><td><a href="/learn/control-systems/steady-state-error/">ความผิดพลาดอยู่ตัว</a> · <a href="/learn/control-systems/bode-plot/">โบด</a></td></tr>
+          <tr><td><b>AGC ในวิทยุ</b></td><td>แอมพลิจูดสัญญาณ</td><td>ตัวตรวจจับแอมพลิจูด</td><td>แอมป์เกนปรับได้</td><td>I + ลอการิทึม</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>เครื่องชาร์จแบต Li-ion CC–CV</b></td><td>กระแส แล้วแรงดัน</td><td>shunt, ตัวแบ่งแรงดัน</td><td>ตัวแปลง DC–DC</td><td>PI สองลูปสลับโหมด</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ตัวขับ LED กระแสคงที่</b></td><td>กระแส LED</td><td>ตัวต้านทานวัดกระแส</td><td>บั๊ก/บูสต์</td><td>Type II, hysteretic</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a></td></tr>
+          <tr><td><b>วงจรออสซิลเลเตอร์ Wien bridge</b></td><td>แอมพลิจูดการแกว่ง</td><td>หลอด/ไดโอดจำกัด</td><td>ออปแอมป์</td><td>ป้อนกลับบวก + เสถียรแอมพลิจูด</td><td><a href="/learn/control-systems/nyquist/">ไนควิสต์</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>หัวแร้งบัดกรีควบคุมอุณหภูมิ</b></td><td>อุณหภูมิปลาย</td><td>เทอร์โมคัปเปิล</td><td>ฮีตเตอร์ PWM</td><td>PID + anti-windup</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td></tr>
+          <tr><td><b>ลำโพง class-D ป้อนกลับ</b></td><td>แรงดันลำโพง</td><td>วัดหลัง LC ฟิลเตอร์</td><td>MOSFET PWM</td><td>ป้อนกลับอันดับสูง</td><td><a href="/learn/control-systems/bode-plot/">โบด</a> · <a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a></td></tr>
+          <tr><td><b>แหล่งจ่ายแรงดันสูงหลอด X-ray</b></td><td>kV เอาต์พุต</td><td>ตัวแบ่งแรงดันสูง</td><td>อินเวอร์เตอร์เรโซแนนซ์</td><td>PI + จำกัดอัตรา</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="power">
+    <h2 id="power">อิเล็กทรอนิกส์กำลังและพลังงาน <span class="mono" style="font-size:.7em;color:var(--ink-3)">10 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>บั๊กคอนเวอร์เตอร์ 12→5 V</b></td><td>แรงดันเอาต์พุต</td><td>ตัวแบ่งแรงดัน</td><td>PWM + MOSFET</td><td>Type III / โหมดกระแส</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a></td></tr>
+          <tr><td><b>บูสต์ PFC หน้าแหล่งจ่าย</b></td><td>กระแสเข้าให้เป็นไซน์ + แรงดันบัส</td><td>เซนเซอร์กระแส, ตัวแบ่ง</td><td>บูสต์ PWM</td><td>ลูปกระแสเร็ว + ลูปแรงดันช้า</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>อินเวอร์เตอร์โซลาร์ต่อกริด</b></td><td>กระแสจ่ายเข้ากริด</td><td>CT, PLL</td><td>อินเวอร์เตอร์ฟูลบริดจ์</td><td>PI ในแกน dq / PR</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td></tr>
+          <tr><td><b>MPPT แผงโซลาร์</b></td><td>กำลังสูงสุด</td><td>V, I ของแผง</td><td>ตัวแปลง DC–DC</td><td>perturb & observe (ค้นหา)</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>UPS ออนไลน์</b></td><td>แรงดันเอาต์พุต AC</td><td>ตัวแบ่ง, CT</td><td>อินเวอร์เตอร์</td><td>repetitive / PR controller</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td></tr>
+          <tr><td><b>ตัวแปลง LLC เรโซแนนซ์</b></td><td>แรงดันเอาต์พุต</td><td>ออปโตคัปเปลอร์</td><td>ความถี่สวิตช์</td><td>Type II ผ่าน optocoupler</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/bode-plot/">โบด</a></td></tr>
+          <tr><td><b>AVR เครื่องกำเนิดไฟฟ้า</b></td><td>แรงดันขั้ว</td><td>PT</td><td>กระแสสนาม (exciter)</td><td>PID + PSS</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/root-locus/">รูทโลคัส</a></td></tr>
+          <tr><td><b>Governor ควบคุมความถี่ 50 Hz</b></td><td>ความถี่ระบบ</td><td>วัดความถี่</td><td>วาล์วไอน้ำ/น้ำ</td><td>droop + I (AGC)</td><td><a href="/learn/control-systems/steady-state-error/">ความผิดพลาดอยู่ตัว</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>กังหันลม pitch control</b></td><td>ความเร็วโรเตอร์ / กำลัง</td><td>เอนโค้ดเดอร์</td><td>มอเตอร์ปรับมุมใบ</td><td>PI gain-scheduled</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>BMS สมดุลเซลล์แบต</b></td><td>แรงดันเซลล์</td><td>ADC หลายช่อง</td><td>สวิตช์ balancing</td><td>on–off + hysteresis</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="motion">
+    <h2 id="motion">มอเตอร์และเมคาทรอนิกส์ <span class="mono" style="font-size:.7em;color:var(--ink-3)">12 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>ไดรฟ์มอเตอร์ DC ความเร็ว</b></td><td>ความเร็วรอบ</td><td>เอนโค้ดเดอร์</td><td>H-bridge</td><td>PI กระแส + PI ความเร็ว</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>เซอร์โว AC/BLDC</b></td><td>ตำแหน่งเพลา</td><td>เอนโค้ดเดอร์สัมบูรณ์</td><td>อินเวอร์เตอร์ FOC</td><td>P–PI–PI คาสเคด + FF</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>เครื่อง CNC / เลเซอร์คัต</b></td><td>ตำแหน่งหลายแกน</td><td>เอนโค้ดเดอร์เชิงเส้น</td><td>เซอร์โว/สเต็ปเปอร์</td><td>คาสเคด + feedforward + วิถี</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a> · <a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>เครื่องพิมพ์ 3 มิติ</b></td><td>ตำแหน่งหัว + อุณหภูมิหัวฉีด</td><td>เทอร์มิสเตอร์, (ไม่มีเซนเซอร์ตำแหน่ง)</td><td>สเต็ปเปอร์, ฮีตเตอร์</td><td>วงเปิดตำแหน่ง + PID อุณหภูมิ</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a> · <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>กิมบอลกล้อง</b></td><td>มุมกล้อง</td><td>IMU</td><td>มอเตอร์ BLDC</td><td>PI อัตราหมุน + P มุม</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a> · <a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td></tr>
+          <tr><td><b>สายพานลำเลียงคุมแรงตึง</b></td><td>แรงตึงสายพาน</td><td>load cell</td><td>มอเตอร์ม้วน</td><td>PI + ชดเชยเส้นผ่านศูนย์กลาง</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>ลอยแม่เหล็ก (maglev)</b></td><td>ระยะลอย</td><td>Hall sensor</td><td>แม่เหล็กไฟฟ้า</td><td>lead (พลานต์ไม่เสถียร)</td><td><a href="/learn/control-systems/compensators/">lead/lag</a> · <a href="/learn/control-systems/modeling/">แบบจำลอง</a></td></tr>
+          <tr><td><b>Ball-and-beam</b></td><td>ตำแหน่งลูกบอล</td><td>IR/กล้อง</td><td>เซอร์โวเอียงคาน</td><td>PD คาสเคด / lead</td><td><a href="/learn/control-systems/compensators/">lead/lag</a> · <a href="/learn/control-systems/root-locus/">รูทโลคัส</a></td></tr>
+          <tr><td><b>หัวอ่านฮาร์ดดิสก์</b></td><td>ตำแหน่งหัวอ่าน</td><td>servo pattern บนจาน</td><td>voice coil</td><td>lead + notch, ดิจิทัลเร็วสูง</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a> · <a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td></tr>
+          <tr><td><b>ออโต้โฟกัสกล้อง</b></td><td>ตำแหน่งเลนส์</td><td>contrast / phase detect</td><td>voice coil / สเต็ปเปอร์</td><td>ค้นหาค่าสูงสุด + PID</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ลิฟต์</b></td><td>ตำแหน่ง ความเร็ว jerk</td><td>เอนโค้ดเดอร์</td><td>มอเตอร์เหนี่ยวนำ + อินเวอร์เตอร์</td><td>วิถี S-curve + PI คาสเคด</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>เครื่องซักผ้าไดรฟ์ตรง</b></td><td>ความเร็วถัง + สมดุล</td><td>Hall, กระแส</td><td>BLDC</td><td>PI + ตรวจโหลดไม่สมดุล</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="robotics">
+    <h2 id="robotics">หุ่นยนต์ <span class="mono" style="font-size:.7em;color:var(--ink-3)">10 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>แขนกลอุตสาหกรรม 6 แกน</b></td><td>มุมข้อต่อ</td><td>เอนโค้ดเดอร์สัมบูรณ์</td><td>เซอร์โว + harmonic drive</td><td>PD + ชดเชยแรงโน้มถ่วง, computed torque</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>หุ่นยนต์ SCARA หยิบวาง</b></td><td>ตำแหน่ง XY</td><td>เอนโค้ดเดอร์</td><td>เซอร์โว</td><td>คาสเคด + จลนศาสตร์ผกผัน</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>หุ่นเดินตามเส้น</b></td><td>ความคลาดจากเส้น</td><td>อาร์เรย์อินฟราเรด</td><td>มอเตอร์ซ้าย–ขวา</td><td>PD</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>หุ่นยนต์ทรงตัวสองล้อ</b></td><td>มุมเอียง ตำแหน่ง</td><td>IMU + เอนโค้ดเดอร์</td><td>มอเตอร์ล้อ</td><td>LQR / PID สองลูป</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a> · <a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>หุ่นยนต์ AGV/AMR ในโกดัง</b></td><td>ตำแหน่ง ทิศทาง</td><td>LiDAR, เอนโค้ดเดอร์, IMU</td><td>มอเตอร์ล้อ</td><td>pure pursuit + ตัวกรองคาลมาน</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a></td></tr>
+          <tr><td><b>โดรนสี่ใบพัด</b></td><td>มุม ความสูง ตำแหน่ง</td><td>IMU, บารอมิเตอร์, GPS</td><td>ESC + BLDC</td><td>PID คาสเคดมุม–อัตรา</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/digital-control/">ดิจิทัล</a></td></tr>
+          <tr><td><b>หุ่นยนต์สี่ขา</b></td><td>ท่าทางลำตัว</td><td>IMU, เซนเซอร์แรงที่เท้า</td><td>มอเตอร์ข้อต่อแรงบิดสูง</td><td>MPC + impedance control</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a> · <a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>มือกลจับของแบบนุ่ม</b></td><td>แรงจับ</td><td>เซนเซอร์แรง/กระแสมอเตอร์</td><td>มอเตอร์นิ้ว</td><td>force / impedance control</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>หุ่นยนต์ผ่าตัด</b></td><td>ตำแหน่งปลายเครื่องมือ</td><td>เอนโค้ดเดอร์, กล้อง</td><td>มอเตอร์ + สายเคเบิล</td><td>PD + ชดเชยสายยืด + teleoperation</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>Exoskeleton ช่วยเดิน</b></td><td>แรงบิดข้อต่อ</td><td>EMG, เอนโค้ดเดอร์</td><td>มอเตอร์ข้อเข่า/สะโพก</td><td>admittance control</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="vehicles">
+    <h2 id="vehicles">ยานยนต์และการขนส่ง <span class="mono" style="font-size:.7em;color:var(--ink-3)">8 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>ครูสคอนโทรล</b></td><td>ความเร็วรถ</td><td>เซนเซอร์ความเร็วล้อ</td><td>ลิ้นปีกผีเสื้อ/มอเตอร์</td><td>PI + feedforward ความชัน</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/steady-state-error/">ความผิดพลาดอยู่ตัว</a></td></tr>
+          <tr><td><b>Adaptive cruise control</b></td><td>ระยะห่างคันหน้า</td><td>เรดาร์</td><td>คันเร่ง/เบรก</td><td>คาสเคดระยะ–ความเร็ว / MPC</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a></td></tr>
+          <tr><td><b>ABS เบรกกันล้อล็อก</b></td><td>อัตราลื่นไถลล้อ</td><td>เซนเซอร์ความเร็วล้อ</td><td>วาล์วไฮดรอลิก</td><td>ควบคุมไม่เชิงเส้น / sliding mode</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>ESC/ESP ทรงตัวรถ</b></td><td>อัตราหันเห</td><td>ไจโร, มุมพวงมาลัย</td><td>เบรกแต่ละล้อ</td><td>MPC / อิงแบบจำลอง</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>ควบคุมมอเตอร์ EV</b></td><td>แรงบิด</td><td>เซนเซอร์กระแส, resolver</td><td>อินเวอร์เตอร์ SiC</td><td>FOC + MTPA</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a> · <a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a></td></tr>
+          <tr><td><b>เลี้ยวช่วยไฟฟ้า (EPS)</b></td><td>แรงบิดพวงมาลัย</td><td>torque sensor</td><td>มอเตอร์ช่วย</td><td>PI + ชดเชยความเฉื่อย</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td><b>ช่วยรักษาเลน</b></td><td>ตำแหน่งในเลน</td><td>กล้อง</td><td>มอเตอร์พวงมาลัย</td><td>pure pursuit / LQR</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a></td></tr>
+          <tr><td><b>รถไฟฟ้า ATO</b></td><td>ความเร็ว ตำแหน่งหยุด</td><td>เอนโค้ดเดอร์ล้อ, balise</td><td>มอเตอร์ลาก + เบรก</td><td>วิถี + PI</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="aero">
+    <h2 id="aero">อากาศยานและอวกาศ <span class="mono" style="font-size:.7em;color:var(--ink-3)">5 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>ระบบออโต้ไพลอต</b></td><td>ความสูง ทิศทาง</td><td>pitot, ไจโร, GPS</td><td>แพนหาง</td><td>PID คาสเคด + gain scheduling</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>ควบคุมท่าทางดาวเทียม</b></td><td>มุมดาวเทียม</td><td>star tracker, ไจโร</td><td>reaction wheel</td><td>PD (ระบบ 1/Js²)</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/root-locus/">รูทโลคัส</a></td></tr>
+          <tr><td><b>จรวด thrust vector</b></td><td>มุมลำจรวด</td><td>IMU</td><td>gimbal เครื่องยนต์</td><td>PD + ทำให้เสถียร (ไม่เสถียรวงเปิด)</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a> · <a href="/learn/control-systems/nyquist/">ไนควิสต์</a></td></tr>
+          <tr><td><b>ร่มร่อนส่งของ (guided parafoil)</b></td><td>ทิศทางไปเป้า</td><td>GPS</td><td>สายบังคับ</td><td>heading control</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+          <tr><td><b>ใบพัดเฮลิคอปเตอร์ 2-DOF ในแล็บ</b></td><td>pitch, yaw</td><td>เอนโค้ดเดอร์</td><td>มอเตอร์ใบพัด</td><td>LQR + I</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="process">
+    <h2 id="process">กระบวนการ อาคาร และเกษตร <span class="mono" style="font-size:.7em;color:var(--ink-3)">8 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>แอร์อินเวอร์เตอร์</b></td><td>อุณหภูมิห้อง</td><td>เทอร์มิสเตอร์</td><td>ความเร็วคอมเพรสเซอร์</td><td>PI (หน่วงเวลามาก)</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td></tr>
+          <tr><td><b>ระดับน้ำในถัง</b></td><td>ระดับ</td><td>อัลตราโซนิก/ความดัน</td><td>ปั๊ม/วาล์ว</td><td>PI (ระบบอินทิเกรต)</td><td><a href="/learn/control-systems/modeling/">แบบจำลอง</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ความดันน้ำประปาปั๊มอินเวอร์เตอร์</b></td><td>ความดัน</td><td>pressure transmitter</td><td>ปั๊ม + VFD</td><td>PI</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td></tr>
+          <tr><td><b>หม้อไอน้ำ (drum level)</b></td><td>ระดับน้ำ</td><td>เซนเซอร์ระดับ</td><td>วาล์วน้ำป้อน</td><td>สามองค์ประกอบ (FF ไอน้ำ) — RHP zero</td><td><a href="/learn/control-systems/compensators/">lead/lag</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>เตาอบอุตสาหกรรม</b></td><td>อุณหภูมิ</td><td>เทอร์โมคัปเปิล</td><td>SCR / แก๊ส</td><td>PID + Smith predictor</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a> · <a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>โรงเรือนอัจฉริยะ</b></td><td>อุณหภูมิ ความชื้น CO₂</td><td>เซนเซอร์สภาพแวดล้อม</td><td>พัดลม พ่นหมอก ไฟ</td><td>on–off + PI</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ปลูกพืชไฮโดรโปนิกส์</b></td><td>pH, EC สารละลาย</td><td>pH probe, EC probe</td><td>ปั๊มโดส</td><td>PI ช้า + dead-band</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>ถังหมักเบียร์/ไบโอรีแอคเตอร์</b></td><td>อุณหภูมิ pH O₂</td><td>โพรบ</td><td>ฮีตเตอร์ ปั๊ม แอร์</td><td>PID หลายลูป</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="life">
+    <h2 id="life">ชีวการแพทย์และชีวิตประจำวัน <span class="mono" style="font-size:.7em;color:var(--ink-3)">7 ระบบ</span></h2>
+    <div class="table-wrap">
+      <table class="cs-gal">
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>ตัวขับ</th><th>ตัวควบคุมที่นิยม</th><th>เรียนที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>ปั๊มอินซูลิน (artificial pancreas)</b></td><td>ระดับน้ำตาล</td><td>CGM</td><td>ปั๊มอินซูลิน</td><td>MPC / PID ปลอดภัย</td><td><a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>เครื่องช่วยหายใจ</b></td><td>ความดัน/อัตราไหล</td><td>flow sensor</td><td>โบลเวอร์/วาล์ว</td><td>PI รวดเร็ว</td><td><a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ตู้อบทารก</b></td><td>อุณหภูมิผิวทารก</td><td>เทอร์มิสเตอร์ผิว</td><td>ฮีตเตอร์</td><td>PI ช้าและปลอดภัย</td><td><a href="/learn/control-systems/pid-tuning/">จูน PID</a></td></tr>
+          <tr><td><b>ร่างกายควบคุมอุณหภูมิ</b></td><td>อุณหภูมิแกนกาย</td><td>เทอร์โมรีเซปเตอร์</td><td>เหงื่อ สั่น หลอดเลือด</td><td>ป้อนกลับทางชีววิทยา</td><td><a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>ชักโครก (ลูกลอย)</b></td><td>ระดับน้ำ</td><td>ลูกลอย</td><td>วาล์ว</td><td>P เชิงกล (ระบบควบคุมแรกของบ้าน)</td><td><a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td><b>หม้อหุงข้าวฟัซซี่</b></td><td>อุณหภูมิตามช่วง</td><td>เทอร์มิสเตอร์</td><td>ฮีตเตอร์</td><td>ฟัซซี่ / ลำดับขั้น</td><td><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้น</a></td></tr>
+          <tr><td><b>เตารีดไอน้ำ/เตาแม่เหล็กไฟฟ้า</b></td><td>อุณหภูมิ/กำลัง</td><td>เทอร์มิสเตอร์, CT</td><td>ขดลวดเหนี่ยวนำ</td><td>PI + ควบคุมความถี่</td><td><a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a> · <a href="/learn/control-systems/pid/">PID</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+    <section class="tsec" aria-labelledby="patterns">
+    <h2 id="patterns">รูปแบบที่ซ้ำกันข้ามสาขา</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รูปแบบ</th><th>พบใน</th><th>เครื่องมือ</th></tr></thead>
+        <tbody>
+          <tr><td>ลูปซ้อน เร็วข้างใน ช้าข้างนอก</td><td>เซอร์โว, PFC, โดรน, โหมดกระแส, ACC</td><td><a href="/learn/control-systems/mechatronics/#cascade">คาสเคด</a></td></tr>
+          <tr><td>พลานต์อันดับหนึ่ง + หน่วงเวลา</td><td>อุณหภูมิ, ความดัน, เคมี</td><td><a href="/learn/control-systems/pid-tuning/">FOPDT + SIMC</a></td></tr>
+          <tr><td>อินทิเกรเตอร์ในพลานต์ (ชนิด 1)</td><td>ตำแหน่งมอเตอร์, ระดับน้ำ, PLL</td><td><a href="/learn/control-systems/steady-state-error/">ชนิดของระบบ</a></td></tr>
+          <tr><td>ไม่เสถียรวงเปิด</td><td>ลอยแม่เหล็ก, หุ่นทรงตัว, จรวด</td><td><a href="/learn/control-systems/nyquist/#unstable">ไนควิสต์</a>, <a href="/learn/control-systems/state-feedback/">LQR</a></td></tr>
+          <tr><td>เรโซแนนซ์อันดับสอง</td><td>LC ฟิลเตอร์, เพลายืดหยุ่น, ฮาร์ดดิสก์</td><td><a href="/learn/control-systems/bode-plot/#second-order">โบด</a>, notch</td></tr>
+          <tr><td>ศูนย์ฝั่งขวา (เริ่มผิดทิศ)</td><td>บูสต์, หม้อไอน้ำ, แพนหางเครื่องบิน</td><td><a href="/learn/control-systems/time-response/#T9">ผลของศูนย์</a></td></tr>
+          <tr><td>อิ่มตัวและ windup</td><td>แทบทุกระบบ</td><td><a href="/learn/control-systems/pid/#P8">anti-windup</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>จะเลือกโปรเจกต์ระบบควบคุมสำหรับนักศึกษาอย่างไร?</summary><p>เริ่มจากระบบที่มีพลานต์อันดับหนึ่งและวัดง่าย เช่น ความเร็วมอเตอร์ อุณหภูมิ หรือระดับน้ำ ฝึก PI และการจูนให้คล่อง จากนั้นขยับไปยังระบบอันดับสองหรือไม่เสถียรวงเปิด เช่น ball-and-beam ลอยแม่เหล็ก หรือหุ่นยนต์ทรงตัว ซึ่งต้องใช้ lead หรือป้อนกลับสถานะ</p></details><details><summary>ทำไมเกือบทุกระบบใช้ PI หรือ PID?</summary><p>เพราะ PID ต้องการแบบจำลองน้อย จูนได้จากการทดลอง เข้าใจง่ายสำหรับช่างเทคนิค และพอสำหรับพลานต์อันดับต่ำส่วนใหญ่ ระบบที่ต้องการมากกว่านั้น เช่น หลายตัวแปรผูกกัน ไม่เสถียรวงเปิด หรือมีข้อจำกัดเข้มงวด จึงใช้ป้อนกลับสถานะ LQR หรือ MPC</p></details></section>
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fexamples%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fexamples%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fexamples%2F&amp;text=%E0%B8%84%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B9%84%E0%B8%AD%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%2070%20%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%3A%20%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%95%E0%B9%88%E0%B8%8A%E0%B8%B1%E0%B8%81%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%81%E0%B8%96%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%A3%E0%B8%A7%E0%B8%94" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/control-systems/examples/" data-share-title="คลังไอเดียระบบควบคุม 70 ระบบ: ตั้งแต่ชักโครกถึงจรวด">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/power-electronics-control/"><span class="mono">← หน้าก่อนหน้า</span><b>ควบคุมตัวแปลงกำลัง: จากฟังก์ชันถ่ายโอนบั๊กคอนเวอร์เตอร์ ถึงตัวชดเชย Type II/III</b></a><a class="pager-next" href="/learn/"><span class="mono">ไปต่อ →</span><b>คลังความรู้ทั้งหมด</b></a></nav>
+  </article>
+</div>
+<script>
+(function(){var q=document.getElementById("galFilter"),c=document.getElementById("galCount");if(!q)return;
+var rows=[].slice.call(document.querySelectorAll(".cs-gal tbody tr"));
+function f(){var t=q.value.trim().toLowerCase(),n=0;rows.forEach(function(r){var ok=!t||r.textContent.toLowerCase().indexOf(t)>=0;r.hidden=!ok;if(ok)n++});
+document.querySelectorAll(".cs-gal").forEach(function(tb){var v=tb.querySelectorAll("tbody tr:not([hidden])").length;tb.closest("section").hidden=t&&!v});
+c.textContent=t?("พบ "+n+" ระบบ"):(rows.length+" ระบบ")}
+q.addEventListener("input",f);f()})();
+</script>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=d84cb134" defer></script>
+
+</body>
+</html>

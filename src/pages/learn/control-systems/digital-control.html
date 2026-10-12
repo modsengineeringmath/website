@@ -1,0 +1,136 @@
+<!--meta
+{
+  "title": "ระบบควบคุมดิจิทัล: การสุ่ม ZOH การแปลง z เสถียรภาพในวงกลมหนึ่งหน่วย Tustin และ PID ดิจิทัล | อาจารย์มด",
+  "h1": "ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล",
+  "description": "ระบบควบคุมดิจิทัลบนไมโครคอนโทรลเลอร์ การสุ่มสัญญาณและ aliasing วงจรคงค่าอันดับศูนย์ (ZOH) การแปลง z ฟังก์ชันถ่ายโอนไม่ต่อเนื่อง การแมป z = e^{sT} เสถียรภาพในวงกลมหนึ่งหน่วย เกณฑ์ของจูรี แปลงตัวควบคุมด้วย Euler และ Tustin (bilinear) สมการผลต่างของ PID ดิจิทัล การเลือกคาบสุ่ม และผลของหน่วงเวลาครึ่งคาบต่อเฟสมาร์จิน",
+  "ogTitle": "ควบคุมดิจิทัล: จาก s สู่ z และ PID ในไมโครคอนโทรลเลอร์",
+  "lesson": "control-systems",
+  "sub": "digital-control",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Digital control", "Sampling", "Zero-order hold", "Z-transform", "Bilinear transform", "Jury stability criterion", "Digital PID", "Aliasing"],
+  "faq": [
+    {"q": "ควรเลือกความถี่สุ่มเท่าไร?", "a": "กฎหัวแม่มือคือ 20 ถึง 30 เท่าของแบนด์วิดท์วงปิด (หรือของความถี่ครอสโอเวอร์) ต่ำกว่า 10 เท่าเฟสมาร์จินจะหายไปมากจากหน่วงเวลาของ ZOH และควรใส่ฟิลเตอร์แอนติแอลิแอสก่อน ADC ที่ตัดความถี่ต่ำกว่าครึ่งหนึ่งของความถี่สุ่ม"},
+    {"q": "ทำไมระบบที่เสถียรแบบต่อเนื่อง จึงไม่เสถียรเมื่อทำเป็นดิจิทัล?", "a": "เพราะการสุ่มและคงค่าเพิ่มหน่วงเวลาเฉลี่ยครึ่งคาบสุ่ม ลดเฟสมาร์จิน ยิ่งเกนสูงและคาบสุ่มยาว ยิ่งแย่ ระบบอันดับหนึ่งที่ปิดวงด้วย P ซึ่งเสถียรทุกเกนแบบต่อเนื่อง จะมีเกนสูงสุดเมื่อทำเป็นดิจิทัล"},
+    {"q": "Tustin ต่างจาก Euler อย่างไร?", "a": "Euler แทนอนุพันธ์ด้วยผลต่างไปข้างหน้าหรือย้อนหลัง ง่ายแต่บิดเบี้ยวเมื่อคาบสุ่มยาว และ forward Euler อาจทำให้ระบบเสถียรกลายเป็นไม่เสถียร Tustin (bilinear) แมปฝั่งซ้ายของระนาบ s ไปภายในวงกลมหนึ่งหน่วยพอดี จึงรักษาเสถียรภาพเสมอ แม่นกว่าในช่วงความถี่ต่ำถึงกลาง นิยมที่สุดในการแปลงตัวควบคุม"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>ควบคุมดิจิทัล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.21 · ระบบควบคุม · Digital Control</p>
+      <h1>ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล</h1>
+      <p class="lede">ตัวควบคุมเกือบทุกตัวในวันนี้คือโค้ดในไมโครคอนโทรลเลอร์หรือ DSP: อ่าน ADC ทุกคาบ \(T\) คำนวณ แล้วเขียน PWM ค้างไว้จนคาบถัดไป การทำแบบนี้เปลี่ยนโลกต่อเนื่อง (\(s\)) เป็นโลกไม่ต่อเนื่อง (\(z\)) และเพิ่มหน่วงเวลาที่ต้องรู้ทัน หน้านี้พาแปลงทุกอย่างที่เรียนมาเป็นดิจิทัล ตั้งแต่การสุ่ม ความเสถียรในวงกลมหนึ่งหน่วย จนถึงสมการผลต่างของ PID ที่เขียนลงชิปได้ทันที สูตรใช้รหัส Y</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(z = e^{sT}\): ฝั่งซ้ายของระนาบ s → ภายในวงกลมหนึ่งหน่วย · เสถียร \(\iff |z_i| \lt 1\)</li>
+          <li>พลานต์ + ZOH: \(G(z) = (1 - z^{-1})\mathcal Z\{G(s)/s\}\)</li>
+          <li>ตัวควบคุม: แทน \(s \approx \frac2T\frac{z - 1}{z + 1}\) (Tustin) แล้วเขียนเป็นสมการผลต่าง</li>
+          <li>ความถี่สุ่ม 20–30 เท่าของแบนด์วิดท์ · ZOH หน่วงครึ่งคาบ เสียเฟส \(\omega_cT/2\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น sampling, aliasing, ZOH, z = e^sT, Jury, Tustin, Euler, digital PID" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="sampling">
+    <h2 id="sampling">การสุ่มและวงจรคงค่า <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="Y1" data-k="sampling theorem nyquist frequency aliasing anti-alias filter ws > 2 wmax การสุ่ม แอลิแอส">
+        <p class="tf-n"><b><span class="fid">Y1</span> Sampling and aliasing</b> การสุ่มและแอลิแอส</p>
+        \[ \omega_s = \frac{2\pi}{T} \gt 2\omega_{max} \qquad (\text{ความถี่ไนควิสต์ } \omega_s/2) \]
+        <p class="tf-x">ความถี่เหนือ \(\omega_s/2\) จะปรากฏเป็นความถี่ต่ำปลอม (alias) ต้องกรองด้วยฟิลเตอร์แอนติแอลิแอส RC ก่อน ADC · ดูภาพการสุ่มใน<a href="/learn/signals/">แล็บสัญญาณ</a></p>
+      </div>
+      <div class="tf wide" id="Y2" data-k="zero order hold zoh equivalent discretization step invariant G(z) = (1 - z^-1) Z{G/s} วงจรคงค่าอันดับศูนย์">
+        <p class="tf-n"><b><span class="fid">Y2</span> ZOH equivalent of the plant</b> พลานต์มองจากคอมพิวเตอร์</p>
+        \[ G(z) = (1 - z^{-1})\,\mathcal Z\left\{\frac{G(s)}{s}\right\} \qquad \text{เช่น } \frac{a}{s + a} \to \frac{1 - e^{-aT}}{z - e^{-aT}} \]
+        <p class="tf-x">แม่นตรงที่จังหวะสุ่ม (step invariant) · ปริภูมิสถานะ: \(A_d = e^{AT}\), \(B_d = \int_0^Te^{A\tau}d\tau\,B\) (<a href="/learn/control-systems/state-space/#X6">X6</a>)</p>
+      </div>
+      <div class="tf wide" id="Y3" data-k="s to z mapping z = e^sT unit circle stability poles inside unit circle การแมป วงกลมหนึ่งหน่วย">
+        <p class="tf-n"><b><span class="fid">Y3</span> s-to-z mapping and stability</b> การแมปและเสถียรภาพ</p>
+        \[ z = e^{sT}: \ \ s = -\sigma \pm j\omega_d \ \mapsto\ |z| = e^{-\sigma T},\ \angle z = \pm\omega_dT, \qquad \text{เสถียร} \iff |z_i| \lt 1 \]
+        <p class="tf-x">แกน \(j\omega\) → วงกลมหนึ่งหน่วย · \(s = 0\) → \(z = 1\) · ขั้วใกล้ \(z = 1\) = ช้า · ขั้วบนแกนจริงลบ (\(z \lt 0\)) = แกว่งสลับทุกคาบ ไม่มีคู่เทียบในโลกต่อเนื่อง</p>
+      </div>
+      <div class="tf wide" id="Y4" data-k="jury stability test second order conditions P(1) P(-1) a0 a2 เกณฑ์ของจูรี">
+        <p class="tf-n"><b><span class="fid">Y4</span> Jury test (2nd order)</b> เกณฑ์จูรีสำหรับ \(P(z) = a_2z^2 + a_1z + a_0,\ a_2 \gt 0\)</p>
+        \[ P(1) \gt 0, \qquad P(-1) \gt 0, \qquad |a_0| \lt a_2 \]
+        <p class="tf-x">เทียบเท่าเราท์ในโลก z · อันดับสูงกว่าใช้ตารางของจูรี หรือแปลง \(z = \frac{1 + w}{1 - w}\) แล้วใช้<a href="/learn/control-systems/routh-hurwitz/">เราท์</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-y1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-1 · P ที่เสถียรเสมอ กลายเป็นมีเกนสูงสุด</span><h3>พลานต์ \(\frac{1}{s + 1}\) ควบคุมด้วย P ผ่านคอมพิวเตอร์ที่ \(T = 0.1\) s หาเกนสูงสุด</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#Y2">Y2</a>: \(G(z) = \dfrac{1 - e^{-0.1}}{z - e^{-0.1}} = \dfrac{0.09516}{z - 0.9048}\)</p></li>
+        <li><p>วงปิด: \(z - 0.9048 + 0.09516K = 0 \Rightarrow z = 0.9048 - 0.09516K\)</p></li>
+        <li><p><a class="tag tf" href="#Y3">Y3</a>: \(|z| \lt 1 \Rightarrow -1 \lt 0.9048 - 0.09516K \Rightarrow K \lt 20.02\)</p></li>
+      </ol>
+      <p class="answer">แบบต่อเนื่องเสถียรทุก \(K\) แต่แบบดิจิทัลเสถียรเมื่อ \(K \lt 20\) เท่านั้น ที่ \(K\) ใกล้ 20 ขั้วอยู่ใกล้ \(z = -1\) เอาต์พุตแกว่งสลับขึ้นลงทุกคาบ · python-control c2d ยืนยัน \(G(z)\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="discretize">
+    <h2 id="discretize">แปลงตัวควบคุมเป็นดิจิทัล <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="Y5" data-k="discretization euler forward backward tustin bilinear prewarping s substitution การแปลงตัวควบคุม ทัสติน ออยเลอร์">
+        <p class="tf-n"><b><span class="fid">Y5</span> Discretization methods</b> วิธีแปลง \(C(s) \to C(z)\)</p>
+        \[ \text{Forward Euler: } s \approx \frac{z - 1}{T}, \qquad \text{Backward Euler: } s \approx \frac{z - 1}{Tz}, \qquad \text{Tustin: } s \approx \frac{2}{T}\cdot\frac{z - 1}{z + 1} \]
+        <p class="tf-x">Tustin รักษาเสถียรภาพเสมอ · ถ้าต้องการให้ความถี่หนึ่ง (เช่น notch ที่ \(\omega_0\)) ตรงพอดี ใช้ prewarping: แทน \(\frac2T\) ด้วย \(\frac{\omega_0}{\tan(\omega_0T/2)}\)</p>
+      </div>
+      <div class="tf wide" id="Y6" data-k="digital pid difference equation velocity form incremental position form tustin backward euler PID ดิจิทัล สมการผลต่าง">
+        <p class="tf-n"><b><span class="fid">Y6</span> Digital PID</b> PID ดิจิทัล (I แบบ Tustin, D แบบ backward + ฟิลเตอร์)</p>
+        \[ I_k = I_{k-1} + \frac{K_IT}{2}(e_k + e_{k-1}), \qquad D_k = \frac{T_f}{T_f + T}D_{k-1} + \frac{K_D}{T_f + T}(e_k - e_{k-1}), \qquad u_k = K_Pe_k + I_k + D_k \]
+        <p class="tf-x">รูปแบบความเร็ว (incremental): \(\Delta u_k = u_k - u_{k-1}\) ไม่ต้องเก็บอินทิกรัล สลับ manual/auto ไม่กระตุก · ใส่ D จากเอาต์พุตและ anti-windup ตามโค้ดใน<a href="/learn/control-systems/pid/#code">หน้า PID</a></p>
+      </div>
+      <div class="tf wide" id="Y7" data-k="sample rate selection rule of thumb bandwidth zoh delay half sample phase loss เลือกคาบสุ่ม เฟสที่เสีย">
+        <p class="tf-n"><b><span class="fid">Y7</span> Choosing the sample rate</b> เลือกความถี่สุ่ม</p>
+        \[ \omega_s \approx (20 \text{ ถึง } 30)\,\omega_{BW}, \qquad \Delta\text{PM} \approx \frac{\omega_cT}{2}\ \text{rad} = 28.6\,\omega_cT \ \text{องศา} \ (\text{จาก ZOH}) \]
+        <p class="tf-x">บวกหน่วงจากการคำนวณอีก (มักเป็นหนึ่งคาบเต็มถ้าเขียน PWM คาบถัดไป) · ลูปกระแสของไดรฟ์มอเตอร์มักสุ่ม 10–20 kHz พร้อม PWM</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-y2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-2 · PI ลงชิป</span><h3>แปลง PI \(C(s) = 2 + \frac{1}{s}\) ด้วย Tustin ที่ \(T = 0.01\) s เป็นสมการผลต่าง</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#Y5">Y5</a>: \(\dfrac1s \to \dfrac{T}{2}\cdot\dfrac{z + 1}{z - 1}\) ได้ \(C(z) = 2 + 0.005\dfrac{z + 1}{z - 1} = \dfrac{2.005z - 1.995}{z - 1}\)</p></li>
+        <li><p>คูณไขว้: \((z - 1)U = (2.005z - 1.995)E\) → หารด้วย \(z\) แล้วแปลงเป็นเวลา</p></li>
+      </ol>
+      <p class="answer">\(u_k = u_{k-1} + 2.005\,e_k - 1.995\,e_{k-1}\) · สามบรรทัดในโค้ด รันทุก 10 ms</p>
+    </div>
+    <div class="wx" id="ex-y3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-3 · พาวเวอร์ซัพพลายดิจิทัล</span><h3>ลูปแรงดันมีครอสโอเวอร์ 5 kHz ถ้าสุ่มที่ 100 kHz (เท่ากับความถี่สวิตชิ่ง) เสียเฟสเท่าไร และถ้าสุ่ม 50 kHz ล่ะ</h3></div>
+      <ol class="steps">
+        <li><p>\(\omega_c = 2\pi \times 5000 = 31416\) rad/s</p></li>
+        <li><p>100 kHz: \(T = 10\ \mu\)s → \(28.6 \times 31416 \times 10^{-5} = 9.0^\circ\) <a class="tag tf" href="#Y7">Y7</a></p></li>
+        <li><p>50 kHz: \(T = 20\ \mu\)s → \(18^\circ\)</p></li>
+      </ol>
+      <p class="answer">ที่ 100 kHz เสียเฟส 9° (บวกหน่วงคำนวณอีกราว 18° ถ้าอัปเดต PWM คาบถัดไป) ต้องออกแบบตัวชดเชยเผื่อไว้ · ลดความถี่สุ่มลงครึ่งหนึ่งเสียเฟสเพิ่มเท่าตัว</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>โลกจริงมีการอิ่มตัว แรงเสียดทาน และพลานต์ที่ไม่ตรงแบบจำลอง ไปที่<a href="/learn/control-systems/nonlinear-robust/">ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน</a> หรือข้ามไปดูงานจริงที่<a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

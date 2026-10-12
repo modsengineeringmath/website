@@ -1,0 +1,155 @@
+<!--meta
+{
+  "title": "ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน ฟังก์ชันถ่ายโอน และ e^{At} | อาจารย์มด",
+  "h1": "ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}",
+  "description": "แบบจำลองปริภูมิสถานะสำหรับระบบควบคุมสมัยใหม่ ตัวแปรสถานะ สมการสถานะและสมการเอาต์พุต ẋ = Ax + Bu, y = Cx + Du สร้างจากสมการเชิงอนุพันธ์ วงจร RLC และมอเตอร์ DC แปลงเป็นฟังก์ชันถ่ายโอน G = C(sI − A)⁻¹B + D ขั้วคือค่าเฉพาะของ A รูปแบบมาตรฐานควบคุมได้ สังเกตได้ และโมดัล การแปลงความคล้าย และคำตอบด้วยเมทริกซ์เอกซ์โพเนนเชียล e^{At}",
+  "ogTitle": "ปริภูมิสถานะ: จากวงจร RLC สู่ ẋ = Ax + Bu",
+  "lesson": "control-systems",
+  "sub": "state-space",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["State-space representation", "State variable", "Matrix exponential", "Controllable canonical form", "Observable canonical form", "Modal form", "Similarity transformation", "Eigenvalues"],
+  "faq": [
+    {"q": "ทำไมต้องใช้ปริภูมิสถานะในเมื่อมีฟังก์ชันถ่ายโอนแล้ว?", "a": "ปริภูมิสถานะจัดการระบบหลายอินพุตหลายเอาต์พุตได้เป็นธรรมชาติ รวมเงื่อนไขเริ่มต้นได้ เห็นสัญญาณภายในทั้งหมด (ไม่ใช่แค่อินพุต-เอาต์พุต) ใช้กับระบบแปรตามเวลาและไม่เชิงเส้นได้ และเป็นฐานของการวางขั้ว ตัวสังเกต LQR และตัวกรองคาลมาน ซึ่งใช้ในหุ่นยนต์ โดรน และยานยนต์สมัยใหม่"},
+    {"q": "เลือกตัวแปรสถานะอย่างไร?", "a": "ในวงจรไฟฟ้าเลือกกระแสตัวเหนี่ยวนำและแรงดันตัวเก็บประจุ (ตัวเก็บพลังงาน) ในกลไกเลือกตำแหน่งและความเร็ว จำนวนสถานะเท่ากับอันดับของระบบ การเลือกไม่ซ้ำกัน ชุดต่างกันสัมพันธ์กันด้วยการแปลงความคล้าย และให้ค่าเฉพาะ (ขั้ว) เท่ากันเสมอ"},
+    {"q": "ขั้วของระบบในปริภูมิสถานะหาอย่างไร?", "a": "คือค่าเฉพาะของเมทริกซ์ A หรือรากของ det(sI − A) = 0 ซึ่งตรงกับตัวส่วนของฟังก์ชันถ่ายโอน (ถ้าไม่มีการหักล้างขั้ว-ศูนย์) ระบบเสถียรเมื่อค่าเฉพาะทุกตัวมีส่วนจริงเป็นลบ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>ปริภูมิสถานะ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.18 · ระบบควบคุม · State-Space Representation</p>
+      <h1>ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}</h1>
+      <p class="lede">ปี 1960 รูดอล์ฟ คาลมาน (Rudolf Kalman) เปลี่ยนมุมมองระบบควบคุมจาก “อินพุต-เอาต์พุต” เป็น “สถานะภายใน” เขียนระบบอันดับ \(n\) ใด ๆ เป็นสมการเชิงอนุพันธ์อันดับหนึ่ง \(n\) สมการในรูปเมทริกซ์ ทำให้<a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a>ทั้งหมดใช้ได้ทันที: ค่าเฉพาะคือขั้ว \(e^{At}\) คือคำตอบ และระบบหลายอินพุตหลายเอาต์พุตไม่ยากกว่าระบบเดียว นี่คือประตูสู่ modern control ที่ใช้ในหุ่นยนต์ โดรน และยานอวกาศ สูตรใช้รหัส X</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\dot{\mathbf x} = A\mathbf x + B\mathbf u,\ \ \mathbf y = C\mathbf x + D\mathbf u\) · สถานะ = ตัวเก็บพลังงาน (\(i_L,\ v_C\), ตำแหน่ง, ความเร็ว)</li>
+          <li>\(G(s) = C(sI - A)^{-1}B + D\) · ขั้ว = ค่าเฉพาะของ \(A\)</li>
+          <li>\(\mathbf x(t) = e^{At}\mathbf x(0) + \int_0^te^{A(t-\tau)}B\mathbf u(\tau)\,d\tau\) · \(e^{At} = \mathcal L^{-1}\{(sI - A)^{-1}\}\)</li>
+          <li>ฟังก์ชันเดียวมีได้หลายแบบจำลอง (รูปแบบควบคุมได้ สังเกตได้ โมดัล) เชื่อมกันด้วย \(T\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น state equation, transfer function, eigenvalue, e^At, canonical, similarity" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="model">
+    <h2 id="model">แบบจำลองปริภูมิสถานะ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="X1" data-k="state equation output equation A B C D matrices state vector สมการสถานะ สมการเอาต์พุต">
+        <p class="tf-n"><b><span class="fid">X1</span> State-space model</b> แบบจำลองปริภูมิสถานะ</p>
+        \[ \dot{\mathbf x}(t) = A\mathbf x(t) + B\mathbf u(t), \qquad \mathbf y(t) = C\mathbf x(t) + D\mathbf u(t) \]
+        <p class="tf-x">\(\mathbf x \in \mathbb R^n\) สถานะ · \(\mathbf u \in \mathbb R^m\) อินพุต · \(\mathbf y \in \mathbb R^p\) เอาต์พุต · \(A_{n\times n}\) (พลวัต) \(B_{n\times m}\) \(C_{p\times n}\) \(D_{p\times m}\) (มักเป็นศูนย์)</p>
+      </div>
+      <div class="tf wide" id="X2" data-k="controllable canonical form companion form from transfer function differential equation รูปแบบมาตรฐานควบคุมได้">
+        <p class="tf-n"><b><span class="fid">X2</span> Controllable canonical form</b> รูปแบบมาตรฐานควบคุมได้</p>
+        \[ G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_0}{s^n + a_{n-1}s^{n-1} + \cdots + a_0}:\quad A = \begin{pmatrix} 0 & 1 & & \\ & \ddots & \ddots & \\ & & 0 & 1 \\ -a_0 & -a_1 & \cdots & -a_{n-1} \end{pmatrix},\ B = \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 1 \end{pmatrix},\ C = (b_0\ \ b_1\ \cdots\ b_{n-1}) \]
+        <p class="tf-x">เขียนได้ทันทีจากสัมประสิทธิ์ · ใช้ในการวางขั้ว (<a href="/learn/control-systems/state-feedback/">ป้อนกลับสถานะ</a>) · รูปแบบสังเกตได้ (observable) คือทรานสโพส: \(A^T, C^T, B^T\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-x1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง X-1 · วงจร RLC</span><h3>เขียนแบบจำลองปริภูมิสถานะของวงจร RLC อนุกรม \(R = 10\ \Omega,\ L = 10\) mH, \(C = 100\ \mu\)F เอาต์พุตคือ \(v_C\)</h3></div>
+      <ol class="steps">
+        <li><p>สถานะ \(x_1 = i_L,\ x_2 = v_C\) · KVL: \(L\dot i = v_{in} - Ri - v_C\) · ตัวเก็บประจุ: \(C\dot v_C = i\)</p></li>
+        <li><p>เขียนเป็นเมทริกซ์ <a class="tag tf" href="#X1">X1</a></p>
+          \[ \begin{pmatrix} \dot i \\ \dot v_C \end{pmatrix} = \begin{pmatrix} -R/L & -1/L \\ 1/C & 0 \end{pmatrix}\begin{pmatrix} i \\ v_C \end{pmatrix} + \begin{pmatrix} 1/L \\ 0 \end{pmatrix}v_{in} = \begin{pmatrix} -1000 & -100 \\ 10^4 & 0 \end{pmatrix}\mathbf x + \begin{pmatrix} 100 \\ 0 \end{pmatrix}v_{in} \]
+          <p>\(y = v_C = (0\ \ 1)\,\mathbf x\)</p></li>
+      </ol>
+      <p class="answer">ค่าเฉพาะของ \(A\): \(\lambda^2 + 1000\lambda + 10^6 = 0\) ตรงกับตัวส่วนของ<a href="/learn/control-systems/modeling/#ex-m1">ตัวอย่าง M-1</a> ✓ (\(\omega_n = 1000,\ \zeta = 0.5\))</p>
+      <p class="check">python-control ss2tf: \(\dfrac{10^6}{s^2 + 1000s + 10^6}\) ✓ · ดูวงจรอื่นใน<a href="/learn/linear-algebra/ee-applications/#rlc">ประยุกต์พีชคณิตเชิงเส้น</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tf">
+    <h2 id="tf">จากปริภูมิสถานะสู่ฟังก์ชันถ่ายโอน <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="X3" data-k="transfer function from state space C (sI - A)^-1 B + D resolvent ฟังก์ชันถ่ายโอนจากปริภูมิสถานะ">
+        <p class="tf-n"><b><span class="fid">X3</span> Transfer function</b> ฟังก์ชันถ่ายโอน</p>
+        \[ G(s) = C(sI - A)^{-1}B + D = \frac{C\,\operatorname{adj}(sI - A)\,B}{\det(sI - A)} + D \]
+        <p class="tf-x">ใช้อินเวอร์สแบบแอดจอยต์ (<a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>) · ตัวส่วน \(\det(sI - A)\) = พหุนามลักษณะเฉพาะ</p>
+      </div>
+      <div class="tf" id="X4" data-k="poles eigenvalues of A characteristic polynomial det(sI-A) stability ขั้ว ค่าเฉพาะ">
+        <p class="tf-n"><b><span class="fid">X4</span> Poles = eigenvalues</b> ขั้ว = ค่าเฉพาะของ A</p>
+        \[ \det(sI - A) = 0 \]
+        <p class="tf-x">เสถียร \(\iff\) \(\operatorname{Re}\lambda_i(A) \lt 0\) ทุกตัว (<a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a>)</p>
+      </div>
+      <div class="tf" id="X5" data-k="similarity transformation change of state variables T invariant eigenvalues transfer function การแปลงความคล้าย">
+        <p class="tf-n"><b><span class="fid">X5</span> Similarity transformation</b> เปลี่ยนตัวแปรสถานะ</p>
+        \[ \mathbf x = T\mathbf z:\ \ \hat A = T^{-1}AT,\ \hat B = T^{-1}B,\ \hat C = CT \]
+        <p class="tf-x">ค่าเฉพาะและฟังก์ชันถ่ายโอนไม่เปลี่ยน · \(T\) = เวกเตอร์เฉพาะ ได้รูปแบบโมดัล (ทแยงมุม)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-x2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง X-2 · ไปและกลับ</span><h3>เขียน \(G(s) = \dfrac{s + 3}{s^2 + 3s + 2}\) ในรูปแบบควบคุมได้ แล้วตรวจกลับด้วย X3</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#X2">X2</a>: \(a_0 = 2,\ a_1 = 3,\ b_0 = 3,\ b_1 = 1\)</p>
+          \[ A = \begin{pmatrix} 0 & 1 \\ -2 & -3 \end{pmatrix},\quad B = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\quad C = (3\ \ 1) \]</li>
+        <li><p><a class="tag tf" href="#X3">X3</a>: \((sI - A)^{-1} = \dfrac{1}{s^2 + 3s + 2}\begin{pmatrix} s + 3 & 1 \\ -2 & s \end{pmatrix}\) ได้ \((sI - A)^{-1}B = \dfrac{1}{s^2 + 3s + 2}\begin{pmatrix} 1 \\ s \end{pmatrix}\)</p>
+          \[ C(sI - A)^{-1}B = \frac{3 + s}{s^2 + 3s + 2} \ \checkmark \]</li>
+      </ol>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="solution">
+    <h2 id="solution">คำตอบของสมการสถานะ: e^{At} <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="X6" data-k="state transition matrix matrix exponential solution convolution e^At zero input zero state คำตอบสมการสถานะ เมทริกซ์ทรานซิชัน">
+        <p class="tf-n"><b><span class="fid">X6</span> State solution</b> คำตอบของสมการสถานะ</p>
+        \[ \mathbf x(t) = \underbrace{e^{At}\mathbf x(0)}_{\text{ผลตอบสนองอิสระ}} + \underbrace{\int_0^te^{A(t - \tau)}B\mathbf u(\tau)\,d\tau}_{\text{ผลตอบสนองบังคับ}}, \qquad e^{At} = \mathcal L^{-1}\big\{(sI - A)^{-1}\big\} = Pe^{\Lambda t}P^{-1} \]
+        <p class="tf-x">\(e^{At}\) เรียกว่าเมทริกซ์ทรานซิชันสถานะ \(\Phi(t)\) · คำนวณได้ทั้งด้วยลาปลาซและด้วยการทำเป็นทแยงมุม (<a href="/learn/linear-algebra/eigenvalues/#dynamics">ค่าเฉพาะ</a>) · คือแกนของการ<a href="/learn/control-systems/digital-control/">แปลงเป็นดิจิทัลแบบ ZOH</a> \(A_d = e^{AT}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-x3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง X-3 · หา e^{At}</span><h3>หา \(e^{At}\) ของ \(A = \begin{pmatrix} 0 & 1 \\ -2 & -3 \end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>\((sI - A)^{-1} = \dfrac{1}{(s+1)(s+2)}\begin{pmatrix} s + 3 & 1 \\ -2 & s \end{pmatrix}\)</p></li>
+        <li><p>เศษส่วนย่อยทีละช่อง เช่น \(\dfrac{s+3}{(s+1)(s+2)} = \dfrac{2}{s+1} - \dfrac{1}{s+2}\)</p></li>
+      </ol>
+      <p class="answer">\(e^{At} = \begin{pmatrix} 2e^{-t} - e^{-2t} & e^{-t} - e^{-2t} \\ -2e^{-t} + 2e^{-2t} & -e^{-t} + 2e^{-2t} \end{pmatrix}\)</p>
+      <p class="check">ตรวจ \(t = 0\): ได้ \(I\) ✓ · เทียบ scipy expm ที่ \(t = 0.5\): ทุกช่องตรง ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="forms">
+    <h2 id="forms">รูปแบบมาตรฐานต่าง ๆ ใช้ทำอะไร <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รูปแบบ</th><th>ลักษณะ</th><th>ใช้เมื่อ</th></tr></thead>
+        <tbody>
+          <tr><td>ฟิสิกส์ (physical)</td><td>สถานะมีความหมายจริง (\(i_L\), \(v_C\), ตำแหน่ง)</td><td>วัดได้ ออกแบบตัวสังเกต จำกัดสถานะ</td></tr>
+          <tr><td>ควบคุมได้ (controllable)</td><td>แถวล่างคือสัมประสิทธิ์ตัวส่วน</td><td>วางขั้ว (เทียบสัมประสิทธิ์ตรง ๆ)</td></tr>
+          <tr><td>สังเกตได้ (observable)</td><td>ทรานสโพสของแบบควบคุมได้</td><td>ออกแบบตัวสังเกต</td></tr>
+          <tr><td>โมดัล / จอร์แดน</td><td>\(A\) ทแยงมุม (หรือบล็อก)</td><td>แยกโหมดอิสระ วิเคราะห์การสั่นของโครงสร้าง</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>มีแบบจำลองแล้ว คำถามคือ “ขับสถานะไปที่ไหนก็ได้หรือไม่” และ “ดูสถานะทั้งหมดจากเอาต์พุตได้หรือไม่” ไปที่<a href="/learn/control-systems/controllability-observability/">ความสามารถควบคุมได้และสังเกตได้</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

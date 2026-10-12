@@ -1,0 +1,160 @@
+<!--meta
+{
+  "title": "ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน: ฟังก์ชันพรรณนา ลิมิตไซเคิล ลียาปูนอฟ sliding mode และ robust stability | อาจารย์มด",
+  "h1": "ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน",
+  "description": "ความไม่เชิงเส้นที่พบในระบบควบคุมจริง การอิ่มตัว dead-zone backlash แรงเสียดทาน การควอนไทซ์ ฟังก์ชันพรรณนา (describing function) ทำนายลิมิตไซเคิล ระนาบเฟส เสถียรภาพแบบลียาปูนอฟ sliding mode control ความไม่แน่นอนของแบบจำลอง เงื่อนไขเสถียรภาพแบบทนทาน small-gain theorem และแนวคิด H-infinity",
+  "ogTitle": "ไม่เชิงเส้นและทนทาน: เมื่อโลกจริงไม่ตรงแบบจำลอง",
+  "lesson": "control-systems",
+  "sub": "nonlinear-robust",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Graduate"],
+  "about": ["Nonlinear control", "Describing function", "Limit cycle", "Lyapunov stability", "Sliding mode control", "Robust control", "Small-gain theorem", "H-infinity"],
+  "faq": [
+    {"q": "ลิมิตไซเคิลคืออะไร เกิดได้อย่างไร?", "a": "คือการแกว่งค้างที่มีแอมพลิจูดและความถี่คงที่ ไม่ขึ้นกับเงื่อนไขเริ่มต้น เกิดได้เฉพาะในระบบไม่เชิงเส้น เช่น ตัวควบคุมแบบ on–off ร่วมกับพลานต์ที่มีเฟสล่าช้ามาก หรือ backlash ในเกียร์ร่วมกับลูปตำแหน่งที่มีเกนสูง ฟังก์ชันพรรณนาใช้ทำนายแอมพลิจูดและความถี่ได้ล่วงหน้า"},
+    {"q": "วิธีลียาปูนอฟใช้ทำอะไร?", "a": "ใช้พิสูจน์เสถียรภาพของระบบไม่เชิงเส้นโดยไม่ต้องแก้สมการ หาฟังก์ชันคล้ายพลังงาน V(x) ที่เป็นบวก ถ้าอนุพันธ์ตามเวลาเป็นลบเสมอ ระบบจะลู่เข้าจุดสมดุล ใช้มากในการพิสูจน์ตัวควบคุมหุ่นยนต์ เช่น PD + ชดเชยแรงโน้มถ่วง"},
+    {"q": "การควบคุมแบบทนทาน (robust control) ต่างจากการจูนธรรมดาอย่างไร?", "a": "การออกแบบทั่วไปใช้แบบจำลองเดียว ส่วน robust control ระบุขอบเขตความไม่แน่นอนของพลานต์อย่างชัดเจน แล้วรับประกันว่าระบบเสถียรและได้สมรรถนะสำหรับพลานต์ทุกตัวในขอบเขตนั้น เกนมาร์จินและเฟสมาร์จินคือรูปแบบง่ายที่สุดของแนวคิดนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>ไม่เชิงเส้น · ทนทาน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.22 · ระบบควบคุม · Nonlinear &amp; Robust Control</p>
+      <h1>ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน</h1>
+      <p class="lede">ทุกอย่างก่อนหน้านี้สมมติว่าระบบเชิงเส้นและแบบจำลองถูกต้อง แต่ PWM เต็มได้แค่ 100% เกียร์มีระยะคลอน แรงเสียดทานสถิตทำให้มอเตอร์ไม่ขยับที่แรงดันต่ำ และค่าพารามิเตอร์จริงต่างจากแคตตาล็อก 20% หน้านี้รวมเครื่องมือหลักสำหรับโลกจริง ระดับภาพรวมที่ใช้ได้จริง เพื่อเป็นทางไปสู่วิชาระดับบัณฑิตศึกษา สูตรใช้รหัส U</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ความไม่เชิงเส้นทั่วไป: อิ่มตัว dead-zone backlash แรงเสียดทาน ควอนไทซ์ · ทำให้เกิด windup และลิมิตไซเคิล</li>
+          <li>ฟังก์ชันพรรณนา: ลิมิตไซเคิลที่ \(G(j\omega) = -1/N(a)\) · รีเลย์ \(N = 4d/(\pi a)\)</li>
+          <li>ลียาปูนอฟ: \(V \gt 0,\ \dot V \lt 0 \Rightarrow\) เสถียร</li>
+          <li>ทนทาน: \(\|W\,T\|_\infty \lt 1\) (ความไม่แน่นอนแบบคูณ) · small gain: \(\|G_1\|\,\|G_2\| \lt 1\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น saturation, describing function, limit cycle, lyapunov, sliding, small gain" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="nonlinearities">
+    <h2 id="nonlinearities">ความไม่เชิงเส้นที่เจอทุกวัน <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ความไม่เชิงเส้น</th><th>พบที่</th><th>ผลกระทบ</th><th>วิธีรับมือ</th></tr></thead>
+        <tbody>
+          <tr><td>อิ่มตัว (saturation)</td><td>PWM 0–100% แรงดันแบต กระแสสูงสุด</td><td>integral windup ช้าลง overshoot</td><td><a href="/learn/control-systems/pid/#P8">anti-windup</a> จำกัดค่าอ้างอิง</td></tr>
+          <tr><td>Dead-zone</td><td>วาล์ว มอเตอร์ที่มีแรงเสียดทานสถิต ไดรเวอร์ที่มี dead-time</td><td>ความผิดพลาดค้าง</td><td>ชดเชยด้วยตัวผกผัน เพิ่ม I</td></tr>
+          <tr><td>Backlash</td><td>เกียร์ สายพาน</td><td>ลิมิตไซเคิลในลูปตำแหน่ง</td><td>เกียร์ไร้ระยะคลอน วัดที่ปลายโหลด ลดเกน</td></tr>
+          <tr><td>แรงเสียดทาน (Coulomb, stiction)</td><td>แกนเลื่อน ข้อต่อหุ่นยนต์</td><td>stick–slip, hunting</td><td>feedforward แรงเสียดทาน dither</td></tr>
+          <tr><td>ควอนไทซ์</td><td>ADC เอนโค้ดเดอร์ PWM ความละเอียดจำกัด</td><td>แกว่งเล็ก ๆ รอบเป้า</td><td>ความละเอียดสูงขึ้น dead-band เล็ก ๆ</td></tr>
+          <tr><td>อัตราจำกัด (rate limit)</td><td>slew rate ของออปแอมป์ ตัวขับไฮดรอลิก</td><td>เหมือนหน่วงเวลาที่แอมพลิจูดสูง</td><td>วางแผนวิถี (trajectory)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="describing">
+    <h2 id="describing">ฟังก์ชันพรรณนาและลิมิตไซเคิล <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="U1" data-k="describing function relay saturation N(a) harmonic balance first harmonic ฟังก์ชันพรรณนา รีเลย์ อิ่มตัว">
+        <p class="tf-n"><b><span class="fid">U1</span> Describing functions</b> ฟังก์ชันพรรณนา (เกนสมมูลต่อไซน์แอมพลิจูด \(a\))</p>
+        \[ \text{รีเลย์ } \pm d:\ N(a) = \frac{4d}{\pi a}, \qquad \text{อิ่มตัว (ชัน } k, \text{ ขีด } \delta):\ N(a) = \frac{2k}{\pi}\left[\sin^{-1}\frac{\delta}{a} + \frac{\delta}{a}\sqrt{1 - \frac{\delta^2}{a^2}}\right]\ (a \gt \delta) \]
+        <p class="tf-x">ประมาณเฉพาะฮาร์มอนิกหลัก ใช้ได้ดีเมื่อพลานต์กรองฮาร์มอนิกสูง (low-pass) · อิ่มตัว: \(N\) ลดลงเมื่อ \(a\) เพิ่ม (เกนประสิทธิผลลดลง)</p>
+      </div>
+      <div class="tf wide" id="U2" data-k="limit cycle prediction harmonic balance G(jw) = -1/N(a) amplitude frequency ทำนายลิมิตไซเคิล">
+        <p class="tf-n"><b><span class="fid">U2</span> Limit-cycle prediction</b> ทำนายลิมิตไซเคิล</p>
+        \[ 1 + N(a)G(j\omega) = 0 \iff G(j\omega) = -\frac{1}{N(a)} \]
+        <p class="tf-x">วาด \(-1/N(a)\) บนกราฟ<a href="/learn/control-systems/nyquist/">ไนควิสต์</a> จุดตัดให้ทั้งแอมพลิจูดและความถี่ของการแกว่ง · เป็นหลักการของ <a href="/learn/control-systems/pid-tuning/#relay">relay auto-tune</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-u1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง U-1 · ตัวควบคุม on–off</span><h3>ตัวควบคุมรีเลย์ ±1 กับพลานต์ \(G(s) = \dfrac{10}{s(s+1)(s+2)}\) จะแกว่งที่ความถี่และแอมพลิจูดเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>\(-1/N(a) = -\pi a/4\) อยู่บนแกนจริงลบ <a class="tag tf" href="#U2">U2</a></p></li>
+        <li><p>\(G(j\omega)\) ตัดแกนจริงลบที่ \(\omega = \sqrt2\) ค่า \(-10/6 = -1.667\) (เหมือน <a href="/learn/control-systems/nyquist/#ex-n1">N-1</a>)</p></li>
+        <li><p>\(\pi a/4 = 1.667 \Rightarrow a = 2.12\)</p></li>
+      </ol>
+      <p class="answer">แกว่งค้างที่ \(\omega = 1.414\) rad/s (คาบ 4.44 s) แอมพลิจูดประมาณ 2.12 · เตาอบที่ใช้เทอร์โมสตัท on–off แกว่งรอบจุดตั้งด้วยเหตุผลเดียวกัน</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lyapunov">
+    <h2 id="lyapunov">เสถียรภาพแบบลียาปูนอฟ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="U3" data-k="lyapunov direct method energy function positive definite derivative negative global asymptotic stability ลียาปูนอฟ ฟังก์ชันพลังงาน">
+        <p class="tf-n"><b><span class="fid">U3</span> Lyapunov's direct method</b> วิธีตรงของลียาปูนอฟ</p>
+        \[ V(\mathbf 0) = 0,\ \ V(\mathbf x) \gt 0 \ (\mathbf x \ne \mathbf 0),\ \ \dot V = \nabla V\cdot f(\mathbf x) \lt 0 \ \Rightarrow\ \text{เสถียรเชิงอาการ} \]
+        <p class="tf-x">ถ้า \(V \to \infty\) เมื่อ \(\|\mathbf x\| \to \infty\) ด้วย จะเสถียรแบบทั่วทั้งปริภูมิ (global) · ระบบเชิงเส้น: \(V = \mathbf x^TP\mathbf x\) กับ \(A^TP + PA = -Q\)</p>
+      </div>
+      <div class="tf wide" id="U4" data-k="lyapunov indirect method linearization jacobian eigenvalues local stability วิธีอ้อมของลียาปูนอฟ">
+        <p class="tf-n"><b><span class="fid">U4</span> Lyapunov's indirect method</b> วิธีอ้อม (ทำให้เป็นเชิงเส้น)</p>
+        \[ J = \left.\frac{\partial f}{\partial\mathbf x}\right|_{\mathbf x_0}:\ \ \operatorname{Re}\lambda_i(J) \lt 0 \Rightarrow \text{เสถียรเฉพาะที่}, \quad \operatorname{Re}\lambda_i \gt 0 \text{ บางตัว} \Rightarrow \text{ไม่เสถียร} \]
+        <p class="tf-x">ถ้ามี \(\operatorname{Re}\lambda = 0\) สรุปไม่ได้ ต้องใช้วิธีตรง · เป็นเหตุผลที่<a href="/learn/control-systems/modeling/#linearize">การทำให้เป็นเชิงเส้น</a>ใช้ได้</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-u2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง U-2 · เมื่อทำเป็นเชิงเส้นแล้วตอบไม่ได้</span><h3>\(\dot x = -x^3\) เสถียรไหม</h3></div>
+      <ol class="steps">
+        <li><p>วิธีอ้อม: \(J = -3x^2|_0 = 0\) สรุปไม่ได้ <a class="tag tf" href="#U4">U4</a></p></li>
+        <li><p>วิธีตรง: \(V = x^2 \gt 0\), \(\dot V = 2x\dot x = -2x^4 \lt 0\) สำหรับ \(x \ne 0\) <a class="tag tf" href="#U3">U3</a></p></li>
+      </ol>
+      <p class="answer">เสถียรเชิงอาการแบบทั่วทั้งปริภูมิ แต่ลู่เข้าช้ากว่าเอกซ์โพเนนเชียล · หุ่นยนต์ใช้ \(V\) = พลังงานจลน์ + พลังงานศักย์เสมือน พิสูจน์ PD + ชดเชยแรงโน้มถ่วง (ดู<a href="/learn/control-systems/robotics/">โรโบติกส์</a>)</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf wide" id="U5" data-k="sliding mode control switching surface robust discontinuous chattering ควบคุมแบบโหมดเลื่อน">
+        <p class="tf-n"><b><span class="fid">U5</span> Sliding mode control</b> ควบคุมแบบโหมดเลื่อน</p>
+        \[ \sigma = \dot e + \lambda e, \qquad u = u_{eq} - k\,\operatorname{sign}(\sigma), \quad k \gt |\text{ความไม่แน่นอน}| \]
+        <p class="tf-x">บังคับให้สถานะเลื่อนบนผิว \(\sigma = 0\) ซึ่ง \(e \to 0\) แบบ \(e^{-\lambda t}\) ทนต่อการรบกวนที่จำกัดขอบเขตได้สมบูรณ์ · ข้อเสีย: chattering แก้ด้วย \(\operatorname{sat}(\sigma/\phi)\) แทน sign · ใช้ในไดรฟ์มอเตอร์และตัวแปลงกำลัง</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="robust">
+    <h2 id="robust">การควบคุมแบบทนทาน <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="U6" data-k="multiplicative uncertainty robust stability condition W T infinity norm complementary sensitivity ความไม่แน่นอนแบบคูณ เสถียรภาพทนทาน">
+        <p class="tf-n"><b><span class="fid">U6</span> Robust stability (multiplicative uncertainty)</b> เสถียรภาพทนทาน</p>
+        \[ G_{\text{จริง}} = G(1 + W\Delta),\ |\Delta| \le 1 \quad\Rightarrow\quad \text{เสถียรทุกพลานต์} \iff |W(j\omega)T(j\omega)| \lt 1 \ \ \forall\omega \]
+        <p class="tf-x">\(|W(j\omega)|\) = ขนาดความไม่แน่นอนสัมพัทธ์ที่แต่ละความถี่ (มักเล็กที่ความถี่ต่ำ โตที่ความถี่สูง) · จึงต้องให้ \(|T|\) เล็กที่ความถี่สูง: แบนด์วิดท์ถูกจำกัดด้วยความรู้เรื่องพลานต์</p>
+      </div>
+      <div class="tf wide" id="U7" data-k="small gain theorem loop gain norm less than one feedback interconnection ทฤษฎีบทเกนเล็ก">
+        <p class="tf-n"><b><span class="fid">U7</span> Small-gain theorem</b> ทฤษฎีบทเกนเล็ก</p>
+        \[ \|G_1\|_\infty\,\|G_2\|_\infty \lt 1 \ \Rightarrow\ \text{ระบบป้อนกลับของ } G_1, G_2 \text{ เสถียร} \]
+        <p class="tf-x">ใช้ได้แม้ \(G_2\) ไม่เชิงเส้นหรือแปรตามเวลา (ใช้เกนแบบ \(L_2\)) · เป็นฐานของ H∞ control ซึ่งออกแบบตัวควบคุมให้ \(\|W_1S\|_\infty\) และ \(\|W_2T\|_\infty\) เล็กที่สุดพร้อมกัน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-u3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง U-3 · เกนพลานต์ไม่แน่นอน</span><h3>\(L = \dfrac{K}{s(s+1)(s+2)}\) ออกแบบที่ \(K = 2\) แต่พลานต์จริงมีเกนตั้งแต่ 0.5 ถึง 1.5 เท่าของค่าที่ออกแบบ ยังเสถียรไหม</h3></div>
+      <ol class="steps">
+        <li><p>\(K\) จริงอยู่ในช่วง 1 ถึง 3 · เสถียรเมื่อ \(K \lt 6\) (<a href="/learn/control-systems/routh-hurwitz/#ex-r5">R-5</a>)</p></li>
+        <li><p>มองด้วยมาร์จิน: GM = 3 เท่า (9.54 dB) ครอบความไม่แน่นอน 1.5 เท่า เหลือที่ว่างอีก 2 เท่า</p></li>
+      </ol>
+      <p class="answer">เสถียรทุกกรณี (robustly stable) แต่ที่ \(K = 3\) PM ลดเหลือประมาณ 20° แกว่งมาก ถ้าต้องการสมรรถนะทนทานด้วย (robust performance) ต้องออกแบบให้มาร์จินมากกว่านี้</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ได้เครื่องมือครบแล้ว ส่วนที่ 9 คือการลงสนามจริง: <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a> <a href="/learn/control-systems/robotics/">โรโบติกส์</a> และ<a href="/learn/control-systems/power-electronics-control/">ตัวแปลงกำลัง</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

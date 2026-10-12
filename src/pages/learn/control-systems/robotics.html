@@ -1,0 +1,184 @@
+<!--meta
+{
+  "title": "ระบบควบคุมโรโบติกส์: จลนศาสตร์ จาโคเบียน พลศาสตร์แขนกล computed torque วิถี และหุ่นยนต์ล้อ | อาจารย์มด",
+  "h1": "ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ",
+  "description": "ระบบควบคุมหุ่นยนต์สำหรับวิศวกรไฟฟ้า จลนศาสตร์ตรงและผกผันของแขนกลสองข้อต่อ จาโคเบียนและภาวะเอกฐาน สมการพลศาสตร์แขนกล ควบคุมข้อต่ออิสระด้วย PD/PID ชดเชยแรงโน้มถ่วง computed torque control การสร้างวิถีแบบพหุนามกำลังสามและห้า หุ่นยนต์ล้อแบบ differential drive การนำทางไปยังเป้าหมาย หุ่นยนต์ทรงตัวสองล้อ และไอเดียโปรเจกต์หุ่นยนต์",
+  "ogTitle": "โรโบติกส์: จากจลนศาสตร์ถึง computed torque และหุ่นยนต์ทรงตัว",
+  "lesson": "control-systems",
+  "sub": "robotics",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Robotics", "Robot control", "Forward kinematics", "Inverse kinematics", "Jacobian matrix", "Computed torque control", "Trajectory planning", "Differential drive robot", "Self-balancing robot"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js", "/assets/cs-pid.js"],
+  "faq": [
+    {"q": "ทำไมควบคุมแขนกลด้วย PID แยกแต่ละข้อต่อได้?", "a": "เพราะข้อต่อส่วนใหญ่มีเกียร์ทดสูง ความเฉื่อยของโหลดที่สะท้อนมายังมอเตอร์ลดลงตามกำลังสองของอัตราทด ผลกระทบระหว่างข้อต่อ (coupling) จึงเล็กเมื่อเทียบกับความเฉื่อยของมอเตอร์เอง มองเป็นการรบกวนที่ PID จัดการได้ แต่หุ่นยนต์ที่ขับตรง (direct drive) หรือเคลื่อนที่เร็วมาก ต้องใช้ computed torque"},
+    {"q": "ภาวะเอกฐาน (singularity) คืออะไร?", "a": "คือท่าที่จาโคเบียนเสียแรงก์ (ดีเทอร์มิแนนต์เป็นศูนย์) เช่น แขนกลเหยียดตรงสุด ปลายแขนเคลื่อนในบางทิศไม่ได้ และการคำนวณความเร็วข้อต่อจากความเร็วปลายแขนจะได้ค่าอนันต์ ต้องวางแผนวิถีให้ห่างจากท่าเหล่านี้"},
+    {"q": "หุ่นยนต์ทรงตัวสองล้อควบคุมอย่างไร?", "a": "เป็นลูกตุ้มกลับหัวบนล้อ พลานต์ไม่เสถียรวงเปิด นิยมใช้ LQR กับสถานะ มุมเอียง อัตราเอียง ตำแหน่ง และความเร็วล้อ หรือ PID สองลูป (ลูปในคุมมุมเอียง ลูปนอกคุมความเร็ว) มุมเอียงได้จากการหลอมรวมไจโรกับ accelerometer"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>โรโบติกส์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.24 · ระบบควบคุม · Robotics &amp; Robot Control</p>
+      <h1>ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ</h1>
+      <p class="lede">หุ่นยนต์คือเมคาทรอนิกส์ที่มีหลายข้อต่อทำงานประสานกัน คำถามเปลี่ยนจาก “มอเตอร์หมุนไปมุมนี้” เป็น “ปลายแขนไปตำแหน่งนี้ตามเส้นทางนี้” ต้องเพิ่มจลนศาสตร์ (เรขาคณิต) พลศาสตร์ (แรงบิดที่ต้องใช้) และการวางแผนวิถี แต่ลึก ๆ แล้ว<strong>ทุกข้อต่อยังเป็นเซอร์โวที่คุมด้วยหลักการเดียวกับ<a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></strong> หน้านี้พาจากแขนกลสองข้อต่อไปถึงหุ่นยนต์ล้อและหุ่นยนต์ทรงตัว สูตรใช้รหัส A</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>จลนศาสตร์ตรง \(\mathbf x = f(\mathbf q)\) · ผกผัน \(\mathbf q = f^{-1}(\mathbf x)\) · ความเร็ว \(\dot{\mathbf x} = J(\mathbf q)\dot{\mathbf q}\)</li>
+          <li>พลศาสตร์: \(M(\mathbf q)\ddot{\mathbf q} + C(\mathbf q, \dot{\mathbf q})\dot{\mathbf q} + \mathbf g(\mathbf q) = \boldsymbol\tau\)</li>
+          <li>PD + ชดเชยแรงโน้มถ่วง → เสถียรเสมอ (ลียาปูนอฟ) · computed torque → ทุกข้อต่อเป็นระบบอันดับสองเชิงเส้นที่เลือก \(\zeta, \omega_n\) ได้</li>
+          <li>หุ่นยนต์ล้อ: \(v = \frac r2(\omega_R + \omega_L)\), \(\omega = \frac rb(\omega_R - \omega_L)\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น forward kinematics, inverse, jacobian, dynamics, computed torque, trajectory, differential drive" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="kinematics">
+    <h2 id="kinematics">จลนศาสตร์แขนกลสองข้อต่อ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A1" data-k="forward kinematics two link planar arm x y theta1 theta2 จลนศาสตร์ตรง แขนกลสองข้อต่อ">
+        <p class="tf-n"><b><span class="fid">A1</span> Forward kinematics (2-link planar)</b> จลนศาสตร์ตรง</p>
+        \[ x = l_1\cos\theta_1 + l_2\cos(\theta_1 + \theta_2), \qquad y = l_1\sin\theta_1 + l_2\sin(\theta_1 + \theta_2) \]
+        <p class="tf-x">ใช้<a href="/learn/trigonometry/">ตรีโกณมิติ</a>ล้วน ๆ · แขนหลายข้อต่อใช้เมทริกซ์แปลงพิกัด (Denavit–Hartenberg) คูณต่อกัน</p>
+      </div>
+      <div class="tf wide" id="A2" data-k="inverse kinematics law of cosines elbow up down solution จลนศาสตร์ผกผัน กฎของโคไซน์">
+        <p class="tf-n"><b><span class="fid">A2</span> Inverse kinematics</b> จลนศาสตร์ผกผัน</p>
+        \[ \cos\theta_2 = \frac{x^2 + y^2 - l_1^2 - l_2^2}{2l_1l_2}, \qquad \theta_1 = \operatorname{atan2}(y, x) - \operatorname{atan2}(l_2\sin\theta_2,\ l_1 + l_2\cos\theta_2) \]
+        <p class="tf-x">\(\theta_2 = \pm\cos^{-1}(\cdot)\) ให้สองคำตอบ (ข้อศอกขึ้น/ลง) · ถ้า \(|\cos\theta_2| \gt 1\) ปลายแขนเอื้อมไม่ถึง</p>
+      </div>
+      <div class="tf wide" id="A3" data-k="jacobian velocity kinematics singularity determinant l1 l2 sin theta2 จาโคเบียน ภาวะเอกฐาน">
+        <p class="tf-n"><b><span class="fid">A3</span> Jacobian</b> จาโคเบียนและภาวะเอกฐาน</p>
+        \[ \begin{pmatrix} \dot x \\ \dot y \end{pmatrix} = \underbrace{\begin{pmatrix} -l_1s_1 - l_2s_{12} & -l_2s_{12} \\ l_1c_1 + l_2c_{12} & l_2c_{12} \end{pmatrix}}_{J(\boldsymbol\theta)}\begin{pmatrix} \dot\theta_1 \\ \dot\theta_2 \end{pmatrix}, \qquad \det J = l_1l_2\sin\theta_2, \qquad \boldsymbol\tau = J^T\mathbf F \]
+        <p class="tf-x">\(s_{12} = \sin(\theta_1 + \theta_2)\) · \(\theta_2 = 0, \pi\) (แขนเหยียดตรงหรือพับสุด) เป็นภาวะเอกฐาน · \(J^T\) แปลงแรงที่ปลายแขนเป็นแรงบิดข้อต่อ (ใช้ใน force control) · ดู<a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>และ<a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-1 · ไปและกลับ</span><h3>แขนกล \(l_1 = l_2 = 0.5\) m ที่ \(\theta_1 = 30^\circ,\ \theta_2 = 60^\circ\) ปลายแขนอยู่ที่ไหน แล้วคำนวณย้อนกลับ</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#A1">A1</a>: \(x = 0.5\cos30^\circ + 0.5\cos90^\circ = 0.433\) m · \(y = 0.5\sin30^\circ + 0.5\sin90^\circ = 0.75\) m</p></li>
+        <li><p><a class="tag tf" href="#A2">A2</a>: \(\cos\theta_2 = \dfrac{0.1875 + 0.5625 - 0.25 - 0.25}{0.5} = 0.5 \Rightarrow \theta_2 = 60^\circ\) · \(\theta_1 = \operatorname{atan2}(0.75, 0.433) - \operatorname{atan2}(0.433, 0.75) = 60^\circ - 30^\circ = 30^\circ\) ✓</p></li>
+        <li><p><a class="tag tf" href="#A3">A3</a>: \(\det J = 0.25\sin60^\circ = 0.217\) ห่างจากเอกฐาน ✓</p></li>
+      </ol>
+      <p class="answer">ปลายแขนที่ (0.433, 0.75) m · คำนวณย้อนกลับได้มุมเดิม (คำตอบข้อศอกลง) · อีกคำตอบคือ \(\theta_2 = -60^\circ,\ \theta_1 = 90^\circ\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dynamics">
+    <h2 id="dynamics">พลศาสตร์และการควบคุมข้อต่อ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A4" data-k="manipulator dynamics euler lagrange mass matrix coriolis gravity torque พลศาสตร์แขนกล ออยเลอร์ ลากรานจ์">
+        <p class="tf-n"><b><span class="fid">A4</span> Manipulator dynamics</b> สมการพลศาสตร์แขนกล</p>
+        \[ M(\mathbf q)\ddot{\mathbf q} + C(\mathbf q, \dot{\mathbf q})\dot{\mathbf q} + \mathbf g(\mathbf q) + \mathbf f(\dot{\mathbf q}) = \boldsymbol\tau \]
+        <p class="tf-x">\(M\) เมทริกซ์ความเฉื่อย (สมมาตร บวกแน่นอน เปลี่ยนตามท่า) · \(C\) แรงโคริโอลิสและหนีศูนย์ · \(\mathbf g\) แรงโน้มถ่วง · \(\mathbf f\) แรงเสียดทาน · ได้จากสมการออยเลอร์–ลากรานจ์ \(\frac{d}{dt}\frac{\partial\mathcal L}{\partial\dot q} - \frac{\partial\mathcal L}{\partial q} = \tau\)</p>
+      </div>
+      <div class="tf wide" id="A5" data-k="independent joint control pd gravity compensation lyapunov stability ควบคุมข้อต่ออิสระ ชดเชยแรงโน้มถ่วง">
+        <p class="tf-n"><b><span class="fid">A5</span> PD + gravity compensation</b> PD + ชดเชยแรงโน้มถ่วง</p>
+        \[ \boldsymbol\tau = K_P(\mathbf q_d - \mathbf q) - K_D\dot{\mathbf q} + \mathbf g(\mathbf q) \]
+        <p class="tf-x">ลู่เข้า \(\mathbf q_d\) คงที่เสมอสำหรับ \(K_P, K_D \succ 0\) ใดก็ได้ (พิสูจน์ด้วย<a href="/learn/control-systems/nonlinear-robust/#lyapunov">ลียาปูนอฟ</a> \(V = \tfrac12\dot{\mathbf q}^TM\dot{\mathbf q} + \tfrac12\mathbf e^TK_P\mathbf e\)) · ไม่ต้องรู้ \(M\) และ \(C\) เลย · ไม่มีเทอม I จึงไม่ต้องกลัว windup</p>
+      </div>
+      <div class="tf wide" id="A6" data-k="computed torque control feedback linearization inverse dynamics error dynamics kp kd omega n zeta คอมพิวเต็ดทอร์ก">
+        <p class="tf-n"><b><span class="fid">A6</span> Computed torque (inverse dynamics)</b> คอมพิวเต็ดทอร์ก</p>
+        \[ \boldsymbol\tau = M(\mathbf q)\big[\ddot{\mathbf q}_d + K_D\dot{\mathbf e} + K_P\mathbf e\big] + C\dot{\mathbf q} + \mathbf g \ \Rightarrow\ \ddot{\mathbf e} + K_D\dot{\mathbf e} + K_P\mathbf e = \mathbf 0 \]
+        <p class="tf-x">ความผิดพลาดทุกข้อต่อกลายเป็นระบบอันดับสองเชิงเส้นอิสระ เลือก \(K_P = \omega_n^2,\ K_D = 2\zeta\omega_n\) · ต้องรู้แบบจำลองแม่น · คือ feedback linearization</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-2 · ตั้งเกน computed torque</span><h3>ต้องการให้ความผิดพลาดของทุกข้อต่อลู่เข้าแบบหน่วงวิกฤต เวลาเข้าที่ประมาณ 0.6 s</h3></div>
+      <ol class="steps">
+        <li><p>หน่วงวิกฤต \(\zeta = 1\): \(t_s \approx 5.8/\omega_n\) (2%) → \(\omega_n \approx 10\) rad/s</p></li>
+        <li><p><a class="tag tf" href="#A6">A6</a>: \(K_P = 100\ \text{s}^{-2}\), \(K_D = 20\ \text{s}^{-1}\) (เป็นเมทริกซ์ทแยงมุม)</p></li>
+      </ol>
+      <p class="answer">\(K_P = 100I,\ K_D = 20I\) ทุกข้อต่อตอบสนองเหมือนกันไม่ว่าท่าไหน (ตราบที่แบบจำลองถูก) · ต้องตรวจว่าแรงบิดที่คำนวณได้ไม่เกินขีดจำกัดของมอเตอร์</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trajectory">
+    <h2 id="trajectory">วางแผนวิถี <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A7" data-k="trajectory planning cubic polynomial quintic rest to rest velocity acceleration วางแผนวิถี พหุนามกำลังสาม">
+        <p class="tf-n"><b><span class="fid">A7</span> Cubic and quintic trajectories</b> วิถีพหุนาม (จากหยุดนิ่งถึงหยุดนิ่ง)</p>
+        \[ q(t) = q_0 + \Delta\left[3\left(\tfrac tT\right)^2 - 2\left(\tfrac tT\right)^3\right], \qquad \dot q_{max} = \frac{3\Delta}{2T}, \qquad \ddot q_{max} = \frac{6\Delta}{T^2} \]
+        <p class="tf-x">ความเร็วต่อเนื่อง ความเร่งกระโดดที่ต้นและปลาย · พหุนามกำลังห้า \(\Delta[10\tau^3 - 15\tau^4 + 6\tau^5]\) ให้ความเร่งต่อเนื่องด้วย (นุ่มกว่า กระตุ้นเรโซแนนซ์น้อยกว่า) · ส่ง \(q, \dot q, \ddot q\) ไปเป็น feedforward (<a href="/learn/control-systems/mechatronics/#K4">K4</a>)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-3 · หมุนข้อต่อ 90° ใน 2 วินาที</span><h3>หาวิถีกำลังสามและความเร็ว ความเร่งสูงสุด</h3></div>
+      <ol class="steps">
+        <li><p>\(\Delta = \pi/2,\ T = 2\): \(q(t) = 1.178t^2 - 0.393t^3\) rad <a class="tag tf" href="#A7">A7</a></p></li>
+        <li><p>\(\dot q_{max} = \dfrac{3(\pi/2)}{4} = 1.178\) rad/s ที่ \(t = 1\) s · \(\ddot q_{max} = \dfrac{6(\pi/2)}{4} = 2.356\) rad/s² ที่ \(t = 0\)</p></li>
+      </ol>
+      <p class="answer">\(q(t) = 1.178t^2 - 0.393t^3\) · ความเร็วสูงสุด 67.5°/s · ใช้ตรวจว่ามอเตอร์และเกียร์รับไหว (แรงบิดสูงสุด \(\approx J_{eq}\ddot q_{max}\) + แรงโน้มถ่วง)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mobile">
+    <h2 id="mobile">หุ่นยนต์ล้อและหุ่นยนต์ทรงตัว <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A8" data-k="differential drive kinematics wheel speed linear angular velocity unicycle model หุ่นยนต์ล้อ differential drive">
+        <p class="tf-n"><b><span class="fid">A8</span> Differential-drive kinematics</b> จลนศาสตร์หุ่นยนต์สองล้อขับ</p>
+        \[ v = \frac r2(\omega_R + \omega_L), \quad \omega = \frac rb(\omega_R - \omega_L), \quad \dot x = v\cos\phi,\ \dot y = v\sin\phi,\ \dot\phi = \omega \]
+        <p class="tf-x">\(r\) รัศมีล้อ \(b\) ระยะห่างล้อ · ผกผัน: \(\omega_{R,L} = \dfrac{v \pm \omega b/2}{r}\) แล้วใช้ PI คุมความเร็วล้อแต่ละข้าง</p>
+      </div>
+      <div class="tf wide" id="A9" data-k="go to goal heading control pure pursuit line following pd steering นำทางไปเป้าหมาย">
+        <p class="tf-n"><b><span class="fid">A9</span> Go-to-goal / heading control</b> นำทางไปเป้าหมาย</p>
+        \[ \phi_d = \operatorname{atan2}(y_g - y,\ x_g - x), \qquad \omega = K_\phi\,\operatorname{wrap}(\phi_d - \phi), \qquad v = \min\big(v_{max},\ K_\rho\rho\big) \]
+        <p class="tf-x">\(\rho\) = ระยะถึงเป้า · wrap มุมให้อยู่ใน \((-\pi, \pi]\) · หุ่นเดินตามเส้นใช้ PD กับความคลาดจากเส้นแทน \(\phi_d - \phi\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-a4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-4 · สั่งล้อ</span><h3>หุ่นยนต์ล้อรัศมี 5 cm ระยะห่างล้อ 30 cm ต้องการ \(v = 0.5\) m/s และเลี้ยวด้วย \(\omega = 1\) rad/s</h3></div>
+      <ol class="steps">
+        <li><p><a class="tag tf" href="#A8">A8</a>: \(\omega_R = \dfrac{0.5 + 1(0.15)}{0.05} = 13\) rad/s · \(\omega_L = \dfrac{0.5 - 0.15}{0.05} = 7\) rad/s</p></li>
+      </ol>
+      <p class="answer">ล้อขวา 13 rad/s (124 rpm) ล้อซ้าย 7 rad/s (67 rpm) รัศมีวงเลี้ยว \(v/\omega = 0.5\) m · ส่งเป็นค่าอ้างอิงให้ลูปความเร็วล้อแต่ละข้าง</p>
+    </div>
+    <p><strong>หุ่นยนต์ทรงตัวสองล้อ</strong> คือ<a href="/learn/control-systems/modeling/#ex-m4">ลูกตุ้มกลับหัว</a>บนล้อ (ขั้วฝั่งขวา) วัดมุมเอียงด้วย IMU (complementary filter: \(\hat\theta = \alpha(\hat\theta + \omega_{gyro}T) + (1 - \alpha)\theta_{acc}\), \(\alpha \approx 0.98\)) แล้วใช้ <a href="/learn/control-systems/state-feedback/#lqr">LQR</a> กับสถานะ (มุม อัตรามุม ตำแหน่ง ความเร็ว) หรือ PID สองลูป ลูปในคุมมุมเร็ว ลูปนอกคุมความเร็วช้า</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ข้อต่อหนึ่งข้อต่อ</h2>
+    <p>ข้อต่อที่มีความเฉื่อยและแรงโน้มถ่วงถูกชดเชยแล้ว คือพลานต์ \(\frac{1}{Js^2 + bs}\) ลองตั้ง \(K_P = 100,\ K_D = 20\) (ตัวอย่าง A-2 กับ \(J = 1\)) ดูการตอบสนองแบบหน่วงวิกฤต แล้วลองข้อต่อที่ยืดหยุ่น</p>
+    <div class="pid-lab" data-presets='[{"n":"ข้อต่อแข็ง J=1 · PD (A-2)","plant":"1/(s^2+0.1s)","kp":100,"ki":0,"kd":20,"tend":1.5},{"n":"ข้อต่อแข็ง + แรงโน้มถ่วงไม่ชดเชย (ใช้ PID)","plant":"1/(s^2+0.1s)","kp":100,"ki":50,"kd":20,"tend":3},{"n":"ข้อต่อยืดหยุ่น (harmonic drive)","plant":"400/((s^2+0.1s)(s^2+4s+400))","kp":20,"ki":0,"kd":8,"tend":3},{"n":"มุมเอียงหุ่นยนต์ทรงตัว (ไม่เสถียร)","plant":"1/(s^2-20)","kp":60,"ki":10,"kd":8,"tend":3}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="projects">
+    <h2 id="projects">ไอเดียโปรเจกต์หุ่นยนต์</h2>
+    <ul>
+      <li><span class="lv lv-b">พื้นฐาน</span> หุ่นเดินตามเส้น PD · หุ่นหลบสิ่งกีดขวางด้วยอัลตราโซนิก · แขนกลเซอร์โว RC 3 แกนพร้อมจลนศาสตร์ผกผัน</li>
+      <li><span class="lv lv-i">กลาง</span> หุ่นยนต์ล้อนำทางด้วยเอนโค้ดเดอร์ (odometry) ไปยังพิกัด · หุ่นทรงตัวสองล้อ · พล็อตเตอร์วาดรูป SCARA สองข้อต่อ</li>
+      <li><span class="lv lv-a">ขั้นสูง</span> แขนกล 6 แกนด้วย computed torque · โดรนสี่ใบพัด (PID คาสเคดมุม–อัตรา) · หุ่นยนต์ทำแผนที่ด้วย LiDAR + ตัวกรองคาลมาน · หุ่นยนต์ขาเดิน</li>
+    </ul>
+    <p>ไอเดียเพิ่มเติมอยู่ใน<a href="/learn/control-systems/examples/">คลังไอเดียระบบควบคุม</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ทุกมอเตอร์ในหุ่นยนต์ต้องการแหล่งจ่ายที่นิ่ง และไดรเวอร์ทุกตัวคือตัวแปลงกำลัง ไปที่<a href="/learn/control-systems/power-electronics-control/">สะพานสู่อิเล็กทรอนิกส์กำลัง</a> เพื่อดูว่าวิชาควบคุมทั้งหมดไปอยู่ในพาวเวอร์ซัพพลายได้อย่างไร</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
