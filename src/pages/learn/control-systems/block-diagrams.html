@@ -1,0 +1,172 @@
+<!--meta
+{
+  "title": "บล็อกไดอะแกรมและกฎของเมสัน: ลดรูป อนุกรม ขนาน ป้อนกลับ ย้ายจุดรวม และฟังก์ชันถ่ายโอนวงปิด | อาจารย์มด",
+  "h1": "บล็อกไดอะแกรม แผนภาพสัญญาณ และฟังก์ชันถ่ายโอนวงปิด",
+  "description": "วิธีลดรูปบล็อกไดอะแกรมทีละขั้น บล็อกอนุกรม ขนาน วงป้อนกลับ การย้ายจุดรวมสัญญาณและจุดแยกสัญญาณ แผนภาพการไหลของสัญญาณ (signal-flow graph) กฎของเมสัน (Mason's gain formula) ลูปที่ไม่สัมผัสกัน ระบบหลายอินพุต และลูปซ้อนแบบแทโคมิเตอร์ของเซอร์โวมอเตอร์ พร้อมตัวอย่างที่ตรวจด้วยพีชคณิตเชิงสัญลักษณ์",
+  "ogTitle": "บล็อกไดอะแกรมและกฎของเมสัน: ลดรูปทีละขั้น",
+  "lesson": "control-systems",
+  "sub": "block-diagrams",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate"],
+  "about": ["Block diagram", "Signal-flow graph", "Mason's gain formula", "Feedback loop", "Closed-loop transfer function", "Cascade control"],
+  "faq": [
+    {"q": "ลดรูปบล็อกไดอะแกรมกับใช้กฎของเมสัน ควรใช้อะไร?", "a": "ระบบที่มีลูปซ้อนกันชัดเจนลดรูปทีละขั้นได้เร็วและเห็นภาพ ส่วนระบบที่ลูปพันกันซับซ้อน หรือต้องการคำตอบในครั้งเดียว กฎของเมสันเป็นระบบกว่า ควรทำได้ทั้งสองวิธีและใช้อีกวิธีตรวจคำตอบ"},
+    {"q": "ลูปที่ไม่สัมผัสกัน (non-touching) คืออะไร?", "a": "คือลูปสองลูปที่ไม่มีโนดร่วมกันเลยในแผนภาพการไหลของสัญญาณ ในกฎของเมสัน ผลคูณของลูปที่ไม่สัมผัสกันจะถูกบวกกลับเข้าไปในดีเทอร์มิแนนต์ Δ เพราะตอนลบลูปเดี่ยวทีละลูปเราลบผลรวมนั้นซ้ำไป"},
+    {"q": "ป้อนกลับบวกใช้สูตรอะไร?", "a": "G/(1 − GH) คือเปลี่ยนเครื่องหมายในตัวส่วน ในกฎของเมสันให้ใส่เครื่องหมายบวกลงในค่าลูปเกน (ลูปป้อนกลับลบมีเครื่องหมายลบติดอยู่ในลูปเกน)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>บล็อกไดอะแกรม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.3 · ระบบควบคุม · Block Diagrams &amp; Signal-Flow Graphs</p>
+      <h1>บล็อกไดอะแกรม แผนภาพสัญญาณ และฟังก์ชันถ่ายโอนวงปิด</h1>
+      <p class="lede">ระบบจริงประกอบด้วยตัวควบคุม ตัวขับ พลานต์ เซนเซอร์ และฟิลเตอร์ ต่อกันเป็นลูปซ้อนลูป บล็อกไดอะแกรมคือภาษาภาพที่วิศวกรควบคุมใช้คุยกัน และการลดรูปให้เหลือฟังก์ชันถ่ายโอนเดียวคือทักษะที่ต้องคล่องก่อนวิเคราะห์อะไรต่อ หน้านี้มีกฎลดรูปครบชุด กฎของเมสัน และตัวอย่างลูปซ้อนจากเซอร์โวมอเตอร์ สูตรใช้รหัส B</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>อนุกรม: คูณ · ขนาน: บวก · ป้อนกลับลบ: \(\dfrac{G}{1 + GH}\)</li>
+          <li>ย้ายจุดรวม/จุดแยกข้ามบล็อก ต้องใส่บล็อกชดเชย \(G\) หรือ \(1/G\)</li>
+          <li>เมสัน: \(T = \dfrac{\sum P_k\Delta_k}{\Delta}\), \(\Delta = 1 - \sum L_i + \sum L_iL_j - \cdots\) (คู่ที่ไม่สัมผัสกัน)</li>
+          <li>ลูปในเร็ว (ความเร็ว กระแส) ทำให้ลูปนอก (ตำแหน่ง) ออกแบบง่ายและหน่วงดีขึ้น</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น series, parallel, feedback, move summing, mason, non-touching" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="rules">
+    <h2 id="rules">กฎลดรูปพื้นฐาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="B1" data-k="series cascade blocks multiply อนุกรม คูณ">
+        <p class="tf-n"><b><span class="fid">B1</span> Series (cascade)</b> อนุกรม</p>
+        \[ G_1 \to G_2 \ \equiv\ G_1G_2 \]
+        <p class="tf-x">ใช้ได้เมื่อบล็อกหลังไม่ “โหลด” บล็อกหน้า (วงจรจริงต้องมีบัฟเฟอร์ เช่น ออปแอมป์)</p>
+      </div>
+      <div class="tf" id="B2" data-k="parallel blocks add sum ขนาน บวก">
+        <p class="tf-n"><b><span class="fid">B2</span> Parallel</b> ขนาน</p>
+        \[ G_1 \parallel G_2 \ \equiv\ G_1 \pm G_2 \]
+        <p class="tf-x">ตามเครื่องหมายที่จุดรวม · PID แบบขนานคือ \(K_P + K_I/s + K_Ds\)</p>
+      </div>
+      <div class="tf wide" id="B3" data-k="feedback loop negative positive closed loop formula G/(1+GH) ป้อนกลับ วงปิด">
+        <p class="tf-n"><b><span class="fid">B3</span> Feedback loop</b> วงป้อนกลับ</p>
+        \[ \frac{Y}{R} = \frac{G}{1 \pm GH} \qquad (+\ \text{สำหรับป้อนกลับลบ},\ -\ \text{สำหรับป้อนกลับบวก}) \]
+        <p class="tf-x">จำแบบคำพูด: “ไปข้างหน้า ส่วน หนึ่งบวกรอบลูป” · ป้อนกลับหนึ่งหน่วย (\(H = 1\)): \(\frac{G}{1 + G}\)</p>
+      </div>
+      <div class="tf wide" id="B4" data-k="moving summing point pickoff point takeoff ahead behind block equivalent ย้ายจุดรวม ย้ายจุดแยก">
+        <p class="tf-n"><b><span class="fid">B4</span> Moving junctions</b> ย้ายจุดรวมและจุดแยก</p>
+        \[ \begin{array}{l|l} \text{ย้ายจุดรวมไปหลังบล็อก } G & \text{ใส่ } G \text{ ในเส้นที่เข้ามารวม} \\ \text{ย้ายจุดรวมไปหน้าบล็อก } G & \text{ใส่ } 1/G \\ \text{ย้ายจุดแยกไปหลังบล็อก } G & \text{ใส่ } 1/G \text{ ในเส้นที่แยกออก} \\ \text{ย้ายจุดแยกไปหน้าบล็อก } G & \text{ใส่ } G \end{array} \]
+        <p class="tf-x">หลักการ: สัญญาณทุกเส้นต้องเหมือนเดิมหลังย้าย · ใช้แยกลูปที่พันกันให้เป็นลูปซ้อนกันได้</p>
+      </div>
+      <div class="tf" id="B5" data-k="unity feedback equivalent non unity H forward path G/(1+GH-G) ป้อนกลับหนึ่งหน่วยเทียบเท่า">
+        <p class="tf-n"><b><span class="fid">B5</span> Equivalent unity feedback</b> แปลงเป็นป้อนกลับหนึ่งหน่วย</p>
+        \[ G_e = \frac{G}{1 + GH - G} \]
+        <p class="tf-x">ใช้หาชนิดของระบบและความผิดพลาดอยู่ตัวเมื่อ \(H \ne 1\)</p>
+      </div>
+      <div class="tf" id="B6" data-k="multiple inputs superposition disturbance reference การหลายอินพุต การซ้อนทับ">
+        <p class="tf-n"><b><span class="fid">B6</span> Multiple inputs</b> หลายอินพุต</p>
+        \[ Y = T_R(s)R + T_D(s)D \]
+        <p class="tf-x">ระบบเชิงเส้นใช้การซ้อนทับ: หาทีละอินพุตโดยตั้งอินพุตอื่นเป็นศูนย์ แล้วบวก</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="reduction">
+    <h2 id="reduction">ลดรูปทีละขั้น: สามลูปซ้อน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="csfig"><!--FIG:cs-bd1--><svg viewBox="0 0 680 240" role="img" aria-label="บล็อกไดอะแกรมสามลูป: G1 G2 G3 อนุกรม ลูปใน H1 รอบ G2 ลูปกลาง H2 จากเอาต์พุตกลับมาก่อน G2 และลูปนอกป้อนกลับหนึ่งหน่วย"><defs><marker id="cs-bd1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker><clipPath id="cs-bd1-c"><rect x="0" y="0" width="680" height="240"/></clipPath></defs><path class="wire" d="M10 70L44 70" marker-end="url(#cs-bd1-a)"/><text class="lbk" x="22" y="60" text-anchor="middle">R</text><circle class="sum" cx="56" cy="70" r="12"/><path class="thin" d="M47.6 61.6l16.8 16.8m0 -16.8l-16.8 16.8"/><text class="lb" x="34" y="64">+</text><text class="lb" x="42" y="96">-</text><path class="wire" d="M68 70L95 70" marker-end="url(#cs-bd1-a)"/><rect class="blk" x="95" y="48" width="70" height="44" rx="6"/><text class="lb" x="130" y="75" text-anchor="middle">G₁</text><path class="wire" d="M165 70L203 70" marker-end="url(#cs-bd1-a)"/><circle class="sum" cx="215" cy="70" r="12"/><path class="thin" d="M206.6 61.6l16.8 16.8m0 -16.8l-16.8 16.8"/><text class="lb" x="193" y="64">+</text><text class="lb" x="201" y="96">-</text><path class="wire" d="M227 70L263 70" marker-end="url(#cs-bd1-a)"/><circle class="sum" cx="275" cy="70" r="12"/><path class="thin" d="M266.6 61.6l16.8 16.8m0 -16.8l-16.8 16.8"/><text class="lb" x="253" y="64">+</text><text class="lb" x="261" y="96">-</text><path class="wire" d="M287 70L320 70" marker-end="url(#cs-bd1-a)"/><rect class="blk" x="320" y="48" width="80" height="44" rx="6"/><text class="lb" x="360" y="75" text-anchor="middle">G₂</text><path class="wire" d="M400 70L460 70" marker-end="url(#cs-bd1-a)"/><circle cx="430" cy="70" r="3.5" style="fill:var(--ink)"/><rect class="blk" x="460" y="48" width="80" height="44" rx="6"/><text class="lb" x="500" y="75" text-anchor="middle">G₃</text><path class="wire" d="M540 70L668 70" marker-end="url(#cs-bd1-a)"/><text class="lbk" x="652" y="60" text-anchor="middle">Y</text><circle cx="580" cy="70" r="3.5" style="fill:var(--ink)"/><circle cx="625" cy="70" r="3.5" style="fill:var(--ink)"/><path class="wire" d="M430 70L430 135L400 135" marker-end="url(#cs-bd1-a)"/><rect class="blk" x="320" y="115" width="80" height="40" rx="6"/><text class="lb" x="360" y="140" text-anchor="middle">H₁</text><path class="wire" d="M320 135L275 135L275 82" marker-end="url(#cs-bd1-a)"/><path class="wire" d="M580 70L580 185L400 185" marker-end="url(#cs-bd1-a)"/><rect class="blk" x="320" y="165" width="80" height="40" rx="6"/><text class="lb" x="360" y="190" text-anchor="middle">H₂</text><path class="wire" d="M320 185L215 185L215 82" marker-end="url(#cs-bd1-a)"/><path class="wire" d="M625 70L625 228L56 228L56 82" marker-end="url(#cs-bd1-a)"/></svg><!--/FIG--><figcaption>ระบบสามลูป: ลูปใน \(H_1\) รอบ \(G_2\) · ลูปกลาง \(H_2\) จากเอาต์พุตกลับมาก่อน \(G_2\) · ลูปนอกหนึ่งหน่วย</figcaption></figure>
+    <div class="wx" id="ex-b1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง B-1 · ลดรูปจากในออกนอก</span><h3>หา \(Y/R\) ของระบบในรูปด้านบน</h3></div>
+      <ol class="steps">
+        <li><p>ลูปในสุด \(G_2\) กับ \(H_1\) <a class="tag tf" href="#B3">B3</a>: \(\dfrac{G_2}{1 + G_2H_1}\) แล้วอนุกรมกับ \(G_3\) <a class="tag tf" href="#B1">B1</a></p>
+          \[ X = \frac{G_2G_3}{1 + G_2H_1} \]</li>
+        <li><p>ลูปกลาง \(X\) กับ \(H_2\)</p>
+          \[ \frac{X}{1 + XH_2} = \frac{G_2G_3}{1 + G_2H_1 + G_2G_3H_2} \]</li>
+        <li><p>อนุกรม \(G_1\) แล้วปิดลูปนอกหนึ่งหน่วย</p>
+          \[ \frac{Y}{R} = \hlC{\frac{G_1G_2G_3}{1 + G_2H_1 + G_2G_3H_2 + G_1G_2G_3}} \]</li>
+      </ol>
+      <p class="check">ตรวจด้วย sympy ✓ · สังเกตตัวส่วน = 1 + ผลรวมลูปเกนทุกลูป (เพราะทุกลูปสัมผัสกัน) ตรงกับกฎของเมสันด้านล่าง</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="mason">
+    <h2 id="mason">กฎของเมสัน (Mason's Gain Formula) <span class="lv lv-i">กลาง</span></h2>
+    <p>แปลงบล็อกไดอะแกรมเป็น<strong>แผนภาพการไหลของสัญญาณ</strong> (signal-flow graph): สัญญาณเป็นโนด บล็อกเป็นกิ่งที่มีเกน แล้วใช้สูตรเดียวได้คำตอบทันที แม้ลูปจะพันกันซับซ้อน (Samuel Mason, 1953)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="B7" data-k="mason gain formula signal flow graph forward path loop determinant delta non-touching กฎของเมสัน">
+        <p class="tf-n"><b><span class="fid">B7</span> Mason's gain formula</b> กฎของเมสัน</p>
+        \[ T = \frac{1}{\Delta}\sum_k P_k\Delta_k, \qquad \Delta = 1 - \sum L_i + \sum L_iL_j - \sum L_iL_jL_k + \cdots \]
+        <p class="tf-x">\(P_k\) = เกนของเส้นทางไปข้างหน้าที่ \(k\) · \(L_i\) = ลูปเกน (รวมเครื่องหมายลบของป้อนกลับลบ) · \(L_iL_j\) = ผลคูณของคู่ลูปที่<strong>ไม่สัมผัสกัน</strong> · \(\Delta_k\) = \(\Delta\) ที่ตัดลูปซึ่งสัมผัสเส้นทาง \(k\) ทิ้ง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-b2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง B-2 · ลูปที่ไม่สัมผัสกัน</span><h3>เส้นทางไปข้างหน้า \(G_1G_2G_3G_4\) มีลูป \(-G_2H_1\) (รอบ \(G_2\)) \(-G_4H_2\) (รอบ \(G_4\)) และลูปนอก \(-G_1G_2G_3G_4H_3\) หา \(Y/R\)</h3></div>
+      <ol class="steps">
+        <li><p>\(P_1 = G_1G_2G_3G_4\) · ลูป: \(L_1 = -G_2H_1\), \(L_2 = -G_4H_2\), \(L_3 = -G_1G_2G_3G_4H_3\)</p></li>
+        <li><p>\(L_1\) กับ \(L_2\) ไม่สัมผัสกัน (\(G_2\) กับ \(G_4\) ไม่มีโนดร่วม คั่นด้วย \(G_3\)) · \(L_3\) สัมผัสทุกลูป</p>
+          \[ \Delta = 1 + G_2H_1 + G_4H_2 + G_1G_2G_3G_4H_3 + G_2H_1G_4H_2 \]</li>
+        <li><p>ทุกลูปสัมผัสเส้นทาง \(P_1\): \(\Delta_1 = 1\) <a class="tag tf" href="#B7">B7</a></p></li>
+      </ol>
+      <p class="answer">\(\dfrac{Y}{R} = \dfrac{G_1G_2G_3G_4}{1 + G_2H_1 + G_4H_2 + G_1G_2G_3G_4H_3 + G_2G_4H_1H_2}\)</p>
+      <p class="check">ลดรูปแบบบล็อกตรวจ: ลูปใน \(\frac{G_2}{1 + G_2H_1}\) และ \(\frac{G_4}{1 + G_4H_2}\) คูณกันได้ตัวส่วน \((1 + G_2H_1)(1 + G_4H_2)\) ซึ่งกระจายแล้วมีพจน์ \(G_2H_1G_4H_2\) พอดี ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="cascade">
+    <h2 id="cascade">ลูปซ้อน: ป้อนกลับความเร็วด้วยแทโคมิเตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>เซอร์โวตำแหน่งที่ใช้ P อย่างเดียวมักแกว่งมาก วิธีคลาสสิกคือวัดความเร็วด้วยแทโคมิเตอร์ (หรือเอนโค้ดเดอร์) ป้อนกลับเป็น<strong>ลูปใน</strong> ทำหน้าที่เหมือนแดมเปอร์ไฟฟ้า หลักเดียวกับลูปกระแส–ความเร็ว–ตำแหน่งของไดรฟ์ทุกตัวใน<a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></p>
+    <figure class="csfig"><!--FIG:cs-tacho--><svg viewBox="0 0 660 200" role="img" aria-label="เซอร์โวมอเตอร์ที่มีลูปในป้อนกลับความเร็วด้วยแทโคมิเตอร์ Kt s และลูปนอกป้อนกลับตำแหน่ง"><defs><marker id="cs-tacho-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker><clipPath id="cs-tacho-c"><rect x="0" y="0" width="660" height="200"/></clipPath></defs><path class="wire" d="M10 70L52 70" marker-end="url(#cs-tacho-a)"/><text class="lbk" x="26" y="60" text-anchor="middle">θr</text><circle class="sum" cx="64" cy="70" r="12"/><path class="thin" d="M55.6 61.6l16.8 16.8m0 -16.8l-16.8 16.8"/><text class="lb" x="42" y="64">+</text><text class="lb" x="50" y="96">-</text><path class="wire" d="M76 70L115 70" marker-end="url(#cs-tacho-a)"/><rect class="blk" x="115" y="48" width="70" height="44" rx="6"/><text class="lb" x="150" y="75" text-anchor="middle">K</text><path class="wire" d="M185 70L238 70" marker-end="url(#cs-tacho-a)"/><circle class="sum" cx="250" cy="70" r="12"/><path class="thin" d="M241.6 61.6l16.8 16.8m0 -16.8l-16.8 16.8"/><text class="lb" x="228" y="64">+</text><text class="lb" x="236" y="96">-</text><path class="wire" d="M262 70L300 70" marker-end="url(#cs-tacho-a)"/><rect class="blk" x="300" y="45" width="110" height="50" rx="6"/><text class="lb" x="355" y="70" text-anchor="middle">10/(s+1)</text><text class="tk" x="355" y="86" text-anchor="middle">มอเตอร์</text><path class="wire" d="M410 70L470 70" marker-end="url(#cs-tacho-a)"/><text class="lbk" x="440" y="60" text-anchor="middle">ω</text><circle cx="445" cy="70" r="3.5" style="fill:var(--ink)"/><rect class="blk" x="470" y="48" width="70" height="44" rx="6"/><text class="lb" x="505" y="75" text-anchor="middle">1/s</text><path class="wire" d="M540 70L648 70" marker-end="url(#cs-tacho-a)"/><text class="lbk" x="630" y="60" text-anchor="middle">θ</text><circle cx="600" cy="70" r="3.5" style="fill:var(--ink)"/><path class="wire" d="M445 70L445 140L395 140" marker-end="url(#cs-tacho-a)"/><rect class="blk" x="315" y="120" width="80" height="40" rx="6"/><text class="lb" x="355" y="140" text-anchor="middle">Kₜ</text><text class="tk" x="355" y="156" text-anchor="middle">แทโค</text><path class="wire" d="M315 140L250 140L250 82" marker-end="url(#cs-tacho-a)"/><path class="wire" d="M600 70L600 185L64 185L64 82" marker-end="url(#cs-tacho-a)"/></svg><!--/FIG--></figure>
+    <div class="wx" id="ex-b3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง B-3 · เลือกเกนแทโค</span><h3>ในรูปด้านบน ให้ \(K = 1\) หา \(K_t\) ที่ทำให้วงปิดมี \(\zeta = 0.5\) และเทียบกับกรณีไม่มีแทโค</h3></div>
+      <ol class="steps">
+        <li><p>ลูปใน <a class="tag tf" href="#B3">B3</a>: \(\dfrac{\Omega}{U} = \dfrac{10/(s+1)}{1 + 10K_t/(s+1)} = \dfrac{10}{s + 1 + 10K_t}\)</p></li>
+        <li><p>อนุกรม \(K\) และ \(1/s\) แล้วปิดลูปนอก</p>
+          \[ \frac{\Theta}{\Theta_r} = \frac{10K}{s^2 + (1 + 10K_t)s + 10K} \]</li>
+        <li><p>\(K = 1\): \(\omega_n = \sqrt{10} = 3.162\) · \(2\zeta\omega_n = 1 + 10K_t = 3.162 \Rightarrow K_t = 0.216\)</p></li>
+        <li><p>ไม่มีแทโค: \(\zeta = \dfrac{1}{2(3.162)} = 0.158\) overshoot 60%</p></li>
+      </ol>
+      <p class="answer">\(K_t = 0.216\) ลด overshoot จาก 60% เหลือ 16.3% โดย \(\omega_n\) เท่าเดิม ลูปในเพิ่มการหน่วงโดยไม่เพิ่มศูนย์ (ต่างจาก PD) จึงไม่มี overshoot ส่วนเกินจากศูนย์</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="tf warn">
+      <ul>
+        <li><b>เครื่องหมายป้อนกลับ</b> → ดูเครื่องหมายที่จุดรวมทุกครั้ง ป้อนกลับบวกตัวส่วนเป็น \(1 - GH\)</li>
+        <li><b>ย้ายจุดแยกแล้วลืมบล็อกชดเชย</b> → ตรวจว่าสัญญาณในเส้นที่ย้ายยังเหมือนเดิม <a class="tag tf" href="#B4">B4</a></li>
+        <li><b>เมสัน: นับคู่ลูปที่สัมผัสกัน</b> → นับเฉพาะคู่ที่ไม่มีโนดร่วมเลย</li>
+        <li><b>ลืม \(\Delta_k\)</b> → ถ้ามีลูปที่ไม่แตะเส้นทาง \(k\) \(\Delta_k \ne 1\)</li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ได้ฟังก์ชันถ่ายโอนวงปิดแล้ว ขั้นต่อไปคือดูว่ามันตอบสนองอย่างไร เร็วแค่ไหน พุ่งเกินเท่าไร ไปที่<a href="/learn/control-systems/time-response/">ผลตอบสนองเวลาและสเปกการออกแบบ</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

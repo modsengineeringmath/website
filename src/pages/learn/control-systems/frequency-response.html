@@ -1,0 +1,132 @@
+<!--meta
+{
+  "title": "ผลตอบสนองความถี่ (Frequency Response): G(jω) ขนาด เฟส ยอดเรโซแนนซ์ และแบนด์วิดท์ | อาจารย์มด",
+  "h1": "ผลตอบสนองความถี่: G(jω) ขนาด เฟส และแบนด์วิดท์",
+  "description": "ผลตอบสนองความถี่ของระบบเชิงเส้น ป้อนไซน์ได้ไซน์ ที่มาของ G(jω) ขนาดและเฟส วัดด้วยฟังก์ชันเจเนอเรเตอร์และออสซิลโลสโคป ยอดเรโซแนนซ์ Mr ความถี่เรโซแนนซ์ แบนด์วิดท์ ความสัมพันธ์กับ ζ ωn rise time และ overshoot การมองวงปิดจากวงเปิด และเหตุผลที่วิศวกรใช้โดเมนความถี่ในการออกแบบ",
+  "ogTitle": "ผลตอบสนองความถี่: ป้อนไซน์ ได้ไซน์ แล้วอ่านอะไรได้บ้าง",
+  "lesson": "control-systems",
+  "sub": "frequency-response",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate"],
+  "about": ["Frequency response", "Sinusoidal steady state", "Bandwidth", "Resonant peak", "Resonant frequency", "Magnitude and phase", "Oscilloscope measurement"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js"],
+  "faq": [
+    {"q": "ทำไมป้อนไซน์เข้าระบบเชิงเส้นแล้วได้ไซน์ความถี่เดิม?", "a": "เพราะ e^{jωt} เป็นฟังก์ชันเฉพาะ (eigenfunction) ของระบบเชิงเส้นไม่แปรตามเวลา ผ่านอนุพันธ์และอินทิกรัลแล้วยังเป็นรูปเดิม ถูกคูณด้วยจำนวนเชิงซ้อน G(jω) เท่านั้น ขนาดจึงถูกคูณด้วย |G(jω)| และเฟสถูกเลื่อน ∠G(jω) ส่วนความถี่ไม่เปลี่ยน"},
+    {"q": "แบนด์วิดท์ของระบบควบคุมบอกอะไร?", "a": "บอกช่วงความถี่ที่ระบบวงปิดติดตามค่าอ้างอิงได้ดี (ขนาดลดไม่เกิน 3 dB) แบนด์วิดท์กว้างหมายถึงตอบสนองเร็ว เวลาขึ้นประมาณ 1.8 ถึง 2.2 หารด้วยแบนด์วิดท์ แต่ก็รับสัญญาณรบกวนความถี่สูงเข้ามามากขึ้นด้วย"},
+    {"q": "ทำไมวิศวกรชอบออกแบบในโดเมนความถี่?", "a": "เพราะวัดได้จากระบบจริงโดยไม่ต้องมีแบบจำลอง จัดการหน่วงเวลาได้ตรง ๆ เห็นผลของสัญญาณรบกวนและเรโซแนนซ์ชัด และการต่อบล็อกอนุกรมเป็นแค่การบวกกราฟโบด จึงเป็นภาษาหลักของงานออกแบบแอมป์ พาวเวอร์ซัพพลาย และเซอร์โว"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>ผลตอบสนองความถี่</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.11 · ระบบควบคุม · Frequency Response</p>
+      <h1>ผลตอบสนองความถี่: G(jω) ขนาด เฟส และแบนด์วิดท์</h1>
+      <p class="lede">ต่อฟังก์ชันเจเนอเรเตอร์ป้อนไซน์เข้าวงจร แล้ววัดเอาต์พุตด้วยสโคป จะเห็นไซน์ความถี่เดิม แต่ขนาดและเฟสเปลี่ยน กวาดความถี่ตั้งแต่ต่ำถึงสูง ก็ได้ “ลายนิ้วมือ” ของระบบครบถ้วน นี่คือผลตอบสนองความถี่ ซึ่งเป็นฐานของโบด ไนควิสต์ และการออกแบบตัวชดเชยทั้งหมดในส่วนที่ 5–6 สูตรใช้รหัส Q</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>อินพุต \(A\sin\omega t\) → เอาต์พุตอยู่ตัว \(A|G(j\omega)|\sin(\omega t + \angle G(j\omega))\)</li>
+          <li>หา \(G(j\omega)\): แทน \(s = j\omega\) แล้วหาขนาดและมุมของจำนวนเชิงซ้อน</li>
+          <li>วงปิดอันดับสอง: \(M_r = \frac{1}{2\zeta\sqrt{1-\zeta^2}}\), แบนด์วิดท์ \(\approx \omega_n\) (×1.27 ที่ ζ = 0.5)</li>
+          <li>แบนด์วิดท์กว้าง = เร็ว · ยอดเรโซแนนซ์สูง = แกว่งมาก</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น sinusoid, magnitude, phase, resonant, bandwidth, rise time" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="sinusoid">
+    <h2 id="sinusoid">ป้อนไซน์ ได้ไซน์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="Q1" data-k="sinusoidal steady state magnitude phase G(jw) frequency response definition ผลตอบสนองความถี่ ไซน์ สถานะอยู่ตัว">
+        <p class="tf-n"><b><span class="fid">Q1</span> Sinusoidal steady state</b> ผลตอบสนองต่อไซน์ในสถานะอยู่ตัว</p>
+        \[ u(t) = A\sin\omega t \ \Rightarrow\ y_{ss}(t) = A\,|G(j\omega)|\sin\big(\omega t + \angle G(j\omega)\big) \]
+        <p class="tf-x">ใช้ได้เมื่อ \(G\) เสถียร (พจน์ชั่วครู่หายไปแล้ว) · \(|G(j\omega)|\) = อัตราขยาย · \(\angle G(j\omega)\) = เฟส (ลบ = ล้าหลัง) · คือแนวคิดเฟสเซอร์ในวงจร AC นั่นเอง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-q1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Q-1 · วงจร RC กับสโคป</span><h3>วงจร RC \(R = 1\ \text{k}\Omega,\ C = 1\ \mu\text{F}\) ป้อน \(2\sin(2\pi \cdot 1000t)\) V จะเห็นเอาต์พุตบนสโคปเป็นอย่างไร</h3></div>
+      <ol class="steps">
+        <li><p>\(G(s) = \dfrac{1}{RCs + 1} = \dfrac{1}{0.001s + 1}\) ความถี่มุม 1000 rad/s (159 Hz)</p></li>
+        <li><p>\(\omega = 6283\) rad/s: \(G(j\omega) = \dfrac{1}{1 + j6.283}\) <a class="tag tf" href="#Q1">Q1</a></p>
+          \[ |G| = \frac{1}{\sqrt{1 + 6.283^2}} = 0.157 \ (-16.1\ \text{dB}), \qquad \angle G = -\tan^{-1}6.283 = -81^\circ \]</li>
+      </ol>
+      <p class="answer">เอาต์พุต \(0.314\sin(\omega t - 81^\circ)\) V: แอมพลิจูด 0.31 V ล้าหลังเกือบ 90° (เลื่อนไปทางขวา 0.225 ms บนสโคป) · ลองวัดจริงใน<a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="closed-loop">
+    <h2 id="closed-loop">สเปกในโดเมนความถี่ของวงปิด <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="Q2" data-k="resonant peak mr resonant frequency wr second order closed loop zeta ยอดเรโซแนนซ์ ความถี่เรโซแนนซ์">
+        <p class="tf-n"><b><span class="fid">Q2</span> Resonant peak</b> ยอดเรโซแนนซ์ของวงปิดอันดับสอง</p>
+        \[ M_r = \frac{1}{2\zeta\sqrt{1 - \zeta^2}}, \qquad \omega_r = \omega_n\sqrt{1 - 2\zeta^2} \qquad (\zeta \lt 0.707) \]
+        <p class="tf-x">\(M_r\) สูง ↔ overshoot มาก · ค่าที่นิยมในการออกแบบ \(1.1 \lt M_r \lt 1.5\) (0.8–3.5 dB)</p>
+      </div>
+      <div class="tf wide" id="Q3" data-k="bandwidth -3 db closed loop second order formula rise time relation แบนด์วิดท์ เวลาขึ้น">
+        <p class="tf-n"><b><span class="fid">Q3</span> Bandwidth</b> แบนด์วิดท์วงปิด (−3 dB)</p>
+        \[ \omega_{BW} = \omega_n\sqrt{1 - 2\zeta^2 + \sqrt{4\zeta^4 - 4\zeta^2 + 2}}, \qquad t_r\,\omega_{BW} \approx 1.8 \text{ ถึง } 2.2 \]
+        <p class="tf-x">ζ = 0.5 → \(1.27\omega_n\) · ζ = 0.707 → \(\omega_n\) · ζ = 1 → \(0.64\omega_n\) · ใช้ \(\omega_{BW} \approx \omega_{gc}\) ถึง \(2\omega_{gc}\) จากโบดวงเปิด (<a href="/learn/control-systems/margins/#G5">G5</a>)</p>
+      </div>
+      <div class="tf wide" id="Q4" data-k="closed loop from open loop magnitude high low gain T approx 1 approx L ปิดวงจากวงเปิด">
+        <p class="tf-n"><b><span class="fid">Q4</span> Closed loop from open loop</b> อ่านวงปิดจากวงเปิด</p>
+        \[ |L| \gg 1:\ T \approx 1,\ S \approx \frac1L \qquad\qquad |L| \ll 1:\ T \approx L,\ S \approx 1 \]
+        <p class="tf-x">ความถี่ต่ำที่ลูปเกนสูง วงปิดติดตามดี · ความถี่สูงที่ลูปเกนต่ำ วงปิดเท่ากับวงเปิด (ลดสัญญาณรบกวน) · ช่วงรอยต่อที่ \(|L| \approx 1\) คือจุดที่เสถียรภาพตัดสิน (มาร์จิน)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-q2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Q-2 · ระบบ ζ = 0.5</span><h3>วงปิด \(T(s) = \dfrac{16}{s^2 + 4s + 16}\) หา \(M_r,\ \omega_r\) และแบนด์วิดท์</h3></div>
+      <ol class="steps">
+        <li><p>\(\omega_n = 4,\ \zeta = 0.5\) · \(M_r = \dfrac{1}{2(0.5)(0.866)} = 1.155\) (1.25 dB) <a class="tag tf" href="#Q2">Q2</a></p></li>
+        <li><p>\(\omega_r = 4\sqrt{0.5} = 2.83\) rad/s · \(\omega_{BW} = 4 \times 1.272 = 5.09\) rad/s <a class="tag tf" href="#Q3">Q3</a></p></li>
+      </ol>
+      <p class="answer">\(M_r = 1.155\) ที่ 2.83 rad/s · แบนด์วิดท์ 5.09 rad/s · ทำนายเวลาขึ้น \(\approx 1.8/5.09 = 0.35\) s ถึง \(2.2/5.09 = 0.43\) s (ค่าจริง 10–90% คือ 0.42 s)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องมองในโดเมนความถี่</h2>
+    <ul>
+      <li><b>วัดได้จริง</b>: ไม่ต้องมีสมการ ใช้ FG + สโคป หรือ network analyzer กวาดความถี่ (ห้องแล็บพาวเวอร์ซัพพลายทำแบบนี้ทุกวัน)</li>
+      <li><b>ต่ออนุกรม = บวกกราฟ</b>: บน<a href="/learn/control-systems/bode-plot/">โบด</a> เพิ่มตัวชดเชยแค่บวกเส้น</li>
+      <li><b>หน่วงเวลาไม่ใช่ปัญหา</b>: \(e^{-j\omega T}\) มีขนาด 1 เฟส \(-\omega T\)</li>
+      <li><b>เห็นสัญญาณรบกวนและเรโซแนนซ์</b>: รู้ทันทีว่าความถี่ไหนถูกขยาย</li>
+      <li><b>ความทนทาน</b>: <a href="/learn/control-systems/margins/">มาร์จิน</a>บอกว่าพลานต์เปลี่ยนได้แค่ไหน</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ชี้ความถี่ อ่านขนาดและเฟส</h2>
+    <p>ชี้เมาส์บนกราฟโบดเพื่ออ่าน \(|L(j\omega)|\) และ \(\angle L(j\omega)\) ที่ความถี่ใดก็ได้ ลองพิมพ์ \(16/(s^2+4s+16)\) แล้วหายอดเรโซแนนซ์</p>
+    <div class="cs-lab" data-tf="1000/(s+1000)" data-views="bode" data-k="1" data-presets='[{"n":"RC 1/(0.001s+1)","tf":"1000/(s+1000)","k":1},{"n":"วงปิด ζ=0.5 (Q-2)","tf":"16/(s^2+4s+16)","k":1},{"n":"RLC ζ=0.1","tf":"1/(s^2+0.2s+1)","k":1}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>ข้อมูลความถี่ทั้งหมดวาดให้เร็วและออกแบบได้ด้วย<a href="/learn/control-systems/bode-plot/">โบดไดอะแกรม</a> ไปฝึกวาดด้วยมือต่อเลย</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

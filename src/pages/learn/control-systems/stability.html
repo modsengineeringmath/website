@@ -1,0 +1,145 @@
+<!--meta
+{
+  "title": "เสถียรภาพของระบบควบคุม: BIBO ขั้วบนระนาบ s เสถียรวิกฤต และเสถียรภาพภายใน | อาจารย์มด",
+  "h1": "เสถียรภาพของระบบควบคุม: ขั้วบนระนาบ s",
+  "description": "นิยามเสถียรภาพแบบ BIBO และเสถียรภาพเชิงอาการ เกณฑ์ตำแหน่งขั้วบนระนาบ s เสถียรวิกฤตและขั้วซ้ำบนแกน jω เงื่อนไขจำเป็นของสัมประสิทธิ์ การป้อนกลับทำให้ระบบเสถียรหรือไม่เสถียร เสถียรภาพภายในและอันตรายของการหักล้างขั้วฝั่งขวา และภาพรวมเครื่องมือตรวจเสถียรภาพทั้งหมด Routh รูทโลคัส โบด ไนควิสต์ ลียาปูนอฟ",
+  "ogTitle": "เสถียรภาพ: คำถามแรกของวิศวกรควบคุม",
+  "lesson": "control-systems",
+  "sub": "stability",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate"],
+  "about": ["Stability", "BIBO stability", "Asymptotic stability", "Marginal stability", "Internal stability", "Pole–zero cancellation", "Characteristic equation"],
+  "faq": [
+    {"q": "เสถียรวิกฤต (marginally stable) ถือว่าเสถียรไหม?", "a": "ในทางวิศวกรรมถือว่าไม่ยอมรับ เพราะไม่ใช่ BIBO stable ถ้าอินพุตมีความถี่ตรงกับขั้วบนแกน jω เอาต์พุตจะโตไม่จำกัด (เรโซแนนซ์) และการเปลี่ยนแปลงเล็กน้อยของพารามิเตอร์อาจผลักขั้วไปฝั่งขวาได้"},
+    {"q": "ทำไมห้ามหักล้างขั้วฝั่งขวาด้วยศูนย์?", "a": "การหักล้างเกิดแค่บนกระดาษ ค่าจริงไม่มีทางตรงพอดี และแม้ตรงพอดี ขั้วฝั่งขวานั้นยังอยู่ในสัญญาณภายในระบบ (เช่น สัญญาณควบคุม) เงื่อนไขเริ่มต้นหรือสัญญาณรบกวนเพียงเล็กน้อยจะทำให้สัญญาณภายในโตไม่จำกัด เรียกว่าไม่มีเสถียรภาพภายใน (internally unstable)"},
+    {"q": "ควรใช้เครื่องมือไหนตรวจเสถียรภาพ?", "a": "มีพหุนามลักษณะเฉพาะใช้เราท์ (เร็ว บอกช่วงเกน) อยากเห็นว่าขั้วเดินอย่างไรใช้รูทโลคัส มีแค่ข้อมูลความถี่หรือมีหน่วงเวลาใช้โบดและไนควิสต์ ระบบไม่เชิงเส้นใช้ลียาปูนอฟ ทุกเครื่องมือให้คำตอบสอดคล้องกัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>เสถียรภาพ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.6 · ระบบควบคุม · Stability</p>
+      <h1>เสถียรภาพของระบบควบคุม: ขั้วบนระนาบ s</h1>
+      <p class="lede">ระบบควบคุมที่ไม่เสถียรไม่ใช่แค่ทำงานไม่ดี แต่อันตราย: มอเตอร์หมุนเร่งจนพัง แขนกลสะบัด พาวเวอร์ซัพพลายแกว่งจนไหม้ เสถียรภาพจึงเป็นเงื่อนไขแรกที่ต้องผ่านก่อนสเปกอื่นทั้งหมด หน้านี้วางนิยามให้ชัด ผูกเข้ากับตำแหน่งขั้ว แล้วชี้ทางไปเครื่องมือแต่ละตัวที่จะใช้ตลอดส่วนที่ 3 ถึง 5 สูตรใช้รหัส S</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ระบบเชิงเส้นเสถียร \(\iff\) ขั้วทุกตัวมี \(\operatorname{Re} \lt 0\)</li>
+          <li>ขั้วเดี่ยวบนแกน \(j\omega\): เสถียรวิกฤต (แกว่งค้าง) · ซ้ำบนแกน หรือ \(\operatorname{Re} \gt 0\): ไม่เสถียร</li>
+          <li>ขั้ววงปิดคือรากของ \(1 + L(s) = 0\) การป้อนกลับย้ายขั้วได้ทั้งไปทางดีและทางร้าย</li>
+          <li>ห้ามหักล้างขั้วฝั่งขวาด้วยศูนย์ของตัวควบคุม</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น BIBO, poles, marginal, repeated, internal, cancellation" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definitions">
+    <h2 id="definitions">นิยามเสถียรภาพ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="S1" data-k="bibo stability bounded input bounded output impulse response absolutely integrable เสถียรภาพแบบ BIBO">
+        <p class="tf-n"><b><span class="fid">S1</span> BIBO stability</b> อินพุตมีขอบเขต เอาต์พุตมีขอบเขต</p>
+        \[ |u(t)| \le M \Rightarrow |y(t)| \le N \ \ \forall t \quad \iff \quad \int_0^\infty |g(t)|\,dt \lt \infty \]
+        <p class="tf-x">\(g(t)\) คือผลตอบสนองอิมพัลส์ · มุมมองจากภายนอก (อินพุต-เอาต์พุต)</p>
+      </div>
+      <div class="tf wide" id="S2" data-k="pole location criterion left half plane real part negative stable unstable marginal ตำแหน่งขั้ว ฝั่งซ้าย">
+        <p class="tf-n"><b><span class="fid">S2</span> Pole-location criterion</b> เกณฑ์ตำแหน่งขั้ว</p>
+        \[ \begin{cases} \operatorname{Re}(p_i) \lt 0\ \ \forall i & \text{เสถียร (เชิงอาการและ BIBO)} \\ \text{ขั้วเดี่ยวบนแกน } j\omega,\ \text{ที่เหลือฝั่งซ้าย} & \text{เสถียรวิกฤต} \\ \operatorname{Re}(p_i) \gt 0 \ \text{หรือขั้วซ้ำบนแกน } j\omega & \text{ไม่เสถียร} \end{cases} \]
+        <p class="tf-x">เหตุผล: ขั้ว \(p\) ให้พจน์ \(e^{pt}\) · ขั้วซ้ำบนแกนให้ \(t\cos\omega t\) ซึ่งโตตามเวลา · เสถียรภาพขึ้นกับ<strong>ขั้วเท่านั้น</strong> ไม่ขึ้นกับศูนย์</p>
+      </div>
+    </div>
+    <figure class="csfig"><!--FIG:cs-splane--><svg viewBox="0 0 560 300" role="img" aria-label="ระนาบ s แบ่งเป็นฝั่งซ้าย (เสถียร) และฝั่งขวา (ไม่เสถียร) ขั้วจริงลบให้ผลตอบสนองลดลงแบบเอกซ์โพเนนเชียล ขั้วเชิงซ้อนให้การแกว่ง ขั้วบนแกน jω ให้การแกว่งค้าง"><defs><marker id="cs-splane-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0 0L10 5L0 10z"/></marker><clipPath id="cs-splane-c"><rect x="0" y="0" width="560" height="300"/></clipPath></defs><rect class="shadeg" x="40" y="12" width="254" height="262"/><rect class="shade" x="294" y="12" width="254" height="262"/><rect class="thin" x="40" y="12" width="508" height="262"/><text class="tk" x="40" y="289" text-anchor="middle">−4</text><text class="tk" x="103.5" y="289" text-anchor="middle">−3</text><text class="tk" x="167" y="289" text-anchor="middle">−2</text><text class="tk" x="230.5" y="289" text-anchor="middle">−1</text><text class="tk" x="294" y="289" text-anchor="middle">0</text><text class="tk" x="357.5" y="289" text-anchor="middle">1</text><text class="tk" x="421" y="289" text-anchor="middle">2</text><text class="tk" x="484.5" y="289" text-anchor="middle">3</text><text class="tk" x="548" y="289" text-anchor="middle">4</text><text class="tk" x="35" y="271.8" text-anchor="end">−2j</text><text class="tk" x="35" y="209.4" text-anchor="end">−1j</text><text class="tk" x="35" y="84.6" text-anchor="end">1j</text><text class="tk" x="35" y="22.2" text-anchor="end">2j</text><path class="gr" d="M40 12V274M103.5 12V274M167 12V274M230.5 12V274M294 12V274M357.5 12V274M421 12V274M484.5 12V274M548 12V274M40 267.8H548M40 205.4H548M40 143H548M40 80.6H548M40 18.2H548"/><path class="ax" d="M40 143H548"/><path class="ax" d="M294 12V274"/><text class="lb" x="544" y="137" text-anchor="end">σ</text><text class="lb" x="300" y="26">jω</text><text class="lbk" x="167" y="252.2" text-anchor="middle">ฝั่งซ้าย: เสถียร</text><text class="lbk" x="421" y="252.2" text-anchor="middle">ฝั่งขวา: ไม่เสถียร</text><path class="px" d="M97.5 137l12 12m0-12l-12 12"/><path class="px" d="M211.8 55.9l12 12m0-12l-12 12"/><path class="px" d="M211.8 218.1l12 12m0-12l-12 12"/><path class="px" d="M288 49.7l12 12m0-12l-12 12"/><path class="px" d="M288 224.3l12 12m0-12l-12 12"/><path class="px" d="M383.2 74.6l12 12m0-12l-12 12"/><path class="px" d="M383.2 199.4l12 12m0-12l-12 12"/><path class="px" d="M446.8 137l12 12m0-12l-12 12"/><path class="c3" style="stroke-width:1.8" d="M65.4 163.3L66.6 165.1L67.7 166.7L68.9 168.3L70.1 169.7L71.2 171L72.4 172.2L73.6 173.3L74.7 174.3L75.9 175.3L77.1 176.2L78.2 177L79.4 177.7L80.6 178.4L81.7 179L82.9 179.6L84.1 180.2L85.2 180.7L86.4 181.1L87.6 181.5L88.7 181.9L89.9 182.3L91.1 182.6L92.2 183L93.4 183.2L94.6 183.5L95.7 183.7L96.9 184L98.1 184.2L99.2 184.4L100.4 184.5L101.6 184.7L102.7 184.9L103.9 185L105.1 185.1L106.2 185.2L107.4 185.4L108.6 185.5L109.7 185.5L110.9 185.6L112.1 185.7L113.2 185.8L114.4 185.9L115.6 185.9L116.7 186L117.9 186L119.1 186.1L120.2 186.1L121.4 186.2L122.6 186.2L123.7 186.2L124.9 186.3L126.1 186.3L127.2 186.3L128.4 186.4L129.6 186.4L130.7 186.4L131.9 186.4L133.1 186.4L134.2 186.5L135.4 186.5"/><path class="c3" style="stroke-width:1.8" d="M167 21.4L168.2 22.4L169.3 24.2L170.5 26.6L171.7 29.3L172.8 32.3L174 35.4L175.2 38.2L176.3 40.8L177.5 43L178.7 44.7L179.8 45.8L181 46.3L182.2 46.2L183.3 45.7L184.5 44.6L185.7 43.3L186.8 41.6L188 39.9L189.2 38.1L190.3 36.3L191.5 34.8L192.7 33.5L193.8 32.5L195 31.8L196.2 31.4L197.3 31.4L198.5 31.8L199.7 32.3L200.8 33.1L202 34.1L203.2 35.1L204.3 36.2L205.5 37.2L206.7 38.2L207.8 39L209 39.6L210.2 40L211.3 40.2L212.5 40.2L213.7 40.1L214.8 39.7L216 39.3L217.2 38.7L218.3 38.1L219.5 37.5L220.7 36.8L221.8 36.3L223 35.8L224.2 35.4L225.3 35.2L226.5 35L227.7 35L228.8 35.1L230 35.3L231.2 35.6L232.3 35.9L233.5 36.2L234.7 36.6L235.8 37L237 37.3"/><path class="c4" style="stroke-width:1.8" d="M306.7 28.8L307.9 29.2L309 30.3L310.2 32.1L311.4 34.4L312.5 37.1L313.7 40.1L314.9 43.3L316 46.3L317.2 49.1L318.4 51.4L319.5 53.2L320.7 54.4L321.9 54.8L323 54.5L324.2 53.5L325.4 51.8L326.5 49.5L327.7 46.8L328.9 43.8L330 40.7L331.2 37.7L332.4 34.8L333.5 32.4L334.7 30.6L335.9 29.4L337 28.8L338.2 29.1L339.4 30.1L340.5 31.7L341.7 33.9L342.9 36.6L344 39.6L345.2 42.7L346.4 45.7L347.5 48.6L348.7 51L349.9 53L351 54.2L352.2 54.8L353.4 54.6L354.5 53.7L355.7 52.1L356.9 50L358 47.3L359.2 44.4L360.4 41.3L361.5 38.2L362.7 35.3L363.9 32.8L365 30.9L366.2 29.5L367.4 28.9L368.5 29L369.7 29.8L370.9 31.4L372 33.5L373.2 36.1L374.4 39L375.5 42.1L376.7 45.2"/><path class="c2" style="stroke-width:1.8" d="M446.4 41.1L447.6 41.1L448.7 41.2L449.9 41.4L451.1 41.8L452.2 42.2L453.4 42.8L454.6 43.5L455.7 44.2L456.9 44.9L458.1 45.6L459.2 46.2L460.4 46.6L461.6 46.9L462.7 47L463.9 46.9L465.1 46.5L466.2 45.8L467.4 45L468.6 43.9L469.7 42.7L470.9 41.5L472.1 40.2L473.2 39L474.4 37.9L475.6 37L476.7 36.5L477.9 36.3L479.1 36.5L480.2 37.2L481.4 38.3L482.6 39.8L483.7 41.7L484.9 43.8L486.1 46.1L487.2 48.4L488.4 50.6L489.6 52.6L490.7 54.2L491.9 55.2L493.1 55.6L494.2 55.2L495.4 54.1L496.6 52.2L497.7 49.5L498.9 46.3L500.1 42.5L501.2 38.4L502.4 34.2L503.6 30.1L504.7 26.5L505.9 23.6L507.1 21.7L508.2 20.9L509.4 21.4L510.6 23.3L511.7 26.6L512.9 31.3L514.1 37.1L515.2 43.9L516.4 51.2"/></svg><!--/FIG--></figure>
+    <div class="wx" id="ex-s1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-1 · จำแนกเสถียรภาพ</span><h3>จำแนก (ก) \(\frac{1}{(s+1)(s+2)}\) (ข) \(\frac{s - 3}{s^2 + 2s + 5}\) (ค) \(\frac{1}{s(s+1)}\) (ง) \(\frac{1}{(s^2 + 4)^2}\) (จ) \(\frac{1}{s^2 - s + 1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ขั้ว −1, −2 → เสถียร · (ข) ขั้ว \(-1 \pm j2\) → เสถียร (ศูนย์ฝั่งขวาไม่มีผลต่อเสถียรภาพ) <a class="tag tf" href="#S2">S2</a></p></li>
+        <li><p>(ค) ขั้ว 0 (เดี่ยว), −1 → เสถียรวิกฤต (อินพุตขั้นบันได เอาต์พุตเป็นแรมป์ ไม่ BIBO)</p></li>
+        <li><p>(ง) ขั้ว \(\pm j2\) ซ้ำสองครั้ง → ไม่เสถียร · (จ) ขั้ว \(0.5 \pm j0.866\) → ไม่เสถียร</p></li>
+      </ol>
+      <p class="answer">เสถียร: (ก) (ข) · เสถียรวิกฤต: (ค) · ไม่เสถียร: (ง) (จ)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="feedback">
+    <h2 id="feedback">การป้อนกลับ: ทำให้เสถียรก็ได้ ไม่เสถียรก็ได้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="S3" data-k="closed loop poles characteristic equation 1 + KG feedback stabilize destabilize ขั้ววงปิด สมการลักษณะเฉพาะ">
+        <p class="tf-n"><b><span class="fid">S3</span> Closed-loop characteristic equation</b> สมการลักษณะเฉพาะวงปิด</p>
+        \[ 1 + K\frac{N(s)}{D(s)} = 0 \iff D(s) + KN(s) = 0 \]
+        <p class="tf-x">ขั้ววงปิดต่างจากขั้ววงเปิด และเปลี่ยนตาม \(K\) · วงเปิดไม่เสถียรอาจเสถียรเมื่อปิดวง และกลับกัน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-2 · ป้อนกลับช่วยและป้อนกลับทำร้าย</span><h3>(ก) พลานต์ไม่เสถียร \(\frac{1}{s - 1}\) กับตัวควบคุม \(K\) · (ข) พลานต์เสถียร \(\frac{1}{(s+1)^3}\) กับ \(K\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(s - 1 + K = 0 \Rightarrow s = 1 - K\) เสถียรเมื่อ \(K \gt 1\) การป้อนกลับ<strong>ทำให้เสถียร</strong></p></li>
+        <li><p>(ข) \((s + 1)^3 + K = 0\) เสถียรเมื่อ \(K \lt 8\) (<a href="/learn/control-systems/routh-hurwitz/">เราท์</a>) การป้อนกลับที่แรงเกิน<strong>ทำให้ไม่เสถียร</strong> แม้พลานต์จะเสถียร</p></li>
+      </ol>
+      <p class="answer">ไม่มีการป้อนกลับที่ “ปลอดภัยเสมอ” ต้องตรวจทุกครั้ง · ทุกพลานต์ที่มี \(n - m \ge 3\) จะไม่เสถียรเมื่อเกนสูงพอ (เส้นกำกับ ±60° ข้ามไปฝั่งขวา)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="internal">
+    <h2 id="internal">เสถียรภาพภายในและกับดักการหักล้างขั้ว <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="S4" data-k="internal stability unstable pole zero cancellation four transfer functions เสถียรภาพภายใน หักล้างขั้ว">
+        <p class="tf-n"><b><span class="fid">S4</span> Internal stability</b> เสถียรภาพภายใน</p>
+        \[ \text{ต้องเสถียรทั้ง 4 ฟังก์ชัน:}\quad \frac{1}{1 + CG},\quad \frac{G}{1 + CG},\quad \frac{C}{1 + CG},\quad \frac{CG}{1 + CG} \]
+        <p class="tf-x">ถ้า \(C\) มีศูนย์หักล้างขั้วฝั่งขวาของ \(G\) (หรือกลับกัน) \(T = \frac{CG}{1 + CG}\) อาจดูเสถียร แต่ \(\frac{G}{1 + CG}\) (ผลของการรบกวน) ไม่เสถียร</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-3 · หักล้างแล้วพัง</span><h3>พลานต์ \(G = \frac{1}{s - 1}\) ตัวควบคุม \(C = \frac{s - 1}{s(s + 2)}\) ดูเหมือน \(L = \frac{1}{s(s+2)}\) ระบบเสถียรจริงไหม</h3></div>
+      <ol class="steps">
+        <li><p>\(T = \dfrac{L}{1 + L} = \dfrac{1}{s^2 + 2s + 1}\) ขั้ว −1, −1 ดูเสถียร</p></li>
+        <li><p>จากการรบกวนที่อินพุตพลานต์ไปเอาต์พุต: \(\dfrac{G}{1 + CG} = \dfrac{s(s + 2)}{(s - 1)(s^2 + 2s + 1)}\) มีขั้วที่ \(+1\) <a class="tag tf" href="#S4">S4</a></p></li>
+      </ol>
+      <p class="answer">ไม่มีเสถียรภาพภายใน การรบกวนเพียงเล็กน้อยทำให้เอาต์พุตโตแบบ \(e^t\) แม้ค่าอ้างอิงจะตอบสนองดี บทเรียน: <strong>ขั้วฝั่งขวาต้องถูกย้ายด้วยการป้อนกลับ ไม่ใช่ซ่อนด้วยศูนย์</strong></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="toolbox">
+    <h2 id="toolbox">กล่องเครื่องมือตรวจเสถียรภาพ</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>เครื่องมือ</th><th>ใช้อะไร</th><th>ให้อะไร</th><th>เหมาะกับ</th></tr></thead>
+        <tbody>
+          <tr><td><a href="/learn/control-systems/routh-hurwitz/">เราท์–เฮอร์วิตซ์</a></td><td>สัมประสิทธิ์พหุนาม</td><td>จำนวนรากฝั่งขวา ช่วง K</td><td>ตรวจเร็ว หาเกนวิกฤต</td></tr>
+          <tr><td><a href="/learn/control-systems/root-locus/">รูทโลคัส</a></td><td>ขั้ว ศูนย์วงเปิด</td><td>ทางเดินขั้วทุก K</td><td>ออกแบบในโดเมนเวลา</td></tr>
+          <tr><td><a href="/learn/control-systems/margins/">โบด + มาร์จิน</a></td><td>\(L(j\omega)\) (วัดได้)</td><td>GM, PM</td><td>ออกแบบในโดเมนความถี่ มีหน่วงเวลา</td></tr>
+          <tr><td><a href="/learn/control-systems/nyquist/">ไนควิสต์</a></td><td>\(L(j\omega)\) + จำนวนขั้วฝั่งขวาวงเปิด</td><td>จำนวนขั้ววงปิดฝั่งขวา</td><td>ทุกกรณี รวมวงเปิดไม่เสถียร</td></tr>
+          <tr><td><a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะของ A</a></td><td>แบบจำลองปริภูมิสถานะ</td><td>ขั้ว (ค่าเฉพาะ)</td><td>ระบบหลายตัวแปร</td></tr>
+          <tr><td><a href="/learn/control-systems/nonlinear-robust/">ลียาปูนอฟ</a></td><td>ฟังก์ชันพลังงาน</td><td>เสถียรภาพไม่เชิงเส้น</td><td>หุ่นยนต์ ระบบไม่เชิงเส้น</td></tr>
+          <tr><td><a href="/learn/control-systems/digital-control/">จูรี / วงกลมหนึ่งหน่วย</a></td><td>พหุนามใน z</td><td>ขั้วใน \(|z| \lt 1\)</td><td>ตัวควบคุมดิจิทัล</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>เครื่องมือแรกและเร็วที่สุดคือ<a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เราท์–เฮอร์วิตซ์</a> ซึ่งตอบได้ว่ามีรากฝั่งขวากี่ตัวและเกนเท่าไรจึงเสถียร โดยไม่ต้องหารากเลย</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
