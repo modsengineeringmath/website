@@ -63,3 +63,25 @@ Formula cards use the same markup as linear algebra, so every card appears in th
   the series pages and the home page from the functions in `scripts/fg_figs.py` (helpers in `scripts/svglib.py`).
   Run it before `node build.mjs` after editing a figure.
 - Short URLs (`/oscilloscope`, `/simulator`, `/op-amp`, `/bode`, `/ad9833` …) are in `_redirects`.
+
+## Control systems engineering (added 2026-10-12)
+Series `control-systems` in `TOPICS` (build.mjs), topic 11. It is the first series with `parts`: 9 parts × 26 sub-pages
+(introduction F, modeling M, block-diagrams B, time-response T, steady-state-error E, stability S, routh-hurwitz R,
+root-locus L, root-locus-sketching W, root-locus-design J, frequency-response Q, bode-plot D, margins G, nyquist N,
+compensators C, pid P, pid-tuning Z, state-space X, controllability-observability O, state-feedback V, digital-control Y,
+nonlinear-robust U, mechatronics K, robotics A, power-electronics-control H, examples gallery).
+- A sub-page goes live as soon as `src/pages/learn/control-systems/<slug>.html` exists; until then the hub shows its card
+  as "เร็วๆ นี้" and it is left out of the pager, sitemap and llms.txt (`live()` in build.mjs). Numbering never shifts.
+- The series nav groups pages by part (`<details class="sn-all">`); the hub groups cards with `.cs-part`.
+- Interactive tools (all plain JS, no dependencies):
+  - `assets/cs-core.js` — math engine: TF parser (`1/(s(s+1)(s+2))`, `e^(-0.5s)/(s+1)`), roots, Bode, margins, root locus
+    with all sketching-rule quantities, Nyquist counting, step response, state space, ZOH. Verified against python-control.
+  - `assets/cs-ui.js` — `<div class="cs-lab" data-tf="…" data-views="rl,bode,nyq,step" data-k="2" data-kmax="12"
+    data-zeta="0.5,0.7" data-rules data-neg data-edit="false" data-presets='[{"n":"…","tf":"…","k":1}]'>`.
+  - `assets/cs-routh.js` — `<div class="rh-calc" data-p="1+K/(s(s+1)(s+2))" data-presets='[{"n":"…","p":"…"}]'>`;
+    a `<button class="wx-btn" data-rh="s^3+3s^2+2s+K">` in a worked example fills it.
+  - `assets/cs-pid.js` (needs cs-ui.js) — `<div class="pid-lab" data-presets='[{"n":"…","plant":"…","kp":1,"ki":0,"kd":0,"tend":20,"umax":2}]'>`.
+- Figures: `python3 scripts/cs_figs.py` fills empty `<!--FIG:key--><!--/FIG-->` blocks in the series pages from
+  `scripts/cs_figs.py` (root loci, Bode, Nyquist, step responses, block diagrams); `--all` redraws every figure.
+- Every worked-example number was checked with python-control / sympy before publishing.
+- Short URLs (`/control`, `/routh`, `/root-locus`, `/bode-plot`, `/pid`, `/robotics` …) are in `_redirects`.

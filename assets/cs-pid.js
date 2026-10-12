@@ -137,7 +137,7 @@
     var x = new Array(sd.n).fill(0), I = 0, D = 0, mPrev = 0, ePrev = 0;
     var Td = g.kp > 0 ? g.kd / g.kp : g.kd, Tf = g.kd > 0 ? Math.max(Td / Math.max(1, g.N), h) : 0;
     var t = [], y = [], u = [], yk = 0, uk = 0, dStep = o.dist ? 0.5 * T : Infinity, dist = 0;
-    var r = 1, iae = 0;
+    var r = 1, iae = 0, kb = Math.abs(CS.lowFreq(this.tf).Kb) || 1, dMag = 0.5 / kb;
     for (var k = 0; k <= n * sub; k++) {
       var tk = k * h;
       // measure
@@ -156,8 +156,8 @@
       if (!windup) I += g.ki * e * h;
       if (k % sub === 0) { t.push(tk); y.push(yk); u.push(us); }
       iae += Math.abs(e) * h;
-      // plant input = u + load disturbance (step of −0.5 at mid-time, entering at the plant input)
-      dist = tk >= dStep ? -0.5 : 0;
+      // plant input = u + load disturbance at mid-time, scaled to 0.5/|G(0)| (same size as half the reference)
+      dist = tk >= dStep ? -dMag : 0;
       var uin = us + dist;
       // push through dead time (ring buffer of nd samples)
       var ud;
@@ -213,7 +213,7 @@
     var gh = this.ghost;
     var sv = this.q('svg[data-v="y"]'), su = this.q('svg[data-v="u"]');
     function plot(svg, H, data, ghost, ref, label) {
-      var lim = 8, all = data.concat(ghost || []).filter(isFinite).map(function (v) { return Math.max(-lim, Math.min(lim, v)); });
+      var lim = ref ? 8 : 1e6, all = data.concat(ghost || []).filter(isFinite).map(function (v) { return Math.max(-lim, Math.min(lim, v)); });
       var lo = Math.min(0, Math.min.apply(null, all)), hi = Math.max(ref ? 1.2 : 0.1, Math.max.apply(null, all));
       var ya = lo - 0.05 * (hi - lo), yb = hi + 0.08 * (hi - lo), yt = U.ticks(ya, yb, 5);
       var F = new U.Frame(560, H, { l: 40, t: 10, r: 12, b: 24 }, 0, T, ya, yb, false);
