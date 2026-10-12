@@ -1,0 +1,255 @@
+<!--meta
+{
+  "title": "ระบบควบคุม (Control Systems Engineering) ครบจบ: ป้อนกลับ เสถียรภาพ Routh รูทโลคัส โบด PID | อาจารย์มด",
+  "h1": "ระบบควบคุม (Control Systems Engineering): ป้อนกลับ เสถียรภาพ รูทโลคัส โบด และ PID",
+  "description": "คลังวิศวกรรมระบบควบคุมภาษาไทย ตั้งแต่พื้นฐานถึงขั้นสูง ระบบควบคุมป้อนกลับ (feedback control) แบบจำลอง บล็อกไดอะแกรม ผลตอบสนองเวลา เสถียรภาพ เกณฑ์เราท์–เฮอร์วิตซ์ รูทโลคัสวาดด้วยมือ โบดไดอะแกรม เกนและเฟสมาร์จิน ไนควิสต์ ตัวชดเชย lead lag ตัวควบคุม P PI PD PID ปริภูมิสถานะ ควบคุมดิจิทัล เมคาทรอนิกส์ โรโบติกส์ และการควบคุมตัวแปลงกำลัง พร้อมแล็บรูทโลคัส โบด และไนควิสต์แบบโต้ตอบ",
+  "ogTitle": "ระบบควบคุมครบจบ: เสถียรภาพ รูทโลคัส โบด PID ถึงหุ่นยนต์",
+  "lesson": "control-systems",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Control engineering", "Control theory", "Feedback control system", "Automatic control", "Routh–Hurwitz stability criterion", "Root locus", "Bode plot", "Nyquist stability criterion", "PID controller", "Lead–lag compensator", "State-space representation", "Mechatronics", "Robotics", "Power electronics"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-ui.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "name": "แล็บระบบควบคุม: รูทโลคัส โบด ไนควิสต์ และผลตอบสนองขั้นบันได",
+      "alternateName": "Interactive root locus, Bode and Nyquist lab (Thai)",
+      "url": "https://modsengineeringmath.com/learn/control-systems/#lab",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB"},
+      "featureList": ["Root locus with draggable poles and zeros", "Asymptotes, breakaway points, jω crossings and departure angles computed by the sketching rules", "Bode magnitude and phase with straight-line asymptotes", "Gain and phase margins", "Nyquist plot with encirclement count Z = N + P", "Closed-loop step response with overshoot, rise and settling time"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "Control Engineering กับ Control Systems ต่างกันอย่างไร?", "a": "ใช้แทนกันได้เกือบทั้งหมด Control Systems มักหมายถึงตัวระบบและทฤษฎีที่ใช้วิเคราะห์ (ชื่อวิชาในมหาวิทยาลัยส่วนใหญ่) ส่วน Control Engineering หมายถึงสาขาวิชาชีพที่ออกแบบระบบเหล่านั้น หน้านี้ใช้ชื่อเต็ม Control Systems Engineering เพื่อให้ครอบคลุมทั้งสองคำ คำค้นที่เกี่ยวข้องคือ feedback control, automatic control และ control theory"},
+    {"q": "ควรเรียน classical control หรือ modern control ก่อน?", "a": "แนะนำ classical ก่อน (ฟังก์ชันถ่ายโอน เสถียรภาพ รูทโลคัส โบด PID) เพราะให้ภาพทางกายภาพชัด ใช้ออกแบบงานจริงส่วนใหญ่ได้ และเป็นภาษาที่ datasheet กับวิศวกรใช้คุยกัน จากนั้นต่อ modern control (ปริภูมิสถานะ) ซึ่งต่อยอดจากพีชคณิตเชิงเส้นและจำเป็นกับระบบหลายอินพุตหลายเอาต์พุต หุ่นยนต์ และการควบคุมที่เหมาะสมที่สุด"},
+    {"q": "ต้องมีพื้นฐานอะไรก่อนเรียนระบบควบคุม?", "a": "การแปลงลาปลาซ จำนวนเชิงซ้อน สมการเชิงอนุพันธ์อันดับหนึ่งและสอง และวงจรไฟฟ้าเบื้องต้น ถ้าจะเรียน modern control ต้องมีพีชคณิตเชิงเส้น โดยเฉพาะค่าเฉพาะ ทุกหัวข้อนี้มีหน้าอธิบายในคลังความรู้ของเว็บนี้"},
+    {"q": "ระบบควบคุมเกี่ยวกับอิเล็กทรอนิกส์กำลังอย่างไร?", "a": "สวิตชิงพาวเวอร์ซัพพลายทุกตัวคือระบบควบคุมป้อนกลับ ตัวแปลงบั๊ก บูสต์ คือพลานต์ ไอซีควบคุม PWM คือแอคชูเอเตอร์ และตัวชดเชย Type II หรือ Type III คือตัวควบคุม การเลือกความถี่ครอสโอเวอร์และเฟสมาร์จินใช้โบดไดอะแกรมชุดเดียวกับในหน้านี้ทุกประการ"},
+    {"q": "แล็บในหน้านี้ใช้แทน MATLAB ได้ไหม?", "a": "สำหรับการเรียนและตรวจการบ้านระดับปริญญาตรีใช้แทนได้: วาดรูทโลคัส โบด ไนควิสต์ ผลตอบสนองขั้นบันได และคำนวณมาร์จินให้ ตัวเลขทุกตัวตรวจเทียบกับ python-control แล้ว แต่สิ่งสำคัญกว่าคือฝึกวาดด้วยมือให้ได้ก่อน แล้วใช้แล็บตรวจ ซึ่งเป็นจุดประสงค์หลักของชุดบทเรียนนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page la-hub cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>ระบบควบคุม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11 · วิศวกรรมไฟฟ้า · Control Systems Engineering</p>
+      <h1>ระบบควบคุม (Control Systems Engineering): ป้อนกลับ เสถียรภาพ รูทโลคัส โบด และ PID</h1>
+      <p class="lede">เครื่องปรับอากาศที่รักษาอุณหภูมิ มอเตอร์ที่หมุนได้ความเร็วตามสั่ง แขนหุ่นยนต์ที่หยุดตรงตำแหน่ง โดรนที่ลอยนิ่งกลางลม และพาวเวอร์ซัพพลายที่จ่าย 5.00 V ไม่ว่าโหลดจะเปลี่ยนแค่ไหน ทั้งหมดใช้หลักการเดียวกัน คือ<strong>วัดผลลัพธ์ เทียบกับเป้าหมาย แล้วแก้ไข</strong> ชุดบทเรียนนี้เริ่มจากวงจรไฟฟ้าที่เราคุ้นเคย ไล่ไปถึงการวาดรูทโลคัสด้วยมือ วิเคราะห์โบด ออกแบบตัวชดเชยและ PID จนถึงหุ่นยนต์และตัวแปลงกำลัง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#roadmap">แผนที่การเรียน</a>
+        <a class="btn btn-ghost btn-sm" href="#lab">แล็บรูทโลคัส · โบด</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">ค้นหาสูตร</a>
+        <a class="btn btn-ghost btn-sm" href="#ideas">ไอเดียเมคาทรอนิกส์ · หุ่นยนต์</a>
+      </div>
+      <div class="tldr">
+        <b>ทั้งวิชาในหนึ่งนาที</b>
+        <ul>
+          <li>เขียนพลานต์เป็นฟังก์ชันถ่ายโอน \(G(s)\) ต่อตัวควบคุม \(C(s)\) แล้วปิดวงได้ \(T(s) = \dfrac{CG}{1 + CG}\) <a href="/learn/control-systems/block-diagrams/">บล็อกไดอะแกรม</a></li>
+          <li>ระบบเสถียรเมื่อรากของ \(1 + KG(s) = 0\) อยู่ซ้ายของแกน \(j\omega\) ทุกตัว ตรวจได้โดยไม่ต้องหาราก <a href="/learn/control-systems/routh-hurwitz/">เราท์–เฮอร์วิตซ์</a></li>
+          <li>รากเหล่านั้นเดินอย่างไรเมื่อปรับ \(K\) <a href="/learn/control-systems/root-locus/">รูทโลคัส</a> · ห่างจากความไม่เสถียรแค่ไหน <a href="/learn/control-systems/margins/">เกนและเฟสมาร์จิน</a></li>
+          <li>ไม่ได้ตามสเปก เพิ่มขั้วและศูนย์อย่างมีชั้นเชิง <a href="/learn/control-systems/compensators/">lead · lag</a> และ <a href="/learn/control-systems/pid/">PID</a></li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <!-- ============ NAME ============ -->
+    <section class="tsec" aria-labelledby="name">
+    <h2 id="name">Control Engineering หรือ Control Systems เรียกอะไรดี</h2>
+    <p>ทั่วโลกใช้สองคำนี้แทนกันได้ แต่มีน้ำหนักต่างกันเล็กน้อย <strong>Control Systems</strong> คือชื่อวิชาที่มหาวิทยาลัยส่วนใหญ่ใช้ (Control Systems Engineering ของ Nise, Modern Control Systems ของ Dorf) เน้นตัวระบบและเครื่องมือวิเคราะห์ ส่วน <strong>Control Engineering</strong> คือชื่อสาขาวิชาชีพ เน้นงานออกแบบ หน้านี้จึงใช้ชื่อเต็ม <em>Control Systems Engineering</em> ครอบทั้งสองคำ ภาษาไทยใช้ <strong>ระบบควบคุม</strong> และ <strong>วิศวกรรมระบบควบคุม</strong></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>คำ</th><th>ความหมายที่ใช้ในชุดนี้</th><th>เชื่อมไปหน้า</th></tr></thead>
+        <tbody>
+          <tr><td>Control system</td><td>ระบบที่จัดการให้ตัวแปรหนึ่งเป็นไปตามที่ต้องการ</td><td><a href="/learn/control-systems/introduction/">ภาพรวม</a></td></tr>
+          <tr><td>Feedback control system</td><td>ระบบวงปิดที่วัดเอาต์พุตย้อนกลับมาเทียบกับค่าอ้างอิง</td><td><a href="/learn/control-systems/introduction/">ภาพรวม</a> · <a href="/learn/control-systems/block-diagrams/">บล็อก</a></td></tr>
+          <tr><td>Automatic control</td><td>การควบคุมที่ทำงานเองโดยไม่ต้องมีคนคอยปรับ</td><td><a href="/learn/control-systems/pid/">PID</a></td></tr>
+          <tr><td>Classical control</td><td>วิเคราะห์ในโดเมน \(s\) และความถี่: Routh รูทโลคัส โบด ไนควิสต์</td><td>ส่วนที่ 2 ถึง 6</td></tr>
+          <tr><td>Modern control</td><td>วิเคราะห์ในปริภูมิสถานะด้วยเมทริกซ์</td><td>ส่วนที่ 7</td></tr>
+          <tr><td>Mechatronics</td><td>กลไก + ไฟฟ้า + อิเล็กทรอนิกส์ + ซอฟต์แวร์ ที่มีระบบควบคุมเป็นแกนกลาง</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td>Robotics</td><td>เมคาทรอนิกส์ที่มีหลายข้อต่อ รับรู้ และตัดสินใจเอง</td><td><a href="/learn/control-systems/robotics/">โรโบติกส์</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ ROADMAP ============ -->
+    <section class="tsec" aria-labelledby="roadmap">
+    <h2 id="roadmap">แผนที่การเรียน: classical ก่อน แล้วค่อย modern</h2>
+    <p>ลำดับในชุดนี้ตั้งใจเรียงแบบที่อาจารย์สอนในห้อง <strong>เริ่ม classical ก่อน</strong> เพราะฟังก์ชันถ่ายโอนให้ภาพทางกายภาพชัด (ขั้วคือความเร็วตอบสนอง เฟสคือความล่าช้า) งานออกแบบในอุตสาหกรรมส่วนใหญ่จบได้ที่ PID และตัวชดเชย และเป็นภาษาที่ datasheet ของไอซีควบคุมใช้ เมื่อแน่นแล้วจึงขึ้น <strong>modern control</strong> ที่ต่อยอดจาก<a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a> สำหรับระบบหลายตัวแปร หุ่นยนต์ และการควบคุมที่เหมาะสมที่สุด</p>
+    <div class="flow la-flow" aria-label="ลำดับการเรียนระบบควบคุม">
+      <div><b>1–2</b>แบบจำลอง · สมรรถนะ</div><i aria-hidden="true">→</i>
+      <div><b>3</b>เสถียรภาพ · Routh</div><i aria-hidden="true">→</i>
+      <div><b>4</b>รูทโลคัส</div><i aria-hidden="true">→</i>
+      <div><b>5</b>โบด · ไนควิสต์</div><i aria-hidden="true">→</i>
+      <div><b>6</b>Lead · Lag · PID</div><i aria-hidden="true">→</i>
+      <div><b>7–9</b>Modern · ดิจิทัล · งานจริง</div>
+    </div>
+    <div class="la-levels">
+      <div class="la-level">
+        <span class="lv lv-b">พื้นฐาน</span>
+        <h3>ปี 2–3 · เริ่มเรียนวิชาควบคุม</h3>
+        <ul>
+          <li><a href="/learn/control-systems/introduction/">วงเปิด วงปิด ทำไมต้องป้อนกลับ</a></li>
+          <li><a href="/learn/control-systems/modeling/">ฟังก์ชันถ่ายโอนของวงจร RLC และมอเตอร์</a></li>
+          <li><a href="/learn/control-systems/block-diagrams/">ลดรูปบล็อกไดอะแกรม</a></li>
+          <li><a href="/learn/control-systems/time-response/">สเปก Mp, tr, ts จากขั้ว</a></li>
+          <li><a href="/learn/control-systems/stability/">ขั้วบนระนาบ s กับเสถียรภาพ</a></li>
+          <li><a href="/learn/control-systems/routh-hurwitz/">สร้างตารางเราท์</a></li>
+        </ul>
+      </div>
+      <div class="la-level">
+        <span class="lv lv-i">กลาง</span>
+        <h3>ปี 3–4 · ออกแบบตัวควบคุม</h3>
+        <ul>
+          <li><a href="/learn/control-systems/routh-hurwitz/#gain-range">ช่วง K ที่เสถียร · กรณีพิเศษ</a></li>
+          <li><a href="/learn/control-systems/root-locus/">กฎวาดรูทโลคัสทุกข้อ</a> · <a href="/learn/control-systems/root-locus-sketching/">ฝึกวาด</a></li>
+          <li><a href="/learn/control-systems/bode-plot/">วาดโบดด้วยเส้นกำกับ</a> · <a href="/learn/control-systems/margins/">มาร์จิน</a></li>
+          <li><a href="/learn/control-systems/compensators/">ออกแบบ lead · lag</a></li>
+          <li><a href="/learn/control-systems/pid/">P PI PD PID</a> · <a href="/learn/control-systems/pid-tuning/">จูน PID</a></li>
+        </ul>
+      </div>
+      <div class="la-level">
+        <span class="lv lv-a">ขั้นสูง</span>
+        <h3>ป.โท · งานวิจัย · งานจริง</h3>
+        <ul>
+          <li><a href="/learn/control-systems/nyquist/">ไนควิสต์และระบบเสถียรแบบมีเงื่อนไข</a></li>
+          <li><a href="/learn/control-systems/state-space/">ปริภูมิสถานะ</a> · <a href="/learn/control-systems/state-feedback/">วางขั้ว LQR ตัวสังเกต</a></li>
+          <li><a href="/learn/control-systems/digital-control/">ควบคุมดิจิทัลบนไมโครคอนโทรลเลอร์</a></li>
+          <li><a href="/learn/control-systems/nonlinear-robust/">ไม่เชิงเส้นและความทนทาน</a></li>
+          <li><a href="/learn/control-systems/power-electronics-control/">ตัวชดเชย Type II/III ของ SMPS</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="hint">บางหน้ายังเขียนไม่เสร็จ ลิงก์ของหน้านั้นจะพาไปการ์ดในหัวข้อถัดไปซึ่งติดป้าย “เร็วๆ นี้” ไว้</p>
+    </section>
+
+    <!-- ============ PATH FROM EE ============ -->
+    <section class="tsec" aria-labelledby="from-ee">
+    <h2 id="from-ee">เริ่มจากไฟฟ้า ปูทางไปอิเล็กทรอนิกส์กำลัง</h2>
+    <p>นักศึกษาไฟฟ้ามีข้อได้เปรียบ เพราะวงจร RC คือระบบอันดับหนึ่ง วงจร RLC คือระบบอันดับสอง และออปแอมป์คือตัวควบคุมที่สร้างได้จริงบนโต๊ะ ชุดนี้จึงใช้วงจรเป็นตัวอย่างหลักตลอดทาง แล้วค่อยขยายไปมอเตอร์ กลไก และหุ่นยนต์ ปลายทางคือ<strong>ตัวแปลงกำลังแบบสวิตชิ่ง</strong> ซึ่งรวมทุกเรื่องในชุดนี้ไว้ในวงจรเดียว</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สิ่งที่รู้จากไฟฟ้า</th><th>ในภาษาระบบควบคุม</th><th>ใช้ต่อที่</th></tr></thead>
+        <tbody>
+          <tr><td>วงจร RC, \(\tau = RC\)</td><td>ระบบอันดับหนึ่ง ขั้ว \(s = -1/\tau\)</td><td><a href="/learn/first-order-system/">แล็บระบบอันดับ 1</a></td></tr>
+          <tr><td>วงจร RLC อนุกรม</td><td>ระบบอันดับสอง \(\zeta,\ \omega_n\)</td><td><a href="/learn/second-order-system/">แล็บระบบอันดับ 2</a></td></tr>
+          <tr><td>อิมพีแดนซ์ \(Z(s)\)</td><td>ฟังก์ชันถ่ายโอน \(G(s)\)</td><td><a href="/learn/control-systems/modeling/">แบบจำลอง</a></td></tr>
+          <tr><td>ออปแอมป์อินเวอร์ติง \(-Z_f/Z_i\)</td><td>ตัวควบคุม PI, PD, lead, lag</td><td><a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a> · <a href="/learn/control-systems/compensators/">ตัวชดเชย</a></td></tr>
+          <tr><td>ฟิลเตอร์ low-pass, \(-3\) dB</td><td>แบนด์วิดท์ โบดไดอะแกรม</td><td><a href="/learn/control-systems/bode-plot/">โบด</a></td></tr>
+          <tr><td>ฟังก์ชันเจเนอเรเตอร์ + สโคป วัดเกนและเฟส</td><td>วัดผลตอบสนองความถี่จริง</td><td><a href="/learn/function-generator/">แล็บ FG + สโคป</a></td></tr>
+          <tr><td>มอเตอร์ DC: \(V = Ri + L\,di/dt + K_e\omega\)</td><td>พลานต์ของเซอร์โว</td><td><a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a></td></tr>
+          <tr><td>บั๊กคอนเวอร์เตอร์, LC ฟิลเตอร์, PWM</td><td>\(G_{vd}(s)\) และตัวชดเชย Type III</td><td><a href="/learn/control-systems/power-electronics-control/">สะพานสู่อิเล็กทรอนิกส์กำลัง</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ PAGES ============ -->
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">ทุกหน้าในชุดนี้ แบ่งเป็น 9 ส่วน</h2>
+    <p>อ่านตามลำดับเลขหน้า ตัวอักษรท้ายการ์ดคือรหัสสูตรของหน้านั้น เช่น R3 คือสูตรที่ 3 ของหน้าเราท์–เฮอร์วิตซ์ ใช้อ้างอิงในรายงานหรือค้นหาในหัวข้อถัดไปได้</p>
+    <!--series-cards:control-systems-->
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บระบบควบคุม: รูทโลคัส โบด ไนควิสต์ ในจอเดียว</h2>
+    <p>พิมพ์ฟังก์ชันถ่ายโอนวงเปิด \(L(s)\) เช่น <code>1/(s(s+1)(s+2))</code> หรือ <code>(s+3)/(s^2(s+10))</code> แล้วเลื่อนเกน \(K\) ดูขั้ววงปิด (จุดส้ม) เดินตามรูทโลคัส พร้อมกับโบดที่เลื่อนขึ้นลงและกราฟไนควิสต์ที่ขยายจนอ้อม \(-1\) ลากขั้ว × หรือศูนย์ ○ เพื่อดูว่ารูปร่างเปลี่ยนอย่างไร คลิกบนเส้นโลคัสเพื่อเลือก \(K\) ที่จุดนั้น</p>
+    <div class="cs-lab" data-tf="1/(s(s+1)(s+2))" data-views="rl,bode,nyq,step" data-k="2" data-zeta="0.5" data-rules data-presets='[{"n":"K/(s(s+1)(s+2)) · คลาสสิก","tf":"1/(s(s+1)(s+2))","k":2},{"n":"มอเตอร์ DC + P","tf":"10/(s(s+5))","k":1},{"n":"ศูนย์ดึงโลคัส (PD)","tf":"(s+2)/(s(s+1)(s+5))","k":5},{"n":"PI กับระบบอันดับหนึ่ง","tf":"(s+0.5)/(s(s+2))","k":2},{"n":"ขั้วเชิงซ้อน (มุมออก)","tf":"1/(s(s^2+2s+5))","k":2},{"n":"เสถียรแบบมีเงื่อนไข","tf":"(s+1)^2/(s^3)","k":5},{"n":"ไม่เสถียรวงเปิด","tf":"(s+1)/(s(s-1))","k":3},{"n":"หน่วงเวลา","tf":"e^(-0.5s)/(s+1)","k":2}]'>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    <p>ลองตั้งโจทย์ให้ตัวเอง: ระบบ \(\dfrac{K}{s(s+1)(s+2)}\) เสถียรถึง \(K\) เท่าไร (เฉลย \(K = 6\) ที่ \(\omega = \sqrt2\) ซึ่งตรงกับตารางเราท์ใน<a href="/learn/control-systems/routh-hurwitz/">หน้าเราท์–เฮอร์วิตซ์</a> และเกนมาร์จินที่ \(K = 1\) คือ \(20\log 6 = 15.6\) dB ใน<a href="/learn/control-systems/margins/">หน้ามาร์จิน</a>) สามวิธีให้คำตอบเดียวกัน นี่คือความงามของวิชานี้</p>
+    </section>
+
+    <!-- ============ FORMULAS ============ -->
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">ค้นหาสูตรทั้งหมดในที่เดียว</h2>
+    <p>รวมทุกสูตรจากทุกหน้าที่เปิดแล้ว พิมพ์ได้ทั้งภาษาไทยและอังกฤษ หรือรหัสสูตรตรง ๆ เช่น <code>L4</code> (จุดตัดเส้นกำกับ) หรือ <code>G3</code> (เฟสมาร์จินกับ ζ)</p>
+    <!--formula-index:control-systems-->
+    </section>
+
+    <!-- ============ IDEAS ============ -->
+    <section class="tsec" aria-labelledby="ideas">
+    <h2 id="ideas">ไอเดียระบบควบคุม: จากไฟฟ้า สู่เมคาทรอนิกส์และหุ่นยนต์</h2>
+    <p>เข้าใจลูปเดียว ใช้ได้กับทุกระบบ ต่างกันแค่ว่าพลานต์คืออะไร วัดด้วยอะไร และขับด้วยอะไร ตารางนี้เป็นตัวอย่างบางส่วน ฉบับเต็ม 60+ ระบบอยู่ใน<a href="/learn/control-systems/examples/">คลังไอเดีย</a></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ระบบ</th><th>ตัวแปรที่ควบคุม</th><th>เซนเซอร์</th><th>แอคชูเอเตอร์</th><th>ตัวควบคุมที่นิยม</th></tr></thead>
+        <tbody>
+          <tr><td>บั๊กคอนเวอร์เตอร์ 12 V → 5 V</td><td>แรงดันเอาต์พุต</td><td>ตัวแบ่งแรงดัน</td><td>PWM + MOSFET</td><td>Type III (PID + ขั้ว)</td></tr>
+          <tr><td>ไดรฟ์มอเตอร์ DC</td><td>ความเร็วรอบ</td><td>เอนโค้ดเดอร์</td><td>H-bridge</td><td>PI ลูปกระแส + PI ลูปความเร็ว</td></tr>
+          <tr><td>เซอร์โวตำแหน่ง (เครื่อง CNC, 3D printer)</td><td>ตำแหน่งแกน</td><td>เอนโค้ดเดอร์เชิงเส้น</td><td>เซอร์โวมอเตอร์</td><td>คาสเคด P–PI–PI + feedforward</td></tr>
+          <tr><td>แขนกลหุ่นยนต์ 6 แกน</td><td>มุมข้อต่อ</td><td>เอนโค้ดเดอร์สัมบูรณ์</td><td>มอเตอร์ BLDC + harmonic drive</td><td>PD + ชดเชยแรงโน้มถ่วง, computed torque</td></tr>
+          <tr><td>โดรนสี่ใบพัด</td><td>มุมเอียง ความสูง</td><td>IMU, บารอมิเตอร์</td><td>ESC + มอเตอร์ BLDC</td><td>PID คาสเคดมุม–อัตราหมุน</td></tr>
+          <tr><td>หุ่นยนต์ทรงตัวสองล้อ</td><td>มุมเอียง</td><td>IMU</td><td>มอเตอร์ล้อ</td><td>LQR หรือ PID สองลูป</td></tr>
+          <tr><td>หุ่นยนต์เดินตามเส้น</td><td>ระยะเบี่ยงจากเส้น</td><td>อาร์เรย์อินฟราเรด</td><td>มอเตอร์ซ้าย–ขวา</td><td>PD</td></tr>
+          <tr><td>หุ่นยนต์ล้อแบบ differential drive</td><td>ตำแหน่ง ทิศทาง</td><td>เอนโค้ดเดอร์ล้อ, LiDAR</td><td>มอเตอร์สองล้อ</td><td>pure pursuit + PI ความเร็วล้อ</td></tr>
+          <tr><td>อินเวอร์เตอร์ต่อกริด (โซลาร์)</td><td>กระแสที่จ่ายเข้ากริด</td><td>เซนเซอร์กระแส, PLL</td><td>อินเวอร์เตอร์ PWM</td><td>PI ในแกน dq / PR</td></tr>
+          <tr><td>ที่ชาร์จแบตเตอรี่ CC–CV</td><td>กระแส แล้วแรงดัน</td><td>shunt, ตัวแบ่งแรงดัน</td><td>ตัวแปลง DC–DC</td><td>PI สองลูปสลับโหมด</td></tr>
+          <tr><td>เตาอบรีโฟลว์ / เครื่องพิมพ์ 3D หัวฉีด</td><td>อุณหภูมิ</td><td>เทอร์โมคัปเปิล</td><td>ฮีตเตอร์ + SSR</td><td>PID + anti-windup</td></tr>
+          <tr><td>ลิฟต์</td><td>ตำแหน่ง ความเร่งที่นุ่มนวล</td><td>เอนโค้ดเดอร์</td><td>มอเตอร์เหนี่ยวนำ + อินเวอร์เตอร์</td><td>จำกัด jerk + PI คาสเคด</td></tr>
+          <tr><td>ลอยแม่เหล็ก (maglev)</td><td>ระยะลอย</td><td>Hall sensor</td><td>ขดลวดแม่เหล็ก</td><td>lead (พลานต์ไม่เสถียรวงเปิด)</td></tr>
+          <tr><td>ระบบเบรก ABS</td><td>อัตราลื่นไถลของล้อ</td><td>เซนเซอร์ความเร็วล้อ</td><td>วาล์วไฮดรอลิก</td><td>ควบคุมแบบไม่เชิงเส้น / sliding mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ NOTATION ============ -->
+    <section class="tsec" aria-labelledby="notation">
+    <h2 id="notation">สัญลักษณ์ที่ใช้ในชุดนี้</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สัญลักษณ์</th><th>ความหมาย</th><th>English</th></tr></thead>
+        <tbody>
+          <tr><td>\(r,\ y,\ e,\ u,\ d\)</td><td>ค่าอ้างอิง เอาต์พุต ความผิดพลาด สัญญาณควบคุม สัญญาณรบกวน</td><td>reference, output, error, control, disturbance</td></tr>
+          <tr><td>\(G(s),\ C(s),\ H(s)\)</td><td>พลานต์ ตัวควบคุม เซนเซอร์ (ทางป้อนกลับ)</td><td>plant, controller, feedback path</td></tr>
+          <tr><td>\(L(s) = KG(s)H(s)\)</td><td>ฟังก์ชันถ่ายโอนวงเปิด (loop gain)</td><td>open-loop / loop transfer function</td></tr>
+          <tr><td>\(T(s),\ S(s)\)</td><td>ฟังก์ชันถ่ายโอนวงปิด และฟังก์ชันความไว \(S = 1/(1 + L)\)</td><td>complementary sensitivity, sensitivity</td></tr>
+          <tr><td>\(\zeta,\ \omega_n,\ \omega_d\)</td><td>อัตราส่วนการหน่วง ความถี่ธรรมชาติ ความถี่แกว่งหน่วง</td><td>damping ratio, natural / damped frequency</td></tr>
+          <tr><td>\(M_p,\ t_r,\ t_p,\ t_s\)</td><td>พุ่งเกิน เวลาขึ้น เวลายอด เวลาเข้าที่</td><td>overshoot, rise, peak, settling time</td></tr>
+          <tr><td>\(K_p,\ K_v,\ K_a\)</td><td>ค่าคงตัวความผิดพลาดตำแหน่ง ความเร็ว ความเร่ง</td><td>static error constants</td></tr>
+          <tr><td>\(\sigma_a,\ \theta_a\)</td><td>จุดตัดและมุมของเส้นกำกับรูทโลคัส</td><td>asymptote centroid, angle</td></tr>
+          <tr><td>\(\omega_{gc},\ \omega_{pc}\)</td><td>ความถี่ครอสโอเวอร์ของเกน และของเฟส</td><td>gain / phase crossover frequency</td></tr>
+          <tr><td>GM, PM</td><td>เกนมาร์จิน เฟสมาร์จิน</td><td>gain margin, phase margin</td></tr>
+          <tr><td>\(K_P,\ K_I,\ K_D,\ T_i,\ T_d\)</td><td>เกนและค่าคงเวลาของ PID</td><td>PID gains, integral / derivative time</td></tr>
+          <tr><td>\(\mathbf x,\ A,\ B,\ C,\ D\)</td><td>เวกเตอร์สถานะและเมทริกซ์ในปริภูมิสถานะ</td><td>state vector, state-space matrices</td></tr>
+          <tr><td>\(j\)</td><td>หน่วยจินตภาพ \(j^2 = -1\)</td><td>imaginary unit</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ PREREQ ============ -->
+    <section class="tsec" aria-labelledby="prereq">
+    <h2 id="prereq">ต้องรู้อะไรมาก่อน</h2>
+    <ul>
+      <li><a href="/learn/laplace-transform/">การแปลงลาปลาซ</a>: ฟังก์ชันถ่ายโอน เศษส่วนย่อย ทฤษฎีบทค่าสุดท้าย</li>
+      <li><a href="/learn/first-order-system/">ระบบอันดับหนึ่ง</a> และ <a href="/learn/second-order-system/">ระบบอันดับสอง</a>: \(\tau,\ \zeta,\ \omega_n\) และสเปกเวลา</li>
+      <li><a href="/learn/signals/">สัญญาณเบื้องต้น</a>: ขั้นบันได อิมพัลส์ ไซน์</li>
+      <li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a> โดยเฉพาะ<a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a>: สำหรับส่วนที่ 7</li>
+      <li><a href="/learn/trigonometry/">ตรีโกณมิติ</a>: มุมของเวกเตอร์เชิงซ้อน ซึ่งใช้ตลอดในเงื่อนไขมุมของรูทโลคัส</li>
+    </ul>
+    </section>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

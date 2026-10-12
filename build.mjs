@@ -151,6 +151,82 @@ export const TOPICS = [
         summary: "รูปแบบงานจริงที่เจอบ่อย: แรงดันริปเปิล PWM กับค่าเฉลี่ย คลิปเปอร์ แคลมเปอร์ หา C และ L จากการวัด ความต้านทานขาออก ทดสอบเครื่องขยายเสียง และสัญญาณเซนเซอร์" },
     ],
   },
+  {
+    // A large series grouped into parts. A sub-page is "live" only when src/pages/learn/control-systems/<slug>.html exists;
+    // the others show as "เร็วๆ นี้" on the hub and are skipped by prev/next, sitemap and llms.txt.
+    slug: "control-systems",
+    title: "ระบบควบคุม (Control Systems Engineering)",
+    en: "Control Systems Engineering",
+    sym: "G(s)",
+    summary: "วิศวกรรมระบบควบคุมจากพื้นฐานถึงขั้นสูง: ป้อนกลับ แบบจำลอง เสถียรภาพ Routh–Hurwitz รูทโลคัสแบบวาดด้วยมือ ตอบสนองความถี่ Bode Nyquist ตัวชดเชย P PI PD PID ปริภูมิสถานะ ดิจิทัล ไปจนถึงเมคาทรอนิกส์ โรโบติกส์ และตัวแปลงกำลัง",
+    playlist: "PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka",
+    fxHint: "พิมพ์ เช่น routh, root locus, asymptote, breakaway, bode, phase margin, nyquist, PID, lead, ziegler",
+    parts: [
+      { id: "foundations", n: 1, title: "ภาพรวมและแบบจำลอง", en: "Foundations & Modeling", blurb: "เริ่มจากวงจรไฟฟ้าที่เรารู้จัก แล้วมองมันเป็นระบบที่มีอินพุต เอาต์พุต และป้อนกลับ" },
+      { id: "performance", n: 2, title: "สมรรถนะของระบบ", en: "Performance", blurb: "ระบบดีหรือไม่ดี วัดจากอะไร: ความเร็ว overshoot และความแม่นยำ" },
+      { id: "stability", n: 3, title: "เสถียรภาพ", en: "Stability", blurb: "คำถามแรกของวิศวกรควบคุม: ระบบนี้เสถียรไหม และเสถียรได้ถึงเกนเท่าไร" },
+      { id: "root-locus", n: 4, title: "รูทโลคัส", en: "Root Locus", blurb: "ดูว่าขั้วเคลื่อนอย่างไรเมื่อปรับเกน วาดด้วยมือให้ได้ก่อนเปิดโปรแกรม" },
+      { id: "frequency", n: 5, title: "ตอบสนองความถี่", en: "Frequency Response", blurb: "มองระบบผ่านไซน์: Bode, margin และ Nyquist ภาษาที่วิศวกรทั่วโลกใช้" },
+      { id: "design", n: 6, title: "ออกแบบตัวควบคุม", en: "Compensator & PID Design", blurb: "นำทุกเครื่องมือมาออกแบบ lead lag และ PID ให้ได้ตามสเปก" },
+      { id: "modern", n: 7, title: "ระบบควบคุมสมัยใหม่", en: "Modern Control", blurb: "ปริภูมิสถานะ ต่อยอดจากพีชคณิตเชิงเส้น: วางขั้ว ตัวสังเกต LQR" },
+      { id: "advanced", n: 8, title: "ดิจิทัลและขั้นสูง", en: "Digital & Advanced", blurb: "เมื่อตัวควบคุมคือไมโครคอนโทรลเลอร์ และเมื่อโลกไม่เป็นเชิงเส้น" },
+      { id: "applications", n: 9, title: "งานประยุกต์", en: "Mechatronics, Robotics & Power Electronics", blurb: "ทฤษฎีลงสนามจริง: มอเตอร์ หุ่นยนต์ และตัวแปลงกำลัง ทางไปสู่อิเล็กทรอนิกส์กำลัง" },
+    ],
+    sub: [
+      { slug: "introduction", part: "foundations", short: "ภาพรวมป้อนกลับ", title: "ระบบควบคุมคืออะไร: วงเปิด วงปิด และการป้อนกลับ", en: "What Is a Control System?", sym: "⟲", prefix: "F",
+        summary: "ระบบควบคุมอัตโนมัติทำงานอย่างไร เปรียบเทียบวงเปิดกับวงปิด ป้อนกลับลดความผิดพลาดและต้านการรบกวนได้อย่างไร เป้าหมายการออกแบบ และตัวอย่างระบบจริงจากไฟฟ้า เมคาทรอนิกส์ โรโบติกส์ ถึงอิเล็กทรอนิกส์กำลัง" },
+      { slug: "modeling", part: "foundations", short: "แบบจำลอง", title: "แบบจำลองทางคณิตศาสตร์: วงจรไฟฟ้า มอเตอร์ กลไก ความร้อน", en: "Mathematical Modeling", sym: "G(s)", prefix: "M",
+        summary: "จากกฎฟิสิกส์สู่ฟังก์ชันถ่ายโอน วงจร RLC ออปแอมป์ มอเตอร์ไฟฟ้ากระแสตรง มวล-สปริง-ดัมเปอร์ ระบบหมุน ความร้อน ของไหล ความคล้ายเชิงอุปมาไฟฟ้า-กล และการทำให้เป็นเชิงเส้น" },
+      { slug: "block-diagrams", part: "foundations", short: "บล็อกไดอะแกรม", title: "บล็อกไดอะแกรม แผนภาพสัญญาณ และฟังก์ชันถ่ายโอนวงปิด", en: "Block Diagrams & Signal-Flow Graphs", sym: "▭→▭", prefix: "B",
+        summary: "การลดรูปบล็อกแบบอนุกรม ขนาน และป้อนกลับ ย้ายจุดรวมสัญญาณและจุดแยก กฎของเมสัน ฟังก์ชันถ่ายโอนวงปิด ความผิดพลาด และสัญญาณรบกวน" },
+      { slug: "time-response", part: "performance", short: "ตอบสนองเวลา", title: "ผลตอบสนองเวลา: ขั้ว ศูนย์ และสเปกการออกแบบ", en: "Time Response & Specifications", sym: "y(t)", prefix: "T",
+        summary: "ผลตอบสนองต่อขั้นบันไดของระบบอันดับหนึ่ง สอง และสูงกว่า ขั้วเด่น ผลของศูนย์และขั้วเพิ่ม เวลาขึ้น overshoot เวลาเข้าที่ และความสัมพันธ์กับตำแหน่งบนระนาบ s" },
+      { slug: "steady-state-error", part: "performance", short: "ความผิดพลาดอยู่ตัว", title: "ความผิดพลาดสถานะอยู่ตัว ชนิดของระบบ และความไว", en: "Steady-State Error & System Type", sym: "e∞", prefix: "E",
+        summary: "ทฤษฎีบทค่าสุดท้าย ชนิดของระบบ (type 0, 1, 2) ค่าคงตัวความผิดพลาด Kp Kv Ka ความผิดพลาดจากการรบกวน ความไว (sensitivity) และการยกชนิดด้วยอินทิเกรเตอร์" },
+      { slug: "stability", part: "stability", short: "เสถียรภาพ", title: "เสถียรภาพของระบบควบคุม: ขั้วบนระนาบ s และเงื่อนไขเบื้องต้น", en: "Stability of Control Systems", sym: "Re s<0", prefix: "S",
+        summary: "นิยามเสถียรภาพแบบ BIBO และเชิงอาการ ตำแหน่งขั้วบนระนาบ s เสถียรวิกฤต เงื่อนไขจำเป็นของสัมประสิทธิ์ ความไม่เสถียรจากการป้อนกลับ และเสถียรภาพสัมพัทธ์" },
+      { slug: "routh-hurwitz", part: "stability", short: "เราท์–เฮอร์วิตซ์", title: "เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์ (Routh–Hurwitz Criterion)", en: "Routh–Hurwitz Stability Criterion", sym: "R", prefix: "R",
+        summary: "สร้างตารางเราท์ทีละขั้น นับขั้วฝั่งขวา กรณีพิเศษ (ศูนย์ในคอลัมน์แรก แถวเป็นศูนย์) หาช่วงเกน K ที่เสถียร เกนวิกฤตและความถี่วิกฤต ε-method พหุนามช่วย เฮอร์วิตซ์ดีเทอร์มิแนนต์ และเสถียรภาพสัมพัทธ์" },
+      { slug: "root-locus", part: "root-locus", short: "รูทโลคัส", title: "รูทโลคัส (Root Locus): นิยามและกฎการวาดทุกข้อ", en: "Root Locus: Definition & Sketching Rules", sym: "K→", prefix: "L",
+        summary: "ขั้วของวงปิดเคลื่อนอย่างไรเมื่อเกน K เปลี่ยน เงื่อนไขมุมและขนาด กฎการวาดทุกข้อ: จุดเริ่ม-จบ เส้นกำกับ จุดแยก จุดตัดแกน jω มุมออก-เข้า พร้อมที่มาของแต่ละกฎ" },
+      { slug: "root-locus-sketching", part: "root-locus", short: "วาดรูทโลคัส", title: "ฝึกวาดรูทโลคัสด้วยมือ: ทีละขั้น พร้อมตัวอย่างและแกลเลอรีรูปแบบ", en: "Sketching Root Loci by Hand", sym: "✎", prefix: "W",
+        summary: "ตัวอย่างวาดด้วยมือทีละขั้นตั้งแต่ระบบง่ายถึงซับซ้อน ขั้วเชิงซ้อน ศูนย์ ขั้วหลายตัว รูทโลคัสของ PID แกลเลอรีรูปแบบมาตรฐาน และแล็บที่ตรวจคำตอบของกฎแต่ละข้อ ใช้แทน MATLAB" },
+      { slug: "root-locus-design", part: "root-locus", short: "ออกแบบด้วยรูทโลคัส", title: "ออกแบบด้วยรูทโลคัส: เลือกเกน เพิ่มขั้วหรือศูนย์ และตัวชดเชย", en: "Design by Root Locus", sym: "ζ", prefix: "J",
+        summary: "เลือก K จากสเปก ζ และ ωn ผลของการเพิ่มขั้วและศูนย์ต่อรูปร่างโลคัส ออกแบบ PD PI และ lead/lag ด้วยรูทโลคัส การหักล้างขั้ว-ศูนย์ รูทโลคัสเมื่อ K ติดลบ และรูทโลคัสของพารามิเตอร์อื่น" },
+      { slug: "frequency-response", part: "frequency", short: "ตอบสนองความถี่", title: "ผลตอบสนองความถี่: G(jω) ขนาด เฟส และแบนด์วิดท์", en: "Frequency Response", sym: "G(jω)", prefix: "Q",
+        summary: "ป้อนไซน์เข้าระบบเชิงเส้น ออกมาเป็นไซน์ที่ขนาดและเฟสเปลี่ยน ที่มาของ G(jω) ความถี่เรโซแนนซ์ ยอดเรโซแนนซ์ Mr แบนด์วิดท์ และความสัมพันธ์กับผลตอบสนองเวลาของระบบอันดับสอง" },
+      { slug: "bode-plot", part: "frequency", short: "โบดไดอะแกรม", title: "โบดไดอะแกรม (Bode Plot): วาดด้วยมือทีละขั้น", en: "Bode Plot by Hand", sym: "dB", prefix: "D",
+        summary: "เดซิเบล เดคาด การวาดขนาดและเฟสด้วยเส้นกำกับ ปัจจัยพื้นฐาน K sⁿ (1+τs) อันดับสอง และหน่วงเวลา ค่าแก้ที่จุดมุม ตัวอย่างหลายแบบ การหาฟังก์ชันถ่ายโอนจากกราฟ และแล็บโบดที่ตรวจคำตอบ" },
+      { slug: "margins", part: "frequency", short: "เกนและเฟสมาร์จิน", title: "วิเคราะห์โบด: เกนมาร์จิน เฟสมาร์จิน และเสถียรภาพจากกราฟ", en: "Gain & Phase Margins", sym: "PM", prefix: "G",
+        summary: "ความถี่ครอสโอเวอร์ เกนมาร์จิน เฟสมาร์จิน อ่านจากโบด ความสัมพันธ์ PM กับ ζ และ overshoot แบนด์วิดท์กับความเร็ว ระบบเสถียรแบบมีเงื่อนไข ผลของหน่วงเวลา และฟังก์ชันความไว S T" },
+      { slug: "nyquist", part: "frequency", short: "ไนควิสต์", title: "เกณฑ์เสถียรภาพของไนควิสต์ (Nyquist Criterion)", en: "Nyquist Stability Criterion", sym: "−1", prefix: "N",
+        summary: "ทฤษฎีบทอาร์กิวเมนต์ เส้นทางไนควิสต์ Z = N + P วาดกราฟขั้วทีละขั้น จัดการขั้วบนแกน jω ตัวอย่างเสถียร ไม่เสถียร และมีเงื่อนไข อ่านมาร์จิน และเปรียบเทียบกับโบด" },
+      { slug: "compensators", part: "design", short: "Lead · Lag", title: "ตัวชดเชย Lead, Lag และ Lag-Lead: ออกแบบด้วยโบดและรูทโลคัส", en: "Lead, Lag & Lag-Lead Compensators", sym: "α", prefix: "C",
+        summary: "ตัวชดเชยเลื่อนเฟส (lead) ลดความผิดพลาดอยู่ตัว (lag) และรวมสองแบบ สูตรเลือก α และ T ขั้นตอนออกแบบทีละขั้นด้วยโบดและรูทโลคัส วงจรออปแอมป์และ RC จริง และข้อควรระวัง" },
+      { slug: "pid", part: "design", short: "P · PI · PD · PID", title: "ตัวควบคุม P, PI, PD และ PID: โครงสร้าง ผลของแต่ละเทอม และการออกแบบ", en: "P, PI, PD & PID Controllers", sym: "PID", prefix: "P",
+        summary: "โครงสร้างขนาน อุดมคติ และอนุกรม ผลของเทอม P I D ต่อ rise time overshoot และความผิดพลาดอยู่ตัว ความเกี่ยวข้องกับ lead/lag ออกแบบ PID ด้วยรูทโลคัสและโบด พร้อมแล็บ PID แบบโต้ตอบ" },
+      { slug: "pid-tuning", part: "design", short: "จูน PID", title: "การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และเรื่องที่ใช้งานจริง", en: "PID Tuning & Practical Issues", sym: "ZN", prefix: "Z",
+        summary: "จูนจากกราฟตอบสนองขั้นบันได (reaction curve) และเกนวิกฤต (ultimate gain) Cohen–Coon, Lambda/IMC ฟิลเตอร์อนุพันธ์ anti-windup setpoint weighting ตัวควบคุม 2 องศาอิสระ และ relay auto-tune" },
+      { slug: "state-space", part: "modern", short: "ปริภูมิสถานะ", title: "ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}", en: "State-Space Representation", sym: "ẋ=Ax", prefix: "X",
+        summary: "ตัวแปรสถานะ สมการสถานะและสมการเอาต์พุต จากสมการเชิงอนุพันธ์ วงจร และฟังก์ชันถ่ายโอน รูปแบบมาตรฐานควบคุมได้ สังเกตได้ และโมดัล คำตอบ e^{At} ขั้วคือค่าเฉพาะ G(s) = C(sI − A)⁻¹B + D" },
+      { slug: "controllability-observability", part: "modern", short: "ควบคุมได้ · สังเกตได้", title: "ความสามารถควบคุมได้และสังเกตได้ (Controllability & Observability)", en: "Controllability & Observability", sym: "𝒞", prefix: "O",
+        summary: "นิยาม เมทริกซ์ควบคุมได้และสังเกตได้ ทดสอบแบบ Kalman และ PBH การแยกส่วนของ Kalman ความเกี่ยวข้องกับการหักล้างขั้ว-ศูนย์ และ realization ที่น้อยที่สุด" },
+      { slug: "state-feedback", part: "modern", short: "ป้อนกลับสถานะ", title: "ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR", en: "State Feedback, Observers & LQR", sym: "u=−Kx", prefix: "V",
+        summary: "การวางขั้ว (pole placement) สูตร Ackermann ตัวสังเกตสถานะ Luenberger หลักการแยกส่วน การติดตามสัญญาณอ้างอิงและอินทิเกรเตอร์ LQR สมการริคคาติเบื้องต้น และตัวกรองคาลมานโดยย่อ" },
+      { slug: "digital-control", part: "advanced", short: "ควบคุมดิจิทัล", title: "ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล", en: "Digital Control", sym: "z", prefix: "Y",
+        summary: "การสุ่มและ ZOH, aliasing, การแปลง z, ฟังก์ชันถ่ายโอนแบบไม่ต่อเนื่อง เสถียรภาพบนวงกลมหนึ่งหน่วย (Jury) การแปลงตัวควบคุม (Euler, Tustin) PID ดิจิทัล และการเลือกความถี่สุ่ม" },
+      { slug: "nonlinear-robust", part: "advanced", short: "ไม่เชิงเส้น · ทนทาน", title: "ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน", en: "Nonlinear & Robust Control", sym: "NL", prefix: "U",
+        summary: "การอิ่มตัว dead-zone backlash ฟังก์ชันพรรณนา (describing function) ลิมิตไซเคิล ระนาบเฟส เสถียรภาพแบบลียาปูนอฟ sliding mode ความไม่แน่นอนของแบบจำลอง ความทนทาน และแนวคิด H∞" },
+      { slug: "mechatronics", part: "applications", short: "เมคาทรอนิกส์", title: "ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด", en: "Mechatronic Systems Control", sym: "M", prefix: "K",
+        summary: "มอเตอร์ DC เซนเซอร์ (เอนโค้ดเดอร์ โพเทนชิโอมิเตอร์ IMU) ไดรเวอร์และ PWM ลูปกระแส-ความเร็ว-ตำแหน่งแบบคาสเคด เซอร์โวตำแหน่ง ชุดเกียร์ ความฝืด backlash และตัวอย่างจริง" },
+      { slug: "robotics", part: "applications", short: "โรโบติกส์", title: "ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ", en: "Robotics & Robot Control", sym: "θ", prefix: "A",
+        summary: "จลนศาสตร์ตรงและผกผัน จาโคเบียน พลศาสตร์แขนกล (Euler–Lagrange) ควบคุมข้อต่อแบบ PD/PID ชดเชยแรงโน้มถ่วง computed torque การสร้างวิถี หุ่นยนต์ล้อ differential drive และการติดตามเส้นทาง" },
+      { slug: "power-electronics-control", part: "applications", short: "สะพานสู่อิเล็กทรอนิกส์กำลัง", title: "ควบคุมตัวแปลงกำลัง: จากฟังก์ชันถ่ายโอนบั๊กคอนเวอร์เตอร์ ถึงตัวชดเชย Type II/III", en: "Control of Power Converters", sym: "DC", prefix: "H",
+        summary: "แบบจำลองสัญญาณเล็กของบั๊กคอนเวอร์เตอร์ Gvd(s) โหมดแรงดันและโหมดกระแส เลือกความถี่ครอสโอเวอร์ ตัวชดเชย Type II และ Type III ด้วยออปแอมป์ เฟสมาร์จิน และเส้นทางสู่บทอิเล็กทรอนิกส์กำลัง" },
+      { slug: "examples", part: "applications", short: "คลังตัวอย่าง", title: "คลังไอเดียระบบควบคุม 60+ ระบบ: ตั้งแต่เทอร์โมสตัทถึงโดรน", en: "Control Systems Examples Gallery", sym: "✦", tag: "ตารางและโจทย์โปรเจกต์",
+        summary: "รวมระบบควบคุมรอบตัวพร้อมตัวแปรที่ควบคุม แอคชูเอเตอร์ เซนเซอร์ ชนิดตัวควบคุม และบทเรียนที่เกี่ยวข้อง ใช้เป็นโจทย์โปรเจกต์ ไอเดียสอน และแรงบันดาลใจ" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -220,7 +296,7 @@ function topicCards() {
     <b>${esc(t.title)}</b>
     <span class="tc-en">${esc(t.en)}</span>
     <span class="tc-sum">${esc(t.summary)}</span>
-    <span class="tc-foot"><span class="tc-go">${t.sub ? `${t.sub.length} หน้าย่อย →` : "อ่านบทเรียน →"}</span>${t.playlist ? '<span class="tc-vid">▶ มีวิดีโอ</span>' : ""}</span>
+    <span class="tc-foot"><span class="tc-go">${t.sub ? `${live(t).length} หน้าย่อย →` : "อ่านบทเรียน →"}</span>${t.playlist ? '<span class="tc-vid">▶ มีวิดีโอ</span>' : ""}</span>
   </a>`
     ).join("") +
     "\n</div>"
@@ -246,27 +322,72 @@ function toc(html) {
 // Series (a topic with sub-pages, e.g. linear algebra)
 // ---------------------------------------------------------------------------
 const seriesUrl = (t, s) => `/learn/${t.slug}/${s ? s.slug + "/" : ""}`;
+// a sub-page is live once its source file exists; the rest are shown as "coming soon" and left out of prev/next, sitemap and llms.txt
+const subFile = (t, s) => path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
+const live = (t) => (t.sub || []).filter((s) => fs.existsSync(subFile(t, s)));
+const subNo = (t, s) => t.sub.indexOf(s) + 1; // stable number, does not shift when pages are added
 
 function seriesNav(t, cur) {
-  const items = [{ short: "ภาพรวม", slug: null }, ...t.sub];
-  return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}"><span class="sn-title mono">${esc(t.en)}</span><div class="sn-list">` +
-    items.map((s, i) => `<a href="${seriesUrl(t, s.slug ? s : null)}"${(cur ? cur.slug : null) === s.slug ? ' aria-current="page"' : ""}><span class="sn-n">${i}</span>${esc(s.short)}</a>`).join("") +
-    "</div></nav>";
+  const lv = new Set(live(t));
+  const pill = (s) => {
+    const sub = s && s.slug ? s : null;
+    const here = (cur ? cur.slug : null) === (sub ? sub.slug : null);
+    return `<a href="${seriesUrl(t, sub)}"${here ? ' aria-current="page"' : ""}><span class="sn-n">${sub ? subNo(t, sub) : 0}</span>${esc(sub ? sub.short : "ภาพรวม")}</a>`;
+  };
+  const head = `<span class="sn-title mono">${esc(t.en)}</span>`;
+  if (!t.parts) {
+    const items = [null, ...t.sub];
+    return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}">${head}<div class="sn-list">${items.map(pill).join("")}</div></nav>`;
+  }
+  const row = (p) => {
+    const subs = t.sub.filter((s) => s.part === p.id && lv.has(s));
+    if (!subs.length) return "";
+    return `<div class="sn-part"><span class="sn-pt mono">${p.n} · ${esc(p.title)}</span><div class="sn-list">${subs.map(pill).join("")}</div></div>`;
+  };
+  const curPart = cur ? t.parts.find((p) => p.id === cur.part) : null;
+  const inline = [null, ...(curPart ? t.sub.filter((s) => s.part === curPart.id && lv.has(s)) : [])];
+  return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}">${head}` +
+    `<div class="sn-list">${inline.map(pill).join("")}</div>` +
+    `<details class="sn-all"${cur ? "" : " open"}><summary>ดูครบทุกส่วน · ${lv.size} หน้า</summary>${t.parts.map(row).join("")}</details></nav>`;
 }
 
 function seriesCards(t) {
-  return '<div class="la-cards">' + t.sub.map((s, i) => `
-  <a class="la-card" href="${seriesUrl(t, s)}">
-    <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${TOPICS.indexOf(t) + 1}.${i + 1}</span></span>
+  const ti = TOPICS.indexOf(t) + 1;
+  const lv = new Set(live(t));
+  const card = (s) => {
+    const n = `${ti}.${subNo(t, s)}`;
+    const foot = s.prefix ? `สูตร ${s.prefix}1, ${s.prefix}2, …` : s.tag || "แล็บโต้ตอบ";
+    const inner = `
+    <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${n}</span></span>
     <b>${esc(s.title)}</b>
     <span class="tc-en">${esc(s.en)}</span>
-    <span class="tc-sum">${esc(s.summary)}</span>
-    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">${s.prefix ? `สูตร ${s.prefix}1, ${s.prefix}2, …` : "แล็บโต้ตอบ"}</span></span>
-  </a>`).join("") + "\n</div>";
+    <span class="tc-sum">${esc(s.summary)}</span>`;
+    return lv.has(s)
+      ? `
+  <a class="la-card" href="${seriesUrl(t, s)}">${inner}
+    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">${foot}</span></span>
+  </a>`
+      : `
+  <div class="la-card soon" aria-disabled="true">${inner}
+    <span class="tc-foot"><span class="tc-go">เร็วๆ นี้</span><span class="mono">${foot}</span></span>
+  </div>`;
+  };
+  if (!t.parts) return '<div class="la-cards">' + t.sub.map(card).join("") + "\n</div>";
+  return t.parts.map((p) => {
+    const subs = t.sub.filter((s) => s.part === p.id);
+    if (!subs.length) return "";
+    const done = subs.filter((s) => lv.has(s)).length;
+    return `<div class="cs-part" id="part-${p.id}">
+  <div class="cs-part-h"><span class="cs-part-n mono">ส่วนที่ ${p.n}</span><h3>${esc(p.title)} <small>${esc(p.en)}</small></h3><p>${esc(p.blurb)}${done < subs.length ? ` <span class="mono cs-part-soon">เปิดแล้ว ${done}/${subs.length}</span>` : ""}</p></div>
+  <div class="la-cards">${subs.map(card).join("")}
+  </div>
+</div>`;
+  }).join("\n");
 }
 
 function seriesPager(t, s) {
-  const i = t.sub.indexOf(s), prev = t.sub[i - 1], next = t.sub[i + 1];
+  const L = live(t);
+  const i = L.indexOf(s), prev = L[i - 1], next = L[i + 1];
   const ti = TOPICS.indexOf(t), nextTopic = TOPICS[ti + 1];
   const a = (href, dir, label, title) => `<a class="pager-${dir}" href="${href}"><span class="mono">${label}</span><b>${esc(title)}</b></a>`;
   return `<nav class="pager" aria-label="หน้าถัดไป">${
@@ -419,7 +540,7 @@ function lessonSchema(meta, url, topic, ogImageUrl, sub) {
       publisher: { "@id": PERSON_ID },
       about: meta.about || [sub ? sub.en : topic.en],
       isPartOf: sub ? { "@id": SITE + `/learn/${topic.slug}/#article` } : { "@id": `${SITE}/learn/#library` },
-      ...(!sub && topic.sub ? { hasPart: topic.sub.map((s) => ({ "@id": SITE + seriesUrl(topic, s) + "#article" })) } : {}),
+      ...(!sub && topic.sub ? { hasPart: live(topic).map((s) => ({ "@id": SITE + seriesUrl(topic, s) + "#article" })) } : {}),
       image: [ogImageUrl],
       educationalLevel: meta.level || "Undergraduate",
       ...(topic.playlist ? { citation: `https://www.youtube.com/playlist?list=${topic.playlist}` } : {}),
@@ -472,7 +593,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -625,7 +746,7 @@ The site teaches mathematics the way an electrical engineer uses it: every lesso
 When citing, please name "Mod's Engineering Mathematics (อาจารย์มด)" and link the page URL.
 
 ## Lessons (reading order)
-${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}` + (t.sub ? "\n" + t.sub.map((s) => `  - [${s.en} — ${s.title}](${SITE}${seriesUrl(t, s)}): ${s.summary}`).join("\n") : "")).join("\n")}
+${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}` + (t.sub ? "\n" + live(t).map((s) => `  - [${s.en} — ${s.title}](${SITE}${seriesUrl(t, s)}): ${s.summary}`).join("\n") : "")).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug}/): ${d}`).join("\n")}

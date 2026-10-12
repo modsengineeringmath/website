@@ -1570,3 +1570,165 @@ table.meas tr.ph td{white-space:normal}
 .lab-card .lab-fig svg{background:#0b1014}
 @media (min-width:1100px){#labs .lab-cards{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1360px){#labs .lab-cards{grid-template-columns:repeat(4,1fr)}}
+
+/* ============================================================ Control systems series */
+:root{--b1:#2a78d6;--b2:#d9541e;--b3:#1a9a6c;--b4:#9b5de5;--b5:#c28a00;--b6:#0d93a8;--bad:#d03a2f;--warnc:#b97800}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--b1:#5aa0f0;--b2:#f08a56;--b3:#4cc296;--b4:#b98af0;--b5:#e6b422;--b6:#40c1d4;--bad:#ff7468;--warnc:#e6b422}}
+:root[data-theme="dark"]{--b1:#5aa0f0;--b2:#f08a56;--b3:#4cc296;--b4:#b98af0;--b5:#e6b422;--b6:#40c1d4;--bad:#ff7468;--warnc:#e6b422}
+
+/* series nav with parts */
+.series-nav .sn-part{display:flex;flex-direction:column;gap:4px}
+.sn-pt{font-size:.72rem;color:var(--ink-3);letter-spacing:.02em}
+.sn-all{border:1px solid var(--rule);border-radius:12px;background:var(--card);padding:0}
+.sn-all > summary{cursor:pointer;padding:9px 14px;font-size:.88rem;font-weight:600;color:var(--ink-2);list-style:none}
+.sn-all > summary::-webkit-details-marker{display:none}
+.sn-all > summary::after{content:" ▾";color:var(--accent)}
+.sn-all[open] > summary::after{content:" ▴"}
+.sn-all .sn-part{padding:6px 14px 10px;border-top:1px solid var(--rule)}
+.sn-all .sn-list{flex-wrap:wrap;overflow:visible}
+
+/* hub: grouped cards */
+.cs-part{margin:30px 0 8px}
+.cs-part-h{display:grid;gap:2px;margin-bottom:10px}
+.cs-part-h h3{margin:0;font-size:1.2rem;line-height:1.3}
+.cs-part-h h3 small{font:500 .78rem var(--mono);color:var(--ink-3);margin-left:8px}
+.cs-part-h p{margin:0;color:var(--ink-2);font-size:.95rem}
+.cs-part-n{color:var(--accent);font-size:.74rem}
+.cs-part-soon{color:var(--ink-3)}
+.la-card.soon{opacity:.62;border-style:dashed;cursor:default}
+.la-card.soon:hover{transform:none;border-color:var(--rule);box-shadow:none}
+.la-card.soon .soon-tag{font:600 .7rem var(--mono);color:var(--ink-3);border:1px solid var(--rule);border-radius:999px;padding:1px 8px;align-self:flex-start}
+
+/* interactive lab */
+.cs-lab{margin:20px 0;border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:14px;display:grid;gap:10px;min-width:0}
+.cs-lab:not(.cs-ready){min-height:120px}
+.cs-bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.cs-f{display:inline-flex;align-items:center;gap:8px;font-size:.88rem}
+.cs-f .mono{color:var(--ink-3);font-size:.78rem}
+.cs-f-tf{flex:1 1 280px}
+.cs-tf{flex:1;min-width:0;font:500 .95rem var(--mono);padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink)}
+.cs-pre,.cs-kn{font:inherit;font-size:.9rem;padding:7px 8px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink)}
+.cs-kn{width:92px;font-family:var(--mono)}
+.cs-f-k{flex:1 1 260px}
+.cs-kr{flex:1;min-width:90px;accent-color:var(--accent)}
+.cs-btn{font:600 .8rem var(--sans);padding:6px 12px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);color:var(--signal);cursor:pointer}
+.cs-btn:hover{border-color:var(--signal)}
+.cs-btn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cs-btn.cs-sm{padding:1px 9px;font-size:.78rem}
+.cs-zoom{margin-left:8px;display:inline-flex;gap:4px}
+.cs-bar2{font-size:.82rem}
+.cs-hint{color:var(--ink-3);font-size:.76rem}
+.cs-err{background:color-mix(in srgb,var(--bad) 10%,var(--card));border:1px solid color-mix(in srgb,var(--bad) 40%,var(--rule));border-radius:8px;padding:6px 10px;font-size:.86rem}
+.cs-views{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.cs-plot{margin:0;border:1px solid var(--rule);border-radius:10px;padding:8px 8px 4px;background:var(--paper);min-width:0}
+.cs-plot figcaption{font-size:.78rem;color:var(--ink-3);margin-bottom:2px}
+.cs-svg{width:100%;height:auto;display:block;touch-action:pan-y;user-select:none}
+.cs-p-rl .cs-svg{touch-action:none;cursor:crosshair}
+.cs-p-bode{grid-column:auto}
+.cs-box{fill:none;stroke:var(--ink-3);stroke-width:1}
+.cs-gr{fill:none;stroke:var(--rule);stroke-width:1}
+.cs-gr.minor{stroke-width:.6;opacity:.6}
+.cs-axl{fill:none;stroke:var(--ink-3);stroke-width:1.3}
+.cs-tk{font:500 10.5px var(--mono);fill:var(--ink-3)}
+.cs-ax-t{font:600 11px var(--mono);fill:var(--ink-2)}
+.cs-hv-t{font:500 11px var(--mono);fill:var(--ink-2)}
+.cs-br{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cs-br.neg{stroke-dasharray:6 3}
+.cs-pz path{fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.cs-pz circle:not(.cs-hit){fill:var(--paper);stroke:var(--ink);stroke-width:2.2}
+.cs-hit{fill:transparent;stroke:none;cursor:grab}
+.cs-pz:hover path,.cs-pz:hover circle:not(.cs-hit){stroke:var(--accent)}
+.cs-delmode .cs-pz{cursor:not-allowed}
+.cs-clp{fill:var(--accent);stroke:var(--paper);stroke-width:1.5}
+.cs-asy{fill:none;stroke:var(--ink-3);stroke-width:1.4;stroke-dasharray:6 4}
+.cs-cen{fill:var(--ink-3)}
+.cs-brk{fill:var(--b3);stroke:var(--paper);stroke-width:1.2}
+.cs-crs{fill:var(--bad);stroke:var(--paper);stroke-width:1}
+.cs-zl{fill:none;stroke:var(--b4);stroke-width:1;stroke-dasharray:2 4;opacity:.8}
+.cs-zt{font:500 10px var(--mono);fill:var(--b4)}
+.cs-cv{fill:none;stroke:var(--b1);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.cs-cv.neg{stroke:var(--b1);stroke-dasharray:3 4;opacity:.55;stroke-width:1.8}
+.cs-zero{fill:none;stroke:var(--ink-3);stroke-width:1.2}
+.cs-m180{stroke:var(--bad);stroke-dasharray:5 4;opacity:.75}
+.cs-cor{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 3}
+.cs-mk{fill:none;stroke:var(--b3);stroke-width:1.8;stroke-dasharray:5 3}
+.cs-mk2{fill:none;stroke:var(--b2);stroke-width:1.8;stroke-dasharray:5 3}
+.cs-pm{fill:none;stroke:var(--b3);stroke-width:3}
+.cs-band{fill:color-mix(in srgb,var(--b3) 14%,transparent);stroke:none}
+.cs-uc{fill:none;stroke:var(--b4);stroke-width:1.1;stroke-dasharray:3 3;opacity:.8}
+.cs-m1{fill:none;stroke:var(--bad);stroke-width:2.6;stroke-linecap:round}
+.cs-arr{stroke:var(--b1);fill:none}
+.cs-arh{fill:var(--b1)}
+.cs-nytxt{font:600 11.5px var(--mono);fill:var(--ink)}
+.cs-hv{stroke:var(--ink-3);stroke-width:1;fill:none}
+.cs-hd{fill:var(--accent);stroke:var(--paper);stroke-width:1.5}
+.cs-hover{min-height:1.2em;font-size:.76rem;color:var(--ink-2);padding:2px 4px}
+.cs-hide-ans .cs-ans{display:none}
+.cs-read{display:flex;flex-wrap:wrap;gap:6px 10px}
+.cs-rd{display:inline-flex;align-items:baseline;gap:6px;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;font-size:.88rem}
+.cs-rd .mono{color:var(--ink-3);font-size:.72rem}
+.cs-rd-w{flex:1 1 100%}
+.cs-pol{font-family:var(--mono);font-size:.82rem;margin-right:8px;white-space:nowrap}
+.cs-pol i{font-style:normal;color:var(--ink-3);font-size:.72rem}
+.cs-ok{color:var(--ok)}.cs-bad{color:var(--bad)}.cs-warn{color:var(--warnc)}
+.cs-rules{border-top:1px dashed var(--rule);padding-top:10px}
+.cs-rules-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-bottom:6px}
+.cs-rules-h .mono{color:var(--ink-3);font-size:.76rem}
+.cs-rules dl{margin:0;display:grid;gap:6px}
+.cs-rules dl > div{display:grid;gap:1px;padding:6px 10px;border-radius:8px;background:var(--paper);border:1px solid var(--rule)}
+.cs-rules dt{font:600 .78rem var(--mono);color:var(--accent)}
+.cs-rules dd{margin:0;font-size:.9rem;overflow-wrap:anywhere}
+
+/* Routh calculator + PID lab (shared form look) */
+.rh-calc,.pid-lab{margin:20px 0;border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:14px;display:grid;gap:10px;min-width:0}
+.rh-calc table{border-collapse:collapse;font-family:var(--mono);font-size:.92rem;margin:0}
+.rh-calc td,.rh-calc th{border:1px solid var(--rule);padding:5px 12px;text-align:right}
+.rh-calc th{background:var(--paper-2);color:var(--accent);font-weight:600;text-align:center}
+.rh-calc td.neg{color:var(--bad);font-weight:600}
+.rh-calc td.eps{color:var(--warnc)}
+.rh-calc .rh-out{font-size:.92rem}
+.rh-calc .rh-steps{font-size:.88rem;color:var(--ink-2)}
+.pid-lab .pid-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.pid-lab label.sl{display:grid;grid-template-columns:3.2rem 1fr 4.5rem;gap:8px;align-items:center;font-size:.88rem}
+.pid-lab label.sl .mono{color:var(--accent);font-weight:600}
+.pid-lab input[type=range]{accent-color:var(--accent);min-width:0}
+.pid-lab output{font-family:var(--mono);font-size:.82rem;text-align:right}
+
+/* block diagrams / computed figures on control pages */
+.csfig{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:14px;margin:16px 0;color:var(--ink)}
+.csfig svg{width:100%;max-width:680px;height:auto;margin:0 auto;display:block}
+.csfig figcaption{font-size:.84rem;color:var(--ink-3);text-align:center;margin-top:8px}
+.csfig .ax{stroke:var(--ink-3);stroke-width:1.2;fill:none}
+.csfig .gr{stroke:var(--rule);stroke-width:1;fill:none}
+.csfig .tk{font:500 10.5px var(--mono);fill:var(--ink-3)}
+.csfig .lb{font:600 12px var(--mono);fill:var(--ink-2)}
+.csfig .lbk{font:600 12px var(--mono);fill:var(--accent)}
+.csfig .c1{fill:none;stroke:var(--b1);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.csfig .c2{fill:none;stroke:var(--b2);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.csfig .c3{fill:none;stroke:var(--b3);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.csfig .c4{fill:none;stroke:var(--b4);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.csfig .dsh{fill:none;stroke:var(--ink-3);stroke-width:1.3;stroke-dasharray:6 4}
+.csfig .thin{fill:none;stroke:var(--ink-3);stroke-width:1}
+.csfig .blk{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+.csfig .sum{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+.csfig .wire{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.csfig .arh{fill:var(--ink)}
+.csfig .px{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round}
+.csfig .zo{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+.csfig .mkr{fill:var(--bad);stroke:var(--paper);stroke-width:1}
+.csfig .mkg{fill:var(--b3);stroke:var(--paper);stroke-width:1}
+.csfig .shade{fill:color-mix(in srgb,var(--bad) 8%,transparent);stroke:none}
+.csfig .shadeg{fill:color-mix(in srgb,var(--b3) 10%,transparent);stroke:none}
+@media (max-width:560px){.cs-lab{padding:10px}.cs-views{grid-template-columns:minmax(0,1fr)}.cs-rd{font-size:.82rem}}
+@media print{.cs-lab .cs-bar,.cs-lab .cs-bar2{display:none}}
+/* static Routh tables in lessons */
+.rt-wrap{overflow-x:auto;margin:10px 0}
+table.rt{border-collapse:collapse;font-family:var(--mono);font-size:.92rem;width:auto;margin:0}
+table.rt th,table.rt td{border:none;border-bottom:1px solid var(--rule);padding:4px 14px;text-align:center;white-space:nowrap}
+table.rt th{color:var(--ink-3);font-weight:500;border-right:1.5px solid var(--ink-3);text-align:left}
+table.rt td:nth-child(2){background:color-mix(in srgb,var(--accent) 9%,transparent);font-weight:600}
+table.rt td.neg{color:var(--bad)}
+table.rt td.eps,table.rt tr.aux td{color:var(--warnc)}
+table.rt caption{caption-side:bottom;font:500 .78rem var(--sans);color:var(--ink-3);padding-top:6px;text-align:left}
+.rh-tab td:first-of-type{font-weight:600}
+.rh-calc table{width:auto;min-width:min(100%,420px)}

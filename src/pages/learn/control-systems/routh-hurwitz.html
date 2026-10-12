@@ -1,0 +1,380 @@
+<!--meta
+{
+  "title": "เกณฑ์เสถียรภาพเราท์–เฮอร์วิตซ์ (Routh–Hurwitz): สร้างตารางทีละขั้น กรณีพิเศษ หาช่วง K | อาจารย์มด",
+  "h1": "เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์ (Routh–Hurwitz Criterion)",
+  "description": "วิธีใช้เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์ (Routh–Hurwitz) ทีละขั้น สร้างตารางเราท์ นับจำนวนรากฝั่งขวา สูตรลัดอันดับสาม กรณีพิเศษศูนย์ในหลักแรก (วิธี ε) แถวเป็นศูนย์ทั้งแถว (พหุนามช่วย) หาช่วงเกน K ที่เสถียร เกนวิกฤตและความถี่การแกว่ง ช่วงเสถียรของ PI เสถียรภาพสัมพัทธ์ ดีเทอร์มิแนนต์เฮอร์วิตซ์ พร้อมเครื่องคิดเลขตารางเราท์แสดงวิธีทำที่ใส่ K ได้",
+  "ogTitle": "เราท์–เฮอร์วิตซ์ทีละขั้น: ตาราง กรณีพิเศษ และช่วง K ที่เสถียร",
+  "lesson": "control-systems",
+  "sub": "routh-hurwitz",
+  "nav": "cs",
+  "katex": true,
+  "published": "2026-10-12",
+  "updated": "2026-10-12",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Routh–Hurwitz stability criterion", "Routh array", "Characteristic equation", "Hurwitz polynomial", "Hurwitz determinant", "Auxiliary polynomial", "Marginal stability", "Critical gain", "Relative stability", "PI controller"],
+  "scripts": ["/assets/cs-core.js", "/assets/cs-routh.js", "/assets/cs-ui.js"],
+  "faq": [
+    {"q": "ทำไมเกณฑ์เราท์–เฮอร์วิตซ์จึงดูแค่หลักแรก?", "a": "เพราะหลักแรกของแต่ละแถวคืออัตราส่วนของดีเทอร์มิแนนต์เฮอร์วิตซ์ที่อยู่ติดกัน \\(\\Delta_k/\\Delta_{k-1}\\) จำนวนครั้งที่เครื่องหมายในหลักแรกเปลี่ยนจึงเท่ากับจำนวนรากที่ส่วนจริงเป็นบวก หลักอื่นเป็นเพียงตัวกลางในการคำนวณแถวถัดไป"},
+    {"q": "คูณหรือหารทั้งแถวด้วยตัวเลขได้ไหม?", "a": "ได้ ถ้าเป็นจำนวนบวก เพราะไม่เปลี่ยนเครื่องหมายของหลักแรก ช่วยให้ตัวเลขเล็กลงและลดเศษส่วน แต่ห้ามคูณด้วยจำนวนลบ และถ้าตัวคูณมี K อยู่ด้วย ต้องแน่ใจว่าเป็นบวกในช่วงที่สนใจ"},
+    {"q": "หลักแรกเป็นศูนย์กับแถวเป็นศูนย์ทั้งแถว ต่างกันอย่างไร?", "a": "หลักแรกเป็นศูนย์แต่ตัวอื่นในแถวไม่เป็นศูนย์ ให้แทนด้วย ε เล็กบวกแล้วทำต่อ ส่วนแถวเป็นศูนย์ทั้งแถวแปลว่ามีรากสมมาตรรอบจุดกำเนิด (เช่น คู่บนแกน jω) ให้สร้างพหุนามช่วยจากแถวก่อนหน้า หาอนุพันธ์ แล้วนำสัมประสิทธิ์มาแทนแถวนั้น รากของพหุนามช่วยเป็นรากของพหุนามเดิมด้วย"},
+    {"q": "เกนวิกฤตและความถี่การแกว่งหาจากตารางเราท์อย่างไร?", "a": "เกนวิกฤตคือค่า K ที่ทำให้แถว s¹ เป็นศูนย์ (ระบบอยู่ขอบเสถียร) จากนั้นแทนค่า K นั้นลงในแถว s² ได้พหุนามช่วย \\(as^2 + b = 0\\) ความถี่การแกว่งคือ \\(\\omega = \\sqrt{b/a}\\) ค่าคู่นี้ตรงกับจุดที่รูทโลคัสตัดแกน jω และใช้ในการจูน PID แบบ Ziegler–Nichols"},
+    {"q": "เราท์–เฮอร์วิตซ์ใช้กับระบบที่มีหน่วงเวลาได้ไหม?", "a": "ใช้ตรง ๆ ไม่ได้ เพราะ \\(e^{-sT}\\) ไม่ใช่พหุนาม ต้องประมาณด้วยพาเด (Padé) ก่อน ซึ่งได้คำตอบโดยประมาณ หรือใช้เกณฑ์ไนควิสต์และเฟสมาร์จินซึ่งจัดการหน่วงเวลาได้ตรง ส่วนระบบไม่ต่อเนื่องใช้เกณฑ์ของจูรี (Jury) หรือแปลงด้วย bilinear transform ก่อน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="csArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/control-systems/">ระบบควบคุม</a></li><li>เราท์–เฮอร์วิตซ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.7 · ระบบควบคุม · Routh–Hurwitz Criterion</p>
+      <h1>เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์ (Routh–Hurwitz Criterion)</h1>
+      <p class="lede">ระบบวงปิดเสถียรเมื่อรากของสมการลักษณะเฉพาะอยู่ฝั่งซ้ายของระนาบ \(s\) ทุกตัว แต่พหุนามดีกรีสามขึ้นไปที่มี \(K\) อยู่ข้างใน หารากด้วยมือแทบไม่ได้ เกณฑ์ของเราท์ (Edward Routh, 1876) และเฮอร์วิตซ์ (Adolf Hurwitz, 1895) ตอบได้ว่า<strong>มีรากฝั่งขวากี่ตัว โดยไม่ต้องหารากเลย</strong> และบอกช่วงเกน \(K\) ที่ทำให้ระบบเสถียรด้วยการคูณ ลบ หาร ธรรมดา สูตรในหน้านี้ใช้รหัส R</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#table">สร้างตารางทีละขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#epsilon">ศูนย์ในหลักแรก</a>
+        <a class="btn btn-ghost btn-sm" href="#zero-row">แถวศูนย์</a>
+        <a class="btn btn-ghost btn-sm" href="#gain-range">ช่วง K</a>
+        <a class="btn btn-ghost btn-sm" href="#calculator">เครื่องคิดเลข</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เงื่อนไขจำเป็น: สัมประสิทธิ์ทุกตัวต้องมีเครื่องหมายเดียวกันและไม่มีพจน์หาย ถ้าไม่ผ่าน ไม่เสถียรแน่นอน</li>
+          <li>เรียงสัมประสิทธิ์สลับลงสองแถวแรก แถวถัดไป \(= \dfrac{-1}{\text{ตัวหลักแรกแถวบน}}\begin{vmatrix} \cdot & \cdot \\ \cdot & \cdot \end{vmatrix}\)</li>
+          <li><strong>จำนวนครั้งที่หลักแรกเปลี่ยนเครื่องหมาย = จำนวนรากฝั่งขวา</strong></li>
+          <li>มี \(K\): ให้หลักแรกเป็นบวกทุกตัว ได้ช่วง \(K\) · ขอบช่วงคือเกนวิกฤต แถว \(s^2\) ให้ความถี่การแกว่ง</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> เริ่มเรียนควบคุม</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น necessary, epsilon, auxiliary, K range, third order, hurwitz" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องมีเกณฑ์นี้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ระบบวงปิด \(T(s) = \dfrac{KG(s)}{1 + KG(s)}\) มีขั้วเป็นรากของ<strong>สมการลักษณะเฉพาะ</strong> \(1 + KG(s) = 0\) เมื่อคูณกระจายจะได้พหุนาม</p>
+    \[ a_0s^n + a_1s^{n-1} + a_2s^{n-2} + \cdots + a_{n-1}s + a_n = 0 \]
+    <p>ระบบ<a href="/learn/control-systems/stability/">เสถียร</a>ก็ต่อเมื่อรากทุกตัวมีส่วนจริงเป็นลบ (อยู่ฝั่งซ้ายของแกน \(j\omega\)) พหุนามแบบนี้เรียกว่า<strong>พหุนามเฮอร์วิตซ์</strong> ถ้ามีรากแม้ตัวเดียวทางขวา ผลตอบสนองจะมีพจน์ \(e^{\sigma t}\) ที่ \(\sigma \gt 0\) โตไม่หยุด คำถามคือ ถ้า \(n = 4\) หรือมี \(K\) ปนอยู่ จะรู้ได้อย่างไรโดยไม่หาราก คำตอบคือตารางเราท์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R1" data-k="necessary condition coefficients same sign missing term เงื่อนไขจำเป็น สัมประสิทธิ์ เครื่องหมายเดียวกัน พจน์หาย">
+        <p class="tf-n"><b><span class="fid">R1</span> Necessary condition</b> เงื่อนไขจำเป็น (ตรวจก่อนสร้างตาราง)</p>
+        \[ \text{เสถียร} \ \Rightarrow\ a_0, a_1, \dots, a_n \ \text{มีเครื่องหมายเดียวกัน และไม่มีตัวใดเป็นศูนย์} \]
+        <p class="tf-x">ที่มา: ถ้ารากทุกตัวอยู่ทางซ้าย ตัวประกอบคือ \((s + a)\) และ \((s^2 + bs + c)\) ที่ \(a, b, c \gt 0\) คูณกันแล้วสัมประสิทธิ์ต้องเป็นบวกหมด · เป็นเงื่อนไข<strong>จำเป็นแต่ไม่พอ</strong>: \(s^3 + s^2 + 2s + 3\) บวกหมดแต่ไม่เสถียร · สำหรับดีกรี 1 และ 2 เงื่อนไขนี้พอดี</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">สร้างตารางเราท์ทีละขั้น <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตารางมี \(n + 1\) แถว ตั้งชื่อแถวตามกำลังของ \(s\) จาก \(s^n\) ลงไป \(s^0\) สองแถวแรกได้จากการ<strong>เขียนสัมประสิทธิ์สลับกัน</strong> ตัวคี่ลำดับไว้แถวบน ตัวคู่ไว้แถวล่าง แถวที่เหลือคำนวณจากสองแถวเหนือมันเสมอ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R2" data-k="routh array table construction first two rows build สร้างตาราง สองแถวแรก">
+        <p class="tf-n"><b><span class="fid">R2</span> Routh array</b> โครงตารางเราท์</p>
+        \[ \begin{array}{c|cccc} s^n & a_0 & a_2 & a_4 & \cdots \\ s^{n-1} & a_1 & a_3 & a_5 & \cdots \\ s^{n-2} & b_1 & b_2 & b_3 & \cdots \\ s^{n-3} & c_1 & c_2 & \cdots & \\ \vdots & \vdots & & & \\ s^0 & \ast & & & \end{array} \]
+        <p class="tf-x">ช่องที่ไม่มีสัมประสิทธิ์ให้ใส่ 0 · แถวจะสั้นลงเรื่อย ๆ จนแถว \(s^1\) และ \(s^0\) เหลือตัวเดียว · แถว \(s^0\) จะเท่ากับ \(a_n\) เสมอ (ใช้ตรวจการคำนวณ)</p>
+      </div>
+      <div class="tf wide" id="R3" data-k="routh element formula b1 c1 cross multiply determinant pivot สูตรแต่ละช่อง คูณไขว้">
+        <p class="tf-n"><b><span class="fid">R3</span> Element formula</b> สูตรคำนวณแต่ละช่อง</p>
+        \[ b_1 = \frac{a_1a_2 - a_0a_3}{a_1} = \frac{-1}{a_1}\begin{vmatrix} a_0 & a_2 \\ a_1 & a_3 \end{vmatrix}, \qquad b_2 = \frac{a_1a_4 - a_0a_5}{a_1}, \qquad c_1 = \frac{b_1a_3 - a_1b_2}{b_1} \]
+        <p class="tf-x">จำง่าย: <strong>หลักแรกของสองแถวบนเป็นหลักตายตัวเสมอ</strong> คู่ที่สองเลื่อนไปทางขวาทีละหลัก แล้ว “คูณไขว้ ล่างซ้าย × บนขวา ลบ บนซ้าย × ล่างขวา หารด้วยล่างซ้าย”</p>
+      </div>
+      <div class="tf wide" id="R4" data-k="routh criterion sign changes first column right half plane roots number จำนวนรากฝั่งขวา เปลี่ยนเครื่องหมาย หลักแรก">
+        <p class="tf-n"><b><span class="fid">R4</span> Routh–Hurwitz criterion</b> เกณฑ์ของเราท์–เฮอร์วิตซ์</p>
+        \[ \#\{\text{รากที่ } \operatorname{Re}s \gt 0\} = \#\{\text{ครั้งที่เครื่องหมายในหลักแรกเปลี่ยน}\} \]
+        <p class="tf-x">ระบบเสถียร \(\iff\) ทุกตัวในหลักแรกมีเครื่องหมายเดียวกัน (ปกติคือบวก) และไม่มีศูนย์ · เกณฑ์บอก<strong>จำนวน</strong>รากฝั่งขวา ไม่ได้บอกว่ารากอยู่ตรงไหน</p>
+      </div>
+      <div class="tf" id="R5" data-k="row scaling multiply positive constant simplify คูณแถว ตัวคงที่บวก ทำให้ง่าย">
+        <p class="tf-n"><b><span class="fid">R5</span> Row scaling</b> คูณหรือหารทั้งแถวด้วยจำนวนบวก</p>
+        \[ [\,b_1\ \ b_2\ \ b_3\,] \ \to\ [\,kb_1\ \ kb_2\ \ kb_3\,], \quad k \gt 0 \]
+        <p class="tf-x">เครื่องหมายหลักแรกไม่เปลี่ยน คำตอบไม่เปลี่ยน ช่วยกำจัดเศษส่วน · ห้ามใช้ \(k \lt 0\)</p>
+      </div>
+      <div class="tf" id="R6" data-k="third order shortcut cubic a2 a1 > a3 a0 สูตรลัดอันดับสาม กำลังสาม">
+        <p class="tf-n"><b><span class="fid">R6</span> Third-order shortcut</b> สูตรลัดอันดับสาม</p>
+        \[ a_3s^3 + a_2s^2 + a_1s + a_0:\quad \text{เสถียร} \iff a_i \gt 0 \ \text{และ} \ a_2a_1 \gt a_3a_0 \]
+        <p class="tf-x">“ผลคูณตัวกลางมากกว่าผลคูณตัวริม” ได้จากหลักแรกแถว \(s^1\) ของตาราง · ใช้บ่อยที่สุดในข้อสอบ</p>
+      </div>
+    </div>
+
+    <div class="wx" id="ex-r1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-1 · อันดับสี่ ครบทุกขั้น</span><h3>ระบบที่มีสมการลักษณะเฉพาะ \(s^4 + 2s^3 + 3s^2 + 4s + 5 = 0\) เสถียรหรือไม่ มีรากฝั่งขวากี่ตัว</h3><button type="button" class="wx-btn" data-rh="s^4+2s^3+3s^2+4s+5">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>เงื่อนไขจำเป็น <a class="tag tf" href="#R1">R1</a>: สัมประสิทธิ์ 1, 2, 3, 4, 5 บวกหมด ไม่มีพจน์หาย ผ่าน แต่ยังสรุปไม่ได้ ต้องสร้างตาราง</p></li>
+        <li><p>เขียนสองแถวแรกแบบสลับ <a class="tag tf" href="#R2">R2</a>: แถว \(s^4\) ได้ 1, 3, 5 และแถว \(s^3\) ได้ 2, 4, 0</p></li>
+        <li><p>แถว \(s^2\) <a class="tag tf" href="#R3">R3</a></p>
+          \[ b_1 = \frac{2\cdot3 - 1\cdot4}{2} = \hlP{1}, \qquad b_2 = \frac{2\cdot5 - 1\cdot0}{2} = 5 \]</li>
+        <li><p>แถว \(s^1\) ใช้แถว \(s^3\) และ \(s^2\)</p>
+          \[ c_1 = \frac{1\cdot4 - 2\cdot5}{1} = \hlP{-6} \]</li>
+        <li><p>แถว \(s^0\): \(d_1 = \dfrac{(-6)(5) - 1\cdot0}{-6} = \hlP{5}\) (เท่ากับ \(a_n = 5\) ตามที่ควรเป็น ✓)</p>
+          <div class="rt-wrap"><table class="rt"><tbody>
+            <tr><th>s⁴</th><td>1</td><td>3</td><td>5</td></tr>
+            <tr><th>s³</th><td>2</td><td>4</td><td>0</td></tr>
+            <tr><th>s²</th><td>1</td><td>5</td><td></td></tr>
+            <tr><th>s¹</th><td class="neg">−6</td><td></td><td></td></tr>
+            <tr><th>s⁰</th><td>5</td><td></td><td></td></tr>
+          </tbody><caption>หลักแรก: + + + − + เปลี่ยนเครื่องหมายสองครั้ง (1 → −6 และ −6 → 5)</caption></table></div></li>
+      </ol>
+      <p class="answer">หลักแรกเปลี่ยนเครื่องหมาย 2 ครั้ง <a class="tag tf" href="#R4">R4</a> จึงมี<strong>รากฝั่งขวา 2 ตัว ระบบไม่เสถียร</strong> แม้สัมประสิทธิ์จะเป็นบวกทั้งหมด</p>
+      <p class="check">ตรวจด้วยรากจริง: \(s = 0.288 \pm j1.416\) (ฝั่งขวา 2 ตัว ✓) และ \(s = -1.288 \pm j0.858\)</p>
+    </div>
+
+    <div class="wx" id="ex-r2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-2 · สูตรลัดอันดับสาม</span><h3>ตรวจเสถียรภาพของ (ก) \(2s^3 + 4s^2 + 3s + 5\) และ (ข) \(s^3 + s^2 + 2s + 3\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) สัมประสิทธิ์บวกหมด ตรวจ \(a_2a_1 \gt a_3a_0\) <a class="tag tf" href="#R6">R6</a>: \(4 \times 3 = 12 \gt 2 \times 5 = 10\) ✓</p></li>
+        <li><p>(ข) สัมประสิทธิ์บวกหมด แต่ \(1 \times 2 = 2 \lt 1 \times 3 = 3\) ✗ สร้างตารางยืนยัน</p>
+          <div class="rt-wrap"><table class="rt"><tbody>
+            <tr><th>s³</th><td>1</td><td>2</td></tr>
+            <tr><th>s²</th><td>1</td><td>3</td></tr>
+            <tr><th>s¹</th><td class="neg">(1·2 − 1·3)/1 = −1</td><td></td></tr>
+            <tr><th>s⁰</th><td>3</td><td></td></tr>
+          </tbody></table></div></li>
+      </ol>
+      <p class="answer">(ก) เสถียร · (ข) ไม่เสถียร มีรากฝั่งขวา 2 ตัว</p>
+      <p class="check">รากจริง (ก): \(-1.902\) และ \(-0.049 \pm j1.145\) เสถียรแต่ใกล้แกน \(j\omega\) มาก (12 กับ 10 ห่างกันนิดเดียว) · (ข): \(0.138 \pm j1.527\) และ \(-1.276\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="epsilon">
+    <h2 id="epsilon">กรณีพิเศษ 1: หลักแรกเป็นศูนย์ (วิธี ε) <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าตัวแรกของแถวเป็นศูนย์แต่ตัวอื่นในแถวไม่เป็นศูนย์ แถวถัดไปจะหารด้วยศูนย์ ทางแก้คือแทนศูนย์ด้วย \(\varepsilon\) จำนวนบวกที่เล็กมาก คำนวณต่อตามปกติ แล้วดูเครื่องหมายเมื่อ \(\varepsilon \to 0^+\) แนวคิดคือขยับพหุนามเล็กน้อยให้รากที่อยู่ใกล้แกนขยับออกจากแกน จำนวนรากในแต่ละฝั่งไม่เปลี่ยน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R7" data-k="epsilon method zero first column small positive special case วิธี เอปซิลอน ศูนย์ในหลักแรก">
+        <p class="tf-n"><b><span class="fid">R7</span> Zero in the first column (ε method)</b> หลักแรกเป็นศูนย์</p>
+        \[ [\,0\ \ a\ \ b\,] \ \to\ [\,\varepsilon\ \ a\ \ b\,], \qquad \text{นับเครื่องหมายของหลักแรกเมื่อ } \varepsilon \to 0^+ \]
+        <p class="tf-x">พจน์ที่มี \(\varepsilon\) ให้ดูพจน์ที่โดดเด่นเมื่อ \(\varepsilon\) เล็ก เช่น \(\dfrac{4\varepsilon - 12}{\varepsilon} \approx -\dfrac{12}{\varepsilon} \to -\infty\) (ลบ) · ใช้ \(\varepsilon \lt 0\) ได้ผลเท่ากัน</p>
+      </div>
+      <div class="tf" id="R8" data-k="reverse coefficients reciprocal 1/s substitution alternative กลับลำดับสัมประสิทธิ์ แทน s ด้วย 1/s">
+        <p class="tf-n"><b><span class="fid">R8</span> Reversed-coefficient method</b> ทางเลือก: กลับลำดับสัมประสิทธิ์</p>
+        \[ a_0s^n + \cdots + a_n \ \to\ a_ns^n + a_{n-1}s^{n-1} + \cdots + a_0 \]
+        <p class="tf-x">แทน \(s \to 1/s\) รากกลายเป็นส่วนกลับ ซึ่งอยู่ฝั่งเดียวกันเสมอ จำนวนรากฝั่งขวาจึงเท่าเดิม บางครั้งตารางใหม่ไม่มีศูนย์ในหลักแรก</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-3 · วิธี ε</span><h3>หาจำนวนรากฝั่งขวาของ \(s^5 + 2s^4 + 2s^3 + 4s^2 + 11s + 10 = 0\)</h3><button type="button" class="wx-btn" data-rh="s^5+2s^4+2s^3+4s^2+11s+10">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>สองแถวแรก \(s^5\): 1, 2, 11 และ \(s^4\): 2, 4, 10</p></li>
+        <li><p>แถว \(s^3\): \(\dfrac{2\cdot2 - 1\cdot4}{2} = \hlP{0}\), \(\dfrac{2\cdot11 - 1\cdot10}{2} = 6\) หลักแรกเป็นศูนย์แต่แถวไม่เป็นศูนย์ แทนด้วย \(\varepsilon\) <a class="tag tf" href="#R7">R7</a></p></li>
+        <li><p>แถว \(s^2\)</p>
+          \[ \frac{\varepsilon\cdot4 - 2\cdot6}{\varepsilon} = \frac{4\varepsilon - 12}{\varepsilon} \xrightarrow{\ \varepsilon \to 0^+\ } -\infty \ (\text{ลบ}), \qquad \frac{\varepsilon\cdot10 - 2\cdot0}{\varepsilon} = 10 \]</li>
+        <li><p>แถว \(s^1\): ให้ \(c_1 = \frac{4\varepsilon - 12}{\varepsilon}\) ได้ \(\dfrac{c_1\cdot6 - \varepsilon\cdot10}{c_1} = 6 - \dfrac{10\varepsilon^2}{4\varepsilon - 12} \to 6\) (บวก) และแถว \(s^0\) = 10</p>
+          <div class="rt-wrap"><table class="rt"><tbody>
+            <tr><th>s⁵</th><td>1</td><td>2</td><td>11</td></tr>
+            <tr><th>s⁴</th><td>2</td><td>4</td><td>10</td></tr>
+            <tr><th>s³</th><td class="eps">ε (+)</td><td>6</td><td></td></tr>
+            <tr><th>s²</th><td class="neg">(4ε − 12)/ε → −</td><td>10</td><td></td></tr>
+            <tr><th>s¹</th><td>→ 6</td><td></td><td></td></tr>
+            <tr><th>s⁰</th><td>10</td><td></td><td></td></tr>
+          </tbody><caption>หลักแรกเมื่อ ε → 0⁺: + + + − + +</caption></table></div></li>
+      </ol>
+      <p class="answer">เปลี่ยนเครื่องหมาย 2 ครั้ง (ε → ลบ → 6) จึงมี<strong>รากฝั่งขวา 2 ตัว</strong> ไม่เสถียร</p>
+      <p class="check">รากจริง: \(0.895 \pm j1.456\) (ฝั่งขวา 2 ตัว ✓), \(-1.241 \pm j1.038\), \(-1.309\) · ถ้าใช้ \(\varepsilon \lt 0\) หลักแรกจะเป็น + + − + + + ก็เปลี่ยน 2 ครั้งเท่ากัน</p>
+    </div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="zero-row">
+    <h2 id="zero-row">กรณีพิเศษ 2: แถวเป็นศูนย์ทั้งแถว (พหุนามช่วย) <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าทั้งแถวเป็นศูนย์ แปลว่าแถวก่อนหน้าเป็นตัวประกอบของพหุนามเดิม และตัวประกอบนั้นมีแต่กำลังคู่ของ \(s\) รากของมันจึง<strong>สมมาตรรอบจุดกำเนิด</strong> คือเป็นคู่ \(\pm j\omega\) บนแกนจินตภาพ คู่ \(\pm\sigma\) บนแกนจริง หรือสี่ตัว \(\pm\sigma \pm j\omega\) ในกรณีนี้ใช้ ε ไม่ได้ ต้องใช้พหุนามช่วย</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R9" data-k="row of zeros auxiliary polynomial derivative symmetric roots jw axis แถวศูนย์ พหุนามช่วย อนุพันธ์ รากสมมาตร">
+        <p class="tf-n"><b><span class="fid">R9</span> Row of zeros: auxiliary polynomial</b> แถวศูนย์ทั้งแถว</p>
+        \[ A(s) = \alpha_1s^{k} + \alpha_2s^{k-2} + \alpha_3s^{k-4} + \cdots \ (\text{จากแถว } s^k), \qquad \text{แถวศูนย์} \ \leftarrow\ \frac{dA}{ds} = k\alpha_1s^{k-1} + (k-2)\alpha_2s^{k-3} + \cdots \]
+        <p class="tf-x">รากของ \(A(s) = 0\) เป็นรากของพหุนามเดิมด้วย · หลังแทนแถวแล้วทำต่อตามปกติ การเปลี่ยนเครื่องหมาย<strong>ตั้งแต่แถว \(A(s)\) ลงไป</strong>บอกรากของ \(A\) ที่อยู่ฝั่งขวา · ถ้าไม่มีการเปลี่ยนเครื่องหมายเลย รากของ \(A\) อยู่บนแกน \(j\omega\) ทั้งหมด: เสถียรวิกฤต (ถ้าไม่ซ้ำ)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-4 · แถวศูนย์</span><h3>วิเคราะห์ \(s^5 + 7s^4 + 6s^3 + 42s^2 + 8s + 56 = 0\)</h3><button type="button" class="wx-btn" data-rh="s^5+7s^4+6s^3+42s^2+8s+56">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>สองแถวแรก \(s^5\): 1, 6, 8 และ \(s^4\): 7, 42, 56 หารแถว \(s^4\) ด้วย 7 ได้ 1, 6, 8 <a class="tag tf" href="#R5">R5</a></p></li>
+        <li><p>แถว \(s^3\): \(\dfrac{1\cdot6 - 1\cdot6}{1} = 0\), \(\dfrac{1\cdot8 - 1\cdot8}{1} = 0\) <strong>ศูนย์ทั้งแถว</strong></p></li>
+        <li><p>สร้างพหุนามช่วยจากแถว \(s^4\) (1, 6, 8) แล้วหาอนุพันธ์ <a class="tag tf" href="#R9">R9</a></p>
+          \[ A(s) = s^4 + 6s^2 + 8, \qquad \frac{dA}{ds} = \hlP{4}s^3 + 12s \ \Rightarrow\ \text{แถว } s^3 = 4,\ 12 \ (\text{หารด้วย 4 ได้ } 1,\ 3) \]</li>
+        <li><p>ทำต่อ แถว \(s^2\): \(\dfrac{1\cdot6 - 1\cdot3}{1} = 3\), \(8\) · แถว \(s^1\): \(\dfrac{3\cdot3 - 1\cdot8}{3} = \tfrac13\) · แถว \(s^0\): 8</p>
+          <div class="rt-wrap"><table class="rt"><tbody>
+            <tr><th>s⁵</th><td>1</td><td>6</td><td>8</td></tr>
+            <tr><th>s⁴</th><td>1</td><td>6</td><td>8</td></tr>
+            <tr class="aux"><th>s³</th><td>1</td><td>3</td><td></td></tr>
+            <tr><th>s²</th><td>3</td><td>8</td><td></td></tr>
+            <tr><th>s¹</th><td>1/3</td><td></td><td></td></tr>
+            <tr><th>s⁰</th><td>8</td><td></td><td></td></tr>
+          </tbody><caption>แถว s⁴ ถูกหารด้วย 7 · แถว s³ มาจาก dA/ds (หารด้วย 4)</caption></table></div></li>
+        <li><p>ไม่มีการเปลี่ยนเครื่องหมาย รากทั้ง 4 ของ \(A(s)\) จึงอยู่บนแกน \(j\omega\) แยกตัวประกอบได้</p>
+          \[ A(s) = (s^2 + 2)(s^2 + 4) \ \Rightarrow\ s = \pm j\sqrt2,\ \pm j2 \]</li>
+      </ol>
+      <p class="answer">ไม่มีรากฝั่งขวา มีรากบนแกน \(j\omega\) 4 ตัว (ไม่ซ้ำ) และอีก 1 ตัวฝั่งซ้าย ระบบ<strong>เสถียรวิกฤต (marginally stable)</strong> จะแกว่งค้างที่ \(\omega = \sqrt2\) และ \(2\) rad/s</p>
+      <p class="check">ตรวจ: หารยาว \(s^5 + 7s^4 + 6s^3 + 42s^2 + 8s + 56 = (s + 7)(s^4 + 6s^2 + 8)\) รากที่เหลือคือ \(-7\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="gain-range">
+    <h2 id="gain-range">หาช่วงเกน K ที่ทำให้ระบบเสถียร <span class="lv lv-i">กลาง</span></h2>
+    <p>นี่คือการใช้งานหลักของเกณฑ์เราท์ในงานออกแบบ สร้างตารางโดยปล่อย \(K\) เป็นตัวแปร แล้วบังคับให้หลักแรกเป็นบวกทุกตัว ได้อสมการของ \(K\) มาแก้พร้อมกัน ค่า \(K\) ที่ขอบช่วงคือ<strong>เกนวิกฤต</strong> \(K_{cr}\) (ultimate gain) ที่ระบบอยู่ขอบเสถียรและแกว่งค้าง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R10" data-k="critical gain ultimate gain oscillation frequency s1 row zero s2 auxiliary เกนวิกฤต ความถี่การแกว่ง">
+        <p class="tf-n"><b><span class="fid">R10</span> Critical gain and oscillation frequency</b> เกนวิกฤตและความถี่การแกว่ง</p>
+        \[ \text{แถว } s^1 = 0 \ \Rightarrow\ K = K_{cr}, \qquad \text{แถว } s^2:\ \alpha s^2 + \beta\big|_{K_{cr}} = 0 \ \Rightarrow\ \omega_{cr} = \sqrt{\beta/\alpha} \]
+        <p class="tf-x">\(K_{cr}\) และ \(\omega_{cr}\) คือจุดที่<a href="/learn/control-systems/root-locus/">รูทโลคัส</a>ตัดแกน \(j\omega\) · ใช้ตั้งค่า PID แบบ <a href="/learn/control-systems/pid-tuning/">Ziegler–Nichols</a> (\(T_{cr} = 2\pi/\omega_{cr}\)) · เกนมาร์จินที่เกน \(K\) ใด ๆ คือ \(20\log(K_{cr}/K)\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-5 · โจทย์คลาสสิก</span><h3>ระบบป้อนกลับหนึ่งหน่วยมี \(G(s) = \dfrac{K}{s(s+1)(s+2)}\) หาช่วง \(K\) ที่เสถียร เกนวิกฤต และความถี่การแกว่ง</h3><button type="button" class="wx-btn" data-rh="1+K/(s(s+1)(s+2))">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>สมการลักษณะเฉพาะ: \(1 + \dfrac{K}{s(s+1)(s+2)} = 0 \Rightarrow s(s^2 + 3s + 2) + K = 0\)</p>
+          \[ s^3 + 3s^2 + 2s + K = 0 \]</li>
+        <li><p>สร้างตาราง</p>
+          <div class="rt-wrap"><table class="rt"><tbody>
+            <tr><th>s³</th><td>1</td><td>2</td></tr>
+            <tr><th>s²</th><td>3</td><td>K</td></tr>
+            <tr><th>s¹</th><td>(6 − K)/3</td><td></td></tr>
+            <tr><th>s⁰</th><td>K</td><td></td></tr>
+          </tbody></table></div></li>
+        <li><p>ให้หลักแรกเป็นบวกทุกตัว: \(\dfrac{6 - K}{3} \gt 0 \Rightarrow K \lt 6\) และ \(K \gt 0\) ได้ \(\hlC{0 \lt K \lt 6}\) (ตรงกับสูตรลัด R6: \(3 \cdot 2 \gt 1 \cdot K\))</p></li>
+        <li><p>ที่ \(K_{cr} = 6\) แถว \(s^1\) เป็นศูนย์ ใช้แถว \(s^2\) เป็นพหุนามช่วย <a class="tag tf" href="#R10">R10</a></p>
+          \[ 3s^2 + 6 = 0 \ \Rightarrow\ s = \pm j\sqrt2 \ \Rightarrow\ \hlC{\omega_{cr} = \sqrt2 = 1.414\ \text{rad/s}} \]</li>
+      </ol>
+      <p class="answer">เสถียรเมื่อ \(0 \lt K \lt 6\) · ที่ \(K = 6\) ระบบแกว่งค้างที่ \(\omega = \sqrt2\) rad/s (คาบ \(T_{cr} = 2\pi/\sqrt2 = 4.44\) s)</p>
+      <p class="check">ตรวจ: \(s^3 + 3s^2 + 2s + 6 = (s + 3)(s^2 + 2)\) รากคือ \(-3,\ \pm j\sqrt2\) ✓ · ลากแถบ \(K\) ในแล็บท้ายหน้าไปที่ 6 จุดส้มจะอยู่บนแกน \(j\omega\) พอดี</p>
+    </div>
+
+    <div class="wx" id="ex-r6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-6 · พลานต์ไม่เสถียรวงเปิด</span><h3>หาช่วง \(K\) ที่ทำให้ \(G(s) = \dfrac{K(s+1)}{s(s-1)(s+6)}\) เสถียรเมื่อป้อนกลับหนึ่งหน่วย</h3><button type="button" class="wx-btn" data-rh="1+K(s+1)/(s(s-1)(s+6))">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(s(s - 1)(s + 6) + K(s + 1) = s^3 + 5s^2 - 6s + Ks + K\)</p>
+          \[ s^3 + 5s^2 + (K - 6)s + K = 0 \]</li>
+        <li><p>ตาราง: \(s^3\): 1, \(K - 6\) · \(s^2\): 5, \(K\) · \(s^1\): \(\dfrac{5(K - 6) - K}{5} = \dfrac{4K - 30}{5}\) · \(s^0\): \(K\)</p></li>
+        <li><p>เงื่อนไข: \(4K - 30 \gt 0 \Rightarrow K \gt 7.5\) และ \(K \gt 0\)</p></li>
+        <li><p>ที่ \(K = 7.5\): แถว \(s^2\) ให้ \(5s^2 + 7.5 = 0 \Rightarrow \omega = \sqrt{1.5} = 1.225\) rad/s</p></li>
+      </ol>
+      <p class="answer">เสถียรเมื่อ \(\hlC{K \gt 7.5}\) ต่างจาก R-5 ตรงที่ต้องใช้เกน<strong>สูงพอ</strong>จึงเสถียร เพราะพลานต์มีขั้วที่ \(s = +1\) ต้องอาศัยการป้อนกลับที่แรงพอดึงขั้วนั้นกลับมาฝั่งซ้าย</p>
+      <p class="check">ตรวจ \(K = 7.5\): \(s^3 + 5s^2 + 1.5s + 7.5 = (s + 5)(s^2 + 1.5)\) ✓ · พลานต์แบบนี้พบในลูกตุ้มกลับหัว ลอยแม่เหล็ก และหุ่นยนต์ทรงตัว</p>
+    </div>
+
+    <div class="wx" id="ex-r7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-7 · อันดับสี่</span><h3>หาช่วง \(K\) ของ \(s^4 + 3s^3 + 3s^2 + 2s + K = 0\) และความถี่การแกว่งที่ขอบ</h3><button type="button" class="wx-btn" data-rh="s^4+3s^3+3s^2+2s+K">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>\(s^4\): 1, 3, \(K\) · \(s^3\): 3, 2 · \(s^2\): \(\dfrac{3\cdot3 - 1\cdot2}{3} = \dfrac73\), \(\dfrac{3K - 0}{3} = K\)</p></li>
+        <li><p>\(s^1\): \(\dfrac{\frac73\cdot2 - 3K}{\frac73} = 2 - \dfrac{9K}{7}\) · \(s^0\): \(K\)</p></li>
+        <li><p>\(2 - \dfrac{9K}{7} \gt 0 \Rightarrow K \lt \dfrac{14}{9}\) และ \(K \gt 0\)</p></li>
+        <li><p>ที่ \(K = \tfrac{14}{9}\): \(\tfrac73s^2 + \tfrac{14}{9} = 0 \Rightarrow s^2 = -\tfrac23 \Rightarrow \omega = \sqrt{2/3} = 0.816\) rad/s</p></li>
+      </ol>
+      <p class="answer">\(\hlC{0 \lt K \lt 14/9 \approx 1.556}\) · แกว่งที่ \(\omega = 0.816\) rad/s</p>
+      <p class="check">รากที่ \(K = 14/9\): \(\pm j0.8165\) และ \(-1.5 \pm j0.289\) ✓</p>
+    </div>
+
+    <div class="wx" id="ex-r8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-8 · สองพารามิเตอร์: ตัวควบคุม PI</span><h3>พลานต์ \(G(s) = \dfrac{1}{(s+1)(s+2)}\) ใช้ PI \(C(s) = K_P + \dfrac{K_I}{s}\) หาบริเวณ \((K_P, K_I)\) ที่เสถียร</h3><button type="button" class="wx-btn" data-rh="s^3+3s^2+(2+3)s+K">ลองในเครื่องคิดเลข (K_P = 3)</button></div>
+      <ol class="steps">
+        <li><p>\(1 + \dfrac{K_Ps + K_I}{s(s+1)(s+2)} = 0 \Rightarrow s^3 + 3s^2 + (2 + K_P)s + K_I = 0\)</p></li>
+        <li><p>สูตรลัดอันดับสาม <a class="tag tf" href="#R6">R6</a>: ทุกสัมประสิทธิ์บวก และ \(3(2 + K_P) \gt K_I\)</p></li>
+      </ol>
+      <p class="answer">\(\hlC{K_P \gt -2,\quad 0 \lt K_I \lt 3(2 + K_P)}\) เป็นบริเวณสามเหลี่ยมเปิดในระนาบ \(K_P\)–\(K_I\) ยิ่งเพิ่ม \(K_P\) ยิ่งใส่ \(K_I\) ได้มาก แต่ \(K_I\) มากเกินไปจะไม่เสถียรเสมอ (เทอม I เพิ่มความล่าช้าเฟส)</p>
+      <p class="check">ตรวจขอบ \(K_P = 3,\ K_I = 15\): \(s^3 + 3s^2 + 5s + 15 = (s + 3)(s^2 + 5)\) รากบนแกนที่ \(\pm j\sqrt5\) ✓ · ดูต่อที่<a href="/learn/control-systems/pid/">หน้า PID</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="relative">
+    <h2 id="relative">เสถียรภาพสัมพัทธ์: ไม่ใช่แค่เสถียร แต่ต้องเร็วพอ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ระบบที่ขั้วอยู่ที่ \(-0.01\) เสถียร แต่ใช้เวลาเข้าที่ \(4/0.01 = 400\) วินาที ในงานจริงเราต้องการให้ขั้วทุกตัวอยู่ซ้ายของเส้น \(s = -\sigma\) (เวลาเข้าที่ 2% ไม่เกิน \(4/\sigma\)) เทคนิคคือเลื่อนแกน แทน \(s = z - \sigma\) แล้วใช้เราท์กับพหุนามของ \(z\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R11" data-k="relative stability shift axis s = z - sigma settling time degree of stability เสถียรภาพสัมพัทธ์ เลื่อนแกน">
+        <p class="tf-n"><b><span class="fid">R11</span> Relative stability (axis shift)</b> เสถียรภาพสัมพัทธ์</p>
+        \[ \operatorname{Re}(s_i) \lt -\sigma \ \ \forall i \iff p(z - \sigma) \ \text{เป็นพหุนามเฮอร์วิตซ์ในตัวแปร } z \]
+        <p class="tf-x">จำนวนการเปลี่ยนเครื่องหมายในตารางของ \(z\) = จำนวนขั้วที่อยู่ขวาของเส้น \(s = -\sigma\) · \(t_s \approx 4/\sigma\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-9 · ต้องการ ts ไม่เกิน 16 s</span><h3>สำหรับ \(s^3 + 3s^2 + 2s + K\) หาช่วง \(K\) ที่ทำให้ขั้วทุกตัวอยู่ซ้ายของ \(s = -0.25\) และลองถามว่าได้ถึง \(-0.5\) ไหม</h3></div>
+      <ol class="steps">
+        <li><p>แทน \(s = z - \tfrac14\) แล้วกระจาย <a class="tag tf" href="#R11">R11</a></p>
+          \[ z^3 + \tfrac94z^2 + \tfrac{11}{16}z + \left(K - \tfrac{21}{64}\right) = 0 \]</li>
+        <li><p>สูตรลัดอันดับสาม: \(K - \tfrac{21}{64} \gt 0\) และ \(\tfrac94 \cdot \tfrac{11}{16} \gt K - \tfrac{21}{64} \Rightarrow K \lt \tfrac{15}{8}\)</p></li>
+        <li><p>ลอง \(\sigma = 0.5\): แทน \(s = z - \tfrac12\) ได้ \(z^3 + \tfrac32z^2 - \tfrac14z + \left(K - \tfrac38\right)\) สัมประสิทธิ์ของ \(z\) เป็นลบ<strong>ไม่ว่า \(K\) เท่าไร</strong> <a class="tag tf" href="#R1">R1</a></p></li>
+      </ol>
+      <p class="answer">\(\hlC{21/64 \lt K \lt 15/8}\) ขั้วทุกตัวอยู่ซ้ายของ \(-0.25\) · แต่ไม่มี \(K\) ใดที่ดันขั้วทุกตัวไปซ้ายของ \(-0.5\) ได้ ตัวควบคุมแบบ P อย่างเดียวทำไม่ได้ ต้องเพิ่มศูนย์ด้วย <a href="/learn/control-systems/compensators/">lead</a> หรือ <a href="/learn/control-systems/pid/">PD</a> ซึ่งรูทโลคัสจะอธิบายว่าทำไม</p>
+      <p class="check">ตรวจ \(K = 15/8\): รากคือ \(-2.5,\ -0.25 \pm j0.829\) ✓ · \(K = 21/64\): \(-2.135,\ -0.615,\ -0.25\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="hurwitz">
+    <h2 id="hurwitz">ดีเทอร์มิแนนต์เฮอร์วิตซ์: ที่มาของตาราง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เฮอร์วิตซ์เขียนเกณฑ์เดียวกันในรูปดีเทอร์มิแนนต์ สะดวกสำหรับพิสูจน์และสำหรับเขียนโปรแกรมเชิงสัญลักษณ์ หลักแรกของตารางเราท์คืออัตราส่วนของดีเทอร์มิแนนต์ที่อยู่ติดกัน (อ่านพื้นฐาน<a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R12" data-k="hurwitz determinants matrix leading principal minors delta k ดีเทอร์มิแนนต์เฮอร์วิตซ์ ไมเนอร์หลัก">
+        <p class="tf-n"><b><span class="fid">R12</span> Hurwitz determinants</b> ดีเทอร์มิแนนต์เฮอร์วิตซ์</p>
+        \[ H = \begin{pmatrix} a_1 & a_3 & a_5 & \cdots \\ a_0 & a_2 & a_4 & \cdots \\ 0 & a_1 & a_3 & \cdots \\ 0 & a_0 & a_2 & \cdots \\ \vdots & & & \ddots \end{pmatrix}_{n\times n}, \qquad \text{เสถียร} \iff \Delta_1, \Delta_2, \dots, \Delta_n \gt 0 \ (a_0 \gt 0) \]
+        <p class="tf-x">\(\Delta_k\) คือไมเนอร์หลักนำ \(k \times k\) · หลักแรกของเราท์: \(a_0,\ \Delta_1,\ \tfrac{\Delta_2}{\Delta_1},\ \tfrac{\Delta_3}{\Delta_2},\ \dots\) · ลีนาร์–ชีพาร์ต (Liénard–Chipart) แสดงว่าเมื่อสัมประสิทธิ์บวกหมด ตรวจแค่ \(\Delta\) ลำดับคี่ (หรือคู่) ก็พอ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-10 · เทียบกับ R-1</span><h3>หาดีเทอร์มิแนนต์เฮอร์วิตซ์ของ \(s^4 + 2s^3 + 3s^2 + 4s + 5\)</h3></div>
+      <ol class="steps">
+        <li><p>\(a_0 = 1,\ a_1 = 2,\ a_2 = 3,\ a_3 = 4,\ a_4 = 5\) <a class="tag tf" href="#R12">R12</a></p>
+          \[ H = \begin{pmatrix} 2 & 4 & 0 & 0 \\ 1 & 3 & 5 & 0 \\ 0 & 2 & 4 & 0 \\ 0 & 1 & 3 & 5 \end{pmatrix} \Rightarrow \Delta_1 = 2,\ \Delta_2 = 2,\ \Delta_3 = -12,\ \Delta_4 = -60 \]</li>
+        <li><p>อัตราส่วน: \(1,\ 2,\ \tfrac22 = 1,\ \tfrac{-12}{2} = -6,\ \tfrac{-60}{-12} = 5\)</p></li>
+      </ol>
+      <p class="answer">ได้ 1, 2, 1, −6, 5 ตรงกับหลักแรกของตารางเราท์ในตัวอย่าง R-1 ทุกตัว ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="tf warn">
+      <ul>
+        <li><b>เขียนสองแถวแรกผิด</b> → แถวบนคือ \(a_0, a_2, a_4\) (ข้ามทีละตัว) แถวล่างคือ \(a_1, a_3, a_5\) ไม่ใช่เขียนเรียงกัน</li>
+        <li><b>ลืมพจน์ที่หายไป</b> → เช่น \(s^3 + 2s + 5\) ต้องเขียน \(a_1 = 0\) ไม่ใช่ข้าม (และแค่นี้ก็สรุปได้แล้วว่าไม่เสถียร)</li>
+        <li><b>เครื่องหมายในสูตรสลับ</b> → ตัวตั้งคือ “ล่างซ้าย × บนขวา − บนซ้าย × ล่างขวา” ตรวจด้วยแถว \(s^0 = a_n\) เสมอ</li>
+        <li><b>หลักแรกเป็นศูนย์ แต่ใช้พหุนามช่วย</b> → พหุนามช่วยใช้เฉพาะเมื่อศูนย์<strong>ทั้งแถว</strong> นอกนั้นใช้ ε <a class="tag tf" href="#R7">R7</a></li>
+        <li><b>ช่วง K ลืมเงื่อนไข K &gt; 0 จากแถว s⁰</b> → ต้องรวมทุกแถวที่มี \(K\) แล้วหาส่วนร่วม</li>
+        <li><b>คิดว่า “เสถียร” = ดีพอ</b> → เสถียรแต่ขั้วชิดแกนจะแกว่งนาน ใช้เสถียรภาพสัมพัทธ์ <a class="tag tf" href="#R11">R11</a> หรือดู<a href="/learn/control-systems/margins/">มาร์จิน</a></li>
+        <li><b>ใช้กับหน่วงเวลาตรง ๆ</b> → \(e^{-sT}\) ไม่ใช่พหุนาม ต้องประมาณพาเดก่อน หรือใช้<a href="/learn/control-systems/nyquist/">ไนควิสต์</a></li>
+      </ul>
+    </div>
+    </section>
+
+    <!-- ============ CALC ============ -->
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขตารางเราท์แสดงวิธีทำ</h2>
+    <p>ใส่พหุนามหรือสมการ \(1 + KG(s)\) ได้เลย ระบบจะคูณกระจาย สร้างตาราง (มี \(K\) ก็ได้ จะแสดงหลักแรกเป็นฟังก์ชันของ \(K\)) จัดการวิธี ε และพหุนามช่วยให้อัตโนมัติ หาช่วง \(K\) ที่เสถียร เกนวิกฤต ความถี่การแกว่ง และตรวจกับรากจริงทุกครั้ง</p>
+    <div class="rh-calc" data-p="1+K/(s(s+1)(s+2))" data-presets='[{"n":"K/(s(s+1)(s+2))","p":"1+K/(s(s+1)(s+2))"},{"n":"อันดับสี่ (R-1)","p":"s^4+2s^3+3s^2+4s+5"},{"n":"วิธี ε (R-3)","p":"s^5+2s^4+2s^3+4s^2+11s+10"},{"n":"แถวศูนย์ (R-4)","p":"s^5+7s^4+6s^3+42s^2+8s+56"},{"n":"พลานต์ไม่เสถียร (R-6)","p":"1+K(s+1)/(s(s-1)(s+6))"},{"n":"อันดับสี่มี K (R-7)","p":"s^4+3s^3+3s^2+2s+K"},{"n":"PI กับ K_P = 3 (R-8)","p":"s^3+3s^2+5s+K"},{"n":"อันดับหกมีแถวศูนย์","p":"s^6+2s^5+8s^4+12s^3+20s^2+16s+16"}]'>
+      <p class="hint">กำลังโหลดเครื่องคิดเลข (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">เห็นภาพ: ช่วง K เดียวกันบนรูทโลคัส</h2>
+    <p>เลื่อน \(K\) จาก 0 ถึง 6 ดูขั้ววงปิด (จุดส้ม) สองตัวเดินเข้าหาแกน \(j\omega\) และตัดแกนที่ \(\pm j1.414\) พอดีเมื่อ \(K = 6\) ตรงกับตัวอย่าง R-5 ผลตอบสนองขั้นบันไดจะแกว่งนานขึ้นเรื่อย ๆ จนแกว่งค้าง หน้าถัดไปจะสอนวาดรูปนี้ด้วยมือ</p>
+    <div class="cs-lab" data-tf="1/(s(s+1)(s+2))" data-views="rl,step" data-k="3" data-kmax="12" data-edit="false" data-rules>
+      <p class="hint">กำลังโหลดแล็บ (ต้องเปิด JavaScript)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>เราท์ตอบว่า “เสถียรถึง \(K\) เท่าไร” แต่ไม่บอกว่าขั้วอยู่ตรงไหนและเดินไปทางไหน คำถามนั้นตอบด้วย<a href="/learn/control-systems/root-locus/">รูทโลคัส</a> ซึ่งใช้ผลจากหน้านี้ (\(K_{cr}\), \(\omega_{cr}\)) เป็นจุดตัดแกน \(j\omega\) โดยตรง ส่วนมุมมองความถี่ของคำถามเดียวกันอยู่ที่<a href="/learn/control-systems/margins/">เกนมาร์จิน</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
