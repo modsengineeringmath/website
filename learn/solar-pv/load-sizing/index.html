@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ติดโซลาร์เซลล์กี่ kW ดี: เลือกขนาดจากบิลค่าไฟ โปรไฟล์โหลด Self-consumption TOU บ้าน ร้านค้า โรงงาน | อาจารย์มด</title>
+<meta name="description" content="วิธีเลือกขนาดโซลาร์เซลล์ให้คุ้มที่สุด: อ่านบิลค่าไฟ อัตราก้าวหน้าและ TOU แยกโหลดกลางวันกลางคืน วิธีสำรวจเครื่องใช้ไฟฟ้า self-consumption self-sufficiency โปรไฟล์โหลดบ้าน ร้านค้า สำนักงาน โรงงาน ห้องเย็น zero export ช่วงวันหยุด และตัวอย่างเลือกขนาด 3 กรณีพร้อมเครื่องคำนวณ">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/solar-pv/load-sizing/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/solar-pv/load-sizing/">
+<meta property="og:title" content="ติดโซลาร์กี่ kW ดี: เลือกขนาดจากบิลค่าไฟ">
+<meta property="og:description" content="วิธีเลือกขนาดโซลาร์เซลล์ให้คุ้มที่สุด: อ่านบิลค่าไฟ อัตราก้าวหน้าและ TOU แยกโหลดกลางวันกลางคืน วิธีสำรวจเครื่องใช้ไฟฟ้า self-consumption self-sufficiency โปรไฟล์โหลดบ้าน ร้านค้า สำนักงาน โรงงาน ห้องเย็น zero export ช่วงวันหยุด และตัวอย่างเลือกขนาด 3 กรณีพร้อมเครื่องคำนวณ">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-solar-pv-load-sizing.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ติดโซลาร์กี่ kW ดี: เลือกขนาดจากบิลค่าไฟ">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ติดโซลาร์กี่ kW ดี: เลือกขนาดจากบิลค่าไฟ">
+<meta name="twitter:description" content="วิธีเลือกขนาดโซลาร์เซลล์ให้คุ้มที่สุด: อ่านบิลค่าไฟ อัตราก้าวหน้าและ TOU แยกโหลดกลางวันกลางคืน วิธีสำรวจเครื่องใช้ไฟฟ้า self-consumption self-sufficiency โปรไฟล์โหลดบ้าน ร้านค้า สำนักงาน โรงงาน ห้องเย็น zero export ช่วงวันหยุด และตัวอย่างเลือกขนาด 3 กรณีพร้อมเครื่องคำนวณ">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-solar-pv-load-sizing.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/solar-pv/load-sizing/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/solar-pv/load-sizing/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=cd8cae23">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/load-sizing/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/load-sizing/#article","headline":"เลือกขนาดระบบจากบิลค่าไฟและโปรไฟล์โหลด: ใช้เองกลางวัน ส่งคืนกริด และแบตเตอรี่","description":"วิธีเลือกขนาดโซลาร์เซลล์ให้คุ้มที่สุด: อ่านบิลค่าไฟ อัตราก้าวหน้าและ TOU แยกโหลดกลางวันกลางคืน วิธีสำรวจเครื่องใช้ไฟฟ้า self-consumption self-sufficiency โปรไฟล์โหลดบ้าน ร้านค้า สำนักงาน โรงงาน ห้องเย็น zero export ช่วงวันหยุด และตัวอย่างเลือกขนาด 3 กรณีพร้อมเครื่องคำนวณ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/load-sizing/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/load-sizing/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Load profile","Self-consumption","Time-of-use tariff","PV system sizing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-load-sizing.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"เลือกขนาดระบบจากบิลค่าไฟและโปรไฟล์โหลด: ใช้เองกลางวัน ส่งคืนกริด และแบตเตอรี่","item":"https://modsengineeringmath.com/learn/solar-pv/load-sizing/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"บ้านใช้ไฟเดือนละ 500–600 หน่วย ควรติดโซลาร์กี่ kW?","acceptedAnswer":{"@type":"Answer","text":"ขึ้นกับว่าใช้ไฟช่วงกลางวันเท่าไร ถ้าใช้กลางวันประมาณ 40–50 % ของทั้งหมด (มีคนอยู่บ้าน เปิดแอร์กลางวัน) ขนาดที่ใช้เองได้เกือบหมดคือประมาณ 2.5–3.5 kWp ถ้าทำงานนอกบ้านทั้งวัน โหลดกลางวันเหลือแค่ตู้เย็นและปั๊มน้ำ ขนาดที่คุ้มอาจเหลือ 1.5–2 kWp เว้นแต่จะขายไฟส่วนเกินหรือเพิ่มแบตเตอรี่"}},{"@type":"Question","name":"ทำไมไม่ติดให้ใหญ่ที่สุดเท่าที่หลังคารับได้?","acceptedAnswer":{"@type":"Answer","text":"ไฟส่วนที่เกินโหลดกลางวันต้องส่งออกในราคารับซื้อที่ต่ำกว่าค่าไฟเกือบครึ่ง หรือถูกตัดทิ้งถ้าเป็นระบบ zero export เงินที่ลงทุนส่วนเกินจึงคืนทุนช้ากว่าส่วนที่ใช้เองมาก การเลือกขนาดพอดีโหลดกลางวันให้ผลตอบแทนต่อบาทสูงสุด แล้วค่อยขยายภายหลังเมื่อโหลดกลางวันเพิ่ม เช่น ซื้อรถยนต์ไฟฟ้าชาร์จกลางวัน"}},{"@type":"Question","name":"ผู้ใช้ไฟอัตรา TOU ติดโซลาร์คุ้มกว่าไหม?","acceptedAnswer":{"@type":"Answer","text":"ส่วนใหญ่คุ้มกว่า เพราะช่วงที่แผงผลิตไฟคือวันธรรมดาเวลา 09:00–16:00 น. ซึ่งอยู่ในช่วง on-peak ที่ค่าไฟแพงที่สุด ไฟจากโซลาร์จึงแทนไฟราคาแพง แต่ในวันหยุดซึ่งเป็น off-peak ทั้งวัน มูลค่าต่อหน่วยจะต่ำลง และกิจการที่หยุดวันหยุดอาจมีไฟเหลือ"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
+          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/vector-algebra/" >พีชคณิตของเวกเตอร์</a>
+          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
+          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
+          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" aria-current="page">ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#bill">อ่านบิลค่าไฟให้ได้ข้อมูลออกแบบ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#profiles">โปรไฟล์โหลดแบบต่าง ๆ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#audit">วิธีสำรวจเครื่องใช้ไฟฟ้า<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#calculator">เครื่องคำนวณขนาดจากบิลค่าไฟ</a></li><li><a href="#cases">กรณีศึกษา<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#ev">โหลดใหม่ที่เปลี่ยนการเลือกขนาด</a></li><li><a href="#advanced">ประเด็นระดับปริญญาโท<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ขนาดจากบิลค่าไฟ</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในออกแบบระบบโซลาร์เซลล์"><span class="sn-title mono">Solar PV System Design</span><div class="sn-list"><a href="/learn/solar-pv/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/solar-pv/energy-yield/"><span class="sn-n">8</span>คาดการณ์พลังงาน</a><a href="/learn/solar-pv/load-sizing/" aria-current="page"><span class="sn-n">9</span>ขนาดจากบิลค่าไฟ</a><a href="/learn/solar-pv/economics/"><span class="sn-n">10</span>ความคุ้มค่า</a><a href="/learn/solar-pv/forecasting-monitoring/"><span class="sn-n">11</span>พยากรณ์ · เฝ้าติดตาม</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 19 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · พื้นฐานและการเลือกแผง</span><div class="sn-list"><a href="/learn/solar-pv/pv-cell/"><span class="sn-n">1</span>เซลล์และเส้น I-V</a><a href="/learn/solar-pv/solar-resource/"><span class="sn-n">2</span>แสงอาทิตย์ · มุม · เงา</a><a href="/learn/solar-pv/panel-selection/"><span class="sn-n">3</span>เลือกแผง</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · ออกแบบระบบและการจ่ายไฟ</span><div class="sn-list"><a href="/learn/solar-pv/system-types/"><span class="sn-n">4</span>ชนิดระบบ · ขนานไฟ</a><a href="/learn/solar-pv/string-sizing/"><span class="sn-n">5</span>ออกแบบสตริง</a><a href="/learn/solar-pv/wiring-protection/"><span class="sn-n">6</span>สายไฟ · ป้องกัน</a><a href="/learn/solar-pv/battery-storage/"><span class="sn-n">7</span>แบตเตอรี่</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · คาดการณ์ล่วงหน้าและความคุ้มค่า</span><div class="sn-list"><a href="/learn/solar-pv/energy-yield/"><span class="sn-n">8</span>คาดการณ์พลังงาน</a><a href="/learn/solar-pv/load-sizing/" aria-current="page"><span class="sn-n">9</span>ขนาดจากบิลค่าไฟ</a><a href="/learn/solar-pv/economics/"><span class="sn-n">10</span>ความคุ้มค่า</a><a href="/learn/solar-pv/forecasting-monitoring/"><span class="sn-n">11</span>พยากรณ์ · เฝ้าติดตาม</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · อิเล็กทรอนิกส์กำลังในระบบโซลาร์</span><div class="sn-list"><a href="/learn/solar-pv/mppt/"><span class="sn-n">12</span>MPPT</a><a href="/learn/solar-pv/pv-inverter/"><span class="sn-n">13</span>อินเวอร์เตอร์</a><a href="/learn/solar-pv/controller-selection/"><span class="sn-n">14</span>เลือกตัวควบคุม</a></div></div><div class="sn-part"><span class="sn-pt mono">5 · งานประยุกต์และภาคปฏิบัติ</span><div class="sn-list"><a href="/learn/solar-pv/solar-air-conditioner/"><span class="sn-n">15</span>โซลาร์จ่ายแอร์</a><a href="/learn/solar-pv/solar-farm/"><span class="sn-n">16</span>โซลาร์ฟาร์ม</a><a href="/learn/solar-pv/solar-agriculture/"><span class="sn-n">17</span>ปั๊มน้ำ · เกษตร</a><a href="/learn/solar-pv/installation-maintenance/"><span class="sn-n">18</span>ติดตั้ง · บำรุงรักษา</a><a href="/learn/solar-pv/design-lab/"><span class="sn-n">19</span>เครื่องมือออกแบบ</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 14.9 · ออกแบบระบบโซลาร์เซลล์ · Sizing from Bills &amp; Load Profile</p>
+      <h1>เลือกขนาดระบบจากบิลค่าไฟและโปรไฟล์โหลด: ใช้เองกลางวัน ส่งคืนกริด และแบตเตอรี่</h1>
+      <p class="lede">คำถามที่พบบ่อยที่สุดคือ “ติดกี่ kW ดี” คำตอบที่ถูกไม่ได้มาจากพื้นที่หลังคาหรืองบประมาณ แต่มาจาก <b>รูปร่างของการใช้ไฟตลอดวัน</b> โซลาร์ผลิตไฟเป็นรูประฆังคว่ำช่วง 07:00–17:00 น. ส่วนที่ซ้อนทับกับโหลดคือส่วนที่คุ้มที่สุด หน้านี้สอนวิธีหาส่วนนั้นจากบิล จากการสำรวจเครื่องใช้ไฟฟ้า และจากข้อมูลมิเตอร์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">คำนวณจากบิล</a>
+        <a class="btn btn-ghost btn-sm" href="#bill">อ่านบิลค่าไฟ</a>
+        <a class="btn btn-ghost btn-sm" href="#profiles">โปรไฟล์โหลด</a>
+        <a class="btn btn-ghost btn-sm" href="#audit">สำรวจเครื่องใช้ไฟฟ้า</a>
+        <a class="btn btn-ghost btn-sm" href="#cases">3 กรณีศึกษา</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ขนาดที่คุ้มที่สุดของ on-grid ≈ พลังงานที่ใช้ช่วงมีแดดต่อปี ÷ ผลผลิตจำเพาะ (≈ 1,350 kWh/kWp)</li>
+          <li>หน่วยที่ใช้เองแทนค่าไฟหน่วยแพงสุด (อัตราก้าวหน้า หรือ on-peak ของ TOU)</li>
+          <li>กิจการ: ระวังวันหยุด — โหลดหายแต่แผงยังผลิต</li>
+          <li>ข้อมูลมิเตอร์ราย 15 นาทีดีกว่าการเดาทุกครั้ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#bill">อ่านบิลค่าไฟให้ได้ข้อมูลออกแบบ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#profiles">โปรไฟล์โหลดแบบต่าง ๆ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#audit">วิธีสำรวจเครื่องใช้ไฟฟ้า<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#calculator">เครื่องคำนวณขนาดจากบิลค่าไฟ</a></li><li><a href="#cases">กรณีศึกษา<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#ev">โหลดใหม่ที่เปลี่ยนการเลือกขนาด</a></li><li><a href="#advanced">ประเด็นระดับปริญญาโท<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น daytime, kwp, เครื่องใช้ไฟฟ้า, tou, ขนาด" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="bill">
+    <h2 id="bill">อ่านบิลค่าไฟให้ได้ข้อมูลออกแบบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>หน่วยที่ใช้ (kWh) 12 เดือน</b> — เห็นฤดูกาล (แอร์หน้าร้อน) ใช้ค่าเฉลี่ยและค่าสูงสุด</li>
+      <li><b>ประเภทผู้ใช้ไฟ</b> บ้านอยู่อาศัยอัตราก้าวหน้า (ยิ่งใช้มาก หน่วยท้าย ๆ ยิ่งแพง) หรืออัตรา TOU กิจการขนาดเล็ก/กลาง/ใหญ่</li>
+      <li><b>ค่า Ft และ VAT</b> ปรับทุกงวด ค่าไฟเฉลี่ยรวมทั้งหมดของบ้านในช่วงปี 2567–2569 อยู่ราว 4–4.5 บาท/หน่วย</li>
+      <li><b>กิจการ TOU:</b> แยก kWh on-peak / off-peak / holiday และ kW ความต้องการพลังไฟฟ้าสูงสุด (demand charge) ถ้ามี</li>
+    </ul>
+    <div class="note"><b>มูลค่าของหน่วยที่ใช้เองคือ “ค่าไฟส่วนเพิ่ม”</b> บ้านอัตราก้าวหน้า หน่วยที่โซลาร์ช่วยลดคือหน่วยท้าย ๆ ซึ่งเป็นขั้นราคาสูงสุด ผู้ใช้ TOU ประเภทแรงดันต่ำ ค่าไฟ on-peak (จ.–ศ. 09:00–22:00 น.) สูงกว่า off-peak ราว 2 เท่า และแผงผลิตไฟช่วง on-peak พอดี อัตราจริงตรวจจากประกาศของการไฟฟ้าล่าสุด</div>
+<div class="tf" id="L1" data-k="daytime energy fraction bill พลังงานกลางวัน สัดส่วน"><p class="tf-n"><b><span class="fid">L1</span> Daytime energy from the bill</b> พลังงานที่ใช้ช่วงมีแดด</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>E</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi><mo separator="true">,</mo><mi>d</mi><mi>a</mi><mi>y</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>E</mi><mrow><mi>m</mi><mi>o</mi><mi>n</mi><mi>t</mi><mi>h</mi></mrow></msub><mo>×</mo><msub><mi>f</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi></mrow></msub></mrow><mn>30</mn></mfrac></mrow><annotation encoding="application/x-tex">E_{sun,day} = \frac{E_{month}\times f_{sun}}{30}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">30</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">h</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="tf" id="L2" data-k="pv size self consumption daytime load ขนาดระบบ ใช้เอง"><p class="tf-n"><b><span class="fid">L2</span> PV size matched to daytime load</b> ขนาดระบบที่พอดีโหลดกลางวัน</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>P</mi><mrow><mi>P</mi><mi>V</mi></mrow></msub><mo>≈</mo><mfrac><mrow><mn>365</mn><mtext> </mtext><msub><mi>E</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi><mo separator="true">,</mo><mi>d</mi><mi>a</mi><mi>y</mi></mrow></msub></mrow><mrow><msub><mi>Y</mi><mi>f</mi></msub><mo>×</mo><mi>S</mi><mi>C</mi><msub><mi>R</mi><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">P_{PV} \approx \frac{365\,E_{sun,day}}{Y_f\times SCR_{target}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3324em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">SC</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">365</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+    <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{sun}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = สัดส่วนพลังงานที่ใช้ช่วง ~08:00–17:00 น. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">Y_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> = ผลผลิตจำเพาะ (<a href="/learn/solar-pv/energy-yield/#E2">E2</a>) <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>C</mi><msub><mi>R</mi><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">SCR_{target}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">SC</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> = สัดส่วนที่ต้องการใช้เอง (ใช้ 0.85–0.95 เพราะวันฟ้าใสแผงผลิตเกินโหลดได้ แม้ค่าเฉลี่ยจะพอดี)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="profiles">
+    <h2 id="profiles">โปรไฟล์โหลดแบบต่าง ๆ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ประเภท</th><th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{sun}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> โดยประมาณ</th><th>ลักษณะ</th><th>แนวทาง</th></tr></thead>
+      <tbody>
+        <tr><td>บ้าน ทำงานนอกบ้าน</td><td>20–30 %</td><td>พีคหัวค่ำ 18–23 น. (แอร์ห้องนอน)</td><td>ระบบเล็ก หรือ hybrid ถ้าต้องการลดค่าไฟกลางคืน</td></tr>
+        <tr><td>บ้าน มีคนอยู่ / ทำงานที่บ้าน</td><td>40–55 %</td><td>แอร์กลางวัน คอมพิวเตอร์</td><td>on-grid 3–5 kWp</td></tr>
+        <tr><td>ร้านค้า คลินิก สำนักงาน</td><td>65–85 %</td><td>เปิด 08–18 น. แอร์เป็นหลัก</td><td>on-grid ขนาดพอดีโหลดกลางวัน คืนทุนเร็ว</td></tr>
+        <tr><td>โรงงาน 1 กะ</td><td>60–75 % (วันทำงาน)</td><td>วันหยุดโหลดหาย</td><td>ระวังวันหยุด / ขออนุญาตส่งออก / zero export</td></tr>
+        <tr><td>โรงงาน 3 กะ ห้องเย็น โรงพยาบาล</td><td>35–45 %</td><td>โหลดฐานสูงตลอด 24 ชม.</td><td>ติดได้ใหญ่ ใช้เองเกือบหมด</td></tr>
+        <tr><td>ฟาร์มปั๊มน้ำ</td><td>~100 %</td><td>สูบน้ำช่วงมีแดด</td><td>ปั๊มโซลาร์ต่อตรง (ดู <a href="/learn/solar-pv/solar-agriculture/">เกษตร</a>)</td></tr>
+      </tbody>
+    </table></div>
+    <h3>ใช้ข้อมูลจริงแทนการเดา</h3>
+    <ul>
+      <li><b>มิเตอร์ AMR/สมาร์ตมิเตอร์</b> ของกิจการมักบันทึกทุก 15 นาที ขอข้อมูลจากการไฟฟ้าหรือระบบของอาคาร</li>
+      <li><b>ติดมิเตอร์วัดกำลังพร้อม CT</b> (ราคาไม่กี่ร้อยถึงพันบาท) บันทึก 1–4 สัปดาห์ เพียงพอสำหรับบ้านและร้าน</li>
+      <li>วาดโปรไฟล์โหลดซ้อนกับโปรไฟล์โซลาร์ (รูประฆังคว่ำ สูงสุดราว 12:00–12:30 น.) ส่วนที่ซ้อนคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mrow><mi>s</mi><mi>e</mi><mi>l</mi><mi>f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">E_{self}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">se</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="audit">
+    <h2 id="audit">วิธีสำรวจเครื่องใช้ไฟฟ้า <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="L3" data-k="appliance energy audit power hours duty พลังงานเครื่องใช้ไฟฟ้า"><p class="tf-n"><b><span class="fid">L3</span> Appliance energy</b> พลังงานจากรายการเครื่องใช้ไฟฟ้า</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>P</mi><mi>i</mi></msub><mtext> </mtext><msub><mi>h</mi><mi>i</mi></msub><mtext> </mtext><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">E = \sum_i P_i\,h_i\,k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+    <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">P_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = กำลังไฟฟ้า (W) <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">h_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = ชั่วโมงใช้งานต่อวัน <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">k_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = สัดส่วนเวลาที่ทำงานจริง (duty) เช่น ตู้เย็นคอมเพรสเซอร์ทำงาน 30–50 % ของเวลา แอร์อินเวอร์เตอร์ทำงานเฉลี่ย 40–60 % ของกำลังพิกัด (<a href="/learn/solar-pv/solar-air-conditioner/">ดูหน้าแอร์</a>)</p>
+<div class="wx" id="ex-l-1"><div class="wx-head"><span class="mono">ตัวอย่าง L-1</span><h3>บ้านทำงานที่บ้าน: โหลดช่วง 09:00–16:00 น.</h3></div>
+<div class="table-wrap"><table>
+<thead><tr><th>เครื่องใช้</th><th>กำลังเฉลี่ย</th><th>ชม. ช่วงมีแดด</th><th>kWh/วัน</th></tr></thead>
+<tbody>
+<tr><td>แอร์ 12,000 BTU อินเวอร์เตอร์</td><td>0.5 kW</td><td>6</td><td>3.0</td></tr>
+<tr><td>ตู้เย็น (ช่วงกลางวัน)</td><td>0.05 kW เฉลี่ย</td><td>8</td><td>0.4</td></tr>
+<tr><td>คอมพิวเตอร์ + จอ + เราเตอร์</td><td>0.15 kW</td><td>8</td><td>1.2</td></tr>
+<tr><td>ปั๊มน้ำ</td><td>0.4 kW</td><td>1</td><td>0.4</td></tr>
+<tr><td>เครื่องซักผ้า</td><td>0.5 kW</td><td>1</td><td>0.5</td></tr>
+<tr><td><b>รวม</b></td><td></td><td></td><td><b>5.5</b></td></tr>
+</tbody></table></div>
+<ol class="steps">
+<li><p>L2: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>P</mi><mi>V</mi></mrow></msub><mo>=</mo><mn>365</mn><mo stretchy="false">(</mo><mn>5.5</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mn>1350</mn><mo>×</mo><mn>1.0</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1.49</mn></mrow><annotation encoding="application/x-tex">P_{PV} = 365(5.5)/(1350 \times 1.0) = 1.49</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">365</span><span class="mopen">(</span><span class="mord">5.5</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord">1350</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1.0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.49</span></span></span></span> kWp (ถ้ายอมให้ใช้เอง ~90 %: 1.65 kWp)</p></li>
+<li><p>เลือก 3 แผง × 580 W = 1.74 kWp หรือ 4 แผง × 450 W = 1.8 kWp กับอินเวอร์เตอร์ 1.5–2 kW</p></li>
+<li><p>ถ้าย้ายการซักผ้า รีดผ้า ชาร์จรถไฟฟ้า มาเป็นช่วงกลางวัน โหลดกลางวันเพิ่ม ขนาดที่คุ้มก็เพิ่มตาม — <b>การปรับพฤติกรรมเป็นการลงทุนที่ถูกที่สุด</b></p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณขนาดจากบิลค่าไฟ</h2>
+    <div class="fg-calc pv-calc" data-pv="size"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cases">
+    <h2 id="cases">กรณีศึกษา <span class="lv lv-i">กลาง</span></h2>
+<div class="wx" id="ex-l-2"><div class="wx-head"><span class="mono">ตัวอย่าง L-2</span><h3>บ้าน 600 หน่วย/เดือน ใช้กลางวัน 45 %</h3></div>
+<ol class="steps">
+<li><p>L1: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mrow><mi>s</mi><mi>u</mi><mi>n</mi><mo separator="true">,</mo><mi>d</mi><mi>a</mi><mi>y</mi></mrow></msub><mo>=</mo><mn>600</mn><mo stretchy="false">(</mo><mn>0.45</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>30</mn><mo>=</mo><mn>9.0</mn></mrow><annotation encoding="application/x-tex">E_{sun,day} = 600(0.45)/30 = 9.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">n</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">600</span><span class="mopen">(</span><span class="mord">0.45</span><span class="mclose">)</span><span class="mord">/30</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">9.0</span></span></span></span> kWh/วัน</p></li>
+<li><p>L2: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>P</mi><mi>V</mi></mrow></msub><mo>=</mo><mn>365</mn><mo stretchy="false">(</mo><mn>9.0</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mn>1350</mn><mo>×</mo><mn>0.9</mn><mo stretchy="false">)</mo><mo>=</mo><mn>2.70</mn></mrow><annotation encoding="application/x-tex">P_{PV} = 365(9.0)/(1350 \times 0.9) = 2.70</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">365</span><span class="mopen">(</span><span class="mord">9.0</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord">1350</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.9</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2.70</span></span></span></span> kWp → 5 แผง × 580 W = 2.90 kWp</p></li>
+<li><p>ผลิตได้ ≈ 2.9 × 1350/12 = 326 kWh/เดือน ใช้เองได้ ≈ 270 kWh/เดือน (จำกัดด้วยโหลดกลางวัน)</p></li>
+<li><p>ประหยัด ≈ 270 × 4.2 = 1,134 บาท/เดือน + ขายส่วนเกิน ≈ 56 × 2.2 = 123 บาท ลดบิลได้ราว 45 % (เทียบกับตัวอย่าง <a href="/learn/solar-pv/system-types/#ex-s-1">S-1</a> ที่ติด 5 kWp)</p></li>
+</ol></div>
+<div class="wx" id="ex-l-3"><div class="wx-head"><span class="mono">ตัวอย่าง L-3</span><h3>โรงงานเล็ก TOU: วันทำงานโหลดฐาน 60 kW วันหยุด 15 kW</h3></div>
+<p>ระบบ zero export (ห้ามส่งออก) ผลผลิตจำเพาะ 1,350 kWh/kWp (3.70 kWh/kWp/วัน) วันหยุด 104 วัน/ปี โหลดวันหยุดใช้ได้สูงสุด ≈ 15 kW × 7 h = 105 kWh/วัน</p>
+<ol class="steps">
+<li><p>100 kWp: วันหยุดผลิต 370 kWh ใช้ได้ 105 → ทิ้ง ≈ 265 × 104 = 27,500 kWh/ปี = 20 % ของพลังงานทั้งปี</p></li>
+<li><p>60 kWp: วันหยุดผลิต 222 kWh ทิ้ง ≈ 117 × 104 = 12,200 kWh/ปี = 15 % — และกำลังสูงสุดช่วงเที่ยงวันทำงาน (~45–50 kW AC) ยังต่ำกว่าโหลดฐาน 60 kW ✓</p></li>
+<li><p>มูลค่า 60 kWp: วันทำงาน <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>222</mn><mo>×</mo><mn>261</mn><mo>=</mo><mn>57,900</mn></mrow><annotation encoding="application/x-tex">222 \times 261 = 57{,}900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">222</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">261</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">57</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">900</span></span></span></span> kWh × on-peak 5.80 ≈ 335,800 บาท + วันหยุด <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>105</mn><mo>×</mo><mn>104</mn><mo>=</mo><mn>10,900</mn></mrow><annotation encoding="application/x-tex">105 \times 104 = 10{,}900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">105</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">104</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">10</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">900</span></span></span></span> kWh × off-peak 2.64 ≈ 28,800 บาท → รวม ≈ 364,600 บาท/ปี</p></li>
+<li><p>เงินลงทุน 60 kWp × 22,000 บาท/kWp = 1.32 ล้านบาท → คืนทุนอย่างง่าย ≈ 3.6 ปี</p></li>
+<li><p>ทางเลือกเพิ่ม: ขออนุญาตส่งออกไฟวันหยุด ย้ายงานบางอย่าง (ชาร์จรถยก ปั๊ม ห้องเย็นแช่ล่วงหน้า) มาวันหยุดกลางวัน หรือเพิ่มแบตเตอรี่ขนาดเล็กเพื่อตัด peak — ประเมินด้วยข้อมูลมิเตอร์ราย 15 นาที</p></li>
+</ol></div>
+    <p>ตัวเลขค่าไฟ TOU ในตัวอย่างใช้อัตราประเภทแรงดันต่ำที่ประกาศใช้ในช่วงหลายปีที่ผ่านมา (ก่อนรวม Ft และ VAT) เพื่อแสดงวิธีคิด ใช้อัตราในบิลของคุณจริงเสมอ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ev">
+    <h2 id="ev">โหลดใหม่ที่เปลี่ยนการเลือกขนาด</h2>
+    <ul>
+      <li><b>รถยนต์ไฟฟ้า:</b> 15–20 kWh/100 km ถ้าชาร์จกลางวันที่บ้านหรือที่ทำงาน เป็นโหลดที่ “ยืดหยุ่น” ที่สุดสำหรับดูดซับไฟโซลาร์ (เครื่องชาร์จที่มีโหมด solar surplus)</li>
+      <li><b>ปั๊มความร้อนผลิตน้ำร้อน</b> ตั้งเวลาทำงานกลางวัน เก็บความร้อนในถัง</li>
+      <li><b>แอร์</b> ตั้งเวลา pre-cooling ช่วงบ่ายก่อนกลับบ้าน (ดู <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>)</li>
+      <li><b>เผื่อขยาย:</b> เลือกอินเวอร์เตอร์ที่รับแผงเพิ่มได้ (DC/AC ถึง 1.5) หรือเตรียมพื้นที่หลังคา/ท่อสายไว้</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>จำลองรายชั่วโมงทั้งปี</b> ด้วยโปรไฟล์โหลด 8,760 ค่า × ผลผลิตโซลาร์รายชั่วโมง หา SCR/SSR ที่แต่ละขนาดและขนาดแบต (grid search หรือ optimization)</li>
+      <li><b>Load disaggregation</b> (NILM) แยกเครื่องใช้ไฟฟ้าจากสัญญาณมิเตอร์รวม ด้วย machine learning</li>
+      <li><b>Demand charge</b> ของกิจการขนาดกลางและใหญ่: โซลาร์ลดความต้องการพลังไฟฟ้าสูงสุดได้ไม่แน่นอนเพราะเมฆ ต้องใช้แบตหรือ load control และการพยากรณ์</li>
+      <li><b>การประเมินหลายเกณฑ์</b> NPV, IRR, SSR, การลดคาร์บอน (กริดไทยปล่อยราว 0.4–0.5 kgCO₂/kWh) สำหรับรายงาน ESG</li>
+    </ul>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>บ้านใช้ไฟเดือนละ 500–600 หน่วย ควรติดโซลาร์กี่ kW?</summary><p>ขึ้นกับว่าใช้ไฟช่วงกลางวันเท่าไร ถ้าใช้กลางวันประมาณ 40–50 % ของทั้งหมด (มีคนอยู่บ้าน เปิดแอร์กลางวัน) ขนาดที่ใช้เองได้เกือบหมดคือประมาณ 2.5–3.5 kWp ถ้าทำงานนอกบ้านทั้งวัน โหลดกลางวันเหลือแค่ตู้เย็นและปั๊มน้ำ ขนาดที่คุ้มอาจเหลือ 1.5–2 kWp เว้นแต่จะขายไฟส่วนเกินหรือเพิ่มแบตเตอรี่</p></details><details><summary>ทำไมไม่ติดให้ใหญ่ที่สุดเท่าที่หลังคารับได้?</summary><p>ไฟส่วนที่เกินโหลดกลางวันต้องส่งออกในราคารับซื้อที่ต่ำกว่าค่าไฟเกือบครึ่ง หรือถูกตัดทิ้งถ้าเป็นระบบ zero export เงินที่ลงทุนส่วนเกินจึงคืนทุนช้ากว่าส่วนที่ใช้เองมาก การเลือกขนาดพอดีโหลดกลางวันให้ผลตอบแทนต่อบาทสูงสุด แล้วค่อยขยายภายหลังเมื่อโหลดกลางวันเพิ่ม เช่น ซื้อรถยนต์ไฟฟ้าชาร์จกลางวัน</p></details><details><summary>ผู้ใช้ไฟอัตรา TOU ติดโซลาร์คุ้มกว่าไหม?</summary><p>ส่วนใหญ่คุ้มกว่า เพราะช่วงที่แผงผลิตไฟคือวันธรรมดาเวลา 09:00–16:00 น. ซึ่งอยู่ในช่วง on-peak ที่ค่าไฟแพงที่สุด ไฟจากโซลาร์จึงแทนไฟราคาแพง แต่ในวันหยุดซึ่งเป็น off-peak ทั้งวัน มูลค่าต่อหน่วยจะต่ำลง และกิจการที่หยุดวันหยุดอาจมีไฟเหลือ</p></details></section>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fload-sizing%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fload-sizing%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fload-sizing%2F&amp;text=%E0%B9%80%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%81%E0%B8%82%E0%B8%99%E0%B8%B2%E0%B8%94%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%9A%E0%B8%B4%E0%B8%A5%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B9%84%E0%B8%9F%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%84%E0%B8%9F%E0%B8%A5%E0%B9%8C%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94%3A%20%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%80%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%A7%E0%B8%B1%E0%B8%99%20%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B4%E0%B8%94%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B9%81%E0%B8%9A%E0%B8%95%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B8%B5%E0%B9%88" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/solar-pv/load-sizing/" data-share-title="เลือกขนาดระบบจากบิลค่าไฟและโปรไฟล์โหลด: ใช้เองกลางวัน ส่งคืนกริด และแบตเตอรี่">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/solar-pv/energy-yield/"><span class="mono">← หน้าก่อนหน้า</span><b>คาดการณ์พลังงานที่ผลิตได้: Performance Ratio ห่วงโซ่การสูญเสีย และ kWh/kWp ในไทย</b></a><a class="pager-next" href="/learn/solar-pv/economics/"><span class="mono">หน้าถัดไป →</span><b>ความคุ้มค่าของโซลาร์เซลล์: ระยะคืนทุน NPV IRR LCOE และการวิเคราะห์ความไว</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=cd8cae23" defer></script>
+<script src="/assets/lesson.js?v=cd8cae23" defer></script>
+<script src="/assets/pv-calc.js?v=cd8cae23" defer></script>
+</body>
+</html>

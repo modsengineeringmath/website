@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เลือกตัวควบคุมโซลาร์เซลล์ 2026: ชาร์จคอนโทรลเลอร์ PWM MPPT อินเวอร์เตอร์ ชิป MPPT Gate Driver MCU รุ่นปัจจุบันและรุ่นที่แข็งแกร่งไม่ตกยุค | อาจารย์มด</title>
+<meta name="description" content="คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/solar-pv/controller-selection/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/solar-pv/controller-selection/">
+<meta property="og:title" content="เลือกตัวควบคุมโซลาร์: ทันสมัยแต่ไม่ตกยุค">
+<meta property="og:description" content="คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-solar-pv-controller-selection.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="เลือกตัวควบคุมโซลาร์: ทันสมัยแต่ไม่ตกยุค">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="เลือกตัวควบคุมโซลาร์: ทันสมัยแต่ไม่ตกยุค">
+<meta name="twitter:description" content="คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-solar-pv-controller-selection.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/solar-pv/controller-selection/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/solar-pv/controller-selection/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=cd8cae23">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/controller-selection/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/controller-selection/#article","headline":"เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค","description":"คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/controller-selection/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/controller-selection/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Solar charge controller","Solar inverter selection","Gate driver","Microcontroller","Modbus"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-controller-selection.jpg"],"educationalLevel":["Vocational","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค","item":"https://modsengineeringmath.com/learn/solar-pv/controller-selection/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ชาร์จคอนโทรลเลอร์ MPPT ควรเลือกกี่แอมป์?","acceptedAnswer":{"@type":"Answer","text":"พิกัดของชาร์จคอนโทรลเลอร์บอกเป็นกระแสด้านแบตเตอรี่ คำนวณจากกำลังแผงหารด้วยแรงดันแบต เช่น แผง 2.32 kWp ชาร์จแบต 24 V (25.6 V) ได้กระแสสูงสุดประมาณ 91 A ต้องใช้ 100 A ถ้าเปลี่ยนเป็นแบต 48 V กระแสเหลือ 45 A ใช้ 50–60 A และต้องตรวจว่า Voc ของสตริงตอนหนาวไม่เกินแรงดันเข้าสูงสุดของคอนโทรลเลอร์"}},{"@type":"Question","name":"จะเลือกอุปกรณ์อย่างไรไม่ให้ตกยุคเร็ว?","acceptedAnswer":{"@type":"Answer","text":"เลือกอุปกรณ์ที่ใช้โปรโตคอลเปิดและเป็นมาตรฐาน (Modbus, SunSpec, CAN) อัปเดตเฟิร์มแวร์ได้ มีตัวแทนและอะไหล่ในประเทศ รองรับกระแสของแผงรุ่นใหม่และแบตเตอรี่แรงดันสูง สำหรับนักออกแบบวงจร เลือกชิปที่สถานะ Active อยู่ในโครงการรับประกันอายุผลิตภัณฑ์ของผู้ผลิต มีรุ่นที่ขาตรงกันในตระกูลเดียวกัน และเขียนเฟิร์มแวร์แยกชั้นฮาร์ดแวร์เพื่อย้ายชิปได้"}},{"@type":"Question","name":"นักศึกษาควรใช้ไมโครคอนโทรลเลอร์ตัวไหนทำโปรเจกต์ MPPT หรืออินเวอร์เตอร์?","acceptedAnswer":{"@type":"Answer","text":"งานที่มีลูปควบคุมกระแสเร็ว เช่น อินเวอร์เตอร์เชื่อมกริด ควรใช้ MCU สำหรับงานกำลังโดยเฉพาะ เช่น TI C2000 หรือ STM32G474 ที่มี PWM ความละเอียดสูง ADC ทริกเกอร์ตาม PWM และ comparator ตัดกระแสเกินในตัว ส่วนงาน MPPT ชาร์จแบตที่ลูปช้าและงานเฝ้าติดตาม IoT ใช้ ESP32 หรือ RP2040/RP2350 ได้ดีและราคาถูก"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
+          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/vector-algebra/" >พีชคณิตของเวกเตอร์</a>
+          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
+          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
+          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" aria-current="page">ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#principles">หลักการเลือก: ปัจจุบัน vs ตัวกลางที่แข็งแกร่ง<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#charge-controller">ชาร์จคอนโทรลเลอร์: PWM กับ MPPT<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#inverter">เลือกอินเวอร์เตอร์<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#chips">ชิปสำหรับออกแบบวงจรโซลาร์เอง<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#mcu">ไมโครคอนโทรลเลอร์สำหรับงานโซลาร์<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#future-proof">เลือกอย่างไรไม่ให้ตกยุค<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#advanced">ประเด็นระดับปริญญาโท<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>เลือกตัวควบคุม</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในออกแบบระบบโซลาร์เซลล์"><span class="sn-title mono">Solar PV System Design</span><div class="sn-list"><a href="/learn/solar-pv/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/solar-pv/mppt/"><span class="sn-n">12</span>MPPT</a><a href="/learn/solar-pv/pv-inverter/"><span class="sn-n">13</span>อินเวอร์เตอร์</a><a href="/learn/solar-pv/controller-selection/" aria-current="page"><span class="sn-n">14</span>เลือกตัวควบคุม</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 19 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · พื้นฐานและการเลือกแผง</span><div class="sn-list"><a href="/learn/solar-pv/pv-cell/"><span class="sn-n">1</span>เซลล์และเส้น I-V</a><a href="/learn/solar-pv/solar-resource/"><span class="sn-n">2</span>แสงอาทิตย์ · มุม · เงา</a><a href="/learn/solar-pv/panel-selection/"><span class="sn-n">3</span>เลือกแผง</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · ออกแบบระบบและการจ่ายไฟ</span><div class="sn-list"><a href="/learn/solar-pv/system-types/"><span class="sn-n">4</span>ชนิดระบบ · ขนานไฟ</a><a href="/learn/solar-pv/string-sizing/"><span class="sn-n">5</span>ออกแบบสตริง</a><a href="/learn/solar-pv/wiring-protection/"><span class="sn-n">6</span>สายไฟ · ป้องกัน</a><a href="/learn/solar-pv/battery-storage/"><span class="sn-n">7</span>แบตเตอรี่</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · คาดการณ์ล่วงหน้าและความคุ้มค่า</span><div class="sn-list"><a href="/learn/solar-pv/energy-yield/"><span class="sn-n">8</span>คาดการณ์พลังงาน</a><a href="/learn/solar-pv/load-sizing/"><span class="sn-n">9</span>ขนาดจากบิลค่าไฟ</a><a href="/learn/solar-pv/economics/"><span class="sn-n">10</span>ความคุ้มค่า</a><a href="/learn/solar-pv/forecasting-monitoring/"><span class="sn-n">11</span>พยากรณ์ · เฝ้าติดตาม</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · อิเล็กทรอนิกส์กำลังในระบบโซลาร์</span><div class="sn-list"><a href="/learn/solar-pv/mppt/"><span class="sn-n">12</span>MPPT</a><a href="/learn/solar-pv/pv-inverter/"><span class="sn-n">13</span>อินเวอร์เตอร์</a><a href="/learn/solar-pv/controller-selection/" aria-current="page"><span class="sn-n">14</span>เลือกตัวควบคุม</a></div></div><div class="sn-part"><span class="sn-pt mono">5 · งานประยุกต์และภาคปฏิบัติ</span><div class="sn-list"><a href="/learn/solar-pv/solar-air-conditioner/"><span class="sn-n">15</span>โซลาร์จ่ายแอร์</a><a href="/learn/solar-pv/solar-farm/"><span class="sn-n">16</span>โซลาร์ฟาร์ม</a><a href="/learn/solar-pv/solar-agriculture/"><span class="sn-n">17</span>ปั๊มน้ำ · เกษตร</a><a href="/learn/solar-pv/installation-maintenance/"><span class="sn-n">18</span>ติดตั้ง · บำรุงรักษา</a><a href="/learn/solar-pv/design-lab/"><span class="sn-n">19</span>เครื่องมือออกแบบ</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 14.14 · ออกแบบระบบโซลาร์เซลล์ · Choosing Solar Controllers, Chips &amp; MCUs</p>
+      <h1>เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค</h1>
+      <p class="lede">“ตัวควบคุม” ในระบบโซลาร์มีสองระดับ ระดับผู้ใช้คือ <b>ชาร์จคอนโทรลเลอร์และอินเวอร์เตอร์</b> ที่ซื้อสำเร็จ ระดับผู้ออกแบบคือ <b>ชิปและไมโครคอนโทรลเลอร์</b> ที่อยู่ข้างใน หน้านี้ให้เกณฑ์เลือกทั้งสองระดับ แยกเป็น “ตัวกลางที่แข็งแกร่ง” — เทคโนโลยีที่พิสูจน์แล้ว หาง่าย มีเอกสารครบ — กับ “รุ่นปัจจุบัน” — สมรรถนะสูงกว่า แต่ต้องตรวจความพร้อมของห่วงโซ่อุปทาน และวิธีเลือกให้ระบบไม่ตกยุคตลอด 10–25 ปี</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#charge-controller">ชาร์จคอนโทรลเลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#inverter">เลือกอินเวอร์เตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#chips">ชิปสำหรับออกแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#mcu">ไมโครคอนโทรลเลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#future-proof">ไม่ตกยุค</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>แผงใหญ่กว่า ~200 W: ใช้ MPPT เสมอ · ระบบใหม่เลือกแบต 48 V (หรือ HV) แทน 12/24 V</li>
+          <li>อินเวอร์เตอร์: อยู่ในรายชื่อการไฟฟ้า · รับกระแสแผงรุ่นใหม่ · โปรโตคอลเปิด · มีบริการในไทย</li>
+          <li>ออกแบบเอง: ชิปควบคุมเฉพาะทางคุมลูปเร็ว + MCU กำกับ คือสถาปัตยกรรมที่ทนทานที่สุด</li>
+          <li>MCU งานกำลัง: C2000, STM32G4, dsPIC33 · งาน IoT/MPPT ช้า: ESP32</li>
+          <li>ตรวจสถานะชิป (Active/NRND) และระวังของปลอมทุกครั้ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#principles">หลักการเลือก: ปัจจุบัน vs ตัวกลางที่แข็งแกร่ง<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#charge-controller">ชาร์จคอนโทรลเลอร์: PWM กับ MPPT<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#inverter">เลือกอินเวอร์เตอร์<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#chips">ชิปสำหรับออกแบบวงจรโซลาร์เอง<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#mcu">ไมโครคอนโทรลเลอร์สำหรับงานโซลาร์<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#future-proof">เลือกอย่างไรไม่ให้ตกยุค<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#advanced">ประเด็นระดับปริญญาโท<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น charge controller, กระแส, voc, mcu" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="principles">
+    <h2 id="principles">หลักการเลือก: ปัจจุบัน vs ตัวกลางที่แข็งแกร่ง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เกณฑ์</th><th>ตัวกลางที่แข็งแกร่ง (robust mainstream)</th><th>รุ่นปัจจุบัน (state of the art)</th></tr></thead>
+      <tbody>
+        <tr><td>ความเสี่ยงทางเทคนิค</td><td>ต่ำ มีข้อมูลภาคสนามหลายปี</td><td>สูงกว่า ข้อมูลภาคสนามสั้น</td></tr>
+        <tr><td>สมรรถนะ</td><td>เพียงพอ</td><td>ประสิทธิภาพสูง เล็ก ฟังก์ชันมาก</td></tr>
+        <tr><td>การหาอะไหล่/ช่าง</td><td>ง่าย หลายแหล่ง</td><td>ผู้ผลิตน้อยราย</td></tr>
+        <tr><td>ความเสี่ยงของปลอม</td><td>สูงสำหรับชิปยอดนิยม — ซื้อจากตัวแทนจำหน่ายที่ได้รับอนุญาต</td><td>ต่ำกว่า</td></tr>
+        <tr><td>เหมาะกับ</td><td>งานสอน งานซ่อม งานพื้นที่ห่างไกล งานที่ต้องการความเชื่อถือได้สูง</td><td>ผลิตภัณฑ์ใหม่ โครงการที่ต้องการประสิทธิภาพ งานวิจัย</td></tr>
+      </tbody>
+    </table></div>
+    <p>คำแนะนำในทางปฏิบัติคือ <b>ใช้รุ่นปัจจุบันในจุดที่ให้ผลมาก</b> (เช่น สวิตช์ SiC ในอินเวอร์เตอร์ MCU รุ่นใหม่) และ <b>ใช้ตัวกลางที่แข็งแกร่งในจุดที่ความเชื่อถือได้สำคัญที่สุด</b> (วงจรป้องกัน แหล่งจ่ายเลี้ยงวงจร โปรโตคอลสื่อสาร)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="charge-controller">
+    <h2 id="charge-controller">ชาร์จคอนโทรลเลอร์: PWM กับ MPPT <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>PWM</th><th>MPPT</th></tr></thead>
+      <tbody>
+        <tr><td>หลักการ</td><td>สวิตช์ต่อแผงกับแบตโดยตรง แผงทำงานที่แรงดันแบต</td><td>บั๊กคอนเวอร์เตอร์ แผงทำงานที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>m</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V_{mp}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> (ดู <a href="/learn/solar-pv/mppt/#ex-t-2">ตัวอย่าง T-2</a>)</td></tr>
+        <tr><td>แผงที่เข้ากันได้</td><td>แผงเล็ก <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>m</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V_{mp}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> ≈ 17–18 V กับแบต 12 V เท่านั้น</td><td>แผงทุกขนาด ต่ออนุกรมได้ถึงแรงดันเข้าสูงสุด</td></tr>
+        <tr><td>พลังงานที่ได้</td><td>ต่ำกว่า 20–40 % กับแผงใหญ่</td><td>เต็มที่ (ประสิทธิภาพ 95–98 %)</td></tr>
+        <tr><td>ราคา</td><td>ถูกมาก</td><td>แพงกว่า แต่คุ้มเมื่อแผง &gt; 200 W</td></tr>
+        <tr><td>ใช้กับ</td><td>ไฟส่องสว่างโซลาร์ ระบบ 12 V ขนาดเล็ก</td><td>off-grid ทุกขนาด ระบบ DC-coupled</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="C1" data-k="charge controller current rating battery voltage กระแสชาร์จคอนโทรลเลอร์"><p class="tf-n"><b><span class="fid">C1</span> Charge controller current rating</b> พิกัดกระแสชาร์จคอนโทรลเลอร์ (ด้านแบต)</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>I</mi><mrow><mi>c</mi><mi>c</mi></mrow></msub><mo>≥</mo><mfrac><msub><mi>P</mi><mrow><mi>P</mi><mi>V</mi></mrow></msub><msub><mi>V</mi><mrow><mi>b</mi><mi>a</mi><mi>t</mi><mo separator="true">,</mo><mi>n</mi><mi>o</mi><mi>m</mi></mrow></msub></mfrac><mspace width="1em"/><mo stretchy="false">(</mo><mtext>เกินได้เล็กน้อย คอนโทรลเลอร์ MPPT ส่วนใหญ่จำกัดกระแสเอง</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">I_{cc} \ge \frac{P_{PV}}{V_{bat,nom}} \quad (\text{เกินได้เล็กน้อย คอนโทรลเลอร์ MPPT ส่วนใหญ่จำกัดกระแสเอง})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">cc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3324em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord brahmic_fallback">เกินได้เล็กน้อย</span><span class="mord"> </span><span class="mord brahmic_fallback">คอนโทรลเลอร์</span><span class="mord"> MPPT </span><span class="mord brahmic_fallback">ส่วนใหญ่จำกัดกระแสเอง</span></span><span class="mclose">)</span></span></span></span></span></div>
+<div class="tf" id="C2" data-k="charge controller maximum pv input voltage voc tmin แรงดันเข้าสูงสุด"><p class="tf-n"><b><span class="fid">C2</span> Maximum PV input voltage</b> แรงดันขาเข้าสูงสุด</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub><mtext> </mtext><msub><mi>V</mi><mrow><mi>o</mi><mi>c</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi>T</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub><mo stretchy="false">)</mo><mo>&lt;</mo><msub><mi>V</mi><mrow><mi>P</mi><mi>V</mi><mo separator="true">,</mo><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><mspace width="2em"/><msub><mi>V</mi><mrow><mi>m</mi><mi>p</mi><mo separator="true">,</mo><mi>s</mi><mi>t</mi><mi>r</mi><mi>i</mi><mi>n</mi><mi>g</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi>T</mi><mrow><mi>c</mi><mo separator="true">,</mo><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><mo stretchy="false">)</mo><mo>&gt;</mo><msub><mi>V</mi><mrow><mi>b</mi><mi>a</mi><mi>t</mi><mo separator="true">,</mo><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><mo>+</mo><mn>5</mn><mtext> V</mtext></mrow><annotation encoding="application/x-tex">N_s\,V_{oc}(T_{min}) &lt; V_{PV,max} \qquad V_{mp,string}(T_{c,max}) &gt; V_{bat,max} + 5\ \text{V}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">oc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">ma</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">in</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">ma</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">ma</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">5</span><span class="mspace"> </span><span class="mord text"><span class="mord">V</span></span></span></span></span></span></div>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>แผง 4 × 580 W (2.32 kWp) สำหรับบ้านสวน off-grid</h3></div>
+<ol class="steps">
+<li><p>แบต 24 V (25.6 V): <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>=</mo><mn>2320</mn><mi mathvariant="normal">/</mi><mn>25.6</mn><mo>=</mo><mn>91</mn></mrow><annotation encoding="application/x-tex">I = 2320/25.6 = 91</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2320/25.6</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">91</span></span></span></span> A → คอนโทรลเลอร์ 100 A ราคาสูง สายแบตใหญ่</p></li>
+<li><p>แบต 48 V (51.2 V): <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>=</mo><mn>2320</mn><mi mathvariant="normal">/</mi><mn>51.2</mn><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">I = 2320/51.2 = 45</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2320/51.2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">45</span></span></span></span> A → คอนโทรลเลอร์ 50–60 A — <b>ระบบใหม่ควรเลือก 48 V</b></p></li>
+<li><p>ต่อ 2 อนุกรม × 2 ขนาน: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>o</mi><mi>c</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V_{oc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">oc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> ตอนหนาว = 2 × 54.16 = 108.3 V → ใช้รุ่นแรงดันเข้า 150 V ได้ (เผื่อ 28 %)</p></li>
+<li><p>ต่อ 4 อนุกรม: 216.6 V → ต้องใช้รุ่น 250 V ขึ้นไป แต่ได้กระแสน้อยลงครึ่งหนึ่ง สายเล็กลง</p></li>
+<li><p>ตรวจขอบล่าง: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>m</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V_{mp}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> ตอนร้อน 2 × 36.9 = 73.7 V &gt; แรงดันชาร์จสูงสุด 56.8 V + 5 V ✓</p></li>
+</ol></div>
+    <h3>เกณฑ์เลือกชาร์จคอนโทรลเลอร์ MPPT</h3>
+    <ul>
+      <li>ประสิทธิภาพสูงสุด ≥ 97 % และกราฟประสิทธิภาพที่กำลังต่ำ (ระบบ off-grid ทำงานที่กำลังต่ำบ่อย)</li>
+      <li>โปรไฟล์ชาร์จสำหรับ LiFePO4 ปรับค่าได้ และสื่อสารกับ BMS (CAN/RS485) หรืออย่างน้อยรับสัญญาณหยุดชาร์จได้</li>
+      <li>ป้องกันการต่อกลับขั้ว ทั้งด้านแผงและแบต ป้องกันอุณหภูมิ มีเซนเซอร์อุณหภูมิแบต</li>
+      <li>บันทึกข้อมูลและสื่อสาร (Bluetooth/RS485/VE.Direct/Modbus) ระวังรุ่นราคาถูกที่โฆษณา “MPPT” แต่ข้างในเป็น PWM</li>
+      <li>ตัวอย่างในตลาดที่มีเอกสารครบ: ซีรีส์ SmartSolar/BlueSolar ของ Victron, Tracer ของ EPEVER, Morningstar TriStar MPPT และรุ่นของผู้ผลิตอินเวอร์เตอร์ — เลือกตามบริการหลังการขายในพื้นที่</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="inverter">
+    <h2 id="inverter">เลือกอินเวอร์เตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวข้อ</th><th>ต้องมี (แข็งแกร่ง)</th><th>ข้อดีของรุ่นปัจจุบัน</th></tr></thead>
+      <tbody>
+        <tr><td>การรับรอง</td><td>อยู่ในรายชื่อที่ กฟภ./กฟน. ยอมรับ ผ่าน IEC 62109, 62116, 61727</td><td>ผ่าน IEEE 1547-2018 / grid code ใหม่ ฟังก์ชัน Volt-VAR</td></tr>
+        <tr><td>อินพุต DC</td><td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mrow><mi>M</mi><mi>P</mi><mi>P</mi><mi>T</mi><mo separator="true">,</mo><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub></mrow><annotation encoding="application/x-tex">I_{MPPT,max}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">MPPT</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">ma</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> ≥ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mrow><mi>m</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">I_{mp}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> ของแผง (16 A ขึ้นไป)</td><td>18–20 A ต่อสตริง รองรับแผง 210 mm และ bifacial · 3–4 MPPT</td></tr>
+        <tr><td>DC/AC ที่อนุญาต</td><td>≥ 130 %</td><td>150–200 %</td></tr>
+        <tr><td>ประสิทธิภาพ</td><td>Euro ≥ 97 %</td><td>98–98.5 % (SiC)</td></tr>
+        <tr><td>ความทนทาน</td><td>IP65 ทำงานเต็มพิกัดถึง 45 °C ระบายความร้อนดี</td><td>ไร้พัดลม หรือพัดลมเปลี่ยนได้</td></tr>
+        <tr><td>ความปลอดภัย</td><td>RCMU ตรวจ Riso SPD DC/AC</td><td>AFCI, rapid shutdown, ตรวจ I-V curve สตริงจากระยะไกล</td></tr>
+        <tr><td>การสื่อสาร</td><td>Modbus RTU/TCP (SunSpec), Wi-Fi/LAN</td><td>API เปิด เชื่อม EMS/VPP อัปเดตเฟิร์มแวร์ทางไกล</td></tr>
+        <tr><td>ไฮบริด</td><td>รายการแบตที่รองรับ closed-loop CAN/RS485 · สลับเป็นไฟสำรอง &lt; 20 ms</td><td>แบต HV · ขนานหลายเครื่อง · จ่ายโหลดไม่สมดุล 3 เฟส · generator port</td></tr>
+        <tr><td>บริการ</td><td>ประกัน ≥ 5 ปีขยายได้ ศูนย์บริการและเครื่องสำรองในไทย</td><td>ประกัน 10 ปี วิเคราะห์ระยะไกล</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>บทเรียนจากหน้างาน</b> ยี่ห้อที่ดีที่สุดในกระดาษไม่มีประโยชน์ถ้าเสียแล้วรอเครื่องเปลี่ยน 3 เดือน สำหรับบ้านและกิจการ <b>การบริการในพื้นที่</b> และ <b>ความเข้ากันได้กับแบตที่หาได้ในอนาคต</b> มักสำคัญกว่าประสิทธิภาพที่ต่างกัน 0.5 %</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="chips">
+    <h2 id="chips">ชิปสำหรับออกแบบวงจรโซลาร์เอง <span class="lv lv-i">กลาง</span></h2>
+    <p>รายการต่อไปนี้เป็นตัวอย่างชิปที่ใช้แพร่หลายและมีเอกสารการออกแบบครบ ณ ช่วงที่เขียน ตรวจสถานะการผลิต ดาต้าชีตฉบับล่าสุด และแหล่งจำหน่ายที่ได้รับอนุญาตก่อนออกแบบทุกครั้ง</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หน้าที่</th><th>ตัวกลางที่แข็งแกร่ง</th><th>รุ่นปัจจุบัน / สมรรถนะสูง</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ชาร์จ MPPT แผงเล็ก (&lt; 50 W)</td><td>TI <b>BQ24650</b> (synchronous buck, คุมแรงดันแผง) · ST <b>SPV1040</b> (boost MPPT สำหรับเซลล์ไม่กี่เซลล์)</td><td>TI <b>BQ25798</b> (buck-boost, MPPT, I²C, 1–4 เซลล์)</td><td>IoT เซนเซอร์ไร้สาย ไฟสนาม</td></tr>
+        <tr><td>ชาร์จ MPPT 50–500 W</td><td>ADI <b>LT3652</b> (power tracking) · บั๊กควบคุมด้วย MCU + ไดรเวอร์ครึ่งบริดจ์</td><td>ADI <b>LT8490 / LT8491</b> (buck-boost 4 สวิตช์ MPPT ในตัว ถึง 80 V)</td><td>LT8491 มี I²C telemetry</td></tr>
+        <tr><td>Gate driver ครึ่งบริดจ์ไม่แยกฉนวน</td><td>IR2110 / IR2184 / IRS2186 (bootstrap)</td><td>TI UCC27712, UCC27282 · Infineon 2EDL</td><td>IR2110 ของปลอมมาก</td></tr>
+        <tr><td>Gate driver แยกฉนวน (อินเวอร์เตอร์)</td><td>ออปโตคัปเปลอร์ไดรเวอร์ (เช่น ตระกูล HCPL-3120/ACPL)</td><td>TI <b>UCC21520 / UCC21530 / UCC5350</b> · ADI <b>ADuM4120 / ADuM4135</b> (DESAT) · Infineon EiceDRIVER 1ED/2ED · Si823x</td><td>SiC ต้องการ −3 ถึง −5 V ปิด และ miller clamp</td></tr>
+        <tr><td>วัดกระแส</td><td>shunt + ออปแอมป์ differential · Hall แบบ ACS712 (รุ่นเก่า)</td><td>shunt + isolated amplifier <b>AMC1300/AMC1301</b>, delta-sigma <b>AMC1306</b> · Allegro ACS724/ACS37002 · LEM closed-loop</td><td>ป้องกันกระแสเกินรอบต่อรอบต้องเร็ว &lt; 1 µs</td></tr>
+        <tr><td>สวิตช์ 100–150 V (ชาร์จเจอร์)</td><td>Si MOSFET trench</td><td>Si MOSFET Rds(on) ต่ำ · GaN 100 V</td><td>—</td></tr>
+        <tr><td>สวิตช์ 650 V (อินเวอร์เตอร์ 1 เฟส, micro)</td><td>IGBT 600/650 V · superjunction MOSFET</td><td>SiC MOSFET 650 V · GaN 650 V (micro-inverter)</td><td>—</td></tr>
+        <tr><td>สวิตช์ 1,200 V (3 เฟส)</td><td>IGBT module</td><td>SiC MOSFET 1,200 V / โมดูล 3 ระดับ</td><td>—</td></tr>
+        <tr><td>แหล่งจ่ายเลี้ยงวงจรจากแผง</td><td>flyback ด้วย UC3843/UC2844 (<a href="/learn/power-electronics/controller-selection/">คลาสสิก</a>)</td><td>flyback IC ที่มีสวิตช์ 1,700 V ในตัว (รับ DC 1,000 V)</td><td>ระวังแรงดัน Voc สูงสุด</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mcu">
+    <h2 id="mcu">ไมโครคอนโทรลเลอร์สำหรับงานโซลาร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ตระกูล</th><th>จุดเด่น</th><th>เหมาะกับ</th><th>สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td><b>TI C2000</b> (F28004x · F28003x · F28P55x · F28P65x)</td><td>HRPWM, ADC ทริกเกอร์ตาม PWM, CLA, comparator subsystem ตัดกระแสในฮาร์ดแวร์, ไลบรารี DCL และ solar/PLL</td><td>อินเวอร์เตอร์เชื่อมกริด ไฮบริด งานอุตสาหกรรมและวิจัย</td><td>ตัวกลางที่แข็งแกร่ง + รุ่นใหม่ต่อเนื่อง</td></tr>
+        <tr><td><b>STM32G474</b> (และ STM32F334 รุ่นก่อน)</td><td>HRTIM 184 ps, ADC 5 ตัว, comparator+DAC, CORDIC/FMAC บอร์ด Nucleo ราคาถูก</td><td>MPPT, DC-DC, อินเวอร์เตอร์ขนาดเล็ก การสอน</td><td>แข็งแกร่ง มีบอร์ดและชุมชนมาก</td></tr>
+        <tr><td><b>Microchip dsPIC33CK/CH, dsPIC33A</b></td><td>PWM ความละเอียดสูง DSP engine เครื่องมือ PowerSmart/DCLD</td><td>SMPS ดิจิทัล ชาร์จเจอร์ micro-inverter</td><td>แข็งแกร่ง อายุผลิตภัณฑ์ยาว</td></tr>
+        <tr><td>Infineon XMC4000 / PSoC Control C3</td><td>CCU8/HRPWM, ADC เร็ว</td><td>มอเตอร์ ปั๊ม อินเวอร์เตอร์</td><td>รุ่นปัจจุบัน</td></tr>
+        <tr><td><b>ESP32 / ESP32-S3 / ESP32-C6</b></td><td>Wi-Fi/BLE ราคาถูก</td><td>monitoring, data logger, MPPT ลูปช้า, IoT ฟาร์ม</td><td>ไม่เหมาะลูปกระแสเร็ว</td></tr>
+        <tr><td>RP2040 / RP2350</td><td>PIO ยืดหยุ่น ราคาถูก</td><td>งานสอน ลอจิกเสริม เก็บข้อมูล</td><td>เหมาะงานไม่วิกฤต</td></tr>
+      </tbody>
+    </table></div>
+    <h3>สถาปัตยกรรมที่แนะนำ</h3>
+    <ol>
+      <li><b>ฮาร์ดแวร์ป้องกันอิสระจากซอฟต์แวร์</b>: comparator ตัดกระแสเกินรอบต่อรอบ DESAT ของไดรเวอร์ watchdog และรีเลย์ที่ตัดได้แม้ MCU ค้าง</li>
+      <li><b>MCU งานกำลัง</b> คุมลูปกระแส/แรงดัน PLL MPPT ที่อัตราสุ่มสม่ำเสมอ (interrupt จาก PWM)</li>
+      <li><b>MCU/โมดูลสื่อสารแยก</b> (เช่น ESP32) จัดการ Wi-Fi, คลาวด์, หน้าจอ — ไม่ให้งานสื่อสารรบกวนจังหวะของลูปควบคุม และอัปเดตเฟิร์มแวร์ฝั่งสื่อสารได้โดยไม่แตะส่วนความปลอดภัย</li>
+      <li><b>โปรโตคอล</b>: Modbus RTU/TCP พร้อมแผนที่รีจิสเตอร์ SunSpec สำหรับอินเวอร์เตอร์ · CAN สำหรับ BMS (โปรโตคอลแบตที่อินเวอร์เตอร์ส่วนใหญ่รองรับ) · MQTT สำหรับคลาวด์</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="future-proof">
+    <h2 id="future-proof">เลือกอย่างไรไม่ให้ตกยุค <span class="lv lv-b">พื้นฐาน</span></h2>
+    <h3>สำหรับผู้ซื้อระบบ</h3>
+    <ul>
+      <li>เลือกอินเวอร์เตอร์ที่ <b>รองรับแบตเตอรี่</b> แม้ยังไม่ซื้อแบตวันนี้ (hybrid-ready) หรือวางแผน AC-coupling ไว้</li>
+      <li>เผื่อ DC/AC และ MPPT ว่างสำหรับเพิ่มแผงในอนาคต</li>
+      <li>โปรโตคอลเปิด (Modbus/SunSpec) ให้เปลี่ยนแพลตฟอร์ม monitoring หรือเชื่อม EMS/VPP ได้ ไม่ผูกกับคลาวด์ของผู้ผลิตรายเดียว</li>
+      <li>ผู้ผลิตที่ออกอัปเดตเฟิร์มแวร์ต่อเนื่อง (ข้อกำหนดของการไฟฟ้าเปลี่ยนได้ เครื่องที่อัปเดตไม่ได้อาจขนานไฟต่อไม่ได้)</li>
+    </ul>
+    <h3>สำหรับผู้ออกแบบวงจร</h3>
+    <ul>
+      <li>ชิปสถานะ <b>Active</b> และอยู่ในโครงการรับประกันอายุผลิตภัณฑ์ (product longevity) ของผู้ผลิต 10–15 ปี หลีกเลี่ยง NRND/Last-time-buy</li>
+      <li>เลือกตระกูลที่มีรุ่น <b>ขาตรงกัน</b> หลายขนาดหน่วยความจำ และมี second source สำหรับชิ้นส่วนทั่วไป (MOSFET, ไดรเวอร์, ตัวเก็บประจุ)</li>
+      <li>แยกชั้นฮาร์ดแวร์ (HAL) ในเฟิร์มแวร์ ให้ย้ายจาก MCU หนึ่งไปอีกตัวได้โดยแก้น้อยที่สุด เขียนอัลกอริทึมควบคุม (PI, PLL, MPPT) เป็นโมดูลอิสระที่ทดสอบบนคอมพิวเตอร์ได้</li>
+      <li>ออกแบบ PCB ให้รองรับสวิตช์สองแบบ (เช่น ฟุตพรินต์ TO-247-4 ที่ใส่ได้ทั้ง Si และ SiC พร้อมไดรเวอร์ที่ตั้งแรงดันลบได้)</li>
+      <li>ซื้อชิปจากตัวแทนจำหน่ายที่ได้รับอนุญาตเท่านั้น ชิปยอดนิยมราคาถูกผิดปกติในตลาดออนไลน์มักเป็นของปลอมหรือรีมาร์ก</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Functional safety</b> (IEC 61508 แนวคิด) ในอินเวอร์เตอร์ไฮบริดและ BMS: การวิเคราะห์ FMEA, diagnostic coverage และ safe state</li>
+      <li><b>Cybersecurity</b> ของอินเวอร์เตอร์ที่เชื่อมอินเทอร์เน็ต (IEC 62443 แนวคิด, secure boot, signed firmware) — สำคัญเมื่อมีอินเวอร์เตอร์จำนวนมากที่สั่งการพร้อมกันได้</li>
+      <li><b>Hardware-in-the-loop</b> (Typhoon HIL, OPAL-RT, PLECS RT Box) ทดสอบเฟิร์มแวร์กับแบบจำลองกริดและแผงแบบเรียลไทม์ก่อนต่อของจริง</li>
+      <li><b>Model-based design</b> ด้วย MATLAB/Simulink หรือ PLECS แล้วสร้างโค้ดอัตโนมัติลง C2000/STM32</li>
+    </ul>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>ชาร์จคอนโทรลเลอร์ MPPT ควรเลือกกี่แอมป์?</summary><p>พิกัดของชาร์จคอนโทรลเลอร์บอกเป็นกระแสด้านแบตเตอรี่ คำนวณจากกำลังแผงหารด้วยแรงดันแบต เช่น แผง 2.32 kWp ชาร์จแบต 24 V (25.6 V) ได้กระแสสูงสุดประมาณ 91 A ต้องใช้ 100 A ถ้าเปลี่ยนเป็นแบต 48 V กระแสเหลือ 45 A ใช้ 50–60 A และต้องตรวจว่า Voc ของสตริงตอนหนาวไม่เกินแรงดันเข้าสูงสุดของคอนโทรลเลอร์</p></details><details><summary>จะเลือกอุปกรณ์อย่างไรไม่ให้ตกยุคเร็ว?</summary><p>เลือกอุปกรณ์ที่ใช้โปรโตคอลเปิดและเป็นมาตรฐาน (Modbus, SunSpec, CAN) อัปเดตเฟิร์มแวร์ได้ มีตัวแทนและอะไหล่ในประเทศ รองรับกระแสของแผงรุ่นใหม่และแบตเตอรี่แรงดันสูง สำหรับนักออกแบบวงจร เลือกชิปที่สถานะ Active อยู่ในโครงการรับประกันอายุผลิตภัณฑ์ของผู้ผลิต มีรุ่นที่ขาตรงกันในตระกูลเดียวกัน และเขียนเฟิร์มแวร์แยกชั้นฮาร์ดแวร์เพื่อย้ายชิปได้</p></details><details><summary>นักศึกษาควรใช้ไมโครคอนโทรลเลอร์ตัวไหนทำโปรเจกต์ MPPT หรืออินเวอร์เตอร์?</summary><p>งานที่มีลูปควบคุมกระแสเร็ว เช่น อินเวอร์เตอร์เชื่อมกริด ควรใช้ MCU สำหรับงานกำลังโดยเฉพาะ เช่น TI C2000 หรือ STM32G474 ที่มี PWM ความละเอียดสูง ADC ทริกเกอร์ตาม PWM และ comparator ตัดกระแสเกินในตัว ส่วนงาน MPPT ชาร์จแบตที่ลูปช้าและงานเฝ้าติดตาม IoT ใช้ ESP32 หรือ RP2040/RP2350 ได้ดีและราคาถูก</p></details></section>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fcontroller-selection%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fcontroller-selection%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsolar-pv%2Fcontroller-selection%2F&amp;text=%E0%B9%80%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%81%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B9%82%E0%B8%8B%E0%B8%A5%E0%B8%B2%E0%B8%A3%E0%B9%8C%3A%20%E0%B8%8A%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%84%E0%B8%AD%E0%B8%99%E0%B9%82%E0%B8%97%E0%B8%A3%E0%B8%A5%E0%B9%80%E0%B8%A5%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B8%AD%E0%B8%B4%E0%B8%99%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B8%8A%E0%B8%B4%E0%B8%9B%20%E0%B9%81%E0%B8%A5%E0%B8%B0%20MCU%20%E0%B8%A3%E0%B8%B8%E0%B9%88%E0%B8%99%E0%B8%9B%E0%B8%B1%E0%B8%88%E0%B8%88%E0%B8%B8%E0%B8%9A%E0%B8%B1%E0%B8%99%E0%B8%81%E0%B8%B1%E0%B8%9A%E0%B8%A3%E0%B8%B8%E0%B9%88%E0%B8%99%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%81%E0%B8%82%E0%B9%87%E0%B8%87%E0%B9%81%E0%B8%81%E0%B8%A3%E0%B9%88%E0%B8%87%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%95%E0%B8%81%E0%B8%A2%E0%B8%B8%E0%B8%84" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/solar-pv/controller-selection/" data-share-title="เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/solar-pv/pv-inverter/"><span class="mono">← หน้าก่อนหน้า</span><b>อินเวอร์เตอร์โซลาร์: โครงสร้าง Boost + H-bridge PLL ควบคุมกระแสกริด Anti-islanding และมาตรฐาน</b></a><a class="pager-next" href="/learn/solar-pv/solar-air-conditioner/"><span class="mono">หน้าถัดไป →</span><b>โซลาร์เซลล์จ่ายแอร์: คำนวณ BTU เป็น kW ขนาดแผง แอร์อินเวอร์เตอร์ แอร์ DC/AC ไฮบริด และกระแสกระชาก</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=cd8cae23" defer></script>
+<script src="/assets/lesson.js?v=cd8cae23" defer></script>
+</body>
+</html>

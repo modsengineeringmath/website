@@ -1,0 +1,202 @@
+<!--meta
+{
+  "title": "เลือกตัวควบคุมโซลาร์เซลล์ 2026: ชาร์จคอนโทรลเลอร์ PWM MPPT อินเวอร์เตอร์ ชิป MPPT Gate Driver MCU รุ่นปัจจุบันและรุ่นที่แข็งแกร่งไม่ตกยุค | อาจารย์มด",
+  "h1": "เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค",
+  "description": "คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน",
+  "ogTitle": "เลือกตัวควบคุมโซลาร์: ทันสมัยแต่ไม่ตกยุค",
+  "og": {"title": "เลือกตัวควบคุมโซลาร์: ทันสมัยแต่ไม่ตกยุค"},
+  "lesson": "solar-pv",
+  "sub": "controller-selection",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Solar charge controller", "Solar inverter selection", "Gate driver", "Microcontroller", "Modbus"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "ชาร์จคอนโทรลเลอร์ MPPT ควรเลือกกี่แอมป์?", "a": "พิกัดของชาร์จคอนโทรลเลอร์บอกเป็นกระแสด้านแบตเตอรี่ คำนวณจากกำลังแผงหารด้วยแรงดันแบต เช่น แผง 2.32 kWp ชาร์จแบต 24 V (25.6 V) ได้กระแสสูงสุดประมาณ 91 A ต้องใช้ 100 A ถ้าเปลี่ยนเป็นแบต 48 V กระแสเหลือ 45 A ใช้ 50–60 A และต้องตรวจว่า Voc ของสตริงตอนหนาวไม่เกินแรงดันเข้าสูงสุดของคอนโทรลเลอร์"},
+    {"q": "จะเลือกอุปกรณ์อย่างไรไม่ให้ตกยุคเร็ว?", "a": "เลือกอุปกรณ์ที่ใช้โปรโตคอลเปิดและเป็นมาตรฐาน (Modbus, SunSpec, CAN) อัปเดตเฟิร์มแวร์ได้ มีตัวแทนและอะไหล่ในประเทศ รองรับกระแสของแผงรุ่นใหม่และแบตเตอรี่แรงดันสูง สำหรับนักออกแบบวงจร เลือกชิปที่สถานะ Active อยู่ในโครงการรับประกันอายุผลิตภัณฑ์ของผู้ผลิต มีรุ่นที่ขาตรงกันในตระกูลเดียวกัน และเขียนเฟิร์มแวร์แยกชั้นฮาร์ดแวร์เพื่อย้ายชิปได้"},
+    {"q": "นักศึกษาควรใช้ไมโครคอนโทรลเลอร์ตัวไหนทำโปรเจกต์ MPPT หรืออินเวอร์เตอร์?", "a": "งานที่มีลูปควบคุมกระแสเร็ว เช่น อินเวอร์เตอร์เชื่อมกริด ควรใช้ MCU สำหรับงานกำลังโดยเฉพาะ เช่น TI C2000 หรือ STM32G474 ที่มี PWM ความละเอียดสูง ADC ทริกเกอร์ตาม PWM และ comparator ตัดกระแสเกินในตัว ส่วนงาน MPPT ชาร์จแบตที่ลูปช้าและงานเฝ้าติดตาม IoT ใช้ ESP32 หรือ RP2040/RP2350 ได้ดีและราคาถูก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>เลือกตัวควบคุม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.14 · ออกแบบระบบโซลาร์เซลล์ · Choosing Solar Controllers, Chips &amp; MCUs</p>
+      <h1>เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค</h1>
+      <p class="lede">“ตัวควบคุม” ในระบบโซลาร์มีสองระดับ ระดับผู้ใช้คือ <b>ชาร์จคอนโทรลเลอร์และอินเวอร์เตอร์</b> ที่ซื้อสำเร็จ ระดับผู้ออกแบบคือ <b>ชิปและไมโครคอนโทรลเลอร์</b> ที่อยู่ข้างใน หน้านี้ให้เกณฑ์เลือกทั้งสองระดับ แยกเป็น “ตัวกลางที่แข็งแกร่ง” — เทคโนโลยีที่พิสูจน์แล้ว หาง่าย มีเอกสารครบ — กับ “รุ่นปัจจุบัน” — สมรรถนะสูงกว่า แต่ต้องตรวจความพร้อมของห่วงโซ่อุปทาน และวิธีเลือกให้ระบบไม่ตกยุคตลอด 10–25 ปี</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#charge-controller">ชาร์จคอนโทรลเลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#inverter">เลือกอินเวอร์เตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#chips">ชิปสำหรับออกแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#mcu">ไมโครคอนโทรลเลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#future-proof">ไม่ตกยุค</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>แผงใหญ่กว่า ~200 W: ใช้ MPPT เสมอ · ระบบใหม่เลือกแบต 48 V (หรือ HV) แทน 12/24 V</li>
+          <li>อินเวอร์เตอร์: อยู่ในรายชื่อการไฟฟ้า · รับกระแสแผงรุ่นใหม่ · โปรโตคอลเปิด · มีบริการในไทย</li>
+          <li>ออกแบบเอง: ชิปควบคุมเฉพาะทางคุมลูปเร็ว + MCU กำกับ คือสถาปัตยกรรมที่ทนทานที่สุด</li>
+          <li>MCU งานกำลัง: C2000, STM32G4, dsPIC33 · งาน IoT/MPPT ช้า: ESP32</li>
+          <li>ตรวจสถานะชิป (Active/NRND) และระวังของปลอมทุกครั้ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น charge controller, กระแส, voc, mcu" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="principles">
+    <h2 id="principles">หลักการเลือก: ปัจจุบัน vs ตัวกลางที่แข็งแกร่ง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เกณฑ์</th><th>ตัวกลางที่แข็งแกร่ง (robust mainstream)</th><th>รุ่นปัจจุบัน (state of the art)</th></tr></thead>
+      <tbody>
+        <tr><td>ความเสี่ยงทางเทคนิค</td><td>ต่ำ มีข้อมูลภาคสนามหลายปี</td><td>สูงกว่า ข้อมูลภาคสนามสั้น</td></tr>
+        <tr><td>สมรรถนะ</td><td>เพียงพอ</td><td>ประสิทธิภาพสูง เล็ก ฟังก์ชันมาก</td></tr>
+        <tr><td>การหาอะไหล่/ช่าง</td><td>ง่าย หลายแหล่ง</td><td>ผู้ผลิตน้อยราย</td></tr>
+        <tr><td>ความเสี่ยงของปลอม</td><td>สูงสำหรับชิปยอดนิยม — ซื้อจากตัวแทนจำหน่ายที่ได้รับอนุญาต</td><td>ต่ำกว่า</td></tr>
+        <tr><td>เหมาะกับ</td><td>งานสอน งานซ่อม งานพื้นที่ห่างไกล งานที่ต้องการความเชื่อถือได้สูง</td><td>ผลิตภัณฑ์ใหม่ โครงการที่ต้องการประสิทธิภาพ งานวิจัย</td></tr>
+      </tbody>
+    </table></div>
+    <p>คำแนะนำในทางปฏิบัติคือ <b>ใช้รุ่นปัจจุบันในจุดที่ให้ผลมาก</b> (เช่น สวิตช์ SiC ในอินเวอร์เตอร์ MCU รุ่นใหม่) และ <b>ใช้ตัวกลางที่แข็งแกร่งในจุดที่ความเชื่อถือได้สำคัญที่สุด</b> (วงจรป้องกัน แหล่งจ่ายเลี้ยงวงจร โปรโตคอลสื่อสาร)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="charge-controller">
+    <h2 id="charge-controller">ชาร์จคอนโทรลเลอร์: PWM กับ MPPT <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>PWM</th><th>MPPT</th></tr></thead>
+      <tbody>
+        <tr><td>หลักการ</td><td>สวิตช์ต่อแผงกับแบตโดยตรง แผงทำงานที่แรงดันแบต</td><td>บั๊กคอนเวอร์เตอร์ แผงทำงานที่ \(V_{mp}\) (ดู <a href="/learn/solar-pv/mppt/#ex-t-2">ตัวอย่าง T-2</a>)</td></tr>
+        <tr><td>แผงที่เข้ากันได้</td><td>แผงเล็ก \(V_{mp}\) ≈ 17–18 V กับแบต 12 V เท่านั้น</td><td>แผงทุกขนาด ต่ออนุกรมได้ถึงแรงดันเข้าสูงสุด</td></tr>
+        <tr><td>พลังงานที่ได้</td><td>ต่ำกว่า 20–40 % กับแผงใหญ่</td><td>เต็มที่ (ประสิทธิภาพ 95–98 %)</td></tr>
+        <tr><td>ราคา</td><td>ถูกมาก</td><td>แพงกว่า แต่คุ้มเมื่อแผง &gt; 200 W</td></tr>
+        <tr><td>ใช้กับ</td><td>ไฟส่องสว่างโซลาร์ ระบบ 12 V ขนาดเล็ก</td><td>off-grid ทุกขนาด ระบบ DC-coupled</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="C1" data-k="charge controller current rating battery voltage กระแสชาร์จคอนโทรลเลอร์"><p class="tf-n"><b><span class="fid">C1</span> Charge controller current rating</b> พิกัดกระแสชาร์จคอนโทรลเลอร์ (ด้านแบต)</p>
+        \[ I_{cc} \ge \frac{P_{PV}}{V_{bat,nom}} \quad (\text{เกินได้เล็กน้อย คอนโทรลเลอร์ MPPT ส่วนใหญ่จำกัดกระแสเอง}) \]</div>
+<div class="tf" id="C2" data-k="charge controller maximum pv input voltage voc tmin แรงดันเข้าสูงสุด"><p class="tf-n"><b><span class="fid">C2</span> Maximum PV input voltage</b> แรงดันขาเข้าสูงสุด</p>
+        \[ N_s\,V_{oc}(T_{min}) < V_{PV,max} \qquad V_{mp,string}(T_{c,max}) > V_{bat,max} + 5\ \text{V} \]</div>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>แผง 4 × 580 W (2.32 kWp) สำหรับบ้านสวน off-grid</h3></div>
+<ol class="steps">
+<li><p>แบต 24 V (25.6 V): \(I = 2320/25.6 = 91\) A → คอนโทรลเลอร์ 100 A ราคาสูง สายแบตใหญ่</p></li>
+<li><p>แบต 48 V (51.2 V): \(I = 2320/51.2 = 45\) A → คอนโทรลเลอร์ 50–60 A — <b>ระบบใหม่ควรเลือก 48 V</b></p></li>
+<li><p>ต่อ 2 อนุกรม × 2 ขนาน: \(V_{oc}\) ตอนหนาว = 2 × 54.16 = 108.3 V → ใช้รุ่นแรงดันเข้า 150 V ได้ (เผื่อ 28 %)</p></li>
+<li><p>ต่อ 4 อนุกรม: 216.6 V → ต้องใช้รุ่น 250 V ขึ้นไป แต่ได้กระแสน้อยลงครึ่งหนึ่ง สายเล็กลง</p></li>
+<li><p>ตรวจขอบล่าง: \(V_{mp}\) ตอนร้อน 2 × 36.9 = 73.7 V &gt; แรงดันชาร์จสูงสุด 56.8 V + 5 V ✓</p></li>
+</ol></div>
+    <h3>เกณฑ์เลือกชาร์จคอนโทรลเลอร์ MPPT</h3>
+    <ul>
+      <li>ประสิทธิภาพสูงสุด ≥ 97 % และกราฟประสิทธิภาพที่กำลังต่ำ (ระบบ off-grid ทำงานที่กำลังต่ำบ่อย)</li>
+      <li>โปรไฟล์ชาร์จสำหรับ LiFePO4 ปรับค่าได้ และสื่อสารกับ BMS (CAN/RS485) หรืออย่างน้อยรับสัญญาณหยุดชาร์จได้</li>
+      <li>ป้องกันการต่อกลับขั้ว ทั้งด้านแผงและแบต ป้องกันอุณหภูมิ มีเซนเซอร์อุณหภูมิแบต</li>
+      <li>บันทึกข้อมูลและสื่อสาร (Bluetooth/RS485/VE.Direct/Modbus) ระวังรุ่นราคาถูกที่โฆษณา “MPPT” แต่ข้างในเป็น PWM</li>
+      <li>ตัวอย่างในตลาดที่มีเอกสารครบ: ซีรีส์ SmartSolar/BlueSolar ของ Victron, Tracer ของ EPEVER, Morningstar TriStar MPPT และรุ่นของผู้ผลิตอินเวอร์เตอร์ — เลือกตามบริการหลังการขายในพื้นที่</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="inverter">
+    <h2 id="inverter">เลือกอินเวอร์เตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวข้อ</th><th>ต้องมี (แข็งแกร่ง)</th><th>ข้อดีของรุ่นปัจจุบัน</th></tr></thead>
+      <tbody>
+        <tr><td>การรับรอง</td><td>อยู่ในรายชื่อที่ กฟภ./กฟน. ยอมรับ ผ่าน IEC 62109, 62116, 61727</td><td>ผ่าน IEEE 1547-2018 / grid code ใหม่ ฟังก์ชัน Volt-VAR</td></tr>
+        <tr><td>อินพุต DC</td><td>\(I_{MPPT,max}\) ≥ \(I_{mp}\) ของแผง (16 A ขึ้นไป)</td><td>18–20 A ต่อสตริง รองรับแผง 210 mm และ bifacial · 3–4 MPPT</td></tr>
+        <tr><td>DC/AC ที่อนุญาต</td><td>≥ 130 %</td><td>150–200 %</td></tr>
+        <tr><td>ประสิทธิภาพ</td><td>Euro ≥ 97 %</td><td>98–98.5 % (SiC)</td></tr>
+        <tr><td>ความทนทาน</td><td>IP65 ทำงานเต็มพิกัดถึง 45 °C ระบายความร้อนดี</td><td>ไร้พัดลม หรือพัดลมเปลี่ยนได้</td></tr>
+        <tr><td>ความปลอดภัย</td><td>RCMU ตรวจ Riso SPD DC/AC</td><td>AFCI, rapid shutdown, ตรวจ I-V curve สตริงจากระยะไกล</td></tr>
+        <tr><td>การสื่อสาร</td><td>Modbus RTU/TCP (SunSpec), Wi-Fi/LAN</td><td>API เปิด เชื่อม EMS/VPP อัปเดตเฟิร์มแวร์ทางไกล</td></tr>
+        <tr><td>ไฮบริด</td><td>รายการแบตที่รองรับ closed-loop CAN/RS485 · สลับเป็นไฟสำรอง &lt; 20 ms</td><td>แบต HV · ขนานหลายเครื่อง · จ่ายโหลดไม่สมดุล 3 เฟส · generator port</td></tr>
+        <tr><td>บริการ</td><td>ประกัน ≥ 5 ปีขยายได้ ศูนย์บริการและเครื่องสำรองในไทย</td><td>ประกัน 10 ปี วิเคราะห์ระยะไกล</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>บทเรียนจากหน้างาน</b> ยี่ห้อที่ดีที่สุดในกระดาษไม่มีประโยชน์ถ้าเสียแล้วรอเครื่องเปลี่ยน 3 เดือน สำหรับบ้านและกิจการ <b>การบริการในพื้นที่</b> และ <b>ความเข้ากันได้กับแบตที่หาได้ในอนาคต</b> มักสำคัญกว่าประสิทธิภาพที่ต่างกัน 0.5 %</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="chips">
+    <h2 id="chips">ชิปสำหรับออกแบบวงจรโซลาร์เอง <span class="lv lv-i">กลาง</span></h2>
+    <p>รายการต่อไปนี้เป็นตัวอย่างชิปที่ใช้แพร่หลายและมีเอกสารการออกแบบครบ ณ ช่วงที่เขียน ตรวจสถานะการผลิต ดาต้าชีตฉบับล่าสุด และแหล่งจำหน่ายที่ได้รับอนุญาตก่อนออกแบบทุกครั้ง</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หน้าที่</th><th>ตัวกลางที่แข็งแกร่ง</th><th>รุ่นปัจจุบัน / สมรรถนะสูง</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ชาร์จ MPPT แผงเล็ก (&lt; 50 W)</td><td>TI <b>BQ24650</b> (synchronous buck, คุมแรงดันแผง) · ST <b>SPV1040</b> (boost MPPT สำหรับเซลล์ไม่กี่เซลล์)</td><td>TI <b>BQ25798</b> (buck-boost, MPPT, I²C, 1–4 เซลล์)</td><td>IoT เซนเซอร์ไร้สาย ไฟสนาม</td></tr>
+        <tr><td>ชาร์จ MPPT 50–500 W</td><td>ADI <b>LT3652</b> (power tracking) · บั๊กควบคุมด้วย MCU + ไดรเวอร์ครึ่งบริดจ์</td><td>ADI <b>LT8490 / LT8491</b> (buck-boost 4 สวิตช์ MPPT ในตัว ถึง 80 V)</td><td>LT8491 มี I²C telemetry</td></tr>
+        <tr><td>Gate driver ครึ่งบริดจ์ไม่แยกฉนวน</td><td>IR2110 / IR2184 / IRS2186 (bootstrap)</td><td>TI UCC27712, UCC27282 · Infineon 2EDL</td><td>IR2110 ของปลอมมาก</td></tr>
+        <tr><td>Gate driver แยกฉนวน (อินเวอร์เตอร์)</td><td>ออปโตคัปเปลอร์ไดรเวอร์ (เช่น ตระกูล HCPL-3120/ACPL)</td><td>TI <b>UCC21520 / UCC21530 / UCC5350</b> · ADI <b>ADuM4120 / ADuM4135</b> (DESAT) · Infineon EiceDRIVER 1ED/2ED · Si823x</td><td>SiC ต้องการ −3 ถึง −5 V ปิด และ miller clamp</td></tr>
+        <tr><td>วัดกระแส</td><td>shunt + ออปแอมป์ differential · Hall แบบ ACS712 (รุ่นเก่า)</td><td>shunt + isolated amplifier <b>AMC1300/AMC1301</b>, delta-sigma <b>AMC1306</b> · Allegro ACS724/ACS37002 · LEM closed-loop</td><td>ป้องกันกระแสเกินรอบต่อรอบต้องเร็ว &lt; 1 µs</td></tr>
+        <tr><td>สวิตช์ 100–150 V (ชาร์จเจอร์)</td><td>Si MOSFET trench</td><td>Si MOSFET Rds(on) ต่ำ · GaN 100 V</td><td>—</td></tr>
+        <tr><td>สวิตช์ 650 V (อินเวอร์เตอร์ 1 เฟส, micro)</td><td>IGBT 600/650 V · superjunction MOSFET</td><td>SiC MOSFET 650 V · GaN 650 V (micro-inverter)</td><td>—</td></tr>
+        <tr><td>สวิตช์ 1,200 V (3 เฟส)</td><td>IGBT module</td><td>SiC MOSFET 1,200 V / โมดูล 3 ระดับ</td><td>—</td></tr>
+        <tr><td>แหล่งจ่ายเลี้ยงวงจรจากแผง</td><td>flyback ด้วย UC3843/UC2844 (<a href="/learn/power-electronics/controller-selection/">คลาสสิก</a>)</td><td>flyback IC ที่มีสวิตช์ 1,700 V ในตัว (รับ DC 1,000 V)</td><td>ระวังแรงดัน Voc สูงสุด</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mcu">
+    <h2 id="mcu">ไมโครคอนโทรลเลอร์สำหรับงานโซลาร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ตระกูล</th><th>จุดเด่น</th><th>เหมาะกับ</th><th>สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td><b>TI C2000</b> (F28004x · F28003x · F28P55x · F28P65x)</td><td>HRPWM, ADC ทริกเกอร์ตาม PWM, CLA, comparator subsystem ตัดกระแสในฮาร์ดแวร์, ไลบรารี DCL และ solar/PLL</td><td>อินเวอร์เตอร์เชื่อมกริด ไฮบริด งานอุตสาหกรรมและวิจัย</td><td>ตัวกลางที่แข็งแกร่ง + รุ่นใหม่ต่อเนื่อง</td></tr>
+        <tr><td><b>STM32G474</b> (และ STM32F334 รุ่นก่อน)</td><td>HRTIM 184 ps, ADC 5 ตัว, comparator+DAC, CORDIC/FMAC บอร์ด Nucleo ราคาถูก</td><td>MPPT, DC-DC, อินเวอร์เตอร์ขนาดเล็ก การสอน</td><td>แข็งแกร่ง มีบอร์ดและชุมชนมาก</td></tr>
+        <tr><td><b>Microchip dsPIC33CK/CH, dsPIC33A</b></td><td>PWM ความละเอียดสูง DSP engine เครื่องมือ PowerSmart/DCLD</td><td>SMPS ดิจิทัล ชาร์จเจอร์ micro-inverter</td><td>แข็งแกร่ง อายุผลิตภัณฑ์ยาว</td></tr>
+        <tr><td>Infineon XMC4000 / PSoC Control C3</td><td>CCU8/HRPWM, ADC เร็ว</td><td>มอเตอร์ ปั๊ม อินเวอร์เตอร์</td><td>รุ่นปัจจุบัน</td></tr>
+        <tr><td><b>ESP32 / ESP32-S3 / ESP32-C6</b></td><td>Wi-Fi/BLE ราคาถูก</td><td>monitoring, data logger, MPPT ลูปช้า, IoT ฟาร์ม</td><td>ไม่เหมาะลูปกระแสเร็ว</td></tr>
+        <tr><td>RP2040 / RP2350</td><td>PIO ยืดหยุ่น ราคาถูก</td><td>งานสอน ลอจิกเสริม เก็บข้อมูล</td><td>เหมาะงานไม่วิกฤต</td></tr>
+      </tbody>
+    </table></div>
+    <h3>สถาปัตยกรรมที่แนะนำ</h3>
+    <ol>
+      <li><b>ฮาร์ดแวร์ป้องกันอิสระจากซอฟต์แวร์</b>: comparator ตัดกระแสเกินรอบต่อรอบ DESAT ของไดรเวอร์ watchdog และรีเลย์ที่ตัดได้แม้ MCU ค้าง</li>
+      <li><b>MCU งานกำลัง</b> คุมลูปกระแส/แรงดัน PLL MPPT ที่อัตราสุ่มสม่ำเสมอ (interrupt จาก PWM)</li>
+      <li><b>MCU/โมดูลสื่อสารแยก</b> (เช่น ESP32) จัดการ Wi-Fi, คลาวด์, หน้าจอ — ไม่ให้งานสื่อสารรบกวนจังหวะของลูปควบคุม และอัปเดตเฟิร์มแวร์ฝั่งสื่อสารได้โดยไม่แตะส่วนความปลอดภัย</li>
+      <li><b>โปรโตคอล</b>: Modbus RTU/TCP พร้อมแผนที่รีจิสเตอร์ SunSpec สำหรับอินเวอร์เตอร์ · CAN สำหรับ BMS (โปรโตคอลแบตที่อินเวอร์เตอร์ส่วนใหญ่รองรับ) · MQTT สำหรับคลาวด์</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="future-proof">
+    <h2 id="future-proof">เลือกอย่างไรไม่ให้ตกยุค <span class="lv lv-b">พื้นฐาน</span></h2>
+    <h3>สำหรับผู้ซื้อระบบ</h3>
+    <ul>
+      <li>เลือกอินเวอร์เตอร์ที่ <b>รองรับแบตเตอรี่</b> แม้ยังไม่ซื้อแบตวันนี้ (hybrid-ready) หรือวางแผน AC-coupling ไว้</li>
+      <li>เผื่อ DC/AC และ MPPT ว่างสำหรับเพิ่มแผงในอนาคต</li>
+      <li>โปรโตคอลเปิด (Modbus/SunSpec) ให้เปลี่ยนแพลตฟอร์ม monitoring หรือเชื่อม EMS/VPP ได้ ไม่ผูกกับคลาวด์ของผู้ผลิตรายเดียว</li>
+      <li>ผู้ผลิตที่ออกอัปเดตเฟิร์มแวร์ต่อเนื่อง (ข้อกำหนดของการไฟฟ้าเปลี่ยนได้ เครื่องที่อัปเดตไม่ได้อาจขนานไฟต่อไม่ได้)</li>
+    </ul>
+    <h3>สำหรับผู้ออกแบบวงจร</h3>
+    <ul>
+      <li>ชิปสถานะ <b>Active</b> และอยู่ในโครงการรับประกันอายุผลิตภัณฑ์ (product longevity) ของผู้ผลิต 10–15 ปี หลีกเลี่ยง NRND/Last-time-buy</li>
+      <li>เลือกตระกูลที่มีรุ่น <b>ขาตรงกัน</b> หลายขนาดหน่วยความจำ และมี second source สำหรับชิ้นส่วนทั่วไป (MOSFET, ไดรเวอร์, ตัวเก็บประจุ)</li>
+      <li>แยกชั้นฮาร์ดแวร์ (HAL) ในเฟิร์มแวร์ ให้ย้ายจาก MCU หนึ่งไปอีกตัวได้โดยแก้น้อยที่สุด เขียนอัลกอริทึมควบคุม (PI, PLL, MPPT) เป็นโมดูลอิสระที่ทดสอบบนคอมพิวเตอร์ได้</li>
+      <li>ออกแบบ PCB ให้รองรับสวิตช์สองแบบ (เช่น ฟุตพรินต์ TO-247-4 ที่ใส่ได้ทั้ง Si และ SiC พร้อมไดรเวอร์ที่ตั้งแรงดันลบได้)</li>
+      <li>ซื้อชิปจากตัวแทนจำหน่ายที่ได้รับอนุญาตเท่านั้น ชิปยอดนิยมราคาถูกผิดปกติในตลาดออนไลน์มักเป็นของปลอมหรือรีมาร์ก</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Functional safety</b> (IEC 61508 แนวคิด) ในอินเวอร์เตอร์ไฮบริดและ BMS: การวิเคราะห์ FMEA, diagnostic coverage และ safe state</li>
+      <li><b>Cybersecurity</b> ของอินเวอร์เตอร์ที่เชื่อมอินเทอร์เน็ต (IEC 62443 แนวคิด, secure boot, signed firmware) — สำคัญเมื่อมีอินเวอร์เตอร์จำนวนมากที่สั่งการพร้อมกันได้</li>
+      <li><b>Hardware-in-the-loop</b> (Typhoon HIL, OPAL-RT, PLECS RT Box) ทดสอบเฟิร์มแวร์กับแบบจำลองกริดและแผงแบบเรียลไทม์ก่อนต่อของจริง</li>
+      <li><b>Model-based design</b> ด้วย MATLAB/Simulink หรือ PLECS แล้วสร้างโค้ดอัตโนมัติลง C2000/STM32</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,182 @@
+<!--meta
+{
+  "title": "อินเวอร์เตอร์โซลาร์เซลล์ทำงานอย่างไร: Boost + H-bridge DC-link SPWM ฟิลเตอร์ LCL PLL ควบคุมกระแส PR และ dq Anti-islanding และ Grid Code | อาจารย์มด",
+  "h1": "อินเวอร์เตอร์โซลาร์: โครงสร้าง Boost + H-bridge, PLL, ควบคุมกระแสกริด, Anti-islanding และมาตรฐาน",
+  "description": "อิเล็กทรอนิกส์กำลังของอินเวอร์เตอร์โซลาร์แบบละเอียด: string micro optimizer central โครงสร้างสองขั้น boost + full-bridge แรงดัน DC-link ตัวเก็บประจุ 100 Hz SPWM unipolar ฟิลเตอร์ L และ LCL วงจรไร้หม้อแปลง H5 HERIC กระแสรั่ว PLL ควบคุมกระแสแบบ PR และ dq กำลังจริงและกำลังรีแอกทีฟ Volt-VAR anti-islanding IEC 62116 IEEE 1547 ride-through ฮาร์มอนิก และ grid-forming พร้อมตัวอย่างออกแบบ 5 kW",
+  "ogTitle": "อินเวอร์เตอร์โซลาร์: PLL ควบคุมกระแส anti-islanding",
+  "og": {"title": "อินเวอร์เตอร์โซลาร์: PLL ควบคุมกระแส anti-islanding"},
+  "lesson": "solar-pv",
+  "sub": "pv-inverter",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Solar inverter", "Grid-tied inverter", "Phase-locked loop", "LCL filter", "Anti-islanding"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "อินเวอร์เตอร์ออนกริดแปลงไฟ DC เป็น AC อย่างไร?", "a": "อินเวอร์เตอร์ส่วนใหญ่มีสองขั้น ขั้นแรกเป็นบูสต์คอนเวอร์เตอร์ที่ทำ MPPT และยกแรงดันแผงขึ้นเป็นแรงดัน DC-link ประมาณ 380–420 V ขั้นที่สองเป็นวงจรเต็มบริดจ์ที่สวิตช์ด้วย PWM แบบไซน์ที่ความถี่สิบกว่าถึงหลายสิบกิโลเฮิรตซ์ แล้วกรองด้วยตัวเหนี่ยวนำหรือฟิลเตอร์ LCL ให้เป็นกระแสไซน์ที่มีเฟสตรงกับแรงดันกริด โดยใช้ PLL ล็อกเฟสและลูปควบคุมกระแส"},
+    {"q": "Anti-islanding คืออะไร?", "a": "คือฟังก์ชันที่ทำให้อินเวอร์เตอร์หยุดจ่ายไฟเมื่อการไฟฟ้าดับ เพื่อไม่ให้สายที่ควรไม่มีไฟกลับมีไฟจากโซลาร์จนเป็นอันตรายต่อช่าง อินเวอร์เตอร์ตรวจแรงดันและความถี่ที่ผิดปกติ และใช้วิธีเชิงรุกเช่นการเลื่อนความถี่เล็กน้อยเพื่อดูการตอบสนองของระบบ ต้องตัดภายในเวลาที่มาตรฐานกำหนด เช่น 2 วินาทีตาม IEC 62116"},
+    {"q": "Grid-forming กับ grid-following inverter ต่างกันอย่างไร?", "a": "Grid-following ซึ่งเป็นอินเวอร์เตอร์โซลาร์ส่วนใหญ่ ทำตัวเป็นแหล่งกระแสที่ตามแรงดันและความถี่ของกริดผ่าน PLL ต้องมีกริดอยู่ก่อน Grid-forming ทำตัวเป็นแหล่งแรงดันที่สร้างแรงดันและความถี่เอง ใช้ในโหมดสำรองไฟของอินเวอร์เตอร์ไฮบริด microgrid และระบบที่มีพลังงานหมุนเวียนสัดส่วนสูง ซึ่งต้องการความเฉื่อยเสมือนเพื่อพยุงความถี่"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>อินเวอร์เตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.13 · ออกแบบระบบโซลาร์เซลล์ · PV Inverters &amp; Grid-Tie Control</p>
+      <h1>อินเวอร์เตอร์โซลาร์: โครงสร้าง Boost + H-bridge, PLL, ควบคุมกระแสกริด, Anti-islanding และมาตรฐาน</h1>
+      <p class="lede">อินเวอร์เตอร์คือ “สมอง” ของระบบโซลาร์: ทำ MPPT แปลง DC เป็น AC ที่สะอาดและซิงโครไนซ์กับกริด ป้องกันตัวเองและผู้คน และสื่อสารกับผู้ใช้ หน้านี้เปิดฝาอินเวอร์เตอร์ออกดูทีละบล็อก พร้อมสมการออกแบบที่ใช้ได้จริงกับอินเวอร์เตอร์ 5 kW และเชื่อมกับเนื้อหา <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a> <a href="/learn/control-systems/">ระบบควบคุม</a> และ <a href="/learn/fourier-series/inverters-pwm/">สเปกตรัม PWM</a></p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#architecture">โครงสร้าง</a>
+        <a class="btn btn-ghost btn-sm" href="#dclink">DC-link</a>
+        <a class="btn btn-ghost btn-sm" href="#filter">ฟิลเตอร์ L/LCL</a>
+        <a class="btn btn-ghost btn-sm" href="#control">PLL และควบคุมกระแส</a>
+        <a class="btn btn-ghost btn-sm" href="#anti-islanding">Anti-islanding</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>Boost (MPPT) → DC-link (C ใหญ่ รับกำลังกระเพื่อม 100 Hz) → H-bridge SPWM → ฟิลเตอร์ L/LCL → กริด</li>
+          <li>ลูปซ้อน: ลูปกระแส (เร็ว) ← ลูปแรงดัน DC-link (ช้า) ← MPPT (ช้าสุด) และ PLL ให้มุมเฟส</li>
+          <li>อินเวอร์เตอร์เป็นแหล่งกระแส (grid-following) ต้องตัดเมื่อเกิด islanding</li>
+          <li>มาตรฐาน: IEC 62109 62116 61727 IEEE 1547 และข้อกำหนดของ กฟภ./กฟน.</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น dc-link, capacitor, ripple, lcl, pll, pr, dq, reactive" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">ชนิดของอินเวอร์เตอร์ตามขนาด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>กำลัง</th><th>จุดเด่น</th><th>ข้อจำกัด</th></tr></thead>
+      <tbody>
+        <tr><td>Micro-inverter</td><td>0.3–2 kW</td><td>MPPT รายแผง แรงดัน DC ต่ำ ขยายง่าย</td><td>ราคาต่อวัตต์สูง ตัวเครื่องอยู่บนหลังคาร้อน</td></tr>
+        <tr><td>String inverter 1 เฟส</td><td>1–10 kW</td><td>มาตรฐานบ้าน ราคาคุ้ม หลาย MPPT</td><td>เงาบังกระทบทั้งสตริง</td></tr>
+        <tr><td>String inverter 3 เฟส</td><td>5–350 kW</td><td>อาคาร โรงงาน และฟาร์มแบบกระจาย ซ่อมโดยเปลี่ยนเครื่อง</td><td>จำนวนเครื่องมาก</td></tr>
+        <tr><td>Central inverter</td><td>1–5 MVA</td><td>ต้นทุนต่อ MW ต่ำสุดสำหรับฟาร์มใหญ่</td><td>จุดเสียจุดเดียวกระทบมาก ต้องมีอะไหล่และช่างเฉพาะ</td></tr>
+        <tr><td>Hybrid inverter</td><td>3–30 kW</td><td>PV + แบต + ไฟสำรอง ในเครื่องเดียว</td><td>ต้องเลือกแบตที่เข้ากันได้</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="architecture">
+    <h2 id="architecture">โครงสร้างภายในอินเวอร์เตอร์ 1 เฟส <span class="lv lv-i">กลาง</span></h2>
+    <div class="pv-flow" aria-label="บล็อกภายในอินเวอร์เตอร์"><span>สตริง PV</span><i>→</i><span>EMI filter DC · ตรวจ Riso</span><i>→</i><span>Boost (MPPT) ต่อ MPPT</span><i>→</i><span>DC-link 380–420 V</span><i>→</i><span>H-bridge (H5/HERIC) SPWM</span><i>→</i><span>ฟิลเตอร์ LCL</span><i>→</i><span>รีเลย์ตัดต่อ ×2 · RCMU</span><i>→</i><span>EMI filter AC · กริด</span></div>
+    <ul>
+      <li><b>ขั้น boost</b> หนึ่งตัวต่อ MPPT ทำ MPPT ของแต่ละสตริงอิสระ (ดู <a href="/learn/solar-pv/mppt/">MPPT</a>) และยกแรงดันขึ้นเมื่อสตริงสั้น ถ้าแรงดันสตริงสูงกว่า DC-link อยู่แล้ว ขั้น boost จะถูกบายพาสเพื่อลดการสูญเสีย</li>
+      <li><b>DC-link</b> แยกพลวัตของสองขั้นออกจากกัน และรับกำลังกระเพื่อม 100 Hz ของระบบ 1 เฟส</li>
+      <li><b>H-bridge</b> สวิตช์ 16–50 kHz ด้วย MOSFET (Si/SiC) หรือ IGBT · วงจรไร้หม้อแปลงแบบ H5 หรือ HERIC เพิ่มสวิตช์เพื่อแยกแผงออกจากกริดช่วง freewheeling ทำให้แรงดันโหมดร่วม (common-mode) ของแผงเทียบดินคงที่ ลด<b>กระแสรั่วผ่านความจุแผง-ดิน</b> (ซึ่ง RCMU ต้องตรวจ ≤ 300 mA และตรวจกระแสกระโดด 30 mA)</li>
+      <li><b>รีเลย์สองชุดอนุกรม</b> ตามมาตรฐานความปลอดภัย ตัดได้แม้รีเลย์ตัวหนึ่งติด ทดสอบตัวเองก่อนเชื่อมกริดทุกครั้ง</li>
+      <li><b>ระบบ 3 เฟส</b> ใช้วงจรสามขาสองระดับ หรือสามระดับ (NPC/T-type) เพื่อลด ripple และความเค้นแรงดันที่ DC-link 600–1,100 V</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="dclink">
+    <h2 id="dclink">แรงดันและตัวเก็บประจุ DC-link <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="V1" data-k="minimum dc link voltage modulation index แรงดัน dc-link ต่ำสุด"><p class="tf-n"><b><span class="fid">V1</span> Minimum DC-link voltage</b> แรงดัน DC-link ต่ำสุด</p>
+        \[ \text{1 เฟส: } V_{dc} > \sqrt2\,V_{g,max} \qquad \text{3 เฟส SPWM: } V_{dc} > \frac{2\sqrt2}{\sqrt3}V_{LL} \qquad \text{3 เฟส SVPWM: } V_{dc} > \sqrt2\,V_{LL} \]</div>
+    <p>ระบบ 230 V ที่แรงดันกริดสูงสุด +10 % ต้องการ \(V_{dc} > 358\) V บวกแรงดันตกบนฟิลเตอร์และ margin ของการควบคุม → ใช้ 380–420 V · ระบบ 3 เฟส 400 V ต้องการ ≈ 653 V (SPWM) หรือ ≈ 566 V (SVPWM/third-harmonic injection)</p>
+<div class="tf" id="V2" data-k="dc link capacitor double line frequency ripple ตัวเก็บประจุ dc-link ริปเปิล 100 hz"><p class="tf-n"><b><span class="fid">V2</span> DC-link capacitor for 2ω power ripple (1-phase)</b> ตัวเก็บประจุสำหรับกำลังกระเพื่อม 100 Hz</p>
+        \[ p(t) = P\left[1 - \cos(2\omega t)\right] \quad\Rightarrow\quad C_{dc} = \frac{P}{\omega\,V_{dc}\,\Delta V_{pp}} \]</div>
+<div class="wx" id="ex-v-1"><div class="wx-head"><span class="mono">ตัวอย่าง V-1</span><h3>DC-link ของอินเวอร์เตอร์ 5 kW 1 เฟส</h3></div>
+<ol class="steps">
+<li><p>\(V_{dc}\) = 400 V ยอมให้ ripple 5 % → \(\Delta V_{pp}\) = 20 V</p></li>
+<li><p>\(C_{dc} = \dfrac{5000}{(2\pi \cdot 50)(400)(20)} = 1{,}989\ \mu\text{F}\) → เช่น 4 × 560 µF/450 V อิเล็กโตรไลต์ ขนาน (ต้องตรวจพิกัดกระแส ripple 100 Hz และอุณหภูมิ เพราะอายุตัวเก็บประจุกำหนดอายุอินเวอร์เตอร์)</p></li>
+<li><p>ทางเลือกใหม่: ฟิล์มคาปาซิเตอร์ขนาดเล็กลงร่วมกับ <b>power decoupling</b> แบบแอกทีฟ เพื่อยืดอายุ (สำคัญกับ micro-inverter ที่ร้อน)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="filter">
+    <h2 id="filter">SPWM และฟิลเตอร์ L/LCL <span class="lv lv-i">กลาง</span></h2>
+    <p>SPWM แบบ unipolar ทำให้แรงดันขาออกสวิตช์ระหว่าง 0 กับ ±\(V_{dc}\) ที่ความถี่ประสิทธิผล \(2f_{sw}\) ฮาร์มอนิกจึงย้ายไปรอบ \(2f_{sw}\) และ ripple ลดลง 4 เท่าเทียบ bipolar (สเปกตรัมละเอียดอยู่ที่ <a href="/learn/fourier-series/inverters-pwm/">อนุกรมฟูเรียร์ของอินเวอร์เตอร์</a>)</p>
+<div class="tf" id="V3" data-k="inverter inductor current ripple unipolar bipolar spwm ริปเปิลกระแสตัวเหนี่ยวนำ"><p class="tf-n"><b><span class="fid">V3</span> Grid-side inductor ripple (full-bridge)</b> ริปเปิลกระแสของตัวเหนี่ยวนำ</p>
+        \[ \text{unipolar: } \Delta I_{pp} = \frac{V_{dc}\,d(1-d)}{2 L f_{sw}} \le \frac{V_{dc}}{8 L f_{sw}} \qquad \text{bipolar: } \Delta I_{pp,max} = \frac{V_{dc}}{2 L f_{sw}} \]</div>
+<div class="tf" id="V4" data-k="lcl filter resonance frequency design rule ความถี่เรโซแนนซ์ ฟิลเตอร์ lcl"><p class="tf-n"><b><span class="fid">V4</span> LCL resonance</b> ความถี่เรโซแนนซ์ของฟิลเตอร์ LCL</p>
+        \[ f_{res} = \frac{1}{2\pi}\sqrt{\frac{L_1 + L_2}{L_1 L_2 C_f}} \qquad 10 f_g < f_{res} < \tfrac12 f_{sw} \]</div>
+<div class="wx" id="ex-v-2"><div class="wx-head"><span class="mono">ตัวอย่าง V-2</span><h3>ฟิลเตอร์ของอินเวอร์เตอร์ 5 kW 230 V, \(f_{sw}\) = 20 kHz</h3></div>
+<ol class="steps">
+<li><p>กระแสพิกัด \(5000/230 = 21.7\) A rms → ยอด 30.7 A · ยอมให้ ripple 20 % ของยอด = 6.1 A</p></li>
+<li><p>V3 (unipolar): \(L \ge \dfrac{400}{8(20\text{k})(6.1)} = 410\ \mu\text{H}\) — ถ้าใช้ฟิลเตอร์ L อย่างเดียว ฮาร์มอนิกความถี่สูงยังผ่านไปกริดมาก</p></li>
+<li><p>ใช้ LCL: \(L_1\) = 0.5 mH (ฝั่งอินเวอร์เตอร์) \(L_2\) = 0.15 mH (ฝั่งกริด) \(C_f\) = 5 µF</p></li>
+<li><p>V4: \(f_{res} = \dfrac{1}{2\pi}\sqrt{\dfrac{0.65\text{m}}{(0.5\text{m})(0.15\text{m})(5\,\mu)}} = 6.6\) kHz อยู่ระหว่าง 500 Hz กับ 10 kHz ✓</p></li>
+<li><p>เรโซแนนซ์ต้องหน่วง: passive damping (R อนุกรม \(C_f\)) หรือ active damping ในลูปควบคุม (ป้อนกลับกระแส \(C_f\)) — ไม่หน่วงแล้วลูปกระแสจะแกว่งที่ \(f_{res}\)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="control">
+    <h2 id="control">PLL และการควบคุมกระแสกริด <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>อินเวอร์เตอร์เชื่อมกริดเป็น <b>แหล่งกระแสที่ควบคุมได้</b> โครงสร้างลูปซ้อน (ดู <a href="/learn/control-systems/power-electronics-control/">ควบคุมตัวแปลงกำลัง</a>):</p>
+    <ol>
+      <li><b>PLL</b> หามุมเฟส \(\theta\) และความถี่ของแรงดันกริด · แบบ 3 เฟสใช้ SRF-PLL: แปลง \(v_{abc}\) เป็น \(v_d, v_q\) แล้วใช้ PI บังคับ \(v_q \to 0\) · แบบ 1 เฟสสร้างสัญญาณตั้งฉากด้วย SOGI (second-order generalized integrator) ก่อน · แบนด์วิดท์ 10–30 Hz (เร็วไปติดฮาร์มอนิก ช้าไปตามความถี่ไม่ทัน)</li>
+      <li><b>ลูปแรงดัน DC-link</b> (แบนด์วิดท์ ~10 Hz ช้ากว่า 100 Hz ripple) บอกว่าต้องส่งกำลังเท่าไร → กำหนดแอมพลิจูดกระแสอ้างอิง</li>
+      <li><b>ลูปกระแส</b> (แบนด์วิดท์ 1–2 kHz) ทำให้กระแสตามไซน์อ้างอิงที่มีเฟส \(\theta\) จาก PLL · ระบบ 1 เฟสนิยมตัวควบคุม PR · 3 เฟสใช้ PI ในกรอบ dq + decoupling</li>
+    </ol>
+<div class="tf" id="V5" data-k="proportional resonant controller pr ตัวควบคุมเรโซแนนซ์"><p class="tf-n"><b><span class="fid">V5</span> Proportional-resonant (PR) controller</b> ตัวควบคุมแบบเรโซแนนซ์</p>
+        \[ G_{PR}(s) = K_p + \frac{2K_r\,\omega_c\,s}{s^2 + 2\omega_c s + \omega_0^2} \qquad \omega_0 = 2\pi\cdot 50 \]</div>
+    <p>PI ธรรมดาตามไซน์ไม่ได้โดยไม่มีความผิดพลาดของเฟสและขนาด PR ให้อัตราขยายสูงมากที่ \(\omega_0\) (เทียบเท่า PI ในกรอบหมุน) เพิ่มตัวชดเชยฮาร์มอนิก (HC) ที่ 3, 5, 7 เพื่อลดฮาร์มอนิกของกระแสเมื่อแรงดันกริดบิดเบี้ยว</p>
+<div class="tf" id="V6" data-k="active reactive power dq frame กำลังจริง กำลังรีแอกทีฟ"><p class="tf-n"><b><span class="fid">V6</span> Power in the dq frame (amplitude-invariant)</b> กำลังในกรอบ dq</p>
+        \[ P = \tfrac32\,(v_d i_d + v_q i_q) \qquad Q = \tfrac32\,(v_q i_d - v_d i_q) \qquad (v_q = 0:\ P = \tfrac32 v_d i_d,\ Q = -\tfrac32 v_d i_q) \]</div>
+    <p>เมื่อ PLL ล็อกแล้ว \(i_d\) คุมกำลังจริง \(i_q\) คุมกำลังรีแอกทีฟอย่างอิสระ จึงทำฟังก์ชันช่วยกริดได้</p>
+<div class="tf" id="V7" data-k="reactive power power factor volt var กำลังรีแอกทีฟ เพาเวอร์แฟกเตอร์"><p class="tf-n"><b><span class="fid">V7</span> Reactive power for a power factor</b> กำลังรีแอกทีฟที่เพาเวอร์แฟกเตอร์ที่กำหนด</p>
+        \[ Q = P\tan(\cos^{-1}PF) \qquad S = \frac{P}{PF} \]</div>
+<div class="wx" id="ex-v-3"><div class="wx-head"><span class="mono">ตัวอย่าง V-3</span><h3>จ่ายกำลังรีแอกทีฟช่วยคุมแรงดัน</h3></div>
+<ol class="steps">
+<li><p>อินเวอร์เตอร์ 5 kW ตั้งให้ทำงานที่ PF 0.9 (ดูดกำลังรีแอกทีฟ) เมื่อแรงดันสูง: \(Q = 5\tan(25.8^\circ) = 2.42\) kvar</p></li>
+<li><p>ต้องการพิกัด \(S = 5/0.9 = 5.56\) kVA — ถ้าอินเวอร์เตอร์พิกัด 5 kVA จะต้องลดกำลังจริงลงเหลือ 4.5 kW ขณะใช้ PF 0.9 (นี่คือเหตุผลที่บางโครงการเลือกพิกัด kVA สูงกว่า kW)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="anti-islanding">
+    <h2 id="anti-islanding">Anti-islanding และการป้องกันที่จุดต่อ <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><b>Passive:</b> แรงดันต่ำ/เกิน ความถี่ต่ำ/เกิน อัตราเปลี่ยนความถี่ (ROCOF) การกระโดดของเฟส — ไม่พอเมื่อกำลังโหลดในเกาะพอดีกับกำลังอินเวอร์เตอร์ (non-detection zone)</li>
+      <li><b>Active:</b> Sandia frequency shift, slip-mode frequency shift, การฉีดกระแสรบกวนเล็กน้อยเพื่อวัดอิมพีแดนซ์ — เมื่อกริดหายไป สิ่งรบกวนจะผลักความถี่ออกนอกช่วงจนตัด</li>
+      <li><b>มาตรฐานทดสอบ:</b> IEC 62116 (ทดสอบด้วยโหลด RLC เรโซแนนซ์ที่ Q = 1 ต้องตัดภายใน 2 วินาที) · IEEE 1547.1 · อินเวอร์เตอร์สำหรับขนานไฟในไทยต้องผ่านการทดสอบตามระเบียบของ กฟภ./กฟน. และอยู่ในรายชื่อที่ประกาศ</li>
+      <li><b>Ride-through vs trip:</b> ระบบเล็กเดิมเน้นตัดเร็ว แต่เมื่อโซลาร์มีสัดส่วนสูง ถ้าทุกเครื่องตัดพร้อมกันเมื่อแรงดันตกชั่วขณะ ระบบไฟจะยิ่งแย่ grid code สมัยใหม่ (IEEE 1547-2018, ข้อกำหนดของผู้ควบคุมระบบสำหรับโรงไฟฟ้า) จึงกำหนดให้ <b>ทนแรงดันตก (LVRT/HVRT) และจ่ายกระแสรีแอกทีฟช่วย</b> ในช่วงเวลาที่กำหนด และตัดเมื่อเกินขอบเขตนั้น</li>
+      <li><b>ฟังก์ชันช่วยกริด:</b> Volt-VAR (ดูดกำลังรีแอกทีฟเมื่อแรงดันสูง) Volt-Watt (ลดกำลังเมื่อแรงดันเกิน) Freq-Watt (ลดกำลังเมื่อความถี่สูง) และการจำกัดกำลังส่งออก</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="quality">
+    <h2 id="quality">คุณภาพไฟฟ้าและมาตรฐานที่เกี่ยวข้อง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวข้อ</th><th>ข้อกำหนดทั่วไป</th><th>มาตรฐาน</th></tr></thead>
+      <tbody>
+        <tr><td>ความปลอดภัยของคอนเวอร์เตอร์</td><td>ฉนวน กระแสรั่ว การตรวจ Riso RCMU</td><td>IEC 62109-1/-2</td></tr>
+        <tr><td>Anti-islanding</td><td>ตัดภายใน 2 s</td><td>IEC 62116</td></tr>
+        <tr><td>THD กระแส</td><td>&lt; 5 % ที่พิกัด (แยกขีดจำกัดรายฮาร์มอนิก)</td><td>IEC 61727, IEEE 1547 (ดู <a href="/learn/fourier-series/power-harmonics/">THD · IEEE 519</a>)</td></tr>
+        <tr><td>DC injection</td><td>&lt; 0.5–1 % ของกระแสพิกัด</td><td>IEC 61727 และข้อกำหนดการไฟฟ้า</td></tr>
+        <tr><td>Power factor</td><td>&gt; 0.9–0.95 เมื่อจ่ายเกิน 50 % (หรือตามที่ตั้ง)</td><td>ข้อกำหนดการเชื่อมต่อ</td></tr>
+        <tr><td>ประสิทธิภาพ</td><td>Max 97–99 % · Euro/CEC weighted 96.5–98.5 %</td><td>EN 50530 (MPPT), IEC 61683</td></tr>
+        <tr><td>EMC</td><td>การแผ่คลื่นและภูมิคุ้มกัน</td><td>IEC 61000-6-x, CISPR 11</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Grid-forming control</b> (droop, virtual synchronous machine, dispatchable virtual oscillator) ความเฉื่อยเสมือน การจำกัดกระแสเมื่อเกิดลัดวงจร และเสถียรภาพเมื่อกริดอ่อน (SCR ต่ำ)</li>
+      <li><b>เสถียรภาพแบบอิมพีแดนซ์</b> ระหว่างอินเวอร์เตอร์หลายเครื่องกับสายจำหน่าย (harmonic resonance, PLL-induced instability) วิเคราะห์ด้วยเกณฑ์ Nyquist ของอัตราส่วนอิมพีแดนซ์ (ดู <a href="/learn/control-systems/nyquist/">Nyquist</a>)</li>
+      <li><b>Model predictive control</b> และ deadbeat current control สำหรับอินเวอร์เตอร์ความถี่สวิตช์ต่ำกำลังสูง</li>
+      <li><b>SiC/GaN</b> ทำให้ \(f_{sw}\) สูงขึ้น ฟิลเตอร์เล็กลง แต่ต้องจัดการ dv/dt กระแสรั่ว และ EMI</li>
+      <li><b>ความเชื่อถือได้</b> ของตัวเก็บประจุ DC-link และโมดูลสวิตช์ภายใต้วัฏจักรความร้อนรายวันในอากาศร้อน (mission-profile based lifetime)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

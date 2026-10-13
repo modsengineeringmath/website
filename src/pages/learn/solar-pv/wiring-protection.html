@@ -1,0 +1,200 @@
+<!--meta
+{
+  "title": "สายไฟและอุปกรณ์ป้องกันระบบโซลาร์เซลล์: สาย PV1-F MC4 แรงดันตก ฟิวส์สตริง DC Isolator SPD RCD Type B กราวด์ และการต่อเข้าตู้ไฟ | อาจารย์มด",
+  "h1": "สายไฟ ฟิวส์ เบรกเกอร์ SPD กราวด์ และการต่อเข้าตู้ไฟ สำหรับระบบโซลาร์",
+  "description": "ออกแบบฝั่ง DC และ AC ของระบบโซลาร์เซลล์ให้ปลอดภัย: ทำไมไฟ DC อันตรายกว่า AC สาย PV1-F H1Z2Z2-K ขั้วต่อ MC4 คำนวณแรงดันตกและขนาดสาย ฟิวส์สตริง gPV เมื่อไรต้องใช้ DC isolator DC-PV2 SPD Type 1 Type 2 RCD Type A Type B เบรกเกอร์ AC กราวด์ equipotential bonding ล่อฟ้า การต่อเข้าตู้ไฟบ้าน AFCI และ rapid shutdown พร้อมเครื่องคำนวณและตัวอย่าง",
+  "ogTitle": "สายไฟ ฟิวส์ SPD กราวด์ ระบบโซลาร์",
+  "og": {"title": "สายไฟ ฟิวส์ SPD กราวด์ ระบบโซลาร์"},
+  "lesson": "solar-pv",
+  "sub": "wiring-protection",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Photovoltaic cable", "Surge protective device", "String fuse", "DC isolator", "Earthing"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "ใช้เบรกเกอร์ AC ธรรมดาตัดไฟฝั่ง DC ของแผงโซลาร์ได้ไหม?", "a": "ไม่ได้ กระแส DC ไม่มีจุดผ่านศูนย์ทุกครึ่งรอบแบบ AC อาร์กที่เกิดตอนตัดวงจรจึงดับยาก เบรกเกอร์หรือสวิตช์ AC ที่ไม่ได้ออกแบบสำหรับ DC อาจเกิดอาร์กค้างและไหม้ ต้องใช้อุปกรณ์ที่ระบุพิกัดแรงดัน DC ไม่น้อยกว่า Voc สูงสุดของสตริง และสำหรับ DC isolator ควรระบุ utilization category DC-PV2 ตาม IEC 60947-3"},
+    {"q": "ระบบโซลาร์ต้องมีฟิวส์สตริงทุกระบบไหม?", "a": "ไม่ทุกระบบ ฟิวส์สตริงจำเป็นเมื่อมีสตริงขนานกันตั้งแต่ 3 สตริงขึ้นไปในวงจรเดียว (หรือเมื่อกระแสย้อนจากสตริงอื่นรวมกันเกินพิกัด maximum series fuse ของแผง) ระบบบ้านที่ใช้สตริงละ MPPT หรือขนานแค่ 2 สตริงมักไม่ต้องใช้ ถ้าใช้ต้องเป็นฟิวส์ชนิด gPV ตาม IEC 60269-6 ติดทั้งขั้วบวกและลบ"},
+    {"q": "สาย DC ของโซลาร์ใช้สาย THW หรือ VCT ได้ไหม?", "a": "ไม่ควร สายโซลาร์ต้องทนแสง UV โอโซน อุณหภูมิสูง และแรงดัน DC ถึง 1,000–1,500 V ตลอด 25 ปี ให้ใช้สาย PV1-F หรือ H1Z2Z2-K ตาม EN 50618 / IEC 62930 ซึ่งเป็นฉนวนสองชั้นแบบ cross-linked ส่วนสาย THW เป็น PVC ไม่ทน UV และไม่ได้ออกแบบสำหรับงานนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>สายไฟ · ป้องกัน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.6 · ออกแบบระบบโซลาร์เซลล์ · Wiring, Protection &amp; Earthing</p>
+      <h1>สายไฟ ฟิวส์ เบรกเกอร์ SPD กราวด์ และการต่อเข้าตู้ไฟ สำหรับระบบโซลาร์</h1>
+      <p class="lede">ไฟไหม้จากระบบโซลาร์เกือบทั้งหมดเริ่มที่ฝั่ง DC: ขั้วต่อหลวม ขั้วต่อต่างยี่ห้อ สายถูกบาดที่ขอบรางยึด หรือใช้อุปกรณ์ AC ตัดวงจร DC หน้านี้รวมการเลือกสาย คำนวณแรงดันตก อุปกรณ์ป้องกันกระแสเกินและแรงดันเกิน กราวด์ และจุดต่อเข้าตู้ไฟ ให้ระบบปลอดภัยตลอด 25 ปี</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#sld">ผังวงจรเส้นเดียว</a>
+        <a class="btn btn-ghost btn-sm" href="#cable">สายและขั้วต่อ</a>
+        <a class="btn btn-ghost btn-sm" href="#string-fuse">ฟิวส์สตริง</a>
+        <a class="btn btn-ghost btn-sm" href="#spd">SPD และฟ้าผ่า</a>
+        <a class="btn btn-ghost btn-sm" href="#ac-side">ฝั่ง AC และตู้ไฟ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ฝั่ง DC: สาย PV1-F/H1Z2Z2-K · ขั้วต่อยี่ห้อเดียวกันย้ำด้วยคีมที่ถูกต้อง · สวิตช์ DC-PV2 · ฟิวส์ gPV เมื่อขนาน ≥ 3 สตริง</li>
+          <li>ออกแบบกระแสฝั่ง DC ด้วย \(1.25\,I_{sc}\) · แรงดันตก DC ≤ 1–1.5 % · AC ≤ 1–2 %</li>
+          <li>SPD ทั้งฝั่ง DC และ AC · กราวด์โครงและกรอบแผงด้วยสาย ≥ 6 mm²</li>
+          <li>ฝั่ง AC: เบรกเกอร์แยกสำหรับอินเวอร์เตอร์ · RCD ตามที่ผู้ผลิตกำหนด (Type B ถ้าอินเวอร์เตอร์ไม่มีการแยกที่เพียงพอ) · ป้ายเตือนแหล่งจ่ายสองทาง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น แรงดันตก, fuse, gpv, spd, breaker, 1.25" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="dc-danger">
+    <h2 id="dc-danger">ทำไมไฟ DC จากแผงอันตรายเป็นพิเศษ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>ปิดไม่ได้:</b> ตราบใดที่มีแสง แผงมีแรงดันเสมอ ตัดเบรกเกอร์ที่ตู้ไฟแล้วสาย DC บนหลังคายังมีไฟหลายร้อยโวลต์</li>
+      <li><b>อาร์กไม่ดับเอง:</b> กระแส AC ผ่านศูนย์ 100 ครั้งต่อวินาที อาร์กจึงดับเองได้ แต่อาร์ก DC ที่แรงดัน 300–1,000 V ต่อเนื่องได้นานจนวัสดุรอบข้างลุกไหม้</li>
+      <li><b>กระแสลัดวงจรต่ำ:</b> \(I_{sc}\) สูงกว่ากระแสใช้งานเพียง ~5 % อุปกรณ์ป้องกันกระแสเกินทั่วไปจึงมองไม่เห็นความผิดพร่องหลายชนิด การป้องกันต้องอาศัยการออกแบบและติดตั้งที่ถูกต้องเป็นหลัก</li>
+      <li><b>อยู่กลางแจ้ง 25 ปี:</b> UV ความร้อน 70–80 °C บนหลังคา ฝน หนู และการขยายตัวของโครงโลหะ</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="sld">
+    <h2 id="sld">ผังวงจรเส้นเดียว (Single-Line Diagram) ของระบบบ้าน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="pv-flow" aria-label="ลำดับอุปกรณ์"><span>สตริงแผง</span><i>→</i><span>(ฟิวส์ gPV ถ้าจำเป็น)</span><i>→</i><span>DC isolator DC-PV2</span><i>→</i><span>SPD DC Type 2</span><i>→</i><span>อินเวอร์เตอร์</span><i>→</i><span>AC isolator / เบรกเกอร์</span><i>→</i><span>SPD AC · RCD (ตามผู้ผลิต)</span><i>→</i><span>ตู้ไฟ · มิเตอร์</span></div>
+    <p>ใน SLD ต้องระบุ: จำนวนแผงต่อสตริงและจำนวนสตริง \(V_{oc,max}\) และ \(I_{sc}\) ขนาดและชนิดสายทุกช่วง พิกัดฟิวส์ สวิตช์ SPD เบรกเกอร์ RCD จุดต่อลงดิน และจุดต่อเข้าระบบการไฟฟ้า เป็นเอกสารที่การไฟฟ้าและผู้ตรวจต้องใช้ และเป็นส่วนหนึ่งของเอกสารส่งมอบตาม IEC 62446-1</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="cable">
+    <h2 id="cable">สายไฟและขั้วต่อฝั่ง DC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>สาย:</b> PV1-F หรือ H1Z2Z2-K (EN 50618 / IEC 62930) ทองแดงฝอยชุบดีบุก ฉนวนสองชั้นทน UV แรงดัน 1,000–1,500 V DC ขนาดที่ใช้บ่อย 4 mm² (สตริง) และ 6–10 mm² (สายยาวหรือรวมสตริง)</li>
+      <li><b>ขั้วต่อ:</b> MC4 หรือที่ “compatible” ต้องเป็น <b>ยี่ห้อและรุ่นเดียวกันทั้งสองฝั่ง</b> (IEC 62852 ทดสอบแบบจับคู่) การเสียบต่างยี่ห้อเป็นสาเหตุอันดับต้นของอาร์กและไฟไหม้ ย้ำหัวด้วยคีมย้ำที่ผู้ผลิตกำหนด ห้ามใช้คีมธรรมดา</li>
+      <li><b>การเดิน:</b> ใช้ท่อหรือรางที่ทน UV ยึดสายไม่ให้ห้อยแตะหลังคา ห้ามรัดสายผ่านขอบคมของราง เว้นห่วงหยดน้ำ (drip loop) ที่จุดเข้าท่อ เดินสาย + และ − คู่กันเพื่อลดพื้นที่วงรอบ</li>
+      <li><b>ภายในอาคาร:</b> เดินในท่อโลหะ แยกจากสาย AC และติดป้าย “สาย DC จากแผงโซลาร์ มีไฟแม้ตัดเบรกเกอร์”</li>
+    </ul>
+<div class="tf" id="W1" data-k="dc voltage drop cable cross section แรงดันตก dc ขนาดสาย"><p class="tf-n"><b><span class="fid">W1</span> DC voltage drop</b> แรงดันตกในสาย DC (ไป-กลับ)</p>
+        \[ \Delta V = \frac{2\,L\,I\,\rho_T}{A} \qquad \Delta V\% = \frac{\Delta V}{V}\times 100 \qquad A_{min} = \frac{2\,L\,I\,\rho_T}{\Delta V\%_{max}\,V/100} \]</div>
+<div class="tf" id="W2" data-k="copper resistivity temperature ความต้านทานจำเพาะ ทองแดง อุณหภูมิ"><p class="tf-n"><b><span class="fid">W2</span> Copper resistivity vs temperature</b> ความต้านทานจำเพาะของทองแดง</p>
+        \[ \rho_T = \rho_{20}\left[1 + 0.00393\,(T-20)\right] \qquad \rho_{20} = 0.01724\ \Omega\,\text{mm}^2/\text{m} \]</div>
+<div class="tf" id="W3" data-k="ac voltage drop single phase three phase แรงดันตก ac 1 เฟส 3 เฟส"><p class="tf-n"><b><span class="fid">W3</span> AC voltage drop</b> แรงดันตกฝั่ง AC</p>
+        \[ \Delta V_{1\phi} = 2LI\,(R'\cos\varphi + X'\sin\varphi) \qquad \Delta V_{3\phi} = \sqrt{3}\,LI\,(R'\cos\varphi + X'\sin\varphi) \]</div>
+    <p>\(R'\), \(X'\) คือความต้านทานและรีแอกแตนซ์ต่อเมตรของสาย อินเวอร์เตอร์จ่ายที่ \(\cos\varphi \approx 1\) จึงใช้แค่ส่วน \(R'\) ได้ แรงดันตกฝั่ง AC มีผลมากกว่าที่คิด: แรงดันที่ขั้วอินเวอร์เตอร์ = แรงดันกริด + แรงดันตก ถ้าสายจำหน่ายแรงดันสูงอยู่แล้วช่วงเที่ยง อินเวอร์เตอร์จะตัดเพราะแรงดันเกิน (overvoltage trip) ควรให้แรงดันตกฝั่ง AC ≤ 1 % สำหรับระบบบ้าน</p>
+<div class="wx" id="ex-w-1"><div class="wx-head"><span class="mono">ตัวอย่าง W-1</span><h3>สายสตริงยาว 30 m: 4 หรือ 6 mm²</h3></div>
+<p>สตริง 5 แผง \(I_{mp}\) = 13.37 A สายยาวทางเดียว 30 m ทองแดงที่ 70 °C</p>
+<ol class="steps">
+<li><p>\(\rho_{70} = 0.01724\left[1+0.00393(50)\right] = 0.02063\ \Omega\,\text{mm}^2/\text{m}\)</p></li>
+<li><p>4 mm²: \(\Delta V = 2(30)(13.37)(0.02063)/4 = 4.14\) V → \(4.14/217 = 1.9\ \%\) ที่ \(V_{mp}\) STC และ 2.2 % ตอนร้อน · สูญเสีย 55 W</p></li>
+<li><p>6 mm²: \(\Delta V = 2.76\) V → 1.27 % (1.5 % ตอนร้อน) · สูญเสีย 37 W</p></li>
+<li><p>เลือก 6 mm² — ต้นทุนสายเพิ่มไม่กี่ร้อยบาท แต่ได้พลังงานคืนราว 18 W ตลอดช่วงแดดจัดไปอีก 25 ปี (ทดลองในเครื่องคำนวณด้านล่าง)</p></li>
+</ol></div>
+    <div class="fg-calc pv-calc" data-pv="cable" data-l="30" data-i="13.37" data-v="217" data-a="4"></div>
+<div class="tf" id="W4" data-k="design current 1.25 isc cable rating กระแสออกแบบ สาย"><p class="tf-n"><b><span class="fid">W4</span> DC design current</b> กระแสที่ใช้เลือกสายและอุปกรณ์ฝั่ง DC</p>
+        \[ I_{design,string} = 1.25\,I_{sc} \qquad I_{design,array} = 1.25\,N_p\,I_{sc} \]</div>
+    <p>ความสามารถนำกระแส (ampacity) ของสายต้องลดค่าตามอุณหภูมิแวดล้อม (หลังคาร้อน 60–70 °C) และจำนวนสายที่รวมกลุ่มในท่อ ใช้ตารางของผู้ผลิตสายหรือมาตรฐาน วสท./IEC 60364-5-52 แล้วเลือกขนาดที่ผ่านทั้งเงื่อนไขกระแส (W4) และแรงดันตก (W1)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="string-fuse">
+    <h2 id="string-fuse">ฟิวส์สตริง: เมื่อไรต้องมี <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อสตริงหนึ่งลัดวงจร (เช่น ขั้วต่อทะลุลงโครง) สตริงอื่นที่ขนานอยู่จะดันกระแสย้อนเข้าไป แผงทนกระแสย้อนได้ไม่เกินค่า “maximum series fuse rating” \(I_{MOD,OCPR}\) ในดาต้าชีต (เช่น 25–30 A)</p>
+<div class="tf" id="W5" data-k="string fuse gpv reverse current ocpr ฟิวส์สตริง กระแสย้อน"><p class="tf-n"><b><span class="fid">W5</span> String fuse requirement and rating (IEC 62548)</b> เงื่อนไขและพิกัดฟิวส์สตริง</p>
+        \[ \text{ต้องมีฟิวส์เมื่อ } (N_p - 1)\,1.25\,I_{sc} > I_{MOD,OCPR} \qquad 1.5\,I_{sc} < I_n \le \min(2.4\,I_{sc},\ I_{MOD,OCPR}) \]</div>
+<div class="wx" id="ex-w-2"><div class="wx-head"><span class="mono">ตัวอย่าง W-2</span><h3>รวม 3 สตริงเข้า MPPT เดียว</h3></div>
+<p>แผง \(I_{sc}\) = 14.1 A, maximum series fuse = 30 A</p>
+<ol class="steps">
+<li><p>กระแสย้อนสูงสุด \((3-1)(1.25)(14.1) = 35.3\) A &gt; 30 A → <b>ต้องมีฟิวส์</b></p></li>
+<li><p>ถ้า 2 สตริง: \((2-1)(1.25)(14.1) = 17.6\) A ≤ 30 A → ไม่ต้องมี</p></li>
+<li><p>พิกัดฟิวส์: \(1.5(14.1) = 21.2 &lt; I_n \le \min(33.8, 30)\) → เลือก <b>25 A gPV</b> พิกัดแรงดัน ≥ \(V_{oc,max}\) ของสตริง ติดทั้งขั้ว + และ −</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="isolator">
+    <h2 id="isolator">สวิตช์ตัดตอน DC (DC isolator) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li>ใช้สวิตช์ที่ระบุ <b>DC-PV2</b> ตาม IEC 60947-3 (หรือ DC-PV1 สำหรับงานเบา) แรงดัน ≥ \(V_{oc,max}\) กระแส ≥ \(1.25 I_{sc} N_p\) ตัดได้ทั้งขั้ว + และ −</li>
+      <li>ติดใกล้อินเวอร์เตอร์ (หลายรุ่นมีในตัว) ระบบที่สาย DC ยาวเข้าอาคารควรมีอีกชุดใกล้แผงหรือก่อนเข้าอาคาร</li>
+      <li>สวิตช์ DC ในกล่องพลาสติกกลางแดดเป็นจุดเสียบ่อย: เลือก IP65/66 ติดใต้ร่มเงา ติดตั้งให้ทางเข้าสายอยู่ด้านล่าง ใช้เคเบิลแกลนด์ขนาดพอดีสาย</li>
+      <li><b>ห้ามใช้เบรกเกอร์ AC</b> หรือ MCB ที่ไม่ได้ระบุพิกัด DC (และขั้วถูกต้อง สำหรับ DC breaker ที่มีขั้ว) — ใส่กลับขั้วแล้วตัดอาร์กไม่ได้</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="spd">
+    <h2 id="spd">อุปกรณ์ป้องกันแรงดันเกิน (SPD) และฟ้าผ่า <span class="lv lv-i">กลาง</span></h2>
+    <p>ประเทศไทยมีวันฟ้าคะนองสูง (หลายพื้นที่ &gt; 80–100 วันต่อปี) แผงบนหลังคาเป็นตัวรับแรงดันเหนี่ยวนำจากฟ้าผ่าใกล้ ๆ ได้ดี SPD จึงเป็นอุปกรณ์จำเป็น</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ตำแหน่ง</th><th>ชนิด</th><th>เลือกอย่างไร</th></tr></thead>
+      <tbody>
+        <tr><td>ฝั่ง DC ที่อินเวอร์เตอร์</td><td>Type 2 (Type 1+2 ถ้ามีระบบล่อฟ้าและระยะห่างไม่พอ)</td><td>\(U_{CPV} \ge V_{oc,max}\) ของอาร์เรย์ · \(I_{SCPV} \ge 1.25 N_p I_{sc}\) · ตาม IEC 61643-31</td></tr>
+        <tr><td>ฝั่ง DC ใกล้แผง</td><td>Type 2</td><td>เมื่อสาย DC ยาวเกิน ~10 m</td></tr>
+        <tr><td>ฝั่ง AC ที่อินเวอร์เตอร์ / ตู้ไฟ</td><td>Type 2 (Type 1+2 ที่ตู้เมนถ้ามีล่อฟ้าหรือสายอากาศ)</td><td>\(U_c \ge\) 275 V (ระบบ 230/400 V)</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>สายต่อ SPD ลงดินต้องสั้นที่สุด (รวมสองข้าง &lt; 0.5 m) มิฉะนั้นแรงดันตกบนสายเหนี่ยวนำจะทำให้ SPD ไร้ประโยชน์</li>
+      <li>อาคารที่มีระบบล่อฟ้า: ติดแผงให้ห่างจากตัวนำล่อฟ้าตามระยะแยก (separation distance) ตาม IEC 62305-3 หรือออกแบบให้อยู่ในพื้นที่ป้องกัน ถ้าไม่ได้ต้องเชื่อมเข้ากับระบบล่อฟ้าและใช้ SPD Type 1</li>
+      <li>SPD เป็นวัสดุสิ้นเปลือง ตรวจหน้าต่างแสดงสถานะทุกครั้งที่บำรุงรักษาและหลังพายุฟ้าคะนองรุนแรง</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="earthing">
+    <h2 id="earthing">กราวด์และการประสานศักย์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>ต่อกรอบแผงและโครงยึดลงดิน</b> (equipotential bonding) ด้วยสายทองแดง ≥ 6 mm² (≥ 16 mm² เมื่อเชื่อมกับระบบล่อฟ้า) ใช้ขั้วต่อหรือแหวนกัดผิว (bonding washer/WEEB) ที่เจาะผ่านผิวอโนไดซ์ของกรอบอลูมิเนียม ระวังการกัดกร่อนระหว่างทองแดงกับอลูมิเนียม (ใช้ขั้วต่อ bi-metal หรือสแตนเลส)</li>
+      <li><b>ระบบไฟฟ้าแรงต่ำในไทย</b> ส่วนใหญ่เป็น TN-C-S ต่อสายดินของระบบโซลาร์เข้ากับขั้วดินหลักของอาคารตามมาตรฐานการติดตั้งทางไฟฟ้าของ วสท. และข้อกำหนดของการไฟฟ้า ไม่ตอกหลักดินแยกลอย ๆ ที่ไม่ได้เชื่อมกับระบบหลัก</li>
+      <li><b>ห้ามต่อขั้ว + หรือ − ของแผงลงดิน</b> เว้นแต่ผู้ผลิตแผงและอินเวอร์เตอร์กำหนด (functional earthing สำหรับแผงบางชนิด) อินเวอร์เตอร์ไม่มีหม้อแปลงส่วนใหญ่ต้องการอาร์เรย์แบบลอย (floating) และตรวจความต้านทานฉนวน (Riso) ก่อนเริ่มทำงานทุกเช้า</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="ac-side">
+    <h2 id="ac-side">ฝั่ง AC และการต่อเข้าตู้ไฟ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="W6" data-k="ac breaker inverter output current เบรกเกอร์ ac กระแสขาออกอินเวอร์เตอร์"><p class="tf-n"><b><span class="fid">W6</span> Inverter AC current and breaker</b> กระแสขาออกและเบรกเกอร์ฝั่ง AC</p>
+        \[ I_{AC,1\phi} = \frac{P_{AC}}{V\cos\varphi} \qquad I_{AC,3\phi} = \frac{P_{AC}}{\sqrt{3}\,V_{LL}\cos\varphi} \qquad I_{n,CB} \ge 1.25\,I_{AC,max} \]</div>
+<div class="wx" id="ex-w-3"><div class="wx-head"><span class="mono">ตัวอย่าง W-3</span><h3>เบรกเกอร์สำหรับอินเวอร์เตอร์ 5 kW และ 10 kW</h3></div>
+<ol class="steps">
+<li><p>5 kW 1 เฟส 230 V: \(I = 5000/230 = 21.7\) A → \(1.25 \times 21.7 = 27.2\) A → เบรกเกอร์ 32 A 2P (หรือตามค่าสูงสุดที่ผู้ผลิตแนะนำ ใช้ \(I_{AC,max}\) จากดาต้าชีตถ้ามี)</p></li>
+<li><p>10 kW 3 เฟส 400 V: \(I = 10000/(\sqrt{3}\cdot 400) = 14.4\) A → \(1.25 \times 14.4 = 18.0\) A → เบรกเกอร์ 20 A 4P</p></li>
+<li><p>สายต้องรับกระแสได้ไม่น้อยกว่าพิกัดเบรกเกอร์ตามวิธีเดินสาย และแรงดันตกตามข้อ W3</p></li>
+</ol></div>
+    <ul>
+      <li><b>จุดต่อ:</b> ต่อเข้าเบรกเกอร์ย่อยเฉพาะของอินเวอร์เตอร์ในตู้ไฟ (load-side connection) ตรวจว่าบัสบาร์และเมนเบรกเกอร์ของตู้รับกระแสรวมจากการไฟฟ้า + อินเวอร์เตอร์ได้ (กฎ 120 % ใน NEC เป็นแนวคิดที่ใช้อ้างอิง)</li>
+      <li><b>RCD:</b> ทำตามคู่มืออินเวอร์เตอร์ อินเวอร์เตอร์ที่ผู้ผลิตยืนยันว่าไม่สามารถป้อนกระแสรั่ว DC เข้าระบบ (มีการแยกอย่างง่ายหรือมี RCMU ในตัว) ใช้ RCD Type A ได้ ถ้าไม่ใช่ต้องใช้ Type B</li>
+      <li><b>ป้าย:</b> ที่ตู้ไฟและมิเตอร์ “ระบบนี้มีแหล่งจ่ายไฟสองแหล่ง” ระบุตำแหน่งสวิตช์ตัดของอินเวอร์เตอร์ ให้ผู้ซ่อมและพนักงานดับเพลิงเห็นชัด</li>
+      <li><b>ระบบ hybrid:</b> แยกตู้โหลดสำรอง (backup panel) ห้ามต่อเอาต์พุตสำรองเข้ากับวงจรที่มีไฟการไฟฟ้า ตรวจ N-PE switching ในโหมดสำรองตามคู่มือ</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="fire">
+    <h2 id="fire">ไฟไหม้ AFCI และ Rapid Shutdown <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><b>AFCI (arc-fault circuit interrupter)</b> ในอินเวอร์เตอร์ตรวจลายเซ็นความถี่สูงของอาร์กแบบอนุกรมแล้วหยุดทำงาน (UL 1699B, IEC 63027) อินเวอร์เตอร์รุ่นใหม่หลายยี่ห้อมีให้ ควรเปิดใช้</li>
+      <li><b>Rapid shutdown</b> ลดแรงดันสายบนหลังคาให้ต่ำกว่า ~30 V ภายในเวลาสั้นเมื่อสั่งหยุด (ข้อบังคับใน NEC 690.12 ของสหรัฐฯ) ทำได้ด้วย optimizer, micro-inverter หรือ MLPE shutdown device เหมาะกับอาคารสาธารณะ อาคารสูง และโรงงานที่มีวัสดุติดไฟ</li>
+      <li><b>สาเหตุไฟไหม้ที่พบมากที่สุด</b>: ขั้วต่อต่างยี่ห้อหรือย้ำไม่ดี สวิตช์ DC เสื่อม ฉนวนสายถูกบาด และการทำงานต่อโดยไม่ตรวจหลังพายุ — ป้องกันได้ด้วยการตรวจตามตาราง (ดู <a href="/learn/solar-pv/installation-maintenance/">งานบำรุงรักษา</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">เช็กลิสต์ฝั่ง DC และ AC</h2>
+    <ol>
+      <li>สาย PV ตามมาตรฐาน ขนาดผ่านทั้งกระแสและแรงดันตก</li>
+      <li>ขั้วต่อยี่ห้อเดียวกัน ย้ำด้วยเครื่องมือของผู้ผลิต ทดสอบดึง</li>
+      <li>อุปกรณ์ DC ทุกตัวมีพิกัดแรงดัน ≥ \(V_{oc,max}\) และพิกัดกระแส ≥ \(1.25\,I_{sc}\) ต่อวงจร</li>
+      <li>ฟิวส์ gPV เมื่อจำเป็นตาม W5</li>
+      <li>SPD DC และ AC ติดใกล้อุปกรณ์ที่ป้องกัน สายลงดินสั้น</li>
+      <li>กรอบแผงและโครงประสานศักย์ ต่อเข้าระบบดินหลัก</li>
+      <li>เบรกเกอร์ AC แยก RCD ตามผู้ผลิต ป้ายเตือนครบ</li>
+      <li>ทดสอบตาม IEC 62446-1 ก่อนจ่ายไฟ (ขั้ว \(V_{oc}\) \(I_{sc}\) ฉนวน) — ดู <a href="/learn/solar-pv/installation-maintenance/#commissioning">การทดสอบส่งมอบ</a></li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

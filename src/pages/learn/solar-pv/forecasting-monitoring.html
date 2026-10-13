@@ -1,0 +1,197 @@
+<!--meta
+{
+  "title": "พยากรณ์กำลังผลิตโซลาร์เซลล์ล่วงหน้าและการเฝ้าติดตาม: Clear-sky NWP ดาวเทียม Machine Learning MAE RMSE Skill Score และตรวจจับความผิดปกติ | อาจารย์มด",
+  "h1": "พยากรณ์กำลังผลิตโซลาร์ล่วงหน้าและการเฝ้าติดตาม: clear-sky พยากรณ์อากาศ ML และตรวจจับความผิดปกติ",
+  "description": "การคาดการณ์ล่วงหน้าของระบบโซลาร์: ระยะพยากรณ์ตั้งแต่นาทีถึงวัน แบบจำลองท้องฟ้าแจ่มใส clear-sky index persistence การพยากรณ์จากภาพดาวเทียม กล้องท้องฟ้า และแบบจำลองอากาศเชิงตัวเลข (NWP) machine learning และการพยากรณ์เชิงความน่าจะเป็น ตัวชี้วัด MAE RMSE skill score ระบบเฝ้าติดตาม KPI PR availability performance index และการตรวจจับความผิดปกติอัตโนมัติ พร้อมตัวอย่างและโค้ด",
+  "ogTitle": "พยากรณ์กำลังผลิตโซลาร์ล่วงหน้า + เฝ้าติดตาม",
+  "og": {"title": "พยากรณ์กำลังผลิตโซลาร์ล่วงหน้า + เฝ้าติดตาม"},
+  "lesson": "solar-pv",
+  "sub": "forecasting-monitoring",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Solar power forecasting", "Clear-sky model", "Numerical weather prediction", "PV monitoring", "Fault detection"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "พยากรณ์กำลังผลิตโซลาร์ล่วงหน้าทำได้แม่นแค่ไหน?", "a": "ขึ้นกับระยะเวลาล่วงหน้าและสภาพอากาศ พยากรณ์ล่วงหน้า 1 วันสำหรับโรงไฟฟ้าเดี่ยวมักมีความคลาดเคลื่อนเฉลี่ยสัมบูรณ์ประมาณ 5–10 % ของกำลังติดตั้งในเวลากลางวัน ฤดูฝนที่เมฆเปลี่ยนเร็วคลาดเคลื่อนมากกว่าฤดูแล้ง การรวมหลายโรงไฟฟ้าในพื้นที่กว้างช่วยลดความคลาดเคลื่อนลงมาก"},
+    {"q": "Clear-sky index คืออะไร?", "a": "คืออัตราส่วนระหว่างแสงที่วัดหรือพยากรณ์ได้กับแสงที่จะได้ถ้าท้องฟ้าแจ่มใสในเวลาเดียวกัน ค่า 1 คือฟ้าใส ค่าต่ำคือมีเมฆ การพยากรณ์ค่า clear-sky index แทนการพยากรณ์แสงโดยตรงช่วยแยกส่วนที่คำนวณได้แน่นอน (ตำแหน่งดวงอาทิตย์) ออกจากส่วนที่ไม่แน่นอน (เมฆ)"},
+    {"q": "จะรู้ได้อย่างไรว่าระบบโซลาร์ผลิตไฟน้อยผิดปกติ?", "a": "เทียบพลังงานจริงกับพลังงานที่ควรผลิตได้จากแสงและอุณหภูมิจริงของช่วงเวลานั้น ไม่ใช่เทียบกับเดือนก่อน ถ้า performance index ต่ำกว่าประมาณ 0.9 ต่อเนื่องให้ตรวจ และเทียบกระแสของแต่ละสตริงกันเอง สตริงที่ต่ำกว่าค่ามัธยฐานเกินประมาณ 10 % ในวันฟ้าใสบ่งชี้แผงสกปรก เงาใหม่ ขั้วต่อเสีย หรือบายพาสไดโอดลัด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>พยากรณ์ · เฝ้าติดตาม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.11 · ออกแบบระบบโซลาร์เซลล์ · PV Forecasting &amp; Monitoring</p>
+      <h1>พยากรณ์กำลังผลิตโซลาร์ล่วงหน้าและการเฝ้าติดตาม: clear-sky พยากรณ์อากาศ ML และตรวจจับความผิดปกติ</h1>
+      <p class="lede">การคาดการณ์รายปี (<a href="/learn/solar-pv/energy-yield/">หน้าก่อน</a>) ตอบว่าควรลงทุนไหม แต่เมื่อระบบเดินแล้ว คำถามเปลี่ยนเป็น “พรุ่งนี้บ่ายจะผลิตได้เท่าไร” เพื่อวางแผนชาร์จแบต ตั้งเวลาโหลด ซื้อขายไฟ หรือให้ศูนย์ควบคุมของการไฟฟ้าเตรียมโรงไฟฟ้าสำรอง และ “วันนี้ผลิตน้อยเพราะเมฆหรือเพราะระบบเสีย” หน้านี้ครอบคลุมทั้งการพยากรณ์ล่วงหน้าและการเฝ้าติดตามที่ใช้ตอบสองคำถามนี้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#horizons">ระยะพยากรณ์</a>
+        <a class="btn btn-ghost btn-sm" href="#clearsky">Clear-sky</a>
+        <a class="btn btn-ghost btn-sm" href="#ml">Machine learning</a>
+        <a class="btn btn-ghost btn-sm" href="#metrics">วัดความแม่น</a>
+        <a class="btn btn-ghost btn-sm" href="#monitoring">เฝ้าติดตาม</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>แยกส่วนแน่นอน (ดวงอาทิตย์ → clear-sky) ออกจากส่วนไม่แน่นอน (เมฆ → clear-sky index)</li>
+          <li>นาที: กล้องท้องฟ้า · ชั่วโมง: ดาวเทียม · วันถึงหลายวัน: แบบจำลองอากาศ NWP + ML</li>
+          <li>รายงานความแม่นเป็น skill score เทียบ persistence เสมอ</li>
+          <li>เฝ้าติดตามด้วย “พลังงานที่ควรได้” จากแสงจริง แล้วเทียบสตริงกันเอง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น clear-sky, persistence, rmse, skill, expected power" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ใครต้องการพยากรณ์ และต้องการล่วงหน้าแค่ไหน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ผู้ใช้</th><th>ใช้ทำอะไร</th><th>ระยะล่วงหน้า</th></tr></thead>
+      <tbody>
+        <tr><td>บ้าน/อาคารที่มีแบตเตอรี่</td><td>ตัดสินใจว่าคืนนี้ควรชาร์จแบตจากกริดราคาถูก (TOU off-peak) หรือรอแดดพรุ่งนี้</td><td>12–36 ชั่วโมง</td></tr>
+        <tr><td>โรงงาน</td><td>ตั้งเวลาโหลดยืดหยุ่น (ห้องเย็น ปั๊ม ชาร์จรถยก) ลด peak demand</td><td>ชั่วโมง–1 วัน</td></tr>
+        <tr><td>โซลาร์ฟาร์ม/ผู้รวมไฟ (VPP)</td><td>แจ้งกำลังผลิตล่วงหน้าตามสัญญาหรือข้อกำหนดของผู้ควบคุมระบบ</td><td>วันถัดไป และปรับระหว่างวัน</td></tr>
+        <tr><td>ศูนย์ควบคุมระบบไฟฟ้า</td><td>เตรียมกำลังสำรอง (reserve) และ ramp ของโรงไฟฟ้าอื่น</td><td>นาที–หลายวัน</td></tr>
+        <tr><td>ระบบ hybrid ที่ microgrid/เกาะ</td><td>จัดการเครื่องปั่นไฟและแบต ลดน้ำมัน</td><td>นาที–ชั่วโมง</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="horizons">
+    <h2 id="horizons">ระยะพยากรณ์และวิธีที่เหมาะ <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ระยะ</th><th>วิธี</th><th>ข้อมูลที่ใช้</th></tr></thead>
+      <tbody>
+        <tr><td>วินาที–30 นาที (nowcasting)</td><td>กล้องถ่ายท้องฟ้า (all-sky imager) ติดตามการเคลื่อนของเมฆ · ข้อมูลกำลังผลิตล่าสุด</td><td>ภาพท้องฟ้า, SCADA</td></tr>
+        <tr><td>30 นาที–6 ชั่วโมง</td><td>Cloud motion vector จากภาพดาวเทียม (Himawari สำหรับเอเชีย ทุก 10 นาที)</td><td>ดาวเทียม</td></tr>
+        <tr><td>6 ชั่วโมง–7 วัน</td><td>แบบจำลองอากาศเชิงตัวเลข (NWP) เช่น ECMWF IFS, NOAA GFS, WRF ระดับภูมิภาค + การแก้ค่าเชิงสถิติ/ML</td><td>NWP, ข้อมูลย้อนหลังของโรงไฟฟ้า</td></tr>
+        <tr><td>เดือน–ฤดู</td><td>ค่าเฉลี่ยระยะยาว + ดัชนีภูมิอากาศ (ENSO)</td><td>ภูมิอากาศวิทยา</td></tr>
+      </tbody>
+    </table></div>
+    <p>ในประเทศไทย ความยากอยู่ที่เมฆก่อตัวเร็ว (convective clouds) ช่วงบ่ายในฤดูฝน และหมอกควันในภาคเหนือช่วงต้นปี ส่วนฤดูแล้งท้องฟ้าค่อนข้างคงที่ พยากรณ์แม่นกว่า</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="clearsky">
+    <h2 id="clearsky">แยกส่วนแน่นอนออกด้วย clear-sky <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A1" data-k="clear sky index kt star ดัชนีท้องฟ้าแจ่มใส"><p class="tf-n"><b><span class="fid">A1</span> Clear-sky index</b> ดัชนีท้องฟ้าแจ่มใส</p>
+        \[ k^*(t) = \frac{G(t)}{G_{cs}(t)} \qquad \hat P(t+h) = \hat k^*(t+h)\,P_{cs}(t+h) \]</div>
+<div class="tf" id="A2" data-k="haurwitz clear sky model ghi แบบจำลองท้องฟ้าแจ่มใส"><p class="tf-n"><b><span class="fid">A2</span> Haurwitz clear-sky model</b> แบบจำลองท้องฟ้าแจ่มใสอย่างง่าย</p>
+        \[ GHI_{cs} = 1098\,\cos\theta_z\,\exp\!\left(-\frac{0.057}{\cos\theta_z}\right)\ \text{W/m}^2 \]</div>
+    <p>แบบจำลองนี้ใช้เพียงมุมเซนิท (<a href="/learn/solar-pv/solar-resource/#R4">R4</a>) แบบจำลองที่แม่นกว่า (Ineichen–Perez, REST2, McClear) ใช้ความขุ่นของบรรยากาศ (Linke turbidity, aerosol, ไอน้ำ) ซึ่งสำคัญในไทยเพราะหมอกควันและความชื้นสูง</p>
+<div class="wx" id="ex-a-1"><div class="wx-head"><span class="mono">ตัวอย่าง A-1</span><h3>แสงฟ้าใสตอนเที่ยงที่กรุงเทพฯ วันที่ 21 มีนาคม</h3></div>
+<ol class="steps">
+<li><p>มุมเงย 75.8° (ตัวอย่าง <a href="/learn/solar-pv/solar-resource/#ex-r-2">R-2</a>) → \(\theta_z = 14.2^\circ\), \(\cos\theta_z = 0.969\)</p></li>
+<li><p>\(GHI_{cs} = 1098(0.969)\exp(-0.057/0.969) = 1098(0.969)(0.943) = 1{,}004\ \text{W/m}^2\)</p></li>
+<li><p>ถ้าวัดได้ 650 W/m² → \(k^* = 0.65\) มีเมฆบางส่วน · ถ้าพรุ่งนี้พยากรณ์ \(k^* = 0.8\) ที่เวลาเดียวกัน → \(\hat G \approx 800\) W/m²</p></li>
+</ol></div>
+<div class="tf" id="A3" data-k="persistence smart persistence baseline forecast การพยากรณ์แบบคงสภาพ"><p class="tf-n"><b><span class="fid">A3</span> (Smart) persistence baseline</b> การพยากรณ์อ้างอิงแบบคงสภาพ</p>
+        \[ \hat P(t+h) = P(t) \qquad \text{smart: } \hat k^*(t+h) = k^*(t)\ \Rightarrow\ \hat P(t+h) = k^*(t)\,P_{cs}(t+h) \]</div>
+    <p>Persistence คือ “พรุ่งนี้เหมือนวันนี้” หรือ “อีก 15 นาทีเหมือนตอนนี้” เป็นคู่แข่งที่เอาชนะยากในระยะสั้นมาก ทุกวิธีพยากรณ์ต้องเทียบกับมันก่อน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ml">
+    <h2 id="ml">Machine learning และการพยากรณ์เชิงความน่าจะเป็น <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>แนวทางที่ใช้ได้ผลในทางปฏิบัติคือ <b>ให้ NWP บอกสภาพอากาศ แล้วให้ ML แปลงเป็นกำลังของโรงไฟฟ้านั้น</b> (model output statistics) เพราะ ML เรียนรู้ความลำเอียงของ NWP ในพื้นที่ และพฤติกรรมเฉพาะของระบบ (เงา clipping ฝุ่น) จากข้อมูลย้อนหลัง</p>
+    <ul>
+      <li><b>คุณลักษณะ (features):</b> GHI/k* จาก NWP หลายจุดรอบโรงไฟฟ้า เมฆต่ำ/กลาง/สูง อุณหภูมิ ความชื้น ลม มุมดวงอาทิตย์ ชั่วโมง วันในปี กำลังผลิตล่าสุด (สำหรับระยะสั้น)</li>
+      <li><b>แบบจำลอง:</b> gradient boosting (XGBoost/LightGBM) ทำงานดีกับข้อมูลตาราง · LSTM/Temporal CNN/Transformer สำหรับลำดับเวลา · CNN กับภาพดาวเทียม</li>
+      <li><b>เชิงความน่าจะเป็น:</b> พยากรณ์ quantile (P10, P50, P90) ด้วย quantile regression หรือ ensemble ของ NWP ให้ผู้ใช้ตัดสินใจด้วยความเสี่ยง เช่น สำรองแบตไว้เผื่อกรณี P10</li>
+      <li><b>ข้อควรระวัง:</b> แบ่งข้อมูล train/test ตามเวลา (ห้ามสุ่มปน) ตรวจข้อมูลช่วงไฟดับ/ตัด export ที่ไม่ใช่สภาพอากาศ และ retrain เมื่อระบบเปลี่ยน</li>
+    </ul>
+<pre class="code"># พยากรณ์ day-ahead แบบย่อ: NWP + gradient boosting (scikit-learn)
+import pandas as pd
+from sklearn.ensemble import GradientBoostingRegressor
+
+df = pd.read_csv("plant_hourly.csv", parse_dates=["time"])   # กำลังจริง + NWP ของวันก่อนหน้า
+df = df[df.sun_elev &gt; 0]                                      # เฉพาะกลางวัน
+X = df[["nwp_ghi", "nwp_cloud_low", "nwp_cloud_mid", "nwp_temp", "sun_elev", "hour", "doy"]]
+y = df["p_ac_kw"]
+
+cut = df.time &lt; "2026-01-01"                                   # แบ่งตามเวลา ไม่สุ่ม
+model = GradientBoostingRegressor(n_estimators=400, max_depth=4, learning_rate=0.05)
+model.fit(X[cut], y[cut])
+pred = model.predict(X[~cut]).clip(0, df.p_ac_max.iloc[0])   # ไม่ติดลบ ไม่เกินพิกัด
+nmae = (abs(pred - y[~cut])).mean() / df.p_ac_max.iloc[0]</pre>
+    </section>
+
+    <section class="tsec" aria-labelledby="metrics">
+    <h2 id="metrics">วัดความแม่นของการพยากรณ์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A4" data-k="mae rmse nmae error metrics ความคลาดเคลื่อน"><p class="tf-n"><b><span class="fid">A4</span> Error metrics</b> ตัวชี้วัดความคลาดเคลื่อน</p>
+        \[ MAE = \frac{1}{n}\sum|\hat P_i - P_i| \qquad RMSE = \sqrt{\frac{1}{n}\sum(\hat P_i - P_i)^2} \qquad nMAE = \frac{MAE}{P_{rated}} \]</div>
+<div class="tf" id="A5" data-k="forecast skill score persistence ทักษะการพยากรณ์"><p class="tf-n"><b><span class="fid">A5</span> Forecast skill score</b> คะแนนทักษะเทียบ persistence</p>
+        \[ SS = 1 - \frac{RMSE_{model}}{RMSE_{persistence}} \]</div>
+<div class="wx" id="ex-a-2"><div class="wx-head"><span class="mono">ตัวอย่าง A-2</span><h3>พยากรณ์พลังงานรายวัน 5 วัน (MWh)</h3></div>
+<div class="table-wrap"><table>
+<thead><tr><th>วัน</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+<tbody>
+<tr><td>จริง</td><td>3.2</td><td>4.1</td><td>4.6</td><td>3.9</td><td>2.1</td></tr>
+<tr><td>พยากรณ์</td><td>3.0</td><td>4.4</td><td>4.3</td><td>3.5</td><td>2.9</td></tr>
+<tr><td>Persistence (เท่าเมื่อวาน)</td><td>3.5</td><td>3.2</td><td>4.1</td><td>4.6</td><td>3.9</td></tr>
+</tbody></table></div>
+<ol class="steps">
+<li><p>ความคลาดเคลื่อนของพยากรณ์: −0.2, +0.3, −0.3, −0.4, +0.8 → MAE = 2.0/5 = 0.40 MWh</p></li>
+<li><p>\(RMSE_{model} = \sqrt{(0.04+0.09+0.09+0.16+0.64)/5} = 0.45\) MWh</p></li>
+<li><p>\(RMSE_{pers} = \sqrt{(0.09+0.81+0.25+0.49+3.24)/5} = 0.99\) MWh</p></li>
+<li><p>A5: \(SS = 1 - 0.45/0.99 = 0.54\) — ดีกว่า persistence 54 % · วันที่ 5 พลาดมากสุด (พายุฝนที่พยากรณ์ไม่ทัน) RMSE ลงโทษความผิดพลาดใหญ่มากกว่า MAE</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="monitoring">
+    <h2 id="monitoring">ระบบเฝ้าติดตามและ KPI <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>ข้อมูล:</b> อินเวอร์เตอร์ส่งค่าผ่าน Modbus RTU/TCP (โปรไฟล์ SunSpec) หรือคลาวด์ของผู้ผลิต: กำลัง AC/DC แรงดันและกระแสแต่ละ MPPT/สตริง อุณหภูมิ รหัสความผิดพร่อง · มิเตอร์ที่จุดต่อ · เซ็นเซอร์แสงบนระนาบแผง (เซลล์อ้างอิงหรือไพราโนมิเตอร์) และอุณหภูมิแผงสำหรับระบบเชิงพาณิชย์</li>
+      <li><b>KPI ตาม IEC 61724-1:</b> พลังงาน, \(Y_f\), PR (และ PR ปรับอุณหภูมิ), availability, ความผิดพร่องและเวลาซ่อม</li>
+      <li><b>ระบบบ้าน:</b> แอปของผู้ผลิตอินเวอร์เตอร์เพียงพอ ตั้งการแจ้งเตือนเมื่อพลังงานรายวันต่ำกว่าค่าคาดหมายหรือมี error</li>
+      <li><b>ระบบใหญ่:</b> SCADA/แพลตฟอร์ม monitoring ที่รวมหลายยี่ห้อ ตรวจรายสตริงด้วยตัวเลขเชิงสถิติ และส่งงานให้ทีม O&amp;M</li>
+    </ul>
+<div class="tf" id="A6" data-k="expected power performance index monitoring กำลังที่ควรได้ ดัชนีสมรรถนะ"><p class="tf-n"><b><span class="fid">A6</span> Expected power and performance index</b> กำลังที่ควรได้และดัชนีสมรรถนะ</p>
+        \[ P_{exp} = P_{STC}\,\frac{G_{POA}}{1000}\left[1+\gamma(T_c-25)\right]\eta_{sys} \qquad PI = \frac{P_{meas}}{P_{exp}} \]</div>
+<div class="tf" id="A7" data-k="string current deviation median outlier ค่าเบี่ยงเบนกระแสสตริง"><p class="tf-n"><b><span class="fid">A7</span> String deviation from the median</b> ค่าเบี่ยงเบนของสตริงจากค่ามัธยฐาน</p>
+        \[ \delta_k = \frac{I_k - \operatorname{median}(I)}{\operatorname{median}(I)} \qquad \text{เตือนเมื่อ } \delta_k < -10\%\ \text{ต่อเนื่องในช่วงแสง} > 600\ \text{W/m}^2 \]</div>
+<div class="wx" id="ex-a-3"><div class="wx-head"><span class="mono">ตัวอย่าง A-3</span><h3>ระบบ 5.8 kWp ผลิตน้อยหรือแค่มีเมฆ</h3></div>
+<p>เวลา 11:00 น. เซ็นเซอร์วัด \(G_{POA}\) = 820 W/m² อุณหภูมิแผง 55 °C อินเวอร์เตอร์จ่าย 3.2 kW \(\eta_{sys}\) (สาย ฝุ่น อินเวอร์เตอร์) ≈ 0.92</p>
+<ol class="steps">
+<li><p>\(P_{exp} = 5.8(0.82)\left[1 - 0.0029(30)\right](0.92) = 5.8(0.82)(0.913)(0.92) = 3.99\) kW</p></li>
+<li><p>\(PI = 3.2/3.99 = 0.80\) — ต่ำกว่าปกติ 20 % ทั้งที่แสงดี ไม่ใช่เพราะเมฆ</p></li>
+<li><p>ดูข้อมูลราย MPPT: MPPT1 7.6 A, MPPT2 4.9 A ขณะที่ทั้งสองทิศเดียวกัน → \(\delta_2 = -35\ \%\) (เทียบ MPPT1)</p></li>
+<li><p>แรงดัน MPPT2 ต่ำกว่าปกติราว 1/3 ของแผงหนึ่งแผง → สงสัยบายพาสไดโอดลัดหรือเงาใหม่ ส่งช่างตรวจด้วยกล้องความร้อนและวัด \(V_{oc}\) รายแผง (ดู <a href="/learn/solar-pv/installation-maintenance/#troubleshooting">ตารางอาการเสีย</a>)</p></li>
+</ol></div>
+    <h3>การตรวจจับความผิดปกติที่ใช้ได้จริง</h3>
+    <ol>
+      <li><b>เทียบกันเอง:</b> สตริงเทียบสตริง อินเวอร์เตอร์เทียบอินเวอร์เตอร์ในทิศเดียวกัน — ไม่ต้องมีเซ็นเซอร์แสงก็ใช้ได้</li>
+      <li><b>เทียบกับที่ควรได้:</b> PI จากแสงและอุณหภูมิจริง หรือจากข้อมูลดาวเทียมเมื่อไม่มีเซ็นเซอร์</li>
+      <li><b>รูปร่างกราฟรายวัน:</b> ยอดแบน = clipping หรือจำกัดกำลัง · ตกเป็นศูนย์กลางวัน = trip (แรงดันกริดเกิน ฉนวนต่ำ) · ไม่สมมาตรเช้า-บ่าย = เงาข้างเดียว</li>
+      <li><b>แนวโน้มระยะยาว:</b> soiling ratio ระหว่างรอบล้าง และอัตราการเสื่อมรายปีด้วยวิธี year-on-year (เช่น ไลบรารี RdTools ของ NREL)</li>
+      <li><b>ML:</b> isolation forest / autoencoder กับข้อมูลหลายตัวแปร สำหรับระบบใหญ่ที่มีข้อมูลมาก (และต้องมีวิศวกรตรวจสอบผล)</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Spatio-temporal forecasting</b> ใช้ข้อมูลโรงไฟฟ้าข้างเคียงเป็นเซ็นเซอร์เมฆที่ลอยมา (graph neural networks)</li>
+      <li><b>Regional/aggregate forecasting</b> ของ PV บนหลังคาที่ไม่มีมิเตอร์แยก (behind-the-meter) สำหรับผู้ควบคุมระบบ — upscaling จากระบบตัวอย่าง</li>
+      <li><b>Probabilistic evaluation:</b> CRPS, pinball loss, reliability diagram</li>
+      <li><b>Forecast-driven control:</b> MPC สำหรับแบตเตอรี่และโหลดยืดหยุ่น การเสนอราคาในตลาดไฟฟ้าภายใต้ความไม่แน่นอน</li>
+      <li><b>Physics-informed ML</b> และ digital twin ของโรงไฟฟ้าสำหรับ O&amp;M เชิงพยากรณ์</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

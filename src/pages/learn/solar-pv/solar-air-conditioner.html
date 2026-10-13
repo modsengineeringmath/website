@@ -1,0 +1,171 @@
+<!--meta
+{
+  "title": "โซลาร์เซลล์จ่ายแอร์: แอร์ 12000 BTU ใช้แผงกี่แผง คำนวณ BTU เป็น kW SEER COP แอร์อินเวอร์เตอร์ แอร์โซลาร์ DC/AC ไฮบริด และค่าไฟที่ประหยัด | อาจารย์มด",
+  "h1": "โซลาร์เซลล์จ่ายแอร์: คำนวณ BTU เป็น kW ขนาดแผง แอร์อินเวอร์เตอร์ แอร์ DC/AC ไฮบริด และกระแสกระชาก",
+  "description": "ออกแบบระบบโซลาร์เซลล์สำหรับเครื่องปรับอากาศในประเทศไทย: เลือก BTU ตามขนาดห้อง แปลง BTU เป็น kW COP EER SEER ฉลากเบอร์ 5 กำลังไฟจริงของแอร์อินเวอร์เตอร์ตลอดวัน ทำไมแอร์กับโซลาร์เข้ากันดี วิธีต่อแบบ on-grid hybrid off-grid และแอร์โซลาร์ DC/AC กระแสกระชากของคอมเพรสเซอร์ ขนาดแผงและแบตเตอรี่ ตัวอย่างบ้านและสำนักงาน และเครื่องคำนวณ",
+  "ogTitle": "โซลาร์เซลล์จ่ายแอร์: ใช้แผงกี่แผง",
+  "og": {"title": "โซลาร์เซลล์จ่ายแอร์: ใช้แผงกี่แผง"},
+  "lesson": "solar-pv",
+  "sub": "solar-air-conditioner",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Solar air conditioning", "Inverter air conditioner", "Coefficient of performance", "Seasonal energy efficiency ratio"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "แอร์ 12,000 BTU ใช้แผงโซลาร์กี่แผง?", "a": "แอร์อินเวอร์เตอร์เบอร์ 5 ขนาด 12,000 BTU ใช้ไฟเฉลี่ยประมาณ 0.4–0.6 kW ขณะทำงาน ถ้าเปิดช่วงกลางวัน 6 ชั่วโมง ใช้พลังงานประมาณ 3 kWh แผงประมาณ 1–1.5 kWp หรือแผง 580 W จำนวน 2–3 แผงผ่านอินเวอร์เตอร์ on-grid ช่วยจ่ายได้เกือบทั้งหมดในช่วงมีแดด ถ้าต้องการเปิดกลางคืนต้องเพิ่มแบตเตอรี่หรือใช้ไฟการไฟฟ้า"},
+    {"q": "ต่อแผงโซลาร์เข้าแอร์ตรง ๆ ได้ไหม?", "a": "แอร์ทั่วไปใช้ไฟ AC 220 V ต้องผ่านอินเวอร์เตอร์เสมอ ยกเว้นแอร์โซลาร์แบบ DC/AC ไฮบริดที่มีช่องรับไฟ DC จากแผงเข้าบัส DC ของคอมเพรสเซอร์โดยตรง และใช้ไฟบ้านเสริมเมื่อแสงไม่พอ ต้องต่อแผงตามจำนวนและแรงดันที่ผู้ผลิตแอร์กำหนดเท่านั้น"},
+    {"q": "แอร์ธรรมดา (ไม่ใช่อินเวอร์เตอร์) ใช้กับระบบ off-grid ได้ไหม?", "a": "ได้แต่ต้องระวัง คอมเพรสเซอร์แบบความเร็วคงที่ดึงกระแสกระชากตอนสตาร์ตประมาณ 3–6 เท่าของกระแสใช้งาน อินเวอร์เตอร์ off-grid ต้องรับกำลังกระชากนั้นได้ และคอมเพรสเซอร์ตัดต่อบ่อยทำให้สิ้นเปลืองพลังงานแบต แอร์อินเวอร์เตอร์สตาร์ตแบบนุ่มนวลและประหยัดกว่ามาก จึงเหมาะกับโซลาร์มากกว่า"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>โซลาร์จ่ายแอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.15 · ออกแบบระบบโซลาร์เซลล์ · Solar Power for Air Conditioning</p>
+      <h1>โซลาร์เซลล์จ่ายแอร์: คำนวณ BTU เป็น kW ขนาดแผง แอร์อินเวอร์เตอร์ แอร์ DC/AC ไฮบริด และกระแสกระชาก</h1>
+      <p class="lede">ในประเทศไทย แอร์คือโหลดที่ใหญ่ที่สุดของบ้านและสำนักงาน — มักเป็น 40–60 % ของค่าไฟ — และทำงานหนักที่สุดในช่วงที่แดดแรงที่สุด ภาระความเย็นกับพลังงานแสงอาทิตย์จึงมาจากต้นเหตุเดียวกัน ทำให้แอร์เป็นโหลดที่จับคู่กับโซลาร์ได้ดีที่สุด หน้านี้คำนวณตั้งแต่ BTU ของห้องจนถึงจำนวนแผงและค่าไฟที่ประหยัด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">คำนวณแผงสำหรับแอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#units">BTU · COP · SEER</a>
+        <a class="btn btn-ghost btn-sm" href="#connection">วิธีต่อ</a>
+        <a class="btn btn-ghost btn-sm" href="#examples">ตัวอย่าง</a>
+        <a class="btn btn-ghost btn-sm" href="#efficiency-first">ลดภาระก่อน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>12,000 BTU/h = 3.52 kW ความเย็น แอร์เบอร์ 5 ใช้ไฟเพียง 1/4–1/6 ของนั้น</li>
+          <li>กำลังเฉลี่ย ≈ BTU × ภาระ ÷ SEER → แอร์ 12,000 BTU อินเวอร์เตอร์ ≈ 0.4–0.6 kW</li>
+          <li>แผง ≈ 1–1.5 kWp ต่อแอร์ 12,000 BTU ที่เปิดกลางวัน (ผ่านอินเวอร์เตอร์ on-grid)</li>
+          <li>แอร์อินเวอร์เตอร์เหมาะกับโซลาร์ที่สุด แอร์ความเร็วคงที่กระชาก 3–6 เท่า</li>
+          <li>กันความร้อนเข้าบ้านก่อน — ถูกกว่าการซื้อแผงเพิ่ม</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น btu, cop, seer, eer, กระแสกระชาก, ขนาดห้อง" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมแอร์กับโซลาร์เข้ากันดี <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>เวลาตรงกัน:</b> ความร้อนที่เข้าอาคารผ่านหลังคาและผนังสูงสุดช่วงบ่าย ซึ่งยังเป็นช่วงที่แผงผลิตไฟมาก ร้าน สำนักงาน คลินิก โรงเรียน ใช้แอร์ช่วงเวลาเดียวกับแดดพอดี</li>
+      <li><b>ฤดูตรงกัน:</b> เดือนมีนาคม–พฤษภาคมที่แอร์ทำงานหนักที่สุด เป็นเดือนที่แสงอาทิตย์มากที่สุดของปี</li>
+      <li><b>หลังคาร่มเย็นขึ้น:</b> แผงบนหลังคาบังแดดบางส่วน ลดความร้อนเข้าห้องใต้หลังคาได้</li>
+      <li><b>ข้อจำกัด:</b> แอร์ห้องนอนที่เปิดกลางคืนไม่ได้ประโยชน์จาก on-grid โดยตรง (ต้องใช้แบตเตอรี่หรือ pre-cooling)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="units">
+    <h2 id="units">BTU kW COP EER SEER: แปลงหน่วยให้ถูก <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="H1" data-k="btu to kw ton refrigeration แปลง btu เป็น kw ตันความเย็น"><p class="tf-n"><b><span class="fid">H1</span> BTU/h to kW</b> แปลงขนาดแอร์เป็นกิโลวัตต์ความเย็น</p>
+        \[ Q\ [\text{kW}] = \text{BTU/h}\times 0.29307\times 10^{-3} \qquad 12{,}000\ \text{BTU/h} = 1\ \text{ton} = 3.52\ \text{kW} \]</div>
+<div class="tf" id="H2" data-k="cop eer seer efficiency ratio ประสิทธิภาพแอร์"><p class="tf-n"><b><span class="fid">H2</span> COP, EER and SEER</b> ตัวชี้วัดประสิทธิภาพ</p>
+        \[ COP = \frac{Q_{cool}}{P_{el}} \qquad EER\ [\text{BTU/h/W}] = 3.412\,COP \qquad SEER = \frac{\text{ความเย็นทั้งฤดู (BTU)}}{\text{พลังงานไฟฟ้าทั้งฤดู (Wh)}} \]</div>
+    <p><b>ความเย็น ≠ ไฟฟ้า:</b> แอร์เป็นปั๊มความร้อน ย้ายความร้อน 3–6 หน่วยต่อไฟฟ้า 1 หน่วย ค่าบนฉลากประหยัดไฟเบอร์ 5 ของไทยใช้ SEER (BTU/h ต่อ W ตามฤดูกาล) แอร์อินเวอร์เตอร์รุ่นปัจจุบันมี SEER ประมาณ 15–27 ขึ้นกับขนาด แอร์ความเร็วคงที่รุ่นเก่ามี EER ราว 9–11</p>
+<div class="tf" id="H3" data-k="average electrical power inverter ac load factor กำลังไฟฟ้าเฉลี่ยแอร์"><p class="tf-n"><b><span class="fid">H3</span> Average electrical power</b> กำลังไฟฟ้าเฉลี่ยขณะเปิดแอร์</p>
+        \[ \bar P_{el}\ [\text{W}] \approx \frac{\text{BTU/h}\times LF}{SEER} \qquad P_{el,rated} = \frac{\text{BTU/h}}{EER} \]</div>
+    <p>\(LF\) = ภาระเฉลี่ยเทียบพิกัด (0.5–0.9) ขึ้นกับขนาดห้อง ฉนวน จำนวนคน อุณหภูมิที่ตั้ง และเวลาของวัน แอร์อินเวอร์เตอร์ลดความเร็วคอมเพรสเซอร์เมื่อห้องเย็นแล้ว กำลังจริงจึงต่ำกว่าพิกัดมาก</p>
+<div class="tf" id="H4" data-k="room cooling load btu per square meter ขนาดห้อง btu ต่อ ตารางเมตร"><p class="tf-n"><b><span class="fid">H4</span> Rule-of-thumb room size</b> เลือก BTU ตามพื้นที่ห้อง (เพดานสูง ~2.6 m)</p>
+        \[ \text{BTU/h} \approx A\,[\text{m}^2] \times \begin{cases} 700\text{–}800 & \text{ห้องนอน/ห้องไม่โดนแดด} \\ 800\text{–}1{,}000 & \text{ห้องโดนแดด ห้องรับแขก สำนักงาน ร้านค้า} \end{cases} \]</div>
+    <p>กฎหัวแม่มือนี้ใช้คัดเลือกเบื้องต้น งานอาคารใหญ่ต้องคำนวณภาระความเย็น (cooling load) จากผนัง หลังคา หน้าต่าง คน อุปกรณ์ และอากาศภายนอก แอร์ที่ใหญ่เกินไปตัดต่อบ่อย ไม่ดึงความชื้น และไม่ประหยัด</p>
+<div class="wx" id="ex-h-1"><div class="wx-head"><span class="mono">ตัวอย่าง H-1</span><h3>ห้องนอน 18 m²</h3></div>
+<ol class="steps">
+<li><p>H4: \(18 \times 700 = 12{,}600\) BTU/h → เลือก 12,000–13,000 BTU</p></li>
+<li><p>H1: \(12{,}000 \times 0.29307 = 3.52\) kW ความเย็น</p></li>
+<li><p>H3: SEER 20, LF 0.8 → \(\bar P = 12{,}000(0.8)/20 = 480\) W · พิกัดที่ EER 12 → 1,000 W</p></li>
+<li><p>H2: COP เฉลี่ย = \(20/3.412 = 5.86\) — ไฟ 1 หน่วยย้ายความร้อนได้ราว 5.9 หน่วย</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sizing">
+    <h2 id="sizing">ขนาดแผงสำหรับแอร์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="H5" data-k="pv size for air conditioner energy and power criteria ขนาดแผงสำหรับแอร์"><p class="tf-n"><b><span class="fid">H5</span> PV size for an air conditioner</b> ขนาดแผงสำหรับแอร์</p>
+        \[ P_{PV} \ge \max\!\left( \frac{N\,\bar P_{el}\,h_{sun}}{PSH\times PR},\ \frac{N\,\bar P_{el}}{0.55} \right) \]</div>
+    <p>เงื่อนไขแรกคือพลังงาน (พลังงานแผงต่อวันพอกับพลังงานแอร์ช่วงมีแดด) เงื่อนไขที่สองคือกำลัง: ช่วง 09:00–10:00 และ 15:00–16:00 น. แผงจ่ายได้ราว 50–60 % ของ kWp ถ้าต้องการให้แอร์ใช้ไฟโซลาร์เกือบทั้งหมดตลอดช่วงนั้น แผงต้องใหญ่พอ (ส่วนที่ขาดดึงจากกริดอัตโนมัติในระบบ on-grid)</p>
+<div class="tf" id="H6" data-k="compressor inrush locked rotor surge current กระแสกระชาก คอมเพรสเซอร์"><p class="tf-n"><b><span class="fid">H6</span> Compressor starting surge</b> กำลังกระชากตอนสตาร์ต</p>
+        \[ P_{surge} \approx k_{LRA}\,P_{el,rated} \qquad k_{LRA} \approx 3\text{–}6\ (\text{ความเร็วคงที่}),\ \approx 1\text{–}1.5\ (\text{อินเวอร์เตอร์}) \]</div>
+    <p>สำคัญกับระบบ off-grid และโหมดไฟสำรองของ hybrid: อินเวอร์เตอร์ต้องรับกำลังกระชากได้ (ดูค่า surge/peak power 5–10 วินาทีในดาต้าชีต) และแบตต้องจ่ายกระแสนั้นได้ (<a href="/learn/solar-pv/battery-storage/#B3">B3</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณแผงสำหรับแอร์</h2>
+    <div class="fg-calc pv-calc" data-pv="ac"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="connection">
+    <h2 id="connection">วิธีต่อโซลาร์กับแอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รูปแบบ</th><th>หลักการ</th><th>ข้อดี</th><th>ข้อจำกัด</th></tr></thead>
+      <tbody>
+        <tr><td><b>On-grid ทั้งบ้าน</b></td><td>อินเวอร์เตอร์จ่ายเข้าตู้ไฟ แอร์ใช้ไฟจากโซลาร์ก่อนอัตโนมัติ</td><td>ง่าย คุ้มที่สุด ใช้กับแอร์ทุกเครื่องและโหลดอื่น</td><td>ไฟดับแอร์ดับ ไม่ช่วยกลางคืน</td></tr>
+        <tr><td><b>Hybrid + แบต</b></td><td>เพิ่มแบตเก็บไฟกลางวัน</td><td>ใช้แอร์หัวค่ำได้ มีไฟสำรอง</td><td>แพง ต้องดูความคุ้ม (<a href="/learn/solar-pv/battery-storage/#economics">B5–B6</a>)</td></tr>
+        <tr><td><b>แอร์โซลาร์ DC/AC ไฮบริด</b></td><td>ชุดคอยล์ร้อนมีช่องรับ DC จากแผงเข้าบัส DC ของอินเวอร์เตอร์คอมเพรสเซอร์ ใช้ไฟบ้านเสริม</td><td>ไม่ต้องมีอินเวอร์เตอร์แยก ไม่ส่งไฟย้อนกริด (ไม่ต้องขออนุญาตขนานไฟในหลายกรณี — ตรวจกับการไฟฟ้า)</td><td>แผงใช้ได้กับแอร์เครื่องนั้นเท่านั้น ไฟเหลือทิ้งเมื่อแอร์ไม่ทำงาน ต้องใช้แผงตามสเปกผู้ผลิต</td></tr>
+        <tr><td><b>Off-grid</b></td><td>แผง + แบต + อินเวอร์เตอร์ off-grid</td><td>ไม่มีสายไฟฟ้าก็ใช้แอร์ได้</td><td>ต้องใช้แบตใหญ่และเผื่อกำลังกระชาก</td></tr>
+        <tr><td><b>Solar thermal cooling</b></td><td>ความร้อนจากแผงรับแสงขับเครื่องทำความเย็นแบบดูดซึม</td><td>ใช้ในอาคารใหญ่บางแห่ง</td><td>ซับซ้อน ราคาแพง ไม่นิยมเทียบกับ PV + แอร์อินเวอร์เตอร์</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่างออกแบบ <span class="lv lv-i">กลาง</span></h2>
+<div class="wx" id="ex-h-2"><div class="wx-head"><span class="mono">ตัวอย่าง H-2</span><h3>บ้าน: แอร์ 12,000 BTU เปิด 8 ชม. (6 ชม. ช่วงมีแดด)</h3></div>
+<ol class="steps">
+<li><p>\(\bar P\) = 0.48 kW (ตัวอย่าง H-1) → พลังงานต่อวัน \(0.48 \times 8 = 3.8\) kWh · ช่วงมีแดด \(0.48 \times 6 = 2.9\) kWh</p></li>
+<li><p>H5 พลังงาน: \(2.9/(4.8 \times 0.78) = 0.77\) kWp · H5 กำลัง: \(0.48/0.55 = 0.87\) kWp → 2 แผง × 580 W = 1.16 kWp</p></li>
+<li><p>ค่าไฟแอร์ทั้งเดือน ≈ \(3.8 \times 30 \times 4.2\) ≈ 484 บาท ประหยัดได้ ≈ 363 บาท/เดือน (ส่วนที่เหลือคือช่วงกลางคืน)</p></li>
+<li><p>ข้อสังเกต: แอร์อินเวอร์เตอร์เบอร์ 5 ประหยัดอยู่แล้ว ระบบโซลาร์ขนาดนี้คุ้มเมื่อรวมกับโหลดกลางวันอื่นของบ้าน (ดู <a href="/learn/solar-pv/load-sizing/">ขนาดจากบิล</a>) — <b>ถ้าแอร์เก่า EER 9 การเปลี่ยนแอร์ใหม่อาจคุ้มกว่าการติดโซลาร์ก่อน</b></p></li>
+</ol></div>
+<div class="wx" id="ex-h-3"><div class="wx-head"><span class="mono">ตัวอย่าง H-3</span><h3>สำนักงาน: แอร์ 24,000 BTU 4 เครื่อง เปิด 08:00–18:00 น.</h3></div>
+<ol class="steps">
+<li><p>SEER 16, LF 0.8: \(\bar P = 24{,}000(0.8)/16 = 1.2\) kW/เครื่อง → 4.8 kW รวม</p></li>
+<li><p>พลังงาน 10 ชม. = 48 kWh/วัน · ช่วงมีแดด 7 ชม. = 33.6 kWh</p></li>
+<li><p>H5: พลังงาน \(33.6/(4.8 \times 0.78) = 8.97\) kWp · กำลัง \(4.8/0.55 = 8.73\) kWp → 16 แผง = 9.28 kWp อินเวอร์เตอร์ 3 เฟส 8 kW</p></li>
+<li><p>ค่าไฟแอร์ ≈ 6,050 บาท/เดือน ประหยัด ≈ 4,230 บาท/เดือน (≈ 70 %) ผู้ใช้ TOU ประหยัดมากกว่านี้เพราะแทนไฟ on-peak</p></li>
+</ol></div>
+<div class="wx" id="ex-h-4"><div class="wx-head"><span class="mono">ตัวอย่าง H-4</span><h3>เปิดแอร์ห้องนอน 12,000 BTU กลางคืนด้วยแบตเตอรี่</h3></div>
+<ol class="steps">
+<li><p>เปิด 8 ชม. × 0.48 kW = 3.84 kWh</p></li>
+<li><p>B1: \(3.84/(0.9 \times 0.9) = 4.74\) kWh → แบต 5.12 kWh หนึ่งลูก (ถ้าไม่มีโหลดกลางคืนอื่น)</p></li>
+<li><p>แผงต้องผลิตเพิ่มอีก ≈ 4.3 kWh/วัน สำหรับชาร์จ → +1.2 kWp</p></li>
+<li><p>ทางเลือกที่ถูกกว่า: <b>pre-cooling</b> เปิดแอร์ห้องนอนช่วง 15:00–18:00 น. ด้วยไฟโซลาร์ ทำให้ผนังและเฟอร์นิเจอร์เย็น แล้วตั้งอุณหภูมิสูงขึ้นเล็กน้อยตอนกลางคืน</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="efficiency-first">
+    <h2 id="efficiency-first">ลดภาระความร้อนก่อน แล้วค่อยเพิ่มแผง</h2>
+    <ul>
+      <li><b>ฉนวนหลังคา</b> (ใยแก้ว 3–6 นิ้ว หรือฉนวนพ่น) และฟอยล์สะท้อนรังสี ลดความร้อนผ่านหลังคาได้มากที่สุด</li>
+      <li><b>บังแดดหน้าต่างทิศตะวันตก</b> กันสาด ฟิล์มกรองแสง ต้นไม้ — ความร้อนช่วงบ่ายเป็นตัวกำหนดขนาดแอร์</li>
+      <li><b>ตั้ง 25–26 °C</b> ทุก 1 °C ที่ตั้งสูงขึ้นประหยัดราว 5–10 % พัดลมช่วยให้รู้สึกเย็นที่อุณหภูมิสูงขึ้น</li>
+      <li><b>ล้างแอร์ทุก 6 เดือน</b> คอยล์สกปรกลดประสิทธิภาพ 10–30 %</li>
+      <li><b>คอยล์ร้อนในที่ร่ม อากาศถ่ายเท</b> ไม่ตั้งในที่อับหรือโดนแดดบ่ายจัด</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>อินเวอร์เตอร์ของคอมเพรสเซอร์</b> (PMSM/BLDC + PFC) เป็นวงจรเดียวกับอินเวอร์เตอร์โซลาร์แต่ใช้ field-oriented control — แอร์ DC/AC ไฮบริดรวม MPPT เข้ากับบัส DC เดียวกัน</li>
+      <li><b>Thermal storage</b> (น้ำเย็น/น้ำแข็ง) ในอาคารใหญ่ ผลิตความเย็นด้วยไฟโซลาร์กลางวัน ใช้ตอนเย็น — ถูกกว่าแบตเตอรี่ต่อ kWh</li>
+      <li><b>Model predictive control</b> ของ HVAC ร่วมกับการพยากรณ์แสงและอุณหภูมิ (ดู <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์</a>) ใช้มวลความร้อนของอาคารเป็นแบตเตอรี่</li>
+      <li><b>ผลต่อกริด</b> แอร์จำนวนมากในชั่วโมงเดียวกันกับโซลาร์บนหลังคาลดพีคกลางวันของระบบไฟฟ้า แต่ย้ายพีคไปหัวค่ำ (duck curve)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

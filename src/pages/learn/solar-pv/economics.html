@@ -1,0 +1,166 @@
+<!--meta
+{
+  "title": "ติดโซลาร์เซลล์คุ้มไหม: คำนวณระยะคืนทุน NPV IRR LCOE ค่าเสื่อม การเปลี่ยนอินเวอร์เตอร์ สินเชื่อ และการวิเคราะห์ความไว | อาจารย์มด",
+  "h1": "ความคุ้มค่าของโซลาร์เซลล์: ระยะคืนทุน NPV IRR LCOE และการวิเคราะห์ความไว",
+  "description": "วิเคราะห์ความคุ้มค่าของระบบโซลาร์เซลล์แบบวิศวกรรมเศรษฐศาสตร์: เงินลงทุน ผลประหยัดรายปีจากการใช้เองและขายไฟ ระยะคืนทุนอย่างง่ายและแบบคิดลด มูลค่าปัจจุบันสุทธิ NPV อัตราผลตอบแทนภายใน IRR ต้นทุนพลังงานเฉลี่ย LCOE การเสื่อมของแผง ค่าบำรุงรักษา การเปลี่ยนอินเวอร์เตอร์ สินเชื่อ ภาษี และการวิเคราะห์ความไว พร้อมเครื่องคำนวณและกราฟกระแสเงินสด",
+  "ogTitle": "ติดโซลาร์คุ้มไหม: คืนทุน NPV IRR LCOE",
+  "og": {"title": "ติดโซลาร์คุ้มไหม: คืนทุน NPV IRR LCOE"},
+  "lesson": "solar-pv",
+  "sub": "economics",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Payback period", "Net present value", "Internal rate of return", "Levelized cost of electricity"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "โซลาร์เซลล์บ้านคืนทุนกี่ปี?", "a": "ระบบ on-grid ที่ขนาดพอดีโหลดกลางวันในประเทศไทยมักคืนทุนอย่างง่ายประมาณ 5–7 ปี ขึ้นกับราคาติดตั้ง สัดส่วนที่ใช้เอง ค่าไฟ และผลผลิตของพื้นที่ ระบบที่มีแบตเตอรี่คืนทุนนานกว่า (ประมาณ 8–12 ปี) กิจการที่ใช้อัตรา TOU และใช้ไฟกลางวันมากอาจคืนทุนได้ภายใน 3–5 ปี"},
+    {"q": "LCOE ของโซลาร์เซลล์คืออะไร ทำไมต้องรู้?", "a": "LCOE คือต้นทุนต่อหน่วยไฟฟ้าตลอดอายุโครงการ คำนวณจากต้นทุนทั้งหมดที่คิดลดแล้วหารด้วยพลังงานทั้งหมดที่คิดลดแล้ว ถ้า LCOE ต่ำกว่าค่าไฟที่ประหยัดได้ ระบบคุ้มทุน ระบบบ้านในไทยมี LCOE ประมาณ 1.6–2.5 บาท/kWh ต่ำกว่าค่าไฟบ้านราว 4–4.5 บาท/kWh"},
+    {"q": "ระยะคืนทุน กับ IRR ควรดูอะไร?", "a": "ระยะคืนทุนบอกความเร็วที่ได้เงินคืน เข้าใจง่ายแต่ไม่สนใจผลตอบแทนหลังคืนทุนและมูลค่าของเวลา IRR บอกผลตอบแทนต่อปีตลอดอายุ เปรียบเทียบกับดอกเบี้ยเงินฝากหรือต้นทุนเงินกู้ได้ NPV บอกมูลค่าความมั่งคั่งที่เพิ่มขึ้นจริง ควรดูทั้งสามค่าประกอบกับการวิเคราะห์ความไว"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ความคุ้มค่า</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.10 · ออกแบบระบบโซลาร์เซลล์ · Economics: Payback, NPV, IRR, LCOE</p>
+      <h1>ความคุ้มค่าของโซลาร์เซลล์: ระยะคืนทุน NPV IRR LCOE และการวิเคราะห์ความไว</h1>
+      <p class="lede">“คืนทุนกี่ปี” เป็นคำถามที่ดีแต่ไม่พอ ระบบโซลาร์ใช้งาน 25–30 ปี มีค่าใช้จ่ายระหว่างทาง (ล้างแผง เปลี่ยนอินเวอร์เตอร์) พลังงานลดลงทุกปี และค่าไฟเปลี่ยน หน้านี้สร้างกระแสเงินสดรายปีแล้วคำนวณตัวชี้วัดมาตรฐาน 4 ตัว พร้อมวิเคราะห์ว่าตัวแปรไหนกระทบผลมากที่สุด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">เครื่องคำนวณความคุ้มค่า</a>
+        <a class="btn btn-ghost btn-sm" href="#cashflow">กระแสเงินสด</a>
+        <a class="btn btn-ghost btn-sm" href="#metrics">NPV IRR LCOE</a>
+        <a class="btn btn-ghost btn-sm" href="#sensitivity">ความไว</a>
+        <a class="btn btn-ghost btn-sm" href="#finance">สินเชื่อและภาษี</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ตัวแปรที่กระทบมากที่สุด: ราคาติดตั้ง สัดส่วนใช้เอง และค่าไฟ — ไม่ใช่ยี่ห้อแผง</li>
+          <li>ระบบบ้านตัวอย่าง 5 kWp: คืนทุน ≈ 6 ปี IRR ≈ 16 % LCOE ≈ 2 บาท/kWh</li>
+          <li>คิดค่าเปลี่ยนอินเวอร์เตอร์ (ปี 10–15) และการเสื่อม 0.4–0.5 %/ปีเสมอ</li>
+          <li>ถ้ากู้เงินมาติด ค่างวดอาจสูงกว่าผลประหยัดในปีแรก ๆ — ดูกระแสเงินสดรายปี</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น payback, npv, irr, lcoe, ค่างวด, ผลประหยัด" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="cashflow">
+    <h2 id="cashflow">สร้างกระแสเงินสดรายปี <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="F1" data-k="capex investment cost per kwp เงินลงทุน"><p class="tf-n"><b><span class="fid">F1</span> Investment</b> เงินลงทุนเริ่มต้น</p>
+        \[ CAPEX = P_{STC}\times c_{kWp} \quad (+\ \text{แบตเตอรี่ ค่าขออนุญาต ปรับปรุงตู้ไฟ หลังคา}) \]</div>
+<div class="tf" id="F2" data-k="annual saving net cash flow ผลประหยัดรายปี กระแสเงินสดสุทธิ"><p class="tf-n"><b><span class="fid">F2</span> Net saving in year y</b> ผลประหยัดสุทธิในปีที่ y</p>
+        \[ S_y = E_1(1-d)^{y-1}\left[SCR\cdot c_{buy}(1+e)^{y-1} + (1-SCR)\,c_{sell}\right] - C_{O\&M} - C_{repl,y} \]</div>
+    <p>\(d\) = การเสื่อมต่อปี \(e\) = อัตราค่าไฟที่เพิ่มต่อปี \(c_{sell}\) = ราคาขายไฟส่วนเกิน (คงที่ตามสัญญา) \(C_{O\&M}\) = ค่าล้าง ตรวจ ประกัน (≈ 0.5–1.5 % ของ CAPEX ต่อปี) \(C_{repl,y}\) = ค่าเปลี่ยนอุปกรณ์ในปีนั้น (อินเวอร์เตอร์ราวปีที่ 10–15)</p>
+<div class="tf" id="F3" data-k="simple payback period ระยะคืนทุนอย่างง่าย"><p class="tf-n"><b><span class="fid">F3</span> Simple payback</b> ระยะคืนทุนอย่างง่าย</p>
+        \[ PB \approx \frac{CAPEX}{S_1} \quad \text{(หรือปีที่เงินสดสะสม } -CAPEX + \textstyle\sum S_y \text{ เป็นบวก)} \]</div>
+<div class="wx" id="ex-f-1"><div class="wx-head"><span class="mono">ตัวอย่าง F-1</span><h3>บ้าน 5 kWp: ปีแรก</h3></div>
+<p>ราคาติดตั้ง 30,000 บาท/kWp ผลผลิต 1,350 kWh/kWp ใช้เอง 80 % ค่าไฟ 4.2 บาท ขายไฟ 2.2 บาท O&amp;M 1 %/ปี</p>
+<ol class="steps">
+<li><p>F1: CAPEX = 5 × 30,000 = 150,000 บาท · \(E_1\) = 6,750 kWh</p></li>
+<li><p>ใช้เอง 5,400 kWh × 4.2 = 22,680 บาท · ขาย 1,350 kWh × 2.2 = 2,970 บาท</p></li>
+<li><p>O&amp;M = 1,500 บาท → \(S_1\) = 22,680 + 2,970 − 1,500 = 24,150 บาท</p></li>
+<li><p>F3: PB ≈ 150,000/24,150 = 6.2 ปี (เมื่อนับค่าไฟที่เพิ่มปีละ 1.5 % จากเงินสดสะสมจริง ได้ 6.1 ปี)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="metrics">
+    <h2 id="metrics">NPV IRR LCOE และระยะคืนทุนคิดลด <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F4" data-k="net present value npv discount rate มูลค่าปัจจุบันสุทธิ"><p class="tf-n"><b><span class="fid">F4</span> Net present value</b> มูลค่าปัจจุบันสุทธิ</p>
+        \[ NPV = -CAPEX + \sum_{y=1}^{N}\frac{S_y}{(1+r)^y} \]</div>
+<div class="tf" id="F5" data-k="lcoe levelized cost of electricity ต้นทุนพลังงานเฉลี่ย"><p class="tf-n"><b><span class="fid">F5</span> Levelized cost of electricity</b> ต้นทุนพลังงานเฉลี่ยตลอดอายุ</p>
+        \[ LCOE = \frac{CAPEX + \sum_{y=1}^{N}\dfrac{C_{O\&M,y} + C_{repl,y}}{(1+r)^y}}{\sum_{y=1}^{N}\dfrac{E_y}{(1+r)^y}} \]</div>
+<div class="tf" id="F6" data-k="internal rate of return irr อัตราผลตอบแทนภายใน"><p class="tf-n"><b><span class="fid">F6</span> Internal rate of return</b> อัตราผลตอบแทนภายใน</p>
+        \[ 0 = -CAPEX + \sum_{y=1}^{N}\frac{S_y}{(1+IRR)^y} \]</div>
+<div class="tf" id="F7" data-k="discounted payback ระยะคืนทุนคิดลด"><p class="tf-n"><b><span class="fid">F7</span> Discounted payback</b> ระยะคืนทุนแบบคิดลด</p>
+        \[ \min\Big\{ Y : -CAPEX + \sum_{y=1}^{Y}\frac{S_y}{(1+r)^y} \ge 0 \Big\} \]</div>
+    <ul>
+      <li><b>NPV &gt; 0</b> โครงการเพิ่มความมั่งคั่งเมื่อเทียบกับการเอาเงินไปลงทุนที่ผลตอบแทน \(r\)</li>
+      <li><b>IRR</b> เทียบกับดอกเบี้ยเงินฝาก/พันธบัตร (ทางเลือกของเงินเย็น) หรือต้นทุนเงินกู้ — ระบบโซลาร์ที่ดีมี IRR 12–20 % ซึ่งสูงกว่าทางเลือกปลอดภัยส่วนใหญ่</li>
+      <li><b>LCOE</b> ไม่ขึ้นกับค่าไฟ ใช้เทียบเทคโนโลยีหรือเทียบกับค่าไฟที่จะซื้อ ถ้า LCOE &lt; ค่าไฟ ทุกหน่วยที่ใช้เองคือกำไร</li>
+      <li>IRR หาด้วยการลองค่าหรือ bisection (เครื่องคำนวณด้านล่างใช้ bisection) ใน Excel ใช้ <code>=IRR(ช่วงกระแสเงินสด)</code> และ <code>=NPV(r, ช่วงปี 1..N) - CAPEX</code></li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณความคุ้มค่า</h2>
+    <p>ค่าเริ่มต้นคือตัวอย่าง F-1 อายุ 25 ปี เปลี่ยนอินเวอร์เตอร์ปีที่ 12 (12 % ของเงินลงทุน) อัตราคิดลด 5 % กราฟคือเงินสดสะสม จุดที่ตัดแกนศูนย์คือระยะคืนทุน</p>
+    <div class="fg-calc pv-calc" data-pv="econ"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sensitivity">
+    <h2 id="sensitivity">วิเคราะห์ความไว (Sensitivity) <span class="lv lv-i">กลาง</span></h2>
+    <p>เปลี่ยนตัวแปรทีละตัวจากกรณีฐาน (5 kWp, 30,000 บาท/kWp, ใช้เอง 80 %, ค่าไฟ 4.2 บาท เพิ่ม 1.5 %/ปี, 1,350 kWh/kWp, r = 5 %) คำนวณด้วยเครื่องคำนวณในหน้านี้:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>กรณี</th><th>คืนทุน (ปี)</th><th>IRR</th><th>NPV 25 ปี</th><th>LCOE (บาท/kWh)</th></tr></thead>
+      <tbody>
+        <tr><td><b>กรณีฐาน</b></td><td>6.1</td><td>16.2 %</td><td>210,800</td><td>2.00</td></tr>
+        <tr><td>ราคาติดตั้ง −20 % (24,000/kWp)</td><td>4.8</td><td>20.8 %</td><td>247,000</td><td>1.60</td></tr>
+        <tr><td>ราคาติดตั้ง +20 % (36,000/kWp)</td><td>7.3</td><td>13.0 %</td><td>174,500</td><td>2.40</td></tr>
+        <tr><td>ใช้เองแค่ 50 %</td><td>7.3</td><td>12.8 %</td><td>138,700</td><td>2.00</td></tr>
+        <tr><td>ใช้เอง 100 %</td><td>5.5</td><td>18.3 %</td><td>258,900</td><td>2.00</td></tr>
+        <tr><td>ค่าไฟ 3.8 บาท</td><td>6.7</td><td>14.6 %</td><td>177,300</td><td>2.00</td></tr>
+        <tr><td>ค่าไฟ 4.6 บาท</td><td>5.6</td><td>17.8 %</td><td>244,300</td><td>2.00</td></tr>
+        <tr><td>ค่าไฟไม่ขึ้นเลย</td><td>6.3</td><td>14.8 %</td><td>163,700</td><td>2.00</td></tr>
+        <tr><td>ผลผลิต 1,250 kWh/kWp (เงา/ฝุ่น)</td><td>6.6</td><td>14.8 %</td><td>181,700</td><td>2.16</td></tr>
+        <tr><td>อัตราคิดลด 8 %</td><td>6.1 (คิดลด 8.6)</td><td>16.2 %</td><td>120,400</td><td>2.50</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>อ่านตาราง:</b> ราคาติดตั้งและสัดส่วนใช้เองกระทบมากที่สุด การเลือกขนาดให้พอดีโหลด (<a href="/learn/solar-pv/load-sizing/">หน้าขนาดจากบิล</a>) และการเปรียบเทียบราคาหลายเจ้าจึงสำคัญกว่าการเลือกแผงที่ถูกกว่าไม่กี่เปอร์เซ็นต์ ส่วนการเสื่อมและค่าบำรุงรักษากระทบน้อยกว่า แต่ต้องใส่ไว้เพื่อไม่ให้ผลดูดีเกินจริง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="finance">
+    <h2 id="finance">สินเชื่อ ภาษี และรูปแบบการลงทุน <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F8" data-k="loan annuity payment installment ค่างวด สินเชื่อ"><p class="tf-n"><b><span class="fid">F8</span> Loan payment (annuity)</b> ค่างวดเงินกู้รายปี</p>
+        \[ A = P\,\frac{i(1+i)^n}{(1+i)^n - 1} \]</div>
+<div class="wx" id="ex-f-2"><div class="wx-head"><span class="mono">ตัวอย่าง F-2</span><h3>กู้ 150,000 บาท ดอกเบี้ย 5 % 5 ปี</h3></div>
+<ol class="steps">
+<li><p>\(A = 150{,}000 \dfrac{0.05(1.05)^5}{(1.05)^5 - 1} = 34{,}646\) บาท/ปี (≈ 2,890 บาท/เดือน)</p></li>
+<li><p>ผลประหยัดปีแรก 24,150 บาท → เงินสดสุทธิ −10,500 บาท/ปี ช่วง 5 ปีแรก</p></li>
+<li><p>ถ้ายืดเป็น 8 ปี ค่างวด ≈ 23,200 บาท/ปี ใกล้ผลประหยัด → ผ่อนแทนค่าไฟได้พอดี (cash-flow neutral)</p></li>
+</ol></div>
+    <ul>
+      <li><b>รูปแบบการลงทุน:</b> ซื้อขาด (CAPEX) · ผ่อนกับธนาคาร (สินเชื่อสีเขียว) · เช่าระบบ · Private PPA (ผู้ลงทุนติดตั้งและขายไฟให้ในราคาต่ำกว่าการไฟฟ้า ส่วนลด 10–30 % สัญญา 10–25 ปี เหมาะกับกิจการที่ไม่อยากลงทุนเอง)</li>
+      <li><b>ภาษีและสิทธิประโยชน์:</b> นิติบุคคลหักค่าเสื่อมราคาของระบบได้ และอาจได้สิทธิประโยชน์จากมาตรการส่งเสริมการลงทุนด้านการประหยัดพลังงานและพลังงานทดแทน บุคคลธรรมดาให้ติดตามมาตรการลดหย่อนที่รัฐประกาศในแต่ละปี ตรวจเงื่อนไขกับหน่วยงานที่เกี่ยวข้องก่อนนำมาคิดในงบประมาณ</li>
+      <li><b>ประกันภัย:</b> เพิ่มระบบโซลาร์ในกรมธรรม์ที่อยู่อาศัยหรืออัคคีภัย (บางบริษัทกำหนดให้มีวิศวกรรับรอง)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="pitfalls">
+    <h2 id="pitfalls">ข้อผิดพลาดที่ทำให้ตัวเลขสวยเกินจริง</h2>
+    <ol>
+      <li>คิดว่าใช้เองได้ 100 % ทั้งที่โหลดกลางวันน้อยกว่าการผลิต</li>
+      <li>ใช้ค่าไฟเฉลี่ยทั้งบิล แทนค่าไฟส่วนเพิ่มของหน่วยที่ถูกแทนจริง (บางกรณีกลับกัน: TOU on-peak แพงกว่าเฉลี่ย)</li>
+      <li>ไม่หักการเสื่อม ค่าล้างแผง ค่าเปลี่ยนอินเวอร์เตอร์</li>
+      <li>สมมติค่าไฟขึ้นปีละ 3–5 % ตลอด 25 ปี</li>
+      <li>ใช้ผลผลิตของภาคที่แดดดีที่สุด หรือจากระบบที่ไม่มีเงา ทั้งที่หลังคาของตัวเองมีเงา</li>
+      <li>ไม่นับค่าใช้จ่ายแฝง: ปรับปรุงตู้ไฟ ซ่อมหลังคา ค่าขออนุญาต ค่าวิศวกร</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Monte Carlo</b> สุ่มตัวแปร (แสงรายปี ค่าไฟ การเสื่อม ความพร้อมใช้) หา distribution ของ NPV และความน่าจะเป็นที่จะขาดทุน</li>
+      <li><b>Real options</b> มูลค่าของการรอซื้อแบตเตอรี่ภายหลังเมื่อราคาลด หรือขยายระบบเมื่อมีรถไฟฟ้า</li>
+      <li><b>Project finance</b> ของโซลาร์ฟาร์ม: DSCR, P90 debt sizing, tariff structure ของ PPA, CAPEX/OPEX ของ MW และ WACC</li>
+      <li><b>ต้นทุนภายนอก</b> มูลค่าคาร์บอน (REC/I-REC, Thailand Voluntary Emission Reduction) และผลต่อการตัดสินใจลงทุน</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

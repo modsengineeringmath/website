@@ -1,0 +1,215 @@
+<!--meta
+{
+  "title": "ออกแบบระบบโซลาร์เซลล์ (Solar PV System Design): เลือกแผง ออกแบบสตริง แบตเตอรี่ คาดการณ์พลังงาน MPPT อินเวอร์เตอร์ แอร์ ฟาร์ม | อาจารย์มด",
+  "h1": "ออกแบบระบบโซลาร์เซลล์ (Solar PV System Design)",
+  "description": "คู่มือออกแบบและใช้งานโซลาร์เซลล์ภาษาไทยฉบับละเอียด 19 หน้า: เส้นโค้ง I-V เลือกแผง TOPCon HJT แสงอาทิตย์ในไทย on-grid off-grid hybrid ขนานไฟ กฟภ. กฟน. ออกแบบสตริง สายไฟ SPD กราวด์ แบตเตอรี่ LiFePO4 คาดการณ์พลังงาน PR ระยะคืนทุน พยากรณ์ล่วงหน้า MPPT อินเวอร์เตอร์ เลือกตัวควบคุม โซลาร์จ่ายแอร์ โซลาร์ฟาร์ม ปั๊มน้ำเกษตร ติดตั้งบำรุงรักษา พร้อมเครื่องคำนวณฟรี",
+  "ogTitle": "ออกแบบระบบโซลาร์เซลล์ครบวงจร + เครื่องคำนวณฟรี",
+  "og": {"title": "ออกแบบระบบโซลาร์เซลล์ครบวงจร + เครื่องคำนวณฟรี"},
+  "lesson": "solar-pv",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Photovoltaic system", "Solar panel", "Solar inverter", "Maximum power point tracking", "Battery energy storage", "Solar farm", "Solar water pumping", "Solar air conditioning", "Solar power forecasting"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "jsonld": [
+    {
+      "@type": "Course",
+      "@id": "https://modsengineeringmath.com/learn/solar-pv/#course",
+      "name": "ออกแบบระบบโซลาร์เซลล์ (Solar PV System Design)",
+      "alternateName": ["Solar PV System Design (Thai)", "การออกแบบใช้งานโซลาร์เซลล์", "ระบบผลิตไฟฟ้าพลังงานแสงอาทิตย์", "Solar rooftop design Thailand"],
+      "description": "ชุดบทเรียน 19 หน้าและเครื่องคำนวณ: เซลล์และเส้นโค้ง I-V เลือกแผง แสงอาทิตย์ในไทย ชนิดระบบและการขนานไฟ ออกแบบสตริง สายไฟและการป้องกัน แบตเตอรี่ คาดการณ์พลังงาน ขนาดจากบิล ความคุ้มค่า พยากรณ์ล่วงหน้า MPPT อินเวอร์เตอร์ เลือกตัวควบคุม โซลาร์จ่ายแอร์ โซลาร์ฟาร์ม ปั๊มน้ำและเกษตร ติดตั้งและบำรุงรักษา",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "educationalLevel": ["Vocational", "Undergraduate", "Graduate"],
+      "teaches": ["Solar cell I-V curve and single-diode model", "Solar panel selection", "Peak sun hours and orientation", "On-grid, off-grid and hybrid PV systems", "PV string sizing", "DC wiring and protection", "Battery sizing", "Energy yield and performance ratio", "PV economics (payback, NPV, IRR, LCOE)", "PV power forecasting", "MPPT algorithms", "Grid-tied inverter control", "Solar air conditioning", "Solar farm design", "Solar water pumping", "PV commissioning and maintenance"],
+      "coursePrerequisites": ["https://modsengineeringmath.com/learn/power-electronics/", "https://modsengineeringmath.com/learn/calculus-basics/"],
+      "provider": {"@id": "https://modsengineeringmath.com/#mod"},
+      "url": "https://modsengineeringmath.com/learn/solar-pv/",
+      "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT24H"},
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB", "category": "Free"}
+    }
+  ],
+  "faq": [
+    {"q": "ติดโซลาร์เซลล์บ้านควรเริ่มคำนวณจากอะไร?", "a": "เริ่มจากบิลค่าไฟ 12 เดือนและดูว่าใช้ไฟช่วงกลางวันมากแค่ไหน ระบบ on-grid ที่คุ้มที่สุดคือขนาดพอดีกับโหลดกลางวัน แล้วค่อยตรวจพื้นที่หลังคา ทิศ เงาบัง และงบประมาณ ดูวิธีทำในหน้าเลือกขนาดจากบิลค่าไฟ"},
+    {"q": "แผงโซลาร์ 1 kWp ในประเทศไทยผลิตไฟได้วันละกี่หน่วย?", "a": "โดยเฉลี่ยประมาณ 3.6–4.0 kWh ต่อวัน หรือ 1,300–1,450 kWh ต่อปี ขึ้นกับพื้นที่ ทิศ มุมเอียง อุณหภูมิ ฝุ่น และเงาบัง คำนวณจาก E = P × PSH × PR โดย PSH ของไทยประมาณ 4.6–5.2 ชั่วโมง และ PR ประมาณ 0.75–0.82"},
+    {"q": "On-grid, Off-grid และ Hybrid ต่างกันอย่างไร?", "a": "On-grid ต่อขนานกับการไฟฟ้า ไม่มีแบตเตอรี่ ถูกที่สุดแต่ไฟดับแล้วระบบหยุดตามมาตรฐานป้องกันการจ่ายไฟย้อน Off-grid ไม่ต่อการไฟฟ้า ต้องมีแบตเตอรี่พอสำหรับกลางคืนและวันฝนตก Hybrid ต่อกริดและมีแบตเตอรี่ เก็บไฟไว้ใช้กลางคืนและสำรองเมื่อไฟดับ"},
+    {"q": "โซลาร์เซลล์ใช้กับแอร์ได้ไหม?", "a": "ได้และเหมาะมาก เพราะแอร์ทำงานหนักช่วงกลางวันพร้อมกับที่แผงผลิตไฟได้มาก แอร์ 12,000 BTU แบบอินเวอร์เตอร์เบอร์ 5 ใช้ไฟเฉลี่ยประมาณ 0.4–0.6 kW ขณะทำงาน แผงประมาณ 1–1.5 kWp ช่วยจ่ายได้เกือบทั้งหมดในช่วงกลางวัน"},
+    {"q": "เว็บนี้มีเครื่องคำนวณอะไรบ้าง?", "a": "มีแล็บเส้นโค้ง I-V พร้อมเงาบัง เครื่องเลือกขนาดจากบิล ออกแบบสตริง คาดการณ์พลังงานรายเดือน ขนาดแบตเตอรี่ แอร์โซลาร์ แรงดันตกในสาย และความคุ้มค่า NPV IRR LCOE ใช้ฟรีในเบราว์เซอร์ รวมอยู่ในหน้าเครื่องมือออกแบบ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>ออกแบบระบบโซลาร์เซลล์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14 · Solar PV System Design · ช่าง → ป.ตรี → ป.โท</p>
+      <h1>ออกแบบระบบโซลาร์เซลล์ (Solar PV System Design)</h1>
+      <p class="lede">โซลาร์เซลล์ไม่ใช่แค่ “ซื้อแผงมาวางบนหลังคา” ระบบที่ดีเริ่มจากการเข้าใจเส้นโค้ง I-V ของแผง รู้ว่าแสงอาทิตย์ของพื้นที่ให้พลังงานเท่าไร ออกแบบสตริงให้เข้ากับอินเวอร์เตอร์ทั้งตอนหนาวและตอนร้อน ป้องกันฝั่ง DC ที่ดับอาร์กยาก คาดการณ์พลังงานและความคุ้มค่าก่อนลงทุน และเข้าใจอิเล็กทรอนิกส์กำลังที่อยู่ข้างใน ชุดนี้มี 19 หน้า <!--formula-count:solar-pv--> สูตรที่มีรหัสอ้างอิงถาวร <!--example-count:solar-pv--> ตัวอย่างวิธีทำด้วยตัวเลขจริง และเครื่องคำนวณที่ใช้ได้ทันที</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#flow">ขั้นตอนออกแบบ 10 ขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/solar-pv/load-sizing/">ขนาดจากบิลค่าไฟ</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#goals">เลือกตามเป้าหมาย</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">ค้นหาสูตร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>พลังงานต่อปี \(E \approx P_{STC}\times H_{POA}\times 365\times PR\) — ในไทย 1 kWp ≈ 1,300–1,450 kWh/ปี</li>
+          <li>สตริง: \(N_s V_{oc}(T_{min}) \le V_{dc,max}\) และ \(N_s V_{mp}(T_{cell,max}) \ge V_{MPPT,min}\)</li>
+          <li>On-grid คุ้มที่สุดเมื่อขนาดพอดีโหลดกลางวัน แบตเตอรี่คุ้มเมื่อมีโหลดกลางคืนหรือไฟดับบ่อย</li>
+          <li>ฝั่ง DC อันตรายกว่าที่คิด: ใช้สาย ขั้วต่อ ฟิวส์ และสวิตช์ที่พิกัด DC เท่านั้น</li>
+          <li>เลือกอุปกรณ์จากมาตรฐานและการรองรับระยะยาว ไม่ใช่จากราคาต่อวัตต์อย่างเดียว</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> เจ้าของบ้าน · ช่าง · ปวช./ปวส.</span><span><span class="lv lv-i">กลาง</span> ป.ตรี · ผู้ออกแบบติดตั้ง</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย · โรงไฟฟ้า</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="flow">
+    <h2 id="flow">ขั้นตอนออกแบบระบบโซลาร์ 10 ขั้น <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทุกระบบตั้งแต่หลังคาบ้าน 3 kW จนถึงโซลาร์ฟาร์ม 50 MW ใช้ลำดับความคิดเดียวกัน ต่างกันแค่ความละเอียดของข้อมูลและเครื่องมือ แต่ละขั้นลิงก์ไปยังหน้าที่อธิบายละเอียด อ่านตามลำดับหรือข้ามไปขั้นที่ต้องการก็ได้</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ขั้น</th><th>ทำอะไร</th><th>ผลลัพธ์</th><th>อ่านต่อ</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>เก็บข้อมูลการใช้ไฟ บิล 12 เดือน โหลดกลางวัน/กลางคืน ไฟดับบ่อยไหม</td><td>kWh/เดือน โปรไฟล์โหลด</td><td><a href="/learn/solar-pv/load-sizing/">ขนาดจากบิล</a></td></tr>
+        <tr><td>2</td><td>เลือกชนิดระบบ on-grid / hybrid / off-grid / DC ตรง</td><td>สถาปัตยกรรมระบบ</td><td><a href="/learn/solar-pv/system-types/">ชนิดระบบ</a></td></tr>
+        <tr><td>3</td><td>สำรวจพื้นที่ ทิศ มุมเอียง เงาบัง ความแข็งแรงหลังคา</td><td>พื้นที่ใช้ได้ ค่า POA</td><td><a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · เงา</a></td></tr>
+        <tr><td>4</td><td>เลือกแผงตามพื้นที่ งบ และสภาพอากาศ</td><td>รุ่นแผงและดาต้าชีต</td><td><a href="/learn/solar-pv/panel-selection/">เลือกแผง</a></td></tr>
+        <tr><td>5</td><td>เลือกอินเวอร์เตอร์และออกแบบสตริง</td><td>\(N_s \times N_p\) DC/AC ratio</td><td><a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง</a></td></tr>
+        <tr><td>6</td><td>เลือกแบตเตอรี่ (ถ้ามี)</td><td>kWh, V, BMS</td><td><a href="/learn/solar-pv/battery-storage/">แบตเตอรี่</a></td></tr>
+        <tr><td>7</td><td>สายไฟ อุปกรณ์ป้องกัน กราวด์ จุดต่อเข้าตู้ไฟ</td><td>Single-line diagram</td><td><a href="/learn/solar-pv/wiring-protection/">สายไฟ · ป้องกัน</a></td></tr>
+        <tr><td>8</td><td>คาดการณ์พลังงานและการสูญเสีย</td><td>kWh/ปี PR รายเดือน</td><td><a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน</a></td></tr>
+        <tr><td>9</td><td>วิเคราะห์ความคุ้มค่าและความเสี่ยง</td><td>คืนทุน NPV IRR LCOE</td><td><a href="/learn/solar-pv/economics/">ความคุ้มค่า</a></td></tr>
+        <tr><td>10</td><td>ขออนุญาต ติดตั้ง ทดสอบ ส่งมอบ เฝ้าติดตาม บำรุงรักษา</td><td>รายงานทดสอบ ระบบ monitoring</td><td><a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · O&amp;M</a> · <a href="/learn/solar-pv/forecasting-monitoring/">เฝ้าติดตาม</a></td></tr>
+      </tbody>
+    </table></div>
+    <div class="pv-flow" aria-label="เส้นทางพลังงาน"><span>☀ แสงอาทิตย์</span><i>→</i><span>แผง (DC)</span><i>→</i><span>MPPT · DC-DC</span><i>→</i><span>DC-link / แบตเตอรี่</span><i>→</i><span>อินเวอร์เตอร์ (AC)</span><i>→</i><span>ตู้ไฟ · โหลด · กริด</span></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="key">
+    <h2 id="key">สมการหลักที่ใช้ทั้งชุด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เรื่อง</th><th>สมการ</th><th>ความหมาย</th><th>รหัส</th></tr></thead>
+      <tbody>
+        <tr><td>กำลังของแผง</td><td>\(P = V I,\ \ FF = \dfrac{V_{mp}I_{mp}}{V_{oc}I_{sc}}\)</td><td>จุดทำงานบนเส้นโค้ง I-V</td><td><a href="/learn/solar-pv/pv-cell/#P3">P3</a></td></tr>
+        <tr><td>ผลของอุณหภูมิ</td><td>\(P = P_{STC}\left[1+\gamma (T_c-25)\right]\)</td><td>ร้อนขึ้น 10 °C กำลังลด ≈ 3 %</td><td><a href="/learn/solar-pv/pv-cell/#P6">P6</a></td></tr>
+        <tr><td>พลังงานต่อปี</td><td>\(E = P_{STC}\,H_{POA}\,365\,PR\)</td><td>ใช้กับทุกขนาดระบบ</td><td><a href="/learn/solar-pv/energy-yield/#E1">E1</a></td></tr>
+        <tr><td>แผงต่อสตริงสูงสุด</td><td>\(N_{s,max} = \left\lfloor V_{dc,max}/V_{oc}(T_{min})\right\rfloor\)</td><td>ห้ามเกินแม้ตอนเช้าหนาว</td><td><a href="/learn/solar-pv/string-sizing/#D2">D2</a></td></tr>
+        <tr><td>ความจุแบตเตอรี่</td><td>\(C = \dfrac{E_{day}\,N_{auto}}{DoD\,\eta}\)</td><td>kWh พิกัดที่ต้องซื้อ</td><td><a href="/learn/solar-pv/battery-storage/#B1">B1</a></td></tr>
+        <tr><td>ความคุ้มค่า</td><td>\(LCOE = \dfrac{\sum (C_t)/(1+r)^t}{\sum E_t/(1+r)^t}\)</td><td>ต้นทุนต่อหน่วยตลอดอายุ</td><td><a href="/learn/solar-pv/economics/#F5">F5</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="goals">
+    <h2 id="goals">เลือกเส้นทางตามเป้าหมายของคุณ</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เป้าหมาย</th><th>ระบบที่เหมาะ</th><th>อ่านตามลำดับ</th></tr></thead>
+      <tbody>
+        <tr><td>บ้านพักอาศัย ลดค่าไฟกลางวัน</td><td>On-grid 3–10 kW</td><td><a href="/learn/solar-pv/load-sizing/">ขนาดจากบิล</a> → <a href="/learn/solar-pv/panel-selection/">เลือกแผง</a> → <a href="/learn/solar-pv/string-sizing/">สตริง</a> → <a href="/learn/solar-pv/system-types/">ขนานไฟ</a> → <a href="/learn/solar-pv/economics/">คุ้มไหม</a></td></tr>
+        <tr><td>บ้านที่ไฟดับบ่อย หรือใช้ไฟกลางคืนมาก</td><td>Hybrid + LiFePO4</td><td><a href="/learn/solar-pv/system-types/">ชนิดระบบ</a> → <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่</a> → <a href="/learn/solar-pv/controller-selection/">เลือกอินเวอร์เตอร์</a></td></tr>
+        <tr><td>ลดค่าไฟแอร์ ร้านค้า สำนักงาน</td><td>On-grid / Hybrid</td><td><a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a> → <a href="/learn/solar-pv/load-sizing/">โปรไฟล์โหลด</a></td></tr>
+        <tr><td>สวน ไร่ นา บ่อปลา ไม่มีไฟฟ้า</td><td>ปั๊มน้ำ DC / VFD โซลาร์</td><td><a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำและเกษตร</a> → <a href="/learn/solar-pv/wiring-protection/">สายไฟ</a></td></tr>
+        <tr><td>โรงงาน อาคารใหญ่ 100 kW–1 MW</td><td>On-grid หลายอินเวอร์เตอร์ / zero export</td><td><a href="/learn/solar-pv/load-sizing/">โปรไฟล์ TOU</a> → <a href="/learn/solar-pv/energy-yield/">คาดการณ์</a> → <a href="/learn/solar-pv/forecasting-monitoring/">monitoring</a></td></tr>
+        <tr><td>โรงไฟฟ้า โซลาร์ฟาร์ม</td><td>Utility-scale MW</td><td><a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a> → <a href="/learn/solar-pv/pv-inverter/">grid code</a> → <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์</a></td></tr>
+        <tr><td>นักศึกษา วิศวกรออกแบบวงจร</td><td>อิเล็กทรอนิกส์กำลัง</td><td><a href="/learn/solar-pv/pv-cell/">I-V</a> → <a href="/learn/solar-pv/mppt/">MPPT</a> → <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์</a> → <a href="/learn/solar-pv/controller-selection/">ชิปและ MCU</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="start">
+    <h2 id="start">เริ่มตามระดับของคุณ</h2>
+    <div class="la-levels">
+      <div class="la-level">
+        <p><span class="lv lv-b">พื้นฐาน</span></p>
+        <p>เจ้าของบ้าน ช่างไฟฟ้า ปวช./ปวส. ที่อยากเข้าใจก่อนซื้อหรือก่อนติดตั้ง</p>
+        <p><a href="/learn/solar-pv/system-types/">ชนิดระบบ</a> → <a href="/learn/solar-pv/load-sizing/">ขนาดจากบิล</a> → <a href="/learn/solar-pv/panel-selection/">เลือกแผง</a> → <a href="/learn/solar-pv/wiring-protection/">ความปลอดภัย</a> → <a href="/learn/solar-pv/design-lab/">เครื่องมือ</a></p>
+      </div>
+      <div class="la-level">
+        <p><span class="lv lv-i">กลาง</span></p>
+        <p>นักศึกษาวิศวกรรม ผู้ออกแบบและผู้รับเหมาติดตั้ง</p>
+        <p><a href="/learn/solar-pv/pv-cell/">I-V</a> → <a href="/learn/solar-pv/string-sizing/">สตริง</a> → <a href="/learn/solar-pv/energy-yield/">คาดการณ์</a> → <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่</a> → <a href="/learn/solar-pv/economics/">ความคุ้มค่า</a> → <a href="/learn/solar-pv/installation-maintenance/">ทดสอบ</a></p>
+      </div>
+      <div class="la-level">
+        <p><span class="lv lv-a">ขั้นสูง</span></p>
+        <p>ป.โท งานวิจัย วิศวกรโรงไฟฟ้าและผู้พัฒนาอินเวอร์เตอร์</p>
+        <p><a href="/learn/solar-pv/mppt/">MPPT</a> → <a href="/learn/solar-pv/pv-inverter/">ควบคุมอินเวอร์เตอร์</a> → <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ ML</a> → <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a></p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">ทุกบทในชุดนี้</h2>
+    <!--series-cards:solar-pv-->
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">ลองเลย: แผงเดียวกัน ต่างแสง ต่างอุณหภูมิ ต่างเงา</h2>
+    <p>กดปุ่ม “ใบไม้บัง 1 ช่อง” แล้วดูว่าเส้นกำลัง P-V มีสองยอด อัลกอริทึม MPPT แบบง่ายที่เริ่มจากฝั่งแรงดันสูงจะติดอยู่ที่ยอดเล็ก ทำไมจึงเป็นเช่นนั้น และแก้อย่างไร อ่านที่ <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้น I-V</a> และ <a href="/learn/solar-pv/mppt/">MPPT</a></p>
+    <div class="pv-iv" data-ta="30"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <p>คาดการณ์พลังงานของระบบ 5 kWp ในพื้นที่ของคุณ (เปลี่ยนพื้นที่ ทิศ และการสูญเสียได้):</p>
+    <div class="fg-calc pv-calc" data-pv="yield"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">ค้นหาสูตรทั้งหมดในที่เดียว</h2>
+    <p>ทุกสูตรมีรหัสถาวร (P เซลล์ · R แสงอาทิตย์ · M แผง · S ระบบ · D สตริง · W สายไฟ · B แบตเตอรี่ · E พลังงาน · L ขนาดจากโหลด · F ความคุ้มค่า · A พยากรณ์ · T MPPT · V อินเวอร์เตอร์ · C ตัวควบคุม · H แอร์ · G ฟาร์ม · K เกษตร · I ติดตั้ง) อ้างอิงข้ามหน้าได้</p>
+    <!--formula-index:solar-pv-->
+    </section>
+
+    <section class="tsec" aria-labelledby="prereq">
+    <h2 id="prereq">ความรู้พื้นฐานที่เกี่ยวข้องบนเว็บนี้</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ความรู้</th><th>ใช้ทำอะไรในวิชานี้</th><th>บทเรียน</th></tr></thead>
+      <tbody>
+        <tr><td>บั๊ก บูสต์ คอนเวอร์เตอร์</td><td>MPPT ชาร์จคอนโทรลเลอร์ ขั้น DC-DC ของอินเวอร์เตอร์</td><td><a href="/learn/power-electronics/buck-converter/">บั๊ก</a> · <a href="/learn/power-electronics/boost-converter/">บูสต์</a></td></tr>
+        <tr><td>แล็บจำลองคอนเวอร์เตอร์</td><td>ทดลอง MPPT กับแผงจำลอง</td><td><a href="/learn/power-electronics/converter-lab/#preset=solar-mppt">พรีเซ็ต solar-mppt</a></td></tr>
+        <tr><td>อนุกรมฟูเรียร์ ฮาร์มอนิก</td><td>THD ของกระแสอินเวอร์เตอร์ SPWM ฟิลเตอร์</td><td><a href="/learn/fourier-series/inverters-pwm/">สเปกตรัมอินเวอร์เตอร์</a> · <a href="/learn/fourier-series/power-harmonics/">THD · IEEE 519</a></td></tr>
+        <tr><td>ระบบควบคุม PI และ Bode</td><td>ลูปกระแส ลูปแรงดัน DC-link PLL</td><td><a href="/learn/control-systems/pid/">PID</a> · <a href="/learn/control-systems/bode-plot/">Bode</a></td></tr>
+        <tr><td>ตัวเลือกชิปควบคุม</td><td>เลือก MCU gate driver สำหรับอินเวอร์เตอร์</td><td><a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a></td></tr>
+        <tr><td>แคลคูลัส</td><td>พลังงาน = อินทิกรัลกำลัง ค่าเฉลี่ย</td><td><a href="/learn/calculus-basics/">แคลคูลัสเบื้องต้น</a> · <a href="/learn/integral-calculus/">อินทิกรัล</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="standards">
+    <h2 id="standards">มาตรฐานและแหล่งข้อมูลที่ใช้อ้างอิง</h2>
+    <ul>
+      <li><b>แผง:</b> IEC 61215 (คุณภาพการออกแบบ), IEC 61730 (ความปลอดภัย), IEC 61853 (สมรรถนะตามแสงและอุณหภูมิ), มอก. 61215 / มอก. 61730</li>
+      <li><b>ระบบและการติดตั้ง:</b> IEC 60364-7-712 (ระบบ PV ในอาคาร), IEC 62548 (ออกแบบ PV array), มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (วสท.) และข้อกำหนดของการไฟฟ้า</li>
+      <li><b>อินเวอร์เตอร์และการเชื่อมต่อ:</b> IEC 62109 (ความปลอดภัย), IEC 62116 (anti-islanding), IEC 61727, IEEE 1547-2018, ระเบียบการเชื่อมต่อระบบโครงข่ายไฟฟ้าของ กฟภ. และ กฟน.</li>
+      <li><b>สายและอุปกรณ์:</b> EN 50618 / IEC 62930 (สาย PV), IEC 62852 (ขั้วต่อ), IEC 60269-6 (ฟิวส์ gPV), IEC 61643-31 (SPD ฝั่ง PV)</li>
+      <li><b>ทดสอบและส่งมอบ:</b> IEC 62446-1 (เอกสาร การทดสอบ การตรวจ), IEC 62446-3 (ภาพถ่ายความร้อน), IEC 61724 (การเฝ้าติดตามสมรรถนะ)</li>
+      <li><b>แบตเตอรี่:</b> IEC 62619 (ความปลอดภัยลิเทียมในอุตสาหกรรม), UL 9540 / UL 9540A (ระบบกักเก็บพลังงาน)</li>
+      <li><b>ข้อมูลแสงอาทิตย์:</b> แผนที่ศักยภาพพลังงานแสงอาทิตย์ของกรมพัฒนาพลังงานทดแทนและอนุรักษ์พลังงาน (พพ.), PVGIS (European Commission JRC), NASA POWER, NREL NSRDB</li>
+    </ul>
+    <div class="note"><b>หมายเหตุ</b> ข้อกำหนดการขนานไฟ อัตรารับซื้อไฟ และขั้นตอนขออนุญาตเปลี่ยนตามนโยบายของรัฐและการไฟฟ้า ตรวจประกาศฉบับล่าสุดของ กกพ. กฟภ. และ กฟน. ก่อนออกแบบจริงเสมอ ตัวเลขราคาในชุดนี้เป็นค่าตั้งต้นเพื่อการคำนวณ ให้แทนด้วยใบเสนอราคาจริง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">ตำราอ้างอิง</h2>
+    <ol>
+      <li>G. M. Masters, <i>Renewable and Efficient Electric Power Systems</i>, 2nd ed., Wiley — พื้นฐานแสงอาทิตย์และระบบ PV ที่อ่านง่ายที่สุด</li>
+      <li>A. Luque &amp; S. Hegedus (eds.), <i>Handbook of Photovoltaic Science and Engineering</i>, 2nd ed., Wiley — อ้างอิงเชิงลึกทุกด้าน</li>
+      <li>K. Mertens, <i>Photovoltaics: Fundamentals, Technology and Practice</i>, 2nd ed., Wiley — เซลล์ แผง ระบบ และการวัด</li>
+      <li>R. Teodorescu, M. Liserre, P. Rodríguez, <i>Grid Converters for Photovoltaic and Wind Power Systems</i>, Wiley-IEEE — การควบคุมอินเวอร์เตอร์เชื่อมกริด</li>
+      <li>J. A. Duffie &amp; W. A. Beckman, <i>Solar Engineering of Thermal Processes, Photovoltaics and Wind</i>, 5th ed. — ตำแหน่งดวงอาทิตย์และแสงบนระนาบเอียง</li>
+      <li>IEA PVPS Task 13 reports — ความเชื่อถือได้ การเสื่อม และความไม่แน่นอนของการคาดการณ์พลังงาน</li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
