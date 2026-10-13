@@ -136,3 +136,27 @@ in the hub's formula index; the series is in `MD_SERIES` (Markdown copies for AI
   `/learn/power-electronics/converter-lab/#preset=<name>` opens the full lab with it. Styles: "POWER ELECTRONICS CONVERTER LAB" in site.css.
 - Short URLs (`/power-electronics`, `/pe`, `/buck`, `/boost`, `/cuk`, `/compensator`, `/type-iii`, `/smps`, `/converter-lab` …) are in `_redirects`.
 - Next topics planned on the hub: SEPIC/Zeta, synchronous & interleaved, rectifiers & PFC, LLC & soft switching, DAB, inverters, SiC/GaN, EV charger.
+
+## Solar PV system design (added 2026-10-13)
+Series `solar-pv` in `TOPICS` (build.mjs), topic 14, 5 parts × 19 sub-pages: basics (pv-cell P, solar-resource R, panel-selection M),
+system (system-types S, string-sizing D, wiring-protection W, battery-storage B), forecast (energy-yield E, load-sizing L, economics F,
+forecasting-monitoring A), power electronics (mppt T, pv-inverter V, controller-selection C), applications (solar-air-conditioner H,
+solar-farm G, solar-agriculture K, installation-maintenance I, design-lab). Formula cards use the same markup as the other series and
+appear in the hub's formula index; the series is in `MD_SERIES`, and `src/md/solar-pv.md` is published as `/learn/solar-pv/guide.md`
+(`MD_GUIDES` entries now carry their own `desc` for llms.txt). Worked-example numbers were checked with Python and against the
+calculator engine in Node.
+- Calculators `assets/pv-calc.js` (`window.PVCalc`; in Node copy it to `.cjs`): `<div class="fg-calc pv-calc" data-pv="string|yield|size|battery|ac|pump|cable|econ">`
+  — any input can be preset with `data-<key>="value"` (keys are the first field of each entry in `CALC[...].ins`). I-V/P-V lab with partial
+  shading: `<div class="pv-iv" [data-shade="100,100,25"] [data-g="1000"] [data-ta="30"] [data-stc]>` — 580 Wp module, single-diode model fitted
+  to Voc/Isc/MPP, three bypass-diode substrings, shows the global MPP and where P&O started from Voc gets stuck. Thai site irradiance,
+  monthly shape, orientation and mounting factors are the tables at the top of the file (rounded teaching values). Styles: "SOLAR PV DESIGN" in site.css.
+- The MPPT page embeds the converter lab (`pe-lab`, preset `solar-mppt`).
+- OG images: the solar pages set `"og": {"title": …}` (short title) because the full titles are long.
+- Short URLs (`/solar`, `/pv`, `/mppt`, `/solar-calculator`, `/string-sizing`, `/solar-ac`, `/solar-pump`, `/lcoe` …) are in `_redirects`.
+
+## Main menu (changed 2026-10-13)
+`src/layout.html` groups the menu: `<div class="nav-grp"><button class="nav-tg" aria-controls>` + `<div class="nav-list [nav-list-r] [nav-list-wide]">`
+(links and `<span class="nav-h">` headings). Below 1600 px the hamburger panel shows the groups as an accordion (the group of the
+current page opens automatically, the current link is highlighted by `site.js` via `.nav-here`); from 1600 px they are dropdowns
+(hover, focus or click; Esc closes). `data-nav` keys: home learn trig calc int vec la lap fos sos sig fg fs cs pe pv watch tools about.
+To add a page to the menu, add a link to the right group; to add a series, add a group.

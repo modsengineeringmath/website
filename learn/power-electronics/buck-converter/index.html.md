@@ -142,8 +142,6 @@ $G_{vd}$ มีขั้วคู่ที่ $f_0$ (เฟสตก 180°) แ�
 
 - เปลี่ยนเป็น Peak current mode + Step load → ดู transient
 
-ต้องเปิด JavaScript เพื่อใช้แล็บ
-
 ## ประเด็นระดับปริญญาโท
 
 - Multiphase/Interleaved buck สำหรับ CPU/VRM: ripple หักล้างกัน, $f_{ripple} = N f_s$

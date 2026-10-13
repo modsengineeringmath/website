@@ -325,6 +325,63 @@ export const TOPICS = [
         summary: "ซิมูเลเตอร์ระดับการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค กับแบตเตอรี่ ไฟบ้าน โซลาร์ โหลด 3 แบบ ตัวควบคุม 4 โหมด สโคป 2 ช่อง ฟังก์ชันเจนฯ คำนวณ L และใบงาน 10 ชุด" },
     ],
   },
+  {
+    // Topic 14: Solar PV system design — from the cell to rooftop, battery, air conditioning, solar farms and farming,
+    // with the design calculators in assets/pv-calc.js. Same series machinery as power-electronics (parts, live(), formula index).
+    slug: "solar-pv",
+    title: "ออกแบบระบบโซลาร์เซลล์",
+    en: "Solar PV System Design",
+    sym: "☀",
+    summary: "ออกแบบและใช้งานโซลาร์เซลล์ครบวงจร ตั้งแต่เส้นโค้ง I-V เลือกแผง แสงอาทิตย์ในไทย ระบบ on-grid off-grid hybrid ออกแบบสตริง สายไฟและการป้องกัน แบตเตอรี่ คาดการณ์พลังงานและความคุ้มค่า พยากรณ์ล่วงหน้า MPPT อินเวอร์เตอร์ เลือกตัวควบคุม โซลาร์จ่ายแอร์ โซลาร์ฟาร์ม ปั๊มน้ำเพื่อการเกษตร งานติดตั้งและบำรุงรักษา พร้อมเครื่องคำนวณออกแบบฟรี",
+    fxHint: "พิมพ์ เช่น voc, string, psh, pr, kwh, dod, btu, mppt, lcoe, irr, ระยะคืนทุน, แรงดันตก, ปั๊มน้ำ",
+    parts: [
+      { id: "basics", n: 1, title: "พื้นฐานและการเลือกแผง", en: "Fundamentals & Modules", blurb: "เซลล์แสงอาทิตย์ทำงานอย่างไร เส้นโค้ง I-V ผลของแสงและอุณหภูมิ แสงอาทิตย์ในไทย มุมเอียง เงาบัง และการเลือกแผงจากดาต้าชีต" },
+      { id: "system", n: 2, title: "ออกแบบระบบและการจ่ายไฟ", en: "System Design & Grid Connection", blurb: "เลือกชนิดระบบ ขนานไฟกับ กฟภ./กฟน. ออกแบบสตริงให้เข้ากับอินเวอร์เตอร์ สายไฟ อุปกรณ์ป้องกัน กราวด์ และแบตเตอรี่" },
+      { id: "forecast", n: 3, title: "คาดการณ์ล่วงหน้าและความคุ้มค่า", en: "Prediction & Economics", blurb: "คำนวณพลังงานที่จะผลิตได้ก่อนติดตั้ง เลือกขนาดจากบิลค่าไฟ ระยะคืนทุน NPV IRR LCOE และพยากรณ์กำลังผลิตรายชั่วโมงถึงรายวัน" },
+      { id: "power-electronics", n: 4, title: "อิเล็กทรอนิกส์กำลังในระบบโซลาร์", en: "Power Electronics for PV", blurb: "MPPT อินเวอร์เตอร์เชื่อมกริด PLL การควบคุมกระแส anti-islanding และการเลือกตัวควบคุม ชิป และ MCU ที่ทันสมัยแต่ไม่ตกยุค" },
+      { id: "applications", n: 5, title: "งานประยุกต์และภาคปฏิบัติ", en: "Applications & Practice", blurb: "โซลาร์จ่ายแอร์ โซลาร์ฟาร์ม ปั๊มน้ำและเกษตร งานติดตั้ง ทดสอบ บำรุงรักษา วิเคราะห์อาการเสีย และเครื่องมือออกแบบออนไลน์" },
+    ],
+    sub: [
+      { slug: "pv-cell", part: "basics", short: "เซลล์และเส้น I-V", title: "เซลล์แสงอาทิตย์ทำงานอย่างไร: เส้นโค้ง I-V แบบจำลองไดโอด STC NOCT และผลของอุณหภูมิ", en: "How a Solar Cell Works: I-V Curve", sym: "I-V", prefix: "P",
+        summary: "รอยต่อ p-n กับแสง แบบจำลองไดโอดเดี่ยว Isc Voc MPP fill factor ประสิทธิภาพ STC กับ NOCT สัมประสิทธิ์อุณหภูมิ บายพาสไดโอด พร้อมแล็บเส้นโค้ง I-V และเงาบัง" },
+      { slug: "solar-resource", part: "basics", short: "แสงอาทิตย์ · มุม · เงา", title: "แสงอาทิตย์ในประเทศไทย: ความเข้มแสง ชั่วโมงแดดสูงสุด มุมเอียง ทิศ และเงาบัง", en: "Solar Resource, Orientation & Shading", sym: "PSH", prefix: "R",
+        summary: "GHI DNI DHI POA ชั่วโมงแดดสูงสุด (PSH) ข้อมูลแสงของไทย ตำแหน่งดวงอาทิตย์ มุมเอียงและทิศที่เหมาะ ระยะห่างแถวกันเงา และวิธีประเมินเงาบังหน้างาน" },
+      { slug: "panel-selection", part: "basics", short: "เลือกแผง", title: "เลือกแผงโซลาร์เซลล์: PERC TOPCon HJT Back-contact Bifacial อ่านดาต้าชีต และมาตรฐาน", en: "Choosing Solar Panels", sym: "Wp", prefix: "M",
+        summary: "เทคโนโลยีเซลล์ปัจจุบัน half-cut multi-busbar bifacial อ่านดาต้าชีตทุกบรรทัด tolerance การเสื่อม ประกัน มาตรฐาน IEC 61215 61730 มอก. และเช็กลิสต์เลือกซื้อ" },
+      { slug: "system-types", part: "system", short: "ชนิดระบบ · ขนานไฟ", title: "ระบบโซลาร์ On-grid Off-grid Hybrid และการขนานไฟกับ กฟภ. กฟน.", en: "System Types & Grid Connection", sym: "⇄", prefix: "S",
+        summary: "เปรียบเทียบ on-grid off-grid hybrid และระบบ DC ตรง zero export net billing ขั้นตอนขออนุญาต กฟภ. กฟน. กกพ. ท้องถิ่น และการเลือกระบบตามรูปแบบการใช้ไฟ" },
+      { slug: "string-sizing", part: "system", short: "ออกแบบสตริง", title: "ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio", en: "String Sizing & Inverter Matching", sym: "Ns", prefix: "D",
+        summary: "คำนวณจำนวนแผงต่ออนุกรมสูงสุดต่ำสุด สตริงขนานต่อ MPPT ตรวจกระแส Isc DC/AC ratio และ clipping พร้อมเครื่องคำนวณและตัวอย่างระบบ 5 kW 10 kW และ 100 kW" },
+      { slug: "wiring-protection", part: "system", short: "สายไฟ · ป้องกัน", title: "สายไฟ ฟิวส์ เบรกเกอร์ SPD กราวด์ และการต่อเข้าตู้ไฟ สำหรับระบบโซลาร์", en: "Wiring, Protection & Earthing", sym: "⏚", prefix: "W",
+        summary: "สาย PV1-F ขั้วต่อ MC4 แรงดันตก ฟิวส์สตริง DC isolator SPD Type 1/2 RCD Type A/B กราวด์และ equipotential bonding การต่อเข้าตู้ไฟบ้าน ไฟไหม้ DC และ rapid shutdown" },
+      { slug: "battery-storage", part: "system", short: "แบตเตอรี่", title: "แบตเตอรี่สำหรับโซลาร์: LiFePO4 ขนาด kWh DoD C-rate BMS และระบบสำรองไฟ", en: "Battery Storage for PV", sym: "kWh", prefix: "B",
+        summary: "เคมีแบตเตอรี่ LFP NMC ตะกั่วกรด โซเดียมไอออน ขนาดตามพลังงานกลางคืนและวันสำรอง DoD C-rate อายุรอบ BMS ระบบ 48 V กับ high voltage ความปลอดภัย และความคุ้มค่า" },
+      { slug: "energy-yield", part: "forecast", short: "คาดการณ์พลังงาน", title: "คาดการณ์พลังงานที่ผลิตได้: Performance Ratio ห่วงโซ่การสูญเสีย และ kWh/kWp ในไทย", en: "Energy Yield Prediction", sym: "PR", prefix: "E",
+        summary: "สมการพลังงาน E = P·H·PR แยกการสูญเสียทีละขั้น อุณหภูมิ ฝุ่น สาย อินเวอร์เตอร์ clipping การเสื่อมรายปี P50 P90 รายเดือน และการใช้ PVGIS PVsyst SAM" },
+      { slug: "load-sizing", part: "forecast", short: "ขนาดจากบิลค่าไฟ", title: "เลือกขนาดระบบจากบิลค่าไฟและโปรไฟล์โหลด: ใช้เองกลางวัน ส่งคืนกริด และแบตเตอรี่", en: "Sizing from Bills & Load Profile", sym: "kWp", prefix: "L",
+        summary: "อ่านบิลค่าไฟ แยกโหลดกลางวันกลางคืน self-consumption self-sufficiency โปรไฟล์บ้าน ร้านค้า โรงงาน TOU ความต้องการพลังไฟฟ้า และตัวอย่างเลือกขนาด 3 กรณี" },
+      { slug: "economics", part: "forecast", short: "ความคุ้มค่า", title: "ความคุ้มค่าของโซลาร์เซลล์: ระยะคืนทุน NPV IRR LCOE และการวิเคราะห์ความไว", en: "Economics: Payback, NPV, IRR, LCOE", sym: "฿", prefix: "F",
+        summary: "ต้นทุนระบบ ผลประหยัดรายปี ระยะคืนทุนอย่างง่ายและคิดลด NPV IRR LCOE ค่าเสื่อม การเปลี่ยนอินเวอร์เตอร์ ภาษีและสินเชื่อ และการวิเคราะห์ความไวพร้อมเครื่องคำนวณ" },
+      { slug: "forecasting-monitoring", part: "forecast", short: "พยากรณ์ · เฝ้าติดตาม", title: "พยากรณ์กำลังผลิตโซลาร์ล่วงหน้าและการเฝ้าติดตาม: clear-sky พยากรณ์อากาศ ML และตรวจจับความผิดปกติ", en: "PV Forecasting & Monitoring", sym: "ŷ", prefix: "A",
+        summary: "ระยะพยากรณ์นาทีถึงวัน แบบจำลอง clear-sky persistence NWP ดาวเทียม machine learning ตัวชี้วัด MAE RMSE skill score ระบบเฝ้าติดตาม KPI และตรวจจับความผิดปกติอัตโนมัติ" },
+      { slug: "mppt", part: "power-electronics", short: "MPPT", title: "MPPT ติดตามจุดกำลังสูงสุด: P&O Incremental Conductance เงาบังบางส่วน และ Global MPPT", en: "Maximum Power Point Tracking", sym: "MPP", prefix: "T",
+        summary: "ทำไมต้องมีคอนเวอร์เตอร์ระหว่างแผงกับโหลด จุดทำงานกับความต้านทาน P&O InC ขนาดก้าว ความถี่ ประสิทธิภาพ MPPT เงาบังกับหลายยอด global scan และโค้ดตัวอย่าง พร้อมซิมูเลเตอร์" },
+      { slug: "pv-inverter", part: "power-electronics", short: "อินเวอร์เตอร์", title: "อินเวอร์เตอร์โซลาร์: โครงสร้าง Boost + H-bridge PLL ควบคุมกระแสกริด Anti-islanding และมาตรฐาน", en: "PV Inverters & Grid-Tie Control", sym: "DC→AC", prefix: "V",
+        summary: "string micro optimizer central โครงสร้างสองขั้น DC-link SPWM ฟิลเตอร์ L LCL PLL ควบคุมกระแสแบบ PR และ dq anti-islanding grid code ride-through Volt-VAR และฮาร์มอนิก" },
+      { slug: "controller-selection", part: "power-electronics", short: "เลือกตัวควบคุม", title: "เลือกตัวควบคุมโซลาร์: ชาร์จคอนโทรลเลอร์ อินเวอร์เตอร์ ชิป และ MCU รุ่นปัจจุบันกับรุ่นที่แข็งแกร่งไม่ตกยุค", en: "Choosing Solar Controllers, Chips & MCUs", sym: "IC", prefix: "C",
+        summary: "PWM กับ MPPT ชาร์จคอนโทรลเลอร์ เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid ชิป MPPT ชาร์จเจอร์ gate driver MCU C2000 STM32G4 dsPIC33 ESP32 การสื่อสาร Modbus CAN และการวางแผนไม่ให้ตกยุค" },
+      { slug: "solar-air-conditioner", part: "applications", short: "โซลาร์จ่ายแอร์", title: "โซลาร์เซลล์จ่ายแอร์: คำนวณ BTU เป็น kW ขนาดแผง แอร์อินเวอร์เตอร์ แอร์ DC/AC ไฮบริด และกระแสกระชาก", en: "Solar Power for Air Conditioning", sym: "❄", prefix: "H",
+        summary: "ภาระความเย็น BTU COP EER SEER แอร์เบอร์ 5 กำลังไฟจริงตลอดวัน ทำไมแอร์กับโซลาร์เข้ากันดี วิธีต่อแบบ on-grid hybrid และแอร์โซลาร์ DC การเลือกขนาดและตัวอย่าง" },
+      { slug: "solar-farm", part: "applications", short: "โซลาร์ฟาร์ม", title: "ออกแบบโซลาร์ฟาร์ม: ผังแผง ระยะห่างแถว GCR Tracker อินเวอร์เตอร์ หม้อแปลง และการเชื่อมต่อระบบ", en: "Utility-Scale Solar Farm Design", sym: "MW", prefix: "G",
+        summary: "ขั้นตอนพัฒนาโครงการ เลือกที่ดิน ผังและ GCR fixed tilt กับ single-axis tracker bifacial central กับ string inverter MV สถานีไฟฟ้า SCADA grid code โซลาร์ลอยน้ำ และพลังงานต่อไร่" },
+      { slug: "solar-agriculture", part: "applications", short: "ปั๊มน้ำ · เกษตร", title: "โซลาร์เพื่อการเกษตร: ปั๊มน้ำโซลาร์ คำนวณ Head และอัตราไหล Agrivoltaics และฟาร์มอัจฉริยะ", en: "Solar Pumping & Agrivoltaics", sym: "Q·H", prefix: "K",
+        summary: "ความต้องการน้ำของพืช กำลังปั๊ม ρgQH หัวสูบรวม ปั๊ม DC บัสเลส ปั๊ม AC ผ่าน VFD ถังเก็บน้ำแทนแบตเตอรี่ โซลาร์ร่วมกับเกษตร โรงเรือน ฟาร์มปศุสัตว์และประมง และ IoT" },
+      { slug: "installation-maintenance", part: "applications", short: "ติดตั้ง · บำรุงรักษา", title: "ติดตั้ง ทดสอบ ส่งมอบ และบำรุงรักษาระบบโซลาร์: IEC 62446 I-V tracer ภาพความร้อน และวิเคราะห์อาการเสีย", en: "Installation, Commissioning & O&M", sym: "✓", prefix: "I",
+        summary: "หลังคาและโครงยึด ขั้นตอนติดตั้งปลอดภัย การทดสอบก่อนจ่ายไฟ Voc Isc ฉนวน I-V curve ภาพถ่ายความร้อน ล้างแผง ตารางบำรุงรักษา และตารางอาการเสีย 20 แบบ" },
+      { slug: "design-lab", part: "applications", short: "เครื่องมือออกแบบ", title: "เครื่องมือออกแบบระบบโซลาร์ออนไลน์: สตริง พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ สายไฟ และความคุ้มค่า", en: "Solar PV Design Calculator", sym: "▶", tag: "เครื่องคำนวณ 9 ตัว",
+        summary: "รวมเครื่องคำนวณทุกตัวในหน้าเดียว: แล็บเส้น I-V ขนาดจากบิล ออกแบบสตริง คาดการณ์พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ แรงดันตก และความคุ้มค่า พร้อมใบงานฝึกออกแบบ" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -691,7 +748,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/, /<div class="pv-iv"/, /<div class="fg-calc pv-calc"/, /<div class="pe-lab"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -718,8 +775,13 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["fourier-series", "power-electronics"];
-const MD_GUIDES = [{ src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)" }];
+const MD_SERIES = ["fourier-series", "power-electronics", "solar-pv"];
+const MD_GUIDES = [
+  { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
+    desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
+  { src: "src/md/solar-pv.md", out: "learn/solar-pv/guide.md", page: "/learn/solar-pv/", title: "Solar PV system design — complete guide (Thai, Markdown)",
+    desc: "19-chapter structure, 10-step design workflow, key formulas with IDs (cell, resource, modules, string sizing, wiring, batteries, yield, economics, forecasting, MPPT, inverters, air conditioning, solar farms, pumping), Thai solar data, worked-example numbers, calculators, standards (IEC 61215/61730/62548/62446/62109/62116, IEEE 1547, PEA/MEA) and FAQ" },
+];
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
 
@@ -865,6 +927,8 @@ const LABS = [
   ["Fourier series table of 18 waveforms", "fourier-series/waveform-table", "Fourier series, RMS and THD of square, pulse, triangle, sawtooth, half/full-wave rectified sine, 6-pulse line current, TRIAC phase control, clipped sine, SMPS current, quasi-square, six-step, SPWM, trapezoid and inductor-ripple waveforms, each with a thumbnail and a link to its derivation"],
   ["DC-DC converter simulator lab", "power-electronics/converter-lab", "free browser-based switching-level (cycle-by-cycle) simulator of buck, boost, inverting buck-boost and Cuk converters with Rds(on), diode Vf, inductor DCR and capacitor ESR; sources: battery with internal resistance, 220 V 50 Hz mains through transformer + bridge rectifier + bulk capacitor, or PV panel (single-diode model); loads: resistor, constant current (e-load), step load; control: open loop, digital voltage-mode PI with anti-windup and soft-start, peak current mode with slope compensation, P&O MPPT; 2-channel oscilloscope with min/max envelope, function generator injecting square/sine/triangle into Vref or duty (for Gvd measurement), efficiency/CCM-DCM readouts, L/C design and inductor turns/flux/wire calculator; 10 worksheets with one-click presets via #preset=<name>"],
   ["Power electronics formula index", "power-electronics#formulas", "every DC-DC converter formula with a citable ID (B buck, U boost, W buck-boost, K Cuk, S small-signal model, C compensator design, A analog control, Z digital control, O observers, L inductor design, V test sources) in one searchable list"],
+  ["Solar PV design calculators", "solar-pv/design-lab", "free browser-based solar PV design tools (Thai): I-V and P-V curve lab of a 580 Wp module with three bypass-diode substrings, irradiance, temperature and partial shading (shows global vs local MPP that P&O gets stuck on); system size from the electricity bill; string sizing (Voc at minimum temperature, Vmp at hot cell temperature, MPPT window, current per MPPT, DC/AC ratio); energy yield with a loss chain and Performance Ratio for Thai sites by month; battery sizing (kWh, Ah, DoD, C-rate, inverter surge); solar for air conditioners (BTU, SEER, kWp); solar water pump sizing (crop water, total dynamic head, kWp); DC/AC voltage drop and cable size; economics (payback, NPV, IRR, LCOE)"],
+  ["Solar PV formula index", "solar-pv#formulas", "every solar PV design formula with a citable ID (P cell & I-V, R solar resource, M modules, S system types, D string sizing, W wiring & protection, B batteries, E energy yield, L load sizing, F economics, A forecasting, T MPPT, V inverters, C controllers, H air conditioning, G solar farms, K pumping & agriculture, I installation & O&M) in one searchable list"],
   ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
 ];
 fs.writeFileSync(
@@ -884,14 +948,15 @@ ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}
 - [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
 - Lab presets can be opened directly, e.g. ${SITE}/learn/function-generator/simulator/#preset=rc-square (RC low-pass with a square wave), #preset=probe-comp, #preset=lissajous, #preset=opamp-slew, #preset=aliasing
+- Solar PV design calculators (string sizing, energy yield, battery, air conditioner, solar pump, voltage drop, payback/NPV/IRR/LCOE): ${SITE}/learn/solar-pv/design-lab/ ; MPPT switching-level simulation: ${SITE}/learn/power-electronics/converter-lab/#preset=solar-mppt
 - Harmonic lab presets, e.g. ${SITE}/learn/fourier-series/analyzer-lab/#preset=smps (SMPS without PFC), #preset=neutral (hot neutral), #preset=six (6-pulse rectifier), #preset=cap-resonance (PF capacitor resonance), #preset=detuned (7 % detuned bank), #preset=square-gibbs, #preset=lc-buck
 
 ## Markdown versions (for AI assistants)
-${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ`).join("\n")}
+${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): ${g.desc}`).join("\n")}
 ${TOPICS.filter((t) => MD_SERIES.includes(t.slug)).map((t) => [`- [${t.en} — hub (Markdown)](${SITE}/learn/${t.slug}/index.html.md)`, ...live(t).map((s) => `- [${s.en} (Markdown)](${SITE}${seriesUrl(t, s)}index.html.md)`)].join("\n")).join("\n")}
 
 ## About
-- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters) and buck converters
+- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters), power electronics and solar PV system design (string sizing, batteries, energy yield, MPPT, inverters, solar air conditioning, solar farms, solar pumping)
 - [About อาจารย์มด](${SITE}/about/): profile, teaching, current projects and status updates
 - [Knowledge library](${SITE}/learn/): index of all lessons, books in progress and video series
 - [Updates feed (RSS)](${SITE}/feed.xml)

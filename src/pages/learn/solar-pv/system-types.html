@@ -1,0 +1,174 @@
+<!--meta
+{
+  "title": "ระบบโซลาร์เซลล์ On-grid Off-grid Hybrid ต่างกันอย่างไร: Zero Export Net Billing และขั้นตอนขนานไฟ กฟภ. กฟน. | อาจารย์มด",
+  "h1": "ระบบโซลาร์ On-grid Off-grid Hybrid และการขนานไฟกับ กฟภ. กฟน.",
+  "description": "เปรียบเทียบระบบโซลาร์เซลล์ on-grid (grid-tie) off-grid hybrid และ DC ตรง DC-coupled กับ AC-coupled micro-inverter และ optimizer zero export กันไฟย้อน net billing สมดุลพลังงาน self-consumption self-sufficiency ขั้นตอนขออนุญาตขนานไฟ กฟภ. กฟน. แจ้ง กกพ. และท้องถิ่น และวิธีเลือกระบบให้ตรงกับการใช้ไฟ",
+  "ogTitle": "On-grid Off-grid Hybrid และการขนานไฟ · โซลาร์เซลล์",
+  "og": {"title": "On-grid Off-grid Hybrid และการขนานไฟ"},
+  "lesson": "solar-pv",
+  "sub": "system-types",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Grid-connected photovoltaic system", "Off-grid photovoltaic system", "Hybrid inverter", "Net billing", "Self-consumption"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "ระบบ On-grid ใช้ไฟได้ตอนไฟดับไหม?", "a": "ไม่ได้ อินเวอร์เตอร์ on-grid ต้องหยุดจ่ายไฟภายในเวลาที่มาตรฐานกำหนดเมื่อไฟการไฟฟ้าดับ (anti-islanding) เพื่อความปลอดภัยของช่างที่ซ่อมสายส่ง ถ้าต้องการไฟสำรองต้องใช้ระบบ hybrid ที่มีแบตเตอรี่และช่องจ่ายโหลดสำรอง (backup/EPS)"},
+    {"q": "Zero export คืออะไร ต้องขออนุญาตการไฟฟ้าไหม?", "a": "Zero export คือการควบคุมไม่ให้ไฟจากโซลาร์ไหลย้อนออกสู่ระบบการไฟฟ้า โดยใช้มิเตอร์หรือ CT วัดกำลังที่จุดต่อแล้วลดกำลังอินเวอร์เตอร์ แม้ไม่ขายไฟ ระบบที่ต่อขนานกับการไฟฟ้ายังต้องแจ้งหรือขออนุญาตตามระเบียบของ กฟภ. หรือ กฟน. และใช้อินเวอร์เตอร์ที่อยู่ในรายชื่อที่การไฟฟ้ายอมรับ"},
+    {"q": "Hybrid แบบ DC-coupled กับ AC-coupled ต่างกันอย่างไร?", "a": "DC-coupled ต่อแผงและแบตเตอรี่เข้าอินเวอร์เตอร์ไฮบริดตัวเดียว ชาร์จแบตจากแผงโดยตรง ประสิทธิภาพสูงกว่าและถูกกว่าสำหรับระบบใหม่ AC-coupled เพิ่มแบตเตอรี่พร้อมอินเวอร์เตอร์แบตเข้าทางฝั่ง AC เหมาะกับการเพิ่มแบตให้ระบบ on-grid เดิม แต่พลังงานผ่านการแปลงหลายขั้นกว่า"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ชนิดระบบ · ขนานไฟ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.4 · ออกแบบระบบโซลาร์เซลล์ · System Types &amp; Grid Connection</p>
+      <h1>ระบบโซลาร์ On-grid Off-grid Hybrid และการขนานไฟกับ กฟภ. กฟน.</h1>
+      <p class="lede">การนำไฟจากแผงมาใช้มีได้หลายสถาปัตยกรรม และแต่ละแบบเหมาะกับรูปแบบการใช้ไฟต่างกัน การเลือกผิดตั้งแต่ขั้นนี้ทำให้ทั้งโครงการไม่คุ้ม เช่น ใส่แบตเตอรี่ให้บ้านที่ใช้ไฟแค่กลางวัน หรือติด on-grid ให้บ้านที่ต้องการไฟสำรองตอนไฟดับ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#compare">เปรียบเทียบระบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#balance">สมดุลพลังงาน</a>
+        <a class="btn btn-ghost btn-sm" href="#coupling">DC/AC coupling</a>
+        <a class="btn btn-ghost btn-sm" href="#permit">ขั้นตอนขนานไฟ</a>
+        <a class="btn btn-ghost btn-sm" href="#choose">เลือกระบบ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>On-grid: ถูกที่สุด คืนทุนเร็ว แต่ไฟดับแล้วดับด้วย</li>
+          <li>Hybrid: on-grid + แบต + ไฟสำรอง แพงขึ้น คุ้มเมื่อใช้ไฟกลางคืนมากหรือไฟดับบ่อย</li>
+          <li>Off-grid: ไม่มีการไฟฟ้า แบตต้องพอทั้งกลางคืนและวันฝนตก ออกแบบเผื่อมาก</li>
+          <li>ต่อขนานกับการไฟฟ้าทุกกรณีต้องใช้อินเวอร์เตอร์ในรายชื่อที่การไฟฟ้ายอมรับ และแจ้ง/ขออนุญาตตามระเบียบ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น self-consumption, export, net billing, ประสิทธิภาพ" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">เปรียบเทียบระบบหลัก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>On-grid (Grid-tie)</th><th>Hybrid</th><th>Off-grid</th><th>DC ตรง</th></tr></thead>
+      <tbody>
+        <tr><td>ต่อกับการไฟฟ้า</td><td>ต่อ</td><td>ต่อ</td><td>ไม่ต่อ</td><td>ไม่ต่อ</td></tr>
+        <tr><td>แบตเตอรี่</td><td>ไม่มี</td><td>มี</td><td>มี (ขนาดใหญ่)</td><td>ไม่มี หรือใช้ถังน้ำแทน</td></tr>
+        <tr><td>ไฟดับ</td><td>ระบบหยุด</td><td>จ่ายโหลดสำรองต่อ</td><td>ไม่เกี่ยว</td><td>ไม่เกี่ยว</td></tr>
+        <tr><td>อุปกรณ์หลัก</td><td>อินเวอร์เตอร์ on-grid</td><td>อินเวอร์เตอร์ไฮบริด + แบต + BMS</td><td>อินเวอร์เตอร์ off-grid / ชาร์จคอนโทรลเลอร์ + แบต (+ เครื่องปั่นไฟ)</td><td>คอนโทรลเลอร์ปั๊ม / ตัวแปลง DC</td></tr>
+        <tr><td>ราคาต่อ kWp (เทียบ)</td><td>1×</td><td>1.6–2.5×</td><td>2–3×</td><td>0.7–1.2×</td></tr>
+        <tr><td>ประสิทธิภาพรวม</td><td>สูงสุด (96–98 % ที่อินเวอร์เตอร์)</td><td>สูง ยกเว้นไฟที่ผ่านแบต</td><td>ต่ำกว่า (ไฟเข้าแบตแล้วออก)</td><td>สูง</td></tr>
+        <tr><td>เหมาะกับ</td><td>บ้าน ร้าน โรงงาน ที่ใช้ไฟกลางวัน</td><td>บ้านใช้ไฟกลางคืน ไฟดับบ่อย ต้องการความมั่นคง</td><td>เกาะ ดอย สวน ไร่ สถานีสื่อสาร</td><td>ปั๊มน้ำเกษตร พัดลม DC ไฟส่องสว่าง</td></tr>
+      </tbody>
+    </table></div>
+    <h3>รูปแบบย่อยที่พบบ่อย</h3>
+    <ul>
+      <li><b>String inverter</b> แผงหลายแผงต่ออนุกรมเป็นสตริงเข้าอินเวอร์เตอร์ตัวเดียว ราคาต่อวัตต์ต่ำ บำรุงรักษาง่าย</li>
+      <li><b>Micro-inverter</b> อินเวอร์เตอร์เล็กต่อแผง 1–4 แผง แรงดัน DC ต่ำ (&lt; 60–80 V) ปลอดภัยเรื่องไฟไหม้ DC ทนเงาบังดี แต่ราคาสูงและอุปกรณ์อยู่บนหลังคาร้อน</li>
+      <li><b>Power optimizer</b> DC-DC ต่อแผง ทำ MPPT ระดับแผง ส่งไปอินเวอร์เตอร์สตริง มีฟังก์ชัน rapid shutdown</li>
+      <li><b>Zero export / Export limit</b> ระบบ on-grid หรือ hybrid ที่มีมิเตอร์หรือ CT ที่จุดต่อ ลดกำลังเมื่อจะมีไฟย้อนออก ใช้เมื่อไม่ได้ขายไฟหรือหม้อแปลงรับไฟย้อนไม่ได้</li>
+      <li><b>Off-grid + เครื่องกำเนิดไฟฟ้า</b> (PV-diesel hybrid) ใช้เมื่อพลังงานแสงไม่พอในบางฤดู แบตเล็กลงได้มาก</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="balance">
+    <h2 id="balance">สมดุลพลังงาน: ใช้เอง ส่งออก ซื้อเข้า <span class="lv lv-i">กลาง</span></h2>
+    <p>ทุกช่วงเวลา กำลังจากแผง โหลด และการไฟฟ้า ต้องสมดุลกันที่ตู้ไฟ ถ้ารวมทั้งปี:</p>
+<div class="tf" id="S1" data-k="energy balance self consumption export import สมดุลพลังงาน ใช้เอง ส่งออก ซื้อเข้า"><p class="tf-n"><b><span class="fid">S1</span> Energy balance at the meter</b> สมดุลพลังงานที่จุดต่อ</p>
+        \[ E_{PV} = E_{self} + E_{export} \qquad E_{load} = E_{self} + E_{import} \]</div>
+<div class="tf" id="S2" data-k="self consumption ratio self sufficiency อัตราใช้เอง พึ่งพาตนเอง"><p class="tf-n"><b><span class="fid">S2</span> Self-consumption and self-sufficiency</b> อัตราการใช้เองและการพึ่งพาตนเอง</p>
+        \[ SCR = \frac{E_{self}}{E_{PV}} \qquad SSR = \frac{E_{self}}{E_{load}} \]</div>
+<div class="tf" id="S3" data-k="bill saving net billing buyback ผลประหยัด ค่าไฟ ราคารับซื้อ"><p class="tf-n"><b><span class="fid">S3</span> Bill saving under net billing</b> ผลประหยัดค่าไฟแบบ net billing</p>
+        \[ \text{Saving} = E_{self}\,c_{buy} + E_{export}\,c_{sell} \qquad c_{sell} < c_{buy} \]</div>
+    <p>ภายใต้ <b>net billing</b> ไฟที่ใช้เองมีค่าเท่าค่าไฟที่ไม่ต้องซื้อ (≈ 4–4.5 บาท/หน่วยรวม Ft และ VAT) แต่ไฟส่วนเกินที่ส่งออกได้ราคารับซื้อต่ำกว่า (โครงการโซลาร์ภาคประชาชนช่วงปี 2567–2568 ใช้ 2.20 บาท/หน่วย สัญญา 10 ปี) ผลคือ <b>ทุกหน่วยที่ใช้เองมีค่าเกือบสองเท่าของหน่วยที่ขาย</b> การออกแบบที่ดีจึงพยายามให้ SCR สูง (ดู <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิล</a>)</p>
+<div class="wx" id="ex-s-1"><div class="wx-head"><span class="mono">ตัวอย่าง S-1</span><h3>บ้านใช้ไฟ 600 หน่วย/เดือน ติด 5 kWp</h3></div>
+<p>ระบบผลิต 600 kWh/เดือน บ้านใช้ไฟช่วงมีแดด 270 kWh/เดือน ค่าไฟ 4.2 บาท/หน่วย ราคารับซื้อ 2.2 บาท/หน่วย</p>
+<ol class="steps">
+<li><p>\(E_{self} = 270\) kWh (ใช้ได้ไม่เกินโหลดกลางวัน) · \(E_{export} = 600 - 270 = 330\) kWh</p></li>
+<li><p>Saving = \(270(4.2) + 330(2.2) = 1{,}134 + 726 = 1{,}860\) บาท/เดือน</p></li>
+<li><p>SCR = 270/600 = 45 % · SSR = 270/600 = 45 %</p></li>
+<li><p>ถ้าติดแค่ 2.9 kWp (ผลิต ≈ 326 kWh ใช้เองได้ ≈ 270) ประหยัด ≈ 1,134 + 123 = 1,257 บาท ด้วยเงินลงทุนแค่ 58 % — ผลตอบแทนต่อบาทดีกว่า แม้ประหยัดรวมน้อยกว่า</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="coupling">
+    <h2 id="coupling">Hybrid แบบ DC-coupled กับ AC-coupled <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S4" data-k="efficiency chain round trip coupling ประสิทธิภาพ ห่วงโซ่"><p class="tf-n"><b><span class="fid">S4</span> Efficiency of a conversion chain</b> ประสิทธิภาพของห่วงโซ่การแปลง</p>
+        \[ \eta_{chain} = \prod_k \eta_k \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>DC-coupled</th><th>AC-coupled</th></tr></thead>
+      <tbody>
+        <tr><td>เส้นทาง PV → แบต → โหลด AC</td><td>MPPT DC-DC (0.98) → แบต (0.95) → อินเวอร์เตอร์ (0.96)</td><td>PV inverter (0.97) → battery inverter ชาร์จ (0.96) → แบต (0.95) → ดิสชาร์จ (0.96)</td></tr>
+        <tr><td>ประสิทธิภาพรวม</td><td>\(0.98 \times 0.95 \times 0.96 \approx 0.89\)</td><td>\(0.97\times0.96\times0.95\times0.96 \approx 0.85\)</td></tr>
+        <tr><td>เหมาะกับ</td><td>ระบบใหม่ทั้งชุด</td><td>เพิ่มแบตให้ระบบ on-grid ที่มีอยู่ ระบบใหญ่หลายอินเวอร์เตอร์</td></tr>
+        <tr><td>ข้อจำกัด</td><td>ขนาดแผงและแบตผูกกับอินเวอร์เตอร์ตัวเดียว</td><td>อุปกรณ์มากขึ้น ต้องประสานการควบคุม (frequency shifting ในโหมด off-grid)</td></tr>
+      </tbody>
+    </table></div>
+    <p>ประสิทธิภาพต่างกันราว 4 % เฉพาะพลังงานที่ผ่านแบตเตอรี่ ส่วนพลังงานที่ใช้ตรงช่วงกลางวันผ่านการแปลงขั้นเดียวในทั้งสองแบบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="antiislanding">
+    <h2 id="antiislanding">ทำไมระบบ on-grid ต้องดับเมื่อไฟดับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้าอินเวอร์เตอร์ยังจ่ายไฟเข้าสายที่การไฟฟ้าตัดออกเพื่อซ่อม ช่างที่คิดว่าสายไม่มีไฟจะถูกไฟดูด ปรากฏการณ์นี้เรียกว่า <b>islanding</b> มาตรฐานจึงกำหนดให้อินเวอร์เตอร์ตรวจจับและตัดตัวเองภายใน 2 วินาที (IEC 62116, IEEE 1547) ด้วยการเฝ้าดูแรงดันและความถี่ (passive) ร่วมกับการรบกวนเล็กน้อยเพื่อดูการตอบสนอง (active) รายละเอียดอยู่ที่ <a href="/learn/solar-pv/pv-inverter/#anti-islanding">อินเวอร์เตอร์โซลาร์</a></p>
+    <p>ระบบ hybrid จ่ายโหลดสำรองได้เพราะมี <b>สวิตช์ถ่ายโอน (transfer relay)</b> ในตัวที่แยกวงจรโหลดสำรองออกจากการไฟฟ้าก่อน แล้วจึงสร้างไฟ AC เองจากแบตเตอรี่ — วงจรสำรองต้องเดินสายแยกเป็นตู้โหลดสำรอง (backup/EPS panel) ไม่ใช่ทั้งบ้าน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="permit">
+    <h2 id="permit">ขั้นตอนขออนุญาตขนานไฟในประเทศไทย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ขั้นตอนโดยทั่วไปของระบบบนหลังคาขนาดเล็ก (สรุปเพื่อให้เห็นภาพรวม รายละเอียด เอกสาร และค่าธรรมเนียมเปลี่ยนตามประกาศ ตรวจเว็บไซต์ของการไฟฟ้าและ กกพ. ฉบับล่าสุดก่อนยื่นทุกครั้ง):</p>
+    <ol>
+      <li><b>ตรวจโครงสร้างหลังคา</b> ให้วิศวกรโยธาประเมินและรับรองความแข็งแรง ระบบบนหลังคาที่พื้นที่และน้ำหนักไม่เกินเกณฑ์ที่กฎกระทรวงกำหนดสามารถใช้วิธีแจ้งต่อเจ้าพนักงานท้องถิ่นแทนการขออนุญาตดัดแปลงอาคาร</li>
+      <li><b>ยื่นคำขอขนานไฟ</b> กับการไฟฟ้าส่วนภูมิภาค (กฟภ.) หรือการไฟฟ้านครหลวง (กฟน.) ตามพื้นที่ ผ่านระบบออนไลน์ แนบแบบ single-line diagram รายการอุปกรณ์ ใบรับรองวิศวกรไฟฟ้า และใบรับรองโครงสร้าง</li>
+      <li><b>แจ้ง กกพ.</b> (สำนักงานคณะกรรมการกำกับกิจการพลังงาน) เรื่องการยกเว้นใบอนุญาตผลิตไฟฟ้าสำหรับระบบขนาดเล็ก</li>
+      <li><b>ติดตั้ง</b> ด้วยอินเวอร์เตอร์ที่อยู่ในรายชื่อที่ผ่านการทดสอบของการไฟฟ้า อุปกรณ์ตามมาตรฐาน และช่างหรือวิศวกรที่มีใบอนุญาต</li>
+      <li><b>การไฟฟ้าตรวจและทดสอบ</b> (เช่น ทดสอบการตัดเมื่อไฟดับ) เปลี่ยนมิเตอร์เป็นแบบวัดสองทาง (ถ้าขายไฟ) แล้วจึงเริ่มขนานไฟและนับวันซื้อขาย</li>
+    </ol>
+    <div class="note warn"><b>ห้ามขนานไฟก่อนได้รับอนุญาต</b> การต่อระบบ on-grid โดยไม่แจ้งการไฟฟ้า อาจผิดระเบียบ ถูกตัดไฟ หรือมีปัญหากับประกันภัยเมื่อเกิดเหตุ ระบบ zero export ก็ยังเป็นการต่อขนานและต้องปฏิบัติตามระเบียบ</div>
+    <h3>โครงการขนาดใหญ่</h3>
+    <ul>
+      <li>ระบบหลังคาโรงงานและอาคารพาณิชย์ขนาดหลายร้อย kW ถึง MW: ศึกษาการเชื่อมต่อ (grid impact study) ข้อกำหนดการเชื่อมต่อระบบโครงข่ายไฟฟ้า (grid code) ระบบป้องกันที่จุดต่อ และอาจต้องขอรับใบอนุญาตผลิตไฟฟ้า</li>
+      <li>โรงไฟฟ้า (โซลาร์ฟาร์ม) ขายไฟเข้าระบบ: เข้าร่วมตามประกาศรับซื้อไฟฟ้าของรัฐ (PPA) ใบอนุญาตผลิตไฟฟ้า การใช้ที่ดิน รายงานสิ่งแวดล้อม (CoP/EIA ตามขนาด) และสัญญาซื้อขายไฟฟ้า (ดู <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>)</li>
+      <li>รูปแบบธุรกิจที่พบบ่อย: ลงทุนเอง (CAPEX), เช่าระบบ, Private PPA (ผู้ลงทุนติดตั้งให้แล้วขายไฟในราคาต่ำกว่าการไฟฟ้า), ESCO</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกระบบให้ตรงกับการใช้ไฟ</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ถ้า…</th><th>เลือก</th><th>เหตุผล</th></tr></thead>
+      <tbody>
+        <tr><td>ใช้ไฟกลางวันมาก (แอร์ ร้าน สำนักงาน โรงงานกะกลางวัน)</td><td>On-grid ขนาดพอดีโหลดกลางวัน</td><td>ใช้เองเกือบ 100 % คืนทุน 4–6 ปี</td></tr>
+        <tr><td>ใช้ไฟกลางคืนเป็นหลัก ไม่ค่อยมีคนอยู่กลางวัน</td><td>On-grid ขนาดเล็ก หรือ Hybrid</td><td>แบตเตอรี่ช่วยย้ายพลังงาน แต่คืนทุนนานขึ้น</td></tr>
+        <tr><td>ไฟดับบ่อย มีอุปกรณ์สำคัญ (ตู้แช่ ปั๊มออกซิเจนบ่อปลา เครื่องมือแพทย์)</td><td>Hybrid + ตู้โหลดสำรอง</td><td>มูลค่าความมั่นคงสูงกว่าค่าไฟ</td></tr>
+        <tr><td>ไม่มีสายการไฟฟ้า หรือค่าเดินสายแพงมาก</td><td>Off-grid (+ เครื่องปั่นไฟสำรอง)</td><td>ถูกกว่าการพาดสายหลายกิโลเมตร</td></tr>
+        <tr><td>ใช้ไฟเพื่อสูบน้ำช่วงกลางวัน</td><td>ปั๊มโซลาร์ DC / VFD ต่อตรง</td><td>ถังน้ำเก็บพลังงานแทนแบต (ดู <a href="/learn/solar-pv/solar-agriculture/">เกษตร</a>)</td></tr>
+        <tr><td>หม้อแปลงหรือสัญญาไม่ให้ไฟย้อน</td><td>On-grid / Hybrid + zero export</td><td>ใช้เองล้วน ไม่ส่งออก</td></tr>
+        <tr><td>หลังคาหลายทิศ มีเงามาก</td><td>Micro-inverter หรือ optimizer</td><td>MPPT ระดับแผง</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Hosting capacity</b> ของสายจำหน่ายแรงต่ำ: แรงดันเกินช่วงเที่ยง (voltage rise) เมื่อ PV หนาแน่น วิเคราะห์ด้วย load flow แก้ด้วย Volt-VAR, Volt-Watt, OLTC หรือแบตเตอรี่ชุมชน</li>
+      <li><b>Virtual power plant (VPP)</b> และ demand response รวมระบบ hybrid หลายพันหลังเป็นโรงไฟฟ้าเสมือน</li>
+      <li><b>Microgrid</b> ที่สลับโหมด grid-connected/islanded อย่างราบรื่น grid-forming inverter และการแบ่งโหลดด้วย droop control</li>
+      <li><b>Peer-to-peer energy trading</b> ระหว่างบ้าน ทดลองในไทยหลายพื้นที่ ประเด็นด้านกฎหมายและการคิดค่าผ่านสาย (wheeling charge)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

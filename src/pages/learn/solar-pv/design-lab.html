@@ -1,0 +1,163 @@
+<!--meta
+{
+  "title": "เครื่องมือออกแบบระบบโซลาร์เซลล์ออนไลน์ฟรี: คำนวณสตริง พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ แรงดันตก ระยะคืนทุน และแล็บเส้น I-V | อาจารย์มด",
+  "h1": "เครื่องมือออกแบบระบบโซลาร์ออนไลน์: สตริง พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ สายไฟ และความคุ้มค่า",
+  "description": "เครื่องคำนวณออกแบบโซลาร์เซลล์ภาษาไทย 9 ตัวในหน้าเดียว ใช้ฟรีในเบราว์เซอร์: แล็บเส้นโค้ง I-V และ P-V พร้อมเงาบัง เลือกขนาดจากบิลค่าไฟ ออกแบบสตริงกับอินเวอร์เตอร์ คาดการณ์พลังงานรายเดือนและ PR ขนาดแบตเตอรี่ โซลาร์สำหรับแอร์ ปั๊มน้ำโซลาร์ แรงดันตกในสาย และระยะคืนทุน NPV IRR LCOE เรียงตามขั้นตอนออกแบบ พร้อมใบงานฝึก",
+  "ogTitle": "เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์ 9 ตัว",
+  "og": {"title": "เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์ 9 ตัว"},
+  "lesson": "solar-pv",
+  "sub": "design-lab",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Solar PV calculator", "PV system design tool", "String sizing calculator", "Solar payback calculator"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://modsengineeringmath.com/learn/solar-pv/design-lab/#app",
+      "name": "เครื่องมือออกแบบระบบโซลาร์เซลล์ (Solar PV Design Calculator)",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB"},
+      "featureList": ["I-V and P-V curve lab with partial shading and bypass diodes", "System size from electricity bill", "String sizing and inverter matching", "Monthly energy yield and performance ratio", "Battery sizing", "Solar for air conditioners", "Solar water pump sizing", "Cable voltage drop", "Payback, NPV, IRR and LCOE"],
+      "url": "https://modsengineeringmath.com/learn/solar-pv/design-lab/",
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "เครื่องคำนวณนี้ใช้แทนซอฟต์แวร์ออกแบบมืออาชีพได้ไหม?", "a": "ใช้สำหรับเรียนรู้ ประเมินเบื้องต้น และตรวจตัวเลขของผู้รับเหมาได้ดี แต่ข้อมูลแสงเป็นค่าเฉลี่ยประมาณ และไม่ได้จำลองเงาสามมิติหรือข้อมูลรายชั่วโมง งานจริงที่ต้องลงทุนควรตรวจด้วยข้อมูลของพิกัดจริง (เช่น PVGIS) ซอฟต์แวร์ของผู้ผลิตอินเวอร์เตอร์ และให้วิศวกรรับรองการออกแบบ"},
+    {"q": "ข้อมูลที่กรอกถูกส่งไปที่ไหนไหม?", "a": "ไม่ส่ง การคำนวณทั้งหมดทำในเบราว์เซอร์ของผู้ใช้ด้วย JavaScript ไม่มีการเก็บหรือส่งข้อมูลออกไป"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>เครื่องมือออกแบบ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.19 · ออกแบบระบบโซลาร์เซลล์ · Solar PV Design Calculator</p>
+      <h1>เครื่องมือออกแบบระบบโซลาร์ออนไลน์: สตริง พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ สายไฟ และความคุ้มค่า</h1>
+      <p class="lede">เครื่องคำนวณทุกตัวของชุดนี้เรียงตามลำดับการออกแบบจริง เริ่มจากดูพฤติกรรมของแผง เลือกขนาด ออกแบบสตริง คาดการณ์พลังงาน เลือกแบตเตอรี่ แล้วจบที่ความคุ้มค่า แต่ละตัวมีรหัสสูตรกำกับ คลิกไปอ่านที่มาได้ ทุกช่องพิมพ์แก้ได้และคำนวณใหม่ทันที (ไม่มีการส่งข้อมูลออกจากเครื่อง)</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#t1">① แผงและเงา</a>
+        <a class="btn btn-ghost btn-sm" href="#t2">② ขนาดจากบิล</a>
+        <a class="btn btn-ghost btn-sm" href="#t3">③ สตริง</a>
+        <a class="btn btn-ghost btn-sm" href="#t4">④ พลังงาน</a>
+        <a class="btn btn-ghost btn-sm" href="#t5">⑤ แบตเตอรี่</a>
+        <a class="btn btn-ghost btn-sm" href="#t9">⑨ ความคุ้มค่า</a>
+        <a class="btn btn-ghost btn-sm" href="#worksheets">ใบงาน</a>
+      </div>
+      <div class="tldr">
+        <b>วิธีใช้</b>
+        <ul>
+          <li>ค่าเริ่มต้นทุกตัวคือระบบบ้าน 5–6 kWp ในกรุงเทพฯ ด้วยแผง 580 Wp — แทนด้วยข้อมูลของคุณ</li>
+          <li>เครื่องหมาย ✓/✗ คือการตรวจเงื่อนไขการออกแบบ ✗ ต้องแก้ก่อนไปขั้นถัดไป</li>
+          <li>ผลลัพธ์ของขั้นก่อนเป็นค่าเข้าของขั้นถัดไป (เช่น kWh/kWp จาก ④ ไปใส่ใน ⑨)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="t1">
+    <h2 id="t1">① แผงทำงานอย่างไรเมื่อแสง อุณหภูมิ และเงาเปลี่ยน</h2>
+    <p>เข้าใจเส้นโค้งก่อนออกแบบ: ร้อนแล้วแรงดันลด (ใช้ใน ③) เงาทำให้มีหลายยอด (สำคัญกับการวางแผงและเลือกอินเวอร์เตอร์) · ทฤษฎี: <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้น I-V</a> · <a href="/learn/solar-pv/mppt/">MPPT</a></p>
+    <div class="pv-iv" data-ta="30"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t2">
+    <h2 id="t2">② เลือกขนาดระบบจากบิลค่าไฟ</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/load-sizing/">ขนาดจากบิล</a> · <a href="/learn/solar-pv/system-types/">ชนิดระบบ</a></p>
+    <div class="fg-calc pv-calc" data-pv="size"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t3">
+    <h2 id="t3">③ ออกแบบสตริงและจับคู่อินเวอร์เตอร์</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง</a> · <a href="/learn/solar-pv/panel-selection/">อ่านดาต้าชีตแผง</a></p>
+    <div class="fg-calc pv-calc" data-pv="string"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t4">
+    <h2 id="t4">④ คาดการณ์พลังงานรายเดือนและ PR</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน</a> · <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ มุมเอียง เงา</a></p>
+    <div class="fg-calc pv-calc" data-pv="yield" data-kwp="5.8"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t5">
+    <h2 id="t5">⑤ ขนาดแบตเตอรี่ (ถ้ามี)</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่</a></p>
+    <div class="fg-calc pv-calc" data-pv="battery"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t6">
+    <h2 id="t6">⑥ โซลาร์สำหรับแอร์</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a></p>
+    <div class="fg-calc pv-calc" data-pv="ac"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t7">
+    <h2 id="t7">⑦ ปั๊มน้ำโซลาร์เพื่อการเกษตร</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำและเกษตร</a></p>
+    <div class="fg-calc pv-calc" data-pv="pump"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t8">
+    <h2 id="t8">⑧ แรงดันตกและขนาดสาย</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/wiring-protection/">สายไฟและการป้องกัน</a></p>
+    <div class="fg-calc pv-calc" data-pv="cable"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t9">
+    <h2 id="t9">⑨ ความคุ้มค่า: คืนทุน NPV IRR LCOE</h2>
+    <p>ทฤษฎี: <a href="/learn/solar-pv/economics/">ความคุ้มค่า</a></p>
+    <div class="fg-calc pv-calc" data-pv="econ"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worksheets">
+    <h2 id="worksheets">ใบงานฝึกออกแบบ</h2>
+    <p>ใช้เครื่องคำนวณด้านบนทำโจทย์ แล้วเปิดดูแนวคำตอบ (ตัวเลขอาจต่างเล็กน้อยตามการปัดเศษ)</p>
+    <details class="pv-ws"><summary><b>ใบงาน 1</b> แผงร้อนเสียกำลังเท่าไร</summary>
+      <p>ในแล็บ ① กด STC จด MPP แล้วตั้งอุณหภูมิอากาศ 35 °C (ไม่เลือกช่องอุณหภูมิเซลล์) แสง 1,000 W/m² คำนวณ % ที่หายไป เทียบกับสูตร P6 + P7</p>
+      <p><i>แนวคำตอบ:</i> เซลล์ ≈ 63.8 °C แล็บให้ ≈ 510 W (หายไป ≈ 12 %) สูตร P6 ให้ 514.8 W ความต่างเล็กน้อยมาจากแบบจำลองไดโอดเทียบกับสัมประสิทธิ์เชิงเส้นในดาต้าชีต</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 2</b> เงาบังสองระดับ</summary>
+      <p>ตั้งสตริงย่อย 1 = 100 %, 2 = 60 %, 3 = 30 % (ปุ่ม “เงาเสาไล่ระดับ”) มีกี่ยอด ยอดไหนสูงสุด P&amp;O จากฝั่ง \(V_{oc}\) เสียกี่ %</p>
+      <p><i>แนวคำตอบ:</i> สามยอด global MPP อยู่ที่แรงดันกลาง ≈ 26–27 V (≈ 200 W) P&amp;O ติดยอดแรงดันสูง ≈ 157 W เสียราว 20 %</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 3</b> ภาคเหนือหนาวจัด</summary>
+      <p>ใน ③ ตั้งอุณหภูมิต่ำสุด 0 °C แบบที่เลือกยังผ่านไหม จำนวนแผงต่อสตริงสูงสุดเปลี่ยนเป็นเท่าไร</p>
+      <p><i>แนวคำตอบ:</i> \(V_{oc}\) ต่อแผง 55.5 V จำนวนสูงสุดลดจาก 11 เป็น 10 แผงสำหรับอินเวอร์เตอร์ 600 V แบบ 5 × 2 ยังผ่าน</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 4</b> หลังคาร้อน ไม่มีช่องลม และฝุ่นมาก</summary>
+      <p>ใน ④ เปลี่ยนการติดตั้งเป็น “ติดชิดหลังคา” ฝุ่น 5 % เงา 3 % PR และ kWh/kWp เปลี่ยนเท่าไร</p>
+      <p><i>แนวคำตอบ:</i> PR ลดจาก ≈ 79 % เหลือ ≈ 73 % ผลผลิตจำเพาะจาก ≈ 1,437 เหลือ ≈ 1,335 kWh/kWp (หายไป ≈ 7 %)</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 5</b> แบต 24 V หรือ 48 V</summary>
+      <p>ใน ⑤ เปลี่ยนแรงดันระบบเป็น 25.6 V และขนาดลูก 2.56 kWh ดูกระแส DC และ C-rate ที่โหลด 3.5 kW เทียบกับ 51.2 V</p>
+      <p><i>แนวคำตอบ:</i> กระแสเพิ่มเป็นสองเท่า (≈ 145 A) ต้องใช้สายและฟิวส์ใหญ่ขึ้นมาก — เหตุผลที่ระบบใหม่ใช้ 48 V ขึ้นไป</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 6</b> ความคุ้มค่าเมื่อใช้เองน้อย</summary>
+      <p>ใน ⑨ ตั้งสัดส่วนใช้เอง 40 % ระยะคืนทุนเป็นเท่าไร แล้วลดขนาดระบบเหลือ 3 kWp และใช้เอง 85 % เทียบ IRR</p>
+      <p><i>แนวคำตอบ:</i> ใช้เอง 40 %: คืนทุน ≈ 7.9 ปี IRR ≈ 11.7 % · ระบบ 3 kWp ใช้เอง 85 %: คืนทุน ≈ 5.9 ปี IRR ≈ 16.7 % — ระบบเล็กที่ใช้เองเกือบหมดให้ผลตอบแทนต่อบาทสูงกว่า แม้ประหยัดรวมน้อยกว่า (สอดคล้องกับตัวอย่าง <a href="/learn/solar-pv/system-types/#ex-s-1">S-1</a>)</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 7</b> ปั๊มน้ำหัวสูง</summary>
+      <p>ใน ⑦ เปลี่ยนระดับน้ำนิ่งเป็น 40 m จำนวนแผงเปลี่ยนเท่าไร ถ้าเปลี่ยนจากน้ำหยดเป็นปล่อยตามร่อง (ประสิทธิภาพ 55 %) ล่ะ</p>
+      <p><i>แนวคำตอบ:</i> หัวสูบ 58 m แผงเพิ่มเป็นประมาณ 1.5 เท่า · ประสิทธิภาพการให้น้ำ 55 % ทำให้ต้องการน้ำเพิ่มราว 64 % — ระบบให้น้ำที่ดีลดขนาดโซลาร์ได้มาก</p></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="limits">
+    <h2 id="limits">ขอบเขตและข้อจำกัดของเครื่องมือ</h2>
+    <ul>
+      <li>ข้อมูลแสงเป็นค่าเฉลี่ยระยะยาวที่ปัดเศษของแต่ละภูมิภาคและรูปแบบรายเดือนของภาคกลาง ไม่ใช่ข้อมูลรายชั่วโมงของพิกัดจริง</li>
+      <li>ตัวประกอบทิศและมุมเอียงเป็นค่าประมาณสำหรับละติจูด 13–18° N</li>
+      <li>แล็บ I-V ใช้แบบจำลองไดโอดเดี่ยวที่ไม่มี \(R_{sh}\) และบายพาสไดโอดอุดมคติ (แรงดันตก 0.45 V)</li>
+      <li>ตัวเลขราคาและค่าไฟเป็นค่าตั้งต้น ให้ใช้ใบเสนอราคาและบิลจริง</li>
+      <li>การออกแบบจริงต้องผ่านมาตรฐาน ข้อกำหนดของการไฟฟ้า และการรับรองของวิศวกร</li>
+    </ul>
+    <p>อยากเห็นวงจรภายในทำงานระดับการสวิตช์? ลอง <a href="/learn/power-electronics/converter-lab/#preset=solar-mppt">แล็บจำลองคอนเวอร์เตอร์ พรีเซ็ตโซลาร์ + MPPT</a></p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

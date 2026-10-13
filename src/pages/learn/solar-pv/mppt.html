@@ -1,0 +1,195 @@
+<!--meta
+{
+  "title": "MPPT คืออะไร: ติดตามจุดกำลังสูงสุดของโซลาร์เซลล์ P&O Incremental Conductance เงาบังบางส่วน Global MPPT และโค้ดตัวอย่าง | อาจารย์มด",
+  "h1": "MPPT ติดตามจุดกำลังสูงสุด: P&O Incremental Conductance เงาบังบางส่วน และ Global MPPT",
+  "description": "MPPT ภาษาไทยแบบละเอียด: ทำไมต่อแผงตรงกับโหลดหรือแบตแล้วเสียกำลัง จุดทำงานบนเส้นโค้ง I-V คอนเวอร์เตอร์เปลี่ยนความต้านทานที่แผงมองเห็น เงื่อนไข dP/dV = 0 อัลกอริทึม Perturb & Observe และ Incremental Conductance ขนาดก้าวและคาบ ประสิทธิภาพ MPPT ตาม EN 50530 ชาร์จคอนโทรลเลอร์ PWM กับ MPPT เงาบังบางส่วนกับหลายยอด global scan โค้ด C สำหรับไมโครคอนโทรลเลอร์ และแล็บจำลองคอนเวอร์เตอร์",
+  "ogTitle": "MPPT: P&O, InC, เงาบัง และ Global MPPT",
+  "og": {"title": "MPPT: P&O, InC, เงาบัง และ Global MPPT"},
+  "lesson": "solar-pv",
+  "sub": "mppt",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Maximum power point tracking", "Perturb and observe", "Incremental conductance", "Partial shading", "Solar charge controller"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js", "/assets/pe-sim.js", "/assets/pe-lab.js"],
+  "faq": [
+    {"q": "MPPT ทำงานอย่างไร?", "a": "MPPT คือการควบคุมคอนเวอร์เตอร์ DC-DC ระหว่างแผงกับโหลดให้แผงทำงานที่แรงดันซึ่งให้กำลังสูงสุดเสมอ ตัวควบคุมวัดแรงดันและกระแสของแผง ขยับแรงดันอ้างอิงทีละน้อย ถ้ากำลังเพิ่มก็ขยับต่อในทิศเดิม ถ้ากำลังลดก็กลับทิศ (Perturb and Observe) หรือใช้เงื่อนไขความชัน dI/dV = −I/V (Incremental Conductance) จุดทำงานจึงวนอยู่รอบจุดกำลังสูงสุดเมื่อแสงและอุณหภูมิเปลี่ยน"},
+    {"q": "ชาร์จคอนโทรลเลอร์ PWM กับ MPPT ต่างกันเท่าไร?", "a": "แบบ PWM ต่อแผงกับแบตเตอรี่ผ่านสวิตช์ แผงจึงถูกบังคับให้ทำงานที่แรงดันแบตเตอรี่ซึ่งต่ำกว่า Vmp มาก เช่น แผง 580 W ที่ Vmp 43 V ต่อกับแบต 24 V ได้ไม่ถึง 400 W แบบ MPPT ใช้บั๊กคอนเวอร์เตอร์ให้แผงทำงานที่ Vmp แล้วแปลงลงมาเป็นแรงดันแบต ได้กำลังมากกว่า 20–40 % สำหรับแผงขนาดใหญ่ แบบ PWM เหมาะเฉพาะแผงเล็กที่ออกแบบมาคู่กับแบต 12 V"},
+    {"q": "ทำไมอินเวอร์เตอร์ผลิตไฟน้อยเมื่อมีเงาบังแผงบางส่วน แม้เงาจะเล็ก?", "a": "เงาบังทำให้บายพาสไดโอดนำ เส้นกำลัง P-V ของสตริงมีหลายยอด อัลกอริทึม MPPT แบบไต่เขาอาจติดอยู่ที่ยอดเล็ก (local maximum) และไม่หาเจอยอดใหญ่ (global maximum) อินเวอร์เตอร์ที่มีฟังก์ชัน global MPPT หรือ shade scan จะกวาดแรงดันทั้งช่วงเป็นระยะเพื่อหายอดที่ดีที่สุด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>MPPT</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.12 · ออกแบบระบบโซลาร์เซลล์ · Maximum Power Point Tracking</p>
+      <h1>MPPT ติดตามจุดกำลังสูงสุด: P&amp;O Incremental Conductance เงาบังบางส่วน และ Global MPPT</h1>
+      <p class="lede">แผงโซลาร์ไม่ได้ “จ่าย 580 W” เสมอ มันจ่ายกำลังตามจุดที่โหลดดึงให้ทำงานบนเส้นโค้ง I-V ถ้าจุดนั้นไม่ใช่ MPP กำลังหายไปทันที 20–40 % MPPT คือหัวใจด้านอิเล็กทรอนิกส์กำลังของระบบโซลาร์ทุกระบบ ตั้งแต่ชาร์จคอนโทรลเลอร์ 12 V จนถึงอินเวอร์เตอร์ 3 MW หน้านี้เชื่อมเส้นโค้ง I-V เข้ากับ <a href="/learn/power-electronics/buck-converter/">บั๊ก</a> และ <a href="/learn/power-electronics/boost-converter/">บูสต์คอนเวอร์เตอร์</a> แล้วเขียนอัลกอริทึมจริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#why">ทำไมต้องมี MPPT</a>
+        <a class="btn btn-ghost btn-sm" href="#algorithms">P&amp;O และ InC</a>
+        <a class="btn btn-ghost btn-sm" href="#partial-shading">เงาบังและ Global MPPT</a>
+        <a class="btn btn-ghost btn-sm" href="#code">โค้ด C</a>
+        <a class="btn btn-ghost btn-sm" href="#sim">ซิมูเลเตอร์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>โหลดกำหนดจุดทำงานของแผง คอนเวอร์เตอร์เปลี่ยน “ความต้านทานที่แผงมองเห็น” ได้ด้วย duty</li>
+          <li>MPP: \(dP/dV = 0 \iff dI/dV = -I/V\)</li>
+          <li>P&amp;O: ขยับแล้วดูกำลัง · InC: ดูความชัน · ขนาดก้าวและคาบคือการแลกระหว่างความเร็วกับการแกว่ง</li>
+          <li>เงาบังทำให้มีหลายยอด ต้องกวาดหา global MPP เป็นระยะ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น resistance, duty, dp/dv, incremental, step, efficiency, fractional" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องมี MPPT: โหลดกำหนดจุดทำงาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้าต่อแผงตรงกับตัวต้านทาน \(R\) จุดทำงานคือจุดตัดของเส้นโค้ง I-V กับเส้นตรง \(I = V/R\) มีค่า \(R\) เพียงค่าเดียวที่ทำให้จุดตัดอยู่ที่ MPP:</p>
+<div class="tf" id="T1" data-k="optimal load resistance mpp operating point ความต้านทานที่เหมาะ จุดทำงาน"><p class="tf-n"><b><span class="fid">T1</span> Optimum load resistance</b> ความต้านทานโหลดที่ทำให้ได้ MPP</p>
+        \[ R_{mpp} = \frac{V_{mp}}{I_{mp}} \]</div>
+<div class="wx" id="ex-t-1"><div class="wx-head"><span class="mono">ตัวอย่าง T-1</span><h3>แผง 580 W ต่อตรงกับตัวต้านทาน</h3></div>
+<ol class="steps">
+<li><p>\(R_{mpp} = 43.4/13.37 = 3.25\ \Omega\) → ได้ 580 W</p></li>
+<li><p>\(R = 6\ \Omega\): จุดตัดที่ ≈ 48.9 V, 8.15 A → 399 W (เสีย 31 %)</p></li>
+<li><p>\(R = 2\ \Omega\): จุดตัดที่ ≈ 28.2 V, 14.1 A → 398 W (เสีย 31 %)</p></li>
+<li><p>และ \(R_{mpp}\) เองเปลี่ยนตลอดวันตามแสงและอุณหภูมิ — ไม่มีโหลดคงที่ใดที่ดีตลอดวัน (ค่าคำนวณจากแบบจำลองในแล็บ <a href="/learn/solar-pv/pv-cell/#lab">I-V</a>)</p></li>
+</ol></div>
+    <h3>คอนเวอร์เตอร์คือ “หม้อแปลงความต้านทาน”</h3>
+    <p>ในสถานะคงตัวและไม่คิดการสูญเสีย คอนเวอร์เตอร์ DC-DC ทำให้แผงมองเห็นความต้านทานที่ขึ้นกับ duty \(D\):</p>
+<div class="tf" id="T2" data-k="input resistance buck boost buck-boost duty ความต้านทานขาเข้า"><p class="tf-n"><b><span class="fid">T2</span> Input resistance seen by the panel</b> ความต้านทานที่แผงมองเห็น</p>
+        \[ \text{buck: } R_{in} = \frac{R_L}{D^2} \qquad \text{boost: } R_{in} = R_L(1-D)^2 \qquad \text{buck-boost: } R_{in} = R_L\frac{(1-D)^2}{D^2} \]</div>
+    <p>ผลที่ตามมา: บั๊กทำได้เฉพาะ \(R_{in} \ge R_L\) บูสต์ทำได้เฉพาะ \(R_{in} \le R_L\) บั๊ก-บูสต์และ <a href="/learn/power-electronics/cuk-converter/">Ćuk</a> ทำได้ทั้งสองทาง และ <b>เครื่องหมายการควบคุมกลับกัน</b>: ในบั๊ก เพิ่ม \(D\) แล้วแรงดันแผงลด ในบูสต์ เพิ่ม \(D\) แล้วแรงดันแผงลดเช่นกัน (เพราะดึงกระแสมากขึ้น) — ต้องตั้งทิศให้ถูกในโค้ด หรือควบคุมผ่านลูปแรงดันขาเข้า \(V_{ref}\) แทนการคุม \(D\) ตรง ๆ</p>
+    <p>เมื่อโหลดเป็นแบตเตอรี่ แรงดันขาออกเกือบคงที่ คอนเวอร์เตอร์จึงเลือกแรงดันแผงได้อิสระ: บั๊ก \(V_{pv} = V_{bat}/D\) และบูสต์ \(V_{pv} = V_{bat}(1-D)\)</p>
+<div class="wx" id="ex-t-2"><div class="wx-head"><span class="mono">ตัวอย่าง T-2</span><h3>ชาร์จแบต 24 V (LFP 25.6 V): PWM กับ MPPT</h3></div>
+<ol class="steps">
+<li><p><b>PWM</b> (สวิตช์ต่อตรง): แผงถูกดึงลงไปที่แรงดันชาร์จ ≈ 27.6 V → กระแส ≈ \(I_{sc}\) = 14.1 A → 389 W ที่ 25 °C (67 % ของ 580 W) · ตอนเซลล์ 60 °C ได้ ≈ 396 W เทียบ MPP 517 W (77 %)</p></li>
+<li><p><b>MPPT</b> (บั๊ก): แผงทำงานที่ \(V_{mp}\) = 43.4 V → \(D = 27.6/43.4 \approx 0.64\) → 580 W × ประสิทธิภาพคอนเวอร์เตอร์ 97 % = 563 W</p></li>
+<li><p>กำลังเพิ่มขึ้น 30–45 % → สำหรับแผงขนาดใหญ่ MPPT คุ้มเสมอ PWM เหมาะเฉพาะแผงเล็กที่ \(V_{mp}\) ≈ 17–18 V คู่กับแบต 12 V</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="algorithms">
+    <h2 id="algorithms">อัลกอริทึม P&amp;O และ Incremental Conductance <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="T3" data-k="mpp condition dp dv incremental conductance เงื่อนไข mpp"><p class="tf-n"><b><span class="fid">T3</span> MPP condition</b> เงื่อนไขของจุดกำลังสูงสุด</p>
+        \[ \frac{dP}{dV} = I + V\frac{dI}{dV} = 0 \iff \frac{dI}{dV} = -\frac{I}{V} \qquad \begin{cases} dP/dV > 0 & \text{อยู่ซ้าย MPP → เพิ่ม } V \\ dP/dV < 0 & \text{อยู่ขวา MPP → ลด } V \end{cases} \]</div>
+<div class="tf" id="T4" data-k="perturb and observe p&amp;o hill climbing update rule"><p class="tf-n"><b><span class="fid">T4</span> Perturb &amp; Observe update</b> กฎของ P&amp;O</p>
+        \[ V_{ref}[k+1] = V_{ref}[k] + \Delta V\cdot\operatorname{sign}\!\big(\Delta P[k]\cdot\Delta V[k]\big) \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Perturb &amp; Observe (P&amp;O, hill climbing)</th><th>Incremental Conductance (InC)</th></tr></thead>
+      <tbody>
+        <tr><td>หลักการ</td><td>ขยับแรงดัน ดูว่ากำลังเพิ่มหรือลด</td><td>เทียบ \(dI/dV\) กับ \(-I/V\)</td></tr>
+        <tr><td>ที่ MPP</td><td>แกว่งรอบ MPP ตลอด (3 ระดับ)</td><td>หยุดได้เมื่อ \(|dI/dV + I/V| &lt; \varepsilon\)</td></tr>
+        <tr><td>แสงเปลี่ยนเร็ว</td><td>อาจเดินผิดทาง (สับสนระหว่างผลของการขยับกับผลของเมฆ)</td><td>ดีกว่าเล็กน้อย</td></tr>
+        <tr><td>การคำนวณ</td><td>คูณ เปรียบเทียบ</td><td>หาร (หรือคูณไขว้) เพิ่มเล็กน้อย</td></tr>
+        <tr><td>ใช้จริง</td><td>แพร่หลายที่สุด มักเพิ่ม dP-P&amp;O / ก้าวปรับได้</td><td>ใช้มากในอินเวอร์เตอร์</td></tr>
+      </tbody>
+    </table></div>
+    <p>ในทางปฏิบัติทั้งสองวิธีให้ประสิทธิภาพใกล้กันมากเมื่อปรับพารามิเตอร์ดี ความต่างอยู่ที่ <b>ขนาดก้าว</b> และ <b>คาบการขยับ</b>:</p>
+<div class="tf" id="T5" data-k="step size oscillation loss tradeoff ขนาดก้าว การแกว่ง"><p class="tf-n"><b><span class="fid">T5</span> Steady-state oscillation loss</b> การสูญเสียจากการแกว่งรอบ MPP</p>
+        \[ \Delta P_{loss} \approx \frac{1}{2}\left|\frac{d^2P}{dV^2}\right|_{mpp}\overline{(V - V_{mp})^2} \;\propto\; \Delta V^2 \]</div>
+<div class="tf" id="T6" data-k="perturbation period settling time คาบการขยับ เวลาเข้าที่"><p class="tf-n"><b><span class="fid">T6</span> Perturbation period</b> คาบการขยับ</p>
+        \[ T_p > t_{settle} + t_{filter} \qquad (\text{มักเลือก } T_p = 20\text{–}200\ \text{ms}) \]</div>
+    <ul>
+      <li><b>ก้าวใหญ่</b>: ตามแสงที่เปลี่ยนเร็วทัน แต่แกว่งรอบ MPP มาก (สูญเสียตาม \(\Delta V^2\))</li>
+      <li><b>ก้าวเล็ก</b>: แม่นในสภาวะคงที่ แต่ตามไม่ทันเมฆ ต้องเลือกก้าวไม่เล็กกว่าความละเอียดของ PWM และ ADC (มิฉะนั้นขยับแล้วไม่มีอะไรเปลี่ยน)</li>
+      <li><b>คาบสั้นเกินไป</b>: วัดก่อนคอนเวอร์เตอร์เข้าที่ (โดยเฉพาะตัวเก็บประจุขาเข้าใหญ่และลูปแรงดันช้า) อัลกอริทึมจะตัดสินใจผิด ต้องรอให้ \(V_{pv}\) เข้าที่ก่อนเสมอ</li>
+      <li><b>ก้าวแปรผัน</b>: \(\Delta V = k\,|\Delta P/\Delta V|\) ก้าวใหญ่เมื่อไกล MPP ก้าวเล็กเมื่อใกล้</li>
+    </ul>
+<div class="tf" id="T7" data-k="mppt efficiency en 50530 ประสิทธิภาพ mppt"><p class="tf-n"><b><span class="fid">T7</span> MPPT efficiency (EN 50530)</b> ประสิทธิภาพการติดตาม</p>
+        \[ \eta_{MPPT} = \frac{\int P_{pv}(t)\,dt}{\int P_{mpp}(t)\,dt} \qquad (\text{static} > 99.5\ \%,\ \text{dynamic} > 99\ \%\ \text{สำหรับอินเวอร์เตอร์ที่ดี}) \]</div>
+<div class="tf" id="T8" data-k="fractional open circuit voltage short circuit current kvoc แรงดันเปิดวงจรสัดส่วน"><p class="tf-n"><b><span class="fid">T8</span> Fractional Voc / Isc methods</b> วิธีประมาณจากสัดส่วน</p>
+        \[ V_{mp} \approx k_V\,V_{oc}\ (k_V \approx 0.76\text{–}0.84) \qquad I_{mp} \approx k_I\,I_{sc}\ (k_I \approx 0.90\text{–}0.95) \]</div>
+    <p>วิธีสัดส่วนง่ายมาก (หยุดจ่ายสั้น ๆ วัด \(V_{oc}\) แล้วตั้ง \(V_{ref}\)) แต่ไม่ใช่ MPP จริงและเสียพลังงานตอนหยุดวัด ใช้เป็นจุดเริ่มต้นของ P&amp;O หรือในวงจรราคาถูก</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="partial-shading">
+    <h2 id="partial-shading">เงาบังบางส่วนและ Global MPPT <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อบางกลุ่มเซลล์ถูกบัง บายพาสไดโอดนำ เส้น P-V มีหลายยอด (<a href="/learn/solar-pv/pv-cell/#bypass">ดูหน้าเซลล์</a>) P&amp;O และ InC เป็นวิธีไต่เขา จึงหยุดที่ยอดใกล้ที่สุด ซึ่งอาจไม่ใช่ยอดสูงสุด ลองในแล็บด้านล่าง: กด “ใบไม้บัง 1 ช่อง” — P&amp;O ที่เริ่มจากฝั่ง \(V_{oc}\) ติดที่ ≈ 150 W ขณะที่ global MPP ≈ 340 W</p>
+    <div class="pv-iv" data-shade="100,100,25" data-ta="30"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <h3>วิธีหา global MPP</h3>
+    <ol>
+      <li><b>Periodic scan</b> ทุก 5–15 นาที กวาด \(V_{ref}\) จากประมาณ \(0.95V_{oc}\) ลงมาถึงขอบล่างของช่วง MPPT บันทึกยอดที่ดีที่สุด แล้วกลับไปทำ P&amp;O รอบยอดนั้น เสียพลังงานระหว่างกวาด 0.1–0.3 %</li>
+      <li><b>Event-triggered scan</b> กวาดเมื่อกำลังเปลี่ยนเกินเกณฑ์ หรือเมื่อแรงดันที่ MPP ต่ำผิดสัดส่วนจาก \(N_s \times 0.8 V_{oc,mod}\)</li>
+      <li><b>ใช้ความรู้โครงสร้าง</b> ยอดของสตริงที่มีบายพาสไดโอดมักอยู่ใกล้ \(k\times 0.8\,V_{oc,sub}\) จึงตรวจเฉพาะจุดเหล่านั้น (ลดเวลากวาด)</li>
+      <li><b>Metaheuristics</b> (PSO, GWO, ฯลฯ) ในงานวิจัย — ต้องเทียบกับ scan อย่างง่ายอย่างเป็นธรรม เพราะ scan ก็ทำได้ดีในอินเวอร์เตอร์จริง</li>
+      <li><b>แก้ที่ระดับฮาร์ดแวร์</b> optimizer/micro-inverter ทำ MPPT ระดับแผง ไม่มีปัญหาหลายยอดระดับสตริง</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="code">
+    <h2 id="code">โค้ด C สำหรับไมโครคอนโทรลเลอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>โครงสร้างที่แนะนำ: ลูปเร็ว (ทุกคาบ PWM หรือทุก 10–50 µs) คุมแรงดันแผงให้เท่ากับ \(V_{ref}\) ด้วย PI (ดู <a href="/learn/power-electronics/digital-control/">ควบคุมดิจิทัล</a>) และลูป MPPT ช้า (ทุก \(T_p\)) ปรับ \(V_{ref}\) ค่าที่วัดต้องกรองเฉลี่ยตลอดคาบ \(T_p\)</p>
+<pre class="code">/* MPPT: เรียกทุก Tp (เช่น 100 ms) ด้วยค่าเฉลี่ยของ v, i ในคาบนั้น */
+#define STEP   0.5f     /* V ต่อก้าว (≥ ความละเอียดของลูปแรงดัน) */
+#define VMIN   (0.55f * VOC_STC)
+#define VMAX   (0.95f * VOC_STC)
+
+static float v_prev, p_prev, i_prev, vref = 0.80f * VOC_STC;
+
+void mppt_po(float v, float i)                 /* Perturb &amp; Observe (T4) */
+{
+    float p = v * i, dv = v - v_prev, dp = p - p_prev;
+    if (dp != 0.0f) {
+        if ((dp &gt; 0.0f) == (dv &gt; 0.0f)) vref += STEP;   /* dP/dV &gt; 0: ซ้าย MPP */
+        else                              vref -= STEP;   /* dP/dV &lt; 0: ขวา MPP */
+    }
+    vref = fminf(fmaxf(vref, VMIN), VMAX);
+    v_prev = v; p_prev = p;
+}
+
+void mppt_inc(float v, float i)                /* Incremental Conductance (T3) */
+{
+    float dv = v - v_prev, di = i - i_prev;
+    if (fabsf(dv) &lt; 1e-3f) {                    /* แรงดันไม่เปลี่ยน: ดูกระแส (แสงเปลี่ยน) */
+        if (di &gt; 0.0f) vref += STEP; else if (di &lt; 0.0f) vref -= STEP;
+    } else {
+        float g = di * v + i * dv;              /* = v·dv·(dI/dV + I/V) คูณไขว้ ไม่ต้องหาร */
+        g = (dv &gt; 0.0f) ? g : -g;
+        if (g &gt; EPS) vref += STEP; else if (g &lt; -EPS) vref -= STEP;
+    }
+    vref = fminf(fmaxf(vref, VMIN), VMAX);
+    v_prev = v; i_prev = i;
+}</pre>
+    <ul>
+      <li>ป้องกันเพิ่มเติม: ถ้าแบตเต็มหรือโหลดรับไม่ได้ ให้เปลี่ยนจากโหมด MPPT เป็นโหมดคุมแรงดัน/กระแสขาออก (curtail) โดยเลื่อน \(V_{ref}\) ไปทางขวาของ MPP (ฝั่ง \(V_{oc}\)) ซึ่งเสถียรกว่าฝั่งซ้าย</li>
+      <li>ตอนเริ่มต้น: เริ่มที่ \(0.8V_{oc}\) ที่วัดได้จริง (T8) และใช้ soft-start</li>
+      <li>ทดสอบด้วยแหล่งจ่ายจำลองแผง (PV simulator / solar array simulator) หรือแหล่งจ่ายต่อตัวต้านทานอนุกรม ก่อนใช้แผงจริง (ดู <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ทดลองในซิมูเลเตอร์คอนเวอร์เตอร์</h2>
+    <p>แล็บด้านล่างจำลองแผง 36 เซลล์ต่อบั๊กคอนเวอร์เตอร์ที่มี P&amp;O MPPT ระดับการสวิตช์จริง ดูช่อง 1 (แรงดันแผง) และช่อง 2 (กระแสแผง) ไต่ขึ้นหา MPP แล้วแกว่งรอบจุดนั้น ลองเปลี่ยนแสง G ระหว่างจำลอง หรือเปลี่ยนโหลด แล้วดูว่า MPPT ตามได้เร็วแค่ไหน ฉบับเต็มอยู่ที่ <a href="/learn/power-electronics/converter-lab/#preset=solar-mppt">แล็บจำลองคอนเวอร์เตอร์</a></p>
+    <div class="pe-lab" data-topo="buck" data-preset="solar-mppt" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Drift ของ P&amp;O</b> เมื่อแสงเพิ่มต่อเนื่อง (ramp) — แก้ด้วย dP-P&amp;O ที่แยกผลของแสงด้วยการวัดกลางคาบ</li>
+      <li><b>Model-based / extremum seeking control</b> ใช้ ripple ของการสวิตช์เป็นสัญญาณขยับเอง (ripple correlation control) ตอบสนองระดับ kHz</li>
+      <li><b>MPPT ในอินเวอร์เตอร์เฟสเดียว</b>: กำลังกระเพื่อม 100 Hz บน DC-link ทำให้ \(V_{pv}\) กระเพื่อม — ต้องเลือกช่วงวัดและ C ให้เหมาะ (ดู <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์</a>)</li>
+      <li><b>เสถียรภาพของลูปแรงดันขาเข้า</b>: ความต้านทานพลวัตของแผงเปลี่ยนจากบวกมากใกล้ \(V_{oc}\) ไปเป็นค่าน้อยใกล้ \(I_{sc}\) — gain ของ plant เปลี่ยนตามจุดทำงาน ตัวชดเชยต้องเสถียรทั้งช่วง (ดู <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย</a>)</li>
+      <li><b>ทดสอบตาม EN 50530</b> ด้วยโปรไฟล์แสงขึ้นลงแบบ ramp ที่กำหนด วัด static และ dynamic MPPT efficiency</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,187 @@
+<!--meta
+{
+  "title": "แบตเตอรี่สำหรับโซลาร์เซลล์: LiFePO4 คำนวณขนาด kWh Ah DoD C-rate อายุรอบ BMS ระบบ 48 V กับ High Voltage และความคุ้มค่า | อาจารย์มด",
+  "h1": "แบตเตอรี่สำหรับโซลาร์: LiFePO4 ขนาด kWh DoD C-rate BMS และระบบสำรองไฟ",
+  "description": "เลือกและคำนวณแบตเตอรี่สำหรับระบบโซลาร์ hybrid และ off-grid: เคมี LiFePO4 NMC ตะกั่วกรด โซเดียมไอออน สูตรความจุจากพลังงานกลางคืนและวันสำรอง DoD ประสิทธิภาพ Ah C-rate อายุรอบและอายุปฏิทิน ต้นทุนต่อหน่วยที่ผ่านแบต (LCOS) BMS ระบบ 48 V กับ high voltage การตั้งค่าชาร์จ ความปลอดภัย IEC 62619 UL 9540A พร้อมเครื่องคำนวณและตัวอย่าง",
+  "ogTitle": "แบตเตอรี่สำหรับโซลาร์: LiFePO4 ขนาดและความคุ้มค่า",
+  "og": {"title": "แบตเตอรี่สำหรับโซลาร์: LiFePO4 ขนาดและความคุ้มค่า"},
+  "lesson": "solar-pv",
+  "sub": "battery-storage",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Battery energy storage", "Lithium iron phosphate battery", "Battery management system", "Depth of discharge", "C-rate"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "บ้านควรใช้แบตเตอรี่โซลาร์กี่ kWh?", "a": "เริ่มจากพลังงานที่ใช้ช่วงไม่มีแดด (ประมาณ 17:00–07:00 น.) ที่ต้องการให้แบตจ่าย หารด้วย DoD และประสิทธิภาพ เช่น ใช้กลางคืน 6 kWh DoD 90 % ประสิทธิภาพ 90 % ต้องการแบตพิกัดประมาณ 7.4 kWh ในทางปฏิบัติเลือก 10 kWh (สองโมดูล 5.12 kWh) แล้วตรวจว่าแผงมีพลังงานเหลือพอชาร์จเต็มในวันปกติ"},
+    {"q": "ทำไมแบตเตอรี่โซลาร์ส่วนใหญ่เป็น LiFePO4?", "a": "LiFePO4 (LFP) ปลอดภัยกว่า NMC มาก เพราะเกิด thermal runaway ยากกว่าและไม่ปล่อยออกซิเจน อายุรอบ 4,000–8,000 รอบ ใช้ DoD ได้ 90–100 % ไม่มีโคบอลต์ ราคาลดลงต่อเนื่อง ข้อเสียคือหนักกว่าและความหนาแน่นพลังงานต่ำกว่า ซึ่งไม่สำคัญสำหรับงานติดตั้งอยู่กับที่"},
+    {"q": "ติดแบตเตอรี่แล้วคุ้มไหม?", "a": "คุ้มเมื่อแต่ละหน่วยที่ย้ายจากกลางวันไปกลางคืนสร้างมูลค่ามากกว่าต้นทุนต่อหน่วยที่ผ่านแบต (LCOS) ภายใต้ net billing มูลค่าคือค่าไฟลบราคาขายไฟ ประมาณ 2 บาท/หน่วย ขณะที่ LCOS ของ LFP คุณภาพดีอยู่ราว 1.5–3 บาท/หน่วย จึงใกล้จุดคุ้มทุน มูลค่าที่ทำให้คุ้มชัดเจนมักเป็นไฟสำรองตอนไฟดับ อัตรา TOU หรือการลดความต้องการพลังไฟฟ้าสูงสุด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>แบตเตอรี่</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.7 · ออกแบบระบบโซลาร์เซลล์ · Battery Storage for PV</p>
+      <h1>แบตเตอรี่สำหรับโซลาร์: LiFePO4 ขนาด kWh DoD C-rate BMS และระบบสำรองไฟ</h1>
+      <p class="lede">แบตเตอรี่คือส่วนที่แพงที่สุดและอันตรายที่สุดของระบบ hybrid และ off-grid ถ้าเล็กเกินไป ไฟหมดก่อนเช้า ถ้าใหญ่เกินไป ไม่เคยถูกใช้เต็มและไม่คุ้ม ถ้าเลือกเคมีหรือ BMS ผิด อายุสั้นหรือเสี่ยงไฟไหม้ หน้านี้คำนวณขนาดทั้งด้านพลังงานและกำลัง เปรียบเทียบเคมี และประเมินความคุ้มค่าแบบตรงไปตรงมา</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#sizing">คำนวณขนาด</a>
+        <a class="btn btn-ghost btn-sm" href="#chemistry">เคมีแบตเตอรี่</a>
+        <a class="btn btn-ghost btn-sm" href="#bms">BMS และแรงดันระบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#economics">คุ้มไหม</a>
+        <a class="btn btn-ghost btn-sm" href="#safety">ความปลอดภัย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ความจุ \(= \dfrac{E_{night} \times \text{วันสำรอง}}{DoD \times \eta}\) แล้วตรวจกำลัง (C-rate) และพลังงานแผงที่ใช้ชาร์จ</li>
+          <li>งานติดตั้งอยู่กับที่ปี 2026: LiFePO4 เป็นค่าเริ่มต้น ตะกั่วกรดเหลือเฉพาะงบต่ำมาก โซเดียมไอออนเริ่มเข้าตลาด</li>
+          <li>แบตกับอินเวอร์เตอร์ต้องคุยกันผ่าน CAN/RS485 (closed-loop) และอยู่ในรายการเข้ากันได้</li>
+          <li>มูลค่าหลักของแบตในไทยวันนี้คือไฟสำรอง TOU และ peak shaving มากกว่าการเก็บไฟกลางวันไว้ใช้กลางคืน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น dod, ah, c-rate, cycle, lcos, autonomy" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="terms">
+    <h2 id="terms">ศัพท์ที่ต้องรู้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>คำ</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>ความจุพิกัด (kWh, Ah)</td><td>พลังงานหรือประจุทั้งหมดที่เก็บได้เมื่อใหม่ ที่อัตราคายประจุมาตรฐาน · kWh = Ah × V / 1000</td></tr>
+        <tr><td>SoC (State of Charge)</td><td>ประจุที่เหลือเป็น % ของความจุ</td></tr>
+        <tr><td>DoD (Depth of Discharge)</td><td>สัดส่วนที่ใช้ได้จริงต่อรอบ = 100 % − SoC ต่ำสุด</td></tr>
+        <tr><td>SoH (State of Health)</td><td>ความจุปัจจุบันเทียบตอนใหม่ ปกติสิ้นอายุที่ 70–80 %</td></tr>
+        <tr><td>C-rate</td><td>กระแสเทียบความจุ: 1C = กระแสที่คายหมดใน 1 ชั่วโมง</td></tr>
+        <tr><td>Round-trip efficiency</td><td>พลังงานที่ได้ออก ÷ พลังงานที่ใส่เข้า LFP 92–97 % (เฉพาะเซลล์) ตะกั่วกรด 75–85 %</td></tr>
+        <tr><td>Cycle life / calendar life</td><td>จำนวนรอบจนเหลือ 70–80 % / อายุตามเวลาแม้ไม่ใช้ (ขึ้นกับอุณหภูมิและ SoC ที่เก็บ)</td></tr>
+        <tr><td>Autonomy</td><td>จำนวนวันที่แบตจ่ายโหลดได้เองโดยไม่มีแสง (สำคัญกับ off-grid)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="chemistry">
+    <h2 id="chemistry">เปรียบเทียบเคมีแบตเตอรี่ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เคมี</th><th>V ต่อเซลล์</th><th>DoD ใช้งาน</th><th>อายุรอบ</th><th>ความปลอดภัย</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td><b>LiFePO4 (LFP)</b></td><td>3.2 V</td><td>90–100 %</td><td>4,000–8,000</td><td>ดีมาก</td><td>บ้าน อาคาร ฟาร์ม off-grid ทุกขนาด (ค่าเริ่มต้น)</td></tr>
+        <tr><td>NMC / NCA</td><td>3.6–3.7 V</td><td>80–90 %</td><td>1,500–4,000</td><td>ต้องระวัง thermal runaway</td><td>รถยนต์ไฟฟ้า แบตมือสองจาก EV (ต้องมี BMS ใหม่และการทดสอบ)</td></tr>
+        <tr><td>ตะกั่วกรด AGM / Gel</td><td>2.0 V</td><td>50 %</td><td>500–1,500</td><td>ดี แต่มีไฮโดรเจนเมื่อชาร์จเกิน</td><td>งบต่ำมาก สำรองนาน ๆ ครั้ง</td></tr>
+        <tr><td>ตะกั่วกรดน้ำ (OPzS)</td><td>2.0 V</td><td>50–60 %</td><td>1,500–3,000</td><td>ต้องระบายอากาศ เติมน้ำกลั่น</td><td>สถานีสื่อสารเดิม</td></tr>
+        <tr><td>โซเดียมไอออน</td><td>~3.1 V</td><td>90–100 %</td><td>3,000–6,000 (ช่วงเริ่มตลาด)</td><td>ดี ทนเย็น ขนส่งที่ 0 V ได้</td><td>เริ่มมีในระบบกักเก็บพลังงาน ตามดูตลาด</td></tr>
+      </tbody>
+    </table></div>
+    <p>ค่าเป็นช่วงทั่วไปจากดาต้าชีตผลิตภัณฑ์ ใช้ค่าของรุ่นที่จะซื้อจริงในการออกแบบ อายุรอบขึ้นกับ DoD อุณหภูมิ และ C-rate ที่ระบุในเงื่อนไขทดสอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sizing">
+    <h2 id="sizing">คำนวณขนาดแบตเตอรี่ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="B1" data-k="battery capacity autonomy dod efficiency ความจุแบตเตอรี่ วันสำรอง"><p class="tf-n"><b><span class="fid">B1</span> Nominal battery capacity</b> ความจุพิกัดที่ต้องการ</p>
+        \[ C_{nom} = \frac{E_{bat,day}\times N_{auto}}{DoD \times \eta_{bat+inv}} \]</div>
+<div class="tf" id="B2" data-k="ampere hour kwh voltage แอมป์ชั่วโมง"><p class="tf-n"><b><span class="fid">B2</span> kWh to Ah</b> แปลงพลังงานเป็นแอมป์-ชั่วโมง</p>
+        \[ C_{Ah} = \frac{C_{kWh}\times 1000}{V_{nom}} \qquad V_{nom} = N_{cell}\,V_{cell}\quad(\text{LFP }16\text{s} = 51.2\ \text{V}) \]</div>
+<div class="tf" id="B3" data-k="c rate discharge current power กระแสคายประจุ"><p class="tf-n"><b><span class="fid">B3</span> Battery current and C-rate</b> กระแสแบตและ C-rate</p>
+        \[ I_{bat} = \frac{P_{load}}{V_{bat}\,\eta_{inv}} \qquad C\text{-rate} = \frac{I_{bat}}{C_{Ah}} \]</div>
+<div class="tf" id="B4" data-k="off grid pv array size autonomy ขนาดแผง off grid"><p class="tf-n"><b><span class="fid">B4</span> Off-grid array size</b> ขนาดแผงสำหรับระบบ off-grid</p>
+        \[ P_{PV} = \frac{E_{load,day}}{PSH_{worst}\times PR_{off}} \qquad PR_{off} \approx 0.60\text{–}0.70 \]</div>
+    <p>ระบบ off-grid มี PR ต่ำกว่า on-grid เพราะพลังงานส่วนใหญ่ผ่านแบตเตอรี่ และเมื่อแบตเต็ม MPPT ต้องลดกำลังแผงทิ้ง (curtailment) ใช้ PSH ของเดือนที่แย่ที่สุด (ในไทยมักเป็นส.ค.–ก.ย. หรือช่วงหมอกควันในภาคเหนือ)</p>
+<div class="wx" id="ex-b-1"><div class="wx-head"><span class="mono">ตัวอย่าง B-1</span><h3>บ้าน hybrid: ใช้ไฟกลางคืน 6 kWh</h3></div>
+<ol class="steps">
+<li><p>B1: \(C_{nom} = \dfrac{6 \times 1}{0.90 \times 0.90} = 7.41\) kWh</p></li>
+<li><p>B2: ที่ 51.2 V → \(7410/51.2 = 145\) Ah → เลือก 2 โมดูล 5.12 kWh (100 Ah) = 10.24 kWh 200 Ah เหลือเผื่อการเสื่อม 20–30 %</p></li>
+<li><p>B3: โหลดสูงสุด 3.5 kW → \(I = 3500/(51.2 \times 0.94) = 72.7\) A → C-rate = 72.7/200 = 0.36C ✓ (LFP ทั่วไปต่อเนื่อง ≤ 0.5C)</p></li>
+<li><p>ชาร์จเต็มจาก DoD 90 % ด้วยกำลัง 5 kW: \(t = 10.24(0.9)/(5 \times 0.95) = 1.9\) ชั่วโมง → แผงต้องมีพลังงานเหลือจากโหลดกลางวันอย่างน้อย ≈ 9.7 kWh ในวันปกติ</p></li>
+</ol></div>
+<div class="wx" id="ex-b-2"><div class="wx-head"><span class="mono">ตัวอย่าง B-2</span><h3>บ้านพักบนดอย off-grid ใช้ไฟ 3 kWh/วัน สำรอง 2 วัน</h3></div>
+<ol class="steps">
+<li><p>LFP, DoD 80 % (เผื่ออายุ), \(\eta\) = 0.85: \(C_{nom} = 3(2)/(0.8 \times 0.85) = 8.8\) kWh → 2 × 5.12 kWh</p></li>
+<li><p>B4: PSH เดือนแย่สุด 4.2 h, \(PR_{off}\) = 0.65 → \(P_{PV} = 3/(4.2 \times 0.65) = 1.10\) kWp → เผื่อชาร์จคืนหลังวันฝนตก ใช้ 2 kWp (4 แผง × 580 W = 2.32 kWp)</p></li>
+<li><p>ถ้าเป็นตะกั่วกรด DoD 50 %: \(3(2)/(0.5 \times 0.8) = 15\) kWh = 313 Ah ที่ 48 V — หนักกว่า 3–4 เท่าและอายุสั้นกว่ามาก</p></li>
+</ol></div>
+    <div class="fg-calc pv-calc" data-pv="battery"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="bms">
+    <h2 id="bms">BMS แรงดันระบบ และการตั้งค่าชาร์จ <span class="lv lv-i">กลาง</span></h2>
+    <h3>BMS (Battery Management System) ทำอะไร</h3>
+    <ul>
+      <li>วัดแรงดันทุกเซลล์ อุณหภูมิหลายจุด และกระแส · ตัดเมื่อแรงดันเซลล์เกินหรือต่ำเกิน กระแสเกิน อุณหภูมิผิดปกติ (โดยเฉพาะห้ามชาร์จ LFP ที่ต่ำกว่า 0 °C)</li>
+      <li>ปรับสมดุลเซลล์ (passive balancing หรือ active balancing)</li>
+      <li>ประมาณ SoC/SoH และส่งค่าขีดจำกัดกระแสชาร์จ/คาย (CCL/DCL) และแรงดันเป้าหมายให้อินเวอร์เตอร์ผ่าน CAN หรือ RS485 — เรียกว่า <b>closed-loop communication</b> ทำให้อินเวอร์เตอร์ชาร์จตามที่แบตต้องการจริง</li>
+    </ul>
+    <h3>48 V (low voltage) กับ high voltage</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>LV 48/51.2 V</th><th>HV 150–800 V</th></tr></thead>
+      <tbody>
+        <tr><td>กระแสที่ 5 kW</td><td>~100 A (สายใหญ่ 35–50 mm² ฟิวส์/เบรกเกอร์ DC กระแสสูง)</td><td>~10–25 A</td></tr>
+        <tr><td>ประสิทธิภาพ</td><td>ต่ำกว่าเล็กน้อย (ขั้น DC-DC แปลงแรงดันสูงขึ้น)</td><td>สูงกว่า</td></tr>
+        <tr><td>ความปลอดภัยต่อการสัมผัส</td><td>แรงดันต่ำ (ELV) แต่กระแสลัดวงจรสูงมาก</td><td>แรงดันอันตราย ต้องติดตั้งโดยผู้ชำนาญ</td></tr>
+        <tr><td>ขยายระบบ</td><td>ขนานโมดูลง่าย หลายยี่ห้อ</td><td>ซ้อนเป็นสแต็กของยี่ห้อเดียวกัน</td></tr>
+        <tr><td>เหมาะกับ</td><td>บ้าน 3–15 kW off-grid/hybrid ทั่วไป</td><td>บ้านใหญ่ อาคาร ระบบ 3 เฟส</td></tr>
+      </tbody>
+    </table></div>
+    <h3>ค่าชาร์จทั่วไปของ LFP 16 เซลล์ (51.2 V)</h3>
+    <ul>
+      <li>Bulk/Absorption: 3.45–3.55 V/เซลล์ → 55.2–56.8 V · Float: 3.35–3.40 V/เซลล์ → 53.6–54.4 V (หรือไม่ใช้ float)</li>
+      <li>ตัดคายประจุ: 2.9–3.0 V/เซลล์ → 46.4–48 V · ใช้ค่าที่ผู้ผลิตแบตกำหนดเสมอ และใช้ closed-loop เมื่อทำได้</li>
+      <li>เก็บระยะยาวที่ SoC 40–60 % ในที่ร่ม อุณหภูมิสูงเร่งการเสื่อมตามเวลา (ห้องแบตควรไม่เกิน 30–35 °C)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="economics">
+    <h2 id="economics">แบตเตอรี่คุ้มไหม <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="B5" data-k="lcos levelized cost of storage ต้นทุนต่อหน่วยที่ผ่านแบต"><p class="tf-n"><b><span class="fid">B5</span> Simple levelized cost of storage</b> ต้นทุนต่อหน่วยที่ผ่านแบตเตอรี่ (อย่างง่าย)</p>
+        \[ LCOS \approx \frac{\text{ราคาแบต}}{C_{nom}\times DoD \times N_{cycles,eff}\times \eta} \qquad N_{cycles,eff} = \min(N_{cycle\,life},\ 365\,Y_{calendar}) \]</div>
+<div class="tf" id="B6" data-k="value of shifting energy arbitrage มูลค่าการย้ายพลังงาน"><p class="tf-n"><b><span class="fid">B6</span> Value of shifting one kWh</b> มูลค่าของการเก็บไฟกลางวันไว้ใช้กลางคืน</p>
+        \[ v_{shift} = c_{buy,night} - c_{sell,day} \qquad \text{คุ้มเมื่อ } v_{shift} > LCOS \]</div>
+<div class="wx" id="ex-b-3"><div class="wx-head"><span class="mono">ตัวอย่าง B-3</span><h3>LCOS ของ LFP 10.24 kWh</h3></div>
+<p>สมมติราคาแบตติดตั้ง 70,000 บาท (≈ 6,840 บาท/kWh — ใช้ราคาจริงของคุณแทน) อายุปฏิทิน 15 ปี ใช้วันละรอบ</p>
+<ol class="steps">
+<li><p>\(N_{cycles,eff} = \min(6000,\ 365 \times 15) = 5{,}475\) รอบ</p></li>
+<li><p>\(LCOS = \dfrac{70{,}000}{10.24 \times 0.9 \times 5475 \times 0.9} = 1.54\) บาท/kWh</p></li>
+<li><p>B6: ค่าไฟกลางคืน 4.2 − ราคาขายกลางวัน 2.2 = 2.0 บาท/kWh &gt; 1.54 → คุ้มเล็กน้อย <b>ถ้าใช้ทุกวันจนครบอายุ</b> แต่ยังไม่รวมส่วนต่างราคาอินเวอร์เตอร์ไฮบริดและค่าเสียโอกาสของเงิน</p></li>
+<li><p>ข้อสรุป: ซื้อแบตเพราะต้องการไฟสำรอง ใช้กับ TOU หรือ peak shaving ของกิจการ — ถ้าเหตุผลเดียวคือย้ายไฟกลางวันไปกลางคืน ให้คำนวณด้วยตัวเลขของตัวเองก่อน</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="safety">
+    <h2 id="safety">ความปลอดภัยและการติดตั้ง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li>เลือกแบตที่ผ่าน <b>IEC 62619</b> (และ UL 9540A สำหรับการลามไฟระดับระบบ) มี BMS ที่ตัดได้จริง ไม่ใช่แบตประกอบเองจากเซลล์ไม่ทราบที่มา</li>
+      <li>ติดตั้งในที่อากาศถ่ายเท ไม่โดนแดด ไม่ใช่ห้องนอนหรือทางหนีไฟ ห่างจากวัสดุติดไฟ พื้นแข็งแรงรับน้ำหนัก (แบต 5 kWh ≈ 45–55 kg)</li>
+      <li>ฝั่ง DC ของแบตต้องมีฟิวส์หรือเบรกเกอร์ DC ใกล้ขั้วแบตที่ตัดกระแสลัดวงจรระดับหลายพันแอมป์ได้ (เช่น ฟิวส์ NH หรือ class T) สายขนาดพอและย้ำหัวด้วยเครื่องมือที่ถูกต้อง</li>
+      <li>เมื่อขนานหลายโมดูล ใช้สายยาวเท่ากันหรือต่อแบบทแยง (diagonal) ให้กระแสแบ่งเท่ากัน และเชื่อมการสื่อสาร BMS ตามคู่มือ</li>
+      <li>เตรียมถังดับเพลิงที่เหมาะ และแจ้งผู้อยู่อาศัยเรื่องการตัดระบบในกรณีฉุกเฉิน</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>แบบจำลองวงจรสมมูล</b> (Thevenin 1RC/2RC) ของเซลล์ LFP และการประมาณ SoC ด้วย Extended/Unscented Kalman filter — ยากเพราะเส้น OCV-SoC ของ LFP แบนมาก</li>
+      <li><b>แบบจำลองการเสื่อม</b> แยก calendar aging (ขึ้นกับอุณหภูมิและ SoC ตาม Arrhenius) และ cycle aging (ขึ้นกับ DoD และ throughput) เพื่อหานโยบายการชาร์จที่เหมาะสม</li>
+      <li><b>Energy management</b> ด้วย model predictive control ใช้พยากรณ์แสงและโหลดล่วงหน้า (ดู <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์</a>) เพื่อตัดสินใจชาร์จ/คายในอัตรา TOU</li>
+      <li><b>Second-life EV batteries</b> ทดสอบ SoH คัดกลุ่ม ออกแบบ BMS ใหม่ และประเด็นความปลอดภัย</li>
+      <li><b>ตัวแปลง DC-DC สองทิศทาง</b> (bidirectional buck-boost, DAB) ระหว่างแบตกับ DC-link — ต่อยอดจาก <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

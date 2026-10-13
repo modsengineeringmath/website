@@ -1,0 +1,189 @@
+<!--meta
+{
+  "title": "ออกแบบสตริงโซลาร์เซลล์: คำนวณจำนวนแผงต่ออนุกรม Voc ตอนหนาว Vmp ตอนร้อน ช่วง MPPT กระแส และ DC/AC Ratio | อาจารย์มด",
+  "h1": "ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio",
+  "description": "วิธีคำนวณจำนวนแผงโซลาร์ต่อสตริงและจำนวนสตริงต่อ MPPT แบบละเอียด: แรงดัน Voc ที่อุณหภูมิต่ำสุด Vmp ที่เซลล์ร้อนสุด ช่วง MPPT และ full-load MPPT กระแส Imp และ Isc ต่อ MPPT DC/AC ratio และ clipping สตริงหลายทิศ พร้อมเครื่องคำนวณออนไลน์และตัวอย่างระบบ 5 kW 10 kW 100 kW",
+  "ogTitle": "ออกแบบสตริงโซลาร์และจับคู่อินเวอร์เตอร์",
+  "og": {"title": "ออกแบบสตริงโซลาร์และจับคู่อินเวอร์เตอร์"},
+  "lesson": "solar-pv",
+  "sub": "string-sizing",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["PV string sizing", "Solar inverter", "MPPT voltage range", "DC/AC ratio"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "ต่อแผงโซลาร์อนุกรมได้สูงสุดกี่แผง?", "a": "หาร Vdc สูงสุดของอินเวอร์เตอร์ด้วย Voc ของแผงที่อุณหภูมิต่ำสุดของพื้นที่ แล้วปัดลง เช่น อินเวอร์เตอร์ 600 V แผง Voc 52.2 V β −0.25 %/°C ที่ 10 °C Voc เพิ่มเป็น 54.2 V ต่อได้สูงสุด 11 แผง ต้องใช้ Voc ตอนหนาวเพราะแรงดันสูงที่สุดเกิดตอนเช้าที่อากาศเย็นและแผงยังไม่ร้อน"},
+    {"q": "DC/AC ratio ควรเป็นเท่าไร?", "a": "สำหรับประเทศไทยนิยม 1.1–1.3 คือแผงใหญ่กว่าพิกัดอินเวอร์เตอร์ 10–30 % เพราะแผงแทบไม่เคยจ่ายถึงพิกัด STC จากอุณหภูมิและการสูญเสีย การสูญเสียจากการตัดยอด (clipping) ที่ 1.2–1.3 มักไม่เกิน 1–2 % แต่ได้พลังงานช่วงเช้าเย็นเพิ่ม ต้องไม่เกินค่าที่ผู้ผลิตอินเวอร์เตอร์อนุญาตและเงื่อนไขของการไฟฟ้า"},
+    {"q": "แผงสองทิศต่อเข้า MPPT เดียวกันได้ไหม?", "a": "ไม่ควร สตริงที่ขนานกันต้องมีแรงดัน MPP ใกล้กัน ถ้าทิศต่างกัน แสงและอุณหภูมิต่างกัน จุด MPP ไม่ตรงกันทำให้เสียพลังงาน ให้แยกแต่ละทิศไปคนละ MPPT หรือใช้ optimizer ถ้าจำเป็นต้องรวม ต้องเป็นสตริงจำนวนแผงเท่ากันและยอมรับการสูญเสีย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ออกแบบสตริง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.5 · ออกแบบระบบโซลาร์เซลล์ · String Sizing &amp; Inverter Matching</p>
+      <h1>ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio</h1>
+      <p class="lede">อินเวอร์เตอร์รับแรงดันได้ในหน้าต่างหนึ่ง และรับกระแสได้ไม่เกินค่าหนึ่ง ส่วนแรงดันของสตริงเปลี่ยนตามอุณหภูมิทุกวัน การออกแบบสตริงคือการเลือก “แผงกี่แผงต่ออนุกรม และกี่สตริงต่อขนาน” ให้สตริงอยู่ในหน้าต่างนั้น ทั้งในเช้าที่หนาวที่สุดและเที่ยงที่ร้อนที่สุดของปี — พลาดด้านบนอินเวอร์เตอร์พัง พลาดด้านล่างเสียพลังงานทุกบ่าย</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">เครื่องคำนวณสตริง</a>
+        <a class="btn btn-ghost btn-sm" href="#voltage">ขีดจำกัดแรงดัน</a>
+        <a class="btn btn-ghost btn-sm" href="#current">ขีดจำกัดกระแส</a>
+        <a class="btn btn-ghost btn-sm" href="#dcac">DC/AC ratio</a>
+        <a class="btn btn-ghost btn-sm" href="#examples">ตัวอย่าง 3 ขนาด</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ขีดบน: \(N_s V_{oc}(T_{min}) \le V_{dc,max}\) — ห้ามเกินเด็ดขาด</li>
+          <li>ขีดล่าง: \(N_s V_{mp}(T_{c,max}) \ge V_{MPPT,min}\) — ต่ำกว่านี้เสียพลังงานช่วงร้อน</li>
+          <li>กระแส: \(N_p I_{mp} \le I_{MPPT,max}\) และ \(1.25 N_p I_{sc} \le I_{sc,max}\)</li>
+          <li>DC/AC 1.1–1.3 · สตริงต่างทิศแยก MPPT · สตริงขนานต้องจำนวนแผงเท่ากัน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น voc, tmin, mppt, imp, dc/ac, clipping" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="inverter-specs">
+    <h2 id="inverter-specs">ค่าในดาต้าชีตอินเวอร์เตอร์ที่ต้องใช้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ค่า</th><th>ตัวอย่าง 5 kW 1 เฟส</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>Max. DC input voltage \(V_{dc,max}\)</td><td>600 V</td><td>เกินแล้วเสียหายถาวร (ไม่ครอบคลุมประกัน)</td></tr>
+        <tr><td>MPPT voltage range</td><td>120–550 V</td><td>ช่วงที่ MPPT ทำงาน</td></tr>
+        <tr><td>Full-load MPPT range</td><td>~ 160–550 V</td><td>ช่วงที่จ่ายได้เต็มพิกัด (บางยี่ห้อระบุ)</td></tr>
+        <tr><td>Start-up voltage</td><td>~ 100–150 V</td><td>แรงดันที่เริ่มทำงานตอนเช้า</td></tr>
+        <tr><td>Rated DC voltage</td><td>360 V</td><td>แรงดันที่ประสิทธิภาพดีที่สุด</td></tr>
+        <tr><td>จำนวน MPPT / สตริงต่อ MPPT</td><td>2 / 1</td><td>แยกทิศหรือแยกขนาดสตริง</td></tr>
+        <tr><td>Max. input current per MPPT</td><td>16 A</td><td>เกินแล้วอินเวอร์เตอร์ตัดยอด (ไม่พัง)</td></tr>
+        <tr><td>Max. short-circuit current per MPPT</td><td>22 A</td><td>ความปลอดภัยของวงจรภายใน ต้องไม่เกิน</td></tr>
+        <tr><td>Max. DC input power / DC/AC ที่อนุญาต</td><td>7.5 kW (150 %)</td><td>ขนาดแผงสูงสุดที่ผู้ผลิตยอม</td></tr>
+        <tr><td>Rated AC power</td><td>5 kW</td><td>ฐานของ DC/AC ratio และการขออนุญาต</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="voltage">
+    <h2 id="voltage">ขีดจำกัดแรงดัน: หนาวสุดและร้อนสุด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>แรงดันของแผงขึ้นกับอุณหภูมิเซลล์เป็นหลัก (<a href="/learn/solar-pv/pv-cell/#P6">P6</a>) แรงดันสูงสุดเกิดในเช้าที่อากาศหนาวที่สุด เมื่อแสงพอให้แรงดันขึ้นเต็มแต่แผงยังไม่ร้อน จึงใช้ <b>อุณหภูมิอากาศต่ำสุดเป็นอุณหภูมิเซลล์</b> ส่วนแรงดันต่ำสุดขณะทำงานเกิดตอนเที่ยงที่แผงร้อนที่สุด</p>
+<div class="tf" id="D1" data-k="voc minimum temperature แรงดันเปิดวงจร อุณหภูมิต่ำสุด"><p class="tf-n"><b><span class="fid">D1</span> Maximum module voltage (coldest morning)</b> แรงดันสูงสุดของแผงตอนหนาวสุด</p>
+        \[ V_{oc,max} = V_{oc,STC}\left[1 + \beta_{V_{oc}}\,(T_{min} - 25)\right] \]</div>
+<div class="tf" id="D2" data-k="maximum modules per string vdc max จำนวนแผงต่อสตริงสูงสุด"><p class="tf-n"><b><span class="fid">D2</span> Maximum modules per string</b> จำนวนแผงต่อสตริงสูงสุด</p>
+        \[ N_{s,max} = \left\lfloor \frac{V_{dc,max}}{V_{oc,max}} \right\rfloor \quad \text{(และต้องไม่เกิน } V_{sys,max}\text{ ของแผงด้วย)} \]</div>
+<div class="tf" id="D3" data-k="vmp hot cell temperature beta vmp แรงดัน mpp ตอนร้อน"><p class="tf-n"><b><span class="fid">D3</span> Minimum MPP voltage (hottest noon)</b> แรงดัน MPP ต่ำสุดตอนร้อนสุด</p>
+        \[ V_{mp,min} = V_{mp,STC}\left[1 + \beta_{V_{mp}}(T_{c,max} - 25)\right] \qquad \beta_{V_{mp}} \approx \gamma - \alpha \]</div>
+<div class="tf" id="D4" data-k="minimum modules per string mppt min จำนวนแผงต่อสตริงต่ำสุด"><p class="tf-n"><b><span class="fid">D4</span> Minimum modules per string</b> จำนวนแผงต่อสตริงต่ำสุด</p>
+        \[ N_{s,min} = \left\lceil \frac{V_{MPPT,min}}{V_{mp,min}} \right\rceil \]</div>
+<div class="tf" id="D5" data-k="mppt upper limit vmp cold ขอบบนช่วง mppt"><p class="tf-n"><b><span class="fid">D5</span> MPPT upper limit</b> ขอบบนของช่วง MPPT</p>
+        \[ N_{s} \le \left\lfloor \frac{V_{MPPT,max}}{V_{mp}(T_{min})} \right\rfloor \]</div>
+    <h3>เลือก \(T_{min}\) และ \(T_{c,max}\) อย่างไร</h3>
+    <ul>
+      <li><b>\(T_{min}\)</b>: อุณหภูมิต่ำสุดที่เคยบันทึกของพื้นที่ (จากกรมอุตุนิยมวิทยา) กรุงเทพฯ และภาคใต้ใช้ 10–15 °C ภาคกลางและอีสาน 5–10 °C ภาคเหนือและพื้นที่สูง 0–5 °C ถ้าไม่แน่ใจใช้ค่าต่ำไว้ก่อน (ปลอดภัยกว่า)</li>
+      <li><b>\(T_{c,max}\)</b>: อุณหภูมิเซลล์สูงสุด ≈ อากาศสูงสุด + 30–35 °C (<a href="/learn/solar-pv/pv-cell/#P7">P7</a>) ในไทยใช้ 70–75 °C สำหรับแผงยกลอย และ 75–80 °C สำหรับแผงติดชิดหลังคา</li>
+      <li>ผลของ \(T_{min}\) ไม่น้อย: ถ้าเปลี่ยนจาก 10 °C เป็น 0 °C แผงตัวอย่างมี \(V_{oc,max}\) 55.5 V และอินเวอร์เตอร์ 600 V ยังรับได้ 10 แผง (จาก 11) — ในภาคเหนือต้องคิดค่านี้จริงจัง</li>
+    </ul>
+    <div class="note warn"><b>อย่าเผื่อด้านบนน้อยเกินไป</b> แรงดันเกิน \(V_{dc,max}\) แม้เพียงไม่กี่นาทีตอนเช้าก็ทำให้ตัวเก็บประจุหรือสวิตช์ด้านเข้าเสียหายได้ และผู้ผลิตจะไม่รับประกัน บางรายแนะนำให้เผื่ออีก 2–3 % สำหรับ tolerance และแสงที่สูงกว่า 1,000 W/m² จากเมฆสะท้อน (cloud enhancement)</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="current">
+    <h2 id="current">ขีดจำกัดกระแส: สตริงขนานต่อ MPPT <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="D6" data-k="strings per mppt current imp isc 1.25 สตริงขนานต่อ mppt กระแส"><p class="tf-n"><b><span class="fid">D6</span> Parallel strings per MPPT</b> จำนวนสตริงขนานต่อ MPPT</p>
+        \[ N_p \le \left\lfloor \frac{I_{MPPT,max}}{I_{mp}} \right\rfloor \qquad 1.25\,N_p\,I_{sc} \le I_{sc,max} \]</div>
+    <p>ตัวคูณ 1.25 เผื่อแสงที่สูงกว่า STC (cloud enhancement, albedo) และกระแสด้านหลังของแผงสองหน้า ข้อกำหนดของ IEC 62548 ใช้ตัวคูณนี้กับการเลือกสายและฟิวส์ด้วย ถ้า \(N_p I_{mp}\) เกิน \(I_{MPPT,max}\) เล็กน้อย อินเวอร์เตอร์จะจำกัดกระแสเอง (เสียพลังงานแต่ไม่พัง) แต่ถ้า \(I_{sc}\) เกิน \(I_{sc,max}\) อาจเสียหายเมื่อเกิดความผิดพร่องภายใน</p>
+    <p><b>แผงกระแสสูงกับอินเวอร์เตอร์รุ่นเก่า:</b> แผง 182/210 mm มี \(I_{mp}\) 13–18 A อินเวอร์เตอร์รุ่นเก่ารับได้ 11–13 A ต่อ MPPT จึงต้องตรวจทุกครั้ง อินเวอร์เตอร์รุ่นปัจจุบันจำนวนมากรองรับ 16–20 A ต่อสตริงแล้ว</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="dcac">
+    <h2 id="dcac">DC/AC ratio และ clipping <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="D7" data-k="dc ac ratio inverter loading ratio oversizing clipping อัตราส่วน dc ac"><p class="tf-n"><b><span class="fid">D7</span> DC/AC ratio</b> อัตราส่วนกำลังแผงต่อพิกัดอินเวอร์เตอร์</p>
+        \[ r_{DC/AC} = \frac{N_s N_p P_{STC}}{P_{AC,rated}} \]</div>
+    <p>แผงในไทยแทบไม่เคยจ่ายกำลังถึง STC เพราะอุณหภูมิ ฝุ่น และการสูญเสียในสาย กำลังสูงสุดจริงช่วงเที่ยงจึงอยู่ราว 75–85 % ของ \(P_{STC}\) การใช้แผงมากกว่าพิกัดอินเวอร์เตอร์ (oversizing) ทำให้อินเวอร์เตอร์ทำงานใกล้พิกัดนานขึ้น ได้พลังงานเช้าเย็นมากขึ้น และต้นทุนต่อหน่วยลดลง เมื่อกำลัง DC เกินพิกัด อินเวอร์เตอร์จะเลื่อนจุดทำงานออกจาก MPP เพื่อจำกัดกำลัง (<b>clipping</b>)</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>DC/AC</th><th>clipping ต่อปีในไทย (ประมาณ)</th><th>ใช้เมื่อ</th></tr></thead>
+      <tbody>
+        <tr><td>1.0–1.1</td><td>~0 %</td><td>สัญญาจำกัดกำลังส่งออกตามพิกัด kW แผง</td></tr>
+        <tr><td>1.1–1.3</td><td>0.2–2 %</td><td>บ้านและอาคารทั่วไป (แนะนำ)</td></tr>
+        <tr><td>1.3–1.5</td><td>2–6 %</td><td>หลังคาตะวันออก-ตะวันตก ระบบที่ขนาดอินเวอร์เตอร์ถูกจำกัดด้วยสัญญาหรือหม้อแปลง</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="D8" data-k="full load mppt voltage minimum voltage at rated power แรงดันต่ำสุดที่จ่ายเต็มพิกัด"><p class="tf-n"><b><span class="fid">D8</span> Minimum voltage for full power</b> แรงดันต่ำสุดที่ยังจ่ายเต็มพิกัด</p>
+        \[ V_{full,min} \approx \frac{P_{AC,rated}}{\eta_{inv}\,\sum I_{MPPT,max}} \]</div>
+    <p>ถ้าแรงดันสตริงตอนร้อนต่ำกว่า \(V_{full,min}\) อินเวอร์เตอร์ถูกจำกัดด้วยกระแส ไม่สามารถจ่ายเต็มพิกัด แม้แสงมาก — เกิดบ่อยในระบบที่สตริงสั้นเกินไป</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณสตริง</h2>
+    <p>ใส่ค่าจากดาต้าชีตแผงและอินเวอร์เตอร์ เครื่องจะคำนวณช่วงจำนวนแผงที่ใช้ได้ แล้วตรวจแบบที่คุณเลือกทีละเงื่อนไข (✓/✗) ค่าเริ่มต้นคือตัวอย่าง D-1</p>
+    <div class="fg-calc pv-calc" data-pv="string"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่างออกแบบ 3 ขนาด <span class="lv lv-i">กลาง</span></h2>
+    <p>ทุกตัวอย่างใช้แผง 580 Wp (\(V_{oc}\) 52.2 V, \(V_{mp}\) 43.4 V, \(I_{sc}\) 14.10 A, \(I_{mp}\) 13.37 A, β = −0.25, γ = −0.29, α = +0.045 %/°C) \(T_{min}\) = 10 °C \(T_{c,max}\) = 70 °C จึงได้ \(V_{oc,max}\) = 54.16 V \(V_{mp,min}\) = 36.86 V \(V_{mp}(T_{min})\) = 45.58 V (ใช้ \(\beta_{V_{mp}} = -0.335\) %/°C)</p>
+<div class="wx" id="ex-d-1"><div class="wx-head"><span class="mono">ตัวอย่าง D-1</span><h3>บ้าน: อินเวอร์เตอร์ไฮบริด 5 kW 1 เฟส</h3></div>
+<p>\(V_{dc,max}\) 600 V · MPPT 120–550 V · 2 MPPT · 16 A/MPPT · \(I_{sc,max}\) 22 A/MPPT</p>
+<ol class="steps">
+<li><p>D2: \(N_{s,max} = \lfloor 600/54.16 \rfloor = 11\)</p></li>
+<li><p>D4: \(N_{s,min} = \lceil 120/36.86\rceil = 4\) · D5: \(\lfloor 550/45.58 \rfloor = 12\) → ใช้ได้ 4–11 แผงต่อสตริง</p></li>
+<li><p>D6: \(\lfloor 16/13.37 \rfloor = 1\) สตริงต่อ MPPT · \(1.25 \times 14.1 = 17.6 \le 22\) ✓</p></li>
+<li><p>เลือก 5 แผง × 2 สตริง (สตริงละ MPPT) = 10 แผง = 5.80 kWp → DC/AC = 1.16 ✓</p></li>
+<li><p>ตรวจ: \(V_{oc}\) สตริงตอนหนาว 270.8 V ≤ 600 ✓ · \(V_{mp}\) ตอนร้อน 184.3 V ≥ 120 ✓ · D8: \(5000/(0.97 \times 32) = 161\) V ≤ 184 ✓</p></li>
+<li><p>ข้อสังเกต: ถ้าหลังคามีสองทิศ ใช้สตริงละทิศ แต่ละ MPPT ทำงานอิสระ ถ้าทิศเดียว อาจเลือก 10 แผงสตริงเดียว (Voc 541.6 V) ได้แรงดันใกล้ rated DC voltage มากกว่า แต่เหลือ MPPT ว่างหนึ่งตัว และเงาบังส่งผลทั้งสตริง</p></li>
+</ol></div>
+<div class="wx" id="ex-d-2"><div class="wx-head"><span class="mono">ตัวอย่าง D-2</span><h3>บ้านใหญ่/ร้านค้า: อินเวอร์เตอร์ 10 kW 3 เฟส</h3></div>
+<p>\(V_{dc,max}\) 1,100 V · MPPT 160–1,000 V · 2 MPPT · 16 A/MPPT</p>
+<ol class="steps">
+<li><p>\(N_{s,max} = \lfloor 1100/54.16 \rfloor = 20\) · \(N_{s,min} = \lceil 160/36.86 \rceil = 5\) · ขอบบน MPPT \(\lfloor 1000/45.58\rfloor = 21\)</p></li>
+<li><p>เลือก 11 แผง × 2 สตริง = 22 แผง = 12.76 kWp → DC/AC = 1.28</p></li>
+<li><p>ตรวจ: \(V_{oc}\) ตอนหนาว 595.7 V ✓ · \(V_{mp}\) ตอนร้อน 405.4 V ✓ · \(V_{mp}\) ตอนหนาว 501.4 V ✓ (ใกล้ rated DC voltage ของอินเวอร์เตอร์ 3 เฟสส่วนใหญ่ ≈ 600 V)</p></li>
+</ol></div>
+<div class="wx" id="ex-d-3"><div class="wx-head"><span class="mono">ตัวอย่าง D-3</span><h3>โรงงาน: อินเวอร์เตอร์ 100 kW</h3></div>
+<p>\(V_{dc,max}\) 1,100 V · MPPT 200–1,000 V · 10 MPPT · 2 สตริงต่อ MPPT · 32 A/MPPT · \(I_{sc,max}\) 40 A/MPPT · เป้า DC/AC ≈ 1.25</p>
+<ol class="steps">
+<li><p>เลือก 18 แผงต่อสตริง: \(V_{oc}\) ตอนหนาว \(18 \times 54.16 = 974.8\) V ≤ 1,100 ✓ (เผื่อ 11 %) · \(V_{mp}\) ตอนร้อน 663.4 V ✓ · ตอนหนาว 820.5 V ✓</p></li>
+<li><p>แผงที่ต้องการ: \(1.25 \times 100/0.58 \approx 216\) แผง = 12 สตริง × 18 = 216 แผง = 125.3 kWp → DC/AC = 1.25</p></li>
+<li><p>กระแสต่อ MPPT ที่มี 2 สตริง: \(2 \times 13.37 = 26.7\) A ≤ 32 ✓ · \(1.25 \times 2 \times 14.1 = 35.3\) A ≤ 40 ✓</p></li>
+<li><p>12 สตริงบน 10 MPPT: 2 MPPT รับ 2 สตริง อีก 8 MPPT รับ 1 สตริง — ทุกสตริงใน MPPT เดียวกันต้องทิศเดียวกันและยาวเท่ากัน</p></li>
+<li><p>สตริงยาวทำให้กระแส DC ต่ำ สายเล็กลง แรงดันตกน้อย (ดู <a href="/learn/solar-pv/wiring-protection/">สายไฟ</a>) แต่ต้องใช้อุปกรณ์ DC พิกัด 1,000–1,100 V ทั้งหมด</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="layout">
+    <h2 id="layout">กฎการจัดสตริงที่ใช้จริง</h2>
+    <ol>
+      <li>แผงในสตริงเดียวกัน: รุ่นเดียวกัน ทิศเดียวกัน มุมเอียงเดียวกัน เงาใกล้เคียงกัน</li>
+      <li>สตริงที่ขนานใน MPPT เดียวกัน: จำนวนแผงเท่ากันและทิศเดียวกัน</li>
+      <li>สตริงต่างทิศหรือต่างความยาว: แยก MPPT</li>
+      <li>เงาบังบางแผงเป็นประจำ: รวมแผงที่มีเงาไว้ในสตริงเดียว อย่ากระจายไปทุกสตริง หรือใช้ optimizer เฉพาะแผงนั้น</li>
+      <li>เดินสาย + และ − ของสตริงคู่กันไป (leap-frog / ไม่ให้เกิดวงรอบ) ลดพื้นที่วงลูปเพื่อลดแรงดันเหนี่ยวนำจากฟ้าผ่า</li>
+      <li>ระบบใหญ่: ออกแบบให้สตริงยาวเท่ากันทั้งโครงการ ใช้ combiner box หรือ string inverter กระจายตามโซน</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Clipping loss แบบรายชั่วโมง</b> คำนวณจากข้อมูล POA รายชั่วโมงหรือราย 1–5 นาที (ข้อมูลรายชั่วโมงประเมิน clipping ต่ำเกินจริงเมื่อเมฆผ่านเร็ว)</li>
+      <li><b>Optimal DC/AC ratio</b> แก้ปัญหาเชิงเศรษฐศาสตร์: ต้นทุนแผงส่วนเพิ่มเทียบพลังงานส่วนเพิ่ม โดยมีข้อจำกัดของสัญญาและ grid code</li>
+      <li><b>สายยาวกับแรงดันสูง 1,500 V</b> ในโซลาร์ฟาร์ม ลดจำนวน combiner และต้นทุนสาย แต่ต้องออกแบบฉนวนและ PID</li>
+      <li><b>ผลของ \(I_{sc}\) ที่เพิ่มจากด้านหลังของแผงสองหน้า</b> และ cloud enhancement ที่วัดได้ถึง 1,400–1,600 W/m² ในเขตร้อนช่วงสั้น ๆ ต่อการเลือกฟิวส์และอินเวอร์เตอร์</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

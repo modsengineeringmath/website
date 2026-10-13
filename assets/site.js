@@ -32,6 +32,34 @@
     matchMedia("(min-width:1600px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
   }
 
+  // menu groups: accordion in the hamburger panel, dropdown on desktop (hover, focus or click)
+  if (nav) {
+    var wide = matchMedia("(min-width:1600px)"), grps = nav.querySelectorAll(".nav-grp");
+    var setGrp = function (g, open) {
+      if (open) g.setAttribute("data-open", ""); else g.removeAttribute("data-open");
+      g.querySelector(".nav-tg").setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    var closeOthers = function (keep) { Array.prototype.forEach.call(grps, function (g) { if (g !== keep) setGrp(g, false); }); };
+    Array.prototype.forEach.call(grps, function (g) {
+      Array.prototype.forEach.call(g.querySelectorAll("a"), function (a) { if (a.getAttribute("href") === location.pathname) a.classList.add("nav-here"); });
+      var here = g.querySelector(".nav-here"), top = g.querySelector('[aria-current="page"]');
+      if (here && top && here !== top) top.removeAttribute("aria-current");
+      var cur = here || top;
+      if (cur) { g.classList.add("nav-cur"); if (!wide.matches) setGrp(g, true); }
+      g.querySelector(".nav-tg").addEventListener("click", function (e) {
+        e.stopPropagation();
+        var open = !g.hasAttribute("data-open");
+        if (wide.matches) closeOthers(g);
+        setGrp(g, open);
+      });
+    });
+    document.addEventListener("click", function (e) { if (wide.matches && !nav.contains(e.target)) closeOthers(null); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && wide.matches) closeOthers(null); });
+    wide.addEventListener("change", function (m) {
+      Array.prototype.forEach.call(grps, function (g) { setGrp(g, !m.matches && g.classList.contains("nav-cur")); });
+    });
+  }
+
   // footer year
   var yr = document.getElementById("yr");
   if (yr) yr.textContent = new Date().getFullYear();

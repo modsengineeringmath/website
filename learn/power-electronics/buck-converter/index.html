@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=90de235d">
+<link rel="stylesheet" href="/assets/site.css?v=cd8cae23">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-electronics/buck-converter/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-electronics/buck-converter/#article","headline":"บั๊กคอนเวอร์เตอร์ (Buck Converter): หลักการ สูตร ริปเปิล CCM/DCM การออกแบบ และฟังก์ชันถ่ายโอน","description":"บั๊กคอนเวอร์เตอร์ละเอียดถึงระดับปริญญาโท: หลักการทำงาน volt-second balance Vo = D·Vin ผลของ Rds(on) DCR และ Vf ริปเปิลกระแสตัวเหนี่ยวนำและแรงดันขาออกรวม ESR ขอบเขต CCM/DCM ความเค้นของสวิตช์ ไดโอด ตัวเก็บประจุ การสูญเสียการนำและการสวิตช์ ฟังก์ชันถ่ายโอน Gvd(s) ตัวอย่างออกแบบ 24 V → 12 V 1.2 A 50 kHz และซิมูเลชันวงจรออนไลน์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-electronics/buck-converter/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-electronics/buck-converter/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Buck converter","DC-DC converter","Volt-second balance","Output voltage ripple","Continuous conduction mode","Synchronous rectification"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-electronics/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-electronics-buck-converter.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อิเล็กทรอนิกส์กำลัง","item":"https://modsengineeringmath.com/learn/power-electronics/"},{"@type":"ListItem","position":4,"name":"บั๊กคอนเวอร์เตอร์ (Buck Converter): หลักการ สูตร ริปเปิล CCM/DCM การออกแบบ และฟังก์ชันถ่ายโอน","item":"https://modsengineeringmath.com/learn/power-electronics/buck-converter/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมแรงดันขาออกของบั๊กเท่ากับ D คูณแรงดันขาเข้า?","acceptedAnswer":{"@type":"Answer","text":"ในสถานะคงตัวแรงดันเฉลี่ยบนตัวเหนี่ยวนำต้องเป็นศูนย์ ช่วงสวิตช์นำ L รับ Vin − Vo นาน DTs ช่วงไดโอดนำรับ −Vo นาน (1−D)Ts รวมกันเป็นศูนย์จะได้ Vo = D·Vin"}},{"@type":"Question","name":"ควรออกแบบริปเปิลกระแสตัวเหนี่ยวนำเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"นิยมเลือก 20–40 % ของกระแสโหลด ค่าน้อยทำให้ L ใหญ่และตอบสนองช้า ค่ามากทำให้กระแสพีก ริปเปิลขาออก และการสูญเสียแกนสูง และต้องคำนวณที่แรงดันขาเข้าสูงสุด"}}]}]}</script>
@@ -59,33 +59,93 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
-      <a href="/learn/trigonometry/" >ตรีโกณมิติ</a>
-      <a href="/learn/integral-calculus/" >อินทิกรัล</a>
-      <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น</a>
-      <a href="/learn/first-order-system/" >ระบบอันดับ 1</a>
-      <a href="/learn/second-order-system/" >ระบบอันดับ 2</a>
-      <a href="/learn/signals/" >สัญญาณ</a>
-      <a href="/learn/fourier-series/" >อนุกรมฟูเรียร์</a>
-      <a class="nav-sub" href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิกเสมือนจริง</a>
-      <a class="nav-sub" href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
-      <a class="nav-sub" href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
-      <a class="nav-sub" href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
-      <a class="nav-sub" href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
-      <a href="/learn/power-electronics/" aria-current="page">อิเล็กทรอนิกส์กำลัง</a>
-      <a class="nav-sub" href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
-      <a class="nav-sub" href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
-      <a class="nav-sub" href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
-      <a class="nav-sub" href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
-      <a href="/learn/function-generator/" >แล็บ FG + สโคป</a>
-      <a class="nav-sub" href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง (แล็บเสมือนจริง)</a>
-      <a class="nav-sub" href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
-      <a href="/learn/control-systems/" >ระบบควบคุม</a>
-      <a class="nav-sub" href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
-      <a class="nav-sub" href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
-      <a class="nav-sub" href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
-      <a class="nav-sub" href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
-      <a class="nav-sub" href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
-      <a class="nav-sub" href="/learn/control-systems/robotics/">โรโบติกส์</a>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
+          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/vector-algebra/" >พีชคณิตของเวกเตอร์</a>
+          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
+          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
+          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" aria-current="page">ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
       <a href="/#watch" >ดูคลิป</a>
       <a href="/tools/lesson-editor/" >เครื่องมือ</a>
       <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
@@ -410,6 +470,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
       <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
       <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
       <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
       <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
       <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -433,9 +497,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=90de235d" defer></script>
-<script src="/assets/lesson.js?v=90de235d" defer></script>
-<script src="/assets/pe-sim.js?v=90de235d" defer></script>
-<script src="/assets/pe-lab.js?v=90de235d" defer></script>
+<script src="/assets/site.js?v=cd8cae23" defer></script>
+<script src="/assets/lesson.js?v=cd8cae23" defer></script>
+<script src="/assets/pe-sim.js?v=cd8cae23" defer></script>
+<script src="/assets/pe-lab.js?v=cd8cae23" defer></script>
 </body>
 </html>

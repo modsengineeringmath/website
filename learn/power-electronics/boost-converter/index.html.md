@@ -82,8 +82,6 @@ Current-mode ไม่ได้ลบ RHP zero แต่ทำให้ระบ
 
 - สวิตช์/ไดโอด ≥ 75–100 V, ไดโอดควรเป็น Schottky หรือ ultrafast (ลด $Q_{rr}$)
 
-ต้องเปิด JavaScript เพื่อใช้แล็บ
-
 ## หัวข้อขยาย
 
 - Boost PFC — ใช้ boost ทำให้กระแสอินพุตตามรูป sine (average current mode), ดู SMPS

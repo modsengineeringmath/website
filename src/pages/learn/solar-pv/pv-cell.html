@@ -1,0 +1,196 @@
+<!--meta
+{
+  "title": "เซลล์แสงอาทิตย์ทำงานอย่างไร: เส้นโค้ง I-V แบบจำลองไดโอด Voc Isc MPP Fill Factor STC NOCT และผลของอุณหภูมิ | อาจารย์มด",
+  "h1": "เซลล์แสงอาทิตย์ทำงานอย่างไร: เส้นโค้ง I-V แบบจำลองไดโอด STC NOCT และผลของอุณหภูมิ",
+  "description": "หลักการโซลาร์เซลล์ภาษาไทยแบบละเอียด: รอยต่อ p-n กับโฟตอน แบบจำลองไดโอดเดี่ยว เส้นโค้ง I-V และ P-V Isc Voc MPP fill factor ประสิทธิภาพ STC NOCT สัมประสิทธิ์อุณหภูมิ ผลของแสงน้อย การต่ออนุกรมขนาน บายพาสไดโอด hot spot พร้อมแล็บเส้นโค้ง I-V และเงาบังแบบโต้ตอบ",
+  "ogTitle": "เซลล์แสงอาทิตย์และเส้นโค้ง I-V · โซลาร์เซลล์",
+  "og": {"title": "เซลล์แสงอาทิตย์และเส้นโค้ง I-V"},
+  "lesson": "solar-pv",
+  "sub": "pv-cell",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Solar cell", "I-V curve", "Single-diode model", "Fill factor", "Bypass diode"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "Voc กับ Isc ของแผงโซลาร์คืออะไร?", "a": "Voc คือแรงดันเมื่อเปิดวงจร (ไม่มีกระแส) Isc คือกระแสเมื่อลัดวงจร (แรงดันศูนย์) ทั้งสองเป็นจุดปลายของเส้นโค้ง I-V แผงไม่จ่ายกำลังที่ทั้งสองจุด กำลังสูงสุดอยู่ที่จุด MPP ซึ่งประมาณ 80–84 % ของ Voc และ 93–95 % ของ Isc สำหรับแผงซิลิคอนปัจจุบัน"},
+    {"q": "ทำไมแผงโซลาร์ผลิตไฟได้น้อยลงตอนร้อนจัด?", "a": "แรงดันของรอยต่อ p-n ลดลงเมื่ออุณหภูมิสูงขึ้น ประมาณ −0.25 ถึง −0.30 % ต่อองศาสำหรับ Voc ขณะที่กระแสเพิ่มขึ้นเพียงเล็กน้อย กำลังจึงลดลงประมาณ −0.26 ถึง −0.35 % ต่อองศา ในประเทศไทยเซลล์ร้อนถึง 60–70 °C กำลังจึงต่ำกว่าพิกัด STC 10–13 %"},
+    {"q": "บายพาสไดโอดในกล่องต่อสายทำหน้าที่อะไร?", "a": "เมื่อบางเซลล์ถูกบังแสง กระแสของสตริงจะบังคับให้เซลล์นั้นรับแรงดันย้อนกลับและร้อนจนเกิด hot spot บายพาสไดโอดจะนำกระแสข้ามกลุ่มเซลล์ที่ถูกบัง แผงจึงเสียกำลังเพียงประมาณหนึ่งในสามแทนที่จะเสียเกือบทั้งแผง และป้องกันเซลล์ไหม้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>เซลล์และเส้น I-V</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.1 · ออกแบบระบบโซลาร์เซลล์ · How a Solar Cell Works</p>
+      <h1>เซลล์แสงอาทิตย์ทำงานอย่างไร: เส้นโค้ง I-V แบบจำลองไดโอด STC NOCT และผลของอุณหภูมิ</h1>
+      <p class="lede">ทุกการตัดสินใจในระบบโซลาร์ ตั้งแต่จำนวนแผงต่อสตริงจนถึงอัลกอริทึม MPPT ย้อนกลับมาที่เส้นโค้งเส้นเดียว คือเส้นโค้ง I-V ของแผง หน้านี้สร้างเส้นโค้งนั้นจากฟิสิกส์ของรอยต่อ p-n อ่านค่าจากดาต้าชีต และดูว่าแสง อุณหภูมิ และเงาเปลี่ยนมันอย่างไร</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บเส้นโค้ง I-V</a>
+        <a class="btn btn-ghost btn-sm" href="#model">แบบจำลองไดโอด</a>
+        <a class="btn btn-ghost btn-sm" href="#temperature">อุณหภูมิ</a>
+        <a class="btn btn-ghost btn-sm" href="#bypass">บายพาสไดโอด</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เซลล์คือไดโอดที่มีแหล่งกระแส \(I_{ph}\propto G\) ขนานอยู่ — เส้น I-V คือเส้นไดโอดกลับหัว</li>
+          <li>\(I_{sc}\) แปรตามแสงเกือบเป็นเชิงเส้น \(V_{oc}\) แปรตามแสงแบบลอการิทึม</li>
+          <li>ร้อนขึ้น 1 °C: \(V_{oc}\) ลด ≈ 0.25–0.30 % กำลังลด ≈ 0.26–0.35 %</li>
+          <li>STC (1000 W/m², เซลล์ 25 °C) เป็นแค่จุดอ้างอิง ในไทยเซลล์ทำงานที่ 50–70 °C</li>
+          <li>เงาบังเซลล์เดียวทำให้กลุ่มเซลล์ทั้งกลุ่มถูกบายพาส และ P-V มีหลายยอด</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น voc, fill factor, noct, อุณหภูมิ, bypass" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="physics">
+    <h2 id="physics">จากโฟตอนถึงกระแสไฟฟ้า <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เซลล์ซิลิคอนเป็นแผ่นสารกึ่งตัวนำบางประมาณ 130–180 µm ที่มีรอยต่อ p-n ใกล้ผิวหน้า เมื่อโฟตอนที่มีพลังงานมากกว่าแถบพลังงานต้องห้าม (bandgap) \(E_g\) ของซิลิคอน (1.12 eV) ถูกดูดกลืน มันสร้างคู่อิเล็กตรอน-โฮล สนามไฟฟ้าในบริเวณปลอดพาหะ (depletion region) แยกอิเล็กตรอนไปฝั่ง n และโฮลไปฝั่ง p ถ้าต่อวงจรภายนอก พาหะเหล่านี้ไหลเป็นกระแสได้</p>
+<div class="tf" id="P1" data-k="photon energy bandgap wavelength พลังงานโฟตอน ความยาวคลื่นตัด"><p class="tf-n"><b><span class="fid">P1</span> Photon energy &amp; cut-off wavelength</b> พลังงานโฟตอนและความยาวคลื่นตัด</p>
+        \[ E_{ph} = \frac{hc}{\lambda} \qquad \lambda_{g} = \frac{hc}{E_g} = \frac{1240\ \text{eV}\cdot\text{nm}}{1.12\ \text{eV}} \approx 1107\ \text{nm} \]</div>
+    <p>แสงที่ยาวกว่า ~1,107 nm (อินฟราเรดไกล) ผ่านไปโดยไม่สร้างพาหะ ส่วนโฟตอนพลังงานสูง (สีฟ้า UV) สร้างพาหะได้คู่เดียวเท่ากัน พลังงานส่วนเกินกลายเป็นความร้อน สองกลไกนี้ทำให้เซลล์รอยต่อเดียวมีขีดจำกัดทางทฤษฎี (Shockley–Queisser) ประมาณ 33 % ที่ bandgap เหมาะสม และราว 29–30 % สำหรับซิลิคอนเมื่อรวม Auger recombination เซลล์เชิงพาณิชย์ปี 2026 ทำได้ 23–26 % และแผงได้ 21–24 %</p>
+    <ul>
+      <li><b>ทำไมเซลล์ร้อนขึ้น:</b> แสงที่ไม่ได้เป็นไฟฟ้า (75–80 %) กลายเป็นความร้อนบนแผงเกือบทั้งหมด</li>
+      <li><b>ทำไมกระแสแปรตามแสง:</b> จำนวนคู่พาหะแปรตามจำนวนโฟตอน กระแส \(I_{ph}\) จึงแปรตามความเข้มแสง \(G\) (W/m²) เกือบเป็นเชิงเส้น</li>
+      <li><b>ทำไมแรงดันมีเพดาน:</b> แรงดันของเซลล์ซิลิคอนหนึ่งเซลล์อยู่ที่ราว 0.68–0.75 V ตอนเปิดวงจร ไม่ว่าเซลล์ใหญ่แค่ไหน — ต้องต่ออนุกรมหลายเซลล์จึงได้แรงดันใช้งาน</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="model">
+    <h2 id="model">แบบจำลองไดโอดเดี่ยว (Single-Diode Model) <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจรสมมูลของเซลล์หรือแผงคือแหล่งกระแส \(I_{ph}\) ขนานกับไดโอด ความต้านทานขนาน \(R_{sh}\) (กระแสรั่วตามขอบเซลล์และข้อบกพร่อง) และความต้านทานอนุกรม \(R_s\) (เนื้อสาร หน้าสัมผัส busbar ริบบอน) เมื่อแผงมี \(N_s\) เซลล์อนุกรม:</p>
+<div class="tf" id="P2" data-k="single diode model equation สมการไดโอดเดี่ยว iph i0 rs rsh thermal voltage"><p class="tf-n"><b><span class="fid">P2</span> Single-diode model</b> สมการแบบจำลองไดโอดเดี่ยว</p>
+        \[ I = I_{ph} - I_0\left[\exp\!\left(\frac{V + I R_s}{n N_s V_T}\right) - 1\right] - \frac{V + I R_s}{R_{sh}}, \qquad V_T = \frac{kT}{q} \approx 25.7\ \text{mV at } 25^\circ\text{C} \]</div>
+    <p>\(n\) คือ ideality factor (1.0–1.5 สำหรับซิลิคอน) \(I_0\) คือกระแสอิ่มตัวย้อนกลับ (ระดับ 10⁻¹⁰–10⁻⁹ A สำหรับแผง) ซึ่งเพิ่มขึ้นอย่างรวดเร็วตามอุณหภูมิ สมการนี้เป็น implicit (มี \(I\) สองข้าง) จึงต้องแก้ด้วยวิธีเชิงตัวเลข เช่น Newton–Raphson หรือฟังก์ชัน Lambert W แต่จุดสำคัญสามจุดหาได้ตรง ๆ:</p>
+<div class="tf" id="P3" data-k="isc voc mpp fill factor ff ค่าลัดวงจร เปิดวงจร จุดกำลังสูงสุด"><p class="tf-n"><b><span class="fid">P3</span> Short circuit, open circuit, MPP and fill factor</b> จุดสำคัญบนเส้นโค้ง I-V</p>
+        \[ I_{sc}\approx I_{ph} \qquad V_{oc} \approx nN_sV_T\ln\!\left(\frac{I_{ph}}{I_0}+1\right) \qquad P_{mp}=V_{mp}I_{mp} \qquad FF=\frac{V_{mp}I_{mp}}{V_{oc}I_{sc}} \]</div>
+<div class="tf" id="P4" data-k="efficiency module area ประสิทธิภาพ พื้นที่แผง"><p class="tf-n"><b><span class="fid">P4</span> Conversion efficiency</b> ประสิทธิภาพการแปลงพลังงาน</p>
+        \[ \eta = \frac{P_{mp}}{G\cdot A} \qquad (\text{STC: } G = 1000\ \text{W/m}^2) \]</div>
+    <p><b>Fill factor</b> บอกความ “เหลี่ยม” ของเส้นโค้ง แผงซิลิคอนดีมี FF 0.78–0.83 ค่า FF ต่ำบ่งชี้ \(R_s\) สูง (ริบบอนหลวม รอยร้าว ขั้วต่อเสื่อม) หรือ \(R_{sh}\) ต่ำ (PID เซลล์รั่ว) — เป็นเครื่องมือวินิจฉัยหลักในงาน <a href="/learn/solar-pv/installation-maintenance/">ทดสอบด้วย I-V curve tracer</a></p>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>อ่านดาต้าชีตแผง 580 Wp: FF และประสิทธิภาพ</h3></div>
+<p>แผง TOPCon 144 half-cut: \(P_{max}\) = 580 W, \(V_{oc}\) = 52.2 V, \(I_{sc}\) = 14.10 A, \(V_{mp}\) = 43.4 V, \(I_{mp}\) = 13.37 A ขนาด 2,278 × 1,134 mm</p>
+<ol class="steps">
+<li><p>\(FF = \dfrac{43.4 \times 13.37}{52.2 \times 14.10} = \dfrac{580.3}{736.0} = 0.788\)</p></li>
+<li><p>พื้นที่ \(A = 2.278 \times 1.134 = 2.583\ \text{m}^2\)</p></li>
+<li><p>\(\eta = \dfrac{580}{1000 \times 2.583} = 22.5\ \%\)</p></li>
+<li><p>อัตราส่วนที่ใช้ตรวจความสมเหตุสมผล: \(V_{mp}/V_{oc}\) = 0.83 และ \(I_{mp}/I_{sc}\) = 0.95 — อยู่ในช่วงปกติของซิลิคอนผลึก</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="irradiance">
+    <h2 id="irradiance">ผลของความเข้มแสง <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="P5" data-k="irradiance dependence isc voc ความเข้มแสง แสงน้อย"><p class="tf-n"><b><span class="fid">P5</span> Irradiance dependence</b> กระแสและแรงดันเมื่อแสงเปลี่ยน</p>
+        \[ I_{sc}(G) = I_{sc,STC}\,\frac{G}{1000} \qquad V_{oc}(G) \approx V_{oc,STC} + nN_sV_T\ln\!\frac{G}{1000} \]</div>
+    <p>แสงลดลงครึ่งหนึ่ง กระแสลดลงครึ่งหนึ่งแต่แรงดันลดเพียงเล็กน้อย ตัวอย่างแผง 72 เซลล์เทียบเท่า (\(n\) = 1.2, \(nN_sV_T\) ≈ 2.22 V) ที่แสง 200 W/m²: \(V_{oc}\) ลดลง \(2.22\ln 5 \approx 3.6\) V เหลือ ≈ 48.6 V นี่คือเหตุผลที่ <b>อินเวอร์เตอร์เริ่มทำงานตั้งแต่เช้ามืด</b> (แรงดันพอแล้ว แม้กระแสยังน้อย) และเป็นเหตุผลที่การออกแบบสตริงต้องคิดแรงดันสูงสุดตอนเช้าหนาว ๆ ที่แสงยังอ่อน</p>
+    <p>ประสิทธิภาพที่แสงน้อย (low-light performance) ระบุในดาต้าชีตเป็น % ของประสิทธิภาพ STC ที่ 200 W/m² ปกติ 95–99 % แผงที่มี \(R_{sh}\) สูงทำได้ดีกว่าในวันครึ้ม</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="temperature">
+    <h2 id="temperature">ผลของอุณหภูมิ: ศัตรูอันดับหนึ่งของโซลาร์ในประเทศไทย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ดาต้าชีตให้สัมประสิทธิ์อุณหภูมิสามตัว β (ของ \(V_{oc}\)), α (ของ \(I_{sc}\)) และ γ (ของ \(P_{max}\)) ในหน่วย %/°C ใช้แบบเชิงเส้นรอบ 25 °C:</p>
+<div class="tf" id="P6" data-k="temperature coefficient beta alpha gamma สัมประสิทธิ์อุณหภูมิ voc isc pmax"><p class="tf-n"><b><span class="fid">P6</span> Temperature coefficients</b> สัมประสิทธิ์อุณหภูมิ</p>
+        \[ V_{oc}(T_c) = V_{oc,STC}\left[1+\beta (T_c-25)\right] \quad I_{sc}(T_c) = I_{sc,STC}\left[1+\alpha (T_c-25)\right] \quad P(T_c) = P_{STC}\left[1+\gamma (T_c-25)\right] \]</div>
+    <p>ค่าทั่วไป: PERC β ≈ −0.27, γ ≈ −0.34 %/°C · TOPCon β ≈ −0.25, γ ≈ −0.29 · HJT β ≈ −0.24, γ ≈ −0.24 ถึง −0.26 · α ≈ +0.04 ถึง +0.05 %/°C สัมประสิทธิ์ของ \(V_{mp}\) ประมาณ \(\gamma - \alpha\) เพราะ \(P = VI\)</p>
+<div class="tf" id="P7" data-k="cell temperature noct nmot อุณหภูมิเซลล์"><p class="tf-n"><b><span class="fid">P7</span> Cell temperature from NOCT/NMOT</b> ประมาณอุณหภูมิเซลล์</p>
+        \[ T_c \approx T_a + \frac{NOCT - 20}{800}\,G \]</div>
+    <p>NOCT (หรือ NMOT ในมาตรฐาน IEC 61215 รุ่นใหม่) คืออุณหภูมิเซลล์ที่ 800 W/m², อากาศ 20 °C, ลม 1 m/s, แผงยึดแบบเปิดด้านหลัง มักอยู่ที่ 41–45 °C แผงที่ติดชิดหลังคาหรือไม่มีลมหมุนเวียนจะร้อนกว่าที่สูตรนี้บอก 5–15 °C</p>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">ตัวอย่าง P-2</span><h3>เที่ยงวันเดือนเมษายน: แผง 580 W จ่ายได้จริงเท่าไร</h3></div>
+<p>อากาศ 35 °C แสง 1,000 W/m² NOCT = 43 °C, γ = −0.29 %/°C, β = −0.25 %/°C, α = +0.045 %/°C</p>
+<ol class="steps">
+<li><p>อุณหภูมิเซลล์: \(T_c = 35 + \dfrac{43-20}{800}(1000) = 35 + 28.75 = 63.75\ ^\circ\text{C}\)</p></li>
+<li><p>กำลัง: \(P = 580\left[1 - 0.0029(63.75-25)\right] = 580(0.8876) = 514.8\ \text{W}\) — หายไป 11 %</p></li>
+<li><p>\(V_{oc} = 52.2\left[1-0.0025(38.75)\right] = 47.1\ \text{V}\) และ \(I_{sc} = 14.1\left[1+0.00045(38.75)\right] = 14.35\ \text{A}\)</p></li>
+<li><p>ข้อสรุปเชิงออกแบบ: ใช้ \(V_{mp}\) ตอนร้อนในการตรวจขอบล่างของช่วง MPPT และใช้ \(V_{oc}\) ตอนหนาวในการตรวจแรงดันสูงสุด (ดู <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง</a>)</p></li>
+</ol></div>
+    <div class="note"><b>ทางเลือกในเขตร้อน</b> แผงที่ γ ต่ำ (HJT, TOPCon) ให้พลังงานต่อปีมากกว่าแผง PERC ที่พิกัดเท่ากันราว 1.5–3 % ในไทย การยกแผงให้มีช่องลมใต้แผง 10–15 cm ช่วยลดอุณหภูมิเซลล์ได้หลายองศา ซึ่งได้ผลใกล้เคียงกัน</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: เส้นโค้ง I-V และ P-V ของแผงจริง</h2>
+    <p>แล็บนี้ใช้แบบจำลองไดโอดเดี่ยว (P2) ที่ปรับค่า \(I_0\) และ \(R_s\) ให้ผ่านจุด \(V_{oc}\), \(I_{sc}\) และ MPP ของแผง 580 Wp ในตัวอย่าง P-1 พอดี แผงแบ่งเป็นสามสตริงย่อย (24 เซลล์เทียบเท่าต่อกลุ่ม) แต่ละกลุ่มมีบายพาสไดโอดของตัวเอง ลองทำตามนี้:</p>
+    <ol>
+      <li>กด <b>STC</b> แล้วอ่าน \(V_{oc}\), \(I_{sc}\), MPP ให้ตรงกับดาต้าชีต</li>
+      <li>เลื่อนแสงจาก 1,000 ลงเหลือ 200 W/m² — กระแสลดตามแสง แรงดันแทบไม่ลด (P5)</li>
+      <li>กด <b>เที่ยงร้อน</b> — เส้นโค้งเลื่อนซ้าย กำลังหายไปราว 9–11 % (P6, P7)</li>
+      <li>กด <b>ใบไม้บัง 1 ช่อง</b> — เส้น I-V เป็นขั้นบันได P-V มีสองยอด</li>
+      <li>เอาเครื่องหมาย <b>มีบายพาสไดโอด</b> ออก — กำลังทั้งแผงถูกจำกัดด้วยกลุ่มที่ถูกบัง</li>
+    </ol>
+    <div class="pv-iv" data-g="1000" data-ta="25" data-stc><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="series-parallel">
+    <h2 id="series-parallel">ต่ออนุกรม ต่อขนาน และ mismatch <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="P8" data-k="series parallel string array อนุกรม ขนาน สตริง อาร์เรย์"><p class="tf-n"><b><span class="fid">P8</span> Series and parallel connection</b> การต่ออนุกรมและขนาน</p>
+        \[ \text{อนุกรม } N_s:\ V_{str} = \sum V_k,\ I_{str} = I\ (\text{ร่วมกัน}) \qquad \text{ขนาน } N_p:\ I_{arr} = \sum I_j,\ V_{arr} = V\ (\text{ร่วมกัน}) \]</div>
+    <ul>
+      <li><b>อนุกรม</b> แรงดันบวกกัน กระแสต้องเท่ากันทุกแผง แผงที่อ่อนที่สุด (สกปรก ร้อน ถูกบัง) จะดึงกระแสทั้งสตริงลง จึงไม่ควรผสมแผงต่างรุ่นต่างกระแสในสตริงเดียว</li>
+      <li><b>ขนาน</b> กระแสบวกกัน แรงดันต้องเท่ากัน สตริงที่ขนานกันต้องมีจำนวนแผงเท่ากันและวางทิศเดียวกัน ถ้าทิศต่างกันให้แยกไปคนละ MPPT</li>
+      <li><b>Mismatch loss</b> เกิดจากแผงที่มีค่าต่างกันเล็กน้อย (power tolerance 0/+5 W, การเสื่อมไม่เท่ากัน) โดยปกติ 0.5–2 %</li>
+      <li><b>กระแสย้อน</b> เมื่อสตริงหนึ่งลัดวงจร สตริงอื่นที่ขนานอยู่จะดันกระแสย้อนเข้า ถ้าขนานเกิน 2–3 สตริงต้องมีฟิวส์สตริง (ดู <a href="/learn/solar-pv/wiring-protection/#string-fuse">W5</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="bypass">
+    <h2 id="bypass">เงาบัง บายพาสไดโอด และ hot spot <span class="lv lv-i">กลาง</span></h2>
+    <p>ในสตริงอนุกรม เซลล์ทุกเซลล์ต้องนำกระแสเท่ากัน ถ้าเซลล์หนึ่งถูกบังจนผลิตกระแสได้น้อยกว่ากระแสสตริง มันจะถูกบังคับให้ทำงานในย่านไบแอสย้อนกลับ กลายเป็นโหลดที่กินกำลังของเซลล์อื่น เกิดความร้อนเฉพาะจุด (<b>hot spot</b>) จนแผ่นหลังไหม้หรือกระจกแตกได้</p>
+    <p>แผงทั่วไปจึงแบ่งเซลล์เป็น 3 กลุ่ม แต่ละกลุ่มมี <b>บายพาสไดโอด</b> (Schottky หรือ smart bypass ชนิด MOSFET) ในกล่องต่อสาย เมื่อกลุ่มใดถูกบัง ไดโอดนำ ทำให้แรงดันกลุ่มนั้นเหลือ −0.3 ถึง −0.5 V สตริงยังจ่ายกระแสเต็มผ่านกลุ่มที่ดี ผลคือ:</p>
+    <ul>
+      <li>แผงเสียกำลังประมาณ 1/3 ต่อกลุ่มที่ถูกบัง แทนที่จะเสียเกือบทั้งหมด</li>
+      <li>เส้น I-V เป็นขั้นบันได และเส้น P-V มี <b>หลายยอด</b> (local maxima) ซึ่งทำให้ MPPT แบบไต่เขาติดยอดผิดได้ — แก้ด้วย global scan (ดู <a href="/learn/solar-pv/mppt/#partial-shading">MPPT ภายใต้เงาบังบางส่วน</a>)</li>
+      <li>แผง half-cut (ครึ่งบน-ครึ่งล่างต่อขนานกัน) ทนเงาบังแนวนอนได้ดีกว่า: เงาที่บังครึ่งล่างทำให้เสียกำลังแค่ครึ่งหนึ่งของกลุ่ม</li>
+    </ul>
+<div class="wx" id="ex-p-3"><div class="wx-head"><span class="mono">ตัวอย่าง P-3</span><h3>ใบไม้บังเซลล์เดียว เสียกำลังเท่าไร</h3></div>
+<ol class="steps">
+<li><p>ใบไม้บังเซลล์หนึ่งในกลุ่มที่ 3 ให้แสงเหลือ 25 % กลุ่มนี้ผลิตกระแสได้แค่ \(0.25 \times 14.1 \approx 3.5\) A</p></li>
+<li><p>ถ้าทำงานที่กระแส 13 A (กลุ่ม 1–2 ทำงานเต็ม) กลุ่ม 3 ถูกบายพาส แรงดันแผงเหลือราว 2/3 → กำลังราว 2/3 ของปกติ ≈ 340 W ที่เซลล์ร้อน (ในแล็บ)</p></li>
+<li><p>ถ้าทำงานที่กระแส ≈ 3.5 A ทั้งสามกลุ่มนำ แรงดันเต็มแต่กระแสน้อย → ≈ 150 W</p></li>
+<li><p>จึงมีสองยอดบนเส้น P-V และยอดที่ดีกว่าคือยอดแรงดันต่ำ (global MPP) — อินเวอร์เตอร์ที่ไม่มี global scan อาจติดที่ยอด 150 W ทั้งวัน</p></li>
+<li><p>ถ้าไม่มีบายพาสไดโอด กระแสทั้งแผงถูกจำกัดที่ ≈ 3.5 A และเซลล์ที่ถูกบังร้อนจัด → นี่คือเหตุผลที่บายพาสไดโอดเป็นอุปกรณ์ความปลอดภัย ไม่ใช่แค่เพิ่มกำลัง</p></li>
+</ol></div>
+    <div class="note warn"><b>ห้ามมองข้าม</b> บายพาสไดโอดที่เสียแบบลัดวงจรทำให้แรงดันแผงหายไป 1/3 ตลอดเวลา ส่วนที่เสียแบบเปิดวงจรทำให้เกิด hot spot เมื่อมีเงา ตรวจได้จากการวัด \(V_{oc}\) ของแต่ละแผงเทียบกัน และภาพถ่ายความร้อน (ดู <a href="/learn/solar-pv/installation-maintenance/">งานบำรุงรักษา</a>)</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="stc">
+    <h2 id="stc">STC NOCT BNPI และค่าที่ดาต้าชีตบอก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เงื่อนไข</th><th>แสง</th><th>อุณหภูมิ</th><th>ใช้ทำอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>STC (Standard Test Conditions)</td><td>1,000 W/m², AM 1.5</td><td>เซลล์ 25 °C</td><td>พิกัดบนป้าย Wp เทียบแผงต่างยี่ห้อ</td></tr>
+        <tr><td>NOCT / NMOT</td><td>800 W/m²</td><td>อากาศ 20 °C ลม 1 m/s</td><td>ประมาณอุณหภูมิเซลล์และกำลังภาคสนาม</td></tr>
+        <tr><td>BNPI / BSTC (แผงสองหน้า)</td><td>หน้า 1,000 + หลัง 135 W/m²</td><td>เซลล์ 25 °C</td><td>กำลังรวมของแผง bifacial</td></tr>
+        <tr><td>Low irradiance</td><td>200 W/m²</td><td>เซลล์ 25 °C</td><td>ประสิทธิภาพวันครึ้ม เช้า เย็น</td></tr>
+      </tbody>
+    </table></div>
+    <p>AM 1.5 (air mass) หมายถึงสเปกตรัมแสงที่ผ่านชั้นบรรยากาศ 1.5 เท่าของความหนาแนวดิ่ง (ดวงอาทิตย์สูงจากขอบฟ้าราว 42°) เป็นสเปกตรัมอ้างอิงตาม IEC 60904-3</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>สกัดพารามิเตอร์ 5 ตัว</b> (\(I_{ph}, I_0, n, R_s, R_{sh}\)) จากดาต้าชีตหรือจาก I-V ที่วัดจริง: วิธี De Soto (2006), วิธีวนซ้ำของ Villalva (2009) หรือ curve fitting ด้วย least squares — ใช้ใน PVsyst และ pvlib (`pvlib.ivtools`)</li>
+      <li><b>แบบจำลองไดโอดคู่</b> แยก recombination ในบริเวณปลอดพาหะ (\(n\approx 2\)) ช่วยให้แม่นที่แสงน้อย</li>
+      <li><b>ผลลัพธ์ Lambert W</b> ทำให้เขียน \(I(V)\) แบบ explicit ได้: เร็วพอสำหรับคำนวณรายชั่วโมงทั้งปีหรือใช้ใน HIL simulator</li>
+      <li><b>Spectral mismatch และ IAM</b> แสงเช้าเย็นมีสเปกตรัมแดงกว่าและตกกระทบมุมเฉียง กระจก AR coating ช่วยลดการสะท้อน</li>
+      <li><b>Reverse-bias breakdown</b> ของเซลล์ TOPCon/HJT ต่ำกว่า PERC (บางรุ่น −5 ถึง −10 V) ทำให้การออกแบบบายพาสและการวิเคราะห์ hot spot ต่างไป</li>
+      <li><b>การเสื่อมเชิงกลไก:</b> LID, LeTID, PID, UVID (สำคัญกับ TOPCon), การเกิดรอยร้าว (micro-crack) และการกัดกร่อนหน้าสัมผัส — ผลต่อ \(R_s\), \(R_{sh}\) และ \(I_{sc}\) ต่างกัน วินิจฉัยได้จากรูปร่างเส้น I-V</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

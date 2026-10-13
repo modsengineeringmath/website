@@ -1,0 +1,182 @@
+<!--meta
+{
+  "title": "ออกแบบโซลาร์ฟาร์ม: ขั้นตอนพัฒนาโครงการ 1 MW ใช้ที่ดินกี่ไร่ ผังแผง GCR Tracker Bifacial อินเวอร์เตอร์ หม้อแปลง 22 kV SCADA และโซลาร์ลอยน้ำ | อาจารย์มด",
+  "h1": "ออกแบบโซลาร์ฟาร์ม: ผังแผง ระยะห่างแถว GCR Tracker อินเวอร์เตอร์ หม้อแปลง และการเชื่อมต่อระบบ",
+  "description": "การออกแบบโรงไฟฟ้าพลังงานแสงอาทิตย์ (โซลาร์ฟาร์ม) ภาษาไทย: ขั้นตอนพัฒนาโครงการ เลือกที่ดินและจุดเชื่อมต่อ พื้นที่ต่อ MW ประมาณ 5 ไร่ GCR fixed tilt กับ single-axis tracker แผงสองหน้า ระบบ DC 1,500 V string กับ central inverter หม้อแปลงและระบบ 22/33 kV SCADA สถานีตรวจวัดอากาศ ระบบป้องกัน grid code ฟาร์มลอยน้ำ พลังงานต่อไร่ การบำรุงรักษา และตัวอย่างฟาร์ม 5 MWp",
+  "ogTitle": "ออกแบบโซลาร์ฟาร์ม: ที่ดิน ผัง tracker 22 kV",
+  "og": {"title": "ออกแบบโซลาร์ฟาร์ม: ที่ดิน ผัง tracker 22 kV"},
+  "lesson": "solar-pv",
+  "sub": "solar-farm",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Photovoltaic power station", "Solar tracker", "Ground coverage ratio", "Floating solar", "Medium-voltage substation"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "โซลาร์ฟาร์ม 1 MW ใช้ที่ดินกี่ไร่?", "a": "ด้วยแผงประสิทธิภาพประมาณ 22–23 % แบบยึดอยู่กับที่ ใช้ที่ดินประมาณ 4.5–6 ไร่ต่อ MWp รวมทางเดิน ถนน รั้ว และพื้นที่อุปกรณ์ ถ้าใช้ตัวติดตามแกนเดียวต้องเว้นระยะแถวมากขึ้น ใช้ประมาณ 6–8 ไร่ต่อ MWp ฟาร์มเก่าที่ใช้แผงประสิทธิภาพต่ำเคยใช้ถึง 10–15 ไร่ต่อ MW"},
+    {"q": "โซลาร์ฟาร์ม 1 MW ผลิตไฟได้ปีละเท่าไร?", "a": "ในพื้นที่แดดดีของไทยประมาณ 1,450–1,550 MWh ต่อปีต่อ MWp สำหรับแบบยึดอยู่กับที่ และเพิ่มขึ้นประมาณ 10–15 % ถ้าใช้ตัวติดตามแกนเดียวกับแผงสองหน้า ขึ้นกับแสงของพื้นที่ การสูญเสีย และความพร้อมใช้งานของระบบ"},
+    {"q": "Single-axis tracker คุ้มในประเทศไทยไหม?", "a": "ขึ้นกับพื้นที่และราคา ไทยมีแสงกระจายสูงเพราะความชื้นและเมฆ ตัวติดตามจึงได้พลังงานเพิ่มน้อยกว่าในทะเลทราย (ประมาณ 10–15 % เทียบ 20–25 %) แต่ราคาตัวติดตามลดลงมาก และช่วยให้รูปร่างการผลิตกว้างขึ้นช่วงเช้าเย็น ต้องเทียบ LCOE ของสองแบบด้วยราคาจริง ดินที่ทรุดตัวหรือน้ำท่วมขังเป็นข้อจำกัดสำคัญ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>โซลาร์ฟาร์ม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.16 · ออกแบบระบบโซลาร์เซลล์ · Utility-Scale Solar Farm Design</p>
+      <h1>ออกแบบโซลาร์ฟาร์ม: ผังแผง ระยะห่างแถว GCR Tracker อินเวอร์เตอร์ หม้อแปลง และการเชื่อมต่อระบบ</h1>
+      <p class="lede">โซลาร์ฟาร์มใช้หลักเดียวกับระบบบนหลังคา แต่ทุกการตัดสินใจถูกคูณด้วยหลายพันแผงและ 25 ปี: เปลี่ยนระยะห่างแถว 10 cm คือที่ดินหลายไร่ เลือกอินเวอร์เตอร์ผิดคือรายได้ที่หายเป็นล้าน หน้านี้ไล่ตั้งแต่การพัฒนาโครงการ การวางผัง ไปจนถึงระบบแรงดันปานกลางและการเชื่อมต่อกับการไฟฟ้า</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#development">ขั้นตอนพัฒนาโครงการ</a>
+        <a class="btn btn-ghost btn-sm" href="#layout">ผังและที่ดิน</a>
+        <a class="btn btn-ghost btn-sm" href="#tracker">Fixed vs Tracker</a>
+        <a class="btn btn-ghost btn-sm" href="#electrical">ระบบไฟฟ้า MV</a>
+        <a class="btn btn-ghost btn-sm" href="#floating">ลอยน้ำ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ที่ดิน ≈ 5 ไร่/MWp (fixed) · พลังงาน ≈ 1,450–1,550 MWh/MWp/ปี ในพื้นที่แดดดี</li>
+          <li>จุดเชื่อมต่อ (ความสามารถของสายและสถานีไฟฟ้า) มักกำหนดขนาดโครงการมากกว่าที่ดิน</li>
+          <li>DC 1,500 V + string inverter 200–350 kW หรือ central 3–5 MVA → หม้อแปลง 0.8/22–33 kV</li>
+          <li>Tracker + bifacial ได้พลังงานเพิ่ม 10–20 % ต้องเทียบด้วย LCOE</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ไร่, gcr, transformer, availability, mv" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="development">
+    <h2 id="development">ขั้นตอนพัฒนาโครงการ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>สัญญาและนโยบาย:</b> รูปแบบการขายไฟ (สัญญาซื้อขายไฟกับการไฟฟ้าตามประกาศรับซื้อ, private PPA กับนิคม/โรงงาน, ใช้เอง) กำหนดขนาด ราคา และข้อกำหนดทางเทคนิค</li>
+      <li><b>จุดเชื่อมต่อ:</b> ตรวจความสามารถของสายจำหน่าย 22/33 kV หรือสถานีไฟฟ้าที่ใกล้ที่สุด (grid capacity) ระยะทางสายเชื่อมต่อ และผลการศึกษาการเชื่อมต่อ</li>
+      <li><b>ที่ดิน:</b> สถานะทางกฎหมายของที่ดิน (ที่ดินบางประเภท เช่น ส.ป.ก. มีข้อจำกัดการใช้) ผังเมือง ความลาดเอียง (&lt; 5 % ดีที่สุด) ระดับน้ำท่วมย้อนหลัง ถนนเข้าออก</li>
+      <li><b>ข้อมูลแสงและพื้นที่:</b> ข้อมูลดาวเทียมระยะยาว + สถานีวัดแสงหน้างาน (ช่วยลดความไม่แน่นอน P90 ดู <a href="/learn/solar-pv/energy-yield/#p50-p90">E7</a>) สำรวจดิน (geotechnical) ทดสอบแรงดึงเสาเข็ม ความต้านทานดินสำหรับระบบกราวด์</li>
+      <li><b>ใบอนุญาต:</b> ใบอนุญาตผลิตไฟฟ้าและใบอนุญาตที่เกี่ยวข้อง การประเมินผลกระทบสิ่งแวดล้อมตามขนาด การรับฟังความคิดเห็นชุมชน</li>
+      <li><b>ออกแบบเบื้องต้นและการเงิน:</b> ผัง พลังงาน P50/P90 ต้นทุน LCOE IRR (ดู <a href="/learn/solar-pv/economics/">ความคุ้มค่า</a>)</li>
+      <li><b>EPC:</b> ออกแบบละเอียด จัดซื้อ ก่อสร้าง ทดสอบ (FAT/SAT) ทดสอบเดินเครื่อง (COD) ทดสอบสมรรถนะ (PR test)</li>
+      <li><b>O&amp;M 20–25 ปี:</b> monitoring ล้างแผง ตัดหญ้า ซ่อม อะไหล่ รายงานสมรรถนะ</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="layout">
+    <h2 id="layout">ผังแผงและพื้นที่ที่ต้องใช้ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="G1" data-k="land area per mw rai gcr พื้นที่ที่ดิน ไร่ต่อ mw"><p class="tf-n"><b><span class="fid">G1</span> Land area</b> พื้นที่ที่ดินที่ต้องใช้</p>
+        \[ A_{land} \approx \frac{P_{STC}}{\eta\cdot 1000\ \text{W/m}^2\cdot GCR}\times k_{aux} \qquad 1\ \text{ไร่} = 1{,}600\ \text{m}^2,\ k_{aux}\approx 1.2\text{–}1.3 \]</div>
+<div class="tf" id="G2" data-k="energy per rai land productivity พลังงานต่อไร่"><p class="tf-n"><b><span class="fid">G2</span> Energy per unit land</b> พลังงานต่อไร่</p>
+        \[ \frac{E}{A_{land}} = \frac{P_{STC}\,Y_f}{A_{land}} \]</div>
+<div class="wx" id="ex-g-1"><div class="wx-head"><span class="mono">ตัวอย่าง G-1</span><h3>ที่ดินและพลังงานของ 1 MWp</h3></div>
+<ol class="steps">
+<li><p>แผง 580 W ประสิทธิภาพ 22.5 % → 1,724 แผง พื้นที่แผง 4,450 m²</p></li>
+<li><p>GCR 0.7 (ตัวอย่าง <a href="/learn/solar-pv/solar-resource/#ex-r-3">R-3</a>) และพื้นที่ส่วนประกอบ \(k_{aux}\) = 1.25: \(A_{land} = 4{,}450/0.7 \times 1.25 = 7{,}950\ \text{m}^2\) ≈ <b>5.0 ไร่</b></p></li>
+<li><p>G2: \(Y_f\) ≈ 1,430 kWh/kWp → 1,430 MWh/ปี ÷ 5 ไร่ ≈ <b>290 MWh/ไร่/ปี</b> ที่ราคาไฟ 2–3 บาท/kWh คือรายได้หลายแสนบาทต่อไร่ต่อปี — เทียบได้ว่าทำไมที่ดินใกล้สถานีไฟฟ้ามีมูลค่าสูง</p></li>
+</ol></div>
+    <h3>หลักการจัดผัง</h3>
+    <ul>
+      <li><b>โต๊ะแผง (table)</b> 2 แผงแนวตั้ง (2P) × 14–28 แผง หรือ 1P บนตัวติดตาม ขนาดโต๊ะตรงกับความยาวสตริง (เช่น 28 แผง/สตริงที่ 1,500 V) เพื่อลดสาย</li>
+      <li><b>ทางเดินและถนน</b> สำหรับรถล้างแผงและรถบำรุงรักษา ทางระบายน้ำตามแนวลาดธรรมชาติ</li>
+      <li><b>ตำแหน่งอินเวอร์เตอร์/สถานีแปลงแรงดัน</b> อยู่กลางกลุ่มแผงเพื่อลดความยาวสาย DC ที่แพงและสูญเสียสูง</li>
+      <li><b>ระยะจากรั้วและต้นไม้</b> ตามการวิเคราะห์เงา (<a href="/learn/solar-pv/solar-resource/#R7">R7</a>) ระดับแผงเหนือระดับน้ำท่วมสูงสุดที่บันทึกได้ + ระยะเผื่อ</li>
+      <li><b>พืชคลุมดิน</b> ลดฝุ่นและการกัดเซาะ (ดินเปลือยในหน้าแล้งทำให้แผงสกปรกเร็ว) และเปิดทางให้ทำเกษตรร่วม (ดู <a href="/learn/solar-pv/solar-agriculture/">agrivoltaics</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="tracker">
+    <h2 id="tracker">Fixed tilt, Single-axis tracker และ Bifacial <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Fixed tilt 10–15° ทิศใต้</th><th>Horizontal single-axis tracker (HSAT) แนวเหนือ-ใต้</th></tr></thead>
+      <tbody>
+        <tr><td>พลังงานต่อ kWp (ไทย)</td><td>ฐาน</td><td>+10–15 % (+ bifacial อีก 5–8 %)</td></tr>
+        <tr><td>รูปร่างการผลิต</td><td>ระฆังแหลม</td><td>ไหล่กว้าง ช่วงเช้า-บ่ายสูงขึ้น เหมาะ PPA ที่ราคาสูงช่วงเย็น</td></tr>
+        <tr><td>GCR / ที่ดิน</td><td>0.6–0.8</td><td>0.3–0.45 ใช้ที่ดินมากกว่า</td></tr>
+        <tr><td>ความซับซ้อน</td><td>ต่ำ</td><td>มอเตอร์ ตัวควบคุม backtracking stow ลมแรง</td></tr>
+        <tr><td>ข้อจำกัด</td><td>—</td><td>ดินอ่อน น้ำท่วม ความลาดเอียงต่างระดับ</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Backtracking:</b> ช่วงเช้าเย็นตัวติดตามเอียงกลับเพื่อไม่ให้แถวบังกันเอง แลกกับมุมตกกระทบที่ไม่ดีที่สุด ยังได้พลังงานมากกว่าปล่อยให้บัง ตัวควบคุมรุ่นใหม่ใช้ข้อมูลภูมิประเทศและแสงกระจายเพื่อเลือกมุม (diffuse-optimized tracking) ซึ่งช่วยมากในวันครึ้มของไทย</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="electrical">
+    <h2 id="electrical">ระบบไฟฟ้าของฟาร์ม <span class="lv lv-i">กลาง</span></h2>
+    <div class="pv-flow" aria-label="ระบบไฟฟ้าโซลาร์ฟาร์ม"><span>สตริง 1,500 V</span><i>→</i><span>combiner box / string inverter</span><i>→</i><span>สถานีแปลงแรงดัน (inverter + หม้อแปลง 0.6–0.8/22–33 kV + RMU)</span><i>→</i><span>สายป้อน MV วงแหวน</span><i>→</i><span>สวิตช์เกียร์ MV + มิเตอร์ + รีเลย์ป้องกันที่จุดต่อ</span><i>→</i><span>สายของการไฟฟ้า</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>String inverter (200–350 kW)</th><th>Central inverter (3–5 MVA)</th></tr></thead>
+      <tbody>
+        <tr><td>MPPT</td><td>หลายตัวต่อเครื่อง ทนเงาและ mismatch ดี</td><td>น้อย ต่อหลายสิบสตริง</td></tr>
+        <tr><td>การซ่อม</td><td>เปลี่ยนทั้งเครื่องในไม่กี่ชั่วโมง เสียทีละน้อย</td><td>ต้องมีช่างเฉพาะ เสียครั้งละมาก</td></tr>
+        <tr><td>ต้นทุน</td><td>สูงกว่าเล็กน้อยต่อ W ลดสาย DC/combiner</td><td>ต่ำสุดต่อ W ในโครงการใหญ่มาก</td></tr>
+        <tr><td>นิยมในไทย</td><td>ฟาร์มหลาย MW ถึงหลายสิบ MW และหลังคาโรงงาน</td><td>ฟาร์มขนาดใหญ่มาก</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="G3" data-k="mv current transformer rating กระแส mv หม้อแปลง"><p class="tf-n"><b><span class="fid">G3</span> MV current and transformer rating</b> กระแสแรงดันปานกลางและพิกัดหม้อแปลง</p>
+        \[ I_{MV} = \frac{S}{\sqrt3\,V_{LL}} \qquad S_{tr} \ge \frac{P_{AC,max}}{PF_{min}} \]</div>
+<div class="tf" id="G4" data-k="ac cable loss three phase i2r การสูญเสียในสาย 3 เฟส"><p class="tf-n"><b><span class="fid">G4</span> Three-phase cable loss</b> การสูญเสียในสายสามเฟส</p>
+        \[ P_{loss} = 3\,I^2\,R'\,L \]</div>
+<div class="tf" id="G5" data-k="availability downtime ความพร้อมใช้งาน"><p class="tf-n"><b><span class="fid">G5</span> Availability</b> ความพร้อมใช้งาน</p>
+        \[ A = \frac{T_{period} - T_{down}}{T_{period}} \qquad \text{หรือแบบถ่วงพลังงาน } A_E = \frac{E_{actual}}{E_{actual}+E_{lost}} \]</div>
+<div class="wx" id="ex-g-2"><div class="wx-head"><span class="mono">ตัวอย่าง G-2</span><h3>ฟาร์ม 5 MWp ที่ลพบุรี เชื่อม 22 kV</h3></div>
+<ol class="steps">
+<li><p>DC/AC 1.25 → อินเวอร์เตอร์รวม 4 MW AC (เช่น string inverter 250 kW × 16) · ที่ดิน ≈ 25 ไร่</p></li>
+<li><p>พลังงาน: GHI 5.1 × 1.04 × 365 × PR 0.78 × 5,000 kWp ≈ 7,550 MWh/ปี (≈ 1,510 kWh/kWp)</p></li>
+<li><p>G3: \(I_{22kV} = 4\text{M}/(\sqrt3 \cdot 22\text{k}) = 105\) A · หม้อแปลง PF 0.95 → ≥ 4.2 MVA (เช่น 2 × 2.5 MVA เพื่อความยืดหยุ่นเมื่อซ่อม)</p></li>
+<li><p>G4: สาย MV อะลูมิเนียม 2 km \(R'\) ≈ 0.32 Ω/km → \(3(105)^2(0.32)(2) = 21\) kW ≈ 0.5 % ที่กำลังเต็ม</p></li>
+<li><p>ระบบป้องกันที่จุดต่อ: รีเลย์แรงดัน/ความถี่ ป้องกันกระแสเกิน ทิศทางกำลัง (ถ้าห้ามย้อนเกินพิกัด) และอินเตอร์ล็อกกับการไฟฟ้าตามข้อกำหนด</p></li>
+</ol></div>
+    <h3>SCADA และการวัด</h3>
+    <ul>
+      <li>สถานีตรวจวัดอากาศ: ไพราโนมิเตอร์บนระนาบแผงและแนวราบ (Class A ตาม IEC 61724-1) อุณหภูมิแผง ลม ฝน ตัววัดความสกปรก (soiling station)</li>
+      <li>SCADA/PPC (power plant controller) คุมกำลังจริง กำลังรีแอกทีฟ ramp rate ตามคำสั่งศูนย์ควบคุม และส่งพยากรณ์ (ดู <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์</a>)</li>
+      <li>เครือข่ายไฟเบอร์ออปติก ระบบกล้อง รั้ว และไฟส่องสว่างเพื่อความปลอดภัย (การขโมยสายทองแดงพบบ่อย)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="floating">
+    <h2 id="floating">โซลาร์ลอยน้ำ (Floating PV) <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li>ติดบนทุ่นลอยในอ่างเก็บน้ำ บ่อดินเก่า บ่อบำบัดน้ำ — ไม่ใช้ที่ดิน น้ำช่วยลดอุณหภูมิแผง (PR สูงขึ้นเล็กน้อย) และลดการระเหยของน้ำ</li>
+      <li>ในไทย กฟผ. พัฒนาโซลาร์ลอยน้ำร่วมกับเขื่อนพลังน้ำ (hydro-floating solar hybrid) เช่นที่เขื่อนสิรินธรและเขื่อนอุบลรัตน์ ใช้สายส่งเดิมของเขื่อนและใช้น้ำในเขื่อนเป็น “แบตเตอรี่” ชดเชยช่วงเมฆ</li>
+      <li>ประเด็นออกแบบ: ระบบสมอยึดตามระดับน้ำขึ้นลงหลายเมตร แรงลมและคลื่น สาย DC ลอยน้ำต้องทนน้ำ (AD7/AD8) ความชื้นสูงทำให้ PID และการกัดกร่อนมากขึ้น การเข้าถึงเพื่อบำรุงรักษา และผลต่อระบบนิเวศ</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="om">
+    <h2 id="om">การดำเนินงานและบำรุงรักษาฟาร์ม</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>งาน</th><th>ความถี่ (ทั่วไป)</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ล้างแผง</td><td>2–6 ครั้ง/ปี ตามฝุ่น</td><td>ตัดสินจาก soiling ratio เทียบค่าน้ำและค่าแรง ใช้น้ำ RO/น้ำอ่อน หุ่นยนต์ล้างแบบแห้งในฟาร์มใหญ่</td></tr>
+        <tr><td>ตัดหญ้า/จัดการพืช</td><td>ทุก 1–3 เดือนช่วงฝน</td><td>หญ้าสูงบังแผงแถวล่าง ใช้แกะ/ปศุสัตว์บางพื้นที่</td></tr>
+        <tr><td>ภาพถ่ายความร้อนด้วยโดรน</td><td>1–2 ครั้ง/ปี</td><td>หา hot spot ไดโอดเสีย แผงแตก ตาม IEC 62446-3</td></tr>
+        <tr><td>ตรวจขั้วต่อ/ขันแน่น (torque)</td><td>ปีละครั้ง</td><td>กล้องความร้อนที่ combiner และหม้อแปลง</td></tr>
+        <tr><td>บำรุงรักษาหม้อแปลง/สวิตช์เกียร์</td><td>ตามผู้ผลิต</td><td>ตรวจน้ำมัน DGA ทดสอบรีเลย์</td></tr>
+        <tr><td>อินเวอร์เตอร์</td><td>ทุก 6–12 เดือน</td><td>ทำความสะอาดไส้กรอง พัดลม อัปเดตเฟิร์มแวร์</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Layout optimization</b> หา GCR ความยาวโต๊ะ และตำแหน่งอินเวอร์เตอร์ที่ทำให้ LCOE ต่ำสุดบนที่ดินรูปร่างจริงและภูมิประเทศ (terrain-following tracker)</li>
+      <li><b>PV + BESS</b> ในฟาร์ม: firming, ramp-rate control, time-shifting และ DC-coupled storage ที่ใช้พลังงาน clipping</li>
+      <li><b>Grid code และการศึกษาเชิงพลวัต</b> ของโรงไฟฟ้าอินเวอร์เตอร์: fault ride-through, short-circuit contribution, ฮาร์มอนิกและเรโซแนนซ์กับสายเคเบิลยาว (ดู <a href="/learn/fourier-series/mitigation/">ฮาร์มอนิกและฟิลเตอร์</a>)</li>
+      <li><b>Performance guarantee test</b> ตาม IEC 61724-2/-3 และการจัดการข้อพิพาทเรื่องสมรรถนะระหว่างเจ้าของกับ EPC</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

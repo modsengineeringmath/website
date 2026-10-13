@@ -1,0 +1,180 @@
+<!--meta
+{
+  "title": "โซลาร์เซลล์เพื่อการเกษตร: ปั๊มน้ำโซลาร์ คำนวณ Head อัตราไหล ขนาดแผง ปั๊มบาดาล DC VFD Agrivoltaics และฟาร์มอัจฉริยะ | อาจารย์มด",
+  "h1": "โซลาร์เพื่อการเกษตร: ปั๊มน้ำโซลาร์ คำนวณ Head และอัตราไหล Agrivoltaics และฟาร์มอัจฉริยะ",
+  "description": "ออกแบบโซลาร์เซลล์สำหรับการทำฟาร์มและการเกษตรในไทย: ความต้องการน้ำของพืช ET₀ Kc หัวสูบรวม TDH การสูญเสียในท่อ Hazen-Williams กำลังปั๊ม ρgQH ขนาดแผงจากพลังงานไฮดรอลิก ปั๊ม DC บัสเลส ปั๊มบาดาล ปั๊ม AC ผ่าน VFD ถังเก็บน้ำแทนแบตเตอรี่ บ่อปลาและเครื่องเติมอากาศ ฟาร์มปศุสัตว์ ห้องเย็น agrivoltaics Land Equivalent Ratio และ IoT สมาร์ตฟาร์ม พร้อมเครื่องคำนวณ",
+  "ogTitle": "ปั๊มน้ำโซลาร์และ Agrivoltaics",
+  "og": {"title": "ปั๊มน้ำโซลาร์และ Agrivoltaics"},
+  "lesson": "solar-pv",
+  "sub": "solar-agriculture",
+  "nav": "pv",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Solar water pumping", "Agrivoltaics", "Total dynamic head", "Variable frequency drive", "Smart farming"],
+  "scripts": ["/assets/lesson.js", "/assets/pv-calc.js"],
+  "faq": [
+    {"q": "ปั๊มน้ำโซลาร์ต้องใช้แผงกี่วัตต์?", "a": "คำนวณจากน้ำที่ต้องการต่อวันและหัวสูบรวม พลังงานไฮดรอลิก (kWh) = ปริมาณน้ำ (m³) × หัวสูบ (m) ÷ 367 หารด้วยประสิทธิภาพรวมของปั๊ม มอเตอร์ และคอนโทรลเลอร์ (ประมาณ 40–60 %) ได้พลังงานไฟฟ้าต่อวัน แล้วหารด้วยชั่วโมงแดดสูงสุดและ PR เช่น น้ำ 44 m³/วัน หัวสูบ 38 m ต้องใช้แผงประมาณ 2.5 kWp โดยทั่วไปใช้แผง 1.3–2 เท่าของกำลังปั๊ม"},
+    {"q": "ปั๊มน้ำโซลาร์ต้องมีแบตเตอรี่ไหม?", "a": "ส่วนใหญ่ไม่ต้อง ใช้ถังเก็บน้ำหรือบ่อพักแทนแบตเตอรี่ สูบน้ำขึ้นถังช่วงมีแดดแล้วปล่อยน้ำด้วยแรงโน้มถ่วงเมื่อต้องการ ถูกกว่าแบตเตอรี่มากและอายุยาวกว่า ใช้แบตเฉพาะเมื่อต้องสูบหรือให้น้ำตอนกลางคืน หรือเมื่อต้องการแรงดันคงที่ตลอดเวลา"},
+    {"q": "Agrivoltaics คืออะไร คุ้มไหม?", "a": "คือการทำเกษตรและผลิตไฟฟ้าจากโซลาร์บนพื้นที่เดียวกัน โดยยกแผงสูงหรือเว้นระยะให้แสงผ่านพอสำหรับพืช เหมาะกับพืชที่ทนร่มหรือชอบร่มบางส่วน และพื้นที่แดดจัดที่พืชเครียดจากความร้อน ผลรวมการใช้ที่ดินมักดีกว่าแยกทำ (Land Equivalent Ratio มากกว่า 1) แต่โครงสร้างแพงกว่าฟาร์มปกติและต้องออกแบบให้เครื่องจักรเกษตรทำงานได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pvArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ปั๊มน้ำ · เกษตร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 14.17 · ออกแบบระบบโซลาร์เซลล์ · Solar Pumping &amp; Agrivoltaics</p>
+      <h1>โซลาร์เพื่อการเกษตร: ปั๊มน้ำโซลาร์ คำนวณ Head และอัตราไหล Agrivoltaics และฟาร์มอัจฉริยะ</h1>
+      <p class="lede">พื้นที่เกษตรจำนวนมากอยู่ไกลสายไฟ หรือใช้เครื่องสูบน้ำดีเซลที่ค่าน้ำมันแพงและต้องเฝ้า ขณะที่พืชต้องการน้ำมากที่สุดในวันที่แดดจัดที่สุด ปั๊มน้ำโซลาร์จึงเป็นงานโซลาร์ที่คืนทุนเร็วที่สุดงานหนึ่ง หน้านี้คำนวณตั้งแต่ความต้องการน้ำของพืชจนถึงจำนวนแผง แล้วขยายไปยังบ่อปลา ฟาร์มสัตว์ ห้องเย็น และการทำเกษตรใต้แผง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">คำนวณปั๊มโซลาร์</a>
+        <a class="btn btn-ghost btn-sm" href="#water">น้ำที่พืชต้องการ</a>
+        <a class="btn btn-ghost btn-sm" href="#head">หัวสูบรวม</a>
+        <a class="btn btn-ghost btn-sm" href="#pump-types">ชนิดปั๊ม</a>
+        <a class="btn btn-ghost btn-sm" href="#agrivoltaics">Agrivoltaics</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>พลังงานไฮดรอลิก (kWh) = ปริมาตร (m³) × หัวสูบ (m) ÷ 367</li>
+          <li>หัวสูบรวม = ยกสถิต + ระดับลดขณะสูบ + สูญเสียในท่อ + แรงดันปลายทาง</li>
+          <li>ถังเก็บน้ำ = แบตเตอรี่ที่ถูกที่สุด · ปั๊ม DC บัสเลส / ปั๊ม AC + VFD โซลาร์</li>
+          <li>แผง ≈ 1.3–2 เท่าของกำลังปั๊ม 1 kWp ยกน้ำ 38 m ได้ ≈ 18 m³/วัน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น head, et0, hazen, ρgqh, 367, ler" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="water">
+    <h2 id="water">น้ำที่พืชต้องการ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="K1" data-k="crop water requirement et0 kc evapotranspiration ความต้องการน้ำของพืช"><p class="tf-n"><b><span class="fid">K1</span> Crop water requirement</b> ความต้องการน้ำของพืช</p>
+        \[ ET_c = K_c\,ET_0\ [\text{mm/วัน}] \qquad V = \frac{ET_c\,[\text{mm}]\times A\,[\text{m}^2]}{1000\,\eta_{irr}}\ [\text{m}^3] \qquad 1\ \text{mm บน } 1\ \text{ไร่} = 1.6\ \text{m}^3 \]</div>
+    <p>\(ET_0\) (reference evapotranspiration) ในไทยประมาณ 3.5–6 mm/วัน สูงสุดช่วงหน้าแล้ง \(K_c\) ขึ้นกับพืชและระยะการเติบโต (0.4–1.2) \(\eta_{irr}\) = ประสิทธิภาพการให้น้ำ: น้ำหยด 85–95 % สปริงเกลอร์ 70–80 % ปล่อยตามร่อง 50–60 % — การเปลี่ยนเป็นน้ำหยดจึงลดขนาดระบบสูบได้มาก</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="head">
+    <h2 id="head">หัวสูบรวม (Total Dynamic Head) <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="K2" data-k="total dynamic head tdh static drawdown friction หัวสูบรวม"><p class="tf-n"><b><span class="fid">K2</span> Total dynamic head</b> หัวสูบรวม</p>
+        \[ H = H_{static} + H_{drawdown} + H_{friction} + H_{outlet} \]</div>
+    <ul>
+      <li>\(H_{static}\) ระยะแนวดิ่งจากผิวน้ำนิ่งถึงจุดปล่อยน้ำสูงสุด (หรือปากถังพักบนหอสูง)</li>
+      <li>\(H_{drawdown}\) ระดับน้ำในบ่อบาดาลที่ลดลงขณะสูบ (จากผลทดสอบบ่อ)</li>
+      <li>\(H_{outlet}\) แรงดันที่ต้องการที่หัวจ่าย: น้ำหยด 7–15 m (0.7–1.5 bar) สปริงเกลอร์ 20–30 m ปล่อยลงถัง 0</li>
+    </ul>
+<div class="tf" id="K3" data-k="hazen williams friction loss pipe การสูญเสียในท่อ"><p class="tf-n"><b><span class="fid">K3</span> Pipe friction (Hazen–Williams, SI)</b> การสูญเสียแรงเสียดทานในท่อ</p>
+        \[ h_f = \frac{10.67\,L\,Q^{1.852}}{C^{1.852}\,d^{4.87}} \qquad (Q\ \text{m}^3/\text{s},\ d\ \text{m},\ C_{PE/PVC}\approx 140\text{–}150) \]</div>
+    <p>สังเกตเลขชี้กำลัง 4.87 ของเส้นผ่านศูนย์กลาง: ขยายท่อเพียงขนาดเดียวลดการสูญเสียได้ 3 เท่า ท่อเล็กเป็นสาเหตุที่พบบ่อยที่สุดที่ทำให้ปั๊มโซลาร์ได้น้ำน้อยกว่าที่คาด</p>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">ตัวอย่าง K-1</span><h3>ท่อ PE ยาว 200 m อัตราไหล 7.3 m³/h</h3></div>
+<ol class="steps">
+<li><p>\(Q = 7.3/3600 = 0.00203\ \text{m}^3/\text{s}\), \(C\) = 140</p></li>
+<li><p>ท่อ 2 นิ้ว (\(d\) ≈ 0.050 m): \(h_f\) ≈ 5.0 m</p></li>
+<li><p>ท่อ 2½ นิ้ว (\(d\) ≈ 0.0635 m): \(h_f\) ≈ 1.6 m (+ ข้อต่อ วาล์ว ≈ 1.4 m → ใช้ 3 m)</p></li>
+<li><p>ประหยัดหัวสูบ 3.4 m ≈ 9 % ของหัวสูบรวม → แผงเล็กลงเกือบ 10 % ด้วยค่าท่อที่เพิ่มขึ้นเล็กน้อย</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="power">
+    <h2 id="power">กำลังปั๊มและขนาดแผง <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K4" data-k="hydraulic power rho g q h 367 กำลังไฮดรอลิก"><p class="tf-n"><b><span class="fid">K4</span> Hydraulic power and energy</b> กำลังและพลังงานไฮดรอลิก</p>
+        \[ P_{hyd} = \rho g Q H \quad\Rightarrow\quad P_{hyd}\,[\text{kW}] = \frac{Q\,[\text{m}^3/\text{h}]\times H\,[\text{m}]}{367} \qquad E_{hyd}\,[\text{kWh}] = \frac{V\,[\text{m}^3]\times H\,[\text{m}]}{367} \]</div>
+<div class="tf" id="K5" data-k="pump electrical power wire to water efficiency ประสิทธิภาพปั๊ม"><p class="tf-n"><b><span class="fid">K5</span> Electrical input (wire-to-water)</b> กำลังไฟฟ้าที่ปั๊มต้องการ</p>
+        \[ P_{el} = \frac{P_{hyd}}{\eta_{pump}\,\eta_{motor}\,\eta_{ctrl}} \qquad \eta_{w2w} \approx 0.40\text{–}0.60 \]</div>
+<div class="tf" id="K6" data-k="pv array size pumping water per kwp ขนาดแผงปั๊มน้ำ"><p class="tf-n"><b><span class="fid">K6</span> PV array for pumping</b> ขนาดแผงสำหรับปั๊มน้ำ</p>
+        \[ P_{PV} = \frac{E_{hyd}}{\eta_{w2w}\,PSH\,PR_{pump}} \qquad \frac{V}{P_{PV}} = \frac{367\,PSH\,PR_{pump}\,\eta_{w2w}}{H}\ \left[\tfrac{\text{m}^3}{\text{วัน}\cdot\text{kWp}}\right] \]</div>
+<div class="wx" id="ex-k-2"><div class="wx-head"><span class="mono">ตัวอย่าง K-2</span><h3>สวนผัก/ผลไม้ 5 ไร่ ให้น้ำหยดจากบ่อบาดาล</h3></div>
+<ol class="steps">
+<li><p>K1: \(ET_0\) = 5 mm/วัน \(K_c\) = 1.0 → 5 mm/วัน × 8,000 m² ÷ 1000 ÷ 0.9 = <b>44.4 m³/วัน</b></p></li>
+<li><p>K2: \(H\) = 20 (ระดับน้ำนิ่ง) + 5 (ลดขณะสูบ) + 3 (ท่อ 2½ นิ้ว) + 10 (น้ำหยด) = <b>38 m</b></p></li>
+<li><p>สูบ 6 ชั่วโมงช่วงแดดดี → \(Q\) = 7.4 m³/h · K4: \(P_{hyd} = 7.4 \times 38/367 = 0.77\) kW</p></li>
+<li><p>K5: \(\eta_{w2w}\) = 0.5 → \(P_{el}\) ≈ 1.5 kW → เลือกปั๊มบาดาลโซลาร์ 1.5 kW ที่ให้ 7–8 m³/h ที่ 38 m (ตรวจจากกราฟ Q-H ของผู้ผลิต)</p></li>
+<li><p>K6: \(E_{hyd} = 44.4 \times 38/367 = 4.6\) kWh → \(P_{PV} = 4.6/(0.5 \times 5 \times 0.75) = 2.45\) kWp → 5 แผง × 580 W = 2.9 kWp (≈ 1.9 เท่าของกำลังปั๊ม)</p></li>
+<li><p>ถังพัก 1 วัน (≈ 45 m³) หรือบ่อพัก ช่วยให้วันครึ้มยังให้น้ำได้</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณปั๊มน้ำโซลาร์</h2>
+    <div class="fg-calc pv-calc" data-pv="pump"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pump-types">
+    <h2 id="pump-types">ชนิดปั๊มและตัวควบคุม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>กำลัง</th><th>เหมาะกับ</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ปั๊ม DC บัสเลส (BLDC) ผิวดิน/แช่</td><td>100 W–1.5 kW</td><td>บ่อตื้น สระ ร่องสวน น้ำหยดแปลงเล็ก</td><td>ประสิทธิภาพสูง ต่อแผงผ่านคอนโทรลเลอร์ MPPT ของปั๊ม</td></tr>
+        <tr><td>ปั๊มบาดาล DC บัสเลส (submersible)</td><td>0.5–4 kW</td><td>บ่อบาดาล 3–4 นิ้ว หัวสูบสูง</td><td>เลือกใบพัดแบบ helical rotor สำหรับหัวสูงอัตราไหลต่ำ หรือ centrifugal สำหรับอัตราไหลสูง</td></tr>
+        <tr><td>ปั๊ม AC 3 เฟสเดิม + Solar VFD</td><td>0.75–75 kW</td><td>ฟาร์มใหญ่ ใช้ปั๊มเดิม ระบบชลประทาน</td><td>VFD ที่มี MPPT รับ DC จากแผงโดยตรง (ต่อแผงแรงดันสูง 500–800 V) สลับใช้ไฟ AC ได้</td></tr>
+        <tr><td>ปั๊มหอยโข่ง/ไดอะแฟรม 12–24 V</td><td>&lt; 200 W</td><td>รดน้ำต้นไม้ พ่นยา งานเล็ก</td><td>ต่อแบต/แผงเล็ก</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>ทำไมไม่ใช้อินเวอร์เตอร์ off-grid + ปั๊ม AC ธรรมดา:</b> ปั๊มดึงกระแสกระชากสูงตอนสตาร์ต ต้องมีแบตและอินเวอร์เตอร์ใหญ่ ปั๊มโซลาร์และ solar VFD ปรับความเร็วตามแสง สตาร์ตนุ่มนวล ไม่ต้องมีแบต</li>
+      <li><b>ฟังก์ชันที่ควรมีในคอนโทรลเลอร์:</b> MPPT, ป้องกันบ่อแห้ง (dry-run), สวิตช์ลูกลอยถังเต็ม, ป้องกันกระแสเกิน/แรงดันเกิน, บันทึกข้อมูลและส่งค่าผ่านมือถือ</li>
+      <li><b>ความปลอดภัย:</b> สาย DC จากแผงถึงคอนโทรลเลอร์ยาวและอยู่กลางแจ้ง ใช้สาย PV และอุปกรณ์ DC ตาม <a href="/learn/solar-pv/wiring-protection/">หน้าสายไฟ</a> กราวด์โครงแผงและท่อโลหะ ติด SPD เพราะพื้นที่โล่งฟ้าผ่าบ่อย</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="farm-uses">
+    <h2 id="farm-uses">งานฟาร์มอื่นที่ใช้โซลาร์ได้ดี</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>งาน</th><th>แนวทาง</th><th>ข้อควรระวัง</th></tr></thead>
+      <tbody>
+        <tr><td>บ่อปลา/กุ้ง เครื่องเติมอากาศ (ตีน้ำ)</td><td>เครื่องตีน้ำกลางวันใช้โซลาร์ตรง กลางคืนซึ่งออกซิเจนต่ำสุดใช้ไฟกริด/แบต/เครื่องปั่นไฟ</td><td>ห้ามไฟดับตอนเช้ามืด สัตว์น้ำตายได้ ต้องมีระบบสำรอง</td></tr>
+        <tr><td>โรงเรือนไก่/สุกร</td><td>หลังคาโรงเรือนกว้าง โหลดพัดลมระบบ EVAP กลางวันตรงกับแดด</td><td>แผงทนแอมโมเนีย IEC 62716 ทำความสะอาดบ่อยขึ้น</td></tr>
+        <tr><td>ห้องเย็น เก็บผลผลิต</td><td>ทำความเย็นช่วงกลางวัน ใช้มวลความเย็น/น้ำแข็งเก็บพลังงาน</td><td>ออกแบบฉนวนและประตูก่อน</td></tr>
+        <tr><td>อบแห้งผลผลิต</td><td>ตู้อบลมร้อนพลังแสงอาทิตย์ + พัดลม DC จากแผง</td><td>ควบคุมความชื้นและอุณหภูมิ</td></tr>
+        <tr><td>รั้วไฟฟ้า กล้อง ไฟส่องสว่าง</td><td>ระบบ 12/24 V ขนาดเล็กพร้อมแบต</td><td>ป้องกันการขโมย</td></tr>
+        <tr><td>เครื่องจักรเกษตรไฟฟ้า</td><td>ชาร์จรถไถ/โดรนพ่นยาไฟฟ้ากลางวัน</td><td>วางแผนโหลดตามแดด</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="agrivoltaics">
+    <h2 id="agrivoltaics">Agrivoltaics: ปลูกพืชใต้แผงโซลาร์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K7" data-k="land equivalent ratio ler agrivoltaics อัตราส่วนการใช้ที่ดินเทียบเท่า"><p class="tf-n"><b><span class="fid">K7</span> Land equivalent ratio</b> อัตราส่วนการใช้ที่ดินเทียบเท่า</p>
+        \[ LER = \frac{Y_{crop,AV}}{Y_{crop,mono}} + \frac{E_{PV,AV}}{E_{PV,mono}} \qquad LER > 1\ \Rightarrow\ \text{ทำร่วมกันดีกว่าแยกพื้นที่} \]</div>
+    <ul>
+      <li><b>โครงสร้าง:</b> ยกแผงสูง 2.5–5 m ให้คนและเครื่องจักรทำงานได้ หรือแผงแนวตั้งสองหน้า (vertical bifacial) วางเป็นแถวห่าง GCR 0.2–0.4 ให้แสงผ่าน 50–80 %</li>
+      <li><b>พืชที่เหมาะ:</b> พืชทนร่มหรือชอบร่มบางส่วน ผักใบ สมุนไพร กาแฟ โกโก้ ไม้ผลบางชนิด หญ้าเลี้ยงสัตว์ — ในเขตร้อนร่มเงาบางส่วนช่วยลดความเครียดจากความร้อนและลดการระเหยของน้ำ</li>
+      <li><b>ผลลัพธ์งานวิจัย:</b> หลายโครงการรายงาน LER มากกว่า 1 (ในยุโรปบางโครงการ 1.6–1.9) แต่ผลขึ้นกับพืช ภูมิอากาศ และการออกแบบ ต้องทดลองในพื้นที่ก่อนขยาย</li>
+      <li><b>อื่น ๆ:</b> ปศุสัตว์ใต้แผง (แกะ แพะ ไก่) ช่วยควบคุมหญ้า · โซลาร์บนหลังคาโรงเรือน (ระวังแสงไม่พอสำหรับพืชในโรงเรือน) · โซลาร์ลอยน้ำบนบ่อเกษตร (ดู <a href="/learn/solar-pv/solar-farm/#floating">ลอยน้ำ</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="smartfarm">
+    <h2 id="smartfarm">สมาร์ตฟาร์มพลังแสงอาทิตย์ <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><b>เซนเซอร์ความชื้นดิน</b> + คอนโทรลเลอร์ (ESP32/LoRaWAN) เปิดวาล์วน้ำหยดเมื่อดินแห้ง ประหยัดน้ำ 20–40 % จึงใช้แผงและปั๊มเล็กลง</li>
+      <li><b>สถานีอากาศขนาดเล็ก</b> วัดแสง อุณหภูมิ ความชื้น ฝน คำนวณ ET₀ เอง (สมการ FAO-56 Penman–Monteith)</li>
+      <li><b>ระดับน้ำในถัง/บ่อบาดาล</b> แจ้งเตือนผ่าน LINE/แอป เมื่อปั๊มทำงานผิดปกติ</li>
+      <li><b>พลังงานของอุปกรณ์ IoT</b> แผง 5–20 W + แบต LFP ขนาดเล็ก + ชิปชาร์จ MPPT (ดู <a href="/learn/solar-pv/controller-selection/#chips">ชิปสำหรับออกแบบ</a>) ออกแบบให้อยู่ได้ 3–5 วันไม่มีแดด</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">ประเด็นระดับปริญญาโท <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>แบบจำลองระบบปั๊มรายชั่วโมง</b>: เส้นโค้งปั๊มที่ความเร็วต่าง ๆ (affinity laws \(Q \propto n,\ H \propto n^2,\ P \propto n^3\)) ร่วมกับเส้นโค้งระบบท่อและกำลังแผงรายชั่วโมง หาปริมาณน้ำรายวันจริง (มีแสงขั้นต่ำที่ปั๊มเริ่มส่งน้ำได้)</li>
+      <li><b>การจัดการน้ำใต้ดินอย่างยั่งยืน</b>: ปั๊มโซลาร์ที่ค่าน้ำแทบเป็นศูนย์อาจกระตุ้นการสูบเกิน ต้องมีการวัดและกติกา</li>
+      <li><b>Agrivoltaic modeling</b> ร่วมแบบจำลองพืช (crop model) กับการกระจายแสงใต้แผง และวัดผลจริงในภูมิอากาศเขตร้อน</li>
+      <li><b>PV-powered irrigation scheduling</b> ด้วยการพยากรณ์แสงและความต้องการน้ำล่วงหน้า (MPC)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
