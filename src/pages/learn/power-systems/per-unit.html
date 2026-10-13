@@ -1,0 +1,141 @@
+<!--meta
+{
+  "title": "ระบบต่อหน่วย (Per-Unit System): ค่าฐาน Z_base I_base การเปลี่ยนฐาน หม้อแปลงใน pu และไดอะแกรมอิมพีแดนซ์ พร้อมตัวอย่าง | อาจารย์มด",
+  "h1": "ระบบต่อหน่วย (Per-Unit System): ค่าฐาน การเปลี่ยนฐาน หม้อแปลง และไดอะแกรมอิมพีแดนซ์",
+  "description": "เรียนระบบต่อหน่วยให้เข้าใจจริง: ทำไมวิศวกรระบบไฟฟ้าใช้ pu เลือก S_base V_base คำนวณ Z_base = V²/S และ I_base = S/(√3V) การเปลี่ยนฐานอิมพีแดนซ์จากดาต้าชีต %Z หม้อแปลงมีค่า pu เท่ากันทั้งสองด้าน ตัวอย่างระบบเครื่องกำเนิด หม้อแปลง สายส่ง 138 kV และการหากระแสลัดวงจรด้วย pu พร้อมเครื่องคำนวณ",
+  "ogTitle": "ระบบต่อหน่วย Per-Unit: ค่าฐานและเปลี่ยนฐาน",
+  "og": {"title": "ระบบต่อหน่วย Per-Unit: ค่าฐานและเปลี่ยนฐาน"},
+  "lesson": "power-systems",
+  "sub": "per-unit",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Per-unit system", "Transformer", "Impedance"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "%Z ของหม้อแปลงกับค่า pu ต่างกันอย่างไร?", "a": "เป็นค่าเดียวกันคนละหน่วย %Z = 6 % หมายถึง Z = 0.06 pu บนฐานพิกัดของหม้อแปลงเอง (S_base = พิกัด kVA, V_base = แรงดันพิกัด) ก่อนนำไปรวมกับอุปกรณ์อื่นต้องเปลี่ยนฐานให้ใช้ S_base เดียวกันทั้งระบบ"},
+    {"q": "ทำไมค่า pu ของหม้อแปลงเท่ากันทั้งด้านแรงสูงและแรงต่ำ?", "a": "เพราะเลือก V_base สองด้านตามอัตราส่วนรอบของหม้อแปลง ค่าโอห์มเมื่อสะท้อนข้ามหม้อแปลงคูณด้วยอัตราส่วนกำลังสอง และ Z_base ก็เปลี่ยนด้วยอัตราส่วนกำลังสองเท่ากัน ค่าที่หารกันจึงเท่าเดิม หม้อแปลงอุดมคติจึงหายไปจากวงจร pu"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>ระบบต่อหน่วย</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.3 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Per-Unit System</p>
+      <h1>ระบบต่อหน่วย (Per-Unit System): ค่าฐาน การเปลี่ยนฐาน หม้อแปลง และไดอะแกรมอิมพีแดนซ์</h1>
+      <p class="lede">ระบบไฟฟ้าจริงมีแรงดันหลายระดับต่อกันด้วยหม้อแปลง ถ้าคิดเป็นโวลต์และโอห์ม ต้องแปลงค่าข้ามหม้อแปลงทุกครั้ง ระบบต่อหน่วยแก้ปัญหานี้ด้วยการหารทุกค่าด้วย “ค่าฐาน” ที่เลือกอย่างฉลาด ผลคือหม้อแปลงอุดมคติหายไป และค่าทุกตัวอยู่ในช่วงที่ตรวจด้วยสามัญสำนึกได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#base">ค่าฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#change">เปลี่ยนฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#trafo">หม้อแปลงหายไป</a>
+        <a class="btn btn-ghost btn-sm" href="#example">ตัวอย่างระบบเต็ม</a>
+        <a class="btn btn-ghost btn-sm" href="#calc">เครื่องคำนวณ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ค่า pu = ค่าจริง ÷ ค่าฐาน · เลือก S_base (ทั้งระบบ) และ V_base (ต่อโซนแรงดัน)</li>
+          <li>\(Z_{base} = V_{base}^2/S_{base}\) · \(I_{base} = S_{base}/(\sqrt3 V_{base})\) (ค่าสามเฟส แรงดันสาย)</li>
+          <li>เปลี่ยนฐาน: \(Z_{new} = Z_{old}(S_{new}/S_{old})(V_{old}/V_{new})^2\)</li>
+          <li>V_base ข้ามหม้อแปลงตามอัตราส่วนรอบ → หม้อแปลงเหลือแค่ \(Z_{pu}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น base, zbase, ibase, change of base, %z" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องใช้ per-unit <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>หม้อแปลงหายไป</b> จากวงจรเมื่อเลือกฐานถูก (เหลือแค่อิมพีแดนซ์รั่ว)</li>
+      <li><b>ค่าอยู่ในช่วงแคบ</b>: หม้อแปลง 0.04–0.15 pu เครื่องกำเนิด \(X_d''\) 0.12–0.25 pu แรงดันปกติ 0.95–1.05 pu — ตัวเลขแปลกตาแปลว่าคำนวณผิด</li>
+      <li><b>ดาต้าชีตให้ค่าเป็น % หรือ pu</b> อยู่แล้ว (%Z ของหม้อแปลง \(X_d''\) ของเครื่องกำเนิด)</li>
+      <li><b>ไม่มี √3 กวนใจ</b>: ในระบบสามเฟสสมดุล ค่า pu ของแรงดันสายเท่ากับแรงดันเฟส และกำลังสามเฟสเท่ากับกำลังต่อเฟส</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="base">
+    <h2 id="base">ค่าฐานและค่าต่อหน่วย <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="U1" data-k="per unit value actual base ค่าต่อหน่วย ค่าจริง ค่าฐาน"><p class="tf-n"><b><span class="fid">U1</span> Per-unit value</b> ค่าต่อหน่วย</p>
+        \[ x_{pu} = \frac{x_{actual}}{x_{base}} \qquad \%x = 100\,x_{pu} \]</div>
+<div class="tf" id="U2" data-k="base impedance zbase v squared over s อิมพีแดนซ์ฐาน"><p class="tf-n"><b><span class="fid">U2</span> Base impedance</b> อิมพีแดนซ์ฐาน (S สามเฟส, V แรงดันสาย)</p>
+        \[ Z_{base} = \frac{V_{base,LL}^2}{S_{base,3\varphi}} \qquad (\text{kV}^2/\text{MVA} = \Omega) \]</div>
+<div class="tf" id="U3" data-k="base current ibase กระแสฐาน"><p class="tf-n"><b><span class="fid">U3</span> Base current</b> กระแสฐาน</p>
+        \[ I_{base} = \frac{S_{base,3\varphi}}{\sqrt3\,V_{base,LL}} \]</div>
+<div class="wx" id="ex-u-1"><div class="wx-head"><span class="mono">ตัวอย่าง U-1</span><h3>ฐาน 100 MVA 22 kV</h3></div>
+<ol class="steps">
+<li><p>U2: \(Z_{base} = 22^2/100 = 4.84\ \Omega\) · U3: \(I_{base} = 100\text{e}6/(\sqrt3 \cdot 22\text{e}3) = 2{,}624\) A</p></li>
+<li><p>สาย \(Z = 4.84\ \Omega\) → 1.0 pu · กระแส 1,000 A → 0.381 pu · แรงดัน 21.5 kV → 0.977 pu</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="change">
+    <h2 id="change">เปลี่ยนฐานอิมพีแดนซ์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="U5" data-k="change of base impedance conversion new base เปลี่ยนฐาน"><p class="tf-n"><b><span class="fid">U5</span> Change of base</b> เปลี่ยนฐานอิมพีแดนซ์</p>
+        \[ Z_{pu,new} = Z_{pu,old}\,\frac{S_{base,new}}{S_{base,old}}\left(\frac{V_{base,old}}{V_{base,new}}\right)^2 \]</div>
+    <p>ที่มา: ค่าโอห์มจริงต้องเท่าเดิม \(Z_{pu,old}Z_{base,old} = Z_{pu,new}Z_{base,new}\) แทน U2 ได้ U5 ทันที</p>
+<div class="wx" id="ex-u-2"><div class="wx-head"><span class="mono">ตัวอย่าง U-2</span><h3>หม้อแปลง 1 MVA 22 kV %Z = 6 % บนฐานระบบ 100 MVA</h3></div>
+<ol class="steps">
+<li><p>U5: \(0.06 \times (100/1) \times 1^2 = 6.0\) pu</p></li>
+<li><p>ตรวจเป็นโอห์ม: ฐานเดิม \(0.06 \times 22^2/1 = 29.04\ \Omega\) · ฐานใหม่ \(6 \times 4.84 = 29.04\ \Omega\) ✓</p></li>
+<li><p>ค่า 6 pu ดูใหญ่ แต่สมเหตุสมผล: หม้อแปลงเล็กมากเทียบกับฐาน 100 MVA จึง “แข็ง” น้อย (จำกัดกระแสได้มาก)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trafo">
+    <h2 id="trafo">ทำไมหม้อแปลงหายไปจากวงจร pu <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="U4" data-k="voltage base transformer ratio zones ฐานแรงดัน อัตราส่วนหม้อแปลง โซน"><p class="tf-n"><b><span class="fid">U4</span> Voltage bases across a transformer</b> ฐานแรงดันสองด้านของหม้อแปลง</p>
+        \[ \frac{V_{base,HV}}{V_{base,LV}} = \frac{V_{rated,HV}}{V_{rated,LV}} \quad\Rightarrow\quad \frac{Z_{base,HV}}{Z_{base,LV}} = \left(\frac{V_{HV}}{V_{LV}}\right)^2 \]</div>
+<div class="tf" id="U6" data-k="transformer pu same both sides ohms referred หม้อแปลง pu เท่ากันสองด้าน"><p class="tf-n"><b><span class="fid">U6</span> Transformer impedance is the same in pu on both sides</b> ค่า pu เท่ากันสองด้าน</p>
+        \[ Z_{\Omega,HV} = a^2 Z_{\Omega,LV} \ \text{และ}\ Z_{base,HV} = a^2 Z_{base,LV} \;\Rightarrow\; Z_{pu,HV} = Z_{pu,LV} \]</div>
+<div class="wx" id="ex-u-3"><div class="wx-head"><span class="mono">ตัวอย่าง U-3</span><h3>หม้อแปลง 1 MVA 22/0.4 kV Z = 6 %</h3></div>
+<ol class="steps">
+<li><p>ด้านแรงสูง: \(0.06 \times 22^2/1 = 29.04\ \Omega\) · ด้านแรงต่ำ: \(0.06 \times 0.4^2/1 = 9.6\ \text{m}\Omega\)</p></li>
+<li><p>อัตราส่วน \(29.04/0.0096 = 3025 = (22/0.4)^2\) ✓ — โอห์มต่างกัน 3,025 เท่า แต่ pu = 0.06 เท่ากัน</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="example">
+    <h2 id="example">ตัวอย่างระบบเต็ม: เครื่องกำเนิด–หม้อแปลง–สายส่ง–หม้อแปลง <span class="lv lv-i">กลาง</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 150" role="img" aria-label="ระบบตัวอย่างสำหรับ per-unit">
+        <circle class="bx2" cx="40" cy="60" r="22"/><text class="tb" x="40" y="65" text-anchor="middle">G</text><text class="t2" x="40" y="100" text-anchor="middle">100 MVA 13.8 kV</text><text class="t2" x="40" y="114" text-anchor="middle">X″ = 0.20</text>
+        <path class="ln2" d="M62 60 H120"/><circle class="bx" cx="132" cy="60" r="12"/><circle class="bx" cx="148" cy="60" r="12"/><text class="t2" x="140" y="96" text-anchor="middle">T1 100 MVA</text><text class="t2" x="140" y="110" text-anchor="middle">13.8/138 kV X = 0.10</text>
+        <path class="ln3" d="M160 60 H520"/><text class="tb" x="340" y="50" text-anchor="middle">สายส่ง 138 kV · Z = j50 Ω</text>
+        <circle class="bx" cx="532" cy="60" r="12"/><circle class="bx" cx="548" cy="60" r="12"/><text class="t2" x="540" y="96" text-anchor="middle">T2 100 MVA</text><text class="t2" x="540" y="110" text-anchor="middle">138/13.8 kV X = 0.10</text>
+        <path class="ln2" d="M560 60 H640"/><path class="ln" d="M640 35 V85"/><text class="tb" x="690" y="64" text-anchor="middle">บัส F ⚡</text>
+        <text class="t2" x="380" y="140" text-anchor="middle">ฐาน: S = 100 MVA · V = 13.8 kV (ฝั่งเครื่องกำเนิด) → 138 kV (สายส่ง) → 13.8 kV (บัส F)</text>
+      </svg>
+    </figure>
+<div class="wx" id="ex-u-4"><div class="wx-head"><span class="mono">ตัวอย่าง U-4</span><h3>ลัดวงจรสามเฟสที่บัส F (แรงดันก่อนเกิดเหตุ 1.0 pu)</h3></div>
+<ol class="steps">
+<li><p>อุปกรณ์มีพิกัดตรงฐานทุกตัว ใช้ค่าเดิม: G 0.20 · T1 0.10 · T2 0.10</p></li>
+<li><p>สายส่ง: \(Z_{base} = 138^2/100 = 190.44\ \Omega\) → \(j50/190.44 = j0.2626\) pu</p></li>
+<li><p>รวม \(X = 0.20 + 0.10 + 0.2626 + 0.10 = 0.6626\) pu → \(I_f = 1/0.6626 = 1.509\) pu</p></li>
+<li><p>U3 ที่ 13.8 kV: \(I_{base} = 100\text{e}6/(\sqrt3 \cdot 13.8\text{e}3) = 4{,}184\) A → \(I_f = 1.509 \times 4184 = 6.31\) kA</p></li>
+<li><p>ในสายส่ง (ฐาน 138 kV, \(I_{base} = 418.4\) A): กระแสเดียวกัน 1.509 pu = 631 A — pu ไม่สนว่าอยู่ด้านไหนของหม้อแปลง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calc">
+    <h2 id="calc">เครื่องคำนวณ per-unit และเปลี่ยนฐาน</h2>
+    <div class="fg-calc ps-calc" data-ps="pu"></div>
+    <div class="fg-calc ps-calc" data-ps="base"></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

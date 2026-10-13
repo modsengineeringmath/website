@@ -1,0 +1,156 @@
+<!--meta
+{
+  "title": "ชาร์จช้าด้วยไฟบ้าน (Mode 2): สายชาร์จพกพา เต้ารับ 16 A ตั้งกระแสเท่าไรปลอดภัย ปลั๊กไหม้เพราะอะไร | อาจารย์มด",
+  "h1": "ชาร์จช้าด้วยไฟบ้าน (Mode 2): สายชาร์จพกพา เต้ารับ 16 A กระแสที่ปลอดภัย และความร้อนที่ปลั๊ก",
+  "description": "ใช้สายชาร์จพกพา (Portable EV charger, Mode 2, ICCB) เสียบเต้ารับบ้านอย่างปลอดภัย: กล่องควบคุมทำอะไร เลือกกระแส 8 10 13 16 A ให้เหมาะกับเต้ารับและสาย กฎ 80 % ของโหลดต่อเนื่อง ความร้อนที่หน้าสัมผัส I²R ทำไมปลั๊กไหม้ แรงดันตก เต้ารับ IEC 60309 ข้อห้ามสายพ่วง และเวลาชาร์จ พร้อมเครื่องคำนวณ",
+  "ogTitle": "ชาร์จช้าด้วยไฟบ้าน (Mode 2): กระแสเท่าไรปลอดภัย",
+  "og": {"title": "ชาร์จช้าด้วยไฟบ้าน (Mode 2): กระแสเท่าไรปลอดภัย"},
+  "lesson": "ev-charging",
+  "sub": "portable-charger",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electric vehicle charging", "Portable charger", "AC power plugs and sockets", "Joule heating"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "สายชาร์จพกพาควรตั้งกี่แอมป์?", "a": "สำหรับเต้ารับ 16 A ที่ใช้ชาร์จต่อเนื่องข้ามคืน ควรตั้งไม่เกิน 10–13 A (ไม่เกิน 80 % ของพิกัดเต้ารับ) และวงจรนั้นควรเป็นวงจรเฉพาะ สาย 2.5 mm² ขึ้นไป มีสายดิน ถ้าเต้ารับเก่า หลวม หรือไม่แน่ใจ ให้ตั้ง 8–10 A และคลำดูความร้อนที่ปลั๊กหลังชาร์จ 30 นาทีแรก"},
+    {"q": "ทำไมปลั๊กชาร์จรถไหม้ทั้งที่เบรกเกอร์ไม่ตัด?", "a": "เบรกเกอร์ตัดเมื่อกระแสเกิน แต่ปลั๊กไหม้เพราะความร้อนเฉพาะจุดที่หน้าสัมผัสซึ่งมีความต้านทานสูงจากขาหลวม สนิม หรือสปริงล้า ความร้อนเท่ากับ I²R เช่น 16 A กับหน้าสัมผัส 30 mΩ ร้อน 7.7 W ในพื้นที่เล็ก ๆ ต่อเนื่องหลายชั่วโมงจนพลาสติกละลาย เบรกเกอร์มองไม่เห็นความร้อนนี้"},
+    {"q": "ใช้สายพ่วงหรือปลั๊กสามตาชาร์จรถได้ไหม?", "a": "ไม่ควรเด็ดขาด สายพ่วงและปลั๊กแปลงเพิ่มจุดสัมผัสที่ร้อนได้ มักใช้สายเล็ก ไม่ได้ออกแบบให้รับกระแสสูงต่อเนื่องหลายชั่วโมง และบางชนิดไม่มีสายดินต่อถึง ทำให้ระบบป้องกันไฟรั่วของสายชาร์จทำงานผิดพลาด คู่มือรถทุกยี่ห้อห้ามไว้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>ชาร์จช้า (Mode 2)</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.3 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · Portable Charger (Mode 2)</p>
+      <h1>ชาร์จช้าด้วยไฟบ้าน (Mode 2): สายชาร์จพกพา เต้ารับ 16 A กระแสที่ปลอดภัย และความร้อนที่ปลั๊ก</h1>
+      <p class="lede">สายชาร์จที่มากับรถ (บางคนเรียกสายชาร์จฉุกเฉิน) เสียบเต้ารับบ้านได้ทันที ไม่ต้องติดตั้งอะไร เหมาะกับคนขับวันละไม่มาก แต่เต้ารับบ้านออกแบบมาสำหรับเครื่องใช้ไฟฟ้าที่เปิด-ปิดเป็นพัก ๆ ไม่ใช่โหลด 10–16 A ต่อเนื่อง 8–15 ชั่วโมง หน้านี้อธิบายฟิสิกส์ของความร้อน และวิธีเลือกกระแสให้ปลอดภัย</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">ตรวจวงจรของคุณ</a>
+        <a class="btn btn-ghost btn-sm" href="#iccb">กล่องควบคุมทำอะไร</a>
+        <a class="btn btn-ghost btn-sm" href="#heat">ทำไมปลั๊กไหม้</a>
+        <a class="btn btn-ghost btn-sm" href="#socket">เต้ารับที่เหมาะ</a>
+        <a class="btn btn-ghost btn-sm" href="#rules">กฎ 10 ข้อ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>กำลัง ≈ 230 × I: 8 A = 1.8 kW · 10 A = 2.3 kW · 13 A = 3.0 kW · 16 A = 3.7 kW</li>
+          <li>โหลดต่อเนื่องไม่ควรเกิน 80 % ของพิกัดเต้ารับ → เต้ารับ 16 A ใช้ ≤ 12.8 A (แนะนำ 10 A)</li>
+          <li>ความร้อนที่หน้าสัมผัส = I²R: ลด 16 → 10 A ความร้อนเหลือ 39 %</li>
+          <li>วงจรเฉพาะ สาย ≥ 2.5 mm² มีสายดิน ห้ามสายพ่วง ห้ามปลั๊กแปลง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น i2r, หน้าสัมผัส, 80 %, แรงดันตก" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="iccb">
+    <h2 id="iccb">ข้างในกล่องควบคุมของสายชาร์จพกพา (ICCB) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>กล่องกลางสายเรียกว่า <b>IC-CPD</b> หรือ <b>ICCB</b> (In-Cable Control and Protection Device ตาม IEC 62752) มันคือวอลล์บ็อกซ์ขนาดเล็กที่พกได้ ทำงานเหมือน <a href="/learn/ev-charging/wallbox/">Mode 3</a> ทุกอย่าง ยกเว้นต้นทางเป็นเต้ารับ</p>
+    <ul>
+      <li><b>RCD ในตัว</b> ตัดเมื่อกระแสรั่ว AC 30 mA และส่วนใหญ่ตรวจ DC 6 mA ด้วย</li>
+      <li><b>ตรวจสายดิน</b> และบางรุ่นตรวจว่าขั้วสาย L-N สลับ</li>
+      <li><b>ส่งสัญญาณ Control Pilot</b> บอกรถว่าดึงได้กี่แอมป์ (ปุ่มเลือก 8/10/13/16 A คือการเปลี่ยน duty cycle — <a href="/learn/ev-charging/wallbox/#W2">W2</a>)</li>
+      <li><b>รีเลย์</b> ต่อไฟเข้ารถเมื่อทุกอย่างพร้อม</li>
+      <li><b>เซนเซอร์อุณหภูมิในปลั๊ก</b> (รุ่นดี) ลดกระแสหรือหยุดเมื่อปลั๊กร้อน — คุณสมบัติที่ควรเลือก</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="current">
+    <h2 id="current">ตั้งกระแสเท่าไร: กฎ 80 % ของโหลดต่อเนื่อง <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="M1" data-k="mode 2 power current กำลังชาร์จ แอมป์ สายชาร์จพกพา"><p class="tf-n"><b><span class="fid">M1</span> Mode 2 charging power</b> กำลังของสายชาร์จพกพา</p>
+        \[ P = V\,I \qquad 230 \times \{8,10,13,16\} = \{1.84,\ 2.30,\ 2.99,\ 3.68\}\ \text{kW} \]</div>
+<div class="tf" id="M2" data-k="continuous load 80 percent socket rating กฎ 80 เปอร์เซ็นต์ โหลดต่อเนื่อง"><p class="tf-n"><b><span class="fid">M2</span> Continuous-load rule</b> โหลดต่อเนื่องไม่เกิน 80 % ของพิกัด</p>
+        \[ I_{EV} \le 0.8\,I_{socket} \quad\Longleftrightarrow\quad 1.25\,I_{EV} \le I_{socket},\ I_{breaker},\ I_{cable} \]</div>
+    <p>โหลดที่ทำงานต่อเนื่องตั้งแต่ 3 ชั่วโมงขึ้นไปถือเป็น <b>โหลดต่อเนื่อง</b> อุปกรณ์ทุกตัวในเส้นทางต้องรับ 125 % ของกระแส เพราะพิกัดของเต้ารับและเบรกเกอร์ทดสอบในสภาพที่อุณหภูมิไม่สะสมนานขนาดนั้น</p>
+<div class="wx" id="ex-m-1"><div class="wx-head"><span class="mono">ตัวอย่าง M-1</span><h3>เต้ารับ 16 A ตั้งได้สูงสุดเท่าไร</h3></div>
+<ol class="steps">
+<li><p>M2: \(I_{EV} \le 0.8 \times 16 = 12.8\ \text{A}\) → ปุ่ม 16 A ไม่ผ่าน ใช้ 10 หรือ 13 A ได้</p></li>
+<li><p>ถ้าวงจรเดินสาย 2.5 mm² (รับได้ 18 A เมื่อร้อยท่อ) และเบรกเกอร์ 16 A: \(1.25 \times 10 = 12.5 \le 16 \le 18\) ✓</p></li>
+<li><p>ที่ 13 A: \(1.25 \times 13 = 16.3\) A — ชนพิกัดพอดี ใช้ได้ถ้าเต้ารับและปลั๊กสภาพดีมาก จึงแนะนำ 10 A สำหรับการใช้ทุกคืน</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="heat">
+    <h2 id="heat">ทำไมปลั๊กไหม้: ฟิสิกส์ของความร้อนที่หน้าสัมผัส <span class="lv lv-i">กลาง</span></h2>
+    <p>ไฟไหม้จากการชาร์จด้วยเต้ารับบ้านเกือบทั้งหมดไม่ได้เริ่มจากสายในผนัง แต่เริ่มที่ <b>จุดสัมผัส</b> ระหว่างขาปลั๊กกับสปริงในเต้ารับ พื้นที่สัมผัสจริงเล็กมาก ถ้ามีสนิม ฝุ่น หรือสปริงล้า ความต้านทานเพิ่มจากไม่กี่ mΩ เป็นหลายสิบ mΩ</p>
+<div class="tf" id="M3" data-k="contact resistance heat i squared r ความร้อนหน้าสัมผัส ปลั๊กไหม้"><p class="tf-n"><b><span class="fid">M3</span> Contact heating</b> ความร้อนที่หน้าสัมผัส</p>
+        \[ P_{c} = I^2 R_c \qquad \frac{P_c(I_2)}{P_c(I_1)} = \left(\frac{I_2}{I_1}\right)^2 \]</div>
+<div class="tf" id="M4" data-k="temperature rise thermal resistance อุณหภูมิเพิ่มขึ้น ความต้านทานความร้อน"><p class="tf-n"><b><span class="fid">M4</span> Temperature rise</b> อุณหภูมิที่เพิ่มขึ้นในสภาวะคงตัว</p>
+        \[ \Delta T = P_c\,R_{th} \qquad R_{th}\ \text{ของปลั๊กพลาสติก} \approx 5\text{–}15\ ^\circ\text{C/W} \]</div>
+    <p>ปัญหาคือ <b>วงจรป้อนกลับเชิงบวก</b>: หน้าสัมผัสร้อน → โลหะออกซิไดซ์และสปริงอ่อนตัว → \(R_c\) เพิ่ม → ร้อนขึ้นอีก จนพลาสติกละลายและเกิดอาร์ก ทั้งหมดนี้เกิดขึ้นโดยกระแสไม่เกินพิกัดเบรกเกอร์ เบรกเกอร์จึงไม่ตัด และ RCD ก็ไม่ตัดเพราะไม่มีไฟรั่ว</p>
+<div class="wx" id="ex-m-2"><div class="wx-head"><span class="mono">ตัวอย่าง M-2</span><h3>เต้ารับใหม่กับเต้ารับเก่าหลวม</h3></div>
+<ol class="steps">
+<li><p>เต้ารับใหม่ \(R_c \approx 5\ \text{m}\Omega\) ที่ 10 A: M3 \(P_c = 10^2(0.005) = 0.5\ \text{W}\) → M4 \(\Delta T \approx 0.5 \times 10 = 5\) °C สบาย</p></li>
+<li><p>เต้ารับเก่า \(R_c \approx 30\ \text{m}\Omega\) ที่ 16 A: \(P_c = 16^2(0.030) = 7.7\ \text{W}\) → \(\Delta T \approx 77\) °C บวกอุณหภูมิห้อง 35 °C = 112 °C พลาสติก PC/PA เริ่มเสียรูป</p></li>
+<li><p>เต้ารับเก่าเดิมแต่ลดเป็น 10 A: \(P_c = 3.0\) W (\(=(10/16)^2 = 39\,\%\)) → \(\Delta T \approx 30\) °C — ยังอุ่น แต่ควรเปลี่ยนเต้ารับ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="drop">
+    <h2 id="drop">แรงดันตกและความร้อนในสาย <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="M5" data-k="voltage drop single phase cable แรงดันตก สายไฟ 1 เฟส"><p class="tf-n"><b><span class="fid">M5</span> Single-phase voltage drop</b> แรงดันตกในสาย 1 เฟส (ไป-กลับ)</p>
+        \[ \Delta V = I\,\frac{2\,\rho\,L}{A} \qquad \rho_{Cu,70^\circ\text{C}} \approx 0.0206\ \Omega\,\text{mm}^2/\text{m} \]</div>
+<div class="tf" id="M6" data-k="cable loss heat i2r watt ความร้อนในสาย การสูญเสีย"><p class="tf-n"><b><span class="fid">M6</span> Cable loss</b> การสูญเสียในสาย</p>
+        \[ P_{loss} = I^2\,\frac{2\,\rho\,L}{A} = I\,\Delta V \]</div>
+<div class="wx" id="ex-m-3"><div class="wx-head"><span class="mono">ตัวอย่าง M-3</span><h3>วงจรเต้ารับ 20 m สาย 2.5 mm² ชาร์จ 10 A</h3></div>
+<ol class="steps">
+<li><p>\(R_{loop} = 2(0.0206)(20)/2.5 = 0.330\ \Omega\)</p></li>
+<li><p>M5: \(\Delta V = 10 \times 0.330 = 3.3\ \text{V} = 1.44\,\%\) ของ 230 V ✓ (เกณฑ์ทั่วไป ≤ 3–5 % รวมทั้งระบบ)</p></li>
+<li><p>M6: \(P_{loss} = 10 \times 3.3 = 33\ \text{W}\) กระจายตลอดสาย 40 m ไม่เป็นอันตราย แต่คิดเป็น 1.4 % ของพลังงานที่ซื้อ</p></li>
+<li><p>เวลาชาร์จ 30 kWh: \(30/(2.3 \times 0.86) = 15.2\) ชม. — ขับวันละ 40 km (6 kWh) ใช้แค่ 3 ชม.</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณ: ตรวจวงจรสายชาร์จพกพาของคุณ</h2>
+    <div class="fg-calc ev-calc" data-ev="portable"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="portable" data-vals='{"i":"16","rc":"30"}'>ลอง: 16 A กับเต้ารับเก่า 30 mΩ</button><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="portable" data-vals='{"i":"10","a":"1.5","brk":"16","l":"35"}'>ลอง: วงจรเก่าสาย 1.5 mm²</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="socket">
+    <h2 id="socket">เต้ารับแบบไหนเหมาะกับการชาร์จทุกวัน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เต้ารับ</th><th>ข้อดี</th><th>ข้อควรระวัง</th></tr></thead>
+      <tbody>
+        <tr><td>เต้ารับบ้าน 3 ขา (มอก. 166) ติดตั้งใหม่ วงจรเฉพาะ</td><td>ใช้หัวปลั๊กที่มากับรถได้ทันที ค่าติดตั้งต่ำ</td><td>เลือกยี่ห้อที่ได้มาตรฐาน ใช้ 10 A เปลี่ยนทุกไม่กี่ปีถ้าใช้หนัก</td></tr>
+        <tr><td>เต้ารับอุตสาหกรรม IEC 60309 (CEE) 16 A สีน้ำเงิน</td><td>หน้าสัมผัสใหญ่ ล็อกแน่น ทนโหลดต่อเนื่อง กันน้ำ IP44/IP67</td><td>ต้องใช้หัวปลั๊กแบบเดียวกันจากผู้ผลิตสายชาร์จ</td></tr>
+        <tr><td>เต้ารับในตู้ภายนอก IP44 ขึ้นไป</td><td>ชาร์จกลางแจ้งได้</td><td>อย่าวางกล่อง ICCB จุ่มน้ำขัง แขวนให้สูง</td></tr>
+        <tr><td>เต้ารับเก่าในโรงรถที่ใช้ร่วมกับปั๊มน้ำ/เครื่องมือ</td><td>—</td><td>ไม่เหมาะ: วงจรร่วมเกินพิกัดได้ ตรวจไม่ได้ว่าสายดินดี</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rules">
+    <h2 id="rules">กฎ 10 ข้อสำหรับชาร์จด้วยไฟบ้าน</h2>
+    <ol>
+      <li>ใช้สายชาร์จที่มากับรถหรือที่ได้มาตรฐาน IEC 62752 เท่านั้น</li>
+      <li>วงจรเฉพาะจากตู้ไฟ เบรกเกอร์ 16 A สาย 2.5 mm² ขึ้นไป (ระยะไกลใช้ 4 mm²)</li>
+      <li>มีสายดินต่อถึงหลักดิน และวงจรมี RCD 30 mA</li>
+      <li>ตั้งกระแส 10 A สำหรับการใช้ประจำ (13 A ได้เมื่อเต้ารับและปลั๊กสภาพดีมาก)</li>
+      <li>ห้ามสายพ่วง ปลั๊กแปลง ปลั๊กสามทาง และม้วนสายไว้</li>
+      <li>เสียบให้สุด ปลั๊กไม่โยกคลอน กล่อง ICCB ไม่แขวนถ่วงปลั๊ก</li>
+      <li>30 นาทีแรกของการใช้งานครั้งแรก คลำปลั๊ก: อุ่นได้ ร้อนจนจับนานไม่ได้ = หยุดใช้</li>
+      <li>เห็นรอยไหม้ คราบดำ กลิ่นพลาสติก เปลี่ยนเต้ารับทันที</li>
+      <li>ไม่ชาร์จพร้อมกับเครื่องทำน้ำอุ่นหรือแอร์ที่อยู่วงจรเดียวกัน</li>
+      <li>ถ้าชาร์จทุกวันและขับเกิน 60–80 km/วัน พิจารณา <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์</a></li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

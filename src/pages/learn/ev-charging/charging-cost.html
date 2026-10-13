@@ -1,0 +1,146 @@
+<!--meta
+{
+  "title": "ค่าชาร์จรถ EV ที่บ้าน: อัตราค่าไฟก้าวหน้ากับ TOU, ค่า Ft, ค่าใช้จ่ายต่อกิโลเมตร และเปลี่ยนมิเตอร์ TOU คุ้มไหม | อาจารย์มด",
+  "h1": "ค่าชาร์จรถ EV ที่บ้าน: ค่าไฟอัตราก้าวหน้ากับ TOU, ค่าใช้จ่ายต่อกิโลเมตร และความคุ้มค่าของมิเตอร์ TOU",
+  "description": "คำนวณค่าชาร์จรถยนต์ไฟฟ้าที่บ้านในประเทศไทย: โครงสร้างค่าไฟบ้านประเภท 1.2 อัตราก้าวหน้า ค่า Ft VAT ค่าบริการ อัตรา TOU On-Peak 5.7982 Off-Peak 2.6369 บาท ช่วงเวลา On-Peak พลังงานต่อ 100 km ค่าใช้จ่ายต่อกิโลเมตรเทียบรถน้ำมัน ตัวอย่างบ้านใช้ไฟ 400 หน่วยวิ่ง 1,500 km และเครื่องคำนวณว่ามิเตอร์ TOU คุ้มหรือไม่",
+  "ogTitle": "ค่าชาร์จรถ EV ที่บ้าน: อัตราปกติ vs TOU",
+  "og": {"title": "ค่าชาร์จรถ EV ที่บ้าน: อัตราปกติ vs TOU"},
+  "lesson": "ev-charging",
+  "sub": "charging-cost",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electricity pricing", "Time-of-use electricity pricing", "Electric vehicle"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "ชาร์จรถ EV ที่บ้านกิโลเมตรละกี่บาท?", "a": "ประมาณ 0.65–0.85 บาทต่อกิโลเมตร สำหรับรถที่ใช้ไฟ 15 kWh ต่อ 100 km และประสิทธิภาพการชาร์จ 90 % ขึ้นกับว่าใช้อัตราปกติ (ไฟส่วนเพิ่มอยู่ขั้นบนสุดราว 4.4 บาทก่อน Ft และ VAT) หรือ TOU ชาร์จช่วง Off-Peak (ราว 2.6 บาทก่อน Ft และ VAT) เทียบกับรถน้ำมัน 14 km/ลิตร ที่ราคา 35 บาท/ลิตร ประมาณ 2.5 บาท/km"},
+    {"q": "มิเตอร์ TOU คุ้มไหมเมื่อมีรถ EV?", "a": "คุ้มเมื่อพลังงานที่ย้ายไปช่วง Off-Peak ได้มากพอ อัตรา Off-Peak ถูกกว่าอัตราปกติขั้นบนเกือบครึ่ง แต่ On-Peak แพงกว่า (5.7982 บาท) บ้านที่ใช้ไฟกลางวันวันธรรมดามาก เช่น เปิดแอร์ทั้งวันโดยไม่มีโซลาร์ อาจไม่คุ้ม ให้ใส่ตัวเลขบิลของคุณในเครื่องคำนวณ ระยะทางยิ่งมาก TOU ยิ่งคุ้ม"},
+    {"q": "ช่วงเวลา On-Peak และ Off-Peak ของ TOU คือเมื่อไร?", "a": "On-Peak คือวันจันทร์–ศุกร์ เวลา 09:00–22:00 น. Off-Peak คือวันจันทร์–ศุกร์ 22:00–09:00 น. และวันเสาร์ อาทิตย์ วันหยุดราชการตามปกติทั้งวัน ตรวจรายละเอียดวันหยุดที่ใช้กับ TOU จากการไฟฟ้า"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>ค่าไฟ · TOU · ต่อกิโลเมตร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.7 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · Home Charging Cost</p>
+      <h1>ค่าชาร์จรถ EV ที่บ้าน: ค่าไฟอัตราก้าวหน้ากับ TOU, ค่าใช้จ่ายต่อกิโลเมตร และความคุ้มค่าของมิเตอร์ TOU</h1>
+      <p class="lede">“ชาร์จเต็มหนึ่งครั้งกี่บาท” ตอบไม่ได้ด้วยการคูณราคาต่อหน่วยตัวเดียว เพราะค่าไฟบ้านแบบปกติเป็นอัตราก้าวหน้า ไฟหน่วยที่เพิ่มเพราะรถถูกคิดในขั้นที่แพงที่สุด ส่วนแบบ TOU ราคาขึ้นกับเวลา หน้านี้แยกโครงสร้างบิลออกเป็นส่วน ๆ แล้วคำนวณ “ค่าไฟส่วนเพิ่ม” ที่แท้จริงของรถ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">คำนวณบิลของคุณ</a>
+        <a class="btn btn-ghost btn-sm" href="#bill">โครงสร้างบิล</a>
+        <a class="btn btn-ghost btn-sm" href="#tou">TOU</a>
+        <a class="btn btn-ghost btn-sm" href="#perkm">ต่อกิโลเมตร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ไฟที่ซื้อเพื่อรถ = km × kWh/100 km ÷ ประสิทธิภาพการชาร์จ</li>
+          <li>อัตราปกติ: ไฟส่วนเพิ่มคิดที่ขั้นบน ≈ 4.42 ฿ + Ft แล้ว × 1.07 ≈ 4.9 ฿/หน่วย</li>
+          <li>TOU Off-Peak ≈ 2.64 ฿ + Ft แล้ว × 1.07 ≈ 3.0 ฿/หน่วย แต่ On-Peak แพงขึ้นเป็น ≈ 6.4 ฿</li>
+          <li>ค่าชาร์จ ≈ 0.65–0.85 ฿/km เทียบรถน้ำมัน ≈ 2.5 ฿/km</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น tou, ft, vat, ต่อกิโลเมตร, น้ำมัน" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="energy">
+    <h2 id="energy">รถใช้ไฟเดือนละกี่หน่วย <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="T1" data-k="monthly charging energy km consumption efficiency พลังงานชาร์จต่อเดือน"><p class="tf-n"><b><span class="fid">T1</span> Monthly charging energy</b> ไฟที่มิเตอร์นับต่อเดือนเพราะรถ</p>
+        \[ E_{EV} = \frac{d \times c/100}{\eta} \qquad d = \text{km/เดือน},\ c = \text{kWh/100 km},\ \eta \approx 0.85\text{–}0.92 \]</div>
+    <p>อัตราสิ้นเปลืองจริงของรถเก๋งไฟฟ้าในเมืองไทยประมาณ 13–17 kWh/100 km (รถ SUV และขับเร็วบนทางด่วนสูงกว่า) ตัวเลขบนหน้าจอรถมักเป็นค่า “จากแบต” ยังไม่รวมการสูญเสียในการชาร์จ</p>
+<div class="wx" id="ex-t-1"><div class="wx-head"><span class="mono">ตัวอย่าง T-1</span><h3>วิ่ง 1,500 km/เดือน รถ 15 kWh/100 km</h3></div>
+<ol class="steps">
+<li><p>T1: \(E_{EV} = 1500 \times 0.15 / 0.9 = 250\ \text{kWh}\) ต่อเดือน</p></li>
+<li><p>ถ้าบ้านเดิมใช้ 400 หน่วย บิลจะกลายเป็น 650 หน่วย — เพิ่มขึ้น 62 %</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="bill">
+    <h2 id="bill">โครงสร้างค่าไฟบ้าน (อัตราปกติ ประเภท 1.2) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ส่วนของบิล</th><th>ค่า (ปี 2568)</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ค่าพลังงาน 150 หน่วยแรก</td><td>3.2484 ฿/หน่วย</td><td rowspan="3">ใช้มากขึ้น ราคาต่อหน่วยขั้นถัดไปแพงขึ้น</td></tr>
+        <tr><td>หน่วยที่ 151–400</td><td>4.2218 ฿/หน่วย</td></tr>
+        <tr><td>หน่วยที่ 401 ขึ้นไป</td><td>4.4217 ฿/หน่วย</td></tr>
+        <tr><td>ค่าบริการรายเดือน</td><td>24.62 ฿</td><td></td></tr>
+        <tr><td>ค่าไฟฟ้าผันแปร (Ft)</td><td>ประกาศทุก 4 เดือน เช่น 0.1972 ฿/หน่วย</td><td>ตรวจค่างวดปัจจุบันจาก กกพ.</td></tr>
+        <tr><td>ภาษีมูลค่าเพิ่ม</td><td>7 % ของทั้งหมด</td><td></td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="T2" data-k="progressive tariff block rate bill อัตราก้าวหน้า ค่าไฟบ้าน"><p class="tf-n"><b><span class="fid">T2</span> Progressive (block) tariff bill</b> ค่าไฟอัตราก้าวหน้า</p>
+        \[ B = \Big[\sum_k r_k\,E_k + S + E\,F_t\Big](1 + 0.07) \qquad E_k = \text{หน่วยที่ตกอยู่ในขั้นที่ } k \]</div>
+<div class="tf" id="T3" data-k="marginal cost incremental bill ev ค่าไฟส่วนเพิ่ม รถ"><p class="tf-n"><b><span class="fid">T3</span> Incremental cost of the EV</b> ค่าไฟส่วนเพิ่มเพราะรถ</p>
+        \[ \Delta B = B(E_{home} + E_{EV}) - B(E_{home}) \qquad \text{฿/km} = \frac{\Delta B}{d} \]</div>
+<div class="wx" id="ex-t-2"><div class="wx-head"><span class="mono">ตัวอย่าง T-2</span><h3>บ้าน 400 หน่วย + รถ 250 หน่วย (อัตราปกติ Ft 0.1972)</h3></div>
+<ol class="steps">
+<li><p>บิลเดิม T2: \(150(3.2484) + 250(4.2218) = 487.26 + 1055.45 = 1542.71\) + 24.62 + \(400(0.1972) = 78.88\) → 1646.21 × 1.07 = <b>1,761 ฿</b></p></li>
+<li><p>บิลใหม่ 650 หน่วย: \(1542.71 + 250(4.4217) = 2648.14\) + 24.62 + \(650(0.1972) = 128.18\) → 2800.94 × 1.07 = <b>2,997 ฿</b></p></li>
+<li><p>T3: \(\Delta B = 1{,}236\) ฿ → \(1236/1500 = 0.82\) ฿/km · ต่อหน่วยของรถ \(1236/250 = 4.94\) ฿</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tou">
+    <h2 id="tou">อัตรา TOU (ประเภท 1.3.2) <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ช่วงเวลา</th><th>เมื่อไร</th><th>ค่าพลังงาน (ไม่รวม Ft, VAT)</th></tr></thead>
+      <tbody>
+        <tr><td><b>On-Peak</b></td><td>จันทร์–ศุกร์ 09:00–22:00 น.</td><td>5.7982 ฿/หน่วย</td></tr>
+        <tr><td><b>Off-Peak</b></td><td>จันทร์–ศุกร์ 22:00–09:00 น. · เสาร์ อาทิตย์ วันหยุดราชการตามปกติทั้งวัน</td><td>2.6369 ฿/หน่วย</td></tr>
+        <tr><td>ค่าบริการ</td><td>รายเดือน</td><td>24.62 ฿</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="T4" data-k="tou bill on peak off peak ค่าไฟ tou"><p class="tf-n"><b><span class="fid">T4</span> TOU bill</b> ค่าไฟอัตรา TOU</p>
+        \[ B_{TOU} = \Big[5.7982\,E_{on} + 2.6369\,E_{off} + S + (E_{on}+E_{off})F_t\Big](1.07) \]</div>
+    <p>กุญแจคือ <b>ไฟที่เคยใช้ช่วงกลางวันวันธรรมดาของบ้านเดิม</b> จะแพงขึ้นจาก ~4.2–4.4 เป็น 5.8 ฿ ส่วนไฟของรถที่ชาร์จ Off-Peak ถูกลงจาก 4.42 เป็น 2.64 ฿ TOU คุ้มเมื่อส่วนลดของรถมากกว่าส่วนเพิ่มของบ้าน</p>
+<div class="tf" id="T5" data-k="tou break even condition จุดคุ้มทุน tou"><p class="tf-n"><b><span class="fid">T5</span> TOU break-even (rough)</b> เงื่อนไขคุ้มโดยประมาณ</p>
+        \[ E_{EV,off}\,(r_{top} - 2.64) \;>\; E_{home,on}\,(5.80 - \bar r_{home}) + E_{home,off}\,(2.64 - \bar r_{home}) \]</div>
+<div class="wx" id="ex-t-3"><div class="wx-head"><span class="mono">ตัวอย่าง T-3</span><h3>บ้านเดิมกับ TOU (บ้านใช้ On-Peak 55 % รถชาร์จ Off-Peak ทั้งหมด)</h3></div>
+<ol class="steps">
+<li><p>ยังไม่มีรถ: On 220 · Off 180 หน่วย → T4: \(220(5.7982) + 180(2.6369) = 1750.24\) + 24.62 + 78.88 → × 1.07 = <b>1,984 ฿</b> (แพงกว่าอัตราปกติ 223 ฿ — บ้านนี้ยังไม่ควรใช้ TOU)</p></li>
+<li><p>มีรถ: Off +250 → \(+250(2.6369) + 250(0.1972) = 708.53\) → (1853.74 + 708.53) × 1.07 = <b>2,742 ฿</b></p></li>
+<li><p>เทียบอัตราปกติเมื่อมีรถ 2,997 ฿ → TOU ถูกกว่า <b>255 ฿/เดือน</b> ค่ารถจริงเมื่อเทียบบิลเดิม 2,742 − 1,761 = 980 ฿ = 0.65 ฿/km</p></li>
+<li><p>ถ้าวิ่งแค่ 1,000 km/เดือน (167 หน่วย) TOU ถูกกว่าเพียง 96 ฿/เดือน — ไม่คุ้มค่าเปลี่ยนมิเตอร์เร็วนักถ้าบ้านใช้ไฟกลางวันมาก ถ้ามีโซลาร์ที่ลดไฟกลางวัน TOU คุ้มขึ้นมาก (<a href="/learn/ev-charging/solar-ac-ev/">ดูหน้าถัดไป</a>)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="perkm">
+    <h2 id="perkm">ค่าใช้จ่ายต่อกิโลเมตรเทียบรถน้ำมัน <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="T6" data-k="cost per km ev petrol comparison ต่อกิโลเมตร น้ำมัน เปรียบเทียบ"><p class="tf-n"><b><span class="fid">T6</span> Cost per kilometre</b> ค่าใช้จ่ายต่อกิโลเมตร</p>
+        \[ \text{฿/km}_{EV} = \frac{c}{100\,\eta}\,r_{marginal} \qquad \text{฿/km}_{ICE} = \frac{\text{ราคาน้ำมัน}}{\text{km/ลิตร}} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>กรณี (15 kWh/100 km, η 0.9)</th><th>ราคาส่วนเพิ่มรวม Ft VAT</th><th>฿/km</th><th>1,500 km/เดือน</th></tr></thead>
+      <tbody>
+        <tr><td>อัตราปกติ ขั้นบน</td><td>≈ 4.94 ฿</td><td>0.82</td><td>≈ 1,240 ฿</td></tr>
+        <tr><td>TOU ชาร์จ Off-Peak</td><td>≈ 3.03 ฿</td><td>0.51 (เฉพาะรถ)</td><td>≈ 760 ฿ (+ ส่วนต่างบ้าน)</td></tr>
+        <tr><td>ชาร์จจากโซลาร์ส่วนเกิน (เสียโอกาสขายไฟ 2.2 ฿)</td><td>≈ 2.2 ฿</td><td>0.37</td><td>≈ 550 ฿</td></tr>
+        <tr><td>ตู้ชาร์จด่วนสาธารณะ</td><td>≈ 6.5–8 ฿</td><td>1.1–1.3</td><td>≈ 1,600–2,000 ฿</td></tr>
+        <tr><td>รถน้ำมัน 14 km/ลิตร 35 ฿/ลิตร</td><td>—</td><td>2.50</td><td>3,750 ฿</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณ: อัตราปกติหรือ TOU คุ้มกว่าสำหรับบ้านคุณ</h2>
+    <div class="fg-calc ev-calc" data-ev="cost"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="cost" data-vals='{"km":"1000"}'>ลอง: วิ่ง 1,000 km</button><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="cost" data-vals='{"km":"3000","home":"300","onpk":"35"}'>ลอง: วิ่ง 3,000 km บ้านใช้กลางวันน้อย</button></div>
+    <div class="note"><b>หมายเหตุ</b> อัตราค่าไฟในหน้านี้เป็นอัตราของ กฟภ./กฟน. ที่ใช้ในปี 2568 สำหรับผู้ใช้ไฟแรงดันต่ำกว่า 22 kV ค่า Ft ใส่เป็นตัวแปรเพราะเปลี่ยนทุก 4 เดือน ไม่รวมค่าใช้จ่ายเปลี่ยนมิเตอร์และอัตราพิเศษสำหรับ EV ที่อาจประกาศเพิ่ม ตรวจประกาศล่าสุดก่อนตัดสินใจ</div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

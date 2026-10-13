@@ -1,0 +1,156 @@
+<!--meta
+{
+  "title": "แบตเตอรี่รถ EV กับเวลาชาร์จ: SOC, kWh กับ Ah, CC-CV, ทำไมชาร์จช้าหลัง 80 %, ประสิทธิภาพ และอายุแบต | อาจารย์มด",
+  "h1": "แบตเตอรี่รถ EV กับเวลาชาร์จ: SOC, CC-CV, ประสิทธิภาพ, กำลังที่ลดลงหลัง 80 % และอายุแบตเตอรี่",
+  "description": "คำนวณเวลาชาร์จรถยนต์ไฟฟ้าให้ใกล้ความจริง: ความจุ kWh กับ Ah แรงดันแพ็ก สถานะการประจุ SOC การชาร์จ CC-CV ทำไมกำลังชาร์จลดลงหลัง 80 % การสูญเสียในเครื่องชาร์จ C-rate อุณหภูมิ ตัวอย่างชาร์จ 20–80 % และ 20–100 % ด้วยสายชาร์จพกพาและวอลล์บ็อกซ์ และวิธีชาร์จให้แบตอายุยาว",
+  "ogTitle": "เวลาชาร์จรถ EV: SOC CC-CV และ 80 %",
+  "og": {"title": "เวลาชาร์จรถ EV: SOC CC-CV และ 80 %"},
+  "lesson": "ev-charging",
+  "sub": "battery-charging",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Lithium-ion battery", "State of charge", "Constant current constant voltage charging", "Battery management system"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "ทำไมชาร์จรถ EV ช้าลงหลัง 80 %?", "a": "เมื่อแรงดันเซลล์เข้าใกล้ขีดสูงสุด ระบบจัดการแบตเตอรี่ (BMS) ต้องเปลี่ยนจากชาร์จกระแสคงที่ (CC) เป็นแรงดันคงที่ (CV) กระแสจึงค่อย ๆ ลดลงเพื่อไม่ให้เซลล์ใดเกินแรงดันและเพื่อให้เซลล์ทุกก้อนเต็มเท่ากัน การชาร์จ 80–100 % อาจใช้เวลาใกล้เคียงกับ 20–80 % โดยเฉพาะที่ตู้ DC"},
+    {"q": "ควรชาร์จรถ EV ถึง 100 % ทุกวันไหม?", "a": "สำหรับแบต NMC ผู้ผลิตส่วนใหญ่แนะนำตั้งขีดไว้ 80–90 % สำหรับการใช้ประจำวัน และชาร์จ 100 % เฉพาะก่อนเดินทางไกล ส่วนแบต LFP หลายยี่ห้อแนะนำให้ชาร์จเต็ม 100 % เป็นครั้งคราว (อย่างน้อยสัปดาห์ละครั้ง) เพื่อให้ BMS ปรับเทียบค่า SOC ให้ถูก ให้ทำตามคู่มือรถ"},
+    {"q": "ชาร์จที่บ้านด้วยไฟ AC ทำให้แบตเสื่อมเร็วไหม?", "a": "ไม่ การชาร์จ AC ที่บ้าน 2–11 kW มี C-rate ต่ำมาก (ประมาณ 0.05–0.2C) เป็นการชาร์จที่ถนอมแบตที่สุด สิ่งที่ทำให้แบตเสื่อมเร็วคือความร้อนสูง การชาร์จ DC กำลังสูงบ่อย ๆ และการจอดทิ้งที่ SOC 100 % นาน ๆ ในที่ร้อน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>แบตเตอรี่ · เวลาชาร์จ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.2 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · EV Battery &amp; Charging Time</p>
+      <h1>แบตเตอรี่รถ EV กับเวลาชาร์จ: SOC, CC-CV, ประสิทธิภาพ, กำลังที่ลดลงหลัง 80 % และอายุแบตเตอรี่</h1>
+      <p class="lede">สูตร “เวลา = พลังงาน ÷ กำลัง” ใช้ได้ดีในช่วงกลางของแบต แต่ช่วงท้ายการชาร์จกำลังจะลดลงเอง และไฟที่จ่ายจากมิเตอร์ไม่ได้เข้าแบตทั้งหมด หน้านี้ทำให้การประมาณเวลาและค่าไฟแม่นขึ้น และอธิบายว่าควรชาร์จอย่างไรให้แบตอยู่ได้นาน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">คำนวณเวลาชาร์จ</a>
+        <a class="btn btn-ghost btn-sm" href="#capacity">kWh · Ah · SOC</a>
+        <a class="btn btn-ghost btn-sm" href="#cccv">CC-CV</a>
+        <a class="btn btn-ghost btn-sm" href="#losses">การสูญเสีย</a>
+        <a class="btn btn-ghost btn-sm" href="#life">ถนอมแบต</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ความจุ kWh = แรงดันแพ็ก × Ah ÷ 1000 · ใช้ “ความจุที่ใช้ได้ (usable)” ในการคำนวณ</li>
+          <li>เวลา ≈ ความจุ × ΔSOC ÷ (P × η) แล้วบวกเวลาช่วง CV หลัง ~80 %</li>
+          <li>ไฟจากมิเตอร์ ≈ ไฟเข้าแบต ÷ 0.85–0.92 (ชาร์จกระแสต่ำประสิทธิภาพต่ำกว่า)</li>
+          <li>ชาร์จ AC ที่บ้าน C-rate ≈ 0.04–0.2C ถนอมแบตที่สุด ศัตรูคือความร้อนและการจอดที่ 100 % นาน ๆ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น soc, ah, c-rate, cv, ประสิทธิภาพ, เวลา" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="capacity">
+    <h2 id="capacity">ความจุ kWh, Ah และสถานะการประจุ SOC <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="B1" data-k="battery capacity kwh ah voltage ความจุแบตเตอรี่ แอมป์ชั่วโมง"><p class="tf-n"><b><span class="fid">B1</span> Battery energy capacity</b> ความจุพลังงานของแบตเตอรี่</p>
+        \[ E_{bat}\,[\text{kWh}] = \frac{V_{pack}\,[\text{V}]\times C\,[\text{Ah}]}{1000} \]</div>
+<div class="tf" id="B2" data-k="state of charge soc energy stored สถานะการประจุ"><p class="tf-n"><b><span class="fid">B2</span> State of charge</b> สถานะการประจุ</p>
+        \[ SOC = \frac{E_{stored}}{E_{usable}}\times 100\,\% \qquad E_{to\,add} = E_{usable}\,\frac{SOC_2 - SOC_1}{100} \]</div>
+    <p>ผู้ผลิตบอกได้สองค่า: <b>ความจุรวม (gross)</b> และ <b>ความจุใช้ได้ (usable/net)</b> ซึ่งน้อยกว่า 3–10 % เพราะ BMS เก็บส่วนบนและล่างไว้เป็นกันชน ให้ใช้ค่า usable ในการคำนวณเสมอ แบตเตอรี่รถมีสองเคมีหลัก: <b>LFP</b> (ลิเทียมไอรอนฟอสเฟต ทนรอบ ปลอดภัย แรงดันเซลล์ 3.2 V) และ <b>NMC</b> (ความหนาแน่นสูง แรงดันเซลล์ 3.6–3.7 V)</p>
+<div class="wx" id="ex-b-1"><div class="wx-head"><span class="mono">ตัวอย่าง B-1</span><h3>แพ็ก 400 V 150 Ah มีกี่ kWh</h3></div>
+<ol class="steps">
+<li><p>B1: \(E = 400 \times 150 / 1000 = 60\ \text{kWh}\)</p></li>
+<li><p>LFP 3.2 V ต่อเซลล์ → ต่ออนุกรม \(400/3.2 = 125\) เซลล์ (เขียนว่า 125S)</p></li>
+<li><p>B2: จาก 20 % ถึง 80 % ต้องเติม \(60 \times 0.6 = 36\ \text{kWh}\) เข้าแบต</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="time">
+    <h2 id="time">เวลาชาร์จแบบง่าย และพลังงานจากมิเตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="B3" data-k="charging time simple เวลาชาร์จ พลังงาน กำลัง ประสิทธิภาพ"><p class="tf-n"><b><span class="fid">B3</span> Charging time (constant-power part)</b> เวลาชาร์จในช่วงกำลังคงที่</p>
+        \[ t \approx \frac{E_{usable}\,(SOC_2 - SOC_1)/100}{P_{charge}\,\eta} \]</div>
+<div class="tf" id="B4" data-k="grid energy losses efficiency พลังงานจากมิเตอร์ การสูญเสีย"><p class="tf-n"><b><span class="fid">B4</span> Energy drawn from the meter</b> พลังงานที่มิเตอร์นับ</p>
+        \[ E_{grid} = \frac{E_{to\,add}}{\eta} \qquad E_{loss} = E_{grid} - E_{to\,add} \]</div>
+<div class="wx" id="ex-b-2"><div class="wx-head"><span class="mono">ตัวอย่าง B-2</span><h3>ชาร์จ 20 → 80 % แบต 60 kWh ด้วยวอลล์บ็อกซ์ 7.36 kW</h3></div>
+<ol class="steps">
+<li><p>B2: เติม 36 kWh · ประสิทธิภาพ \(\eta = 0.90\)</p></li>
+<li><p>B3: \(t = 36/(7.36 \times 0.90) = 36/6.624 = 5.43\ \text{h} \approx 5\) ชม. 26 นาที</p></li>
+<li><p>B4: มิเตอร์นับ \(36/0.9 = 40\ \text{kWh}\) สูญเสีย 4 kWh เป็นความร้อนใน OBC สายไฟ และแบต</p></li>
+<li><p>ช่วงนี้อยู่ต่ำกว่า 80 % กำลังคงที่ตลอด สูตรง่ายจึงตรงกับเครื่องคำนวณด้านล่าง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cccv">
+    <h2 id="cccv">CC-CV: ทำไมช่วงท้ายชาร์จช้าลง <span class="lv lv-i">กลาง</span></h2>
+    <p>เซลล์ลิเทียมมีแรงดันสูงสุดที่ห้ามเกิน (LFP ≈ 3.65 V, NMC ≈ 4.2 V ต่อเซลล์) ช่วงแรกระบบชาร์จด้วย <b>กระแสคงที่ (Constant Current, CC)</b> แรงดันค่อย ๆ ขึ้น เมื่อแรงดันถึงขีด ระบบเปลี่ยนเป็น <b>แรงดันคงที่ (Constant Voltage, CV)</b> กระแสลดลงเองแบบเอกซ์โพเนนเชียลตามที่เซลล์รับได้ ช่วงท้าย BMS ยังต้อง <b>ปรับสมดุลเซลล์ (balancing)</b> ให้ทุกก้อนเต็มเท่ากัน</p>
+<div class="tf" id="B5" data-k="cv phase taper current exponential กระแสลดลง ช่วง cv"><p class="tf-n"><b><span class="fid">B5</span> CV-phase current taper</b> กระแสในช่วงแรงดันคงที่</p>
+        \[ i(t) \approx I_{CC}\,e^{-t/\tau} \qquad \tau \approx R_{int}C_{eq} \]</div>
+    <p>เมื่อมองจากผนังบ้าน การชาร์จ AC ที่กำลังต่ำ (2–11 kW) ส่วนใหญ่อยู่ในโหมด “กำลังคงที่” ได้ถึง 90 % กว่า เพราะ OBC จ่ายน้อยกว่าที่แบตรับได้มาก ส่วนตู้ DC 150 kW จะลดกำลังเร็วตั้งแต่ 50–60 % เครื่องคำนวณในหน้านี้ใช้แบบจำลองแบบง่าย: กำลังคงที่ถึง 80 % แล้วลดเป็นเส้นตรงเหลือ 30 % ที่ 100 %</p>
+<div class="tf" id="B6" data-k="taper model power soc knee แบบจำลองกำลังลดลง"><p class="tf-n"><b><span class="fid">B6</span> Teaching taper model</b> แบบจำลองกำลังลดลงที่ใช้ในเครื่องคำนวณ</p>
+        \[ P(SOC) = \begin{cases} P_{0} & SOC \le 80\,\% \\[2pt] P_{0}\left[1 - 0.7\,\dfrac{SOC-80}{20}\right] & SOC > 80\,\% \end{cases} \qquad t = \int \frac{E_{usable}\,dSOC/100}{P(SOC)\,\eta} \]</div>
+<div class="wx" id="ex-b-3"><div class="wx-head"><span class="mono">ตัวอย่าง B-3</span><h3>ชาร์จ 20 → 100 % ด้วยวอลล์บ็อกซ์ 7.36 kW</h3></div>
+<ol class="steps">
+<li><p>20 → 80 %: 5.43 ชม. (ตัวอย่าง B-2)</p></li>
+<li><p>80 → 100 %: เติม 12 kWh แต่กำลังเฉลี่ยลดลง อินทิเกรต B6: \(\int_{80}^{100}\dfrac{0.6\,dS}{7.36(0.9)[1-0.035(S-80)]} = \dfrac{0.6}{6.624}\cdot\dfrac{\ln(1/0.3)}{0.035} = 3.11\ \text{h}\)</p></li>
+<li><p>รวม ≈ 8.5 ชม. (เครื่องคำนวณ: 8 ชม. 32 นาที) ขณะที่สูตรง่ายให้ 7.25 ชม. — <b>20 % สุดท้ายใช้เวลาเกินครึ่งหนึ่งของ 60 % แรก</b></p></li>
+<li><p>ข้อคิด: ชาร์จประจำวันถึง 80–90 % แล้วชาร์จเต็มเฉพาะวันเดินทาง ประหยัดเวลาและถนอมแบต (สำหรับ NMC)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="crate">
+    <h2 id="crate">C-rate: ชาร์จที่บ้านเบาแค่ไหน <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="B7" data-k="c-rate charging rate ความเร็วการชาร์จเทียบความจุ"><p class="tf-n"><b><span class="fid">B7</span> C-rate</b> อัตราการชาร์จเทียบความจุ</p>
+        \[ C\text{-rate} = \frac{P_{charge}\,[\text{kW}]}{E_{bat}\,[\text{kWh}]} = \frac{I}{C_{Ah}} \qquad 1C = \text{เต็มใน } \approx 1\ \text{ชั่วโมง} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วิธีชาร์จ (แบต 60 kWh)</th><th>กำลัง</th><th>C-rate</th><th>ผลต่อแบต</th></tr></thead>
+      <tbody>
+        <tr><td>สายชาร์จพกพา 10 A</td><td>2.3 kW</td><td>0.04C</td><td>เบามาก แต่ OBC ทำงานนาน ประสิทธิภาพต่ำลงเล็กน้อย</td></tr>
+        <tr><td>วอลล์บ็อกซ์ 7.4 kW</td><td>7.4 kW</td><td>0.12C</td><td>เหมาะที่สุดสำหรับใช้ประจำ</td></tr>
+        <tr><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>22 kW</td><td>0.37C</td><td>ยังเบา</td></tr>
+        <tr><td>ตู้ DC 150 kW</td><td>150 kW</td><td>2.5C (ช่วงสั้น)</td><td>ร้อน ใช้ได้เมื่อจำเป็น ไม่ควรใช้ทุกวัน</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="losses">
+    <h2 id="losses">การสูญเสียระหว่างมิเตอร์กับแบตเตอรี่ <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><b>สายไฟในบ้านและสายชาร์จ</b>: 0.5–2 % (ขึ้นกับขนาดสายและความยาว — คำนวณใน <a href="/learn/ev-charging/home-electrical/#cable">ระบบไฟบ้าน</a>)</li>
+      <li><b>OBC (PFC + DC-DC)</b>: 4–8 % ที่กำลังพิกัด แต่ที่กำลังต่ำมาก ๆ ค่าคงที่ของวงจรควบคุม พัดลม ปั๊มน้ำหล่อเย็นกินสัดส่วนมากขึ้น</li>
+      <li><b>แบตเตอรี่</b>: ความต้านทานภายในและการปรับสมดุลเซลล์ 1–3 %</li>
+      <li><b>ระบบในรถที่ทำงานระหว่างชาร์จ</b>: คอมพิวเตอร์ ระบบทำความเย็นแบต (ในวันร้อนอาจหลายร้อยวัตต์)</li>
+    </ul>
+    <p>ผลรวม: ชาร์จ AC ที่บ้านมีประสิทธิภาพราว 85–92 % ชาร์จด้วยกระแส 6–8 A ต่ำสุดอาจเหลือ 80–85 % ในวันร้อน ใช้ค่า 90 % สำหรับวอลล์บ็อกซ์และ 85–88 % สำหรับสายชาร์จพกพา</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคำนวณเวลาชาร์จ</h2>
+    <div class="fg-calc ev-calc" data-ev="time" data-s1="100"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="time" data-vals='{"mode":"สายชาร์จพกพา 10 A (2.3 kW)","s0":"20","s1":"100","eta":"86"}'>ลอง: สายพกพา 10 A 20→100 %</button><button type="button" class="btn btn-ghost btn-sm" data-ev-fill="time" data-vals='{"mode":"วอลล์บ็อกซ์ 3 เฟส 16 A (11 kW)","obc":"7.4","s0":"20","s1":"80"}'>ลอง: วอลล์บ็อกซ์ 11 kW กับรถ OBC 7.4 kW</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="life">
+    <h2 id="life">ชาร์จอย่างไรให้แบตอายุยาว <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ปัจจัย</th><th>ผล</th><th>แนวปฏิบัติ</th></tr></thead>
+      <tbody>
+        <tr><td>อุณหภูมิสูง</td><td>เร่งปฏิกิริยาข้างเคียง ความจุลดเร็ว</td><td>จอดในร่ม หลีกเลี่ยงชาร์จ DC ต่อเนื่องหลายรอบในวันร้อน</td></tr>
+        <tr><td>SOC สูงนาน ๆ</td><td>NMC เสื่อมเร็วที่แรงดันสูง</td><td>ตั้งขีด 80–90 % ใช้ตั้งเวลาให้ชาร์จเสร็จใกล้เวลาออกจากบ้าน</td></tr>
+        <tr><td>SOC ต่ำมาก</td><td>เสี่ยงเซลล์บางก้อนต่ำเกิน</td><td>อย่าปล่อยต่ำกว่า 10 % นาน ๆ</td></tr>
+        <tr><td>C-rate สูง</td><td>ความร้อน lithium plating เมื่อแบตเย็น</td><td>ชาร์จ AC ที่บ้านเป็นหลัก DC เมื่อเดินทาง</td></tr>
+        <tr><td>LFP กับการปรับเทียบ</td><td>เส้น OCV แบน BMS ประมาณ SOC ยาก</td><td>ชาร์จเต็ม 100 % เป็นครั้งคราวตามคู่มือ</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

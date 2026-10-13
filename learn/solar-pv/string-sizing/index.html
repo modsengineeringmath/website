@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=c8098a2f">
+<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/string-sizing/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/#article","headline":"ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio","description":"วิธีคำนวณจำนวนแผงโซลาร์ต่อสตริงและจำนวนสตริงต่อ MPPT แบบละเอียด: แรงดัน Voc ที่อุณหภูมิต่ำสุด Vmp ที่เซลล์ร้อนสุด ช่วง MPPT และ full-load MPPT กระแส Imp และ Isc ต่อ MPPT DC/AC ratio และ clipping สตริงหลายทิศ พร้อมเครื่องคำนวณออนไลน์และตัวอย่างระบบ 5 kW 10 kW 100 kW","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PV string sizing","Solar inverter","MPPT voltage range","DC/AC ratio"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-string-sizing.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio","item":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ต่อแผงโซลาร์อนุกรมได้สูงสุดกี่แผง?","acceptedAnswer":{"@type":"Answer","text":"หาร Vdc สูงสุดของอินเวอร์เตอร์ด้วย Voc ของแผงที่อุณหภูมิต่ำสุดของพื้นที่ แล้วปัดลง เช่น อินเวอร์เตอร์ 600 V แผง Voc 52.2 V β −0.25 %/°C ที่ 10 °C Voc เพิ่มเป็น 54.2 V ต่อได้สูงสุด 11 แผง ต้องใช้ Voc ตอนหนาวเพราะแรงดันสูงที่สุดเกิดตอนเช้าที่อากาศเย็นและแผงยังไม่ร้อน"}},{"@type":"Question","name":"DC/AC ratio ควรเป็นเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"สำหรับประเทศไทยนิยม 1.1–1.3 คือแผงใหญ่กว่าพิกัดอินเวอร์เตอร์ 10–30 % เพราะแผงแทบไม่เคยจ่ายถึงพิกัด STC จากอุณหภูมิและการสูญเสีย การสูญเสียจากการตัดยอด (clipping) ที่ 1.2–1.3 มักไม่เกิน 1–2 % แต่ได้พลังงานช่วงเช้าเย็นเพิ่ม ต้องไม่เกินค่าที่ผู้ผลิตอินเวอร์เตอร์อนุญาตและเงื่อนไขของการไฟฟ้า"}},{"@type":"Question","name":"แผงสองทิศต่อเข้า MPPT เดียวกันได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ควร สตริงที่ขนานกันต้องมีแรงดัน MPP ใกล้กัน ถ้าทิศต่างกัน แสงและอุณหภูมิต่างกัน จุด MPP ไม่ตรงกันทำให้เสียพลังงาน ให้แยกแต่ละทิศไปคนละ MPPT หรือใช้ optimizer ถ้าจำเป็นต้องรวม ต้องเป็นสตริงจำนวนแผงเท่ากันและยอมรับการสูญเสีย"}}]}]}</script>
@@ -156,6 +156,45 @@
           <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
           <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
           <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
         </div>
       </div>
       <a href="/#watch" >ดูคลิป</a>
@@ -376,6 +415,12 @@
       <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
       <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
       <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
       <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
       <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
       <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -399,8 +444,8 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=c8098a2f" defer></script>
-<script src="/assets/lesson.js?v=c8098a2f" defer></script>
-<script src="/assets/pv-calc.js?v=c8098a2f" defer></script>
+<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/lesson.js?v=0014ea3e" defer></script>
+<script src="/assets/pv-calc.js?v=0014ea3e" defer></script>
 </body>
 </html>

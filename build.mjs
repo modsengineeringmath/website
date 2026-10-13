@@ -392,6 +392,116 @@ export const TOPICS = [
         summary: "รวมเครื่องคำนวณทุกตัวในหน้าเดียว: แล็บเส้น I-V ขนาดจากบิล ออกแบบสตริง คาดการณ์พลังงาน แบตเตอรี่ แอร์ ปั๊มน้ำ แรงดันตก และความคุ้มค่า พร้อมใบงานฝึกออกแบบ" },
     ],
   },
+  {
+    // Topic 15: Home EV charging — portable (Mode 2) "slow" charging from a house socket, the home wallbox (Mode 3),
+    // the house wiring behind it, and how solar PV, air conditioning and the car share one supply. Tools in assets/ev-calc.js.
+    slug: "ev-charging",
+    title: "ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน",
+    en: "Home EV Charging",
+    sym: "🔌",
+    summary: "ชาร์จช้าด้วยสายชาร์จพกพาจากเต้ารับบ้าน (Mode 2) กับชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3) ตั้งแต่ kW กับ kWh แบตเตอรี่ CC-CV สัญญาณ Control Pilot ขนาดมิเตอร์ สายไฟ เบรกเกอร์ RCD Type B กราวด์ ค่าไฟ TOU และการใช้โซลาร์ แอร์ และรถ EV ร่วมกันในบ้านเดียว พร้อมเครื่องคำนวณและซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง",
+    fxHint: "พิมพ์ เช่น kwh, mode 2, wallbox, duty, control pilot, rcd, มิเตอร์, แรงดันตก, tou, solar, แอร์, เวลาชาร์จ",
+    parts: [
+      { id: "basics", n: 1, title: "พื้นฐานการชาร์จ", en: "Charging Fundamentals", blurb: "กำลังกับพลังงาน โหมดและระดับการชาร์จ AC กับ DC เครื่องชาร์จในรถ หัวชาร์จ แบตเตอรี่ลิเทียม CC-CV และการคำนวณเวลาชาร์จ" },
+      { id: "home", n: 2, title: "ชาร์จที่บ้าน: ชาร์จช้าและชาร์จเร็ว", en: "Home Charging Equipment & Wiring", blurb: "สายชาร์จพกพาเสียบเต้ารับบ้าน วอลล์บ็อกซ์ 7.4–22 kW สัญญาณ Control Pilot ระบบไฟบ้าน มิเตอร์ สายไฟ เบรกเกอร์ RCD กราวด์ และมาตรฐานความปลอดภัย" },
+      { id: "energy", n: 3, title: "ค่าไฟและพลังงานในบ้าน", en: "Cost & Home Energy", blurb: "ค่าไฟปกติกับ TOU ค่าใช้จ่ายต่อกิโลเมตร และการจัดการพลังงานที่เชื่อมโซลาร์เซลล์ แอร์ และการชาร์จรถเข้าด้วยกัน" },
+      { id: "lab", n: 4, title: "เครื่องมือคำนวณและซิมูเลเตอร์", en: "Calculators & Simulator", blurb: "เครื่องคำนวณทุกตัวในหน้าเดียว และซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมงพร้อมใบงาน" },
+    ],
+    sub: [
+      { slug: "charging-basics", part: "basics", short: "พื้นฐาน · โหมดชาร์จ", title: "พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ", en: "EV Charging Basics: Modes, AC vs DC, Connectors", sym: "kW", prefix: "C",
+        summary: "กำลังกับพลังงาน ชาร์จช้า ชาร์จเร็วที่บ้าน และชาร์จด่วน DC ต่างกันอย่างไร Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) หัว Type 2 CCS2 CHAdeMO GB/T และตารางเลือกวิธีชาร์จ" },
+      { slug: "battery-charging", part: "basics", short: "แบตเตอรี่ · เวลาชาร์จ", title: "แบตเตอรี่รถ EV กับเวลาชาร์จ: SOC, CC-CV, ประสิทธิภาพ, กำลังที่ลดลงหลัง 80 % และอายุแบตเตอรี่", en: "EV Battery & Charging Time", sym: "SOC", prefix: "B",
+        summary: "ความจุ kWh กับ Ah แรงดันแพ็ก SOC กราฟ CC-CV ทำไมชาร์จช้าลงหลัง 80 % การสูญเสียในเครื่องชาร์จ คำนวณเวลาชาร์จจริง อุณหภูมิ และวิธีชาร์จให้แบตอายุยาว" },
+      { slug: "portable-charger", part: "home", short: "ชาร์จช้า (Mode 2)", title: "ชาร์จช้าด้วยไฟบ้าน (Mode 2): สายชาร์จพกพา เต้ารับ 16 A กระแสที่ปลอดภัย และความร้อนที่ปลั๊ก", en: "Portable Charger from a House Socket (Mode 2)", sym: "16A", prefix: "M",
+        summary: "สายชาร์จพกพา (ICCB) ทำงานอย่างไร เลือกกระแส 8–16 A ให้เหมาะกับเต้ารับและสาย ความร้อนที่หน้าสัมผัส I²R แรงดันตก เต้ารับ IEC 60309 กับเต้ารับบ้าน ข้อห้ามสายพ่วง และเวลาชาร์จ" },
+      { slug: "wallbox", part: "home", short: "ชาร์จเร็วที่บ้าน (Wallbox)", title: "ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 kW 11 kW 22 kW, Control Pilot PWM, Proximity และการเลือกเครื่อง", en: "Home Wallbox Charger (Mode 3) & Control Pilot", sym: "PWM", prefix: "W",
+        summary: "วอลล์บ็อกซ์ไม่ใช่ตัวชาร์จแต่เป็นสวิตช์อัจฉริยะ สัญญาณ Control Pilot ±12 V PWM duty → กระแส สถานะ A–F ตัวต้านทาน Proximity 1 เฟสกับ 3 เฟส ขีดจำกัด OBC load balancing และเกณฑ์เลือกซื้อ" },
+      { slug: "home-electrical", part: "home", short: "ระบบไฟบ้าน · มิเตอร์ · สาย", title: "เตรียมระบบไฟบ้านสำหรับชาร์จรถ EV: ขนาดมิเตอร์ โหลดรวม สายเมน เบรกเกอร์ ขนาดสาย และแรงดันตก", en: "Home Electrical System for EV Charging", sym: "A", prefix: "H",
+        summary: "คำนวณโหลดรวมของบ้านเมื่อเพิ่มรถ EV ดีมานด์แฟกเตอร์ มิเตอร์ 15(45) A กับ 30(100) A เมนเบรกเกอร์ วงจรย่อยเฉพาะ ขนาดสายตามกระแสต่อเนื่อง 125 % แรงดันตก และขั้นตอนขอ กฟภ. กฟน." },
+      { slug: "safety-standards", part: "home", short: "ความปลอดภัย · RCD · กราวด์", title: "ความปลอดภัยการชาร์จรถ EV: RCD Type A กับ Type B, กระแสรั่ว DC 6 mA, การต่อลงดิน, มาตรฐาน และอาการเสีย", en: "EV Charging Safety, RCD & Earthing", sym: "⏚", prefix: "P",
+        summary: "ไฟดูดเกิดอย่างไร RCD ทำงานด้วยหลักอะไร ทำไมต้อง Type B หรือ RDC-DD 6 mA ระบบ TN-C-S กับ TT หลักดิน แรงดันสัมผัส IP มาตรฐาน IEC 61851 IEC 62196 IEC 60364-7-722 วสท. และตารางอาการเสีย" },
+      { slug: "charging-cost", part: "energy", short: "ค่าไฟ · TOU · ต่อกิโลเมตร", title: "ค่าชาร์จรถ EV ที่บ้าน: ค่าไฟอัตราก้าวหน้ากับ TOU, ค่าใช้จ่ายต่อกิโลเมตร และความคุ้มค่าของการเปลี่ยนมิเตอร์", en: "Home Charging Cost: Tariffs, TOU & Cost per km", sym: "฿", prefix: "T",
+        summary: "อ่านโครงสร้างค่าไฟบ้าน อัตราก้าวหน้า ค่า Ft VAT อัตรา TOU On-Peak Off-Peak พลังงานต่อ 100 km ค่าใช้จ่ายต่อกิโลเมตรเทียบน้ำมัน และคำนวณว่าเปลี่ยนเป็นมิเตอร์ TOU คุ้มหรือไม่" },
+      { slug: "solar-ac-ev", part: "energy", short: "โซลาร์ + แอร์ + รถ EV", title: "โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว: สมดุลพลังงาน การชาร์จจากโซลาร์ส่วนเกิน การจัดการโหลด และ V2H", en: "Solar PV, Air Conditioning & EV in One Home", sym: "☀", prefix: "S",
+        summary: "หลักการที่เชื่อมสามระบบ: กำลังทุกขณะต้องสมดุล ไฟไหลไปทางไหน โปรไฟล์โหลด 24 ชั่วโมง self-consumption การชาร์จจากโซลาร์ส่วนเกิน dynamic load balancing แบตเตอรี่บ้าน V2L V2H และขนาดระบบที่เหมาะ" },
+      { slug: "ev-lab", part: "lab", short: "เครื่องมือ · ซิมูเลเตอร์", title: "เครื่องมือคำนวณการชาร์จรถ EV ที่บ้าน และซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง (โซลาร์ + แอร์ + รถ)", en: "Home EV Charging Calculators & Energy Simulator", sym: "▶", tag: "เครื่องคำนวณ 7 ตัว + ซิมูเลเตอร์",
+        summary: "เวลาชาร์จ สายชาร์จพกพา Control Pilot ระบบไฟบ้าน ขนาดสายและแรงดันตก ค่าไฟและ TOU และซิมูเลเตอร์ที่จำลองโซลาร์ แอร์ และรถ EV ทุก 15 นาทีตลอดวัน พร้อมใบงาน" },
+    ],
+  },
+  {
+    // Topic 16: Power systems & protection (a preparation course): structure, phasors and three-phase, per-unit,
+    // transformers and lines, faults and symmetrical components, protection, overcurrent coordination, earthing. Tools in assets/ps-calc.js.
+    slug: "power-systems",
+    title: "ระบบไฟฟ้ากำลังและระบบป้องกัน",
+    en: "Power Systems & Protection",
+    sym: "⚡",
+    summary: "ปูพื้นก่อนเรียนวิชาระบบไฟฟ้ากำลังและการป้องกันระบบไฟฟ้ากำลัง: โครงสร้างระบบไฟฟ้าไทย เฟสเซอร์ สามเฟส กำลังเชิงซ้อน ระบบต่อหน่วย หม้อแปลงและสายส่ง การลัดวงจร องค์ประกอบสมมาตร หลักการป้องกัน CT รีเลย์กระแสเกินและการประสาน การต่อลงดิน รีเลย์ผลต่างและระยะทาง พร้อมแล็บคำนวณ",
+    fxHint: "พิมพ์ เช่น per unit, base, fault, mva, %z, symmetrical, sequence, idmt, tms, cti, ct, earth, 87, mho",
+    parts: [
+      { id: "foundations", n: 1, title: "พื้นฐานระบบไฟฟ้ากำลัง", en: "Foundations", blurb: "ระบบไฟฟ้าตั้งแต่โรงไฟฟ้าถึงบ้าน เฟสเซอร์และสามเฟส กำลังเชิงซ้อน ระบบต่อหน่วย หม้อแปลง และสายส่ง" },
+      { id: "faults", n: 2, title: "การลัดวงจร", en: "Fault Analysis", blurb: "คำนวณกระแสลัดวงจรสามเฟสด้วย %Z และ MVA องค์ประกอบสมมาตร และการลัดวงจรไม่สมมาตร" },
+      { id: "protection", n: 3, title: "ระบบป้องกัน", en: "Power System Protection", blurb: "หลักการป้องกัน CT VT รีเลย์กระแสเกินและการประสาน การต่อลงดินและความปลอดภัย รีเลย์ผลต่างและรีเลย์ระยะทาง" },
+      { id: "lab", n: 4, title: "แล็บคำนวณ", en: "Lab", blurb: "ระบบต่อหน่วย กระแสลัดวงจร กราฟประสานรีเลย์ (TCC) การส่งกำลัง P-δ และองค์ประกอบสมมาตร" },
+    ],
+    sub: [
+      { slug: "power-system-overview", part: "foundations", short: "ภาพรวมระบบไฟฟ้า", title: "ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย ระดับแรงดันในประเทศไทย และทำไมต้องส่งด้วยแรงดันสูง", en: "Power System Overview", sym: "G", prefix: "G",
+        summary: "โรงไฟฟ้า สายส่ง สถานีไฟฟ้า ระบบจำหน่าย 500/230/115 kV 22/33 kV 400/230 V บทบาท กฟผ. กฟภ. กฟน. ทำไมแรงดันสูงลดการสูญเสีย I²R ความถี่ 50 Hz สมดุลกำลัง และแผนที่วิชาที่ต้องเรียน" },
+      { slug: "phasors-three-phase", part: "foundations", short: "เฟสเซอร์ · สามเฟส", title: "เฟสเซอร์ อิมพีแดนซ์ กำลังเชิงซ้อน และระบบสามเฟส: Y กับ Δ, √3 และกำลังสามเฟส", en: "Phasors, Complex Power & Three-Phase Systems", sym: "∠", prefix: "A",
+        summary: "เขียนไซน์เป็นเฟสเซอร์ อิมพีแดนซ์ R X Z กำลังเชิงซ้อน S = VI* แรงดันเฟสกับแรงดันสาย การต่อ Y และ Δ กำลังสามเฟส √3 V_L I_L cosφ และวงจรสมมูลเฟสเดียว" },
+      { slug: "per-unit", part: "foundations", short: "ระบบต่อหน่วย", title: "ระบบต่อหน่วย (Per-Unit System): ค่าฐาน การเปลี่ยนฐาน หม้อแปลง และไดอะแกรมอิมพีแดนซ์", en: "Per-Unit System", sym: "pu", prefix: "U",
+        summary: "ทำไมวิศวกรระบบไฟฟ้าใช้ pu เลือก S_base V_base คำนวณ Z_base I_base เปลี่ยนฐานอิมพีแดนซ์ หม้อแปลงหายไปจากวงจร ตัวอย่างระบบเครื่องกำเนิด–หม้อแปลง–สายส่ง–โหลด" },
+      { slug: "transformers-lines", part: "foundations", short: "หม้อแปลง · สายส่ง", title: "หม้อแปลงและสายส่งในระบบกำลัง: วงจรสมมูล %Z การควบคุมแรงดัน แบบจำลองสายส่ง และสมการส่งกำลัง P-δ", en: "Transformers, Lines & Power Transfer", sym: "P-δ", prefix: "L",
+        summary: "วงจรสมมูลหม้อแปลง %Z จากการทดสอบลัดวงจร voltage regulation การต่อ Dyn11 แบบจำลองสายสั้น ปานกลาง ยาว แรงดันตก ΔV ≈ (RP + XQ)/V และ P = V₁V₂ sin δ / X" },
+      { slug: "fault-analysis", part: "faults", short: "กระแสลัดวงจร", title: "คำนวณกระแสลัดวงจร: ลัดวงจรสามเฟสด้วย %Z และวิธี MVA, แหล่งจ่าย หม้อแปลง สาย และค่ายอดที่ไม่สมมาตร", en: "Short-Circuit Calculation", sym: "Isc", prefix: "F",
+        summary: "ทำไมต้องรู้กระแสลัดวงจร แหล่งจ่ายต้นทาง หม้อแปลง สายเคเบิล วิธี %Z กับวิธี MVA กระแสลัดวงจรที่ตู้ MDB อัตรา X/R ค่ายอด i_p พิกัดตัดกระแส (Icu kA) และตัวอย่างหม้อแปลง 1,000 kVA" },
+      { slug: "symmetrical-components", part: "faults", short: "องค์ประกอบสมมาตร", title: "องค์ประกอบสมมาตรและการลัดวงจรไม่สมมาตร: ลำดับบวก ลบ ศูนย์ ลัดลงดินหนึ่งเฟส สองเฟส และสองเฟสลงดิน", en: "Symmetrical Components & Unbalanced Faults", sym: "a", prefix: "S",
+        summary: "ตัวดำเนินการ a เมทริกซ์ Fortescue แยกระบบไม่สมดุลเป็นลำดับ 1 2 0 วงจรลำดับของเครื่องกำเนิด หม้อแปลง Dyn สายส่ง การต่อวงจรลำดับสำหรับ SLG LL DLG และกระแสลงดิน" },
+      { slug: "protection-principles", part: "protection", short: "หลักการป้องกัน · CT", title: "หลักการระบบป้องกันไฟฟ้ากำลัง: โซนป้องกัน การเลือกตัด CT VT รหัส ANSI และคุณสมบัติของรีเลย์", en: "Protection Principles, CTs & Relays", sym: "52", prefix: "P",
+        summary: "คุณสมบัติ 5 ข้อของระบบป้องกัน โซนป้องกันและการซ้อนทับ ป้องกันหลักกับสำรอง เบรกเกอร์ CT ความอิ่มตัว คลาส 5P20 VT รหัส ANSI 50 51 50N 87 21 27 59 81 และรีเลย์ดิจิทัล" },
+      { slug: "overcurrent-coordination", part: "protection", short: "รีเลย์กระแสเกิน · ประสาน", title: "รีเลย์กระแสเกินและการประสานการป้องกัน: กราฟ IDMT IEC 60255, TMS, CTI, ฟิวส์ และเบรกเกอร์ MCB/MCCB", en: "Overcurrent Protection & Coordination", sym: "TCC", prefix: "R",
+        summary: "รีเลย์ 50/51 กราฟ Standard Very Extremely Inverse ตั้ง pickup และ TMS ช่วงเวลาประสาน CTI 0.3 s การประสานรีเลย์–ฟิวส์–เบรกเกอร์ กราฟ MCB B C D และตัวอย่างประสาน 3 ระดับ" },
+      { slug: "earthing-safety", part: "protection", short: "การต่อลงดิน", title: "การต่อลงดินและการป้องกันไฟดูด: TN-C-S TT IT อิมพีแดนซ์วงรอบ เวลาตัดวงจร RCD แรงดันสัมผัส และหลักดิน", en: "Earthing Systems & Shock Protection", sym: "⏚", prefix: "E",
+        summary: "ระบบการต่อลงดิน TN TT IT วงรอบความผิดพร่อง Z_s เงื่อนไขตัดวงจรอัตโนมัติ 0.4 s แรงดันสัมผัส RCD 30 mA ความต้านทานหลักดิน 5 Ω ตามแบบไทย และการวัดด้วย fall-of-potential" },
+      { slug: "differential-distance", part: "protection", short: "รีเลย์ผลต่าง · ระยะทาง", title: "รีเลย์ผลต่าง (87) และรีเลย์ระยะทาง (21): ป้องกันหม้อแปลง บัส สายส่ง เปอร์เซ็นต์ไบแอส และโซน Mho", en: "Differential (87) & Distance (21) Protection", sym: "87", prefix: "D",
+        summary: "หลักกฎกระแสของเคอร์ชอฟฟ์ในรีเลย์ผลต่าง ไบแอสเปอร์เซ็นต์ inrush และฮาร์มอนิกที่ 2 ป้องกันหม้อแปลง รีเลย์ระยะทาง Z = V/I วงกลม Mho โซน 1 2 3 และระยะเวลาหน่วง" },
+      { slug: "power-lab", part: "lab", short: "แล็บคำนวณ", title: "แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน: Per-unit กระแสลัดวงจร TCC ประสานรีเลย์ P-δ และองค์ประกอบสมมาตร", en: "Power Systems & Protection Lab", sym: "▶", tag: "เครื่องคำนวณ 6 ตัว + ใบงาน",
+        summary: "ระบบต่อหน่วย เปลี่ยนฐาน กระแสลัดวงจรจากแหล่งจ่าย–หม้อแปลง–สาย ประสานรีเลย์ IDMT 3 ระดับบนกราฟ log-log การส่งกำลัง P-δ และแยกองค์ประกอบสมมาตร พร้อมใบงาน" },
+    ],
+  },
+  {
+    // Topic 17: Power factor for every level — waveforms, power triangle, correction, billing, harmonics, measurement,
+    // with the PF simulator and virtual capacitor bank in assets/pf-lab.js.
+    slug: "power-factor",
+    title: "เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ",
+    en: "Power Factor Explained",
+    sym: "φ",
+    summary: "เพาเวอร์แฟกเตอร์ตั้งแต่ภาพเปรียบเทียบง่าย ๆ จนถึงสมการ รูปคลื่น v i p สามเหลี่ยมกำลัง P Q S การปรับปรุงด้วยคาปาซิเตอร์ ตู้คาปาซิเตอร์อัตโนมัติ ค่าปรับ kvar ของการไฟฟ้า ฮาร์มอนิกกับ PF จริง และการวัด พร้อมซิมูเลเตอร์และอุปกรณ์จำลองเสมือนที่ทดลองได้ทันที",
+    fxHint: "พิมพ์ เช่น cos, kvar, tan, capacitor, μF, ค่าปรับ, true pf, dpf, thd, wattmeter, resonance, ตู้คาปาซิเตอร์",
+    parts: [
+      { id: "understand", n: 1, title: "เข้าใจเพาเวอร์แฟกเตอร์", en: "Understanding Power Factor", blurb: "ภาพเปรียบเทียบ สามเหลี่ยมกำลัง รูปคลื่นแรงดัน กระแส และกำลังขณะใดขณะหนึ่ง" },
+      { id: "correct", n: 2, title: "ปรับปรุงเพาเวอร์แฟกเตอร์", en: "Power Factor Correction", blurb: "คำนวณคาปาซิเตอร์ ตู้คาปาซิเตอร์อัตโนมัติ และค่าปรับ kvar ในบิลค่าไฟ" },
+      { id: "advanced", n: 3, title: "ฮาร์มอนิกและการวัด", en: "Harmonics & Measurement", blurb: "PF จริงเมื่อมีฮาร์มอนิก เรโซแนนซ์ ตู้ detuned และการวัด PF ด้วยเครื่องมือจริง" },
+      { id: "lab", n: 4, title: "ซิมูเลเตอร์และอุปกรณ์จำลอง", en: "Simulator & Virtual Equipment", blurb: "ซิมูเลเตอร์ PF แบบเห็นคลื่นและเฟสเซอร์ ตู้คาปาซิเตอร์อัตโนมัติจำลอง และใบงาน" },
+    ],
+    sub: [
+      { slug: "pf-basics", part: "understand", short: "PF คืออะไร", title: "เพาเวอร์แฟกเตอร์คืออะไร: ภาพเปรียบเทียบ สามเหลี่ยมกำลัง P Q S, cos φ, ตามหลังกับนำหน้า", en: "What Is Power Factor?", sym: "S", prefix: "B",
+        summary: "เริ่มจากแก้วเบียร์และเรือลากจูง แล้วไปสู่ P (kW) Q (kvar) S (kVA) สามเหลี่ยมกำลัง cos φ โหลดตัวต้านทาน ตัวเหนี่ยวนำ ตัวเก็บประจุ PF ของเครื่องใช้ไฟฟ้า และ PF ต่ำทำให้เสียอะไร" },
+      { slug: "waveforms-power", part: "understand", short: "รูปคลื่น v · i · p", title: "เพาเวอร์แฟกเตอร์ในรูปคลื่น: กำลังขณะหนึ่ง p(t) กำลังไหลกลับ เฟสเซอร์ และความหมายของกำลังรีแอกทีฟ", en: "Power Factor in Waveforms & Phasors", sym: "p", prefix: "W",
+        summary: "คูณ v(t) กับ i(t) ทีละจุด ได้ p(t) ที่มีค่าเฉลี่ยคือ P และแกว่งด้วยความถี่สองเท่า กำลังไหลกลับไปมา พลังงานที่เก็บในสนามแม่เหล็กและไฟฟ้า เฟสเซอร์ และพิสูจน์ P = VI cos φ" },
+      { slug: "pf-correction", part: "correct", short: "คำนวณคาปาซิเตอร์", title: "ปรับปรุงเพาเวอร์แฟกเตอร์ด้วยคาปาซิเตอร์: Q_c = P(tan φ₁ − tan φ₂), kvar เป็น μF, กระแสลด การสูญเสียลด และ kVA ที่ได้คืน", en: "Power Factor Correction Calculation", sym: "Qc", prefix: "C",
+        summary: "สูตรขนาดคาปาซิเตอร์ ตารางตัวคูณ kvar/kW แปลง kvar เป็น μF ทั้ง 1 เฟส สามเฟส Y Δ กระแสสายลดลงเท่าไร การสูญเสียลดตาม 1/PF² kVA หม้อแปลงที่ได้คืน แรงดันเพิ่ม และการชดเชยมอเตอร์รายตัว" },
+      { slug: "capacitor-bank", part: "correct", short: "ตู้คาปาซิเตอร์", title: "ตู้คาปาซิเตอร์อัตโนมัติ: PF Controller ขั้นสวิตช์ C/k คอนแทกเตอร์ ตัวต้านทานคายประจุ กระแสพุ่งเข้า และการบำรุงรักษา", en: "Automatic Capacitor Banks", sym: "C", prefix: "K",
+        summary: "ส่วนประกอบของตู้ คอนโทรลเลอร์วัดและตัดต่ออย่างไร ค่า C/k การแบ่งขั้น 1:1:2:2 คอนแทกเตอร์สำหรับคาปาซิเตอร์ inrush ตัวต้านทานคายประจุ แรงดันเกิน การตรวจเช็กประจำปี และอาการเสีย" },
+      { slug: "pf-billing", part: "correct", short: "ค่าปรับ kvar ในบิล", title: "เพาเวอร์แฟกเตอร์กับค่าไฟ: ค่าปรับ kvar ส่วนที่เกิน 61.97 % ของ kW ความต้องการพลังไฟฟ้า และความคุ้มค่าของตู้คาปาซิเตอร์", en: "Power Factor & the Electricity Bill", sym: "฿", prefix: "T",
+        summary: "ผู้ใช้ไฟประเภทใดเสียค่าเพาเวอร์แฟกเตอร์ ทำไมเกณฑ์คือ PF 0.85 คำนวณ kvar ที่ถูกเรียกเก็บ ค่าความต้องการพลังไฟฟ้า และระยะคืนทุนของตู้คาปาซิเตอร์จากบิลจริง" },
+      { slug: "harmonics-true-pf", part: "advanced", short: "PF จริง · ฮาร์มอนิก", title: "PF จริงกับฮาร์มอนิก: Displacement PF, Distortion PF, THD, เรโซแนนซ์ของคาปาซิเตอร์ และตู้ Detuned 7 %", en: "True Power Factor & Harmonics", sym: "THD", prefix: "H",
+        summary: "ทำไมโหลดอิเล็กทรอนิกส์มี cos φ ≈ 1 แต่ PF จริงแค่ 0.6 PF = DPF/√(1+THD²) คาปาซิเตอร์ช่วยไม่ได้ เรโซแนนซ์ h = √(S_sc/Q_c) ตู้ detuned 7 % 14 % active filter และ PFC" },
+      { slug: "pf-measurement", part: "advanced", short: "การวัด PF", title: "วัดเพาเวอร์แฟกเตอร์: แคลมป์มิเตอร์วัดกำลัง เพาเวอร์มิเตอร์ วัตต์มิเตอร์สองตัว และการอ่านมิเตอร์ของการไฟฟ้า", en: "Measuring Power Factor", sym: "W", prefix: "M",
+        summary: "วัด P Q S PF ด้วยแคลมป์มิเตอร์ เพาเวอร์อนาไลเซอร์ และมิเตอร์ดิจิทัล วิธีวัตต์มิเตอร์สองตัว tan φ = √3(W₁−W₂)/(W₁+W₂) ทิศ CT ที่กลับข้าง การบันทึกโหลด และเช็กลิสต์ก่อนออกแบบตู้" },
+      { slug: "pf-lab", part: "lab", short: "ซิมูเลเตอร์ PF", title: "ซิมูเลเตอร์เพาเวอร์แฟกเตอร์: รูปคลื่น เฟสเซอร์ สามเหลี่ยมกำลัง มิเตอร์เสมือน และตู้คาปาซิเตอร์อัตโนมัติจำลอง", en: "Power Factor Simulator & Virtual Capacitor Bank", sym: "▶", tag: "ซิมูเลเตอร์ + อุปกรณ์จำลอง + ใบงาน 10 ชุด",
+        summary: "เลือกโหลดจริง เช่น มอเตอร์ หลอดไฟ ฮีตเตอร์ ไดรเวอร์ LED เปิดคาปาซิเตอร์ทีละขั้น เห็นคลื่น v i p เฟสเซอร์หมุน สามเหลี่ยมกำลัง มิเตอร์ และค่าไฟ พร้อมตู้คาปาซิเตอร์อัตโนมัติจำลองตลอดวันทำงาน" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -759,7 +869,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/, /<div class="pv-iv"/, /<div class="fg-calc pv-calc"/, /<div class="pe-lab"/, /<div class="vec-lab"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/, /<div class="pv-iv"/, /<div class="fg-calc pv-calc"/, /<div class="pe-lab"/, /<div class="vec-lab"/, /<div class="fg-calc ev-calc"/, /<div class="ev-sim"/, /<div class="ev-cp"/, /<div class="fg-calc ps-calc"/, /<div class="ps-tcc"/, /<div class="ps-pd"/, /<div class="pf-sim"/, /<div class="pf-bank"/, /<div class="fg-calc pf-calc"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -786,7 +896,7 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["vector-algebra", "fourier-series", "power-electronics", "solar-pv"];
+const MD_SERIES = ["vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor"];
 const MD_GUIDES = [
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vector algebra — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, vector addition/subtraction/scaling, signed scalar and vector projections, dot/cross products, torque/work/magnetic force, interactive lab and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
@@ -942,6 +1052,13 @@ const LABS = [
   ["Power electronics formula index", "power-electronics#formulas", "every DC-DC converter formula with a citable ID (B buck, U boost, W buck-boost, K Cuk, S small-signal model, C compensator design, A analog control, Z digital control, O observers, L inductor design, V test sources) in one searchable list"],
   ["Solar PV design calculators", "solar-pv/design-lab", "free browser-based solar PV design tools (Thai): I-V and P-V curve lab of a 580 Wp module with three bypass-diode substrings, irradiance, temperature and partial shading (shows global vs local MPP that P&O gets stuck on); system size from the electricity bill; string sizing (Voc at minimum temperature, Vmp at hot cell temperature, MPPT window, current per MPPT, DC/AC ratio); energy yield with a loss chain and Performance Ratio for Thai sites by month; battery sizing (kWh, Ah, DoD, C-rate, inverter surge); solar for air conditioners (BTU, SEER, kWp); solar water pump sizing (crop water, total dynamic head, kWp); DC/AC voltage drop and cable size; economics (payback, NPV, IRR, LCOE)"],
   ["Solar PV formula index", "solar-pv#formulas", "every solar PV design formula with a citable ID (P cell & I-V, R solar resource, M modules, S system types, D string sizing, W wiring & protection, B batteries, E energy yield, L load sizing, F economics, A forecasting, T MPPT, V inverters, C controllers, H air conditioning, G solar farms, K pumping & agriculture, I installation & O&M) in one searchable list"],
+  ["Home energy simulator: solar PV + air conditioning + EV charging", "ev-charging/ev-lab", "free browser-based 24-hour home energy simulator (15-minute steps, Thai tariffs): PV yield shape, base/morning/evening loads, daytime and bedroom air conditioners, EV daily driving with charging strategies (plug-in on arrival, off-peak timer 22:00, solar-surplus only, solar first then off-peak top-up), home battery, normal vs TOU tariff, export price, main-breaker current check; plus calculators for charging time with CC-CV taper, Mode 2 portable charger socket heating (I²R contact resistance) and voltage drop, Control Pilot PWM duty ↔ current with A–F states and Proximity resistor, home load/meter sizing (15(45) vs 30(100) A), EV circuit breaker/cable/voltage drop, monthly cost normal vs TOU and cost per km, solar share of EV charging"],
+  ["EV charging formula index", "ev-charging#formulas", "every home EV charging formula with a citable ID (C basics, B battery & charging time, M Mode 2 portable charger, W wallbox & Control Pilot, H home electrical system, P safety/RCD/earthing, T tariffs, S solar + AC + EV energy management)"],
+  ["Overcurrent relay coordination (TCC) lab", "power-systems/overcurrent-coordination", "three IDMT relays (IEC 60255 SI/VI/EI/LTI/DT) with pickup, TMS and instantaneous settings on a log-log time-current plot, operating times and CTI at the chosen fault current, automatic TMS grading"],
+  ["Power systems & protection calculators", "power-systems/power-lab", "per-unit bases and change of base, transformer regulation, P-δ power transfer, IEC 60909 style LV short-circuit current (source + transformer + cable, κ and peak i_p, MVA method), symmetrical components with phasor diagrams, SLG/LL/DLG fault currents, IDMT relay time, TN/TT automatic disconnection and touch voltage, percentage-bias differential relay"],
+  ["Power systems & protection formula index", "power-systems#formulas", "every formula with a citable ID (G overview, A phasors/three-phase, U per-unit, L transformers/lines, F short circuit, S symmetrical components, P protection/CT, R overcurrent coordination, E earthing, D differential/distance)"],
+  ["Power factor simulator & virtual capacitor bank", "power-factor/pf-lab", "animated v(t), i(t), p(t) with negative-power shading, rotating phasors, power triangle, PF dial and digital meters for real loads (heater, induction motor with load-dependent PF, magnetic-ballast fluorescent, SMPS/LED without PFC with harmonics, inverter AC with PFC, fridge, custom R-X) and a 6-step capacitor bank; automatic capacitor bank over a factory day with PF controller, C/k, step arrangements, switching count and Thai kvar penalty; calculators for capacitor kvar/µF, PF penalty and payback, true PF with THD, resonance and detuned banks, motor individual compensation, two-wattmeter method; presets via #preset=<name>"],
+  ["Power factor formula index", "power-factor#formulas", "every power factor formula with a citable ID (B basics, W waveforms, C correction, K capacitor banks, T billing, H harmonics, M measurement)"],
   ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
 ];
 fs.writeFileSync(
@@ -969,7 +1086,7 @@ ${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): ${g.desc}`).join("\n")
 ${TOPICS.filter((t) => MD_SERIES.includes(t.slug)).map((t) => [`- [${t.en} — hub (Markdown)](${SITE}/learn/${t.slug}/index.html.md)`, ...live(t).map((s) => `- [${s.en} (Markdown)](${SITE}${seriesUrl(t, s)}index.html.md)`)].join("\n")).join("\n")}
 
 ## About
-- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters), power electronics and solar PV system design (string sizing, batteries, energy yield, MPPT, inverters, solar air conditioning, solar farms, solar pumping)
+- [Home](${SITE}/): overview, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters), power electronics and solar PV system design (string sizing, batteries, energy yield, MPPT, inverters, solar air conditioning, solar farms, solar pumping), home EV charging (Mode 2/Mode 3, Control Pilot, meters, RCD Type B, TOU, solar + AC + EV), power systems & protection fundamentals (per-unit, short circuit, symmetrical components, relay coordination, earthing) and power factor (correction, capacitor banks, kvar penalty, harmonics) with simulators
 - [About อาจารย์มด](${SITE}/about/): profile, teaching, current projects and status updates
 - [Knowledge library](${SITE}/learn/): index of all lessons, books in progress and video series
 - [Updates feed (RSS)](${SITE}/feed.xml)

@@ -1,0 +1,153 @@
+<!--meta
+{
+  "title": "ตู้คาปาซิเตอร์อัตโนมัติ: PF Controller ค่า C/k การแบ่งขั้น 1:1:2:2 คอนแทกเตอร์ AC-6b กระแสพุ่งเข้า ตัวต้านทานคายประจุ บำรุงรักษา และตู้จำลองเสมือน | อาจารย์มด",
+  "h1": "ตู้คาปาซิเตอร์อัตโนมัติ: PF Controller ขั้นสวิตช์ C/k คอนแทกเตอร์ ตัวต้านทานคายประจุ และการบำรุงรักษา",
+  "description": "ทำความเข้าใจตู้คาปาซิเตอร์แก้เพาเวอร์แฟกเตอร์แบบอัตโนมัติ: ส่วนประกอบในตู้ PF controller วัด P Q อย่างไร ค่า C/k และแถบตอบสนอง การแบ่งขั้น 1:1:2:2 และ 1:2:4 การหมุนเวียนขั้น หน่วงเวลาการต่อซ้ำ คอนแทกเตอร์สำหรับคาปาซิเตอร์ AC-6b กระแสพุ่งเข้าแบบ back-to-back ตัวต้านทานคายประจุตาม IEC 60831 ตำแหน่ง CT ตารางบำรุงรักษาและอาการเสีย พร้อมตู้คาปาซิเตอร์จำลองตลอดวันทำงานของโรงงาน",
+  "ogTitle": "ตู้คาปาซิเตอร์อัตโนมัติ + ตู้จำลองเสมือน",
+  "og": {"title": "ตู้คาปาซิเตอร์อัตโนมัติ + ตู้จำลองเสมือน"},
+  "lesson": "power-factor",
+  "sub": "capacitor-bank",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Capacitor bank", "Power-factor correction", "Contactor"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "ค่า C/k ของ PF controller คืออะไร?", "a": "C/k คือกระแสรีแอกทีฟด้านทุติยภูมิของ CT ที่เทียบเท่ากับคาปาซิเตอร์ขั้นเล็กที่สุด คำนวณจาก Qขั้นเล็กสุด ÷ (√3 × V × อัตราส่วน CT) คอนโทรลเลอร์ใช้ค่านี้ตัดสินว่ารีแอกทีฟที่ขาดหรือเกินมากพอที่จะสับหรือปลดหนึ่งขั้นหรือยัง ถ้าตั้งเล็กเกินไปคอนแทกเตอร์จะสับไปมาบ่อย ถ้าตั้งใหญ่เกินไป PF จะไม่ถึงเป้า"},
+    {"q": "ทำไมต้องใช้คอนแทกเตอร์สำหรับคาปาซิเตอร์โดยเฉพาะ?", "a": "ขณะสับคาปาซิเตอร์ที่ยังไม่มีประจุ โดยเฉพาะเมื่อมีขั้นอื่นต่ออยู่แล้ว (back-to-back) กระแสพุ่งเข้ามีค่ายอดหลายสิบถึงหลายร้อยเท่าของพิกัดในเวลาไม่กี่มิลลิวินาที หน้าสัมผัสคอนแทกเตอร์ธรรมดาจะเชื่อมติดหรือสึกเร็ว คอนแทกเตอร์ AC-6b มีหน้าสัมผัสช่วยพร้อมตัวต้านทานหน่วงที่ต่อก่อนหน้าสัมผัสหลักเพื่อจำกัดกระแสช่วงแรก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>ตู้คาปาซิเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.4 · เพาเวอร์แฟกเตอร์ · Automatic Capacitor Banks</p>
+      <h1>ตู้คาปาซิเตอร์อัตโนมัติ: PF Controller ขั้นสวิตช์ C/k คอนแทกเตอร์ ตัวต้านทานคายประจุ และการบำรุงรักษา</h1>
+      <p class="lede">โหลดของโรงงานเปลี่ยนตลอดวัน คาปาซิเตอร์ขนาดคงที่จะชดเชยขาดตอนโหลดหนักและเกินตอนโหลดเบา ตู้คาปาซิเตอร์อัตโนมัติแก้ปัญหานี้ด้วยการวัด PF ตลอดเวลาแล้วสับหรือปลดคาปาซิเตอร์ทีละขั้น หน้านี้มีตู้จำลองเสมือนให้ลองตั้งค่าเหมือนกดคอนโทรลเลอร์จริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#virtual">ตู้จำลองเสมือน</a>
+        <a class="btn btn-ghost btn-sm" href="#parts">ส่วนประกอบ</a>
+        <a class="btn btn-ghost btn-sm" href="#controller">คอนโทรลเลอร์ · C/k</a>
+        <a class="btn btn-ghost btn-sm" href="#steps">แบ่งขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#maint">บำรุงรักษา · อาการเสีย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ตู้ = CT + PF controller + ฟิวส์/MCCB + คอนแทกเตอร์ AC-6b + คาปาซิเตอร์ + ตัวต้านทานคายประจุ + พัดลม (+ รีแอกเตอร์ถ้า detuned)</li>
+          <li>C/k = Q ขั้นเล็กสุด ÷ (√3 V × อัตราส่วน CT) — เกณฑ์ตัดสินใจสับ/ปลด</li>
+          <li>แบ่งขั้น 1:1:2:2 หรือ 1:2:4 ได้ระดับละเอียดด้วยคอนแทกเตอร์น้อยตัว</li>
+          <li>หน่วงเวลาต่อซ้ำ ≥ เวลาคายประจุ (มักตั้ง 30–60 s)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น c/k, step, inrush, discharge, contactor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="parts">
+    <h2 id="parts">ส่วนประกอบของตู้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อุปกรณ์</th><th>หน้าที่</th><th>ข้อกำหนดที่สำคัญ</th></tr></thead>
+      <tbody>
+        <tr><td>CT (ที่สายเมน)</td><td>ให้คอนโทรลเลอร์วัดกระแสรวมของโรงงาน</td><td>ติดต้นทางของตู้คาปาซิเตอร์ (เห็นทั้งโหลดและคาปาซิเตอร์) · เฟสที่ CT ต้องตรงกับที่ตั้งค่าในคอนโทรลเลอร์</td></tr>
+        <tr><td>PF controller</td><td>คำนวณ P Q PF ตัดสินใจสับ/ปลดขั้น แสดงผล แจ้งเตือน</td><td>ตั้ง PF เป้า C/k หน่วงเวลา จำนวนขั้น การหมุนเวียน</td></tr>
+        <tr><td>ฟิวส์ NH / MCCB ต่อขั้น</td><td>ป้องกันลัดวงจรในขั้น</td><td>พิกัด ≈ 1.5–1.8 เท่ากระแสคาปาซิเตอร์</td></tr>
+        <tr><td>คอนแทกเตอร์ AC-6b</td><td>สับ/ปลดขั้น</td><td>มีตัวต้านทานจำกัดกระแสพุ่งเข้า</td></tr>
+        <tr><td>คาปาซิเตอร์ (self-healing, IEC 60831)</td><td>จ่าย kvar</td><td>แรงดันพิกัด 440–480 V สำหรับระบบ 400 V มีอุปกรณ์ตัดเมื่อแรงดันภายในสูง</td></tr>
+        <tr><td>ตัวต้านทานคายประจุ</td><td>คายประจุให้ปลอดภัยและพร้อมสับซ้ำ</td><td>≤ 75 V ภายใน 3 นาที (IEC 60831)</td></tr>
+        <tr><td>พัดลมและเทอร์โมสตัท</td><td>ระบายความร้อน</td><td>คาปาซิเตอร์อายุสั้นลงครึ่งหนึ่งทุก 7–10 °C ที่ร้อนขึ้น</td></tr>
+        <tr><td>รีแอกเตอร์ detuned (ถ้ามี)</td><td>กันเรโซแนนซ์ฮาร์มอนิก</td><td>p = 7 % (189 Hz) หรือ 14 % (134 Hz) — <a href="/learn/power-factor/harmonics-true-pf/#detuned">อ่าน</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="controller">
+    <h2 id="controller">คอนโทรลเลอร์ตัดสินใจอย่างไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K1" data-k="reactive power required target controller rule ค่ารีแอกทีฟที่ขาด"><p class="tf-n"><b><span class="fid">K1</span> Reactive power still needed</b> รีแอกทีฟที่ยังขาด</p>
+        \[ \Delta Q = Q_{measured} - P\tan\varphi_{target} \qquad \Delta Q &gt; k_r Q_{step,min} \Rightarrow \text{สับ} \qquad \Delta Q &lt; -k_r Q_{step,min} \Rightarrow \text{ปลด} \]</div>
+<div class="tf" id="K2" data-k="c over k setting ct ratio secondary current ค่า c/k"><p class="tf-n"><b><span class="fid">K2</span> C/k setting</b> ค่า C/k (แอมป์ด้านทุติยภูมิ)</p>
+        \[ C/k = \frac{Q_{step,min}}{\sqrt3\,V_L\,k_{CT}} \qquad k_{CT} = \frac{I_{p}}{I_{s}} \]</div>
+    <p>\(k_r\) (มักประมาณ 0.6–0.7) กำหนดความกว้างของ “แถบนิ่ง” รอบเป้าหมาย ถ้าแคบเกินไป ขั้นเล็กจะสับไปมา (hunting) คอนโทรลเลอร์ยังหน่วงเวลาก่อนตัดสินใจ (ไม่ตอบสนองโหลดกระชากชั่วครู่) และห้ามสับขั้นเดิมซ้ำจนกว่าคายประจุเสร็จ</p>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">ตัวอย่าง K-1</span><h3>ตู้ 6 × 25 kvar ระบบ 400 V CT 1000/5</h3></div>
+<ol class="steps">
+<li><p>K2: \(C/k = 25{,}000/(\sqrt3 \times 400 \times 200) = 0.18\) A</p></li>
+<li><p>ถ้าใช้ CT 2000/5 (k = 400): C/k = 0.09 A — ค่ายิ่งเล็ก คอนโทรลเลอร์ยิ่งต้องวัดละเอียด เลือก CT ให้เหมาะกับกระแสโหลดจริง</p></li>
+<li><p>คอนโทรลเลอร์รุ่นใหม่หลายรุ่นวัด C/k อัตโนมัติตอนเริ่มใช้งาน (สับแต่ละขั้นแล้ววัดกระแสที่เปลี่ยน)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="steps">
+    <h2 id="steps">การแบ่งขั้น <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K3" data-k="step combinations resolution binary 1 2 4 การแบ่งขั้น ระดับ"><p class="tf-n"><b><span class="fid">K3</span> Number of levels</b> จำนวนระดับที่ได้</p>
+        \[ \text{ขั้นเท่ากัน } n\ \text{ขั้น: } n\ \text{ระดับ} \qquad 1{:}2{:}4{:}\dots\ (n\ \text{ขั้น}): 2^n - 1\ \text{ระดับ} \qquad \Delta Q_{res} = Q_{step,min} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รูปแบบ (150 kvar)</th><th>ระดับ</th><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr><td>6 × 25</td><td>6 ระดับ ทีละ 25</td><td>สึกเท่ากัน หมุนเวียนได้</td><td>คอนแทกเตอร์มาก</td></tr>
+        <tr><td>1:1:2:2 (25 25 50 50)</td><td>6 ระดับ ทีละ 25</td><td>คอนแทกเตอร์ 4 ตัว</td><td>สับหลายขั้นพร้อมกันบางครั้ง</td></tr>
+        <tr><td>1:2:4 (25 50 100)</td><td>7 ระดับ (ถึง 175)</td><td>คอนแทกเตอร์น้อยที่สุด</td><td>ขั้นใหญ่สับบ่อย กระแสพุ่งเข้าสูง</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inrush">
+    <h2 id="inrush">กระแสพุ่งเข้าและการคายประจุ <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="K4" data-k="inrush current single bank short circuit capacitor กระแสพุ่งเข้า"><p class="tf-n"><b><span class="fid">K4</span> Inrush peak, single bank</b> ค่ายอดกระแสพุ่งเข้า (สับขั้นแรก)</p>
+        \[ \frac{\hat i_{inrush}}{\sqrt2\,I_{C}} \approx \sqrt{\frac{2\,S_{sc}}{Q_c}} \]</div>
+    <p>เมื่อสับขั้นใหม่ขนานกับขั้นที่มีประจุอยู่แล้ว (back-to-back) อิมพีแดนซ์ระหว่างกันเหลือแค่สายสั้น ๆ ในตู้ กระแสพุ่งเข้าสูงกว่ากรณีแรกมาก นี่คือเหตุผลของคอนแทกเตอร์ AC-6b ที่มีตัวต้านทานต่อก่อน หรือรีแอกเตอร์ (ซึ่งตู้ detuned มีอยู่แล้ว)</p>
+<div class="tf" id="K5" data-k="discharge resistor iec 60831 75 v 3 minutes ตัวต้านทานคายประจุ"><p class="tf-n"><b><span class="fid">K5</span> Discharge resistor</b> ตัวต้านทานคายประจุ (≤ 75 V ใน t วินาที)</p>
+        \[ R \le \frac{t}{C\,\ln\!\left(\dfrac{\sqrt2\,U_N}{U_R}\right)} \qquad U_R = 75\ \text{V},\ t = 180\ \text{s} \]</div>
+<div class="wx" id="ex-k-2"><div class="wx-head"><span class="mono">ตัวอย่าง K-2</span><h3>ขั้น 25 kvar 440 V (137 µF ต่อเฟส Δ) และหม้อแปลง 1,000 kVA 6 %</h3></div>
+<ol class="steps">
+<li><p>K4: \(S_{sc} = 1000/0.06 = 16{,}700\) kVA → \(\sqrt{2(16{,}700)/25} = 36.5\) เท่าของค่ายอดพิกัด</p></li>
+<li><p>K5: \(R \le 180/(137\text{e-}6 \times \ln(\sqrt2 \cdot 440/75)) = 180/(137\text{e-}6 \times 2.12) = 620\ \text{k}\Omega\)</p></li>
+<li><p>ผู้ผลิตมักใส่ตัวต้านทานที่คายเร็วกว่ามาก (เช่น ถึง 50 V ใน 60 s) เพื่อให้คอนโทรลเลอร์สับขั้นเดิมซ้ำได้เร็ว — ค่าหน่วงเวลาต่อซ้ำในคอนโทรลเลอร์ต้องไม่สั้นกว่าเวลาคายประจุ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="virtual">
+    <h2 id="virtual">ตู้คาปาซิเตอร์จำลองเสมือน: หนึ่งวันของโรงงาน</h2>
+    <p>หน้าจอคอนโทรลเลอร์ด้านบนแสดง cos φ และไฟสถานะของแต่ละขั้น เลื่อนแถบเวลาเพื่อดูว่าขั้นไหนสับอยู่ กราฟด้านล่างเทียบ PF เมื่อไม่มีตู้ (เส้นเทา) กับเมื่อมีตู้ (เส้นน้ำเงิน) พร้อม kvar ที่โหลดต้องการกับที่ตู้จ่าย ลองเปลี่ยนการแบ่งขั้น และลดค่า C/k เหลือ 0.3 แล้วดูจำนวนครั้งที่คอนแทกเตอร์ทำงาน</p>
+    <div class="pf-bank" data-steps="6 × 25 kvar" data-target="0.95"><noscript>ต้องเปิด JavaScript เพื่อใช้ตู้จำลอง</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="maint">
+    <h2 id="maint">บำรุงรักษาและอาการเสีย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รายการ</th><th>ความถี่</th><th>วิธี</th></tr></thead>
+      <tbody>
+        <tr><td>ดูหน้าจอคอนโทรลเลอร์ PF และการแจ้งเตือน</td><td>รายสัปดาห์</td><td>บันทึก PF ช่วงพีก</td></tr>
+        <tr><td>วัดกระแสแต่ละขั้นเทียบพิกัด</td><td>ทุก 6 เดือน</td><td>ลดลงเกิน 10–15 % = คาปาซิเตอร์เสื่อม (ความจุลด)</td></tr>
+        <tr><td>ภาพถ่ายความร้อน ขั้วต่อ ฟิวส์ คอนแทกเตอร์</td><td>ทุก 6–12 เดือน</td><td>หาจุดร้อน ขั้วหลวม</td></tr>
+        <tr><td>ทำความสะอาดแผ่นกรองพัดลม</td><td>ทุก 3–6 เดือน</td><td>อุณหภูมิในตู้สูงทำให้อายุสั้น</td></tr>
+        <tr><td>ตรวจคาปาซิเตอร์บวม รั่ว กลิ่น</td><td>ทุกครั้งที่เปิดตู้</td><td>เปลี่ยนทันที</td></tr>
+      </tbody>
+    </table></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการ</th><th>สาเหตุที่พบบ่อย</th></tr></thead>
+      <tbody>
+        <tr><td>PF ไม่ขึ้นแม้สับครบทุกขั้น</td><td>คาปาซิเตอร์เสื่อม ฟิวส์ขาด ตู้เล็กเกินไปเมื่อโหลดเพิ่ม หรือ CT ติดผิดตำแหน่ง (หลังตู้)</td></tr>
+        <tr><td>คอนโทรลเลอร์แสดง PF แปลก ๆ หรือนำหน้าตลอด</td><td>CT ผิดเฟส กลับขั้ว k-l หรือตั้งค่าเฟสอ้างอิงผิด</td></tr>
+        <tr><td>คอนแทกเตอร์สับไปมาถี่</td><td>C/k เล็กเกินไป หน่วงเวลาสั้น โหลดเปลี่ยนเร็ว (เครื่องเชื่อม ลิฟต์)</td></tr>
+        <tr><td>ฟิวส์ขาดบ่อย คาปาซิเตอร์ร้อน</td><td>ฮาร์มอนิกและเรโซแนนซ์ — ต้องวัด THD พิจารณาตู้ detuned</td></tr>
+        <tr><td>แรงดันสูงตอนกลางคืน</td><td>ขั้นค้าง (คอนแทกเตอร์ติด) หรือมีคาปาซิเตอร์คงที่มากเกิน</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

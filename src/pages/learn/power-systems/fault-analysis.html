@@ -1,0 +1,132 @@
+<!--meta
+{
+  "title": "คำนวณกระแสลัดวงจร: ลัดวงจรสามเฟสด้วย %Z และวิธี MVA, หม้อแปลง 1,000 kVA, สายเคเบิล, X/R, ค่ายอด i_p, IEC 60909 และพิกัด kA ของเบรกเกอร์ | อาจารย์มด",
+  "h1": "คำนวณกระแสลัดวงจร: ลัดวงจรสามเฟสด้วย %Z และวิธี MVA, X/R ค่ายอด และพิกัดตัดกระแสของเบรกเกอร์",
+  "description": "วิธีคำนวณกระแสลัดวงจรระบบแรงต่ำที่ใช้เลือกเบรกเกอร์จริง: กระแสลัดวงจรสามเฟสตาม IEC 60909 ตัวคูณแรงดัน c อิมพีแดนซ์ต้นทางจาก MVA ลัดวงจร หม้อแปลงจาก %Z สายเคเบิล วิธี %Z กับวิธี MVA อัตรา X/R DC offset ค่ายอด i_p = κ√2 I_k ตัวอย่างหม้อแปลง 1,000 kVA 6 % ที่ตู้ MDB และปลายสาย กระแสลัดลงดิน และการเลือก Icu Ics ของเบรกเกอร์ พร้อมเครื่องคำนวณ",
+  "ogTitle": "คำนวณกระแสลัดวงจร %Z และ MVA",
+  "og": {"title": "คำนวณกระแสลัดวงจร: %Z และวิธี MVA"},
+  "lesson": "power-systems",
+  "sub": "fault-analysis",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Short circuit", "IEC 60909", "Circuit breaker", "Fault current"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "กระแสลัดวงจรของหม้อแปลงคำนวณเร็ว ๆ อย่างไร?", "a": "ถ้าต้นทางแข็งแรงมาก กระแสลัดวงจรสามเฟสที่ขั้วแรงต่ำประมาณเท่ากับกระแสพิกัดหารด้วย Z ในหน่วย pu เช่น หม้อแปลง 1,000 kVA 400 V มีกระแสพิกัด 1,443 A ถ้า %Z = 6 % กระแสลัดวงจรประมาณ 1,443/0.06 = 24 kA ค่าจริงต่ำกว่านี้เล็กน้อยเพราะต้นทางมีอิมพีแดนซ์ และสูงขึ้นถ้ามีมอเตอร์ช่วยป้อนกระแส"},
+    {"q": "Icu กับ Ics ของเบรกเกอร์ต่างกันอย่างไร?", "a": "Icu (ultimate breaking capacity) คือกระแสลัดวงจรสูงสุดที่เบรกเกอร์ตัดได้โดยไม่ระเบิด แต่อาจใช้ต่อไม่ได้ Ics (service breaking capacity) คือกระแสที่ตัดได้แล้วยังใช้งานต่อได้ตามปกติ เป็นเปอร์เซ็นต์ของ Icu เช่น 50 75 หรือ 100 % จุดที่สำคัญควรเลือกให้ Ics ไม่น้อยกว่ากระแสลัดวงจรที่คำนวณได้"},
+    {"q": "ทำไมกระแสลัดวงจรช่วงแรกสูงกว่าค่าสมมาตร?", "a": "เพราะวงจรมีตัวเหนี่ยวนำ กระแสเปลี่ยนทันทีไม่ได้ ถ้าลัดวงจรเกิดขณะแรงดันผ่านศูนย์ กระแสจะมีส่วน DC ซ้อนอยู่และลดลงแบบเอกซ์โพเนนเชียลด้วยค่าคงที่เวลา L/R ยอดแรกจึงสูงได้เกือบสองเท่าของค่ายอดสมมาตรเมื่อ X/R สูง เบรกเกอร์ต้องทนแรงแม่เหล็กไฟฟ้าจากค่ายอดนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>กระแสลัดวงจร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.5 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Short-Circuit Calculation</p>
+      <h1>คำนวณกระแสลัดวงจร: ลัดวงจรสามเฟสด้วย %Z และวิธี MVA, X/R ค่ายอด และพิกัดตัดกระแสของเบรกเกอร์</h1>
+      <p class="lede">กระแสลัดวงจรเป็นตัวเลขที่สำคัญที่สุดตัวหนึ่งในงานไฟฟ้า ใช้เลือกพิกัดตัดกระแส (kA) ของเบรกเกอร์ทุกตัว ขนาดบัสบาร์ ขนาดสายให้ทนความร้อนช่วงสั้น และตั้งค่ารีเลย์ หน้านี้ใช้วิธีที่วิศวกรใช้จริง: รวมอิมพีแดนซ์ตั้งแต่ต้นทางถึงจุดเกิดเหตุ แล้วหารแรงดันด้วยอิมพีแดนซ์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calc">เครื่องคำนวณ</a>
+        <a class="btn btn-ghost btn-sm" href="#method">วิธี %Z</a>
+        <a class="btn btn-ghost btn-sm" href="#mva">วิธี MVA</a>
+        <a class="btn btn-ghost btn-sm" href="#peak">X/R · ค่ายอด</a>
+        <a class="btn btn-ghost btn-sm" href="#select">เลือกเบรกเกอร์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(I_k'' = c\,U_n/(\sqrt3\,|Z_k|)\) โดย \(Z_k\) = ต้นทาง + หม้อแปลง + สาย (อ้างอิงแรงดันเดียวกัน)</li>
+          <li>หม้อแปลงอย่างเดียว: \(I_k \approx I_n/Z_{pu}\) → 1,000 kVA 6 % ≈ 24 kA</li>
+          <li>ค่ายอดแรก \(i_p = \kappa\sqrt2\,I_k''\), \(\kappa = 1.02 + 0.98e^{-3R/X}\)</li>
+          <li>เบรกเกอร์ต้องมี Icu (และควร Ics) ≥ กระแสลัดวงจรสูงสุด ณ จุดติดตั้ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ik, mva, %z, kappa, peak, icu" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="method">
+    <h2 id="method">วิธีอิมพีแดนซ์ (%Z / โอห์ม) ตาม IEC 60909 <span class="lv lv-i">กลาง</span></h2>
+    <p>หลักการ: ที่จุดลัดวงจรวางแหล่งจ่ายเทียบเท่า \(cU_n/\sqrt3\) แล้วหารด้วยอิมพีแดนซ์ลำดับบวกรวมจากทุกแหล่งถึงจุดนั้น ทุกค่าต้องอ้างอิงที่แรงดันเดียวกัน (ปกติคือแรงดันที่จุดเกิดเหตุ) ตัวคูณ \(c\) ชดเชยแรงดันจริงที่อาจสูงกว่าพิกัด (\(c_{max} = 1.05\) สำหรับแรงต่ำ, 1.10 สำหรับแรงสูง)</p>
+<div class="tf" id="F1" data-k="three phase fault current iec 60909 c factor กระแสลัดวงจรสามเฟส"><p class="tf-n"><b><span class="fid">F1</span> Initial symmetrical short-circuit current</b> กระแสลัดวงจรสามเฟสเริ่มต้น</p>
+        \[ I_k'' = \frac{c\,U_n}{\sqrt3\,|Z_k|} \qquad Z_k = Z_Q + Z_T + Z_L \]</div>
+<div class="tf" id="F2" data-k="source impedance network feeder mva ssc อิมพีแดนซ์ต้นทาง"><p class="tf-n"><b><span class="fid">F2</span> Network (source) impedance</b> อิมพีแดนซ์ต้นทางจากกำลังลัดวงจร</p>
+        \[ Z_Q = \frac{c\,U_n^2}{S_{kQ}''} \quad (\text{อ้างอิงแรงดัน } U_n) \]</div>
+<div class="tf" id="F3" data-k="transformer impedance uk percent ztr infinite bus อิมพีแดนซ์หม้อแปลง"><p class="tf-n"><b><span class="fid">F3</span> Transformer impedance</b> อิมพีแดนซ์หม้อแปลง</p>
+        \[ Z_T = \frac{u_k}{100}\,\frac{U_{rT}^2}{S_{rT}} \qquad I_k \approx \frac{I_{rT}}{u_k/100}\ \ (\text{ต้นทางแข็งแรงมาก}) \]</div>
+<div class="tf" id="F4" data-k="cable impedance resistance reactance per metre parallel อิมพีแดนซ์สายเคเบิล"><p class="tf-n"><b><span class="fid">F4</span> Cable impedance</b> อิมพีแดนซ์สายเคเบิล</p>
+        \[ Z_L = \frac{1}{n}\left(\frac{\rho\,\ell}{A} + j\,x'\ell\right) \qquad \rho_{Cu,20^\circ} = 0.018\ \Omega\,\text{mm}^2/\text{m},\ x' \approx 0.08\ \text{m}\Omega/\text{m} \]</div>
+<div class="wx" id="ex-f-1"><div class="wx-head"><span class="mono">ตัวอย่าง F-1</span><h3>ระบบ 22 kV (500 MVA) → หม้อแปลง 1,000 kVA 6 % → MDB 400 V → สาย 2 × 240 mm² ยาว 30 m</h3></div>
+<ol class="steps">
+<li><p>F2 (อ้างอิง 400 V): \(Z_Q = 1.05 \times 400^2/500\text{e}6 = 0.336\ \text{m}\Omega\) (X/R = 10)</p></li>
+<li><p>F3: \(Z_T = 0.06 \times 400^2/1\text{e}6 = 9.60\ \text{m}\Omega\) X/R = 6 → \(R_T = 1.58,\ X_T = 9.47\ \text{m}\Omega\)</p></li>
+<li><p>ที่ MDB: \(R = 1.61,\ X = 9.80\ \text{m}\Omega\) → \(|Z| = 9.93\ \text{m}\Omega\) → F1: \(I_k'' = 1.05 \times 400/(\sqrt3 \times 9.93\text{e-}3) = 24.4\) kA</p></li>
+<li><p>F4 สาย: \(R_L = 0.018(30)/240/2 = 1.13\ \text{m}\Omega\) · \(X_L = 0.08(30)/2 = 1.20\ \text{m}\Omega\) → ปลายสาย \(|Z| = \sqrt{2.74^2 + 11.0^2} = 11.3\ \text{m}\Omega\) → <b>21.4 kA</b></p></li>
+<li><p>สาย 30 m ลดกระแสได้เพียง 12 % — ตู้ย่อยที่อยู่ใกล้ MDB ยังต้องใช้เบรกเกอร์พิกัดสูง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mva">
+    <h2 id="mva">วิธี MVA: คิดในใจได้ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="F7" data-k="mva method series parallel short circuit mva วิธี mva"><p class="tf-n"><b><span class="fid">F7</span> MVA method</b> วิธี MVA (ต่ออนุกรมรวมแบบส่วนกลับ ขนานรวมแบบบวก)</p>
+        \[ S_{sc,i} = \frac{S_{r,i}}{Z_{pu,i}} \qquad \frac{1}{S_{sc,series}} = \sum_i \frac{1}{S_{sc,i}} \qquad S_{sc,parallel} = \sum_i S_{sc,i} \qquad I_k = \frac{S_{sc}}{\sqrt3\,U_n} \]</div>
+<div class="wx" id="ex-f-2"><div class="wx-head"><span class="mono">ตัวอย่าง F-2</span><h3>ตรวจตัวอย่าง F-1 ด้วยวิธี MVA</h3></div>
+<ol class="steps">
+<li><p>หม้อแปลง: \(1/0.06 = 16.67\) MVA · ต้นทาง 500 MVA</p></li>
+<li><p>อนุกรม: \(1/(1/500 + 1/16.67) = 16.13\) MVA → \(I_k = 16.13\text{e}6/(\sqrt3 \times 400) = 23.3\) kA</p></li>
+<li><p>ต่างจาก F-1 (24.4 kA) ราว 5 % เพราะวิธี MVA ไม่คิดตัวคูณ c และรวมขนาดโดยไม่สนมุม — ใช้ตรวจคำตอบเร็ว ๆ ได้ดี</p></li>
+<li><p>มอเตอร์ 200 kW ในโรงงานช่วยป้อนกระแสช่วงแรก ≈ 5–6 เท่าของพิกัดของมันเอง (\(S_{sc} \approx 5.5 \times 0.25 = 1.4\) MVA ขนานเข้าไป) — IEC 60909 ให้รวมด้วย</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="peak">
+    <h2 id="peak">X/R, DC offset และค่ายอด <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F9" data-k="asymmetrical current dc offset time constant กระแสไม่สมมาตร dc offset"><p class="tf-n"><b><span class="fid">F9</span> Asymmetrical fault current</b> กระแสลัดวงจรไม่สมมาตร</p>
+        \[ i(t) = \sqrt2\,I_k''\left[\sin(\omega t + \alpha - \theta) - \sin(\alpha - \theta)\,e^{-t/\tau}\right] \qquad \tau = \frac{X}{\omega R} \]</div>
+<div class="tf" id="F5" data-k="kappa peak factor x r ratio ค่าคูณค่ายอด"><p class="tf-n"><b><span class="fid">F5</span> Peak factor κ</b> ตัวคูณค่ายอด (IEC 60909)</p>
+        \[ \kappa = 1.02 + 0.98\,e^{-3R/X} \]</div>
+<div class="tf" id="F6" data-k="peak short circuit current ip making capacity ค่ายอดกระแสลัดวงจร"><p class="tf-n"><b><span class="fid">F6</span> Peak short-circuit current</b> ค่ายอดกระแสลัดวงจร</p>
+        \[ i_p = \kappa\,\sqrt2\,I_k'' \]</div>
+    <p>เทอม DC มาจากความจริงที่ว่ากระแสในตัวเหนี่ยวนำเปลี่ยนทันทีไม่ได้ (เหมือน <a href="/learn/first-order-system/">ระบบอันดับหนึ่ง</a>) ถ้าลัดวงจรเกิดขณะ \(\alpha - \theta = -90^\circ\) เทอม DC ใหญ่สุด X/R ยิ่งสูง τ ยิ่งยาว ยอดแรกยิ่งใกล้ \(2\sqrt2 I_k''\)</p>
+<div class="wx" id="ex-f-3"><div class="wx-head"><span class="mono">ตัวอย่าง F-3</span><h3>ค่ายอดที่ MDB (X/R = 6.08)</h3></div>
+<ol class="steps">
+<li><p>F5: \(\kappa = 1.02 + 0.98e^{-3/6.08} = 1.02 + 0.98(0.611) = 1.62\)</p></li>
+<li><p>F6: \(i_p = 1.62 \times \sqrt2 \times 24.4 = 55.9\) kA — ค่ายอดนี้กำหนดความแข็งแรงทางกลของบัสบาร์และพิกัด making capacity (Icm) ของเบรกเกอร์</p></li>
+<li><p>τ = \(6.08/314.16 = 19\) ms — เทอม DC หายไปเกือบหมดภายในราว 3τ ≈ 60 ms</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calc">
+    <h2 id="calc">เครื่องคำนวณกระแสลัดวงจร</h2>
+    <div class="fg-calc ps-calc" data-ps="fault"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ps-fill="fault" data-vals='{"kva":"2000","zt":"6"}'>ลอง: หม้อแปลง 2,000 kVA</button><button type="button" class="btn btn-ghost btn-sm" data-ps-fill="fault" data-vals='{"kva":"160","zt":"4","l":"60","a":"35","np":"1"}'>ลอง: หม้อแปลงจำหน่าย 160 kVA ถึงบ้าน 60 m</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="select">
+    <h2 id="select">นำไปใช้: เลือกพิกัดเบรกเกอร์และตรวจสาย <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F8" data-k="breaking capacity icu ics icm selection พิกัดตัดกระแส เลือกเบรกเกอร์"><p class="tf-n"><b><span class="fid">F8</span> Breaker duty check</b> เงื่อนไขพิกัดเบรกเกอร์</p>
+        \[ I_{cu}\ (\text{และควร } I_{cs}) \ge I_{k,max}'' \qquad I_{cm} \ge i_p \qquad k^2S^2 \ge I^2t\ \ (\text{สายทนความร้อน}) \]</div>
+    <ul>
+      <li><b>ค่าสูงสุด</b> (c = 1.05, สายเย็น 20 °C, มอเตอร์ทุกตัวทำงาน) ใช้เลือกพิกัดตัดกระแสและความแข็งแรง</li>
+      <li><b>ค่าต่ำสุด</b> (c = 0.95, สายร้อน, ลัดลงดินที่ปลายสาย) ใช้ตรวจว่าอุปกรณ์ป้องกัน <b>ตัดทัน</b> — เชื่อมกับ <a href="/learn/power-systems/earthing-safety/">การตัดวงจรอัตโนมัติ</a></li>
+      <li>เงื่อนไขความร้อนของสาย \(I^2t \le k^2S^2\) (k ≈ 115 สำหรับทองแดง PVC) — ตรวจว่าสายไม่เสียหายก่อนอุปกรณ์ตัด</li>
+      <li>การป้องกันแบบ cascading/back-up: เบรกเกอร์ต้นทางช่วยจำกัดกระแสให้เบรกเกอร์ปลายทางที่พิกัดต่ำกว่าได้ เฉพาะคู่ที่ผู้ผลิตรับรอง</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

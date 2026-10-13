@@ -1,0 +1,152 @@
+<!--meta
+{
+  "title": "ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย ระดับแรงดันในประเทศไทย 500/230/115/22 kV ทำไมส่งด้วยแรงดันสูง และสมดุลความถี่ | อาจารย์มด",
+  "h1": "ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย ระดับแรงดันในประเทศไทย และทำไมต้องส่งด้วยแรงดันสูง",
+  "description": "ระบบไฟฟ้ากำลังทำงานอย่างไรตั้งแต่โรงไฟฟ้าถึงปลั๊กในบ้าน: โรงไฟฟ้า สถานีไฟฟ้าแรงสูง สายส่ง 500 230 115 kV ของ กฟผ. ระบบจำหน่าย 22 33 kV ของ กฟภ. 12 24 kV ของ กฟน. แรงต่ำ 400/230 V คำนวณว่าทำไมแรงดันสูงลดการสูญเสีย I²R ความถี่ 50 Hz กับสมดุลกำลัง ความเฉื่อย df/dt โหลดแฟกเตอร์ และแผนผังส่วนประกอบที่ต้องป้องกัน",
+  "ogTitle": "ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย",
+  "og": {"title": "ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย"},
+  "lesson": "power-systems",
+  "sub": "power-system-overview",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electric power system", "Electric power transmission", "Electric power distribution", "Utility frequency"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "ทำไมสายส่งไฟฟ้าต้องใช้แรงดันสูง?", "a": "การสูญเสียในสายคือ I²R ถ้าส่งกำลังเท่าเดิมด้วยแรงดันสูงขึ้น กระแสลดลงตามสัดส่วน การสูญเสียจึงลดลงตามกำลังสองของแรงดัน เช่น เพิ่มแรงดันจาก 22 kV เป็น 230 kV (10.5 เท่า) การสูญเสียลดลงประมาณ 109 เท่า และใช้สายเส้นเล็กลงได้"},
+    {"q": "ระดับแรงดันในระบบไฟฟ้าของประเทศไทยมีอะไรบ้าง?", "a": "ระบบส่งของ กฟผ. ใช้ 500 kV 230 kV 115 kV (และ 69 kV บางส่วน) ระบบจำหน่ายแรงสูงของ กฟภ. ใช้ 22 kV และ 33 kV ของ กฟน. ใช้ 12 kV และ 24 kV ระบบแรงต่ำของบ้านและอาคารใช้ 400/230 V สามเฟสสี่สาย ความถี่ 50 Hz"},
+    {"q": "ทำไมความถี่ไฟฟ้าต้องคงที่ที่ 50 Hz?", "a": "ความถี่สะท้อนความเร็วรอบของเครื่องกำเนิดทุกเครื่องที่ซิงโครไนซ์กัน ถ้ากำลังผลิตน้อยกว่าโหลด เครื่องกำเนิดจะถูกดึงพลังงานจลน์ออก หมุนช้าลง ความถี่ตก ระบบควบคุมจึงต้องปรับกำลังผลิตให้เท่ากับโหลดตลอดเวลา ถ้าความถี่ตกมากจะมีการปลดโหลดอัตโนมัติเพื่อรักษาระบบ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>ภาพรวมระบบไฟฟ้า</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.1 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Power System Overview</p>
+      <h1>ภาพรวมระบบไฟฟ้ากำลัง: ผลิต ส่ง จำหน่าย ระดับแรงดันในประเทศไทย และทำไมต้องส่งด้วยแรงดันสูง</h1>
+      <p class="lede">ระบบไฟฟ้ากำลังคือเครื่องจักรที่ใหญ่ที่สุดที่มนุษย์สร้าง เครื่องกำเนิดหลายร้อยเครื่องทั่วประเทศหมุนพร้อมกันเป็นจังหวะเดียว 50 รอบต่อวินาที และต้องผลิตไฟเท่ากับที่ทุกบ้านทุกโรงงานใช้ “ในขณะนั้น” หน้านี้วางภาพใหญ่ก่อนลงรายละเอียด: ส่วนประกอบ ระดับแรงดัน เหตุผลของแรงดันสูง และสิ่งที่ระบบป้องกันต้องดูแล</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#structure">โครงสร้างระบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#voltage">ระดับแรงดันไทย</a>
+        <a class="btn btn-ghost btn-sm" href="#why-hv">ทำไมแรงดันสูง</a>
+        <a class="btn btn-ghost btn-sm" href="#frequency">ความถี่กับสมดุลกำลัง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ผลิต (13.8–24 kV) → หม้อแปลงยกแรงดัน → ส่ง 500/230/115 kV → สถานีไฟฟ้า → จำหน่าย 22/33 kV (กฟภ.) 12/24 kV (กฟน.) → หม้อแปลงจำหน่าย → 400/230 V</li>
+          <li>การสูญเสียในสาย ∝ 1/V² เมื่อส่งกำลังเท่าเดิม</li>
+          <li>ความถี่บอกสมดุลกำลัง: ผลิตน้อยกว่าใช้ → ความถี่ตก</li>
+          <li>ทุกส่วนต้องมีระบบป้องกัน เพราะลัดวงจรเกิดได้ทุกที่</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น loss, i2r, frequency, inertia, load factor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="structure">
+    <h2 id="structure">โครงสร้างระบบไฟฟ้า: จากโรงไฟฟ้าถึงปลั๊ก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 200" role="img" aria-label="แผนภาพเส้นเดียวของระบบไฟฟ้ากำลัง">
+        <circle class="bx2" cx="40" cy="90" r="24"/><text class="tb" x="40" y="95" text-anchor="middle">G</text><text class="t2" x="40" y="132" text-anchor="middle">13.8–24 kV</text>
+        <path class="ln2" d="M64 90 H95"/><circle class="bx" cx="108" cy="90" r="13"/><circle class="bx" cx="124" cy="90" r="13"/><text class="t2" x="116" y="122" text-anchor="middle">ยกแรงดัน</text>
+        <path class="ln2" d="M137 90 H180"/><path class="ln" d="M180 60 V120"/><text class="t2" x="180" y="140" text-anchor="middle">บัส</text>
+        <path class="ln3" d="M180 90 H330"/><text class="tb" x="255" y="80" text-anchor="middle">สายส่ง 500/230/115 kV</text><text class="t2" x="255" y="108" text-anchor="middle">กฟผ. (EGAT)</text>
+        <path class="ln" d="M330 60 V120"/><circle class="bx" cx="348" cy="90" r="13"/><circle class="bx" cx="364" cy="90" r="13"/><text class="t2" x="356" y="122" text-anchor="middle">สถานีไฟฟ้า</text>
+        <path class="ln4" d="M377 90 H530"/><text class="tb" x="454" y="80" text-anchor="middle">จำหน่าย 22/33 kV · 12/24 kV</text><text class="t2" x="454" y="108" text-anchor="middle">กฟภ. (PEA) · กฟน. (MEA)</text>
+        <circle class="bx" cx="548" cy="90" r="13"/><circle class="bx" cx="564" cy="90" r="13"/><text class="t2" x="556" y="122" text-anchor="middle">หม้อแปลงจำหน่าย</text>
+        <path class="ln2" d="M577 90 H620"/><path class="ln" d="M620 60 V120"/>
+        <rect class="bx" x="640" y="40" width="110" height="34" rx="6"/><text x="695" y="62" text-anchor="middle">บ้าน 230 V</text>
+        <rect class="bx" x="640" y="106" width="110" height="34" rx="6"/><text x="695" y="128" text-anchor="middle">โรงงาน 400 V</text>
+        <path class="ln" d="M620 57 H640"/><path class="ln" d="M620 123 H640"/>
+        <text class="t2" x="380" y="180" text-anchor="middle">ทุกเส้น ทุกบัส ทุกหม้อแปลง มีเบรกเกอร์และรีเลย์ป้องกันของตัวเอง (โซนป้องกัน)</text>
+      </svg>
+      <figcaption>แผนภาพเส้นเดียว (single-line diagram) — ระบบสามเฟสวาดเป็นเส้นเดียวเพื่อความชัดเจน เป็นภาษาหลักของวิชานี้</figcaption>
+    </figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ส่วน</th><th>อุปกรณ์หลัก</th><th>สิ่งที่ต้องศึกษา</th></tr></thead>
+      <tbody>
+        <tr><td>การผลิต (Generation)</td><td>เครื่องกำเนิดซิงโครนัส กังหัน AVR governor โรงไฟฟ้าพลังงานหมุนเวียนผ่านอินเวอร์เตอร์</td><td>แบบจำลอง \(X_d''\) การควบคุม P-f และ Q-V</td></tr>
+        <tr><td>การส่ง (Transmission)</td><td>สายอากาศ สายเคเบิลใต้ดิน หม้อแปลงกำลัง สถานีไฟฟ้า</td><td>แบบจำลองสาย การส่งกำลัง P-δ load flow เสถียรภาพ</td></tr>
+        <tr><td>การจำหน่าย (Distribution)</td><td>สายป้อน 22/33 kV หม้อแปลงจำหน่าย รีโคลสเซอร์ ฟิวส์</td><td>แรงดันตก การชดเชยรีแอกทีฟ การประสานการป้องกัน</td></tr>
+        <tr><td>ผู้ใช้ไฟ (Utilization)</td><td>ตู้ MDB สายป้อน มอเตอร์ อาคาร</td><td>กระแสลัดวงจร เลือกอุปกรณ์ การต่อลงดิน PF</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="voltage">
+    <h2 id="voltage">ระดับแรงดันในประเทศไทย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ระดับ</th><th>แรงดัน (line-line)</th><th>ผู้ดูแล</th><th>ใช้ทำอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>แรงสูงพิเศษ (EHV)</td><td>500 kV</td><td>กฟผ.</td><td>ส่งกำลังระยะไกลระหว่างภูมิภาค</td></tr>
+        <tr><td>แรงสูง (HV)</td><td>230 kV · 115 kV (69 kV บางพื้นที่)</td><td>กฟผ. · กฟน. · กฟภ.</td><td>ส่งเข้าเมือง สถานีไฟฟ้าย่อย ผู้ใช้ไฟรายใหญ่</td></tr>
+        <tr><td>แรงปานกลาง (MV)</td><td>22 kV · 33 kV (กฟภ.) · 12 kV · 24 kV (กฟน.)</td><td>กฟภ. · กฟน.</td><td>สายป้อนจำหน่าย โรงงานที่มีหม้อแปลงเอง</td></tr>
+        <tr><td>แรงต่ำ (LV)</td><td>400/230 V 3 เฟส 4 สาย</td><td>กฟภ. · กฟน. · ผู้ใช้ไฟ</td><td>บ้าน อาคาร โรงงานขนาดเล็ก</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="why-hv">
+    <h2 id="why-hv">ทำไมต้องส่งด้วยแรงดันสูง <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="G1" data-k="line loss i2r three phase การสูญเสียในสาย สามเฟส"><p class="tf-n"><b><span class="fid">G1</span> Three-phase line loss</b> การสูญเสียในสายสามเฟส</p>
+        \[ I = \frac{P}{\sqrt{3}\,V_L\cos\varphi} \qquad P_{loss} = 3I^2R = \frac{P^2 R}{V_L^2\cos^2\varphi} \]</div>
+<div class="tf" id="G2" data-k="percent loss voltage squared สัดส่วนการสูญเสีย กำลังสองของแรงดัน"><p class="tf-n"><b><span class="fid">G2</span> Fractional loss</b> สัดส่วนการสูญเสีย</p>
+        \[ \frac{P_{loss}}{P} = \frac{P\,R}{V_L^2\cos^2\varphi} \;\propto\; \frac{1}{V_L^2} \]</div>
+<div class="wx" id="ex-g-1"><div class="wx-head"><span class="mono">ตัวอย่าง G-1</span><h3>ส่ง 20 MW ระยะ 100 km สาย R = 0.1 Ω/km ต่อเฟส PF = 1</h3></div>
+<ol class="steps">
+<li><p>\(R = 0.1 \times 100 = 10\ \Omega\) ต่อเฟส</p></li>
+<li><p>22 kV: G1 \(I = 20\text{e}6/(\sqrt3 \cdot 22\text{e}3) = 525\) A → \(P_{loss} = 3(525)^2(10) = 8.27\) MW = <b>41 %</b> — ใช้ไม่ได้</p></li>
+<li><p>115 kV: \(I = 100.4\) A → \(0.30\) MW = <b>1.5 %</b></p></li>
+<li><p>230 kV: \(I = 50.2\) A → \(0.076\) MW = <b>0.38 %</b> — แรงดันเพิ่ม 2 เท่า การสูญเสียลด 4 เท่า (G2)</p></li>
+<li><p>ข้อแลกเปลี่ยน: แรงดันสูงต้องใช้ฉนวน เสา ระยะห่าง และหม้อแปลงที่แพงขึ้น จึงเลือกระดับแรงดันตามระยะทางและกำลังที่ส่ง</p></li>
+</ol></div>
+    <p>สูตรเดียวกันอธิบายว่าทำไม <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a> สำคัญ: \(\cos\varphi\) อยู่ในตัวหารยกกำลังสอง PF 0.7 ทำให้การสูญเสียเพิ่มเป็น \(1/0.49 \approx 2\) เท่าของ PF 1</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="frequency">
+    <h2 id="frequency">ความถี่กับสมดุลกำลัง <span class="lv lv-i">กลาง</span></h2>
+    <p>เครื่องกำเนิดทุกเครื่องในระบบหมุนซิงโครนัสกัน มวลหมุนเก็บพลังงานจลน์ไว้ ถ้ากำลังกลจากกังหัน \(P_m\) น้อยกว่ากำลังไฟฟ้าที่โหลดดึง \(P_e\) ส่วนต่างถูกดึงจากพลังงานจลน์ รอบหมุนลดลง ความถี่จึงตก</p>
+<div class="tf" id="G3" data-k="inertia constant rocof df dt swing frequency ความเฉื่อย อัตราเปลี่ยนความถี่"><p class="tf-n"><b><span class="fid">G3</span> Initial rate of change of frequency</b> อัตราการเปลี่ยนความถี่ทันทีหลังเสียสมดุล</p>
+        \[ \frac{df}{dt} = \frac{f_0\,(P_m - P_e)}{2\,H\,S_{sys}} \qquad H = \frac{\tfrac12 J\omega^2}{S_{rated}}\ \ (\text{วินาที}) \]</div>
+<div class="wx" id="ex-g-2"><div class="wx-head"><span class="mono">ตัวอย่าง G-2</span><h3>ระบบ 30,000 MW (H = 4 s) โรงไฟฟ้า 1,000 MW หลุดทันที</h3></div>
+<ol class="steps">
+<li><p>G3: \(df/dt = 50(-1000)/(2 \times 4 \times 30{,}000) = -0.21\) Hz/s</p></li>
+<li><p>ถ้าไม่มีอะไรช่วย ภายใน 3 วินาทีความถี่ตกถึง ≈ 49.4 Hz — governor ของโรงไฟฟ้าอื่นต้องเพิ่มกำลัง และถ้าตกต่อ รีเลย์ความถี่ต่ำ (81) จะปลดโหลดเป็นขั้น ๆ</p></li>
+<li><p>ระบบที่มีโซลาร์และลมผ่านอินเวอร์เตอร์มากขึ้นมี H จริงน้อยลง (อินเวอร์เตอร์ไม่มีมวลหมุน) df/dt จึงชันขึ้น — เป็นหัวข้อวิจัยปัจจุบัน (grid-forming inverter, synthetic inertia)</p></li>
+</ol></div>
+<div class="tf" id="G4" data-k="load factor demand peak average โหลดแฟกเตอร์"><p class="tf-n"><b><span class="fid">G4</span> Load factor</b> โหลดแฟกเตอร์</p>
+        \[ LF = \frac{P_{avg}}{P_{peak}} = \frac{E_{period}}{P_{peak}\,T} \]</div>
+    <p>โหลดแฟกเตอร์ต่ำหมายถึงต้องสร้างโรงไฟฟ้าและสายส่งไว้รองรับพีกที่เกิดไม่กี่ชั่วโมง นี่คือเหตุผลของอัตรา TOU และค่าความต้องการพลังไฟฟ้า (demand charge) — เชื่อมกับ <a href="/learn/ev-charging/charging-cost/">ค่าชาร์จรถ EV แบบ TOU</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="faults">
+    <h2 id="faults">ความผิดพร่อง (Fault) และทำไมต้องมีระบบป้องกัน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิดฟอลต์</th><th>สัดส่วนโดยประมาณในสายอากาศ</th><th>สาเหตุทั่วไป</th></tr></thead>
+      <tbody>
+        <tr><td>เฟสเดียวลงดิน (SLG)</td><td>≈ 70–80 %</td><td>กิ่งไม้ สัตว์ ฉนวนแตก ฟ้าผ่า</td></tr>
+        <tr><td>สองเฟส (LL)</td><td>≈ 8–15 %</td><td>สายแกว่งเข้าหากัน</td></tr>
+        <tr><td>สองเฟสลงดิน (DLG)</td><td>≈ 8–10 %</td><td>ฟ้าผ่า เสาล้ม</td></tr>
+        <tr><td>สามเฟส (3φ)</td><td>≈ 2–5 %</td><td>ลืมปลดสายดินชั่วคราว เครื่องจักรลัด — รุนแรงที่สุดในหลายกรณี</td></tr>
+      </tbody>
+    </table></div>
+    <p>กระแสลัดวงจรสูงกว่ากระแสปกติ 10–50 เท่า ภายในเสี้ยววินาทีทำให้ตัวนำร้อนจัด แรงแม่เหล็กไฟฟ้าดึงบัสบาร์งอ อาร์กเผาอุปกรณ์ และแรงดันตกทั้งระบบ ระบบป้องกันต้องหา “จุดที่เสีย” แล้วตัดเฉพาะจุดนั้นภายในเวลา 50–500 ms อ่านต่อ: <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a> · <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน</a></p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

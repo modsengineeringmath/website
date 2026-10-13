@@ -1,0 +1,126 @@
+<!--meta
+{
+  "title": "เฟสเซอร์ อิมพีแดนซ์ กำลังเชิงซ้อน S = VI* และระบบสามเฟส Y กับ Δ, √3, กำลังสามเฟส และวงจรสมมูลเฟสเดียว | อาจารย์มด",
+  "h1": "เฟสเซอร์ อิมพีแดนซ์ กำลังเชิงซ้อน และระบบสามเฟส: Y กับ Δ, √3 และกำลังสามเฟส",
+  "description": "ปูพื้นวงจรไฟฟ้ากระแสสลับสำหรับวิชาระบบไฟฟ้ากำลัง: เขียนสัญญาณไซน์เป็นเฟสเซอร์ค่า rms อิมพีแดนซ์ R X Z กำลังเชิงซ้อน S = VI* กำลังจริงและกำลังรีแอกทีฟ ระบบสามเฟสสมดุล แรงดันเฟสกับแรงดันสาย √3 ∠30° การต่อ Y และ Δ การแปลง Δ-Y กำลังสามเฟส √3 V_L I_L cosφ และการวิเคราะห์ด้วยวงจรสมมูลเฟสเดียว พร้อมตัวอย่าง",
+  "ogTitle": "เฟสเซอร์ กำลังเชิงซ้อน และสามเฟส Y Δ",
+  "og": {"title": "เฟสเซอร์ กำลังเชิงซ้อน และสามเฟส Y Δ"},
+  "lesson": "power-systems",
+  "sub": "phasors-three-phase",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Phasor", "Complex power", "Three-phase electric power", "Y-Δ transform"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "ทำไมกำลังเชิงซ้อนใช้ S = VI* (กระแสคอนจูเกต)?", "a": "เพื่อให้มุมของ S เท่ากับมุมของแรงดันลบมุมของกระแส ซึ่งคือมุมเพาเวอร์แฟกเตอร์ φ ถ้าใช้ VI ตรง ๆ มุมจะเป็นผลบวกของสองมุมซึ่งไม่มีความหมายทางกายภาพ ด้วยนิยามนี้ โหลดตัวเหนี่ยวนำ (กระแสตามหลัง) ได้ Q เป็นบวก"},
+    {"q": "ทำไมกำลังสามเฟสมี √3?", "a": "เพราะ V_L = √3 V_ph ในการต่อ Y และ I_L = √3 I_ph ในการต่อ Δ กำลังรวม 3 V_ph I_ph cosφ จึงเขียนในรูปค่าสายได้เป็น √3 V_L I_L cosφ ทั้งสองแบบการต่อ ค่า √3 มาจากผลต่างของเฟสเซอร์สองตัวที่ห่างกัน 120°"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>เฟสเซอร์ · สามเฟส</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.2 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Phasors, Complex Power &amp; Three-Phase</p>
+      <h1>เฟสเซอร์ อิมพีแดนซ์ กำลังเชิงซ้อน และระบบสามเฟส: Y กับ Δ, √3 และกำลังสามเฟส</h1>
+      <p class="lede">ทุกบทของวิชาระบบไฟฟ้ากำลังเขียนด้วยภาษาเฟสเซอร์ ถ้าคล่องสามอย่างในหน้านี้ — เฟสเซอร์ กำลังเชิงซ้อน และการลดระบบสามเฟสสมดุลเหลือวงจรเฟสเดียว — บทที่เหลือจะง่ายขึ้นมาก</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#phasor">เฟสเซอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#power">S = VI*</a>
+        <a class="btn btn-ghost btn-sm" href="#three">สามเฟส Y Δ</a>
+        <a class="btn btn-ghost btn-sm" href="#perphase">วงจรเฟสเดียว</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(v(t) = V_m\cos(\omega t+\theta)\ \leftrightarrow\ \mathbf V = \tfrac{V_m}{\sqrt2}\angle\theta\) (ค่า rms)</li>
+          <li>\(S = \mathbf V\mathbf I^* = P + jQ\) · ตัวเหนี่ยวนำ Q &gt; 0 · ตัวเก็บประจุ Q &lt; 0</li>
+          <li>Y: \(V_L = \sqrt3 V_{ph}\angle 30^\circ\), \(I_L = I_{ph}\) · Δ: \(V_L = V_{ph}\), \(I_L = \sqrt3 I_{ph}\angle -30^\circ\)</li>
+          <li>\(S_{3\varphi} = \sqrt3 V_L I_L\) · ระบบสมดุลคิดเฟสเดียวแล้วคูณ 3</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น phasor, complex power, sqrt3, delta, star" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="phasor">
+    <h2 id="phasor">เฟสเซอร์และอิมพีแดนซ์ <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="A1" data-k="phasor rms sinusoid เฟสเซอร์ ค่า rms ไซน์"><p class="tf-n"><b><span class="fid">A1</span> Phasor (rms)</b> เฟสเซอร์ค่า rms</p>
+        \[ v(t) = \sqrt{2}\,V\cos(\omega t + \theta) \;\longleftrightarrow\; \mathbf V = V\angle\theta = V\cos\theta + jV\sin\theta \]</div>
+    <p>ระบบไฟฟ้ากำลังใช้เฟสเซอร์ค่า <b>rms</b> (ไม่ใช่ค่ายอด) เพราะกำลังคำนวณได้ตรงโดยไม่ต้องหาร 2 แรงดัน 230 V คือค่า rms ค่ายอดคือ 325 V อ่านทฤษฎีเฟสเซอร์และการหมุนเชิงภาพใน <a href="/learn/power-factor/waveforms-power/">เพาเวอร์แฟกเตอร์ในรูปคลื่น</a></p>
+<div class="tf" id="A2" data-k="impedance reactance inductive capacitive อิมพีแดนซ์ รีแอกแตนซ์"><p class="tf-n"><b><span class="fid">A2</span> Impedance</b> อิมพีแดนซ์</p>
+        \[ \mathbf Z = R + jX = |Z|\angle\varphi \qquad X_L = \omega L \qquad X_C = -\frac{1}{\omega C} \qquad \mathbf I = \frac{\mathbf V}{\mathbf Z} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="power">
+    <h2 id="power">กำลังเชิงซ้อน S = VI* <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="A3" data-k="complex power s vi conjugate p q กำลังเชิงซ้อน คอนจูเกต"><p class="tf-n"><b><span class="fid">A3</span> Complex power</b> กำลังเชิงซ้อน</p>
+        \[ \mathbf S = \mathbf V\,\mathbf I^* = P + jQ = |V||I|\angle(\theta_v - \theta_i) \qquad P = |V||I|\cos\varphi,\ \ Q = |V||I|\sin\varphi \]</div>
+<div class="tf" id="A4" data-k="power in impedance i2r i2x กำลังในอิมพีแดนซ์"><p class="tf-n"><b><span class="fid">A4</span> Power absorbed by an impedance</b> กำลังที่อิมพีแดนซ์ดูดกลืน</p>
+        \[ \mathbf S = |I|^2\mathbf Z = |I|^2R + j|I|^2X = \frac{|V|^2}{\mathbf Z^*} \]</div>
+<div class="wx" id="ex-a-1"><div class="wx-head"><span class="mono">ตัวอย่าง A-1</span><h3>230∠0° V จ่ายโหลด 8 + j6 Ω</h3></div>
+<ol class="steps">
+<li><p>A2: \(\mathbf Z = 10\angle 36.87^\circ\) → \(\mathbf I = 230/10\angle 36.87^\circ = 23\angle -36.87^\circ\) A (ตามหลัง)</p></li>
+<li><p>A3: \(\mathbf S = 230 \times 23\angle(0 + 36.87^\circ) = 5290\angle 36.87^\circ = 4232 + j3174\) VA</p></li>
+<li><p>A4 ตรวจ: \(|I|^2R = 529 \times 8 = 4232\) W ✓ \(|I|^2X = 529 \times 6 = 3174\) var ✓ PF = 0.8 ตามหลัง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="three">
+    <h2 id="three">ระบบสามเฟสสมดุล: Y และ Δ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เครื่องกำเนิดสามเฟสสร้างแรงดันสามชุดขนาดเท่ากัน ห่างกัน 120° ลำดับเฟส a-b-c (ลำดับบวก) ในไทยเรียกเฟส L1 L2 L3 (หรือ R S T) ข้อดี: กำลังรวมขณะหนึ่งคงที่ (มอเตอร์ไม่สั่น) และใช้ทองแดงน้อยกว่าระบบเฟสเดียวที่ส่งกำลังเท่ากัน</p>
+<div class="tf" id="A5" data-k="line voltage phase voltage sqrt3 30 degrees wye star แรงดันสาย แรงดันเฟส สตาร์"><p class="tf-n"><b><span class="fid">A5</span> Wye (Y) connection</b> การต่อแบบ Y</p>
+        \[ \mathbf V_{ab} = \mathbf V_{an} - \mathbf V_{bn} = \sqrt3\,V_{ph}\angle(\theta + 30^\circ) \qquad \mathbf I_L = \mathbf I_{ph} \]</div>
+<div class="tf" id="A6" data-k="three phase power sqrt3 vl il กำลังสามเฟส"><p class="tf-n"><b><span class="fid">A6</span> Three-phase power</b> กำลังสามเฟส (ทั้ง Y และ Δ)</p>
+        \[ \mathbf S_{3\varphi} = 3\,\mathbf V_{ph}\mathbf I_{ph}^* \qquad |S_{3\varphi}| = \sqrt3\,V_L I_L \qquad P_{3\varphi} = \sqrt3\,V_L I_L\cos\varphi \]</div>
+<div class="tf" id="A7" data-k="delta connection line current sqrt3 minus 30 เดลต้า กระแสสาย"><p class="tf-n"><b><span class="fid">A7</span> Delta (Δ) connection</b> การต่อแบบ Δ</p>
+        \[ \mathbf V_L = \mathbf V_{ph} \qquad \mathbf I_a = \mathbf I_{ab} - \mathbf I_{ca} = \sqrt3\,I_{ph}\angle(\theta - 30^\circ) \]</div>
+<div class="tf" id="A8" data-k="delta to wye conversion z delta over 3 แปลงเดลต้าเป็นสตาร์"><p class="tf-n"><b><span class="fid">A8</span> Balanced Δ → Y conversion</b> แปลงโหลด Δ สมดุลเป็น Y</p>
+        \[ \mathbf Z_Y = \frac{\mathbf Z_\Delta}{3} \qquad \mathbf I_a + \mathbf I_b + \mathbf I_c = 0\ \ (\text{สมดุล: ไม่มีกระแสนิวทรัล}) \]</div>
+<div class="wx" id="ex-a-2"><div class="wx-head"><span class="mono">ตัวอย่าง A-2</span><h3>มอเตอร์ 3 เฟส 400 V 30 kW PF 0.85 ตามหลัง</h3></div>
+<ol class="steps">
+<li><p>A6: \(I_L = 30{,}000/(\sqrt3 \times 400 \times 0.85) = 50.9\) A</p></li>
+<li><p>\(S = 30/0.85 = 35.3\) kVA → \(Q = \sqrt{35.3^2 - 30^2} = 18.6\) kvar</p></li>
+<li><p>ถ้ามอเตอร์ต่อ Δ: กระแสในขดลวด \(50.9/\sqrt3 = 29.4\) A แรงดันคร่อมขด 400 V · ต่อ Y: กระแสขด 50.9 A แรงดัน 231 V — กำลังเท่ากัน</p></li>
+</ol></div>
+<div class="wx" id="ex-a-3"><div class="wx-head"><span class="mono">ตัวอย่าง A-3</span><h3>ฮีตเตอร์ Δ ตัวละ 48 Ω ต่อกับ 400 V</h3></div>
+<ol class="steps">
+<li><p>กระแสต่อตัว \(400/48 = 8.33\) A → กำลังรวม \(3 \times 400 \times 8.33 = 10\) kW</p></li>
+<li><p>A8: เทียบเท่า Y ตัวละ 16 Ω: \(I_L = 230.9/16 = 14.4\) A \(= \sqrt3 \times 8.33\) ✓</p></li>
+<li><p>ถ้านำฮีตเตอร์ชุดเดิมไปต่อ Y: แรงดันต่อตัว 230.9 V กระแส 4.81 A กำลังรวม 3.33 kW — <b>Y ได้กำลังเป็น 1/3 ของ Δ</b> (หลักของการสตาร์ตมอเตอร์แบบ Y-Δ)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="perphase">
+    <h2 id="perphase">วงจรสมมูลเฟสเดียว (per-phase equivalent) <span class="lv lv-i">กลาง</span></h2>
+    <ol>
+      <li>แปลงทุกอย่างที่ต่อ Δ เป็น Y เทียบเท่า (A8) แหล่งจ่าย Δ ใช้แรงดันเฟส \(V_L/\sqrt3\)</li>
+      <li>วาดเฉพาะเฟส a กับสายนิวทรัลสมมติ (ไม่มีกระแสในระบบสมดุล)</li>
+      <li>แก้วงจรเฟสเดียวด้วยเฟสเซอร์ แล้วเฟส b c ได้จากการหมุน −120° และ +120°</li>
+      <li>กำลังรวม = 3 เท่าของเฟสเดียว</li>
+    </ol>
+    <p>วิธีนี้ใช้ได้เฉพาะระบบสมดุล เมื่อไม่สมดุล (เช่น ลัดลงดินเฟสเดียว) ต้องใช้ <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a> ซึ่งแยกระบบไม่สมดุลออกเป็นระบบสมดุลสามชุด แล้วใช้วงจรเฟสเดียวได้อีกครั้ง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ฝึกคิดด้วยเครื่องคำนวณ</h2>
+    <p>หม้อแปลงจ่ายโหลด 700 kW PF 0.8 แรงดันด้านโหลดตกเท่าไร (ใช้ P Q และ %R %X — ทฤษฎีอยู่ในบทถัดไป)</p>
+    <div class="fg-calc ps-calc" data-ps="reg"></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

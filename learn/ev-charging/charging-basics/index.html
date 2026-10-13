@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, ชาร์จ AC กับ DC, On-board Charger และหัวชาร์จ Type 2 CCS2 | อาจารย์มด</title>
+<meta name="description" content="เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/ev-charging/charging-basics/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/ev-charging/charging-basics/">
+<meta property="og:title" content="พื้นฐานการชาร์จรถ EV: kW kWh Mode 1–4 AC DC">
+<meta property="og:description" content="เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-ev-charging-charging-basics.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="พื้นฐานการชาร์จรถ EV: kW kWh Mode 1–4 AC DC">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="พื้นฐานการชาร์จรถ EV: kW kWh Mode 1–4 AC DC">
+<meta name="twitter:description" content="เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-ev-charging-charging-basics.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/ev-charging/charging-basics/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/ev-charging/charging-basics/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/ev-charging/charging-basics/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/ev-charging/charging-basics/#article","headline":"พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ","description":"เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/ev-charging/charging-basics/","mainEntityOfPage":"https://modsengineeringmath.com/learn/ev-charging/charging-basics/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Electric vehicle charging","On-board charger","Type 2 connector","Combined Charging System"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/ev-charging/#article"},"image":["https://modsengineeringmath.com/images/og/learn-ev-charging-charging-basics.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน","item":"https://modsengineeringmath.com/learn/ev-charging/"},{"@type":"ListItem","position":4,"name":"พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ","item":"https://modsengineeringmath.com/learn/ev-charging/charging-basics/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"kW กับ kWh ต่างกันอย่างไรในรถยนต์ไฟฟ้า?","acceptedAnswer":{"@type":"Answer","text":"kWh คือขนาดถังพลังงาน เช่น แบตเตอรี่ 60 kWh ส่วน kW คือความเร็วในการเติม เช่น เครื่องชาร์จ 7.4 kW เติมได้ 7.4 kWh ในหนึ่งชั่วโมง (ก่อนหักการสูญเสีย) เหมือนลิตรกับลิตรต่อนาทีของหัวจ่ายน้ำมัน"}},{"@type":"Question","name":"On-board charger (OBC) คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือวงจรอิเล็กทรอนิกส์กำลังในรถที่แปลงไฟ AC จากบ้านหรือวอลล์บ็อกซ์เป็นไฟ DC แรงดันสูงเข้าแบตเตอรี่ พิกัดของ OBC เช่น 7.4 kW หรือ 11 kW เป็นเพดานของการชาร์จ AC ทุกแบบ การชาร์จด่วน DC ข้าม OBC ไปเข้าแบตโดยตรง"}},{"@type":"Question","name":"หัวชาร์จที่ใช้ในประเทศไทยเป็นแบบไหน?","acceptedAnswer":{"@type":"Answer","text":"รถส่วนใหญ่ในไทยใช้หัว AC แบบ Type 2 (IEC 62196-2) และหัว DC แบบ CCS2 ซึ่งรวม Type 2 ไว้ด้านบนกับขา DC สองขาด้านล่าง รถบางรุ่นใช้ CHAdeMO หรือ GB/T ตามประเทศผู้ผลิต"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
+          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
+          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
+          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+        <div class="nav-list" id="navvec">
+          <a href="/learn/vector-algebra/" >ภาพรวม · ค้นหาสูตรเวกเตอร์</a>
+          <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D / 3D</a>
+          <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a>
+          <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+          <a href="/learn/vector-algebra/dot-product/">Dot product · มุมและงาน</a>
+          <a href="/learn/vector-algebra/cross-product/">Cross product · กฎมือขวา</a>
+          <a href="/learn/vector-algebra/engineering-applications/">แรง แรงบิด และสนามแม่เหล็ก</a>
+          <a href="/learn/vector-algebra/vector-lab/">แล็บเวกเตอร์ 2D / 3D</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" aria-current="page">ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#power-energy">กำลัง (kW) กับ พลังงาน (kWh)<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#path">ไฟเดินทางจากผนังเข้าแบตเตอรี่อย่างไร<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#modes">โหมดการชาร์จ Mode 1–4 ตาม IEC 61851<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#obc">On-board Charger: เพดานของการชาร์จ AC<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#connectors">หัวชาร์จและเต้ารับ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#choose">เลือกวิธีชาร์จให้เหมาะกับการใช้งาน<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>พื้นฐาน · โหมดชาร์จ</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน"><span class="sn-title mono">Home EV Charging</span><div class="sn-list"><a href="/learn/ev-charging/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/ev-charging/charging-basics/" aria-current="page"><span class="sn-n">1</span>พื้นฐาน · โหมดชาร์จ</a><a href="/learn/ev-charging/battery-charging/"><span class="sn-n">2</span>แบตเตอรี่ · เวลาชาร์จ</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 9 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · พื้นฐานการชาร์จ</span><div class="sn-list"><a href="/learn/ev-charging/charging-basics/" aria-current="page"><span class="sn-n">1</span>พื้นฐาน · โหมดชาร์จ</a><a href="/learn/ev-charging/battery-charging/"><span class="sn-n">2</span>แบตเตอรี่ · เวลาชาร์จ</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · ชาร์จที่บ้าน: ชาร์จช้าและชาร์จเร็ว</span><div class="sn-list"><a href="/learn/ev-charging/portable-charger/"><span class="sn-n">3</span>ชาร์จช้า (Mode 2)</a><a href="/learn/ev-charging/wallbox/"><span class="sn-n">4</span>ชาร์จเร็วที่บ้าน (Wallbox)</a><a href="/learn/ev-charging/home-electrical/"><span class="sn-n">5</span>ระบบไฟบ้าน · มิเตอร์ · สาย</a><a href="/learn/ev-charging/safety-standards/"><span class="sn-n">6</span>ความปลอดภัย · RCD · กราวด์</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · ค่าไฟและพลังงานในบ้าน</span><div class="sn-list"><a href="/learn/ev-charging/charging-cost/"><span class="sn-n">7</span>ค่าไฟ · TOU · ต่อกิโลเมตร</a><a href="/learn/ev-charging/solar-ac-ev/"><span class="sn-n">8</span>โซลาร์ + แอร์ + รถ EV</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · เครื่องมือคำนวณและซิมูเลเตอร์</span><div class="sn-list"><a href="/learn/ev-charging/ev-lab/"><span class="sn-n">9</span>เครื่องมือ · ซิมูเลเตอร์</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 15.1 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · EV Charging Basics</p>
+      <h1>พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ</h1>
+      <p class="lede">ก่อนคุยเรื่องมิเตอร์ สายไฟ หรือโซลาร์ ต้องแยกสองคำนี้ให้ขาด: <b>กำลัง (kW)</b> กับ <b>พลังงาน (kWh)</b> และต้องรู้ว่าไฟจากผนังบ้านเดินทางเข้าแบตเตอรี่ผ่านอะไรบ้าง หน้านี้ตอบว่า “ชาร์จช้า” “ชาร์จเร็วที่บ้าน” และ “ชาร์จด่วน” ต่างกันตรงไหนจริง ๆ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#power-energy">kW กับ kWh</a>
+        <a class="btn btn-ghost btn-sm" href="#modes">Mode 1–4</a>
+        <a class="btn btn-ghost btn-sm" href="#obc">On-board Charger</a>
+        <a class="btn btn-ghost btn-sm" href="#connectors">หัวชาร์จ</a>
+        <a class="btn btn-ghost btn-sm" href="#choose">เลือกวิธีชาร์จ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>kWh = ขนาดถัง · kW = อัตราการเติม · kWh = kW × ชั่วโมง</li>
+          <li>ไฟ AC (บ้าน วอลล์บ็อกซ์) ต้องผ่าน OBC ในรถ · ไฟ DC (ตู้ชาร์จด่วน) เข้าแบตตรง</li>
+          <li>กำลังชาร์จจริง = ค่าน้อยที่สุดของ เครื่องชาร์จ · สาย · OBC · สถานะแบต</li>
+          <li>ไทยใช้ Type 2 สำหรับ AC และ CCS2 สำหรับ DC เป็นหลัก</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#power-energy">กำลัง (kW) กับ พลังงาน (kWh)<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#path">ไฟเดินทางจากผนังเข้าแบตเตอรี่อย่างไร<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#modes">โหมดการชาร์จ Mode 1–4 ตาม IEC 61851<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#obc">On-board Charger: เพดานของการชาร์จ AC<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#connectors">หัวชาร์จและเต้ารับ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#choose">เลือกวิธีชาร์จให้เหมาะกับการใช้งาน<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น kwh, 3 เฟส, obc, km ต่อชั่วโมง" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="power-energy">
+    <h2 id="power-energy">กำลัง (kW) กับ พลังงาน (kWh) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นึกถึงการเติมน้ำใส่ถัง: <b>ขนาดถัง</b> คือลิตร <b>ความแรงของก๊อก</b> คือลิตรต่อนาที แบตเตอรี่รถก็เช่นกัน ขนาดถังวัดเป็น <b>kWh</b> (กิโลวัตต์-ชั่วโมง) และความแรงของการเติมวัดเป็น <b>kW</b> (กิโลวัตต์) ใบแจ้งหนี้ค่าไฟคิดเป็น “หน่วย” ซึ่งก็คือ kWh</p>
+<div class="tf" id="C1" data-k="energy power time kwh kw พลังงาน กำลัง เวลา หน่วย"><p class="tf-n"><b><span class="fid">C1</span> Energy = power × time</b> พลังงานเท่ากับกำลังคูณเวลา</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mtext> </mtext><mo stretchy="false">[</mo><mtext>kWh</mtext><mo stretchy="false">]</mo><mo>=</mo><mi>P</mi><mtext> </mtext><mo stretchy="false">[</mo><mtext>kW</mtext><mo stretchy="false">]</mo><mo>×</mo><mi>t</mi><mtext> </mtext><mo stretchy="false">[</mo><mtext>h</mtext><mo stretchy="false">]</mo><mspace width="2em"/><mn>1</mn><mtext> kWh</mtext><mo>=</mo><mn>1</mn><mtext> หน่วยค่าไฟ</mtext><mo>=</mo><mn>3.6</mn><mtext> MJ</mtext></mrow><annotation encoding="application/x-tex">E\,[\text{kWh}] = P\,[\text{kW}] \times t\,[\text{h}] \qquad 1\ \text{kWh} = 1\ \text{หน่วยค่าไฟ} = 3.6\ \text{MJ}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord text"><span class="mord">kWh</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord text"><span class="mord">kW</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord text"><span class="mord">h</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:2em;"></span><span class="mord">1</span><span class="mspace"> </span><span class="mord text"><span class="mord">kWh</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">1</span><span class="mspace"> </span><span class="mord text"><span class="mord brahmic_fallback">หน่วยค่าไฟ</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">3.6</span><span class="mspace"> </span><span class="mord text"><span class="mord">MJ</span></span></span></span></span></span></div>
+<div class="tf" id="C2" data-k="single phase power ac 1 เฟส กำลังไฟฟ้า v i pf"><p class="tf-n"><b><span class="fid">C2</span> Single-phase AC power</b> กำลังไฟฟ้ากระแสสลับ 1 เฟส</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo>=</mo><mi>V</mi><mtext> </mtext><mi>I</mi><mtext> </mtext><mi>cos</mi><mo>⁡</mo><mi>φ</mi><mtext>  </mtext><mo>≈</mo><mtext>  </mtext><mi>V</mi><mtext> </mtext><mi>I</mi><mspace width="1em"/><mo stretchy="false">(</mo><mtext>เครื่องชาร์จที่มี PFC: </mtext><mi>cos</mi><mo>⁡</mo><mi>φ</mi><mo>≈</mo><mn>0.99</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P = V\,I\,\cos\varphi \;\approx\; V\,I \quad (\text{เครื่องชาร์จที่มี PFC: } \cos\varphi \approx 0.99)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">φ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:1em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord brahmic_fallback">เครื่องชาร์จที่มี</span><span class="mord"> PFC: </span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">φ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.99</span><span class="mclose">)</span></span></span></span></span></div>
+<div class="tf" id="C3" data-k="three phase power 3 เฟส sqrt3 กำลังสามเฟส"><p class="tf-n"><b><span class="fid">C3</span> Three-phase AC power</b> กำลังไฟฟ้า 3 เฟส</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo>=</mo><msqrt><mn>3</mn></msqrt><mtext> </mtext><msub><mi>V</mi><mi>L</mi></msub><mtext> </mtext><msub><mi>I</mi><mi>L</mi></msub><mtext> </mtext><mi>cos</mi><mo>⁡</mo><mi>φ</mi><mo>=</mo><mn>3</mn><mtext> </mtext><msub><mi>V</mi><mrow><mi>p</mi><mi>h</mi></mrow></msub><mtext> </mtext><mi>I</mi><mtext> </mtext><mi>cos</mi><mo>⁡</mo><mi>φ</mi><mspace width="2em"/><mo stretchy="false">(</mo><msub><mi>V</mi><mi>L</mi></msub><mo>=</mo><mn>400</mn><mtext> V</mtext><mo separator="true">,</mo><mtext> </mtext><msub><mi>V</mi><mrow><mi>p</mi><mi>h</mi></mrow></msub><mo>=</mo><mn>230</mn><mtext> V</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P = \sqrt{3}\,V_L\,I_L\,\cos\varphi = 3\,V_{ph}\,I\,\cos\varphi \qquad (V_L = 400\ \text{V},\ V_{ph} = 230\ \text{V})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1505em;vertical-align:-0.1944em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9561em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">3</span></span></span><span style="top:-2.9161em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.0839em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">φ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">h</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">φ</span><span class="mspace" style="margin-right:2em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord">400</span><span class="mspace"> </span><span class="mord text"><span class="mord">V</span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">h</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">230</span><span class="mspace"> </span><span class="mord text"><span class="mord">V</span></span><span class="mclose">)</span></span></span></span></span></div>
+    <p>เครื่องชาร์จรถทุกรุ่นที่ได้มาตรฐานมีวงจรแก้เพาเวอร์แฟกเตอร์ (PFC) ในตัว จึงใช้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>≈</mo><mi>V</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">P \approx VI</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span></span></span></span> ได้ เรื่องนี้อธิบายละเอียดในชุด <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></p>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>วอลล์บ็อกซ์ 32 A 1 เฟส ชาร์จ 5 ชั่วโมง ได้กี่หน่วย</h3></div>
+<ol class="steps">
+<li><p>C2: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>230</mn><mo>×</mo><mn>32</mn><mo>=</mo><mn>7,360</mn><mtext> W</mtext><mo>=</mo><mn>7.36</mn><mtext> kW</mtext></mrow><annotation encoding="application/x-tex">P = 230 \times 32 = 7{,}360\ \text{W} = 7.36\ \text{kW}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">230</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">32</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">7</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">360</span><span class="mspace"> </span><span class="mord text"><span class="mord">W</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">7.36</span><span class="mspace"> </span><span class="mord text"><span class="mord">kW</span></span></span></span></span></p></li>
+<li><p>C1: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>7.36</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>36.8</mn><mtext> kWh</mtext></mrow><annotation encoding="application/x-tex">E = 7.36 \times 5 = 36.8\ \text{kWh}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">7.36</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">36.8</span><span class="mspace"> </span><span class="mord text"><span class="mord">kWh</span></span></span></span></span> — มิเตอร์บ้านหมุนไป 36.8 หน่วย</p></li>
+<li><p>พลังงานที่เข้าแบตจริงน้อยกว่านี้ราว 10 % (ประสิทธิภาพ ≈ 90 %) เหลือประมาณ 33 kWh ดู <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a></p></li>
+</ol></div>
+<div class="wx" id="ex-c-2"><div class="wx-head"><span class="mono">ตัวอย่าง C-2</span><h3>วอลล์บ็อกซ์ 3 เฟส 16 A ให้กำลังเท่าไร</h3></div>
+<ol class="steps">
+<li><p>C3: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><msqrt><mn>3</mn></msqrt><mo>×</mo><mn>400</mn><mo>×</mo><mn>16</mn><mo>=</mo><mn>11,085</mn><mtext> W</mtext><mo>≈</mo><mn>11</mn><mtext> kW</mtext></mrow><annotation encoding="application/x-tex">P = \sqrt{3}\times 400 \times 16 = 11{,}085\ \text{W} \approx 11\ \text{kW}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1328em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9072em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">3</span></span></span><span style="top:-2.8672em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1328em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">400</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">16</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">11</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">085</span><span class="mspace"> </span><span class="mord text"><span class="mord">W</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">11</span><span class="mspace"> </span><span class="mord text"><span class="mord">kW</span></span></span></span></span></p></li>
+<li><p>หรือคิดทีละเฟส: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>230</mn><mo>×</mo><mn>16</mn><mo>=</mo><mn>11,040</mn><mtext> W</mtext></mrow><annotation encoding="application/x-tex">3 \times 230 \times 16 = 11{,}040\ \text{W}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">230</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">16</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">11</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">040</span><span class="mspace"> </span><span class="mord text"><span class="mord">W</span></span></span></span></span> (ต่างกันเล็กน้อยเพราะ 400/√3 = 230.9 V)</p></li>
+<li><p>สังเกต: กระแสต่อเฟสแค่ 16 A เท่าเต้ารับบ้าน แต่กำลังมากกว่าสายชาร์จพกพา 16 A ถึงสามเท่า — ระบบ 3 เฟสส่งกำลังมากได้โดยกระแสต่อสายไม่สูง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="path">
+    <h2 id="path">ไฟเดินทางจากผนังเข้าแบตเตอรี่อย่างไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 250" role="img" aria-label="เส้นทางไฟ AC และ DC เข้าแบตเตอรี่รถ">
+        <rect class="bx" x="10" y="30" width="110" height="50" rx="8"/><text class="tb" x="65" y="52" text-anchor="middle">ไฟบ้าน AC</text><text class="t2" x="65" y="69" text-anchor="middle">230 V / 400 V</text>
+        <rect class="bx2" x="160" y="30" width="140" height="50" rx="8"/><text class="tb" x="230" y="52" text-anchor="middle">EVSE (สายพกพา/วอลล์บ็อกซ์)</text><text class="t2" x="230" y="69" text-anchor="middle">สวิตช์ + RCD + Control Pilot</text>
+        <path class="ln2" d="M120 55 H160"/><path class="ln2" d="M300 55 H350"/>
+        <rect class="bx" x="350" y="20" width="390" height="210" rx="14" style="fill:none;stroke-dasharray:6 5"/><text class="t2" x="545" y="40" text-anchor="middle">ภายในรถ</text>
+        <rect class="bx2" x="370" y="55" width="150" height="60" rx="8"/><text class="tb" x="445" y="78" text-anchor="middle">On-board Charger</text><text class="t2" x="445" y="96" text-anchor="middle">PFC → DC-DC แยกฉนวน</text>
+        <path class="ln2" d="M520 85 H580"/>
+        <rect class="bx" x="580" y="60" width="140" height="120" rx="8"/><text class="tb" x="650" y="105" text-anchor="middle">แบตเตอรี่</text><text class="t2" x="650" y="123" text-anchor="middle">300–800 V DC</text><text class="t2" x="650" y="141" text-anchor="middle">+ BMS ควบคุม</text>
+        <rect class="bx" x="10" y="160" width="110" height="50" rx="8"/><text class="tb" x="65" y="182" text-anchor="middle">ตู้ชาร์จด่วน DC</text><text class="t2" x="65" y="199" text-anchor="middle">มี AC→DC ในตู้</text>
+        <path class="ln3" d="M120 185 H560 V150 H580"/><text class="t2" x="330" y="178" text-anchor="middle">DC ตรงเข้าแบต (ข้าม OBC) · สื่อสารผ่าน PLC</text>
+      </svg>
+      <figcaption>ทุกการชาร์จแบบ AC ใช้ตัวแปลง (OBC) ในรถ จึงถูกจำกัดด้วยขนาด OBC ส่วนการชาร์จ DC ใช้ตัวแปลงใหญ่ในตู้ชาร์จ</figcaption>
+    </figure>
+    <p><b>EVSE</b> (Electric Vehicle Supply Equipment) คือชื่อทางการของ “เครื่องชาร์จ” ที่บ้าน ไม่ว่าจะเป็นกล่องควบคุมบนสายชาร์จพกพาหรือวอลล์บ็อกซ์ หน้าที่คือ (1) ตรวจว่าเสียบรถแล้วและมีสายดิน (2) บอกรถว่าดึงกระแสได้สูงสุดเท่าไรผ่านสัญญาณ Control Pilot (3) ต่อและตัดไฟด้วยคอนแทกเตอร์ (4) ตัดเมื่อมีไฟรั่ว อ่านรายละเอียดที่ <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์และ Control Pilot</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="modes">
+    <h2 id="modes">โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>โหมด</th><th>ต่ออย่างไร</th><th>การป้องกันและสื่อสาร</th><th>กำลัง</th><th>ใช้ที่บ้านได้ไหม</th></tr></thead>
+      <tbody>
+        <tr><td><b>Mode 1</b></td><td>เสียบเต้ารับตรง ไม่มีกล่องควบคุม</td><td>ไม่มี Control Pilot พึ่ง RCD ของบ้าน</td><td>≤ 3.7 kW</td><td>ไม่อนุญาตสำหรับรถยนต์ (ใช้กับสกู๊ตเตอร์/จักรยาน)</td></tr>
+        <tr><td><b>Mode 2</b> — ชาร์จช้า</td><td>สายชาร์จพกพาเสียบเต้ารับ มีกล่อง ICCB กลางสาย</td><td>Control Pilot + RCD (มักตรวจ DC 6 mA) ในกล่อง</td><td>1.8–3.7 kW (1φ) / ถึง 22 kW (หัว 3 เฟสอุตสาหกรรม)</td><td>ได้ — เต้ารับมีสายดิน วงจรเฉพาะ</td></tr>
+        <tr><td><b>Mode 3</b> — ชาร์จเร็วที่บ้าน</td><td>วอลล์บ็อกซ์ต่อตายตัวกับตู้ไฟ</td><td>Control Pilot + Proximity + RCD/RDC-DD</td><td>3.7–22 kW AC</td><td>ได้ — วิธีที่แนะนำสำหรับชาร์จประจำ</td></tr>
+        <tr><td><b>Mode 4</b> — ชาร์จด่วน DC</td><td>ตู้ DC ตัวแปลงอยู่ในตู้</td><td>สื่อสารดิจิทัล (CCS: PLC/ISO 15118, CHAdeMO: CAN)</td><td>30–350 kW DC</td><td>โดยทั่วไปไม่ (มี DC wallbox 10–30 kW แต่ราคาสูง)</td></tr>
+      </tbody>
+    </table></div>
+    <p>SAE (อเมริกา) ใช้คำว่า <b>Level 1</b> (120 V), <b>Level 2</b> (208–240 V) และ <b>DC Fast</b> ในไทยไฟบ้าน 230 V ทั้ง Mode 2 และ Mode 3 จึงจัดเป็น “Level 2” ตามความหมายของอเมริกา คำว่า Level จึงทำให้สับสน ชุดนี้ใช้ Mode ตาม IEC</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="obc">
+    <h2 id="obc">On-board Charger: เพดานของการชาร์จ AC <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="C4" data-k="charging power limit min obc evse cable กำลังชาร์จจริง ค่าน้อยที่สุด"><p class="tf-n"><b><span class="fid">C4</span> Actual AC charging power</b> กำลังชาร์จจริงคือค่าที่น้อยที่สุด</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>P</mi><mrow><mi>c</mi><mi>h</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi></mrow></msub><mo>=</mo><mi>min</mi><mo>⁡</mo><mtext> ⁣</mtext><mrow><mo fence="true">(</mo><msub><mi>P</mi><mrow><mi>E</mi><mi>V</mi><mi>S</mi><mi>E</mi></mrow></msub><mo separator="true">,</mo><mtext> </mtext><msub><mi>P</mi><mrow><mi>c</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi></mrow></msub><mo separator="true">,</mo><mtext> </mtext><msub><mi>P</mi><mrow><mi>O</mi><mi>B</mi><mi>C</mi></mrow></msub><mo separator="true">,</mo><mtext> </mtext><msub><mi>P</mi><mrow><mi>B</mi><mi>M</mi><mi>S</mi></mrow></msub><mo stretchy="false">(</mo><mi>S</mi><mi>O</mi><mi>C</mi><mo separator="true">,</mo><mi>T</mi><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">P_{charge} = \min\!\left(P_{EVSE},\ P_{cable},\ P_{OBC},\ P_{BMS}(SOC,T)\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">ha</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">E</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span><span class="mord mathnormal mtight" style="margin-right:0.05764em;">SE</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">ab</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">OBC</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">BMS</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07153em;">SOC</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></div>
+    <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>E</mi><mi>V</mi><mi>S</mi><mi>E</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{EVSE}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">E</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span><span class="mord mathnormal mtight" style="margin-right:0.05764em;">SE</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> มาจากกระแสที่เครื่องชาร์จประกาศผ่าน Control Pilot <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>c</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{cable}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">ab</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> มาจากตัวต้านทาน Proximity ในหัวสาย <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>O</mi><mi>B</mi><mi>C</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{OBC}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">OBC</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> คือพิกัดเครื่องชาร์จในรถ และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>B</mi><mi>M</mi><mi>S</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{BMS}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">BMS</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> คือที่ระบบจัดการแบตยอมรับ ซึ่งลดลงเมื่อแบตใกล้เต็มหรืออุณหภูมิไม่เหมาะ</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>OBC ของรถ</th><th>ต่อกับ</th><th>ได้จริง</th><th>เหตุผล</th></tr></thead>
+      <tbody>
+        <tr><td>1 เฟส 7.4 kW (32 A)</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>7.4 kW</td><td>OBC ใช้เฟสเดียว กระแส 32 A</td></tr>
+        <tr><td>1 เฟส 7.4 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 11 kW (16 A)</td><td>3.7 kW</td><td>ใช้ได้แค่เฟสเดียว × 16 A</td></tr>
+        <tr><td>3 เฟส 11 kW (16 A)</td><td>วอลล์บ็อกซ์ 1 เฟส 32 A</td><td>3.7 kW</td><td>OBC 3 เฟสหลายรุ่นรับเฟสเดียวได้แค่ 16 A — ตรวจสเปกรถ</td></tr>
+        <tr><td>3 เฟส 11 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>11 kW</td><td>OBC เป็นเพดาน</td></tr>
+        <tr><td>3 เฟส 22 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>22 kW</td><td>ต้องใช้สาย 32 A ด้วย</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>บทเรียนก่อนซื้อ</b> ดูสเปก “AC charging max” และจำนวนเฟสของรถก่อนเลือกวอลล์บ็อกซ์และมิเตอร์ การซื้อเครื่อง 22 kW ให้รถที่รับได้ 7.4 kW เสียเงินเปล่าและอาจต้องขอมิเตอร์ 3 เฟสโดยไม่จำเป็น</div>
+<div class="tf" id="C5" data-k="range per hour km per hour ระยะทางต่อชั่วโมง ชาร์จ"><p class="tf-n"><b><span class="fid">C5</span> Range added per hour</b> ระยะทางที่ได้ต่อชั่วโมงที่ชาร์จ</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">Δ</mi><mi>d</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow></mfrac><mtext> </mtext><mo stretchy="false">[</mo><mtext>km/h</mtext><mo stretchy="false">]</mo><mo>=</mo><mfrac><mrow><msub><mi>P</mi><mrow><mi>c</mi><mi>h</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi></mrow></msub><mtext> </mtext><mi>η</mi></mrow><mi>c</mi></mfrac><mo>×</mo><mn>100</mn><mspace width="2em"/><mi>c</mi><mo>=</mo><mtext>อัตราสิ้นเปลือง (kWh/100 km)</mtext></mrow><annotation encoding="application/x-tex">\frac{\Delta d}{\Delta t}\,[\text{km/h}] = \frac{P_{charge}\,\eta}{c}\times 100 \qquad c = \text{อัตราสิ้นเปลือง (kWh/100 km)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord text"><span class="mord">km/h</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">c</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">ha</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:2em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord brahmic_fallback">อัตราสิ้นเปลือง</span><span class="mord"> (kWh/100 km)</span></span></span></span></span></span></div>
+<div class="wx" id="ex-c-3"><div class="wx-head"><span class="mono">ตัวอย่าง C-3</span><h3>ชาร์จหนึ่งชั่วโมงได้ระยะทางเท่าไร</h3></div>
+<ol class="steps">
+<li><p>รถกินไฟ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">c = 15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span> kWh/100 km ประสิทธิภาพการชาร์จ 90 %</p></li>
+<li><p>สายชาร์จพกพา 10 A: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>2.3</mn></mrow><annotation encoding="application/x-tex">P = 2.3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2.3</span></span></span></span> kW → <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.3</mn><mo stretchy="false">(</mo><mn>0.9</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>15</mn><mo>×</mo><mn>100</mn><mo>=</mo><mn>13.8</mn></mrow><annotation encoding="application/x-tex">2.3(0.9)/15 \times 100 = 13.8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2.3</span><span class="mopen">(</span><span class="mord">0.9</span><span class="mclose">)</span><span class="mord">/15</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">13.8</span></span></span></span> km/h</p></li>
+<li><p>วอลล์บ็อกซ์ 7.36 kW → <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7.36</mn><mo stretchy="false">(</mo><mn>0.9</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>15</mn><mo>×</mo><mn>100</mn><mo>=</mo><mn>44</mn></mrow><annotation encoding="application/x-tex">7.36(0.9)/15\times 100 = 44</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">7.36</span><span class="mopen">(</span><span class="mord">0.9</span><span class="mclose">)</span><span class="mord">/15</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">44</span></span></span></span> km/h</p></li>
+<li><p>ตู้ DC 100 kW (ช่วง SOC ต่ำ ประสิทธิภาพ ≈ 95 %) → ≈ 630 km/h — แต่ลดลงมากเมื่อ SOC เกิน 80 %</p></li>
+<li><p>คนที่ขับวันละ 40 km ต้องการเติมแค่ 6–7 kWh ต่อวัน: สายพกพา 10 A ชาร์จกลางคืน 3 ชั่วโมงก็พอ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="connectors">
+    <h2 id="connectors">หัวชาร์จและเต้ารับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวชาร์จ</th><th>ใช้กับ</th><th>ขา</th><th>พบในไทย</th></tr></thead>
+      <tbody>
+        <tr><td><b>Type 2</b> (Mennekes, IEC 62196-2)</td><td>AC 1 เฟสและ 3 เฟส ถึง 63 A</td><td>L1 L2 L3 N PE + CP + PP (7 ขา)</td><td>มาตรฐานหลักของรถส่วนใหญ่</td></tr>
+        <tr><td><b>CCS2</b> (Combo 2)</td><td>DC ถึง 350–500 kW</td><td>Type 2 ด้านบน (ใช้ CP PP PE) + DC+ DC− ด้านล่าง</td><td>ตู้ชาร์จด่วนส่วนใหญ่</td></tr>
+        <tr><td><b>Type 1</b> (J1772)</td><td>AC 1 เฟส</td><td>L N PE CP PP (5 ขา)</td><td>รถนำเข้าจากอเมริกา/ญี่ปุ่นรุ่นเก่า</td></tr>
+        <tr><td><b>CHAdeMO</b></td><td>DC สื่อสารผ่าน CAN</td><td>10 ขา</td><td>รถญี่ปุ่นบางรุ่น</td></tr>
+        <tr><td><b>GB/T</b></td><td>AC และ DC ของจีน</td><td>แยกหัว AC/DC</td><td>รถจีนบางรุ่น (ส่วนใหญ่ที่ขายในไทยเปลี่ยนเป็น Type 2/CCS2)</td></tr>
+      </tbody>
+    </table></div>
+    <p>ขา <b>CP (Control Pilot)</b> ใช้สื่อสารกระแสสูงสุดและสถานะ ขา <b>PP (Proximity Pilot)</b> มีตัวต้านทานบอกพิกัดของสาย และ <b>PE</b> คือสายดินที่ต้องต่อถึงหลักดินของบ้านเสมอ — ไม่มีสายดิน เครื่องชาร์จจะไม่ยอมจ่ายไฟ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกวิธีชาร์จให้เหมาะกับการใช้งาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>การใช้รถ</th><th>พลังงานต่อวัน</th><th>ชาร์จช้า 10 A (คืนละ 8 ชม.)</th><th>แนะนำ</th></tr></thead>
+      <tbody>
+        <tr><td>ไปทำงาน 30–50 km/วัน</td><td>5–8 kWh</td><td>≈ 16 kWh ✓ พอ</td><td>Mode 2 ในวงจรเฉพาะ หรือวอลล์บ็อกซ์ 3.7–7.4 kW ถ้าอยากเร็ว</td></tr>
+        <tr><td>เดินทาง 80–150 km/วัน</td><td>14–25 kWh</td><td>≈ 16 kWh ✗ ไม่พอบางวัน</td><td>วอลล์บ็อกซ์ 7.4 kW</td></tr>
+        <tr><td>สองคันในบ้าน / แท็กซี่ / ส่งของ</td><td>&gt; 30 kWh</td><td>✗</td><td>วอลล์บ็อกซ์ 3 เฟส 11 kW หรือสองเครื่องพร้อม load balancing</td></tr>
+        <tr><td>คอนโด หอพัก (ไม่มีวงจรเฉพาะ)</td><td>—</td><td>ห้ามเสียบเต้ารับทั่วไปข้ามคืน</td><td>ชาร์จที่จุดชาร์จส่วนกลาง/สาธารณะ</td></tr>
+      </tbody>
+    </table></div>
+    <div class="fg-calc ev-calc" data-ev="time"></div>
+    <p>อ่านต่อ: <a href="/learn/ev-charging/battery-charging/">ทำไมชาร์จช้าลงหลัง 80 %</a> · <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้านอย่างปลอดภัย</a> · <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์</a></p>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>kW กับ kWh ต่างกันอย่างไรในรถยนต์ไฟฟ้า?</summary><p>kWh คือขนาดถังพลังงาน เช่น แบตเตอรี่ 60 kWh ส่วน kW คือความเร็วในการเติม เช่น เครื่องชาร์จ 7.4 kW เติมได้ 7.4 kWh ในหนึ่งชั่วโมง (ก่อนหักการสูญเสีย) เหมือนลิตรกับลิตรต่อนาทีของหัวจ่ายน้ำมัน</p></details><details><summary>On-board charger (OBC) คืออะไร?</summary><p>คือวงจรอิเล็กทรอนิกส์กำลังในรถที่แปลงไฟ AC จากบ้านหรือวอลล์บ็อกซ์เป็นไฟ DC แรงดันสูงเข้าแบตเตอรี่ พิกัดของ OBC เช่น 7.4 kW หรือ 11 kW เป็นเพดานของการชาร์จ AC ทุกแบบ การชาร์จด่วน DC ข้าม OBC ไปเข้าแบตโดยตรง</p></details><details><summary>หัวชาร์จที่ใช้ในประเทศไทยเป็นแบบไหน?</summary><p>รถส่วนใหญ่ในไทยใช้หัว AC แบบ Type 2 (IEC 62196-2) และหัว DC แบบ CCS2 ซึ่งรวม Type 2 ไว้ด้านบนกับขา DC สองขาด้านล่าง รถบางรุ่นใช้ CHAdeMO หรือ GB/T ตามประเทศผู้ผลิต</p></details></section>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fev-charging%2Fcharging-basics%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fev-charging%2Fcharging-basics%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fev-charging%2Fcharging-basics%2F&amp;text=%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%90%E0%B8%B2%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%8A%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%A3%E0%B8%96%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C%E0%B9%84%E0%B8%9F%E0%B8%9F%E0%B9%89%E0%B8%B2%3A%20kW%20%E0%B8%81%E0%B8%B1%E0%B8%9A%20kWh%2C%20Mode%201%E2%80%934%2C%20AC%20%E0%B8%81%E0%B8%B1%E0%B8%9A%20DC%2C%20On-board%20Charger%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AB%E0%B8%B1%E0%B8%A7%E0%B8%8A%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%88" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/ev-charging/charging-basics/" data-share-title="พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/ev-charging/"><span class="mono">← ภาพรวม</span><b>ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</b></a><a class="pager-next" href="/learn/ev-charging/battery-charging/"><span class="mono">หน้าถัดไป →</span><b>แบตเตอรี่รถ EV กับเวลาชาร์จ: SOC, CC-CV, ประสิทธิภาพ, กำลังที่ลดลงหลัง 80 % และอายุแบตเตอรี่</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/lesson.js?v=0014ea3e" defer></script>
+<script src="/assets/ee-kit.js?v=0014ea3e" defer></script>
+<script src="/assets/ev-calc.js?v=0014ea3e" defer></script>
+</body>
+</html>

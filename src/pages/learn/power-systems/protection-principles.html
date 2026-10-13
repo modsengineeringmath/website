@@ -1,0 +1,146 @@
+<!--meta
+{
+  "title": "หลักการระบบป้องกันไฟฟ้ากำลัง: คุณสมบัติ 5 ข้อ โซนป้องกัน ป้องกันหลักและสำรอง เบรกเกอร์ CT 5P20 ภาระ ALF VT รหัส ANSI และรีเลย์ดิจิทัล | อาจารย์มด",
+  "h1": "หลักการระบบป้องกันไฟฟ้ากำลัง: โซนป้องกัน การเลือกตัด CT VT รหัส ANSI และคุณสมบัติของรีเลย์",
+  "description": "ปูพื้นวิชาการป้องกันระบบไฟฟ้ากำลัง: ห่วงโซ่ตรวจจับ ตัดสินใจ ตัดวงจร คุณสมบัติ 5 ข้อ (ความเชื่อถือได้ การเลือกตัด ความเร็ว ความไว ความประหยัด) โซนป้องกันและการซ้อนทับ ป้องกันหลักกับสำรอง เวลากำจัดฟอลต์ เบรกเกอร์ หม้อแปลงกระแส CT คลาส 5P20 ภาระ (burden) ALF ที่แท้จริง ความอิ่มตัว VT ขั้วและทิศทาง รหัสอุปกรณ์ ANSI และรีเลย์ดิจิทัล IEC 61850 พร้อมตัวอย่างคำนวณ CT",
+  "ogTitle": "หลักการระบบป้องกันไฟฟ้ากำลังและ CT",
+  "og": {"title": "หลักการระบบป้องกันไฟฟ้ากำลังและ CT"},
+  "lesson": "power-systems",
+  "sub": "protection-principles",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Power system protection", "Current transformer", "Protective relay", "Circuit breaker"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "CT คลาส 5P20 หมายถึงอะไร?", "a": "5P20 คือ CT สำหรับงานป้องกัน (P) มีความผิดพลาดรวมไม่เกิน 5 % ที่กระแส 20 เท่าของพิกัด (ALF = 20) เมื่อต่อภาระเท่ากับพิกัด VA ของ CT ถ้าภาระจริงน้อยกว่าพิกัด CT จะแม่นยำถึงกระแสที่สูงกว่า 20 เท่า คำนวณได้จาก ALF ที่แท้จริง"},
+    {"q": "ทำไมห้ามเปิดวงจรด้านทุติยภูมิของ CT ขณะมีกระแส?", "a": "CT บังคับกระแสตามด้านปฐมภูมิ ถ้าด้านทุติยภูมิเปิด แรงแม่เหล็กจากกระแสปฐมภูมิไม่มีอะไรหักล้าง แกนอิ่มตัวทันที และเกิดแรงดันยอดสูงหลายพันโวลต์ที่ขั้วทุติยภูมิ อันตรายต่อคนและทำให้ฉนวน CT เสีย ต้องลัดขั้ว (short) ก่อนถอดเครื่องวัดหรือรีเลย์เสมอ"},
+    {"q": "การเลือกตัด (selectivity) คืออะไร?", "a": "คือความสามารถของระบบป้องกันที่จะตัดเฉพาะอุปกรณ์ป้องกันที่อยู่ใกล้ฟอลต์ที่สุด เพื่อให้ไฟดับในพื้นที่น้อยที่สุด ทำได้ด้วยการแบ่งโซนป้องกัน ใช้เวลาหน่วงเป็นขั้น (time grading) ใช้ระดับกระแส (current grading) หรือใช้การสื่อสารระหว่างรีเลย์"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>หลักการป้องกัน · CT</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.7 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Protection Principles, CTs &amp; Relays</p>
+      <h1>หลักการระบบป้องกันไฟฟ้ากำลัง: โซนป้องกัน การเลือกตัด CT VT รหัส ANSI และคุณสมบัติของรีเลย์</h1>
+      <p class="lede">ระบบป้องกันเปรียบเหมือนระบบภูมิคุ้มกันของระบบไฟฟ้า มันเฝ้าดูตลอดเวลาแต่ทำงานจริงเพียงไม่กี่ครั้งต่อปี และเมื่อถึงเวลาต้องตัดสินใจถูกภายในเสี้ยววินาที ตัดช้าไปอุปกรณ์เสียหาย ตัดผิดตัวไฟดับทั้งเมือง หน้านี้วางกรอบความคิดที่วิชาการป้องกันใช้ทั้งเล่ม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#chain">ห่วงโซ่การป้องกัน</a>
+        <a class="btn btn-ghost btn-sm" href="#qualities">คุณสมบัติ 5 ข้อ</a>
+        <a class="btn btn-ghost btn-sm" href="#zones">โซนป้องกัน</a>
+        <a class="btn btn-ghost btn-sm" href="#ct">CT · 5P20</a>
+        <a class="btn btn-ghost btn-sm" href="#relays">รีเลย์ดิจิทัล</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ตรวจจับ (CT VT) → ตัดสินใจ (รีเลย์) → สั่งตัด (แบตเตอรี่ DC + ขดทริป) → ตัด (เบรกเกอร์)</li>
+          <li>เชื่อถือได้ · เลือกตัด · เร็ว · ไว · ประหยัด — แลกเปลี่ยนกันเสมอ</li>
+          <li>ทุกจุดของระบบต้องอยู่ในอย่างน้อยหนึ่งโซน โซนซ้อนกันที่เบรกเกอร์</li>
+          <li>CT ห้ามเปิดวงจรทุติยภูมิ · 5P20 = ผิดพลาด ≤ 5 % ถึง 20 เท่าที่ภาระพิกัด</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ct, burden, alf, knee, clearing time, vt" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="chain">
+    <h2 id="chain">ห่วงโซ่การป้องกัน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="ee-flow" aria-label="ห่วงโซ่การป้องกัน"><span>ฟอลต์ในระบบ</span><i>→</i><span>CT / VT ลดขนาดสัญญาณ</span><i>→</i><span>รีเลย์วัดและตัดสินใจ</span><i>→</i><span>หน้าสัมผัสทริป + แบตเตอรี่ DC</span><i>→</i><span>เบรกเกอร์เปิดหน้าสัมผัส ดับอาร์ก</span></div>
+<div class="tf" id="P1" data-k="fault clearing time relay breaker เวลากำจัดฟอลต์"><p class="tf-n"><b><span class="fid">P1</span> Fault clearing time</b> เวลากำจัดฟอลต์</p>
+        \[ t_{clear} = t_{relay} + t_{breaker} \qquad (\text{รีเลย์ทันที } 20\text{–}40\ \text{ms},\ \text{เบรกเกอร์ } 40\text{–}80\ \text{ms}) \]</div>
+    <p>ทุกส่วนต้องทำงานได้แม้ไฟ AC ดับ (ระหว่างฟอลต์แรงดันอาจตกเกือบศูนย์) จึงใช้ <b>แบตเตอรี่ DC ของสถานี</b> 110 V หรือ 220 V จ่ายให้รีเลย์และขดทริป ในตู้แรงต่ำ เบรกเกอร์มีตัวตรวจจับในตัว (trip unit) จึงรวมสามขั้นไว้ในอุปกรณ์เดียว</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="qualities">
+    <h2 id="qualities">คุณสมบัติ 5 ข้อของระบบป้องกัน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>คุณสมบัติ</th><th>ความหมาย</th><th>ขัดแย้งกับ</th></tr></thead>
+      <tbody>
+        <tr><td><b>ความเชื่อถือได้</b> (Reliability)</td><td>Dependability: ทำงานเมื่อมีฟอลต์ · Security: ไม่ทำงานเมื่อไม่มี</td><td>สองด้านนี้ขัดกันเอง: ป้องกันสองชุดแบบ OR เพิ่ม dependability ลด security</td></tr>
+        <tr><td><b>การเลือกตัด</b> (Selectivity)</td><td>ตัดเฉพาะส่วนที่เสีย</td><td>ความเร็ว (ต้องหน่วงเวลาเป็นขั้น)</td></tr>
+        <tr><td><b>ความเร็ว</b> (Speed)</td><td>ลดความเสียหาย รักษาเสถียรภาพ</td><td>การเลือกตัด และ security</td></tr>
+        <tr><td><b>ความไว</b> (Sensitivity)</td><td>ตรวจฟอลต์ที่เล็กที่สุดได้ (ปลายสาย ลงดินผ่านความต้านทาน)</td><td>Security (ไวเกินทริปผิดจาก inrush หรือโหลด)</td></tr>
+        <tr><td><b>ความประหยัด</b> (Economy)</td><td>ค่าใช้จ่ายเหมาะกับมูลค่าที่ปกป้อง</td><td>ทุกข้อ</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P2" data-k="sensitivity setting minimum fault maximum load ตั้งค่า ความไว"><p class="tf-n"><b><span class="fid">P2</span> Setting window</b> หน้าต่างการตั้งค่า</p>
+        \[ k_1\,I_{load,max} \;&lt;\; I_{setting} \;&lt;\; \frac{I_{fault,min}}{k_2} \qquad k_1 \approx 1.2\text{–}1.5,\ \ k_2 \approx 1.5\text{–}2 \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="zones">
+    <h2 id="zones">โซนป้องกัน ป้องกันหลักและสำรอง <span class="lv lv-i">กลาง</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 170" role="img" aria-label="โซนป้องกันที่ซ้อนกันที่เบรกเกอร์">
+        <circle class="bx2" cx="40" cy="85" r="20"/><text class="tb" x="40" y="90" text-anchor="middle">G</text>
+        <path class="ln2" d="M60 85 H740"/>
+        <rect class="fa" x="96" y="78" width="12" height="14"/><rect class="fa" x="236" y="78" width="12" height="14"/><rect class="fa" x="356" y="78" width="12" height="14"/><rect class="fa" x="596" y="78" width="12" height="14"/>
+        <circle class="bx" cx="168" cy="85" r="11"/><circle class="bx" cx="182" cy="85" r="11"/>
+        <path class="ln" d="M300 60 V110"/><text class="t2" x="300" y="125" text-anchor="middle">บัส</text>
+        <rect class="lnd" x="18" y="40" width="96" height="90" rx="10"/><text class="t2" x="66" y="34" text-anchor="middle">โซนเครื่องกำเนิด</text>
+        <rect class="lnd" x="90" y="50" width="166" height="70" rx="10"/><text class="t2" x="175" y="144" text-anchor="middle">โซนหม้อแปลง</text>
+        <rect class="lnd" x="228" y="44" width="148" height="82" rx="10"/><text class="t2" x="302" y="38" text-anchor="middle">โซนบัส</text>
+        <rect class="lnd" x="350" y="52" width="266" height="66" rx="10"/><text class="t2" x="483" y="144" text-anchor="middle">โซนสายส่ง</text>
+        <text class="t2" x="380" y="164" text-anchor="middle">■ = เบรกเกอร์ · โซนซ้อนกันคร่อมเบรกเกอร์ ไม่มีจุดบอด</text>
+      </svg>
+    </figure>
+    <ul>
+      <li><b>โซนซ้อนกันที่เบรกเกอร์</b> ทำได้โดยใช้ CT คนละด้านของเบรกเกอร์ ฟอลต์ในช่วงซ้อนทำให้สองโซนตัด แต่ไม่มีจุดไหนที่ไม่มีใครดูแล</li>
+      <li><b>ป้องกันหลัก (main)</b> ตัดเร็วเฉพาะโซนของตัวเอง เช่น รีเลย์ผลต่าง 87</li>
+      <li><b>ป้องกันสำรอง (back-up)</b> ทำงานเมื่อป้องกันหลักหรือเบรกเกอร์ล้มเหลว: สำรองเฉพาะที่ (local) หรือสำรองระยะไกล (remote) เช่น รีเลย์กระแสเกินต้นทางที่หน่วงเวลามากกว่า</li>
+      <li><b>Breaker failure (50BF)</b>: ถ้าสั่งตัดแล้วกระแสยังไหลหลัง ~150 ms ให้สั่งตัดเบรกเกอร์ที่อยู่รอบ ๆ ทั้งหมด</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="ct">
+    <h2 id="ct">หม้อแปลงกระแส (CT): ดวงตาของรีเลย์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="P3" data-k="ct ratio secondary current primary อัตราส่วน ct กระแสทุติยภูมิ"><p class="tf-n"><b><span class="fid">P3</span> CT ratio</b> อัตราส่วน CT</p>
+        \[ I_s = \frac{I_p}{n} \qquad n = \frac{I_{pn}}{I_{sn}}\ \ (\text{เช่น } 400/5,\ 600/1) \]</div>
+<div class="tf" id="P4" data-k="ct burden va lead resistance relay ภาระ ct ความต้านทานสาย"><p class="tf-n"><b><span class="fid">P4</span> CT burden</b> ภาระที่ต่อกับ CT</p>
+        \[ S_b = I_{sn}^2\left(R_{lead,loop} + R_{relay}\right) \qquad R_{lead,loop} = \frac{2\rho\ell}{A}\ \ (\text{ฟอลต์ลงดิน}) \]</div>
+<div class="tf" id="P5" data-k="actual accuracy limit factor alf 5p20 internal burden ALF ที่แท้จริง"><p class="tf-n"><b><span class="fid">P5</span> Actual accuracy limit factor</b> ALF ที่แท้จริงเมื่อภาระไม่เท่าพิกัด</p>
+        \[ ALF' = ALF\,\frac{S_n + S_{in}}{S_b + S_{in}} \qquad S_{in} = I_{sn}^2 R_{ct} \]</div>
+<div class="tf" id="P6" data-k="knee point voltage saturation class px ct แรงดันจุดเข่า อิ่มตัว"><p class="tf-n"><b><span class="fid">P6</span> Knee-point requirement</b> แรงดันจุดเข่าที่ต้องการ (CT คลาส PX)</p>
+        \[ V_k \ge K\,I_{f,s}\left(R_{ct} + R_{lead} + R_{relay}\right) \qquad K \approx 1\text{–}2\ \ (\text{เผื่อ DC offset}) \]</div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>CT 400/5 5P20 15 VA R_ct = 0.2 Ω สายคู่ 10 m ขนาด 2.5 mm² รีเลย์ดิจิทัล 0.2 VA</h3></div>
+<ol class="steps">
+<li><p>สาย: \(R_{loop} = 2(0.0178)(10)/2.5 = 0.142\ \Omega\) · รีเลย์ \(0.2/5^2 = 0.008\ \Omega\)</p></li>
+<li><p>P4: \(S_b = 25(0.142 + 0.008) = 3.76\) VA · \(S_{in} = 25(0.2) = 5\) VA</p></li>
+<li><p>P5: \(ALF' = 20 \times (15+5)/(3.76+5) = 45.7\) → แม่นยำถึง \(45.7 \times 400 = 18.3\) kA</p></li>
+<li><p>ถ้าใช้รีเลย์แบบกลไกเก่า 10 VA ภาระรวม 13.6 VA → \(ALF' = 20(20)/18.6 = 21.5\) → 8.6 kA เท่านั้น — รีเลย์ดิจิทัลช่วยให้ CT ใช้ได้ดีขึ้นมาก</p></li>
+</ol></div>
+    <div class="note"><b>ความปลอดภัย</b> ห้ามเปิดวงจรทุติยภูมิของ CT ขณะมีกระแสปฐมภูมิ แกนจะอิ่มตัวและเกิดแรงดันยอดหลายพันโวลต์ ต้องลัดขั้วทุติยภูมิด้วยเทอร์มินัลลัดวงจร (shorting terminal) ก่อนถอดเครื่องวัดเสมอ</div>
+    <p><b>VT (หม้อแปลงแรงดัน)</b> ลดแรงดันเป็น 100–120 V สำหรับรีเลย์แรงดัน รีเลย์ทิศทาง และรีเลย์ระยะทาง ด้านทุติยภูมิ <b>ห้ามลัดวงจร</b> (ตรงข้ามกับ CT) และต้องมีฟิวส์ ส่วน <b>ขั้ว (polarity)</b> ของทั้ง CT และ VT สำคัญมากสำหรับรีเลย์ทิศทางและรีเลย์ผลต่าง — ต่อกลับขั้วหนึ่งตัว รีเลย์ผลต่างจะทริปทันทีที่จ่ายโหลด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="relays">
+    <h2 id="relays">รีเลย์: จากกลไกสู่ดิจิทัล <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ยุค</th><th>หลักการ</th><th>ข้อสังเกต</th></tr></thead>
+      <tbody>
+        <tr><td>Electromechanical</td><td>จานหมุนเหนี่ยวนำ (induction disc) แม่เหล็กไฟฟ้า</td><td>ทนทาน แต่ภาระสูง ต้องปรับเทียบบ่อย ยังพบในสถานีเก่า</td></tr>
+        <tr><td>Static</td><td>วงจรอนาล็อก ทรานซิสเตอร์</td><td>เร็วขึ้น ช่วงสั้นในประวัติศาสตร์</td></tr>
+        <tr><td>Numerical (ดิจิทัล)</td><td>สุ่มสัญญาณ ADC → DFT หาเฟสเซอร์พื้นฐาน → อัลกอริทึม</td><td>หลายฟังก์ชันในเครื่องเดียว บันทึกเหตุการณ์ (disturbance record) สื่อสาร IEC 61850</td></tr>
+      </tbody>
+    </table></div>
+    <p>รีเลย์ดิจิทัลสุ่มกระแสและแรงดัน 16–80 ครั้งต่อรอบ แล้วใช้ <a href="/learn/fourier-series/dft-fft/">DFT</a> แยกเฟสเซอร์ความถี่พื้นฐานออกมา (กรองฮาร์มอนิกและ DC offset) จากนั้นคำนวณ \(I_1, I_2, 3I_0\) (<a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>) อิมพีแดนซ์ และกำลัง — คณิตศาสตร์ทุกบทที่เรียนมาอยู่ในกล่องเดียว ลองคำนวณเวลาทำงานของรีเลย์หนึ่งตัวด้านล่าง แล้วไปต่อที่ <a href="/learn/power-systems/overcurrent-coordination/">การประสานรีเลย์กระแสเกิน</a></p>
+    <div class="fg-calc ps-calc" data-ps="relay"></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

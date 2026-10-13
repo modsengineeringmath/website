@@ -1,0 +1,139 @@
+<!--meta
+{
+  "title": "PF จริงกับฮาร์มอนิก: Displacement PF, Distortion PF, THD, PF = DPF/√(1+THD²), เรโซแนนซ์คาปาซิเตอร์ และตู้ Detuned 7 % 14 % | อาจารย์มด",
+  "h1": "PF จริงกับฮาร์มอนิก: Displacement PF, Distortion PF, THD, เรโซแนนซ์ของคาปาซิเตอร์ และตู้ Detuned",
+  "description": "ทำไมโหลดอิเล็กทรอนิกส์อย่างคอมพิวเตอร์ ไดรเวอร์ LED และไดรฟ์มอเตอร์มี cos φ เกือบ 1 แต่ PF จริงแค่ 0.6–0.7: กระแสยอดแหลม ฮาร์มอนิก THD PF จริง = DPF × distortion factor = DPF/√(1+THD²) กำลังบิดเบือน D คาปาซิเตอร์แก้ส่วนนี้ไม่ได้ เรโซแนนซ์ขนาน h = √(S_sc/Q_c) ตู้ detuned 7 % (189 Hz) 14 % (134 Hz) ฮาร์มอนิกที่ 3 ในสายนิวทรัล PFC แอกทีฟฟิลเตอร์ พร้อมซิมูเลเตอร์และเครื่องคำนวณ",
+  "ogTitle": "PF จริงกับฮาร์มอนิก: DPF THD และตู้ detuned",
+  "og": {"title": "PF จริงกับฮาร์มอนิก: DPF THD และตู้ detuned"},
+  "lesson": "power-factor",
+  "sub": "harmonics-true-pf",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Power factor", "Total harmonic distortion", "Harmonics (electrical power)", "Electrical resonance", "Power-factor correction"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "Displacement PF กับ True PF ต่างกันอย่างไร?", "a": "Displacement PF (DPF หรือ cos φ₁) คิดเฉพาะมุมระหว่างแรงดันกับกระแสความถี่พื้นฐาน 50 Hz ส่วน True PF คือ P หารด้วย S ที่รวมกระแสฮาร์มอนิกทุกลำดับ ถ้ากระแสเป็นไซน์ ทั้งสองเท่ากัน ถ้ามีฮาร์มอนิก True PF = DPF / √(1 + THD²) ซึ่งต่ำกว่าเสมอ"},
+    {"q": "ทำไมตู้คาปาซิเตอร์ระเบิดหรือฟิวส์ขาดบ่อยในโรงงานที่มีอินเวอร์เตอร์มาก?", "a": "คาปาซิเตอร์กับอิมพีแดนซ์ของหม้อแปลงเกิดเรโซแนนซ์ขนานที่อันดับฮาร์มอนิก h = √(S_sc/Q_c) ถ้าตรงหรือใกล้ฮาร์มอนิกที่ 5 หรือ 7 ที่ไดรฟ์ผลิต กระแสฮาร์มอนิกจะถูกขยายหลายเท่า คาปาซิเตอร์ร้อน ฟิวส์ขาด แรงดันเพี้ยน วิธีแก้คือใช้ตู้ detuned ที่มีรีแอกเตอร์อนุกรมให้ความถี่เรโซแนนซ์ต่ำกว่าฮาร์มอนิกที่ 5"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>PF จริง · ฮาร์มอนิก</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.6 · เพาเวอร์แฟกเตอร์ · True Power Factor &amp; Harmonics</p>
+      <h1>PF จริงกับฮาร์มอนิก: Displacement PF, Distortion PF, THD, เรโซแนนซ์ของคาปาซิเตอร์ และตู้ Detuned</h1>
+      <p class="lede">ทุกอย่างก่อนหน้านี้สมมติว่ากระแสเป็นไซน์ แต่โหลดสมัยใหม่ส่วนใหญ่ผ่านวงจรเรียงกระแสกับตัวเก็บประจุ กระแสจึงไหลเป็นยอดแหลมเฉพาะช่วงยอดของแรงดัน ตรงนี้เองที่ “cos φ” กับ “PF” แยกทางกัน และคาปาซิเตอร์ที่เคยเป็นพระเอกอาจกลายเป็นตัวปัญหา</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#sim">ดูกระแสยอดแหลม</a>
+        <a class="btn btn-ghost btn-sm" href="#truepf">PF = DPF × DF</a>
+        <a class="btn btn-ghost btn-sm" href="#resonance">เรโซแนนซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#detuned">ตู้ detuned</a>
+        <a class="btn btn-ghost btn-sm" href="#fix">วิธีแก้</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(PF = DPF \times DF = \cos\varphi_1/\sqrt{1 + THD_I^2}\)</li>
+          <li>THD 100 % → PF สูงสุดแค่ 0.707 แม้ cos φ = 1</li>
+          <li>คาปาซิเตอร์แก้ได้เฉพาะ DPF · ส่วน DF ต้องแก้ด้วย PFC ตัวเหนี่ยวนำ หรือแอกทีฟฟิลเตอร์</li>
+          <li>เรโซแนนซ์ \(h_r = \sqrt{S_{sc}/Q_c}\) → ใช้ตู้ detuned 7 % (189 Hz)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น thd, dpf, distortion, resonance, detuned, triplen" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมกระแสเป็นยอดแหลม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>อุปกรณ์อิเล็กทรอนิกส์เกือบทุกชนิดเริ่มด้วยไดโอดบริดจ์และตัวเก็บประจุ (<a href="/learn/power-electronics/test-power-sources/">วงจรเรียงกระแส</a>) ตัวเก็บประจุจะเติมประจุเฉพาะตอนแรงดันไฟบ้านสูงกว่าแรงดันของมันเอง คือช่วงสั้น ๆ รอบยอดคลื่น กระแสจึงเป็นพัลส์แคบสูง ตรงกลางพัลส์ตรงกับยอดแรงดันพอดี (cos φ₁ ≈ 1) แต่รูปร่างไม่ใช่ไซน์ — แยกด้วย <a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a> ได้ฮาร์มอนิกคี่ 3 5 7 9 …</p>
+<div class="tf" id="H1" data-k="rms current harmonics thd definition กระแส rms ฮาร์มอนิก thd"><p class="tf-n"><b><span class="fid">H1</span> RMS current and THD</b> กระแส rms และ THD</p>
+        \[ I_{rms} = \sqrt{\sum_{h=1}^{\infty} I_h^2} = I_1\sqrt{1 + THD_I^2} \qquad THD_I = \frac{\sqrt{\sum_{h\ge2} I_h^2}}{I_1} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="truepf">
+    <h2 id="truepf">PF จริง = DPF × Distortion factor <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="H2" data-k="true power factor displacement distortion thd pf จริง"><p class="tf-n"><b><span class="fid">H2</span> True power factor</b> เพาเวอร์แฟกเตอร์จริง (แรงดันเป็นไซน์)</p>
+        \[ PF = \frac{P}{V I_{rms}} = \underbrace{\cos\varphi_1}_{DPF}\times\underbrace{\frac{I_1}{I_{rms}}}_{DF} = \frac{\cos\varphi_1}{\sqrt{1 + THD_I^2}} \]</div>
+<div class="tf" id="H3" data-k="distortion power d apparent power budeanu กำลังบิดเบือน"><p class="tf-n"><b><span class="fid">H3</span> Power components with distortion</b> กำลังเมื่อมีฮาร์มอนิก</p>
+        \[ S^2 = P^2 + Q_1^2 + D^2 \qquad D = V\sqrt{\sum_{h\ge2} I_h^2} = V I_1\,THD_I \]</div>
+<div class="tf" id="H4" data-k="maximum pf capacitor only distortion limit pf สูงสุดเมื่อใช้คาปาซิเตอร์"><p class="tf-n"><b><span class="fid">H4</span> Best PF reachable with capacitors only</b> PF สูงสุดที่คาปาซิเตอร์ทำได้</p>
+        \[ PF_{max} = DF = \frac{1}{\sqrt{1 + THD_I^2}} \qquad THD\ 100\,\% \Rightarrow 0.707 \]</div>
+<div class="wx" id="ex-h-1"><div class="wx-head"><span class="mono">ตัวอย่าง H-1</span><h3>คอมพิวเตอร์ 10 เครื่อง 1.5 kW cos φ₁ = 0.986 THD = 103 %</h3></div>
+<ol class="steps">
+<li><p>H2: \(DF = 1/\sqrt{1 + 1.03^2} = 0.697\) → \(PF = 0.986 \times 0.697 = 0.687\) (ซิมูเลเตอร์: 0.689)</p></li>
+<li><p>H1: \(I_1 = 1500/(230 \times 0.986) = 6.61\) A → \(I_{rms} = 6.61\sqrt{1 + 1.03^2} = 9.49\) A</p></li>
+<li><p>H3: \(D = 230 \times 6.61 \times 1.03 = 1.57\) kVA — มากกว่า Q (0.25 kvar) หลายเท่า</p></li>
+<li><p>ใส่คาปาซิเตอร์ 0.5 kvar: Q กลายเป็น −0.75 (นำหน้า) PF แย่ลงเป็น 0.655 — ลองปุ่ม “คาปาซิเตอร์ช่วยฮาร์มอนิกไม่ได้” ในซิมูเลเตอร์</p></li>
+</ol></div>
+    <div class="fg-calc pf-calc" data-pf="truepf"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ซิมูเลเตอร์: กระแสยอดแหลมกับเฟสเซอร์ที่ “ดูดี”</h2>
+    <div class="pf-sim" data-preset="smps" data-views="wave,phasor,tri,meter"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    <p>สังเกต: เฟสเซอร์ I₁ เกือบตรงกับ V (cos φ ดี) แต่รูปคลื่นกระแสเป็นยอดแหลม และมิเตอร์แสดง THD-I สูง PF จริงต่ำ เพิ่ม “แอร์อินเวอร์เตอร์ (มี PFC)” ลงไปเพื่อดูว่าโหลดที่มีวงจร PFC ต่างกันอย่างไร</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="triplen">
+    <h2 id="triplen">ฮาร์มอนิกที่ 3 กับสายนิวทรัล <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="H8" data-k="triplen harmonics neutral current third harmonic ฮาร์มอนิกที่ 3 สายนิวทรัล"><p class="tf-n"><b><span class="fid">H8</span> Neutral current from triplen harmonics</b> กระแสนิวทรัลจากฮาร์มอนิกลำดับ 3 6 9</p>
+        \[ I_N \approx 3\sqrt{I_3^2 + I_9^2 + \cdots}\ \ (\text{โหลดเฟสเดียวสมดุลสามเฟส}) \]</div>
+    <p>ฮาร์มอนิกที่ 3 ของสามเฟสมีมุมตรงกัน (เป็นลำดับศูนย์ — <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>) จึงบวกกันในสายนิวทรัลแทนที่จะหักล้าง อาคารสำนักงานที่มีคอมพิวเตอร์มากอาจมีกระแสนิวทรัลสูงกว่ากระแสเฟส — ดูการจำลองที่ <a href="/learn/fourier-series/analyzer-lab/#preset=neutral">แล็บฮาร์มอนิก พรีเซ็ต neutral</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="resonance">
+    <h2 id="resonance">เรโซแนนซ์ขนาน: เมื่อคาปาซิเตอร์ขยายฮาร์มอนิก <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="H5" data-k="parallel resonance harmonic order capacitor transformer short circuit เรโซแนนซ์ อันดับฮาร์มอนิก"><p class="tf-n"><b><span class="fid">H5</span> Parallel resonance order</b> อันดับเรโซแนนซ์ขนาน</p>
+        \[ h_r = \sqrt{\frac{S_{sc}}{Q_c}} \approx \sqrt{\frac{S_T}{Q_c\,(\%Z_T/100)}} \qquad f_r = h_r\,f_1 \]</div>
+    <p>มองจากแหล่งกระแสฮาร์มอนิก (ไดรฟ์) อิมพีแดนซ์ของหม้อแปลง (ตัวเหนี่ยวนำ) ขนานกับคาปาซิเตอร์ ที่ \(h_r\) อิมพีแดนซ์ขนานสูงมาก กระแสฮาร์มอนิกเล็ก ๆ สร้างแรงดันฮาร์มอนิกใหญ่ และกระแสวนระหว่างหม้อแปลงกับคาปาซิเตอร์ถูกขยายหลายเท่า เมื่อตู้อัตโนมัติสับขั้นเพิ่ม \(Q_c\) เพิ่ม \(h_r\) ก็เลื่อนลง — ทุกตู้จึงผ่านช่วงอันตรายบางขณะ</p>
+<div class="wx" id="ex-h-2"><div class="wx-head"><span class="mono">ตัวอย่าง H-2</span><h3>หม้อแปลง 1,000 kVA 6 % กับตู้ที่สับ 150 / 300 / 450 kvar</h3></div>
+<ol class="steps">
+<li><p>\(S_{sc} = 1000/0.06 = 16{,}667\) kVA</p></li>
+<li><p>H5: 150 kvar → \(h_r = 10.5\) · 300 kvar → \(h_r = 7.45\) (ใกล้ 7!) · 450 kvar → \(h_r = 6.1\)</p></li>
+<li><p>โรงงานที่มี VFD ผลิตฮาร์มอนิกที่ 5 และ 7 สูง ตู้ธรรมดา 300 kvar จะขยายฮาร์มอนิกที่ 7 อย่างรุนแรง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="detuned">
+    <h2 id="detuned">ตู้ Detuned 7 % และ 14 % <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="H6" data-k="detuned reactor tuning frequency p percent ความถี่จูน detuned"><p class="tf-n"><b><span class="fid">H6</span> Detuned tuning frequency</b> ความถี่จูนของตู้ detuned</p>
+        \[ p = \frac{X_L}{X_C} \qquad f_{tune} = \frac{f_1}{\sqrt{p}} \qquad p = 7\,\% \Rightarrow 189\ \text{Hz}\ (h = 3.78),\ \ p = 14\,\% \Rightarrow 134\ \text{Hz}\ (h = 2.67) \]</div>
+<div class="tf" id="H7" data-k="capacitor voltage rise detuned 1 minus p แรงดันคาปาซิเตอร์ ตู้ detuned"><p class="tf-n"><b><span class="fid">H7</span> Capacitor voltage in a detuned branch</b> แรงดันคร่อมคาปาซิเตอร์</p>
+        \[ U_C = \frac{U_N}{1 - p} \qquad Q_{branch} = \frac{Q_{C,rated}}{1-p}\left(\frac{U_N}{U_{C,rated}}\right)^2 \]</div>
+    <p>รีแอกเตอร์อนุกรมทำให้กิ่งคาปาซิเตอร์เป็น “ตัวเหนี่ยวนำ” สำหรับทุกฮาร์มอนิกที่สูงกว่า 189 Hz (h = 5, 7, 11, …) จึงไม่มีเรโซแนนซ์ขนานในช่วงนั้น และยังจำกัดกระแสพุ่งเข้า ข้อแลกเปลี่ยน: แรงดันคร่อมคาปาซิเตอร์สูงขึ้น 7.5 % ต้องใช้คาปาซิเตอร์พิกัด 480–525 V และตู้แพงกว่า ใช้ 14 % เมื่อมีฮาร์มอนิกที่ 3 มาก (อาคารที่มีโหลดเฟสเดียวมาก)</p>
+    <div class="fg-calc pf-calc" data-pf="resonance"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-pf-fill="resonance" data-vals='{"qc":"150","p":"0"}'>150 kvar ไม่มีรีแอกเตอร์</button><button type="button" class="btn btn-ghost btn-sm" data-pf-fill="resonance" data-vals='{"qc":"450","p":"14"}'>450 kvar detuned 14 %</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="fix">
+    <h2 id="fix">เลือกวิธีแก้ให้ตรงปัญหา <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สถานการณ์</th><th>วิธี</th></tr></thead>
+      <tbody>
+        <tr><td>มอเตอร์ บัลลาสต์ THD ต่ำ (&lt; 10 %)</td><td>ตู้คาปาซิเตอร์ธรรมดา</td></tr>
+        <tr><td>มี VFD/อินเวอร์เตอร์ปนอยู่ (THD-I 10–30 %) หรือ THD-U &gt; 3 %</td><td>ตู้ detuned 7 %</td></tr>
+        <tr><td>อาคารสำนักงาน โหลดเฟสเดียวมาก</td><td>detuned 14 % · สายนิวทรัลใหญ่ขึ้น</td></tr>
+        <tr><td>ฮาร์มอนิกสูงมาก PF แย่จากการบิดเบือน</td><td>แอกทีฟฟิลเตอร์ (ชดเชยทั้ง Q และฮาร์มอนิก) · AC/DC choke ที่ไดรฟ์ · ไดรฟ์ 12 พัลส์ หรือ Active Front End</td></tr>
+        <tr><td>ออกแบบอุปกรณ์ใหม่</td><td>ใส่วงจร PFC แบบบูสต์ (<a href="/learn/power-electronics/boost-converter/">บูสต์คอนเวอร์เตอร์</a>) ให้ผ่าน IEC 61000-3-2</td></tr>
+      </tbody>
+    </table></div>
+    <p>วัดก่อนแก้เสมอ: ใช้เพาเวอร์อนาไลเซอร์บันทึก THD-I THD-U และสเปกตรัมอย่างน้อยหนึ่งสัปดาห์ (<a href="/learn/power-factor/pf-measurement/">การวัด PF</a>) และทดลองผลของตู้ใน <a href="/learn/fourier-series/analyzer-lab/#preset=detuned">แล็บฮาร์มอนิก พรีเซ็ต detuned</a></p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

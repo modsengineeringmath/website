@@ -1,0 +1,130 @@
+<!--meta
+{
+  "title": "หม้อแปลงและสายส่งในระบบไฟฟ้ากำลัง: วงจรสมมูล %Z จากการทดสอบลัดวงจร Regulation แรงดันตก แบบจำลองสาย π และสมการส่งกำลัง P-δ | อาจารย์มด",
+  "h1": "หม้อแปลงและสายส่งในระบบไฟฟ้ากำลัง: วงจรสมมูล %Z การควบคุมแรงดัน แบบจำลองสายส่ง และสมการส่งกำลัง P-δ",
+  "description": "ปูพื้นหม้อแปลงและสายส่งสำหรับวิชาระบบไฟฟ้ากำลัง: วงจรสมมูลหม้อแปลง %Z %R %X จากการทดสอบลัดวงจร voltage regulation การสูญเสียทองแดงตามภาระ ประสิทธิภาพ กลุ่มเวกเตอร์ Dyn11 แบบจำลองสายสั้น ปานกลาง (π) ยาว แรงดันตก ΔV ≈ (RP + XQ)/V ปรากฏการณ์เฟอร์รันติ สมการส่งกำลัง P = V₁V₂ sin δ / X กำลังรีแอกทีฟกับแรงดัน และเสถียรภาพสถิต พร้อมเครื่องคำนวณ",
+  "ogTitle": "หม้อแปลง สายส่ง และสมการ P-δ",
+  "og": {"title": "หม้อแปลง สายส่ง และสมการ P-δ"},
+  "lesson": "power-systems",
+  "sub": "transformers-lines",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Transformer", "Voltage regulation", "Electric power transmission", "Power-angle curve"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "%Z ของหม้อแปลงวัดได้อย่างไร?", "a": "จากการทดสอบลัดวงจร: ลัดขั้วด้านหนึ่ง แล้วค่อย ๆ เพิ่มแรงดันอีกด้านจนกระแสเท่ากับพิกัด แรงดันที่ใช้เทียบกับแรงดันพิกัดคือ %Z (u_k) กำลังที่วัดได้ขณะนั้นคือการสูญเสียทองแดง ใช้หา %R และ %X ได้"},
+    {"q": "ทำไมการส่งกำลังจริงขึ้นกับมุม δ แต่กำลังรีแอกทีฟขึ้นกับขนาดแรงดัน?", "a": "สายส่งมีรีแอกแตนซ์มากกว่าความต้านทานมาก จากสมการ P = V₁V₂ sin δ / X กำลังจริงไหลจากด้านที่มุมนำไปด้านที่มุมตาม ส่วน Q ≈ V(V₁cos δ − V₂)/X ขึ้นกับผลต่างขนาดแรงดันเป็นหลัก การควบคุมระบบจึงแยกเป็น P-f (governor) และ Q-V (AVR คาปาซิเตอร์ แทปหม้อแปลง)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>หม้อแปลง · สายส่ง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.4 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Transformers, Lines &amp; Power Transfer</p>
+      <h1>หม้อแปลงและสายส่งในระบบไฟฟ้ากำลัง: วงจรสมมูล %Z การควบคุมแรงดัน แบบจำลองสายส่ง และสมการส่งกำลัง P-δ</h1>
+      <p class="lede">หม้อแปลงและสายส่งคือ “ท่อ” ของระบบไฟฟ้า ในวิชาระบบไฟฟ้ากำลังเรามองทั้งคู่เป็นอิมพีแดนซ์ที่ส่วนใหญ่เป็นรีแอกแตนซ์ ผลที่ตามมาคือสองเรื่องที่ต้องเข้าใจให้ขาด: แรงดันตกขึ้นกับ Q มากกว่าที่คิด และกำลังจริงไหลตามมุมของแรงดัน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#trafo">หม้อแปลง %Z</a>
+        <a class="btn btn-ghost btn-sm" href="#reg">Regulation</a>
+        <a class="btn btn-ghost btn-sm" href="#lines">แบบจำลองสาย</a>
+        <a class="btn btn-ghost btn-sm" href="#pdelta">P-δ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>หม้อแปลงในระบบกำลัง ≈ อิมพีแดนซ์ %Z (ส่วนใหญ่เป็น X) อัตราส่วน X/R 3–15</li>
+          <li>แรงดันตก \(\Delta V \approx (RP + XQ)/V\) — Q ทำให้แรงดันตกมากเพราะ X ใหญ่</li>
+          <li>\(P = V_sV_r\sin\delta/X\): กำลังไหลตามมุม สูงสุดที่ δ = 90°</li>
+          <li>Q ไหลจากแรงดันสูงไปแรงดันต่ำ — ควบคุมแรงดันด้วย Q</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น %z, regulation, efficiency, voltage drop, pi model, delta" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="trafo">
+    <h2 id="trafo">หม้อแปลง: วงจรสมมูลและ %Z <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>วงจรสมมูลเต็มของหม้อแปลงมีความต้านทานขดลวด รีแอกแตนซ์รั่ว และกิ่งขนาน (แกนเหล็ก) สำหรับการคำนวณระบบไฟฟ้าส่วนใหญ่ กิ่งขนานกระแสน้อยมาก (≈ 0.5–2 %) จึงตัดทิ้ง เหลืออิมพีแดนซ์อนุกรมตัวเดียว \(R + jX\) ซึ่งดาต้าชีตบอกเป็น %Z (หรือ \(u_k\))</p>
+<div class="tf" id="L1" data-k="short circuit test uk percent impedance r x การทดสอบลัดวงจร"><p class="tf-n"><b><span class="fid">L1</span> Impedance from the short-circuit test</b> %Z %R %X จากการทดสอบลัดวงจร</p>
+        \[ \%Z = \frac{V_{sc}}{V_n}\times 100 \qquad \%R = \frac{P_{cu,n}}{S_n}\times 100 \qquad \%X = \sqrt{\%Z^2 - \%R^2} \]</div>
+<div class="wx" id="ex-l-1"><div class="wx-head"><span class="mono">ตัวอย่าง L-1</span><h3>หม้อแปลง 1,000 kVA 22 kV/400 V ทดสอบลัดวงจรด้าน 22 kV ได้ 1,320 V และ 10 kW</h3></div>
+<ol class="steps">
+<li><p>L1: \(\%Z = 1320/22000 \times 100 = 6\,\%\) · \(\%R = 10/1000 \times 100 = 1\,\%\) · \(\%X = \sqrt{36-1} = 5.92\,\%\)</p></li>
+<li><p>X/R = 5.92 — ใกล้ค่าทั่วไปของหม้อแปลงขนาดนี้ ค่านี้กำหนดค่ายอดของกระแสลัดวงจร (<a href="/learn/power-systems/fault-analysis/#F5">F5</a>)</p></li>
+<li><p>ลัดวงจรที่ขั้วแรงต่ำ (ต้นทางแข็งแรงมาก): \(I_k \approx I_n/0.06 = 1443/0.06 = 24\) kA</p></li>
+</ol></div>
+<div class="tf" id="L3" data-k="copper loss load squared efficiency transformer การสูญเสียทองแดง ประสิทธิภาพ"><p class="tf-n"><b><span class="fid">L3</span> Load losses and efficiency</b> การสูญเสียตามภาระและประสิทธิภาพ</p>
+        \[ P_{cu}(x) = x^2 P_{cu,n} \qquad \eta = \frac{x S_n\cos\varphi}{x S_n\cos\varphi + P_{fe} + x^2 P_{cu,n}} \qquad x = S/S_n \]</div>
+    <p>ประสิทธิภาพสูงสุดเมื่อ \(x^2P_{cu,n} = P_{fe}\) หม้อแปลงจำหน่ายออกแบบให้สูงสุดที่ภาระ 40–60 % เพราะส่วนใหญ่ไม่ได้จ่ายเต็มพิกัดตลอดเวลา</p>
+    <p><b>กลุ่มเวกเตอร์ Dyn11</b> (หม้อแปลงจำหน่ายในไทย): ด้านแรงสูงต่อ Δ ด้านแรงต่ำต่อ Y มีนิวทรัลนำออก แรงดันด้านแรงต่ำนำหน้าด้านแรงสูง 30° (เลข 11 = ตำแหน่ง 11 นาฬิกา) ขด Δ ทำให้กระแสลำดับศูนย์และฮาร์มอนิกที่ 3 วนอยู่ในขด ไม่ไหลขึ้นระบบแรงสูง — สำคัญมากในเรื่อง <a href="/learn/power-systems/symmetrical-components/#S9">ลัดลงดิน</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="reg">
+    <h2 id="reg">Voltage regulation และแรงดันตกในสาย <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="L2" data-k="voltage regulation transformer percent r cos x sin การควบคุมแรงดัน"><p class="tf-n"><b><span class="fid">L2</span> Transformer voltage regulation</b> แรงดันตกในหม้อแปลง (%)</p>
+        \[ \varepsilon \approx x\left(\%R\cos\varphi + \%X\sin\varphi\right) + \frac{\big[x(\%X\cos\varphi - \%R\sin\varphi)\big]^2}{200} \]</div>
+<div class="tf" id="L4" data-k="voltage drop approximation rp xq line แรงดันตก สายป้อน"><p class="tf-n"><b><span class="fid">L4</span> Voltage-drop approximation</b> แรงดันตกโดยประมาณ (สามเฟส ใช้ P Q รวม แรงดันสาย)</p>
+        \[ \Delta V \approx \frac{R\,P + X\,Q}{V} \qquad \Delta V\% = \frac{RP + XQ}{V^2}\times 100 \]</div>
+<div class="wx" id="ex-l-2"><div class="wx-head"><span class="mono">ตัวอย่าง L-2</span><h3>หม้อแปลง 1,000 kVA 6 % X/R 6 จ่าย 700 kW PF 0.8</h3></div>
+<ol class="steps">
+<li><p>\(S = 875\) kVA → \(x = 0.875\) · \(\%R = 0.99,\ \%X = 5.92\) · \(\cos\varphi = 0.8,\ \sin\varphi = 0.6\)</p></li>
+<li><p>L2: \(0.875(0.99 \times 0.8 + 5.92 \times 0.6) + [0.875(5.92 \times 0.8 - 0.99 \times 0.6)]^2/200 = 3.80 + 0.07 = 3.86\,\%\)</p></li>
+<li><p>ถ้า PF = 1 (700 kVA): \(0.7 \times 0.99 + (0.7 \times 5.92)^2/200 = 0.78\,\%\) — <b>PF ต่ำทำให้แรงดันตกเพิ่มเกือบ 5 เท่า</b></p></li>
+</ol></div>
+<div class="wx" id="ex-l-3"><div class="wx-head"><span class="mono">ตัวอย่าง L-3</span><h3>สายป้อน 22 kV R = 2 Ω X = 4 Ω ต่อเฟส จ่าย 5 MW + 3 Mvar</h3></div>
+<ol class="steps">
+<li><p>L4: \(\Delta V = (2 \times 5\text{e}6 + 4 \times 3\text{e}6)/22\text{e}3 = 22\text{e}6/22\text{e}3 = 1{,}000\) V = 4.5 %</p></li>
+<li><p>ติดคาปาซิเตอร์ปลายสาย 3 Mvar (Q → 0): \(\Delta V = 10\text{e}6/22\text{e}3 = 455\) V = 2.1 % — คาปาซิเตอร์ “ยกแรงดัน” เพราะลดเทอม XQ</p></li>
+</ol></div>
+    <div class="fg-calc ps-calc" data-ps="reg"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lines">
+    <h2 id="lines">แบบจำลองสายส่ง: สั้น ปานกลาง ยาว <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>แบบจำลอง</th><th>ความยาว (50 Hz)</th><th>องค์ประกอบ</th></tr></thead>
+      <tbody>
+        <tr><td>สายสั้น</td><td>&lt; 80 km</td><td>\(Z = R + jX\) อนุกรมอย่างเดียว</td></tr>
+        <tr><td>สายปานกลาง (π)</td><td>80–250 km</td><td>Z อนุกรม + Y/2 สองข้าง (ความจุไฟฟ้าลงดิน)</td></tr>
+        <tr><td>สายยาว</td><td>&gt; 250 km</td><td>พารามิเตอร์กระจาย ใช้ฟังก์ชันไฮเพอร์โบลิก \(\gamma\ell\)</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="L5" data-k="pi model medium line abcd sending receiving แบบจำลองพาย สายปานกลาง"><p class="tf-n"><b><span class="fid">L5</span> Nominal-π line</b> แบบจำลอง π ของสายปานกลาง</p>
+        \[ \mathbf V_s = \left(1 + \frac{\mathbf Z\mathbf Y}{2}\right)\mathbf V_r + \mathbf Z\,\mathbf I_r \qquad \mathbf I_s = \mathbf Y\left(1 + \frac{\mathbf Z\mathbf Y}{4}\right)\mathbf V_r + \left(1 + \frac{\mathbf Z\mathbf Y}{2}\right)\mathbf I_r \]</div>
+    <p><b>ปรากฏการณ์เฟอร์รันติ</b>: สายยาวที่ไม่มีโหลด (\(I_r = 0\)) ให้ \(V_r = V_s/(1 + ZY/2)\) และเพราะ \(ZY\) เป็นลบเกือบจริง แรงดันปลายทางจึง <b>สูงกว่า</b> ต้นทาง ต้องใช้ shunt reactor ในสาย 500 kV ช่วงโหลดต่ำ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pdelta">
+    <h2 id="pdelta">สมการส่งกำลัง P-δ และกำลังรีแอกทีฟ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="L6" data-k="power angle equation p delta transfer สมการส่งกำลัง มุมกำลัง"><p class="tf-n"><b><span class="fid">L6</span> Power-angle equation (lossless line)</b> สมการส่งกำลัง</p>
+        \[ P = \frac{V_s\,V_r}{X}\sin\delta \qquad P_{max} = \frac{V_sV_r}{X}\ \ (\delta = 90^\circ) \]</div>
+<div class="tf" id="L7" data-k="reactive power flow voltage magnitude q v กำลังรีแอกทีฟ ไหลตามแรงดัน"><p class="tf-n"><b><span class="fid">L7</span> Reactive power at each end</b> กำลังรีแอกทีฟที่ปลายทั้งสอง</p>
+        \[ Q_s = \frac{V_s^2 - V_sV_r\cos\delta}{X} \qquad Q_r = \frac{V_sV_r\cos\delta - V_r^2}{X} \]</div>
+<div class="tf" id="L8" data-k="steady state stability margin ส่วนเผื่อเสถียรภาพ"><p class="tf-n"><b><span class="fid">L8</span> Steady-state stability margin</b> ส่วนเผื่อเสถียรภาพสถิต</p>
+        \[ M = \frac{P_{max} - P}{P_{max}} = 1 - \sin\delta \]</div>
+<div class="wx" id="ex-l-4"><div class="wx-head"><span class="mono">ตัวอย่าง L-4</span><h3>V_s = V_r = 1.0 pu, X = 0.5 pu ต้องส่ง P = 1.0 pu</h3></div>
+<ol class="steps">
+<li><p>L6: \(P_{max} = 1/0.5 = 2.0\) pu → \(\sin\delta = 1/2\) → \(\delta = 30^\circ\)</p></li>
+<li><p>L8: ส่วนเผื่อ 50 % · L7: \(Q_s = (1 - \cos 30^\circ)/0.5 = 0.268\) pu และ \(Q_r = -0.268\) pu (ปลายทางต้องจ่าย Q ด้วย)</p></li>
+<li><p>สายกินรีแอกทีฟ \(Q_s - Q_r = 0.536 = I^2X\) — สายยิ่งส่งกำลังมาก ยิ่งกิน Q แรงดันจึงตกเมื่อโหลดสูง</p></li>
+</ol></div>
+    <div class="fg-calc ps-calc" data-ps="pd"></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

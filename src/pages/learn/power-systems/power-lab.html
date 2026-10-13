@@ -1,0 +1,94 @@
+<!--meta
+{
+  "title": "แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน: Per-unit กระแสลัดวงจร องค์ประกอบสมมาตร P-δ TCC ประสานรีเลย์ การต่อลงดิน รีเลย์ผลต่าง | อาจารย์มด",
+  "h1": "แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน",
+  "description": "รวมเครื่องคำนวณระบบไฟฟ้ากำลังฟรีในหน้าเดียว: ค่าฐานและ per-unit เปลี่ยนฐาน regulation หม้อแปลง กราฟ P-δ กระแสลัดวงจรระบบแรงต่ำแบบ IEC 60909 ฟอลต์ SLG LL DLG แยกองค์ประกอบสมมาตรพร้อมแผนภาพเฟสเซอร์ รีเลย์ IDMT แล็บประสานรีเลย์ 3 ระดับบนกราฟ TCC log-log การตัดวงจรอัตโนมัติ TN TT และรีเลย์ผลต่าง พร้อมใบงาน 10 ชุด",
+  "ogTitle": "แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน",
+  "og": {"title": "แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน"},
+  "lesson": "power-systems",
+  "sub": "power-lab",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electric power system", "Power system protection", "Calculator"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "ใช้แล็บนี้ออกแบบงานจริงได้ไหม?", "a": "ใช้ตรวจคำตอบ เรียนรู้ และประมาณค่าเบื้องต้นได้ดี สูตรเป็นสูตรมาตรฐาน (IEC 60909 IEC 60255) แต่ใช้สมมติฐานที่ง่ายกว่าโปรแกรมวิเคราะห์ระบบไฟฟ้าเชิงพาณิชย์ เช่น ไม่รวมมอเตอร์ที่ช่วยป้อนกระแสลัดวงจร งานออกแบบจริงต้องใช้ข้อมูลจากผู้ผลิตและการไฟฟ้า และให้วิศวกรที่มีใบอนุญาตตรวจรับรอง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>แล็บคำนวณ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.11 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Power Systems &amp; Protection Lab</p>
+      <h1>แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน</h1>
+      <p class="lede">เครื่องมือทุกตัวของชุดนี้เรียงตามลำดับวิชา ทุกช่องแก้ได้ รองรับหน่วยย่อ เช่น 1.5k หรือ 22k ใช้ตรวจการบ้าน ทดลองว่าถ้าเปลี่ยนค่านี้แล้วจะเกิดอะไร หรือทำใบงานด้านล่าง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#l-tcc">ประสานรีเลย์ TCC</a>
+        <a class="btn btn-ghost btn-sm" href="#l-pu">Per-unit</a>
+        <a class="btn btn-ghost btn-sm" href="#l-fault">ลัดวงจร</a>
+        <a class="btn btn-ghost btn-sm" href="#l-seq">องค์ประกอบสมมาตร</a>
+        <a class="btn btn-ghost btn-sm" href="#worksheets">ใบงาน</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="l-pu">
+    <h2 id="l-pu">1 · ค่าฐาน per-unit และเปลี่ยนฐาน</h2>
+    <div class="fg-calc ps-calc" data-ps="pu"></div>
+    <div class="fg-calc ps-calc" data-ps="base"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="l-line">
+    <h2 id="l-line">2 · หม้อแปลงและการส่งกำลัง</h2>
+    <div class="fg-calc ps-calc" data-ps="reg"></div>
+    <div class="fg-calc ps-calc" data-ps="pd"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="l-fault">
+    <h2 id="l-fault">3 · กระแสลัดวงจรระบบแรงต่ำ</h2>
+    <div class="fg-calc ps-calc" data-ps="fault"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="l-seq">
+    <h2 id="l-seq">4 · องค์ประกอบสมมาตรและฟอลต์ไม่สมมาตร</h2>
+    <div class="fg-calc ps-calc" data-ps="seq"></div>
+    <div class="fg-calc ps-calc" data-ps="ufault"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="l-tcc">
+    <h2 id="l-tcc">5 · รีเลย์กระแสเกินและการประสาน</h2>
+    <div class="fg-calc ps-calc" data-ps="relay"></div>
+    <div class="ps-tcc" data-if="10000"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="l-earth">
+    <h2 id="l-earth">6 · การต่อลงดินและรีเลย์ผลต่าง</h2>
+    <div class="fg-calc ps-calc" data-ps="earth"></div>
+    <div class="fg-calc ps-calc" data-ps="diff"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worksheets">
+    <h2 id="worksheets">ใบงาน 10 ชุด (คลิกดูแนวคำตอบ)</h2>
+    <details class="pv-ws"><summary><b>1.</b> มอเตอร์ 2,000 kVA 6.6 kV X″ = 0.17 pu บนฐานของตัวเอง แปลงเป็นฐาน 100 MVA 6.6 kV</summary><p>U5: 0.17 × 100/2 = 8.5 pu (เครื่องมือ 1 ช่องล่าง)</p></details>
+    <details class="pv-ws"><summary><b>2.</b> หม้อแปลง 1,000 kVA 6 % จ่ายโหลด 900 kW PF 0.7 แรงดันตกเท่าไร เทียบกับ PF 0.95</summary><p>เครื่องมือ 2: S = 1,286 kVA (เกินพิกัด!) regulation ≈ 6.4 % · PF 0.95: S = 947 kVA ≈ 2.8 % — ปรับ PF ช่วยทั้งพิกัดและแรงดัน</p></details>
+    <details class="pv-ws"><summary><b>3.</b> สองบัส X = 0.4 pu V = 1.0 pu ส่งได้สูงสุดเท่าไร ถ้าต้องการส่วนเผื่อ 30 % ส่งได้เท่าไร</summary><p>P_max = 2.5 pu · P = 0.7 × 2.5 = 1.75 pu (δ = 44.4°)</p></details>
+    <details class="pv-ws"><summary><b>4.</b> หม้อแปลง 2,000 kVA 6 % ต้นทาง 500 MVA ที่ MDB ต้องใช้เบรกเกอร์กี่ kA</summary><p>เครื่องมือ 3: ≈ 47 kA → เบรกเกอร์ Icu ≥ 50 kA (ค่ายอด ≈ 108 kA)</p></details>
+    <details class="pv-ws"><summary><b>5.</b> หม้อแปลงจำหน่าย 160 kVA 4 % สาย 35 mm² ยาว 60 m ถึงบ้าน กระแสลัดวงจรที่บ้านเท่าไร</summary><p>เครื่องมือ 3 (ตั้ง kva 160, zt 4, l 60, a 35, np 1): ≈ 4.2 kA (ที่ขั้วหม้อแปลง 6.0 kA) — เบรกเกอร์บ้าน 6 kA ใช้ได้ (ปุ่มในหน้ากระแสลัดวงจร)</p></details>
+    <details class="pv-ws"><summary><b>6.</b> กระแส 3 เฟส 100∠0°, 0, 0 A (ลัดลงดินเฟส a) แยกองค์ประกอบ</summary><p>I₀ = I₁ = I₂ = 33.3∠0° A — ลักษณะเฉพาะของ SLG</p></details>
+    <details class="pv-ws"><summary><b>7.</b> X₁ = X₂ = 0.2, X₀ = 0.6 pu ลัดลงดินหรือสามเฟสรุนแรงกว่า</summary><p>3φ = 5.0 pu · SLG = 3/1.0 = 3.0 pu → สามเฟสรุนแรงกว่าเมื่อ X₀ &gt; X₁ (นิวทรัลต่อดินผ่านรีแอกเตอร์ใช้หลักนี้จำกัดกระแสลงดิน)</p></details>
+    <details class="pv-ws"><summary><b>8.</b> ในแล็บ TCC เปลี่ยน R1 เป็น EI TMS 0.1 แล้วกดคำนวณ TMS อัตโนมัติ CTI ที่ 10 kA เป็นอย่างไร ที่ 2 kA ล่ะ</summary><p>R1 EI ที่ 10 kA เร็วมาก (≈ 0.003 s ตามสูตร ในทางปฏิบัติจำกัดด้วยเวลาต่ำสุดของรีเลย์) TMS ของ R2 R3 ลดลง ลองเปลี่ยน I_f เป็น 2000 แล้วตรวจว่า CTI ยังพอหรือไม่ — การประสานต้องผ่านทุกค่ากระแส</p></details>
+    <details class="pv-ws"><summary><b>9.</b> วงจร MCB C32 สาย 6/4 mm² ยาวได้สูงสุดเท่าไรที่ Z_e = 0.8 Ω</summary><p>เครื่องมือ 6: ℓ_max = (230/320 − 0.8)/0.00858 &lt; 0 → ไม่ผ่านแม้สายสั้น ต้องใช้ RCD หรือ MCB B (I_a = 160 A → ℓ_max ≈ 74 m)</p></details>
+    <details class="pv-ws"><summary><b>10.</b> รีเลย์ผลต่าง: I1 = 5, I2 = 4.4 pu (ฟอลต์ภายนอก CT คลาดเคลื่อน) ทริปไหม</summary><p>I_d = 0.6, I_r = 4.7 → ต้องเกิน 0.6 + 0.8(2.7) = 2.76 → ไม่ทริป ✓</p></details>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

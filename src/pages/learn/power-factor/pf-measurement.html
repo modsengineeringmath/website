@@ -1,0 +1,142 @@
+<!--meta
+{
+  "title": "วัดเพาเวอร์แฟกเตอร์: แคลมป์มิเตอร์วัดกำลัง เพาเวอร์อนาไลเซอร์ วัตต์มิเตอร์สองตัว tan φ = √3(W₁−W₂)/(W₁+W₂) มิเตอร์ kWh kvarh และ CT กลับทิศ | อาจารย์มด",
+  "h1": "วัดเพาเวอร์แฟกเตอร์: แคลมป์มิเตอร์ เพาเวอร์อนาไลเซอร์ วิธีวัตต์มิเตอร์สองตัว และการอ่านมิเตอร์ของการไฟฟ้า",
+  "description": "วิธีวัด P Q S และ PF ในงานจริง: แคลมป์มิเตอร์วัดกำลังแบบ 1 เฟสและ 3 เฟส เพาเวอร์อนาไลเซอร์ ต่อแรงดันและ CT ให้ถูกทิศ วิธีวัตต์มิเตอร์สองตัวสำหรับระบบ 3 สาย P = W₁ + W₂ Q = √3(W₁ − W₂) ความหมายเมื่อค่าหนึ่งติดลบ PF เฉลี่ยจาก kWh และ kvarh อาการ CT กลับข้างหรือสลับเฟส การบันทึกโหลดก่อนออกแบบตู้คาปาซิเตอร์ และเช็กลิสต์ความปลอดภัย พร้อมเครื่องคำนวณ",
+  "ogTitle": "วัดเพาเวอร์แฟกเตอร์: แคลมป์ วัตต์มิเตอร์สองตัว",
+  "og": {"title": "วัดเพาเวอร์แฟกเตอร์: แคลมป์ วัตต์มิเตอร์สองตัว"},
+  "lesson": "power-factor",
+  "sub": "pf-measurement",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Power factor", "Wattmeter", "Two-wattmeter method", "Power analyzer"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "วิธีวัตต์มิเตอร์สองตัวใช้ได้เมื่อไร?", "a": "ใช้วัดกำลังจริงรวมของระบบสามเฟสสามสาย (ไม่มีนิวทรัล) ได้เสมอไม่ว่าโหลดสมดุลหรือไม่ ส่วนการหา Q และ PF จาก √3(W₁ − W₂) ใช้ได้เฉพาะโหลดสมดุลที่กระแสเป็นไซน์ ระบบสี่สายที่มีนิวทรัลต้องใช้วัตต์มิเตอร์สามตัว"},
+    {"q": "ทำไมเพาเวอร์มิเตอร์แสดงกำลังติดลบ?", "a": "ส่วนใหญ่เกิดจาก CT หรือแคลมป์คล้องกลับทิศ (ลูกศรต้องชี้จากแหล่งจ่ายไปโหลด) หรือสายแรงดันกับ CT อยู่คนละเฟส ถ้าแน่ใจว่าต่อถูกแล้ว กำลังติดลบหมายถึงกำลังไหลกลับจริง เช่น จากโซลาร์เซลล์ หรือมอเตอร์ที่ถูกโหลดขับให้เป็นเครื่องกำเนิด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>การวัด PF</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.7 · เพาเวอร์แฟกเตอร์ · Measuring Power Factor</p>
+      <h1>วัดเพาเวอร์แฟกเตอร์: แคลมป์มิเตอร์ เพาเวอร์อนาไลเซอร์ วิธีวัตต์มิเตอร์สองตัว และการอ่านมิเตอร์ของการไฟฟ้า</h1>
+      <p class="lede">การออกแบบตู้คาปาซิเตอร์ที่ดีเริ่มจากตัวเลขที่วัดถูก ไม่ใช่ค่าที่คาดเดา หน้านี้อธิบายเครื่องมือที่ใช้จริงหน้างาน วิธีต่อให้ถูกทิศ ความผิดพลาดที่พบบ่อย และวิธีคลาสสิกที่ยังออกสอบเสมอ: วัตต์มิเตอร์สองตัว</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#tools">เครื่องมือ</a>
+        <a class="btn btn-ghost btn-sm" href="#twowatt">วัตต์มิเตอร์สองตัว</a>
+        <a class="btn btn-ghost btn-sm" href="#errors">ความผิดพลาดที่พบบ่อย</a>
+        <a class="btn btn-ghost btn-sm" href="#survey">บันทึกโหลด</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>วัด P ต้องวัดแรงดันและกระแสพร้อมกัน — แคลมป์มิเตอร์วัดกระแสอย่างเดียวบอก PF ไม่ได้</li>
+          <li>3 สาย: \(P = W_1 + W_2\) · โหลดสมดุล \(\tan\varphi = \sqrt3(W_1 - W_2)/(W_1 + W_2)\)</li>
+          <li>ลูกศร CT ชี้ไปทางโหลด และ CT ต้องอยู่เฟสเดียวกับสายแรงดันที่จับคู่</li>
+          <li>ออกแบบตู้จากการบันทึกอย่างน้อย 7 วัน ไม่ใช่ค่าที่อ่านครั้งเดียว</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น wattmeter, two wattmeter, kvarh, ct, tan" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="tools">
+    <h2 id="tools">เครื่องมือวัด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เครื่องมือ</th><th>วัดได้</th><th>ข้อจำกัด</th></tr></thead>
+      <tbody>
+        <tr><td>แคลมป์มิเตอร์ธรรมดา</td><td>กระแส rms</td><td>ไม่รู้มุม → ไม่รู้ P หรือ PF</td></tr>
+        <tr><td>แคลมป์มิเตอร์วัดกำลัง (power clamp)</td><td>V I P Q S PF 1 เฟส / 3 เฟสสมดุล</td><td>3 เฟสไม่สมดุลต้องวัดทีละเฟส บางรุ่นแสดงแค่ DPF</td></tr>
+        <tr><td>เพาเวอร์อนาไลเซอร์ / เครื่องบันทึก (logger)</td><td>ทุกค่าทุกเฟส ฮาร์มอนิก บันทึกต่อเนื่อง</td><td>ราคาสูง ต้องตั้งค่า CT และระบบไฟให้ถูก</td></tr>
+        <tr><td>มิเตอร์ดิจิทัลในตู้ (multifunction meter)</td><td>ค่าทันทีและสะสม kWh kvarh</td><td>ขึ้นกับการต่อ CT ตอนติดตั้ง</td></tr>
+        <tr><td>มิเตอร์ของการไฟฟ้า</td><td>kWh kvarh kW สูงสุด kvar สูงสุด</td><td>อ่านรายเดือน — ดูในบิลหรือขอข้อมูลโหลดโปรไฟล์</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="M1" data-k="wattmeter average power v i cos measurement วัตต์มิเตอร์"><p class="tf-n"><b><span class="fid">M1</span> What a wattmeter measures</b> สิ่งที่วัตต์มิเตอร์วัด</p>
+        \[ W = \frac1T\int_0^T v(t)\,i(t)\,dt = V I\cos(\angle V - \angle I)\ \ (\text{ไซน์}) \]</div>
+<div class="tf" id="M2" data-k="pf from measured p and s v i ค่า pf จากค่าวัด"><p class="tf-n"><b><span class="fid">M2</span> PF from measurements</b> PF จากค่าที่วัดได้</p>
+        \[ PF = \frac{P}{V_{rms}\,I_{rms}} \quad (1\varphi) \qquad PF_{3\varphi} = \frac{P_a + P_b + P_c}{S_a + S_b + S_c}\ \ (\text{แบบเลขคณิต}) \]</div>
+    <p>เครื่องวัดดิจิทัลสุ่ม v และ i พร้อมกันหลายพันครั้งต่อวินาที แล้วคำนวณ M1 ด้วยผลรวมเชิงตัวเลข จึงได้ PF จริงที่รวมฮาร์มอนิก ส่วนค่า “cos φ” หรือ DPF ได้จากการแยกความถี่พื้นฐานด้วย <a href="/learn/fourier-series/dft-fft/">DFT</a> ถ้าสองค่านี้ต่างกันมาก แปลว่ามีฮาร์มอนิกสูง (<a href="/learn/power-factor/harmonics-true-pf/">H2</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="twowatt">
+    <h2 id="twowatt">วิธีวัตต์มิเตอร์สองตัว (Two-wattmeter method) <span class="lv lv-i">กลาง</span></h2>
+    <p>ต่อขดกระแสของ W₁ ที่สาย a ขดแรงดันคร่อม a–c และ W₂ ที่สาย b ขดแรงดันคร่อม b–c (สาย c เป็นจุดอ้างอิงร่วม) ทฤษฎีบทของ Blondel บอกว่าระบบ n สายใช้วัตต์มิเตอร์ n − 1 ตัวก็วัดกำลังรวมได้</p>
+<div class="tf" id="M3" data-k="two wattmeter total power blondel วัตต์มิเตอร์สองตัว กำลังรวม"><p class="tf-n"><b><span class="fid">M3</span> Total power</b> กำลังรวม (ใช้ได้เสมอในระบบ 3 สาย)</p>
+        \[ P = W_1 + W_2 \qquad W_1 = V_L I_L\cos(30^\circ - \varphi),\ \ W_2 = V_L I_L\cos(30^\circ + \varphi) \]</div>
+<div class="tf" id="M4" data-k="two wattmeter reactive power sqrt3 difference กำลังรีแอกทีฟ ผลต่าง"><p class="tf-n"><b><span class="fid">M4</span> Reactive power (balanced)</b> กำลังรีแอกทีฟ (โหลดสมดุล)</p>
+        \[ Q = \sqrt3\,(W_1 - W_2) \]</div>
+<div class="tf" id="M5" data-k="two wattmeter tan phi power factor formula pf วัตต์มิเตอร์สองตัว"><p class="tf-n"><b><span class="fid">M5</span> Power factor (balanced)</b> เพาเวอร์แฟกเตอร์ (โหลดสมดุล)</p>
+        \[ \tan\varphi = \frac{\sqrt3\,(W_1 - W_2)}{W_1 + W_2} \qquad PF = \cos\!\left[\tan^{-1}\frac{\sqrt3\,(W_1 - W_2)}{W_1 + W_2}\right] \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สิ่งที่อ่านได้</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>\(W_1 = W_2\)</td><td>PF = 1 (φ = 0°)</td></tr>
+        <tr><td>\(W_2 = 0\)</td><td>PF = 0.5 (φ = 60°)</td></tr>
+        <tr><td>\(W_2 &lt; 0\) (เข็มตีกลับ)</td><td>PF &lt; 0.5 — กลับขั้วขดแรงดันแล้วอ่านเป็นลบ</td></tr>
+        <tr><td>\(W_1 = -W_2\)</td><td>PF = 0 (โหลดรีแอกทีฟล้วน)</td></tr>
+      </tbody>
+    </table></div>
+<div class="wx" id="ex-m-1"><div class="wx-head"><span class="mono">ตัวอย่าง M-1</span><h3>W₁ = 30 kW, W₂ = 12 kW</h3></div>
+<ol class="steps">
+<li><p>M3: \(P = 42\) kW · M4: \(Q = \sqrt3(18) = 31.2\) kvar</p></li>
+<li><p>M5: \(\tan\varphi = 31.2/42 = 0.742\) → \(\varphi = 36.6^\circ\) → PF = 0.803</p></li>
+<li><p>ตรวจด้วย M3: \(V_LI_L = S/\sqrt3 = 52.3/1.732 = 30.2\) kVA → \(W_1 = 30.2\cos(30 - 36.6)^\circ = 30.0\) ✓ \(W_2 = 30.2\cos 66.6^\circ = 12.0\) ✓</p></li>
+</ol></div>
+    <div class="fg-calc pf-calc" data-pf="twowatt"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="meter">
+    <h2 id="meter">PF เฉลี่ยจากมิเตอร์ kWh และ kvarh <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="M6" data-k="average power factor kwh kvarh monthly pf เฉลี่ย มิเตอร์"><p class="tf-n"><b><span class="fid">M6</span> Average power factor</b> PF เฉลี่ยจากพลังงาน</p>
+        \[ \overline{PF} = \frac{E_{kWh}}{\sqrt{E_{kWh}^2 + E_{kvarh}^2}} \]</div>
+    <p>ระวัง: PF เฉลี่ยรายเดือนอาจดูดี (เช่น 0.9) แต่ค่าปรับคิดจาก kvar สูงสุด ช่วงที่มอเตอร์เบาโหลดหรือกะกลางคืนที่มีแต่ไฟส่องสว่างบัลลาสต์อาจมี PF ต่ำมาก ต้องดูข้อมูลรายช่วง 15 นาที</p>
+    <div class="fg-calc pf-calc" data-pf="avg"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="errors">
+    <h2 id="errors">ความผิดพลาดในการวัดที่พบบ่อย <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการบนเครื่องวัด</th><th>สาเหตุ</th><th>แก้</th></tr></thead>
+      <tbody>
+        <tr><td>P ติดลบ</td><td>CT/แคลมป์กลับทิศ</td><td>หันลูกศรไปทางโหลด หรือกลับ k-l</td></tr>
+        <tr><td>PF ต่ำผิดปกติ (เช่น 0.2) ทั้งที่โหลดเป็นฮีตเตอร์</td><td>CT ไม่ตรงเฟสกับสายแรงดัน (เลื่อน 120°)</td><td>ไล่จับคู่ L1-CT1, L2-CT2, L3-CT3</td></tr>
+        <tr><td>เฟสหนึ่ง PF นำหน้า อีกสองเฟสตามหลังผิดปกติ</td><td>ลำดับเฟสสลับ</td><td>ตรวจ phase rotation</td></tr>
+        <tr><td>กำลังเพี้ยน 1/1000 หรือ 1000 เท่า</td><td>ตั้งอัตราส่วน CT/VT ในเครื่องผิด</td><td>ตั้งค่า CT ratio ให้ตรง</td></tr>
+        <tr><td>PF แกว่งมาก</td><td>โหลดเปลี่ยนเร็ว (เครื่องเชื่อม ลิฟต์ เครื่องปั๊ม)</td><td>บันทึกค่าเฉลี่ย 1 วินาที–1 นาที แทนค่าทันที</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="survey">
+    <h2 id="survey">บันทึกโหลดก่อนออกแบบตู้คาปาซิเตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <ol>
+      <li>บันทึกที่ตู้ MDB อย่างน้อย 7 วัน รวมวันทำงานและวันหยุด ช่วงเวลา 1–15 นาที</li>
+      <li>เก็บ P Q S PF DPF แรงดัน THD-U THD-I และสเปกตรัมฮาร์มอนิก</li>
+      <li>หา Q สูงสุดที่ต้องชดเชย (T4) และ Q ต่ำสุด (กำหนดขั้นเล็กสุด ไม่ให้ชดเชยเกินตอนโหลดเบา)</li>
+      <li>ถ้า THD-I &gt; 10–15 % หรือมี VFD มาก พิจารณาตู้ detuned</li>
+      <li>เปรียบเทียบกับบิล 12 เดือน (kW kvar สูงสุดรายเดือน)</li>
+      <li>หลังติดตั้ง วัดซ้ำเพื่อยืนยัน PF และตรวจว่าไม่มีเรโซแนนซ์ (THD-U ไม่เพิ่ม)</li>
+    </ol>
+    <div class="note"><b>ความปลอดภัย</b> การต่อสายวัดแรงดันในตู้ที่มีไฟเป็นงานไฟฟ้าแรงต่ำขณะมีไฟ (live work) ใช้เครื่องมือ CAT III/CAT IV ที่เหมาะสม อุปกรณ์ป้องกันอันตรายจากอาร์ก และทำโดยผู้ที่ได้รับอนุญาตเท่านั้น ห้ามเปิดวงจรทุติยภูมิของ CT ที่มีกระแส</div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

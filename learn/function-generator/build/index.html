@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=c8098a2f">
+<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/build/#article","headline":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","description":"สร้างเครื่องกำเนิดสัญญาณและสโคปทำเองตั้งแต่ระดับ ม.ปลาย ถึง ป.โท: ออสซิลเลเตอร์ผ่อนคลายด้วยออปแอมป์ เครื่องกำเนิดสี่เหลี่ยม-สามเหลี่ยม ไอซี 555 แบบ astable Wien bridge และ RC phase-shift XR2206 DAC R-2R กับตารางค่าไซน์ DDS AD9833 พร้อมโค้ด Arduino และ ESP32 ภาคขาออกปรับแอมพลิจูดและออฟเซต วงจรขาเข้าสโคปทำเอง พร้อมตัวจำลองตัวสะสมเฟส DDS เครื่องคิดเลข และสูตรรหัส K","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/build/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/build/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Relaxation oscillator","555 timer","Wien bridge oscillator","Phase-shift oscillator","Barkhausen stability criterion","R-2R ladder","Digital-to-analog converter","Direct digital synthesis","AD9833","Arduino","ESP32"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-build.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","item":"https://modsengineeringmath.com/learn/function-generator/build/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"สร้างเครื่องกำเนิดสัญญาณเองแบบไหนง่ายและคุ้มที่สุด?","acceptedAnswer":{"@type":"Answer","text":"ถ้าต้องการแค่คลื่นสี่เหลี่ยม ใช้ไอซี 555 หรือขา PWM ของไมโครคอนโทรลเลอร์ ถ้าต้องการไซน์ สามเหลี่ยม และสี่เหลี่ยมที่ตั้งความถี่ได้แม่นจาก 0.1 Hz ถึงหลาย MHz ใช้โมดูล DDS AD9833 คุมด้วย Arduino หรือ ESP32 ผ่าน SPI สามสาย แล้วเพิ่มภาคขยายด้วยออปแอมป์สำหรับปรับแอมพลิจูดและออฟเซต"}},{"@type":"Question","name":"AD9833 ตั้งค่าความถี่อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"คำนวณเลข 28 บิต M = round(f_out × 2²⁸ / f_MCLK) เช่น 1 kHz กับนาฬิกา 25 MHz ได้ M = 10737 แล้วเขียนเป็นสองคำ 14 บิตลงรีจิสเตอร์ FREQ0 โดยตั้งบิตบนเป็น 01 (0x4000 | ค่า) ลำดับคือ 0x2100 (รีเซ็ต) คำล่าง คำบน 0xC000 (เฟส) แล้ว 0x2000 สำหรับไซน์ 0x2002 สามเหลี่ยม หรือ 0x2028 สี่เหลี่ยม"}},{"@type":"Question","name":"Arduino ใช้เป็นออสซิลโลสโคปได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้สำหรับสัญญาณช้า Arduino Uno อ่าน ADC ได้ราว 9.6 kSa/s ด้วย analogRead จึงดูได้แค่ไม่กี่ร้อย Hz ถึงราว 1 kHz และรับได้เฉพาะ 0–5 V ต้องมีวงจรแบ่งแรงดันและยกระดับก่อนวัดสัญญาณที่มีค่าลบ ESP32 และการ์ดเสียงคอมพิวเตอร์เร็วกว่า แต่ยังห่างจากสโคปจริงมาก เหมาะกับการเรียนรู้หลักการสุ่มสัญญาณ"}},{"@type":"Question","name":"ทำไมออสซิลเลเตอร์ Wien bridge ต้องมีวงจรคุมแอมพลิจูด?","acceptedAnswer":{"@type":"Answer","text":"เงื่อนไข Barkhausen ต้องการเกนวงรอบเท่ากับ 1 พอดี ถ้าเกนน้อยกว่า 3 นิดเดียวการแกว่งจะหยุด ถ้ามากกว่านิดเดียวแอมพลิจูดจะโตจนออปแอมป์อิ่มตัวและไซน์ถูกตัดยอด จึงต้องมีชิ้นส่วนที่ลดเกนเมื่อแอมพลิจูดสูง เช่น ไดโอดคู่ขนานกับตัวต้านทานป้อนกลับบางส่วน หลอดไฟ หรือ JFET"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -155,6 +155,45 @@
           <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
           <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
           <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
         </div>
       </div>
       <a href="/#watch" >ดูคลิป</a>
@@ -584,6 +623,12 @@ void loop() {
       <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
       <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
       <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
       <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
       <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
       <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -607,9 +652,9 @@ void loop() {
   </div>
 </footer>
 
-<script src="/assets/site.js?v=c8098a2f" defer></script>
-<script src="/assets/lesson.js?v=c8098a2f" defer></script>
-<script src="/assets/fgcalc.js?v=c8098a2f" defer></script>
-<script src="/assets/fgdds.js?v=c8098a2f" defer></script>
+<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/lesson.js?v=0014ea3e" defer></script>
+<script src="/assets/fgcalc.js?v=0014ea3e" defer></script>
+<script src="/assets/fgdds.js?v=0014ea3e" defer></script>
 </body>
 </html>

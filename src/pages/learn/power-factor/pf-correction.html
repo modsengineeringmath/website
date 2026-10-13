@@ -1,0 +1,149 @@
+<!--meta
+{
+  "title": "ปรับปรุงเพาเวอร์แฟกเตอร์ด้วยคาปาซิเตอร์: Qc = P(tan φ₁ − tan φ₂) ตารางตัวคูณ kvar แปลง kvar เป็น μF Δ กับ Y กระแสลด การสูญเสียลด kVA ได้คืน | อาจารย์มด",
+  "h1": "ปรับปรุงเพาเวอร์แฟกเตอร์ด้วยคาปาซิเตอร์: Q_c = P(tan φ₁ − tan φ₂), kvar เป็น μF, กระแสลด และ kVA ที่ได้คืน",
+  "description": "คำนวณคาปาซิเตอร์แก้เพาเวอร์แฟกเตอร์ทีละขั้น: สูตร Qc = P(tan φ₁ − tan φ₂) ตารางตัวคูณ kvar/kW แปลง kvar เป็นไมโครฟารัดทั้ง 1 เฟส และ 3 เฟสแบบเดลต้าและสตาร์ กระแสสายลดลงตาม PF₁/PF₂ การสูญเสียลด 1 − (PF₁/PF₂)² kVA หม้อแปลงที่ได้คืน แรงดันเพิ่ม การชดเชยมอเตอร์รายตัวไม่เกิน 0.9 √3 V I₀ และตำแหน่งติดตั้ง พร้อมเครื่องคำนวณ",
+  "ogTitle": "คำนวณคาปาซิเตอร์แก้ PF: Qc = P(tan φ₁ − tan φ₂)",
+  "og": {"title": "คำนวณคาปาซิเตอร์แก้ PF"},
+  "lesson": "power-factor",
+  "sub": "pf-correction",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Power-factor correction", "Capacitor", "Reactive power"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "คำนวณขนาดคาปาซิเตอร์แก้ PF อย่างไร?", "a": "ใช้สูตร Qc = P × (tan φ₁ − tan φ₂) โดย P คือกำลังจริง kW, φ₁ = cos⁻¹ ของ PF เดิม, φ₂ = cos⁻¹ ของ PF ที่ต้องการ เช่น โหลด 100 kW PF 0.75 ต้องการ 0.95 ได้ตัวคูณ 0.882 − 0.329 = 0.553 จึงต้องใช้ 55.3 kvar ในทางปฏิบัติเลือกขนาดมาตรฐานถัดไปและแบ่งเป็นขั้นในตู้อัตโนมัติ"},
+    {"q": "ควรแก้ PF ให้ได้ 1.0 พอดีไหม?", "a": "ไม่ควร เป้าหมายที่นิยมคือ 0.95–0.98 ตามหลัง เพราะตัวคูณจาก 0.95 ไปถึง 1.0 ต้องใช้คาปาซิเตอร์เพิ่มมาก (0.33 kvar ต่อ kW) แต่ลดกระแสได้เพียง 5 % และเสี่ยงชดเชยเกินเมื่อโหลดลดลง ทำให้แรงดันสูงขึ้นและเกิด PF นำหน้า"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>คำนวณคาปาซิเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.3 · เพาเวอร์แฟกเตอร์ · Power Factor Correction Calculation</p>
+      <h1>ปรับปรุงเพาเวอร์แฟกเตอร์ด้วยคาปาซิเตอร์: Q_c = P(tan φ₁ − tan φ₂), kvar เป็น μF, กระแสลด และ kVA ที่ได้คืน</h1>
+      <p class="lede">คาปาซิเตอร์จ่ายกำลังรีแอกทีฟให้มอเตอร์ “ในพื้นที่” แหล่งจ่ายจึงเหลือหน้าที่ส่งแค่กำลังจริง หน้านี้คำนวณตั้งแต่ขนาด kvar ความจุ μF จนถึงผลที่ได้: กระแส การสูญเสีย แรงดัน และความจุของหม้อแปลงที่ได้คืน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calc">เครื่องคำนวณ</a>
+        <a class="btn btn-ghost btn-sm" href="#size">สูตรและตาราง</a>
+        <a class="btn btn-ghost btn-sm" href="#uf">kvar → μF</a>
+        <a class="btn btn-ghost btn-sm" href="#benefit">ผลที่ได้</a>
+        <a class="btn btn-ghost btn-sm" href="#where">ติดตั้งที่ไหน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(Q_c = P(\tan\varphi_1 - \tan\varphi_2)\) · 100 kW จาก 0.75 → 0.95 ต้อง 55 kvar</li>
+          <li>3 เฟส Δ: \(C = Q_c/(3\omega V_L^2)\) ต่อเฟส · Y ต้องใช้ความจุ 3 เท่า</li>
+          <li>กระแสลด: \(I_2/I_1 = PF_1/PF_2\) · การสูญเสียลด \(1 - (PF_1/PF_2)^2\)</li>
+          <li>เป้า 0.95–0.98 ตามหลัง ไม่ใช่ 1.0 · มอเตอร์รายตัว ≤ 0.9 √3 V I₀</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น tan, kvar, μF, delta, การสูญเสีย, kva, แรงดัน" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="size">
+    <h2 id="size">ขนาด kvar <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="C1" data-k="capacitor kvar sizing tan phi formula ขนาดคาปาซิเตอร์ สูตร"><p class="tf-n"><b><span class="fid">C1</span> Capacitor size</b> ขนาดคาปาซิเตอร์</p>
+        \[ Q_c = P\left(\tan\varphi_1 - \tan\varphi_2\right) \qquad \varphi = \cos^{-1}(PF) \]</div>
+    <p>ที่มา: ก่อนแก้ \(Q_1 = P\tan\varphi_1\) หลังแก้ \(Q_2 = P\tan\varphi_2\) (P เท่าเดิมเพราะคาปาซิเตอร์ไม่ใช้กำลังจริง) ผลต่างคือสิ่งที่คาปาซิเตอร์ต้องจ่าย</p>
+    <div class="table-wrap"><table>
+      <caption>ตัวคูณ \(\tan\varphi_1 - \tan\varphi_2\) (kvar ต่อ kW)</caption>
+      <thead><tr><th>PF เดิม ↓ / เป้าหมาย →</th><th>0.90</th><th>0.95</th><th>1.00</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">0.60</th><td>0.849</td><td>1.005</td><td>1.333</td></tr>
+        <tr><th scope="row">0.65</th><td>0.685</td><td>0.840</td><td>1.169</td></tr>
+        <tr><th scope="row">0.70</th><td>0.536</td><td>0.692</td><td>1.020</td></tr>
+        <tr><th scope="row">0.75</th><td>0.398</td><td>0.553</td><td>0.882</td></tr>
+        <tr><th scope="row">0.80</th><td>0.266</td><td>0.421</td><td>0.750</td></tr>
+        <tr><th scope="row">0.85</th><td>0.136</td><td>0.291</td><td>0.620</td></tr>
+      </tbody>
+    </table></div>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>โรงงาน 100 kW PF 0.75 → 0.95 ที่ 400 V 3 เฟส</h3></div>
+<ol class="steps">
+<li><p>C1: \(\tan(\cos^{-1}0.75) = 0.882\) · \(\tan(\cos^{-1}0.95) = 0.329\) → \(Q_c = 100(0.553) = 55.3\) kvar → เลือก 60 kvar แบ่ง 4–6 ขั้น</p></li>
+<li><p>C4 (Δ): \(C = 55{,}300/(3 \times 314.16 \times 400^2) = 367\ \mu\text{F}\) ต่อเฟส</p></li>
+<li><p>C5: กระแส \(192.5 \to 151.9\) A (ลด 21 %) · การสูญเสียลด \(1 - (0.75/0.95)^2 = 37.7\,\%\)</p></li>
+<li><p>C6: \(133.3 \to 105.3\) kVA → หม้อแปลงได้ที่ว่างคืน 28 kVA</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="uf">
+    <h2 id="uf">แปลง kvar เป็นไมโครฟารัด <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="C2" data-k="capacitor reactive power q omega c v squared คาปาซิเตอร์ กำลังรีแอกทีฟ"><p class="tf-n"><b><span class="fid">C2</span> Reactive power of a capacitor</b> กำลังรีแอกทีฟของคาปาซิเตอร์</p>
+        \[ Q_C = \frac{V^2}{X_C} = \omega C V^2 \qquad I_C = \omega C V \]</div>
+<div class="tf" id="C3" data-k="single phase capacitance microfarad 1 เฟส ความจุ ไมโครฟารัด"><p class="tf-n"><b><span class="fid">C3</span> Single-phase capacitance</b> ความจุ 1 เฟส</p>
+        \[ C = \frac{Q_c}{2\pi f V^2} \]</div>
+<div class="tf" id="C4" data-k="three phase delta star capacitance per phase เดลต้า สตาร์ ความจุต่อเฟส"><p class="tf-n"><b><span class="fid">C4</span> Three-phase capacitance per phase</b> ความจุต่อเฟส 3 เฟส</p>
+        \[ C_\Delta = \frac{Q_c}{3\,\omega V_L^2} \qquad C_Y = \frac{Q_c}{\omega V_L^2} = 3\,C_\Delta \]</div>
+    <p>เพราะ Q ∝ V² คาปาซิเตอร์ที่ต่อ Δ ได้แรงดัน 400 V ต่อตัว ให้ kvar มากกว่าต่อ Y (230 V) ถึง 3 เท่า ตู้คาปาซิเตอร์แรงต่ำจึงต่อ Δ เกือบทั้งหมด และระวัง: คาปาซิเตอร์พิกัด 480 V ที่ใช้ที่ 400 V ให้ kvar เพียง \((400/480)^2 = 69\,\%\) ของค่าบนป้าย</p>
+<div class="wx" id="ex-c-2"><div class="wx-head"><span class="mono">ตัวอย่าง C-2</span><h3>มอเตอร์ปั๊ม 1 เฟส 230 V 2.85 kW PF 0.824 → 0.95</h3></div>
+<ol class="steps">
+<li><p>C1: \(\tan\varphi_1 = 0.688,\ \tan\varphi_2 = 0.329\) → \(Q_c = 2.85(0.359) = 1.02\) kvar</p></li>
+<li><p>C3: \(C = 1020/(314.16 \times 230^2) = 61\ \mu\text{F}\) — ใกล้ 60 µF ซึ่งเป็นขนาดมาตรฐาน</p></li>
+<li><p>ในซิมูเลเตอร์ ขั้นละ 0.5 kvar: 2 ขั้น (1.0 kvar) ได้ PF 0.948 · 3 ขั้น (1.5 kvar) ได้ 0.987</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-pf-preset="motor-fixed">เปิดในซิมูเลเตอร์</button></div></div>
+<div class="wx" id="ex-c-3"><div class="wx-head"><span class="mono">ตัวอย่าง C-3</span><h3>คาปาซิเตอร์ 25 kvar 440 V ใช้ที่ 400 V Δ</h3></div>
+<ol class="steps">
+<li><p>kvar จริง \(= 25(400/440)^2 = 20.7\) kvar</p></li>
+<li><p>ความจุต่อเฟส (C2 ที่พิกัด) \(= 25{,}000/(3 \times 314.16 \times 440^2) = 137\ \mu\text{F}\)</p></li>
+<li><p>ทำไมเลือก 440 V: เผื่อแรงดันเกินช่วงกลางคืนและแรงดันฮาร์มอนิก ทำให้คาปาซิเตอร์อายุยืน แต่ต้องเผื่อ kvar ที่ลดลงตอนออกแบบ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="benefit">
+    <h2 id="benefit">ผลที่ได้จากการแก้ PF <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="C5" data-k="current reduction loss reduction pf ratio กระแสลด การสูญเสียลด"><p class="tf-n"><b><span class="fid">C5</span> Current and loss reduction</b> กระแสและการสูญเสียที่ลดลง</p>
+        \[ \frac{I_2}{I_1} = \frac{PF_1}{PF_2} \qquad \frac{\Delta P_{loss}}{P_{loss,1}} = 1 - \left(\frac{PF_1}{PF_2}\right)^2 \]</div>
+<div class="tf" id="C6" data-k="released kva transformer capacity kva ที่ได้คืน"><p class="tf-n"><b><span class="fid">C6</span> Released kVA</b> kVA ที่ได้คืน</p>
+        \[ \Delta S = P\left(\frac{1}{PF_1} - \frac{1}{PF_2}\right) \]</div>
+<div class="tf" id="C7" data-k="voltage rise capacitor transformer impedance แรงดันเพิ่มขึ้น"><p class="tf-n"><b><span class="fid">C7</span> Voltage rise</b> แรงดันที่เพิ่มขึ้น</p>
+        \[ \Delta V\% \approx \frac{Q_c}{S_{sc}}\times 100 \approx \frac{Q_c\,(\%Z_T)}{S_T} \]</div>
+<div class="wx" id="ex-c-4"><div class="wx-head"><span class="mono">ตัวอย่าง C-4</span><h3>ตู้ 300 kVAr ที่หม้อแปลง 1,000 kVA %Z = 6 %</h3></div>
+<ol class="steps">
+<li><p>C7: \(\Delta V \approx 300 \times 6/1000 = 1.8\,\%\) — ประมาณ 7 V ที่ 400 V</p></li>
+<li><p>กลางวันช่วยชดเชยแรงดันตก แต่กลางคืนโหลดน้อยถ้ายังสับค้างไว้ แรงดันอาจสูงเกิน — ตู้อัตโนมัติจึงสำคัญ (<a href="/learn/power-factor/capacitor-bank/">อ่านต่อ</a>)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="where">
+    <h2 id="where">ติดตั้งที่ไหน: รายตัว รายกลุ่ม หรือที่ตู้เมน <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>แบบ</th><th>ข้อดี</th><th>ข้อเสีย</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td>รายตัว (individual) ที่มอเตอร์</td><td>ลดกระแสในสายทั้งเส้น สับพร้อมมอเตอร์ ไม่ต้องมีคอนโทรลเลอร์</td><td>ใช้คาปาซิเตอร์หลายตัว ใช้ไม่เต็มเมื่อมอเตอร์หยุด</td><td>มอเตอร์ใหญ่ที่ทำงานต่อเนื่อง</td></tr>
+        <tr><td>รายกลุ่ม (group) ที่ตู้ย่อย</td><td>สมดุลระหว่างต้นทุนกับการลดการสูญเสีย</td><td>ต้องตัดต่อตามโหลดของกลุ่ม</td><td>อาคารหลายโซน</td></tr>
+        <tr><td>ส่วนกลาง (central) ที่ตู้ MDB</td><td>ต้นทุนต่อ kvar ต่ำที่สุด ใช้ประโยชน์เต็มที่ แก้ค่าปรับได้</td><td>ไม่ลดกระแสในสายป้อนย่อย</td><td>โรงงานทั่วไป · ตู้อัตโนมัติ</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="C8" data-k="motor individual compensation no load current self excitation มอเตอร์ รายตัว กระตุ้นตัวเอง"><p class="tf-n"><b><span class="fid">C8</span> Maximum capacitor directly at a motor</b> คาปาซิเตอร์สูงสุดที่ต่อตรงกับมอเตอร์</p>
+        \[ Q_{c,max} \le 0.9\,\sqrt3\,V\,I_0 \qquad I_0 = \text{กระแสไร้โหลด} \]</div>
+    <p>ถ้าเกินค่านี้ เมื่อตัดไฟมอเตอร์ที่ยังหมุนอยู่ คาปาซิเตอร์จะกระตุ้นมอเตอร์ให้กลายเป็นเครื่องกำเนิด แรงดันที่ขั้วอาจสูงเกินพิกัดอย่างอันตราย ห้ามต่อคาปาซิเตอร์ที่ขั้วออกของ VFD หรือซอฟต์สตาร์ตเตอร์</p>
+    <div class="fg-calc pf-calc" data-pf="motor"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calc">
+    <h2 id="calc">เครื่องคำนวณคาปาซิเตอร์</h2>
+    <div class="fg-calc pf-calc" data-pf="qc"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-pf-fill="qc" data-vals='{"p":"2.85","pf1":"0.824","pf2":"0.95","sys":"1 เฟส 230 V"}'>ลอง: มอเตอร์ 1 เฟส ตัวอย่าง C-2</button><button type="button" class="btn btn-ghost btn-sm" data-pf-fill="qc" data-vals='{"pf2":"1.0"}'>ลอง: แก้ถึง 1.0 (ดูว่าเปลืองแค่ไหน)</button></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
