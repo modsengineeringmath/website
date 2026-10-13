@@ -1,0 +1,133 @@
+<!--meta
+{
+  "title": "องค์ประกอบสมมาตร (Symmetrical Components): ลำดับบวก ลบ ศูนย์ เมทริกซ์ Fortescue และการลัดวงจรลงดินหนึ่งเฟส สองเฟส สองเฟสลงดิน | อาจารย์มด",
+  "h1": "องค์ประกอบสมมาตรและการลัดวงจรไม่สมมาตร: ลำดับบวก ลบ ศูนย์ และฟอลต์ SLG LL DLG",
+  "description": "เข้าใจองค์ประกอบสมมาตรตั้งแต่แนวคิดถึงการคำนวณฟอลต์: ตัวดำเนินการ a = 1∠120° เมทริกซ์ Fortescue และอินเวอร์ส แยกกระแสไม่สมดุลเป็นลำดับบวก ลบ ศูนย์ วงจรลำดับของเครื่องกำเนิด หม้อแปลง Dyn11 สายส่ง การต่อวงจรลำดับสำหรับลัดลงดินหนึ่งเฟส (SLG) สองเฟส (LL) สองเฟสลงดิน (DLG) กระแสลงดิน 3I₀ ตัวอย่างตัวเลขและเครื่องคำนวณพร้อมแผนภาพเฟสเซอร์",
+  "ogTitle": "องค์ประกอบสมมาตร: ลำดับบวก ลบ ศูนย์",
+  "og": {"title": "องค์ประกอบสมมาตร: ลำดับบวก ลบ ศูนย์"},
+  "lesson": "power-systems",
+  "sub": "symmetrical-components",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Symmetrical components", "Fault (power engineering)", "Ground fault"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "องค์ประกอบสมมาตรมีไว้ทำไม?", "a": "ระบบสามเฟสที่ไม่สมดุล เช่น เมื่อเกิดลัดลงดินเฟสเดียว ใช้วงจรสมมูลเฟสเดียวไม่ได้ Fortescue พิสูจน์ว่าเฟสเซอร์สามตัวใด ๆ แยกได้เป็นสามชุดที่สมดุล ได้แก่ ลำดับบวก ลำดับลบ และลำดับศูนย์ แต่ละชุดคำนวณแบบเฟสเดียวได้ แล้วนำมาต่อกันตามเงื่อนไขของฟอลต์ ทำให้วิเคราะห์ฟอลต์ไม่สมดุลได้ง่าย และรีเลย์จำนวนมากก็วัดค่าลำดับเหล่านี้โดยตรง"},
+    {"q": "ทำไมหม้อแปลง Dyn11 ทำให้กระแสลงดินด้านแรงต่ำไม่ไหลขึ้นด้านแรงสูง?", "a": "กระแสลำดับศูนย์ทั้งสามเฟสมีมุมเท่ากัน ขด Δ ด้านแรงสูงให้กระแสนี้ไหลวนภายในขดได้ แต่ไม่มีทางออกไปสายแรงสูงเพราะไม่มีนิวทรัล วงจรลำดับศูนย์ของหม้อแปลงจึงต่อลงดินที่ด้าน Y และขาดที่ด้าน Δ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>องค์ประกอบสมมาตร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.6 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Symmetrical Components &amp; Unbalanced Faults</p>
+      <h1>องค์ประกอบสมมาตรและการลัดวงจรไม่สมมาตร: ลำดับบวก ลบ ศูนย์ และฟอลต์ SLG LL DLG</h1>
+      <p class="lede">ฟอลต์ที่พบบ่อยที่สุดคือลัดลงดินเฟสเดียว ซึ่งทำให้ระบบไม่สมดุล องค์ประกอบสมมาตร (Fortescue, 1918) เปลี่ยนปัญหาสามเฟสไม่สมดุลให้เป็นปัญหาสมดุลสามชุดที่แก้ทีละเฟสได้ — เป็นเครื่องมือคณิตศาสตร์ที่ทรงพลังที่สุดของวิชานี้ และเป็นพื้นฐานของรีเลย์ลงดินกับรีเลย์ลำดับลบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#idea">แนวคิด</a>
+        <a class="btn btn-ghost btn-sm" href="#matrix">เมทริกซ์ Fortescue</a>
+        <a class="btn btn-ghost btn-sm" href="#networks">วงจรลำดับ</a>
+        <a class="btn btn-ghost btn-sm" href="#faults">SLG · LL · DLG</a>
+        <a class="btn btn-ghost btn-sm" href="#calc">เครื่องคำนวณ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(a = 1\angle 120^\circ\), \(1 + a + a^2 = 0\)</li>
+          <li>\(I_0 = \tfrac13(I_a+I_b+I_c)\), \(I_1 = \tfrac13(I_a+aI_b+a^2I_c)\), \(I_2 = \tfrac13(I_a+a^2I_b+aI_c)\)</li>
+          <li>SLG: ต่ออนุกรม 1-2-0 → \(I_f = 3E/(Z_1+Z_2+Z_0+3Z_f)\)</li>
+          <li>LL: ต่อขนาน 1-2 → \(I_f = \sqrt3E/(Z_1+Z_2)\) · DLG: 1 อนุกรมกับ (2 ∥ 0)</li>
+          <li>กระแสลงดิน = 3I₀ — สิ่งที่รีเลย์ 50N/51N วัด</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น operator a, fortescue, zero sequence, slg, ll, dlg" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">แนวคิด: สามชุดสมดุลซ้อนกัน <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li><b>ลำดับบวก (1)</b> ขนาดเท่ากัน ห่าง 120° ลำดับ a-b-c เหมือนระบบปกติ — สร้างสนามหมุนไปข้างหน้า</li>
+      <li><b>ลำดับลบ (2)</b> ขนาดเท่ากัน ห่าง 120° แต่ลำดับ a-c-b — สนามหมุนถอยหลัง ทำให้โรเตอร์มอเตอร์ร้อน (รีเลย์ 46)</li>
+      <li><b>ลำดับศูนย์ (0)</b> สามตัวขนาดเท่ากัน มุมเท่ากัน — รวมกันไหลในนิวทรัล/ดิน</li>
+    </ul>
+<div class="tf" id="S1" data-k="operator a 120 degrees rotation ตัวดำเนินการ a"><p class="tf-n"><b><span class="fid">S1</span> Operator a</b> ตัวดำเนินการ a</p>
+        \[ a = 1\angle 120^\circ = -\tfrac12 + j\tfrac{\sqrt3}{2} \qquad a^2 = 1\angle 240^\circ \qquad a^3 = 1 \qquad 1 + a + a^2 = 0 \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="matrix">
+    <h2 id="matrix">เมทริกซ์ Fortescue และอินเวอร์ส <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S2" data-k="fortescue matrix synthesis phase from sequence เมทริกซ์ฟอร์เตสคิว"><p class="tf-n"><b><span class="fid">S2</span> Phase quantities from sequence quantities</b> สร้างค่าเฟสจากค่าลำดับ</p>
+        \[ \begin{bmatrix} I_a \\ I_b \\ I_c \end{bmatrix} = \begin{bmatrix} 1 &amp; 1 &amp; 1 \\ 1 &amp; a^2 &amp; a \\ 1 &amp; a &amp; a^2 \end{bmatrix} \begin{bmatrix} I_0 \\ I_1 \\ I_2 \end{bmatrix} \]</div>
+<div class="tf" id="S3" data-k="analysis sequence from phase inverse fortescue แยกองค์ประกอบ"><p class="tf-n"><b><span class="fid">S3</span> Sequence quantities from phase quantities</b> แยกค่าลำดับจากค่าเฟส</p>
+        \[ \begin{bmatrix} I_0 \\ I_1 \\ I_2 \end{bmatrix} = \frac13\begin{bmatrix} 1 &amp; 1 &amp; 1 \\ 1 &amp; a &amp; a^2 \\ 1 &amp; a^2 &amp; a \end{bmatrix} \begin{bmatrix} I_a \\ I_b \\ I_c \end{bmatrix} \]</div>
+<div class="tf" id="S4" data-k="neutral current zero sequence 3i0 กระแสนิวทรัล ลำดับศูนย์"><p class="tf-n"><b><span class="fid">S4</span> Neutral / earth current</b> กระแสนิวทรัลและกระแสลงดิน</p>
+        \[ I_n = I_a + I_b + I_c = 3I_0 \]</div>
+    <p>อินเวอร์สของเมทริกซ์ใน S2 คือ S3 (ตรวจได้ด้วยการคูณกันแล้วใช้ \(1 + a + a^2 = 0\)) ทบทวนเมทริกซ์และอินเวอร์สที่ <a href="/learn/linear-algebra/inverse/">อินเวอร์สเมทริกซ์</a></p>
+<div class="wx" id="ex-s-1"><div class="wx-head"><span class="mono">ตัวอย่าง S-1</span><h3>\(I_a = 100\angle 0^\circ,\ I_b = 80\angle -110^\circ,\ I_c = 60\angle 130^\circ\) A</h3></div>
+<ol class="steps">
+<li><p>S3: \(I_0 = 14.96\angle -40.6^\circ\) · \(I_1 = 79.70\angle 5.8^\circ\) · \(I_2 = 9.49\angle 9.9^\circ\) A</p></li>
+<li><p>S4: กระแสนิวทรัล \(3 \times 14.96 = 44.9\) A — แม้โหลดแต่ละเฟสไม่เกินพิกัด สายนิวทรัลก็มีกระแสมาก</p></li>
+<li><p>ความไม่สมดุล \(|I_2|/|I_1| = 11.9\,\%\) — มอเตอร์ที่ต่ออยู่จะร้อนขึ้นจากสนามหมุนย้อนกลับ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="networks">
+    <h2 id="networks">วงจรลำดับของอุปกรณ์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อุปกรณ์</th><th>\(Z_1\)</th><th>\(Z_2\)</th><th>\(Z_0\)</th></tr></thead>
+      <tbody>
+        <tr><td>เครื่องกำเนิดซิงโครนัส</td><td>\(X_d''\) (มีแหล่งจ่าย E)</td><td>≈ \(X_d''\)</td><td>เล็ก (\(X_0\)) + \(3Z_n\) ถ้านิวทรัลต่อดินผ่านอิมพีแดนซ์</td></tr>
+        <tr><td>หม้อแปลง</td><td>\(Z_T\)</td><td>\(Z_T\)</td><td>ขึ้นกับการต่อ: Yn-yn ผ่าน · <b>Dyn: ลงดินด้าน yn ขาดด้าน D</b> · Yy ไม่ต่อดิน: ขาด</td></tr>
+        <tr><td>สายส่ง/เคเบิล</td><td>\(Z_1\)</td><td>\(= Z_1\)</td><td>\(Z_0 \approx 2\text{–}4\,Z_1\) (ทางกลับผ่านดิน/สายดิน)</td></tr>
+        <tr><td>โหลดสถิตสมดุล</td><td>\(Z\)</td><td>\(Z\)</td><td>\(Z\) ถ้า Y ต่อดิน · ∞ ถ้า Δ หรือ Y ลอย</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="S9" data-k="dyn11 transformer zero sequence blocked delta หม้อแปลง dyn ลำดับศูนย์"><p class="tf-n"><b><span class="fid">S9</span> Zero-sequence path of a Dyn transformer</b> ทางเดินลำดับศูนย์ของหม้อแปลง Dyn</p>
+        \[ Z_{0,\,yn\ side} = Z_T + 3Z_n \qquad Z_{0,\,D\ side} = \infty\ \ (\text{กระแสวนในขด Δ}) \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="faults">
+    <h2 id="faults">สูตรฟอลต์ไม่สมมาตร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S5" data-k="single line to ground slg fault current series connection ลัดลงดินหนึ่งเฟส"><p class="tf-n"><b><span class="fid">S5</span> Single line-to-ground fault (phase a)</b> ลัดลงดินหนึ่งเฟส</p>
+        \[ I_{a1} = I_{a2} = I_{a0} = \frac{E}{Z_1 + Z_2 + Z_0 + 3Z_f} \qquad I_f = 3I_{a0} = \frac{3E}{Z_1+Z_2+Z_0+3Z_f} \]</div>
+<div class="tf" id="S6" data-k="line to line ll fault phase b c ลัดวงจรสองเฟส"><p class="tf-n"><b><span class="fid">S6</span> Line-to-line fault (b–c)</b> ลัดวงจรระหว่างสองเฟส</p>
+        \[ I_{a1} = -I_{a2} = \frac{E}{Z_1 + Z_2 + Z_f} \qquad |I_b| = |I_c| = \sqrt3\,|I_{a1}| \]</div>
+<div class="tf" id="S7" data-k="double line to ground dlg fault parallel ลัดสองเฟสลงดิน"><p class="tf-n"><b><span class="fid">S7</span> Double line-to-ground fault (b–c–g)</b> ลัดสองเฟสลงดิน</p>
+        \[ I_{a1} = \frac{E}{Z_1 + \dfrac{Z_2(Z_0+3Z_f)}{Z_2+Z_0+3Z_f}} \qquad I_{a2} = -I_{a1}\frac{Z_0+3Z_f}{Z_2+Z_0+3Z_f} \qquad I_{a0} = -I_{a1}\frac{Z_2}{Z_2+Z_0+3Z_f} \]</div>
+<div class="tf" id="S8" data-k="three phase balanced fault positive only ลัดสามเฟส ลำดับบวก"><p class="tf-n"><b><span class="fid">S8</span> Three-phase fault</b> ลัดวงจรสามเฟส (มีแค่ลำดับบวก)</p>
+        \[ I_{a1} = \frac{E}{Z_1 + Z_f} \qquad I_{a2} = I_{a0} = 0 \]</div>
+<div class="wx" id="ex-s-2"><div class="wx-head"><span class="mono">ตัวอย่าง S-2</span><h3>บัส 22 kV ฐาน 100 MVA: X₁ = X₂ = 0.25 pu, X₀ = 0.15 pu, Z_f = 0</h3></div>
+<ol class="steps">
+<li><p>\(I_{base} = 2{,}624\) A (U3)</p></li>
+<li><p>S8 สามเฟส: \(1/0.25 = 4.00\) pu = 10.5 kA</p></li>
+<li><p>S5 SLG: \(3/(0.25+0.25+0.15) = 4.615\) pu = 12.1 kA — <b>มากกว่าสามเฟส</b> เพราะ \(X_0 &lt; X_1\)</p></li>
+<li><p>S6 LL: \(\sqrt3/0.5 = 3.464\) pu = 9.09 kA \(= 0.866 \times\) สามเฟส</p></li>
+<li><p>S7 DLG: \(Z_2 \parallel Z_0 = j0.09375\) → \(I_{a1} = -j2.909\) · \(I_{a0} = j1.818\) → กระแสลงดิน \(3I_{a0} = 5.455\) pu = 14.3 kA · \(|I_b| = |I_c| = 4.41\) pu</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calc">
+    <h2 id="calc">เครื่องคำนวณองค์ประกอบสมมาตรและฟอลต์</h2>
+    <div class="fg-calc ps-calc" data-ps="seq"></div>
+    <div class="fg-calc ps-calc" data-ps="ufault"></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ps-fill="seq" data-vals='{"am":"100","aa":"0","bm":"100","ba":"-120","cm":"100","ca":"120"}'>ลอง: ระบบสมดุล (ได้แค่ I₁)</button><button type="button" class="btn btn-ghost btn-sm" data-ps-fill="seq" data-vals='{"am":"300","aa":"-80","bm":"0","ba":"0","cm":"0","ca":"0"}'>ลอง: ลัดลงดินเฟส a (I₀ = I₁ = I₂)</button><button type="button" class="btn btn-ghost btn-sm" data-ps-fill="ufault" data-vals='{"x0":"0.6"}'>ลอง: X₀ ใหญ่ (นิวทรัลต่อดินผ่านรีแอกเตอร์)</button></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

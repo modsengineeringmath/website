@@ -1,0 +1,194 @@
+<!--meta
+{
+  "title": "ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 kW 11 kW 22 kW, สัญญาณ Control Pilot PWM, Proximity, Load Balancing | อาจารย์มด",
+  "h1": "ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 / 11 / 22 kW, Control Pilot PWM, Proximity และการเลือกเครื่อง",
+  "description": "วอลล์บ็อกซ์ทำงานอย่างไร: ไม่ได้แปลงไฟแต่เป็นสวิตช์อัจฉริยะ สัญญาณ Control Pilot ±12 V PWM 1 kHz duty cycle บอกกระแส I = 0.6 × D สถานะ A B C D E F วงจรตัวต้านทานฝั่งรถ 2.74 kΩ 1.3 kΩ ตัวต้านทาน Proximity บอกพิกัดสาย 1 เฟส 32 A กับ 3 เฟส ขีดจำกัด OBC dynamic load balancing OCPP และเกณฑ์เลือกซื้อ พร้อมแล็บสัญญาณ CP",
+  "ogTitle": "วอลล์บ็อกซ์ชาร์จรถ EV: Control Pilot PWM ทำงานอย่างไร",
+  "og": {"title": "วอลล์บ็อกซ์ชาร์จรถ EV: Control Pilot ทำงานอย่างไร"},
+  "lesson": "ev-charging",
+  "sub": "wallbox",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Charging station", "SAE J1772", "Pulse-width modulation", "Open Charge Point Protocol"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "วอลล์บ็อกซ์ 7 kW กับ 22 kW ควรเลือกอะไร?", "a": "ดูที่รถและระบบไฟบ้าน รถส่วนใหญ่มี OBC 7–11 kW บ้านส่วนใหญ่เป็นไฟ 1 เฟส จึงใช้ได้สูงสุด 7.4 kW (32 A) วอลล์บ็อกซ์ 22 kW ต้องการไฟ 3 เฟส 32 A และรถที่มี OBC 22 kW ซึ่งมีน้อย สำหรับบ้านทั่วไป 7.4 kW ชาร์จได้ราว 44 km ต่อชั่วโมง เพียงพอสำหรับการชาร์จข้ามคืน"},
+    {"q": "Control Pilot คืออะไร?", "a": "เป็นสายสัญญาณเส้นเดียวในหัวชาร์จที่เครื่องชาร์จส่งคลื่นสี่เหลี่ยม ±12 V ความถี่ 1 kHz ความกว้างพัลส์ (duty cycle) บอกกระแสสูงสุดที่รถดึงได้ เช่น duty 53.3 % = 32 A ส่วนรถตอบกลับด้วยการต่อตัวต้านทานลงดินทำให้แรงดันลดเหลือ 9 V (เสียบแล้ว) หรือ 6 V (พร้อมชาร์จ) เป็นภาษาง่าย ๆ ที่ปลอดภัยแม้ไม่มีคอมพิวเตอร์"},
+    {"q": "Dynamic load balancing จำเป็นไหม?", "a": "จำเป็นถ้ากระแสรวมของบ้านเมื่อรวมรถแล้วอาจเกินเมนเบรกเกอร์หรือมิเตอร์ ระบบนี้ใช้ CT วัดกระแสเข้าบ้าน แล้วลดกระแสชาร์จอัตโนมัติเมื่อบ้านใช้ไฟมาก (เช่น เปิดแอร์หลายเครื่องพร้อมเครื่องทำน้ำอุ่น) ช่วยให้ไม่ต้องขยายมิเตอร์ใหญ่เกินจำเป็น"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>ชาร์จเร็วที่บ้าน (Wallbox)</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.4 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · Home Wallbox (Mode 3)</p>
+      <h1>ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 / 11 / 22 kW, Control Pilot PWM, Proximity และการเลือกเครื่อง</h1>
+      <p class="lede">วอลล์บ็อกซ์คือวิธีชาร์จที่บ้านซึ่งเร็วและปลอดภัยที่สุด เพราะต่อตายตัวกับวงจรเฉพาะ ไม่มีปลั๊กที่หลวมได้ และสื่อสารกับรถตลอดเวลา สิ่งที่น่าทึ่งคือ “ภาษา” ระหว่างเครื่องชาร์จกับรถใช้แค่ไฟสัญญาณเส้นเดียว ตัวต้านทานสองสามตัว และไดโอดหนึ่งตัว — หน้านี้แกะวงจรนั้นทีละขั้น พร้อมแล็บให้ลองเปลี่ยนสถานะเอง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#cp-lab">แล็บ Control Pilot</a>
+        <a class="btn btn-ghost btn-sm" href="#power">7.4 / 11 / 22 kW</a>
+        <a class="btn btn-ghost btn-sm" href="#cp">สัญญาณ CP</a>
+        <a class="btn btn-ghost btn-sm" href="#balance">Load balancing</a>
+        <a class="btn btn-ghost btn-sm" href="#buy">เลือกซื้อ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>บ้าน 1 เฟส: สูงสุด 32 A = 7.4 kW · บ้าน 3 เฟส: 16 A = 11 kW, 32 A = 22 kW</li>
+          <li>Duty cycle ของ PWM 1 kHz บอกกระแส: \(I = 0.6\,D\) (D เป็น %) เช่น 53.3 % → 32 A</li>
+          <li>รถตอบด้วยแรงดัน: 12 V ยังไม่เสียบ · 9 V เสียบแล้ว · 6 V ขอชาร์จ</li>
+          <li>รถดึงกระแส = ค่าน้อยที่สุดของ PWM · สาย (PP) · OBC</li>
+          <li>Load balancing ลดกระแสรถอัตโนมัติไม่ให้เมนเบรกเกอร์ทริป</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น duty, pwm, control pilot, proximity, load balancing" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="power">
+    <h2 id="power">วอลล์บ็อกซ์ 7.4 / 11 / 22 kW ต่างกันอย่างไร <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="W1" data-k="wallbox power 1 phase 3 phase 7.4 11 22 kw กำลังวอลล์บ็อกซ์"><p class="tf-n"><b><span class="fid">W1</span> Wallbox power</b> กำลังของวอลล์บ็อกซ์</p>
+        \[ P_{1\varphi} = 230\,I \qquad P_{3\varphi} = 3 \times 230\,I = \sqrt{3}\times 400\,I \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รุ่น</th><th>ระบบไฟ</th><th>กระแส/เฟส</th><th>กำลัง</th><th>เบรกเกอร์ (C, ×1.25)</th><th>km ต่อชั่วโมง*</th></tr></thead>
+      <tbody>
+        <tr><td>3.7 kW</td><td>1 เฟส</td><td>16 A</td><td>3.68 kW</td><td>20 A</td><td>22</td></tr>
+        <tr><td>7.4 kW</td><td>1 เฟส</td><td>32 A</td><td>7.36 kW</td><td>40 A</td><td>44</td></tr>
+        <tr><td>11 kW</td><td>3 เฟส</td><td>16 A</td><td>11.0 kW</td><td>20 A (3P)</td><td>66</td></tr>
+        <tr><td>22 kW</td><td>3 เฟส</td><td>32 A</td><td>22.1 kW</td><td>40 A (3P)</td><td>132</td></tr>
+      </tbody>
+    </table></div>
+    <p class="pv-note">* ที่ 15 kWh/100 km ประสิทธิภาพ 90 % และเมื่อ OBC ของรถรับได้เต็มกำลัง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inside">
+    <h2 id="inside">ข้างในวอลล์บ็อกซ์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>คอนแทกเตอร์</b> สวิตช์กำลังที่ต่อ L (และ N) เข้าหัวชาร์จเมื่อได้สถานะ C เท่านั้น — ไม่มีไฟที่ขาหัวชาร์จขณะถือหัวไว้ในมือ</li>
+      <li><b>ตรวจจับไฟรั่ว</b> AC 30 mA และ DC 6 mA (RDC-DD) หรือใช้ RCD Type B ที่ตู้ไฟ — <a href="/learn/ev-charging/safety-standards/">ความปลอดภัย</a></li>
+      <li><b>ไมโครคอนโทรลเลอร์ + วงจร CP</b> สร้าง PWM ±12 V และวัดแรงดันตอบกลับ</li>
+      <li><b>มิเตอร์ในตัว</b> นับ kWh (รุ่นที่ใช้คิดเงินต้องมี MID/มาตรวิทยา)</li>
+      <li><b>ตรวจหน้าสัมผัสคอนแทกเตอร์ติด (welding detection)</b> และตรวจอุณหภูมิขั้วต่อ</li>
+      <li><b>การสื่อสาร</b> Wi-Fi/Ethernet/4G โปรโตคอล OCPP สำหรับแอปตั้งเวลาและจัดการโหลด</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="cp">
+    <h2 id="cp">สัญญาณ Control Pilot: ภาษาของเครื่องชาร์จกับรถ <span class="lv lv-i">กลาง</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 240" role="img" aria-label="วงจร Control Pilot ระหว่างเครื่องชาร์จกับรถ">
+        <rect class="bx" x="10" y="20" width="300" height="200" rx="12" style="fill:none"/><text class="tb" x="160" y="42" text-anchor="middle">เครื่องชาร์จ (EVSE)</text>
+        <rect class="bx" x="450" y="20" width="300" height="200" rx="12" style="fill:none"/><text class="tb" x="600" y="42" text-anchor="middle">รถยนต์</text>
+        <rect class="bx2" x="30" y="80" width="90" height="60" rx="6"/><text x="75" y="105" text-anchor="middle">±12 V</text><text class="t2" x="75" y="122" text-anchor="middle">PWM 1 kHz</text>
+        <path class="ln" d="M120 110 H160"/><rect class="bx" x="160" y="100" width="56" height="20" rx="3"/><text class="t2" x="188" y="114" text-anchor="middle">R1 1 kΩ</text>
+        <path class="ln2" d="M216 110 H480"/><circle class="fa" cx="250" cy="110" r="4"/><text class="t2" x="250" y="96" text-anchor="middle">วัดแรงดัน</text>
+        <text class="tb" x="380" y="100" text-anchor="middle">สาย CP</text>
+        <path class="ln" d="M480 110 H510"/><path class="ln" d="M510 100 L530 110 L510 120 Z"/><path class="ln" d="M530 100 V120"/><text class="t2" x="520" y="140" text-anchor="middle">ไดโอด</text>
+        <path class="ln" d="M530 110 H580 V80 H620"/><path class="ln" d="M580 110 V160 H620"/>
+        <rect class="bx" x="620" y="70" width="70" height="20" rx="3"/><text class="t2" x="655" y="84" text-anchor="middle">R2 2.74 kΩ</text>
+        <rect class="bx" x="620" y="150" width="70" height="20" rx="3"/><text class="t2" x="655" y="164" text-anchor="middle">R3 1.3 kΩ</text>
+        <path class="ln" d="M690 80 H720 V200"/><path class="ln" d="M690 160 H700"/><text class="t2" x="704" y="150">S2</text><path class="ln" d="M700 160 L715 152"/><path class="ln" d="M716 160 H720"/>
+        <path class="ln" d="M120 200 H720"/><text class="t2" x="380" y="194" text-anchor="middle">PE (สายดิน) = กราวด์อ้างอิงของสัญญาณ</text>
+        <path class="ln" d="M75 140 V200"/>
+      </svg>
+      <figcaption>เครื่องชาร์จส่ง ±12 V ผ่าน R1 1 kΩ รถต่อไดโอดและ R2 (เสียบแล้ว) แล้วปิดสวิตช์ S2 ต่อ R3 ขนาน (พร้อมชาร์จ) แรงดันที่จุดวัดจึงลดเป็นขั้น ๆ</figcaption>
+    </figure>
+<div class="tf" id="W2" data-k="duty cycle current control pilot pwm 0.6 กระแสสูงสุด"><p class="tf-n"><b><span class="fid">W2</span> Duty cycle → maximum current</b> duty cycle บอกกระแสสูงสุด (IEC 61851-1 / SAE J1772)</p>
+        \[ I_{max} = 0.6\,D \quad (10\,\% \le D \le 85\,\%) \qquad I_{max} = 2.5\,(D-64) \quad (85\,\% < D \le 96\,\%) \]</div>
+<div class="tf" id="W3" data-k="current to duty inverse ตั้งกระแส คำนวณ duty"><p class="tf-n"><b><span class="fid">W3</span> Current → duty cycle</b> ต้องการกระแสนี้ ตั้ง duty เท่าไร</p>
+        \[ D = \frac{I}{0.6}\ \ (6 \le I \le 51\ \text{A}) \qquad D = \frac{I}{2.5}+64\ \ (51 < I \le 80\ \text{A}) \]</div>
+    <p>duty 5 % มีความหมายพิเศษ: “คุยกันแบบดิจิทัล” ตาม ISO 15118 (สัญญาณสื่อสารซ้อนบนสาย CP) ใช้กับตู้ DC และระบบ Plug &amp; Charge ส่วน duty ต่ำกว่า 8 % (ยกเว้น 5 %) หรือสูงกว่า 97 % หมายถึงห้ามชาร์จ</p>
+<div class="tf" id="W4" data-k="cp voltage divider diode state b c 9v 6v แรงดัน cp"><p class="tf-n"><b><span class="fid">W4</span> Pilot voltage seen by the EVSE</b> แรงดันที่เครื่องชาร์จวัดได้ (ครึ่งบวกของ PWM)</p>
+        \[ V_{CP} = V_D + (12 - V_D)\,\frac{R_{car}}{R_{car} + 1\ \text{k}\Omega} \qquad V_D \approx 0.7\ \text{V} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สถานะ</th><th>\(V_{CP}\) ครึ่งบวก</th><th>ฝั่งรถ</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>+12 V (ไม่มี PWM)</td><td>ไม่ได้ต่อ</td><td>ยังไม่เสียบ</td></tr>
+        <tr><td>B</td><td>+9 V</td><td>R2 2.74 kΩ</td><td>เสียบแล้ว รถยังไม่ขอไฟ (เครื่องชาร์จเริ่ม PWM)</td></tr>
+        <tr><td>C</td><td>+6 V</td><td>R2 ∥ R3 = 882 Ω</td><td>รถขอชาร์จ → คอนแทกเตอร์ต่อ</td></tr>
+        <tr><td>D</td><td>+3 V</td><td>R2 ∥ 270 Ω</td><td>ชาร์จและต้องการระบายอากาศ</td></tr>
+        <tr><td>E</td><td>0 V</td><td>—</td><td>ไฟเครื่องชาร์จดับหรือ CP ลัดลงดิน</td></tr>
+        <tr><td>F</td><td>−12 V</td><td>—</td><td>เครื่องชาร์จขัดข้อง</td></tr>
+      </tbody>
+    </table></div>
+    <p>ครึ่งลบของ PWM ต้องอยู่ที่ −12 V เสมอ ไดโอดในรถทำให้ฝั่งรถไม่ดึงกระแสในครึ่งลบ เครื่องชาร์จจึงใช้ครึ่งลบตรวจว่ามีรถจริง (ไม่ใช่ตัวต้านทานลัดลงดิน)</p>
+<div class="wx" id="ex-w-1"><div class="wx-head"><span class="mono">ตัวอย่าง W-1</span><h3>ตรวจแรงดัน CP สถานะ B และ C</h3></div>
+<ol class="steps">
+<li><p>สถานะ B: W4 \(V = 0.7 + 11.3 \times \dfrac{2740}{3740} = 0.7 + 8.28 = 8.98\ \text{V} \approx 9\ \text{V}\) ✓</p></li>
+<li><p>สถานะ C: \(R_{car} = \dfrac{2740 \times 1300}{2740 + 1300} = 882\ \Omega\) → \(V = 0.7 + 11.3 \times \dfrac{882}{1882} = 6.0\ \text{V}\) ✓</p></li>
+<li><p>นี่คือเหตุผลที่ค่าตัวต้านทานในมาตรฐานเป็นเลขแปลก ๆ อย่าง 2.74 kΩ — ออกแบบให้แรงดันออกมาเป็น 9 V และ 6 V พอดีเมื่อรวมไดโอด</p></li>
+</ol></div>
+<div class="wx" id="ex-w-2"><div class="wx-head"><span class="mono">ตัวอย่าง W-2</span><h3>ตั้งวอลล์บ็อกซ์ที่ 32 A 16 A และ 65 A</h3></div>
+<ol class="steps">
+<li><p>W3: 32 A → \(D = 32/0.6 = 53.3\,\%\) ความกว้างพัลส์ 533 µs ในคาบ 1 ms</p></li>
+<li><p>16 A → \(D = 26.7\,\%\) · 6 A (ต่ำสุด) → \(D = 10\,\%\)</p></li>
+<li><p>65 A เกิน 51 A ใช้ช่วงที่สอง: \(D = 65/2.5 + 64 = 90\,\%\) ตรวจกลับด้วย W2: \(2.5(90-64) = 65\ \text{A}\) ✓</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pp">
+    <h2 id="pp">Proximity Pilot: สายบอกพิกัดของตัวเอง <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="W5" data-k="actual current min pwm cable obc proximity กระแสที่รถดึงจริง"><p class="tf-n"><b><span class="fid">W5</span> Current actually drawn</b> กระแสที่รถดึงจริง</p>
+        \[ I_{EV} = \min\!\left(I_{PWM},\ I_{PP},\ I_{OBC}\right) \qquad R_{PP}:\ 1.5\,\text{k}\Omega{=}13\,\text{A},\ 680\,\Omega{=}20\,\text{A},\ 220\,\Omega{=}32\,\text{A},\ 100\,\Omega{=}63\,\text{A} \]</div>
+    <p>ในหัว Type 2 มีตัวต้านทานระหว่างขา PP กับ PE ค่าของมันบอกพิกัดกระแสของสายเส้นนั้น เครื่องชาร์จแบบมีเต้ารับ (untethered) อ่านค่านี้แล้วจำกัดกระแส ป้องกันการใช้สาย 13 A กับเครื่อง 32 A ลองเปลี่ยนสายในแล็บด้านล่าง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="cp-lab">
+    <h2 id="cp-lab">แล็บ Control Pilot: ลองเปลี่ยนสถานะ กระแส และสาย</h2>
+    <div class="ev-cp" data-a="32" data-state="C"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="fg-calc ev-calc" data-ev="cp"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="balance">
+    <h2 id="balance">Dynamic load balancing: ไม่ให้เมนทริปเมื่อเปิดแอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ระบบจัดการโหลดใช้ CT คล้องสายเมนหลังมิเตอร์ วัดกระแสที่บ้านใช้ทุกวินาที แล้วสั่งวอลล์บ็อกซ์เปลี่ยน duty cycle ทันที รถจะลดกระแสตามภายในไม่กี่วินาที (มาตรฐานกำหนดให้รถตอบสนองภายใน 5 วินาที)</p>
+<div class="tf" id="W6" data-k="dynamic load balancing ct main breaker margin จัดการโหลด"><p class="tf-n"><b><span class="fid">W6</span> Dynamic load balancing</b> กระแสที่อนุญาตให้รถ</p>
+        \[ I_{EV}(t) = \min\!\Big(I_{set},\ \max\!\big(0,\ I_{main} - I_{house}(t) - I_{margin}\big)\Big) \qquad I_{EV} < 6\ \text{A} \Rightarrow \text{หยุดชั่วคราว} \]</div>
+<div class="wx" id="ex-w-3"><div class="wx-head"><span class="mono">ตัวอย่าง W-3</span><h3>เมน 63 A บ้านใช้ 40 A ตอนหัวค่ำ</h3></div>
+<ol class="steps">
+<li><p>ตั้งเผื่อ \(I_{margin} = 5\) A → W6: \(I_{EV} = \min(32,\ 63 - 40 - 5) = 18\ \text{A}\)</p></li>
+<li><p>W3: วอลล์บ็อกซ์ส่ง duty \(18/0.6 = 30\,\%\) → รถชาร์จ \(230 \times 18 = 4.1\) kW</p></li>
+<li><p>สี่ทุ่ม แอร์ห้องนั่งเล่นปิดและครัวเลิกใช้ บ้านเหลือ 6 A → \(I_{EV} = \min(32, 52) = 32\) A ชาร์จเต็ม 7.4 kW</p></li>
+<li><p>ผล: ไม่ต้องขยายมิเตอร์จาก 30(100) A หรือเปลี่ยนเป็น 3 เฟส และยังชาร์จเต็มในคืนเดียว</p></li>
+</ol></div>
+    <p>ระบบเดียวกันใช้กับ <b>การชาร์จจากโซลาร์ส่วนเกิน</b>: CT วัดกระแสที่กำลังไหลออกกริด แล้วตั้ง \(I_{EV}\) ให้เท่ากับส่วนเกินนั้น อ่านที่ <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="threephase">
+    <h2 id="threephase">ไฟ 3 เฟสกับรถ OBC เฟสเดียว: ปัญหาเฟสไม่สมดุล <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>บ้าน 3 เฟสที่ใช้รถ OBC เฟสเดียว 32 A จะดึงกระแส 32 A ที่เฟสเดียว เพิ่มความไม่สมดุลระหว่างเฟสและกระแสในสายนิวทรัล การไฟฟ้าบางแห่งจำกัดกระแสไม่สมดุลต่อจุดต่อไฟ ควรเลือกเฟสที่มีโหลดน้อยให้วอลล์บ็อกซ์ หรือใช้วอลล์บ็อกซ์ที่สลับเฟสอัตโนมัติ (phase switching) ซึ่งมีประโยชน์กับการชาร์จจากโซลาร์ด้วย: เมื่อโซลาร์เกินน้อยใช้ 1 เฟส 6 A (1.4 kW) ต่ำสุด เมื่อเกินมากสลับเป็น 3 เฟส (ต่ำสุด 4.1 kW) — ความเข้าใจเรื่ององค์ประกอบสมมาตรช่วยอธิบายผลของความไม่สมดุลนี้ (<a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="buy">
+    <h2 id="buy">เกณฑ์เลือกซื้อวอลล์บ็อกซ์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวข้อ</th><th>ควรมี</th><th>เหตุผล</th></tr></thead>
+      <tbody>
+        <tr><td>มาตรฐาน</td><td>IEC 61851-1, IEC 62196 (หัว), มอก./การรับรองที่การไฟฟ้ายอมรับ</td><td>การไฟฟ้าใช้ตรวจตอนขออนุญาต</td></tr>
+        <tr><td>การตรวจไฟรั่ว DC</td><td>RDC-DD 6 mA ในตัว (IEC 62955) หรือใช้ RCD Type B ที่ตู้</td><td>ไม่ให้ RCD Type A ตาบอด</td></tr>
+        <tr><td>กำลัง</td><td>เท่ากับ OBC ของรถและระบบไฟบ้าน ปรับกระแสได้ 6–32 A</td><td>ไม่เสียเงินกับกำลังที่ใช้ไม่ได้</td></tr>
+        <tr><td>สายติดเครื่อง (tethered) หรือเต้ารับ</td><td>บ้าน: สายติดเครื่อง 5–7.5 m สะดวกกว่า</td><td>ลดการเสียบสายผิด</td></tr>
+        <tr><td>ตั้งเวลาและ load balancing</td><td>ตั้งเวลา Off-Peak, CT จัดการโหลด, โหมดโซลาร์</td><td>ประหยัดค่าไฟ ไม่ต้องขยายมิเตอร์</td></tr>
+        <tr><td>OCPP 1.6J / 2.0.1</td><td>เปลี่ยนแอปหรือผู้ให้บริการได้</td><td>ไม่ผูกกับระบบปิดที่อาจเลิกให้บริการ</td></tr>
+        <tr><td>IP / IK</td><td>IP54–IP65, IK08 ขึ้นไป สำหรับติดนอกบ้าน</td><td>ฝน ฝุ่น แรงกระแทก</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

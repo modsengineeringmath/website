@@ -1,0 +1,113 @@
+<!--meta
+{
+  "title": "เพาเวอร์แฟกเตอร์ในรูปคลื่น: กำลังขณะหนึ่ง p(t) = v·i, กำลังไหลกลับ, เฟสเซอร์หมุน, พลังงานในสนามแม่เหล็ก และพิสูจน์ P = VI cos φ | อาจารย์มด",
+  "h1": "เพาเวอร์แฟกเตอร์ในรูปคลื่น: กำลังขณะหนึ่ง p(t) กำลังไหลกลับ เฟสเซอร์ และความหมายของกำลังรีแอกทีฟ",
+  "description": "มองเพาเวอร์แฟกเตอร์ผ่านรูปคลื่นจริง: แรงดัน v(t) กระแส i(t) ที่ตามหลังมุม φ คูณกันทีละจุดได้กำลังขณะหนึ่ง p(t) ที่แกว่งด้วยความถี่สองเท่า ค่าเฉลี่ยคือ P = VI cos φ ช่วงที่ p ติดลบคือโหลดคืนพลังงาน แยก p(t) เป็นส่วนกำลังจริงและส่วนรีแอกทีฟ Q คือแอมพลิจูดของการไหลไปกลับ พลังงานที่เก็บในตัวเหนี่ยวนำ เวลาที่กระแสตามหลัง และเฟสเซอร์หมุน พร้อมซิมูเลเตอร์ภาพเคลื่อนไหว",
+  "ogTitle": "PF ในรูปคลื่น: p(t) และกำลังไหลกลับ",
+  "og": {"title": "PF ในรูปคลื่น: p(t) และกำลังไหลกลับ"},
+  "lesson": "power-factor",
+  "sub": "waveforms-power",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Instantaneous power", "Phasor", "Reactive power", "Power factor"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "ทำไมกำลังขณะหนึ่ง p(t) มีความถี่ 100 Hz?", "a": "เพราะ p(t) คือผลคูณของแรงดันและกระแสที่เป็นไซน์ 50 Hz ทั้งคู่ ผลคูณของไซน์สองตัวตามเอกลักษณ์ตรีโกณมิติให้ค่าคงที่บวกกับไซน์ความถี่สองเท่า กำลังจึงเต้นขึ้นลง 100 ครั้งต่อวินาที ค่าคงที่คือกำลังเฉลี่ย P"},
+    {"q": "กำลังรีแอกทีฟ Q มีอยู่จริงไหม?", "a": "มีในความหมายว่าพลังงานไหลไปกลับจริงระหว่างแหล่งจ่ายกับสนามแม่เหล็กหรือสนามไฟฟ้าของโหลด Q คือแอมพลิจูดของส่วนที่ไหลไปกลับนั้น ค่าเฉลี่ยของมันเป็นศูนย์ จึงไม่ทำงานสุทธิ แต่กระแสที่ทำให้เกิดการไหลนี้ทำให้สายร้อนจริง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>รูปคลื่น v · i · p</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.2 · เพาเวอร์แฟกเตอร์ · Power Factor in Waveforms &amp; Phasors</p>
+      <h1>เพาเวอร์แฟกเตอร์ในรูปคลื่น: กำลังขณะหนึ่ง p(t) กำลังไหลกลับ เฟสเซอร์ และความหมายของกำลังรีแอกทีฟ</h1>
+      <p class="lede">สามเหลี่ยมกำลังบอก “ผล” แต่รูปคลื่นบอก “สิ่งที่เกิดขึ้นจริง” ในทุกเสี้ยววินาที เมื่อคูณแรงดันกับกระแสทีละจุด เราจะเห็นว่ากำลังไม่ได้ไหลทางเดียวเสมอ บางช่วงโหลดส่งพลังงานกลับ — และนั่นคือที่มาของคำว่า “กำลังรีแอกทีฟ”</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#sim">ซิมูเลเตอร์ภาพเคลื่อนไหว</a>
+        <a class="btn btn-ghost btn-sm" href="#pt">p(t) = v·i</a>
+        <a class="btn btn-ghost btn-sm" href="#split">แยกส่วน P กับ Q</a>
+        <a class="btn btn-ghost btn-sm" href="#phasor">เฟสเซอร์หมุน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(p(t) = VI\cos\varphi - VI\cos(2\omega t - \varphi)\): ค่าคงที่ + แกว่ง 100 Hz</li>
+          <li>ค่าเฉลี่ยของ p(t) คือ \(P = VI\cos\varphi\) — นี่คือที่มาของ cos φ</li>
+          <li>p(t) &lt; 0 เป็นสัดส่วน φ/180° ของเวลา: พลังงานไหลกลับ</li>
+          <li>Q = แอมพลิจูดของส่วนที่ไหลไปกลับ = 2ω × พลังงานเฉลี่ยที่เก็บในสนาม</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น instantaneous, average, 2ωt, stored energy, phase shift" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="pt">
+    <h2 id="pt">กำลังขณะหนึ่ง p(t) <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="W1" data-k="voltage current sinusoid lagging phase angle แรงดัน กระแส ไซน์ มุม"><p class="tf-n"><b><span class="fid">W1</span> Voltage and lagging current</b> แรงดันและกระแสที่ตามหลัง</p>
+        \[ v(t) = \sqrt2\,V\sin\omega t \qquad i(t) = \sqrt2\,I\sin(\omega t - \varphi) \]</div>
+<div class="tf" id="W2" data-k="instantaneous power p of t product identity กำลังขณะหนึ่ง ผลคูณ"><p class="tf-n"><b><span class="fid">W2</span> Instantaneous power</b> กำลังขณะหนึ่ง</p>
+        \[ p(t) = v(t)\,i(t) = 2VI\sin\omega t\,\sin(\omega t-\varphi) = VI\cos\varphi - VI\cos(2\omega t - \varphi) \]</div>
+    <p>ใช้เอกลักษณ์ \(2\sin A\sin B = \cos(A-B) - \cos(A+B)\) (<a href="/learn/trigonometry/">สูตรตรีโกณ</a>) ผลคือเทอมคงที่ \(VI\cos\varphi\) บวกกับคลื่นโคไซน์ความถี่ \(2\omega\) ที่มีแอมพลิจูด \(VI\) (= S)</p>
+<div class="tf" id="W3" data-k="average power real power integral mean กำลังเฉลี่ย กำลังจริง"><p class="tf-n"><b><span class="fid">W3</span> Average (real) power</b> กำลังเฉลี่ย</p>
+        \[ P = \frac1T\int_0^T p(t)\,dt = VI\cos\varphi \]</div>
+    <p>เพราะค่าเฉลี่ยของ \(\cos(2\omega t-\varphi)\) ตลอดคาบเป็นศูนย์ (<a href="/learn/integral-calculus/">อินทิกรัล</a>) นี่คือเหตุผลที่ cos φ ปรากฏในสูตรกำลัง — ไม่ได้มาจากการท่องจำ แต่มาจากการเฉลี่ยผลคูณของสองไซน์</p>
+<div class="tf" id="W7" data-k="negative power fraction time power flows back สัดส่วนเวลากำลังติดลบ"><p class="tf-n"><b><span class="fid">W7</span> Fraction of time with p &lt; 0</b> สัดส่วนเวลาที่กำลังไหลกลับ</p>
+        \[ \frac{t_{p&lt;0}}{T} = \frac{\varphi}{180^\circ} \qquad p_{min} = VI(\cos\varphi - 1),\ \ p_{max} = VI(\cos\varphi + 1) \]</div>
+<div class="wx" id="ex-w-1"><div class="wx-head"><span class="mono">ตัวอย่าง W-1</span><h3>มอเตอร์ 230 V 15.05 A φ = 34.6°</h3></div>
+<ol class="steps">
+<li><p>W3: \(P = 230(15.05)\cos 34.6^\circ = 3461(0.823) = 2.85\) kW</p></li>
+<li><p>W7: \(p_{max} = 3461(1.823) = 6.31\) kW · \(p_{min} = 3461(0.823 - 1) = -0.61\) kW</p></li>
+<li><p>สัดส่วนเวลาที่ไหลกลับ \(34.6/180 = 19\,\%\) — ช่วงสีแดงในกราฟซิมูเลเตอร์</p></li>
+<li><p>W6: กระแสถึงยอดช้ากว่าแรงดัน \(\Delta t = 34.6/360 \times 20\ \text{ms} = 1.92\) ms</p></li>
+</ol></div>
+<div class="tf" id="W6" data-k="time delay phase shift milliseconds เวลาที่ตามหลัง"><p class="tf-n"><b><span class="fid">W6</span> Time shift</b> เวลาที่กระแสตามหลัง</p>
+        \[ \Delta t = \frac{\varphi}{360^\circ}\,T = \frac{\varphi}{360^\circ\,f} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="split">
+    <h2 id="split">แยก p(t) เป็นส่วนที่ทำงานกับส่วนที่ไหลไปกลับ <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="W4" data-k="decomposition active reactive instantaneous power แยกกำลังขณะหนึ่ง"><p class="tf-n"><b><span class="fid">W4</span> Active and reactive parts of p(t)</b> แยกส่วนจริงและส่วนรีแอกทีฟ</p>
+        \[ p(t) = \underbrace{P\,(1 - \cos 2\omega t)}_{\ge 0\ \text{เสมอ: ไหลทางเดียว}} \;-\; \underbrace{Q\,\sin 2\omega t}_{\text{ค่าเฉลี่ย } 0:\ \text{ไหลไปกลับ}} \]</div>
+    <p>ส่วนแรกเป็นบวกเสมอ — พลังงานไหลไปที่โหลดแล้วไม่กลับมา (กลายเป็นงานหรือความร้อน) ส่วนที่สองแกว่งรอบศูนย์ มีแอมพลิจูดเท่ากับ Q พอดี นี่คือนิยามทางกายภาพของกำลังรีแอกทีฟ: <b>อัตราสูงสุดที่พลังงานวิ่งไปกลับระหว่างแหล่งจ่ายกับโหลด</b></p>
+<div class="tf" id="W5" data-k="stored energy inductor capacitor q equals 2 omega w พลังงานที่เก็บ ตัวเหนี่ยวนำ"><p class="tf-n"><b><span class="fid">W5</span> Q and stored energy</b> Q กับพลังงานที่เก็บในสนาม</p>
+        \[ w_L(t) = \tfrac12 L\,i^2(t) \qquad \bar W_L = \tfrac12 L I^2 \qquad Q_L = \omega L I^2 = 2\omega\,\bar W_L \]</div>
+<div class="wx" id="ex-w-2"><div class="wx-head"><span class="mono">ตัวอย่าง W-2</span><h3>Q = 1.96 kvar ที่ 50 Hz เก็บพลังงานในสนามแม่เหล็กเท่าไร</h3></div>
+<ol class="steps">
+<li><p>W5: \(\bar W = Q/(2\omega) = 1960/(2 \times 314.16) = 3.12\) J</p></li>
+<li><p>พลังงานแค่ 3 จูล แต่ถูกเติมและถอนออก 100 ครั้งต่อวินาที อัตราการไหลสูงสุดจึงเป็นหลักกิโลวาร์</p></li>
+<li><p>คาปาซิเตอร์ที่อยู่ข้างมอเตอร์เก็บพลังงานในสนามไฟฟ้า \(\tfrac12Cv^2\) ในจังหวะตรงข้ามกัน (เมื่อขดลวดคายพลังงาน คาปาซิเตอร์รับ) พลังงานจึงวิ่งไปกลับระหว่างสองตัวนี้ในพื้นที่ แทนที่จะวิ่งผ่านสายยาวไปถึงโรงไฟฟ้า</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="phasor">
+    <h2 id="phasor">เฟสเซอร์หมุน: มองคลื่นเป็นเงา <span class="lv lv-i">กลาง</span></h2>
+    <p>เฟสเซอร์คือลูกศรที่หมุนทวนเข็มนาฬิกาด้วยความเร็ว ω ค่าขณะหนึ่งของไซน์คือ “เงา” ของปลายลูกศรบนแกนตั้ง แรงดันและกระแสหมุนด้วยความเร็วเท่ากัน มุมระหว่างสองลูกศรจึงคงที่เป็น φ เราจึงวาดหยุดนิ่งได้ (V บนแกนจริง) แล้วแยกกระแสเป็นสองส่วน:</p>
+<div class="tf" id="W8" data-k="active reactive current components ip iq กระแสส่วนทำงาน ส่วนรีแอกทีฟ"><p class="tf-n"><b><span class="fid">W8</span> Active and reactive current</b> กระแสส่วนทำงานและส่วนรีแอกทีฟ</p>
+        \[ I_P = I\cos\varphi \ \ (\text{ตรงเฟสกับ } V) \qquad I_Q = I\sin\varphi \ \ (\text{ตั้งฉากกับ } V) \qquad I = \sqrt{I_P^2 + I_Q^2} \]</div>
+    <p>คาปาซิเตอร์แก้ได้เฉพาะ \(I_Q\) (ใส่กระแสนำหน้าที่หักล้างกัน) ส่วน \(I_P\) คืองานที่โหลดต้องการจริง ไม่มีใครลดได้ถ้าไม่ลดงาน — ในซิมูเลเตอร์ด้านล่าง ลูกศรสีเหลืองคือ \(I_P\) สังเกตว่ามันยาวเท่าเดิมเมื่อเปิดคาปาซิเตอร์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ซิมูเลเตอร์ภาพเคลื่อนไหว</h2>
+    <p>กด ▶ เล่น: เส้นประแนวตั้งวิ่งตามเวลา ค่า v i p ใต้กราฟเปลี่ยนตามจริง และเฟสเซอร์หมุนพร้อมกัน ลองเปลี่ยนเป็น “ฮีตเตอร์ล้วน” (p ไม่เคยติดลบ) และ “ชดเชยเกิน” (กระแสนำหน้า p ติดลบอีกครั้ง)</p>
+    <div class="pf-sim" data-preset="motor" data-views="wave,phasor,tri,meter"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

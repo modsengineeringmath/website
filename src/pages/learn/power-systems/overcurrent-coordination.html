@@ -1,0 +1,127 @@
+<!--meta
+{
+  "title": "รีเลย์กระแสเกินและการประสานการป้องกัน: กราฟ IDMT IEC 60255 SI VI EI, ตั้ง Pickup และ TMS, CTI 0.3 s, ฟิวส์ MCB กราฟ TCC | อาจารย์มด",
+  "h1": "รีเลย์กระแสเกินและการประสานการป้องกัน: กราฟ IDMT, TMS, CTI, ฟิวส์ และเบรกเกอร์",
+  "description": "ตั้งค่ารีเลย์กระแสเกิน 50/51 และประสานการป้องกันแบบที่วิศวกรทำจริง: กราฟ IEC 60255 Standard Inverse Very Inverse Extremely Inverse Long-time Inverse และ Definite Time การตั้ง pickup จากกระแสโหลดและกระแสฟอลต์ต่ำสุด plug setting multiplier TMS ช่วงเวลาประสาน CTI ส่วนประกอบของ CTI ค่าทันที 50 การประสานรีเลย์–ฟิวส์–เบรกเกอร์ MCB กราฟ B C D ตัวอย่างประสาน 3 ระดับ พร้อมแล็บกราฟ TCC log-log",
+  "ogTitle": "รีเลย์กระแสเกินและการประสาน IDMT TMS CTI",
+  "og": {"title": "รีเลย์กระแสเกินและการประสาน: IDMT TMS CTI"},
+  "lesson": "power-systems",
+  "sub": "overcurrent-coordination",
+  "nav": "ps",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Overcurrent relay", "Protective relay coordination", "Fuse (electrical)", "Circuit breaker"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "CTI (Coordination Time Interval) ควรตั้งเท่าไร?", "a": "โดยทั่วไป 0.3–0.4 วินาทีสำหรับรีเลย์แบบกลไก และ 0.2–0.3 วินาทีสำหรับรีเลย์ดิจิทัลกับเบรกเกอร์สุญญากาศ CTI ต้องครอบคลุมเวลาเปิดของเบรกเกอร์ปลายทาง ความคลาดเคลื่อนของรีเลย์ทั้งสองตัว ความคลาดเคลื่อนของ CT overshoot และส่วนเผื่อความปลอดภัย"},
+    {"q": "เลือกกราฟ SI VI EI อย่างไร?", "a": "เลือกตามว่ากระแสฟอลต์เปลี่ยนตามตำแหน่งมากแค่ไหน ระบบที่อิมพีแดนซ์ต้นทางเล็กเทียบกับสาย กระแสฟอลต์ลดลงมากเมื่อไกลออกไป ใช้ Very Inverse หรือ Extremely Inverse เพื่อให้แยกเวลาได้ดี EI ยังประสานกับฟิวส์และทนกระแสพุ่งเข้าของโหลดเย็น (cold load pickup) ได้ดี ระบบที่กระแสฟอลต์แทบไม่เปลี่ยน ใช้ Standard Inverse หรือ Definite Time"},
+    {"q": "TMS คืออะไร?", "a": "Time Multiplier Setting คือตัวคูณที่เลื่อนกราฟเวลาขึ้นลงทั้งเส้น โดยไม่เปลี่ยนรูปร่าง TMS 0.1 ให้เวลาทำงานเป็นหนึ่งในสิบของ TMS 1.0 ที่กระแสเท่ากัน ใช้ปรับให้รีเลย์ต้นทางช้ากว่ารีเลย์ปลายทางตามช่วงเวลาประสาน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="psArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน</a></li><li>รีเลย์กระแสเกิน · ประสาน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 16.8 · ระบบไฟฟ้ากำลังและระบบป้องกัน · Overcurrent Protection &amp; Coordination</p>
+      <h1>รีเลย์กระแสเกินและการประสานการป้องกัน: กราฟ IDMT, TMS, CTI, ฟิวส์ และเบรกเกอร์</h1>
+      <p class="lede">รีเลย์กระแสเกินคือการป้องกันที่พบมากที่สุดในระบบจำหน่ายและโรงงาน หลักง่ายมาก — กระแสยิ่งมากยิ่งตัดเร็ว — แต่ศิลปะอยู่ที่การประสาน: รีเลย์ที่ใกล้ฟอลต์ที่สุดต้องตัดก่อนเสมอ และรีเลย์ต้นทางต้องรอพอดี ๆ เพื่อเป็นสำรอง หน้านี้ตั้งค่ารีเลย์สามระดับทีละขั้น แล้วให้คุณลองเองบนกราฟ TCC</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บกราฟ TCC</a>
+        <a class="btn btn-ghost btn-sm" href="#curves">กราฟ IDMT</a>
+        <a class="btn btn-ghost btn-sm" href="#settings">ตั้ง pickup · TMS</a>
+        <a class="btn btn-ghost btn-sm" href="#grading">CTI · ประสาน 3 ระดับ</a>
+        <a class="btn btn-ghost btn-sm" href="#lv">ฟิวส์ · MCB</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(t = TMS\cdot k/((I/I_s)^\alpha - 1)\) · SI (0.14, 0.02) · VI (13.5, 1) · EI (80, 2)</li>
+          <li>Pickup: เหนือกระแสโหลดสูงสุด 1.2–1.5 เท่า ต่ำกว่ากระแสฟอลต์ต่ำสุด 1.5 เท่า</li>
+          <li>CTI ≈ 0.2–0.4 s ที่กระแสฟอลต์สูงสุดที่ทั้งคู่มองเห็น</li>
+          <li>ค่าทันที (50) ตั้งเหนือกระแสฟอลต์สูงสุดที่บัสปลายทาง เพื่อไม่ตัดแทนตัวปลายทาง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น idmt, tms, psm, cti, instantaneous, mcb" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="curves">
+    <h2 id="curves">กราฟเวลาผกผัน IDMT ตาม IEC 60255-151 <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="R2" data-k="idmt equation iec 60255 inverse time relay สมการรีเลย์ idmt"><p class="tf-n"><b><span class="fid">R2</span> IEC inverse-time characteristic</b> สมการเวลาทำงาน</p>
+        \[ t = TMS \cdot \frac{k}{\left(I/I_s\right)^{\alpha} - 1} \]</div>
+<div class="tf" id="R3" data-k="curve constants si vi ei lti k alpha ค่าคงที่ กราฟ"><p class="tf-n"><b><span class="fid">R3</span> Curve constants</b> ค่าคงที่ของกราฟมาตรฐาน</p>
+        \[ \text{SI: } (0.14,\ 0.02) \quad \text{VI: } (13.5,\ 1) \quad \text{EI: } (80,\ 2) \quad \text{LTI: } (120,\ 1) \]</div>
+<div class="tf" id="R4" data-k="plug setting multiplier psm current multiple ตัวคูณกระแส"><p class="tf-n"><b><span class="fid">R4</span> Plug setting multiplier</b> ตัวคูณกระแส</p>
+        \[ PSM = \frac{I_{fault}}{I_s} = \frac{I_{fault}}{CT_{ratio}\times PS} \]</div>
+    <p>กราฟ SI แทบแบนเมื่อ PSM เกิน 10 (เวลาเปลี่ยนน้อย) ส่วน EI ชันมาก: เวลาลดลงตามกำลังสองของกระแส คล้ายกราฟการหลอมของฟิวส์ (\(I^2t\) คงที่) จึงประสานกับฟิวส์ได้ดี</p>
+<div class="wx" id="ex-r-1"><div class="wx-head"><span class="mono">ตัวอย่าง R-1</span><h3>CT 400/5 PS 1.0 TMS 0.1 SI กระแสฟอลต์ 6,000 A</h3></div>
+<ol class="steps">
+<li><p>R4: \(I_s = 400\) A → \(PSM = 15\)</p></li>
+<li><p>R2: \(t = 0.1 \times 0.14/(15^{0.02} - 1) = 0.014/0.0557 = 0.25\) s</p></li>
+<li><p>ถ้าเป็น EI: \(t = 0.1 \times 80/(15^2 - 1) = 8/224 = 0.036\) s — เร็วกว่ามากที่กระแสสูง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="settings">
+    <h2 id="settings">ตั้งค่า pickup และค่าทันที <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="R1" data-k="pickup setting load current minimum fault ตั้ง pickup กระแสโหลด"><p class="tf-n"><b><span class="fid">R1</span> Pickup setting</b> กระแสตั้ง</p>
+        \[ 1.2\text{–}1.5\,I_{load,max} \;\le\; I_s \;\le\; \frac{I_{fault,min,end\ of\ backup\ zone}}{1.5} \]</div>
+<div class="tf" id="R7" data-k="instantaneous setting 50 high set through fault ค่าทันที"><p class="tf-n"><b><span class="fid">R7</span> Instantaneous (50) setting</b> ค่าตั้งทันที</p>
+        \[ I_{>>} \ge 1.25\text{–}1.3 \times I_{fault,max}\ \text{at the next downstream bus} \]</div>
+    <p>ค่าทันทีช่วยตัดฟอลต์ใกล้ตัวรีเลย์ (กระแสสูงมาก) โดยไม่ต้องรอกราฟ แต่ต้องไม่เห็นฟอลต์ในโซนถัดไป สำหรับรีเลย์ที่ต้นทางหม้อแปลง ให้ตั้งเหนือกระแสลัดวงจรที่ฝั่งแรงต่ำ (อ้างอิงฝั่งแรงสูง) และเหนือ inrush ของหม้อแปลง (≈ 8–12 เท่าพิกัด ช่วง 0.1 s)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="grading">
+    <h2 id="grading">ช่วงเวลาประสาน (CTI) และการประสาน 3 ระดับ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="R5" data-k="coordination time interval cti grading margin ช่วงเวลาประสาน"><p class="tf-n"><b><span class="fid">R5</span> Coordination time interval</b> ช่วงเวลาประสาน</p>
+        \[ t_{upstream}(I_{f}) - t_{downstream}(I_{f}) \ge CTI = t_{CB} + t_{overshoot} + t_{errors} + t_{safety} \approx 0.2\text{–}0.4\ \text{s} \]</div>
+<div class="tf" id="R6" data-k="required tms grading calculate tms คำนวณ tms ที่ต้องการ"><p class="tf-n"><b><span class="fid">R6</span> Required TMS</b> TMS ที่ต้องการเพื่อได้ CTI</p>
+        \[ TMS_{req} = \frac{\left(t_{down} + CTI\right)\left[(I_f/I_s)^{\alpha} - 1\right]}{k} \quad (\text{ปัดขึ้นเป็นขั้นที่รีเลย์ตั้งได้}) \]</div>
+<div class="wx" id="ex-r-2"><div class="wx-head"><span class="mono">ตัวอย่าง R-2</span><h3>รีเลย์ 3 ระดับ SI ทั้งหมด ฟอลต์สูงสุดที่บัสปลายทาง 10 kA CTI 0.3 s</h3></div>
+<ol class="steps">
+<li><p>R1 (ป้อนโหลด): \(I_s = 200\) A, TMS 0.1 → PSM 50 → \(t_1 = 0.1(0.14)/(50^{0.02}-1) = 0.172\) s</p></li>
+<li><p>R2 (เมนแรงต่ำ): \(I_s = 600\) A → PSM 16.67 → ต่อ TMS 1: \(0.14/(16.67^{0.02}-1) = 2.419\) s · R6: \(TMS = (0.172+0.3)/2.419 = 0.195\) → ตั้ง <b>0.20</b> → \(t_2 = 0.484\) s</p></li>
+<li><p>R3 (ต้นทาง): \(I_s = 1200\) A → PSM 8.33 → ต่อ TMS 1: 3.232 s · \(TMS = (0.484+0.3)/3.232 = 0.243\) → ตั้ง <b>0.25</b> → \(t_3 = 0.808\) s</p></li>
+<li><p>ตรวจ CTI: \(0.484 - 0.172 = 0.31\) ✓ · \(0.808 - 0.484 = 0.32\) ✓ — ราคาของการเลือกตัด: ฟอลต์ใกล้ต้นทางใช้เวลาเกือบ 1 วินาที จึงมักเพิ่มค่าทันที (R7) ให้ R3</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บกราฟ TCC: ลองประสานรีเลย์เอง</h2>
+    <p>ค่าตั้งต้นคือตัวอย่าง R-2 ลองเปลี่ยน R1 เป็น EI แล้วดูว่า CTI ที่กระแสต่ำเสียไปหรือไม่ ลองตั้งค่าทันทีให้ R3 (เช่น 15,000 A) หรือกดปุ่มคำนวณ TMS อัตโนมัติ เส้นสีแดงแนวตั้งคือกระแสฟอลต์ที่ใช้ตรวจ</p>
+    <div class="ps-tcc" data-if="10000"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="fg-calc ps-calc" data-ps="relay"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lv">
+    <h2 id="lv">ฟิวส์และเบรกเกอร์แรงต่ำในการประสาน <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="R8" data-k="mcb magnetic trip curve b c d ฟิวส์ เบรกเกอร์ กราฟ"><p class="tf-n"><b><span class="fid">R8</span> MCB instantaneous (magnetic) trip bands</b> ช่วงตัดทันทีของ MCB (IEC 60898)</p>
+        \[ \text{B: } 3\text{–}5\,I_n \qquad \text{C: } 5\text{–}10\,I_n \qquad \text{D: } 10\text{–}20\,I_n \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อุปกรณ์</th><th>ลักษณะกราฟ</th><th>ข้อควรรู้ในการประสาน</th></tr></thead>
+      <tbody>
+        <tr><td>ฟิวส์ HRC (gG)</td><td>ชันแบบ \(I^2t\) คงที่ จำกัดกระแสได้</td><td>ประสานฟิวส์ต่อฟิวส์ด้วยอัตราส่วนพิกัด ≈ 1.6:1 ขึ้นไป</td></tr>
+        <tr><td>MCB B / C / D</td><td>ส่วนความร้อน (bimetal) + ส่วนแม่เหล็ก (ทันที)</td><td>ในช่วงทันทีประสานด้วยเวลาไม่ได้ ต้องใช้ระดับกระแสหรือตารางของผู้ผลิต</td></tr>
+        <tr><td>MCCB / ACB electronic trip</td><td>LSI: Long (L) Short (S) Instantaneous (I) ปรับได้</td><td>ตั้งช่วง S หน่วงเวลา 0.1–0.4 s เพื่อประสานกับตัวปลายทาง</td></tr>
+        <tr><td>รีโคลสเซอร์ (ระบบจำหน่าย)</td><td>กราฟเร็วและช้า ต่อกลับหลายครั้ง</td><td>“fuse saving”: ตัดเร็วก่อนฟิวส์ขาด ถ้าฟอลต์ยังอยู่ปล่อยให้ฟิวส์ขาด</td></tr>
+      </tbody>
+    </table></div>
+    <p>การประสานกับ MCB ปลายทางใช้หลักเดียวกัน: ที่กระแสฟอลต์สูงสุด ณ ตำแหน่ง MCB เส้นของอุปกรณ์ต้นทางต้องอยู่สูงกว่าเส้นบนสุดของ MCB (เวลาตัดรวม clearing) อย่างน้อย CTI ที่เหมาะกับชนิดอุปกรณ์</p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

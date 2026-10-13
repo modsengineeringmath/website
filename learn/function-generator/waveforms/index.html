@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=c8098a2f">
+<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/waveforms/#article","headline":"สัญญาณพื้นฐานและการอ่านค่า: Vp Vpp Vrms ความถี่ ดิวตี้ และเฟส","description":"อธิบายค่าที่อ่านจากออสซิลโลสโคปและตั้งบนเครื่องกำเนิดสัญญาณ: ค่ายอด Vp ค่ายอดถึงยอด Vpp ค่า RMS ค่าเฉลี่ย ออฟเซต DC คาบ ความถี่ ดิวตี้ไซเคิล เฟส crest factor เดซิเบล dBV dBm และอนุกรมฟูริเยร์ พร้อมตารางสูตร RMS ทุกรูปคลื่น ตัวอย่างวิธีทำ และสโคปจำลองให้ลองเอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/waveforms/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/waveforms/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Waveform","Peak-to-peak voltage","RMS voltage","Average value","Duty cycle","DC offset","Phase difference","Crest factor","Decibel","Fourier series"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-waveforms.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"สัญญาณพื้นฐานและการอ่านค่า: Vp Vpp Vrms ความถี่ ดิวตี้ และเฟส","item":"https://modsengineeringmath.com/learn/function-generator/waveforms/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vpp กับ Vrms ต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"Vpp คือระยะจากยอดล่างถึงยอดบน อ่านได้ตรง ๆ จากจอสโคป ส่วน Vrms คือค่าที่ให้กำลังเท่ากับไฟ DC ขนาดเดียวกัน มิเตอร์ส่วนใหญ่แสดง Vrms สำหรับไซน์ V_{rms} = V_{pp}/(2sqrt2) approx 0.354 V_{pp} เช่น 2 Vpp เท่ากับ 0.707 Vrms"}},{"@type":"Question","name":"ทำไมมัลติมิเตอร์วัดคลื่นสี่เหลี่ยมหรือพัลส์ได้ค่าไม่ตรง?","acceptedAnswer":{"@type":"Answer","text":"มิเตอร์ราคาประหยัดแบบ average-responding วัดค่าเฉลี่ยของสัญญาณที่เรียงกระแสแล้วคูณด้วย 1.111 ซึ่งถูกเฉพาะไซน์ ถ้าเป็นรูปคลื่นอื่นต้องใช้มิเตอร์ True RMS หรือคำนวณจากสูตรในหน้านี้ และควรเช็กว่ามิเตอร์วัดเฉพาะส่วน AC หรือรวม DC ด้วย"}},{"@type":"Question","name":"ตั้งเครื่องกำเนิดสัญญาณเป็น Vrms ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้ เครื่องส่วนใหญ่มีหน่วย Vpp, Vrms และ dBm ให้เลือก ค่า Vrms ที่เครื่องคำนวณให้ถูกต้องสำหรับไซน์ ถ้าเป็นรูปคลื่นอื่นให้ใช้ Vpp แล้วคำนวณ RMS เองตามตาราง W12"}},{"@type":"Question","name":"ดิวตี้ไซเคิล 25 % ของคลื่น 0–5 V ให้แรงดันเฉลี่ยเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"V_{avg} = D V_H = 0.25 times 5 = 1.25 V ส่วน V_{rms} = V_Hsqrt D = 2.5 V ค่าเฉลี่ยใช้กับงานแบบ PWM ที่มีการกรอง ส่วน RMS ใช้คำนวณความร้อนในตัวต้านทาน"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -155,6 +155,45 @@
           <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
           <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
           <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
         </div>
       </div>
       <a href="/#watch" >ดูคลิป</a>
@@ -794,6 +833,12 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
       <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
       <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
       <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
       <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
       <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -817,11 +862,11 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=c8098a2f" defer></script>
-<script src="/assets/lesson.js?v=c8098a2f" defer></script>
-<script src="/assets/fgs-core.js?v=c8098a2f" defer></script>
-<script src="/assets/fgs-scope.js?v=c8098a2f" defer></script>
-<script src="/assets/fgs-ui.js?v=c8098a2f" defer></script>
-<script src="/assets/fgs-app.js?v=c8098a2f" defer></script>
+<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/lesson.js?v=0014ea3e" defer></script>
+<script src="/assets/fgs-core.js?v=0014ea3e" defer></script>
+<script src="/assets/fgs-scope.js?v=0014ea3e" defer></script>
+<script src="/assets/fgs-ui.js?v=0014ea3e" defer></script>
+<script src="/assets/fgs-app.js?v=0014ea3e" defer></script>
 </body>
 </html>

@@ -1,0 +1,156 @@
+<!--meta
+{
+  "title": "เพาเวอร์แฟกเตอร์คืออะไร: ภาพเปรียบเทียบแก้วเบียร์ ม้าลากเรือ สามเหลี่ยมกำลัง P Q S, cos φ, ตามหลังกับนำหน้า และ PF ของเครื่องใช้ไฟฟ้า | อาจารย์มด",
+  "h1": "เพาเวอร์แฟกเตอร์คืออะไร: ภาพเปรียบเทียบ สามเหลี่ยมกำลัง P Q S, cos φ, ตามหลังกับนำหน้า",
+  "description": "อธิบายเพาเวอร์แฟกเตอร์ให้เข้าใจตั้งแต่ไม่มีพื้นฐาน: แก้วเบียร์กับฟอง ม้าลากเรือริมคลอง กำลังจริง P (kW) กำลังรีแอกทีฟ Q (kvar) กำลังปรากฏ S (kVA) สามเหลี่ยมกำลัง cos φ โหลดตัวต้านทาน ตัวเหนี่ยวนำ ตัวเก็บประจุ PF ตามหลังและนำหน้า ตาราง PF ของเครื่องใช้ไฟฟ้า PF ต่ำทำให้กระแสสูง สายร้อน แรงดันตก และค่าปรับ พร้อมตัวอย่างคำนวณ",
+  "ogTitle": "เพาเวอร์แฟกเตอร์คืออะไร: P Q S และ cos φ",
+  "og": {"title": "เพาเวอร์แฟกเตอร์คืออะไร: P Q S และ cos φ"},
+  "lesson": "power-factor",
+  "sub": "pf-basics",
+  "nav": "pf",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Power factor", "AC power", "Reactive power"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/pf-lab.js"],
+  "faq": [
+    {"q": "kW kvar kVA ต่างกันอย่างไร?", "a": "kW (กำลังจริง P) คือกำลังที่เปลี่ยนเป็นงาน ความร้อน แสง หรือแรงบิด kvar (กำลังรีแอกทีฟ Q) คือกำลังที่วิ่งไปกลับระหว่างแหล่งจ่ายกับสนามแม่เหล็กหรือสนามไฟฟ้าในโหลด kVA (กำลังปรากฏ S) คือแรงดันคูณกระแส เป็นภาระที่สาย หม้อแปลง และเครื่องกำเนิดต้องรองรับ ทั้งสามสัมพันธ์กันแบบสามเหลี่ยมมุมฉาก S² = P² + Q²"},
+    {"q": "PF ตามหลัง (lagging) กับนำหน้า (leading) ต่างกันอย่างไร?", "a": "ตามหลังคือกระแสถึงจุดสูงสุดหลังแรงดัน เกิดจากโหลดที่มีขดลวด เช่น มอเตอร์ หม้อแปลง บัลลาสต์แกนเหล็ก นำหน้าคือกระแสถึงจุดสูงสุดก่อนแรงดัน เกิดจากตัวเก็บประจุ เช่น คาปาซิเตอร์แก้ PF ที่ใส่มากเกินไป หรือสายเคเบิลยาวที่ไม่มีโหลด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="pfArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></li><li>PF คืออะไร</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 17.1 · เพาเวอร์แฟกเตอร์ · What Is Power Factor?</p>
+      <h1>เพาเวอร์แฟกเตอร์คืออะไร: ภาพเปรียบเทียบ สามเหลี่ยมกำลัง P Q S, cos φ, ตามหลังกับนำหน้า</h1>
+      <p class="lede">เริ่มจากสิ่งที่จับต้องได้ก่อน แล้วค่อยแปลงเป็นตัวเลขและสมการ ถ้าอ่านจบหน้านี้ คุณจะอธิบายให้คนที่ไม่เคยเรียนไฟฟ้าฟังได้ว่า PF คืออะไร และคำนวณกระแสของโหลดที่ PF ต่ำได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#analogy">ภาพเปรียบเทียบ</a>
+        <a class="btn btn-ghost btn-sm" href="#triangle">สามเหลี่ยมกำลัง</a>
+        <a class="btn btn-ghost btn-sm" href="#loads">R L C</a>
+        <a class="btn btn-ghost btn-sm" href="#devices">PF ของเครื่องใช้</a>
+        <a class="btn btn-ghost btn-sm" href="#cost">PF ต่ำเสียอะไร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>P = งานจริง (kW) · Q = ส่วนที่วิ่งไปกลับ (kvar) · S = ภาระของสาย (kVA)</li>
+          <li>PF = P/S ยิ่งใกล้ 1 ยิ่งดี · มอเตอร์โหลดเบามี PF ต่ำ</li>
+          <li>กระแส = S/V → PF ต่ำ กระแสสูงเพื่อทำงานเท่าเดิม</li>
+          <li>การสูญเสียในสาย ∝ I² ∝ 1/PF²</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น kva, kvar, cos, tan, กระแส, การสูญเสีย" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="analogy">
+    <h2 id="analogy">ระดับ 1: สามภาพเปรียบเทียบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="ee-cards">
+      <div class="ee-card"><p class="mono">🍺 แก้วเบียร์</p><h3>เบียร์ = P · ฟอง = Q · แก้ว = S</h3><p>คุณจ่ายเงินซื้อทั้งแก้ว แต่ดื่มได้แค่เบียร์ ฟองยิ่งเยอะ ต้องใช้แก้วใหญ่ขึ้นเพื่อได้เบียร์เท่าเดิม PF = เบียร์ ÷ แก้ว (ภาพนี้ไม่สมบูรณ์ตรงที่ S² = P² + Q² ไม่ใช่ S = P + Q)</p></div>
+      <div class="ee-card"><p class="mono">🐴 ม้าลากเรือริมคลอง</p><h3>เชือกเฉียง = S · แรงไปข้างหน้า = P</h3><p>ม้าเดินบนตลิ่ง เชือกจึงเฉียงเป็นมุม φ แรงดึงทั้งหมดในเชือกคือ S ส่วนที่ทำให้เรือเคลื่อนไปข้างหน้าคือ S cos φ = P ส่วนที่ดึงเข้าตลิ่งคือ Q ไม่ได้งาน แต่เชือกต้องทน มุมยิ่งกว้าง ยิ่งเปลืองแรงเชือก</p></div>
+      <div class="ee-card"><p class="mono">🛝 ชิงช้า</p><h3>Q = พลังงานที่โยนไปมา</h3><p>คนที่ผลักชิงช้าผิดจังหวะ บางช่วงผลัก บางช่วงถูกชิงช้าดันกลับ พลังงานจึงวิ่งไปกลับ มอเตอร์ก็เช่นกัน ทุกครึ่งรอบมันเก็บพลังงานในสนามแม่เหล็กแล้วคืนกลับ — ดูได้จริงในซิมูเลเตอร์ด้านล่าง</p></div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="triangle">
+    <h2 id="triangle">ระดับ 2: สามเหลี่ยมกำลัง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 520 220" role="img" aria-label="สามเหลี่ยมกำลัง P Q S">
+        <path class="ln3" d="M40 180 H400"/><path class="ln2" d="M400 180 V40"/><path class="ln" d="M40 180 L400 40" style="stroke-width:2.4"/>
+        <path class="lnd" d="M90 180 A50 50 0 0 0 86.6 162"/><text x="100" y="172">φ</text>
+        <text class="tb fc1" x="220" y="202" text-anchor="middle">P = กำลังจริง (kW)</text>
+        <text class="tb fa" x="410" y="115">Q = กำลังรีแอกทีฟ (kvar)</text>
+        <text class="tb" x="190" y="96" text-anchor="middle" transform="rotate(-21 190 96)">S = กำลังปรากฏ (kVA)</text>
+      </svg>
+      <figcaption>สามเหลี่ยมมุมฉาก: ด้านประชิดมุม φ คือ P ด้านตรงข้ามคือ Q ด้านตรงข้ามมุมฉากคือ S</figcaption>
+    </figure>
+<div class="tf" id="B1" data-k="power triangle pythagoras s p q สามเหลี่ยมกำลัง พีทาโกรัส"><p class="tf-n"><b><span class="fid">B1</span> Power triangle</b> สามเหลี่ยมกำลัง</p>
+        \[ S^2 = P^2 + Q^2 \qquad S = \sqrt{P^2 + Q^2} \]</div>
+<div class="tf" id="B2" data-k="power factor definition cos phi ratio เพาเวอร์แฟกเตอร์ นิยาม"><p class="tf-n"><b><span class="fid">B2</span> Power factor</b> เพาเวอร์แฟกเตอร์</p>
+        \[ PF = \frac{P}{S} = \cos\varphi \quad (\text{กระแสเป็นไซน์}) \qquad 0 \le PF \le 1 \]</div>
+<div class="tf" id="B3" data-k="reactive power tan phi q p tan กำลังรีแอกทีฟ แทน"><p class="tf-n"><b><span class="fid">B3</span> Reactive power from P and PF</b> หา Q จาก P และ PF</p>
+        \[ Q = P\tan\varphi = P\,\frac{\sqrt{1 - PF^2}}{PF} \]</div>
+<div class="tf" id="B4" data-k="current from kva single three phase กระแสจาก kva"><p class="tf-n"><b><span class="fid">B4</span> Current from apparent power</b> กระแสจากกำลังปรากฏ</p>
+        \[ I_{1\varphi} = \frac{S}{V} = \frac{P}{V\cdot PF} \qquad I_{3\varphi} = \frac{S}{\sqrt3\,V_L} = \frac{P}{\sqrt3\,V_L\cdot PF} \]</div>
+<div class="wx" id="ex-b-1"><div class="wx-head"><span class="mono">ตัวอย่าง B-1</span><h3>ฮีตเตอร์ 2 kW กับมอเตอร์ปั๊ม 2.85 kW PF 0.824 ที่ 230 V</h3></div>
+<ol class="steps">
+<li><p>ฮีตเตอร์ PF = 1: B4 \(I = 2000/230 = 8.70\) A</p></li>
+<li><p>มอเตอร์: B2 \(S = 2.85/0.824 = 3.46\) kVA · B3 \(Q = \sqrt{3.46^2 - 2.85^2} = 1.96\) kvar · B4 \(I = 3460/230 = 15.0\) A</p></li>
+<li><p>ถ้ามอเตอร์มี PF = 1 กระแสจะเหลือ \(2850/230 = 12.4\) A — PF 0.824 ทำให้กระแสเกินจำเป็น 2.6 A (21 %)</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-pf-preset="motor">เปิดในซิมูเลเตอร์</button></div></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="loads">
+    <h2 id="loads">ตัวต้านทาน ตัวเหนี่ยวนำ ตัวเก็บประจุ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>โหลด</th><th>กระแสเทียบแรงดัน</th><th>P</th><th>Q</th><th>PF</th><th>ตัวอย่าง</th></tr></thead>
+      <tbody>
+        <tr><td>ตัวต้านทาน R</td><td>ตรงเฟส (φ = 0°)</td><td>+</td><td>0</td><td>1</td><td>ฮีตเตอร์ กาต้มน้ำ หลอดไส้</td></tr>
+        <tr><td>ตัวเหนี่ยวนำ L</td><td>ตามหลัง 90°</td><td>0</td><td>+ (ดูด Q)</td><td>0 ตามหลัง</td><td>ขดลวดล้วน (ในอุดมคติ)</td></tr>
+        <tr><td>ตัวเก็บประจุ C</td><td>นำหน้า 90°</td><td>0</td><td>− (จ่าย Q)</td><td>0 นำหน้า</td><td>คาปาซิเตอร์แก้ PF</td></tr>
+        <tr><td>R + L</td><td>ตามหลัง 0–90°</td><td>+</td><td>+</td><td>0–1 ตามหลัง</td><td>มอเตอร์ หม้อแปลง บัลลาสต์</td></tr>
+        <tr><td>R + C</td><td>นำหน้า 0–90°</td><td>+</td><td>−</td><td>0–1 นำหน้า</td><td>ชดเชยเกิน SMPS บางแบบโหลดเบา</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="B5" data-k="lagging leading sign convention q positive negative ตามหลัง นำหน้า เครื่องหมาย"><p class="tf-n"><b><span class="fid">B5</span> Sign convention</b> เครื่องหมายของ Q</p>
+        \[ Q_L = +I^2X_L\ (\text{ตามหลัง, ดูด Q}) \qquad Q_C = -I^2|X_C|\ (\text{นำหน้า, จ่าย Q}) \qquad Q_{net} = Q_L + Q_C \]</div>
+    <p>เพราะ Q ของ L กับ C มีเครื่องหมายตรงข้าม คาปาซิเตอร์จึง “หักล้าง” Q ของมอเตอร์ได้ — นี่คือหลักการแก้ PF ทั้งหมดในหนึ่งบรรทัด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="devices">
+    <h2 id="devices">PF ของเครื่องใช้ไฟฟ้าทั่วไป <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อุปกรณ์</th><th>PF โดยประมาณ</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>ฮีตเตอร์ กาต้ม หม้อหุงข้าว</td><td>1.0</td><td></td></tr>
+        <tr><td>มอเตอร์เหนี่ยวนำ โหลดเต็ม</td><td>0.80–0.90</td><td>มอเตอร์ใหญ่ PF ดีกว่ามอเตอร์เล็ก</td></tr>
+        <tr><td>มอเตอร์เหนี่ยวนำ โหลด 25 %</td><td>0.45–0.65</td><td>กระแสแม่เหล็กเกือบคงที่แม้โหลดน้อย</td></tr>
+        <tr><td>มอเตอร์ไม่มีโหลด</td><td>0.1–0.3</td><td></td></tr>
+        <tr><td>หลอดฟลูออเรสเซนต์ บัลลาสต์แกนเหล็ก</td><td>0.45–0.55</td><td>หลอดที่มีคาปาซิเตอร์ชดเชย ≈ 0.9</td></tr>
+        <tr><td>LED / คอมพิวเตอร์ ไม่มี PFC</td><td>0.5–0.7</td><td>cos φ ≈ 0.95–1 แต่ฮาร์มอนิกสูง (<a href="/learn/power-factor/harmonics-true-pf/">อ่านเหตุผล</a>)</td></tr>
+        <tr><td>แอร์อินเวอร์เตอร์ เครื่องชาร์จรถ (มี PFC)</td><td>0.95–0.99</td><td></td></tr>
+        <tr><td>เครื่องเชื่อมไฟฟ้าหม้อแปลง</td><td>0.3–0.6</td><td></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cost">
+    <h2 id="cost">PF ต่ำเสียอะไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="B6" data-k="line loss ratio power factor squared การสูญเสีย กำลังสอง pf"><p class="tf-n"><b><span class="fid">B6</span> Line losses vs PF</b> การสูญเสียในสายเทียบ PF (P เท่าเดิม)</p>
+        \[ \frac{P_{loss}(PF_1)}{P_{loss}(PF_2)} = \left(\frac{PF_2}{PF_1}\right)^2 \]</div>
+<div class="tf" id="B7" data-k="transformer capacity kva released ความสามารถหม้อแปลง kva"><p class="tf-n"><b><span class="fid">B7</span> Usable real power of a transformer</b> กำลังจริงที่หม้อแปลงจ่ายได้</p>
+        \[ P_{max} = S_{rated}\times PF \]</div>
+<div class="wx" id="ex-b-2"><div class="wx-head"><span class="mono">ตัวอย่าง B-2</span><h3>โรงงาน 100 kW 400 V 3 เฟส PF 0.75</h3></div>
+<ol class="steps">
+<li><p>B2 B3: \(S = 133.3\) kVA · \(Q = 100\tan(\cos^{-1}0.75) = 88.2\) kvar</p></li>
+<li><p>B4: \(I = 133{,}300/(\sqrt3 \times 400) = 192.5\) A · ถ้า PF = 0.95: 151.9 A · PF = 1: 144.3 A</p></li>
+<li><p>B6: สายเดิมร้อนกว่าที่ PF 0.95 อยู่ \((0.95/0.75)^2 = 1.60\) เท่า</p></li>
+<li><p>B7: หม้อแปลง 160 kVA ที่ PF 0.75 จ่ายได้ 120 kW ถ้าแก้เป็น 0.95 จ่ายได้ 152 kW — รับโหลดเพิ่มได้โดยไม่เปลี่ยนหม้อแปลง</p></li>
+<li><p>ถ้าเป็นผู้ใช้ไฟประเภทกิจการขนาดกลางขึ้นไป kvar ที่เกิน \(0.6197 \times 100 = 62\) kvar ถูกคิดเงิน → \((88.2 - 62)\times 56.07 = 1{,}470\) ฿/เดือน (<a href="/learn/power-factor/pf-billing/">อ่านเรื่องค่าปรับ</a>)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ทดลองในซิมูเลเตอร์</h2>
+    <p>เพิ่มฮีตเตอร์ 1 ตัว แล้วเพิ่มมอเตอร์ 1 ตัว แล้วลดโหลดมอเตอร์เหลือ 25 % สังเกตเข็ม PF และความยาวด้าน Q ของสามเหลี่ยม</p>
+    <div class="pf-sim" data-preset="heater" data-compact data-views="tri,meter,phasor"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

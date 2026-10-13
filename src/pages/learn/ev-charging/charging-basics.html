@@ -1,0 +1,178 @@
+<!--meta
+{
+  "title": "พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, ชาร์จ AC กับ DC, On-board Charger และหัวชาร์จ Type 2 CCS2 | อาจารย์มด",
+  "h1": "พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ",
+  "description": "เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ",
+  "ogTitle": "พื้นฐานการชาร์จรถ EV: kW kWh Mode 1–4 AC DC",
+  "og": {"title": "พื้นฐานการชาร์จรถ EV: kW kWh Mode 1–4 AC DC"},
+  "lesson": "ev-charging",
+  "sub": "charging-basics",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electric vehicle charging", "On-board charger", "Type 2 connector", "Combined Charging System"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "kW กับ kWh ต่างกันอย่างไรในรถยนต์ไฟฟ้า?", "a": "kWh คือขนาดถังพลังงาน เช่น แบตเตอรี่ 60 kWh ส่วน kW คือความเร็วในการเติม เช่น เครื่องชาร์จ 7.4 kW เติมได้ 7.4 kWh ในหนึ่งชั่วโมง (ก่อนหักการสูญเสีย) เหมือนลิตรกับลิตรต่อนาทีของหัวจ่ายน้ำมัน"},
+    {"q": "On-board charger (OBC) คืออะไร?", "a": "คือวงจรอิเล็กทรอนิกส์กำลังในรถที่แปลงไฟ AC จากบ้านหรือวอลล์บ็อกซ์เป็นไฟ DC แรงดันสูงเข้าแบตเตอรี่ พิกัดของ OBC เช่น 7.4 kW หรือ 11 kW เป็นเพดานของการชาร์จ AC ทุกแบบ การชาร์จด่วน DC ข้าม OBC ไปเข้าแบตโดยตรง"},
+    {"q": "หัวชาร์จที่ใช้ในประเทศไทยเป็นแบบไหน?", "a": "รถส่วนใหญ่ในไทยใช้หัว AC แบบ Type 2 (IEC 62196-2) และหัว DC แบบ CCS2 ซึ่งรวม Type 2 ไว้ด้านบนกับขา DC สองขาด้านล่าง รถบางรุ่นใช้ CHAdeMO หรือ GB/T ตามประเทศผู้ผลิต"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>พื้นฐาน · โหมดชาร์จ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.1 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · EV Charging Basics</p>
+      <h1>พื้นฐานการชาร์จรถยนต์ไฟฟ้า: kW กับ kWh, Mode 1–4, AC กับ DC, On-board Charger และหัวชาร์จ</h1>
+      <p class="lede">ก่อนคุยเรื่องมิเตอร์ สายไฟ หรือโซลาร์ ต้องแยกสองคำนี้ให้ขาด: <b>กำลัง (kW)</b> กับ <b>พลังงาน (kWh)</b> และต้องรู้ว่าไฟจากผนังบ้านเดินทางเข้าแบตเตอรี่ผ่านอะไรบ้าง หน้านี้ตอบว่า “ชาร์จช้า” “ชาร์จเร็วที่บ้าน” และ “ชาร์จด่วน” ต่างกันตรงไหนจริง ๆ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#power-energy">kW กับ kWh</a>
+        <a class="btn btn-ghost btn-sm" href="#modes">Mode 1–4</a>
+        <a class="btn btn-ghost btn-sm" href="#obc">On-board Charger</a>
+        <a class="btn btn-ghost btn-sm" href="#connectors">หัวชาร์จ</a>
+        <a class="btn btn-ghost btn-sm" href="#choose">เลือกวิธีชาร์จ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>kWh = ขนาดถัง · kW = อัตราการเติม · kWh = kW × ชั่วโมง</li>
+          <li>ไฟ AC (บ้าน วอลล์บ็อกซ์) ต้องผ่าน OBC ในรถ · ไฟ DC (ตู้ชาร์จด่วน) เข้าแบตตรง</li>
+          <li>กำลังชาร์จจริง = ค่าน้อยที่สุดของ เครื่องชาร์จ · สาย · OBC · สถานะแบต</li>
+          <li>ไทยใช้ Type 2 สำหรับ AC และ CCS2 สำหรับ DC เป็นหลัก</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น kwh, 3 เฟส, obc, km ต่อชั่วโมง" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="power-energy">
+    <h2 id="power-energy">กำลัง (kW) กับ พลังงาน (kWh) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นึกถึงการเติมน้ำใส่ถัง: <b>ขนาดถัง</b> คือลิตร <b>ความแรงของก๊อก</b> คือลิตรต่อนาที แบตเตอรี่รถก็เช่นกัน ขนาดถังวัดเป็น <b>kWh</b> (กิโลวัตต์-ชั่วโมง) และความแรงของการเติมวัดเป็น <b>kW</b> (กิโลวัตต์) ใบแจ้งหนี้ค่าไฟคิดเป็น “หน่วย” ซึ่งก็คือ kWh</p>
+<div class="tf" id="C1" data-k="energy power time kwh kw พลังงาน กำลัง เวลา หน่วย"><p class="tf-n"><b><span class="fid">C1</span> Energy = power × time</b> พลังงานเท่ากับกำลังคูณเวลา</p>
+        \[ E\,[\text{kWh}] = P\,[\text{kW}] \times t\,[\text{h}] \qquad 1\ \text{kWh} = 1\ \text{หน่วยค่าไฟ} = 3.6\ \text{MJ} \]</div>
+<div class="tf" id="C2" data-k="single phase power ac 1 เฟส กำลังไฟฟ้า v i pf"><p class="tf-n"><b><span class="fid">C2</span> Single-phase AC power</b> กำลังไฟฟ้ากระแสสลับ 1 เฟส</p>
+        \[ P = V\,I\,\cos\varphi \;\approx\; V\,I \quad (\text{เครื่องชาร์จที่มี PFC: } \cos\varphi \approx 0.99) \]</div>
+<div class="tf" id="C3" data-k="three phase power 3 เฟส sqrt3 กำลังสามเฟส"><p class="tf-n"><b><span class="fid">C3</span> Three-phase AC power</b> กำลังไฟฟ้า 3 เฟส</p>
+        \[ P = \sqrt{3}\,V_L\,I_L\,\cos\varphi = 3\,V_{ph}\,I\,\cos\varphi \qquad (V_L = 400\ \text{V},\ V_{ph} = 230\ \text{V}) \]</div>
+    <p>เครื่องชาร์จรถทุกรุ่นที่ได้มาตรฐานมีวงจรแก้เพาเวอร์แฟกเตอร์ (PFC) ในตัว จึงใช้ \(P \approx VI\) ได้ เรื่องนี้อธิบายละเอียดในชุด <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></p>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>วอลล์บ็อกซ์ 32 A 1 เฟส ชาร์จ 5 ชั่วโมง ได้กี่หน่วย</h3></div>
+<ol class="steps">
+<li><p>C2: \(P = 230 \times 32 = 7{,}360\ \text{W} = 7.36\ \text{kW}\)</p></li>
+<li><p>C1: \(E = 7.36 \times 5 = 36.8\ \text{kWh}\) — มิเตอร์บ้านหมุนไป 36.8 หน่วย</p></li>
+<li><p>พลังงานที่เข้าแบตจริงน้อยกว่านี้ราว 10 % (ประสิทธิภาพ ≈ 90 %) เหลือประมาณ 33 kWh ดู <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a></p></li>
+</ol></div>
+<div class="wx" id="ex-c-2"><div class="wx-head"><span class="mono">ตัวอย่าง C-2</span><h3>วอลล์บ็อกซ์ 3 เฟส 16 A ให้กำลังเท่าไร</h3></div>
+<ol class="steps">
+<li><p>C3: \(P = \sqrt{3}\times 400 \times 16 = 11{,}085\ \text{W} \approx 11\ \text{kW}\)</p></li>
+<li><p>หรือคิดทีละเฟส: \(3 \times 230 \times 16 = 11{,}040\ \text{W}\) (ต่างกันเล็กน้อยเพราะ 400/√3 = 230.9 V)</p></li>
+<li><p>สังเกต: กระแสต่อเฟสแค่ 16 A เท่าเต้ารับบ้าน แต่กำลังมากกว่าสายชาร์จพกพา 16 A ถึงสามเท่า — ระบบ 3 เฟสส่งกำลังมากได้โดยกระแสต่อสายไม่สูง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="path">
+    <h2 id="path">ไฟเดินทางจากผนังเข้าแบตเตอรี่อย่างไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="ee-fig">
+      <svg viewBox="0 0 760 250" role="img" aria-label="เส้นทางไฟ AC และ DC เข้าแบตเตอรี่รถ">
+        <rect class="bx" x="10" y="30" width="110" height="50" rx="8"/><text class="tb" x="65" y="52" text-anchor="middle">ไฟบ้าน AC</text><text class="t2" x="65" y="69" text-anchor="middle">230 V / 400 V</text>
+        <rect class="bx2" x="160" y="30" width="140" height="50" rx="8"/><text class="tb" x="230" y="52" text-anchor="middle">EVSE (สายพกพา/วอลล์บ็อกซ์)</text><text class="t2" x="230" y="69" text-anchor="middle">สวิตช์ + RCD + Control Pilot</text>
+        <path class="ln2" d="M120 55 H160"/><path class="ln2" d="M300 55 H350"/>
+        <rect class="bx" x="350" y="20" width="390" height="210" rx="14" style="fill:none;stroke-dasharray:6 5"/><text class="t2" x="545" y="40" text-anchor="middle">ภายในรถ</text>
+        <rect class="bx2" x="370" y="55" width="150" height="60" rx="8"/><text class="tb" x="445" y="78" text-anchor="middle">On-board Charger</text><text class="t2" x="445" y="96" text-anchor="middle">PFC → DC-DC แยกฉนวน</text>
+        <path class="ln2" d="M520 85 H580"/>
+        <rect class="bx" x="580" y="60" width="140" height="120" rx="8"/><text class="tb" x="650" y="105" text-anchor="middle">แบตเตอรี่</text><text class="t2" x="650" y="123" text-anchor="middle">300–800 V DC</text><text class="t2" x="650" y="141" text-anchor="middle">+ BMS ควบคุม</text>
+        <rect class="bx" x="10" y="160" width="110" height="50" rx="8"/><text class="tb" x="65" y="182" text-anchor="middle">ตู้ชาร์จด่วน DC</text><text class="t2" x="65" y="199" text-anchor="middle">มี AC→DC ในตู้</text>
+        <path class="ln3" d="M120 185 H560 V150 H580"/><text class="t2" x="330" y="178" text-anchor="middle">DC ตรงเข้าแบต (ข้าม OBC) · สื่อสารผ่าน PLC</text>
+      </svg>
+      <figcaption>ทุกการชาร์จแบบ AC ใช้ตัวแปลง (OBC) ในรถ จึงถูกจำกัดด้วยขนาด OBC ส่วนการชาร์จ DC ใช้ตัวแปลงใหญ่ในตู้ชาร์จ</figcaption>
+    </figure>
+    <p><b>EVSE</b> (Electric Vehicle Supply Equipment) คือชื่อทางการของ “เครื่องชาร์จ” ที่บ้าน ไม่ว่าจะเป็นกล่องควบคุมบนสายชาร์จพกพาหรือวอลล์บ็อกซ์ หน้าที่คือ (1) ตรวจว่าเสียบรถแล้วและมีสายดิน (2) บอกรถว่าดึงกระแสได้สูงสุดเท่าไรผ่านสัญญาณ Control Pilot (3) ต่อและตัดไฟด้วยคอนแทกเตอร์ (4) ตัดเมื่อมีไฟรั่ว อ่านรายละเอียดที่ <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์และ Control Pilot</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="modes">
+    <h2 id="modes">โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>โหมด</th><th>ต่ออย่างไร</th><th>การป้องกันและสื่อสาร</th><th>กำลัง</th><th>ใช้ที่บ้านได้ไหม</th></tr></thead>
+      <tbody>
+        <tr><td><b>Mode 1</b></td><td>เสียบเต้ารับตรง ไม่มีกล่องควบคุม</td><td>ไม่มี Control Pilot พึ่ง RCD ของบ้าน</td><td>≤ 3.7 kW</td><td>ไม่อนุญาตสำหรับรถยนต์ (ใช้กับสกู๊ตเตอร์/จักรยาน)</td></tr>
+        <tr><td><b>Mode 2</b> — ชาร์จช้า</td><td>สายชาร์จพกพาเสียบเต้ารับ มีกล่อง ICCB กลางสาย</td><td>Control Pilot + RCD (มักตรวจ DC 6 mA) ในกล่อง</td><td>1.8–3.7 kW (1φ) / ถึง 22 kW (หัว 3 เฟสอุตสาหกรรม)</td><td>ได้ — เต้ารับมีสายดิน วงจรเฉพาะ</td></tr>
+        <tr><td><b>Mode 3</b> — ชาร์จเร็วที่บ้าน</td><td>วอลล์บ็อกซ์ต่อตายตัวกับตู้ไฟ</td><td>Control Pilot + Proximity + RCD/RDC-DD</td><td>3.7–22 kW AC</td><td>ได้ — วิธีที่แนะนำสำหรับชาร์จประจำ</td></tr>
+        <tr><td><b>Mode 4</b> — ชาร์จด่วน DC</td><td>ตู้ DC ตัวแปลงอยู่ในตู้</td><td>สื่อสารดิจิทัล (CCS: PLC/ISO 15118, CHAdeMO: CAN)</td><td>30–350 kW DC</td><td>โดยทั่วไปไม่ (มี DC wallbox 10–30 kW แต่ราคาสูง)</td></tr>
+      </tbody>
+    </table></div>
+    <p>SAE (อเมริกา) ใช้คำว่า <b>Level 1</b> (120 V), <b>Level 2</b> (208–240 V) และ <b>DC Fast</b> ในไทยไฟบ้าน 230 V ทั้ง Mode 2 และ Mode 3 จึงจัดเป็น “Level 2” ตามความหมายของอเมริกา คำว่า Level จึงทำให้สับสน ชุดนี้ใช้ Mode ตาม IEC</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="obc">
+    <h2 id="obc">On-board Charger: เพดานของการชาร์จ AC <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="C4" data-k="charging power limit min obc evse cable กำลังชาร์จจริง ค่าน้อยที่สุด"><p class="tf-n"><b><span class="fid">C4</span> Actual AC charging power</b> กำลังชาร์จจริงคือค่าที่น้อยที่สุด</p>
+        \[ P_{charge} = \min\!\left(P_{EVSE},\ P_{cable},\ P_{OBC},\ P_{BMS}(SOC,T)\right) \]</div>
+    <p>\(P_{EVSE}\) มาจากกระแสที่เครื่องชาร์จประกาศผ่าน Control Pilot \(P_{cable}\) มาจากตัวต้านทาน Proximity ในหัวสาย \(P_{OBC}\) คือพิกัดเครื่องชาร์จในรถ และ \(P_{BMS}\) คือที่ระบบจัดการแบตยอมรับ ซึ่งลดลงเมื่อแบตใกล้เต็มหรืออุณหภูมิไม่เหมาะ</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>OBC ของรถ</th><th>ต่อกับ</th><th>ได้จริง</th><th>เหตุผล</th></tr></thead>
+      <tbody>
+        <tr><td>1 เฟส 7.4 kW (32 A)</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>7.4 kW</td><td>OBC ใช้เฟสเดียว กระแส 32 A</td></tr>
+        <tr><td>1 เฟส 7.4 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 11 kW (16 A)</td><td>3.7 kW</td><td>ใช้ได้แค่เฟสเดียว × 16 A</td></tr>
+        <tr><td>3 เฟส 11 kW (16 A)</td><td>วอลล์บ็อกซ์ 1 เฟส 32 A</td><td>3.7 kW</td><td>OBC 3 เฟสหลายรุ่นรับเฟสเดียวได้แค่ 16 A — ตรวจสเปกรถ</td></tr>
+        <tr><td>3 เฟส 11 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>11 kW</td><td>OBC เป็นเพดาน</td></tr>
+        <tr><td>3 เฟส 22 kW</td><td>วอลล์บ็อกซ์ 3 เฟส 22 kW</td><td>22 kW</td><td>ต้องใช้สาย 32 A ด้วย</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>บทเรียนก่อนซื้อ</b> ดูสเปก “AC charging max” และจำนวนเฟสของรถก่อนเลือกวอลล์บ็อกซ์และมิเตอร์ การซื้อเครื่อง 22 kW ให้รถที่รับได้ 7.4 kW เสียเงินเปล่าและอาจต้องขอมิเตอร์ 3 เฟสโดยไม่จำเป็น</div>
+<div class="tf" id="C5" data-k="range per hour km per hour ระยะทางต่อชั่วโมง ชาร์จ"><p class="tf-n"><b><span class="fid">C5</span> Range added per hour</b> ระยะทางที่ได้ต่อชั่วโมงที่ชาร์จ</p>
+        \[ \frac{\Delta d}{\Delta t}\,[\text{km/h}] = \frac{P_{charge}\,\eta}{c}\times 100 \qquad c = \text{อัตราสิ้นเปลือง (kWh/100 km)} \]</div>
+<div class="wx" id="ex-c-3"><div class="wx-head"><span class="mono">ตัวอย่าง C-3</span><h3>ชาร์จหนึ่งชั่วโมงได้ระยะทางเท่าไร</h3></div>
+<ol class="steps">
+<li><p>รถกินไฟ \(c = 15\) kWh/100 km ประสิทธิภาพการชาร์จ 90 %</p></li>
+<li><p>สายชาร์จพกพา 10 A: \(P = 2.3\) kW → \(2.3(0.9)/15 \times 100 = 13.8\) km/h</p></li>
+<li><p>วอลล์บ็อกซ์ 7.36 kW → \(7.36(0.9)/15\times 100 = 44\) km/h</p></li>
+<li><p>ตู้ DC 100 kW (ช่วง SOC ต่ำ ประสิทธิภาพ ≈ 95 %) → ≈ 630 km/h — แต่ลดลงมากเมื่อ SOC เกิน 80 %</p></li>
+<li><p>คนที่ขับวันละ 40 km ต้องการเติมแค่ 6–7 kWh ต่อวัน: สายพกพา 10 A ชาร์จกลางคืน 3 ชั่วโมงก็พอ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="connectors">
+    <h2 id="connectors">หัวชาร์จและเต้ารับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หัวชาร์จ</th><th>ใช้กับ</th><th>ขา</th><th>พบในไทย</th></tr></thead>
+      <tbody>
+        <tr><td><b>Type 2</b> (Mennekes, IEC 62196-2)</td><td>AC 1 เฟสและ 3 เฟส ถึง 63 A</td><td>L1 L2 L3 N PE + CP + PP (7 ขา)</td><td>มาตรฐานหลักของรถส่วนใหญ่</td></tr>
+        <tr><td><b>CCS2</b> (Combo 2)</td><td>DC ถึง 350–500 kW</td><td>Type 2 ด้านบน (ใช้ CP PP PE) + DC+ DC− ด้านล่าง</td><td>ตู้ชาร์จด่วนส่วนใหญ่</td></tr>
+        <tr><td><b>Type 1</b> (J1772)</td><td>AC 1 เฟส</td><td>L N PE CP PP (5 ขา)</td><td>รถนำเข้าจากอเมริกา/ญี่ปุ่นรุ่นเก่า</td></tr>
+        <tr><td><b>CHAdeMO</b></td><td>DC สื่อสารผ่าน CAN</td><td>10 ขา</td><td>รถญี่ปุ่นบางรุ่น</td></tr>
+        <tr><td><b>GB/T</b></td><td>AC และ DC ของจีน</td><td>แยกหัว AC/DC</td><td>รถจีนบางรุ่น (ส่วนใหญ่ที่ขายในไทยเปลี่ยนเป็น Type 2/CCS2)</td></tr>
+      </tbody>
+    </table></div>
+    <p>ขา <b>CP (Control Pilot)</b> ใช้สื่อสารกระแสสูงสุดและสถานะ ขา <b>PP (Proximity Pilot)</b> มีตัวต้านทานบอกพิกัดของสาย และ <b>PE</b> คือสายดินที่ต้องต่อถึงหลักดินของบ้านเสมอ — ไม่มีสายดิน เครื่องชาร์จจะไม่ยอมจ่ายไฟ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกวิธีชาร์จให้เหมาะกับการใช้งาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>การใช้รถ</th><th>พลังงานต่อวัน</th><th>ชาร์จช้า 10 A (คืนละ 8 ชม.)</th><th>แนะนำ</th></tr></thead>
+      <tbody>
+        <tr><td>ไปทำงาน 30–50 km/วัน</td><td>5–8 kWh</td><td>≈ 16 kWh ✓ พอ</td><td>Mode 2 ในวงจรเฉพาะ หรือวอลล์บ็อกซ์ 3.7–7.4 kW ถ้าอยากเร็ว</td></tr>
+        <tr><td>เดินทาง 80–150 km/วัน</td><td>14–25 kWh</td><td>≈ 16 kWh ✗ ไม่พอบางวัน</td><td>วอลล์บ็อกซ์ 7.4 kW</td></tr>
+        <tr><td>สองคันในบ้าน / แท็กซี่ / ส่งของ</td><td>&gt; 30 kWh</td><td>✗</td><td>วอลล์บ็อกซ์ 3 เฟส 11 kW หรือสองเครื่องพร้อม load balancing</td></tr>
+        <tr><td>คอนโด หอพัก (ไม่มีวงจรเฉพาะ)</td><td>—</td><td>ห้ามเสียบเต้ารับทั่วไปข้ามคืน</td><td>ชาร์จที่จุดชาร์จส่วนกลาง/สาธารณะ</td></tr>
+      </tbody>
+    </table></div>
+    <div class="fg-calc ev-calc" data-ev="time"></div>
+    <p>อ่านต่อ: <a href="/learn/ev-charging/battery-charging/">ทำไมชาร์จช้าลงหลัง 80 %</a> · <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้านอย่างปลอดภัย</a> · <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์</a></p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

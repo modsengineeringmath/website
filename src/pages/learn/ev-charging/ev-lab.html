@@ -1,0 +1,94 @@
+<!--meta
+{
+  "title": "เครื่องมือคำนวณการชาร์จรถ EV ที่บ้านและซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง (โซลาร์ + แอร์ + รถ) | อาจารย์มด",
+  "h1": "เครื่องมือคำนวณการชาร์จรถ EV ที่บ้าน และซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง",
+  "description": "รวมเครื่องมือฟรีสำหรับวางแผนชาร์จรถยนต์ไฟฟ้าที่บ้าน: เวลาชาร์จพร้อมช่วง CC-CV สายชาร์จพกพา Mode 2 ความร้อนที่ปลั๊ก แล็บ Control Pilot ระบบไฟบ้านและขนาดมิเตอร์ ขนาดเบรกเกอร์ สายไฟ แรงดันตก ค่าไฟอัตราปกติกับ TOU โซลาร์ช่วยชาร์จ และซิมูเลเตอร์พลังงานบ้านที่มีโซลาร์ แอร์ รถ และแบตเตอรี่ทุก 15 นาที พร้อมใบงาน 8 ชุด",
+  "ogTitle": "เครื่องมือชาร์จรถ EV ที่บ้าน + ซิมูเลเตอร์พลังงาน",
+  "og": {"title": "เครื่องมือชาร์จรถ EV ที่บ้าน + ซิมูเลเตอร์"},
+  "lesson": "ev-charging",
+  "sub": "ev-lab",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electric vehicle charging", "Home energy management system", "Calculator"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "เครื่องมือเหล่านี้แม่นยำแค่ไหน?", "a": "ใช้สูตรมาตรฐานและค่าตั้งต้นที่สมเหตุสมผลสำหรับประเทศไทย เหมาะสำหรับวางแผน เปรียบเทียบทางเลือก และเรียนรู้ ผลจริงขึ้นกับรถ อุปกรณ์ วิธีเดินสาย สภาพอากาศ และอัตราค่าไฟปัจจุบัน งานติดตั้งจริงต้องออกแบบและตรวจโดยช่างหรือวิศวกรตามมาตรฐาน"},
+    {"q": "ข้อมูลที่กรอกถูกส่งไปที่ไหนไหม?", "a": "ไม่ เครื่องคำนวณทั้งหมดทำงานในเบราว์เซอร์ของคุณ ไม่มีการส่งข้อมูลออกไป"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>เครื่องมือ · ซิมูเลเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.9 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · Calculators &amp; Energy Simulator</p>
+      <h1>เครื่องมือคำนวณการชาร์จรถ EV ที่บ้าน และซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง</h1>
+      <p class="lede">ทุกเครื่องมือของชุดนี้ในหน้าเดียว เรียงตามลำดับการตัดสินใจจริง: รถต้องการพลังงานเท่าไร → ชาร์จแบบไหน → บ้านรับไหวไหม → เดินสายอย่างไร → เสียเงินเท่าไร → ใช้ร่วมกับโซลาร์และแอร์อย่างไร ตัวเลขทุกช่องแก้ได้ ใช้หน่วย SI และพิมพ์ 7.4k แทน 7400 ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#t-sim">ซิมูเลเตอร์บ้าน</a>
+        <a class="btn btn-ghost btn-sm" href="#t-time">เวลาชาร์จ</a>
+        <a class="btn btn-ghost btn-sm" href="#t-home">มิเตอร์ · สาย</a>
+        <a class="btn btn-ghost btn-sm" href="#t-cost">ค่าไฟ</a>
+        <a class="btn btn-ghost btn-sm" href="#worksheets">ใบงาน</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="t-sim">
+    <h2 id="t-sim">ซิมูเลเตอร์พลังงานบ้าน: โซลาร์ + แอร์ + รถ EV + แบตเตอรี่</h2>
+    <p>เลือกสถานการณ์ด้านบนของเครื่อง หรือเปิดหมวดด้านล่างกราฟเพื่อปรับทุกค่า กราฟแสดงโหลดซ้อนกัน (พื้นฐาน แอร์ รถ ชาร์จแบตบ้าน) เส้นเหลืองคือโซลาร์ เส้นประแดงคือไฟที่ซื้อจากกริด เส้นแดงแนวนอนคือขีดจำกัดเมนเบรกเกอร์ ทฤษฎีอยู่ที่ <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ</a></p>
+    <div class="ev-sim" data-preset="now"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t-time">
+    <h2 id="t-time">1 · เวลาชาร์จและพลังงาน</h2>
+    <div class="fg-calc ev-calc" data-ev="time"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t-portable">
+    <h2 id="t-portable">2 · สายชาร์จพกพา (Mode 2) กับเต้ารับบ้าน</h2>
+    <div class="fg-calc ev-calc" data-ev="portable"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t-cp">
+    <h2 id="t-cp">3 · Control Pilot ของวอลล์บ็อกซ์</h2>
+    <div class="ev-cp" data-a="16" data-state="B"><noscript>ต้องเปิด JavaScript</noscript></div>
+    <div class="fg-calc ev-calc" data-ev="cp"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t-home">
+    <h2 id="t-home">4 · ระบบไฟบ้าน: โหลดรวม มิเตอร์ เมนเบรกเกอร์</h2>
+    <div class="fg-calc ev-calc" data-ev="home"></div>
+    <h3>5 · เบรกเกอร์ ขนาดสาย และแรงดันตก</h3>
+    <div class="fg-calc ev-calc" data-ev="cable"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="t-cost">
+    <h2 id="t-cost">6 · ค่าไฟ: อัตราปกติ vs TOU และค่าต่อกิโลเมตร</h2>
+    <div class="fg-calc ev-calc" data-ev="cost"></div>
+    <h3>7 · โซลาร์ช่วยชาร์จรถได้เท่าไร</h3>
+    <div class="fg-calc ev-calc" data-ev="solar"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worksheets">
+    <h2 id="worksheets">ใบงาน 8 ชุด (คลิกเพื่อดูแนวคำตอบ)</h2>
+    <details class="pv-ws"><summary><b>ใบงาน 1</b> รถแบต 60 kWh ชาร์จ 20 → 80 % ด้วยสายพกพา 10 A และวอลล์บ็อกซ์ 7.4 kW ใช้เวลาต่างกันเท่าไร</summary><p>เครื่องคำนวณ 1 (η 86 % กับ 90 %): สายพกพา ≈ 36/(2.3 × 0.86) = 18.2 ชม. · วอลล์บ็อกซ์ ≈ 5.4 ชม. ถ้าขับวันละ 40 km (6 kWh) สายพกพาใช้แค่ 3 ชม./คืน — ข้อสรุป: ความต้องการรายวันสำคัญกว่าความเร็วสูงสุด</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 2</b> สายพกพา 16 A เสียบเต้ารับเก่า (R<sub>c</sub> 30 mΩ) ความร้อนที่ปลั๊กเท่าไร ถ้าลดเป็น 10 A เหลือเท่าไร</summary><p>M3: 16² × 0.03 = 7.7 W (อันตราย) · 10² × 0.03 = 3.0 W (39 %) แต่เต้ารับเก่ายังควรเปลี่ยน</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 3</b> ตั้งวอลล์บ็อกซ์ให้รถดึง 20 A ต้องส่ง duty เท่าไร และสถานะ C วัดแรงดันได้เท่าไร</summary><p>W3: 20/0.6 = 33.3 % (333 µs) · W4: 0.7 + 11.3 × 882/1882 = 6.0 V</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 4</b> บ้านมิเตอร์ 15(45) A แอร์รวม 3 kW น้ำอุ่น 4.5 kW ครัว 2 kW อื่น ๆ 1.5 kW DF 50 % เพิ่มรถ 7.4 kW ได้ไหม</summary><p>เครื่องคำนวณ 4: 62.6 A เกิน 45 A → 30(100) A, 3 เฟส หรือ load balancing (ตัวอย่าง H-1)</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 5</b> วอลล์บ็อกซ์ 32 A ห่างตู้ 40 m เลือกเบรกเกอร์และสาย (แรงดันตก ≤ 2 % หลังเผื่อต้นทาง 1 %)</summary><p>เครื่องคำนวณ 5: เบรกเกอร์ 40 A · ตามกระแส 10 mm² · ตามแรงดันตก ≥ 2(0.0206)(40)(32)/(0.02 × 230) = 11.5 mm² → ใช้ 16 mm² แรงดันตก ≈ 1.43 %</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 6</b> บ้านใช้ 300 หน่วย On-Peak 35 % วิ่งเดือนละ 3,000 km TOU คุ้มไหม</summary><p>เครื่องคำนวณ 6: รถใช้ 500 หน่วย/เดือน TOU ถูกกว่าอัตราปกติหลายร้อยบาทต่อเดือน (ยิ่งวิ่งมากและบ้านใช้กลางวันน้อย ยิ่งคุ้ม)</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 7</b> ในซิมูเลเตอร์ เลือก “โซลาร์ แต่รถไม่อยู่บ้าน” แล้วแก้ให้รถได้ไฟครบโดยค่าไฟต่ำที่สุด</summary><p>เปลี่ยนวิธีชาร์จเป็น “โซลาร์ก่อน เติม Off-Peak ส่วนที่ขาด” หรือ “ตั้งเวลา Off-Peak” ค่าไฟ ≈ 74 ฿/วัน รถได้ครบ — หรือติ๊ก “รถจอดบ้านทั้งวัน” เพื่อดูวันหยุด</p></details>
+    <details class="pv-ws"><summary><b>ใบงาน 8</b> สถานการณ์ “มิเตอร์เล็ก แอร์เยอะ” เมนทริปตอนกี่โมง แก้อย่างไรโดยไม่ขยายมิเตอร์</summary><p>กระแสสูงสุด ≈ 45 A ช่วง 18:00 (แอร์ + ครัว + รถ) เกินเมน 40 A — ลดกำลังเครื่องชาร์จเป็น 3.7 kW หรือเปลี่ยนเป็นตั้งเวลา Off-Peak 22:00 แล้วดูว่ากระแสสูงสุดลดลงเท่าไร</p></details>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

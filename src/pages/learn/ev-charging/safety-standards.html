@@ -1,0 +1,190 @@
+<!--meta
+{
+  "title": "ความปลอดภัยการชาร์จรถ EV: RCD Type A กับ Type B, กระแสรั่ว DC 6 mA, การต่อลงดิน TN-C-S TT, หลักดิน, มาตรฐาน และอาการเสีย | อาจารย์มด",
+  "h1": "ความปลอดภัยการชาร์จรถ EV: RCD Type A กับ Type B, กระแสรั่ว DC 6 mA, การต่อลงดิน มาตรฐาน และอาการเสีย",
+  "description": "ไฟดูดเกิดอย่างไรและป้องกันอย่างไรเมื่อชาร์จรถยนต์ไฟฟ้าที่บ้าน: หลักการ RCD (เครื่องตัดไฟรั่ว) ชนิด AC A F B ทำไมกระแสรั่ว DC เกิน 6 mA ทำให้ RCD Type A ตาบอด RDC-DD ตาม IEC 62955 ระบบการต่อลงดิน TN-C-S กับ TT ปัญหา PEN ขาด ความต้านทานหลักดิน แรงดันสัมผัส IP มาตรฐาน IEC 61851 IEC 62196 IEC 60364-7-722 วสท. เช็กลิสต์ส่งมอบ และตารางอาการเสีย",
+  "ogTitle": "ความปลอดภัยชาร์จรถ EV: RCD Type B และกราวด์",
+  "og": {"title": "ความปลอดภัยชาร์จรถ EV: RCD Type B และกราวด์"},
+  "lesson": "ev-charging",
+  "sub": "safety-standards",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Residual-current device", "Earthing system", "Electric shock", "Ground (electricity)"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js", "/assets/ps-calc.js"],
+  "faq": [
+    {"q": "ชาร์จรถ EV ต้องใช้ RCD Type B เสมอไหม?", "a": "ต้องมีการป้องกันกระแสรั่วแบบ DC แต่ไม่จำเป็นต้องเป็น RCD Type B ที่ตู้เสมอไป ทางเลือกที่มาตรฐาน IEC 60364-7-722 ยอมรับคือ RCD Type B หรือ RCD Type A (หรือ F) ร่วมกับอุปกรณ์ตรวจจับกระแสรั่ว DC 6 mA (RDC-DD ตาม IEC 62955) ซึ่งวอลล์บ็อกซ์รุ่นใหม่ส่วนใหญ่มีในตัว ให้ดูดาต้าชีตของเครื่องชาร์จและข้อกำหนดของการไฟฟ้าในพื้นที่"},
+    {"q": "ทำไม RCD Type AC ใช้กับเครื่องชาร์จรถไม่ได้?", "a": "เครื่องชาร์จในรถมีวงจรเรียงกระแส ถ้าฉนวนเสียฝั่ง DC กระแสรั่วจะเป็นไฟ DC เรียบหรือ DC เป็นลูก ๆ RCD Type AC ตรวจได้เฉพาะไฟรั่วรูปไซน์ และกระแส DC ยังทำให้แกนเหล็กของ RCD อิ่มตัวจนตัดไฟรั่ว AC ไม่ได้ด้วย จึงอันตรายแม้มีไฟรั่วจริง"},
+    {"q": "ค่าความต้านทานหลักดินที่บ้านควรเป็นเท่าไร?", "a": "มาตรฐานการติดตั้งทางไฟฟ้าของไทย (วสท.) กำหนดความต้านทานระหว่างหลักดินกับดินไว้ไม่เกิน 5 โอห์มสำหรับระบบทั่วไป (มีเงื่อนไขผ่อนผันในพื้นที่ที่ทำได้ยาก) หลักดินแท่งเดียวยาว 2.4 เมตรในดินทั่วไปมักได้ 10–50 โอห์ม จึงมักต้องเพิ่มหลักดินหรือตอกลึกขึ้น วัดด้วยเครื่องวัดความต้านทานดินหลังติดตั้ง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>ความปลอดภัย · RCD · กราวด์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.6 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · EV Charging Safety, RCD &amp; Earthing</p>
+      <h1>ความปลอดภัยการชาร์จรถ EV: RCD Type A กับ Type B, กระแสรั่ว DC 6 mA, การต่อลงดิน มาตรฐาน และอาการเสีย</h1>
+      <p class="lede">รถยนต์ไฟฟ้าเป็นกล่องโลหะขนาดใหญ่ที่จอดบนพื้นเปียกได้ ต่อกับไฟบ้านนานหลายชั่วโมง และข้างในมีไฟ DC แรงดันหลายร้อยโวลต์ การป้องกันไฟดูดของบ้านทั่วไปจึงไม่พอเสมอไป หน้านี้อธิบายตั้งแต่ร่างกายรับกระแสได้เท่าไร RCD ทำงานอย่างไร ทำไมต้องสนใจไฟรั่ว DC จนถึงการต่อลงดินและเช็กลิสต์ก่อนใช้งาน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#rcd">RCD ทำงานอย่างไร</a>
+        <a class="btn btn-ghost btn-sm" href="#types">Type A · B · RDC-DD</a>
+        <a class="btn btn-ghost btn-sm" href="#earth">การต่อลงดิน</a>
+        <a class="btn btn-ghost btn-sm" href="#checklist">เช็กลิสต์</a>
+        <a class="btn btn-ghost btn-sm" href="#trouble">อาการเสีย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>กระแสผ่านร่างกาย 30 mA เป็นเวลานานอาจทำให้หัวใจเต้นผิดจังหวะ → ใช้ RCD 30 mA ตัดภายใน 0.3 s</li>
+          <li>RCD วัดผลต่างระหว่างกระแสที่ไปกับที่กลับ ไม่ใช่กระแสรวม</li>
+          <li>เครื่องชาร์จอาจรั่วเป็น DC → ต้องใช้ RCD Type B หรือ Type A + ตรวจจับ DC 6 mA (RDC-DD)</li>
+          <li>สายดินคุณภาพดีคือเงื่อนไขของทุกอย่าง: เครื่องชาร์จจะไม่จ่ายไฟถ้าไม่มี PE</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น rcd, body, tt, หลักดิน, 50 v" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="shock">
+    <h2 id="shock">ไฟดูดเกิดอย่างไร: ร่างกายกับกระแส <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="P1" data-k="body current touch voltage impedance กระแสผ่านร่างกาย แรงดันสัมผัส"><p class="tf-n"><b><span class="fid">P1</span> Body current</b> กระแสที่ไหลผ่านร่างกาย</p>
+        \[ I_{body} = \frac{U_{touch}}{Z_{body} + R_{shoe} + R_{floor}} \qquad Z_{body} \approx 1\text{–}2\ \text{k}\Omega\ (\text{มือถึงเท้า ผิวเปียก}) \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>กระแส AC 50 Hz (ผ่านลำตัว)</th><th>ผลโดยประมาณ (IEC 60479-1)</th></tr></thead>
+      <tbody>
+        <tr><td>0.5 mA</td><td>เริ่มรู้สึก</td></tr>
+        <tr><td>5–10 mA</td><td>เจ็บ กล้ามเนื้อกระตุก ยังปล่อยมือได้</td></tr>
+        <tr><td>10–30 mA</td><td>ปล่อยมือไม่ได้ (let-go) หายใจลำบากถ้านาน</td></tr>
+        <tr><td>&gt; 30–50 mA นานพอ</td><td>เสี่ยงหัวใจเต้นแผ่นระรัว (ventricular fibrillation)</td></tr>
+      </tbody>
+    </table></div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>จับตัวถังที่มีไฟรั่ว 230 V ขณะยืนเท้าเปล่าบนพื้นเปียก</h3></div>
+<ol class="steps">
+<li><p>P1: \(I \approx 230/1000 = 0.23\ \text{A} = 230\ \text{mA}\)</p></li>
+<li><p>สูงกว่าเกณฑ์อันตราย 30 mA เกือบ 8 เท่า — ต้องตัดไฟให้เร็วมาก หรือไม่ให้ตัวถังมีแรงดันตั้งแต่แรก</p></li>
+<li><p>สองชั้นของการป้องกัน: (1) สายดินทำให้ไฟรั่วไหลลงดินและแรงดันสัมผัสต่ำ (2) RCD ตรวจไฟรั่วแล้วตัดภายในเสี้ยววินาที</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rcd">
+    <h2 id="rcd">RCD (เครื่องตัดไฟรั่ว) ทำงานอย่างไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สายไฟเฟส (L) และนิวทรัล (N) ลอดผ่านแกนเหล็กรูปวงแหวนเดียวกัน ปกติกระแสไปเท่ากับกระแสกลับ สนามแม่เหล็กหักล้างกันเป็นศูนย์ ถ้ามีกระแสส่วนหนึ่งรั่วลงดิน (ผ่านคนหรือสายดิน) กระแสสองเส้นไม่เท่ากัน แกนเหล็กเกิดฟลักซ์ ขดลวดตรวจจับเหนี่ยวนำแรงดันไปปลดกลไกตัดไฟ</p>
+<div class="tf" id="P2" data-k="residual current rcd sum of currents กระแสผลต่าง เครื่องตัดไฟรั่ว"><p class="tf-n"><b><span class="fid">P2</span> Residual current</b> กระแสผลต่างที่ RCD วัด</p>
+        \[ i_{\Delta}(t) = i_L(t) + i_N(t)\ \ (1\varphi) \qquad i_{\Delta} = i_{L1}+i_{L2}+i_{L3}+i_N\ \ (3\varphi) \qquad \text{ตัดเมื่อ } I_{\Delta} \ge (0.5\text{–}1)\,I_{\Delta n} \]</div>
+    <p>กระแส \(i_L\) และ \(i_N\) นิยามทิศเข้าหาโหลดทั้งคู่ ผลรวมจึงเป็นศูนย์เมื่อไม่มีไฟรั่ว RCD 30 mA ต้องตัดภายใน 0.3 s ที่ \(I_{\Delta n}\) และภายใน 0.04 s ที่ \(5I_{\Delta n}\) สังเกตว่า RCD <b>ไม่ป้องกันการแตะ L กับ N พร้อมกัน</b> (กระแสไปกลับเท่ากัน) และไม่ป้องกันกระแสเกิน — ต้องมีเบรกเกอร์ด้วย</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">RCD Type AC, A, F, B และ RDC-DD 6 mA <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ตรวจจับไฟรั่วรูปแบบ</th><th>ใช้กับเครื่องชาร์จรถ</th></tr></thead>
+      <tbody>
+        <tr><td><b>Type AC</b></td><td>ไซน์ AC เท่านั้น</td><td>✗ ห้ามใช้</td></tr>
+        <tr><td><b>Type A</b></td><td>AC + DC เป็นลูก ๆ (pulsating) + DC เรียบไม่เกิน 6 mA</td><td>ได้ เมื่อร่วมกับ RDC-DD 6 mA</td></tr>
+        <tr><td><b>Type F</b></td><td>เหมือน A + ความถี่ผสม (อินเวอร์เตอร์ 1 เฟส)</td><td>ได้ เมื่อร่วมกับ RDC-DD 6 mA</td></tr>
+        <tr><td><b>Type B</b></td><td>ทุกแบบ รวม DC เรียบ และความถี่สูงถึง ~1 kHz</td><td>✓ ใช้เดี่ยวได้</td></tr>
+        <tr><td><b>RDC-DD</b> (IEC 62955)</td><td>ตรวจเฉพาะ DC เรียบ ตัดที่ 6 mA</td><td>มักอยู่ในวอลล์บ็อกซ์/สายพกพา ใช้คู่กับ Type A</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P3" data-k="dc fault current 6 ma saturation type a blinding กระแสรั่ว dc 6 มิลลิแอมป์"><p class="tf-n"><b><span class="fid">P3</span> DC blinding limit</b> ขีดกระแสรั่ว DC ที่ RCD Type A ยังทำงานได้</p>
+        \[ I_{\Delta,DC} \le 6\ \text{mA} \;\Rightarrow\; \text{Type A ยังตัด AC ได้} \qquad I_{\Delta,DC} > 6\ \text{mA} \;\Rightarrow\; \text{ต้องตัดด้วย RDC-DD หรือใช้ Type B} \]</div>
+    <p><b>ทำไม DC ทำให้ RCD ตาบอด</b> แกนเหล็กของ RCD ถูกออกแบบให้ไวต่อการเปลี่ยนฟลักซ์ กระแส DC สร้างฟลักซ์คงที่ดันแกนให้ใกล้อิ่มตัว ความชัน \(dB/dH\) ลดลง เมื่อมีไฟรั่ว AC ซ้อนขึ้นมา ฟลักซ์เปลี่ยนน้อยจนขดตรวจจับเหนี่ยวนำแรงดันไม่พอตัดไฟ เครื่องชาร์จในรถมีวงจรเรียงกระแสและ PFC ถ้าฉนวนเสียฝั่ง DC กระแสรั่วจะเป็น DC เรียบ — นี่คือเหตุที่มาตรฐาน EV ต้องการการตรวจจับ DC เสมอ</p>
+    <div class="note"><b>อย่าวาง RCD Type A ต้นทางของ RCD Type B</b> ถ้าตู้ไฟบ้านมี RCD Type A คุมทั้งตู้ (กันดูดเมน) แล้ววงจรรถใช้ Type B อยู่ปลายทาง กระแสรั่ว DC ยังไหลผ่าน Type A ต้นทางและทำให้มันตาบอดได้ ให้แยกวงจรรถออกจาก RCD ต้นทางชนิด A หรือใช้ Type B ที่ต้นทาง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="earth">
+    <h2 id="earth">การต่อลงดิน: TN-C-S, TT และปัญหา PEN ขาด <span class="lv lv-i">กลาง</span></h2>
+    <p>บ้านในไทยส่วนใหญ่ต่อลงดินแบบ <b>TN-C-S</b>: ระบบจำหน่ายใช้สายนิวทรัลร่วมเป็นสายดิน (PEN) และที่ตู้เมนของบ้านแยกออกเป็น N กับ PE โดยต่อถึงหลักดินที่ตู้เมน ข้อดีคือกระแสลัดลงดินสูง เบรกเกอร์ตัดเร็ว ข้อเสียที่สำคัญกับรถ EV คือ <b>ถ้าสาย PEN ในระบบจำหน่ายขาด</b> PE ในบ้าน (และตัวถังรถที่ต่อกับ PE) อาจลอยขึ้นมามีแรงดันหลายสิบถึงเกือบ 230 V เทียบกับพื้นดินที่ยืน</p>
+<div class="tf" id="P4" data-k="tt system condition ra idn 50 v ระบบ tt เงื่อนไข 50 โวลต์"><p class="tf-n"><b><span class="fid">P4</span> TT-system touch-voltage condition</b> เงื่อนไขระบบ TT</p>
+        \[ R_A \times I_{\Delta n} \le 50\ \text{V} \qquad (R_A = \text{ความต้านทานหลักดิน + สาย PE ของผู้ใช้ไฟ}) \]</div>
+    <p>มาตรฐาน IEC 60364-7-722 จึงกำหนดมาตรการสำหรับจุดชาร์จกลางแจ้งในระบบ TN เช่น ทำจุดชาร์จเป็นระบบ TT แยกหลักดิน หรือใช้เครื่องชาร์จที่ตรวจจับ PEN ขาด (open-PEN detection) แล้วตัดทุกขั้วรวม PE วอลล์บ็อกซ์หลายรุ่นมีฟังก์ชันนี้ในตัว — เป็นข้อที่ควรถามก่อนซื้อ</p>
+<div class="tf" id="P5" data-k="earth rod resistance dwight formula ความต้านทานหลักดิน แท่งเดียว"><p class="tf-n"><b><span class="fid">P5</span> Earth-rod resistance (Dwight)</b> ความต้านทานหลักดินแท่งเดียว</p>
+        \[ R_{rod} = \frac{\rho}{2\pi L}\left[\ln\frac{8L}{d} - 1\right] \qquad \rho = \text{สภาพต้านทานดิน } (\Omega\,\text{m}) \]</div>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">ตัวอย่าง P-2</span><h3>หลักดิน 2.4 m เส้นผ่านศูนย์กลาง 16 mm ในดิน 100 Ω·m</h3></div>
+<ol class="steps">
+<li><p>P5: \(\dfrac{100}{2\pi(2.4)} = 6.63\) · \(\ln\dfrac{8(2.4)}{0.016} - 1 = \ln 1200 - 1 = 6.09\)</p></li>
+<li><p>\(R = 6.63 \times 6.09 = 40\ \Omega\) — สูงกว่าเกณฑ์ 5 Ω ของ วสท. มาก</p></li>
+<li><p>วิธีลด: ตอกหลักดินเพิ่มขนานกัน ห่างกันอย่างน้อยความยาวหลัก ตอกลึกขึ้น (R ลดเกือบตาม 1/L) หรือใช้สารปรับปรุงดิน ดินเหนียวชื้น (ρ ≈ 10–30 Ω·m) ทำได้ง่ายกว่าดินทราย (ρ ≈ 200–1000 Ω·m)</p></li>
+</ol></div>
+<div class="wx" id="ex-p-3"><div class="wx-head"><span class="mono">ตัวอย่าง P-3</span><h3>จุดชาร์จแบบ TT ใช้หลักดิน 40 Ω กับ RCD 30 mA ได้ไหม</h3></div>
+<ol class="steps">
+<li><p>P4: \(40 \times 0.03 = 1.2\ \text{V} \le 50\ \text{V}\) ✓ ผ่านเงื่อนไขระบบ TT อย่างสบาย</p></li>
+<li><p>แต่ระบบ TT กระแสลัดลงดินมีแค่ราว \(230/(40+2) \approx 5.5\) A เบรกเกอร์ 40 A ไม่ตัด — การป้องกันขึ้นกับ RCD ทั้งหมด ต้องทดสอบ RCD เป็นประจำ</p></li>
+<li><p>ลองเปรียบเทียบ TN-C-S กับ TT ในเครื่องคำนวณด้านล่าง</p></li>
+</ol></div>
+    <div class="fg-calc ps-calc" data-ps="earth" data-a1="10" data-a2="6" data-in="40" data-l="25"></div>
+    <p>อ่านทฤษฎีการต่อลงดินเต็มรูปแบบที่ <a href="/learn/power-systems/earthing-safety/">ระบบการต่อลงดินและการป้องกันไฟดูด</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="other">
+    <h2 id="other">การป้องกันอื่น: ฟ้าผ่า IP และความร้อน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ul>
+      <li><b>อุปกรณ์ป้องกันแรงดันเกิน (SPD) Type 2</b> ที่ตู้ไฟ ปกป้องวอลล์บ็อกซ์และ OBC จากฟ้าผ่าใกล้ ๆ และการสวิตชิ่งในระบบ</li>
+      <li><b>IP</b> อย่างน้อย IP44 สำหรับติดในที่มีหลังคา IP54–IP65 สำหรับกลางแจ้ง หัวชาร์จที่ไม่ได้ใช้ให้เก็บในที่เก็บหัว</li>
+      <li><b>ขั้วต่อ</b> ขันแน่นด้วยแรงบิดตามคู่มือ (torque) ตรวจซ้ำหลังใช้งาน 1 เดือน ขั้วหลวมคือสาเหตุอันดับหนึ่งของความร้อนในตู้</li>
+      <li><b>พื้นที่ติดตั้ง</b> ไม่ติดใกล้วัสดุไวไฟ ระยะสายชาร์จไม่พาดผ่านทางเดินที่รถทับ</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="standards">
+    <h2 id="standards">มาตรฐานที่เกี่ยวข้อง</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>มาตรฐาน</th><th>เรื่อง</th></tr></thead>
+      <tbody>
+        <tr><td>IEC 61851-1</td><td>ระบบชาร์จตัวนำ: Mode 1–4 Control Pilot การป้องกัน</td></tr>
+        <tr><td>IEC 62752</td><td>สายชาร์จพกพา Mode 2 (IC-CPD)</td></tr>
+        <tr><td>IEC 62196-1/-2/-3</td><td>ปลั๊ก เต้ารับ หัวชาร์จ Type 2 CCS</td></tr>
+        <tr><td>IEC 60364-7-722</td><td>การติดตั้งไฟฟ้าสำหรับจุดชาร์จ: วงจรเฉพาะ RCD ชนิด การป้องกัน PEN ขาด</td></tr>
+        <tr><td>IEC 62955 · IEC 62423</td><td>RDC-DD 6 mA · RCD Type F/B</td></tr>
+        <tr><td>มาตรฐานการติดตั้งทางไฟฟ้าสำหรับประเทศไทย (วสท.)</td><td>หมวดการติดตั้งระบบอัดประจุยานยนต์ไฟฟ้า สายดิน หลักดิน ขนาดสาย</td></tr>
+        <tr><td>ข้อกำหนด กฟน. / กฟภ.</td><td>เงื่อนไขขอใช้ไฟ ขนาดมิเตอร์ อุปกรณ์ที่ยอมรับ</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">เช็กลิสต์ก่อนใช้งานจริง</h2>
+    <ol>
+      <li>วงจรเฉพาะ ขนาดเบรกเกอร์และสายตามการคำนวณ (<a href="/learn/ev-charging/home-electrical/#cable">H5–H9</a>)</li>
+      <li>RCD 30 mA ที่ถูกชนิด (Type B หรือ Type A + RDC-DD) กดปุ่ม Test แล้วตัดจริง</li>
+      <li>วัดค่าความต้านทานหลักดิน และวัดความต่อเนื่องของ PE ถึงตัวเครื่องชาร์จ</li>
+      <li>วัดความต้านทานฉนวนของสายใหม่ (ปลดเครื่องชาร์จก่อน)</li>
+      <li>ตรวจขั้ว L–N–PE ถูกต้อง ไม่สลับ</li>
+      <li>ทดลองชาร์จเต็มกระแส 1 ชั่วโมง วัดอุณหภูมิขั้วต่อในตู้และในวอลล์บ็อกซ์ (ไม่ควรเกิน ~ 30 °C เหนืออุณหภูมิห้อง)</li>
+      <li>ตั้งค่ากระแสสูงสุดของวอลล์บ็อกซ์ให้ตรงกับเบรกเกอร์ (เช่น 32 A กับเบรกเกอร์ 40 A)</li>
+      <li>เก็บเอกสาร: ผังวงจร ผลทดสอบ ใบรับรองช่าง</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="trouble">
+    <h2 id="trouble">ตารางอาการเสียที่พบบ่อย</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการ</th><th>สาเหตุที่น่าจะเป็น</th><th>วิธีตรวจ</th></tr></thead>
+      <tbody>
+        <tr><td>เสียบแล้วเครื่องชาร์จขึ้น “Earth fault / No ground”</td><td>เต้ารับไม่มีสายดิน สาย PE หลุด หลักดินสูงมาก</td><td>วัดความต่อเนื่อง PE วัดแรงดัน N–PE (ปกติ &lt; 5 V)</td></tr>
+        <tr><td>RCD ตัดทันทีที่เริ่มชาร์จ</td><td>ฉนวนสายชื้น โหลดอื่นรั่วสะสมบนวงจรเดียวกัน RCD ไวเกิน</td><td>แยกวงจร วัดฉนวน เปลี่ยน RCD ให้ถูกชนิด</td></tr>
+        <tr><td>RCD ตัดเป็นพัก ๆ ตอนฝนตก</td><td>น้ำเข้าเต้ารับ/กล่องต่อ IP ไม่พอ</td><td>ตรวจซีลและท่อ ร้อยสายเข้ากล่องจากด้านล่าง</td></tr>
+        <tr><td>เมนเบรกเกอร์ทริปหัวค่ำ</td><td>รถ + แอร์ + น้ำอุ่น เกินพิกัด</td><td>ลดกระแสชาร์จ ตั้งเวลา load balancing (<a href="/learn/ev-charging/wallbox/#W6">W6</a>)</td></tr>
+        <tr><td>ชาร์จได้กระแสน้อยกว่าที่ตั้ง</td><td>OBC ของรถจำกัด สายชาร์จพิกัดต่ำ แรงดันตก อุณหภูมิสูงจนเครื่องลดกำลัง</td><td>ดูค่าบนแอปรถ ตรวจ PP วัดแรงดันขณะชาร์จ</td></tr>
+        <tr><td>ปลั๊ก/ขั้วต่อร้อน มีกลิ่น</td><td>หน้าสัมผัสหลวม เต้ารับเสื่อม</td><td>หยุดใช้ทันที เปลี่ยนเต้ารับ ขันขั้วใหม่ (<a href="/learn/ev-charging/portable-charger/#heat">M3</a>)</td></tr>
+        <tr><td>ไฟบ้านกะพริบขณะชาร์จ</td><td>แรงดันตกในสายเมนหรือขั้วต่อหลวม</td><td>วัดแรงดันที่มิเตอร์และที่ตู้ขณะชาร์จ เทียบกัน</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

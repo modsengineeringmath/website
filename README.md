@@ -175,3 +175,22 @@ Each formula has a citable ID; the hub builds the searchable index automatically
   The build refreshes navigation, sitemap, RSS, llms.txt/full, Markdown copies and headers.
 - Vector math regression checks: `node scripts/test-vectors.mjs` (known geometry and 1,000 deterministic identity checks).
 - Cloudflare Pages serves the committed root files directly; commit generated outputs with source changes.
+
+## Home EV charging · Power systems & protection · Power factor (added 2026-10-13)
+Three series in `TOPICS` (build.mjs), topics 15–17, all in `MD_SERIES`; formula cards use the same markup as the other series.
+- `ev-charging` (9 pages, prefixes C B M W H P T S): charging basics, battery & time, Mode 2 portable charger ("ชาร์จช้าด้วยไฟบ้าน"),
+  wallbox & Control Pilot ("ชาร์จเร็วที่บ้าน"), home electrical (meter, load, cable), safety (RCD Type B, earthing), tariffs/TOU,
+  solar + air conditioning + EV (home energy management), ev-lab.
+- `power-systems` (11 pages, prefixes G A U L F S P R E D): preparation course for power system analysis and protection, power-lab.
+- `power-factor` (8 pages, prefixes B W C K T H M): basics, waveforms, correction, capacitor banks, billing, harmonics, measurement, pf-lab.
+- Shared toolkit `assets/ee-kit.js` (`window.EEKit`: parser, formatting, SVG `chart`, calculator builder). Load it before:
+  - `assets/ev-calc.js`: `<div class="fg-calc ev-calc" data-ev="time|portable|cp|home|cable|cost|solar">`, Control Pilot lab `<div class="ev-cp" data-a="32" data-state="C">`,
+    24-h home energy simulator `<div class="ev-sim" data-preset="now|offpeak|solar-commuter|wfh-solar|battery|small-meter">`; `<button data-ev-preset>` loads a preset.
+  - `assets/ps-calc.js`: `<div class="fg-calc ps-calc" data-ps="pu|base|fault|ufault|seq|reg|pd|earth|diff|relay">`, TCC lab `<div class="ps-tcc" data-if="10000">`.
+  - `assets/pf-lab.js`: simulator `<div class="pf-sim" data-preset="motor" [data-compact] [data-mini data-loads="motor"] [data-views="wave,phasor,tri,meter,cable"]>`
+    (presets in `PRESETS`, `#preset=<name>` on the page URL), virtual capacitor bank `<div class="pf-bank" data-steps="6 × 25 kvar" data-target="0.95">`,
+    calculators `<div class="fg-calc pf-calc" data-pf="qc|bill|twowatt|truepf|resonance|motor|avg">`.
+  - Any calculator input can be preset with `data-<key>`; `<button data-ev-fill|data-ps-fill|data-pf-fill="key" data-vals='{"k":"v"}'>` refills one.
+  - In Node, copy the files to `.cjs` and set `globalThis.EEKit = require("./ee-kit.cjs")` before requiring a calculator file.
+- Thai tariffs (2025 rates, Ft as an input), cable ampacity and meter tables are rounded teaching values; worked-example numbers were checked against the engines in Node.
+- Menu: one group "ไฟฟ้ากำลัง" (`data-nav` ev ps pf). Short URLs (`/ev`, `/wallbox`, `/tou`, `/per-unit`, `/tcc`, `/pf`, `/pf-lab` …) are in `_redirects`.

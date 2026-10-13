@@ -1,0 +1,206 @@
+<!--meta
+{
+  "title": "โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว: สมดุลพลังงาน ชาร์จจากโซลาร์ส่วนเกิน จัดการโหลด แบตบ้าน V2H และขนาดระบบ | อาจารย์มด",
+  "h1": "โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว: สมดุลพลังงาน การชาร์จจากโซลาร์ส่วนเกิน การจัดการโหลด และ V2H",
+  "description": "หลักการที่เชื่อมโซลาร์เซลล์ แอร์บ้าน และการชาร์จรถยนต์ไฟฟ้าเข้าด้วยกัน (Home Energy Management): สมการสมดุลกำลังทุกขณะ ไฟไหลไปทางไหน โปรไฟล์โหลด 24 ชั่วโมง self-consumption self-sufficiency การชาร์จรถจากโซลาร์ส่วนเกิน dynamic load balancing ลำดับความสำคัญของโหลด แบตเตอรี่บ้าน V2L V2H pre-cooling แอร์ และเลือกขนาดแผงสำหรับแอร์ + รถ พร้อมซิมูเลเตอร์ 24 ชั่วโมง",
+  "ogTitle": "โซลาร์ + แอร์ + รถ EV ในบ้านเดียว: หลักการเชื่อมโยง",
+  "og": {"title": "โซลาร์ + แอร์ + รถ EV ในบ้านเดียว"},
+  "lesson": "ev-charging",
+  "sub": "solar-ac-ev",
+  "nav": "ev",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate", "Graduate"],
+  "about": ["Home energy management system", "Photovoltaic system", "Air conditioning", "Vehicle-to-grid", "Demand response"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/ev-calc.js"],
+  "faq": [
+    {"q": "ติดโซลาร์ 5 kW พอชาร์จรถ EV และเปิดแอร์ไหม?", "a": "แผง 5 kWp ในไทยผลิตได้ประมาณ 18–20 kWh ต่อวันในวันแดดดี พอสำหรับแอร์กลางวันหนึ่งถึงสองเครื่องและโหลดกลางวันของบ้าน และเหลือส่วนเกินราว 8–10 kWh ซึ่งชาร์จรถได้ราว 50 km ถ้ารถจอดบ้านตอนกลางวัน ถ้ารถไม่อยู่บ้าน ส่วนเกินจะถูกขายคืนกริด แล้วรถชาร์จด้วยไฟ Off-Peak ตอนกลางคืนแทน ซึ่งก็ยังลดค่าไฟได้มาก"},
+    {"q": "ชาร์จรถจากโซลาร์ส่วนเกิน (solar surplus charging) ทำงานอย่างไร?", "a": "วอลล์บ็อกซ์หรือระบบจัดการพลังงานวัดกำลังที่กำลังไหลออกกริดด้วย CT หรือมิเตอร์อัจฉริยะ แล้วตั้งกระแสชาร์จรถให้เท่ากับส่วนเกินนั้นผ่านสัญญาณ Control Pilot เมื่อเมฆบังหรือเปิดแอร์เพิ่ม ส่วนเกินลดลง กระแสชาร์จก็ลดตาม ถ้าส่วนเกินน้อยกว่าประมาณ 1.4 kW (6 A ต่ำสุดตามมาตรฐาน) จะหยุดชาร์จชั่วคราวหรือดึงจากกริดบางส่วนตามที่ตั้งไว้"},
+    {"q": "ควรลงทุนแบตเตอรี่บ้านหรือใช้แบตรถแทน?", "a": "แบตรถมีความจุใหญ่กว่าแบตบ้านหลายเท่า แต่จอดที่บ้านไม่ตรงเวลากับแสงแดดเสมอไป และการจ่ายไฟกลับบ้าน (V2H) ต้องใช้รถ เครื่องชาร์จสองทิศทาง และอุปกรณ์ตัดแยกจากกริดที่รองรับ แบตบ้านเหมาะเมื่อมีโหลดกลางคืนมากหรือไฟดับบ่อย สำหรับบ้านที่ใช้ TOU การชาร์จรถช่วง Off-Peak และใช้ไฟโซลาร์กับแอร์กลางวันมักคุ้มที่สุดโดยไม่ต้องมีแบตบ้าน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="evArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน</a></li><li>โซลาร์ + แอร์ + รถ EV</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.8 · ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน · Solar PV, Air Conditioning &amp; EV in One Home</p>
+      <h1>โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว: สมดุลพลังงาน การชาร์จจากโซลาร์ส่วนเกิน การจัดการโหลด และ V2H</h1>
+      <p class="lede">โซลาร์เซลล์ แอร์ และรถยนต์ไฟฟ้า ดูเหมือนสามเรื่องแยกกัน แต่ในบ้านหนึ่งหลังทั้งสามต่ออยู่บนบัสเดียวกันที่ตู้ไฟ และถูกผูกด้วยกฎทางฟิสิกส์ข้อเดียว: <b>กำลังที่เข้าต้องเท่ากับกำลังที่ออกทุกขณะ</b> ที่เหลือคือเรื่องของ <b>เวลา</b> และ <b>ขีดจำกัดกระแส</b> หน้านี้เรียกหลักการทั้งหมดว่า <b>การจัดการพลังงานในบ้าน (Home Energy Management, HEM)</b> และให้เครื่องมือทดลองคิดก่อนลงทุนจริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#sim">ซิมูเลเตอร์ 24 ชั่วโมง</a>
+        <a class="btn btn-ghost btn-sm" href="#balance">สมดุลกำลัง</a>
+        <a class="btn btn-ghost btn-sm" href="#timing">เวลาของแต่ละโหลด</a>
+        <a class="btn btn-ghost btn-sm" href="#surplus">ชาร์จจากโซลาร์ส่วนเกิน</a>
+        <a class="btn btn-ghost btn-sm" href="#compare">เปรียบเทียบ 6 แบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#sizing">เลือกขนาดแผง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ทุกขณะ: โซลาร์ + กริด + แบต = โหลดพื้นฐาน + แอร์ + รถ (ค่าบวก/ลบบอกทิศ)</li>
+          <li>แอร์กับโซลาร์ “ตรงเวลา” กันโดยธรรมชาติ รถ “เลื่อนเวลาได้” — นี่คือสองเครื่องมือหลัก</li>
+          <li>รถไม่อยู่บ้านกลางวัน → ใช้ไฟโซลาร์กับแอร์ ชาร์จรถ Off-Peak กลางคืน</li>
+          <li>รถอยู่บ้านกลางวัน → ชาร์จจากโซลาร์ส่วนเกิน (≥ 1.4 kW) ลดไฟที่ขายคืนราคาถูก</li>
+          <li>Load balancing ป้องกันเมนทริปเมื่อแอร์ น้ำอุ่น และรถ ทำงานพร้อมกัน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น สมดุล, self-consumption, surplus, v2h, แอร์, ขนาดแผง" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="balance">
+    <h2 id="balance">หลักที่ 1: สมดุลกำลังที่ตู้ไฟ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตู้ไฟเป็นเหมือนสี่แยกของกระแส ตามกฎกระแสของเคอร์ชอฟฟ์ ผลรวมกระแสที่เข้าเท่ากับที่ออก คูณด้วยแรงดันเดียวกันได้สมดุลกำลัง ไฟฟ้าในสายเก็บไว้ไม่ได้ ถ้าโซลาร์ผลิตเกิน ส่วนเกินต้องไปที่ไหนสักแห่งทันที (กริด แบต หรือรถ)</p>
+<div class="tf" id="S1" data-k="power balance pv grid battery load สมดุลกำลัง ทุกขณะ"><p class="tf-n"><b><span class="fid">S1</span> Instantaneous power balance</b> สมดุลกำลังทุกขณะ</p>
+        \[ P_{PV}(t) + P_{grid}(t) + P_{bat}(t) = P_{base}(t) + P_{AC}(t) + P_{EV}(t) \]</div>
+    <p>\(P_{grid} &gt; 0\) คือซื้อไฟ \(P_{grid} &lt; 0\) คือขายคืน \(P_{bat} &gt; 0\) คือแบตจ่าย \(P_{bat} &lt; 0\) คือแบตชาร์จ มิเตอร์ดิจิทัลแบบสองทิศทางนับสองค่าแยกกัน: หน่วยที่ซื้อและหน่วยที่ขาย</p>
+<div class="tf" id="S2" data-k="daily energy balance kwh พลังงานรายวัน สมดุล"><p class="tf-n"><b><span class="fid">S2</span> Daily energy balance</b> สมดุลพลังงานรายวัน (อินทิเกรต S1)</p>
+        \[ E_{PV} + E_{import} - E_{export} + E_{bat,out} - E_{bat,in} = E_{base} + E_{AC} + E_{EV} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="timing">
+    <h2 id="timing">หลักที่ 2: แต่ละอย่างใช้หรือผลิตไฟ “เมื่อไร” <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ระบบ</th><th>ช่วงเวลา</th><th>กำลังทั่วไป</th><th>เลื่อนเวลาได้ไหม</th></tr></thead>
+      <tbody>
+        <tr><td>☀ โซลาร์เซลล์</td><td>07:00–17:00 สูงสุดเที่ยง</td><td>0.6–0.8 kW ต่อ kWp ตอนเที่ยงแดดดี</td><td>ไม่ได้ (ขึ้นกับแดด)</td></tr>
+        <tr><td>❄ แอร์ห้องนั่งเล่น/ทำงาน</td><td>บ่ายที่ร้อนที่สุด</td><td>0.5–1.5 kW/เครื่อง</td><td>บ้าง: pre-cooling ล่วงหน้าตอนบ่าย</td></tr>
+        <tr><td>❄ แอร์ห้องนอน</td><td>21:00–06:00</td><td>0.3–0.6 kW/เครื่อง</td><td>น้อย</td></tr>
+        <tr><td>🏠 โหลดพื้นฐาน</td><td>ตลอดวัน + เช้าเย็น</td><td>0.2–0.5 kW + ช่วงพีก 1–3 kW</td><td>ซักผ้า ล้างจาน ปั๊มน้ำ: ได้</td></tr>
+        <tr><td>🔌 รถ EV</td><td>เมื่อจอดบ้าน</td><td>1.4–7.4 kW</td><td><b>ได้มาก</b> — จอด 12–14 ชม. ชาร์จจริง 1–3 ชม.</td></tr>
+      </tbody>
+    </table></div>
+    <p>แอร์สัมพันธ์กับแดดเพราะความร้อนที่เข้าบ้านมาจากแสงอาทิตย์ (หลังคา ผนัง หน้าต่าง) <b>เหตุเดียวกันที่ทำให้แผงผลิตไฟคือเหตุที่ทำให้แอร์ทำงานหนัก</b> นี่คือเหตุผลที่ <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์กับแอร์เข้ากันดี</a></p>
+<div class="tf" id="S3" data-k="air conditioner average power btu seer กำลังเฉลี่ยแอร์"><p class="tf-n"><b><span class="fid">S3</span> Air-conditioner average power</b> กำลังไฟฟ้าเฉลี่ยของแอร์</p>
+        \[ \bar P_{AC}\,[\text{W}] \approx \frac{\text{BTU/h}\times LF}{SEER} \qquad \text{เช่น } \frac{12{,}000(0.8)}{20} = 480\ \text{W} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="metrics">
+    <h2 id="metrics">ตัวชี้วัด: ใช้ไฟโซลาร์เองได้เท่าไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S4" data-k="self consumption ratio ใช้ไฟโซลาร์เอง สัดส่วน"><p class="tf-n"><b><span class="fid">S4</span> Self-consumption</b> สัดส่วนไฟโซลาร์ที่ใช้เองในบ้าน</p>
+        \[ SC = \frac{E_{PV} - E_{export}}{E_{PV}} \]</div>
+<div class="tf" id="S5" data-k="self sufficiency autarky พึ่งตนเอง สัดส่วน"><p class="tf-n"><b><span class="fid">S5</span> Self-sufficiency</b> สัดส่วนที่บ้านพึ่งตนเองได้</p>
+        \[ SS = 1 - \frac{E_{import}}{E_{load}} \qquad E_{load} = E_{base}+E_{AC}+E_{EV} \]</div>
+    <p>ทำไมต้องสนใจ SC: ในไทย ไฟที่ขายคืนได้ราคาต่ำ (เช่น 2.2 ฿/หน่วยในโครงการโซลาร์ภาคประชาชน) แต่ไฟที่ซื้อแพง 3–6 ฿ ไฟโซลาร์ทุกหน่วยที่ใช้เองจึงมีค่ามากกว่าขาย 1.5–2.5 เท่า</p>
+<div class="tf" id="S6" data-k="value of solar energy self use export net billing มูลค่าไฟโซลาร์"><p class="tf-n"><b><span class="fid">S6</span> Daily value of solar (net billing)</b> มูลค่าของไฟโซลาร์ต่อวัน</p>
+        \[ V = (E_{PV}-E_{export})\,r_{buy}(t) + E_{export}\,r_{sell} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="surplus">
+    <h2 id="surplus">หลักที่ 3: ชาร์จรถจากโซลาร์ส่วนเกิน <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S7" data-k="solar surplus charging current minimum 6a ชาร์จจากโซลาร์ส่วนเกิน กระแส"><p class="tf-n"><b><span class="fid">S7</span> Surplus charging current</b> กระแสชาร์จจากโซลาร์ส่วนเกิน</p>
+        \[ I_{EV} = \left\lfloor \frac{P_{PV} - P_{base} - P_{AC}}{n_{ph}\times 230} \right\rfloor_{A} \quad \text{ใช้เมื่อ } I_{EV} \ge 6\ \text{A}\ (\ge 1.38\ \text{kW ที่ 1 เฟส},\ 4.14\ \text{kW ที่ 3 เฟส}) \]</div>
+    <p>ระบบวัดกำลังที่ไหลออกกริดทุก 1–10 วินาที ปรับ duty cycle ของ Control Pilot (<a href="/learn/ev-charging/wallbox/#W2">W2</a>) ให้รถดึงพอดีกับส่วนเกิน ข้อจำกัดสำคัญคือ <b>กระแสต่ำสุด 6 A</b>: เมื่อส่วนเกินต่ำกว่า 1.4 kW ต้องเลือกว่าจะหยุด หรือยอมดึงกริดเสริม และรถบางรุ่นไม่ชอบการเปลี่ยนกระแสถี่ ๆ ระบบดีจะกรองสัญญาณและหน่วงเวลาสั้น ๆ</p>
+<div class="wx" id="ex-s-1"><div class="wx-head"><span class="mono">ตัวอย่าง S-1</span><h3>เที่ยงวัน แผง 5 kWp จ่าย 3.4 kW บ้านใช้ 1.6 kW</h3></div>
+<ol class="steps">
+<li><p>ส่วนเกิน \(3.4 - 1.6 = 1.8\) kW → S7 (1 เฟส): \(\lfloor 1800/230 \rfloor = 7\) A ≥ 6 A ✓ รถชาร์จ 1.61 kW</p></li>
+<li><p>ถ้าเปิดแอร์อีกเครื่อง 0.8 kW: ส่วนเกิน 1.0 kW → 4 A &lt; 6 A → หยุดชาร์จ (หรือดึงกริด 0.38 kW เพื่อรักษา 6 A)</p></li>
+<li><p>วอลล์บ็อกซ์ 3 เฟสต้องการขั้นต่ำ 4.14 kW จึงใช้กับโซลาร์ส่วนเกินในบ้านทั่วไปได้ยาก — รุ่นที่สลับ 1↔3 เฟสอัตโนมัติจึงมีประโยชน์</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limits">
+    <h2 id="limits">หลักที่ 4: ขีดจำกัดกระแสและลำดับความสำคัญ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S8" data-k="main breaker limit load priority shedding ลำดับความสำคัญ จำกัดกระแสเมน"><p class="tf-n"><b><span class="fid">S8</span> Supply limit</b> ขีดจำกัดที่ตู้เมน</p>
+        \[ P_{base} + P_{AC} + P_{EV} - P_{PV} - P_{bat} \le V\,I_{main}\,(1 - m) \qquad m \approx 0.05\text{–}0.1\ \text{(เผื่อ)} \]</div>
+    <p>เมื่อเกินขีด ตัวจัดการพลังงานลดโหลดตามลำดับที่ผู้ใช้ตั้ง โดยทั่วไป: (1) ลดกระแสชาร์จรถ (เลื่อนได้มากที่สุด) (2) หยุดเครื่องทำน้ำอุ่น/ปั๊มสระชั่วคราว (3) เพิ่มอุณหภูมิแอร์ 1–2 °C ผ่านรีโมตอัจฉริยะ — ไม่ควรตัดแอร์ห้องผู้ป่วยหรือตู้เย็น</p>
+<div class="tf" id="S9" data-k="v2h v2l energy available from ev battery ไฟจากรถเข้าบ้าน"><p class="tf-n"><b><span class="fid">S9</span> Energy available from the car (V2L/V2H)</b> พลังงานที่รถจ่ายให้บ้านได้</p>
+        \[ E_{V2H} = E_{usable}\,\frac{SOC - SOC_{reserve}}{100}\,\eta_{V2H} \qquad \eta_{V2H}\approx 0.85\text{–}0.9 \]</div>
+<div class="wx" id="ex-s-2"><div class="wx-head"><span class="mono">ตัวอย่าง S-2</span><h3>ไฟดับ ใช้รถ 60 kWh SOC 70 % จ่ายบ้าน (เก็บไว้ 30 % สำหรับขับ)</h3></div>
+<ol class="steps">
+<li><p>S9: \(60 \times (70-30)/100 \times 0.88 = 21\) kWh</p></li>
+<li><p>บ้านใช้ตู้เย็น ไฟ พัดลม ปั๊มน้ำ และแอร์ห้องนอนหนึ่งเครื่อง ≈ 0.9 kW → อยู่ได้ ≈ 23 ชั่วโมง</p></li>
+<li><p>V2L (เต้ารับจากรถ ≈ 2–3.6 kW) ใช้ได้ทันทีกับรถที่รองรับ ส่วน V2H จ่ายเข้าตู้ไฟทั้งบ้านต้องมีเครื่องชาร์จสองทิศทางและอุปกรณ์ตัดแยกจากกริด (anti-islanding) ตามข้อกำหนดของการไฟฟ้า</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ซิมูเลเตอร์พลังงานบ้าน 24 ชั่วโมง</h2>
+    <p>ซิมูเลเตอร์คำนวณ S1 ทุก 15 นาที: แผงโซลาร์รูปทรงวันแดดดี แอร์กลางวันที่ทำงานหนักขึ้นตามแดด แอร์ห้องนอน โหลดเช้าเย็น รถที่ออกเช้ากลับเย็น และแบตบ้าน (ถ้ามี) ลองเปลี่ยนวิธีชาร์จและดูว่าพื้นที่สีเขียว (รถ) ย้ายไปอยู่ใต้เส้นเหลือง (โซลาร์) ได้หรือไม่</p>
+    <div class="ev-sim" data-preset="wfh-solar"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">เปรียบเทียบ 6 รูปแบบ (บ้านเดียวกัน อัตรา TOU วันธรรมดา) <span class="lv lv-i">กลาง</span></h2>
+    <p>บ้าน: โหลดพื้นฐาน 14.8 kWh แอร์ 9.9 kWh ต่อวัน รถวิ่ง 50 km (เติม 7.5 kWh เข้าแบต) ขายไฟคืน 2.2 ฿ ค่าไฟรวม Ft และ VAT ไม่รวมค่าบริการ — ตัวเลขจากซิมูเลเตอร์ด้านบน</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รูปแบบ</th><th>ซื้อ On-Peak</th><th>ซื้อ Off-Peak</th><th>ขายคืน</th><th>ใช้โซลาร์เอง</th><th>ค่าไฟ/วัน</th><th>กระแสสูงสุด</th></tr></thead>
+      <tbody>
+        <tr><td>ไม่มีโซลาร์ · เสียบทันที 18:00</td><td>22.8</td><td>10.3</td><td>—</td><td>—</td><td>177 ฿</td><td>38 A</td></tr>
+        <tr><td>ไม่มีโซลาร์ · ตั้งเวลา Off-Peak</td><td>14.4</td><td>18.6</td><td>—</td><td>—</td><td>149 ฿</td><td>36 A</td></tr>
+        <tr><td>โซลาร์ 5 kWp · Off-Peak (รถไม่อยู่กลางวัน)</td><td>6.7</td><td>17.4</td><td>9.8</td><td>47 %</td><td>74 ฿</td><td>36 A</td></tr>
+        <tr><td>โซลาร์ 5 kWp · “ชาร์จจากโซลาร์เท่านั้น” แต่รถไม่อยู่</td><td>6.7</td><td>9.1</td><td>9.8</td><td>47 %</td><td>49 ฿ แต่<b>รถไม่ได้ชาร์จ</b></td><td>8 A</td></tr>
+        <tr><td>โซลาร์ 5 kWp · WFH โซลาร์ก่อน เติม Off-Peak (40 km)</td><td>6.7</td><td>9.6</td><td>3.7</td><td>80 %</td><td>64 ฿</td><td>12 A</td></tr>
+        <tr><td>โซลาร์ 6 kWp + แบตบ้าน 10 kWh · รถ Off-Peak</td><td>0</td><td>17.3</td><td>6.0</td><td>73 %</td><td>39 ฿</td><td>36 A</td></tr>
+      </tbody>
+    </table></div>
+    <div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-ev-preset="now">โหลด: เสียบทันที</button><button type="button" class="btn btn-ghost btn-sm" data-ev-preset="offpeak">โหลด: Off-Peak</button><button type="button" class="btn btn-ghost btn-sm" data-ev-preset="solar-commuter">โหลด: โซลาร์แต่รถไม่อยู่</button><button type="button" class="btn btn-ghost btn-sm" data-ev-preset="wfh-solar">โหลด: WFH โซลาร์</button><button type="button" class="btn btn-ghost btn-sm" data-ev-preset="battery">โหลด: แบตบ้าน</button></div>
+    <p><b>สิ่งที่ตารางสอน</b></p>
+    <ul>
+      <li>แค่ <b>ตั้งเวลาชาร์จ</b> ก็ลดได้ 28 ฿/วัน (≈ 840 ฿/เดือน) โดยไม่ลงทุนอะไรเลย ถ้าใช้ TOU</li>
+      <li>โซลาร์ 5 kWp ลดค่าไฟครึ่งหนึ่งแม้รถไม่ได้ใช้ไฟโซลาร์เลย เพราะไฟโซลาร์ไปแทนไฟ On-Peak ราคาแพงของแอร์และโหลดกลางวัน</li>
+      <li>การชาร์จจากโซลาร์ส่วนเกินช่วยเพิ่ม self-consumption จาก 47 % เป็น 80 % แต่เงินที่ประหยัดเพิ่มไม่มาก (≈ 5 ฿/วัน) เพราะไฟ Off-Peak ราคา ≈ 3.0 ฿ ใกล้ราคาขายคืน 2.2 ฿ — มันคุ้มขึ้นมากถ้าใช้อัตราปกติหรือราคาขายคืนต่ำ และช่วยลดกระแสสูงสุดจาก 36 A เหลือ 12 A</li>
+      <li>เลือก “โซลาร์เท่านั้น” ทั้งที่รถไม่อยู่บ้าน = รถไม่ได้ไฟ — ต้องเลือกกลยุทธ์ให้ตรงกับชีวิตจริง</li>
+      <li>แบตบ้านทำให้ไม่ซื้อไฟ On-Peak เลย แต่ต้องคุ้มกับราคาแบต (ลองคำนวณด้วย <a href="/learn/solar-pv/economics/">เครื่องมือความคุ้มค่า</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="sizing">
+    <h2 id="sizing">เลือกขนาดแผงสำหรับแอร์ + รถ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="S10" data-k="pv sizing for daytime load ev ขนาดแผง โหลดกลางวัน รถ"><p class="tf-n"><b><span class="fid">S10</span> PV size for daytime use</b> ขนาดแผงตามโหลดกลางวัน</p>
+        \[ P_{PV} \approx \frac{E_{day,load} + f_{home}\,E_{EV}}{PSH \times PR} \qquad f_{home} = \text{สัดส่วนวันที่รถจอดบ้านกลางวัน} \]</div>
+<div class="wx" id="ex-s-3"><div class="wx-head"><span class="mono">ตัวอย่าง S-3</span><h3>บ้านใช้ไฟกลางวัน 9 kWh รถต้องการ 6.7 kWh/วัน จอดบ้าน 2 วันต่อสัปดาห์</h3></div>
+<ol class="steps">
+<li><p>\(f_{home} = 2/7 = 0.29\) → พลังงานกลางวันเฉลี่ย \(9 + 0.29(6.7) = 10.9\) kWh</p></li>
+<li><p>S10: \(10.9/(4.8 \times 0.78) = 2.9\) kWp — ขนาดที่ “ใช้เองได้เกือบหมด”</p></li>
+<li><p>ถ้าติด 5 kWp ส่วนเกินวันธรรมดาจะขายคืน คุ้มน้อยกว่าแต่ยังคุ้มถ้าราคาติดตั้งต่ำ ตรวจด้วยเครื่องคำนวณด้านล่างและ <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิล</a></p></li>
+</ol></div>
+    <div class="fg-calc ev-calc" data-ev="solar"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="hems">
+    <h2 id="hems">ตรรกะของตัวจัดการพลังงานบ้าน (HEMS) อย่างง่าย <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>อุปกรณ์จริงอาจเป็นวอลล์บ็อกซ์ที่มี CT อินเวอร์เตอร์ไฮบริด หรือระบบอย่าง Home Assistant ที่อ่านมิเตอร์และสั่งวอลล์บ็อกซ์ผ่าน OCPP/Modbus ตรรกะพื้นฐานทำงานเป็นรอบทุกไม่กี่วินาที:</p>
+<pre><code>ทุก 5 วินาที:
+  P_net = วัดกำลังที่จุดต่อกริด   (+ ซื้อ, − ขาย)
+  headroom = V × I_main × 0.9 − P_house_without_EV
+  ถ้าโหมด = โซลาร์:
+      I_target = (−P_net + P_EV_now) / 230        # ส่วนเกินที่มี
+  ถ้าโหมด = Off-Peak และ เวลาอยู่ในช่วง 22:00–07:30:
+      I_target = I_max
+  I_target = min(I_target, headroom / 230, I_cable, I_set)
+  ถ้า I_target &lt; 6 A:  หยุดชั่วคราว (หน่วง 2–5 นาทีก่อนเริ่มใหม่)
+  มิฉะนั้น:            ส่ง duty = I_target / 0.6  % ทาง Control Pilot
+  ถ้าเวลาใกล้ออกจากบ้าน และ SOC ยังไม่ถึงเป้า: บังคับชาร์จเต็มกำลัง</code></pre>
+    <p>สิ่งที่ทำให้ระบบจริงซับซ้อนกว่านี้: การกรองเมฆที่ผ่านเร็ว การสลับ 1/3 เฟส การพยากรณ์แดดวันพรุ่งนี้ (<a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์โซลาร์</a>) และราคาค่าไฟที่เปลี่ยนตามเวลา — เป็นปัญหา <a href="/learn/control-systems/">ระบบควบคุม</a> และการหาค่าเหมาะสมที่น่าสนใจ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="tips">
+    <h2 id="tips">แนวทางปฏิบัติ 8 ข้อสำหรับบ้านที่มีโซลาร์ แอร์ และรถ</h2>
+    <ol>
+      <li>ลดภาระแอร์ก่อน (ฉนวนหลังคา บังแดดฝั่งตะวันตก ตั้ง 25–26 °C) — ทุกหน่วยที่ไม่ต้องใช้คือหน่วยที่ถูกที่สุด</li>
+      <li>ย้ายงานที่เลื่อนได้มาไว้กลางวัน: ซักผ้า อบผ้า ล้างจาน ปั๊มน้ำ ชาร์จรถเมื่ออยู่บ้าน</li>
+      <li><b>pre-cooling</b>: เปิดแอร์ห้องนอนช่วง 15:00–18:00 ด้วยไฟโซลาร์ แล้วตั้งอุณหภูมิสูงขึ้นเล็กน้อยตอนกลางคืน</li>
+      <li>รถไม่อยู่บ้านกลางวัน → TOU + ตั้งเวลาชาร์จ 22:00 หรือให้ชาร์จเสร็จก่อนออกจากบ้าน</li>
+      <li>ตั้งเพดาน SOC 80–90 % (NMC) เหลือที่ไว้รับไฟโซลาร์ในวันหยุด</li>
+      <li>ใช้ load balancing แทนการขยายมิเตอร์เมื่อทำได้</li>
+      <li>เลือกวอลล์บ็อกซ์ที่รองรับโหมดโซลาร์และ OCPP เผื่ออนาคต</li>
+      <li>ตรวจสอบค่าจริงจากแอปมิเตอร์/อินเวอร์เตอร์เดือนละครั้ง แล้วปรับเวลาชาร์จ</li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
