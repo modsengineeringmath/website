@@ -27,7 +27,8 @@ updated: 2026-10-13
 
 - PCMC ที่ D มากกว่า 0.5 ต้อง slope comp $m_a \ge m_2/2$
 
-@@H2 loop-goals|เป้าหมายของลูป@@
+## เป้าหมายของลูป
+
 $T(s) = G_c(s)\,F_m\,G_{vd}(s)\,H$ ต้องให้
 
 - ความถี่ตัดข้าม $f_c$: สูงพอให้ตอบสนองเร็ว แต่ต่ำกว่าขีดจำกัดทางกายภาพ
@@ -98,7 +99,8 @@ $$C_2=\frac{1}{2\pi f_c G R_1},\; C_1=C_2(k-1),\; R_2=\frac{\sqrt k}{2\pi f_cC_1
 
 ศูนย์คู่อยู่ที่ $f_c/\sqrt k$, ขั้วคู่ที่ $f_c\sqrt k$
 
-@@H2 buck-example|ตัวอย่าง: Buck voltage mode (ค่าเดียวกับซิมูเลเตอร์)@@
+## ตัวอย่าง: Buck voltage mode (ค่าเดียวกับซิมูเลเตอร์)
+
 $V_{in}=24$ V, $L=C=100\ \mu$, ESR 20 mΩ, $R=10\ \Omega$, $f_s=50$ kHz, $V_M=1$ V, ตัวแบ่ง $H = 2.5/12 = 0.208$
 
 - $f_0 = 1.59$ kHz, $Q = 10$, $f_{esr}=79.6$ kHz → เลือก $f_c = 5$ kHz
@@ -121,7 +123,9 @@ R1,R2,R3,C1,C2,C3=10e3,3.0e3,228,70e-9,1.6e-9,21e-9
 Gc=(1+s*R2*C1)*(1+s*(R1+R3)*C3)/(s*R1*(C1+C2)*(1+s*R2*C1*C2/(C1+C2))*(1+s*R3*C3))
 T=Gc*Gvd*H/VM
 gm,pm,wg,wc=ct.margin(T); print(f"fc={wc/2/np.pi:.0f} Hz PM={pm:.1f} deg GM={20*np.log10(gm):.1f} dB")
-@@H2 peak-current-mode|Peak current mode (PCMC)@@
+
+## Peak current mode (PCMC)
+
 ลูปในวัดกระแสพีกของ L/สวิตช์ ลูปนอกสร้างค่าอ้างอิงกระแส $i_c$ ผลคือ L "หายไป" จากลูปนอก:
 
 C3 PCMC control-to-output (buck) ฟังก์ชันถ่ายโอนโหมดกระแส
@@ -142,7 +146,8 @@ $$m_a \ge \tfrac12 m_2,\qquad Q_{f_s/2}=\frac{1}{\pi\left(m_cD'-0.5\right)},\; m
 
 ทดลองในซิม: ตั้ง Boost, PCMC, slope k = 0 → สังเกตกระแสแกว่งที่ $f_s/2$ (คาบคู่-คาบคี่ไม่เท่ากัน) → เพิ่ม k = 0.5 แล้วหายไป
 
-@@H2 advanced|ทางเลือกอื่นระดับปริญญาโท@@
+## ทางเลือกอื่นระดับปริญญาโท
+
 Average current mode (PFC, charger), V² / COT, Sliding-mode, Model predictive control (MPC), Robust $H_\infty$ — จะเพิ่มในบทถัดไป
 
 ## คำถามที่พบบ่อย

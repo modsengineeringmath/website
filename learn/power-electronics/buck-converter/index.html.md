@@ -27,7 +27,8 @@ updated: 2026-10-13
 
 - $G_{vd}$ มีขั้วคู่ LC → voltage mode ใช้ Type III
 
-@@H2 operation|โครงสร้างและการทำงาน@@
+## โครงสร้างและการทำงาน
+
 ประกอบด้วยสวิตช์ $Q$ ไดโอด $D$ (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ $L$ และตัวเก็บประจุ $C$ สวิตช์ทำงานด้วยคาบ $T_s = 1/f_s$ และ duty ratio $D$
 
 - ช่วง ON ($0 \le t \le DT_s$): $v_L = V_{in} - V_o$ กระแส $i_L$ เพิ่มขึ้นเชิงเส้น
@@ -56,7 +57,8 @@ $$\Delta i_L = \frac{(V_{in}-V_o)D}{L f_s} = \frac{V_o(1-D)}{L f_s},
 
 ข้อสังเกตเชิงวิศวกรรม: $\Delta i_L$ สูงสุดที่ $D=0.5$ เมื่อ $V_o$ คงที่แต่ $V_{in}$ เปลี่ยน ripple จะสูงสุดที่ $V_{in,max}$ — ออกแบบ L ที่ $V_{in,max}$ เสมอ
 
-@@H2 ccm-dcm|ขอบเขต CCM/DCM@@
+## ขอบเขต CCM/DCM
+
 นิยาม $K = 2L/(R T_s)$ วงจรอยู่ใน CCM เมื่อ $K > K_{crit}(D) = 1-D$ หรือเทียบเท่า $I_o > \Delta i_L/2$ ใน DCM:
 
 B4 DCM conversion ratio อัตราส่วนใน DCM
@@ -103,7 +105,8 @@ P_{sw}\approx \tfrac12 V_{in} I_o (t_r+t_f) f_s + Q_{rr}V_{in}f_s + Q_g V_{GS} f
 
 การเพิ่ม $f_s$ ลดขนาด L, C แต่เพิ่ม $P_{sw}$ — นี่คือ trade-off หลักของงานออกแบบ ใน synchronous buck แทนไดโอดด้วย MOSFET ตัวล่าง ลด $V_F I$ เหลือ $I^2R$ แต่ต้องมี dead-time ป้องกัน shoot-through
 
-@@H2 transfer-function|แบบจำลองสัญญาณเล็ก@@
+## แบบจำลองสัญญาณเล็ก
+
 จาก state-space averaging (ดู บทแบบจำลอง):
 
 B6 Control-to-output transfer function ฟังก์ชันถ่ายโอน Gvd

@@ -44,7 +44,11 @@
       <p class="lede">เฉลี่ยสถานะตลอดคาบแล้ว linearize ได้ G<sub>vd</sub> G_vg Z_out ตารางฟังก์ชันถ่ายโอนของบั๊ก บูสต์ บั๊ก-บูสต์ PWM gain ลูปเกน และเกณฑ์ฟิลเตอร์ขาเข้าของ Middlebrook</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#other-functions">ฟังก์ชันอื่นที่ต้องรู้</a>
+        <a class="btn btn-primary btn-sm" href="#state-space-averaging">State-space averaging</a>
+        <a class="btn btn-ghost btn-sm" href="#transfer-functions">ตารางฟังก์ชันถ่ายโอน</a>
+        <a class="btn btn-ghost btn-sm" href="#loop-gain">PWM modulator และ loop gain</a>
+        <a class="btn btn-ghost btn-sm" href="#other-functions">ฟังก์ชันอื่นที่ต้องรู้</a>
+        <a class="btn btn-ghost btn-sm" href="#input-filter">เกณฑ์ตัวกรองอินพุตของ Middle</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -66,8 +70,11 @@
     </div>
 
 <section class="tsec"><p>คอนเวอร์เตอร์เป็นระบบ <strong>ไม่เชิงเส้นและแปรตามเวลา</strong> (สวิตช์เปิด/ปิด) แต่ถ้าสนใจความถี่ต่ำกว่า \(f_s/2\) มาก เราเฉลี่ยตลอดคาบแล้ว linearize รอบจุดทำงานได้</p>
-<p>@@H2 state-space-averaging|State-space averaging (Middlebrook &amp; Ćuk, 1976)@@
-สถานะ \(\mathbf x = [i_L\; v_C]^T\) แต่ละช่วงสวิตช์:</p>
+</section>
+
+    <section class="tsec" aria-labelledby="state-space-averaging">
+    <h2 id="state-space-averaging">State-space averaging (Middlebrook &amp; Ćuk, 1976)</h2>
+<p>สถานะ \(\mathbf x = [i_L\; v_C]^T\) แต่ละช่วงสวิตช์:</p>
 <div class="tf" id="S1" data-k="switched state equations สมการสถานะแต่ละช่วง"><p class="tf-n"><b><span class="fid">S1</span> Switched state equations</b> สมการสถานะแต่ละช่วง</p>
         \[ \dot{\mathbf x} = A_1\mathbf x + B_1 v_{in}\;(\text{ON}),\qquad \dot{\mathbf x} = A_2\mathbf x + B_2 v_{in}\;(\text{OFF}) \]</div>
 <p>เฉลี่ยถ่วงน้ำหนักด้วย \(d\) และ \(d' = 1-d\):</p>
@@ -78,8 +85,11 @@
         \[ \text{DC: } X = -A^{-1}BV_{in},\qquad
 \text{AC: } \dot{\hat{\mathbf x}} = A\hat{\mathbf x} + B\hat v_{in} + \big[(A_1-A_2)X + (B_1-B_2)V_{in}\big]\hat d \]</div>
 <p>โดย \(A = DA_1 + D'A_2\) จากนั้น \(G_{vd}(s) = C(sI-A)^{-1}B_d\)</p>
-<p>@@H2 transfer-functions|ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)@@
-รูปทั่วไป: \(G_{vd}(s) = G_{d0}\dfrac{1 - s/\omega_z}{1 + s/(Q\omega_0) + (s/\omega_0)^2}\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="transfer-functions">
+    <h2 id="transfer-functions">ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)</h2>
+<p>รูปทั่วไป: \(G_{vd}(s) = G_{d0}\dfrac{1 - s/\omega_z}{1 + s/(Q\omega_0) + (s/\omega_0)^2}\)</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -112,12 +122,15 @@
 <td>\(D'^2R/(DL)\)</td>
 </tr>
 </tbody></table></div>
-<p>@@H2 loop-gain|PWM modulator และ loop gain@@
-ตัวเปรียบเทียบกับ ramp สูง \(V_M\): \(\hat d = \hat v_c / V_M\) ดังนั้น</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="loop-gain">
+    <h2 id="loop-gain">PWM modulator และ loop gain</h2>
+<p>ตัวเปรียบเทียบกับ ramp สูง \(V_M\): \(\hat d = \hat v_c / V_M\) ดังนั้น</p>
 <div class="tf" id="S4" data-k="loop gain ลูปเกน"><p class="tf-n"><b><span class="fid">S4</span> Loop gain</b> ลูปเกน</p>
         \[ T(s) = G_c(s)\cdot \frac{1}{V_M}\cdot G_{vd}(s)\cdot H(s),\qquad H = \frac{R_2}{R_1+R_2} \]</div>
 <p>ในตัวควบคุมดิจิทัล \(V_M\) เทียบเท่าค่า count เต็มของ PWM และต้องรวม <strong>delay</strong> \(e^{-sT_d}\) (\(T_d\approx 1.5T_s\) สำหรับ update ครั้งเดียวต่อคาบ) — ดู <a href="/learn/power-electronics/digital-control/">การควบคุมดิจิทัล</a></p>
-</section>
+    </section>
 
     <section class="tsec" aria-labelledby="other-functions">
     <h2 id="other-functions">ฟังก์ชันอื่นที่ต้องรู้</h2>
@@ -126,14 +139,29 @@
 <li>\(Z_{out}\) — ใช้ประเมิน load-step: \(\Delta V \approx \Delta I \cdot |Z_{out,cl}|\), กับวงปิด \(Z_{out,cl}=Z_{out,ol}/(1+T)\)</li>
 <li>\(Z_{in}\) — ที่ความถี่ต่ำ คอนเวอร์เตอร์คุมแรงดันเป็น <strong>ความต้านทานเชิงลบ</strong> \(-V_{in}^2/P\)</li>
 </ul>
-<p>@@H2 input-filter|เกณฑ์ตัวกรองอินพุตของ Middlebrook@@
-ถ้าใส่ LC filter หน้า converter ต้องให้ \(|Z_{o,filter}| \ll |Z_{in,conv}|\) ทุกความถี่ มิฉะนั้นวงจรจะแกว่ง (เพราะความต้านทานลบ) → ต้องหน่วงฟิลเตอร์ด้วย \(R_d\)–\(C_d\) เป็นสาเหตุจริงของอาการ &quot;ต่อสายยาว/เปลี่ยนแหล่งจ่ายแล้วแกว่ง&quot; ดู <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a></p>
-<p>@@H2 averaged-switch|แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)@@
-แทนคู่สวิตช์-ไดโอดด้วยหม้อแปลงอุดมคติอัตรา \(1:D\) + แหล่งพึ่งพา — ใช้ใน SPICE (<code>.ac</code> analysis) ได้ทันที เร็วกว่าซิมสวิตชิ่งมาก และรวม DCM ได้</p>
-<p>@@H2 measurement|ตรวจสอบด้วยการวัด@@
-ฉีดสัญญาณผ่านตัวต้านทาน 10–50 Ω ในลูปป้อนกลับ (ดู <a href="/learn/power-electronics/engineering-techniques/#bode">เทคนิคเชิงช่าง</a>) หรือในซิมูเลเตอร์ของเว็บนี้: ตั้ง Open loop, ฟังก์ชันเจนฯ ฉีดที่ Duty แบบ sine ขนาด 0.01 แล้ววัดอัตราส่วน p-p ของ Vout ต่อ 0.02 ที่หลายความถี่ → ได้ \(|G_{vd}|\) เทียบกับสูตรข้างบน</p>
-<p>@@H2 python-bode|Python: วาด Bode ของ Buck@@
-@@CODE0@@</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="input-filter">
+    <h2 id="input-filter">เกณฑ์ตัวกรองอินพุตของ Middlebrook</h2>
+<p>ถ้าใส่ LC filter หน้า converter ต้องให้ \(|Z_{o,filter}| \ll |Z_{in,conv}|\) ทุกความถี่ มิฉะนั้นวงจรจะแกว่ง (เพราะความต้านทานลบ) → ต้องหน่วงฟิลเตอร์ด้วย \(R_d\)–\(C_d\) เป็นสาเหตุจริงของอาการ &quot;ต่อสายยาว/เปลี่ยนแหล่งจ่ายแล้วแกว่ง&quot; ดู <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="averaged-switch">
+    <h2 id="averaged-switch">แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)</h2>
+<p>แทนคู่สวิตช์-ไดโอดด้วยหม้อแปลงอุดมคติอัตรา \(1:D\) + แหล่งพึ่งพา — ใช้ใน SPICE (<code>.ac</code> analysis) ได้ทันที เร็วกว่าซิมสวิตชิ่งมาก และรวม DCM ได้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="measurement">
+    <h2 id="measurement">ตรวจสอบด้วยการวัด</h2>
+<p>ฉีดสัญญาณผ่านตัวต้านทาน 10–50 Ω ในลูปป้อนกลับ (ดู <a href="/learn/power-electronics/engineering-techniques/#bode">เทคนิคเชิงช่าง</a>) หรือในซิมูเลเตอร์ของเว็บนี้: ตั้ง Open loop, ฟังก์ชันเจนฯ ฉีดที่ Duty แบบ sine ขนาด 0.01 แล้ววัดอัตราส่วน p-p ของ Vout ต่อ 0.02 ที่หลายความถี่ → ได้ \(|G_{vd}|\) เทียบกับสูตรข้างบน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="python-bode">
+    <h2 id="python-bode">Python: วาด Bode ของ Buck</h2>
+<pre class="code">Vin, L, C, R, ESR = 24, 100e-6, 100e-6, 10, 0.02
+s = ct.tf('s')
+Gvd = Vin*(1 + s*ESR*C)/(L*C*s**2 + (L/R + ESR*C)*s + 1)
+ct.bode_plot(Gvd, omega_limits=(2*np.pi*10, 2*np.pi*1e5), Hz=True)</pre>
     </section>
 
     <!--faq-->

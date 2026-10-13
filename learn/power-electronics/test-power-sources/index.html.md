@@ -80,7 +80,8 @@ C_{bulk} \ge \frac{2P_{in}\,t_d}{V_{pk}^2 - V_{min}^2},\quad t_d \approx 8\text{
 
 - ถ้าต่อ 220 V ตรง (ไม่ใช้หม้อแปลง) แรงดัน bus ≈ 311 V — เป็นงาน SMPS เต็มรูปแบบ ดู Switching Power Supply
 
-@@H2 solar|โซลาร์เซลล์ (PV)@@
+## โซลาร์เซลล์ (PV)
+
 แบบจำลองไดโอดเดี่ยว:
 
 V2 Single-diode PV model แบบจำลองแผงโซลาร์

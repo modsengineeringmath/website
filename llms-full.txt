@@ -18381,7 +18381,8 @@ MPPT โซลาร์ใต้เงาบางส่วน |
 ติดตาม ESR, $R_{ds(on)}$, $V_F$ เทียบเวลา → ประมาณอายุ (RUL) |
 ใช้จริงได้ |
 
-@@H2 waveform-diagnosis|ตัวอย่าง: วินิจฉัยจากรูปคลื่น@@
+## ตัวอย่าง: วินิจฉัยจากรูปคลื่น
+
 คุณลักษณะที่วัดได้ง่ายและสื่อความหมาย:
 
 - $\Delta i_L$ เทียบค่าทฤษฎี → L ลดลง (แกนแตก/อิ่มตัว)
@@ -18396,9 +18397,13 @@ MPPT โซลาร์ใต้เงาบางส่วน |
 
 ใช้ ห้องแลปจำลอง สร้างชุดข้อมูล: เปลี่ยน L, ESR, $R_{on}$ แบบสุ่ม บันทึกค่าที่วัดได้ → ฝึกโมเดลจำแนก — เป็นหัวข้อโครงงาน/วิทยานิพนธ์ที่ดี
 
-@@H2 llm-assistant|ใช้ LLM (เช่น Claude) เป็นผู้ช่วยวิศวกร@@
+## ใช้ LLM (เช่น Claude) เป็นผู้ช่วยวิศวกร
+
 ได้ผลดีเมื่อให้ข้อมูลครบและขอให้แสดงที่มา:
-@@CODE1@@
+
+ออกแบบตัวชดเชย Type III สำหรับ buck: Vin 18–30 V, Vo 12 V, Io 0.2–2 A,
+L 100 µH ±20%, Cout 100 µF ESR 20 mΩ, fs 100 kHz, ramp 1 V, ตัวแบ่ง 2.5/12
+ต้องการ PM ≥ 55° ทุกมุม ให้แสดงสมการ ค่า R C มาตรฐาน E24 และสคริปต์ Python ตรวจ margin
 ต้องตรวจทุกครั้ง ด้วยการคำนวณซ้ำ ซิม และวัดจริง — LLM อาจคำนวณผิดหรืออ้างค่าในดาต้าชีตผิด
 
 ## แนวทางวิจัยระดับปริญญาโท
@@ -18450,11 +18455,14 @@ Summary: สร้างตัวควบคุมคอนเวอร์เ�
 
 - PCMC ต้องมี leading-edge blanking
 
-@@H2 voltage-mode|สถาปัตยกรรม Voltage mode@@
-@@CODE0@@
+## สถาปัตยกรรม Voltage mode
+
+Vout ─ R1/R2 ─▶ [Error amp Type III] ─ vc ─▶ (+) Comparator ─▶ Gate driver ─▶ Q
+Vref ──▶ (+) Ramp ─▶ (−)
 duty: $d = v_c/V_M$ เมื่อ ramp สูง $V_M$ (ใส่ฟีดฟอร์เวิร์ด $V_M \propto V_{in}$ ทำให้ลูป gain ไม่ขึ้นกับ $V_{in}$ และตัด $G_{vg}$ ได้)
 
-@@H2 opamp-pwm|สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)@@
+## สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)
+
 ตัวสร้างคลื่นสามเหลี่ยม: Schmitt trigger (comparator + $R_A$, $R_B$) ต่อกับ integrator ($R$, $C$)
 
 A1 Op-amp triangle generator วงจรสร้างคลื่นสามเหลี่ยม
@@ -18740,7 +18748,8 @@ RHP zero ต่ำกว่า boost ด้วยปัจจัย $1/D$ — �
 
 เรื่องสัญญาณป้อนกลับขั้วลบ Vout เป็นลบเทียบกับกราวด์ร่วม ต้องใช้ op-amp แบบ inverting (หรือวงจร level-shift) ป้อนกลับให้คอนโทรลเลอร์ ซิมูเลเตอร์บนเว็บนี้แสดงขนาด $\lvert V_o\rvert$
 
-@@H2 four-switch|Non-inverting 4-switch buck-boost@@
+## Non-inverting 4-switch buck-boost
+
 ใช้สองขาสวิตช์ (buck leg + boost leg) กับ L ตัวเดียว ทำงาน 3 โหมด: buck ($V_{in} \gt V_o$), boost ($V_{in} \lt V_o$) และ buck-boost ช่วงเปลี่ยนผ่าน ข้อดี: ขั้วบวก, ความเค้น = $\max(V_{in},V_o)$, ประสิทธิภาพ 95–98% เหมาะกับแบตเตอรี่ Li-ion ที่แรงดันคร่อมค่าเป้าหมาย, USB-PD, ระบบ 12 V รถยนต์ (cold crank) ตัวอย่างชิปควบคุมดู การเลือกตัวควบคุม
 
 ## เลือกใช้อย่างไร
@@ -18810,7 +18819,8 @@ Summary: บั๊กคอนเวอร์เตอร์ละเอีย�
 
 - $G_{vd}$ มีขั้วคู่ LC → voltage mode ใช้ Type III
 
-@@H2 operation|โครงสร้างและการทำงาน@@
+## โครงสร้างและการทำงาน
+
 ประกอบด้วยสวิตช์ $Q$ ไดโอด $D$ (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ $L$ และตัวเก็บประจุ $C$ สวิตช์ทำงานด้วยคาบ $T_s = 1/f_s$ และ duty ratio $D$
 
 - ช่วง ON ($0 \le t \le DT_s$): $v_L = V_{in} - V_o$ กระแส $i_L$ เพิ่มขึ้นเชิงเส้น
@@ -18839,7 +18849,8 @@ $$\Delta i_L = \frac{(V_{in}-V_o)D}{L f_s} = \frac{V_o(1-D)}{L f_s},
 
 ข้อสังเกตเชิงวิศวกรรม: $\Delta i_L$ สูงสุดที่ $D=0.5$ เมื่อ $V_o$ คงที่แต่ $V_{in}$ เปลี่ยน ripple จะสูงสุดที่ $V_{in,max}$ — ออกแบบ L ที่ $V_{in,max}$ เสมอ
 
-@@H2 ccm-dcm|ขอบเขต CCM/DCM@@
+## ขอบเขต CCM/DCM
+
 นิยาม $K = 2L/(R T_s)$ วงจรอยู่ใน CCM เมื่อ $K > K_{crit}(D) = 1-D$ หรือเทียบเท่า $I_o > \Delta i_L/2$ ใน DCM:
 
 B4 DCM conversion ratio อัตราส่วนใน DCM
@@ -18886,7 +18897,8 @@ P_{sw}\approx \tfrac12 V_{in} I_o (t_r+t_f) f_s + Q_{rr}V_{in}f_s + Q_g V_{GS} f
 
 การเพิ่ม $f_s$ ลดขนาด L, C แต่เพิ่ม $P_{sw}$ — นี่คือ trade-off หลักของงานออกแบบ ใน synchronous buck แทนไดโอดด้วย MOSFET ตัวล่าง ลด $V_F I$ เหลือ $I^2R$ แต่ต้องมี dead-time ป้องกัน shoot-through
 
-@@H2 transfer-function|แบบจำลองสัญญาณเล็ก@@
+## แบบจำลองสัญญาณเล็ก
+
 จาก state-space averaging (ดู บทแบบจำลอง):
 
 B6 Control-to-output transfer function ฟังก์ชันถ่ายโอน Gvd
@@ -18979,7 +18991,8 @@ Summary: ออกแบบตัวชดเชย (compensator) ของค�
 
 - PCMC ที่ D มากกว่า 0.5 ต้อง slope comp $m_a \ge m_2/2$
 
-@@H2 loop-goals|เป้าหมายของลูป@@
+## เป้าหมายของลูป
+
 $T(s) = G_c(s)\,F_m\,G_{vd}(s)\,H$ ต้องให้
 
 - ความถี่ตัดข้าม $f_c$: สูงพอให้ตอบสนองเร็ว แต่ต่ำกว่าขีดจำกัดทางกายภาพ
@@ -19050,7 +19063,8 @@ $$C_2=\frac{1}{2\pi f_c G R_1},\; C_1=C_2(k-1),\; R_2=\frac{\sqrt k}{2\pi f_cC_1
 
 ศูนย์คู่อยู่ที่ $f_c/\sqrt k$, ขั้วคู่ที่ $f_c\sqrt k$
 
-@@H2 buck-example|ตัวอย่าง: Buck voltage mode (ค่าเดียวกับซิมูเลเตอร์)@@
+## ตัวอย่าง: Buck voltage mode (ค่าเดียวกับซิมูเลเตอร์)
+
 $V_{in}=24$ V, $L=C=100\ \mu$, ESR 20 mΩ, $R=10\ \Omega$, $f_s=50$ kHz, $V_M=1$ V, ตัวแบ่ง $H = 2.5/12 = 0.208$
 
 - $f_0 = 1.59$ kHz, $Q = 10$, $f_{esr}=79.6$ kHz → เลือก $f_c = 5$ kHz
@@ -19073,7 +19087,9 @@ R1,R2,R3,C1,C2,C3=10e3,3.0e3,228,70e-9,1.6e-9,21e-9
 Gc=(1+s*R2*C1)*(1+s*(R1+R3)*C3)/(s*R1*(C1+C2)*(1+s*R2*C1*C2/(C1+C2))*(1+s*R3*C3))
 T=Gc*Gvd*H/VM
 gm,pm,wg,wc=ct.margin(T); print(f"fc={wc/2/np.pi:.0f} Hz PM={pm:.1f} deg GM={20*np.log10(gm):.1f} dB")
-@@H2 peak-current-mode|Peak current mode (PCMC)@@
+
+## Peak current mode (PCMC)
+
 ลูปในวัดกระแสพีกของ L/สวิตช์ ลูปนอกสร้างค่าอ้างอิงกระแส $i_c$ ผลคือ L "หายไป" จากลูปนอก:
 
 C3 PCMC control-to-output (buck) ฟังก์ชันถ่ายโอนโหมดกระแส
@@ -19094,7 +19110,8 @@ $$m_a \ge \tfrac12 m_2,\qquad Q_{f_s/2}=\frac{1}{\pi\left(m_cD'-0.5\right)},\; m
 
 ทดลองในซิม: ตั้ง Boost, PCMC, slope k = 0 → สังเกตกระแสแกว่งที่ $f_s/2$ (คาบคู่-คาบคี่ไม่เท่ากัน) → เพิ่ม k = 0.5 แล้วหายไป
 
-@@H2 advanced|ทางเลือกอื่นระดับปริญญาโท@@
+## ทางเลือกอื่นระดับปริญญาโท
+
 Average current mode (PFC, charger), V² / COT, Sliding-mode, Model predictive control (MPC), Robust $H_\infty$ — จะเพิ่มในบทถัดไป
 
 ## คำถามที่พบบ่อย
@@ -19276,7 +19293,8 @@ UCC21520, Si823x, 1ED-series |
 GaN |
 ใช้ driver เฉพาะ GaN (แรงดันเกตจำกัด ~6 V) หรือ GaN แบบมี driver ในตัว |
 
-@@H2 opamp|Op-amp และ comparator@@
+## Op-amp และ comparator
+
 ดูตารางใน การควบคุมแบบอนาล็อก — หลัก: GBW ≥ 10× ความต้องการ, rail-to-rail ถ้าแหล่งจ่ายต่ำ, ทน common-mode ของการวัดกระแส
 
 ## คำถามที่พบบ่อย
@@ -19380,7 +19398,8 @@ Open loop, Voltage-mode PI ดิจิทัล, Peak current mode + slope comp
 
 แลป 10 — Ćuk: ลด C1 ทีละขั้น ดูริปเปิลและการหน่วงของ VC1, เปรียบเทียบ ripple ของกระแสขาเข้า (CH = Iin) กับ Buck-Boost
 
-@@H2 next-steps|ต่อยอดสู่ของจริง@@
+## ต่อยอดสู่ของจริง
+
 เมื่อได้ค่าจากซิม → ออกแบบตัวเหนี่ยวนำ → เลือกตัวควบคุม → แหล่งจ่ายทดสอบ → bring-up ตาม เทคนิคเชิงช่าง
 
 ## คำถามที่พบบ่อย
@@ -19453,7 +19472,8 @@ $$\Delta i_{L1} = \frac{V_{in}D}{L_1 f_s},\quad
 
 $C_1$ รับ RMS current สูง: $I_{C1,rms}=\sqrt{I_{L1}^2(1-D)+I_{L2}^2D}$ → ใช้ฟิล์ม (PP) หรือเซรามิกแรงดันสูง ห้ามใช้อิเล็กโตรไลต์ ต้องทนแรงดัน $\ge 1.5(V_{in}+\lvert V_o\rvert)$
 
-@@H2 damping|ไดนามิกอันดับสี่และการหน่วง@@
+## ไดนามิกอันดับสี่และการหน่วง
+
 สถานะ 4 ตัว ($i_{L1}, i_{L2}, v_{C1}, v_{C2}$) ทำให้มีขั้วคู่ซับซ้อนสองคู่ เรโซแนนซ์ $L_1$–$C_1$ และ $L_2$–$C_1$ มักมี Q สูง และ $G_{vd}$ มีคู่ศูนย์ (บางกรณีอยู่ครึ่งขวา) ทำให้เฟสตกถึง −360°
 
 วิธีแก้เชิงวิศวกรรม:
@@ -19464,7 +19484,8 @@ $C_1$ รับ RMS current สูง: $I_{C1,rms}=\sqrt{I_{L1}^2(1-D)+I_{L2}^2D
 
 - จำกัด $f_c$ ให้ต่ำกว่าเรโซแนนซ์ต่ำสุดอย่างน้อย 3–5 เท่า
 
-@@H2 coupled-inductor|Coupled inductor และ zero-ripple@@
+## Coupled inductor และ zero-ripple
+
 พัน $L_1$, $L_2$ บนแกนเดียวกัน (แรงดันบนทั้งสองเท่ากันทุกช่วงเวลา) เลือก coupling $k = n$ (อัตราส่วนรอบ) ทำให้ ripple ย้ายไปอยู่ขดเดียว — อีกขดได้กระแส ripple เกือบศูนย์ (ripple steering) ลด EMI ขาเข้าหรือขาออกได้มาก เป็นจุดเด่นที่ทำให้ Ćuk ใช้ในงานเซนเซอร์, LED และโซลาร์
 
 ## ข้อดี-ข้อเสีย
@@ -19528,23 +19549,27 @@ Summary: ควบคุมคอนเวอร์เตอร์ DC-DC ด้�
 
 - OCP ต้องอยู่ในฮาร์ดแวร์ ไม่ผ่าน CPU
 
-@@H2 structure|โครงสร้าง@@
+## โครงสร้าง
+
 ADC สุ่ม $v_o$ (และ $i_L$) → ตัวชดเชยดิจิทัล $G_c(z)$ → DPWM (ตัวนับ) → gate driver
 
 สิ่งที่ต่างจากอนาล็อก: (1) delay จากการสุ่ม-คำนวณ-อัปเดต (2) quantization ทั้ง ADC และ PWM (3) aliasing
 
-@@H2 sampling|จังหวะการสุ่ม@@
+## จังหวะการสุ่ม
+
 สุ่ม ตรงกลางช่วง ON หรือ OFF (ใช้ trigger จาก timer PWM) จะได้ค่าเฉลี่ยของ $i_L$ โดยไม่ต้องกรอง และหลบหนามจากการสวิตช์ — เป็นเทคนิคมาตรฐานของ C2000/STM32 HRTIM/dsPIC
 
 Delay รวมโดยประมาณ $T_d \approx T_{conv} + T_{calc} + T_s/2$ (ZOH) → เฟสหาย $\phi = -360^\circ f_c T_d$ เช่น $f_s = 100$ kHz, $T_d = 1.5T_s$, $f_c = 5$ kHz → เสียเฟส 27°
 
-@@H2 dpwm-limit-cycle|ความละเอียดและ limit cycle@@
+## ความละเอียดและ limit cycle
+
 ความละเอียดแรงดันขาออกจาก DPWM (buck): $\Delta V_o = V_{in}/2^{N_{PWM}}$ โดย $2^{N_{PWM}} = f_{clk}/f_s$
 เงื่อนไขไม่เกิด limit cycle: $\Delta V_{o,DPWM} \lt \Delta V_{o,ADC}$ (PWM ละเอียดกว่า ADC) + ตัวควบคุมต้องมีอินทิเกรเตอร์ และ gain ของอินทิเกรเตอร์ไม่สูงเกิน
 
 ตัวอย่าง: clock 170 MHz, $f_s = 200$ kHz → 850 count (≈9.7 บิต) → $24/850 = 28$ mV ขณะที่ ADC 12 บิตกับตัวแบ่ง 3.3/15 V → 3.7 mV ⇒ เกิด limit cycle! ต้องใช้ High-resolution PWM (HRTIM 184 ps ใน STM32G4, HRPWM ใน C2000 ~150 ps) หรือ dithering
 
-@@H2 discretization|แปลงตัวชดเชยต่อเนื่อง → ดิจิทัล@@
+## แปลงตัวชดเชยต่อเนื่อง → ดิจิทัล
+
 Tustin (bilinear) พร้อม prewarp ที่ $f_c$:
 
 Z1 Tustin (bilinear) transform การแปลงบิลิเนียร์
@@ -19559,14 +19584,27 @@ $$u[n] = \sum_{k=0}^{3} b_k\, e[n-k] - \sum_{k=1}^{3} a_k u[n-k]$$
 
 หรือออกแบบโดยตรงใน z-domain (direct digital design) เมื่อ $f_c$ ใกล้ $f_s/10$
 
-@@H2 pi-code|โค้ด PI ภาษา C (จุดลอยตัว, เรียกใน ISR ของ ADC)@@
-@@CODE0@@
+## โค้ด PI ภาษา C (จุดลอยตัว, เรียกใน ISR ของ ADC)
+
+typedef struct { float kp, ki_T, i, umin, umax; } PI;
+static inline float pi_step(PI *c, float ref, float meas) {
+float e = ref - meas;
+float u = c->kp * e + c->i + c->ki_T * e; // ลอง output ก่อน
+if (u > c->umax) u = c->umax; // clamp
+else if (u < c->umin) u = c->umin;
+else c->i += c->ki_T * e; // conditional integration = anti-windup
+return u; // duty 0..Dmax
+}
+// ISR: duty = pi_step(&vloop, vref_soft, adc_to_volt(ADC1->DR));
+// TIM->CCR1 = (uint32_t)(duty * PERIOD);
 ซิมูเลเตอร์ของเว็บนี้ใช้อัลกอริทึมเดียวกัน (โหมด Voltage-mode PI) — ลองเพิ่ม Ki จนแกว่ง แล้วสังเกตผลของ soft-start
 
-@@H2 hardware-protection|การป้องกันที่ต้องทำในฮาร์ดแวร์ ไม่ใช่ซอฟต์แวร์@@
+## การป้องกันที่ต้องทำในฮาร์ดแวร์ ไม่ใช่ซอฟต์แวร์
+
 OCP แบบ cycle-by-cycle ต้องใช้ comparator ภายใน MCU ต่อเข้าตัว PWM โดยตรง (fault input / blanking window) ไม่ผ่าน CPU — ซอฟต์แวร์ค้าง/รีเซ็ตต้องไม่ทำให้สวิตช์ค้าง ON
 
-@@H2 mcu|MCU ที่แนะนำ@@
+## MCU ที่แนะนำ
+
 ดูตารางเต็มที่ การเลือกตัวควบคุม — โดยสรุป: TI C2000 (F28003x/F28P55x/F28P65x), STM32G474 (HRTIM), Microchip dsPIC33CK/CH และ dsPIC33A เป็นสายที่ออกแบบมาเพื่อ power conversion โดยตรง; ESP32/Arduino เหมาะกับลูปช้า (MPPT, ชาร์จแบต, การสื่อสาร) แต่ไม่ควรใช้กับลูปกระแสเร็ว
 
 ## ขั้นตอน bring-up
@@ -19753,7 +19791,8 @@ Summary: ออกแบบตัวเหนี่ยวนำสำหรั�
 
 - การสูญเสียแกนใช้ $\Delta B/2$ ไม่ใช่ $B_{pk}$
 
-@@H2 inputs|ข้อมูลตั้งต้นจากวงจร@@
+## ข้อมูลตั้งต้นจากวงจร
+
 จากบท Buck/Boost: $L$, $I_{L,dc}$, $\Delta i_L$, $I_{pk}=I_{L,dc}+\Delta i_L/2$, $I_{rms}=\sqrt{I_{dc}^2+\Delta i_L^2/12}$, $f_s$
 
 ## สมการพื้นฐาน
@@ -19887,10 +19926,12 @@ Luenberger observer ประมาณ iL disturbance observer ประมา�
 
 - $\widehat{ESR} = \Delta v_{o,f_s}/\Delta i_L$ ใช้ทำนายอายุตัวเก็บประจุ
 
-@@H2 why-observe|ทำไมต้องสังเกตแทนวัด@@
+## ทำไมต้องสังเกตแทนวัด
+
 เซนเซอร์กระแสเพิ่มต้นทุน การสูญเสีย สัญญาณรบกวน และจุดเสีย ถ้าเรารู้แบบจำลองและวัด $v_o$, $v_{in}$, $d$ ได้ เราประมาณ $i_L$ และกระแสโหลดได้
 
-@@H2 luenberger|Luenberger observer สำหรับ Buck@@
+## Luenberger observer สำหรับ Buck
+
 แบบจำลองเฉลี่ย ($\mathbf x=[i_L\;v_o]^T$, กระแสโหลด $i_o$ เป็นสัญญาณรบกวน):
 
 O1 Averaged buck state model แบบจำลองสถานะของบั๊ก
@@ -19899,7 +19940,8 @@ $$\dot{\mathbf x} = \underbrace{\begin{bmatrix}-r_L/L & -1/L\\ 1/C & 0\end{bmatr
 
 ตัวสังเกต: $\dot{\hat{\mathbf x}} = A\hat{\mathbf x} + B d + L_o(y - \hat y)$ เลือก $L_o$ ให้ขั้วของ $A - L_oC_y$ เร็วกว่าลูปควบคุม 3–5 เท่า แต่ช้ากว่า $f_s/5$
 
-@@H2 load-observer|ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer@@
+## ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer
+
 เพิ่มสถานะ $i_o$ โดยสมมติ $\dot i_o \approx 0$:
 
 O2 Extended-state load observer ตัวสังเกตกระแสโหลด
@@ -19908,7 +19950,8 @@ $$\mathbf z = [i_L\; v_o\; i_o]^T,\quad \dot{\hat i}_o = l_3(v_o - \hat v_o)$$
 
 นำ $\hat i_o$ ไปทำ load-current feedforward → load-step dip ลดลงอย่างมาก (เทคนิคที่ใช้ใน VRM และ EV charger)
 
-@@H2 kalman|Kalman filter@@
+## Kalman filter
+
 เมื่อสัญญาณวัดมีสัญญาณรบกวนมาก (ADC + สวิตชิ่ง) ใช้ Kalman แบบดิสครีต: ทำนาย $\hat x^-=A_d\hat x + B_d u$, $P^-=A_dPA_d^T+Q$ แล้วแก้ไข $K=P^-C^T(CP^-C^T+R)^{-1}$ — ปรับ $Q$ (ความไม่แน่นอนของแบบจำลอง) กับ $R$ (สัญญาณรบกวนวัด) เป็นตัวแลกระหว่างความเร็วกับความเรียบ
 
 ## ข้อควรระวังของการสังเกต
@@ -19990,7 +20033,8 @@ Summary: หาฟังก์ชันถ่ายโอนของคอน�
 
 คอนเวอร์เตอร์เป็นระบบ ไม่เชิงเส้นและแปรตามเวลา (สวิตช์เปิด/ปิด) แต่ถ้าสนใจความถี่ต่ำกว่า $f_s/2$ มาก เราเฉลี่ยตลอดคาบแล้ว linearize รอบจุดทำงานได้
 
-@@H2 state-space-averaging|State-space averaging (Middlebrook & Ćuk, 1976)@@
+## State-space averaging (Middlebrook & Ćuk, 1976)
+
 สถานะ $\mathbf x = [i_L\; v_C]^T$ แต่ละช่วงสวิตช์:
 
 S1 Switched state equations สมการสถานะแต่ละช่วง
@@ -20012,7 +20056,8 @@ $$\text{DC: } X = -A^{-1}BV_{in},\qquad
 
 โดย $A = DA_1 + D'A_2$ จากนั้น $G_{vd}(s) = C(sI-A)^{-1}B_d$
 
-@@H2 transfer-functions|ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)@@
+## ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)
+
 รูปทั่วไป: $G_{vd}(s) = G_{d0}\dfrac{1 - s/\omega_z}{1 + s/(Q\omega_0) + (s/\omega_0)^2}$
 
 |
@@ -20043,7 +20088,8 @@ $D'/\sqrt{LC}$ |
 $D'R\sqrt{C/L}$ |
 $D'^2R/(DL)$ |
 
-@@H2 loop-gain|PWM modulator และ loop gain@@
+## PWM modulator และ loop gain
+
 ตัวเปรียบเทียบกับ ramp สูง $V_M$: $\hat d = \hat v_c / V_M$ ดังนั้น
 
 S4 Loop gain ลูปเกน
@@ -20060,17 +20106,24 @@ $$T(s) = G_c(s)\cdot \frac{1}{V_M}\cdot G_{vd}(s)\cdot H(s),\qquad H = \frac{R_2
 
 - $Z_{in}$ — ที่ความถี่ต่ำ คอนเวอร์เตอร์คุมแรงดันเป็น ความต้านทานเชิงลบ $-V_{in}^2/P$
 
-@@H2 input-filter|เกณฑ์ตัวกรองอินพุตของ Middlebrook@@
+## เกณฑ์ตัวกรองอินพุตของ Middlebrook
+
 ถ้าใส่ LC filter หน้า converter ต้องให้ $|Z_{o,filter}| \ll |Z_{in,conv}|$ ทุกความถี่ มิฉะนั้นวงจรจะแกว่ง (เพราะความต้านทานลบ) → ต้องหน่วงฟิลเตอร์ด้วย $R_d$–$C_d$ เป็นสาเหตุจริงของอาการ "ต่อสายยาว/เปลี่ยนแหล่งจ่ายแล้วแกว่ง" ดู วิเคราะห์อาการเสีย
 
-@@H2 averaged-switch|แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)@@
+## แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)
+
 แทนคู่สวิตช์-ไดโอดด้วยหม้อแปลงอุดมคติอัตรา $1:D$ + แหล่งพึ่งพา — ใช้ใน SPICE (.ac analysis) ได้ทันที เร็วกว่าซิมสวิตชิ่งมาก และรวม DCM ได้
 
-@@H2 measurement|ตรวจสอบด้วยการวัด@@
+## ตรวจสอบด้วยการวัด
+
 ฉีดสัญญาณผ่านตัวต้านทาน 10–50 Ω ในลูปป้อนกลับ (ดู เทคนิคเชิงช่าง) หรือในซิมูเลเตอร์ของเว็บนี้: ตั้ง Open loop, ฟังก์ชันเจนฯ ฉีดที่ Duty แบบ sine ขนาด 0.01 แล้ววัดอัตราส่วน p-p ของ Vout ต่อ 0.02 ที่หลายความถี่ → ได้ $|G_{vd}|$ เทียบกับสูตรข้างบน
 
-@@H2 python-bode|Python: วาด Bode ของ Buck@@
-@@CODE0@@
+## Python: วาด Bode ของ Buck
+
+Vin, L, C, R, ESR = 24, 100e-6, 100e-6, 10, 0.02
+s = ct.tf('s')
+Gvd = Vin*(1 + s*ESR*C)/(L*C*s**2 + (L/R + ESR*C)*s + 1)
+ct.bode_plot(Gvd, omega_limits=(2*np.pi*10, 2*np.pi*1e5), Hz=True)
 
 ## คำถามที่พบบ่อย
 
@@ -20111,8 +20164,11 @@ Summary: ภาพรวมแหล่งจ่ายไฟสวิตชิ�
 
 - ทดลอง off-line ต้องมีหม้อแปลงแยกขดและ differential probe
 
-@@H2 offline-structure|โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)@@
-@@CODE0@@
+## โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)
+
+AC 220 V → ฟิวส์/MOV → EMI filter (CM choke, X/Y cap) → บริดจ์ → [PFC boost ~400 V] → bulk C
+→ DC-DC แยกฉนวน (flyback / forward / LLC) → rectifier + filter → Vout
+↑ ป้อนกลับผ่าน TL431 + optocoupler
 PFC บังคับตามมาตรฐานฮาร์มอนิก (IEC 61000-3-2) เมื่อกำลังเกิน ~75 W
 
 ## ตระกูลวงจรแยกฉนวน
@@ -20185,7 +20241,8 @@ ZVS ฝั่งปฐม, ZCS ฝั่งทุติย, ประสิท�
 
 - ทดลอง off-line ต้องใช้ isolation transformer + variac + differential probe — ดู แหล่งจ่ายทดสอบ
 
-@@H2 next|หัวข้อที่จะเพิ่ม (ระดับ ป.โท)@@
+## หัวข้อที่จะเพิ่ม (ระดับ ป.โท)
+
 PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และการออกแบบ tank, Active clamp flyback, Phase-shift full-bridge, DAB สำหรับ EV/ESS, synchronous rectification ฝั่งทุติยภูมิ
 
 ## คำถามที่พบบ่อย
@@ -20280,7 +20337,8 @@ C_{bulk} \ge \frac{2P_{in}\,t_d}{V_{pk}^2 - V_{min}^2},\quad t_d \approx 8\text{
 
 - ถ้าต่อ 220 V ตรง (ไม่ใช้หม้อแปลง) แรงดัน bus ≈ 311 V — เป็นงาน SMPS เต็มรูปแบบ ดู Switching Power Supply
 
-@@H2 solar|โซลาร์เซลล์ (PV)@@
+## โซลาร์เซลล์ (PV)
+
 แบบจำลองไดโอดเดี่ยว:
 
 V2 Single-diode PV model แบบจำลองแผงโซลาร์
@@ -20458,7 +20516,8 @@ MCU รีเซ็ตเมื่อมีโหลด |
 Ground bounce, ไฟเลี้ยง MCU ตกขณะสวิตช์ |
 แยก LDO/decoupling, star ground |
 
-@@H2 practice|ใช้ซิมูเลเตอร์ฝึกวิเคราะห์@@
+## ใช้ซิมูเลเตอร์ฝึกวิเคราะห์
+
 ใน ห้องแลปจำลอง สร้าง "ความเสีย" แล้วดูผล:
 
 - ลด L ลง 5 เท่า (จำลองแกนแตก) → ΔiL เพิ่ม, เข้า DCM

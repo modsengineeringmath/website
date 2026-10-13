@@ -27,10 +27,12 @@ Luenberger observer ประมาณ iL disturbance observer ประมา�
 
 - $\widehat{ESR} = \Delta v_{o,f_s}/\Delta i_L$ ใช้ทำนายอายุตัวเก็บประจุ
 
-@@H2 why-observe|ทำไมต้องสังเกตแทนวัด@@
+## ทำไมต้องสังเกตแทนวัด
+
 เซนเซอร์กระแสเพิ่มต้นทุน การสูญเสีย สัญญาณรบกวน และจุดเสีย ถ้าเรารู้แบบจำลองและวัด $v_o$, $v_{in}$, $d$ ได้ เราประมาณ $i_L$ และกระแสโหลดได้
 
-@@H2 luenberger|Luenberger observer สำหรับ Buck@@
+## Luenberger observer สำหรับ Buck
+
 แบบจำลองเฉลี่ย ($\mathbf x=[i_L\;v_o]^T$, กระแสโหลด $i_o$ เป็นสัญญาณรบกวน):
 
 O1 Averaged buck state model แบบจำลองสถานะของบั๊ก
@@ -39,7 +41,8 @@ $$\dot{\mathbf x} = \underbrace{\begin{bmatrix}-r_L/L & -1/L\\ 1/C & 0\end{bmatr
 
 ตัวสังเกต: $\dot{\hat{\mathbf x}} = A\hat{\mathbf x} + B d + L_o(y - \hat y)$ เลือก $L_o$ ให้ขั้วของ $A - L_oC_y$ เร็วกว่าลูปควบคุม 3–5 เท่า แต่ช้ากว่า $f_s/5$
 
-@@H2 load-observer|ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer@@
+## ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer
+
 เพิ่มสถานะ $i_o$ โดยสมมติ $\dot i_o \approx 0$:
 
 O2 Extended-state load observer ตัวสังเกตกระแสโหลด
@@ -48,7 +51,8 @@ $$\mathbf z = [i_L\; v_o\; i_o]^T,\quad \dot{\hat i}_o = l_3(v_o - \hat v_o)$$
 
 นำ $\hat i_o$ ไปทำ load-current feedforward → load-step dip ลดลงอย่างมาก (เทคนิคที่ใช้ใน VRM และ EV charger)
 
-@@H2 kalman|Kalman filter@@
+## Kalman filter
+
 เมื่อสัญญาณวัดมีสัญญาณรบกวนมาก (ADC + สวิตชิ่ง) ใช้ Kalman แบบดิสครีต: ทำนาย $\hat x^-=A_d\hat x + B_d u$, $P^-=A_dPA_d^T+Q$ แล้วแก้ไข $K=P^-C^T(CP^-C^T+R)^{-1}$ — ปรับ $Q$ (ความไม่แน่นอนของแบบจำลอง) กับ $R$ (สัญญาณรบกวนวัด) เป็นตัวแลกระหว่างความเร็วกับความเรียบ
 
 ## ข้อควรระวังของการสังเกต

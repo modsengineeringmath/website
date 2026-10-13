@@ -161,7 +161,8 @@ UCC21520, Si823x, 1ED-series |
 GaN |
 ใช้ driver เฉพาะ GaN (แรงดันเกตจำกัด ~6 V) หรือ GaN แบบมี driver ในตัว |
 
-@@H2 opamp|Op-amp และ comparator@@
+## Op-amp และ comparator
+
 ดูตารางใน การควบคุมแบบอนาล็อก — หลัก: GBW ≥ 10× ความต้องการ, rail-to-rail ถ้าแหล่งจ่ายต่ำ, ทน common-mode ของการวัดกระแส
 
 ## คำถามที่พบบ่อย

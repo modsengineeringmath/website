@@ -29,7 +29,8 @@ updated: 2026-10-13
 
 คอนเวอร์เตอร์เป็นระบบ ไม่เชิงเส้นและแปรตามเวลา (สวิตช์เปิด/ปิด) แต่ถ้าสนใจความถี่ต่ำกว่า $f_s/2$ มาก เราเฉลี่ยตลอดคาบแล้ว linearize รอบจุดทำงานได้
 
-@@H2 state-space-averaging|State-space averaging (Middlebrook & Ćuk, 1976)@@
+## State-space averaging (Middlebrook & Ćuk, 1976)
+
 สถานะ $\mathbf x = [i_L\; v_C]^T$ แต่ละช่วงสวิตช์:
 
 S1 Switched state equations สมการสถานะแต่ละช่วง
@@ -51,7 +52,8 @@ $$\text{DC: } X = -A^{-1}BV_{in},\qquad
 
 โดย $A = DA_1 + D'A_2$ จากนั้น $G_{vd}(s) = C(sI-A)^{-1}B_d$
 
-@@H2 transfer-functions|ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)@@
+## ตารางฟังก์ชันถ่ายโอน (CCM, ไม่คิด ESR)
+
 รูปทั่วไป: $G_{vd}(s) = G_{d0}\dfrac{1 - s/\omega_z}{1 + s/(Q\omega_0) + (s/\omega_0)^2}$
 
 |
@@ -82,7 +84,8 @@ $D'/\sqrt{LC}$ |
 $D'R\sqrt{C/L}$ |
 $D'^2R/(DL)$ |
 
-@@H2 loop-gain|PWM modulator และ loop gain@@
+## PWM modulator และ loop gain
+
 ตัวเปรียบเทียบกับ ramp สูง $V_M$: $\hat d = \hat v_c / V_M$ ดังนั้น
 
 S4 Loop gain ลูปเกน
@@ -99,17 +102,24 @@ $$T(s) = G_c(s)\cdot \frac{1}{V_M}\cdot G_{vd}(s)\cdot H(s),\qquad H = \frac{R_2
 
 - $Z_{in}$ — ที่ความถี่ต่ำ คอนเวอร์เตอร์คุมแรงดันเป็น ความต้านทานเชิงลบ $-V_{in}^2/P$
 
-@@H2 input-filter|เกณฑ์ตัวกรองอินพุตของ Middlebrook@@
+## เกณฑ์ตัวกรองอินพุตของ Middlebrook
+
 ถ้าใส่ LC filter หน้า converter ต้องให้ $|Z_{o,filter}| \ll |Z_{in,conv}|$ ทุกความถี่ มิฉะนั้นวงจรจะแกว่ง (เพราะความต้านทานลบ) → ต้องหน่วงฟิลเตอร์ด้วย $R_d$–$C_d$ เป็นสาเหตุจริงของอาการ "ต่อสายยาว/เปลี่ยนแหล่งจ่ายแล้วแกว่ง" ดู วิเคราะห์อาการเสีย
 
-@@H2 averaged-switch|แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)@@
+## แบบจำลองเชิงวงจร: Averaged switch (PWM switch ของ Vorpérian)
+
 แทนคู่สวิตช์-ไดโอดด้วยหม้อแปลงอุดมคติอัตรา $1:D$ + แหล่งพึ่งพา — ใช้ใน SPICE (.ac analysis) ได้ทันที เร็วกว่าซิมสวิตชิ่งมาก และรวม DCM ได้
 
-@@H2 measurement|ตรวจสอบด้วยการวัด@@
+## ตรวจสอบด้วยการวัด
+
 ฉีดสัญญาณผ่านตัวต้านทาน 10–50 Ω ในลูปป้อนกลับ (ดู เทคนิคเชิงช่าง) หรือในซิมูเลเตอร์ของเว็บนี้: ตั้ง Open loop, ฟังก์ชันเจนฯ ฉีดที่ Duty แบบ sine ขนาด 0.01 แล้ววัดอัตราส่วน p-p ของ Vout ต่อ 0.02 ที่หลายความถี่ → ได้ $|G_{vd}|$ เทียบกับสูตรข้างบน
 
-@@H2 python-bode|Python: วาด Bode ของ Buck@@
-@@CODE0@@
+## Python: วาด Bode ของ Buck
+
+Vin, L, C, R, ESR = 24, 100e-6, 100e-6, 10, 0.02
+s = ct.tf('s')
+Gvd = Vin*(1 + s*ESR*C)/(L*C*s**2 + (L/R + ESR*C)*s + 1)
+ct.bode_plot(Gvd, omega_limits=(2*np.pi*10, 2*np.pi*1e5), Hz=True)
 
 ## คำถามที่พบบ่อย
 

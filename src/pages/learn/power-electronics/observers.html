@@ -45,8 +45,11 @@
       <p class="lede">Luenberger observer ประมาณ i<sub>L</sub> disturbance observer ประมาณกระแสโหลดเพื่อ feedforward Kalman filter ข้อควรระวัง และการเฝ้าสังเกต V<sub>in</sub> อุณหภูมิ ESR และการอิ่มตัว</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#caveats">ข้อควรระวังของการสังเกต</a>
-        <a class="btn btn-ghost btn-sm" href="#condition-monitoring">การเฝ้าสังเกตเหตุการณ์แวดล้อ</a>
+        <a class="btn btn-primary btn-sm" href="#why-observe">ทำไมต้องสังเกตแทนวัด</a>
+        <a class="btn btn-ghost btn-sm" href="#luenberger">Luenberger observer สำหรับ B</a>
+        <a class="btn btn-ghost btn-sm" href="#load-observer">ประมาณกระแสโหลดด้วย Extended</a>
+        <a class="btn btn-ghost btn-sm" href="#kalman">Kalman filter</a>
+        <a class="btn btn-ghost btn-sm" href="#caveats">ข้อควรระวังของการสังเกต</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -67,21 +70,32 @@
       <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
     </div>
 
-<section class="tsec"><p>@@H2 why-observe|ทำไมต้องสังเกตแทนวัด@@
-เซนเซอร์กระแสเพิ่มต้นทุน การสูญเสีย สัญญาณรบกวน และจุดเสีย ถ้าเรารู้แบบจำลองและวัด \(v_o\), \(v_{in}\), \(d\) ได้ เราประมาณ \(i_L\) และกระแสโหลดได้</p>
-<p>@@H2 luenberger|Luenberger observer สำหรับ Buck@@
-แบบจำลองเฉลี่ย (\(\mathbf x=[i_L\;v_o]^T\), กระแสโหลด \(i_o\) เป็นสัญญาณรบกวน):</p>
+
+    <section class="tsec" aria-labelledby="why-observe">
+    <h2 id="why-observe">ทำไมต้องสังเกตแทนวัด</h2>
+<p>เซนเซอร์กระแสเพิ่มต้นทุน การสูญเสีย สัญญาณรบกวน และจุดเสีย ถ้าเรารู้แบบจำลองและวัด \(v_o\), \(v_{in}\), \(d\) ได้ เราประมาณ \(i_L\) และกระแสโหลดได้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="luenberger">
+    <h2 id="luenberger">Luenberger observer สำหรับ Buck</h2>
+<p>แบบจำลองเฉลี่ย (\(\mathbf x=[i_L\;v_o]^T\), กระแสโหลด \(i_o\) เป็นสัญญาณรบกวน):</p>
 <div class="tf" id="O1" data-k="averaged buck state model แบบจำลองสถานะของบั๊ก"><p class="tf-n"><b><span class="fid">O1</span> Averaged buck state model</b> แบบจำลองสถานะของบั๊ก</p>
         \[ \dot{\mathbf x} = \underbrace{\begin{bmatrix}-r_L/L & -1/L\\ 1/C & 0\end{bmatrix}}_{A}\mathbf x + \begin{bmatrix}v_{in}/L\\0\end{bmatrix}d + \begin{bmatrix}0\\-1/C\end{bmatrix}i_o,\qquad y = v_o \]</div>
 <p>ตัวสังเกต: \(\dot{\hat{\mathbf x}} = A\hat{\mathbf x} + B d + L_o(y - \hat y)\) เลือก \(L_o\) ให้ขั้วของ \(A - L_oC_y\) เร็วกว่าลูปควบคุม 3–5 เท่า แต่ช้ากว่า \(f_s/5\)</p>
-<p>@@H2 load-observer|ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer@@
-เพิ่มสถานะ \(i_o\) โดยสมมติ \(\dot i_o \approx 0\):</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="load-observer">
+    <h2 id="load-observer">ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer</h2>
+<p>เพิ่มสถานะ \(i_o\) โดยสมมติ \(\dot i_o \approx 0\):</p>
 <div class="tf" id="O2" data-k="extended-state load observer ตัวสังเกตกระแสโหลด"><p class="tf-n"><b><span class="fid">O2</span> Extended-state load observer</b> ตัวสังเกตกระแสโหลด</p>
         \[ \mathbf z = [i_L\; v_o\; i_o]^T,\quad \dot{\hat i}_o = l_3(v_o - \hat v_o) \]</div>
 <p>นำ \(\hat i_o\) ไปทำ <strong>load-current feedforward</strong> → load-step dip ลดลงอย่างมาก (เทคนิคที่ใช้ใน VRM และ EV charger)</p>
-<p>@@H2 kalman|Kalman filter@@
-เมื่อสัญญาณวัดมีสัญญาณรบกวนมาก (ADC + สวิตชิ่ง) ใช้ Kalman แบบดิสครีต: ทำนาย \(\hat x^-=A_d\hat x + B_d u\), \(P^-=A_dPA_d^T+Q\) แล้วแก้ไข \(K=P^-C^T(CP^-C^T+R)^{-1}\) — ปรับ \(Q\) (ความไม่แน่นอนของแบบจำลอง) กับ \(R\) (สัญญาณรบกวนวัด) เป็นตัวแลกระหว่างความเร็วกับความเรียบ</p>
-</section>
+    </section>
+
+    <section class="tsec" aria-labelledby="kalman">
+    <h2 id="kalman">Kalman filter</h2>
+<p>เมื่อสัญญาณวัดมีสัญญาณรบกวนมาก (ADC + สวิตชิ่ง) ใช้ Kalman แบบดิสครีต: ทำนาย \(\hat x^-=A_d\hat x + B_d u\), \(P^-=A_dPA_d^T+Q\) แล้วแก้ไข \(K=P^-C^T(CP^-C^T+R)^{-1}\) — ปรับ \(Q\) (ความไม่แน่นอนของแบบจำลอง) กับ \(R\) (สัญญาณรบกวนวัด) เป็นตัวแลกระหว่างความเร็วกับความเรียบ</p>
+    </section>
 
     <section class="tsec" aria-labelledby="caveats">
     <h2 id="caveats">ข้อควรระวังของการสังเกต</h2>

@@ -27,23 +27,27 @@ updated: 2026-10-13
 
 - OCP ต้องอยู่ในฮาร์ดแวร์ ไม่ผ่าน CPU
 
-@@H2 structure|โครงสร้าง@@
+## โครงสร้าง
+
 ADC สุ่ม $v_o$ (และ $i_L$) → ตัวชดเชยดิจิทัล $G_c(z)$ → DPWM (ตัวนับ) → gate driver
 
 สิ่งที่ต่างจากอนาล็อก: (1) delay จากการสุ่ม-คำนวณ-อัปเดต (2) quantization ทั้ง ADC และ PWM (3) aliasing
 
-@@H2 sampling|จังหวะการสุ่ม@@
+## จังหวะการสุ่ม
+
 สุ่ม ตรงกลางช่วง ON หรือ OFF (ใช้ trigger จาก timer PWM) จะได้ค่าเฉลี่ยของ $i_L$ โดยไม่ต้องกรอง และหลบหนามจากการสวิตช์ — เป็นเทคนิคมาตรฐานของ C2000/STM32 HRTIM/dsPIC
 
 Delay รวมโดยประมาณ $T_d \approx T_{conv} + T_{calc} + T_s/2$ (ZOH) → เฟสหาย $\phi = -360^\circ f_c T_d$ เช่น $f_s = 100$ kHz, $T_d = 1.5T_s$, $f_c = 5$ kHz → เสียเฟส 27°
 
-@@H2 dpwm-limit-cycle|ความละเอียดและ limit cycle@@
+## ความละเอียดและ limit cycle
+
 ความละเอียดแรงดันขาออกจาก DPWM (buck): $\Delta V_o = V_{in}/2^{N_{PWM}}$ โดย $2^{N_{PWM}} = f_{clk}/f_s$
 เงื่อนไขไม่เกิด limit cycle: $\Delta V_{o,DPWM} \lt \Delta V_{o,ADC}$ (PWM ละเอียดกว่า ADC) + ตัวควบคุมต้องมีอินทิเกรเตอร์ และ gain ของอินทิเกรเตอร์ไม่สูงเกิน
 
 ตัวอย่าง: clock 170 MHz, $f_s = 200$ kHz → 850 count (≈9.7 บิต) → $24/850 = 28$ mV ขณะที่ ADC 12 บิตกับตัวแบ่ง 3.3/15 V → 3.7 mV ⇒ เกิด limit cycle! ต้องใช้ High-resolution PWM (HRTIM 184 ps ใน STM32G4, HRPWM ใน C2000 ~150 ps) หรือ dithering
 
-@@H2 discretization|แปลงตัวชดเชยต่อเนื่อง → ดิจิทัล@@
+## แปลงตัวชดเชยต่อเนื่อง → ดิจิทัล
+
 Tustin (bilinear) พร้อม prewarp ที่ $f_c$:
 
 Z1 Tustin (bilinear) transform การแปลงบิลิเนียร์
@@ -58,14 +62,27 @@ $$u[n] = \sum_{k=0}^{3} b_k\, e[n-k] - \sum_{k=1}^{3} a_k u[n-k]$$
 
 หรือออกแบบโดยตรงใน z-domain (direct digital design) เมื่อ $f_c$ ใกล้ $f_s/10$
 
-@@H2 pi-code|โค้ด PI ภาษา C (จุดลอยตัว, เรียกใน ISR ของ ADC)@@
-@@CODE0@@
+## โค้ด PI ภาษา C (จุดลอยตัว, เรียกใน ISR ของ ADC)
+
+typedef struct { float kp, ki_T, i, umin, umax; } PI;
+static inline float pi_step(PI *c, float ref, float meas) {
+float e = ref - meas;
+float u = c->kp * e + c->i + c->ki_T * e; // ลอง output ก่อน
+if (u > c->umax) u = c->umax; // clamp
+else if (u < c->umin) u = c->umin;
+else c->i += c->ki_T * e; // conditional integration = anti-windup
+return u; // duty 0..Dmax
+}
+// ISR: duty = pi_step(&vloop, vref_soft, adc_to_volt(ADC1->DR));
+// TIM->CCR1 = (uint32_t)(duty * PERIOD);
 ซิมูเลเตอร์ของเว็บนี้ใช้อัลกอริทึมเดียวกัน (โหมด Voltage-mode PI) — ลองเพิ่ม Ki จนแกว่ง แล้วสังเกตผลของ soft-start
 
-@@H2 hardware-protection|การป้องกันที่ต้องทำในฮาร์ดแวร์ ไม่ใช่ซอฟต์แวร์@@
+## การป้องกันที่ต้องทำในฮาร์ดแวร์ ไม่ใช่ซอฟต์แวร์
+
 OCP แบบ cycle-by-cycle ต้องใช้ comparator ภายใน MCU ต่อเข้าตัว PWM โดยตรง (fault input / blanking window) ไม่ผ่าน CPU — ซอฟต์แวร์ค้าง/รีเซ็ตต้องไม่ทำให้สวิตช์ค้าง ON
 
-@@H2 mcu|MCU ที่แนะนำ@@
+## MCU ที่แนะนำ
+
 ดูตารางเต็มที่ การเลือกตัวควบคุม — โดยสรุป: TI C2000 (F28003x/F28P55x/F28P65x), STM32G474 (HRTIM), Microchip dsPIC33CK/CH และ dsPIC33A เป็นสายที่ออกแบบมาเพื่อ power conversion โดยตรง; ESP32/Arduino เหมาะกับลูปช้า (MPPT, ชาร์จแบต, การสื่อสาร) แต่ไม่ควรใช้กับลูปกระแสเร็ว
 
 ## ขั้นตอน bring-up

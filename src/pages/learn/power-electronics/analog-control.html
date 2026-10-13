@@ -46,10 +46,11 @@
       <p class="lede">สร้าง PWM ด้วยออปแอมป์ล้วน error amplifier การเลือกออปแอมป์ วิธีวัดกระแส 4 แบบ ชิปคลาสสิก TL494 UC384x TL431 + optocoupler และเช็กลิสต์</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#error-amplifier">Error amplifier</a>
+        <a class="btn btn-primary btn-sm" href="#voltage-mode">สถาปัตยกรรม Voltage mode</a>
+        <a class="btn btn-ghost btn-sm" href="#opamp-pwm">สร้าง PWM ด้วย op-amp ล้วน</a>
+        <a class="btn btn-ghost btn-sm" href="#error-amplifier">Error amplifier</a>
         <a class="btn btn-ghost btn-sm" href="#current-sensing">การวัดกระแส</a>
         <a class="btn btn-ghost btn-sm" href="#classic-ics">ชิปควบคุมคลาสสิกที่ยังไม่ตกย</a>
-        <a class="btn btn-ghost btn-sm" href="#checklist">Checklist วงจรอนาล็อก</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -70,15 +71,21 @@
       <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
     </div>
 
-<section class="tsec"><p>@@H2 voltage-mode|สถาปัตยกรรม Voltage mode@@
-@@CODE0@@
-duty: \(d = v_c/V_M\) เมื่อ ramp สูง \(V_M\) (ใส่ฟีดฟอร์เวิร์ด \(V_M \propto V_{in}\) ทำให้ลูป gain ไม่ขึ้นกับ \(V_{in}\) และตัด \(G_{vg}\) ได้)</p>
-<p>@@H2 opamp-pwm|สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)@@
-<strong>ตัวสร้างคลื่นสามเหลี่ยม</strong>: Schmitt trigger (comparator + \(R_A\), \(R_B\)) ต่อกับ integrator (\(R\), \(C\))</p>
+
+    <section class="tsec" aria-labelledby="voltage-mode">
+    <h2 id="voltage-mode">สถาปัตยกรรม Voltage mode</h2>
+<pre class="code">Vout ─ R1/R2 ─▶ [Error amp Type III] ─ vc ─▶ (+) Comparator ─▶ Gate driver ─▶ Q
+       Vref ──▶ (+)                      Ramp ─▶ (−)</pre>
+<p>duty: \(d = v_c/V_M\) เมื่อ ramp สูง \(V_M\) (ใส่ฟีดฟอร์เวิร์ด \(V_M \propto V_{in}\) ทำให้ลูป gain ไม่ขึ้นกับ \(V_{in}\) และตัด \(G_{vg}\) ได้)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="opamp-pwm">
+    <h2 id="opamp-pwm">สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)</h2>
+<p><strong>ตัวสร้างคลื่นสามเหลี่ยม</strong>: Schmitt trigger (comparator + \(R_A\), \(R_B\)) ต่อกับ integrator (\(R\), \(C\))</p>
 <div class="tf" id="A1" data-k="op-amp triangle generator วงจรสร้างคลื่นสามเหลี่ยม"><p class="tf-n"><b><span class="fid">A1</span> Op-amp triangle generator</b> วงจรสร้างคลื่นสามเหลี่ยม</p>
         \[ f = \frac{R_B}{4R_A R C},\qquad V_{tri,pp} = 2V_{sat}\frac{R_A}{R_B} \]</div>
 <p>ตัวอย่าง: \(R=10\) kΩ, \(C=1\) nF, \(R_A=10\) kΩ, \(R_B=20\) kΩ → \(f = 50\) kHz ใช้ op-amp ที่ slew rate ≥ \(4 V_{pp} f\) (เช่น ≥ 2 V/µs ที่ 50 kHz, 10 Vpp) และ comparator แยก (LM393 ช้าแต่ใช้ได้ถึง ~100 kHz; TLV3501/LT1016 สำหรับเร็ว)</p>
-</section>
+    </section>
 
     <section class="tsec" aria-labelledby="error-amplifier">
     <h2 id="error-amplifier">Error amplifier</h2>

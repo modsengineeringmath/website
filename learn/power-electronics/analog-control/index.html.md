@@ -27,11 +27,14 @@ updated: 2026-10-13
 
 - PCMC ต้องมี leading-edge blanking
 
-@@H2 voltage-mode|สถาปัตยกรรม Voltage mode@@
-@@CODE0@@
+## สถาปัตยกรรม Voltage mode
+
+Vout ─ R1/R2 ─▶ [Error amp Type III] ─ vc ─▶ (+) Comparator ─▶ Gate driver ─▶ Q
+Vref ──▶ (+) Ramp ─▶ (−)
 duty: $d = v_c/V_M$ เมื่อ ramp สูง $V_M$ (ใส่ฟีดฟอร์เวิร์ด $V_M \propto V_{in}$ ทำให้ลูป gain ไม่ขึ้นกับ $V_{in}$ และตัด $G_{vg}$ ได้)
 
-@@H2 opamp-pwm|สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)@@
+## สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)
+
 ตัวสร้างคลื่นสามเหลี่ยม: Schmitt trigger (comparator + $R_A$, $R_B$) ต่อกับ integrator ($R$, $C$)
 
 A1 Op-amp triangle generator วงจรสร้างคลื่นสามเหลี่ยม

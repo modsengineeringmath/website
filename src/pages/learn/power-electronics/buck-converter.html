@@ -50,11 +50,11 @@
       <p class="lede">วงจรลดแรงดัน: volt-second balance V<sub>o</sub> = DV<sub>in</sub> ริปเปิลกระแสและแรงดัน ขอบ CCM/DCM ความเค้นของอุปกรณ์ การสูญเสีย G<sub>vd</sub>(s) และตัวอย่างออกแบบ 24 V → 12 V</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#conversion-ratio">อัตราส่วนแปลงผัน</a>
+        <a class="btn btn-primary btn-sm" href="#operation">โครงสร้างและการทำงาน</a>
+        <a class="btn btn-ghost btn-sm" href="#conversion-ratio">อัตราส่วนแปลงผัน</a>
         <a class="btn btn-ghost btn-sm" href="#ripple">Ripple ของกระแสและแรงดัน</a>
+        <a class="btn btn-ghost btn-sm" href="#ccm-dcm">ขอบเขต CCM/DCM</a>
         <a class="btn btn-ghost btn-sm" href="#stress">ความเค้นของอุปกรณ์</a>
-        <a class="btn btn-ghost btn-sm" href="#losses">การสูญเสียและประสิทธิภาพ</a>
-        <a class="btn btn-ghost btn-sm" href="#design-example">ตัวอย่างออกแบบ</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -75,13 +75,15 @@
       <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
     </div>
 
-<section class="tsec"><p>@@H2 operation|โครงสร้างและการทำงาน@@
-ประกอบด้วยสวิตช์ \(Q\) ไดโอด \(D\) (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ \(L\) และตัวเก็บประจุ \(C\) สวิตช์ทำงานด้วยคาบ \(T_s = 1/f_s\) และ duty ratio \(D\)</p>
+
+    <section class="tsec" aria-labelledby="operation">
+    <h2 id="operation">โครงสร้างและการทำงาน</h2>
+<p>ประกอบด้วยสวิตช์ \(Q\) ไดโอด \(D\) (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ \(L\) และตัวเก็บประจุ \(C\) สวิตช์ทำงานด้วยคาบ \(T_s = 1/f_s\) และ duty ratio \(D\)</p>
 <ul>
 <li><strong>ช่วง ON</strong> (\(0 \le t \le DT_s\)): \(v_L = V_{in} - V_o\) กระแส \(i_L\) เพิ่มขึ้นเชิงเส้น</li>
 <li><strong>ช่วง OFF</strong> (\(DT_s \le t \le T_s\)): ไดโอดนำ \(v_L = -V_o\) กระแสลดลง</li>
 </ul>
-</section>
+    </section>
 
     <section class="tsec" aria-labelledby="conversion-ratio">
     <h2 id="conversion-ratio">อัตราส่วนแปลงผัน (Volt-second balance)</h2>
@@ -99,8 +101,11 @@
 \qquad
 \Delta v_o \approx \underbrace{\frac{\Delta i_L}{8 C f_s}}_{\text{charge}} + \underbrace{\Delta i_L \cdot ESR}_{\text{ESR}} \]</div>
 <p>ข้อสังเกตเชิงวิศวกรรม: \(\Delta i_L\) สูงสุดที่ \(D=0.5\) เมื่อ \(V_o\) คงที่แต่ \(V_{in}\) เปลี่ยน ripple จะสูงสุดที่ \(V_{in,max}\) — <strong>ออกแบบ L ที่ \(V_{in,max}\) เสมอ</strong></p>
-<p>@@H2 ccm-dcm|ขอบเขต CCM/DCM@@
-นิยาม \(K = 2L/(R T_s)\) วงจรอยู่ใน CCM เมื่อ \(K > K_{crit}(D) = 1-D\) หรือเทียบเท่า \(I_o > \Delta i_L/2\) ใน DCM:</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ccm-dcm">
+    <h2 id="ccm-dcm">ขอบเขต CCM/DCM</h2>
+<p>นิยาม \(K = 2L/(R T_s)\) วงจรอยู่ใน CCM เมื่อ \(K > K_{crit}(D) = 1-D\) หรือเทียบเท่า \(I_o > \Delta i_L/2\) ใน DCM:</p>
 <div class="tf" id="B4" data-k="dcm conversion ratio อัตราส่วนใน dcm"><p class="tf-n"><b><span class="fid">B4</span> DCM conversion ratio</b> อัตราส่วนใน DCM</p>
         \[ M = \frac{V_o}{V_{in}} = \frac{2}{1+\sqrt{1+4K/D^2}} \]</div>
 <p>DCM ทำให้แรงดันขาออกขึ้นกับโหลด, ฟังก์ชันถ่ายโอนลดเหลือขั้วเด่นเดียว — ตัวชดเชยที่ออกแบบสำหรับ CCM อาจช้าเกินไปใน DCM</p>
@@ -146,8 +151,11 @@
         \[ P_{cond}=I_{Q,rms}^2R_{ds(on)} + V_F I_{D,avg} + I_{L,rms}^2 r_L,\quad
 P_{sw}\approx \tfrac12 V_{in} I_o (t_r+t_f) f_s + Q_{rr}V_{in}f_s + Q_g V_{GS} f_s + \tfrac12 C_{oss}V_{in}^2 f_s \]</div>
 <p>การเพิ่ม \(f_s\) ลดขนาด L, C แต่เพิ่ม \(P_{sw}\) — นี่คือ trade-off หลักของงานออกแบบ ใน synchronous buck แทนไดโอดด้วย MOSFET ตัวล่าง ลด \(V_F I\) เหลือ \(I^2R\) แต่ต้องมี dead-time ป้องกัน shoot-through</p>
-<p>@@H2 transfer-function|แบบจำลองสัญญาณเล็ก@@
-จาก state-space averaging (ดู <a href="/learn/power-electronics/small-signal-model/">บทแบบจำลอง</a>):</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="transfer-function">
+    <h2 id="transfer-function">แบบจำลองสัญญาณเล็ก</h2>
+<p>จาก state-space averaging (ดู <a href="/learn/power-electronics/small-signal-model/">บทแบบจำลอง</a>):</p>
 <div class="tf" id="B6" data-k="control-to-output transfer function ฟังก์ชันถ่ายโอน gvd"><p class="tf-n"><b><span class="fid">B6</span> Control-to-output transfer function</b> ฟังก์ชันถ่ายโอน Gvd</p>
         \[ G_{vd}(s)=\frac{\hat v_o}{\hat d}= V_{in}\,\frac{1+s\,ESR\cdot C}{LC\,s^2 + \left(\frac{L}{R}+ESR\cdot C\right)s + 1},
 \quad \omega_0=\frac{1}{\sqrt{LC}},\; Q = R\sqrt{C/L} \]</div>

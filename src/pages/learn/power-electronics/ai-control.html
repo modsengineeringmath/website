@@ -47,6 +47,8 @@
       <div class="trig-quick">
         <a class="btn btn-primary btn-sm" href="#safety-layers">หลักความปลอดภัยข้อแรก</a>
         <a class="btn btn-ghost btn-sm" href="#ai-methods">รูปแบบการใช้ AI</a>
+        <a class="btn btn-ghost btn-sm" href="#waveform-diagnosis">ตัวอย่าง</a>
+        <a class="btn btn-ghost btn-sm" href="#llm-assistant">ใช้ LLM</a>
         <a class="btn btn-ghost btn-sm" href="#research">แนวทางวิจัยระดับปริญญาโท</a>
       </div>
       <div class="tldr">
@@ -67,10 +69,10 @@
 <blockquote>
 <p><strong>ลูปในที่เร็ว (กระแส, OCP) ต้องเป็นอัลกอริทึมเชิงกำหนด (deterministic) ที่พิสูจน์เสถียรภาพได้</strong> AI ทำงานในชั้น <em>กำกับดูแล</em> (supervisory): ปรับพารามิเตอร์ วางแผน ทำนาย วินิจฉัย — ภายใต้ขอบเขตที่ถูก clamp เสมอ</p>
 </blockquote>
-<pre class="code"><code>[AI/ML: จูน, ทำนาย, วินิจฉัย]  ← ms–ชั่วโมง
+<pre class="code">[AI/ML: จูน, ทำนาย, วินิจฉัย]  ← ms–ชั่วโมง
         │ ปรับ Kp, Ki, Vref, โหมด (มีขอบเขต)
 [ลูปแรงดัน PI / Type III]       ← 100 µs–ms
-[ลูปกระแส + OCP ฮาร์ดแวร์]       ← µs (ห้าม AI แตะ)</code></pre>
+[ลูปกระแส + OCP ฮาร์ดแวร์]       ← µs (ห้าม AI แตะ)</pre>
     </section>
 
     <section class="tsec" aria-labelledby="ai-methods">
@@ -114,8 +116,11 @@
 <td>ใช้จริงได้</td>
 </tr>
 </tbody></table></div>
-<p>@@H2 waveform-diagnosis|ตัวอย่าง: วินิจฉัยจากรูปคลื่น@@
-คุณลักษณะที่วัดได้ง่ายและสื่อความหมาย:</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="waveform-diagnosis">
+    <h2 id="waveform-diagnosis">ตัวอย่าง: วินิจฉัยจากรูปคลื่น</h2>
+<p>คุณลักษณะที่วัดได้ง่ายและสื่อความหมาย:</p>
 <ul>
 <li>\(\Delta i_L\) เทียบค่าทฤษฎี → L ลดลง (แกนแตก/อิ่มตัว)</li>
 <li>ripple \(v_o\) ที่ \(f_s\) / \(\Delta i_L\) → ESR ตัวเก็บประจุ</li>
@@ -124,10 +129,15 @@
 <li>การแกว่งความถี่ต่ำหลัง step load → phase margin ต่ำ</li>
 </ul>
 <p>ใช้ <a href="/learn/power-electronics/converter-lab/">ห้องแลปจำลอง</a> สร้างชุดข้อมูล: เปลี่ยน L, ESR, \(R_{on}\) แบบสุ่ม บันทึกค่าที่วัดได้ → ฝึกโมเดลจำแนก — เป็นหัวข้อโครงงาน/วิทยานิพนธ์ที่ดี</p>
-<p>@@H2 llm-assistant|ใช้ LLM (เช่น Claude) เป็นผู้ช่วยวิศวกร@@
-ได้ผลดีเมื่อให้ข้อมูลครบและขอให้แสดงที่มา:
-@@CODE1@@
-<strong>ต้องตรวจทุกครั้ง</strong> ด้วยการคำนวณซ้ำ ซิม และวัดจริง — LLM อาจคำนวณผิดหรืออ้างค่าในดาต้าชีตผิด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="llm-assistant">
+    <h2 id="llm-assistant">ใช้ LLM (เช่น Claude) เป็นผู้ช่วยวิศวกร</h2>
+<p>ได้ผลดีเมื่อให้ข้อมูลครบและขอให้แสดงที่มา:</p>
+<pre class="code">ออกแบบตัวชดเชย Type III สำหรับ buck: Vin 18–30 V, Vo 12 V, Io 0.2–2 A,
+L 100 µH ±20%, Cout 100 µF ESR 20 mΩ, fs 100 kHz, ramp 1 V, ตัวแบ่ง 2.5/12
+ต้องการ PM ≥ 55° ทุกมุม ให้แสดงสมการ ค่า R C มาตรฐาน E24 และสคริปต์ Python ตรวจ margin</pre>
+<p><strong>ต้องตรวจทุกครั้ง</strong> ด้วยการคำนวณซ้ำ ซิม และวัดจริง — LLM อาจคำนวณผิดหรืออ้างค่าในดาต้าชีตผิด</p>
     </section>
 
     <section class="tsec" aria-labelledby="research">

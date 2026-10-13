@@ -78,7 +78,8 @@ RHP zero ต่ำกว่า boost ด้วยปัจจัย $1/D$ — �
 
 เรื่องสัญญาณป้อนกลับขั้วลบ Vout เป็นลบเทียบกับกราวด์ร่วม ต้องใช้ op-amp แบบ inverting (หรือวงจร level-shift) ป้อนกลับให้คอนโทรลเลอร์ ซิมูเลเตอร์บนเว็บนี้แสดงขนาด $\lvert V_o\rvert$
 
-@@H2 four-switch|Non-inverting 4-switch buck-boost@@
+## Non-inverting 4-switch buck-boost
+
 ใช้สองขาสวิตช์ (buck leg + boost leg) กับ L ตัวเดียว ทำงาน 3 โหมด: buck ($V_{in} \gt V_o$), boost ($V_{in} \lt V_o$) และ buck-boost ช่วงเปลี่ยนผ่าน ข้อดี: ขั้วบวก, ความเค้น = $\max(V_{in},V_o)$, ประสิทธิภาพ 95–98% เหมาะกับแบตเตอรี่ Li-ion ที่แรงดันคร่อมค่าเป้าหมาย, USB-PD, ระบบ 12 V รถยนต์ (cold crank) ตัวอย่างชิปควบคุมดู การเลือกตัวควบคุม
 
 ## เลือกใช้อย่างไร

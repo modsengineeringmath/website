@@ -27,8 +27,11 @@ updated: 2026-10-13
 
 - ทดลอง off-line ต้องมีหม้อแปลงแยกขดและ differential probe
 
-@@H2 offline-structure|โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)@@
-@@CODE0@@
+## โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)
+
+AC 220 V → ฟิวส์/MOV → EMI filter (CM choke, X/Y cap) → บริดจ์ → [PFC boost ~400 V] → bulk C
+→ DC-DC แยกฉนวน (flyback / forward / LLC) → rectifier + filter → Vout
+↑ ป้อนกลับผ่าน TL431 + optocoupler
 PFC บังคับตามมาตรฐานฮาร์มอนิก (IEC 61000-3-2) เมื่อกำลังเกิน ~75 W
 
 ## ตระกูลวงจรแยกฉนวน
@@ -101,7 +104,8 @@ ZVS ฝั่งปฐม, ZCS ฝั่งทุติย, ประสิท�
 
 - ทดลอง off-line ต้องใช้ isolation transformer + variac + differential probe — ดู แหล่งจ่ายทดสอบ
 
-@@H2 next|หัวข้อที่จะเพิ่ม (ระดับ ป.โท)@@
+## หัวข้อที่จะเพิ่ม (ระดับ ป.โท)
+
 PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และการออกแบบ tank, Active clamp flyback, Phase-shift full-bridge, DAB สำหรับ EV/ESS, synchronous rectification ฝั่งทุติยภูมิ
 
 ## คำถามที่พบบ่อย

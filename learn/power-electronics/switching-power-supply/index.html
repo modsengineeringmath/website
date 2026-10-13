@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=149ca666">
+<link rel="stylesheet" href="/assets/site.css?v=90de235d">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/#article","headline":"แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย","description":"ภาพรวมแหล่งจ่ายไฟสวิตชิ่งที่ต่อไฟบ้าน: EMI filter PFC boost ตัวแปลงแยกฉนวน flyback forward push-pull half/full-bridge LLC พร้อมอัตราส่วนแปลงผัน ขั้นตอนออกแบบ flyback แรงดันสะท้อน RCD clamp และมาตรฐาน IEC 62368-1 CISPR 32 IEC 61000-3-2","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Switched-mode power supply","Flyback converter","Forward converter","LLC resonant converter","Power factor correction"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-electronics/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-electronics-switching-power-supply.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อิเล็กทรอนิกส์กำลัง","item":"https://modsengineeringmath.com/learn/power-electronics/"},{"@type":"ListItem","position":4,"name":"แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย","item":"https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"flyback เหมาะกับกำลังเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"เหมาะประมาณไม่เกิน 100–150 W เพราะหม้อแปลงต้องเก็บพลังงานทั้งหมดในช่องอากาศและ leakage inductance สร้างแรงดันกระชากที่ต้องดูดซับ กำลังสูงกว่านี้นิยม forward, half/full-bridge หรือ LLC"}}]}]}</script>
@@ -103,7 +103,7 @@
 
 <main id="main">
 <div class="wrap lesson-wrap lesson-layout">
-  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a></li><li><a href="#flyback-design">ขั้นตอนออกแบบ Flyback (CCM/DCM)</a></li><li><a href="#safety-emi">ความปลอดภัยและมาตรฐาน</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#offline-structure">โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)</a></li><li><a href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a></li><li><a href="#flyback-design">ขั้นตอนออกแบบ Flyback (CCM/DCM)</a></li><li><a href="#safety-emi">ความปลอดภัยและมาตรฐาน</a></li><li><a href="#next">หัวข้อที่จะเพิ่ม (ระดับ ป.โท)</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
   <article class="lesson int-page la-page cs-page" id="peArticle">
     <header>
       <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>แหล่งจ่ายสวิตชิ่ง</li></ol>
@@ -113,9 +113,11 @@
       <p class="lede">โครงสร้างแหล่งจ่ายต่อไฟบ้าน EMI filter PFC ตระกูลวงจรแยกฉนวน ขั้นตอนออกแบบ flyback 7 ขั้น มาตรฐาน IEC 62368-1 และ CISPR 32</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a>
+        <a class="btn btn-primary btn-sm" href="#offline-structure">โครงสร้างแหล่งจ่ายต่อไฟบ้าน</a>
+        <a class="btn btn-ghost btn-sm" href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a>
         <a class="btn btn-ghost btn-sm" href="#flyback-design">ขั้นตอนออกแบบ Flyback</a>
         <a class="btn btn-ghost btn-sm" href="#safety-emi">ความปลอดภัยและมาตรฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#next">หัวข้อที่จะเพิ่ม</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -126,13 +128,17 @@
           <li>ทดลอง off-line ต้องมีหม้อแปลงแยกขดและ differential probe</li>
         </ul>
       </div>
-      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a></li><li><a href="#flyback-design">ขั้นตอนออกแบบ Flyback (CCM/DCM)</a></li><li><a href="#safety-emi">ความปลอดภัยและมาตรฐาน</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#offline-structure">โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)</a></li><li><a href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a></li><li><a href="#flyback-design">ขั้นตอนออกแบบ Flyback (CCM/DCM)</a></li><li><a href="#safety-emi">ความปลอดภัยและมาตรฐาน</a></li><li><a href="#next">หัวข้อที่จะเพิ่ม (ระดับ ป.โท)</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
     </header>
 
-<section class="tsec"><p>@@H2 offline-structure|โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)@@
-@@CODE0@@
-PFC บังคับตามมาตรฐานฮาร์มอนิก (IEC 61000-3-2) เมื่อกำลังเกิน ~75 W</p>
-</section>
+
+    <section class="tsec" aria-labelledby="offline-structure">
+    <h2 id="offline-structure">โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)</h2>
+<pre class="code">AC 220 V → ฟิวส์/MOV → EMI filter (CM choke, X/Y cap) → บริดจ์ → [PFC boost ~400 V] → bulk C
+        → DC-DC แยกฉนวน (flyback / forward / LLC) → rectifier + filter → Vout
+                       ↑ ป้อนกลับผ่าน TL431 + optocoupler</pre>
+<p>PFC บังคับตามมาตรฐานฮาร์มอนิก (IEC 61000-3-2) เมื่อกำลังเกิน ~75 W</p>
+    </section>
 
     <section class="tsec" aria-labelledby="isolated-topologies">
     <h2 id="isolated-topologies">ตระกูลวงจรแยกฉนวน</h2>
@@ -205,8 +211,11 @@ PFC บังคับตามมาตรฐานฮาร์มอนิก 
 <li>กระแสรั่วผ่าน Y-cap จำกัด (สำคัญกับเครื่องมือแพทย์)</li>
 <li>ทดลอง off-line ต้องใช้ isolation transformer + variac + differential probe — ดู <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a></li>
 </ul>
-<p>@@H2 next|หัวข้อที่จะเพิ่ม (ระดับ ป.โท)@@
-PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และการออกแบบ tank, Active clamp flyback, Phase-shift full-bridge, DAB สำหรับ EV/ESS, synchronous rectification ฝั่งทุติยภูมิ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">หัวข้อที่จะเพิ่ม (ระดับ ป.โท)</h2>
+<p>PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และการออกแบบ tank, Active clamp flyback, Phase-shift full-bridge, DAB สำหรับ EV/ESS, synchronous rectification ฝั่งทุติยภูมิ</p>
     </section>
 
     <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>flyback เหมาะกับกำลังเท่าไร?</summary><p>เหมาะประมาณไม่เกิน 100–150 W เพราะหม้อแปลงต้องเก็บพลังงานทั้งหมดในช่องอากาศและ leakage inductance สร้างแรงดันกระชากที่ต้องดูดซับ กำลังสูงกว่านี้นิยม forward, half/full-bridge หรือ LLC</p></details></section>
@@ -272,9 +281,9 @@ PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และ�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=149ca666" defer></script>
-<script src="/assets/lesson.js?v=149ca666" defer></script>
-<script src="/assets/pe-sim.js?v=149ca666" defer></script>
-<script src="/assets/pe-lab.js?v=149ca666" defer></script>
+<script src="/assets/site.js?v=90de235d" defer></script>
+<script src="/assets/lesson.js?v=90de235d" defer></script>
+<script src="/assets/pe-sim.js?v=90de235d" defer></script>
+<script src="/assets/pe-lab.js?v=90de235d" defer></script>
 </body>
 </html>
