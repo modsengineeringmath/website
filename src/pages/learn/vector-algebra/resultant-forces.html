@@ -1,0 +1,273 @@
+<!--meta
+{
+  "title": "แรงลัพธ์ด้วยกฎของโคไซน์และกฎของไซน์: สี่เหลี่ยมด้านขนาน สามเหลี่ยมแรง แตกแรงตามแนวเฉียง ทฤษฎีลามี | อาจารย์มด",
+  "h1": "แรงลัพธ์ด้วยกฎของโคไซน์และกฎของไซน์",
+  "description": "หาแรงลัพธ์ภาษาไทยแบบเข้มข้น: พิสูจน์กฎโคไซน์และกฎไซน์จากเวกเตอร์ รวมสองแรงด้วยสี่เหลี่ยมด้านขนานและสามเหลี่ยมแรง หาทิศด้วยกฎไซน์และกรณีมุมป้าน แตกแรงตามสองแนวที่ไม่ตั้งฉาก แรงที่สองน้อยที่สุด รวมหลายแรงด้วยองค์ประกอบ สมดุลสามแรงและทฤษฎีลามี และการรวมกระแสไฟฟ้าที่จุดต่อ พร้อมแล็บโต๊ะแรงเสมือน",
+  "ogTitle": "แรงลัพธ์ด้วยกฎของโคไซน์และไซน์ + แล็บโต๊ะแรง",
+  "lesson": "vector-algebra", "sub": "resultant-forces", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Resultant force", "Law of cosines", "Law of sines", "Parallelogram law", "Lami's theorem", "Force resolution", "Statics"],
+  "scripts": ["/assets/lesson.js", "/assets/vec-mech.js"],
+  "og": {"title": "แรงลัพธ์ · กฎไซน์-โคไซน์", "sub": "สามเหลี่ยมแรง · แตกแรงตามแนวเฉียง · ทฤษฎีลามี · แล็บโต๊ะแรง", "eyebrow": "เวกเตอร์ 3.1 · Resultant Forces", "sym": "R²"},
+  "faq": [
+    {"q": "หาแรงลัพธ์ของสองแรงด้วยกฎของโคไซน์อย่างไร?", "a": "ถ้าสองแรง F₁ กับ F₂ ทำมุม θ กัน ขนาดแรงลัพธ์คือ R = √(F₁² + F₂² + 2F₁F₂cos θ) (แบบสี่เหลี่ยมด้านขนาน) หรือเขียนเป็นสามเหลี่ยมแรง R² = F₁² + F₂² − 2F₁F₂cos β โดย β = 180° − θ คือมุมภายในสามเหลี่ยมที่อยู่ตรงข้าม R ทั้งสองสูตรให้ค่าเดียวกัน"},
+    {"q": "หาทิศของแรงลัพธ์ด้วยกฎของไซน์อย่างไร?", "a": "ใช้ sin α / F₂ = sin β / R โดย α คือมุมระหว่าง F₁ กับ R แล้วบวกหรือลบ α จากทิศของ F₁ ระวังว่า arcsin ให้มุมแหลมเท่านั้น ถ้า F₂² > F₁² + R² มุม α จริงเป็นมุมป้าน 180° − α ควรตรวจด้วยองค์ประกอบทุกครั้ง"},
+    {"q": "เมื่อไหร่ควรใช้กฎไซน์-โคไซน์ เมื่อไหร่ควรใช้องค์ประกอบ?", "a": "สองแรง หรือสามแรงที่สมดุล ใช้ตรีโกณมิติของสามเหลี่ยมแรงได้เร็วและเห็นภาพ ส่วนสามแรงขึ้นไปหรือแรงสามมิติ ใช้การรวมองค์ประกอบ x y z ซึ่งเป็นระบบกว่าและพลาดน้อยกว่า"},
+    {"q": "ทฤษฎีของลามีคืออะไร?", "a": "เมื่อแรงสามแรงที่ร่วมจุดอยู่ในสมดุล ขนาดของแต่ละแรงหารด้วยไซน์ของมุมระหว่างอีกสองแรงมีค่าเท่ากันหมด F₁/sin α = F₂/sin β = F₃/sin γ ใช้หาแรงตึงในเชือกที่แขวนวัตถุได้ทันที"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>แรงลัพธ์ · กฎไซน์-โคไซน์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 3 · Resultant forces: laws of sines &amp; cosines</p>
+      <h1>แรงลัพธ์ด้วยกฎของโคไซน์และกฎของไซน์</h1>
+      <p class="lede">เรือลากสองลำดึงเรือใหญ่คนละมุม เชือกสองเส้นแขวนโคมไฟ กระแสสองสาขาไหลมารวมที่จุดต่อ ทั้งหมดคือคำถามเดียวกัน: <strong>สองเวกเตอร์รวมกันได้เท่าไร ชี้ไปทางไหน</strong> บทนี้พิสูจน์กฎโคไซน์และกฎไซน์จากพีชคณิตเวกเตอร์ แล้วใช้มันอย่างมืออาชีพ ทั้งรวมแรง แตกแรงตามแนวที่กำหนด หาแรงน้อยที่สุด และแก้สมดุลสามแรง พร้อมโต๊ะแรงเสมือนแบบห้องแล็บฟิสิกส์ 1</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#cosine">กฎของโคไซน์</a><a class="btn btn-ghost btn-sm" href="#sine">กฎของไซน์</a><a class="btn btn-ghost btn-sm" href="#resolve">แตกแรงตามแนวเฉียง</a><a class="btn btn-ghost btn-sm" href="#lami">ทฤษฎีลามี</a><a class="btn btn-ghost btn-sm" href="#force-table">โต๊ะแรง</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>ขนาดแรงลัพธ์: \(R^2=F_1^2+F_2^2+2F_1F_2\cos\theta\) เมื่อ θ = มุมระหว่างสองแรง (ต่อหาง)</li>
+        <li>ในสามเหลี่ยมแรงใช้มุมภายใน \(\beta=180^\circ-\theta\): \(R^2=F_1^2+F_2^2-2F_1F_2\cos\beta\)</li>
+        <li>ทิศ: \(\dfrac{\sin\alpha}{F_2}=\dfrac{\sin\beta}{R}\) แล้วตรวจกรณีมุมป้าน</li>
+        <li>สามแรงขึ้นไปหรือสามมิติ: รวมองค์ประกอบ \(R_x=\sum F_x,\ R_y=\sum F_y\) ปลอดภัยที่สุด</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น cosine, sine, resolve, lami, minimum" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="methods">
+      <h2 id="methods">1. สามวิธีหาแรงลัพธ์ และควรเลือกวิธีไหน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="ee-cards">
+        <div class="ee-card"><span class="mono">วิธีที่ 1 · กราฟ</span><h3>วาดหัวต่อหางตามสเกล</h3><p>วัดความยาวและมุมด้วยไม้บรรทัด-โปรแทรกเตอร์ เห็นภาพชัด ความแม่นยำจำกัดที่ ±2%</p></div>
+        <div class="ee-card"><span class="mono">วิธีที่ 2 · ตรีโกณมิติ</span><h3>กฎโคไซน์ + กฎไซน์</h3><p>เร็วที่สุดสำหรับสองแรง หรือสามแรงที่สมดุล ใช้มุมจากโจทย์โดยตรง</p></div>
+        <div class="ee-card"><span class="mono">วิธีที่ 3 · องค์ประกอบ</span><h3>รวม x, y (, z)</h3><p>เป็นระบบสำหรับหลายแรงและสามมิติ เครื่องคิดเลขทำได้ทันที ใช้ตรวจวิธีที่ 2</p></div>
+      </div>
+      <p>วิศวกรที่ชำนาญใช้ทั้งสองแบบคู่กัน: ตรีโกณมิติให้คำตอบสั้นและเข้าใจเรขาคณิต ส่วนองค์ประกอบใช้ตรวจคำตอบ ถ้าสองวิธีให้ตัวเลขต่างกัน แปลว่ามีมุมใดมุมหนึ่งถูกอ่านผิด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="cosine">
+      <h2 id="cosine">2. กฎของโคไซน์: พิสูจน์ด้วย dot product <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ให้ \(\mathbf R=\mathbf F_1+\mathbf F_2\) แล้วคูณ dot กับตัวเอง ใช้ \(\mathbf a\cdot\mathbf a=\lVert\mathbf a\rVert^2\) และ \(\mathbf F_1\cdot\mathbf F_2=F_1F_2\cos\theta\):</p>
+      \[ R^2=(\mathbf F_1+\mathbf F_2)\cdot(\mathbf F_1+\mathbf F_2)=F_1^2+F_2^2+2\,\mathbf F_1\cdot\mathbf F_2=F_1^2+F_2^2+2F_1F_2\cos\theta \]
+      <p>นี่คือรูปแบบ “สี่เหลี่ยมด้านขนาน” ที่ θ เป็นมุมระหว่างสองแรงเมื่อวางหางชนกัน ถ้าวาดแบบหัวต่อหางเป็นสามเหลี่ยม มุมภายในที่อยู่ตรงข้าม R คือ \(\beta=180^\circ-\theta\) และ \(\cos\beta=-\cos\theta\) จึงได้รูปที่คุ้นเคยจากตรีโกณมิติ</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 300" role="img" aria-labelledby="r-par-t r-par-d">
+          <title id="r-par-t">สี่เหลี่ยมด้านขนานและสามเหลี่ยมแรง</title><desc id="r-par-d">F1 ตามแนวนอน F2 ทำมุม theta ด้านซ้ายวางหางชนกันเป็นสี่เหลี่ยมด้านขนาน ด้านขวาต่อหัวต่อหางเป็นสามเหลี่ยม มุม beta ตรงข้าม R เท่ากับ 180 ลบ theta</desc>
+          <defs><marker id="r-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ln ln-p1" d="M30 240 L200 240" marker-end="url(#r-arr)"/><path class="ln ln-cur" d="M30 240 L100 140" marker-end="url(#r-arr)"/>
+          <path class="ln dash" d="M100 140 L270 140 L200 240"/><path class="ln ln-p2" d="M30 240 L268 142" marker-end="url(#r-arr)" style="stroke-width:3"/>
+          <text class="c-p1" x="100" y="262">F₁</text><text class="c-cur" x="40" y="185">F₂</text><text class="c-p2" x="160" y="176">R</text>
+          <path class="ln" d="M70 240 A40 40 0 0 0 53 207" style="stroke:var(--accent)"/><text x="74" y="222" style="fill:var(--accent)">θ</text>
+          <text class="t-th" x="40" y="40">สี่เหลี่ยมด้านขนาน (หางชนกัน)</text><text class="t-sm" x="40" y="62">R² = F₁² + F₂² + 2F₁F₂ cos θ</text>
+          <path class="ln ln-p1" d="M330 240 L500 240" marker-end="url(#r-arr)"/><path class="ln ln-cur" d="M500 240 L570 140" marker-end="url(#r-arr)"/><path class="ln ln-p2" d="M330 240 L568 142" marker-end="url(#r-arr)" style="stroke-width:3"/>
+          <text class="c-p1" x="400" y="262">F₁</text><text class="c-cur" x="545" y="200">F₂</text><text class="c-p2" x="430" y="176">R</text>
+          <path class="ln" d="M480 240 A20 20 0 0 1 488 257" style="stroke:var(--accent)"/><path class="ln" d="M470 240 A30 30 0 0 1 517 216" style="stroke:var(--accent)"/><text x="490" y="226" style="fill:var(--accent)">β</text>
+          <path class="ln" d="M370 240 A40 40 0 0 0 368 224" style="stroke:var(--s-p2)"/><text class="c-p2" x="376" y="232">α</text>
+          <text class="t-th" x="340" y="40">สามเหลี่ยมแรง (หัวต่อหาง)</text><text class="t-sm" x="340" y="62">R² = F₁² + F₂² − 2F₁F₂ cos β</text><text class="t-sm" x="340" y="82">β = 180° − θ</text>
+        </svg>
+        <figcaption>สองภาพเป็นเรื่องเดียวกัน: ครึ่งล่างของสี่เหลี่ยมด้านขนานคือสามเหลี่ยมแรง</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="R1" data-k="law of cosines parallelogram resultant magnitude angle between กฎของโคไซน์ สี่เหลี่ยมด้านขนาน ขนาดแรงลัพธ์">
+          <p class="tf-n"><b><span class="fid">R1</span> Parallelogram law (angle between the forces)</b> ขนาดแรงลัพธ์จากมุมระหว่างแรง</p>
+          \[ R=\sqrt{F_1^2+F_2^2+2F_1F_2\cos\theta},\qquad |F_1-F_2|\le R\le F_1+F_2 \]
+          <p class="tf-x">θ = 0° ได้ \(R=F_1+F_2\) (ดึงทางเดียวกัน) θ = 180° ได้ \(R=|F_1-F_2|\) θ = 90° ได้พีทาโกรัส</p>
+        </div>
+        <div class="tf wide" id="R2" data-k="law of cosines triangle interior angle opposite side กฎโคไซน์ สามเหลี่ยม มุมภายใน">
+          <p class="tf-n"><b><span class="fid">R2</span> Law of cosines (force triangle)</b> กฎของโคไซน์ในสามเหลี่ยมแรง</p>
+          \[ R^2=F_1^2+F_2^2-2F_1F_2\cos\beta,\qquad \beta=180^\circ-\theta,\qquad \cos\beta=\frac{F_1^2+F_2^2-R^2}{2F_1F_2} \]
+          <p class="tf-x">รูปหลังใช้หามุมเมื่อรู้ขนาดทั้งสามด้าน เช่น จากโต๊ะแรงที่รู้แต่มวล</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r1"><div class="wx-head"><span class="mono">ตัวอย่าง R-1 · สองแรงบนห่วงยึด</span><h3>F₁ = 600 N ชี้ตาม +x และ F₂ = 400 N ชี้ทำมุม 50° จาก +x จงหาขนาดและทิศของแรงลัพธ์</h3></div><ol class="steps">
+        <li><p>มุมระหว่างสองแรง θ = 50° → มุมภายในสามเหลี่ยมตรงข้าม R: β = 180° − 50° = 130°</p></li>
+        <li><p>\(R^2=600^2+400^2-2(600)(400)\cos130^\circ=360000+160000+308538=828538\Rightarrow R=910.2\) N</p></li>
+        <li><p>กฎไซน์: \(\sin\alpha=\dfrac{400\sin130^\circ}{910.2}=0.3366\Rightarrow\alpha=19.67^\circ\) (มุมระหว่าง F₁ กับ R)</p></li>
+        <li><p>F₂ อยู่ทวนเข็มจาก F₁ ดังนั้นทิศของ R = 0° + 19.67° = 19.67°</p></li>
+        <li><p>ตรวจด้วยองค์ประกอบ: \(R_x=600+400\cos50^\circ=857.1\), \(R_y=400\sin50^\circ=306.4\) → 910.2 N ที่ 19.67° ✓</p></li>
+      </ol><p class="answer">\(R=910\) N ที่ 19.7° จากแกน +x</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sine">
+      <h2 id="sine">3. กฎของไซน์: หาทิศ และกับดักมุมป้าน <span class="lv lv-i">กลาง</span></h2>
+      <p>พื้นที่ของสามเหลี่ยมแรงเขียนได้สามแบบตามคู่ด้านที่เลือก: \(\tfrac12 F_1F_2\sin\beta=\tfrac12 F_1R\sin\alpha=\tfrac12F_2R\sin\gamma\) ซึ่งก็คือครึ่งหนึ่งของ \(\lVert\mathbf a\times\mathbf b\rVert\) ของแต่ละคู่ หารทุกพจน์ด้วย \(\tfrac12F_1F_2R\) ได้กฎของไซน์ทันที</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="R3" data-k="law of sines direction triangle กฎของไซน์ ทิศแรงลัพธ์">
+          <p class="tf-n"><b><span class="fid">R3</span> Law of sines</b> กฎของไซน์</p>
+          \[ \frac{F_1}{\sin\gamma}=\frac{F_2}{\sin\alpha}=\frac{R}{\sin\beta} \]
+          <p class="tf-x">มุมแต่ละมุม<strong>อยู่ตรงข้าม</strong>ด้านที่จับคู่: α ตรงข้าม F₂ (คือมุมระหว่าง F₁ กับ R) γ ตรงข้าม F₁ และ β ตรงข้าม R</p>
+        </div>
+        <div class="tf wide" id="R4" data-k="ambiguous case obtuse arcsin check sine law กรณีกำกวม มุมป้าน arcsin">
+          <p class="tf-n"><b><span class="fid">R4</span> Ambiguity of arcsin</b> arcsin ให้มุมแหลมเท่านั้น</p>
+          \[ \alpha=\begin{cases}\arcsin\!\Big(\dfrac{F_2\sin\beta}{R}\Big), &amp; F_2^2\le F_1^2+R^2\\[2mm] 180^\circ-\arcsin\!\Big(\dfrac{F_2\sin\beta}{R}\Big), &amp; F_2^2&gt;F_1^2+R^2\end{cases} \]
+          <p class="tf-x">มุมตรงข้ามด้านที่ยาวที่สุดเป็นมุมเดียวที่อาจป้านได้ ถ้าสงสัยให้หามุมด้วยกฎโคไซน์รูป R2 แทน เพราะ arccos ไม่กำกวมในช่วง 0°–180°</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r2"><div class="wx-head"><span class="mono">ตัวอย่าง R-2 · เรือลากสองลำ</span><h3>เรือลาก A ดึง 5 kN ทำมุม 20° ทางซ้ายของแนวเรือ เรือลาก B ดึง 4 kN ทำมุม 30° ทางขวา จงหาแรงลัพธ์และมุมเบนจากแนวเรือ</h3></div><ol class="steps">
+        <li><p>มุมระหว่างสองแรง θ = 20° + 30° = 50° → β = 130°</p></li>
+        <li><p>\(R=\sqrt{25+16-2(5)(4)\cos130^\circ}=\sqrt{66.71}=8.168\) kN</p></li>
+        <li><p>มุมระหว่างแรง A กับ R: \(\sin\alpha=4\sin130^\circ/8.168=0.3751\Rightarrow\alpha=22.03^\circ\) (A ไม่ใช่ด้านยาวสุด จึงไม่ป้าน)</p></li>
+        <li><p>R เบนจากแนวของ A ไปทาง B 22.03° → ทิศ R = 20° − 22.03° = −2.03° คือเบนไปทางขวา 2.0°</p></li>
+      </ol><p class="answer">\(R=8.17\) kN เบนขวา 2.0° — ถ้าต้องการให้ R ตรงแนวเรือ ต้องเพิ่มแรงของ B หรือลดมุมของ A</p></div>
+      <div class="wx" id="ex-r3"><div class="wx-head"><span class="mono">ตัวอย่าง R-3 · กับดักมุมป้าน</span><h3>F₁ = 200 N ที่ 0° และ F₂ = 500 N ที่ 150° จงหาทิศของแรงลัพธ์ด้วยกฎของไซน์อย่างถูกต้อง</h3></div><ol class="steps">
+        <li><p>θ = 150° → β = 30°</p>\[R=\sqrt{200^2+500^2-2(200)(500)\cos30^\circ}=341.8\ \text{N}\]</li>
+        <li><p>\(\arcsin(500\sin30^\circ/341.8)=\arcsin(0.7314)=47.01^\circ\) — ถ้าใช้ค่านี้ตรง ๆ จะผิด!</p></li>
+        <li><p>ตรวจ R4: \(F_2^2=250000\) มากกว่า \(F_1^2+R^2=156795\) → α ป้าน: \(\alpha=180^\circ-47.01^\circ=132.99^\circ\)</p></li>
+        <li><p>ตรวจด้วยองค์ประกอบ: \(R_x=200+500\cos150^\circ=-233.0\), \(R_y=250\) → มุม 132.99° ✓</p></li>
+      </ol><p class="answer">R = 341.8 N ที่ 133.0° — แรงลัพธ์ “กลับหลัง” F₁ เพราะ F₂ ใหญ่และชี้ถอยหลัง</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="resolve">
+      <h2 id="resolve">4. แตกแรงหนึ่งแรงตามสองแนวที่กำหนด (ไม่จำเป็นต้องตั้งฉาก) <span class="lv lv-i">กลาง</span></h2>
+      <p>งานโครงสร้างและเครนมักมีชิ้นส่วนสองชิ้นรับแรงตามแนวของมันเอง เช่น บูมกับสายเคเบิล เราต้องแตกแรงภายนอกหนึ่งแรงเป็นสองส่วนตามแนว u และ v ที่กำหนด วาดสี่เหลี่ยมด้านขนานโดยลากเส้นจากปลายแรงขนานกับแต่ละแนว แล้วใช้กฎของไซน์ในสามเหลี่ยมที่ได้</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="R5" data-k="resolve force two directions oblique components sine law แตกแรง สองแนว แนวเฉียง องค์ประกอบ">
+          <p class="tf-n"><b><span class="fid">R5</span> Components along two oblique lines</b> แตกแรงตามแนว u และ v</p>
+          \[ F_u=F\,\frac{\sin(\theta_v-\theta_F)}{\sin(\theta_v-\theta_u)},\qquad F_v=F\,\frac{\sin(\theta_F-\theta_u)}{\sin(\theta_v-\theta_u)} \]
+          <p class="tf-x">θ แต่ละตัววัดจากแกน +x ทวนเข็ม ค่าลบแปลว่าองค์ประกอบชี้สวนทิศของแนวที่กำหนด <strong>F_u ไม่เท่ากับการฉาย \(\mathbf F\cdot\mathbf u\)</strong> เว้นแต่ u ตั้งฉากกับ v</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r4"><div class="wx-head"><span class="mono">ตัวอย่าง R-4 · แตกแรง 500 N ตามสองแนว</span><h3>แรง 500 N ชี้ที่ 60° จงแตกเป็นองค์ประกอบตามแนว u (0°) และแนว v (105°)</h3></div><ol class="steps">
+        <li><p>มุมในสามเหลี่ยม: ระหว่าง F กับ v = 45°, ระหว่าง F กับ u = 60°, ระหว่าง u กับ v = 105° → มุมตรงข้าม F คือ 180° − 105° = 75°</p></li>
+        <li><p>\(F_u=500\sin45^\circ/\sin105^\circ=366.0\) N และ \(F_v=500\sin60^\circ/\sin105^\circ=448.3\) N</p></li>
+        <li><p>ตรวจ: \(366.0(1,0)+448.3(\cos105^\circ,\sin105^\circ)=(250.0,\ 433.0)=500(\cos60^\circ,\sin60^\circ)\) ✓</p></li>
+        <li><p>เทียบการฉาย \(\mathbf F\cdot\hat{\mathbf u}=250\) N ≠ 366.0 N: สองความหมายนี้ต่างกันเมื่อแนวไม่ตั้งฉาก</p></li>
+      </ol><p class="answer">\(F_u=366\) N, \(F_v=448\) N — ผลรวมขนาด 814 N มากกว่า 500 N ได้ เพราะเป็นเวกเตอร์</p></div>
+      <div class="tf-grid">
+        <div class="tf wide" id="R6" data-k="minimum force perpendicular optimization แรงน้อยที่สุด ตั้งฉาก">
+          <p class="tf-n"><b><span class="fid">R6</span> Minimum second force</b> แรงที่สองน้อยที่สุดเมื่อกำหนดแนวของแรงลัพธ์</p>
+          \[ F_{2,\min}=F_1\sin\phi\quad\text{เมื่อ }\mathbf F_2\perp\mathbf R,\qquad R=F_1\cos\phi \]
+          <p class="tf-x">φ คือมุมระหว่าง F₁ กับแนวที่ต้องการให้ R อยู่ ระยะสั้นที่สุดจากจุดปลาย F₁ ไปยังเส้นตรงคือเส้นตั้งฉาก</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r5"><div class="wx-head"><span class="mono">ตัวอย่าง R-5 · ดึงให้ลัพธ์ตามแนว 30° ด้วยแรงน้อยที่สุด</span><h3>F₁ = 800 N ตามแกน +x ต้องเพิ่ม F₂ ให้แรงลัพธ์อยู่ในแนว 30° จาก +x จงหา F₂ ที่น้อยที่สุดและทิศของมัน</h3></div><ol class="steps">
+        <li><p>F₂ น้อยที่สุดเมื่อตั้งฉากกับแนวของ R: ทิศ F₂ = 30° + 90° = 120°</p></li>
+        <li><p>\(F_{2,\min}=800\sin30^\circ=400\) N และ \(R=800\cos30^\circ=692.8\) N</p></li>
+      </ol><p class="answer">F₂ = 400 N ที่ 120° · ใช้หลักนี้ออกแบบสายยึดและการวางรอกให้ใช้แรงน้อยที่สุด</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sincos-lab">
+      <h2 id="sincos-lab">5. แล็บ: สามเหลี่ยมแรงที่ปรับได้ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>เปลี่ยนขนาดและทิศของสองแรง แล็บจะวาดสามเหลี่ยมแรงพร้อมมุม α และ β แสดงวิธีทำทั้งกฎโคไซน์ กฎไซน์ และตรวจด้วยองค์ประกอบ ลองตั้ง F₁ = 200, F₂ = 500 ที่ 150° เพื่อดูกรณีมุมป้านของตัวอย่าง R-3 เลือกโจทย์ “แตกแรง” เพื่อตรวจตัวอย่าง R-4</p>
+      <div class="mech-lab" data-lab="sincos"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="components">
+      <h2 id="components">6. สามแรงขึ้นไป: วิธีองค์ประกอบที่ไม่พลาด <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="R7" data-k="resultant components many forces atan2 direction แรงลัพธ์ หลายแรง องค์ประกอบ atan2">
+          <p class="tf-n"><b><span class="fid">R7</span> Resultant by rectangular components</b> แรงลัพธ์จากองค์ประกอบ</p>
+          \[ R_x=\sum_i F_i\cos\theta_i,\quad R_y=\sum_i F_i\sin\theta_i,\quad R=\sqrt{R_x^2+R_y^2},\quad \theta_R=\operatorname{atan2}(R_y,R_x) \]
+          <p class="tf-x">ใช้ atan2 (หรือดูเครื่องหมายของ R_x, R_y) เพื่อให้ได้ควอดแรนต์ถูก ห้ามใช้ \(\arctan(R_y/R_x)\) โดยไม่ตรวจ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r6"><div class="wx-head"><span class="mono">ตัวอย่าง R-6 · แรงสามแรงบนเพลต</span><h3>F₁ = 200 N ที่ 30°, F₂ = 150 N ที่ 135°, F₃ = 300 N ที่ 250° จงหาแรงลัพธ์</h3></div><ol class="steps">
+        <li><p>F₁: (173.2, 100.0) · F₂: (−106.1, 106.1) · F₃: (−102.6, −281.9) N</p></li>
+        <li><p>\(R_x=173.2-106.1-102.6=-35.47\) N, \(R_y=100.0+106.1-281.9=-75.84\) N</p></li>
+        <li><p>\(R=\sqrt{35.47^2+75.84^2}=83.73\) N; ควอดแรนต์ III: \(\theta_R=\operatorname{atan2}(-75.84,-35.47)=-115.06^\circ=244.94^\circ\)</p></li>
+        <li><p>ถ้าใช้ \(\arctan(75.84/35.47)=64.9^\circ\) ตรง ๆ จะได้ทิศตรงข้ามจริง 180°</p></li>
+      </ol><p class="answer">R = 83.7 N ที่ 244.9° (ชี้ลงซ้าย)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lami">
+      <h2 id="lami">7. สมดุลสามแรงและทฤษฎีของลามี <span class="lv lv-i">กลาง</span></h2>
+      <p>ถ้าสามแรงร่วมจุดรวมกันเป็นศูนย์ ลูกศรทั้งสามต่อหัวต่อหางแล้วต้อง<strong>ปิดเป็นสามเหลี่ยม</strong> ใช้กฎของไซน์กับสามเหลี่ยมนั้นได้ทฤษฎีของลามี มุมที่ใช้คือมุมระหว่างอีกสองแรง (วัดที่จุดร่วม)</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="R8" data-k="lami theorem equilibrium three forces tension ทฤษฎีลามี สมดุล สามแรง แรงตึงเชือก">
+          <p class="tf-n"><b><span class="fid">R8</span> Lami's theorem</b> ทฤษฎีของลามี</p>
+          \[ \frac{F_1}{\sin\alpha_{23}}=\frac{F_2}{\sin\alpha_{31}}=\frac{F_3}{\sin\alpha_{12}} \]
+          <p class="tf-x">\(\alpha_{23}\) คือมุมระหว่าง F₂ กับ F₃ ที่จุดร่วม ใช้ได้เฉพาะสามแรงที่สมดุลและร่วมจุดเท่านั้น</p>
+        </div>
+        <div class="tf wide" id="R9" data-k="two cables hanging weight tension formula เชือกสองเส้น แขวน น้ำหนัก">
+          <p class="tf-n"><b><span class="fid">R9</span> Two cables holding a weight</b> แรงตึงในเชือกสองเส้น</p>
+          \[ T_1=\frac{W\cos\theta_2}{\sin(\theta_1+\theta_2)},\qquad T_2=\frac{W\cos\theta_1}{\sin(\theta_1+\theta_2)} \]
+          <p class="tf-x">θ₁ θ₂ คือมุมของเชือกกับแนวราบ ได้จาก ΣFx = 0 และ ΣFy = 0 เมื่อ θ เล็ก แรงตึงพุ่งสูงมาก นี่คือเหตุผลที่สายไฟฟ้าต้องหย่อน</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-r7"><div class="wx-head"><span class="mono">ตัวอย่าง R-7 · โคมไฟ 50 kg</span><h3>โคมไฟ 50 kg แขวนด้วยเชือกที่ทำมุม 30° และ 45° กับแนวราบ จงหาแรงตึงทั้งสองเส้น</h3></div><ol class="steps">
+        <li><p>W = 50 × 9.81 = 490.5 N</p></li>
+        <li><p>มุมระหว่างแรงที่จุดร่วม: T₁ กับ T₂ = 180° − 30° − 45° = 105°; T₂ กับ W = 90° + 45° = 135°; W กับ T₁ = 90° + 30° = 120°</p></li>
+        <li><p>ลามี: \(\dfrac{T_1}{\sin135^\circ}=\dfrac{T_2}{\sin120^\circ}=\dfrac{490.5}{\sin105^\circ}=507.8\) N</p></li>
+        <li><p>\(T_1=507.8\sin135^\circ=359.1\) N และ \(T_2=507.8\sin120^\circ=439.8\) N</p></li>
+      </ol><p class="answer">T₁ = 359 N (เส้น 30°), T₂ = 440 N (เส้น 45°) — เส้นที่ชันกว่ารับแรงมากกว่า</p></div>
+      <div class="mech-lab" data-lab="hang"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="force-table">
+      <h2 id="force-table">8. โต๊ะแรง: การทดลองฟิสิกส์ 1 ที่ใช้ทุกสูตรในบทนี้ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>โต๊ะแรงคือวงกลมมีสเกลองศา ห่วงตรงกลางถูกดึงด้วยเชือกผ่านรอกที่ขอบโต๊ะ ปลายเชือกแขวนมวล แรงในเชือกคือ mg นักศึกษาตั้งแรง F₁ F₂ แล้วหาแรงที่สามที่ทำให้ห่วงอยู่กลางหมุดพอดี (แรงสมดุล E = −R) จากนั้นเทียบกับทฤษฎีด้วย %error ตั้งค่าเริ่มต้นเป็น 200 g ที่ 20° กับ 150 g ที่ 110° ซึ่งตั้งฉากกัน ทำให้ได้สามเหลี่ยม 3-4-5: R = 250 g-แรง</p>
+      <div class="mech-lab" data-lab="table"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+      <p>ใบงานฉบับเต็มพร้อมตารางบันทึกผลอยู่ใน <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="electrical">
+      <h2 id="electrical">9. กฎเดียวกันในวงจรไฟฟ้า: รวมกระแสและแรงดัน AC <span class="lv lv-i">กลาง</span></h2>
+      <p>กระแสไฟฟ้ากระแสสลับสองสาขาที่ความถี่เดียวกันรวมกันที่จุดต่อแบบเวกเตอร์ (เฟสเซอร์) ขนาดกระแสรวมจึงใช้กฎของโคไซน์ได้ตรง ๆ โดย θ คือความต่างเฟส นี่คือเหตุผลที่แอมมิเตอร์สองตัวอ่าน 10 A กับ 6 A แต่สายรวมไม่ได้อ่าน 16 A</p>
+      <div class="wx" id="ex-r8"><div class="wx-head"><span class="mono">ตัวอย่าง R-8 · กระแสรวมที่จุดต่อ</span><h3>สาขาที่ 1 มีกระแส 10 A (RMS) ที่มุมเฟส 0° สาขาที่ 2 มีกระแส 6 A ที่มุมเฟส 60° จงหากระแสในสายรวม</h3></div><ol class="steps">
+        <li><p>KCL แบบเฟสเซอร์: \(\mathbf I=\mathbf I_1+\mathbf I_2\) (ความถี่เดียวกัน)</p></li>
+        <li><p>\(I=\sqrt{10^2+6^2+2(10)(6)\cos60^\circ}=\sqrt{196}=14\) A</p></li>
+        <li><p>มุมเฟส: \(\sin\alpha=6\sin120^\circ/14=0.3712\Rightarrow\alpha=21.79^\circ\)</p></li>
+      </ol><p class="answer">\(\mathbf I=14\angle21.79^\circ\) A — ไม่ใช่ 16 A รายละเอียดอยู่ใน <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a></p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">10. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>ใช้ θ (มุมระหว่างแรง) ในรูป “ลบ” ของกฎโคไซน์</td><td>รูป “บวก” ใช้ θ, รูป “ลบ” ใช้มุมภายใน β = 180° − θ ตรวจ: R ต้องไม่เกิน F₁ + F₂</td></tr>
+        <tr><td>จับคู่ด้านกับมุมผิดในกฎไซน์</td><td>มุมต้อง “อยู่ตรงข้าม” ด้านที่หาร วาดสามเหลี่ยมแล้วเขียนชื่อมุมก่อนแทนค่า</td></tr>
+        <tr><td>เชื่อ arcsin โดยไม่ตรวจ</td><td>ใช้ R4 หรือหามุมด้วย R2 (arccos)</td></tr>
+        <tr><td>สับสนองค์ประกอบตามแนวเฉียงกับการฉาย</td><td>แนวไม่ตั้งฉาก → ใช้ R5 ไม่ใช่ dot product</td></tr>
+        <tr><td>ใช้ทฤษฎีลามีกับแรงที่ไม่ร่วมจุดหรือไม่สมดุล</td><td>ลามีมาจากสามเหลี่ยมแรงปิด ต้องสมดุลและร่วมจุด</td></tr>
+        <tr><td>บวกกระแส AC สองสาขาเป็นตัวเลข</td><td>บวกแบบเวกเตอร์ (เฟสเซอร์) เสมอ</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">11. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>แรง 8 kN และ 6 kN ทำมุม 90° กัน จงหาแรงลัพธ์และมุมกับแรง 8 kN</li>
+        <li>แรง 300 N และ 300 N ทำมุม 120° กัน แรงลัพธ์มีขนาดเท่าไร?</li>
+        <li>R = 1 kN ต้องแตกตามแนว u ที่ทำมุม 30° ใต้ R และแนว v ที่ทำมุม 45° เหนือ R จงหา F_u, F_v</li>
+        <li>มวล 20 kg แขวนด้วยเชือกสองเส้นทำมุม 60° กับแนวราบทั้งคู่ แรงตึงแต่ละเส้นเท่าไร?</li>
+        <li>แรงดัน AC 120 V ที่ 0° กับ 160 V ที่ 90° ต่ออนุกรมกัน แรงดันรวมเท่าไร?</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>R = √(64 + 36) = 10 kN, มุม = arctan(6/8) = 36.87°</li>
+        <li>R = √(90000 + 90000 + 2·90000·cos120°) = √90000 = 300 N (สามเหลี่ยมด้านเท่า)</li>
+        <li>มุมตรงข้าม R = 180° − 75° = 105°: F_u = 1000 sin45°/sin105° = 732.1 N, F_v = 1000 sin30°/sin105° = 517.6 N</li>
+        <li>T = W cos60°/sin120° = 196.2 × 0.5/0.866 = 113.3 N ต่อเส้น</li>
+        <li>|V| = √(120² + 160²) = 200 V ที่ 53.13° (ไม่ใช่ 280 V)</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">12. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>ต้องการ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td>ขนาด R จากมุมระหว่างแรง</td><td><a href="#R1">R1</a> \(R^2=F_1^2+F_2^2+2F_1F_2\cos\theta\)</td></tr>
+        <tr><td>ขนาด/มุมในสามเหลี่ยมแรง</td><td><a href="#R2">R2</a> กฎของโคไซน์</td></tr>
+        <tr><td>ทิศของ R</td><td><a href="#R3">R3</a> กฎของไซน์ + <a href="#R4">R4</a> ตรวจมุมป้าน</td></tr>
+        <tr><td>แตกแรงตามสองแนว</td><td><a href="#R5">R5</a></td></tr>
+        <tr><td>แรงน้อยที่สุด</td><td><a href="#R6">R6</a> ตั้งฉากกับแนวของ R</td></tr>
+        <tr><td>หลายแรง</td><td><a href="#R7">R7</a> องค์ประกอบ + atan2</td></tr>
+        <tr><td>สมดุลสามแรง</td><td><a href="#R8">R8</a> ลามี, <a href="#R9">R9</a> เชือกสองเส้น</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">13. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://openstax.org/books/university-physics-volume-1/pages/2-1-scalars-and-vectors" target="_blank" rel="noopener">OpenStax University Physics Vol. 1 §2.1 Scalars and Vectors</a> — การบวกเวกเตอร์ด้วยกราฟและกฎสี่เหลี่ยมด้านขนาน</li>
+        <li><a href="https://openstax.org/books/algebra-and-trigonometry-2e/pages/10-1-non-right-triangles-law-of-sines" target="_blank" rel="noopener">OpenStax Algebra and Trigonometry 2e §10.1–10.2 Law of Sines / Law of Cosines</a> — กรณีกำกวมของกฎไซน์</li>
+        <li>R. C. Hibbeler, <i>Engineering Mechanics: Statics</i>, บทที่ 2–3 (vector addition of forces, equilibrium of a particle)</li>
+      </ul>
+      <p>ต่อไป: แรงที่ไม่ร่วมจุดทำให้เกิดการหมุน ไปที่ <a href="/learn/vector-algebra/force-systems/">ระบบแรงและโมเมนต์</a> หรือดูมุมสามมิติใน <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

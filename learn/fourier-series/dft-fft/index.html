@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
+<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/fourier-series/dft-fft/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/#article","headline":"จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร","description":"เชื่อมอนุกรมฟูเรียร์กับ DFT/FFT ที่เครื่องวัดใช้จริง: สุ่มสัญญาณ N จุดต่อคาบได้สัมประสิทธิ์ cn = X[k]/N ความละเอียดความถี่ fs/N อเลียสซิงของฮาร์มอนิกสูง การรั่วของสเปกตรัม (leakage) เมื่อความถี่ไม่ตรง หน้าต่าง Hann และ flat-top มาตรฐาน IEC 61000-4-7 หน้าต่าง 10 คาบ 200 ms ช่องละ 5 Hz การรวมกลุ่มฮาร์มอนิก การอ่าน dBV จาก FFT บนออสซิลโลสโคป และอัลกอริทึม Goertzel พร้อมโค้ดสำหรับไมโครคอนโทรลเลอร์ ESP32","inLanguage":"th","url":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/","mainEntityOfPage":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Discrete Fourier transform","Fast Fourier transform","Aliasing","Spectral leakage","Window function","IEC 61000-4-7","Goertzel algorithm","Power analyzer"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/fourier-series/#article"},"image":["https://modsengineeringmath.com/images/og/learn-fourier-series-dft-fft.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก","item":"https://modsengineeringmath.com/learn/fourier-series/"},{"@type":"ListItem","position":4,"name":"จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร","item":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"DFT กับอนุกรมฟูเรียร์เกี่ยวกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าสุ่มสัญญาณคาบจำนวน N จุดเท่ากันพอดีในหนึ่งคาบ (หรือจำนวนเต็มคาบ) DFT ของข้อมูลนั้นหารด้วย N คือสัมประสิทธิ์ฟูเรียร์ c_k ตรงตัว ตราบที่สัญญาณไม่มีฮาร์มอนิกเกินครึ่งหนึ่งของความถี่สุ่ม FFT เป็นแค่วิธีคำนวณ DFT ที่เร็ว"}},{"@type":"Question","name":"ทำไมเครื่องวิเคราะห์กำลังใช้หน้าต่าง 10 คาบ?","acceptedAnswer":{"@type":"Answer","text":"IEC 61000-4-7 กำหนดหน้าต่าง 10 คาบที่ 50 Hz (12 คาบที่ 60 Hz) ประมาณ 200 ms ได้ความละเอียด 5 Hz ฮาร์มอนิกที่ h อยู่ช่องที่ 10h และช่องระหว่างนั้นใช้วัดอินเตอร์ฮาร์มอนิก การสุ่มต้องซิงก์กับความถี่ไฟจริงเพื่อไม่ให้เกิด leakage"}},{"@type":"Question","name":"spectral leakage คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าหน้าต่างไม่ครอบจำนวนเต็มคาบพอดี DFT มองว่าสัญญาณมีรอยต่อที่ขอบหน้าต่าง พลังงานของฮาร์มอนิกจึงรั่วไปช่องข้างเคียง ค่าแอมพลิจูดผิดและเกิดเส้นปลอม แก้ด้วยการซิงก์อัตราสุ่มกับความถี่ (PLL) ใช้หน้าต่าง Hann หรือ flat-top และการรวมกลุ่มช่อง"}},{"@type":"Question","name":"Goertzel ดีกว่า FFT เมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อต้องการแค่ไม่กี่ความถี่ เช่นฮาร์มอนิก 1 ถึง 15 ของไฟ 50 Hz บนไมโครคอนโทรลเลอร์ Goertzel คำนวณแต่ละช่องด้วยลูปเดียว ใช้หน่วยความจำน้อย ทำได้ทีละตัวอย่างระหว่างสุ่ม ส่วน FFT คุ้มกว่าเมื่อต้องการทุกช่อง"}}]}]}</script>
@@ -72,15 +72,32 @@
       </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · ค้นหาสูตรเวกเตอร์</a>
-          <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D / 3D</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a>
+        <div class="nav-list nav-list-wide" id="navvec">
+          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+          <span class="nav-h">พื้นฐาน 2D / 3D</span>
+          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
           <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุมและงาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · กฎมือขวา</a>
-          <a href="/learn/vector-algebra/engineering-applications/">แรง แรงบิด และสนามแม่เหล็ก</a>
-          <a href="/learn/vector-algebra/vector-lab/">แล็บเวกเตอร์ 2D / 3D</a>
+          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+          <span class="nav-h">แรงและกลศาสตร์</span>
+          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+          <span class="nav-h">ห้องแล็บ</span>
+          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -471,6 +488,12 @@ float thd_percent(const float *x) {
       <a href="/learn/">คลังความรู้</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
       <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
@@ -515,10 +538,10 @@ float thd_percent(const float *x) {
   </div>
 </footer>
 
-<script src="/assets/site.js?v=0014ea3e" defer></script>
-<script src="/assets/lesson.js?v=0014ea3e" defer></script>
-<script src="/assets/sigexpr.js?v=0014ea3e" defer></script>
-<script src="/assets/fs-core.js?v=0014ea3e" defer></script>
-<script src="/assets/fs-lab.js?v=0014ea3e" defer></script>
+<script src="/assets/site.js?v=4e5aea51" defer></script>
+<script src="/assets/lesson.js?v=4e5aea51" defer></script>
+<script src="/assets/sigexpr.js?v=4e5aea51" defer></script>
+<script src="/assets/fs-core.js?v=4e5aea51" defer></script>
+<script src="/assets/fs-lab.js?v=4e5aea51" defer></script>
 </body>
 </html>

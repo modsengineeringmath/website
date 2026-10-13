@@ -1,0 +1,223 @@
+<!--meta
+{
+  "title": "เวกเตอร์ในแขนกล: Forward/Inverse Kinematics, Jacobian, ความเร็วปลายแขน และแรงบิดข้อต่อ τ = JᵀF | อาจารย์มด",
+  "h1": "เวกเตอร์ในแขนกล: จลนศาสตร์ Jacobian และแรงบิดข้อต่อ",
+  "description": "เรียนแขนกลด้วยเวกเตอร์ภาษาไทย: ตำแหน่งปลายแขนเป็นผลบวกเวกเตอร์ของข้อแขน forward kinematics และ inverse kinematics ของแขน 2 ข้อต่อ (elbow-up/down) พื้นที่ทำงาน แขน 3 มิติ 3 ข้อต่อ Jacobian จาก ω × r ความเร็วปลายแขน ภาวะเอกฐาน แรงบิดข้อต่อ τ = JᵀF จากงานเสมือน และการเลือกมอเตอร์พร้อมเกียร์ มีแล็บแขนกลลากเป้าหมายได้และฉาก 3 มิติ",
+  "ogTitle": "เวกเตอร์ในแขนกล: FK IK Jacobian τ = JᵀF",
+  "lesson": "vector-algebra", "sub": "robot-arm", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Robot arm", "Forward kinematics", "Inverse kinematics", "Jacobian matrix", "Kinematic singularity", "Joint torque", "Virtual work", "Servo motor sizing"],
+  "scripts": ["/assets/lesson.js", "/assets/vec3d.js", "/assets/vec-mech.js"],
+  "og": {"title": "เวกเตอร์ในแขนกล", "sub": "FK · IK · Jacobian · τ = JᵀF · เลือกมอเตอร์", "eyebrow": "เวกเตอร์ 3.4 · Robot Arms", "sym": "J"},
+  "faq": [
+    {"q": "Forward kinematics ของแขนกลสองข้อต่อคืออะไร?", "a": "คือการหาตำแหน่งปลายแขนจากมุมข้อต่อ โดยบวกเวกเตอร์ของข้อแขนแต่ละท่อน p = L₁(cos θ₁, sin θ₁) + L₂(cos(θ₁+θ₂), sin(θ₁+θ₂)) มุมของท่อนที่สองต้องใช้ θ₁+θ₂ เพราะวัดเทียบกับท่อนแรก"},
+    {"q": "Inverse kinematics หามุมข้อต่ออย่างไร?", "a": "ใช้กฎของโคไซน์กับสามเหลี่ยมฐาน-ข้อศอก-ปลายแขน cos θ₂ = (x² + y² − L₁² − L₂²)/(2L₁L₂) ได้สองคำตอบ (ข้อศอกขึ้นหรือลง) แล้ว θ₁ = atan2(y, x) − atan2(L₂ sin θ₂, L₁ + L₂ cos θ₂) ถ้า cos θ₂ อยู่นอก [−1, 1] เป้าหมายอยู่นอกพื้นที่ทำงาน"},
+    {"q": "Jacobian ของแขนกลใช้ทำอะไร?", "a": "เชื่อมความเร็วข้อต่อกับความเร็วปลายแขน v = J θ̇ และเชื่อมแรงที่ปลายแขนกับแรงบิดข้อต่อ τ = Jᵀ F เมื่อ det J = 0 (ภาวะเอกฐาน) แขนขยับปลายในบางทิศไม่ได้ และต้องใช้ความเร็วข้อต่อสูงมากเมื่อเข้าใกล้"},
+    {"q": "เลือกมอเตอร์ข้อต่ออย่างไร?", "a": "หาแรงบิดสูงสุดที่ข้อต่อจาก τ = JᵀF ในท่าที่แย่ที่สุด (มักเป็นแขนเหยียดแนวนอน) รวมน้ำหนักข้อแขนเอง หารด้วยอัตราทดเกียร์และประสิทธิภาพ แล้วเผื่อค่าความปลอดภัย กระแสมอเตอร์ประมาณจาก τ_motor = K_t i"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>แขนกล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 3 · Vectors in robot arms</p>
+      <h1>เวกเตอร์ในแขนกล: จลนศาสตร์ Jacobian และแรงบิดข้อต่อ</h1>
+      <p class="lede">แขนกลในโรงงานประกอบรถยนต์ แขนหยิบชิ้นงานบนสายพาน หรือแขนหุ่นยนต์ที่นักศึกษาสร้างจากเซอร์โว ล้วนคือ<strong>โซ่ของเวกเตอร์</strong> ตำแหน่งปลายแขนคือผลบวกเวกเตอร์ของข้อแขน ความเร็วปลายแขนคือผลรวมของ ω × r และแรงบิดที่มอเตอร์ต้องให้คือโมเมนต์ของแรงที่ปลายแขน บทนี้เชื่อมทุกเรื่องที่เรียนมา — บวกเวกเตอร์ กฎโคไซน์ cross product และการหมุนแกน — ให้กลายเป็นเครื่องมือออกแบบแขนกลและเลือกมอเตอร์ได้จริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#fk">Forward kinematics</a><a class="btn btn-ghost btn-sm" href="#ik">Inverse kinematics</a><a class="btn btn-ghost btn-sm" href="#jacobian">Jacobian</a><a class="btn btn-ghost btn-sm" href="#torque">แรงบิด τ = JᵀF</a><a class="btn btn-ghost btn-sm" href="#arm-lab">แล็บแขนกล</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(\mathbf p=L_1\mathbf e(\theta_1)+L_2\mathbf e(\theta_1+\theta_2)\) — มุมของท่อนที่สองสะสมจากท่อนแรก</li>
+        <li>IK: \(\cos\theta_2=\dfrac{x^2+y^2-L_1^2-L_2^2}{2L_1L_2}\) (กฎโคไซน์) มีสองท่า</li>
+        <li>\(\mathbf v=J\dot{\boldsymbol\theta}\), คอลัมน์ของ J = \(\mathbf k\times(\mathbf p-\mathbf p_i)\); เอกฐานเมื่อ \(\det J=L_1L_2\sin\theta_2=0\)</li>
+        <li>\(\boldsymbol\tau=J^{\mathsf T}\mathbf F\): แรงบิดข้อต่อคือโมเมนต์ของแรงปลายแขนรอบข้อต่อนั้น</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น forward, inverse, jacobian, singularity, torque, workspace" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="chain">
+      <h2 id="chain">1. แขนกลคือโซ่ของเวกเตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>แขนกลแบบข้อต่อหมุน (revolute) ประกอบด้วยข้อแขนแข็งเกร็งต่อกันด้วยมอเตอร์ เมื่อรู้มุมของมอเตอร์ทุกตัว ข้อแขนแต่ละท่อนคือเวกเตอร์ที่มีความยาวคงที่และทิศตามมุมสะสม ตำแหน่งปลายแขน (end-effector) จึงเป็นผลบวกหัวต่อหางของเวกเตอร์เหล่านี้ — กฎเดียวกับ <a href="/learn/vector-algebra/operations/">การบวกเวกเตอร์</a> ที่เรียนในบทแรก</p>
+      <div class="ee-flow"><span>มุมข้อต่อ θ (เอนโค้ดเดอร์)</span><i>→ FK →</i><span>ตำแหน่งปลายแขน p</span><i>→ IK ←</i><span>เป้าหมายที่ต้องการ</span><i>· J ·</i><span>ความเร็ว v, แรง F</span></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="fk">
+      <h2 id="fk">2. Forward kinematics ของแขน 2 ข้อต่อในระนาบ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="A1" data-k="forward kinematics two link planar arm position vector sum จลนศาสตร์ไปข้างหน้า แขนสองข้อต่อ">
+          <p class="tf-n"><b><span class="fid">A1</span> Forward kinematics (2R planar)</b> ตำแหน่งปลายแขนจากมุมข้อต่อ</p>
+          \[ \mathbf p=L_1\begin{bmatrix}\cos\theta_1\\\sin\theta_1\end{bmatrix}+L_2\begin{bmatrix}\cos(\theta_1+\theta_2)\\\sin(\theta_1+\theta_2)\end{bmatrix} \]
+          <p class="tf-x">θ₂ วัดเทียบกับท่อนแรก (เอนโค้ดเดอร์ที่ข้อศอกวัดแบบนี้) ทิศของท่อนสองเทียบโลกจึงเป็น θ₁ + θ₂</p>
+        </div>
+        <div class="tf wide" id="A2" data-k="workspace reach annulus triangle inequality พื้นที่ทำงาน ระยะเอื้อม">
+          <p class="tf-n"><b><span class="fid">A2</span> Workspace</b> พื้นที่ทำงาน</p>
+          \[ |L_1-L_2|\le\lVert\mathbf p\rVert\le L_1+L_2 \]
+          <p class="tf-x">มาจากอสมการสามเหลี่ยมของเวกเตอร์ เป็นวงแหวน ถ้า L₁ = L₂ ปลายแขนแตะฐานได้ (ระยะใน = 0)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-a1"><div class="wx-head"><span class="mono">ตัวอย่าง A-1 · หาตำแหน่งปลายแขน</span><h3>L₁ = 0.5 m, L₂ = 0.4 m, θ₁ = 30°, θ₂ = 60° จงหาตำแหน่งปลายแขน</h3></div><ol class="steps">
+        <li><p>ท่อนแรก: \(0.5(\cos30^\circ,\sin30^\circ)=(0.4330,\ 0.2500)\) m</p></li>
+        <li><p>ท่อนสองชี้ที่ 30° + 60° = 90°: \(0.4(\cos90^\circ,\sin90^\circ)=(0,\ 0.4)\) m</p></li>
+        <li><p>\(\mathbf p=(0.4330,\ 0.6500)\) m ระยะจากฐาน 0.781 m อยู่ใน [0.1, 0.9] ✓</p></li>
+      </ol><p class="answer">\(\mathbf p=(0.433,\ 0.650)\) m — ค่าเริ่มต้นของแล็บด้านล่าง</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ik">
+      <h2 id="ik">3. Inverse kinematics: กฎของโคไซน์ในชีวิตจริง <span class="lv lv-i">กลาง</span></h2>
+      <p>ฐาน ข้อศอก และปลายแขนเป็นสามเหลี่ยมที่รู้ความยาวทั้งสามด้าน (L₁, L₂, ‖p‖) มุมที่ข้อศอกหาได้จาก <a href="/learn/vector-algebra/resultant-forces/#R2">กฎของโคไซน์</a> — ตัวเดียวกับที่ใช้รวมแรง เพราะ \(\mathbf p\) ก็คือ “แรงลัพธ์” ของเวกเตอร์ข้อแขนสองท่อน</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="A3" data-k="inverse kinematics elbow up down law of cosines atan2 จลนศาสตร์ย้อนกลับ ข้อศอกขึ้น ลง">
+          <p class="tf-n"><b><span class="fid">A3</span> Inverse kinematics (2R planar)</b> หามุมข้อต่อจากตำแหน่ง</p>
+          \[ \cos\theta_2=\frac{x^2+y^2-L_1^2-L_2^2}{2L_1L_2},\qquad \theta_2=\pm\arccos(\cdot),\qquad \theta_1=\operatorname{atan2}(y,x)-\operatorname{atan2}\big(L_2\sin\theta_2,\ L_1+L_2\cos\theta_2\big) \]
+          <p class="tf-x">θ₂ บวก = ข้อศอกลง (elbow-down) θ₂ ลบ = ข้อศอกขึ้น (elbow-up) สำหรับเป้าหมายในควอดแรนต์แรก ถ้า |cos θ₂| &gt; 1 เป้าหมายอยู่นอกพื้นที่ทำงาน</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-a2"><div class="wx-head"><span class="mono">ตัวอย่าง A-2 · ส่งปลายแขนไปหยิบชิ้นงาน</span><h3>แขน L₁ = 0.5 m, L₂ = 0.4 m ต้องไปที่ (0.6, 0.3) m จงหามุมข้อต่อทั้งสองท่า</h3></div><ol class="steps">
+        <li><p>\(\cos\theta_2=\dfrac{0.36+0.09-0.25-0.16}{2(0.5)(0.4)}=\dfrac{0.04}{0.4}=0.1\Rightarrow\theta_2=\pm84.26^\circ\)</p></li>
+        <li><p>ท่าข้อศอกลง (θ₂ = +84.26°): \(\theta_1=\operatorname{atan2}(0.3,0.6)-\operatorname{atan2}(0.398,\ 0.540)=26.57^\circ-36.39^\circ=-9.83^\circ\)</p></li>
+        <li><p>ท่าข้อศอกขึ้น (θ₂ = −84.26°): \(\theta_1=26.57^\circ+36.39^\circ=62.96^\circ\)</p></li>
+        <li><p>ตรวจด้วย A1: ทั้งสองท่าให้ (0.600, 0.300) ✓ เลือกท่าที่ไม่ชนสิ่งกีดขวางหรือใกล้ท่าปัจจุบันที่สุด</p></li>
+      </ol><p class="answer">(θ₁, θ₂) = (−9.83°, 84.26°) หรือ (62.96°, −84.26°)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arm-lab">
+      <h2 id="arm-lab">4. แล็บแขนกล 2 ข้อต่อ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>โหมด Forward ปรับมุม θ₁ θ₂ แล้วดูเวกเตอร์ข้อแขนรวมกันเป็น p โหมด Inverse <strong>คลิกหรือลากบนภาพ</strong>เพื่อย้ายเป้าหมาย (กากบาทแดง) แขนจะคำนวณ IK ทันที ติ๊ก “ลากเส้นทาง” แล้วลองวาดตัวอักษร สังเกตว่าเมื่อเหยียดแขนสุดเข้าใกล้ขอบวงแหวน ระบบจะเตือนภาวะเอกฐาน</p>
+      <div class="mech-lab" data-lab="arm"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="jacobian">
+      <h2 id="jacobian">5. ความเร็วปลายแขนและ Jacobian <span class="lv lv-i">กลาง</span></h2>
+      <p>ข้อต่อหมุนด้วยความเร็วเชิงมุม \(\dot\theta_i\) รอบแกน z ทำให้ทุกจุดที่อยู่ปลายน้ำของข้อต่อนั้นเคลื่อนที่ด้วยความเร็ว \(\boldsymbol\omega\times\mathbf r\) (ดู <a href="/learn/vector-algebra/engineering-applications/#robot">ความเร็วจาก cross product</a>) รวมผลของทุกข้อต่อได้ Jacobian</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="A4" data-k="jacobian velocity end effector omega cross r column ความเร็ว ปลายแขน จาโคเบียน">
+          <p class="tf-n"><b><span class="fid">A4</span> Jacobian and tip velocity</b> Jacobian และความเร็วปลายแขน</p>
+          \[ \mathbf v=J\dot{\boldsymbol\theta},\qquad J=\frac{\partial\mathbf p}{\partial\boldsymbol\theta}=\begin{bmatrix}-L_1s_1-L_2s_{12}&amp;-L_2s_{12}\\L_1c_1+L_2c_{12}&amp;L_2c_{12}\end{bmatrix},\qquad J_{:,i}=\mathbf k\times(\mathbf p-\mathbf p_i) \]
+          <p class="tf-x">\(s_{12}=\sin(\theta_1+\theta_2)\) คอลัมน์ i คือความเร็วปลายแขนเมื่อหมุนข้อต่อ i ด้วย 1 rad/s — ตั้งฉากกับเวกเตอร์จากข้อต่อนั้นไปปลายแขนเสมอ</p>
+        </div>
+        <div class="tf wide" id="A5" data-k="singularity determinant jacobian stretched folded ภาวะเอกฐาน ดีเทอร์มิแนนต์ แขนเหยียดสุด">
+          <p class="tf-n"><b><span class="fid">A5</span> Kinematic singularity</b> ภาวะเอกฐาน</p>
+          \[ \det J=L_1L_2\sin\theta_2=0\ \Longleftrightarrow\ \theta_2=0^\circ\ \text{(เหยียดสุด)}\ \text{หรือ}\ 180^\circ\ \text{(พับสุด)} \]
+          <p class="tf-x">สองคอลัมน์ของ J ขนานกัน ปลายแขนขยับในแนวรัศมีไม่ได้ และ \(\dot{\boldsymbol\theta}=J^{-1}\mathbf v\) พุ่งไม่จำกัดเมื่อเข้าใกล้ ตัวควบคุมหุ่นยนต์จริงจึงต้องหลีกเลี่ยงหรือใช้ damped least squares</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-a3"><div class="wx-head"><span class="mono">ตัวอย่าง A-3 · ความเร็วปลายแขน</span><h3>ที่ท่า A-1 ข้อต่อฐานหมุน \(\dot\theta_1=0.5\) rad/s ข้อศอกนิ่ง จงหาความเร็วปลายแขน</h3></div><ol class="steps">
+        <li><p>\(J=\begin{bmatrix}-0.65&amp;-0.40\\0.433&amp;0\end{bmatrix}\) (คอลัมน์ 1 = \(\mathbf k\times\mathbf p=(-0.65,\ 0.433)\))</p></li>
+        <li><p>\(\mathbf v=J\,(0.5,\ 0)^{\mathsf T}=(-0.325,\ 0.2165)\) m/s, \(\lVert\mathbf v\rVert=0.3905\) m/s</p></li>
+        <li><p>ตรวจ: \(\lVert\mathbf v\rVert=\omega\lVert\mathbf p\rVert=0.5(0.781)=0.3905\) ✓ และ \(\mathbf v\perp\mathbf p\)</p></li>
+        <li><p>\(\det J=0.5(0.4)\sin60^\circ=0.1732\ne0\): ไม่อยู่ในภาวะเอกฐาน</p></li>
+      </ol><p class="answer">v = (−0.325, 0.217) m/s ตั้งฉากกับ p</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="torque">
+      <h2 id="torque">6. แรงบิดข้อต่อ τ = JᵀF: ทำไมมอเตอร์ฐานต้องแรงที่สุด <span class="lv lv-a">ขั้นสูง</span></h2>
+      <p>หลักงานเสมือน (virtual work): ถ้าปลายแขนดันวัตถุด้วยแรง F และข้อต่อขยับนิด ๆ δθ งานที่มอเตอร์ทำ \(\boldsymbol\tau\cdot\delta\boldsymbol\theta\) ต้องเท่ากับงานที่ปลายแขนทำ \(\mathbf F\cdot\delta\mathbf p=\mathbf F\cdot J\delta\boldsymbol\theta\) สำหรับทุก δθ จึงได้</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="A6" data-k="joint torque jacobian transpose static force virtual work แรงบิดข้อต่อ งานเสมือน">
+          <p class="tf-n"><b><span class="fid">A6</span> Static joint torques</b> แรงบิดข้อต่อจากแรงที่ปลายแขน</p>
+          \[ \boldsymbol\tau=J^{\mathsf T}\mathbf F\qquad\Longleftrightarrow\qquad \tau_i=\big((\mathbf p-\mathbf p_i)\times\mathbf F\big)\cdot\mathbf k \]
+          <p class="tf-x">รูปขวาคือโมเมนต์ของแรงปลายแขนรอบข้อต่อ i (<a href="/learn/vector-algebra/force-systems/#S2">S2</a>) ตรงกับสามัญสำนึก: ยิ่งปลายแขนอยู่ไกลจากข้อต่อในแนวตั้งฉากกับแรง แรงบิดยิ่งมาก</p>
+        </div>
+        <div class="tf wide" id="A7" data-k="motor sizing gear ratio efficiency torque constant current เลือกมอเตอร์ เกียร์ กระแส">
+          <p class="tf-n"><b><span class="fid">A7</span> Motor sizing through a gearbox</b> เลือกมอเตอร์ผ่านเกียร์</p>
+          \[ \tau_{\text{motor}}=\frac{\tau_{\text{joint}}}{N\,\eta},\qquad i\approx\frac{\tau_{\text{motor}}}{K_t},\qquad \omega_{\text{motor}}=N\,\dot\theta \]
+          <p class="tf-x">N = อัตราทด η = ประสิทธิภาพเกียร์ \(K_t\) = ค่าคงที่แรงบิดของมอเตอร์ (N·m/A) เผื่อค่าความปลอดภัย 1.5–2 เท่าสำหรับความเร่งและแรงเสียดทาน</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-a4"><div class="wx-head"><span class="mono">ตัวอย่าง A-4 · ยกของ 2 kg แล้วเลือกมอเตอร์</span><h3>ที่ท่า A-1 ปลายแขนถือของ 2 kg นิ่ง (ไม่คิดน้ำหนักแขน) จงหาแรงบิดข้อต่อ แล้วเลือกมอเตอร์ฐานผ่านเกียร์ 50:1 (η = 0.8, K_t = 0.1 N·m/A)</h3></div><ol class="steps">
+        <li><p>แขนต้องออกแรงขึ้นต้านน้ำหนัก: \(\mathbf F=(0,\ 2\times9.81)=(0,\ 19.62)\) N</p></li>
+        <li><p>\(\boldsymbol\tau=J^{\mathsf T}\mathbf F=\begin{bmatrix}-0.65&amp;0.433\\-0.40&amp;0\end{bmatrix}\begin{bmatrix}0\\19.62\end{bmatrix}=(8.496,\ 0)\) N·m</p></li>
+        <li><p>ทำไม τ₂ = 0? ท่อนสองตั้งดิ่ง (30° + 60° = 90°) แรงแนวดิ่งผ่านข้อศอกพอดี แขนโมเมนต์เป็นศูนย์</p></li>
+        <li><p>มอเตอร์ฐาน: \(\tau_m=8.496/(50\times0.8)=0.212\) N·m กระแส ≈ 0.212/0.1 = 2.1 A — เผื่อ 2 เท่า เลือกมอเตอร์ที่ให้ต่อเนื่อง ≥ 0.42 N·m</p></li>
+        <li><p>ท่าที่แย่ที่สุด: แขนเหยียดแนวนอน τ₁ = 19.62 × 0.9 = 17.7 N·m (มากกว่าเกือบสองเท่า) ต้องออกแบบด้วยท่านี้</p></li>
+      </ol><p class="answer">τ = (8.50, 0) N·m ที่ท่านี้ · ออกแบบด้วยท่าเหยียดแนวนอน 17.7 N·m</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="three-d">
+      <h2 id="three-d">7. แขน 3 มิติ: ฐานหมุน + แขนในระนาบแนวดิ่ง <span class="lv lv-i">กลาง</span></h2>
+      <p>แขนแบบ articulated ที่พบบ่อยที่สุดมีข้อต่อฐานหมุนรอบแกนตั้ง (q₁) แล้วมีไหล่ (q₂) และศอก (q₃) หมุนในระนาบแนวดิ่ง ฐานหมุนพาระนาบนั้นทั้งระนาบไปด้วย จึงคิดเป็นสองขั้น: หาระยะเอื้อมแนวราบ ρ และความสูง z ในระนาบแขนก่อน แล้วหมุนด้วย q₁ เหมือนการแตกแรงสองขั้นใน <a href="/learn/vector-algebra/direction-cosines/#K6">K6</a></p>
+      <div class="tf-grid">
+        <div class="tf wide" id="A8" data-k="3D arm articulated base yaw shoulder elbow forward kinematics แขนสามมิติ ฐานหมุน ไหล่ ศอก">
+          <p class="tf-n"><b><span class="fid">A8</span> 3-DOF articulated arm</b> แขน 3 ข้อต่อ (ฐาน-ไหล่-ศอก)</p>
+          \[ \rho=L_2\cos q_2+L_3\cos(q_2+q_3),\quad \mathbf p=\big(\rho\cos q_1,\ \rho\sin q_1,\ h+L_2\sin q_2+L_3\sin(q_2+q_3)\big) \]
+        </div>
+        <div class="tf wide" id="A9" data-k="homogeneous transformation matrix 4x4 DH chain เมทริกซ์แปลงเอกพันธ์ DH">
+          <p class="tf-n"><b><span class="fid">A9</span> Homogeneous transforms</b> เมทริกซ์แปลงเอกพันธ์ (หมุน + เลื่อน)</p>
+          \[ T=\begin{bmatrix}R&amp;\mathbf d\\\mathbf 0^{\mathsf T}&amp;1\end{bmatrix},\qquad T_{0\to n}=T_1T_2\cdots T_n,\qquad \begin{bmatrix}\mathbf p\\1\end{bmatrix}=T_{0\to n}\begin{bmatrix}\mathbf p_n\\1\end{bmatrix} \]
+          <p class="tf-x">รวมเมทริกซ์หมุน (<a href="/learn/vector-algebra/coordinate-rotation/#T4">T4</a>) กับเวกเตอร์เลื่อนไว้ในเมทริกซ์ 4×4 เดียว คูณต่อกันตามข้อต่อ — ตารางพารามิเตอร์ Denavit–Hartenberg เป็นวิธีมาตรฐานเขียน T แต่ละข้อ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-a5"><div class="wx-head"><span class="mono">ตัวอย่าง A-5 · แขน 3 มิติ</span><h3>h = 0.4 m, L₂ = 0.6 m, L₃ = 0.5 m, q₁ = 30°, q₂ = 40°, q₃ = −60° จงหาตำแหน่งปลายแขน</h3></div><ol class="steps">
+        <li><p>\(\rho=0.6\cos40^\circ+0.5\cos(-20^\circ)=0.4596+0.4698=0.9295\) m</p></li>
+        <li><p>\(z=0.4+0.6\sin40^\circ+0.5\sin(-20^\circ)=0.4+0.3857-0.1710=0.6147\) m</p></li>
+        <li><p>หมุนด้วยฐาน: \(x=0.9295\cos30^\circ=0.8049\), \(y=0.9295\sin30^\circ=0.4647\) m</p></li>
+      </ol><p class="answer">\(\mathbf p=(0.805,\ 0.465,\ 0.615)\) m — ลองตั้งค่าเดียวกันในฉาก 3 มิติด้านล่าง</p></div>
+      <div class="v3d" data-scene="arm3d" data-p='{"q1":30,"q2":40,"q3":-60}'><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="electrical">
+      <h2 id="electrical">8. มุมมองวิศวกรไฟฟ้า: จากเวกเตอร์สู่กระแสมอเตอร์ <span class="lv lv-i">กลาง</span></h2>
+      <div class="ee-cards">
+        <div class="ee-card"><span class="mono">เซนเซอร์</span><h3>เอนโค้ดเดอร์ → θ</h3><p>เอนโค้ดเดอร์ 4096 พัลส์ต่อรอบ ความละเอียด 0.088° ที่ระยะ 0.9 m ทำให้ปลายแขนคลาดได้ 1.4 mm — คำนวณจาก \(\delta\mathbf p=J\delta\boldsymbol\theta\)</p></div>
+        <div class="ee-card"><span class="mono">ไดรฟ์</span><h3>τ → กระแส</h3><p>แรงบิดมอเตอร์ BLDC/PMSM แปรตามกระแสแกน q (\(\tau=K_t i_q\)) ซึ่งได้จากการหมุนแกน Park ใน <a href="/learn/vector-algebra/coordinate-rotation/#park">บทหมุนแกน</a></p></div>
+        <div class="ee-card"><span class="mono">ควบคุม</span><h3>ลูปตำแหน่ง</h3><p>ตัวควบคุม PID ของแต่ละข้อต่อและการชดเชยแรงโน้มถ่วง \(\tau_g=J^{\mathsf T}\mathbf F_g\) ดูต่อใน <a href="/learn/control-systems/robotics/">ระบบควบคุมหุ่นยนต์</a></p></div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">9. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>ใช้ θ₂ เป็นมุมของท่อนสองเทียบโลก</td><td>θ₂ เป็นมุมสัมพัทธ์ ใช้ θ₁ + θ₂</td></tr>
+        <tr><td>ใช้ arctan(y/x) แทน atan2</td><td>ควอดแรนต์ผิดเมื่อ x &lt; 0 แขนจะเลี้ยวผิดข้าง</td></tr>
+        <tr><td>ลืมว่า IK มีสองคำตอบ</td><td>เลือกท่าตามสิ่งกีดขวางและความต่อเนื่องของการเคลื่อนที่</td></tr>
+        <tr><td>ใช้ J แทน Jᵀ หาแรงบิด</td><td>มิติไม่ตรงในแขน 3 ข้อต่อ 2 มิติ (J เป็น 2×3) ทันที</td></tr>
+        <tr><td>เลือกมอเตอร์จากท่าเดียว</td><td>หาท่าที่แรงบิดสูงสุด (มักเหยียดแนวนอน) และรวมน้ำหนักแขน</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">10. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>L₁ = L₂ = 0.3 m, θ₁ = 90°, θ₂ = −90° จงหา p</li>
+        <li>แขนเดียวกัน ต้องการ p = (0.3, 0.3) จงหา θ₂ และ θ₁ (ท่าข้อศอกลง)</li>
+        <li>แขนเหยียดแนวนอน (θ₁ = θ₂ = 0) L₁ = 0.5, L₂ = 0.4 ปลายถือ 1 kg จงหา τ₁, τ₂ และ det J</li>
+        <li>τ ที่ข้อต่อฐาน 12 N·m เกียร์ 100:1 ประสิทธิภาพ 0.7 มอเตอร์ต้องให้แรงบิดเท่าไร?</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>(0, 0.3) + (0.3cos0°, 0.3sin0°) = (0.3, 0.3) m</li>
+        <li>cos θ₂ = (0.18 − 0.18)/0.18 = 0 → θ₂ = 90°; θ₁ = 45° − atan2(0.3, 0.3) = 0° (และท่าอีกแบบคือ θ₁ = 90°, θ₂ = −90° จากข้อ 1)</li>
+        <li>F = (0, 9.81): τ₁ = 0.9 × 9.81 = 8.83 N·m, τ₂ = 0.4 × 9.81 = 3.92 N·m; det J = 0 เพราะ θ₂ = 0 (เอกฐาน แต่ยังถือของนิ่งได้)</li>
+        <li>12/(100 × 0.7) = 0.171 N·m</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">11. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#A1">A1</a> FK</td><td>\(\mathbf p=L_1\mathbf e(\theta_1)+L_2\mathbf e(\theta_1+\theta_2)\)</td></tr>
+        <tr><td><a href="#A2">A2</a> พื้นที่ทำงาน</td><td>\(|L_1-L_2|\le\lVert\mathbf p\rVert\le L_1+L_2\)</td></tr>
+        <tr><td><a href="#A3">A3</a> IK</td><td>กฎโคไซน์ + atan2 สองคำตอบ</td></tr>
+        <tr><td><a href="#A4">A4</a>–<a href="#A5">A5</a> Jacobian</td><td>\(\mathbf v=J\dot{\boldsymbol\theta}\), \(\det J=L_1L_2\sin\theta_2\)</td></tr>
+        <tr><td><a href="#A6">A6</a>–<a href="#A7">A7</a> แรงบิด</td><td>\(\boldsymbol\tau=J^{\mathsf T}\mathbf F\), \(\tau_m=\tau/(N\eta)\)</td></tr>
+        <tr><td><a href="#A8">A8</a>–<a href="#A9">A9</a> สามมิติ</td><td>ฐานหมุน + ระนาบแขน, เมทริกซ์ 4×4</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">12. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://hades.mech.northwestern.edu/index.php/Modern_Robotics" target="_blank" rel="noopener">Lynch &amp; Park, Modern Robotics (ฉบับเปิดพร้อมวิดีโอ)</a> — บทที่ 4–6 forward/inverse kinematics และ Jacobian</li>
+        <li><a href="https://petercorke.com/toolboxes/robotics-toolbox/" target="_blank" rel="noopener">Peter Corke, Robotics Toolbox (Python/MATLAB)</a> — เครื่องมือระดับโลกสำหรับจำลองแขนกล ใช้ตรวจตัวอย่างในหน้านี้ได้</li>
+        <li>J. J. Craig, <i>Introduction to Robotics: Mechanics and Control</i> — ตำรามาตรฐาน DH parameters</li>
+      </ul>
+      <p>ต่อไป: แรงแม่เหล็กที่สร้างแรงบิดในมอเตอร์ข้อต่อใน <a href="/learn/vector-algebra/em-fields/">เวกเตอร์ในสนามไฟฟ้าและแม่เหล็ก</a> หรือทดลองครบชุดใน <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

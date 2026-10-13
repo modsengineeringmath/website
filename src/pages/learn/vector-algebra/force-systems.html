@@ -1,0 +1,268 @@
+<!--meta
+{
+  "title": "ระบบแรง โมเมนต์ แรงคู่ควบ ระบบสมมูล และสมดุลของวัตถุแข็งเกร็ง: M = r × F แรงปฏิกิริยาคาน | อาจารย์มด",
+  "h1": "ระบบแรง: โมเมนต์ แรงคู่ควบ ระบบสมมูล และสมดุล",
+  "description": "เรียนระบบแรงภาษาไทยแบบวิศวกร: ชนิดของระบบแรง โมเมนต์รอบจุด M = r × F และแบบสเกลาร์ Fd ทฤษฎีวาริยอง โมเมนต์รอบแกนด้วย triple product แรงคู่ควบ การย้ายแรงเป็นระบบแรง-แรงคู่ควบ ลดระบบเป็นแรงลัพธ์เดี่ยว แรงกระจาย แผนภาพวัตถุอิสระ แรงปฏิกิริยาของคาน และแรงบนบัสบาร์ พร้อมแล็บคานและฉากโมเมนต์ 3 มิติ",
+  "ogTitle": "ระบบแรง โมเมนต์ แรงคู่ควบ และสมดุล",
+  "lesson": "vector-algebra", "sub": "force-systems", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Force system", "Moment of a force", "Varignon's theorem", "Couple", "Equivalent force-couple system", "Rigid body equilibrium", "Support reactions", "Distributed load"],
+  "scripts": ["/assets/lesson.js", "/assets/vec3d.js", "/assets/vec-mech.js"],
+  "og": {"title": "ระบบแรง · โมเมนต์ · สมดุล", "sub": "M = r × F · แรงคู่ควบ · ระบบสมมูล · แรงปฏิกิริยาคาน", "eyebrow": "เวกเตอร์ 3.2 · Force Systems", "sym": "ΣM"},
+  "faq": [
+    {"q": "โมเมนต์ของแรงคำนวณอย่างไร?", "a": "แบบเวกเตอร์ M_O = r × F โดย r คือเวกเตอร์จากจุด O ไปยังจุดใดก็ได้บนแนวแรง แบบสเกลาร์ M_O = F·d โดย d คือระยะตั้งฉากจากจุด O ถึงแนวแรง ในสองมิติใช้ M_O = x F_y − y F_x (ทวนเข็มเป็นบวก)"},
+    {"q": "แรงคู่ควบคืออะไร?", "a": "แรงสองแรงขนาดเท่ากัน ทิศตรงข้าม แนวขนานกันห่างกัน d ผลรวมแรงเป็นศูนย์แต่ทำให้หมุนด้วยโมเมนต์ M = F·d ซึ่งมีค่าเท่ากันรอบทุกจุด จึงย้ายไปไว้ที่ใดก็ได้บนวัตถุ เช่น แรงบิดจากมอเตอร์หรือการหมุนพวงมาลัยสองมือ"},
+    {"q": "วัตถุแข็งเกร็งสมดุลเมื่อใด?", "a": "เมื่อผลรวมแรงเป็นศูนย์และผลรวมโมเมนต์รอบจุดใดจุดหนึ่งเป็นศูนย์ด้วย ในระนาบได้สามสมการ ΣFx = 0, ΣFy = 0, ΣM = 0 จึงหาแรงปฏิกิริยาที่ไม่ทราบได้สามตัว เช่น หมุดหนึ่งตัวกับล้อเลื่อนหนึ่งตัวของคานช่วงเดียว"},
+    {"q": "ทำไมต้องลดระบบแรงเป็นแรงลัพธ์เดี่ยว?", "a": "ทำให้รู้ว่าระบบแรงทั้งหมดมีผลเหมือนแรงเดียวที่ตำแหน่งใด ใช้ออกแบบฐานรากให้แรงลงตรงกลาง วางตำแหน่งจุดยก หรือหาจุดศูนย์กลางของแรงกระจาย ตำแหน่งได้จาก x̄ = M_O / R_y"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>ระบบแรง · โมเมนต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 3 · Force systems, moments &amp; equilibrium</p>
+      <h1>ระบบแรง: โมเมนต์ แรงคู่ควบ ระบบสมมูล และสมดุล</h1>
+      <p class="lede">แรงลัพธ์บอกได้ว่าวัตถุจะ “เลื่อน” อย่างไร แต่ไม่บอกว่าจะ “หมุน” หรือไม่ แรงสองแรงที่รวมกันเป็นศูนย์อาจบิดพวงมาลัยให้หมุนได้ บทนี้จัดระบบเครื่องมือของวิชากลศาสตร์วิศวกรรม: โมเมนต์เชิงเวกเตอร์ แรงคู่ควบ การย้ายแรง การลดทั้งระบบให้เหลือแรงเดียว และการหาแรงปฏิกิริยาจากสมการสมดุลสามสมการ ซึ่งเป็นพื้นฐานของงานออกแบบโครงสร้าง ตู้ไฟฟ้า บัสบาร์ และเสาสายส่ง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#moment">โมเมนต์ M = r × F</a><a class="btn btn-ghost btn-sm" href="#couple">แรงคู่ควบ</a><a class="btn btn-ghost btn-sm" href="#reduce">แรงลัพธ์เดี่ยว</a><a class="btn btn-ghost btn-sm" href="#equilibrium">แรงปฏิกิริยาคาน</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(\mathbf M_O=\mathbf r\times\mathbf F\); ในระนาบ \(M_O=xF_y-yF_x\) (ทวนเข็ม +) หรือ \(M_O=Fd\)</li>
+        <li>แรงคู่ควบ: \(\sum\mathbf F=\mathbf 0\) แต่ \(M=Fd\) เท่ากันทุกจุด</li>
+        <li>ระบบใดก็ลดเป็น \(\mathbf R=\sum\mathbf F\) ที่ O + \(\mathbf M_O=\sum\mathbf r\times\mathbf F\) ได้เสมอ</li>
+        <li>สมดุลของวัตถุแข็งเกร็ง: \(\sum\mathbf F=\mathbf 0\) <strong>และ</strong> \(\sum\mathbf M=\mathbf 0\)</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น moment, couple, varignon, axis, reaction, distributed" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="types">
+      <h2 id="types">1. ชนิดของระบบแรงและจำนวนสมการที่ต้องใช้ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="table-wrap"><table><thead><tr><th>ระบบแรง</th><th>ลักษณะ</th><th>สมการสมดุลที่เป็นอิสระ</th><th>ตัวอย่าง</th></tr></thead><tbody>
+        <tr><td>แรงร่วมจุด (concurrent) ในระนาบ</td><td>แนวแรงตัดกันที่จุดเดียว</td><td>2: ΣFx = 0, ΣFy = 0</td><td>ห่วงบนโต๊ะแรง โคมไฟแขวน</td></tr>
+        <tr><td>แรงร่วมจุดสามมิติ</td><td>ตัดที่จุดเดียวในอวกาศ</td><td>3: ΣFx, ΣFy, ΣFz</td><td>ยอดเสาที่มีสายยึดหลายเส้น</td></tr>
+        <tr><td>แรงขนาน (parallel)</td><td>แนวแรงขนานกันทั้งหมด</td><td>2: ΣFy = 0, ΣM = 0</td><td>คานรับน้ำหนักแนวดิ่ง</td></tr>
+        <tr><td>แรงในระนาบทั่วไป (coplanar)</td><td>อยู่ในระนาบเดียว แนวไม่ร่วมจุด</td><td>3: ΣFx, ΣFy, ΣM</td><td>คาน เฟรม โครงถัก</td></tr>
+        <tr><td>แรงสามมิติทั่วไป</td><td>ไม่มีข้อจำกัด</td><td>6: ΣF (3) + ΣM (3)</td><td>แขนกล ตู้ไฟฟ้าบนฐานสี่จุด</td></tr>
+      </tbody></table></div>
+      <p>จำนวนสมการบอกว่าหาแรงที่ไม่ทราบได้สูงสุดกี่ตัว ถ้ามีตัวไม่ทราบมากกว่า เรียกว่า <strong>statically indeterminate</strong> ต้องใช้สมการการเสียรูปเพิ่มในวิชากลศาสตร์วัสดุ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="moment">
+      <h2 id="moment">2. โมเมนต์ของแรงรอบจุด: สเกลาร์และเวกเตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>โมเมนต์วัด “ความสามารถในการหมุน” ของแรงรอบจุด O ขึ้นกับขนาดแรงและระยะตั้งฉากจาก O ถึงแนวแรง (แขนโมเมนต์) แรงที่แนวผ่าน O ไม่ทำให้หมุนรอบ O เลยไม่ว่าจะใหญ่เท่าใด</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 260" role="img" aria-labelledby="s-mom-t s-mom-d">
+          <title id="s-mom-t">แขนโมเมนต์และเวกเตอร์ตำแหน่ง</title><desc id="s-mom-d">จุด O และแรง F ที่จุด A เวกเตอร์ r จาก O ไป A ระยะตั้งฉาก d จาก O ถึงแนวแรง</desc>
+          <defs><marker id="s-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <circle class="dot" cx="90" cy="200" r="6"/><text x="70" y="226">O</text>
+          <path class="ln ln-p1" d="M90 200 L300 120" marker-end="url(#s-arr)"/><text class="c-p1" x="190" y="148">r</text>
+          <path class="ln dash" d="M210 30 L360 225"/>
+          <path class="ln ln-cur" d="M300 120 L345 180" marker-end="url(#s-arr)" style="stroke-width:3"/><text class="c-cur" x="352" y="186">F</text><text x="302" y="110">A</text>
+          <path class="ln ln-p2" d="M90 200 L235 90"/><text class="c-p2" x="140" y="132">d</text>
+          <path class="ln" d="M226 97 L232 105 L240 99" style="stroke:var(--ink-3)"/>
+          <text class="t-th" x="400" y="80">M_O = r × F</text><text class="t-th" x="400" y="110">|M_O| = r F sin θ = F d</text><text class="t-sm" x="400" y="150">r ไปจุดไหนบนแนวแรงก็ได้</text><text class="t-sm" x="400" y="172">ผลคูณไขว้ให้ค่าเดียวกัน</text><text class="t-sm" x="400" y="194">(ส่วนที่ขนานกับ F หายไป)</text>
+        </svg>
+        <figcaption>แขนโมเมนต์ d คือระยะตั้งฉากจาก O ถึงแนวแรง (เส้นประ) ไม่ใช่ความยาวของ r</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="S1" data-k="moment scalar moment arm perpendicular distance torque แขนโมเมนต์ ระยะตั้งฉาก แรงบิด">
+          <p class="tf-n"><b><span class="fid">S1</span> Scalar moment</b> โมเมนต์แบบสเกลาร์</p>
+          \[ M_O=F\,d=F\,r\sin\theta \qquad[\text{N}\cdot\text{m}] \]
+          <p class="tf-x">ทิศหมุนบอกด้วยเครื่องหมาย: ทวนเข็มนาฬิกาเป็นบวก (กฎมือขวาชี้ออกจากกระดาษ +z)</p>
+        </div>
+        <div class="tf wide" id="S2" data-k="moment vector cross product r x F determinant โมเมนต์ เวกเตอร์ ผลคูณไขว้">
+          <p class="tf-n"><b><span class="fid">S2</span> Vector moment</b> โมเมนต์เชิงเวกเตอร์</p>
+          \[ \mathbf M_O=\mathbf r\times\mathbf F=\begin{vmatrix}\mathbf i&amp;\mathbf j&amp;\mathbf k\\ r_x&amp;r_y&amp;r_z\\ F_x&amp;F_y&amp;F_z\end{vmatrix} \]
+          <p class="tf-x">ขนาดคือโมเมนต์ ทิศคือแกนหมุนตามกฎมือขวา วิธีนี้จำเป็นในสามมิติที่หาระยะตั้งฉากยาก</p>
+        </div>
+        <div class="tf wide" id="S3" data-k="moment 2D planar x Fy minus y Fx โมเมนต์ สองมิติ ระนาบ">
+          <p class="tf-n"><b><span class="fid">S3</span> Planar moment from components</b> โมเมนต์ในระนาบจากองค์ประกอบ</p>
+          \[ M_O=x\,F_y-y\,F_x \]
+          <p class="tf-x">คือองค์ประกอบ z ของ \(\mathbf r\times\mathbf F\) เมื่อ \(r_z=F_z=0\) วิธีนี้แทนการหาแขนโมเมนต์ทั้งหมด</p>
+        </div>
+        <div class="tf wide" id="S4" data-k="varignon theorem principle of moments components sum ทฤษฎีวาริยอง หลักของโมเมนต์">
+          <p class="tf-n"><b><span class="fid">S4</span> Varignon's theorem</b> ทฤษฎีวาริยอง</p>
+          \[ \mathbf r\times(\mathbf F_1+\mathbf F_2+\cdots)=\mathbf r\times\mathbf F_1+\mathbf r\times\mathbf F_2+\cdots \]
+          <p class="tf-x">โมเมนต์ของแรงเท่ากับผลรวมโมเมนต์ขององค์ประกอบ จึงแตกแรงเอียงเป็น F_x, F_y แล้วคิดทีละส่วนได้ (มาจากสมบัติการแจกแจงของ cross product)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-s1"><div class="wx-head"><span class="mono">ตัวอย่าง S-1 · ประแจขันน็อตตู้ไฟ</span><h3>ออกแรง 200 N ที่ปลายประแจยาว 0.25 m แรงทำมุม 60° กับด้ามประแจ จงหาแรงบิดที่น็อต</h3></div><ol class="steps">
+        <li><p>แขนโมเมนต์ \(d=r\sin60^\circ=0.25(0.8660)=0.2165\) m</p></li>
+        <li><p>\(M=Fd=200(0.2165)=43.30\) N·m</p></li>
+        <li><p>ถ้าดึงตั้งฉากกับด้าม (θ = 90°) จะได้สูงสุด 50 N·m — แรงบิดที่ระบุบนน็อต (torque spec) ต้องใช้ประแจทอร์กที่ดึงตั้งฉาก</p></li>
+      </ol><p class="answer">M = 43.3 N·m</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="axis">
+      <h2 id="axis">3. โมเมนต์รอบแกน: ส่วนของโมเมนต์ที่ทำให้หมุนจริง <span class="lv lv-i">กลาง</span></h2>
+      <p>ประตูหมุนได้รอบบานพับเท่านั้น โมเมนต์ส่วนที่ตั้งฉากกับบานพับจะถูกบานพับรับไป สิ่งที่ทำให้ประตูหมุนคือ<strong>ส่วนฉาย</strong>ของ \(\mathbf M_O\) บนแกน ซึ่งเป็น scalar triple product</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="S5" data-k="moment about an axis triple product projection hinge โมเมนต์รอบแกน triple product บานพับ">
+          <p class="tf-n"><b><span class="fid">S5</span> Moment about an axis</b> โมเมนต์รอบแกน a</p>
+          \[ M_a=\mathbf u_a\cdot(\mathbf r\times\mathbf F)=\begin{vmatrix}u_{x}&amp;u_{y}&amp;u_{z}\\ r_x&amp;r_y&amp;r_z\\ F_x&amp;F_y&amp;F_z\end{vmatrix} \]
+          <p class="tf-x">\(\mathbf r\) คือเวกเตอร์จากจุดใดก็ได้บนแกนไปยังจุดใดก็ได้บนแนวแรง \(\mathbf u_a\) คือเวกเตอร์หนึ่งหน่วยของแกน เครื่องหมายบอกทิศหมุนตามกฎมือขวารอบ \(\mathbf u_a\)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-s2"><div class="wx-head"><span class="mono">ตัวอย่าง S-2 · แรงกดบนแขนยื่นของตู้</span><h3>แรง \(\mathbf F=(0,0,-200)\) N กระทำที่จุด \(\mathbf r=(0.5,\ 0.8,\ 0)\) m จากจุดยึด O จงหา \(\mathbf M_O\) และโมเมนต์รอบแกน x และรอบแนว (1,1,0)</h3></div><ol class="steps">
+        <li><p>\(\mathbf M_O=\mathbf r\times\mathbf F=\big(0.8(-200)-0,\ 0-0.5(-200),\ 0\big)=(-160,\ 100,\ 0)\) N·m</p></li>
+        <li><p>\(|\mathbf M_O|=\sqrt{160^2+100^2}=188.7\) N·m แขนโมเมนต์ \(188.7/200=0.943\) m</p></li>
+        <li><p>รอบแกน x: \(M_x=\mathbf i\cdot\mathbf M_O=-160\) N·m (ตามเข็มเมื่อมองจากปลายแกน +x)</p></li>
+        <li><p>รอบแนว \(\mathbf u=(1,1,0)/\sqrt2\): \(M_u=(-160+100)/\sqrt2=-42.43\) N·m</p></li>
+      </ol><p class="answer">\(\mathbf M_O=(-160,100,0)\) N·m · \(M_x=-160\) · \(M_u=-42.4\) N·m</p></div>
+      <div class="v3d" data-scene="moment" data-title="แล็บ: โมเมนต์ r × F และโมเมนต์รอบแกน (ค่าตามตัวอย่าง S-2)"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="couple">
+      <h2 id="couple">4. แรงคู่ควบ: หมุนโดยไม่เลื่อน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="S6" data-k="couple moment free vector torque pair of forces แรงคู่ควบ คัปเปิล แรงบิด">
+          <p class="tf-n"><b><span class="fid">S6</span> Couple moment</b> โมเมนต์ของแรงคู่ควบ</p>
+          \[ \mathbf M=\mathbf r_{AB}\times\mathbf F,\qquad M=F\,d \]
+          <p class="tf-x">แรง \(\mathbf F\) ที่ B กับ \(-\mathbf F\) ที่ A โมเมนต์รอบจุด O ใด ๆ คือ \(\mathbf r_B\times\mathbf F+\mathbf r_A\times(-\mathbf F)=(\mathbf r_B-\mathbf r_A)\times\mathbf F\) ไม่ขึ้นกับ O เลย จึงเป็น <em>free vector</em></p>
+        </div>
+      </div>
+      <div class="wx" id="ex-s3"><div class="wx-head"><span class="mono">ตัวอย่าง S-3 · พวงมาลัยและเพลามอเตอร์</span><h3>มือสองข้างหมุนพวงมาลัยเส้นผ่านศูนย์กลาง 0.4 m ด้วยแรงข้างละ 30 N ในทิศตรงข้าม จงหาแรงบิด</h3></div><ol class="steps">
+        <li><p>สองแรงขนาดเท่ากัน ทิศตรงข้าม แนวห่างกัน d = 0.4 m → แรงคู่ควบ</p></li>
+        <li><p>\(M=Fd=30(0.4)=12\) N·m และ \(\sum\mathbf F=\mathbf 0\): ไม่ดันพวงมาลัยไปด้านใด</p></li>
+        <li><p>เพลามอเตอร์ไฟฟ้าก็ได้แรงบิดเป็นแรงคู่ควบจากแรงแม่เหล็กบนขดลวดสองข้าง ดู <a href="/learn/vector-algebra/em-fields/#loop">τ = m × B</a></p></li>
+      </ol><p class="answer">M = 12 N·m</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="equivalent">
+      <h2 id="equivalent">5. ย้ายแรงโดยไม่เปลี่ยนผล: ระบบแรง-แรงคู่ควบสมมูล <span class="lv lv-i">กลาง</span></h2>
+      <p>ถ้าอยากย้ายแรง F จากจุด A ไปจุด O (ที่ไม่อยู่บนแนวแรง) ให้ใส่ F และ −F ที่ O (รวมเป็นศูนย์ ไม่เปลี่ยนอะไร) แล้วสังเกตว่า −F ที่ O กับ F ที่ A เป็นแรงคู่ควบ ผลลัพธ์คือแรง F ที่ O บวกโมเมนต์ \(\mathbf r_{OA}\times\mathbf F\)</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="S7" data-k="equivalent force couple system move force transfer ระบบสมมูล ย้ายแรง แรงคู่ควบ">
+          <p class="tf-n"><b><span class="fid">S7</span> Equivalent force–couple system</b> ระบบแรง-แรงคู่ควบสมมูลที่จุด O</p>
+          \[ \mathbf F_R=\sum\mathbf F_i,\qquad (\mathbf M_R)_O=\sum\mathbf r_{i}\times\mathbf F_i+\sum\mathbf M_{\text{couple}} \]
+          <p class="tf-x">ทุกระบบแรงลดรูปเหลือ “หนึ่งแรง + หนึ่งโมเมนต์” ที่จุดใดก็ได้ ถ้าย้ายจุดอ้างอิง แรงเท่าเดิมแต่โมเมนต์เปลี่ยน: \(\mathbf M_P=\mathbf M_O+\mathbf r_{PO}\times\mathbf F_R\)</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="reduce">
+      <h2 id="reduce">6. ลดระบบแรงในระนาบเป็นแรงลัพธ์เดี่ยว <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="S8" data-k="single resultant line of action location xbar reduce แรงลัพธ์เดี่ยว ตำแหน่ง แนวแรง">
+          <p class="tf-n"><b><span class="fid">S8</span> Single resultant (coplanar)</b> ตำแหน่งของแรงลัพธ์เดี่ยว</p>
+          \[ \bar x=\frac{(M_R)_O}{R_y}\quad(\text{จุดตัดแกน }x),\qquad d=\frac{|(M_R)_O|}{R}\quad(\text{ระยะตั้งฉากจาก }O) \]
+          <p class="tf-x">ใช้ได้เมื่อ \(\mathbf R\ne\mathbf 0\) ถ้า \(\mathbf R=\mathbf 0\) แต่ \(M\ne0\) ระบบเป็นแรงคู่ควบล้วน ไม่มีแรงเดียวที่แทนได้</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-s4"><div class="wx-head"><span class="mono">ตัวอย่าง S-4 · แรงสามแรงบนคานยาว 6 m</span><h3>F₁ = 800 N ลงในแนวดิ่งที่ x = 1.5 m, F₂ = 600 N ที่ 240° (ลงซ้าย) ที่ x = 3.5 m, F₃ = 400 N ขึ้นที่ x = 5 m จงหาระบบสมมูลที่ O (x = 0) และแรงลัพธ์เดี่ยว</h3></div><ol class="steps">
+        <li><p>องค์ประกอบ F₂: \(600\cos240^\circ=-300\), \(600\sin240^\circ=-519.6\) N</p></li>
+        <li><p>\(R_x=-300\) N, \(R_y=-800-519.6+400=-919.6\) N, \(R=967.3\) N ที่ 251.9°</p></li>
+        <li><p>\(M_O=\sum xF_y=1.5(-800)+3.5(-519.6)+5(400)=-1018.7\) N·m (ตามเข็ม) — แรงตามแนวคาน (\(F_x\), y = 0) ไม่มีโมเมนต์</p></li>
+        <li><p>\(\bar x=M_O/R_y=-1018.7/-919.6=1.108\) m</p></li>
+      </ol><p class="answer">ระบบทั้งหมดเทียบเท่าแรง 967 N ที่ 251.9° กระทำที่ x = 1.11 m — ค่าเริ่มต้นของแล็บด้านล่าง</p></div>
+      <div class="mech-lab" data-lab="rigid"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="distributed">
+      <h2 id="distributed">7. แรงกระจายเป็นแรงเดียว <span class="lv lv-i">กลาง</span></h2>
+      <p>น้ำหนักรางเคเบิล ลม หรือแรงดันน้ำ เป็นแรงกระจาย \(w(x)\) (N/m) ใช้ S8 แบบต่อเนื่อง: แรงลัพธ์เท่ากับพื้นที่ใต้กราฟ และกระทำที่จุดเซนทรอยด์ของพื้นที่นั้น</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="S9" data-k="distributed load resultant centroid uniform triangular แรงกระจาย เซนทรอยด์ สม่ำเสมอ สามเหลี่ยม">
+          <p class="tf-n"><b><span class="fid">S9</span> Distributed load</b> แรงลัพธ์ของแรงกระจาย</p>
+          \[ W=\int_0^L w(x)\,dx,\qquad \bar x=\frac{\int_0^L x\,w(x)\,dx}{W};\qquad \text{สม่ำเสมอ: }W=wL,\ \bar x=\tfrac L2;\quad \text{สามเหลี่ยม: }W=\tfrac12w_0L,\ \bar x=\tfrac L3\ \text{จากด้านสูง} \]
+        </div>
+      </div>
+      <div class="wx" id="ex-s5"><div class="wx-head"><span class="mono">ตัวอย่าง S-5 · รางเคเบิลบนขายึดยื่น</span><h3>รางเคเบิลกดขายึดยื่นยาว 0.6 m ด้วยน้ำหนักกระจายสม่ำเสมอ 1.5 kN/m และมีแรงจุด 0.2 kN ที่ปลาย จงหาโมเมนต์ที่โคนขายึด</h3></div><ol class="steps">
+        <li><p>แรงกระจาย → แรงเดียว \(W=1.5(0.6)=0.9\) kN ที่ 0.3 m</p></li>
+        <li><p>\(M=-(0.9)(0.3)-(0.2)(0.6)=-0.27-0.12=-0.39\) kN·m (ตามเข็ม)</p></li>
+        <li><p>โคนต้องให้โมเมนต์ปฏิกิริยา +0.39 kN·m และแรงขึ้น 1.1 kN — ใช้เลือกพุกและขนาดเหล็ก</p></li>
+      </ol><p class="answer">M_โคน = 0.39 kN·m (390 N·m)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="equilibrium">
+      <h2 id="equilibrium">8. สมดุลของวัตถุแข็งเกร็งและแรงปฏิกิริยา <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="S10" data-k="rigid body equilibrium conditions sum forces moments zero สมดุล วัตถุแข็งเกร็ง">
+          <p class="tf-n"><b><span class="fid">S10</span> Equilibrium of a rigid body</b> เงื่อนไขสมดุล</p>
+          \[ \sum\mathbf F=\mathbf 0,\qquad \sum\mathbf M_O=\mathbf 0\qquad\Longrightarrow\qquad \text{ระนาบ: }\sum F_x=0,\ \sum F_y=0,\ \sum M_O=0 \]
+          <p class="tf-x">เลือกจุดหมุนที่มีแรงไม่ทราบผ่านมากที่สุด เพื่อให้สมการโมเมนต์มีตัวไม่ทราบน้อยที่สุด</p>
+        </div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>ฐานรองรับ</th><th>แรงปฏิกิริยาที่ให้</th><th>สัญลักษณ์ใน FBD</th></tr></thead><tbody>
+        <tr><td>ล้อเลื่อน / ผิวเรียบ</td><td>1 แรง ตั้งฉากกับผิว</td><td>B_y</td></tr>
+        <tr><td>หมุด (pin)</td><td>2 แรง</td><td>A_x, A_y</td></tr>
+        <tr><td>ยึดแน่น (fixed)</td><td>2 แรง + 1 โมเมนต์</td><td>A_x, A_y, M_A</td></tr>
+        <tr><td>เชือก / สายเคเบิล</td><td>1 แรงดึงตามสาย</td><td>T</td></tr>
+      </tbody></table></div>
+      <div class="wx" id="ex-s6"><div class="wx-head"><span class="mono">ตัวอย่าง S-6 · คานช่วงเดียว</span><h3>คาน S-4 วางบนหมุด A (x = 0) และล้อเลื่อน B (x = 6 m) จงหาแรงปฏิกิริยา</h3></div><ol class="steps">
+        <li><p>วาด FBD: A_x, A_y ที่ A และ B_y ที่ B พร้อมแรงทั้งสาม</p></li>
+        <li><p>\(\sum M_A=0:\ 6B_y+(-1018.7)=0\Rightarrow B_y=169.8\) N</p></li>
+        <li><p>\(\sum F_y=0:\ A_y+169.8-919.6=0\Rightarrow A_y=749.8\) N</p></li>
+        <li><p>\(\sum F_x=0:\ A_x-300=0\Rightarrow A_x=300\) N (หมุดต้านแรงแนวนอนจาก F₂)</p></li>
+        <li><p>ตรวจด้วย \(\sum M_B=0\): \(-6(749.8)+(-4.5)(-800)+(-2.5)(-519.6)+(-1)(400)=-4498.8+3600+1299+(-400)\approx0\) ✓</p></li>
+      </ol><p class="answer">A_x = 300 N, A_y = 749.8 N, B_y = 169.8 N — สอดคล้องกับ x̄ = 1.11 m ที่ใกล้ A</p></div>
+      <div class="mech-lab" data-lab="rigid" data-mode="beam"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="electrical">
+      <h2 id="electrical">9. ระบบแรงในงานไฟฟ้า <span class="lv lv-i">กลาง</span></h2>
+      <div class="ee-cards">
+        <div class="ee-card"><span class="mono">บัสบาร์</span><h3>แรงลัดวงจร</h3><p>กระแสลัดวงจร 20 kA ในบาร์ขนานห่าง 0.1 m สร้างแรง 800 N ต่อเมตร (<a href="/learn/vector-algebra/em-fields/#wires">M11</a>) เป็นแรงกระจายบนบาร์ ฉนวนรองรับต้องรับแรงปฏิกิริยาตาม S9–S10</p></div>
+        <div class="ee-card"><span class="mono">เสาไฟฟ้า</span><h3>สายและสายยึด</h3><p>แรงดึงสายไฟสามมิติรวมกันที่ยอดเสา (<a href="/learn/vector-algebra/direction-cosines/#ex-k4">K-4</a>) ส่วนแนวนอนสร้างโมเมนต์ที่โคนเสา ต้องหักล้างด้วยสายยึด</p></div>
+        <div class="ee-card"><span class="mono">มอเตอร์</span><h3>แรงบิดและฐาน</h3><p>แรงบิดของมอเตอร์เป็นแรงคู่ควบ ฐานยึดต้องให้แรงคู่ควบตรงข้าม แรงที่สลักเกลียวจึงขึ้นกับระยะห่างของสลักเกลียว (M = F d)</p></div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">10. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>ใช้ความยาวของ r เป็นแขนโมเมนต์</td><td>ใช้ d ตั้งฉาก หรือใช้ \(xF_y-yF_x\)</td></tr>
+        <tr><td>สลับลำดับ \(\mathbf F\times\mathbf r\)</td><td>ทิศกลับ ต้องเป็น \(\mathbf r\times\mathbf F\) เสมอ (r จากจุดอ้างอิงไปหาแรง)</td></tr>
+        <tr><td>ΣF = 0 แล้วสรุปว่าสมดุล</td><td>ต้องตรวจ ΣM = 0 ด้วย แรงคู่ควบมี ΣF = 0 แต่หมุน</td></tr>
+        <tr><td>ลืมแรงปฏิกิริยาแนวนอนที่หมุด</td><td>หมุดให้สองแรงเสมอ ถ้าไม่มีแรงแนวนอนผลจะออกมาเป็นศูนย์เอง</td></tr>
+        <tr><td>วางแรงกระจายผิดตำแหน่ง</td><td>แรงลัพธ์อยู่ที่เซนทรอยด์ของพื้นที่ใต้กราฟ ไม่ใช่กึ่งกลางเสมอ</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">11. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>แรง \(\mathbf F=(30,40)\) N กระทำที่จุด (2, 1) m จงหาโมเมนต์รอบจุดกำเนิด</li>
+        <li>แรง \(\mathbf F=(100,-50,200)\) N กระทำที่ \(\mathbf r=(0.3,0.2,0)\) m จงหา \(\mathbf M_O\) และ \(M_z\)</li>
+        <li>คานยาว 4 m รับแรง 2 kN ลงที่กึ่งกลาง และ 1 kN ลงที่ปลาย B (x = 4 m) วางบนหมุด A กับล้อเลื่อน B จงหาแรงปฏิกิริยา</li>
+        <li>แรงคู่ควบ 50 N ห่างกัน 0.12 m กับแรงคู่ควบอีกคู่ 80 N ห่าง 0.05 m ทิศตรงข้ามกัน โมเมนต์รวมเท่าไร?</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>\(M_O=xF_y-yF_x=2(40)-1(30)=50\) N·m (ทวนเข็ม)</li>
+        <li>\(\mathbf M_O=(0.2\cdot200-0,\ 0-0.3\cdot200,\ 0.3(-50)-0.2(100))=(40,\ -60,\ -35)\) N·m; \(M_z=-35\) N·m</li>
+        <li>\(\sum M_A:\ 4B_y-2(2)-1(4)=0\Rightarrow B_y=2\) kN; \(A_y=3-2=1\) kN; \(A_x=0\)</li>
+        <li>\(50(0.12)-80(0.05)=6-4=2\) N·m ในทิศของคู่แรก</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">12. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#S1">S1</a>–<a href="#S3">S3</a> โมเมนต์</td><td>\(M=Fd\), \(\mathbf M=\mathbf r\times\mathbf F\), \(M=xF_y-yF_x\)</td></tr>
+        <tr><td><a href="#S4">S4</a> วาริยอง</td><td>โมเมนต์ของผลรวม = ผลรวมของโมเมนต์</td></tr>
+        <tr><td><a href="#S5">S5</a> รอบแกน</td><td>\(M_a=\mathbf u_a\cdot(\mathbf r\times\mathbf F)\)</td></tr>
+        <tr><td><a href="#S6">S6</a> แรงคู่ควบ</td><td>\(M=Fd\) เท่ากันทุกจุด</td></tr>
+        <tr><td><a href="#S7">S7</a>–<a href="#S8">S8</a> ระบบสมมูล</td><td>\(\mathbf R=\sum\mathbf F\), \(\mathbf M_O=\sum\mathbf r\times\mathbf F\), \(\bar x=M_O/R_y\)</td></tr>
+        <tr><td><a href="#S9">S9</a> แรงกระจาย</td><td>\(W=\int w\,dx\) ที่เซนทรอยด์</td></tr>
+        <tr><td><a href="#S10">S10</a> สมดุล</td><td>\(\sum\mathbf F=\mathbf 0,\ \sum\mathbf M=\mathbf 0\)</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">13. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://openstax.org/books/university-physics-volume-1/pages/12-1-conditions-for-static-equilibrium" target="_blank" rel="noopener">OpenStax University Physics Vol. 1 §12.1–12.2 Static Equilibrium</a> — เงื่อนไขสมดุลและตัวอย่าง</li>
+        <li><a href="https://openstax.org/books/university-physics-volume-1/pages/10-6-torque" target="_blank" rel="noopener">OpenStax University Physics Vol. 1 §10.6 Torque</a> — แรงบิดเชิงเวกเตอร์</li>
+        <li><a href="https://engineeringstatics.org/" target="_blank" rel="noopener">Baker &amp; Haynes, Engineering Statics: Open and Interactive</a> — ตำราสแตติกส์เปิดพร้อมภาพโต้ตอบ (บทที่ 4–5)</li>
+      </ul>
+      <p>ต่อไป: เปลี่ยนกรอบพิกัดให้คำนวณง่ายขึ้นใน <a href="/learn/vector-algebra/coordinate-rotation/">การหมุนแกนพิกัด</a> หรือใช้โมเมนต์กับข้อต่อหุ่นยนต์ใน <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

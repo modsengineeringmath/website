@@ -1,0 +1,262 @@
+<!--meta
+{
+  "title": "เวกเตอร์ในสนามไฟฟ้าและสนามแม่เหล็ก: กฎคูลอมบ์ การซ้อนทับ ฟลักซ์ แรงลอเรนซ์ F = IL × B แรงระหว่างลวด แรงบิดมอเตอร์ | อาจารย์มด",
+  "h1": "เวกเตอร์ในสนามไฟฟ้าและสนามแม่เหล็ก",
+  "description": "เรียนแม่เหล็กไฟฟ้าด้วยเวกเตอร์ภาษาไทย: กฎของคูลอมบ์แบบเวกเตอร์ แรงลัพธ์บนประจุ สนามไฟฟ้าและหลักการซ้อนทับ จุดที่สนามเป็นศูนย์ ศักย์ไฟฟ้าแบบสเกลาร์ ฟลักซ์ Φ = B·A แรงลอเรนซ์ F = q(E + v × B) รัศมีวงโคจร แรงบนลวด F = IL × B สนามจากลวดตรง แรงระหว่างบัสบาร์ขณะลัดวงจร และแรงบิดบนขดลวด τ = m × B พร้อมแล็บสนามไฟฟ้า แล็บลวดตัวนำ และฉาก 3 มิติ",
+  "ogTitle": "เวกเตอร์ในสนามไฟฟ้าและสนามแม่เหล็ก",
+  "lesson": "vector-algebra", "sub": "em-fields", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Coulomb's law", "Electric field", "Superposition principle", "Electric potential", "Magnetic flux", "Lorentz force", "Biot–Savart law", "Force between parallel conductors", "Torque on a current loop"],
+  "scripts": ["/assets/lesson.js", "/assets/vec3d.js", "/assets/vec-field.js"],
+  "og": {"title": "เวกเตอร์ในสนามไฟฟ้า-แม่เหล็ก", "sub": "คูลอมบ์ · ซ้อนทับ · ลอเรนซ์ · F = IL × B · τ = m × B", "eyebrow": "เวกเตอร์ 4.1 · Electromagnetic Fields", "sym": "E·B"},
+  "faq": [
+    {"q": "หาสนามไฟฟ้าจากประจุหลายตัวอย่างไร?", "a": "ใช้หลักการซ้อนทับ หาเวกเตอร์สนามจากประจุแต่ละตัว E_i = k q_i r̂_i / r_i² แยกเป็นองค์ประกอบ แล้วบวกองค์ประกอบ x y z ทีละแกน ห้ามบวกขนาดของสนามตรง ๆ เพราะทิศต่างกัน ส่วนศักย์ไฟฟ้าเป็นสเกลาร์ บวกตัวเลขได้เลย V = Σ k q_i / r_i"},
+    {"q": "แรงลอเรนซ์คืออะไร?", "a": "แรงที่กระทำต่อประจุ q ที่เคลื่อนที่ด้วยความเร็ว v ในสนามไฟฟ้า E และสนามแม่เหล็ก B คือ F = q(E + v × B) ส่วนแม่เหล็กตั้งฉากกับความเร็วเสมอ จึงไม่ทำงานและไม่เปลี่ยนอัตราเร็ว แค่เลี้ยวทิศ ประจุจึงวิ่งเป็นวงกลมหรือเกลียวรัศมี r = mv⊥/(|q|B)"},
+    {"q": "แรงบนลวดตัวนำในสนามแม่เหล็กหาอย่างไร?", "a": "F = I L × B โดย L เป็นเวกเตอร์ยาวเท่าช่วงลวดที่อยู่ในสนามและชี้ตามทิศกระแส ขนาด F = I L B sin θ ทิศตามกฎมือขวา ถ้าลวดขนานกับสนามจะไม่มีแรง หลักนี้คือที่มาของมอเตอร์ไฟฟ้า"},
+    {"q": "ทำไมบัสบาร์ต้องยึดแน่นในตู้ไฟ?", "a": "ขณะลัดวงจร กระแสหลายหมื่นแอมแปร์ในบาร์ขนานสร้างแรงระหว่างกัน F/L = μ₀I₁I₂/(2πd) เช่น 20 kA ห่าง 10 cm ได้ 800 N ต่อเมตร (ค่ายอดอาจสูงกว่านี้มากเพราะ DC offset) ฉนวนรองรับและระยะยึดต้องออกแบบให้รับแรงนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>สนามไฟฟ้า-แม่เหล็ก</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 4 · Vectors in electromagnetic fields</p>
+      <h1>เวกเตอร์ในสนามไฟฟ้าและสนามแม่เหล็ก</h1>
+      <p class="lede">วิศวกรรมไฟฟ้าทั้งศาสตร์ตั้งอยู่บนสนามเวกเตอร์ E และ B แรงที่ทำให้มอเตอร์หมุน แรงที่ฉีกบัสบาร์ตอนลัดวงจร ลำอิเล็กตรอนในหลอดภาพ และหลักการของเครื่องกำเนิดไฟฟ้า ล้วนเขียนด้วย dot product และ cross product บทนี้เดินจากกฎคูลอมบ์แบบเวกเตอร์ การซ้อนทับ ฟลักซ์ ไปจนถึงแรงลอเรนซ์ แรงบนลวด และแรงบิดบนขดลวด พร้อมแล็บที่ลากประจุและลวดได้เหมือนห้องแล็บฟิสิกส์ 2</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#coulomb">กฎคูลอมบ์</a><a class="btn btn-ghost btn-sm" href="#superposition">การซ้อนทับ</a><a class="btn btn-ghost btn-sm" href="#lorentz">แรงลอเรนซ์</a><a class="btn btn-ghost btn-sm" href="#wires">ลวดขนาน</a><a class="btn btn-ghost btn-sm" href="#loop">แรงบิดมอเตอร์</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(\mathbf F_{12}=k\dfrac{q_1q_2}{r^2}\hat{\mathbf r}_{12}\), \(\mathbf E=\sum k\dfrac{q_i}{r_i^2}\hat{\mathbf r}_i\) — บวกเป็นเวกเตอร์เสมอ</li>
+        <li>ศักย์ \(V=\sum kq_i/r_i\) เป็นสเกลาร์ ฟลักซ์ \(\Phi=\mathbf B\cdot\mathbf A\) เป็น dot product</li>
+        <li>\(\mathbf F=q(\mathbf E+\mathbf v\times\mathbf B)\), \(\mathbf F=I\mathbf L\times\mathbf B\), \(\boldsymbol\tau=\mathbf m\times\mathbf B\) — cross product ทั้งสิ้น</li>
+        <li>ลวดขนาน: \(F/L=\mu_0I_1I_2/(2\pi d)\) กระแสทิศเดียวกันดูดกัน</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น coulomb, field, potential, flux, lorentz, wire, torque" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="quantities">
+      <h2 id="quantities">1. ปริมาณไหนเป็นเวกเตอร์ ปริมาณไหนเป็นสเกลาร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="table-wrap"><table><thead><tr><th>ปริมาณ</th><th>ชนิด</th><th>หน่วย</th><th>รวมหลายแหล่งอย่างไร</th></tr></thead><tbody>
+        <tr><td>แรงไฟฟ้า/แม่เหล็ก F</td><td>เวกเตอร์</td><td>N</td><td>บวกองค์ประกอบ</td></tr>
+        <tr><td>สนามไฟฟ้า E</td><td>เวกเตอร์</td><td>N/C = V/m</td><td>บวกองค์ประกอบ (ซ้อนทับ)</td></tr>
+        <tr><td>สนามแม่เหล็ก B</td><td>เวกเตอร์</td><td>T = Wb/m²</td><td>บวกองค์ประกอบ</td></tr>
+        <tr><td>ศักย์ไฟฟ้า V</td><td>สเกลาร์</td><td>V</td><td>บวกตัวเลข (มีเครื่องหมาย)</td></tr>
+        <tr><td>ฟลักซ์ Φ</td><td>สเกลาร์ (dot product)</td><td>Wb</td><td>บวกตัวเลข</td></tr>
+        <tr><td>กระแส I</td><td>สเกลาร์ที่มีทิศตามลวด</td><td>A</td><td>KCL; ใน AC บวกแบบเฟสเซอร์</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="coulomb">
+      <h2 id="coulomb">2. กฎของคูลอมบ์แบบเวกเตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="M1" data-k="coulomb law vector force charges unit vector inverse square กฎคูลอมบ์ แรงระหว่างประจุ">
+          <p class="tf-n"><b><span class="fid">M1</span> Coulomb's law (vector form)</b> แรงที่ q₁ กระทำต่อ q₂</p>
+          \[ \mathbf F_{12}=k\frac{q_1q_2}{\lVert\mathbf r_2-\mathbf r_1\rVert^2}\,\hat{\mathbf r}_{12}=k\,q_1q_2\,\frac{\mathbf r_2-\mathbf r_1}{\lVert\mathbf r_2-\mathbf r_1\rVert^3},\qquad k=\frac{1}{4\pi\varepsilon_0}=8.988\times10^9\ \text{N}\cdot\text{m}^2/\text{C}^2 \]
+          <p class="tf-x">ใส่เครื่องหมายประจุลงไปตรง ๆ: \(q_1q_2&gt;0\) แรงชี้ตาม \(\hat{\mathbf r}_{12}\) (ผลัก) \(q_1q_2&lt;0\) ชี้กลับ (ดูด) รูปที่สองใช้สะดวกกับคอมพิวเตอร์เพราะไม่ต้องหา unit vector แยก</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m1"><div class="wx-head"><span class="mono">ตัวอย่าง M-1 · แรงลัพธ์บนประจุที่มุมสามเหลี่ยม</span><h3>q₁ = +3 μC ที่ (−0.3, −0.2) m, q₂ = −4 μC ที่ (0.3, −0.2) m, q₃ = +2 μC ที่ (0, 0.32) m จงหาแรงลัพธ์บน q₃</h3></div><ol class="steps">
+        <li><p>จาก q₁: \(\mathbf r=(0.3,\ 0.52)\) m, r = 0.6003 m → \(|F|=k(3\times10^{-6})(2\times10^{-6})/0.3604=0.1496\) N ผลัก → \(\mathbf F_{13}=(0.0748,\ 0.1296)\) N</p></li>
+        <li><p>จาก q₂: \(\mathbf r=(-0.3,\ 0.52)\) m, r = 0.6003 m → \(|F|=0.1995\) N ดูดเข้าหา q₂ → \(\mathbf F_{23}=(0.0997,\ -0.1728)\) N</p></li>
+        <li><p>รวม: \(\mathbf F=(0.1745,\ -0.0432)\) N, \(|\mathbf F|=0.1797\) N ที่ 346.1° (เบนลงขวา 13.9°)</p></li>
+      </ol><p class="answer">F ≈ 0.180 N ที่ −13.9° — เลือกตัวอย่าง “สามเหลี่ยม” ในแล็บด้านล่างเพื่อเห็นลูกศรแรงทั้งสองและแรงลัพธ์</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="superposition">
+      <h2 id="superposition">3. สนามไฟฟ้าและหลักการซ้อนทับ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="M2" data-k="electric field point charge definition F over q สนามไฟฟ้า ประจุจุด">
+          <p class="tf-n"><b><span class="fid">M2</span> Electric field of a point charge</b> สนามไฟฟ้าของประจุจุด</p>
+          \[ \mathbf E=\frac{\mathbf F}{q_0}=k\frac{q}{r^2}\hat{\mathbf r},\qquad \mathbf F=q_0\mathbf E \]
+        </div>
+        <div class="tf wide" id="M3" data-k="superposition principle electric field sum vector components ซ้อนทับ รวมสนาม">
+          <p class="tf-n"><b><span class="fid">M3</span> Superposition</b> หลักการซ้อนทับ</p>
+          \[ \mathbf E(\mathbf r)=\sum_{i}k\,q_i\,\frac{\mathbf r-\mathbf r_i}{\lVert\mathbf r-\mathbf r_i\rVert^3}\qquad\Longrightarrow\qquad E_x=\sum E_{ix},\ E_y=\sum E_{iy},\ E_z=\sum E_{iz} \]
+          <p class="tf-x">สนามจากแต่ละประจุไม่รบกวนกัน (ระบบเชิงเส้น) จึงหาทีละตัวแล้วบวกเวกเตอร์ — แบบเดียวกับแรงลัพธ์ใน <a href="/learn/vector-algebra/resultant-forces/#R7">R7</a></p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m2"><div class="wx-head"><span class="mono">ตัวอย่าง M-2 · สนามของไดโพล</span><h3>+2 μC ที่ (−0.3, 0) m และ −2 μC ที่ (0.3, 0) m จงหาสนามไฟฟ้าที่ P(0, 0.35) m</h3></div><ol class="steps">
+        <li><p>ระยะจากประจุทั้งสอง: \(\sqrt{0.3^2+0.35^2}=0.4610\) m → \(|E_i|=k(2\times10^{-6})/0.2125=84{,}589\) N/C เท่ากัน</p></li>
+        <li><p>จาก +q: ชี้ออกจาก +q → \((0.3,0.35)/0.461\): \(\mathbf E_1=(55{,}050,\ 64{,}225)\) N/C</p></li>
+        <li><p>จาก −q: ชี้เข้าหา −q → \(\mathbf E_2=(55{,}050,\ -64{,}225)\) N/C</p></li>
+        <li><p>องค์ประกอบ y หักล้างกัน: \(\mathbf E=(1.101\times10^5,\ 0)\) N/C ชี้จาก + ไป − ขนานแกนไดโพล</p></li>
+      </ol><p class="answer">E = 1.10 × 10⁵ N/C ตาม +x — ผลรวมขนาด 1.69 × 10⁵ แต่ผลรวมเวกเตอร์เพียง 1.10 × 10⁵</p></div>
+      <div class="tf-grid">
+        <div class="tf wide" id="M4" data-k="electric potential scalar sum gradient equipotential ศักย์ไฟฟ้า สเกลาร์ เส้นศักย์เท่า">
+          <p class="tf-n"><b><span class="fid">M4</span> Electric potential (scalar)</b> ศักย์ไฟฟ้าและความสัมพันธ์กับสนาม</p>
+          \[ V=\sum_i k\frac{q_i}{r_i},\qquad \mathbf E=-\nabla V,\qquad W_{A\to B}=q\,(V_A-V_B) \]
+          <p class="tf-x">ศักย์รวมแบบตัวเลขไม่ต้องแตกองค์ประกอบ ในตัวอย่าง M-2 ที่ P ได้ V = 0 (ระยะเท่ากัน ประจุตรงข้าม) แต่ E ≠ 0 — สนามคือ “ความชัน” ของศักย์ ไม่ใช่ค่าศักย์ เส้นสนามจึงตั้งฉากกับเส้นศักย์เท่าเสมอ</p>
+        </div>
+        <div class="tf wide" id="M5" data-k="zero field point null two charges balance จุดสนามเป็นศูนย์">
+          <p class="tf-n"><b><span class="fid">M5</span> Point of zero field (two charges)</b> จุดที่สนามเป็นศูนย์</p>
+          \[ \frac{|q_1|}{d_1^2}=\frac{|q_2|}{d_2^2}\quad\text{บนเส้นที่ผ่านประจุทั้งสอง} \]
+          <p class="tf-x">ประจุต่างชนิด: จุดนี้อยู่นอกช่วง ฝั่งประจุที่เล็กกว่า ประจุชนิดเดียวกัน: อยู่ระหว่างประจุ ใกล้ตัวที่เล็กกว่า</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m3"><div class="wx-head"><span class="mono">ตัวอย่าง M-3 · จุดที่สนามเป็นศูนย์</span><h3>+4 μC ที่ x = −0.2 m และ −1 μC ที่ x = +0.2 m จงหาจุดบนแกน x ที่ E = 0</h3></div><ol class="steps">
+        <li><p>ต่างชนิด จุดต้องอยู่นอกช่วง ฝั่ง −1 μC (ตัวเล็ก): x &gt; 0.2</p></li>
+        <li><p>\(\dfrac{4}{(x+0.2)^2}=\dfrac{1}{(x-0.2)^2}\Rightarrow\dfrac{2}{x+0.2}=\dfrac{1}{x-0.2}\Rightarrow2x-0.4=x+0.2\Rightarrow x=0.6\) m</p></li>
+        <li><p>ตรวจ: \(k(4\mu)/0.8^2=k(1\mu)/0.4^2\) ✓ ทิศตรงข้ามกันจึงหักล้าง</p></li>
+      </ol><p class="answer">x = 0.6 m — เลือกตัวอย่าง “+4 μC กับ −1 μC” ในแล็บ จุด P วางไว้ตรงนั้นแล้ว</p></div>
+      <div class="fld-lab" data-mode="e" data-preset="triangle"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+      <p>ประจุสามมิติ: ฉากด้านล่างแสดงสนามจากประจุสามตัวบนแกน x, y, z ที่จุด P ใด ๆ ลากหมุนเพื่อเห็นว่าลูกศรทั้งสามบวกกันเป็นลูกศรสีส้มอย่างไร</p>
+      <div class="v3d" data-scene="efield3d"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="flux">
+      <h2 id="flux">4. ฟลักซ์: dot product ระหว่างสนามกับเวกเตอร์พื้นที่ <span class="lv lv-i">กลาง</span></h2>
+      <p>พื้นที่ราบแทนได้ด้วยเวกเตอร์ \(\mathbf A=A\hat{\mathbf n}\) ยาวเท่าพื้นที่และตั้งฉากกับผิว ฟลักซ์วัดว่า “เส้นสนามทะลุผิวมากเพียงใด” จึงเป็นการฉายของสนามบนแนวตั้งฉาก</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="M6" data-k="magnetic flux electric flux dot product area vector ฟลักซ์ เวกเตอร์พื้นที่">
+          <p class="tf-n"><b><span class="fid">M6</span> Flux through a flat surface</b> ฟลักซ์ผ่านผิวราบ</p>
+          \[ \Phi_B=\mathbf B\cdot\mathbf A=BA\cos\theta,\qquad \Phi_E=\mathbf E\cdot\mathbf A,\qquad \mathcal E=-N\frac{d\Phi_B}{dt} \]
+          <p class="tf-x">ขดลวดหมุนในสนามทำให้ θ = ωt ได้ \(\Phi=BA\cos\omega t\) และ \(\mathcal E=NBA\omega\sin\omega t\) — นี่คือที่มาของไฟฟ้ากระแสสลับรูปไซน์ (ต่อใน <a href="/learn/vector-algebra/sinusoids/">sin cos ในไฟฟ้า AC</a>)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m4"><div class="wx-head"><span class="mono">ตัวอย่าง M-4 · ฟลักซ์ผ่านแผ่นเอียง</span><h3>B = 0.8 T ตามแกน +z ผ่านแผ่นพื้นที่ 0.12 m² ที่เอียงจนเวกเตอร์ปกติทำมุม 40° กับแกน z</h3></div><ol class="steps">
+        <li><p>\(\Phi=BA\cos\theta=0.8(0.12)\cos40^\circ=0.0735\) Wb</p></li>
+        <li><p>ถ้าหมุนแผ่นด้วย 3000 rpm (ω = 314.2 rad/s) และ N = 100 รอบ: \(\mathcal E_{\max}=NBA\omega=100(0.8)(0.12)(314.2)=3016\) V</p></li>
+      </ol><p class="answer">Φ = 73.5 mWb · เครื่องกำเนิดหลักการเดียวกันให้แรงดันยอด ≈ 3 kV</p></div>
+      <div class="v3d" data-scene="flux"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lorentz">
+      <h2 id="lorentz">5. แรงลอเรนซ์: ประจุที่เคลื่อนที่ในสนาม <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="M7" data-k="lorentz force cross product v x B charge moving แรงลอเรนซ์ ประจุเคลื่อนที่">
+          <p class="tf-n"><b><span class="fid">M7</span> Lorentz force</b> แรงลอเรนซ์</p>
+          \[ \mathbf F=q(\mathbf E+\mathbf v\times\mathbf B) \]
+          <p class="tf-x">ส่วนแม่เหล็ก \(q\mathbf v\times\mathbf B\) ตั้งฉากกับ \(\mathbf v\) เสมอ: \(\mathbf F\cdot\mathbf v=0\) จึงไม่ทำงาน อัตราเร็วคงที่ เปลี่ยนแค่ทิศ ใช้กฎมือขวากับ q &gt; 0 แล้วกลับทิศถ้า q &lt; 0</p>
+        </div>
+        <div class="tf wide" id="M8" data-k="cyclotron radius period helix pitch charged particle รัศมี คาบ ไซโคลตรอน เกลียว">
+          <p class="tf-n"><b><span class="fid">M8</span> Motion in a uniform B</b> วงกลม เกลียว และคาบ</p>
+          \[ r=\frac{mv_\perp}{|q|B},\qquad T=\frac{2\pi m}{|q|B},\qquad p=v_\parallel T,\qquad \mathbf v_d=\frac{\mathbf E\times\mathbf B}{B^2} \]
+          <p class="tf-x">คาบไม่ขึ้นกับความเร็ว (หลักการไซโคลตรอน) ส่วนความเร็วดริฟต์ \(\mathbf v_d\) คือเงื่อนไขของตัวเลือกความเร็ว: ประจุที่วิ่งด้วย \(v=E/B\) ตั้งฉากกับทั้งคู่จะวิ่งตรง</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m5"><div class="wx-head"><span class="mono">ตัวอย่าง M-5 · โปรตอนในสนามแม่เหล็ก</span><h3>โปรตอนวิ่งด้วย \(\mathbf v=(2\times10^5,\ 0,\ 0.6\times10^5)\) m/s ในสนาม \(\mathbf B=0.05\,\mathbf k\) T จงหาแรง รัศมี คาบ และระยะเกลียว</h3></div><ol class="steps">
+        <li><p>\(\mathbf v\times\mathbf B=(0\cdot0.05-0.6\times10^5\cdot0,\ 0.6\times10^5\cdot0-2\times10^5\cdot0.05,\ 0)=(0,\ -10^4,\ 0)\)</p></li>
+        <li><p>\(\mathbf F=e(\mathbf v\times\mathbf B)=(0,\ -1.602\times10^{-15},\ 0)\) N — ชี้ −y ตั้งฉากกับทั้ง v และ B</p></li>
+        <li><p>\(r=\dfrac{(1.673\times10^{-27})(2\times10^5)}{(1.602\times10^{-19})(0.05)}=41.76\) mm, \(T=1.312\ \mu\)s</p></li>
+        <li><p>ระยะเกลียว \(p=v_\parallel T=(0.6\times10^5)(1.312\times10^{-6})=78.7\) mm</p></li>
+      </ol><p class="answer">r = 41.8 mm, T = 1.31 μs, p = 78.7 mm — ค่าเริ่มต้นของฉาก 3 มิติด้านล่าง</p></div>
+      <div class="v3d" data-scene="lorentz"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+      <div class="fld-lab" data-mode="lorentz"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="wire-force">
+      <h2 id="wire-force">6. แรงบนลวดตัวนำ F = I L × B <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="M9" data-k="force on current carrying wire I L cross B motor rule แรงบนลวด กระแส กฎมือขวา">
+          <p class="tf-n"><b><span class="fid">M9</span> Force on a straight wire</b> แรงบนลวดตรงในสนามสม่ำเสมอ</p>
+          \[ \mathbf F=I\,\mathbf L\times\mathbf B,\qquad F=ILB\sin\theta \]
+          <p class="tf-x">\(\mathbf L\) ยาวเท่าช่วงลวดที่อยู่ในสนาม ชี้ตามทิศกระแส มาจากแรงลอเรนซ์บนประจุจำนวนมากในลวด (\(I\mathbf L=nqA\mathbf v_dL\))</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m6"><div class="wx-head"><span class="mono">ตัวอย่าง M-6 · ลวดในช่องว่างแม่เหล็ก</span><h3>ลวดยาว 0.3 m ตามแกน +x มีกระแส 8 A อยู่ในสนาม 0.5 T ตามแกน +y จงหาแรง</h3></div><ol class="steps">
+        <li><p>\(\mathbf L\times\mathbf B=(0.3\,\mathbf i)\times(0.5\,\mathbf j)=0.15\,\mathbf k\)</p></li>
+        <li><p>\(\mathbf F=8(0.15\,\mathbf k)=1.2\,\mathbf k\) N</p></li>
+      </ol><p class="answer">F = 1.2 N ตาม +z — ลองหมุนทิศลวดและสนามในฉากด้านล่าง</p></div>
+      <div class="v3d" data-scene="wire"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="wires">
+      <h2 id="wires">7. สนามจากลวดตรงและแรงระหว่างลวดขนาน <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="M10" data-k="magnetic field long straight wire biot savart ampere azimuthal สนามจากลวดตรง">
+          <p class="tf-n"><b><span class="fid">M10</span> Field of a long straight wire</b> สนามแม่เหล็กรอบลวดยาว</p>
+          \[ \mathbf B=\frac{\mu_0 I}{2\pi r}\,\hat{\boldsymbol\phi},\qquad \hat{\boldsymbol\phi}=\hat{\mathbf z}\times\hat{\mathbf r},\qquad \mu_0=4\pi\times10^{-7}\ \text{T}\cdot\text{m/A} \]
+          <p class="tf-x">ทิศวนรอบลวดตามกฎมือขวา (นิ้วโป้งตามกระแส) เขียนเป็นเวกเตอร์ด้วย cross product ทำให้รวมลวดหลายเส้นได้ด้วยการบวกองค์ประกอบ</p>
+        </div>
+        <div class="tf wide" id="M11" data-k="force between parallel conductors busbar short circuit attract repel แรงระหว่างลวดขนาน บัสบาร์ ลัดวงจร">
+          <p class="tf-n"><b><span class="fid">M11</span> Force between parallel conductors</b> แรงต่อความยาวระหว่างลวดขนาน</p>
+          \[ \frac{F}{L}=\frac{\mu_0I_1I_2}{2\pi d}=\frac{2\times10^{-7}\,I_1I_2}{d}\ \ \text{N/m} \]
+          <p class="tf-x">กระแสทิศเดียวกันดูดกัน ทิศตรงข้ามผลักกัน ได้จาก \(I_2\mathbf L\times\mathbf B_1\) — นิยามเดิมของหน่วยแอมแปร์ก็มาจากสูตรนี้</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m7"><div class="wx-head"><span class="mono">ตัวอย่าง M-7 · บัสบาร์ขณะลัดวงจร</span><h3>บัสบาร์สองเส้นห่างกัน 0.1 m มีกระแสลัดวงจร 20 kA (RMS สมมาตร) ในทิศตรงข้าม จงประมาณแรงต่อเมตร และสนามที่จุดกึ่งกลาง</h3></div><ol class="steps">
+        <li><p>\(F/L=2\times10^{-7}(20{,}000)^2/0.1=800\) N/m ผลักกัน</p></li>
+        <li><p>ที่กึ่งกลาง (0.05 m จากแต่ละเส้น) กระแสตรงข้ามให้สนามทิศเดียวกัน: \(B=2\times\mu_0(20{,}000)/(2\pi\cdot0.05)=2(0.08)=0.16\) T</p></li>
+        <li><p>ค่ายอดจริงขณะเกิดลัดวงจรอาจสูงกว่านี้หลายเท่าเพราะกระแสยอดรวม DC offset (มาตรฐานการออกแบบใช้ค่ากระแสยอด) ช่วงยึดฉนวนรองรับจึงต้องคำนวณเป็นแรงกระจายแบบ <a href="/learn/vector-algebra/force-systems/#S9">S9</a></p></li>
+      </ol><p class="answer">≈ 800 N/m (80 kgf ต่อเมตร) ผลักบาร์ออกจากกัน</p></div>
+      <div class="fld-lab" data-mode="b" data-preset="opp"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="loop">
+      <h2 id="loop">8. แรงบิดบนขดลวด τ = m × B: หัวใจของมอเตอร์ <span class="lv lv-i">กลาง</span></h2>
+      <p>ขดลวดสี่เหลี่ยมในสนามแม่เหล็ก ด้านที่ตั้งฉากกับสนามได้แรง F = NILB สองด้านในทิศตรงข้าม เป็น<strong>แรงคู่ควบ</strong> (<a href="/learn/vector-algebra/force-systems/#S6">S6</a>) ส่วนอีกสองด้านได้แรงที่หักล้างกันในแนวเดียว แรงบิดสุทธิเขียนได้สั้นที่สุดด้วยโมเมนต์แม่เหล็ก</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="M12" data-k="torque current loop magnetic moment m x B motor coil แรงบิด ขดลวด โมเมนต์แม่เหล็ก มอเตอร์">
+          <p class="tf-n"><b><span class="fid">M12</span> Torque on a current loop</b> แรงบิดบนขดลวด</p>
+          \[ \mathbf m=NIA\,\hat{\mathbf n},\qquad \boldsymbol\tau=\mathbf m\times\mathbf B,\qquad \tau=NIAB\sin\theta,\qquad U=-\mathbf m\cdot\mathbf B \]
+          <p class="tf-x">\(\hat{\mathbf n}\) ตามกฎมือขวาของกระแสในขด แรงบิดหมุนให้ \(\mathbf m\) ไปขนานกับ \(\mathbf B\) (พลังงาน U ต่ำสุด) มอเตอร์ DC จึงต้องมีคอมมิวเตเตอร์กลับกระแสทุกครึ่งรอบ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-m8"><div class="wx-head"><span class="mono">ตัวอย่าง M-8 · ขดลวดมอเตอร์</span><h3>ขดลวด 50 รอบ ขนาด 0.10 × 0.08 m กระแส 3 A ในสนาม 0.4 T เวกเตอร์ปกติทำมุม 60° กับสนาม จงหาแรงบิด</h3></div><ol class="steps">
+        <li><p>\(m=NIA=50(3)(0.008)=1.2\) A·m²</p></li>
+        <li><p>\(\tau=mB\sin60^\circ=1.2(0.4)(0.8660)=0.4157\) N·m</p></li>
+        <li><p>แรงบิดสูงสุด 0.48 N·m เมื่อระนาบขดลวดขนานกับสนาม (θ = 90°) และเป็นศูนย์เมื่อ θ = 0°</p></li>
+      </ol><p class="answer">τ = 0.416 N·m</p></div>
+      <div class="v3d" data-scene="loop"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">9. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>บวกขนาดของสนามจากหลายประจุ</td><td>แตกองค์ประกอบแล้วบวก (M3) ศักย์เท่านั้นที่บวกตัวเลขได้</td></tr>
+        <tr><td>ใช้ |q| แล้วเดาทิศเอง</td><td>ใส่เครื่องหมายใน M1/M3 แล้วให้สูตรจัดการทิศ</td></tr>
+        <tr><td>สลับลำดับ v × B หรือ L × B</td><td>ลำดับคือ “สิ่งที่เคลื่อนที่ × สนาม” กลับลำดับ = กลับทิศ</td></tr>
+        <tr><td>ลืมกลับทิศสำหรับอิเล็กตรอน</td><td>q &lt; 0 ทำให้แรงตรงข้ามกฎมือขวา</td></tr>
+        <tr><td>ใช้ A เป็นสเกลาร์ในฟลักซ์ผิวเอียง</td><td>ใช้ \(\mathbf B\cdot\mathbf A\) และนิยามทิศ \(\hat{\mathbf n}\) ให้ชัด</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">10. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>ประจุ +5 μC สองตัวอยู่ที่ (±0.1, 0) m สนามที่ (0, 0.1) m เท่าไร?</li>
+        <li>อิเล็กตรอนวิ่ง \(\mathbf v=10^6\,\mathbf i\) m/s ใน \(\mathbf B=0.01\,\mathbf k\) T แรงชี้ทางไหน รัศมีเท่าไร?</li>
+        <li>ลวดยาว 0.5 m กระแส 10 A ทำมุม 30° กับสนาม 0.2 T แรงเท่าไร?</li>
+        <li>สายไฟสองเส้นในบ้าน ห่าง 5 mm กระแส 10 A สวนทางกัน แรงต่อเมตรเท่าไร?</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>r = 0.1414 m, |E_i| = k(5μ)/0.02 = 2.247×10⁶ N/C; องค์ประกอบ x หักล้าง, y รวม = 2 × 2.247×10⁶ × (0.1/0.1414) = 3.178×10⁶ N/C ตาม +y</li>
+        <li>\(\mathbf v\times\mathbf B=10^4(\mathbf i\times\mathbf k)=-10^4\mathbf j\) แต่ q &lt; 0 → แรงตาม +j; r = (9.109×10⁻³¹)(10⁶)/(1.602×10⁻¹⁹ × 0.01) = 0.569 mm</li>
+        <li>F = 10(0.5)(0.2)sin30° = 0.5 N</li>
+        <li>2×10⁻⁷ × 100/0.005 = 4 mN/m ผลักกัน (เล็กมากในภาวะปกติ)</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">11. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th><th>ชนิดผลคูณ</th></tr></thead><tbody>
+        <tr><td><a href="#M1">M1</a> คูลอมบ์</td><td>\(kq_1q_2\,\mathbf r/r^3\)</td><td>คูณสเกลาร์</td></tr>
+        <tr><td><a href="#M3">M3</a> ซ้อนทับ</td><td>\(\mathbf E=\sum\mathbf E_i\)</td><td>บวกเวกเตอร์</td></tr>
+        <tr><td><a href="#M4">M4</a> ศักย์</td><td>\(V=\sum kq/r\)</td><td>สเกลาร์</td></tr>
+        <tr><td><a href="#M6">M6</a> ฟลักซ์</td><td>\(\Phi=\mathbf B\cdot\mathbf A\)</td><td>dot</td></tr>
+        <tr><td><a href="#M7">M7</a> ลอเรนซ์</td><td>\(q(\mathbf E+\mathbf v\times\mathbf B)\)</td><td>cross</td></tr>
+        <tr><td><a href="#M9">M9</a> ลวด</td><td>\(I\mathbf L\times\mathbf B\)</td><td>cross</td></tr>
+        <tr><td><a href="#M10">M10</a>–<a href="#M11">M11</a> ลวดตรง</td><td>\(\mu_0I/(2\pi r)\), \(\mu_0I_1I_2/(2\pi d)\)</td><td>cross (ทิศ φ̂)</td></tr>
+        <tr><td><a href="#M12">M12</a> แรงบิดขดลวด</td><td>\(\mathbf m\times\mathbf B\)</td><td>cross</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">12. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://openstax.org/books/university-physics-volume-2/pages/5-3-coulombs-law" target="_blank" rel="noopener">OpenStax University Physics Vol. 2 บทที่ 5 Electric Charges and Fields</a></li>
+        <li><a href="https://openstax.org/books/university-physics-volume-2/pages/11-2-magnetic-fields-and-lines" target="_blank" rel="noopener">OpenStax University Physics Vol. 2 บทที่ 11–12 Magnetic Forces and Fields, Sources of Magnetic Fields</a></li>
+        <li><a href="https://phet.colorado.edu/en/simulations/charges-and-fields" target="_blank" rel="noopener">PhET Charges and Fields</a> และ <a href="https://phet.colorado.edu/en/simulations/faradays-electromagnetic-lab" target="_blank" rel="noopener">Faraday's Electromagnetic Lab</a> — ซิมูเลชันระดับโลก เปิดใช้ได้ใน <a href="/learn/vector-algebra/vector-tools/">หน้าเครื่องมือระดับโลก</a></li>
+      </ul>
+      <p>ต่อไป: ขดลวดที่หมุนในสนามให้แรงดันรูปไซน์ ไปต่อที่ <a href="/learn/vector-algebra/sinusoids/">ความสัมพันธ์ sin–cos ในไฟฟ้ากระแสสลับ</a> หรือทดลองครบใน <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

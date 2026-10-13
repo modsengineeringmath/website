@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
+<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/state-space/#article","headline":"ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}","description":"แบบจำลองปริภูมิสถานะสำหรับระบบควบคุมสมัยใหม่ ตัวแปรสถานะ สมการสถานะและสมการเอาต์พุต ẋ = Ax + Bu, y = Cx + Du สร้างจากสมการเชิงอนุพันธ์ วงจร RLC และมอเตอร์ DC แปลงเป็นฟังก์ชันถ่ายโอน G = C(sI − A)⁻¹B + D ขั้วคือค่าเฉพาะของ A รูปแบบมาตรฐานควบคุมได้ สังเกตได้ และโมดัล การแปลงความคล้าย และคำตอบด้วยเมทริกซ์เอกซ์โพเนนเชียล e^{At}","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/state-space/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/state-space/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["State-space representation","State variable","Matrix exponential","Controllable canonical form","Observable canonical form","Modal form","Similarity transformation","Eigenvalues"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-state-space.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}","item":"https://modsengineeringmath.com/learn/control-systems/state-space/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมต้องใช้ปริภูมิสถานะในเมื่อมีฟังก์ชันถ่ายโอนแล้ว?","acceptedAnswer":{"@type":"Answer","text":"ปริภูมิสถานะจัดการระบบหลายอินพุตหลายเอาต์พุตได้เป็นธรรมชาติ รวมเงื่อนไขเริ่มต้นได้ เห็นสัญญาณภายในทั้งหมด (ไม่ใช่แค่อินพุต-เอาต์พุต) ใช้กับระบบแปรตามเวลาและไม่เชิงเส้นได้ และเป็นฐานของการวางขั้ว ตัวสังเกต LQR และตัวกรองคาลมาน ซึ่งใช้ในหุ่นยนต์ โดรน และยานยนต์สมัยใหม่"}},{"@type":"Question","name":"เลือกตัวแปรสถานะอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ในวงจรไฟฟ้าเลือกกระแสตัวเหนี่ยวนำและแรงดันตัวเก็บประจุ (ตัวเก็บพลังงาน) ในกลไกเลือกตำแหน่งและความเร็ว จำนวนสถานะเท่ากับอันดับของระบบ การเลือกไม่ซ้ำกัน ชุดต่างกันสัมพันธ์กันด้วยการแปลงความคล้าย และให้ค่าเฉพาะ (ขั้ว) เท่ากันเสมอ"}},{"@type":"Question","name":"ขั้วของระบบในปริภูมิสถานะหาอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"คือค่าเฉพาะของเมทริกซ์ A หรือรากของ det(sI − A) = 0 ซึ่งตรงกับตัวส่วนของฟังก์ชันถ่ายโอน (ถ้าไม่มีการหักล้างขั้ว-ศูนย์) ระบบเสถียรเมื่อค่าเฉพาะทุกตัวมีส่วนจริงเป็นลบ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -71,15 +71,32 @@
       </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · ค้นหาสูตรเวกเตอร์</a>
-          <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D / 3D</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a>
+        <div class="nav-list nav-list-wide" id="navvec">
+          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+          <span class="nav-h">พื้นฐาน 2D / 3D</span>
+          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
           <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุมและงาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · กฎมือขวา</a>
-          <a href="/learn/vector-algebra/engineering-applications/">แรง แรงบิด และสนามแม่เหล็ก</a>
-          <a href="/learn/vector-algebra/vector-lab/">แล็บเวกเตอร์ 2D / 3D</a>
+          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+          <span class="nav-h">แรงและกลศาสตร์</span>
+          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+          <span class="nav-h">ห้องแล็บ</span>
+          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -415,6 +432,12 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
       <a href="/learn/">คลังความรู้</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
       <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
@@ -459,7 +482,7 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
   </div>
 </footer>
 
-<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/site.js?v=4e5aea51" defer></script>
 
 </body>
 </html>

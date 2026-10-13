@@ -1,0 +1,201 @@
+<!--meta
+{
+  "title": "ความสัมพันธ์ของ sin และ cos ในไฟฟ้ากระแสสลับ: แอมพลิจูด ความถี่ มุมเฟส นำหน้า-ตามหลัง ค่า RMS | อาจารย์มด",
+  "h1": "sin และ cos ในไฟฟ้ากระแสสลับ: แอมพลิจูด เฟส นำหน้า-ตามหลัง และ RMS",
+  "description": "เรียนพื้นฐานไฟฟ้ากระแสสลับภาษาไทย: v(t) = Vm sin(ωt + φ) ความถี่ คาบ ความถี่เชิงมุม แปลง sin เป็น cos ด้วย ±90° เครื่องหมายลบคือ ±180° เทียบเฟสและบอกนำหน้า-ตามหลัง รวม A cos + B sin เป็นไซน์เดียวด้วยเวกเตอร์ ค่าเฉลี่ยและค่า RMS ไฟบ้าน 220 V วัดความต่างเฟสจากออสซิลโลสโคป อนุพันธ์ของไซน์เลื่อนเฟส 90° พร้อมแล็บเฟสเซอร์หมุน",
+  "ogTitle": "sin cos ในไฟฟ้ากระแสสลับ: เฟส นำหน้า-ตามหลัง RMS",
+  "lesson": "vector-algebra", "sub": "sinusoids", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Sinusoid", "Alternating current", "Phase (waves)", "Root mean square", "Angular frequency", "Phase difference"],
+  "scripts": ["/assets/lesson.js", "/assets/ac-phasor.js"],
+  "og": {"title": "sin · cos ในไฟฟ้า AC", "sub": "แอมพลิจูด · เฟส · นำหน้า-ตามหลัง · RMS · A cos + B sin", "eyebrow": "เวกเตอร์ 4.2 · Sinusoids in AC", "sym": "∿"},
+  "faq": [
+    {"q": "sin กับ cos ต่างกันอย่างไรในไฟฟ้ากระแสสลับ?", "a": "เป็นคลื่นรูปเดียวกันที่เลื่อนเฟสกัน 90° คือ sin θ = cos(θ − 90°) และ cos θ = sin(θ + 90°) หมายความว่า cos นำหน้า sin อยู่ 90° ก่อนเทียบเฟสของสองสัญญาณต้องแปลงให้อยู่ในฟังก์ชันเดียวกันและแอมพลิจูดเป็นบวกก่อนเสมอ"},
+    {"q": "ไฟบ้าน 220 V มีค่ายอดเท่าไร?", "a": "220 V เป็นค่า RMS ค่ายอดคือ 220 × √2 ≈ 311 V และค่ายอดถึงยอดคือ 622 V ความถี่ 50 Hz คาบ 20 ms ความถี่เชิงมุม ω = 2π(50) ≈ 314 rad/s"},
+    {"q": "บอกได้อย่างไรว่ากระแสนำหน้าหรือตามหลังแรงดัน?", "a": "เขียนทั้งสองเป็น sin (หรือ cos) ที่แอมพลิจูดเป็นบวก แล้วเทียบมุมเฟส ตัวที่มุมเฟสมากกว่านำหน้า บนออสซิลโลสโคป ตัวที่ผ่านศูนย์ขาขึ้นก่อนคือตัวที่นำหน้า วงจรแบบเหนี่ยวนำกระแสตามหลัง วงจรแบบตัวเก็บประจุกระแสนำหน้า"},
+    {"q": "ทำไมค่า RMS ของไซน์คือ Vm/√2?", "a": "ค่า RMS คือรากที่สองของค่าเฉลี่ยของกำลังสอง ค่าเฉลี่ยของ sin² ในหนึ่งคาบเท่ากับ 1/2 จึงได้ V_rms = Vm/√2 ความหมายทางกายภาพคือแรงดันกระแสตรงที่ทำให้ตัวต้านทานร้อนเท่ากัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>sin · cos ไฟฟ้า AC</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 4 · Sine &amp; cosine in AC circuits</p>
+      <h1>sin และ cos ในไฟฟ้ากระแสสลับ: แอมพลิจูด เฟส นำหน้า-ตามหลัง และ RMS</h1>
+      <p class="lede">ไฟฟ้าที่เสียบปลั๊กใช้ทุกวันเป็นคลื่นไซน์ 50 Hz ที่เกิดจากขดลวดหมุนในเครื่องกำเนิด ก่อนจะใช้เฟสเซอร์วิเคราะห์วงจรได้ ต้องอ่านคลื่นไซน์ให้คล่อง: แอมพลิจูด ความถี่ มุมเฟส การแปลงระหว่าง sin กับ cos และการบอกว่าอะไรนำหน้าหรือตามหลัง บทนี้ยังแสดงว่า \(A\cos\omega t+B\sin\omega t\) คือเวกเตอร์ (A, B) ในคราบของคลื่น — สะพานที่จะพาไปสู่เฟสเซอร์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#parameters">พารามิเตอร์ของไซน์</a><a class="btn btn-ghost btn-sm" href="#convert">แปลง sin ↔ cos</a><a class="btn btn-ghost btn-sm" href="#lead-lag">นำหน้า-ตามหลัง</a><a class="btn btn-ghost btn-sm" href="#rms">ค่า RMS</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(v(t)=V_m\sin(\omega t+\varphi)\), \(\omega=2\pi f\), \(T=1/f\); ไฟบ้าน 220 V RMS → \(V_m=311\) V, 50 Hz</li>
+        <li>\(\sin\theta=\cos(\theta-90^\circ)\), \(-\sin\theta=\sin(\theta\pm180^\circ)\)</li>
+        <li>เทียบเฟสต้องใช้ฟังก์ชันเดียวกัน แอมพลิจูดบวก และความถี่เดียวกัน</li>
+        <li>\(A\cos\omega t+B\sin\omega t=\sqrt{A^2+B^2}\cos(\omega t-\delta)\), \(\delta=\operatorname{atan2}(B,A)\)</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น omega, period, phase, lead, rms, average" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="origin">
+      <h2 id="origin">1. ไซน์มาจากไหน: ขดลวดหมุนกับ dot product <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ขดลวดพื้นที่ A หมุนด้วยความเร็วเชิงมุม ω ในสนาม B ทำให้มุมระหว่างเวกเตอร์ปกติกับสนามเป็น ωt ฟลักซ์ \(\Phi=\mathbf B\cdot\mathbf A=BA\cos\omega t\) (ดู <a href="/learn/vector-algebra/em-fields/#M6">M6</a>) และแรงดันเหนี่ยวนำ \(e=-N\,d\Phi/dt=NBA\omega\sin\omega t\) ไซน์จึงเกิดจาก<strong>การฉายของเวกเตอร์ที่หมุน</strong>โดยธรรมชาติ — ความคิดนี้คือหัวใจของเฟสเซอร์ในบทถัดไป</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="parameters">
+      <h2 id="parameters">2. พารามิเตอร์ของคลื่นไซน์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="W1" data-k="sinusoid amplitude frequency period angular frequency phase แอมพลิจูด ความถี่ คาบ มุมเฟส">
+          <p class="tf-n"><b><span class="fid">W1</span> General sinusoid</b> รูปทั่วไปของสัญญาณไซน์</p>
+          \[ v(t)=V_m\sin(\omega t+\varphi),\qquad \omega=2\pi f=\frac{2\pi}{T}\ \ [\text{rad/s}],\qquad T=\frac1f \]
+          <p class="tf-x">\(V_m\) แอมพลิจูด (ค่ายอด) \(\varphi\) มุมเฟส (ค่าที่ t = 0) ระวังหน่วย: ωt เป็นเรเดียน ถ้าเขียน φ เป็นองศาต้องแปลงก่อนแทนค่าในเครื่องคิดเลข</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-w1"><div class="wx-head"><span class="mono">ตัวอย่าง W-1 · ไฟบ้านประเทศไทย</span><h3>แรงดันไฟบ้าน 220 V RMS 50 Hz มุมเฟส 0° จงหา V_m, ω, T และค่าแรงดันที่ t = 2.5 ms</h3></div><ol class="steps">
+        <li><p>\(V_m=220\sqrt2=311.1\) V, \(\omega=2\pi(50)=314.16\) rad/s, \(T=1/50=20\) ms</p></li>
+        <li><p>ที่ t = 2.5 ms: \(\omega t=314.16(0.0025)=0.7854\) rad = 45°</p></li>
+        <li><p>\(v=311.1\sin45^\circ=220.0\) V — บังเอิญเท่าค่า RMS พอดีที่มุม 45°</p></li>
+      </ol><p class="answer">\(v(t)=311\sin(314.16t)\) V · ที่ 2.5 ms ได้ 220 V</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="convert">
+      <h2 id="convert">3. แปลงระหว่าง sin กับ cos และจัดการเครื่องหมายลบ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ดูจากวงกลมหนึ่งหน่วย: cos คือการฉายบนแกนนอน sin คือการฉายบนแกนตั้ง ลูกศรที่หมุนทวนเข็มจะไปถึงแกนตั้งช้ากว่าแกนนอน 90° ดังนั้น sin ตามหลัง cos อยู่ 90° (ดู <a href="/learn/trigonometry/">สูตรตรีโกณมิติ</a>)</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="W2" data-k="sin cos conversion shift 90 180 negative sign identities แปลง sin cos เลื่อนเฟส">
+          <p class="tf-n"><b><span class="fid">W2</span> Conversion identities</b> เอกลักษณ์ที่ใช้แปลงรูป</p>
+          \[ \sin\theta=\cos(\theta-90^\circ),\quad \cos\theta=\sin(\theta+90^\circ),\quad -\sin\theta=\sin(\theta\pm180^\circ),\quad -\cos\theta=\cos(\theta\pm180^\circ) \]
+          <p class="tf-x">จำเป็นภาพ: เลื่อน ±90° สลับ sin↔cos และเลื่อน ±180° กลับเครื่องหมาย เลือกเครื่องหมายที่ทำให้มุมอยู่ในช่วง −180° ถึง 180°</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-w2"><div class="wx-head"><span class="mono">ตัวอย่าง W-2 · จัดรูปให้แอมพลิจูดเป็นบวก</span><h3>เขียน \(i(t)=-5\cos(\omega t+30^\circ)\) A ในรูป sin ที่แอมพลิจูดเป็นบวก</h3></div><ol class="steps">
+        <li><p>กำจัดเครื่องหมายลบ: \(-\cos x=\cos(x-180^\circ)\) → \(5\cos(\omega t-150^\circ)\)</p></li>
+        <li><p>แปลงเป็น sin: \(\cos y=\sin(y+90^\circ)\) → \(5\sin(\omega t-60^\circ)\)</p></li>
+        <li><p>ตรวจที่ t = 0: \(-5\cos30^\circ=-4.330\) และ \(5\sin(-60^\circ)=-4.330\) ✓</p></li>
+      </ol><p class="answer">\(i(t)=5\sin(\omega t-60^\circ)\) A</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lead-lag">
+      <h2 id="lead-lag">4. ความต่างเฟส: นำหน้าหรือตามหลัง <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="W3" data-k="phase difference lead lag compare same function positive amplitude ความต่างเฟส นำหน้า ตามหลัง">
+          <p class="tf-n"><b><span class="fid">W3</span> Phase difference</b> ความต่างเฟส</p>
+          \[ v=V_m\sin(\omega t+\varphi_v),\ i=I_m\sin(\omega t+\varphi_i):\qquad \Delta\varphi=\varphi_v-\varphi_i\ \begin{cases}&gt;0 &amp; i\ \text{ตามหลัง}\ v\ (\text{inductive})\\&lt;0 &amp; i\ \text{นำหน้า}\ v\ (\text{capacitive})\end{cases} \]
+          <p class="tf-x">เงื่อนไขก่อนเทียบ: ความถี่เดียวกัน ฟังก์ชันเดียวกัน (sin กับ sin) แอมพลิจูดบวก และเลือก Δφ ในช่วง −180° ถึง 180°</p>
+        </div>
+        <div class="tf wide" id="W4" data-k="time shift phase oscilloscope delta t omega zero crossing เวลา เฟส ออสซิลโลสโคป">
+          <p class="tf-n"><b><span class="fid">W4</span> Phase from a time shift</b> แปลงเวลาเลื่อนเป็นมุมเฟส</p>
+          \[ \Delta\varphi=\omega\,\Delta t=360^\circ\cdot\frac{\Delta t}{T} \]
+          <p class="tf-x">บนสโคป วัด Δt ระหว่างจุดผ่านศูนย์ขาขึ้นของสองสัญญาณ (ดู <a href="/learn/function-generator/measurements/">การวัดด้วยสโคป</a>)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-w3"><div class="wx-head"><span class="mono">ตัวอย่าง W-3 · ใครนำหน้า?</span><h3>\(v=100\sin(\omega t+20^\circ)\) V และ \(i=4\cos(\omega t-50^\circ)\) A อะไรนำหน้า กี่องศา</h3></div><ol class="steps">
+        <li><p>แปลง i เป็น sin: \(4\cos(\omega t-50^\circ)=4\sin(\omega t+40^\circ)\)</p></li>
+        <li><p>\(\Delta\varphi=\varphi_v-\varphi_i=20^\circ-40^\circ=-20^\circ\)</p></li>
+      </ol><p class="answer">กระแสนำหน้าแรงดัน 20° → โหลดมีลักษณะตัวเก็บประจุ (ถ้าเทียบ cos กับ sin ตรง ๆ จะได้คำตอบผิดเป็น 70°)</p></div>
+      <div class="wx" id="ex-w4"><div class="wx-head"><span class="mono">ตัวอย่าง W-4 · วัดจากออสซิลโลสโคป</span><h3>ที่ 50 Hz กระแสมอเตอร์ผ่านศูนย์ขาขึ้นช้ากว่าแรงดัน 1.5 ms จงหามุมเฟสและเพาเวอร์แฟกเตอร์</h3></div><ol class="steps">
+        <li><p>\(\Delta\varphi=360^\circ(1.5/20)=27^\circ\) กระแสตามหลัง</p></li>
+        <li><p>PF = cos 27° = 0.891 ตามหลัง (lagging) — ต่อใน <a href="/learn/power-factor/pf-basics/">เพาเวอร์แฟกเตอร์</a></p></li>
+      </ol><p class="answer">27° ตามหลัง · PF = 0.891</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="combine">
+      <h2 id="combine">5. A cos + B sin คือเวกเตอร์ (A, B) <span class="lv lv-i">กลาง</span></h2>
+      <p>ขยาย \(C\cos(\omega t-\delta)=C\cos\delta\cos\omega t+C\sin\delta\sin\omega t\) เทียบสัมประสิทธิ์กับ \(A\cos\omega t+B\sin\omega t\) ได้ \(A=C\cos\delta\), \(B=C\sin\delta\) นี่คือการเขียนเวกเตอร์ (A, B) ในรูปขนาด C และมุม δ — <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2 มิติ</a> ล้วน ๆ</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="W5" data-k="combine A cos B sin single sinusoid amplitude phase atan2 vector รวม cos sin เป็นไซน์เดียว">
+          <p class="tf-n"><b><span class="fid">W5</span> Combining cos and sin of the same frequency</b> รวมเป็นไซน์เดียว</p>
+          \[ A\cos\omega t+B\sin\omega t=C\cos(\omega t-\delta)=C\sin(\omega t+90^\circ-\delta),\qquad C=\sqrt{A^2+B^2},\quad \delta=\operatorname{atan2}(B,A) \]
+          <p class="tf-x">ใช้ atan2 เพราะ A หรือ B อาจติดลบ ผลลัพธ์นี้ใช้บ่อยมากในการแก้สมการเชิงอนุพันธ์ของวงจรด้วยวิธีสัมประสิทธิ์ (ก่อนรู้จักเฟสเซอร์)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-w5"><div class="wx-head"><span class="mono">ตัวอย่าง W-5 · คำตอบสภาวะคงตัวของวงจร</span><h3>ได้คำตอบ \(i(t)=3\cos\omega t+4\sin\omega t\) A จงเขียนเป็นไซน์เดียว</h3></div><ol class="steps">
+        <li><p>\(C=\sqrt{3^2+4^2}=5\) A, \(\delta=\operatorname{atan2}(4,3)=53.13^\circ\)</p></li>
+        <li><p>\(i=5\cos(\omega t-53.13^\circ)=5\sin(\omega t+36.87^\circ)\) A</p></li>
+      </ol><p class="answer">แอมพลิจูด 5 A ไม่ใช่ 7 A — ค่ายอดของผลรวมคือความยาวของเวกเตอร์ (3, 4)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rms">
+      <h2 id="rms">6. ค่าเฉลี่ยและค่า RMS <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="W6" data-k="rms root mean square effective value heating sqrt2 ค่า RMS ค่ายังผล">
+          <p class="tf-n"><b><span class="fid">W6</span> RMS value</b> ค่า RMS (ค่ายังผล)</p>
+          \[ V_{\text{rms}}=\sqrt{\frac1T\int_0^T v^2(t)\,dt}=\sqrt{\frac{V_m^2}{T}\int_0^T\sin^2\omega t\,dt}=\frac{V_m}{\sqrt2} \]
+          <p class="tf-x">ใช้ \(\sin^2x=\tfrac12(1-\cos2x)\) ค่าเฉลี่ยของ \(\sin^2\) ในหนึ่งคาบเท่ากับ 1/2 (ดู <a href="/learn/integral-calculus/">อินทิกรัล</a>) ใช้ได้กับไซน์เท่านั้น คลื่นที่มีฮาร์มอนิกต้องคำนวณจากนิยาม (<a href="/learn/fourier-series/convergence-parseval/">พาร์เซวาล</a>)</p>
+        </div>
+        <div class="tf wide" id="W7" data-k="average value half cycle rectified 2Vm/pi ค่าเฉลี่ย ครึ่งคาบ">
+          <p class="tf-n"><b><span class="fid">W7</span> Average values</b> ค่าเฉลี่ย</p>
+          \[ \frac1T\int_0^T v\,dt=0,\qquad V_{\text{avg,half}}=\frac{2V_m}{\pi}\approx0.637V_m,\qquad \text{form factor}=\frac{V_{\text{rms}}}{V_{\text{avg,half}}}=1.111 \]
+          <p class="tf-x">มิเตอร์ราคาถูกวัดค่าเฉลี่ยแล้วคูณ 1.111 จึงอ่านถูกเฉพาะไซน์ มิเตอร์ “True RMS” ใช้นิยาม W6</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="derivative">
+      <h2 id="derivative">7. อนุพันธ์ของไซน์เลื่อนเฟส 90°: ทำไม L และ C ทำให้เกิดเฟส <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="W8" data-k="derivative integral sinusoid phase shift 90 inductor capacitor อนุพันธ์ ไซน์ เลื่อนเฟส ตัวเหนี่ยวนำ ตัวเก็บประจุ">
+          <p class="tf-n"><b><span class="fid">W8</span> Calculus shifts phase by 90°</b> อนุพันธ์และปริพันธ์ของไซน์</p>
+          \[ \frac{d}{dt}\sin(\omega t+\varphi)=\omega\sin(\omega t+\varphi+90^\circ),\qquad \int\sin(\omega t+\varphi)\,dt=\frac1\omega\sin(\omega t+\varphi-90^\circ) \]
+          <p class="tf-x">ตัวเหนี่ยวนำ \(v=L\,di/dt\) → แรงดันนำหน้ากระแส 90° และคูณ ωL ตัวเก็บประจุ \(i=C\,dv/dt\) → กระแสนำหน้าแรงดัน 90° คูณ ωC — จำว่า “ELI the ICE man”</p>
+        </div>
+      </div>
+      <p>ทดลองด้านล่าง: เปลี่ยนมุมเฟสของกระแส φ_i ให้ติดลบ (ตามหลัง) แล้วเลือกฟังก์ชันอ้างอิงเป็น sin หรือ cos สังเกตว่าเงาบนแกนจินตภาพคือ sin และเงาบนแกนจริงคือ cos ของลูกศรเดียวกัน</p>
+      <div class="ph-lab" data-mode="rotate"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">8. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>เทียบเฟสระหว่าง sin กับ cos ตรง ๆ</td><td>แปลงให้เป็นฟังก์ชันเดียวกันก่อนด้วย W2</td></tr>
+        <tr><td>เทียบเฟสเมื่อแอมพลิจูดติดลบ</td><td>ย้ายเครื่องหมายลบเข้าไปในมุมด้วย ±180°</td></tr>
+        <tr><td>ใช้องศากับเรเดียนปนกัน</td><td>ωt เป็นเรเดียนเสมอ แปลง φ ให้หน่วยเดียวกันก่อนบวก</td></tr>
+        <tr><td>ใช้ 220 V เป็นค่ายอด</td><td>220 V คือ RMS ค่ายอด 311 V (สำคัญเมื่อเลือกพิกัดแรงดันของตัวเก็บประจุและไดโอด)</td></tr>
+        <tr><td>บวกแอมพลิจูดของไซน์ที่ต่างเฟส</td><td>รวมแบบเวกเตอร์ด้วย W5 หรือเฟสเซอร์</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">9. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>\(v=170\sin(377t-30^\circ)\) V จงหา f, T, V_rms</li>
+        <li>เขียน \(-8\sin(\omega t+120^\circ)\) เป็น cos แอมพลิจูดบวก</li>
+        <li>\(v=10\cos(\omega t+10^\circ)\), \(i=2\sin(\omega t+70^\circ)\) อะไรนำหน้ากี่องศา?</li>
+        <li>รวม \(-6\cos\omega t+8\sin\omega t\) เป็นไซน์เดียว</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>f = 377/2π = 60.0 Hz, T = 16.67 ms, V_rms = 170/√2 = 120.2 V (ไฟบ้านอเมริกา)</li>
+        <li>\(-8\sin(\omega t+120^\circ)=8\sin(\omega t-60^\circ)=8\cos(\omega t-150^\circ)\)</li>
+        <li>v = 10 sin(ωt + 100°) เทียบ i ที่ 70°: แรงดันนำหน้า 30° (กระแสตามหลัง — โหลดแบบเหนี่ยวนำ)</li>
+        <li>C = 10, δ = atan2(8, −6) = 126.87° → \(10\cos(\omega t-126.87^\circ)\)</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">10. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#W1">W1</a> รูปทั่วไป</td><td>\(V_m\sin(\omega t+\varphi)\), \(\omega=2\pi f\)</td></tr>
+        <tr><td><a href="#W2">W2</a> แปลงรูป</td><td>±90° สลับ sin/cos, ±180° กลับเครื่องหมาย</td></tr>
+        <tr><td><a href="#W3">W3</a>–<a href="#W4">W4</a> ความต่างเฟส</td><td>\(\Delta\varphi=\varphi_v-\varphi_i=360^\circ\Delta t/T\)</td></tr>
+        <tr><td><a href="#W5">W5</a> รวมเป็นไซน์เดียว</td><td>\(\sqrt{A^2+B^2}\cos(\omega t-\operatorname{atan2}(B,A))\)</td></tr>
+        <tr><td><a href="#W6">W6</a>–<a href="#W7">W7</a> RMS / เฉลี่ย</td><td>\(V_m/\sqrt2\), \(2V_m/\pi\)</td></tr>
+        <tr><td><a href="#W8">W8</a> อนุพันธ์</td><td>คูณ ω และเลื่อน +90°</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">11. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-1-ac-sources" target="_blank" rel="noopener">OpenStax University Physics Vol. 2 §15.1–15.2 AC Sources, Simple AC Circuits</a></li>
+        <li>C. K. Alexander &amp; M. N. O. Sadiku, <i>Fundamentals of Electric Circuits</i>, บทที่ 9 Sinusoids and Phasors</li>
+        <li><a href="https://phet.colorado.edu/en/simulations/trig-tour" target="_blank" rel="noopener">PhET Trig Tour</a> — วงกลมหนึ่งหน่วยกับกราฟ sin cos tan</li>
+      </ul>
+      <p>ต่อไป: เปลี่ยนไซน์ให้เป็นลูกศรที่คำนวณง่ายใน <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,221 @@
+<!--meta
+{
+  "title": "พื้นฐานเฟสเซอร์ (Phasor): เวกเตอร์หมุน สูตรออยเลอร์ จำนวนเชิงซ้อน รูปเชิงขั้ว และการบวกไซน์ | อาจารย์มด",
+  "h1": "พื้นฐานเฟสเซอร์: จากเวกเตอร์หมุนสู่จำนวนเชิงซ้อน",
+  "description": "เรียนเฟสเซอร์ภาษาไทยตั้งแต่ศูนย์: เฟสเซอร์คือเวกเตอร์หมุนที่หยุดไว้ที่ t = 0 สูตรออยเลอร์ e^{jθ} = cos θ + j sin θ รูปสี่เหลี่ยมมุมฉากและรูปเชิงขั้ว แปลงรูปอย่างถูกควอดแรนต์ บวกลบด้วยเวกเตอร์ คูณหารด้วยขนาดและมุม คูณด้วย j คือหมุน 90° อนุพันธ์กลายเป็น jω บวกไซน์ความถี่เดียวกันด้วยกฎโคไซน์ เฟสเซอร์ค่ายอดกับค่า RMS และข้อจำกัด พร้อมแล็บเฟสเซอร์หมุนและเครื่องคิดเลขเชิงซ้อน",
+  "ogTitle": "พื้นฐานเฟสเซอร์: เวกเตอร์หมุนและจำนวนเชิงซ้อน",
+  "lesson": "vector-algebra", "sub": "phasors", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Phasor", "Euler's formula", "Complex number", "Polar coordinates", "Sinusoidal steady state", "Phasor addition"],
+  "scripts": ["/assets/lesson.js", "/assets/ac-phasor.js"],
+  "og": {"title": "พื้นฐานเฟสเซอร์", "sub": "เวกเตอร์หมุน · ออยเลอร์ · รูปเชิงขั้ว · บวกไซน์ด้วยเวกเตอร์", "eyebrow": "เวกเตอร์ 4.3 · Phasors", "sym": "V∠φ"},
+  "faq": [
+    {"q": "เฟสเซอร์คืออะไร?", "a": "เฟสเซอร์คือจำนวนเชิงซ้อน (หรือเวกเตอร์สองมิติ) ที่เก็บแอมพลิจูดและมุมเฟสของสัญญาณไซน์ความถี่หนึ่ง เช่น v(t) = 311 cos(ωt + 30°) เขียนเป็น V = 311∠30° ภาพในใจคือลูกศรยาว 311 ที่หมุนด้วยความเร็ว ω แล้วถ่ายภาพไว้ที่ t = 0 สัญญาณจริงคือเงาของลูกศรบนแกนจริง"},
+    {"q": "ทำไมต้องใช้เฟสเซอร์?", "a": "เพราะเปลี่ยนสมการเชิงอนุพันธ์ของวงจร RLC ให้เป็นพีชคณิตของจำนวนเชิงซ้อน อนุพันธ์กลายเป็นการคูณด้วย jω ทำให้ใช้กฎของโอห์ม KVL KCL และการหารแรงดันแบบวงจรกระแสตรงได้ทันที โดยตัวต้านทานกลายเป็นอิมพีแดนซ์"},
+    {"q": "บวกเฟสเซอร์อย่างไร?", "a": "แปลงเป็นรูปสี่เหลี่ยมมุมฉาก a + jb แล้วบวกส่วนจริงกับส่วนจริง ส่วนจินตภาพกับส่วนจินตภาพ เหมือนบวกเวกเตอร์สองมิติ ส่วนการคูณและหารทำในรูปเชิงขั้วง่ายกว่า คือคูณขนาดและบวกมุม"},
+    {"q": "เฟสเซอร์ใช้กับสัญญาณที่ความถี่ต่างกันได้ไหม?", "a": "ไม่ได้โดยตรง เฟสเซอร์ใช้ได้เมื่อทุกสัญญาณมีความถี่เดียวกันในสภาวะคงตัวของวงจรเชิงเส้น ถ้ามีหลายความถี่ ต้องแก้ทีละความถี่แล้วนำผลในเวลามาบวกกัน (superposition) เช่น การวิเคราะห์ฮาร์มอนิกด้วยอนุกรมฟูเรียร์"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>เฟสเซอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 4 · Phasor fundamentals</p>
+      <h1>พื้นฐานเฟสเซอร์: จากเวกเตอร์หมุนสู่จำนวนเชิงซ้อน</h1>
+      <p class="lede">ถ้าต้องบวกแรงดัน \(100\sin(\omega t)\) กับ \(80\sin(\omega t+60^\circ)\) ด้วยตรีโกณมิติ จะต้องขยายสูตรผลบวกมุมหลายบรรทัด แต่ถ้ามองแต่ละไซน์เป็น<strong>ลูกศรที่หมุนด้วยความเร็วเดียวกัน</strong> การบวกก็คือการบวกเวกเตอร์สองตัว — เหมือนแรงลัพธ์ทุกประการ เฟสเซอร์คือเครื่องมือที่ทำให้วงจรไฟฟ้ากระแสสลับคำนวณง่ายเท่าวงจรกระแสตรง บทนี้สร้างแนวคิดจากภาพเวกเตอร์ แล้วเชื่อมสู่จำนวนเชิงซ้อนด้วยสูตรออยเลอร์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#rotating">เวกเตอร์หมุน</a><a class="btn btn-ghost btn-sm" href="#euler">สูตรออยเลอร์</a><a class="btn btn-ghost btn-sm" href="#operations">บวก คูณ หาร</a><a class="btn btn-ghost btn-sm" href="#adding">บวกไซน์</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(V_m\cos(\omega t+\varphi)=\operatorname{Re}\{V_me^{j\varphi}e^{j\omega t}\}\) → เฟสเซอร์ \(\mathbf V=V_m\angle\varphi\)</li>
+        <li>\(a+jb=r\angle\theta\), \(r=\sqrt{a^2+b^2}\), \(\theta=\operatorname{atan2}(b,a)\)</li>
+        <li>บวก/ลบ: รูปสี่เหลี่ยมมุมฉาก (เวกเตอร์) · คูณ/หาร: รูปเชิงขั้ว (คูณขนาด บวกมุม)</li>
+        <li>\(\dfrac{d}{dt}\leftrightarrow j\omega\): คูณด้วย j คือหมุนไป 90°</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น euler, polar, rectangular, multiply, j omega, rms" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="rotating">
+      <h2 id="rotating">1. เวกเตอร์หมุน: ไซน์คือเงาของลูกศร <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>วางลูกศรยาว \(V_m\) บนระนาบ ให้หมุนทวนเข็มด้วยความเร็วเชิงมุม ω เริ่มที่มุม φ ตอน t = 0 เงาบนแกนนอนคือ \(V_m\cos(\omega t+\varphi)\) เงาบนแกนตั้งคือ \(V_m\sin(\omega t+\varphi)\) ในวงจรเชิงเส้นที่ทุกสัญญาณมีความถี่เดียวกัน ลูกศรทุกตัวหมุนพร้อมกันด้วย ω เดียว <strong>มุมระหว่างลูกศรจึงคงที่</strong> เราจึงถ่ายภาพนิ่งไว้ที่ t = 0 แล้วทำงานกับภาพนิ่งนั้นได้ — ภาพนิ่งนี้คือเฟสเซอร์</p>
+      <div class="ph-lab" data-mode="rotate" data-p='{"spd":0.4}'><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="euler">
+      <h2 id="euler">2. สูตรออยเลอร์: ลูกศรหมุนเขียนเป็นจำนวนเชิงซ้อน <span class="lv lv-i">กลาง</span></h2>
+      <p>จุดบนระนาบ (x, y) เขียนเป็นจำนวนเชิงซ้อน \(x+jy\) ได้ (วิศวกรไฟฟ้าใช้ j แทน i เพราะ i คือกระแส) ลูกศรหนึ่งหน่วยที่มุม θ คือ \(\cos\theta+j\sin\theta\) สูตรออยเลอร์บอกว่าสิ่งนี้เท่ากับ \(e^{j\theta}\) ทำให้การหมุนกลายเป็นการคูณ และการคูณเลขชี้กำลังคือการบวกมุม</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="H1" data-k="euler formula complex exponential e^{j theta} cos j sin สูตรออยเลอร์">
+          <p class="tf-n"><b><span class="fid">H1</span> Euler's formula</b> สูตรออยเลอร์</p>
+          \[ e^{j\theta}=\cos\theta+j\sin\theta,\qquad \cos\theta=\operatorname{Re}\{e^{j\theta}\},\quad \sin\theta=\operatorname{Im}\{e^{j\theta}\},\quad j^2=-1 \]
+          <p class="tf-x">พิสูจน์จากอนุกรมเทย์เลอร์ของ \(e^x\), \(\cos x\), \(\sin x\) หรือจาก “\(e^{j\theta}\) เป็นคำตอบของ \(z'=jz\)” ซึ่งคือการเคลื่อนที่ที่ความเร็วตั้งฉากกับตำแหน่งเสมอ = หมุนเป็นวงกลม</p>
+        </div>
+        <div class="tf wide" id="H2" data-k="phasor definition real part rotating complex sinusoid phasor transform นิยามเฟสเซอร์">
+          <p class="tf-n"><b><span class="fid">H2</span> Phasor definition</b> นิยามเฟสเซอร์</p>
+          \[ v(t)=V_m\cos(\omega t+\varphi)=\operatorname{Re}\big\{\underbrace{V_me^{j\varphi}}_{\mathbf V}\,e^{j\omega t}\big\}\qquad\Longrightarrow\qquad \mathbf V=V_me^{j\varphi}=V_m\angle\varphi \]
+          <p class="tf-x">ตำราวงจรส่วนใหญ่อ้างอิงกับ cos ถ้าสัญญาณให้มาเป็น sin ให้แปลงด้วย \(\sin x=\cos(x-90^\circ)\) ก่อน หรือใช้ sin เป็นอ้างอิงตลอดทั้งโจทย์ (ห้ามปน)</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="forms">
+      <h2 id="forms">3. รูปสี่เหลี่ยมมุมฉากและรูปเชิงขั้ว <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="H3" data-k="rectangular polar conversion magnitude angle atan2 quadrant แปลงรูป สี่เหลี่ยมมุมฉาก เชิงขั้ว">
+          <p class="tf-n"><b><span class="fid">H3</span> Rectangular ↔ polar</b> แปลงรูป</p>
+          \[ a+jb=r\angle\theta,\qquad r=\sqrt{a^2+b^2},\quad \theta=\operatorname{atan2}(b,a);\qquad a=r\cos\theta,\quad b=r\sin\theta \]
+          <p class="tf-x">เหมือนเวกเตอร์สองมิติ (ขนาด-ทิศ ↔ องค์ประกอบ) ทุกประการ ปุ่ม tan⁻¹ ของเครื่องคิดเลขให้มุมแค่ −90° ถึง 90° ต้องดูควอดแรนต์เองเมื่อ a &lt; 0</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-h1"><div class="wx-head"><span class="mono">ตัวอย่าง H-1 · กับดักควอดแรนต์</span><h3>เขียน \(-3+j4\) ในรูปเชิงขั้ว</h3></div><ol class="steps">
+        <li><p>\(r=\sqrt{9+16}=5\)</p></li>
+        <li><p>\(\tan^{-1}(4/-3)=-53.13^\circ\) แต่จุด (−3, 4) อยู่ควอดแรนต์ II</p></li>
+        <li><p>\(\theta=180^\circ-53.13^\circ=126.87^\circ\) (atan2 ให้ค่านี้โดยตรง)</p></li>
+      </ol><p class="answer">\(-3+j4=5\angle126.87^\circ\) ไม่ใช่ \(5\angle-53.13^\circ\) (ซึ่งคือ \(3-j4\))</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="operations">
+      <h2 id="operations">4. บวก ลบ คูณ หาร: เลือกรูปให้ถูกงาน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="H4" data-k="phasor addition subtraction rectangular vector sum บวก ลบ เฟสเซอร์">
+          <p class="tf-n"><b><span class="fid">H4</span> Addition / subtraction</b> บวกลบในรูปสี่เหลี่ยมมุมฉาก</p>
+          \[ (a_1+jb_1)\pm(a_2+jb_2)=(a_1\pm a_2)+j(b_1\pm b_2) \]
+          <p class="tf-x">คือการบวกเวกเตอร์ (หัวต่อหาง) — KVL และ KCL ในวงจร AC คือการบวกเวกเตอร์ชนิดนี้</p>
+        </div>
+        <div class="tf wide" id="H5" data-k="phasor multiplication division polar magnitude angle rotate scale คูณ หาร เฟสเซอร์ เชิงขั้ว">
+          <p class="tf-n"><b><span class="fid">H5</span> Multiplication / division</b> คูณหารในรูปเชิงขั้ว</p>
+          \[ (r_1\angle\theta_1)(r_2\angle\theta_2)=r_1r_2\angle(\theta_1+\theta_2),\qquad \frac{r_1\angle\theta_1}{r_2\angle\theta_2}=\frac{r_1}{r_2}\angle(\theta_1-\theta_2),\qquad \mathbf z^*=r\angle-\theta \]
+          <p class="tf-x">การคูณคือ “ยืดหด + หมุน” ของเวกเตอร์ ซึ่งไม่มีในพีชคณิตเวกเตอร์ปกติ นี่คือสิ่งที่จำนวนเชิงซ้อนให้เพิ่ม — อิมพีแดนซ์จึงทำหน้าที่ยืดและหมุนเฟสเซอร์กระแสให้เป็นเฟสเซอร์แรงดัน</p>
+        </div>
+        <div class="tf wide" id="H6" data-k="multiply by j rotate 90 degrees -j minus 90 คูณ j หมุน 90 องศา">
+          <p class="tf-n"><b><span class="fid">H6</span> Multiplying by j</b> คูณด้วย j คือหมุน 90°</p>
+          \[ j=1\angle90^\circ,\qquad -j=\frac1j=1\angle-90^\circ,\qquad j\,(a+jb)=-b+ja \]
+        </div>
+      </div>
+      <div class="wx" id="ex-h2"><div class="wx-head"><span class="mono">ตัวอย่าง H-2 · คูณเฟสเซอร์</span><h3>คำนวณ \((10\angle30^\circ)(4-j3)\)</h3></div><ol class="steps">
+        <li><p>แปลงตัวหลัง: \(4-j3=5\angle-36.87^\circ\)</p></li>
+        <li><p>คูณขนาด บวกมุม: \(50\angle(30^\circ-36.87^\circ)=50\angle-6.87^\circ\)</p></li>
+        <li><p>กลับเป็นสี่เหลี่ยมมุมฉาก: \(49.64-j5.98\)</p></li>
+      </ol><p class="answer">\(50\angle-6.87^\circ=49.64-j5.98\) — ค่าเริ่มต้นของเครื่องคิดเลขเชิงซ้อนด้านล่าง</p></div>
+      <div class="wx" id="ex-h3"><div class="wx-head"><span class="mono">ตัวอย่าง H-3 · หารเฟสเซอร์</span><h3>คำนวณ \(\dfrac{8+j6}{3-j4}\)</h3></div><ol class="steps">
+        <li><p>\(8+j6=10\angle36.87^\circ\), \(3-j4=5\angle-53.13^\circ\)</p></li>
+        <li><p>\(\dfrac{10}{5}\angle(36.87^\circ+53.13^\circ)=2\angle90^\circ=j2\)</p></li>
+        <li><p>ตรวจด้วยการคูณสังยุค: \(\dfrac{(8+j6)(3+j4)}{9+16}=\dfrac{24+j32+j18-24}{25}=\dfrac{j50}{25}=j2\) ✓</p></li>
+      </ol><p class="answer">\(j2=2\angle90^\circ\)</p></div>
+      <div class="ph-lab" data-mode="calc"><noscript>เปิด JavaScript เพื่อใช้เครื่องคิดเลข</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="adding">
+      <h2 id="adding">5. บวกไซน์ความถี่เดียวกันด้วยเวกเตอร์และกฎโคไซน์ <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="H7" data-k="sum of sinusoids same frequency phasor law of cosines magnitude บวกไซน์ ความถี่เดียวกัน กฎโคไซน์">
+          <p class="tf-n"><b><span class="fid">H7</span> Sum of two sinusoids</b> ผลบวกของไซน์ความถี่เดียวกัน</p>
+          \[ A_1\angle\varphi_1+A_2\angle\varphi_2=A\angle\varphi,\qquad A=\sqrt{A_1^2+A_2^2+2A_1A_2\cos(\varphi_2-\varphi_1)} \]
+          <p class="tf-x">คือ <a href="/learn/vector-algebra/resultant-forces/#R1">R1</a> ของแรงลัพธ์ เพราะเฟสเซอร์คือเวกเตอร์สองมิติ มุมเฟสหาด้วย atan2 ของผลรวมองค์ประกอบ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-h4"><div class="wx-head"><span class="mono">ตัวอย่าง H-4 · บวกแรงดันสองแหล่ง</span><h3>\(v_1=100\sin\omega t\) V และ \(v_2=80\sin(\omega t+60^\circ)\) V (ใช้ sin เป็นอ้างอิง) จงหา \(v_1+v_2\)</h3></div><ol class="steps">
+        <li><p>เฟสเซอร์: \(\mathbf V_1=100\angle0^\circ=100+j0\), \(\mathbf V_2=80\angle60^\circ=40+j69.28\)</p></li>
+        <li><p>บวก: \(\mathbf V=140+j69.28=156.2\angle26.33^\circ\)</p></li>
+        <li><p>ตรวจด้วยกฎโคไซน์: \(\sqrt{100^2+80^2+2(100)(80)\cos60^\circ}=\sqrt{24400}=156.2\) ✓</p></li>
+      </ol><p class="answer">\(v_1+v_2=156.2\sin(\omega t+26.33^\circ)\) V — ไม่ใช่ 180 V</p></div>
+      <div class="ph-lab" data-mode="sum"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+      <div class="wx" id="ex-h5"><div class="wx-head"><span class="mono">ตัวอย่าง H-5 · KCL ที่จุดต่อ</span><h3>\(i_1=10\cos\omega t\) A และ \(i_2=6\cos(\omega t+60^\circ)\) A ไหลเข้าจุดต่อเดียวกัน กระแสที่ไหลออกเป็นเท่าไร?</h3></div><ol class="steps">
+        <li><p>\(\mathbf I=10\angle0^\circ+6\angle60^\circ=(10+3)+j5.196=13+j5.196\)</p></li>
+        <li><p>\(\mathbf I=14.0\angle21.79^\circ\) A</p></li>
+      </ol><p class="answer">\(i=14\cos(\omega t+21.79^\circ)\) A — ตัวอย่างเดียวกับ <a href="/learn/vector-algebra/resultant-forces/#ex-r8">R-8</a></p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculus">
+      <h2 id="calculus">6. อนุพันธ์กลายเป็นการคูณด้วย jω <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="H8" data-k="derivative j omega integral divide phasor domain calculus อนุพันธ์ jω ปริพันธ์">
+          <p class="tf-n"><b><span class="fid">H8</span> Calculus in the phasor domain</b> อนุพันธ์และปริพันธ์</p>
+          \[ \frac{dv}{dt}\ \longleftrightarrow\ j\omega\mathbf V,\qquad \int v\,dt\ \longleftrightarrow\ \frac{\mathbf V}{j\omega} \]
+          <p class="tf-x">เพราะ \(\frac{d}{dt}e^{j\omega t}=j\omega e^{j\omega t}\) — การคูณ jω คือขยาย ω เท่าและหมุน +90° ตรงกับ <a href="/learn/vector-algebra/sinusoids/#W8">W8</a> ผลคือ \(\mathbf V_L=j\omega L\,\mathbf I\) และ \(\mathbf I_C=j\omega C\,\mathbf V\) สมการเชิงอนุพันธ์ของวงจรกลายเป็นพีชคณิต</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-h6"><div class="wx-head"><span class="mono">ตัวอย่าง H-6 · แรงดันคร่อมตัวเหนี่ยวนำ</span><h3>กระแส \(i=2\cos(1000t)\) A ไหลผ่าน L = 50 mH จงหา v(t)</h3></div><ol class="steps">
+        <li><p>\(\mathbf I=2\angle0^\circ\), \(j\omega L=j(1000)(0.05)=j50\ \Omega\)</p></li>
+        <li><p>\(\mathbf V=j50\times2\angle0^\circ=100\angle90^\circ\) V</p></li>
+        <li><p>ตรวจในโดเมนเวลา: \(L\,di/dt=0.05(-2000\sin1000t)=-100\sin1000t=100\cos(1000t+90^\circ)\) ✓</p></li>
+      </ol><p class="answer">\(v(t)=100\cos(1000t+90^\circ)\) V แรงดันนำหน้ากระแส 90°</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rms">
+      <h2 id="rms">7. เฟสเซอร์ค่ายอดหรือค่า RMS? <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="H9" data-k="rms phasor convention peak power engineering เฟสเซอร์ค่า RMS ค่ายอด">
+          <p class="tf-n"><b><span class="fid">H9</span> Peak vs RMS phasors</b> สองธรรมเนียมการเขียน</p>
+          \[ \mathbf V_{\text{peak}}=V_m\angle\varphi,\qquad \mathbf V_{\text{rms}}=\frac{V_m}{\sqrt2}\angle\varphi,\qquad \mathbf S=\mathbf V_{\text{rms}}\mathbf I_{\text{rms}}^*=\tfrac12\mathbf V_{\text{peak}}\mathbf I_{\text{peak}}^* \]
+          <p class="tf-x">งานไฟฟ้ากำลัง (ไฟบ้าน 220∠0° V) ใช้ RMS เพื่อให้สูตรกำลังสะอาด ส่วนงานอิเล็กทรอนิกส์และตำราวงจรหลายเล่มใช้ค่ายอด สิ่งสำคัญคือใช้แบบเดียวตลอดโจทย์</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limits">
+      <h2 id="limits">8. เมื่อไหร่ใช้เฟสเซอร์ไม่ได้ <span class="lv lv-i">กลาง</span></h2>
+      <ul class="la-check">
+        <li><strong>ความถี่ต่างกัน</strong>: ลูกศรหมุนด้วยความเร็วต่างกัน มุมระหว่างกันเปลี่ยนตลอด ไม่มีเฟสเซอร์ผลรวม (ลองในแล็บบวกไซน์ เลือก “2 เท่า”) ต้องใช้ superposition ทีละความถี่ ดู <a href="/learn/fourier-series/circuit-analysis/">วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์</a></li>
+        <li><strong>ช่วงเปลี่ยนสภาวะ (transient)</strong>: เฟสเซอร์ให้เฉพาะสภาวะคงตัวของไซน์ ช่วงเปิดสวิตช์ต้องใช้ <a href="/learn/laplace-transform/">การแปลงลาปลาซ</a></li>
+        <li><strong>วงจรไม่เชิงเส้น</strong>: ไดโอด แกนเหล็กอิ่มตัว อินเวอร์เตอร์ — สร้างฮาร์มอนิก ไซน์เข้าไม่ได้ไซน์ออก</li>
+      </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">9. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>บวกเฟสเซอร์ในรูปเชิงขั้ว (บวกขนาด บวกมุม)</td><td>บวกต้องเป็นรูปสี่เหลี่ยมมุมฉากเสมอ</td></tr>
+        <tr><td>tan⁻¹ ผิดควอดแรนต์</td><td>ใช้ atan2 หรือวาดจุดก่อน (H-1)</td></tr>
+        <tr><td>ปน sin กับ cos เป็นอ้างอิง</td><td>แปลงทุกสัญญาณให้อ้างอิงเดียวกันก่อนเขียนเฟสเซอร์</td></tr>
+        <tr><td>ปนค่ายอดกับ RMS</td><td>ระบุให้ชัดแต่ต้น โดยเฉพาะตอนคำนวณกำลัง</td></tr>
+        <tr><td>เขียน v(t) = 100∠30°</td><td>เฟสเซอร์ไม่ใช่ฟังก์ชันเวลา ต้องแปลงกลับ \(v(t)=100\cos(\omega t+30^\circ)\)</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">10. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>แปลง \(-5-j5\) และ \(12\angle-150^\circ\) ไปอีกรูปหนึ่ง</li>
+        <li>คำนวณ \((6\angle20^\circ)(2\angle-50^\circ)/(3\angle-90^\circ)\)</li>
+        <li>\(10\cos(\omega t+45^\circ)-10\cos(\omega t-45^\circ)\) = ?</li>
+        <li>ประจุ C = 100 μF มีแรงดัน \(10\cos(500t)\) V จงหากระแสด้วยเฟสเซอร์</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>\(-5-j5=7.071\angle-135^\circ\); \(12\angle-150^\circ=-10.39-j6\)</li>
+        <li>\(\dfrac{12\angle-30^\circ}{3\angle-90^\circ}=4\angle60^\circ\)</li>
+        <li>\((7.071+j7.071)-(7.071-j7.071)=j14.14=14.14\angle90^\circ\) → \(14.14\cos(\omega t+90^\circ)=-14.14\sin\omega t\)</li>
+        <li>\(\mathbf I=j\omega C\mathbf V=j(500)(10^{-4})(10)=j0.5\) → \(i=0.5\cos(500t+90^\circ)\) A (กระแสนำหน้า 90°)</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">11. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#H1">H1</a>–<a href="#H2">H2</a></td><td>\(e^{j\theta}=\cos\theta+j\sin\theta\), \(\mathbf V=V_m\angle\varphi\)</td></tr>
+        <tr><td><a href="#H3">H3</a> แปลงรูป</td><td>\(r=\sqrt{a^2+b^2}\), \(\theta=\operatorname{atan2}(b,a)\)</td></tr>
+        <tr><td><a href="#H4">H4</a>–<a href="#H6">H6</a> ดำเนินการ</td><td>บวก: สี่เหลี่ยมมุมฉาก · คูณ/หาร: เชิงขั้ว · j = หมุน 90°</td></tr>
+        <tr><td><a href="#H7">H7</a> บวกไซน์</td><td>กฎโคไซน์ของเวกเตอร์</td></tr>
+        <tr><td><a href="#H8">H8</a> แคลคูลัส</td><td>\(d/dt\to j\omega\), \(\int\to1/(j\omega)\)</td></tr>
+        <tr><td><a href="#H9">H9</a> RMS</td><td>\(\mathbf S=\mathbf V_{\text{rms}}\mathbf I_{\text{rms}}^*\)</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">12. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li>C. K. Alexander &amp; M. N. O. Sadiku, <i>Fundamentals of Electric Circuits</i>, บทที่ 9 Sinusoids and Phasors</li>
+        <li><a href="https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/" target="_blank" rel="noopener">MIT OCW 6.002 Circuits and Electronics</a> — Sinusoidal steady state และ impedance</li>
+        <li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-2-simple-ac-circuits" target="_blank" rel="noopener">OpenStax University Physics Vol. 2 §15.2–15.3</a> — แผนภาพเฟสเซอร์ของ R, L, C</li>
+      </ul>
+      <p>ต่อไป: นำเฟสเซอร์ไปวิเคราะห์วงจรจริงใน <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจรไฟฟ้ากระแสสลับด้วยเฟสเซอร์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

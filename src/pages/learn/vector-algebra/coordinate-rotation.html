@@ -1,0 +1,219 @@
+<!--meta
+{
+  "title": "การหมุนแกนพิกัด 2D/3D: เมทริกซ์หมุน มุมออยเลอร์ yaw pitch roll สูตรโรดริเกส และการแปลง Park ของมอเตอร์ | อาจารย์มด",
+  "h1": "การหมุนแกนพิกัด: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง",
+  "description": "เรียนการหมุนแกนภาษาไทย: เวกเตอร์เดียวกันมีองค์ประกอบต่างกันในสองกรอบ สูตร x′ = x cos θ + y sin θ หมุนแกนกับหมุนเวกเตอร์ เมทริกซ์หมุนตั้งฉาก RᵀR = I det R = 1 พื้นเอียง เมทริกซ์ Rx Ry Rz ลำดับการหมุน มุมออยเลอร์ Z-Y-X ของโดรนและ IMU หามุมเอียงจากแรงโน้มถ่วง สูตรโรดริเกส และการแปลง Clarke-Park ของมอเตอร์ พร้อมฉาก 3 มิติหมุนกรอบได้",
+  "ogTitle": "การหมุนแกนพิกัด 2D/3D และมุมออยเลอร์",
+  "lesson": "vector-algebra", "sub": "coordinate-rotation", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Undergraduate"],
+  "about": ["Rotation of axes", "Rotation matrix", "Euler angles", "Rodrigues' rotation formula", "Change of basis", "Park transformation", "Inertial measurement unit"],
+  "scripts": ["/assets/lesson.js", "/assets/vec3d.js", "/assets/vec-mech.js"],
+  "og": {"title": "หมุนแกนพิกัด 2D / 3D", "sub": "เมทริกซ์หมุน · มุมออยเลอร์ · IMU · การแปลง Park", "eyebrow": "เวกเตอร์ 3.3 · Rotation of Axes", "sym": "R(θ)"},
+  "faq": [
+    {"q": "หมุนแกนกับหมุนเวกเตอร์ต่างกันอย่างไร?", "a": "หมุนเวกเตอร์ (active) คือย้ายลูกศรไปชี้ทิศใหม่ในกรอบเดิม v_new = R v ส่วนหมุนแกน (passive) คือเวกเตอร์อยู่ที่เดิมแต่เราอ่านองค์ประกอบในแกนที่หมุนไป v′ = Rᵀ v การหมุนแกนไป +θ ให้องค์ประกอบเหมือนการหมุนเวกเตอร์ไป −θ"},
+    {"q": "เมทริกซ์หมุนมีสมบัติอะไร?", "a": "คอลัมน์และแถวเป็นเวกเตอร์หนึ่งหน่วยที่ตั้งฉากกัน RᵀR = I จึงหาอินเวอร์สได้ง่าย R⁻¹ = Rᵀ และ det R = +1 การหมุนไม่เปลี่ยนความยาวและมุมระหว่างเวกเตอร์"},
+    {"q": "ลำดับการหมุนสำคัญไหม?", "a": "สำคัญมากในสามมิติ การหมุนรอบ x แล้ว z ให้ผลต่างจาก z แล้ว x เพราะการคูณเมทริกซ์ไม่สลับที่ มุมออยเลอร์จึงต้องระบุลำดับเสมอ เช่น Z-Y-X (yaw-pitch-roll)"},
+    {"q": "การหมุนแกนเกี่ยวกับมอเตอร์ไฟฟ้าอย่างไร?", "a": "การแปลง Park ในการควบคุมมอเตอร์แบบ field oriented control คือการหมุนแกน αβ ไปตามมุมโรเตอร์ θ ทำให้กระแสสามเฟสที่เป็นไซน์กลายเป็นค่าคงที่ i_d และ i_q ซึ่งควบคุมด้วย PI ได้ง่าย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>หมุนแกนพิกัด</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 3 · Rotation of axes &amp; rotation matrices</p>
+      <h1>การหมุนแกนพิกัด: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง</h1>
+      <p class="lede">โจทย์พื้นเอียงง่ายขึ้นทันทีเมื่อหมุนแกน x ให้ขนานกับพื้น โดรนรู้ว่าตัวเองเอียงเท่าไรจากการอ่านแรงโน้มถ่วงในแกนของตัวเอง และอินเวอร์เตอร์ขับมอเตอร์ควบคุมกระแสได้นิ่งเพราะหมุนแกนตามโรเตอร์ ทั้งหมดใช้ความคิดเดียว: <strong>เวกเตอร์ไม่เปลี่ยน แต่ตัวเลขที่ใช้บรรยายมันเปลี่ยนตามกรอบ</strong> บทนี้สร้างเมทริกซ์หมุนจาก dot product แล้วต่อยอดสู่สามมิติ มุมออยเลอร์ และงานไฟฟ้า</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#two-d">หมุนแกน 2 มิติ</a><a class="btn btn-ghost btn-sm" href="#three-d">เมทริกซ์ 3 มิติ</a><a class="btn btn-ghost btn-sm" href="#euler">มุมออยเลอร์</a><a class="btn btn-ghost btn-sm" href="#park">การแปลง Park</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>องค์ประกอบในแกนใหม่ = dot product กับเวกเตอร์หนึ่งหน่วยของแกนใหม่</li>
+        <li>2D: \(x'=x\cos\theta+y\sin\theta,\ y'=-x\sin\theta+y\cos\theta\) คือ \(\mathbf v'=R(\theta)^{\mathsf T}\mathbf v\)</li>
+        <li>\(R^{\mathsf T}R=I,\ \det R=1\): ความยาวและมุมไม่เปลี่ยน</li>
+        <li>3D: \(R=R_z(\psi)R_y(\theta)R_x(\phi)\) ลำดับสำคัญ — คูณสลับแล้วได้คนละการหมุน</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น rotation, euler, orthogonal, rodrigues, park, clarke" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="idea">
+      <h2 id="idea">1. แนวคิด: ลูกศรเดิม ตัวเลขใหม่ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>เวกเตอร์ความยาว 7.21 หน่วยที่ชี้ไปทางหนึ่ง อาจเขียนเป็น (6, 4) ในแกน xy หรือ (7.20, 0.46) ในแกนที่หมุนไป 30° ทั้งสองชุดบรรยายลูกศรเส้นเดียวกัน การเลือกกรอบที่ดีทำให้สมการง่ายลง เช่น ให้แกนหนึ่งขนานกับพื้นเอียง กับเพลามอเตอร์ หรือกับแขนหุ่นยนต์</p>
+      <p>เครื่องมือที่ทำงานนี้คือ dot product: ถ้า \(\mathbf e_1'\) คือเวกเตอร์หนึ่งหน่วยของแกน x′ องค์ประกอบ x′ ของ \(\mathbf v\) คือ \(\mathbf v\cdot\mathbf e_1'\) (การฉายบนแกนใหม่ ดู <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="two-d">
+      <h2 id="two-d">2. หมุนแกนในระนาบ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>หมุนแกนไปทวนเข็ม θ เวกเตอร์หนึ่งหน่วยของแกนใหม่คือ \(\mathbf e_1'=(\cos\theta,\sin\theta)\) และ \(\mathbf e_2'=(-\sin\theta,\cos\theta)\) จึงได้</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="T1" data-k="rotation of axes 2D formula x' y' cos sin หมุนแกน สองมิติ">
+          <p class="tf-n"><b><span class="fid">T1</span> Rotation of axes (2D)</b> องค์ประกอบในแกนที่หมุน θ</p>
+          \[ x'=\mathbf v\cdot\mathbf e_1'=x\cos\theta+y\sin\theta,\qquad y'=\mathbf v\cdot\mathbf e_2'=-x\sin\theta+y\cos\theta \]
+          \[ \begin{bmatrix}x'\\y'\end{bmatrix}=\begin{bmatrix}\cos\theta&amp;\sin\theta\\-\sin\theta&amp;\cos\theta\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix}=R(\theta)^{\mathsf T}\begin{bmatrix}x\\y\end{bmatrix} \]
+        </div>
+        <div class="tf wide" id="T2" data-k="active passive rotation vector versus axes R v transpose หมุนเวกเตอร์ หมุนแกน active passive">
+          <p class="tf-n"><b><span class="fid">T2</span> Active vs passive rotation</b> หมุนเวกเตอร์กับหมุนแกน</p>
+          \[ \text{หมุนเวกเตอร์ (active): }\mathbf v_{\text{new}}=R(\theta)\mathbf v,\qquad \text{หมุนแกน (passive): }\mathbf v'=R(\theta)^{\mathsf T}\mathbf v=R(-\theta)\mathbf v,\qquad R(\theta)=\begin{bmatrix}\cos\theta&amp;-\sin\theta\\\sin\theta&amp;\cos\theta\end{bmatrix} \]
+          <p class="tf-x">ความสับสนอันดับหนึ่งของบทนี้: ตำราหุ่นยนต์มักใช้ active ส่วนตำรากลศาสตร์มักใช้ passive ให้ดูว่าอะไรถูกหมุน — ลูกศรหรือแกน</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-t1"><div class="wx-head"><span class="mono">ตัวอย่าง T-1 · อ่านเวกเตอร์ในแกนที่หมุน 30°</span><h3>\(\mathbf v=(6,4)\) จงหาองค์ประกอบในแกนที่หมุนทวนเข็ม 30°</h3></div><ol class="steps">
+        <li><p>\(x'=6\cos30^\circ+4\sin30^\circ=5.196+2=7.196\)</p></li>
+        <li><p>\(y'=-6\sin30^\circ+4\cos30^\circ=-3+3.464=0.464\)</p></li>
+        <li><p>ตรวจความยาว: \(\sqrt{6^2+4^2}=7.211\) และ \(\sqrt{7.196^2+0.464^2}=7.211\) ✓</p></li>
+      </ol><p class="answer">\(\mathbf v'=(7.196,\ 0.464)\) — แกน x′ เกือบขนานกับ v จึงได้ y′ เล็ก</p></div>
+      <div class="v3d" data-scene="rotate2d" data-dim="2" data-h="380"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="orthogonal">
+      <h2 id="orthogonal">3. เมทริกซ์หมุนเป็นเมทริกซ์ตั้งฉาก <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="T3" data-k="orthogonal matrix transpose inverse determinant preserves length เมทริกซ์ตั้งฉาก อินเวอร์ส ดีเทอร์มิแนนต์">
+          <p class="tf-n"><b><span class="fid">T3</span> Properties of rotation matrices</b> สมบัติของเมทริกซ์หมุน</p>
+          \[ R^{\mathsf T}R=RR^{\mathsf T}=I,\qquad R^{-1}=R^{\mathsf T},\qquad \det R=+1,\qquad \lVert R\mathbf v\rVert=\lVert\mathbf v\rVert,\qquad (R\mathbf a)\cdot(R\mathbf b)=\mathbf a\cdot\mathbf b \]
+          <p class="tf-x">ทุกคอลัมน์คือแกนใหม่หนึ่งแกนที่เขียนในกรอบเดิม ถ้า det = −1 คือการสะท้อน (กลับมือ) ไม่ใช่การหมุน อินเวอร์สที่ได้จากการทรานสโพสทำให้คอมพิวเตอร์คำนวณเร็วมาก</p>
+        </div>
+      </div>
+      <p>เชื่อมกับ <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a> และ <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a>: เมทริกซ์หมุนสามมิติมีค่าเฉพาะ 1 หนึ่งค่า เวกเตอร์เฉพาะคู่กับค่านี้คือ<strong>แกนหมุน</strong></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="incline">
+      <h2 id="incline">4. ใช้จริงครั้งแรก: พื้นเอียง <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>วางแกน x′ ตามพื้นเอียงมุม θ และ y′ ตั้งฉากพื้น น้ำหนัก \(\mathbf W=(0,-mg)\) ในแกนเดิม หมุนแกนด้วย T1 ได้ \(W_{x'}=-mg\sin\theta\) (ลงเนิน) และ \(W_{y'}=-mg\cos\theta\) (กดพื้น) ทันที ไม่ต้องจำรูปสามเหลี่ยมที่สับสนมุม</p>
+      <div class="wx" id="ex-t2"><div class="wx-head"><span class="mono">ตัวอย่าง T-2 · กล่อง 10 kg บนพื้นเอียง 30°</span><h3>จงหาองค์ประกอบน้ำหนักขนานและตั้งฉากกับพื้นด้วยการหมุนแกน</h3></div><ol class="steps">
+        <li><p>\(\mathbf W=(0,-98.1)\) N, θ = 30°</p></li>
+        <li><p>\(W_{x'}=0\cdot\cos30^\circ+(-98.1)\sin30^\circ=-49.05\) N · \(W_{y'}=-0\cdot\sin30^\circ+(-98.1)\cos30^\circ=-84.96\) N</p></li>
+      </ol><p class="answer">49.05 N ลงเนิน และ 84.96 N กดพื้น — ต่อด้วยแรงเสียดทานในแล็บด้านล่าง</p></div>
+      <div class="mech-lab" data-lab="incline" data-p='{"P":60}'><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="three-d">
+      <h2 id="three-d">5. หมุนในสามมิติ: Rx Ry Rz และลำดับการหมุน <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="T4" data-k="elementary rotation matrices Rx Ry Rz 3D เมทริกซ์หมุนพื้นฐาน สามมิติ">
+          <p class="tf-n"><b><span class="fid">T4</span> Elementary rotations (active, right-hand rule)</b> เมทริกซ์หมุนรอบแกนหลัก</p>
+          \[ R_x(\phi)=\begin{bmatrix}1&amp;0&amp;0\\0&amp;\cos\phi&amp;-\sin\phi\\0&amp;\sin\phi&amp;\cos\phi\end{bmatrix},\quad R_y(\theta)=\begin{bmatrix}\cos\theta&amp;0&amp;\sin\theta\\0&amp;1&amp;0\\-\sin\theta&amp;0&amp;\cos\theta\end{bmatrix},\quad R_z(\psi)=\begin{bmatrix}\cos\psi&amp;-\sin\psi&amp;0\\\sin\psi&amp;\cos\psi&amp;0\\0&amp;0&amp;1\end{bmatrix} \]
+          <p class="tf-x">สังเกตเครื่องหมายของ R_y สลับตำแหน่งกับอีกสองตัว เพราะลำดับวงจร z → x (x × z = −y)</p>
+        </div>
+        <div class="tf wide" id="T5" data-k="order matters non commutative composition ลำดับ การหมุน ไม่สลับที่">
+          <p class="tf-n"><b><span class="fid">T5</span> Composition is not commutative</b> ลำดับการหมุนสำคัญ</p>
+          \[ R_z(90^\circ)R_x(90^\circ)\,\mathbf i=\mathbf j\qquad\text{แต่}\qquad R_x(90^\circ)R_z(90^\circ)\,\mathbf i=\mathbf k \]
+          <p class="tf-x">ลองกับโทรศัพท์จริง: หมุนรอบแกนตั้งก่อนแล้วพลิก กับพลิกก่อนแล้วหมุน หน้าจอจะชี้คนละทิศ</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="euler">
+      <h2 id="euler">6. มุมออยเลอร์ Z-Y-X: yaw pitch roll ของโดรนและแขนกล <span class="lv lv-a">ขั้นสูง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="T6" data-k="euler angles yaw pitch roll ZYX aerospace drone IMU มุมออยเลอร์ หันเห เงย หมุนควง">
+          <p class="tf-n"><b><span class="fid">T6</span> Z-Y-X Euler angles</b> มุมออยเลอร์แบบ yaw-pitch-roll</p>
+          \[ R=R_z(\psi)\,R_y(\theta)\,R_x(\phi),\qquad \mathbf v_{\text{world}}=R\,\mathbf v_{\text{body}},\qquad \mathbf v_{\text{body}}=R^{\mathsf T}\mathbf v_{\text{world}} \]
+          <p class="tf-x">ψ (yaw) หันรอบแกนตั้ง θ (pitch) เงยรอบแกน y ใหม่ φ (roll) หมุนควงรอบแกน x ใหม่ เมื่อ θ = ±90° จะเกิด gimbal lock (yaw กับ roll กลายเป็นแกนเดียวกัน) ระบบจริงจึงนิยม quaternion ภายใน</p>
+        </div>
+        <div class="tf wide" id="T7" data-k="tilt from accelerometer gravity pitch roll atan2 IMU มุมเอียง ความเร่ง แรงโน้มถ่วง">
+          <p class="tf-n"><b><span class="fid">T7</span> Tilt from gravity (accelerometer at rest)</b> หามุมเอียงจากแรงโน้มถ่วง</p>
+          \[ \mathbf f_{\text{body}}=R^{\mathsf T}\begin{bmatrix}0\\0\\g\end{bmatrix}=g\begin{bmatrix}-\sin\theta\\\sin\phi\cos\theta\\\cos\phi\cos\theta\end{bmatrix}\ \Rightarrow\ \theta=\operatorname{atan2}\!\big(-f_x,\sqrt{f_y^2+f_z^2}\big),\quad \phi=\operatorname{atan2}(f_y,f_z) \]
+          <p class="tf-x">yaw หาจากแรงโน้มถ่วงไม่ได้ (การหมุนรอบแกนตั้งไม่เปลี่ยนทิศของ g) ต้องใช้แมกนีโตมิเตอร์ช่วย ดูตัวอย่าง <a href="/learn/vector-algebra/direction-cosines/#ex-k5">K-5</a></p>
+        </div>
+      </div>
+      <div class="wx" id="ex-t3"><div class="wx-head"><span class="mono">ตัวอย่าง T-3 · ตรวจมุมเอียงของ IMU</span><h3>บอร์ดเอียงด้วย ψ = 40°, θ = −25°, φ = 20° จงหาเมทริกซ์ R ค่าที่ accelerometer อ่านได้ขณะนิ่ง และกู้มุมเอียงกลับ</h3></div><ol class="steps">
+        <li><p>\(R=R_z(40^\circ)R_y(-25^\circ)R_x(20^\circ)=\begin{bmatrix}0.6943&amp;-0.7147&amp;-0.0844\\0.5826&amp;0.6269&amp;-0.5173\\0.4226&amp;0.3100&amp;0.8517\end{bmatrix}\), det R = 1</p></li>
+        <li><p>\(\mathbf f=R^{\mathsf T}(0,0,9.81)=9.81\times(\text{แถวที่ 3 ของ }R)=(4.146,\ 3.041,\ 8.355)\) m/s²</p></li>
+        <li><p>\(\theta=\operatorname{atan2}(-4.146,\sqrt{3.041^2+8.355^2})=-25.0^\circ\), \(\phi=\operatorname{atan2}(3.041,8.355)=20.0^\circ\) ✓</p></li>
+        <li><p>ψ = 40° ไม่ปรากฏใน f เลย ยืนยันว่าต้องใช้เซนเซอร์อื่นหา yaw</p></li>
+      </ol><p class="answer">accelerometer อ่าน (4.15, 3.04, 8.36) m/s² และกู้ pitch −25°, roll 20° ได้ตรง</p></div>
+      <div class="v3d" data-scene="rotate3d"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rodrigues">
+      <h2 id="rodrigues">7. หมุนรอบแกนใด ๆ: สูตรโรดริเกส <span class="lv lv-a">ขั้นสูง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="T8" data-k="rodrigues axis angle rotation formula cross product สูตรโรดริเกส หมุนรอบแกน">
+          <p class="tf-n"><b><span class="fid">T8</span> Rodrigues' rotation formula</b> หมุนรอบแกนหนึ่งหน่วย k ด้วยมุม θ</p>
+          \[ \mathbf v_{\text{rot}}=\mathbf v\cos\theta+(\mathbf k\times\mathbf v)\sin\theta+\mathbf k(\mathbf k\cdot\mathbf v)(1-\cos\theta) \]
+          <p class="tf-x">อ่านจากเวกเตอร์ล้วน: ส่วนที่ขนานกับแกน \(\mathbf k(\mathbf k\cdot\mathbf v)\) ไม่หมุน ส่วนตั้งฉากหมุนในระนาบที่มี \(\mathbf v_\perp\) และ \(\mathbf k\times\mathbf v\) เป็นแกน — ใช้ทั้ง dot และ cross ในสูตรเดียว</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-t4"><div class="wx-head"><span class="mono">ตัวอย่าง T-4 · หมุนรอบแนวทแยง</span><h3>หมุน \(\mathbf i=(1,0,0)\) รอบแกน \(\mathbf k=(1,1,1)/\sqrt3\) ไป 120°</h3></div><ol class="steps">
+        <li><p>\(\mathbf k\cdot\mathbf i=1/\sqrt3\), \(\mathbf k\times\mathbf i=(0,1,-1)/\sqrt3\), \(\cos120^\circ=-\tfrac12\), \(\sin120^\circ=\tfrac{\sqrt3}{2}\)</p></li>
+        <li><p>\(\mathbf v=(-\tfrac12,0,0)+\tfrac12(0,1,-1)+\tfrac{1}{3}(1,1,1)(\tfrac32)=(-\tfrac12+\tfrac12,\ \tfrac12+\tfrac12,\ -\tfrac12+\tfrac12)=(0,1,0)\)</p></li>
+      </ol><p class="answer">ได้ \(\mathbf j\) — การหมุน 120° รอบแนว (1,1,1) สลับแกน x → y → z → x เป็นวงจร</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="park">
+      <h2 id="park">8. งานไฟฟ้า: การแปลง Clarke และ Park คือการหมุนแกน <span class="lv lv-a">ขั้นสูง</span></h2>
+      <p>มอเตอร์สามเฟสที่ควบคุมด้วย field oriented control (FOC) วัดกระแส \(i_a,i_b,i_c\) ที่เป็นไซน์ แปลงเป็นเวกเตอร์สองมิติ \((i_\alpha,i_\beta)\) บนระนาบนิ่ง (Clarke) ซึ่งหมุนด้วยความเร็วซิงโครนัส จากนั้น<strong>หมุนแกนตามมุมโรเตอร์ θ</strong> (Park) เวกเตอร์กระแสจึงนิ่งในกรอบ dq ทำให้ตัวควบคุม PI ควบคุมค่าคงที่ได้ เหมือนนั่งบนม้าหมุนแล้วม้าตัวหน้าดูอยู่กับที่</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="T9" data-k="clarke park transform dq alpha beta FOC motor control การแปลง clarke park มอเตอร์">
+          <p class="tf-n"><b><span class="fid">T9</span> Clarke and Park transforms (amplitude-invariant)</b> การแปลง Clarke และ Park</p>
+          \[ i_\alpha=\tfrac23\big(i_a-\tfrac12 i_b-\tfrac12 i_c\big),\quad i_\beta=\tfrac{1}{\sqrt3}(i_b-i_c);\qquad \begin{bmatrix}i_d\\i_q\end{bmatrix}=\begin{bmatrix}\cos\theta&amp;\sin\theta\\-\sin\theta&amp;\cos\theta\end{bmatrix}\begin{bmatrix}i_\alpha\\i_\beta\end{bmatrix} \]
+          <p class="tf-x">เมทริกซ์ Park คือ T1 ทุกประการ — เป็นการหมุนแกนแบบ passive ด้วยมุมไฟฟ้าของโรเตอร์</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-t5"><div class="wx-head"><span class="mono">ตัวอย่าง T-5 · กระแสสามเฟสสมดุล 10 A ที่ ωt = 30°</span><h3>\(i_a=10\cos\omega t,\ i_b=10\cos(\omega t-120^\circ),\ i_c=10\cos(\omega t+120^\circ)\) จงหา \(i_\alpha,i_\beta\) และ \(i_d,i_q\) เมื่อ θ = ωt = 30°</h3></div><ol class="steps">
+        <li><p>\(i_a=8.660,\ i_b=0,\ i_c=-8.660\) A</p></li>
+        <li><p>Clarke: \(i_\alpha=\tfrac23(8.660-0+4.330)=8.660\) A, \(i_\beta=(0+8.660)/\sqrt3=5.000\) A → เวกเตอร์ยาว 10 A ที่มุม 30°</p></li>
+        <li><p>Park: \(i_d=8.660\cos30^\circ+5\sin30^\circ=10.00\) A, \(i_q=-8.660\sin30^\circ+5\cos30^\circ=0\) A</p></li>
+        <li><p>ไม่ว่า ωt เป็นเท่าใด ได้ \(i_d=10,\ i_q=0\) เสมอ: ไซน์สามเส้นกลายเป็นค่าคงที่สองค่า</p></li>
+      </ol><p class="answer">\(i_d=10\) A, \(i_q=0\) — นี่คือเหตุผลที่ FOC ควบคุมแรงบิดของมอเตอร์ได้เหมือนมอเตอร์ DC</p></div>
+      <p>รายละเอียดการควบคุมอยู่ใน <a href="/learn/control-systems/power-electronics-control/">ระบบควบคุมในอิเล็กทรอนิกส์กำลัง</a> และการหมุนของเฟสเซอร์ใน <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">9. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>ใช้ R แทน Rᵀ (หรือกลับกัน)</td><td>ถามตัวเองว่าหมุนลูกศรหรือหมุนแกน ตรวจด้วยกรณีง่าย θ = 90°</td></tr>
+        <tr><td>คูณเมทริกซ์ผิดลำดับ</td><td>ZYX หมายถึง \(R_zR_yR_x\) เวกเตอร์ถูกคูณด้วย R_x ก่อน (อยู่ขวาสุด)</td></tr>
+        <tr><td>ลืมแปลงองศาเป็นเรเดียนในโปรแกรม</td><td>Math.cos ใน JavaScript/Python รับเรเดียน</td></tr>
+        <tr><td>ปัดเศษเมทริกซ์จนไม่ตั้งฉาก</td><td>ตรวจ \(R^{\mathsf T}R\approx I\) และ det ≈ 1 หลังคำนวณเสมอ</td></tr>
+        <tr><td>คิดว่าหา yaw จาก accelerometer ได้</td><td>การหมุนรอบแกนแรงโน้มถ่วงไม่เปลี่ยนค่าที่อ่าน ต้องใช้เข็มทิศหรือไจโร</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">10. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>\(\mathbf v=(3,-4)\) จงหาองค์ประกอบในแกนที่หมุน 90° และ −53.13°</li>
+        <li>หมุนเวกเตอร์ (1, 2, 0) ด้วย \(R_z(90^\circ)\)</li>
+        <li>accelerometer นิ่งอ่าน (0, 4.905, 8.496) m/s² บอร์ดเอียงอย่างไร?</li>
+        <li>กระแส \(i_\alpha=0,\ i_\beta=7\) A และ θ = 90° จงหา \(i_d, i_q\)</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>θ = 90°: (−4, −3) · θ = −53.13° (cos = 0.6, sin = −0.8): x′ = 3(0.6) + (−4)(−0.8) = 5, y′ = −3(−0.8) + (−4)(0.6) = 0 → (5, 0) แกน x′ ชี้ตามเวกเตอร์พอดี</li>
+        <li>\(R_z(90^\circ)(1,2,0)=(-2,1,0)\)</li>
+        <li>\(\theta=\operatorname{atan2}(0,9.81)=0^\circ\), \(\phi=\operatorname{atan2}(4.905,8.496)=30^\circ\): roll 30° ไม่เงย</li>
+        <li>\(i_d=0\cdot0+7\cdot1=7\) A, \(i_q=-0+7\cdot0=0\)</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">11. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#T1">T1</a> หมุนแกน 2D</td><td>\(\mathbf v'=R(\theta)^{\mathsf T}\mathbf v\)</td></tr>
+        <tr><td><a href="#T2">T2</a> หมุนเวกเตอร์</td><td>\(\mathbf v_{\text{new}}=R(\theta)\mathbf v\)</td></tr>
+        <tr><td><a href="#T3">T3</a> สมบัติ</td><td>\(R^{\mathsf T}R=I,\ \det R=1\)</td></tr>
+        <tr><td><a href="#T4">T4</a>–<a href="#T6">T6</a> สามมิติ</td><td>\(R=R_zR_yR_x\) ลำดับสำคัญ</td></tr>
+        <tr><td><a href="#T7">T7</a> มุมเอียงจาก g</td><td>\(\theta=\operatorname{atan2}(-f_x,\sqrt{f_y^2+f_z^2}),\ \phi=\operatorname{atan2}(f_y,f_z)\)</td></tr>
+        <tr><td><a href="#T8">T8</a> โรดริเกส</td><td>\(\mathbf v\cos\theta+(\mathbf k\times\mathbf v)\sin\theta+\mathbf k(\mathbf k\cdot\mathbf v)(1-\cos\theta)\)</td></tr>
+        <tr><td><a href="#T9">T9</a> Clarke–Park</td><td>หมุนแกน αβ ตามมุมโรเตอร์ได้ dq</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">12. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://hades.mech.northwestern.edu/index.php/Modern_Robotics" target="_blank" rel="noopener">Lynch &amp; Park, Modern Robotics (ฉบับเปิด) บทที่ 3 Rigid-Body Motions</a> — เมทริกซ์หมุน exponential coordinates และสูตรโรดริเกส</li>
+        <li><a href="https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/" target="_blank" rel="noopener">MIT OCW 18.06SC Linear Algebra</a> — เมทริกซ์ตั้งฉากและการเปลี่ยนฐาน</li>
+        <li>Texas Instruments, <i>Field Orientated Control of 3-Phase AC-Motors</i> (BPRA073) — การแปลง Clarke และ Park ในทางปฏิบัติ</li>
+      </ul>
+      <p>ต่อไป: ใช้เมทริกซ์หมุนต่อกันเป็นโซ่ใน <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a> หรือหมุนกรอบเองใน <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์</a> (ติ๊ก “กรอบหมุน”)</p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

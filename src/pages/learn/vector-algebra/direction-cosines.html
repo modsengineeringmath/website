@@ -1,0 +1,261 @@
+<!--meta
+{
+  "title": "ทิศทางโคไซน์ (Direction Cosines) และการแตกแรงสามมิติ: α β γ มุมราบ-มุมเงย แรงตามสายเคเบิล | อาจารย์มด",
+  "h1": "ทิศทางโคไซน์และการแตกแรงสามมิติ",
+  "description": "เรียนทิศทางโคไซน์ภาษาไทยแบบเข้มข้น: มุม α β γ กับแกน x y z, cos²α + cos²β + cos²γ = 1, เวกเตอร์หนึ่งหน่วย, แตกแรงสองขั้นด้วยมุมราบและมุมเงย, แรงตามแนวสายเคเบิลจากพิกัดสองจุด, รวมแรงสามมิติ, สนามแม่เหล็กจากเซนเซอร์ พร้อมแล็บ 3 มิติหมุนดูได้และตัวอย่างวิธีทำ",
+  "ogTitle": "ทิศทางโคไซน์ α β γ และการแตกแรงสามมิติ",
+  "lesson": "vector-algebra", "sub": "direction-cosines", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Direction cosines", "Coordinate direction angles", "3D force components", "Unit vector", "Position vector", "Cable tension", "Statics"],
+  "scripts": ["/assets/lesson.js", "/assets/vec3d.js"],
+  "og": {"title": "ทิศทางโคไซน์ α β γ", "sub": "แตกแรงสามมิติ · มุมราบ-มุมเงย · แรงตามสายเคเบิล", "eyebrow": "เวกเตอร์ 1.4 · Direction Cosines", "sym": "γ"},
+  "faq": [
+    {"q": "ทิศทางโคไซน์คืออะไร?", "a": "คือโคไซน์ของมุมที่เวกเตอร์ทำกับแกน +x, +y และ +z (มุม α, β, γ ตามลำดับ) ค่าทั้งสามเท่ากับองค์ประกอบของเวกเตอร์หนึ่งหน่วยในทิศนั้น cos α = Fx/|F|, cos β = Fy/|F|, cos γ = Fz/|F| และต้องเป็นไปตาม cos²α + cos²β + cos²γ = 1"},
+    {"q": "รู้มุมสองมุมแล้วหามุมที่สามได้ไหม?", "a": "ได้จาก cos²γ = 1 − cos²α − cos²β แต่จะได้สองคำตอบ γ และ 180° − γ ต้องดูจากโจทย์ว่าแรงชี้ขึ้น (Fz ≥ 0) หรือลง (Fz ≤ 0) ถ้า cos²α + cos²β มากกว่า 1 แปลว่ามุมที่ให้มาเป็นไปไม่ได้"},
+    {"q": "แรงตามสายเคเบิลเขียนเป็นเวกเตอร์อย่างไร?", "a": "หาเวกเตอร์ตำแหน่งจากจุดยึดไปจุดที่สายดึง r_AB = B − A หารด้วยความยาวได้เวกเตอร์หนึ่งหน่วย แล้วคูณขนาดแรงตึง F = |F| r_AB/|r_AB| วิธีนี้ไม่ต้องหามุมเลย และทิศทางโคไซน์คือองค์ประกอบของเวกเตอร์หนึ่งหน่วยนั้น"},
+    {"q": "มุม α β γ ต่างจากมุมราบและมุมเงยอย่างไร?", "a": "α β γ วัดจากสามแกนโดยตรงและอยู่ในช่วง 0° ถึง 180° ส่วนมุมราบ θ วัดในระนาบ xy และมุมเงย φ วัดจากระนาบ xy ขึ้นไป ใช้แตกแรงสองขั้น F_h = F cos φ, Fz = F sin φ, Fx = F_h cos θ, Fy = F_h sin θ ทั้งสองแบบให้เวกเตอร์เดียวกัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>ทิศทางโคไซน์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 1 · Direction cosines &amp; 3D force components</p>
+      <h1>ทิศทางโคไซน์และการแตกแรงสามมิติ</h1>
+      <p class="lede">ในสองมิติ มุมเดียวบอกทิศของแรงได้ครบ แต่ในสามมิติ สายเคเบิลของเสาอากาศ แรงบนข้อต่อแขนกล หรือสนามแม่เหล็กที่เซนเซอร์อ่านได้ ต้องบอกทิศด้วยมุมกับ<strong>สามแกน</strong> บทนี้สร้างเครื่องมือหลักของสแตติกส์สามมิติ: มุม α β γ ทิศทางโคไซน์ เวกเตอร์หนึ่งหน่วย การแตกแรงสองขั้น และการเขียนแรงตามแนวเส้นจากพิกัด พร้อมฉาก 3 มิติที่ลากหมุนดูได้ทุกมุม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#definition">นิยาม α β γ</a><a class="btn btn-ghost btn-sm" href="#two-step">มุมราบ-มุมเงย</a><a class="btn btn-ghost btn-sm" href="#along-line">แรงตามสายเคเบิล</a><a class="btn btn-ghost btn-sm" href="#lab">ฉาก 3 มิติ</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(\cos\alpha=F_x/F,\ \cos\beta=F_y/F,\ \cos\gamma=F_z/F\) และ \(\mathbf u_F=(\cos\alpha,\cos\beta,\cos\gamma)\)</li>
+        <li>เอกลักษณ์ \(\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1\) ทำให้รู้สองมุมแล้วหามุมที่สามได้ (มีสองคำตอบ)</li>
+        <li>แตกแรงสองขั้น: \(F_h=F\cos\varphi\), \(F_z=F\sin\varphi\), แล้ว \(F_x=F_h\cos\theta\), \(F_y=F_h\sin\theta\)</li>
+        <li>แรงตามสาย: \(\mathbf F=F\,\dfrac{\mathbf r_B-\mathbf r_A}{\lVert\mathbf r_B-\mathbf r_A\rVert}\) ไม่ต้องหามุมเลย</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น cosine, unit, azimuth, cable, resultant" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="why">
+      <h2 id="why">1. ทำไมสามมิติต้องใช้มุมกับสามแกน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>แรง 500 N ที่ “เอียง 60° จากแกน x” ในสามมิติยังไม่ได้บอกอะไรมากนัก เพราะเวกเตอร์ทุกเส้นบนผิวกรวยรอบแกน x ที่มีมุมยอด 60° ทำมุม 60° กับแกน x เหมือนกันหมด เราจึงต้องระบุเพิ่มว่าเวกเตอร์ทำมุมกับแกน y และแกน z เท่าใด หรือใช้มุมสองมุมแบบอื่น เช่น มุมราบกับมุมเงยแบบที่ใช้หันจานดาวเทียม</p>
+      <p>ทางวิศวกรรม ทิศของแรงสามมิติมักมาจากสามแหล่ง ซึ่งบทนี้จะสอนให้แปลงไปมาได้ทั้งหมด:</p>
+      <div class="ee-cards">
+        <div class="ee-card"><span class="mono">แบบ ①</span><h3>มุมกับสามแกน α β γ</h3><p>ตำราสแตติกส์และแบบงานโครงสร้าง เช่น “แรงทำมุม 60°, 45° และ 120° กับแกน x, y, z”</p></div>
+        <div class="ee-card"><span class="mono">แบบ ②</span><h3>มุมราบ θ + มุมเงย φ</h3><p>เสาอากาศ จานดาวเทียม แผงโซลาร์ ทิศของลมหรือแสงอาทิตย์ บอกเป็นทิศบนพื้นแล้วเงยขึ้น</p></div>
+        <div class="ee-card"><span class="mono">แบบ ③</span><h3>พิกัดสองจุดบนแนวแรง</h3><p>สายเคเบิล สายยึดเสา โซ่รอก แขนกล รู้ว่าสายวิ่งจากจุดไหนไปจุดไหน</p></div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="definition">
+      <h2 id="definition">2. นิยามมุม α β γ และทิศทางโคไซน์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>วางหางของเวกเตอร์ \(\mathbf F\) ที่จุดกำเนิด มุม <strong>α</strong> คือมุมระหว่าง \(\mathbf F\) กับแกน +x, <strong>β</strong> คือมุมกับ +y และ <strong>γ</strong> คือมุมกับ +z ทุกมุมอยู่ในช่วง 0° ถึง 180° (ไม่ใช้มุมติดลบ เพราะเป็นมุมระหว่างสองทิศในอวกาศ ไม่ใช่การหมุนในระนาบ) เมื่อฉายเวกเตอร์ลงบนแกน x จะได้ \(F_x=F\cos\alpha\) ซึ่งก็คือ dot product กับเวกเตอร์ฐาน \(\mathbf F\cdot\mathbf i=F(1)\cos\alpha\)</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 330" role="img" aria-labelledby="k-def-t k-def-d">
+          <title id="k-def-t">มุม α β γ ระหว่างแรง F กับแกน x y z</title><desc id="k-def-d">แรง F จากจุดกำเนิดไปจุด (3,4,5) แสดงกล่ององค์ประกอบเส้นประ และมุม alpha beta gamma ที่ทำกับแกน x y z</desc>
+          <defs><marker id="k-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M170 210 L52 280" marker-end="url(#k-arr)"/><path class="ax" d="M170 210 L380 210" marker-end="url(#k-arr)"/><path class="ax" d="M170 210 L170 30" marker-end="url(#k-arr)"/>
+          <text x="40" y="294">x</text><text x="386" y="215">y</text><text x="164" y="22">z</text><text x="150" y="226">O</text>
+          <path class="ln dash" d="M170 210 L104 249 L224 249 L224 109"/><path class="ln dash" d="M170 210 L224 249"/>
+          <path class="ln ln-cur" d="M170 210 L222 112" marker-end="url(#k-arr)" style="stroke-width:3"/>
+          <circle class="dot" cx="224" cy="109" r="4"/><text class="c-cur" x="232" y="104">F = (3, 4, 5)</text>
+          <path class="ln ln-p1" d="M140 228 Q150 232 163 215" /><text class="c-p1" x="122" y="246">α</text>
+          <path class="ln ln-p2" d="M205 210 Q206 196 190 180"/><text class="c-p2" x="210" y="196">β</text>
+          <path class="ln" d="M170 170 Q178 168 186 178" style="stroke:var(--accent)"/><text x="182" y="160" style="fill:var(--accent)">γ</text>
+          <text class="t-th" x="410" y="70">Fx = F cos α</text><text class="t-th" x="410" y="100">Fy = F cos β</text><text class="t-th" x="410" y="130">Fz = F cos γ</text>
+          <text class="t-th" x="410" y="175">u_F = (cos α, cos β, cos γ)</text><text class="t-th" x="410" y="205">|u_F| = 1</text>
+          <text class="t-sm" x="410" y="250">มุมแต่ละมุมอยู่ใน “ระนาบ</text><text class="t-sm" x="410" y="268">ที่มีแกนนั้นและ F” ไม่ใช่</text><text class="t-sm" x="410" y="286">ระนาบพิกัด xy yz zx</text>
+        </svg>
+        <figcaption>มุม α วัดในระนาบที่มีแกน x และ F เอง ไม่ใช่ในระนาบ xy — ภาพสองมิติหลอกตาได้ จึงต้องใช้แล็บหมุนดูด้านล่าง</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="K1" data-k="direction cosines coordinate direction angles alpha beta gamma ทิศทางโคไซน์ มุมกับแกน">
+          <p class="tf-n"><b><span class="fid">K1</span> Direction cosines</b> ทิศทางโคไซน์</p>
+          \[ \cos\alpha=\frac{F_x}{F},\qquad \cos\beta=\frac{F_y}{F},\qquad \cos\gamma=\frac{F_z}{F},\qquad F=\lVert\mathbf F\rVert=\sqrt{F_x^2+F_y^2+F_z^2} \]
+          <p class="tf-x">เครื่องหมายของโคไซน์ตรงกับเครื่องหมายขององค์ประกอบ: \(F_x&lt;0\) แปลว่า \(\alpha&gt;90^\circ\) ใช้ \(\arccos\) ได้ตรง ๆ เพราะผลลัพธ์อยู่ในช่วง 0°–180° พอดี ไม่มีปัญหาควอดแรนต์แบบ arctan</p>
+        </div>
+        <div class="tf wide" id="K2" data-k="unit vector direction cosines เวกเตอร์หนึ่งหน่วย ทิศ">
+          <p class="tf-n"><b><span class="fid">K2</span> Unit vector from direction cosines</b> เวกเตอร์หนึ่งหน่วยคือชุดทิศทางโคไซน์</p>
+          \[ \mathbf u_F=\frac{\mathbf F}{F}=\cos\alpha\,\mathbf i+\cos\beta\,\mathbf j+\cos\gamma\,\mathbf k,\qquad \mathbf F=F\,\mathbf u_F \]
+          <p class="tf-x">นี่คือการแยก “ขนาด” ออกจาก “ทิศ” ให้ชัด: ทิศเก็บใน \(\mathbf u_F\) ที่ไม่มีหน่วย ขนาดเก็บใน \(F\) ที่มีหน่วยนิวตัน</p>
+        </div>
+        <div class="tf wide" id="K3" data-k="identity sum of squares cos² อัตลักษณ์ ผลบวกกำลังสอง 1">
+          <p class="tf-n"><b><span class="fid">K3</span> Fundamental identity</b> ผลบวกกำลังสองของทิศทางโคไซน์</p>
+          \[ \cos^2\alpha+\cos^2\beta+\cos^2\gamma=1 \]
+          <p class="tf-x">พิสูจน์: \(\lVert\mathbf u_F\rVert^2=1\) และ \(\lVert\mathbf u_F\rVert^2=\cos^2\alpha+\cos^2\beta+\cos^2\gamma\) จึงเท่ากัน ในสองมิติจะลดรูปเป็น \(\cos^2\theta+\sin^2\theta=1\) เพราะมุมกับแกน y เท่ากับ \(90^\circ-\theta\)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-k0"><div class="wx-head"><span class="mono">ตัวอย่าง K-0 · จากองค์ประกอบสู่มุม</span><h3>แรง \(\mathbf F=(300,400,500)\) N จงหาขนาด ทิศทางโคไซน์ และมุม α β γ</h3></div><ol class="steps">
+        <li><p>ขนาด \(F=\sqrt{300^2+400^2+500^2}=\sqrt{500{,}000}=707.11\) N</p></li>
+        <li><p>\(\cos\alpha=300/707.11=0.4243\Rightarrow\alpha=64.90^\circ\); \(\cos\beta=0.5657\Rightarrow\beta=55.55^\circ\); \(\cos\gamma=0.7071\Rightarrow\gamma=45.00^\circ\)</p></li>
+        <li><p>ตรวจ \(0.18+0.32+0.50=1\) ✓ และ \(\mathbf u_F=(0.4243,0.5657,0.7071)\)</p></li>
+      </ol><p class="answer">\(F=707.1\) N · \(\alpha=64.9^\circ,\ \beta=55.6^\circ,\ \gamma=45.0^\circ\) — ค่าเริ่มต้นในแล็บ 3 มิติด้านล่าง ลองลากหมุนดูว่ามุม γ อยู่ระหว่างลูกศรกับแกน z จริง</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="from-angles">
+      <h2 id="from-angles">3. จากมุมสู่องค์ประกอบ และการหามุมที่สาม <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="K4" data-k="components from angles magnitude แรงจากมุม องค์ประกอบ">
+          <p class="tf-n"><b><span class="fid">K4</span> Components from magnitude and direction angles</b> องค์ประกอบจากขนาดและมุม</p>
+          \[ \mathbf F=F\cos\alpha\,\mathbf i+F\cos\beta\,\mathbf j+F\cos\gamma\,\mathbf k \]
+        </div>
+        <div class="tf wide" id="K5" data-k="third angle two solutions gamma ambiguity มุมที่สาม สองคำตอบ">
+          <p class="tf-n"><b><span class="fid">K5</span> The third angle</b> มุมที่สามมีสองคำตอบ</p>
+          \[ \cos\gamma=\pm\sqrt{1-\cos^2\alpha-\cos^2\beta},\qquad \gamma_2=180^\circ-\gamma_1 \]
+          <p class="tf-x">เครื่องหมาย + เมื่อแรงชี้ขึ้น (\(F_z\ge0\)) และ − เมื่อชี้ลง ถ้า \(\cos^2\alpha+\cos^2\beta&gt;1\) ชุดมุมนั้นเป็นไปไม่ได้ทางเรขาคณิต เช่น α = β = 30° (เพราะ 0.75 + 0.75 = 1.5)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-k1"><div class="wx-head"><span class="mono">ตัวอย่าง K-1 · โจทย์คลาสสิกของสแตติกส์</span><h3>แรง 500 N ทำมุม α = 60° กับแกน x และ β = 45° กับแกน y แรงชี้ขึ้น จงหา γ และเขียนเวกเตอร์แรง</h3></div><ol class="steps">
+        <li><p>\(\cos^2\gamma=1-\cos^2 60^\circ-\cos^2 45^\circ=1-0.25-0.5=0.25\Rightarrow\cos\gamma=\pm0.5\)</p></li>
+        <li><p>แรงชี้ขึ้น เลือก \(\cos\gamma=+0.5\Rightarrow\gamma=60^\circ\) (ถ้าชี้ลงจะได้ \(\gamma=120^\circ\))</p></li>
+        <li><p>\(\mathbf F=500(\cos60^\circ,\cos45^\circ,\cos60^\circ)=(250,\ 353.6,\ 250)\) N</p></li>
+        <li><p>ตรวจขนาด \(\sqrt{250^2+353.6^2+250^2}=500\) N ✓</p></li>
+      </ol><p class="answer">\(\gamma=60^\circ\) · \(\mathbf F=250\mathbf i+353.6\mathbf j+250\mathbf k\) N</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="two-step">
+      <h2 id="two-step">4. แตกแรงสองขั้นด้วยมุมราบ θ และมุมเงย φ <span class="lv lv-i">กลาง</span></h2>
+      <p>เมื่อโจทย์บอกทิศเป็น “หันไปทาง 30° จากแกน x บนพื้น แล้วเงยขึ้น 50°” ให้แตกสองครั้ง: ครั้งแรกแยกแรงเป็นส่วนตั้ง \(F_z\) กับส่วนนอน \(F_h\) ในระนาบแนวดิ่งที่มีแรงอยู่ ครั้งที่สองแยก \(F_h\) บนพื้นเป็น \(F_x\) และ \(F_y\) เหมือนโจทย์สองมิติ ภาพในใจคือ “เงาของแรงบนพื้น” \(F_h\) แล้วค่อยแตกเงานั้น</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="K6" data-k="azimuth elevation two-step spherical horizontal component มุมราบ มุมเงย แตกสองขั้น">
+          <p class="tf-n"><b><span class="fid">K6</span> Two-step resolution (azimuth θ, elevation φ)</b> แตกแรงสองขั้น</p>
+          \[ F_h=F\cos\varphi,\quad F_z=F\sin\varphi,\quad F_x=F_h\cos\theta=F\cos\varphi\cos\theta,\quad F_y=F\cos\varphi\sin\theta \]
+          <p class="tf-x">กลับทาง: \(F_h=\sqrt{F_x^2+F_y^2}\), \(\theta=\operatorname{atan2}(F_y,F_x)\), \(\varphi=\operatorname{atan2}(F_z,F_h)\) บางตำราใช้มุมจากแกน z (zenith) \(\phi_z=90^\circ-\varphi\) แทน ซึ่งก็คือ γ ของ K1 นั่นเอง</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-k2"><div class="wx-head"><span class="mono">ตัวอย่าง K-2 · สายยึดเสาอากาศ</span><h3>แรงดึงในสาย 700 N หันไปทาง θ = 30° จากแกน +x บนพื้น และเงยขึ้น φ = 50° จากพื้น จงหาองค์ประกอบและมุม α β γ</h3></div><ol class="steps">
+        <li><p>แยกตั้ง-นอน: \(F_z=700\sin50^\circ=536.2\) N, \(F_h=700\cos50^\circ=450.0\) N</p></li>
+        <li><p>แยกเงาบนพื้น: \(F_x=450.0\cos30^\circ=389.7\) N, \(F_y=450.0\sin30^\circ=225.0\) N</p></li>
+        <li><p>มุมกับแกน: \(\alpha=\arccos(389.7/700)=56.17^\circ\), \(\beta=\arccos(225.0/700)=71.25^\circ\), \(\gamma=\arccos(536.2/700)=40.00^\circ\)</p></li>
+        <li><p>สังเกต \(\gamma=90^\circ-\varphi\) เสมอ แต่ \(\alpha\ne\theta\) เพราะ α วัดในอวกาศ ไม่ใช่บนพื้น</p></li>
+      </ol><p class="answer">\(\mathbf F=(389.7,\ 225.0,\ 536.2)\) N · α = 56.2°, β = 71.3°, γ = 40.0°</p></div>
+      <div class="note"><b>ข้อผิดพลาดยอดนิยม</b><p>ใช้ \(F_x=F\cos\theta\) ตรง ๆ โดยลืมคูณ \(\cos\varphi\) ก่อน ตัวเลข \(700\cos30^\circ=606\) N ใหญ่เกินจริง ตรวจได้ทันทีว่า \(F_x^2+F_y^2+F_z^2\) จะมากกว่า \(F^2\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="along-line">
+      <h2 id="along-line">5. แรงตามแนวเส้น: จากพิกัดสองจุดเป็นเวกเตอร์แรง <span class="lv lv-i">กลาง</span></h2>
+      <p>สายเคเบิลรับแรงดึงได้ในแนวสายเท่านั้น ถ้ารู้พิกัดจุดยึด A และจุด B ที่สายวิ่งไปหา เราได้ทิศของแรงทันทีจากเวกเตอร์ตำแหน่ง \(\mathbf r_{AB}=\mathbf r_B-\mathbf r_A\) วิธีนี้เป็นวิธีที่วิศวกรใช้จริงมากที่สุด เพราะแบบงานบอกพิกัด ไม่ได้บอกมุม</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="K7" data-k="force along line position vector cable tension unit vector แรงตามแนวเส้น สายเคเบิล เวกเตอร์ตำแหน่ง">
+          <p class="tf-n"><b><span class="fid">K7</span> Force directed along a line</b> แรงตามแนวเส้นจาก A ไป B</p>
+          \[ \mathbf r_{AB}=(x_B-x_A)\mathbf i+(y_B-y_A)\mathbf j+(z_B-z_A)\mathbf k,\qquad \mathbf u_{AB}=\frac{\mathbf r_{AB}}{\lVert\mathbf r_{AB}\rVert},\qquad \mathbf F=F\,\mathbf u_{AB} \]
+          <p class="tf-x">ทิศทางโคไซน์ของแรงคือองค์ประกอบของ \(\mathbf u_{AB}\) ระวังทิศ: แรงที่สาย<strong>กระทำต่อจุด A</strong> ชี้จาก A ไป B (สายดึง A เข้าหา B) ส่วนแรงที่กระทำต่อ B ชี้กลับจาก B ไป A</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-k3"><div class="wx-head"><span class="mono">ตัวอย่าง K-3 · สายยึดจากฐานถึงยอดเสา</span><h3>สายวิ่งจาก A(0, 0, 0) m ไป B(2, −3, 6) m มีแรงดึง 840 N จงเขียนแรงที่สายกระทำต่อ A เป็นเวกเตอร์ และหามุม α β γ</h3></div><ol class="steps">
+        <li><p>\(\mathbf r_{AB}=(2,-3,6)\) m ความยาว \(\sqrt{4+9+36}=7\) m (ชุดตัวเลข 2-3-6-7 จำง่าย)</p></li>
+        <li><p>\(\mathbf u_{AB}=(2/7,\ -3/7,\ 6/7)=(0.2857,\ -0.4286,\ 0.8571)\)</p></li>
+        <li><p>\(\mathbf F=840\,\mathbf u_{AB}=(240,\ -360,\ 720)\) N</p></li>
+        <li><p>\(\alpha=\arccos(2/7)=73.40^\circ\), \(\beta=\arccos(-3/7)=115.38^\circ\) (เกิน 90° เพราะ \(F_y&lt;0\)), \(\gamma=\arccos(6/7)=31.00^\circ\)</p></li>
+      </ol><p class="answer">\(\mathbf F=240\mathbf i-360\mathbf j+720\mathbf k\) N · ตรวจ \(\sqrt{240^2+360^2+720^2}=840\) N ✓</p></div>
+      <div class="v3d" data-scene="cable" data-title="แล็บ: แรงตามแนวสาย — เลื่อนจุด A และ B แล้วดูเวกเตอร์หนึ่งหน่วยกับแรง"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="resultant">
+      <h2 id="resultant">6. รวมแรงสามมิติ: องค์ประกอบก่อน ขนาดทีหลัง <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="K8" data-k="resultant 3D sum components direction cosines of resultant แรงลัพธ์ สามมิติ ผลรวม">
+          <p class="tf-n"><b><span class="fid">K8</span> Resultant of 3D forces</b> แรงลัพธ์สามมิติและทิศของมัน</p>
+          \[ \mathbf R=\Big(\sum F_x\Big)\mathbf i+\Big(\sum F_y\Big)\mathbf j+\Big(\sum F_z\Big)\mathbf k,\qquad \cos\alpha_R=\frac{R_x}{R},\ \cos\beta_R=\frac{R_y}{R},\ \cos\gamma_R=\frac{R_z}{R} \]
+        </div>
+      </div>
+      <div class="wx" id="ex-k4"><div class="wx-head"><span class="mono">ตัวอย่าง K-4 · เสาไฟฟ้ากับสายยึดสองเส้น</span><h3>ยอดเสาอยู่ที่ P(0, 0, 12) m สาย PA ไปสมอ A(4, −3, 0) m มีแรงดึง 650 N สาย PB ไป B(−3, 4, 0) m มีแรงดึง 390 N จงหาแรงลัพธ์ที่สายทั้งสองกระทำต่อยอดเสา</h3></div><ol class="steps">
+        <li><p>\(\mathbf r_{PA}=(4,-3,-12)\), \(\lVert\mathbf r_{PA}\rVert=13\) m → \(\mathbf F_A=650(4,-3,-12)/13=(200,-150,-600)\) N</p></li>
+        <li><p>\(\mathbf r_{PB}=(-3,4,-12)\), \(\lVert\mathbf r_{PB}\rVert=13\) m → \(\mathbf F_B=390(-3,4,-12)/13=(-90,120,-360)\) N</p></li>
+        <li><p>รวมองค์ประกอบ \(\mathbf R=(110,\ -30,\ -960)\) N, \(R=\sqrt{110^2+30^2+960^2}=966.7\) N</p></li>
+        <li><p>\(\alpha_R=83.47^\circ,\ \beta_R=91.78^\circ,\ \gamma_R=173.23^\circ\): แรงลัพธ์เกือบดิ่งลง กดเสาเป็นแรงอัด 960 N</p></li>
+        <li><p>อ่านผลเชิงวิศวกรรม: ยังมีส่วนแนวนอน \((110,-30)\) N ทำให้ยอดเสาถูกดัด ต้องเพิ่มสายเส้นที่สามหรือปรับแรงดึงให้ส่วนแนวนอนหักล้างกันเป็นศูนย์</p></li>
+      </ol><p class="answer">\(\mathbf R=(110,-30,-960)\) N · \(R=966.7\) N · ส่วนแนวนอน 114.0 N ต้องจัดการต่อ</p></div>
+      <div class="v3d" data-scene="resultant3d" data-p='{"a1":200,"a2":-150,"a3":-600,"b1":-90,"b2":120,"b3":-360,"c1":0,"c2":0,"c3":0}' data-title="แล็บ: แรงลัพธ์สามมิติ (ตั้งค่าตามตัวอย่าง K-4 แล้ว ลองเติม F₃ ให้ส่วนแนวนอนเป็นศูนย์)"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+      <h2 id="lab">7. ฉาก 3 มิติ: หมุนดูมุม α β γ ให้เห็นจริง <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ลากภาพเพื่อหมุนกล้องรอบเวกเตอร์ ปุ่ม <span class="mono">xy · xz · yz</span> ให้มุมมองจากบน หน้า และข้าง ลองสามการทดลองนี้:</p>
+      <ol><li>เลือก “ขนาด + มุม α β” ตั้ง α = β = 30° ระบบจะเตือนว่าเป็นไปไม่ได้ อธิบายด้วย K3</li><li>เปลี่ยน Fz ให้ติดลบ แล้วดูว่า γ ข้าม 90° ขณะที่ α β ไม่เปลี่ยนเครื่องหมาย</li><li>มองจากบน (ปุ่ม xy) แล้วสังเกตว่า “เงา” F_h บนพื้นคือสิ่งที่ใช้กับมุมราบ θ ในตัวอย่าง K-2</li></ol>
+      <div class="v3d" data-scene="dircos"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dcm">
+      <h2 id="dcm">8. ทิศทางโคไซน์กับการหมุนแกน: เมทริกซ์โคไซน์ทิศทาง <span class="lv lv-a">ขั้นสูง</span></h2>
+      <p>ถ้ามีกรอบพิกัดใหม่ \(x'y'z'\) ที่เอียงจากกรอบเดิม แกนใหม่แต่ละแกนก็มีทิศทางโคไซน์สามค่าเทียบกับแกนเดิม เก้าค่านี้จัดเป็นเมทริกซ์ที่เรียกว่า <strong>direction cosine matrix (DCM)</strong> ซึ่งเป็นเมทริกซ์หมุนนั่นเอง องค์ประกอบของเวกเตอร์ในกรอบใหม่คือ dot product กับแกนใหม่แต่ละแกน</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="K9" data-k="direction cosine matrix DCM rotation frame transformation เมทริกซ์โคไซน์ทิศทาง เปลี่ยนกรอบ">
+          <p class="tf-n"><b><span class="fid">K9</span> Direction cosine matrix</b> เมทริกซ์โคไซน์ทิศทาง</p>
+          \[ \begin{bmatrix}F_{x'}\\F_{y'}\\F_{z'}\end{bmatrix}=\begin{bmatrix}\cos\theta_{x'x}&amp;\cos\theta_{x'y}&amp;\cos\theta_{x'z}\\\cos\theta_{y'x}&amp;\cos\theta_{y'y}&amp;\cos\theta_{y'z}\\\cos\theta_{z'x}&amp;\cos\theta_{z'y}&amp;\cos\theta_{z'z}\end{bmatrix}\begin{bmatrix}F_x\\F_y\\F_z\end{bmatrix} \]
+          <p class="tf-x">แต่ละแถวคือเวกเตอร์หนึ่งหน่วยของแกนใหม่ เขียนในกรอบเดิม ทุกแถวยาว 1 และตั้งฉากกัน (K3 ใช้กับทุกแถว) รายละเอียดการหมุนอยู่ในบท <a href="/learn/vector-algebra/coordinate-rotation/">การหมุนแกนพิกัด</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="electrical">
+      <h2 id="electrical">9. ใช้กับงานไฟฟ้า: สนามแม่เหล็กจากเซนเซอร์และทิศของสนาม <span class="lv lv-i">กลาง</span></h2>
+      <p>แมกนีโตมิเตอร์สามแกนในโทรศัพท์ โดรน และมิเตอร์อัจฉริยะ อ่านค่าสนามแม่เหล็กออกมาเป็นสามองค์ประกอบ ทิศทางโคไซน์บอกว่าสนามชี้ไปทางใดเทียบกับตัวเครื่อง ส่วนมุมกับระนาบนอน (มุมจุ่ม) และมุมบนพื้น (heading) คือมุมเงยและมุมราบของ K6 แบบเดียวกับการหาทิศของสนามไฟฟ้าลัพธ์จากประจุหลายตัว</p>
+      <div class="wx" id="ex-k5"><div class="wx-head"><span class="mono">ตัวอย่าง K-5 · แมกนีโตมิเตอร์สามแกน (ตัวเลขสมมติ)</span><h3>เซนเซอร์วางราบอ่าน \(\mathbf B=(30,\ -10,\ -15)\ \mu\)T จงหาขนาด ทิศทางโคไซน์ มุมกดลงจากแนวนอน และมุมบนพื้นจากแกน x</h3></div><ol class="steps">
+        <li><p>\(B=\sqrt{30^2+10^2+15^2}=\sqrt{1225}=35\ \mu\)T</p></li>
+        <li><p>\(\mathbf u_B=(0.8571,\ -0.2857,\ -0.4286)\) → α = 31.00°, β = 106.60°, γ = 115.38°</p></li>
+        <li><p>ส่วนแนวนอน \(B_h=\sqrt{30^2+10^2}=31.62\ \mu\)T มุมกดลง \(\arctan(15/31.62)=25.38^\circ\) (เท่ากับ \(\gamma-90^\circ\))</p></li>
+        <li><p>มุมบนพื้น \(\operatorname{atan2}(-10,30)=-18.43^\circ\) คือสนามแนวนอนเบนไปทาง −y จากแกน x ของเครื่อง</p></li>
+      </ol><p class="answer">\(B=35\ \mu\)T · กดลง 25.4° · เบน −18.4° จากแกน x (เครื่องเข็มทิศจริงต้องชดเชยความเอียงของเครื่องด้วยการหมุนแกน)</p></div>
+      <p>สนามไฟฟ้าลัพธ์จากประจุสามตัวในสามมิติ ใช้ขั้นตอนเดียวกัน: รวมองค์ประกอบ แล้วหาทิศด้วย K8 ทดลองได้ใน <a href="/learn/vector-algebra/em-fields/">บทสนามไฟฟ้าและแม่เหล็ก</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">10. ข้อผิดพลาดที่พบบ่อยและวิธีตรวจ</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>ทำไมผิด / วิธีตรวจ</th></tr></thead><tbody>
+        <tr><td>ใช้ \(\cos\theta\) ของมุมราบแทน \(\cos\alpha\)</td><td>α วัดในอวกาศ ตรวจด้วย K3: ผลรวมกำลังสองต้องเท่ากับ 1</td></tr>
+        <tr><td>ลืมว่ามุมที่สามมีสองค่า</td><td>เลือกตามทิศขึ้น/ลงของแรง ถ้าไม่ระบุต้องรายงานทั้งสองกรณี</td></tr>
+        <tr><td>ใช้ arctan หามุม α β γ</td><td>ใช้ arccos ซึ่งให้ 0°–180° ตรงนิยามพอดี</td></tr>
+        <tr><td>กลับทิศ \(\mathbf r_{AB}\)</td><td>แรงที่สายกระทำต่อจุดยึดชี้ “ออกจากจุดนั้นตามสาย” วาดภาพก่อนลบพิกัด</td></tr>
+        <tr><td>คูณแรงด้วย \(\mathbf r_{AB}\) โดยไม่หารความยาว</td><td>ได้ขนาดผิดเป็น \(F\cdot L\) ตรวจหน่วย: \(\mathbf u\) ต้องไม่มีหน่วย</td></tr>
+        <tr><td>บวกขนาดแรงสามมิติ</td><td>รวมองค์ประกอบก่อนเสมอ ขนาดผลรวมไม่เท่าผลรวมขนาด</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">11. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>\(\mathbf F=(-200,\ 150,\ 600)\) N จงหา F และ α β γ</li>
+        <li>แรง 1.2 kN มี α = 120°, γ = 45° และ \(F_y&gt;0\) จงหา β และองค์ประกอบ</li>
+        <li>แรง 400 N หันไปทางมุมราบ θ = 135° เงยลง φ = −20° จงหาองค์ประกอบ</li>
+        <li>สายจาก A(1, 2, 0) ไป B(−3, 6, 7) m แรงดึง 450 N จงหาแรงที่กระทำต่อ A</li>
+        <li>มุมชุด α = 45°, β = 45°, γ = 45° เป็นไปได้หรือไม่? ทำไม?</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>\(F=\sqrt{40000+22500+360000}=650\) N; α = arccos(−0.3077) = 107.9°, β = arccos(0.2308) = 76.66°, γ = arccos(0.9231) = 22.62°</li>
+        <li>\(\cos^2\beta=1-0.25-0.5=0.25\Rightarrow\beta=60^\circ\); \(\mathbf F=1.2(-0.5,\ 0.5,\ 0.7071)=(-0.6,\ 0.6,\ 0.8485)\) kN</li>
+        <li>\(F_h=400\cos(-20^\circ)=375.9\), \(F_z=400\sin(-20^\circ)=-136.8\); \(F_x=375.9\cos135^\circ=-265.8\), \(F_y=265.8\) N</li>
+        <li>\(\mathbf r_{AB}=(-4,4,7)\), ยาว 9 m → \(\mathbf F=50(-4,4,7)=(-200,\ 200,\ 350)\) N</li>
+        <li>ไม่ได้ เพราะ \(3\cos^2 45^\circ=1.5\ne1\) มุมที่ทำกับสามแกนเท่ากันได้คือ \(\arccos(1/\sqrt3)=54.74^\circ\) (ทิศ (1,1,1))</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">12. สรุปสูตรและการเลือกใช้</h2>
+      <div class="table-wrap"><table><thead><tr><th>โจทย์ให้</th><th>ใช้สูตร</th><th>ได้</th></tr></thead><tbody>
+        <tr><td>องค์ประกอบ</td><td><a href="#K1">K1</a></td><td>มุม α β γ</td></tr>
+        <tr><td>ขนาด + มุมสองมุมกับแกน</td><td><a href="#K5">K5</a> แล้ว <a href="#K4">K4</a></td><td>มุมที่สามและองค์ประกอบ</td></tr>
+        <tr><td>ขนาด + มุมราบ + มุมเงย</td><td><a href="#K6">K6</a></td><td>องค์ประกอบ</td></tr>
+        <tr><td>พิกัดสองจุดบนแนวแรง</td><td><a href="#K7">K7</a></td><td>เวกเตอร์แรงโดยตรง</td></tr>
+        <tr><td>หลายแรง</td><td><a href="#K8">K8</a></td><td>แรงลัพธ์และทิศ</td></tr>
+        <tr><td>กรอบพิกัดเอียง</td><td><a href="#K9">K9</a></td><td>องค์ประกอบในกรอบใหม่</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">13. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li><a href="https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product" target="_blank" rel="noopener">OpenStax Calculus Volume 3 §2.3 The Dot Product</a> — นิยาม direction angles และ direction cosines</li>
+        <li><a href="https://openstax.org/books/university-physics-volume-1/pages/2-2-coordinate-systems-and-components-of-a-vector" target="_blank" rel="noopener">OpenStax University Physics Vol. 1 §2.2 Components of a Vector</a> — องค์ประกอบสามมิติ</li>
+        <li>R. C. Hibbeler, <i>Engineering Mechanics: Statics</i>, บทที่ 2 (Cartesian vectors, position vectors, force directed along a line) — ตำราหลักของวิชาสแตติกส์</li>
+      </ul>
+      <p>ต่อไป: ใช้ทิศทางโคไซน์รวมแรงด้วยตรีโกณมิติใน <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a> หรือเปิด <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a> แล้วเลือกตัวอย่าง “ทิศทางโคไซน์”</p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

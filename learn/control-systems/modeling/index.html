@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
+<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/modeling/#article","headline":"แบบจำลองทางคณิตศาสตร์: วงจรไฟฟ้า มอเตอร์ กลไก ความร้อน","description":"สร้างฟังก์ชันถ่ายโอนจากกฎฟิสิกส์ วิธีอิมพีแดนซ์ วงจร RC RLC ออปแอมป์ มอเตอร์ไฟฟ้ากระแสตรง (ความเร็วและตำแหน่ง) ระบบมวล-สปริง-ดัมเปอร์ ระบบหมุน ชุดเกียร์และการสะท้อนความเฉื่อย ระบบความร้อน ระดับของเหลว ความคล้ายเชิงอุปมาระหว่างไฟฟ้ากับกลไก และการทำให้เป็นเชิงเส้นของลูกตุ้มกลับหัว พร้อมตัวอย่างตัวเลขจริง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/modeling/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/modeling/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Transfer function","Mathematical model","RLC circuit","DC motor","Mass–spring–damper","Electrical–mechanical analogy","Linearization","Inverted pendulum"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-modeling.jpg"],"educationalLevel":["Undergraduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"แบบจำลองทางคณิตศาสตร์: วงจรไฟฟ้า มอเตอร์ กลไก ความร้อน","item":"https://modsengineeringmath.com/learn/control-systems/modeling/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมฟังก์ชันถ่ายโอนต้องสมมติเงื่อนไขเริ่มต้นเป็นศูนย์?","acceptedAnswer":{"@type":"Answer","text":"เพราะฟังก์ชันถ่ายโอนนิยามเป็นอัตราส่วน Y(s)/U(s) ซึ่งต้องไม่ขึ้นกับสถานะเริ่มต้น ผลของเงื่อนไขเริ่มต้นเป็นพจน์แยกที่บวกเข้ามาภายหลัง (ผลตอบสนองอิสระ) ส่วนแบบจำลองปริภูมิสถานะรวมเงื่อนไขเริ่มต้นไว้ได้โดยตรง"}},{"@type":"Question","name":"แบบจำลองมอเตอร์ DC ตัดตัวเหนี่ยวนำทิ้งได้เมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อค่าคงเวลาทางไฟฟ้า L/R เล็กกว่าค่าคงเวลาทางกลมาก (ปกติต่างกัน 10 เท่าขึ้นไป) ซึ่งจริงกับมอเตอร์ส่วนใหญ่ แบบจำลองจะลดเป็นอันดับหนึ่งสำหรับความเร็ว แต่ถ้าออกแบบลูปกระแสหรือลูปที่เร็วมาก ต้องเก็บ L ไว้"}},{"@type":"Question","name":"การทำให้เป็นเชิงเส้นใช้ได้แค่ไหน?","acceptedAnswer":{"@type":"Answer","text":"ใช้ได้ดีเมื่อระบบทำงานใกล้จุดทำงาน (operating point) เช่น ลูกตุ้มเอียงไม่เกินประมาณ 15–20 องศา sin θ ≈ θ คลาดไม่ถึง 2% ถ้าระบบออกห่างจากจุดนั้นมาก ต้องใช้แบบจำลองไม่เชิงเส้น หรือหลายแบบจำลองสลับกัน (gain scheduling)"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -71,15 +71,32 @@
       </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · ค้นหาสูตรเวกเตอร์</a>
-          <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D / 3D</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a>
+        <div class="nav-list nav-list-wide" id="navvec">
+          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+          <span class="nav-h">พื้นฐาน 2D / 3D</span>
+          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
           <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุมและงาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · กฎมือขวา</a>
-          <a href="/learn/vector-algebra/engineering-applications/">แรง แรงบิด และสนามแม่เหล็ก</a>
-          <a href="/learn/vector-algebra/vector-lab/">แล็บเวกเตอร์ 2D / 3D</a>
+          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+          <span class="nav-h">แรงและกลศาสตร์</span>
+          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+          <span class="nav-h">ห้องแล็บ</span>
+          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -541,6 +558,12 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/">คลังความรู้</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
       <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
@@ -585,7 +608,7 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=0014ea3e" defer></script>
+<script src="/assets/site.js?v=4e5aea51" defer></script>
 
 </body>
 </html>

@@ -1,0 +1,243 @@
+<!--meta
+{
+  "title": "วิเคราะห์วงจรไฟฟ้ากระแสสลับด้วยเฟสเซอร์: อิมพีแดนซ์ KVL KCL เชิงเวกเตอร์ แผนภาพเฟสเซอร์ กำลัง S = VI* แก้ PF เรโซแนนซ์ | อาจารย์มด",
+  "h1": "วิเคราะห์วงจรไฟฟ้ากระแสสลับด้วยเฟสเซอร์",
+  "description": "วิเคราะห์วงจร AC ภาษาไทยครบขั้นตอน: แปลงโดเมนเวลาเป็นเฟสเซอร์ อิมพีแดนซ์ของ R L C แอดมิตแตนซ์ วงจร RL ของมอเตอร์ วงจร RLC อนุกรมที่แรงดันคร่อม C มากกว่าแหล่งจ่าย วงจรขนานและ KCL แผนภาพเฟสเซอร์ KVL ต่อหัวต่อหาง กำลังเชิงซ้อน S = VI* สามเหลี่ยมกำลัง แก้เพาเวอร์แฟกเตอร์ด้วยตัวเก็บประจุ เรโซแนนซ์ Q แบนด์วิดท์ วงจรกรองความถี่ต่ำ และเฟสเซอร์สามเฟส พร้อมแล็บวงจร RLC และกราฟผลตอบสนองความถี่",
+  "ogTitle": "วิเคราะห์วงจร AC ด้วยเฟสเซอร์ + แล็บ RLC",
+  "lesson": "vector-algebra", "sub": "ac-circuits", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["AC circuit analysis", "Electrical impedance", "Phasor diagram", "RLC circuit", "Complex power", "Power factor correction", "Resonance", "Low-pass filter"],
+  "scripts": ["/assets/lesson.js", "/assets/ac-phasor.js"],
+  "og": {"title": "วิเคราะห์วงจร AC ด้วยเฟสเซอร์", "sub": "อิมพีแดนซ์ · KVL/KCL เชิงเวกเตอร์ · S = VI* · แก้ PF · เรโซแนนซ์", "eyebrow": "เวกเตอร์ 4.4 · AC Circuit Analysis", "sym": "Z"},
+  "faq": [
+    {"q": "อิมพีแดนซ์ของ R L C คืออะไร?", "a": "ตัวต้านทาน Z_R = R ตัวเหนี่ยวนำ Z_L = jωL = jX_L ตัวเก็บประจุ Z_C = 1/(jωC) = −jX_C โดย X_L = 2πfL และ X_C = 1/(2πfC) อิมพีแดนซ์ใช้แทนความต้านทานในกฎของโอห์ม V = ZI และต่ออนุกรม-ขนานได้เหมือนตัวต้านทาน แต่เป็นจำนวนเชิงซ้อน"},
+    {"q": "ทำไมแรงดันคร่อมตัวเก็บประจุในวงจร RLC อนุกรมมากกว่าแรงดันแหล่งจ่ายได้?", "a": "เพราะ KVL ในวงจร AC เป็นการบวกเวกเตอร์ แรงดันคร่อม L นำหน้ากระแส 90° แรงดันคร่อม C ตามหลัง 90° สองตัวนี้หักล้างกันบางส่วน แต่ละตัวจึงอาจใหญ่กว่าแรงดันรวมได้มาก โดยเฉพาะใกล้เรโซแนนซ์ที่แรงดันคร่อม L และ C เท่ากับ Q เท่าของแหล่งจ่าย"},
+    {"q": "แก้เพาเวอร์แฟกเตอร์ด้วยตัวเก็บประจุคำนวณอย่างไร?", "a": "หากำลังจริง P และมุม φ₁ ปัจจุบัน เลือก PF เป้าหมาย φ₂ แล้ว Q_C = P(tan φ₁ − tan φ₂) ค่าความจุ C = Q_C/(ωV²) ต่อขนานกับโหลด ตัวเก็บประจุให้กระแสนำหน้าที่ไปหักล้างกระแสตามหลังของโหลดแบบเหนี่ยวนำ กระแสในสายจึงลดลงแต่กำลังจริงเท่าเดิม"},
+    {"q": "ความถี่เรโซแนนซ์คืออะไร?", "a": "ความถี่ที่ X_L = X_C คือ f₀ = 1/(2π√(LC)) วงจรอนุกรมจะมีอิมพีแดนซ์ต่ำสุดเท่ากับ R กระแสสูงสุดและร่วมเฟสกับแรงดัน ส่วนวงจรขนานจะมีอิมพีแดนซ์สูงสุด ใช้ในวงจรกรองความถี่ วิทยุ และตัวกรองฮาร์มอนิก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>วิเคราะห์วงจร AC</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 4 · AC circuit analysis with phasors</p>
+      <h1>วิเคราะห์วงจรไฟฟ้ากระแสสลับด้วยเฟสเซอร์</h1>
+      <p class="lede">บทนี้คือจุดที่ทุกอย่างมาบรรจบ: เวกเตอร์ (การบวกหัวต่อหาง) ตรีโกณมิติ (กฎโคไซน์) และจำนวนเชิงซ้อน (การคูณหาร) รวมเป็นวิธีวิเคราะห์วงจรไฟฟ้ากระแสสลับที่วิศวกรใช้ทุกวัน ตั้งแต่มอเตอร์ในบ้าน วงจร RLC เรโซแนนซ์ การแก้เพาเวอร์แฟกเตอร์ในโรงงาน ไปจนถึงวงจรกรองสัญญาณ ทุกตัวอย่างตรวจด้วยตัวเลขและเปิดในแล็บได้ทันที</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#workflow">ขั้นตอนวิเคราะห์</a><a class="btn btn-ghost btn-sm" href="#series">RLC อนุกรม</a><a class="btn btn-ghost btn-sm" href="#power">กำลัง S = VI*</a><a class="btn btn-ghost btn-sm" href="#resonance">เรโซแนนซ์</a><a class="btn btn-ghost btn-sm" href="#lab">แล็บวงจร</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>\(Z_R=R,\ Z_L=j\omega L,\ Z_C=\dfrac{1}{j\omega C}=-\dfrac{j}{\omega C}\); \(\mathbf V=Z\mathbf I\)</li>
+        <li>KVL/KCL เป็นการบวกเวกเตอร์ — ผลรวมขนาดไม่เท่ากับขนาดผลรวม</li>
+        <li>\(\mathbf S=\mathbf V\mathbf I^*=P+jQ\), PF = \(\cos(\varphi_v-\varphi_i)\)</li>
+        <li>เรโซแนนซ์ \(f_0=1/(2\pi\sqrt{LC})\), \(Q=\omega_0L/R\), แรงดันคร่อม L และ C = Q เท่าของแหล่งจ่าย</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น impedance, admittance, kvl, complex power, pf, resonance, filter" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="workflow">
+      <h2 id="workflow">1. ขั้นตอนวิเคราะห์ห้าขั้น <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="ee-flow"><span>① เขียนแหล่งจ่ายเป็นเฟสเซอร์</span><i>→</i><span>② แปลง R L C เป็น Z</span><i>→</i><span>③ แก้วงจรเหมือน DC แต่ใช้จำนวนเชิงซ้อน</span><i>→</i><span>④ วาดแผนภาพเฟสเซอร์ตรวจ</span><i>→</i><span>⑤ แปลงกลับเป็น v(t), i(t) / หากำลัง</span></div>
+      <p>กฎของโอห์ม การต่ออนุกรม-ขนาน ตัวแบ่งแรงดัน KVL KCL nodal และ mesh analysis ที่เรียนในวงจร DC ใช้ได้ทั้งหมด เพียงแต่ตัวเลขทุกตัวเป็นจำนวนเชิงซ้อน (เวกเตอร์สองมิติที่คูณหารได้) ทักษะที่ต้องฝึกคือ <a href="/learn/vector-algebra/phasors/">การคำนวณเฟสเซอร์</a> และการวาดแผนภาพเพื่อตรวจคำตอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="impedance">
+      <h2 id="impedance">2. อิมพีแดนซ์และแอดมิตแตนซ์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z1" data-k="impedance resistor inductor capacitor reactance jωL 1/jωC อิมพีแดนซ์ รีแอกแตนซ์">
+          <p class="tf-n"><b><span class="fid">Z1</span> Element impedances</b> อิมพีแดนซ์ของ R L C</p>
+          \[ Z_R=R,\qquad Z_L=j\omega L=jX_L,\qquad Z_C=\frac{1}{j\omega C}=-jX_C,\qquad X_L=2\pi fL,\quad X_C=\frac{1}{2\pi fC} \]
+          <p class="tf-x">R: แรงดันร่วมเฟสกับกระแส · L: แรงดันนำหน้า 90° · C: แรงดันตามหลัง 90° (ELI the ICE man) X_L เพิ่มตามความถี่ X_C ลดตามความถี่</p>
+        </div>
+        <div class="tf wide" id="Z2" data-k="impedance admittance series parallel combination Z=R+jX Y=G+jB อนุกรม ขนาน แอดมิตแตนซ์">
+          <p class="tf-n"><b><span class="fid">Z2</span> Combining impedances</b> อนุกรม ขนาน และแอดมิตแตนซ์</p>
+          \[ Z_{\text{series}}=\sum Z_k,\qquad \frac{1}{Z_{\text{par}}}=\sum\frac{1}{Z_k},\qquad Z=R+jX=|Z|\angle\theta_Z,\qquad Y=\frac1Z=G+jB \]
+          <p class="tf-x">θ_Z &gt; 0 = วงจรแบบเหนี่ยวนำ (กระแสตามหลัง) θ_Z &lt; 0 = แบบตัวเก็บประจุ ขนานหลายสาขาใช้ Y บวกกันง่ายกว่า</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rl">
+      <h2 id="rl">3. วงจร RL อนุกรม: มอเตอร์ในบ้าน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="wx" id="ex-z1"><div class="wx-head"><span class="mono">ตัวอย่าง Z-1 · มอเตอร์ 220 V 50 Hz</span><h3>มอเตอร์จำลองเป็น R = 30 Ω อนุกรม L = 127 mH ต่อกับ 220∠0° V (RMS) 50 Hz จงหากระแส มุมเฟส กำลัง และ PF</h3></div><ol class="steps">
+        <li><p>\(X_L=2\pi(50)(0.127)=39.90\ \Omega\) → \(Z=30+j39.90=49.92\angle53.06^\circ\ \Omega\)</p></li>
+        <li><p>\(\mathbf I=\dfrac{220\angle0^\circ}{49.92\angle53.06^\circ}=4.407\angle-53.06^\circ\) A กระแสตามหลัง 53°</p></li>
+        <li><p>\(\mathbf S=\mathbf V\mathbf I^*=220(4.407\angle53.06^\circ)=969.6\angle53.06^\circ=582.7+j775.0\) VA</p></li>
+        <li><p>PF = cos 53.06° = 0.601 ตามหลัง — P = 582.7 W (ตรวจ: \(I^2R=4.407^2\times30\) ✓)</p></li>
+      </ol><p class="answer">I = 4.41 A ตามหลัง 53.1° · P = 583 W · Q = 775 var · PF = 0.60</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="series">
+      <h2 id="series">4. วงจร RLC อนุกรมและ KVL เชิงเวกเตอร์ <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z3" data-k="series RLC KVL phasor sum voltage divider impedance RLC อนุกรม KVL เวกเตอร์">
+          <p class="tf-n"><b><span class="fid">Z3</span> Series RLC</b> วงจร RLC อนุกรม</p>
+          \[ Z=R+j(X_L-X_C),\qquad \mathbf I=\frac{\mathbf V_s}{Z},\qquad \mathbf V_s=\mathbf V_R+\mathbf V_L+\mathbf V_C\ \ (\text{บวกเวกเตอร์}),\qquad \mathbf V_k=\mathbf V_s\frac{Z_k}{Z} \]
+        </div>
+      </div>
+      <div class="wx" id="ex-z2"><div class="wx-head"><span class="mono">ตัวอย่าง Z-2 · แรงดันคร่อม C มากกว่าแหล่งจ่าย</span><h3>R = 30 Ω, L = 127 mH, C = 53 μF ต่ออนุกรมกับ 220∠0° V 50 Hz จงหากระแสและแรงดันคร่อมแต่ละตัว</h3></div><ol class="steps">
+        <li><p>\(X_L=39.90\ \Omega\), \(X_C=1/(2\pi\cdot50\cdot53\times10^{-6})=60.06\ \Omega\)</p></li>
+        <li><p>\(Z=30+j(39.90-60.06)=30-j20.16=36.14\angle-33.90^\circ\ \Omega\) (แบบตัวเก็บประจุ)</p></li>
+        <li><p>\(\mathbf I=220/36.14\angle-33.90^\circ=6.087\angle33.90^\circ\) A กระแสนำหน้า</p></li>
+        <li><p>\(\mathbf V_R=182.6\angle33.90^\circ\), \(\mathbf V_L=6.087\angle33.90^\circ\times39.90\angle90^\circ=242.8\angle123.90^\circ\), \(\mathbf V_C=365.6\angle-56.10^\circ\) V</p></li>
+        <li><p>KVL ตรวจแบบเวกเตอร์: \((151.6+j101.8)+(-135.5+j201.6)+(203.9-j303.4)=220.0+j0\) ✓ แต่ผลรวมขนาด 182.6 + 242.8 + 365.6 = 791 V</p></li>
+      </ol><p class="answer">I = 6.09∠33.9° A · V_C = 366 V มากกว่าแหล่งจ่าย 220 V — ต้องเลือกพิกัดแรงดันตัวเก็บประจุจากค่านี้ ไม่ใช่ 220 V</p></div>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 300" role="img" aria-labelledby="z-kvl-t z-kvl-d">
+          <title id="z-kvl-t">แผนภาพเฟสเซอร์ KVL ของวงจร RLC อนุกรม</title><desc id="z-kvl-d">V_R ร่วมเฟสกับกระแส V_L ตั้งฉากนำหน้า V_C ตั้งฉากตามหลัง ต่อหัวต่อหางได้ V_s ตามแกนจริง</desc>
+          <defs><marker id="z-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M40 200 H400"/><path class="ax" d="M80 290 V10"/><text x="404" y="204">Re</text><text x="84" y="14">Im</text>
+          <path class="ln ln-p1" d="M80 200 L171 139" marker-end="url(#z-arr)" style="stroke-width:3"/><text class="c-p1" x="104" y="160">V_R</text>
+          <path class="ln ln-p2" d="M171 139 L90 18" marker-end="url(#z-arr)" style="stroke-width:3"/><text class="c-p2" x="140" y="70">V_L</text>
+          <path class="ln" d="M90 18 L212 199" marker-end="url(#z-arr)" style="stroke-width:3;stroke:var(--c4)"/><text x="170" y="104" style="fill:var(--c4)">V_C</text>
+          <path class="ln ln-cur" d="M80 200 L212 200" marker-end="url(#z-arr)" style="stroke-width:3.5"/><text class="c-cur" x="96" y="222">V_s = 220∠0°</text>
+          <path class="ln dash" d="M80 200 L126 169" marker-end="url(#z-arr)"/><text x="230" y="168" class="t-sm">I ∥ V_R (นำหน้า 33.9°)</text>
+          <text class="t-th" x="420" y="70">หัวต่อหาง: V_R → V_L → V_C</text><text class="t-th" x="420" y="100">ปลายสุดตรงกับ V_s</text><text class="t-sm" x="420" y="140">V_L ⟂ I นำหน้า 90°</text><text class="t-sm" x="420" y="162">V_C ⟂ I ตามหลัง 90°</text><text class="t-sm" x="420" y="184">|V_C| = 366 V &gt; |V_s|</text>
+        </svg>
+        <figcaption>KVL ของวงจร AC คือรูปหลายเหลี่ยมเวกเตอร์ปิด เหมือนรูปหลายเหลี่ยมแรงบนโต๊ะแรง (สเกลประมาณ)</figcaption>
+      </figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="parallel">
+      <h2 id="parallel">5. วงจรขนานและ KCL เชิงเวกเตอร์ <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z4" data-k="parallel circuit KCL branch currents admittance ขนาน KCL กระแสสาขา">
+          <p class="tf-n"><b><span class="fid">Z4</span> Parallel branches</b> วงจรขนาน</p>
+          \[ \mathbf I=\mathbf I_R+\mathbf I_L+\mathbf I_C=\mathbf V\Big(\frac1R+\frac{1}{j\omega L}+j\omega C\Big)=\mathbf V\,Y \]
+        </div>
+      </div>
+      <div class="wx" id="ex-z3"><div class="wx-head"><span class="mono">ตัวอย่าง Z-3 · ฮีตเตอร์ + บัลลาสต์ + ตัวเก็บประจุ</span><h3>220∠0° V 50 Hz ต่อขนาน R = 44 Ω (ฮีตเตอร์ 1.1 kW), L = 0.14 H และ C = 30 μF จงหากระแสสายรวม</h3></div><ol class="steps">
+        <li><p>\(\mathbf I_R=5\angle0^\circ\), \(\mathbf I_L=220/(j43.98)=-j5.002\), \(\mathbf I_C=j(314.16)(30\times10^{-6})(220)=j2.073\) A</p></li>
+        <li><p>KCL: \(\mathbf I=5-j2.929=5.795\angle-30.36^\circ\) A</p></li>
+        <li><p>\(Z=220/\mathbf I=37.97\angle30.36^\circ\ \Omega\), PF = cos 30.36° = 0.863 ตามหลัง</p></li>
+      </ol><p class="answer">I = 5.80 A — น้อยกว่าผลรวมขนาด 5 + 5 + 2.07 = 12.07 A มาก เพราะ I_L กับ I_C หักล้างกัน</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="power">
+      <h2 id="power">6. กำลังเชิงซ้อนและสามเหลี่ยมกำลัง <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z5" data-k="complex power S=VI* real reactive apparent power factor กำลังเชิงซ้อน กำลังจริง รีแอกทีฟ เพาเวอร์แฟกเตอร์">
+          <p class="tf-n"><b><span class="fid">Z5</span> Complex power</b> กำลังเชิงซ้อน (เฟสเซอร์ RMS)</p>
+          \[ \mathbf S=\mathbf V\mathbf I^*=P+jQ,\qquad P=VI\cos\theta,\quad Q=VI\sin\theta,\quad |\mathbf S|=VI,\quad \text{PF}=\frac{P}{|\mathbf S|}=\cos\theta,\ \ \theta=\varphi_v-\varphi_i \]
+          <p class="tf-x">ใช้ conjugate ของกระแสเพื่อให้มุมของ S เท่ากับความต่างเฟส ไม่ใช่ผลบวกเฟส P (W) ทำงานจริง Q (var) ไหลไปกลับ |S| (VA) คือขนาดที่สายและหม้อแปลงต้องรองรับ — <a href="/learn/power-factor/pf-basics/#triangle">สามเหลี่ยมกำลัง</a></p>
+        </div>
+        <div class="tf wide" id="Z6" data-k="power factor correction capacitor Qc tan phi kvar แก้เพาเวอร์แฟกเตอร์ ตัวเก็บประจุ">
+          <p class="tf-n"><b><span class="fid">Z6</span> Power-factor correction</b> แก้ PF ด้วยตัวเก็บประจุขนาน</p>
+          \[ Q_C=P(\tan\varphi_1-\tan\varphi_2),\qquad C=\frac{Q_C}{\omega V^2} \]
+        </div>
+      </div>
+      <div class="wx" id="ex-z4"><div class="wx-head"><span class="mono">ตัวอย่าง Z-4 · แก้ PF ของมอเตอร์ Z-1 เป็น 0.95</span><h3>มอเตอร์ P = 582.7 W, PF 0.601 ตามหลัง ที่ 220 V 50 Hz ต้องใช้ตัวเก็บประจุขนานเท่าใด กระแสสายเหลือเท่าใด</h3></div><ol class="steps">
+        <li><p>\(\tan\varphi_1=\tan(\arccos0.601)=1.330\), \(\tan\varphi_2=\tan(\arccos0.95)=0.3287\)</p></li>
+        <li><p>\(Q_C=582.7(1.330-0.3287)=583.4\) var</p></li>
+        <li><p>\(C=583.4/(314.16\times220^2)=38.4\ \mu\)F → เลือกค่ามาตรฐาน 40 μF</p></li>
+        <li><p>เวกเตอร์กระแส: \(\mathbf I=\mathbf I_{\text{motor}}+\mathbf I_C\) ส่วนจินตภาพตามหลังถูก I_C หักล้าง กระแสสายลดจาก 4.41 A เหลือ 2.79 A</p></li>
+      </ol><p class="answer">C ≈ 38 μF (ใช้ 40 μF ได้ PF 0.961) — กระแสลด 37% กำลังจริงเท่าเดิม ลองตัวอย่าง “แก้ PF ด้วย C” ในแล็บ</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="resonance">
+      <h2 id="resonance">7. เรโซแนนซ์ Q และแบนด์วิดท์ <span class="lv lv-a">ขั้นสูง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z7" data-k="resonance frequency quality factor bandwidth series parallel RLC เรโซแนนซ์ ค่า Q แบนด์วิดท์">
+          <p class="tf-n"><b><span class="fid">Z7</span> Series resonance</b> เรโซแนนซ์อนุกรม</p>
+          \[ \omega_0=\frac{1}{\sqrt{LC}},\quad f_0=\frac{1}{2\pi\sqrt{LC}},\quad Q=\frac{\omega_0L}{R}=\frac{1}{R}\sqrt{\frac LC},\quad \text{BW}=\frac{f_0}{Q}=\frac{R}{2\pi L},\quad |\mathbf V_L|=|\mathbf V_C|=Q|\mathbf V_s| \]
+          <p class="tf-x">ที่ f₀ เฟสเซอร์ V_L กับ V_C ยาวเท่ากันและชี้สวนกัน หักล้างกันพอดี Z = R ต่ำสุด กระแสสูงสุดร่วมเฟส วงจรขนานกลับกัน: อิมพีแดนซ์สูงสุด</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-z5"><div class="wx-head"><span class="mono">ตัวอย่าง Z-5 · เรโซแนนซ์ที่ 159 Hz</span><h3>R = 10 Ω, L = 100 mH, C = 10 μF ต่ออนุกรมกับแหล่งจ่าย 10 V จงหา f₀, Q, BW และแรงดันคร่อม L ที่เรโซแนนซ์</h3></div><ol class="steps">
+        <li><p>\(f_0=1/(2\pi\sqrt{0.1\times10^{-5}})=159.2\) Hz</p></li>
+        <li><p>\(Q=\omega_0L/R=(1000)(0.1)/10=10\), \(\text{BW}=159.2/10=15.9\) Hz</p></li>
+        <li><p>\(I=10/10=1\) A, \(|\mathbf V_L|=|\mathbf V_C|=QV=100\) V</p></li>
+      </ol><p class="answer">แหล่งจ่าย 10 V แต่ L และ C แต่ละตัวมี 100 V — อันตรายจริงในตัวกรองฮาร์มอนิกและวงจรเรโซแนนซ์ ดู <a href="/learn/power-factor/harmonics-true-pf/">ฮาร์มอนิกกับตู้คาปาซิเตอร์</a></p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="filter">
+      <h2 id="filter">8. ตัวแบ่งแรงดันเชิงซ้อน: วงจรกรองความถี่ต่ำ RC <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z8" data-k="RC low pass filter transfer function cutoff frequency voltage divider วงจรกรองความถี่ต่ำ ความถี่ตัด">
+          <p class="tf-n"><b><span class="fid">Z8</span> RC low-pass filter</b> ตัวแบ่งแรงดันเชิงซ้อน</p>
+          \[ H(j\omega)=\frac{\mathbf V_o}{\mathbf V_i}=\frac{Z_C}{R+Z_C}=\frac{1}{1+j\omega RC},\qquad f_c=\frac{1}{2\pi RC},\qquad |H(f_c)|=\frac{1}{\sqrt2},\ \angle H(f_c)=-45^\circ \]
+        </div>
+      </div>
+      <div class="wx" id="ex-z6"><div class="wx-head"><span class="mono">ตัวอย่าง Z-6 · กรองสัญญาณเซนเซอร์</span><h3>R = 1 kΩ, C = 0.1 μF จงหา f_c และอัตราขยายที่ 1 kHz</h3></div><ol class="steps">
+        <li><p>\(f_c=1/(2\pi\cdot1000\cdot10^{-7})=1591.5\) Hz</p></li>
+        <li><p>ที่ 1 kHz: \(\omega RC=0.6283\) → \(H=1/(1+j0.6283)=0.8467\angle-32.14^\circ\)</p></li>
+      </ol><p class="answer">ผ่าน 84.7% ของแอมพลิจูด ล่าช้า 32° — ต่อยอดที่ <a href="/learn/control-systems/bode-plot/">กราฟโบด</a></p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="three-phase">
+      <h2 id="three-phase">9. เฟสเซอร์สามเฟส: เวกเตอร์สามตัวที่รวมเป็นศูนย์ <span class="lv lv-i">กลาง</span></h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="Z9" data-k="three phase balanced phasors 120 degrees sum zero neutral line voltage สามเฟส สมดุล ผลรวมศูนย์">
+          <p class="tf-n"><b><span class="fid">Z9</span> Balanced three-phase set</b> เฟสเซอร์สามเฟสสมดุล</p>
+          \[ \mathbf V_a=V\angle0^\circ,\ \mathbf V_b=V\angle-120^\circ,\ \mathbf V_c=V\angle120^\circ,\qquad \mathbf V_a+\mathbf V_b+\mathbf V_c=\mathbf 0,\qquad \mathbf V_{ab}=\sqrt3\,V\angle30^\circ \]
+          <p class="tf-x">สามเวกเตอร์ที่ห่างกัน 120° ต่อหัวต่อหางเป็นสามเหลี่ยมด้านเท่าปิดพอดี กระแสสายนิวทรัลของโหลดสมดุลจึงเป็นศูนย์ แรงดันระหว่างสาย 230 × √3 = 400 V — ต่อใน <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์และระบบสามเฟส</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+      <h2 id="lab">10. แล็บวงจร RLC ด้วยเฟสเซอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>เลือกวงจรและปรับ R L C f แล้วดูแผนภาพเฟสเซอร์ (KVL/KCL ต่อหัวต่อหาง) รูปคลื่น v(t), i(t) สามเหลี่ยมกำลัง และกราฟผลตอบสนองเชิงความถี่ ปุ่มด้านบนโหลดตัวอย่าง Z-1, Z-5 และ Z-4 ให้ทันที ลากความถี่ผ่าน f₀ แล้วดูว่า V_L กับ V_C สลับกันยาวกว่า</p>
+      <div class="ph-lab" data-mode="circuit"><noscript>เปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+      <p>อยากต่อวงจรเองแบบลากสายไฟ ใช้ <a href="/learn/vector-algebra/vector-tools/#circuits">PhET Circuit Construction Kit: AC และ Falstad Circuit Simulator</a> ในหน้าเครื่องมือระดับโลก แล้วเทียบตัวเลขกับแล็บนี้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">11. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>วิธีป้องกัน</th></tr></thead><tbody>
+        <tr><td>ใช้ f แทน ω ใน X_L = ωL</td><td>X_L = 2πfL ลืม 2π ผิดไป 6.28 เท่า</td></tr>
+        <tr><td>Z_C = jωC</td><td>Z_C = 1/(jωC) = −j/(ωC) ตัวเก็บประจุให้รีแอกแตนซ์ติดลบ</td></tr>
+        <tr><td>บวกขนาดแรงดันหรือกระแส</td><td>KVL/KCL ต้องบวกเฟสเซอร์ (Z-2, Z-3)</td></tr>
+        <tr><td>S = VI (ไม่ conjugate)</td><td>มุมของ S ต้องเป็น \(\varphi_v-\varphi_i\) ใช้ \(\mathbf I^*\)</td></tr>
+        <tr><td>เลือกพิกัด C จากแรงดันแหล่งจ่าย</td><td>วงจรอนุกรมใกล้เรโซแนนซ์ V_C = Q V_s</td></tr>
+        <tr><td>ใช้เฟสเซอร์กับโหลดที่มีฮาร์มอนิก</td><td>แยกวิเคราะห์ทีละความถี่ หรือใช้ <a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a></td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">12. แบบฝึกหัดพร้อมเฉลย</h2>
+      <ol>
+        <li>R = 40 Ω อนุกรม C = 50 μF ที่ 230 V 50 Hz จงหา Z, I และ PF</li>
+        <li>วงจร Z-2 ต้องการให้เรโซแนนซ์ที่ 50 Hz ต้องเปลี่ยน C เป็นเท่าใด กระแสจะเป็นเท่าใด?</li>
+        <li>โหลด 5 kW PF 0.7 ตามหลังที่ 400 V 50 Hz ต้องการ PF 0.95 ใช้ Q_C เท่าไร?</li>
+        <li>\(\mathbf V=100\angle20^\circ\) V, \(\mathbf I=5\angle-25^\circ\) A จงหา P Q และ PF</li>
+      </ol>
+      <details><summary>เปิดเฉลย</summary><ol>
+        <li>X_C = 63.66 Ω, Z = 40 − j63.66 = 75.18∠−57.86° Ω, I = 3.059∠57.86° A, PF = 0.532 นำหน้า</li>
+        <li>C = 1/(ω²L) = 1/(314.16² × 0.127) = 79.8 μF, I = 220/30 = 7.33 A ร่วมเฟส</li>
+        <li>tan φ₁ = 1.0202, tan φ₂ = 0.3287 → Q_C = 5000 × 0.6915 = 3.46 kvar</li>
+        <li>S = 100∠20° × 5∠25° = 500∠45° → P = 353.6 W, Q = 353.6 var, PF = 0.707 ตามหลัง</li>
+      </ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">13. สรุปสูตร</h2>
+      <div class="table-wrap"><table><thead><tr><th>หัวข้อ</th><th>สูตร</th></tr></thead><tbody>
+        <tr><td><a href="#Z1">Z1</a>–<a href="#Z2">Z2</a> อิมพีแดนซ์</td><td>\(R,\ j\omega L,\ 1/(j\omega C)\); อนุกรมบวก Z ขนานบวก Y</td></tr>
+        <tr><td><a href="#Z3">Z3</a> RLC อนุกรม</td><td>\(Z=R+j(X_L-X_C)\), KVL เวกเตอร์</td></tr>
+        <tr><td><a href="#Z4">Z4</a> ขนาน</td><td>\(\mathbf I=\mathbf V\,Y\), KCL เวกเตอร์</td></tr>
+        <tr><td><a href="#Z5">Z5</a>–<a href="#Z6">Z6</a> กำลัง</td><td>\(\mathbf S=\mathbf V\mathbf I^*\), \(Q_C=P(\tan\varphi_1-\tan\varphi_2)\)</td></tr>
+        <tr><td><a href="#Z7">Z7</a> เรโซแนนซ์</td><td>\(f_0=1/(2\pi\sqrt{LC})\), \(Q=\omega_0L/R\)</td></tr>
+        <tr><td><a href="#Z8">Z8</a> วงจรกรอง</td><td>\(H=1/(1+j\omega RC)\)</td></tr>
+        <tr><td><a href="#Z9">Z9</a> สามเฟส</td><td>\(\sum\mathbf V=\mathbf 0\), \(V_L=\sqrt3V_\phi\)</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">14. แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul>
+        <li>C. K. Alexander &amp; M. N. O. Sadiku, <i>Fundamentals of Electric Circuits</i>, บทที่ 9–11 (Sinusoidal steady-state analysis, AC power)</li>
+        <li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac" target="_blank" rel="noopener">OpenStax University Physics Vol. 2 §15.3–15.6 RLC circuits, power, resonance</a></li>
+        <li><a href="https://phet.colorado.edu/en/simulations/circuit-construction-kit-ac" target="_blank" rel="noopener">PhET Circuit Construction Kit: AC</a> และ <a href="https://www.falstad.com/circuit/" target="_blank" rel="noopener">Falstad Circuit Simulator</a></li>
+      </ul>
+      <p>ต่อไป: ทดลองครบชุดใน <a href="/learn/vector-algebra/ac-lab/">แล็บวงจรไฟฟ้ากระแสสลับ</a> หรือไปต่อเรื่องกำลังใน <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

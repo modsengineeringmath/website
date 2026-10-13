@@ -12,7 +12,7 @@
   "updated": "2026-10-13",
   "level": ["Undergraduate"],
   "about": ["Force resultant", "Cable tension", "Work", "Torque", "Magnetic force", "Lorentz force", "Robot kinematics", "Engineering vectors"],
-  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js", "/assets/vec3d.js"],
   "faq": [
     {"q":"เมื่อไรใช้ Dot product และเมื่อไรใช้ Cross product ในงานวิศวกรรม?","a":"ใช้ Dot เมื่อหาส่วนตามทิศ เช่น งาน F·Δr หรือองค์ประกอบแรงตามแกน ใช้ Cross เมื่อต้องการทิศตั้งฉาก เช่น โมเมนต์ r×F แรงแม่เหล็ก qv×B หรือความเร็วจากการหมุน ω×r"},
     {"q":"ทราบจุดปลายสายเคเบิลแล้วหาแรงเวกเตอร์ได้อย่างไร?","a":"ลบตำแหน่งปลายสายกับจุดที่แรงกระทำเพื่อได้เวกเตอร์ทิศ หารด้วยความยาวให้เป็นเวกเตอร์หนึ่งหน่วย แล้วคูณขนาดแรงดึง สายดึงวัตถุเข้าหาปลายสาย ไม่ผลักออกจากปลายสาย"},
@@ -27,9 +27,9 @@
   <aside class="lesson-side"><!--toc--></aside>
   <article class="lesson int-page la-page" id="laArticle">
     <header>
-      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>ประยุกต์ทางวิศวกรรม</li></ol>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">เวกเตอร์</a></li><li>ประยุกต์ทางวิศวกรรม</li></ol>
       <!--series-nav-->
-      <p class="eyebrow">// พีชคณิตเวกเตอร์ · Engineering Applications</p>
+      <p class="eyebrow">// เวกเตอร์ · ส่วนที่ 3 · Engineering applications</p>
       <h1>การประยุกต์เวกเตอร์ทางวิศวกรรม — จากรูปโจทย์สู่คำตอบที่ตรวจได้</h1>
       <p class="lede">การจำสูตรอย่างเดียวไม่พอ ต้องรู้ว่าเวกเตอร์เริ่มจากไหน ชี้ไปไหน ใช้หน่วยอะไร และสูตรสมมติอะไรไว้ หน้านี้เดินจากการรวมแรงในสองมิติไปสู่สายเคเบิลสามมิติ งาน โมเมนต์ สนามแม่เหล็ก และการเคลื่อนที่ของหุ่นยนต์ ทุกตัวอย่างมีขั้นตอนแทนค่าจริงและจุดตรวจคำตอบ</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
@@ -70,6 +70,7 @@
       <figure class="la-fig"><svg viewBox="0 0 660 360" role="img" aria-labelledby="eng-cable-title eng-cable-desc"><title id="eng-cable-title">จุดต่อ A รับแรงดึงตามสาย AB และ AC ในสามมิติ</title><desc id="eng-cable-desc">จุด A เป็นจุดกำเนิด สาย AB ไปยังจุดสอง สาม หกเมตร สาย AC ไปยังจุดลบสี่ ศูนย์ สามเมตร มีแรงน้ำหนักลงด้านล่างและแกนมือขวาสามแกน ภาพเป็นการฉายพิกัดเพื่อแสดงทิศ</desc><defs><marker id="eng-cable-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs><path d="M300 270 H423 M300 270 L220 323 M300 270 V171" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="2" marker-end="url(#eng-cable-arrow)"/><path d="M300 270 L315 90 M300 270 L180 165" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/><path d="M300 270 L311 135" stroke="#38bdf8" stroke-width="4" marker-end="url(#eng-cable-arrow)"/><path d="M300 270 L207 189" stroke="#f59e0b" stroke-width="4" marker-end="url(#eng-cable-arrow)"/><path d="M300 270 V342" stroke="#f472b6" stroke-width="4" marker-end="url(#eng-cable-arrow)"/><circle cx="300" cy="270" r="6" fill="currentColor"/><circle cx="315" cy="90" r="6" fill="currentColor"/><circle cx="180" cy="165" r="6" fill="currentColor"/><g fill="currentColor" font-size="17" font-family="sans-serif"><text x="334" y="88">B = (2, 3, 6) m</text><text x="22" y="144">C = (−4, 0, 3) m</text><text x="323" y="185">T_AB = 700 N</text><text x="30" y="225">T_AC = 500 N</text><text x="322" y="294">A = (0, 0, 0)</text><text x="319" y="340">W = 1000 N</text><text x="432" y="276">x</text><text x="201" y="338">y</text><text x="278" y="162">z</text></g></svg><figcaption>ภาพฉายสามมิติใช้แสดงทิศและจุดอ้างอิง ให้คำนวณจากพิกัดที่ระบุ ไม่อ่านความยาวหรือมุมจากภาพฉาย</figcaption></figure>
       <div class="wx" id="ex-eng-cables"><div class="wx-head"><span class="mono">ตัวอย่าง E-2 · จุดต่อรับแรงดึงสองเส้นและน้ำหนัก</span><h3>ให้ \(A=(0,0,0)\), \(B=(2,3,6)\), \(C=(-4,0,3)\) หน่วยเมตร แรงดึง \(T_{AB}=700\,\mathrm N\), \(T_{AC}=500\,\mathrm N\) และน้ำหนัก \(\mathbf W=(0,0,-1000)\,\mathrm N\)</h3></div><ol class="steps"><li><p>สาย \(AB\): \(\mathbf d_{AB}=(2,3,6)\,\mathrm m\), ความยาว \(\sqrt{2^2+3^2+6^2}=7\,\mathrm m\) จึง \(\hat{\mathbf u}_{AB}=(2/7,3/7,6/7)\)</p></li><li><p>แรง \(\mathbf F_{AB}=700(2/7,3/7,6/7)=(200,300,600)\,\mathrm N\) ตรวจขนาดได้ \(700\,\mathrm N\)</p></li><li><p>สาย \(AC\): ความยาว \(\sqrt{(-4)^2+3^2}=5\,\mathrm m\) จึง \(\mathbf F_{AC}=500(-4/5,0,3/5)=(-400,0,300)\,\mathrm N\)</p></li><li><p>แรงรวมที่ยังไม่รวมแรงรองรับ: \(\mathbf R=\mathbf F_{AB}+\mathbf F_{AC}+\mathbf W=(-200,300,-100)\,\mathrm N\) ไม่เป็นศูนย์ จึงยังไม่สมดุล</p></li><li><p>ถ้ามีจุดรองรับอุดมคติที่ \(A\) สามารถให้แรงปฏิกิริยาสามองค์ประกอบและต้องการสมดุลจุดต่อ ต้องมี \(\mathbf F_{\rm support}=-\mathbf R=(200,-300,100)\,\mathrm N\)</p></li></ol><p class="answer">แรงรองรับที่ต้องการ \((200,-300,100)\,\mathrm N\) มีขนาด \(\sqrt{140000}\approx374.17\,\mathrm N\)</p><p class="check">นี่เป็นการหาแรงรองรับเมื่อกำหนดแรงดึงมาแล้ว ไม่ใช่การพิสูจน์ว่าโครงสร้างที่มีเพียงสองสายกับน้ำหนักสมดุลได้เอง และไม่ได้ตรวจความแข็งแรงของสาย</p></div>
       <p>ถ้าแรงดึงยังไม่ทราบ ใช้ \(\sum F_x=0\), \(\sum F_y=0\), \(\sum F_z=0\) ตั้งระบบสมการจากเวกเตอร์หนึ่งหน่วย การมีสามสมการไม่ได้รับประกันว่าจะหาคำตอบได้เสมอ ต้องตรวจจำนวนตัวไม่ทราบค่าและความเป็นอิสระของทิศแรงด้วย ดูวิธีแก้ระบบที่ <a href="/learn/linear-algebra/linear-systems/">ระบบสมการเชิงเส้น</a></p>
+          <div class="note"><b>เจาะลึก</b><p>แรงตามแนวเส้นและทิศทางโคไซน์แบบครบอยู่ใน <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์</a> (ตัวอย่างเสาไฟฟ้ากับสายยึด K-4)</p></div>
     </section>
 
     <section class="tsec" aria-labelledby="projection">
@@ -117,6 +118,8 @@
       </div></div>
       <p>จากตัวอย่าง E-6 ถ้าแกนมีทิศ \(\hat{\mathbf u}=(1,1,0)/\sqrt2\) จะได้ \(\tau_{\hat{\mathbf u}}=(5-10)/\sqrt2=-5/\sqrt2\approx-3.536\,\mathrm{N\,m}\) เครื่องหมายลบหมายถึงสวนกับทิศบวกที่ตั้งไว้ ไม่ใช่ขนาดโมเมนต์ติดลบ</p>
       <div class="note"><b>ย้ายแรงตามแนวแรงได้เมื่อใด?</b> สำหรับผลแรงภายนอกต่อวัตถุแข็งเกร็ง การย้ายจุดออกแรงตามแนวแรงเดียวกันไม่เปลี่ยนโมเมนต์ เพราะเวกเตอร์ระยะที่เพิ่มขนานกับ \(\mathbf F\) มี Cross เป็นศูนย์ แต่การย้ายแรงขนานไปอีกแนวต้องเพิ่มคู่ควบแรง และการวิเคราะห์ความเค้นภายในต้องพิจารณาจุดออกแรงจริงด้วย</div>
+          <div class="v3d" data-scene="moment"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
+      <p>โมเมนต์รอบแกน แรงคู่ควบ ระบบสมมูล และแรงปฏิกิริยาของคาน อยู่ใน <a href="/learn/vector-algebra/force-systems/">ระบบแรง</a></p>
     </section>
 
     <section class="tsec" aria-labelledby="magnetic">
@@ -129,6 +132,7 @@
       </div></div>
       <div class="wx" id="ex-eng-electron"><div class="wx-head"><span class="mono">ตัวอย่าง E-7 · อิเล็กตรอนในสนามตามแกน z</span><h3>ให้ \(q=-e=-1.602176634\times10^{-19}\,\mathrm C\), \(\mathbf v=(2.0\times10^6,0,0)\,\mathrm{m/s}\), \(\mathbf B=(0,0,0.10)\,\mathrm T\)</h3></div><ol class="steps"><li><p>ทิศ Cross: \(\hat{\mathbf i}\times\hat{\mathbf k}=-\hat{\mathbf j}\) จึง \(\mathbf v\times\mathbf B=(0,-2.0\times10^5,0)\)</p></li><li><p>คูณประจุลบ: \(\mathbf F_B=(-1.602176634\times10^{-19})(0,-2.0\times10^5,0)=(0,3.204353268\times10^{-14},0)\,\mathrm N\)</p></li><li><p>ตรวจขนาด \(|q|vB=(1.602176634\times10^{-19})(2.0\times10^6)(0.10)=3.204353268\times10^{-14}\,\mathrm N\) และ Dot กับความเร็วได้ศูนย์</p></li></ol><p class="answer">แรงประมาณ \(3.2\times10^{-14}\,\mathrm N\) ชี้ \(+y\) · ถ้าเป็นประจุบวกขนาดเท่ากัน แรงจะชี้ \(-y\)</p><p class="check">แสดงเลขละเอียดระหว่างคำนวณเพื่อเช็กเครื่องหมาย แต่รายงานขนาดสุดท้ายประมาณสองเลขนัยสำคัญตามข้อมูล \(v,B\)</p></div>
       <p>ถ้า \(\mathbf v\parallel\mathbf B\) หรือประจุหยุดนิ่ง แรงแม่เหล็กเป็นศูนย์แม้สนามมีค่าไม่เป็นศูนย์ หากมีสนามไฟฟ้าด้วย ส่วน \(q\mathbf E\) สามารถทำงานและเปลี่ยนพลังงานจลน์ได้ จึงไม่ควรสรุปว่าแรงลอเรนซ์ทั้งหมดไม่ทำงาน</p>
+          <div class="v3d" data-scene="lorentz"><noscript>เปิด JavaScript เพื่อใช้ฉาก 3 มิติ</noscript></div>
     </section>
 
     <section class="tsec" aria-labelledby="wire">
@@ -153,6 +157,7 @@
       </div></div>
       <div class="wx" id="ex-eng-robot"><div class="wx-head"><span class="mono">ตัวอย่าง E-9 · ปลายแขนหมุนรอบแกน z</span><h3>จุด \(O\) อยู่กับที่ \(\boldsymbol\omega=(0,0,2)\,\mathrm{rad/s}\), \(\mathbf r_{OP}=(0.30,0.40,0)\,\mathrm m\)</h3></div><ol class="steps"><li><p>Cross ตามลำดับ \(\boldsymbol\omega\times\mathbf r\): \(\mathbf v_P=(0(0)-2(0.40),2(0.30)-0(0),0)=(-0.80,0.60,0)\,\mathrm{m/s}\)</p></li><li><p>ตรวจความเร็วสัมผัส: \(\mathbf v_P\cdot\mathbf r_{OP}=-0.80(0.30)+0.60(0.40)=0\)</p></li><li><p>ระยะถึงแกน \(r_\perp=\sqrt{0.30^2+0.40^2}=0.50\,\mathrm m\) จึงอัตราเร็ว \(\omega r_\perp=2(0.50)=1.0\,\mathrm{m/s}\) ตรงกับ \(\sqrt{0.80^2+0.60^2}=1.0\)</p></li></ol><p class="answer">ความเร็ว \((-0.80,0.60,0)\,\mathrm{m/s}\) · อัตราเร็ว \(1.0\,\mathrm{m/s}\)</p><p class="check">ความเร็วนี้เป็นค่าขณะหนึ่ง ไม่ใช่การกระจัดเมื่อเวลาผ่านไปหนึ่งวินาที เพราะทิศ \(\mathbf r\) และทิศความเร็วเปลี่ยนระหว่างการหมุน</p></div>
       <p>ศึกษาความเร็วหุ่นยนต์เพิ่มเติมได้จาก <a href="https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-1-1-space-jacobian/" target="_blank" rel="noopener">Modern Robotics — §5.1.1 Space Jacobian</a> ซึ่งใช้ทวิสต์และ Space Jacobian การจัดองค์ประกอบของทวิสต์ต่างจากคอลัมน์ความเร็วตำแหน่ง \(\mathbf J_{v,i}\) ที่ใช้ด้านบน จึงต้องตรวจนิยามกรอบพิกัดและแปลงความเร็วของจุดให้ตรงกันก่อนเทียบสูตร</p>
+          <p>FK/IK, Jacobian, ภาวะเอกฐาน และการเลือกมอเตอร์จาก τ = JᵀF อยู่ในบท <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a></p>
     </section>
 
     <section class="tsec" aria-labelledby="equilibrium">

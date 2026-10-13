@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=0014ea3e">
+<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/matrices/#article","headline":"เมทริกซ์และการดำเนินการ (Matrices & Matrix Operations)","description":"สรุปเมทริกซ์ครบตั้งแต่ ม.ปลายถึงมหาวิทยาลัย นิยาม ขนาด ชนิดของเมทริกซ์ การบวก ลบ คูณด้วยสเกลาร์ การคูณเมทริกซ์ทีละช่อง ทรานสโพส เทรซ กำลังของเมทริกซ์ และเมทริกซ์บล็อก ทุกสูตรมีรหัสอ้างอิงและชื่อภาษาอังกฤษ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/matrices/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/matrices/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Matrix","Matrix multiplication","Transpose","Trace","Identity matrix","Symmetric matrix","Orthogonal matrix","Block matrix"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-matrices.jpg"],"educationalLevel":["High school","Undergraduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"เมทริกซ์และการดำเนินการ","item":"https://modsengineeringmath.com/learn/linear-algebra/matrices/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"คูณเมทริกซ์ได้เมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"คูณ AB ได้เมื่อจำนวนหลักของ A เท่ากับจำนวนแถวของ B ถ้า A ขนาด mtimes n และ B ขนาด ntimes p ผลคูณมีขนาด mtimes p จำง่าย ๆ ว่าตัวเลขด้านในต้องเท่ากัน ตัวเลขด้านนอกคือขนาดคำตอบ"}},{"@type":"Question","name":"ทำไม AB ไม่เท่ากับ BA?","acceptedAnswer":{"@type":"Answer","text":"เพราะสมาชิกของ AB มาจากแถวของ A คูณหลักของ B ส่วน BA มาจากแถวของ B คูณหลักของ A เป็นการจับคู่ตัวเลขคนละชุด บางครั้งขนาดยังไม่เท่ากันด้วยซ้ำ ในความหมายเชิงเรขาคณิต AB คือทำการแปลง B ก่อนแล้วตามด้วย A ลำดับจึงสำคัญ"}},{"@type":"Question","name":"ทรานสโพสของผลคูณคืออะไร?","acceptedAnswer":{"@type":"Answer","text":"(AB)^T = B^T A^T ลำดับกลับด้านเสมอ เหมือนใส่ถุงเท้าแล้วใส่รองเท้า ตอนถอดต้องถอดรองเท้าก่อน"}},{"@type":"Question","name":"เทรซ (trace) ใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"เทรซคือผลบวกสมาชิกบนเส้นทแยงมุมหลัก เท่ากับผลบวกของค่าเฉพาะทุกตัว ใช้ตรวจคำตอบค่าเฉพาะได้ทันที และในระบบอันดับสองเทรซของเมทริกซ์สถานะบอกค่าการหน่วง"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -71,15 +71,32 @@
       </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · ค้นหาสูตรเวกเตอร์</a>
-          <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D / 3D</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a>
+        <div class="nav-list nav-list-wide" id="navvec">
+          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+          <span class="nav-h">พื้นฐาน 2D / 3D</span>
+          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
           <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุมและงาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · กฎมือขวา</a>
-          <a href="/learn/vector-algebra/engineering-applications/">แรง แรงบิด และสนามแม่เหล็ก</a>
-          <a href="/learn/vector-algebra/vector-lab/">แล็บเวกเตอร์ 2D / 3D</a>
+          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+          <span class="nav-h">แรงและกลศาสตร์</span>
+          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+          <span class="nav-h">ห้องแล็บ</span>
+          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -832,6 +849,12 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/">คลังความรู้</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
       <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
@@ -876,7 +899,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=0014ea3e" defer></script>
-<script src="/assets/linalg.js?v=0014ea3e" defer></script>
+<script src="/assets/site.js?v=4e5aea51" defer></script>
+<script src="/assets/linalg.js?v=4e5aea51" defer></script>
 </body>
 </html>

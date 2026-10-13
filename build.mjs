@@ -62,20 +62,56 @@ export const TOPICS = [
     summary: "สูตรอินทิเกรตพร้อมชื่อสากล คุณสมบัติ สูตรสำเร็จ และวิธีทำทีละขั้น: เปลี่ยนตัวแปร u หารยาว เศษส่วนย่อย ทีละส่วน และอินทิกรัลจำกัดเขต",
   },
   {
+    // Topic 4: vectors — redone 2026-10-14 as a 5-part series (basics, products, mechanics, electrical, labs) with the
+    // 3D viewer / Vector Studio (assets/vec3d.js), mechanics lab (vec-mech.js), field lab (vec-field.js) and AC phasor lab (ac-phasor.js).
     slug: "vector-algebra",
-    title: "พีชคณิตของเวกเตอร์",
-    en: "Vector Algebra",
+    title: "เวกเตอร์: จากแรงลัพธ์ถึงเฟสเซอร์",
+    en: "Vectors: Forces, Fields & Phasors",
     sym: "→",
-    summary: "เวกเตอร์ 2D/3D การบวก ลบ คูณสเกลาร์ องค์ประกอบและการฉาย Dot/Cross product พร้อมแล็บโต้ตอบและโจทย์แรง งาน แรงบิด สนามแม่เหล็ก",
-    fxHint: "ค้นหา เช่น component, projection, dot, cross, แรงบิด, เวกเตอร์หนึ่งหน่วย",
+    summary: "เวกเตอร์ 2D/3D ทิศทางโคไซน์ แรงลัพธ์ด้วยกฎไซน์-โคไซน์ ระบบแรงและโมเมนต์ การหมุนแกน แขนกล สนามไฟฟ้า-แม่เหล็ก sin/cos สู่เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ พร้อมแล็บ 3 มิติหมุนได้ แล็บกลศาสตร์ แล็บสนาม และแล็บวงจร AC",
+    fxHint: "พิมพ์ เช่น cosine law, sine law, direction cosine, moment, couple, rotation, jacobian, coulomb, lorentz, phasor, impedance, kvl",
+    parts: [
+      { id: "basics", n: 1, title: "พื้นฐานเวกเตอร์ 2D / 3D", en: "Vector Basics", blurb: "ขนาด ทิศทาง พิกัด บวก ลบ คูณสเกลาร์ แตกองค์ประกอบ การฉาย และทิศทางโคไซน์ของแรงสามมิติ" },
+      { id: "products", n: 2, title: "ผลคูณของเวกเตอร์", en: "Dot & Cross Products", blurb: "Dot product สำหรับมุม งาน และการฉาย · Cross product สำหรับพื้นที่ แรงบิด และทิศตั้งฉาก" },
+      { id: "mechanics", n: 3, title: "แรงและกลศาสตร์", en: "Forces & Mechanics", blurb: "แรงลัพธ์ด้วยกฎของไซน์-โคไซน์ ระบบแรงและโมเมนต์ การหมุนแกนพิกัด และเวกเตอร์ในแขนกล" },
+      { id: "electrical", n: 4, title: "ไฟฟ้า: สนามและเฟสเซอร์", en: "Fields & Phasors", blurb: "สนามไฟฟ้า สนามแม่เหล็ก แรงลอเรนซ์ ความสัมพันธ์ sin–cos เฟสเซอร์ และการวิเคราะห์วงจรไฟฟ้ากระแสสลับ" },
+      { id: "labs", n: 5, title: "ห้องแล็บและเครื่องมือ", en: "Labs & Tools", blurb: "สตูดิโอเวกเตอร์ 3 มิติ แล็บกลศาสตร์แบบฟิสิกส์ 1 แล็บสนามแบบฟิสิกส์ 2 แล็บวงจร AC และเครื่องมือระดับโลก" },
+    ],
     sub: [
-      { slug: "foundations", short: "พื้นฐาน 2D/3D", title: "เวกเตอร์ ขนาด ทิศทาง และพิกัด 2D/3D", en: "Vector foundations", sym: "→", prefix: "F", summary: "แยกสเกลาร์กับเวกเตอร์ พิกัด จุดต้นปลาย ขนาด เวกเตอร์หนึ่งหน่วย และทิศทางสามมิติ" },
-      { slug: "operations", short: "บวก ลบ สเกลาร์", title: "การบวก ลบ และคูณเวกเตอร์ด้วยสเกลาร์", en: "Vector operations", sym: "+", prefix: "V", summary: "ต่อหัวกับหาง กฎสี่เหลี่ยมด้านขนาน แรงลัพธ์ และการคำนวณทีละองค์ประกอบ" },
-      { slug: "components-projection", short: "Component · Projection", title: "องค์ประกอบและการฉายเวกเตอร์", en: "Components & projection", sym: "⊥", prefix: "P", summary: "แตกแรงตามแกน ฉายบนทิศที่ไม่ใช่เวกเตอร์หนึ่งหน่วย และแยกส่วนขนานกับตั้งฉาก" },
-      { slug: "dot-product", short: "Dot product", title: "ผลคูณจุดและมุมระหว่างเวกเตอร์", en: "Dot product", sym: "·", prefix: "D", summary: "ความหมายเชิงเรขาคณิต พิสูจน์สูตร หามุม ความตั้งฉาก และงานของแรง" },
-      { slug: "cross-product", short: "Cross product", title: "ผลคูณไขว้ กฎมือขวา พื้นที่และปริมาตร", en: "Cross product", sym: "×", prefix: "C", summary: "คำนวณสามมิติ ลำดับและเครื่องหมาย พื้นที่เวกเตอร์ และผลคูณสามชั้น" },
-      { slug: "engineering-applications", short: "งานวิศวกรรม", title: "การประยุกต์เวกเตอร์ทางวิศวกรรม", en: "Engineering applications", sym: "τ", prefix: "E", summary: "แรงในสายเคเบิล งาน แรงบิด แรงแม่เหล็ก และการเคลื่อนที่ของหุ่นยนต์ พร้อมหน่วยและข้อสมมติ" },
-      { slug: "vector-lab", short: "แล็บเวกเตอร์", title: "แล็บเวกเตอร์ 2D/3D พร้อมวิธีคำนวณ", en: "Interactive vector lab", sym: "↗", tag: "แล็บโต้ตอบ", summary: "ปรับองค์ประกอบแล้วดูภาพและผลบวก ลบ สเกลาร์ Dot/Cross product และ projection พร้อมกัน" },
+      { slug: "foundations", part: "basics", short: "พื้นฐาน 2D/3D", title: "เวกเตอร์ ขนาด ทิศทาง และพิกัด 2D/3D", en: "Vector foundations", sym: "→", prefix: "F", summary: "แยกสเกลาร์กับเวกเตอร์ พิกัด จุดต้นปลาย ขนาด เวกเตอร์หนึ่งหน่วย และทิศทางสามมิติ" },
+      { slug: "operations", part: "basics", short: "บวก ลบ สเกลาร์", title: "การบวก ลบ และคูณเวกเตอร์ด้วยสเกลาร์", en: "Vector operations", sym: "+", prefix: "V", summary: "ต่อหัวกับหาง กฎสี่เหลี่ยมด้านขนาน แรงลัพธ์ และการคำนวณทีละองค์ประกอบ" },
+      { slug: "components-projection", part: "basics", short: "Component · Projection", title: "องค์ประกอบและการฉายเวกเตอร์", en: "Components & projection", sym: "⊥", prefix: "P", summary: "แตกแรงตามแกน ฉายบนทิศที่ไม่ใช่เวกเตอร์หนึ่งหน่วย และแยกส่วนขนานกับตั้งฉาก" },
+      { slug: "direction-cosines", part: "basics", short: "ทิศทางโคไซน์", title: "ทิศทางโคไซน์และการแตกแรงสามมิติ: α β γ มุมราบ-มุมเงย และแรงตามแนวเส้น", en: "Direction cosines & 3D force components", sym: "cos γ", prefix: "K",
+        summary: "มุม α β γ กับสามแกน cos²α + cos²β + cos²γ = 1 แตกแรงสองขั้นด้วยมุมราบ-มุมเงย แรงตามสายเคเบิลจากพิกัดสองจุด และฉาก 3 มิติหมุนดูได้" },
+      { slug: "dot-product", part: "products", short: "Dot product", title: "ผลคูณจุดและมุมระหว่างเวกเตอร์", en: "Dot product", sym: "·", prefix: "D", summary: "ความหมายเชิงเรขาคณิต พิสูจน์สูตร หามุม ความตั้งฉาก และงานของแรง" },
+      { slug: "cross-product", part: "products", short: "Cross product", title: "ผลคูณไขว้ กฎมือขวา พื้นที่และปริมาตร", en: "Cross product", sym: "×", prefix: "C", summary: "คำนวณสามมิติ ลำดับและเครื่องหมาย พื้นที่เวกเตอร์ และผลคูณสามชั้น" },
+      { slug: "resultant-forces", part: "mechanics", short: "แรงลัพธ์ · กฎไซน์-โคไซน์", title: "แรงลัพธ์ด้วยกฎของโคไซน์และกฎของไซน์: สี่เหลี่ยมด้านขนาน สามเหลี่ยมแรง และการแตกแรงตามแนวเฉียง", en: "Resultant forces: laws of sines & cosines", sym: "R²", prefix: "R",
+        summary: "พิสูจน์กฎโคไซน์จากเวกเตอร์ รวมสองแรงด้วยสามเหลี่ยมแรง หาทิศด้วยกฎไซน์และกรณีกำกวม แตกแรงตามสองแนวที่ไม่ตั้งฉาก สามแรงขึ้นไปด้วยองค์ประกอบ และทฤษฎีของลามี" },
+      { slug: "force-systems", part: "mechanics", short: "ระบบแรง · โมเมนต์", title: "ระบบแรง: โมเมนต์ แรงคู่ควบ ระบบสมมูล แรงลัพธ์เดี่ยว และสมดุลของวัตถุแข็งเกร็ง", en: "Force systems, moments & equilibrium", sym: "ΣM", prefix: "S",
+        summary: "แรงร่วมจุด แรงในระนาบ โมเมนต์ M = r × F และทฤษฎีวาริยอง แรงคู่ควบ ย้ายแรงเป็นระบบแรง-แรงคู่ควบ แรงลัพธ์เดี่ยว แผนภาพวัตถุอิสระ และแรงปฏิกิริยาของคาน" },
+      { slug: "coordinate-rotation", part: "mechanics", short: "หมุนแกนพิกัด", title: "การหมุนแกนพิกัด 2D/3D: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง", en: "Rotation of axes & rotation matrices", sym: "R(θ)", prefix: "T",
+        summary: "องค์ประกอบเดียวกันในสองกรอบ หมุนแกนกับหมุนเวกเตอร์ เมทริกซ์หมุนตั้งฉาก RᵀR = I มุมออยเลอร์ Z-Y-X สูตรโรดริเกส พื้นเอียง และกรอบ dq ของมอเตอร์" },
+      { slug: "robot-arm", part: "mechanics", short: "แขนกล", title: "เวกเตอร์ในแขนกล: จลนศาสตร์ไปข้างหน้า-ย้อนกลับ Jacobian ความเร็ว และแรงบิดข้อต่อ", en: "Vectors in robot arms", sym: "J", prefix: "A",
+        summary: "ตำแหน่งปลายแขนเป็นผลบวกเวกเตอร์ของข้อแขน FK/IK ของแขน 2 ข้อต่อ แขน 3 มิติ Jacobian v = Jθ̇ ภาวะเอกฐาน และ τ = JᵀF สำหรับเลือกมอเตอร์" },
+      { slug: "engineering-applications", part: "mechanics", short: "งานวิศวกรรม", title: "การประยุกต์เวกเตอร์ทางวิศวกรรม", en: "Engineering applications", sym: "τ", prefix: "E", summary: "แรงในสายเคเบิล งาน แรงบิด แรงแม่เหล็ก และการเคลื่อนที่ของหุ่นยนต์ พร้อมหน่วยและข้อสมมติ" },
+      { slug: "em-fields", part: "electrical", short: "สนามไฟฟ้า-แม่เหล็ก", title: "เวกเตอร์ในสนามไฟฟ้าและสนามแม่เหล็ก: คูลอมบ์ การซ้อนทับ ลอเรนซ์ F = IL × B และแรงบิดของมอเตอร์", en: "Vectors in electromagnetic fields", sym: "E·B", prefix: "M",
+        summary: "แรงคูลอมบ์เชิงเวกเตอร์ สนามจากประจุหลายตัว ศักย์สเกลาร์ ฟลักซ์ Φ = B·A แรงลอเรนซ์ แรงบนลวด สนามจากลวดตรง แรงระหว่างลวดขนาน และแรงบิดบนขดลวด τ = m × B" },
+      { slug: "sinusoids", part: "electrical", short: "sin · cos ไฟฟ้า AC", title: "ความสัมพันธ์ของ sin และ cos ในไฟฟ้ากระแสสลับ: แอมพลิจูด เฟส นำหน้า-ตามหลัง และค่า RMS", en: "Sine & cosine in AC circuits", sym: "∿", prefix: "W",
+        summary: "v(t) = Vm sin(ωt + φ) ความถี่ คาบ ω เปลี่ยน sin เป็น cos ด้วย ±90° หาความต่างเฟสและนำหน้า-ตามหลัง รวม A cos + B sin เป็นไซน์เดียว ค่าเฉลี่ยและ RMS" },
+      { slug: "phasors", part: "electrical", short: "เฟสเซอร์", title: "พื้นฐานเฟสเซอร์: เวกเตอร์หมุน สูตรออยเลอร์ จำนวนเชิงซ้อน และการบวกไซน์ด้วยเวกเตอร์", en: "Phasor fundamentals", sym: "V∠φ", prefix: "H",
+        summary: "เฟสเซอร์คือลูกศรหมุนที่หยุดไว้ที่ t = 0 สูตรออยเลอร์ รูปสี่เหลี่ยมมุมฉากและเชิงขั้ว บวก คูณ หาร อนุพันธ์เป็น jω และการบวกไซน์ความถี่เดียวกันด้วยกฎโคไซน์" },
+      { slug: "ac-circuits", part: "electrical", short: "วิเคราะห์วงจร AC", title: "วิเคราะห์วงจรไฟฟ้ากระแสสลับด้วยเฟสเซอร์: อิมพีแดนซ์ KVL KCL เชิงเวกเตอร์ แผนภาพเฟสเซอร์ กำลัง และเรโซแนนซ์", en: "AC circuit analysis with phasors", sym: "Z", prefix: "Z",
+        summary: "อิมพีแดนซ์ R jX_L −jX_C วงจรอนุกรม ขนาน และผสม KVL/KCL เป็นการบวกเวกเตอร์ แผนภาพเฟสเซอร์ กำลังเชิงซ้อน S = VI* การแก้ PF เรโซแนนซ์ และ nodal analysis" },
+      { slug: "vector-lab", part: "labs", short: "สตูดิโอเวกเตอร์ 3D", title: "สตูดิโอเวกเตอร์ 2D/3D: วาด หมุนแกน วิเคราะห์ และส่งออกไป GeoGebra MATLAB Python", en: "Vector Studio 2D/3D", sym: "↗", tag: "แล็บโต้ตอบ 3 มิติ",
+        summary: "หมุนมุมมอง 3 มิติด้วยการลาก มุมมอง xy xz yz ผลรวม หัวต่อหาง กล่ององค์ประกอบ มุม α β γ projection cross กรอบหมุนมุมออยเลอร์ และเครื่องคิดเลขเวกเตอร์เดิม" },
+      { slug: "mechanics-lab", part: "labs", short: "แล็บกลศาสตร์", title: "แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1): โต๊ะแรง สามเหลี่ยมแรง เชือกแขวน พื้นเอียง คาน และแขนกล", en: "Virtual mechanics lab (Physics 1)", sym: "⚖", tag: "แล็บโต้ตอบ + ใบงาน",
+        summary: "ทดลองโต๊ะแรงหาแรงสมดุลพร้อม %error กฎไซน์-โคไซน์ ทฤษฎีลามี พื้นเอียงกับแรงเสียดทาน ระบบแรงบนคาน และแขนกล พร้อมใบงานแบบรายงานแล็บ" },
+      { slug: "field-lab", part: "labs", short: "แล็บสนามไฟฟ้า", title: "แล็บสนามไฟฟ้าและแม่เหล็กเสมือน (ฟิสิกส์ 2): ประจุจุด เส้นแรง ศักย์ ลวดตัวนำ และแรงลอเรนซ์", en: "Virtual electric & magnetic field lab (Physics 2)", sym: "E", tag: "แล็บโต้ตอบ + ใบงาน",
+        summary: "ลากประจุแล้วเห็นเวกเตอร์สนาม เส้นแรง เส้นศักย์เท่า และการซ้อนทับที่จุด P สนามจากลวดตรง แรงระหว่างลวด และอนุภาคในสนาม E กับ B" },
+      { slug: "ac-lab", part: "labs", short: "แล็บวงจร AC", title: "แล็บวงจรไฟฟ้ากระแสสลับเสมือน: เฟสเซอร์หมุน บวกไซน์ วงจร RLC และเครื่องคิดเลขจำนวนเชิงซ้อน", en: "Virtual AC circuit lab", sym: "∠", tag: "แล็บโต้ตอบ + ใบงาน",
+        summary: "เฟสเซอร์หมุนกับรูปคลื่น บวกไซน์ด้วยเวกเตอร์ วงจร RLC อนุกรม ขนาน และแก้ PF พร้อมแผนภาพเฟสเซอร์ สามเหลี่ยมกำลัง ผลตอบสนองเชิงความถี่ และเครื่องคิดเลขเชิงซ้อน" },
+      { slug: "vector-tools", part: "labs", short: "เครื่องมือระดับโลก", title: "เครื่องมือระดับโลกสำหรับเวกเตอร์ สนาม และวงจร AC: PhET GeoGebra Falstad MATLAB Python", en: "World-class vector tools", sym: "⊕", tag: "ฝังเครื่องมือจริง + วิธีใช้",
+        summary: "เปิดซิมูเลชัน PhET GeoGebra 3D และ Falstad ในหน้าเดียว วิธีใช้ให้ได้ผลกับบทเรียน ส่งออกเวกเตอร์ไป GeoGebra MATLAB Python และตารางเลือกเครื่องมือ" },
     ],
   },
   {
@@ -588,7 +624,7 @@ function toc(html) {
     '<nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol>' +
     items.map(([, id, t]) => {
       const lv = /<span class="lv lv-([bia])"/.exec(t);
-      return `<li><a href="#${id}">${stripTags(t.replace(LV_RE, ""))}${lv ? `<i class="toc-lv lv-${lv[1]}" aria-hidden="true"></i>` : ""}</a></li>`;
+      return `<li><a href="#${id}">${stripTags(t.replace(LV_RE, "")).replace(/^\s*\d+\.\s+/, "")}${lv ? `<i class="toc-lv lv-${lv[1]}" aria-hidden="true"></i>` : ""}</a></li>`;
     }).join("") +
     "</ol></details></nav>"
   );
@@ -898,7 +934,7 @@ const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
 const MD_SERIES = ["vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor"];
 const MD_GUIDES = [
-  { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vector algebra — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, vector addition/subtraction/scaling, signed scalar and vector projections, dot/cross products, torque/work/magnetic force, interactive lab and reference sources" },
+  { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
     desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
   { src: "src/md/solar-pv.md", out: "learn/solar-pv/guide.md", page: "/learn/solar-pv/", title: "Solar PV system design — complete guide (Thai, Markdown)",
@@ -1030,7 +1066,12 @@ fs.writeFileSync(
 
 // llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
 const LABS = [
-  ["Vector algebra formula index & interactive 2D/3D lab", "vector-algebra", "foundations, addition/subtraction/scaling, signed scalar and vector projections, dot product and angle, cross product and right-hand rule; citable formulas F/V/P/D/C/E; worked forces/work/torque/magnetic-force examples; interactive components with 2D and isometric 3D diagrams"],
+  ["Vector Studio 2D/3D (rotatable)", "vector-algebra/vector-lab", "free browser-based 3D vector tool in Thai: up to 8 vectors, drag to orbit, xy/xz/yz views, perspective, resultant and head-to-tail polygon, component box, direction angles α β γ and direction cosines, projection, dot/cross products, triple product, rotated frame with Z-Y-X Euler angles, pairwise angle table, shareable link (#studio=…), export to GeoGebra commands, MATLAB/Octave quiver3, Python NumPy/Matplotlib and CSV; plus a step-by-step two-vector calculator"],
+  ["Vector formula index (forces, fields & phasors)", "vector-algebra#formulas", "every vector formula with a citable ID: F foundations, V operations, P components/projection, K direction cosines, D dot, C cross, R resultant forces (laws of sines/cosines, oblique resolution, Lami), S force systems (moments, couples, equivalent systems, distributed loads, equilibrium), T rotation of axes (rotation matrices, Euler angles, Rodrigues, Clarke/Park), A robot arms (FK/IK, Jacobian, τ = JᵀF), E engineering applications, M electromagnetic fields (Coulomb, superposition, potential, flux, Lorentz force, F = IL×B, parallel conductors, τ = m×B), W sinusoids (phase, lead/lag, RMS), H phasors, Z AC circuits (impedance, complex power, PF correction, resonance, RC filter, three-phase)"],
+  ["Virtual mechanics lab (Physics 1)", "vector-algebra/mechanics-lab", "force table with equilibrant and percent error, force triangle with laws of sines and cosines (including the obtuse-angle arcsin trap) and oblique resolution, two-cable equilibrium with Lami's theorem, inclined plane with rotated axes and static/kinetic friction, beam force system (equivalent force-couple, single resultant, support reactions), two-link robot arm with FK/IK (drag the target), Jacobian, tip velocity and joint torques; worksheets with data tables"],
+  ["Virtual electric & magnetic field lab (Physics 2)", "vector-algebra/field-lab", "draggable point charges with field vectors, RK4 field lines, equipotentials and potential map, superposition breakdown at a probe point, Coulomb force on a selected charge, zero-field point, parallel plates; long straight wires with B = μ0I/(2πr), field lines as A_z contours and force per metre between wires; charged particle in uniform E and B (circle, velocity selector, cycloid, E×B drift) with a Boris integrator; 3D superposition scene"],
+  ["Virtual AC circuit lab (phasors)", "vector-algebra/ac-lab", "rotating phasor with sine/cosine projections and lead/lag, adding sinusoids as vectors (law of cosines) and why different frequencies cannot be added as phasors, series/parallel RLC and RL∥C power-factor correction with phasor diagram (KVL/KCL polygons), waveforms, power triangle, frequency sweep and resonance, complex-number calculator"],
+  ["World-class tools for vectors, fields and AC circuits", "vector-algebra/vector-tools", "click-to-load PhET simulations (Vector Addition, Charges and Fields, Faraday's Electromagnetic Lab, Circuit Construction Kit: AC, Trig Tour), Falstad Circuit Simulator, GeoGebra 3D command table, MATLAB/Octave and Python starter code matching the lessons, and a tool-selection table"],
   ["Linear algebra formula index & matrix calculator", "linear-algebra", "every matrix, determinant, linear-system, inverse, Cramer and eigenvalue formula with a citable ID (M1…, D1…, L1…, I1…, C1…, E1…, A1…) in one searchable list; exact-fraction calculator for determinant, inverse, Gauss–Jordan / Cramer solutions and eigenvalues/eigenvectors with step-by-step working"],
   ["2×2 transformation & eigenvector lab", "linear-algebra/eigenvalues", "drag a 2×2 matrix's columns: grid and unit circle transform, determinant as signed area, eigen-directions and Av vs v shown live"],
   ["Integral calculus formulas & worked solutions", "integral-calculus", "every basic and standard integral with international names (power rule, linearity, u-substitution, integration by parts, partial fractions, FTC, definite-integral properties); step-by-step lecture-style solutions with highlighted formulas, red cancellations and polynomial long division; Riemann-sum visualiser"],
