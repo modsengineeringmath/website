@@ -1,0 +1,256 @@
+<!--meta
+{
+  "title": "เวกเตอร์ 2 มิติและ 3 มิติ: ขนาด ทิศทาง เวกเตอร์หนึ่งหน่วย พร้อมตัวอย่าง | อาจารย์มด",
+  "h1": "พื้นฐานเวกเตอร์ 2D และ 3D: ขนาด ทิศทาง และเวกเตอร์หนึ่งหน่วย",
+  "description": "เข้าใจเวกเตอร์ตั้งแต่สเกลาร์กับเวกเตอร์ พิกัด 2D/3D เวกเตอร์จากสองจุด ความยาว มุม atan2 เวกเตอร์หนึ่งหน่วย และ direction cosines พร้อมภาพ ตัวอย่างแรงในสายเคเบิล สูตรอ้างอิง และแบบฝึกเฉลย",
+  "ogTitle": "เวกเตอร์ 2D/3D: อ่านลูกศรเป็นสมการ เข้าใจขนาดและทิศทาง",
+  "lesson": "vector-algebra",
+  "sub": "foundations",
+  "nav": "vec",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Vector", "Euclidean vector", "Two-dimensional space", "Three-dimensional space", "Unit vector", "Vector magnitude", "Direction cosines", "Displacement"],
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "faq": [
+    {"q": "เวกเตอร์ต่างจากสเกลาร์อย่างไร?", "a": "สเกลาร์ระบุด้วยตัวเลขและหน่วย เช่น มวล 5 kg ส่วนเวกเตอร์ต้องระบุขนาดและทิศทาง เช่น แรง 5 N ไปทางขวา ในระบบพิกัดฉากเขียนเวกเตอร์ด้วยองค์ประกอบ x, y และ z ได้"},
+    {"q": "หาความยาวเวกเตอร์ 2D และ 3D อย่างไร?", "a": "ในแกนตั้งฉากที่มีเวกเตอร์ฐานหนึ่งหน่วย เวกเตอร์ 2D (ax, ay) มีความยาว sqrt(ax² + ay²) และเวกเตอร์ 3D (ax, ay, az) มีความยาว sqrt(ax² + ay² + az²)"},
+    {"q": "เวกเตอร์หนึ่งหน่วยคืออะไร?", "a": "เวกเตอร์ที่มีความยาวเท่ากับ 1 ใช้ระบุทิศทาง ถ้าเวกเตอร์ a ไม่เป็นศูนย์ เวกเตอร์หนึ่งหน่วยในทิศเดียวกันคือ a หารด้วยความยาวของ a เวกเตอร์ศูนย์ไม่มีทิศทางจึงหาเวกเตอร์หนึ่งหน่วยจากการหารไม่ได้"},
+    {"q": "ทำไมใช้ atan2 แทน arctan(ay/ax)?", "a": "atan2 ตรวจเครื่องหมายของทั้ง ax และ ay จึงเลือกควอดแรนต์ถูกต้องและรองรับ ax เท่ากับศูนย์ ส่วน arctan ของอัตราส่วนอย่างเดียวแยกทิศทางที่ต่างกัน 180 องศาไม่ได้ เวกเตอร์ศูนย์ยังไม่มีมุมทิศทาง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>พื้นฐาน 2D/3D</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// พีชคณิตเวกเตอร์ · บทที่ 1 · Vector foundations</p>
+      <h1>พื้นฐานเวกเตอร์ 2D และ 3D: ขนาด ทิศทาง และเวกเตอร์หนึ่งหน่วย</h1>
+      <p class="lede">ลูกศรหนึ่งเส้นบอกได้ทั้ง “เท่าไร” และ “ไปทางไหน” เมื่อเขียนลูกศรเป็นองค์ประกอบตามแกน เราจะคำนวณแรง การเคลื่อนที่ และตำแหน่งของหุ่นยนต์ได้ด้วยพีชคณิต หน้านี้เริ่มจากภาพที่มองเห็น แล้วค่อยเชื่อมสู่สูตร 2 มิติและ 3 มิติ พร้อมตัวอย่างที่ระบุหน่วยและตรวจคำตอบได้ทุกขั้น</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#magnitude">ขนาดเวกเตอร์</a><a class="btn btn-ghost btn-sm" href="#unit-vector">เวกเตอร์หนึ่งหน่วย</a><a class="btn btn-ghost btn-sm" href="#direction">มุมทิศทาง</a><a class="btn btn-ghost btn-sm" href="#practice">แบบฝึกพร้อมเฉลย</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>เวกเตอร์มีขนาดและทิศทาง เขียนใน 2D เป็น \((a_x,a_y)\) และใน 3D เป็น \((a_x,a_y,a_z)\) เมื่อเลือกแกนแล้ว</li>
+        <li>ลูกศรจาก \(A\) ไป \(B\) คือ “พิกัดปลายลบพิกัดต้น” \(\overrightarrow{AB}=\mathbf r_B-\mathbf r_A\)</li>
+        <li>ในแกนฉากมาตรฐาน \(\|\mathbf a\|=\sqrt{a_x^2+a_y^2+a_z^2}\) และ \(\hat{\mathbf a}=\mathbf a/\|\mathbf a\|\) เมื่อ \(\mathbf a\ne\mathbf0\)</li>
+        <li>องค์ประกอบอาจติดลบ แต่ขนาดไม่ติดลบ ส่วนเวกเตอร์ศูนย์ไม่มีทิศทาง</li>
+      </ul></div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น magnitude, unit vector, มุม, พิกัด" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="scalar-vector">
+      <h2 id="scalar-vector">1. สเกลาร์กับเวกเตอร์: ตัวเลขเดียวเพียงพอหรือยัง? <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ถ้าบอกว่า “มอเตอร์หนัก 8 kg” เราทราบมวลครบแล้ว แต่ถ้าบอกว่า “ออกแรง 80 N” เรายังไม่ทราบว่าจะดึงไปซ้าย ขวา หรือขึ้นบน ข้อมูลทิศทางทำให้ปริมาณสองชนิดนี้ต่างกัน สเกลาร์ (scalar) มีค่าตัวเลขและหน่วย ส่วนเวกเตอร์ (vector) มีขนาด ทิศทาง และหน่วยตามปริมาณที่แทน</p>
+      <div class="table-wrap"><table><thead><tr><th>ปริมาณสเกลาร์</th><th>ปริมาณเวกเตอร์</th><th>ความต่างที่ต้องระวัง</th></tr></thead><tbody>
+        <tr><td>ระยะทาง 10 m</td><td>การกระจัด 10 m ไปทางตะวันออก</td><td>เดินอ้อมกลับจุดเดิมได้ระยะทางเพิ่ม แต่การกระจัดเป็นศูนย์</td></tr>
+        <tr><td>อัตราเร็ว 5 m/s</td><td>ความเร็ว \((3,4)\) m/s</td><td>อัตราเร็วคือขนาดของเวกเตอร์ความเร็ว</td></tr>
+        <tr><td>มวล 2 kg</td><td>แรงโน้มถ่วง \((0,-19.62)\) N</td><td>ตัวอย่างเลือกแกน \(+y\) ขึ้น และ \(g=9.81\) m/s²</td></tr>
+        <tr><td>พลังงาน 20 J</td><td>แรง 20 N ไปทาง \(+x\)</td><td>พลังงานกับแรงมีชนิดและหน่วยต่างกัน จึงนำมาบวกกันไม่ได้</td></tr>
+      </tbody></table></div>
+      <p>สเกลาร์อาจติดลบได้ เช่น อุณหภูมิหรือประจุไฟฟ้า จึงไม่ควรใช้เครื่องหมายบวก/ลบตัดสินว่าเป็นสเกลาร์หรือเวกเตอร์ ในบทนี้ใช้ \(\mathbf a\) หรือ \(\vec a\) แทนเวกเตอร์ และใช้ \(a\) หรือ \(\|\mathbf a\|\) แทนขนาดเมื่อระบุชัดเจน</p>
+      <div class="note"><b>ขอบเขตที่ใช้ในบทเรียน</b><p>เราศึกษาเวกเตอร์จริงในปริภูมิยูคลิดและแกนพิกัดฉากที่มีเวกเตอร์ฐานความยาว 1 สูตรผลรวมกำลังสองและองค์ประกอบตามแกนในหน้านี้ใช้กับฐานตั้งฉากมาตรฐาน ถ้าใช้ฐานเอียง ต้องรวมผลคูณระหว่างเวกเตอร์ฐานด้วย</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="coordinates">
+      <h2 id="coordinates">2. เขียนลูกศรเป็นองค์ประกอบใน 2D และ 3D <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>เลือกจุดกำเนิดและทิศบวกของแกนก่อน แล้วถามว่าลูกศรพาเราเคลื่อนไปตามแกนแต่ละแกนเท่าไร ตัวอย่าง \((3,2)\) หมายถึงไปทาง \(+x\) 3 หน่วยและทาง \(+y\) 2 หน่วย สองตัวเลขนี้เป็นองค์ประกอบ (components) ของเวกเตอร์ ไม่ใช่ความยาวของลูกศรสองเส้นที่ต้องบวกกันเพื่อให้ได้ขนาด</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 300" role="img" aria-labelledby="f-components-title f-components-desc">
+          <title id="f-components-title">เวกเตอร์สองมิติและองค์ประกอบตามแกน</title><desc id="f-components-desc">ลูกศรจากจุดกำเนิดไปยังพิกัด 3, 2 มีองค์ประกอบแนวนอน 3 และแนวตั้ง 2 เส้นประประกอบเป็นสามเหลี่ยมมุมฉาก ขนาดของเวกเตอร์เท่ากับรากที่สองของ 13</desc>
+          <defs><marker id="f-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M65 245 H355 M85 265 V25"/><text x="362" y="250">x</text><text x="73" y="22">y</text><text x="65" y="263">O</text>
+          <g class="ln dash"><path d="M295 105 V245 M85 105 H295"/></g>
+          <path class="ln ln-p1" d="M85 245 H295" marker-end="url(#f-arrow)"/><path class="ln ln-cur" d="M295 245 V105" marker-end="url(#f-arrow)"/>
+          <path class="ln ln-p2" d="M85 245 L295 105" marker-end="url(#f-arrow)"/>
+          <path class="ax" d="M280 245 V230 H295"/><circle class="dot" cx="295" cy="105" r="4"/>
+          <text x="295" y="87">(3, 2)</text><text class="c-p1" x="177" y="269">aₓ = 3</text><text class="c-cur" x="307" y="182">aᵧ = 2</text><text class="c-p2" x="149" y="162">a</text>
+          <text class="t-th" x="405" y="96">สององค์ประกอบ</text><text x="405" y="124">a = 3i + 2j</text><text class="t-th" x="405" y="168">ความยาวลูกศร</text><text x="405" y="196">‖a‖ = √13</text><text class="t-sm" x="405" y="221">≈ 3.606 หน่วย</text>
+        </svg>
+        <figcaption>องค์ประกอบ \(a_x,a_y\) คือระยะที่มีเครื่องหมายตามแกน ส่วน \(\|\mathbf a\|\) คือความยาวของลูกศรทแยง</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="F1" data-k="vector coordinates components basis 2D 3D i j k พิกัด องค์ประกอบ เวกเตอร์ฐาน">
+          <p class="tf-n"><b><span class="fid">F1</span> Cartesian vector representation</b> รูปองค์ประกอบในแกนฉาก</p>
+          \[ \mathbf a=(a_x,a_y)=a_x\hat{\mathbf i}+a_y\hat{\mathbf j},\qquad \mathbf a=(a_x,a_y,a_z)=a_x\hat{\mathbf i}+a_y\hat{\mathbf j}+a_z\hat{\mathbf k} \]
+          <p class="tf-x">\(\hat{\mathbf i}=(1,0,0)\), \(\hat{\mathbf j}=(0,1,0)\), \(\hat{\mathbf k}=(0,0,1)\) เป็นเวกเตอร์ฐานหนึ่งหน่วย หลายตำราเขียน \(\mathbf i,\mathbf j,\mathbf k\) โดยละหมวก ทั้งสามตัวตั้งฉากกัน</p>
+        </div>
+        <div class="tf" id="F2" data-k="equality equal vector same components zero vector เท่ากัน ศูนย์">
+          <p class="tf-n"><b><span class="fid">F2</span> Equality and the zero vector</b> ความเท่ากันและเวกเตอร์ศูนย์</p>
+          \[ \mathbf a=\mathbf b\iff a_x=b_x,\ a_y=b_y,\ a_z=b_z;\qquad \mathbf0=(0,0,0) \]
+          <p class="tf-x">ใช้เมื่อเขียนในฐานเดียวกันและมีมิติเท่ากัน ใน 2D ตัดองค์ประกอบ \(z\) ออก เวกเตอร์ศูนย์มีขนาด 0 และไม่มีทิศทางเฉพาะ</p>
+        </div>
+        <div class="tf" id="F3" data-k="column row vector matrix transpose เวกเตอร์หลัก แถว เมทริกซ์">
+          <p class="tf-n"><b><span class="fid">F3</span> Column-vector notation</b> เวกเตอร์ในรูปเมทริกซ์หลัก</p>
+          \[ \mathbf a=\begin{pmatrix}a_x\\a_y\\a_z\end{pmatrix},\qquad \mathbf a^T=\begin{pmatrix}a_x&a_y&a_z\end{pmatrix} \]
+          <p class="tf-x">วงเล็บ \((a_x,a_y,a_z)\) ในบทเรียนเป็นการระบุองค์ประกอบ เมื่อต้องคูณเมทริกซ์จะใช้เวกเตอร์หลักให้ขนาดสอดคล้องกัน ดู <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a></p>
+        </div>
+      </div>
+      <p>ใน 3D เพิ่มแกน \(z\) ขึ้นมา ระบบมือขวากำหนดให้เมื่อหมุนจาก \(+x\) ไป \(+y\) ตามมุมเล็กกว่า 180° นิ้วหัวแม่มือชี้ \(+z\) การวาดบนกระดาษเป็นภาพฉาย จึงอย่าวัดความยาวจริงหรือมุมจริงจากภาพเอียงด้วยไม้บรรทัด ให้ใช้พิกัดคำนวณ</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 320" role="img" aria-labelledby="f-3d-title f-3d-desc">
+          <title id="f-3d-title">เวกเตอร์สามมิติและองค์ประกอบสามแกน</title><desc id="f-3d-desc">ภาพฉายของแกน x, y และ z กับเวกเตอร์ a พิกัด 3, 2, 4 ลูกศรสีน้ำเงินแทนเวกเตอร์ทั้งหมด เส้นทางสีอื่นแสดงการเคลื่อนทีละแกน x แล้ว y แล้ว z</desc>
+          <defs><marker id="f-arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M170 248 H395 M170 248 L80 308 M170 248 V25"/><text x="403" y="251">x</text><text x="67" y="310">y</text><text x="161" y="20">z</text><text x="175" y="266">O</text>
+          <path class="ln ln-p1" d="M170 248 H320" marker-end="url(#f-arrow3)"/><path class="ln ln-cur" d="M320 248 L260 288" marker-end="url(#f-arrow3)"/><path class="ln ln-p1" d="M260 288 V88" marker-end="url(#f-arrow3)"/>
+          <path class="ln dash" d="M170 48 H320 M320 48 L260 88 M320 48 V248 M170 248 L110 288 H260"/>
+          <path class="ln ln-p2" d="M170 248 L260 88" marker-end="url(#f-arrow3)"/><circle class="dot" cx="260" cy="88" r="4"/>
+          <text class="c-p1" x="233" y="237">3</text><text class="c-cur" x="296" y="285">2</text><text class="c-p1" x="271" y="184">4</text><text x="266" y="75">(3, 2, 4)</text><text class="c-p2" x="187" y="153">a</text>
+          <text class="t-th" x="405" y="95">องค์ประกอบสามแกน</text><text x="405" y="124">a = (3, 2, 4)</text><text class="t-th" x="405" y="164">ภาพฉายเพื่อแสดงทิศ</text><text class="t-sm" x="405" y="189">ไม่ใช่ภาพตามสเกลจริง</text><text x="405" y="234">‖a‖ = √29</text>
+        </svg>
+        <figcaption>การมีองค์ประกอบ 3 ตัวไม่ได้เปลี่ยนหลักการ: อ่านการเปลี่ยนแปลงตามแต่ละแกน และใช้พีทาโกรัสในสามมิติ</figcaption>
+      </figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="points">
+      <h2 id="points">3. จุด ตำแหน่ง และเวกเตอร์จากสองจุด <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p><strong>จุด</strong>บอกว่าอยู่ที่ไหน ส่วน<strong>เวกเตอร์การกระจัด</strong>บอกว่าต้องย้ายจากจุดหนึ่งไปอีกจุดอย่างไร เมื่อเลือกจุดกำเนิด \(O\) จุด \(A\) จึงมีเวกเตอร์ตำแหน่ง \(\mathbf r_A=\overrightarrow{OA}\) ถ้าเปลี่ยนจุดกำเนิด ตำแหน่งเปลี่ยนได้ แต่การกระจัดระหว่างจุดเดิมไม่เปลี่ยน ตราบใดที่ยังใช้ทิศแกนและหน่วยเดิม</p>
+      <div class="tf-grid"><div class="tf wide" id="F4" data-k="displacement position vector two points AB distance ปลายลบต้น การกระจัด ตำแหน่ง">
+        <p class="tf-n"><b><span class="fid">F4</span> Vector between two points</b> เวกเตอร์จากจุด A ไปจุด B</p>
+        \[ \overrightarrow{AB}=\mathbf r_B-\mathbf r_A=(x_B-x_A,\ y_B-y_A,\ z_B-z_A),\qquad \overrightarrow{BA}=-\overrightarrow{AB} \]
+        <p class="tf-x">จำว่า “ปลายลบต้น” การสลับต้นกับปลายเปลี่ยนทิศและเครื่องหมาย แต่ไม่เปลี่ยนความยาว ใน 2D ใช้เพียง \(x,y\)</p>
+      </div></div>
+      <p>เวกเตอร์อิสระ (free vector) สองตัวเท่ากันถ้ามีขนาดและทิศทางเท่ากัน แม้เริ่มลูกศรที่คนละจุด แต่แรงในกลศาสตร์มีจุดกระทำ: ย้ายแรงไปอีกเส้นแนวแรงอาจเปลี่ยนโมเมนต์ต่อวัตถุ แม้องค์ประกอบแรงจะเหมือนเดิม ประเด็นนี้สำคัญใน <a href="/learn/vector-algebra/cross-product/">cross product และโมเมนต์</a></p>
+      <div class="wx" id="ex-f1"><div class="wx-head"><span class="mono">ตัวอย่าง F-1 · การกระจัดบนโต๊ะทดลอง</span><h3>หัววัดย้ายจาก \(A=(-2,1)\) cm ไป \(B=(4,-3)\) cm จงหาเวกเตอร์การกระจัดและระยะตรงระหว่างจุด</h3></div><ol class="steps">
+        <li><p>ใช้ปลายลบต้นตาม <a class="tag" href="#F4">F4</a>: \(\overrightarrow{AB}=(4-(-2),-3-1)=(6,-4)\) cm</p></li>
+        <li><p>เครื่องหมายหมายถึงไปขวา 6 cm และลง 4 cm ส่วนระยะตรงใช้พีทาโกรัส: \(\sqrt{6^2+(-4)^2}=\sqrt{52}=2\sqrt{13}\) cm</p></li>
+        <li><p>ตรวจทิศกลับ: \(\overrightarrow{BA}=(-6,4)\) cm มีความยาวเท่าเดิม ถ้าหัววัดเดินอ้อม ระยะทางที่เดินจริงอาจมากกว่าระยะตรงนี้</p></li>
+      </ol><p class="answer">การกระจัด \((6,-4)\) cm · ระยะตรง \(2\sqrt{13}\approx7.211\) cm</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="magnitude">
+      <h2 id="magnitude">4. ขนาดเวกเตอร์: พีทาโกรัสจากสองแกนสู่สามแกน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ใน 2D องค์ประกอบตั้งฉากกันจึงสร้างสามเหลี่ยมมุมฉากได้ ใน 3D หาความยาวเงาบนระนาบ \(xy\) ก่อนเป็น \(\rho=\sqrt{a_x^2+a_y^2}\) แล้วประกอบกับแกน \(z\) อีกครั้ง: \(\|\mathbf a\|=\sqrt{\rho^2+a_z^2}\) จึงได้ผลรวมกำลังสองสามตัว ขนาดหรือ Euclidean norm เป็นสเกลาร์และมีหน่วยเดียวกับองค์ประกอบ</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="F5" data-k="magnitude length euclidean norm Pythagoras ความยาว ขนาด นอร์ม พีทาโกรัส">
+          <p class="tf-n"><b><span class="fid">F5</span> Euclidean magnitude</b> ขนาดของเวกเตอร์ 2D/3D</p>
+          \[ \|\mathbf a\|_{2D}=\sqrt{a_x^2+a_y^2},\qquad \|\mathbf a\|_{3D}=\sqrt{a_x^2+a_y^2+a_z^2}\ge0 \]
+          <p class="tf-x">\(\|\mathbf a\|=0\iff\mathbf a=\mathbf0\) · การยกกำลังสองต้องรวมวงเล็บเครื่องหมายลบ เช่น \((-4)^2=16\)</p>
+        </div>
+        <div class="tf wide" id="F6" data-k="distance points metric separation ระยะห่าง จุด ความยาว">
+          <p class="tf-n"><b><span class="fid">F6</span> Distance between points</b> ระยะตรงระหว่างจุด</p>
+          \[ d(A,B)=\|\overrightarrow{AB}\|=\sqrt{(x_B-x_A)^2+(y_B-y_A)^2+(z_B-z_A)^2} \]
+          <p class="tf-x">ต้องแปลงพิกัดทุกแกนให้มีหน่วยเดียวกันก่อน คำนวณจากพิกัดในกรอบเดียวกัน และค่อยเปลี่ยนหน่วยคำตอบ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-f2"><div class="wx-head"><span class="mono">ตัวอย่าง F-2 · ระยะเคลื่อนที่ของแขนหุ่นยนต์สามแกน</span><h3>ปลายแขนย้ายจาก \(A=(0.2,-0.1,0.5)\) m ไป \(B=(0.5,0.3,1.7)\) m จงหาการกระจัดและระยะตรง</h3></div><ol class="steps">
+        <li><p>พิกัดใช้เมตรทั้งหมด: \(\overrightarrow{AB}=(0.5-0.2,0.3-(-0.1),1.7-0.5)=(0.3,0.4,1.2)\) m</p></li>
+        <li><p>หาความยาวเงาบนพื้น \(xy\): \(\rho=\sqrt{0.3^2+0.4^2}=0.5\) m</p></li>
+        <li><p>รวมความสูง: \(d=\sqrt{0.5^2+1.2^2}=\sqrt{1.69}=1.3\) m ซึ่งมากกว่าการกระจัดตามแต่ละแกน</p></li>
+      </ol><p class="answer">การกระจัด \((0.3,0.4,1.2)\) m · ระยะตรง \(1.3\) m · ระยะทางจริงขึ้นกับเส้นทางเคลื่อนที่</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="unit-vector">
+      <h2 id="unit-vector">5. เวกเตอร์หนึ่งหน่วย: แยกขนาดออกจากทิศทาง <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ถ้ารู้ว่ามีแรงตึง 500 N แต่ต้องการรู้แต่ละองค์ประกอบ เราต้องมีตัวแทนทิศทางที่ไม่เพิ่มขนาดแรง เวกเตอร์หนึ่งหน่วย (unit vector) ทำหน้าที่นี้: หารทุกองค์ประกอบด้วยความยาวเวกเตอร์เดิม จึงได้เวกเตอร์ทิศเดิมยาว 1 กระบวนการนี้เรียก normalization</p>
+      <div class="tf-grid">
+        <div class="tf" id="F7" data-k="unit vector normalize normalization direction หนึ่งหน่วย นอร์มัลไลซ์ ทิศทาง">
+          <p class="tf-n"><b><span class="fid">F7</span> Normalization</b> เวกเตอร์หนึ่งหน่วยในทิศเดียวกัน</p>
+          \[ \hat{\mathbf a}=\frac{\mathbf a}{\|\mathbf a\|},\qquad \|\hat{\mathbf a}\|=1,\qquad \mathbf a\ne\mathbf0 \]
+          <p class="tf-x">หารทุกองค์ประกอบด้วยค่าบวกเดียวกัน เวกเตอร์หนึ่งหน่วยไม่มีหน่วยทางกายภาพ เพราะหน่วยตัวเศษกับตัวส่วนตัดกัน</p>
+        </div>
+        <div class="tf" id="F8" data-k="magnitude direction tension force vector build สร้างเวกเตอร์ แรงตึง ขนาด ทิศ">
+          <p class="tf-n"><b><span class="fid">F8</span> Magnitude times direction</b> สร้างเวกเตอร์จากขนาดและทิศ</p>
+          \[ \mathbf F=F\hat{\mathbf u},\qquad F=\|\mathbf F\|\ge0,\quad\|\hat{\mathbf u}\|=1 \]
+          <p class="tf-x">\(F\) บอกขนาดแรง หน่วย N และ \(\hat{\mathbf u}\) บอกทิศ ถ้าสเกลาร์ติดลบ ผลลัพธ์จะกลับทิศจาก \(\hat{\mathbf u}\)</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-f3"><div class="wx-head"><span class="mono">ตัวอย่าง F-3 · แรงตึงสายเคเบิล 3D</span><h3>สายเคเบิลดึงจุด \(A=(1,2,0)\) m ไปหา \(B=(3,5,6)\) m ด้วยแรงตึง 700 N จงหาเวกเตอร์แรงที่กระทำต่อ A</h3></div><ol class="steps">
+        <li><p>แรงที่จุด A ดึงเข้าหา B จึงใช้ \(\mathbf d=\overrightarrow{AB}=(2,3,6)\) m ไม่ใช้ \(\overrightarrow{BA}\)</p></li>
+        <li><p>ความยาวสาย \(\|\mathbf d\|=\sqrt{2^2+3^2+6^2}=\sqrt{49}=7\) m</p></li>
+        <li><p>หาเวกเตอร์ทิศ \(\hat{\mathbf u}_{AB}=(2/7,3/7,6/7)\) ตรวจ \((2/7)^2+(3/7)^2+(6/7)^2=1\)</p></li>
+        <li><p>คูณด้วยขนาดแรง: \(\mathbf F_A=700\hat{\mathbf u}_{AB}=(200,300,600)\) N ตรวจ \(\sqrt{200^2+300^2+600^2}=700\) N</p></li>
+      </ol><p class="answer">\(\mathbf F_A=(200,300,600)\) N · แรงจากสายที่จุด B มีทิศตรงข้าม \((-200,-300,-600)\) N สำหรับสายเส้นเดียวกันที่ตึงและไม่มีแรงภายนอกตามแนวสาย</p></div>
+      <div class="note warn"><b>เวกเตอร์ศูนย์ห้าม normalize</b><p>\(\mathbf0/\|\mathbf0\|\) เป็นการหารด้วยศูนย์ ถ้าเซนเซอร์รายงานการกระจัดศูนย์ ต้องระบุว่า “ไม่มีการกระจัดและไม่กำหนดทิศทาง” ในโปรแกรมให้ตรวจขนาดก่อนหาร หากขนาดใกล้ศูนย์เทียบกับความละเอียดของเครื่องมือ ทิศที่คำนวณอาจไวต่อสัญญาณรบกวนมาก</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="direction">
+      <h2 id="direction">6. มุมทิศทางใน 2D และ direction cosines ใน 3D <span class="lv lv-i">กลาง</span></h2>
+      <p>ใน 2D ใช้มุมเดียวได้เมื่อกำหนดวัดจากแกน \(+x\) ทวนเข็มนาฬิกา ใน 3D เวกเตอร์มีอิสระด้านทิศทางสองตัว เราอาจใช้มุมแนวราบกับมุมเงย หรือใช้มุมกับแกนทั้งสามซึ่งมีเงื่อนไขสัมพันธ์กัน หน้านี้ใช้มุมกับแกน \(+x,+y,+z\) เป็น \(\alpha,\beta,\gamma\)</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="F9" data-k="polar cartesian atan2 angle direction quadrants มุม ควอดแรนต์ พิกัดเชิงขั้ว">
+          <p class="tf-n"><b><span class="fid">F9</span> Two-dimensional direction</b> ขนาดและมุมใน 2D</p>
+          \[ a_x=a\cos\theta,\qquad a_y=a\sin\theta,\qquad \theta=\operatorname{atan2}(a_y,a_x),\qquad a=\|\mathbf a\|>0 \]
+          <p class="tf-x">สูตรคอมพิวเตอร์โดยทั่วไปเรียงอาร์กิวเมนต์ \(y,x\) แต่ควรตรวจเอกสารของเครื่องมือที่ใช้ ผลลัพธ์มักอยู่ใน \((-\pi,\pi]\); ถ้าต้องการ \([0,2\pi)\) ให้บวก \(2\pi\) เมื่อมุมติดลบ ใช้หน่วยเรเดียนหรือองศาให้ตรงกับโหมดเครื่องคิดเลข</p>
+        </div>
+        <div class="tf wide" id="F10" data-k="direction cosines alpha beta gamma 3D มุมกับแกน โคไซน์ทิศทาง">
+          <p class="tf-n"><b><span class="fid">F10</span> Direction cosines</b> โคไซน์ทิศทางในสามมิติ</p>
+          \[ \cos\alpha=\frac{a_x}{\|\mathbf a\|},\qquad \cos\beta=\frac{a_y}{\|\mathbf a\|},\qquad \cos\gamma=\frac{a_z}{\|\mathbf a\|},\qquad \cos^2\alpha+\cos^2\beta+\cos^2\gamma=1 \]
+          <p class="tf-x">ใช้เมื่อ \(\mathbf a\ne\mathbf0\) มุมทั้งสามอยู่ในช่วง 0° ถึง 180° องค์ประกอบติดลบหมายถึงมุมกับแกนนั้นมากกว่า 90° ผลรวมของมุมทั้งสามไม่จำเป็นต้องเท่ากับ 180°</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-f4"><div class="wx-head"><span class="mono">ตัวอย่าง F-4 · เลือกควอดแรนต์ให้ถูก</span><h3>แรง \(\mathbf F=(-30,40)\) N มีขนาดและมุมจากแกน +x เท่าไร?</h3></div><ol class="steps">
+        <li><p>ขนาด \(F=\sqrt{(-30)^2+40^2}=50\) N</p></li>
+        <li><p>\(F_x&lt;0,F_y&gt;0\) จึงอยู่ควอดแรนต์ II คำตอบมุมต้องอยู่ระหว่าง 90° และ 180°</p></li>
+        <li><p>ใช้ \(\operatorname{atan2}(40,-30)\approx126.870^\circ\) ถ้าใช้ \(\arctan(40/(-30))\) จะได้ \(-53.130^\circ\) ซึ่งผิดควอดแรนต์ ต้องปรับเพิ่ม 180°</p></li>
+        <li><p>ตรวจกลับ \(50\cos126.870^\circ\approx-30\) N และ \(50\sin126.870^\circ\approx40\) N เวกเตอร์หนึ่งหน่วยคือ \((-0.6,0.8)\)</p></li>
+      </ol><p class="answer">ขนาด 50 N · มุม \(126.870^\circ\) จาก +x ทวนเข็มนาฬิกา · ทิศ \((-0.6,0.8)\)</p></div>
+      <div class="wx" id="ex-f5"><div class="wx-head"><span class="mono">ตัวอย่าง F-5 · มุมของสายเคเบิลกับแต่ละแกน</span><h3>สำหรับทิศ \(\mathbf d=(2,3,6)\) จงหา direction cosines และมุมกับแกน</h3></div><ol class="steps">
+        <li><p>\(\|\mathbf d\|=7\) จึงได้ \((\cos\alpha,\cos\beta,\cos\gamma)=(2/7,3/7,6/7)\)</p></li>
+        <li><p>ตั้งเครื่องคิดเลขเป็นองศา: \(\alpha=\cos^{-1}(2/7)\approx73.398^\circ\), \(\beta\approx64.623^\circ\), \(\gamma\approx31.003^\circ\)</p></li>
+        <li><p>ตรวจผลรวมกำลังสอง \(4/49+9/49+36/49=1\) ส่วนแกน \(z\) มีองค์ประกอบมากที่สุด จึงทำมุมเล็กที่สุดกับเวกเตอร์</p></li>
+      </ol><p class="answer">มุมกับแกน \(+x,+y,+z\) ประมาณ \(73.398^\circ,64.623^\circ,31.003^\circ\) ตามลำดับ</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering-reading">
+      <h2 id="engineering-reading">7. อ่านเวกเตอร์ในงานวิศวกรรมอย่างมีความหมาย</h2>
+      <p>ก่อนแทนสูตรให้เขียนว่าเวกเตอร์แทนปริมาณอะไร ใช้แกนของใคร และหน่วยอะไร ตัวอย่าง \(\mathbf v=(3,4)\) m/s หมายถึงความเร็วตามแกน \(x,y\) เป็น 3 และ 4 m/s ส่วนอัตราเร็วเป็น 5 m/s ถ้าเขียน \(\mathbf F=(3,4)\) N ตัวเลขเหมือนกันแต่แทนแรง และนำไปใช้ในกฎของนิวตัน การมีรูปองค์ประกอบเหมือนกันไม่ได้ทำให้ปริมาณต่างชนิดบวกกันได้</p>
+      <p>ข้อมูลจาก IMU หรือแรงที่วัดบนชิ้นงานมักอยู่ในกรอบแกนของเซนเซอร์ ส่วนแบบ CAD และแขนหุ่นยนต์อาจอยู่ในกรอบโลก ต้องแปลงสู่กรอบเดียวกันก่อนเปรียบเทียบหรือรวมเวกเตอร์ ดูวิธีแตกแรง เปลี่ยนฐาน และฉายในหน้า <a href="/learn/vector-algebra/components-projection/">องค์ประกอบและ projection</a></p>
+      <div class="note"><b>กระบวนการสั้นที่ใช้ได้กับทุกโจทย์</b><ol><li>กำหนดกรอบแกน ทิศบวก และหน่วย</li><li>วาดลูกศรพร้อมจุดต้นและปลายเมื่อเป็นการกระจัด</li><li>เขียนองค์ประกอบพร้อมเครื่องหมาย</li><li>คำนวณขนาดหรือทิศโดยใช้สูตรที่ตรงกับคำถาม</li><li>ตรวจหน่วย ควอดแรนต์ และขนาดว่าตรงกับภาพหรือไม่</li></ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">8. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="table-wrap"><table><thead><tr><th>สิ่งที่มักทำผิด</th><th>วิธีแก้และตรวจ</th></tr></thead><tbody>
+        <tr><td>ใช้ \(a_x+a_y\) เป็นขนาด</td><td>ใช้ \(\sqrt{a_x^2+a_y^2}\); ตัวอย่าง \((3,4)\) ยาว 5 ไม่ใช่ 7</td></tr>
+        <tr><td>สลับปลายลบต้น</td><td>\(\overrightarrow{AB}=B-A\); ดูว่าลูกศรชี้เข้า B หรือไม่</td></tr>
+        <tr><td>ให้ขนาดติดลบเพราะองค์ประกอบติดลบ</td><td>ขนาดไม่ติดลบ เช่น \((-3,0)\) มีขนาด 3</td></tr>
+        <tr><td>ใช้ arctan อัตราส่วนแล้วไม่ดูควอดแรนต์</td><td>ใช้ atan2 และตรวจเครื่องหมายทั้งสองแกน</td></tr>
+        <tr><td>หารด้วยขนาดของเวกเตอร์ศูนย์</td><td>หยุดและระบุว่าทิศไม่กำหนด</td></tr>
+        <tr><td>บวกพิกัด cm กับ m โดยตรง</td><td>แปลงหน่วยก่อน เช่น 20 cm = 0.20 m</td></tr>
+        <tr><td>อ่านมุมจากภาพ 3D ที่วาดเอียง</td><td>ใช้ direction cosines จากองค์ประกอบจริง</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="formula-summary">
+      <h2 id="formula-summary">9. สรุปสูตรพร้อมเงื่อนไข</h2>
+      <div class="table-wrap"><table><thead><tr><th>ต้องการหา</th><th>สูตร</th><th>เงื่อนไข/ลิงก์</th></tr></thead><tbody>
+        <tr><td>เวกเตอร์จากสองจุด</td><td>\(\overrightarrow{AB}=\mathbf r_B-\mathbf r_A\)</td><td>กรอบเดียวกัน · <a href="#F4">F4</a></td></tr>
+        <tr><td>ขนาด</td><td>\(\sqrt{a_x^2+a_y^2+a_z^2}\)</td><td>ฐานตั้งฉากหนึ่งหน่วย · <a href="#F5">F5</a></td></tr>
+        <tr><td>เวกเตอร์หนึ่งหน่วย</td><td>\(\hat{\mathbf a}=\mathbf a/\|\mathbf a\|\)</td><td>\(\mathbf a\ne\mathbf0\) · <a href="#F7">F7</a></td></tr>
+        <tr><td>แรงจากขนาดและทิศ</td><td>\(\mathbf F=F\hat{\mathbf u}\)</td><td>\(\|\hat{\mathbf u}\|=1\) · <a href="#F8">F8</a></td></tr>
+        <tr><td>องค์ประกอบ 2D จากมุม</td><td>\((a\cos\theta,a\sin\theta)\)</td><td>วัดมุมจาก +x · <a href="#F9">F9</a></td></tr>
+        <tr><td>มุม 2D จากองค์ประกอบ</td><td>\(\operatorname{atan2}(a_y,a_x)\)</td><td>เวกเตอร์ไม่เป็นศูนย์ · <a href="#F9">F9</a></td></tr>
+        <tr><td>โคไซน์ทิศทาง 3D</td><td>\((a_x,a_y,a_z)/\|\mathbf a\|\)</td><td>ผลรวมกำลังสอง = 1 · <a href="#F10">F10</a></td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">10. แบบฝึกสั้น พร้อมเฉลยที่ตรวจเองได้</h2>
+      <ol><li>ให้ \(\mathbf a=(-6,8)\) mm จงหาขนาดและเวกเตอร์หนึ่งหน่วย</li><li>ให้ \(P=(2,-1,4)\), \(Q=(-1,3,4)\) m จงหา \(\overrightarrow{PQ}\) และระยะห่าง</li><li>แรงขนาด 20 N ทำมุม 150° จาก +x จงหาองค์ประกอบ</li><li>เวกเตอร์ \((0,0,0)\) มีเวกเตอร์หนึ่งหน่วยหรือไม่? เพราะอะไร?</li></ol>
+      <details><summary>เปิดเฉลยและวิธีตรวจ</summary><ol>
+        <li>\(\|\mathbf a\|=\sqrt{36+64}=10\) mm; \(\hat{\mathbf a}=(-0.6,0.8)\) และ \(0.36+0.64=1\)</li>
+        <li>\(\overrightarrow{PQ}=(-1-2,3-(-1),4-4)=(-3,4,0)\) m; ระยะ \(\sqrt{9+16}=5\) m</li>
+        <li>\(F_x=20\cos150^\circ=-10\sqrt3\approx-17.321\) N, \(F_y=20\sin150^\circ=10\) N; อยู่ควอดแรนต์ II และขนาดกลับเป็น 20 N</li>
+        <li>ไม่มีทิศทางเฉพาะและหารด้วยขนาด 0 ไม่ได้ จึง normalize ไม่ได้</li>
+      </ol></details>
+      <p>ลองเปลี่ยนองค์ประกอบและอ่านผลจากภาพใน <a href="/learn/vector-algebra/vector-lab/">Vector Lab</a> แล้วอธิบายด้วยคำของตนเองว่าทำไมลูกศรกลับทิศเมื่อเครื่องหมายเปลี่ยน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">11. เอกสารอ้างอิงและเส้นทางเรียนต่อ</h2>
+      <p>เนื้อหาเรียบเรียงตามนิยามเวกเตอร์ยูคลิดมาตรฐาน ตัวอย่างงานวิศวกรรมในหน้านี้เป็นตัวอย่างเพื่อการเรียนรู้โดยระบุพิกัดและสมมติฐานไว้ ไม่ใช่ข้อมูลการทดสอบเครื่องจักรเฉพาะรุ่น</p>
+      <ul><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-1-vectors-in-the-plane" target="_blank" rel="noopener">OpenStax, Calculus Volume 3, §2.1 Vectors in the Plane</a> — องค์ประกอบ ขนาด การดำเนินการ และเวกเตอร์หนึ่งหน่วยใน 2D</li><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-2-vectors-in-three-dimensions" target="_blank" rel="noopener">OpenStax, Calculus Volume 3, §2.2 Vectors in Three Dimensions</a> — ระบบพิกัด 3D ระยะห่าง และเวกเตอร์ในปริภูมิ</li></ul>
+      <p>ถัดไปฝึก <a href="/learn/vector-algebra/operations/">บวก ลบ และคูณสเกลาร์</a> แล้วเชื่อมไป <a href="/learn/vector-algebra/components-projection/">components และ projection</a>, <a href="/learn/vector-algebra/dot-product/">dot product</a>, <a href="/learn/vector-algebra/cross-product/">cross product</a> และ <a href="/learn/vector-algebra/engineering-applications/">การประยุกต์ทางวิศวกรรม</a> ทุกหน้ามีสูตรและตัวอย่างของตนเอง โดยรวมค้นหาได้จาก <a href="/learn/vector-algebra/">หน้าหลักพีชคณิตเวกเตอร์</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

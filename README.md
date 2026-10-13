@@ -160,3 +160,18 @@ calculator engine in Node.
 current page opens automatically, the current link is highlighted by `site.js` via `.nav-here`); from 1600 px they are dropdowns
 (hover, focus or click; Esc closes). `data-nav` keys: home learn trig calc int vec la lap fos sos sig fg fs cs pe pv watch tools about.
 To add a page to the menu, add a link to the right group; to add a series, add a group.
+
+## Vector algebra series (added 2026-10-13)
+The original `/learn/vector-algebra/` URL is now a hub with 7 sub-pages: foundations (F), operations (V),
+components-projection (P), dot-product (D), cross-product (C), engineering-applications (E), vector-lab.
+Each formula has a citable ID; the hub builds the searchable index automatically.
+- `assets/vector-lab.js`: `<div class="vec-lab" data-dim="2" data-operation="projection" data-a="3,4,0" data-b="2,1,0">`
+  supports 2D/3D addition, subtraction, scalar scaling, dot/angle, signed scalar and vector projection, and cross.
+  3D diagrams are isometric projections; use numeric results for true angles and lengths.
+- `images/vector-algebra/*.svg` are topic illustrations used by the home page and social cards.
+- Rebuild: `npm run build`; render only vector social cards: `python3 scripts/og.py --prefix learn-vector-algebra`;
+  rebuild again so Open Graph tags point to the created JPGs. Python Playwright and Chromium are needed for OG generation.
+- Vector pages are in `MD_SERIES`; `src/md/vector-algebra.md` publishes the guide.
+  The build refreshes navigation, sitemap, RSS, llms.txt/full, Markdown copies and headers.
+- Vector math regression checks: `node scripts/test-vectors.mjs` (known geometry and 1,000 deterministic identity checks).
+- Cloudflare Pages serves the committed root files directly; commit generated outputs with source changes.

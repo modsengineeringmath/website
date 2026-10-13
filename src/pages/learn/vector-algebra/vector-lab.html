@@ -1,0 +1,59 @@
+<!--meta
+{
+  "title": "แล็บเวกเตอร์ 2D/3D: บวก ลบ Dot Cross และ Projection พร้อมวิธีทำ | อาจารย์มด",
+  "h1": "แล็บเวกเตอร์ 2D / 3D: เปลี่ยนตัวเลขแล้วเห็นความหมาย",
+  "description": "เครื่องคิดเลขเวกเตอร์พร้อมภาพและวิธีแทนค่า ทดลองบวก ลบ คูณสเกลาร์ Dot product Cross product มุม scalar projection และ vector projection ทั้ง 2D/3D พร้อมตัวอย่างตรวจแรง งาน และแรงบิด",
+  "lesson": "vector-algebra", "sub": "vector-lab", "nav": "vec", "katex": true,
+  "published": "2026-10-13", "updated": "2026-10-13",
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "about": ["Vector calculator", "2D vectors", "3D vectors", "Vector projection", "Dot product", "Cross product"],
+  "og": {"title": "แล็บเวกเตอร์ 2D / 3D", "sub": "ปรับองค์ประกอบ · ดูภาพ · ตรวจวิธีคำนวณ", "eyebrow": "บทที่ 4.7 · Interactive Vector Lab", "sym": "↗"},
+  "jsonld": [{"@type": "WebApplication", "name": "แล็บเวกเตอร์ 2D/3D", "url": "https://modsengineeringmath.com/learn/vector-algebra/vector-lab/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "inLanguage": "th", "isAccessibleForFree": true, "featureList": ["Vector addition and subtraction", "Scalar multiplication", "Dot product and angle", "Signed scalar and vector projection", "Cross product", "2D and isometric 3D diagrams"]}],
+  "faq": [
+    {"q": "ภาพสามมิติแสดงมุมจริงหรือไม่?", "a": "ภาพเป็นการฉายสามมิติลงบนจอสองมิติ มุมและความยาวที่เห็นบนจออาจไม่เท่าค่าจริง ให้ใช้มุมและขนาดที่คำนวณจากองค์ประกอบในช่องผลลัพธ์"},
+    {"q": "ทำไมฉายลงบนเวกเตอร์ศูนย์ไม่ได้?", "a": "เวกเตอร์ศูนย์ไม่มีทิศ และสูตรต้องหารด้วยขนาดหรือขนาดกำลังสองของเวกเตอร์เป้าหมาย แล็บจึงแจ้งว่าไม่กำหนดแทนการแสดงค่าที่ดูเหมือนคำนวณได้"},
+    {"q": "เครื่องคิดเลขนี้มีความแม่นยำเท่าใด?", "a": "คำนวณด้วยเลขทศนิยม floating point ของ JavaScript แล้วปัดเพื่อแสดงผล เหมาะสำหรับเรียนและตรวจตัวอย่าง ไม่ใช่เครื่องมือรับรองการออกแบบทางวิศวกรรม ควรตรวจเงื่อนไข หน่วย และค่าจริงก่อนใช้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>แล็บเวกเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 4.7 · Interactive Vector Lab</p>
+      <h1>แล็บเวกเตอร์ 2D / 3D: เปลี่ยนตัวเลขแล้วเห็นความหมาย</h1>
+      <p class="lede">พิมพ์องค์ประกอบของ A และ B เลือกการดำเนินการ แล้วเปรียบเทียบลูกศรกับวิธีคำนวณ ใช้คำถามว่า “ถ้าเปลี่ยนทิศอย่างเดียว ผลจะเปลี่ยนอย่างไร?” เป็นจุดเริ่มต้น ก่อนตรวจคำตอบด้วยสมการ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <h2 id="calculator">เครื่องคิดเลขและภาพเวกเตอร์</h2>
+    <div class="vec-lab" data-dim="2" data-operation="projection" data-a="3,4,0" data-b="2,1,0"><noscript>เปิด JavaScript เพื่อใช้เครื่องคิดเลข ตัวอย่างด้านล่างอ่านและคำนวณได้โดยไม่ใช้ JavaScript</noscript></div>
+    <p>โหมด 2D ใช้เฉพาะองค์ประกอบ x,y ส่วน Cross product ของเวกเตอร์บนระนาบคิดโดยเติม z=0 แล้วแสดงองค์ประกอบตั้งฉากกับระนาบ โหมด 3D ใช้ x,y,z ทั้งหมด <strong>ภาพ 3D เป็นภาพฉาย ไม่ใช่มุมจริง</strong> ใช้ค่าตัวเลขตรวจมุมและขนาด</p>
+    <h2 id="experiments">ใบงานทดลอง: ทำนายก่อนกดคำนวณ</h2>
+    <div class="wx" id="lab-projection"><div class="wx-head"><span class="mono">การทดลอง 1 · Projection</span><h3>ส่วนขนานที่ยาวกว่าองค์ประกอบ x ของ A</h3></div>
+      <p>ตั้ง A=(3,4), B=(2,1) เลือก projection คำถาม: เหตุใดองค์ประกอบ x ของส่วนฉายเป็น 4 มากกว่า x ของ A ที่เป็น 3?</p>
+      <ol class="steps"><li>คำนวณ \(A\cdot B=3(2)+4(1)=10\) และ \(B\cdot B=5\)</li><li>ส่วนขนาน \(A_\parallel=(10/5)(2,1)=(4,2)\)</li><li>ส่วนตั้งฉาก \(A_\perp=(3,4)-(4,2)=(-1,2)\) ตรวจ \((-1,2)\cdot(2,1)=0\)</li></ol>
+      <p class="answer">การฉายบนเส้นเอียงไม่ใช่การเก็บ x อย่างเดียว ส่วนตั้งฉากมี x ติดลบ จึงรวมกลับเป็น 3 ได้ แม้ x ของส่วนขนานเท่ากับ 4</p>
+      <p>เปลี่ยน B เป็น (−2,−1): scalar projection จาก \(2\sqrt5\) กลายเป็น \(-2\sqrt5\) แต่เวกเตอร์ฉายยังเป็น (4,2) เพราะเส้นที่ฉายเป็นเส้นเดิม</p>
+    </div>
+    <div class="wx" id="lab-angle"><div class="wx-head"><span class="mono">การทดลอง 2 · Dot product</span><h3>ตั้งฉาก ทิศเดียว และทิศตรงข้าม</h3></div>
+      <ol class="steps"><li>A=(3,4), B=(−4,3) ให้ dot = −12+12=0 และมุม 90°</li><li>เปลี่ยน B=(6,8) ให้ dot=50 และมุม 0° ขนาด B เป็นสองเท่า A</li><li>เปลี่ยน B=(−6,−8) ให้ dot=−50 และมุม 180°</li></ol>
+      <p class="answer">เครื่องหมาย dot บอกมุมแหลม ศูนย์ หรือมุมป้านได้เมื่อเวกเตอร์ทั้งคู่ไม่เป็นศูนย์ ลอง A=(0,0): dot ยังคำนวณเป็น 0 แต่มุมไม่กำหนด</p>
+    </div>
+    <div class="wx" id="lab-cross"><div class="wx-head"><span class="mono">การทดลอง 3 · Cross product</span><h3>สลับลำดับแล้วทิศกลับ</h3></div>
+      <ol class="steps"><li>เลือก 3D ให้ A=(1,2,2), B=(3,0,4)</li><li>คำนวณ \(A\times B=(8,2,-6)\); ขนาด \(\sqrt{104}\approx10.1980\)</li><li>ตรวจ \((8,2,-6)\cdot A=8+4-12=0\), \((8,2,-6)\cdot B=24-24=0\)</li><li>สลับ A และ B จะได้ (−8,−2,6) ขนาดเท่าเดิมแต่ทิศตรงข้าม</li></ol>
+      <p class="answer">Cross ให้ทิศตั้งฉากและพื้นที่ ห้ามแทน cross ด้วยการคูณองค์ประกอบทีละตัว</p>
+    </div>
+    <h2 id="engineering-check">ทดลองจากโจทย์วิศวกรรม</h2>
+    <ul><li><strong>แรงลัพธ์:</strong> โหมดบวก A=(30,40) N และ B=(−10,20) N ให้ (20,60) N ขนาด \(20\sqrt{10}\approx63.246\) N</li><li><strong>งาน:</strong> โหมด dot ให้ A=(30,40) N และ B=(2,0) m ได้ 60 J ไม่ใช่ 100 J เพราะแรงแนวตั้งไม่ทำงานในการเคลื่อนที่แนวนอนนี้</li><li><strong>แรงบิด:</strong> โหมด cross 3D ให้ A=(0.2,0,0) m และ B=(0,50,0) N ได้ (0,0,10) N·m ตาม +z</li></ul>
+    <p>แล็บรับเฉพาะตัวเลขและไม่ทราบหน่วยโดยอัตโนมัติ ผู้ใช้ต้องกำหนดหน่วยให้สอดคล้องกันก่อนแทนค่า อ่านข้อสมมติของระบบจริงใน <a href="/learn/vector-algebra/engineering-applications/">หน้าการประยุกต์ทางวิศวกรรม</a></p>
+    <h2 id="limitations">ขอบเขตและการตรวจคำตอบ</h2>
+    <p>ภาพและผลลัพธ์ใช้ฐานคาร์ทีเซียนตั้งฉากหนึ่งหน่วย ไม่รองรับฐานเฉียงหรือพิกัดโค้งโดยตรง การคำนวณใช้ floating point; ค่าที่เล็กมากอาจคลาดเคลื่อนจากการปัด อย่าใช้ภาพฉายสามมิติพิสูจน์ความตั้งฉาก ให้ตรวจ dot เป็นศูนย์แทน</p>
+    <p>กลับไปค้น <a href="/learn/vector-algebra/#formulas">สรุปสูตร</a> หรืออ่านที่มาใน <a href="/learn/vector-algebra/components-projection/">Component / Projection</a>, <a href="/learn/vector-algebra/dot-product/">Dot product</a> และ <a href="/learn/vector-algebra/cross-product/">Cross product</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

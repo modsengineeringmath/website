@@ -1,0 +1,244 @@
+<!--meta
+{
+  "title": "บวก ลบ เวกเตอร์ และคูณสเกลาร์ 2D/3D: ภาพและวิธีทำทีละขั้น | อาจารย์มด",
+  "h1": "การบวก ลบเวกเตอร์ และการคูณด้วยสเกลาร์ใน 2D/3D",
+  "description": "เรียนการบวกเวกเตอร์แบบหัวต่อหาง กฎสี่เหลี่ยมด้านขนาน การลบและคูณสเกลาร์จาก 2D ถึง 3D พร้อมตัวอย่างแรงลัพธ์ แรงสมดุล ความเร็วสัมพัทธ์ การเคลื่อนที่ และสรุปสูตรพร้อมแบบฝึกเฉลย",
+  "ogTitle": "บวก ลบ คูณสเกลาร์เวกเตอร์: จากภาพลูกศรสู่แรงลัพธ์ 3D",
+  "lesson": "vector-algebra",
+  "sub": "operations",
+  "nav": "vec",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Vector addition", "Vector subtraction", "Scalar multiplication", "Linear combination", "Resultant force", "Relative velocity", "Static equilibrium"],
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "faq": [
+    {"q": "บวกเวกเตอร์ 2D และ 3D อย่างไร?", "a": "เมื่อเวกเตอร์อยู่ในกรอบแกนเดียวกันและมีหน่วยเดียวกัน ให้บวกองค์ประกอบที่ตรงกัน เช่น (ax, ay, az) + (bx, by, bz) = (ax + bx, ay + by, az + bz) ภาพเรขาคณิตใช้กฎหัวต่อหางหรือสี่เหลี่ยมด้านขนาน"},
+    {"q": "ลบเวกเตอร์หมายความว่าอย่างไร?", "a": "a − b คือ a + (−b) โดย −b มีขนาดเท่า b แต่กลับทิศ ถ้าวาง a และ b ที่จุดต้นเดียวกัน ลูกศรจากปลาย b ไปปลาย a คือ a − b"},
+    {"q": "คูณเวกเตอร์ด้วยสเกลาร์ติดลบเกิดอะไรขึ้น?", "a": "สเกลาร์ติดลบกลับทิศเวกเตอร์และปรับขนาดด้วยค่าสัมบูรณ์ของสเกลาร์ เช่น −2a มีทิศตรงข้าม a และยาวเป็นสองเท่า ถ้าคูณด้วยศูนย์จะได้เวกเตอร์ศูนย์"},
+    {"q": "ขนาดผลบวกเท่ากับผลบวกของขนาดไหม?", "a": "ไม่เสมอไป ขนาดของ a + b ไม่เกินขนาด a บวกขนาด b และจะเท่ากันเมื่อเวกเตอร์ไม่เป็นศูนย์ชี้ทิศเดียวกัน ถ้าชี้สวนกันบางส่วนจะหักล้างกัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>บวก ลบ และคูณสเกลาร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// พีชคณิตเวกเตอร์ · บทที่ 2 · Vector operations</p>
+      <h1>การบวก ลบเวกเตอร์ และการคูณด้วยสเกลาร์ใน 2D/3D</h1>
+      <p class="lede">การรวมแรงจากหลายสายเคเบิล การหาความเร็วสัมพัทธ์ และการคำนวณตำแหน่งใหม่ของหุ่นยนต์ ใช้สามการดำเนินการพื้นฐานเดียวกัน: บวก ลบ และคูณสเกลาร์ เราจะเห็นจากภาพว่าลูกศรประกอบกันอย่างไร แล้วคำนวณทีละองค์ประกอบ พร้อมแยก “เวกเตอร์ผลลัพธ์” ออกจาก “ขนาดผลลัพธ์” ให้ชัด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#addition">บวกเวกเตอร์</a><a class="btn btn-ghost btn-sm" href="#subtraction">ลบเวกเตอร์</a><a class="btn btn-ghost btn-sm" href="#scalar">คูณสเกลาร์</a><a class="btn btn-ghost btn-sm" href="#engineering">ตัวอย่างวิศวกรรม</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul><li>บวกหรือลบองค์ประกอบแกนเดียวกัน: \((a_x\pm b_x,a_y\pm b_y,a_z\pm b_z)\)</li><li>\(\mathbf a-\mathbf b=\mathbf a+(-\mathbf b)\): กลับทิศตัวที่ถูกลบ แล้วใช้กฎหัวต่อหาง</li><li>\(c\mathbf a=(ca_x,ca_y,ca_z)\) และ \(\|c\mathbf a\|=|c|\|\mathbf a\|\)</li><li>ต้องใช้กรอบแกนเดียวกัน หน่วยเข้ากัน และรวมองค์ประกอบก่อนหาขนาด</li></ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="พิมพ์ เช่น addition, subtraction, scalar, แรงลัพธ์" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="before">
+      <h2 id="before">1. ก่อนคำนวณ: แกน หน่วย และชนิดของปริมาณ</h2>
+      <p>เวกเตอร์ \((3,4)\) ที่วัดในแกนของเซนเซอร์อาจชี้คนละทิศกับ \((3,4)\) ในแกนของห้องทดลอง ถ้าจะรวมกันต้องแปลงเป็นกรอบเดียวกันก่อน นอกจากนี้แรงหน่วย N รวมกับแรงหน่วย N ได้ แต่รวมแรงกับความเร็ว m/s ไม่ได้ แม้ทั้งคู่มีองค์ประกอบสองตัว</p>
+      <p>สำหรับเวกเตอร์บนระนาบ \(xy\) เราฝังไว้ใน 3D ได้เป็น \((a_x,a_y,0)\) เมื่อบริบทกำหนดระนาบนั้นชัดเจน จึงรวมกับเวกเตอร์ 3D ได้อย่างมีความหมาย อย่าเติมองค์ประกอบ 0 โดยไม่ทราบว่าเวกเตอร์สองมิติเดิมอยู่ในระนาบใด ถ้าต้องทบทวนพิกัดและเวกเตอร์หนึ่งหน่วย ให้เริ่มจาก <a href="/learn/vector-algebra/foundations/">พื้นฐานเวกเตอร์ 2D/3D</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="addition">
+      <h2 id="addition">2. บวกเวกเตอร์: หัวต่อหางและสี่เหลี่ยมด้านขนาน <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>เดินตาม \(\mathbf a\) ก่อน แล้วเดินตาม \(\mathbf b\) การกระจัดรวมคือ \(\mathbf a+\mathbf b\) ภาพหัวต่อหาง (head-to-tail) วางหางของ \(\mathbf b\) ที่หัวของ \(\mathbf a\) โดยไม่หมุนหรือย่อขยาย ลูกศรผลบวกลากจากจุดเริ่มแรกไปจุดสุดท้าย ถ้าวางทั้งสองเวกเตอร์ให้มีหางร่วมกัน จะได้ผลบวกเป็นเส้นทแยงมุมของสี่เหลี่ยมด้านขนาน</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 330" role="img" aria-labelledby="v-add-title v-add-desc">
+          <title id="v-add-title">การบวกเวกเตอร์แบบหัวต่อหางและกฎสี่เหลี่ยมด้านขนาน</title><desc id="v-add-desc">เวกเตอร์ a เท่ากับ 3, 1 และ b เท่ากับ 1, 2 เมื่อวาง b ต่อที่ปลาย a จุดสุดท้ายเป็น 4, 3 ลูกศรผลบวกจากจุดเริ่มไปจุดสุดท้ายคือ a บวก b เส้นประแสดงอีกลำดับหนึ่งที่ให้จุดสุดท้ายเดียวกัน</desc>
+          <defs><marker id="v-add-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M50 280 H355 M70 300 V20"/><text x="365" y="285">x</text><text x="55" y="18">y</text><text x="50" y="303">O</text>
+          <path class="ln ln-p1" d="M70 280 L250 220" marker-end="url(#v-add-arrow)"/><path class="ln ln-cur" d="M250 220 L310 100" marker-end="url(#v-add-arrow)"/>
+          <path class="ln ln-cur dash" d="M70 280 L130 160" marker-end="url(#v-add-arrow)"/><path class="ln ln-p1 dash" d="M130 160 L310 100" marker-end="url(#v-add-arrow)"/>
+          <path class="ln ln-p2" d="M70 280 L310 100" marker-end="url(#v-add-arrow)"/><circle class="dot" cx="310" cy="100" r="4"/>
+          <text class="c-p1" x="170" y="273">a = (3, 1)</text><text class="c-cur" x="286" y="193">b</text><text class="c-p2" x="175" y="170">a + b</text><text x="309" y="83">(4, 3)</text><text class="c-cur" x="78" y="185">b</text><text class="c-p1" x="200" y="119">a</text>
+          <text class="t-th" x="404" y="105">เส้นทึบ: a แล้ว b</text><text class="t-th" x="404" y="133">เส้นประ: b แล้ว a</text><text x="404" y="179">a + b = (4, 3)</text><text class="t-th" x="404" y="218">จุดปลายตรงกัน</text><text class="t-th" x="404" y="245">จึงสลับที่การบวกได้</text>
+        </svg>
+        <figcaption>เวกเตอร์ย้ายขนานได้โดยขนาดและทิศคงเดิม การเดินคนละลำดับยังลงท้ายที่จุดเดียวกัน</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="V1" data-k="addition sum resultant component 2D 3D บวก ผลรวม แรงลัพธ์ หัวต่อหาง">
+          <p class="tf-n"><b><span class="fid">V1</span> Component-wise addition</b> บวกทีละองค์ประกอบ</p>
+          \[ \mathbf a+\mathbf b=(a_x+b_x,\ a_y+b_y,\ a_z+b_z),\qquad \mathbf R=\sum_{k=1}^{n}\mathbf F_k \]
+          <p class="tf-x">ใน 2D ใช้เฉพาะ \(x,y\) การรวมหลายเวกเตอร์ใช้ \(R_x=\sum F_{kx}\), \(R_y=\sum F_{ky}\), \(R_z=\sum F_{kz}\) แล้วค่อยหาขนาด</p>
+        </div>
+        <div class="tf wide" id="V2" data-k="commutative associative identity inverse properties สมบัติ สลับที่ เปลี่ยนกลุ่ม ศูนย์ ตรงข้าม">
+          <p class="tf-n"><b><span class="fid">V2</span> Properties of vector addition</b> สมบัติของการบวก</p>
+          \[ \mathbf a+\mathbf b=\mathbf b+\mathbf a,\quad(\mathbf a+\mathbf b)+\mathbf c=\mathbf a+(\mathbf b+\mathbf c),\quad\mathbf a+\mathbf0=\mathbf a,\quad\mathbf a+(-\mathbf a)=\mathbf0 \]
+          <p class="tf-x">พิสูจน์ได้จากการใช้สมบัติของจำนวนจริงในแต่ละองค์ประกอบ การหาผลรวมแรงสลับลำดับได้ แต่จุดกระทำของแรงยังสำคัญเมื่อพิจารณาโมเมนต์ต่อวัตถุ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-v1"><div class="wx-head"><span class="mono">ตัวอย่าง V-1 · แรงลัพธ์สองมิติ</span><h3>แรงสองแรงที่จุดเดียวกันเป็น \(\mathbf F_1=(120,-40)\) N และ \(\mathbf F_2=(-30,80)\) N จงหาเวกเตอร์แรงลัพธ์ ขนาด และทิศ</h3></div><ol class="steps">
+        <li><p>รวมแกน \(x\): \(R_x=120-30=90\) N รวมแกน \(y\): \(R_y=-40+80=40\) N จึงได้ \(\mathbf R=(90,40)\) N</p></li>
+        <li><p>คำนวณขนาดหลังรวมองค์ประกอบ: \(R=\sqrt{90^2+40^2}=\sqrt{9700}=10\sqrt{97}\approx98.489\) N</p></li>
+        <li><p>องค์ประกอบทั้งสองเป็นบวก จึงอยู่ควอดแรนต์ I: \(\theta=\operatorname{atan2}(40,90)\approx23.962^\circ\) จาก +x ทวนเข็มนาฬิกา</p></li>
+        <li><p>ตรวจคร่าว ๆ: แรงลัพธ์ชี้ขวาและขึ้น ขนาดเล็กกว่า \(\|\mathbf F_1\|+\|\mathbf F_2\|\) เพราะสองแรงไม่ได้ชี้ทิศเดียวกัน</p></li>
+      </ol><p class="answer">\(\mathbf R=(90,40)\) N · \(R\approx98.489\) N · \(\theta\approx23.962^\circ\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="subtraction">
+      <h2 id="subtraction">3. ลบเวกเตอร์: กลับทิศก่อนบวก <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>จำนวนลบของเวกเตอร์ \(-\mathbf b\) มีความยาวเท่าเดิม แต่ชี้สวนทาง ดังนั้น \(\mathbf a-\mathbf b\) เท่ากับเดินตาม \(-\mathbf b\) และ \(\mathbf a\) ต่อกัน ถ้าวาง \(\mathbf a\) กับ \(\mathbf b\) ให้หางอยู่ที่จุดเดียวกัน ลูกศรจาก<strong>หัวของ b ไปหัวของ a</strong> คือผลต่าง \(\mathbf a-\mathbf b\)</p>
+      <div class="tf-grid"><div class="tf wide" id="V3" data-k="subtraction negative opposite difference ลบ ตรงข้าม ผลต่าง">
+        <p class="tf-n"><b><span class="fid">V3</span> Vector subtraction</b> การลบเวกเตอร์</p>
+        \[ -\mathbf b=(-b_x,-b_y,-b_z),\qquad \mathbf a-\mathbf b=\mathbf a+(-\mathbf b)=(a_x-b_x,a_y-b_y,a_z-b_z) \]
+        <p class="tf-x">ทั่วไป \(\mathbf a-\mathbf b\ne\mathbf b-\mathbf a\) แต่ \(\mathbf b-\mathbf a=-(\mathbf a-\mathbf b)\) และผลต่างสองทิศมีขนาดเท่ากัน</p>
+      </div></div>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 300" role="img" aria-labelledby="v-sub-title v-sub-desc">
+          <title id="v-sub-title">ความหมายของผลต่างเวกเตอร์</title><desc id="v-sub-desc">เวกเตอร์ a จากจุดกำเนิดไป 4, 1 และ b ไป 1, 3 ลูกศรจากปลาย b ไปปลาย a คือ a ลบ b เท่ากับ 3, ลบ 2</desc>
+          <defs><marker id="v-sub-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ax" d="M50 245 H370 M70 268 V20"/><text x="379" y="250">x</text><text x="56" y="20">y</text><text x="48" y="265">O</text>
+          <path class="ln ln-p1" d="M70 245 L310 185" marker-end="url(#v-sub-arrow)"/><path class="ln ln-cur" d="M70 245 L130 65" marker-end="url(#v-sub-arrow)"/><path class="ln ln-p2" d="M130 65 L310 185" marker-end="url(#v-sub-arrow)"/>
+          <text class="c-p1" x="199" y="239">a = (4, 1)</text><text class="c-cur" x="74" y="142">b</text><text x="129" y="48">(1, 3)</text><text x="312" y="179">(4, 1)</text><text class="c-p2" x="212" y="105">a − b</text>
+          <text class="t-th" x="411" y="93">จากหัว b ไปหัว a</text><text x="411" y="126">(4 − 1, 1 − 3)</text><text x="411" y="164">= (3, −2)</text><text class="t-th" x="411" y="209">ไปขวา 3 ลง 2</text>
+        </svg>
+        <figcaption>ผลต่างจากหัว b ไปหัว a: ปลายลบต้นให้ \((4,1)-(1,3)=(3,-2)\)</figcaption>
+      </figure>
+      <div class="wx" id="ex-v2"><div class="wx-head"><span class="mono">ตัวอย่าง V-2 · ความเร็วสัมพัทธ์ของรถตรวจสอบ</span><h3>ในกรอบพื้น รถ A มี \(\mathbf v_A=(12,3)\) m/s และรถ B มี \(\mathbf v_B=(5,-1)\) m/s จงหาความเร็วของ A ที่ผู้สังเกตบน B เห็น</h3></div><ol class="steps">
+        <li><p>ภายใต้กรอบที่เลื่อนที่โดยไม่หมุน ใช้ \(\mathbf v_{A/B}=\mathbf v_A-\mathbf v_B\) โดยความเร็วทั้งคู่ต้องอยู่ในแกนเดียวกัน</p></li>
+        <li><p>ลบองค์ประกอบ: \(\mathbf v_{A/B}=(12-5,3-(-1))=(7,4)\) m/s</p></li>
+        <li><p>อัตราเร็วสัมพัทธ์ \(\sqrt{7^2+4^2}=\sqrt{65}\approx8.062\) m/s ไม่ใช่ \(\|\mathbf v_A\|-\|\mathbf v_B\|\)</p></li>
+      </ol><p class="answer">\(\mathbf v_{A/B}=(7,4)\) m/s · ถ้าเปลี่ยนเป็น B เทียบกับ A จะได้ \((-7,-4)\) m/s</p></div>
+      <div class="note"><b>ถ้ากรอบผู้สังเกตหมุน</b><p>การลบความเร็วอย่างเดียวไม่พอ ต้องรวมการเปลี่ยนกรอบและเทอมจากการหมุน เช่น \(\boldsymbol\omega\times\mathbf r\) ตามสมการการเคลื่อนที่สัมพัทธ์ รายละเอียดเชิงกายภาพเชื่อมกับ <a href="/learn/vector-algebra/cross-product/">cross product</a></p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="scalar">
+      <h2 id="scalar">4. คูณด้วยสเกลาร์: ย่อ ขยาย กลับทิศ <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ถ้า \(c&gt;0\) เวกเตอร์ \(c\mathbf a\) ชี้ทิศเดิม ถ้า \(c&lt;0\) ชี้สวนทาง ขนาดใหม่คือ \(|c|\) เท่าของขนาดเดิม ถ้า \(c=0\) ได้เวกเตอร์ศูนย์ ตัวอย่าง \(0.5\mathbf a\) ยาวครึ่งหนึ่ง ส่วน \(-2\mathbf a\) ยาวสองเท่าและกลับทิศ</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="V4" data-k="scalar multiplication scale magnitude negative คูณสเกลาร์ ย่อ ขยาย กลับทิศ">
+          <p class="tf-n"><b><span class="fid">V4</span> Scalar multiplication</b> คูณทุกองค์ประกอบด้วยสเกลาร์</p>
+          \[ c\mathbf a=(ca_x,ca_y,ca_z),\qquad \|c\mathbf a\|=|c|\|\mathbf a\| \]
+          <p class="tf-x">ใช้ค่าสัมบูรณ์เมื่อหาขนาด ถ้า \(c\) มีหน่วย หน่วยผลลัพธ์คูณกันด้วย เช่น \(m\mathbf a\) มีหน่วย kg·m/s² = N เมื่อ \(m\) เป็นมวลและ \(\mathbf a\) เป็นความเร่ง</p>
+        </div>
+        <div class="tf wide" id="V5" data-k="distributive associative scalar linear combination แจกแจง เชิงเส้น ผลรวมเชิงเส้น">
+          <p class="tf-n"><b><span class="fid">V5</span> Distributive laws and linear combinations</b> การแจกแจงและผลรวมเชิงเส้น</p>
+          \[ c(\mathbf a+\mathbf b)=c\mathbf a+c\mathbf b,\qquad(c+d)\mathbf a=c\mathbf a+d\mathbf a,\qquad c(d\mathbf a)=(cd)\mathbf a,\qquad\mathbf w=c\mathbf a+d\mathbf b \]
+          <p class="tf-x">นิพจน์สุดท้ายเรียกผลรวมเชิงเส้น (linear combination) ตรวจหน่วยของทุกพจน์ให้เหมือนกันก่อนรวม สเกลาร์ทั้งสองอาจมีค่าต่างกันและติดลบได้</p>
+        </div>
+      </div>
+      <figure class="la-fig">
+        <svg viewBox="0 0 600 245" role="img" aria-labelledby="v-scale-title v-scale-desc">
+          <title id="v-scale-title">การคูณเวกเตอร์ด้วยสเกลาร์บวกและลบ</title><desc id="v-scale-desc">ลูกศร a ไปทางขวายาวหนึ่งหน่วย ลูกศรครึ่ง a ทิศเดิมยาวครึ่งหนึ่ง ลูกศรลบสอง a ชี้ซ้ายยาวสองเท่า</desc>
+          <defs><marker id="v-scale-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <path class="ln ln-p1" d="M320 55 H420" marker-end="url(#v-scale-arrow)"/><circle class="dot" cx="320" cy="55" r="3"/><text class="c-p1" x="438" y="60">a</text>
+          <path class="ln ln-cur" d="M320 115 H370" marker-end="url(#v-scale-arrow)"/><circle class="dot" cx="320" cy="115" r="3"/><text class="c-cur" x="390" y="120">0.5a</text>
+          <path class="ln ln-p2" d="M320 175 H120" marker-end="url(#v-scale-arrow)"/><circle class="dot" cx="320" cy="175" r="3"/><text class="c-p2" x="355" y="180">−2a</text>
+          <text class="t-th" x="83" y="61">ขนาดเดิม</text><text class="t-th" x="83" y="121">ครึ่งหนึ่ง ทิศเดิม</text><text class="t-th" x="83" y="215">สองเท่า ทิศตรงข้าม</text>
+        </svg>
+        <figcaption>ขนาดเปลี่ยนด้วย \(|c|\) ส่วนเครื่องหมายของ \(c\) กำหนดว่าจะคงทิศหรือกลับทิศ</figcaption>
+      </figure>
+      <div class="wx" id="ex-v3"><div class="wx-head"><span class="mono">ตัวอย่าง V-3 · ผลรวมเชิงเส้นสามมิติ</span><h3>ให้ \(\mathbf a=(2,-1,3)\), \(\mathbf b=(-1,4,2)\) จงหา \(2\mathbf a-3\mathbf b\)</h3></div><ol class="steps">
+        <li><p>คูณเข้าทุกองค์ประกอบ: \(2\mathbf a=(4,-2,6)\), \(3\mathbf b=(-3,12,6)\)</p></li>
+        <li><p>ลบทีละแกน: \((4-(-3),-2-12,6-6)=(7,-14,0)\)</p></li>
+        <li><p>ตรวจด้วยการแจกแจงตรง: \(2(2)-3(-1)=7\), \(2(-1)-3(4)=-14\), \(2(3)-3(2)=0\)</p></li>
+        <li><p>ถ้าถามขนาดด้วย จะได้ \(\sqrt{7^2+(-14)^2}=\sqrt{245}=7\sqrt5\approx15.652\)</p></li>
+      </ol><p class="answer">\(2\mathbf a-3\mathbf b=(7,-14,0)\) · องค์ประกอบ z หักล้างกันพอดี</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="magnitude-sum">
+      <h2 id="magnitude-sum">5. ทำไมขนาดผลบวกไม่เท่ากับผลบวกของขนาด?</h2>
+      <p>เวกเตอร์ \((3,0)\) และ \((0,4)\) มีขนาด 3 และ 4 แต่ผลบวก \((3,4)\) ยาว 5 การนำ 3 + 4 = 7 เป็นแรงลัพธ์จึงผิด เพราะข้อมูลทิศทางหายไป ถ้าสองเวกเตอร์ชี้ทิศเดียวกันจึงบวกขนาดได้ตรง ๆ ถ้าชี้ตรงข้าม ขนาดต่างกันจะหักล้างกัน</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="V6" data-k="triangle inequality reverse magnitude sum norm อสมการสามเหลี่ยม ขอบเขต ขนาด ผลบวก">
+          <p class="tf-n"><b><span class="fid">V6</span> Triangle and reverse triangle inequalities</b> ขอบเขตของขนาดผลบวก</p>
+          \[ \big|\|\mathbf a\|-\|\mathbf b\|\big|\le\|\mathbf a+\mathbf b\|\le\|\mathbf a\|+\|\mathbf b\| \]
+          <p class="tf-x">ขอบบนเกิดเมื่อเวกเตอร์ไม่เป็นศูนย์ชี้ทิศเดียวกัน ขอบล่างเกิดเมื่อชี้ตรงข้าม หากเวกเตอร์ใดเป็นศูนย์ทั้งสองขอบเท่ากัน ใช้ตรวจคำตอบแรงลัพธ์ได้ทันที</p>
+        </div>
+        <div class="tf wide" id="V7" data-k="magnitude resultant included angle cosine law cosine ผลบวก มุมระหว่าง กฎโคไซน์">
+          <p class="tf-n"><b><span class="fid">V7</span> Magnitude from the included angle</b> ขนาดผลบวกจากมุมระหว่างเวกเตอร์</p>
+          \[ \|\mathbf a+\mathbf b\|=\sqrt{a^2+b^2+2ab\cos\theta},\qquad\|\mathbf a-\mathbf b\|=\sqrt{a^2+b^2-2ab\cos\theta} \]
+          <p class="tf-x">\(a=\|\mathbf a\|\), \(b=\|\mathbf b\|\); \(\theta\in[0,\pi]\) เป็นมุมระหว่างเวกเตอร์เมื่อวางหางร่วมกัน ถ้าตัวใดเป็นศูนย์ มุมไม่กำหนดแต่ใช้สูตรองค์ประกอบหาขนาดได้ ดูที่มาจาก <a href="/learn/vector-algebra/dot-product/">dot product</a></p>
+        </div>
+      </div>
+      <p>ตรวจกรณีสำคัญ: \(\theta=0^\circ\) ได้ \(a+b\); \(\theta=90^\circ\) ได้ \(\sqrt{a^2+b^2}\); \(\theta=180^\circ\) ได้ \(|a-b|\) อย่าสับสนมุมระหว่างลูกศรหางร่วมกับมุมภายในสามเหลี่ยมหัวต่อหาง ซึ่งอาจเป็นมุมเสริมกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+      <h2 id="engineering">6. ใช้จริง: แรงสมดุล การเคลื่อนที่ และ interpolation <span class="lv lv-i">กลาง</span></h2>
+      <p>ตัวอย่างต่อไปนี้แสดงว่าพีชคณิตเวกเตอร์เป็นเครื่องมืออ่านสถานการณ์ทางกายภาพ ไม่ใช่เพียงการจับตัวเลขใส่วงเล็บ แต่ละตัวอย่างจึงระบุว่าเวกเตอร์แทนอะไรและมีสมมติฐานใด</p>
+      <div class="tf-grid"><div class="tf wide" id="V8" data-k="equilibrium resultant balancing force Newton statics สมดุล แรงลัพธ์ แรงสมดุล">
+        <p class="tf-n"><b><span class="fid">V8</span> Force balance for a particle</b> สมดุลแรงของอนุภาค</p>
+        \[ \sum_k\mathbf F_k=\mathbf0\iff\sum_k F_{kx}=0,\ \sum_k F_{ky}=0,\ \sum_k F_{kz}=0;\qquad\mathbf F_{\rm balance}=-\sum_k\mathbf F_k \]
+        <p class="tf-x">ใช้กับอนุภาคหรือแรงที่กระทำร่วมจุดเดียวกัน สำหรับวัตถุแข็งต้องตรวจ \(\sum\boldsymbol\tau=\mathbf0\) เพิ่มเติมด้วย แรงลัพธ์ศูนย์เพียงอย่างเดียวไม่ได้รับประกันว่าไม่หมุน</p>
+      </div></div>
+      <div class="wx" id="ex-v4"><div class="wx-head"><span class="mono">ตัวอย่าง V-4 · แรงที่ต้องเพิ่มเพื่อให้ห่วงอยู่สมดุล</span><h3>แรงทั้งหมดที่ห่วงร่วมจุดเป็น \(\mathbf F_1=(200,100,300)\) N, \(\mathbf F_2=(-50,150,-100)\) N และน้ำหนัก \(\mathbf W=(0,0,-400)\) N ต้องเพิ่มแรงใด?</h3></div><ol class="steps">
+        <li><p>กำหนด \(+z\) ขึ้น น้ำหนักจึงมีองค์ประกอบ z ติดลบ รวมแรงเดิม \(\mathbf R=(200-50+0,100+150+0,300-100-400)=(150,250,-200)\) N</p></li>
+        <li><p>แรงสมดุลต้องตรงข้ามกับผลรวม: \(\mathbf F_3=-\mathbf R=(-150,-250,200)\) N</p></li>
+        <li><p>ขนาด \(\|\mathbf F_3\|=\sqrt{150^2+250^2+200^2}=\sqrt{125000}=250\sqrt2\approx353.553\) N</p></li>
+        <li><p>ตรวจสมดุลทั้งสามแกน: \(150-150=0\), \(250-250=0\), \(-200+200=0\) หากใช้สายเคเบิล แรงนี้ต้องมีทิศเข้าหาจุดยึดจริงและสายรับได้เฉพาะแรงดึง</p></li>
+      </ol><p class="answer">ต้องเพิ่มแรง \((-150,-250,200)\) N ขนาด \(353.553\) N ณ จุดร่วมเดียวกัน</p></div>
+      <div class="wx" id="ex-v5"><div class="wx-head"><span class="mono">ตัวอย่าง V-5 · ตำแหน่งรถอัตโนมัติเมื่อความเร่งคงที่</span><h3>กำหนด \(\mathbf r_0=(1,2)\) m, \(\mathbf v_0=(3,-1)\) m/s และ \(\mathbf a=(0,2)\) m/s² คงที่ จงหา \(\mathbf r,\mathbf v\) ที่ \(t=2\) s</h3></div><ol class="steps">
+        <li><p>ใช้สมการคงความเร่งในกรอบเฉื่อยเดียวกัน: \(\mathbf v=\mathbf v_0+t\mathbf a\) และ \(\mathbf r=\mathbf r_0+t\mathbf v_0+\tfrac12t^2\mathbf a\)</p></li>
+        <li><p>\(t\mathbf a=2(0,2)=(0,4)\) m/s จึงได้ \(\mathbf v=(3,-1)+(0,4)=(3,3)\) m/s</p></li>
+        <li><p>\(t\mathbf v_0=(6,-2)\) m และ \(\tfrac12t^2\mathbf a=2(0,2)=(0,4)\) m จึงได้ \(\mathbf r=(1,2)+(6,-2)+(0,4)=(7,4)\) m</p></li>
+        <li><p>ตรวจด้วยสมการรายแกน: \(x=1+3(2)=7\), \(y=2-1(2)+\tfrac12(2)(2^2)=4\) การกระจัดเป็น \((6,2)\) m ซึ่งต่างจากตำแหน่ง \((7,4)\) m</p></li>
+      </ol><p class="answer">ที่ 2 s ตำแหน่ง \((7,4)\) m และความเร็ว \((3,3)\) m/s · ทุกพจน์ในสมการตำแหน่งมีหน่วย m</p></div>
+      <div class="tf-grid"><div class="tf wide" id="V9" data-k="interpolation line segment affine lerp position เส้นตรง แทรกค่า ตำแหน่ง">
+        <p class="tf-n"><b><span class="fid">V9</span> Linear interpolation between points</b> จุดบนส่วนของเส้นตรง</p>
+        \[ \mathbf r(t)=(1-t)\mathbf r_A+t\mathbf r_B=\mathbf r_A+t(\mathbf r_B-\mathbf r_A),\qquad0\le t\le1 \]
+        <p class="tf-x">\(t\) ในสูตรนี้เป็นพารามิเตอร์ไร้หน่วย ไม่ใช่เวลาโดยอัตโนมัติ \(t=0\) ได้ A, \(t=1\) ได้ B; ถ้าอยู่นอกช่วงนี้เป็น extrapolation บนเส้นตรงเดียวกัน ผลรวมค่าน้ำหนักเท่ากับ 1 จึงใช้กับตำแหน่งได้โดยไม่ขึ้นกับการเลื่อนจุดกำเนิด</p>
+      </div></div>
+      <div class="wx" id="ex-v6"><div class="wx-head"><span class="mono">ตัวอย่าง V-6 · กำหนด waypoint ให้แขนหุ่นยนต์</span><h3>จาก \(A=(1,-2,0)\) m ไป \(B=(5,2,8)\) m ต้องการจุดที่เดินทางไปแล้ว 25% ของระยะตรง</h3></div><ol class="steps">
+        <li><p>การกระจัด \(\mathbf r_B-\mathbf r_A=(4,4,8)\) m เลือกพารามิเตอร์ \(t=0.25\)</p></li>
+        <li><p>\(\mathbf r(0.25)=(1,-2,0)+0.25(4,4,8)=(1,-2,0)+(1,1,2)=(2,-1,2)\) m</p></li>
+        <li><p>ตรวจระยะ: จาก A ไป waypoint ยาว \(\sqrt{1+1+4}=\sqrt6\) m ส่วน AB ยาว \(\sqrt{16+16+64}=4\sqrt6\) m อัตราส่วนเท่ากับ 1/4</p></li>
+      </ol><p class="answer">waypoint คือ \((2,-1,2)\) m · สูตรระบุตำแหน่งบนเส้นตรง ส่วนความเร็วและความเร่งต้องออกแบบแยกต่างหาก</p></div>
+      <p>งานที่มีมุมระหว่างแรง การแยกแรงตามแนวเอียง งาน และกำลัง ใช้ <a href="/learn/vector-algebra/dot-product/">dot product</a> ส่วนโมเมนต์ ความเร็วจากการหมุน และแรงแม่เหล็ก ใช้ <a href="/learn/vector-algebra/cross-product/">cross product</a> ตัวอย่างต่อเนื่องอยู่ใน <a href="/learn/vector-algebra/engineering-applications/">การประยุกต์ทางวิศวกรรม</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">7. ข้อผิดพลาดที่พบบ่อยและวิธีตรวจคำตอบ</h2>
+      <div class="table-wrap"><table><thead><tr><th>ข้อผิดพลาด</th><th>ตัวอย่าง/วิธีแก้</th></tr></thead><tbody>
+        <tr><td>รวมขนาดแทนรวมเวกเตอร์</td><td>\((3,0)+(0,4)=(3,4)\) ขนาด 5 ไม่ใช่ 7</td></tr>
+        <tr><td>ลบจำนวนลบแล้วเครื่องหมายผิด</td><td>\(3-(-1)=4\); เขียนวงเล็บก่อนแทนค่า</td></tr>
+        <tr><td>คูณสเกลาร์แค่องค์ประกอบเดียว</td><td>\(2(1,-3,4)=(2,-6,8)\) ต้องคูณทั้งสามตัว</td></tr>
+        <tr><td>ใช้ \(c\) แทน \(|c|\) ในสูตรขนาด</td><td>\(\|-2\mathbf a\|=2\|\mathbf a\|\) ขนาดไม่ติดลบ</td></tr>
+        <tr><td>คิดว่าผลต่างสลับที่ได้</td><td>\(\mathbf b-\mathbf a=-(\mathbf a-\mathbf b)\)</td></tr>
+        <tr><td>บวกเวกเตอร์ต่างกรอบแกน</td><td>หมุนองค์ประกอบสู่กรอบเดียวกันก่อน ดู <a href="/learn/vector-algebra/components-projection/">การเปลี่ยนฐาน</a></td></tr>
+        <tr><td>เห็นแรงรวมศูนย์แล้วสรุปวัตถุแข็งสมดุลทั้งหมด</td><td>ต้องตรวจโมเมนต์รวมด้วย แรงคู่ควบอาจทำให้หมุน</td></tr>
+        <tr><td>เขียน “คูณเวกเตอร์” โดยไม่ระบุชนิด</td><td>คูณสเกลาร์ให้เวกเตอร์; dot ให้สเกลาร์; cross ใน 3D ให้เวกเตอร์ ทั้งสามต่างกัน</td></tr>
+      </tbody></table></div>
+      <div class="note"><b>ตรวจคำตอบสี่ข้อ</b><p>องค์ประกอบตรงกับทิศที่วาดหรือไม่? ทุกพจน์มีหน่วยเดียวกันหรือไม่? ขนาดผลบวกอยู่ในขอบเขต <a href="#V6">V6</a> หรือไม่? ถ้าบวกตัวตรงข้ามกลับเข้าไป ได้เวกเตอร์ต้นหรือไม่?</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">8. สรุปสูตรบวก ลบ และคูณสเกลาร์</h2>
+      <div class="table-wrap"><table><thead><tr><th>การดำเนินการ</th><th>สูตร</th><th>ภาพ/การใช้งาน</th></tr></thead><tbody>
+        <tr><td><a href="#V1">V1 บวก</a></td><td>\(\mathbf a+\mathbf b=(a_x+b_x,a_y+b_y,a_z+b_z)\)</td><td>หัวต่อหาง · รวมแรง</td></tr>
+        <tr><td><a href="#V3">V3 ลบ</a></td><td>\(\mathbf a-\mathbf b=(a_x-b_x,a_y-b_y,a_z-b_z)\)</td><td>จากหัว b ไปหัว a · ความเร็วสัมพัทธ์</td></tr>
+        <tr><td><a href="#V4">V4 คูณสเกลาร์</a></td><td>\(c\mathbf a=(ca_x,ca_y,ca_z)\)</td><td>ย่อ ขยาย หรือกลับทิศ</td></tr>
+        <tr><td><a href="#V4">V4 ขนาดหลังคูณ</a></td><td>\(\|c\mathbf a\|=|c|\|\mathbf a\|\)</td><td>ตรวจขนาดไม่ติดลบ</td></tr>
+        <tr><td><a href="#V7">V7 ขนาดผลบวก</a></td><td>\(\sqrt{a^2+b^2+2ab\cos\theta}\)</td><td>รู้ขนาดและมุมระหว่างเวกเตอร์</td></tr>
+        <tr><td><a href="#V8">V8 แรงสมดุล</a></td><td>\(\mathbf F_{\rm balance}=-\sum\mathbf F_k\)</td><td>อนุภาคหรือแรงร่วมจุด</td></tr>
+        <tr><td><a href="#V9">V9 จุดระหว่าง A และ B</a></td><td>\(\mathbf r_A+t(\mathbf r_B-\mathbf r_A)\)</td><td>\(0\le t\le1\), waypoint บนส่วนเส้นตรง</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">9. แบบฝึกเพื่อเช็กความเข้าใจ</h2>
+      <ol><li>ให้ \(\mathbf a=(3,-2)\), \(\mathbf b=(-1,5)\) หา \(\mathbf a+\mathbf b\), \(\mathbf a-\mathbf b\), \(-2\mathbf a\)</li><li>ให้ \(\mathbf p=(1,2,-2)\), \(\mathbf q=(3,0,1)\) หา \(3\mathbf p+2\mathbf q\) และขนาด</li><li>แรงร่วมจุด \((40,0)\) N กับ \((0,30)\) N ต้องเพิ่มแรงใดจึงสมดุล? ขนาดเท่าไร?</li><li>เวกเตอร์ยาว 5 และ 8 ทำมุม 60° กัน ผลบวกมีขนาดเท่าไร? ถ้ากลับทิศตัวหลัง ขนาดใหม่เท่าไร?</li><li>หา midpoint ระหว่าง \(A=(2,0,-1)\) กับ \(B=(6,4,3)\)</li></ol>
+      <details><summary>เปิดเฉลยพร้อมวิธีตรวจ</summary><ol>
+        <li>ผลบวก \((2,3)\); ผลต่าง \((4,-7)\); \(-2\mathbf a=(-6,4)\) ตรวจว่าตัวสุดท้ายขนาดเป็นสองเท่าและกลับทิศ</li>
+        <li>\(3\mathbf p+2\mathbf q=(3,6,-6)+(6,0,2)=(9,6,-4)\); ขนาด \(\sqrt{81+36+16}=\sqrt{133}\approx11.533\)</li>
+        <li>แรงลัพธ์ \((40,30)\) N จึงเพิ่ม \((-40,-30)\) N ขนาด 50 N</li>
+        <li>ผลบวก \(\sqrt{25+64+2(5)(8)\cos60^\circ}=\sqrt{129}\approx11.358\); กลับทิศตัวหลังได้ผลต่างขนาด \(\sqrt{25+64-40}=7\) ทั้งสองอยู่ระหว่าง 3 กับ 13</li>
+        <li>ใช้ \(t=0.5\): \((A+B)/2=(4,2,1)\); การกระจัดจาก A ถึง midpoint เป็นครึ่งของ \(B-A\)</li>
+      </ol></details>
+      <p>เปิด <a href="/learn/vector-algebra/vector-lab/">Vector Lab</a> ทดลองให้สองเวกเตอร์ชี้ทิศเดียวกัน ตั้งฉาก และตรงข้าม แล้วเปรียบเทียบขนาดกับสูตรก่อนดูคำตอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">10. เอกสารอ้างอิงและอ่านต่อ</h2>
+      <ul><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-1-vectors-in-the-plane" target="_blank" rel="noopener">OpenStax, Calculus Volume 3, §2.1 Vectors in the Plane</a> — การบวก ลบ คูณสเกลาร์ และการตีความเชิงเรขาคณิต</li><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-2-vectors-in-three-dimensions" target="_blank" rel="noopener">OpenStax, Calculus Volume 3, §2.2 Vectors in Three Dimensions</a> — การขยายการดำเนินการและขนาดสู่ 3D</li><li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-1-forces" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, §5.1 Forces</a> — แรงเป็นเวกเตอร์และแรงลัพธ์</li></ul>
+      <p>ไปต่อที่ <a href="/learn/vector-algebra/components-projection/">components และ projection</a> เพื่อแยกแรงตามแนวเอียง ต่อด้วย <a href="/learn/vector-algebra/dot-product/">dot product</a> สำหรับมุม งาน และกำลัง และ <a href="/learn/vector-algebra/cross-product/">cross product</a> สำหรับโมเมนต์และการหมุน ก่อนรวมทุกเครื่องมือใน <a href="/learn/vector-algebra/engineering-applications/">ตัวอย่างวิศวกรรม</a> ดูสารบัญและสูตรทั้งหมดที่ <a href="/learn/vector-algebra/">หน้าหลักพีชคณิตเวกเตอร์</a></p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

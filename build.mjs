@@ -66,7 +66,17 @@ export const TOPICS = [
     title: "พีชคณิตของเวกเตอร์",
     en: "Vector Algebra",
     sym: "→",
-    summary: "ผลคูณจุด ผลคูณไขว้ และแรงที่กระทำต่อตัวนำในสนามแม่เหล็ก",
+    summary: "เวกเตอร์ 2D/3D การบวก ลบ คูณสเกลาร์ องค์ประกอบและการฉาย Dot/Cross product พร้อมแล็บโต้ตอบและโจทย์แรง งาน แรงบิด สนามแม่เหล็ก",
+    fxHint: "ค้นหา เช่น component, projection, dot, cross, แรงบิด, เวกเตอร์หนึ่งหน่วย",
+    sub: [
+      { slug: "foundations", short: "พื้นฐาน 2D/3D", title: "เวกเตอร์ ขนาด ทิศทาง และพิกัด 2D/3D", en: "Vector foundations", sym: "→", prefix: "F", summary: "แยกสเกลาร์กับเวกเตอร์ พิกัด จุดต้นปลาย ขนาด เวกเตอร์หนึ่งหน่วย และทิศทางสามมิติ" },
+      { slug: "operations", short: "บวก ลบ สเกลาร์", title: "การบวก ลบ และคูณเวกเตอร์ด้วยสเกลาร์", en: "Vector operations", sym: "+", prefix: "V", summary: "ต่อหัวกับหาง กฎสี่เหลี่ยมด้านขนาน แรงลัพธ์ และการคำนวณทีละองค์ประกอบ" },
+      { slug: "components-projection", short: "Component · Projection", title: "องค์ประกอบและการฉายเวกเตอร์", en: "Components & projection", sym: "⊥", prefix: "P", summary: "แตกแรงตามแกน ฉายบนทิศที่ไม่ใช่เวกเตอร์หนึ่งหน่วย และแยกส่วนขนานกับตั้งฉาก" },
+      { slug: "dot-product", short: "Dot product", title: "ผลคูณจุดและมุมระหว่างเวกเตอร์", en: "Dot product", sym: "·", prefix: "D", summary: "ความหมายเชิงเรขาคณิต พิสูจน์สูตร หามุม ความตั้งฉาก และงานของแรง" },
+      { slug: "cross-product", short: "Cross product", title: "ผลคูณไขว้ กฎมือขวา พื้นที่และปริมาตร", en: "Cross product", sym: "×", prefix: "C", summary: "คำนวณสามมิติ ลำดับและเครื่องหมาย พื้นที่เวกเตอร์ และผลคูณสามชั้น" },
+      { slug: "engineering-applications", short: "งานวิศวกรรม", title: "การประยุกต์เวกเตอร์ทางวิศวกรรม", en: "Engineering applications", sym: "τ", prefix: "E", summary: "แรงในสายเคเบิล งาน แรงบิด แรงแม่เหล็ก และการเคลื่อนที่ของหุ่นยนต์ พร้อมหน่วยและข้อสมมติ" },
+      { slug: "vector-lab", short: "แล็บเวกเตอร์", title: "แล็บเวกเตอร์ 2D/3D พร้อมวิธีคำนวณ", en: "Interactive vector lab", sym: "↗", tag: "แล็บโต้ตอบ", summary: "ปรับองค์ประกอบแล้วดูภาพและผลบวก ลบ สเกลาร์ Dot/Cross product และ projection พร้อมกัน" },
+    ],
   },
   {
     // A series: hub page at src/pages/learn/linear-algebra/index.html, sub-pages at src/pages/learn/linear-algebra/<sub>.html
@@ -424,9 +434,10 @@ function renderMath(html, file) {
       throw new Error(`KaTeX error in ${file}: ${e.message}\n  in: ${tex.trim()}`);
     }
   };
-  return html
-    .replace(/\\\[([\s\S]+?)\\\]/g, (_, t) => render(t, true))
-    .replace(/\\\(([\s\S]+?)\\\)/g, (_, t) => render(t, false));
+  // Render in one pass: KaTeX annotations can contain \\ followed by (,
+  // which must not be mistaken for a new inline delimiter in rendered output.
+  return html.replace(/\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)/g,
+    (_, display, inline) => render(display ?? inline, display !== undefined));
 }
 
 function thaiDate(iso) {
@@ -748,7 +759,7 @@ function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
   if (theory > 0) h = h.slice(h.lastIndexOf("<", theory));
-  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/, /<div class="pv-iv"/, /<div class="fg-calc pv-calc"/, /<div class="pe-lab"/])
+  for (const re of [/<div class="trig-lab"/, /<div class="tt-tools"/, /<table class="tt"/, /<div class="tf-filter"/, /<nav class="toc"/, /<nav class="pager"/, /<div class="share"/, /<div class="fx-index"/, /<div class="mx-calc"/, /<div class="la-lab"/, /<div class="mx-prod"/, /<nav class="series-nav"/, /<div class="int-legend"/, /<div class="fgs-bench"/, /<div class="fgs-mini"/, /<div class="fg-calc"/, /<div class="dds-lab"/, /<div class="cs-lab"/, /<div class="rh-calc"/, /<nav class="sn-all"/, /<details class="sn-all"/, /<div class="fs-lab"/, /<ol class="crumbs"/, /<div class="trig-quick"/, /<div class="lesson-meta"/, /<div class="pv-iv"/, /<div class="fg-calc pv-calc"/, /<div class="pe-lab"/, /<div class="vec-lab"/])
     for (let i = 0; i < 3; i++) h = removeBlock(h, re);
   h = h
     .replace(/<!--[\s\S]*?-->/g, "")
@@ -775,8 +786,9 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["fourier-series", "power-electronics", "solar-pv"];
+const MD_SERIES = ["vector-algebra", "fourier-series", "power-electronics", "solar-pv"];
 const MD_GUIDES = [
+  { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vector algebra — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, vector addition/subtraction/scaling, signed scalar and vector projections, dot/cross products, torque/work/magnetic force, interactive lab and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
     desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
   { src: "src/md/solar-pv.md", out: "learn/solar-pv/guide.md", page: "/learn/solar-pv/", title: "Solar PV system design — complete guide (Thai, Markdown)",
@@ -908,6 +920,7 @@ fs.writeFileSync(
 
 // llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
 const LABS = [
+  ["Vector algebra formula index & interactive 2D/3D lab", "vector-algebra", "foundations, addition/subtraction/scaling, signed scalar and vector projections, dot product and angle, cross product and right-hand rule; citable formulas F/V/P/D/C/E; worked forces/work/torque/magnetic-force examples; interactive components with 2D and isometric 3D diagrams"],
   ["Linear algebra formula index & matrix calculator", "linear-algebra", "every matrix, determinant, linear-system, inverse, Cramer and eigenvalue formula with a citable ID (M1…, D1…, L1…, I1…, C1…, E1…, A1…) in one searchable list; exact-fraction calculator for determinant, inverse, Gauss–Jordan / Cramer solutions and eigenvalues/eigenvectors with step-by-step working"],
   ["2×2 transformation & eigenvector lab", "linear-algebra/eigenvalues", "drag a 2×2 matrix's columns: grid and unit circle transform, determinant as signed area, eigen-directions and Av vs v shown live"],
   ["Integral calculus formulas & worked solutions", "integral-calculus", "every basic and standard integral with international names (power rule, linearity, u-substitution, integration by parts, partial fractions, FTC, definite-integral properties); step-by-step lecture-style solutions with highlighted formulas, red cancellations and polynomial long division; Riemann-sum visualiser"],

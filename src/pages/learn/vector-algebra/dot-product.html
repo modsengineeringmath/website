@@ -1,0 +1,210 @@
+<!--meta
+{
+  "title": "Dot Product: ผลคูณจุด 2D–3D มุม Projection งานและกำลัง พร้อมวิธีทำ | อาจารย์มด",
+  "h1": "ผลคูณจุด (Dot Product): มุม การฉาย งาน และกำลัง",
+  "description": "เรียน dot product อย่างละเอียด ตั้งแต่คูณ component แล้วบวก นิยามเชิงเรขาคณิต เครื่องหมาย มุม ความตั้งฉาก Cauchy–Schwarz การฉายแรง งาน กำลัง และ cosine similarity พร้อมตัวอย่าง 2D–3D สรุปสูตรและเฉลย",
+  "ogTitle": "Dot Product: เข้าใจมุม แรง งาน และกำลังด้วยเวกเตอร์",
+  "lesson": "vector-algebra",
+  "sub": "dot-product",
+  "nav": "vec",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Dot product", "Inner product", "Angle between vectors", "Orthogonality", "Cauchy-Schwarz inequality", "Mechanical work", "Mechanical power", "Cosine similarity"],
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "faq": [
+    {"q": "Dot product ได้สเกลาร์หรือเวกเตอร์?", "a": "Dot product ของเวกเตอร์จริงสองตัวได้สเกลาร์ คำนวณโดยคูณ component ที่ตรงกันแล้วบวกรวม เช่น (3,4)·(2,1)=10 ต่างจากการคูณเวกเตอร์ด้วยสเกลาร์ซึ่งยังได้เวกเตอร์"},
+    {"q": "Dot product เป็นศูนย์แปลว่าทำมุม 90 องศาเสมอไหม?", "a": "ถ้าเวกเตอร์ทั้งสองไม่เป็นศูนย์ ดอทเป็นศูนย์เท่ากับทำมุม 90 องศา แต่เวกเตอร์ศูนย์ดอทกับทุกตัวได้ศูนย์และไม่มีทิศ มุมระหว่างเวกเตอร์ที่มีเวกเตอร์ศูนย์จึงไม่นิยาม"},
+    {"q": "Dot product ติดลบหมายความว่าอย่างไร?", "a": "สำหรับเวกเตอร์ไม่เป็นศูนย์ ดอทติดลบหมายถึงมุมระหว่างเวกเตอร์เป็นมุมป้าน ในการคำนวณงานแปลว่าแรงมีส่วนสวนทางการกระจัด จึงให้งานเป็นลบ ไม่ได้แปลว่าขนาดเวกเตอร์ติดลบ"},
+    {"q": "สูตรหามุมระหว่างเวกเตอร์คืออะไร?", "a": "เมื่อ a และ b ไม่เป็นศูนย์ ใช้ θ=arccos[(a·b)/(||a|| ||b||)] โดย θ อยู่ในช่วง 0 ถึง 180 องศา ต้องตรวจหน่วยมุมของเครื่องคิดเลข และจัดการค่าคลาดเคลื่อนเชิงตัวเลขใกล้ ±1 อย่างเหมาะสม"},
+    {"q": "Dot product ใช้หางานและกำลังได้อย่างไร?", "a": "แรงคงที่ F กับการกระจัด Δr ให้งาน W=F·Δr หน่วยจูล ส่วนกำลังกลขณะหนึ่งคือ P=F·v หน่วยวัตต์ ถ้าแรงเปลี่ยนตามเส้นทางต้องใช้อินทิกรัลเส้นสำหรับงาน"},
+    {"q": "Cosine similarity ต่างจาก dot product อย่างไร?", "a": "Dot product ขึ้นกับทั้งขนาดและทิศ ส่วน cosine similarity หารด้วยขนาดเวกเตอร์ทั้งสอง จึงวัดความสอดคล้องของทิศ มีค่าระหว่าง −1 ถึง 1 และไม่นิยามเมื่อมีเวกเตอร์ศูนย์"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>Dot Product</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// พีชคณิตเวกเตอร์ · Dot Product · มุมและส่วนตามทิศ</p>
+      <h1>ผลคูณจุด (Dot Product): มุม การฉาย งาน และกำลัง</h1>
+      <p class="lede">ถ้าออกแรงดึงรถเข็นเอียงขึ้น ส่วนใดทำให้รถเคลื่อนตามพื้น? Dot product ตอบคำถามนี้ด้วยตัวเลขเดียว โดยรวมทั้งขนาดและความสอดคล้องของทิศ หน้านี้เชื่อมสูตร “คูณช่องตรงกันแล้วบวก” กับความหมายเชิงเรขาคณิต และใช้คำนวณมุม การฉาย งาน และกำลังอย่างตรวจสอบได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#geometry">ความหมายของมุม</a><a class="btn btn-ghost btn-sm" href="#worked">ตัวอย่าง 2D–3D</a><a class="btn btn-ghost btn-sm" href="#work-power">งานและกำลัง</a><a class="btn btn-ghost btn-sm" href="#formula-summary">สรุปสูตร</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul><li>\(\mathbf a\cdot\mathbf b=a_xb_x+a_yb_y+a_zb_z\) ได้<strong>สเกลาร์</strong> ไม่ใช่ลูกศร</li><li>\(\mathbf a\cdot\mathbf b=\|\mathbf a\|\|\mathbf b\|\cos\theta\) เมื่อทั้งคู่ไม่เป็นศูนย์</li><li>ดอทบวก = มุมแหลม, ดอทศูนย์ = ตั้งฉาก, ดอทลบ = มุมป้าน โดยการอ่านมุมต้องไม่มีเวกเตอร์ศูนย์</li><li>งานจากแรงคงที่ \(W=\mathbf F\cdot\Delta\mathbf r\); กำลังกลทันที \(P=\mathbf F\cdot\mathbf v\)</li></ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="เช่น dot, มุม, งาน, power, Cauchy, D4" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="definition">
+      <h2 id="definition">1. นิยาม: คูณ component ที่ตรงกันแล้วบวก <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ให้เวกเตอร์จริงสองตัวในมิติเดียวกันและใช้แกนตั้งฉากมาตรฐานเดียวกัน นำ component ตามแกนเดียวกันคูณกัน แล้วรวมผลทั้งหมด เรียก <strong>ผลคูณจุด</strong> (dot product หรือ scalar product) จุด “·” ระหว่างเวกเตอร์หมายถึงการดำเนินการนี้ ส่วน \(3\mathbf a\) หมายถึง <a href="/learn/vector-algebra/operations/">คูณเวกเตอร์ด้วยสเกลาร์</a> ซึ่งเป็นคนละการดำเนินการ</p>
+      <div class="tf-grid"><div class="tf wide" id="D1" data-k="dot product scalar product 2d 3d definition ผลคูณจุด นิยาม คูณองค์ประกอบ">
+        <p class="tf-n"><b><span class="fid">D1</span> Dot product in Cartesian coordinates</b> ผลคูณจุด 2D และ 3D</p>
+        \[ \mathbf a\cdot\mathbf b=a_xb_x+a_yb_y\quad(2D),\qquad \mathbf a\cdot\mathbf b=a_xb_x+a_yb_y+a_zb_z\quad(3D) \]
+        <p class="tf-x">เช่น \((3,4)\cdot(2,1)=3(2)+4(1)=10\) ห้ามจับช่องสลับแกน ผลลัพธ์เป็นจำนวนจริง หน่วยเป็นผลคูณของหน่วยของ a และ b เช่น N·m</p>
+      </div><div class="tf wide" id="D2" data-k="inner product n dimension transpose vector column เมทริกซ์ เวกเตอร์หลัก หลายมิติ ผลคูณภายใน">
+        <p class="tf-n"><b><span class="fid">D2</span> Euclidean inner product in n dimensions</b> สูตรเดียวกันในหลายมิติ</p>
+        \[ \mathbf a\cdot\mathbf b=\sum_{r=1}^{n}a_rb_r=\mathbf a^T\mathbf b \]
+        <p class="tf-x">ในรูปเมทริกซ์ a และ b เป็นเวกเตอร์หลัก n×1 จึงได้ (1×n)(n×1) = 1×1 ใช้กับข้อมูลหลายช่องหรือสัญญาณหลายตัวอย่างได้ ส่วน \(\mathbf a\mathbf b^T\) เป็นเมทริกซ์ ไม่ใช่ดอท</p>
+      </div></div>
+      <div class="note"><b>ขอบเขตของสูตร:</b> หน้านี้ใช้เวกเตอร์จริงและฐาน Euclidean ตั้งฉาก ถ้าเปลี่ยนไปใช้ฐานเอียงที่ไม่ตั้งฉาก การเอาสัมประสิทธิ์พิกัดคูณตรงกันไม่ให้ dot product เดิม ต้องมีเมทริกซ์ Gram ของฐาน ส่วน inner product แบบเชิงซ้อนต้องมีการสังยุคตาม convention ที่เลือก</div>
+      <div class="wx" id="ex-d-signs"><div class="wx-head"><span class="mono">ตัวอย่าง D-1 · ระวังเครื่องหมาย</span><h3>หา \((3,-2,1)\cdot(-1,4,2)\)</h3></div><ol class="steps"><li><p>จับ x กับ x, y กับ y และ z กับ z: \(3(-1)+(-2)(4)+1(2)\)</p></li><li><p>คูณก่อน: \(-3-8+2=-9\) ค่าติดลบไม่ผิด เพราะแต่ละ component มีเครื่องหมายได้</p></li><li><p>ทั้งสองเวกเตอร์ไม่เป็นศูนย์ จึงแปลผลได้ว่ามุมระหว่างกันเป็นมุมป้าน</p></li></ol><p class="answer">\(\mathbf a\cdot\mathbf b=-9\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="geometry">
+      <h2 id="geometry">2. ความหมายเชิงเรขาคณิต: ขนาด × ขนาด × cos มุม <span class="lv lv-b">พื้นฐาน</span></h2>
+      <p>ย้ายเวกเตอร์สองตัวให้เริ่มที่จุดเดียวกันโดยรักษาขนาดและทิศ แล้วมองมุมเล็กระหว่างลูกศร ซึ่งอยู่ในช่วง 0°–180° สำหรับมุมคงที่ ค่าสัมบูรณ์ของดอทเท่ากับผลคูณของขนาดคูณ \(|\cos\theta|\) และเครื่องหมายขึ้นกับ \(\cos\theta\) เมื่อคงขนาดไว้ ดอทมากขึ้นเมื่อสองเวกเตอร์หันไปทางเดียวกันมากขึ้น เมื่อสองทิศตั้งฉากจะไม่มีส่วนตามทิศของกันและกัน จึงได้ศูนย์</p>
+      <div class="tf-grid"><div class="tf wide" id="D3" data-k="geometric dot magnitude cosine angle เรขาคณิต ขนาด โคไซน์ มุม">
+        <p class="tf-n"><b><span class="fid">D3</span> Geometric meaning of the dot product</b> ขนาดและมุม</p>
+        \[ \mathbf a\cdot\mathbf b=\|\mathbf a\|\|\mathbf b\|\cos\theta \]
+        <p class="tf-x">การพูดถึงมุม \(\theta\) ต้องให้ \(\mathbf a\ne\mathbf0\) และ \(\mathbf b\ne\mathbf0\) ถ้ามีเวกเตอร์ศูนย์ ดอทยังนิยามและเท่ากับ 0 แต่ไม่กำหนดมุม</p>
+      </div></div>
+      <figure class="la-fig">
+        <svg viewBox="0 0 720 255" role="img" aria-labelledby="d-sign-title d-sign-desc">
+          <title id="d-sign-title">เครื่องหมายของ dot product แบ่งเป็นมุมแหลม มุมฉาก และมุมป้าน</title><desc id="d-sign-desc">สามภาพแสดง b ตามแนวนอนขวา a เอียงไปทางขวาให้ดอทบวก a ตั้งขึ้นให้ดอทศูนย์ และ a เอียงไปทางซ้ายให้ดอทลบ ทุกภาพใช้เวกเตอร์ไม่เป็นศูนย์</desc>
+          <defs><marker id="d-sign-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#38bdf8"/></marker><marker id="d-sign-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#fb923c"/></marker></defs>
+          <g fill="none" stroke-width="4"><path d="M35 165H195M275 165H435M540 165H690" stroke="#fb923c" marker-end="url(#d-sign-orange)"/><path d="M35 165L150 75M275 165V45M540 165L465 65" stroke="#38bdf8" marker-end="url(#d-sign-blue)"/></g><g stroke="currentColor" fill="none" stroke-width="1.5"><path d="M78 165A43 43 0 0 0 69 139M293 165V147H275M580 165A40 40 0 0 0 516 133"/></g>
+          <g fill="currentColor" font-size="17"><text x="65" y="29">มุมแหลม</text><text x="290" y="29">มุมฉาก</text><text x="560" y="29">มุมป้าน</text><text x="157" y="69">a</text><text x="265" y="42">a</text><text x="450" y="59">a</text><text x="200" y="170">b</text><text x="440" y="170">b</text><text x="695" y="170">b</text><text x="90" y="144">θ</text><text x="565" y="130">θ</text><text x="54" y="214">a · b &gt; 0</text><text x="291" y="214">a · b = 0</text><text x="551" y="214">a · b &lt; 0</text><text x="215" y="247">การอ่านมุมต้องไม่มีเวกเตอร์ศูนย์</text></g>
+        </svg><figcaption>เครื่องหมายบอกความสอดคล้องของทิศ ส่วนค่าจริงยังขึ้นกับขนาดทั้งสองเวกเตอร์</figcaption>
+      </figure>
+      <h3 id="derive-dot">พิสูจน์ด้วยกฎโคไซน์: ทำไมสูตรพิกัดกับสูตรมุมจึงตรงกัน?</h3>
+      <p>สามเหลี่ยมที่มีด้าน a, b และ a−b ให้กฎโคไซน์ \(\|\mathbf a-\mathbf b\|^2=\|\mathbf a\|^2+\|\mathbf b\|^2-2\|\mathbf a\|\|\mathbf b\|\cos\theta\) แต่เมื่อกระจายกำลังสองทีละพิกัด จะได้ \(\sum_r(a_r-b_r)^2=\sum_ra_r^2+\sum_rb_r^2-2\sum_ra_rb_r\) เปรียบเทียบสองสมการแล้วตัดพจน์ขนาดออก จึงได้ \(\sum_ra_rb_r=\|\mathbf a\|\|\mathbf b\|\cos\theta\) ความหมายของมุมจึงตามมาจากสูตรพิกัด ไม่ใช่สูตรที่ต้องจำแยกกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="angle-orthogonal">
+      <h2 id="angle-orthogonal">3. หามุมและทดสอบความตั้งฉาก <span class="lv lv-b">พื้นฐาน</span></h2>
+      <div class="tf-grid"><div class="tf" id="D4" data-k="angle acos arccos theta มุม หามุม เวกเตอร์">
+        <p class="tf-n"><b><span class="fid">D4</span> Angle between two nonzero vectors</b> หามุมระหว่างเวกเตอร์</p>
+        \[ \theta=\cos^{-1}\!\left(\frac{\mathbf a\cdot\mathbf b}{\|\mathbf a\|\|\mathbf b\|}\right),\qquad 0\le\theta\le\pi \]
+        <p class="tf-x">ทั้งคู่ต้องไม่เป็นศูนย์ \(\cos^{-1}\) หมายถึง arccos ไม่ใช่ 1/cos ตรวจเครื่องคิดเลขว่าใช้ DEG หรือ RAD ค่าในวงเล็บต้องอยู่ใน [−1,1]</p>
+      </div><div class="tf" id="D5" data-k="orthogonal perpendicular zero dot ตั้งฉาก ศูนย์ เวกเตอร์ศูนย์">
+        <p class="tf-n"><b><span class="fid">D5</span> Orthogonality test</b> ทดสอบตั้งฉาก</p>
+        \[ \mathbf a\cdot\mathbf b=0\iff\mathbf a\perp\mathbf b \]
+        <p class="tf-x">คำว่า orthogonal ในพีชคณิตรวมเวกเตอร์ศูนย์ด้วย แต่ถ้าตีความว่า “มุม 90°” ต้องให้ทั้งคู่ไม่เป็นศูนย์ เพราะเวกเตอร์ศูนย์ไม่มีทิศ</p>
+      </div></div>
+      <p>มุมระหว่าง <strong>เส้นตรงที่ไม่มีทิศ</strong> ใช้มุมแหลมของสองแนว จึงอาจใช้ \(|\mathbf a\cdot\mathbf b|\) ในสูตร cosine แต่มุมระหว่าง <strong>เวกเตอร์ที่มีทิศ</strong> ห้ามใส่ค่าสัมบูรณ์โดยพลการ เพราะจะทำให้มุมป้านกลายเป็นมุมแหลม</p>
+      <div class="note"><b>สำหรับโปรแกรม:</b> ตรวจความยาวศูนย์ก่อนหาร หากค่าคลาดเคลื่อนจาก floating point ทำให้ cosine เป็น 1.0000000000000002 สามารถจำกัดค่าไว้ใน [−1,1] หลังตรวจอินพุตแล้วได้ แต่ถ้าค่าเกินช่วงมาก ต้องแก้ข้อผิดพลาดเรื่องสูตรหรือข้อมูลก่อน การเขียน arccos กับเวกเตอร์ศูนย์แล้วคืน 0° ทำให้ผลลวง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worked">
+      <h2 id="worked">4. ตัวอย่างหามุมตั้งแต่ 2D ถึง 3D</h2>
+      <div class="wx" id="ex-d-2d"><div class="wx-head"><span class="mono">ตัวอย่าง D-2 · คู่เดียวกับบท Projection</span><h3>หามุมระหว่าง \(\mathbf a=(3,4)\) และ \(\mathbf b=(2,1)\)</h3></div><ol class="steps"><li><p>ดอท \(=3(2)+4(1)=10\), ความยาว \(\|\mathbf a\|=5\), \(\|\mathbf b\|=\sqrt5\) ทั้งคู่ไม่เป็นศูนย์</p></li><li><p>\(\cos\theta=10/(5\sqrt5)=2/\sqrt5\approx0.894427\)</p></li><li><p>\(\theta=\arccos(2/\sqrt5)\approx26.565^\circ\) เป็นมุมแหลมสอดคล้องกับดอทบวก</p></li><li><p>ตรวจกับการฉาย: \(\|\mathbf a\|\cos\theta=5(2/\sqrt5)=2\sqrt5\) ตรงกับค่าฉายใน <a href="/learn/vector-algebra/components-projection/#projection-example">ตัวอย่าง Projection</a></p></li></ol><p class="answer">\(\theta\approx26.565^\circ\)</p></div>
+      <div class="wx" id="ex-d-3d"><div class="wx-head"><span class="mono">ตัวอย่าง D-3 · มุมสามมิติโดยไม่ต้องวาดมุมเอง</span><h3>หามุมระหว่าง \(\mathbf a=(1,2,2)\) และ \(\mathbf b=(2,0,1)\)</h3></div><ol class="steps"><li><p>ดอท \(=1(2)+2(0)+2(1)=4\)</p></li><li><p>ความยาว \(\|\mathbf a\|=\sqrt{1+4+4}=3\), \(\|\mathbf b\|=\sqrt{4+0+1}=\sqrt5\)</p></li><li><p>\(\cos\theta=4/(3\sqrt5)\), จึงได้ \(\theta\approx53.396^\circ\)</p></li><li><p>ตรวจขอบเขต \(|4|\le3\sqrt5\) และดอทบวก จึงควรได้มุมระหว่าง 0° กับ 90°</p></li></ol><p class="answer">\(\theta\approx53.396^\circ\)</p></div>
+      <div class="wx" id="ex-d-perp"><div class="wx-head"><span class="mono">ตัวอย่าง D-4 · หา parameter จากความตั้งฉาก</span><h3>หา t ที่ทำให้ \((1,t,-1)\) ตั้งฉากกับ \((2,-1,0)\)</h3></div><ol class="steps"><li><p>ใช้ <a href="#D5">D5</a>: \(1(2)+t(-1)+(-1)(0)=0\)</p></li><li><p>\(2-t=0\) จึงได้ \(t=2\)</p></li><li><p>ตรวจเวกเตอร์ทั้งสองไม่เป็นศูนย์ ดังนั้นเป็นมุม 90° ได้จริง</p></li></ol><p class="answer">\(t=2\), และ \((1,2,-1)\cdot(2,-1,0)=0\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+      <h2 id="properties">5. สมบัติที่ใช้จัดรูปและตรวจคำตอบ <span class="lv lv-i">กลาง</span></h2>
+      <p>Dot product มีสมบัติคล้ายการคูณจำนวนในเรื่องสลับที่และแจกแจง แต่ไม่มีการหารด้วยเวกเตอร์ และผลของดอทเป็นสเกลาร์จึงต้องระวังชนิดของสิ่งที่คำนวณหลังจากนั้น</p>
+      <div class="tf-grid"><div class="tf wide" id="D6" data-k="commutative distributive bilinear properties scalar สลับที่ แจกแจง สมบัติ">
+        <p class="tf-n"><b><span class="fid">D6</span> Commutativity and bilinearity</b> สลับที่และแจกแจง</p>
+        \[ \mathbf a\cdot\mathbf b=\mathbf b\cdot\mathbf a,\qquad \mathbf a\cdot(\mathbf b+\mathbf c)=\mathbf a\cdot\mathbf b+\mathbf a\cdot\mathbf c \]
+        \[ (\lambda\mathbf a)\cdot\mathbf b=\lambda(\mathbf a\cdot\mathbf b)=\mathbf a\cdot(\lambda\mathbf b),\qquad \mathbf a\cdot\mathbf0=0 \]
+        <p class="tf-x">เวกเตอร์ที่บวกต้องมีมิติเดียวกัน และ \(\lambda\) เป็นจำนวนจริง การเรียก bilinear หมายถึงเชิงเส้นในแต่ละตัวเมื่อคงอีกตัวไว้</p>
+      </div><div class="tf wide" id="D7" data-k="norm length squared magnitude expansion sum difference ความยาว กำลังสอง ผลบวก ผลต่าง">
+        <p class="tf-n"><b><span class="fid">D7</span> Norm and squared-distance identities</b> ความยาวและการกระจายกำลังสอง</p>
+        \[ \mathbf a\cdot\mathbf a=\|\mathbf a\|^2\ge0,\qquad\mathbf a\cdot\mathbf a=0\iff\mathbf a=\mathbf0 \]
+        \[ \|\mathbf a\pm\mathbf b\|^2=\|\mathbf a\|^2+\|\mathbf b\|^2\pm2\mathbf a\cdot\mathbf b \]
+        <p class="tf-x">ถ้า a ตั้งฉาก b พจน์ดอทหายไป ได้พีทาโกรัสในหลายมิติ แต่ถ้าไม่ตั้งฉาก ห้ามเอาความยาวมาบวกกำลังสองโดยละพจน์นี้</p>
+      </div><div class="tf wide" id="D8" data-k="Cauchy Schwarz inequality bound triangle อสมการ ขอบเขต โคชี ชวาร์ซ">
+        <p class="tf-n"><b><span class="fid">D8</span> Cauchy–Schwarz inequality</b> ขอบเขตของดอท</p>
+        \[ |\mathbf a\cdot\mathbf b|\le\|\mathbf a\|\|\mathbf b\|,\qquad\|\mathbf a+\mathbf b\|\le\|\mathbf a\|+\|\mathbf b\| \]
+        <p class="tf-x">อสมการแรกเท่ากันเมื่อเวกเตอร์ขึ้นต่อกันเชิงเส้น รวมกรณีเวกเตอร์ศูนย์ ถ้าทั้งคู่ไม่เป็นศูนย์คือขนานหรือสวนทาง อสมการที่สองคือ triangle inequality</p>
+      </div></div>
+      <h3 id="cauchy-proof">พิสูจน์ Cauchy–Schwarz จากการฉาย</h3>
+      <p>เมื่อ b ≠ 0 ส่วนตั้งฉาก \(\mathbf r=\mathbf a-[(\mathbf a\cdot\mathbf b)/(\mathbf b\cdot\mathbf b)]\mathbf b\) มี \(\|\mathbf r\|^2\ge0\) กระจายแล้วได้ \(\|\mathbf a\|^2-(\mathbf a\cdot\mathbf b)^2/\|\mathbf b\|^2\ge0\) จึงได้ \((\mathbf a\cdot\mathbf b)^2\le\|\mathbf a\|^2\|\mathbf b\|^2\) แล้วถอดรากทั้งสองข้าง ถ้า b = 0 ทั้งสองข้างเป็นศูนย์อยู่แล้ว</p>
+      <div class="note warn"><b>ตัดดอทไม่ได้:</b> จาก \(\mathbf a\cdot\mathbf b=\mathbf a\cdot\mathbf c\) สรุป b = c ไม่ได้ เพราะ b−c อาจตั้งฉาก a ตัวอย่าง \(\mathbf a=(1,0),\mathbf b=(2,3),\mathbf c=(2,-5)\) ได้ดอท 2 เท่ากันทั้งที่ b และ c ต่างกัน</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="projection">
+      <h2 id="projection">6. Dot product กับ component และ projection เป็นเรื่องเดียวกัน</h2>
+      <p>ถ้า u เป็นเวกเตอร์หน่วย ผลดอท \(\mathbf a\cdot\mathbf u=\|\mathbf a\|\cos\theta\) คือค่าของ a ตามทิศ u นั่นคือ scalar projection ถ้าเลือก u เป็นแกน x, y หรือ z ก็ได้ component ที่ใช้อยู่แล้ว จึงไม่ต้องสร้างสูตรใหม่สำหรับแกนเอียง</p>
+      <div class="tf-grid"><div class="tf wide" id="D9" data-k="projection component scalar vector unit ฉาย องค์ประกอบ เวกเตอร์หน่วย">
+        <p class="tf-n"><b><span class="fid">D9</span> From dot product to projection</b> ค่าตามทิศและเวกเตอร์ฉาย</p>
+        \[ \operatorname{comp}_{\mathbf b}\mathbf a=\frac{\mathbf a\cdot\mathbf b}{\|\mathbf b\|},\qquad \operatorname{proj}_{\mathbf b}\mathbf a=\frac{\mathbf a\cdot\mathbf b}{\mathbf b\cdot\mathbf b}\mathbf b,\qquad\mathbf b\ne\mathbf0 \]
+        <p class="tf-x">ตัวแรกเป็นสเกลาร์มีเครื่องหมาย ตัวหลังเป็นเวกเตอร์ เลือกเป้าหมาย b ให้ตรงทิศที่ถาม ดู <a href="/learn/vector-algebra/components-projection/">Component และ Projection</a> สำหรับภาพและวิธีทำละเอียด</p>
+      </div></div>
+      <p>ค่าดอทเองยังไม่ใช่ความยาวเงา เว้นแต่เป้าหมายเป็นเวกเตอร์หน่วย เช่น (3,4)·(2,1) = 10 แต่ค่าฉายสเกลาร์คือ \(2\sqrt5\) และเวกเตอร์ฉายคือ (4,2) การระบุชนิดคำตอบและหน่วยจึงช่วยแยกสามปริมาณนี้ได้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="work-power">
+      <h2 id="work-power">7. การประยุกต์วิศวกรรม: งานและกำลังกล <span class="lv lv-i">กลาง</span></h2>
+      <p>การทำงานของแรงขึ้นกับส่วนของแรงที่ไปตามการกระจัด ถ้าแรงเอียงขึ้นแต่การเคลื่อนที่อยู่ตามพื้น มีเพียงองค์ประกอบแนวนอนที่ทำงานจากการกระจัดนั้น แรงตั้งฉากกับการกระจัดอาจยังจำเป็นต่อสมดุล แต่ไม่ให้งานในเส้นทางที่ตั้งฉากกับแรง</p>
+      <div class="tf-grid"><div class="tf wide" id="D10" data-k="work energy constant force displacement joule งาน พลังงาน แรง การกระจัด จูล">
+        <p class="tf-n"><b><span class="fid">D10</span> Work by a constant force</b> งานจากแรงคงที่</p>
+        \[ W=\mathbf F\cdot\Delta\mathbf r=\|\mathbf F\|\|\Delta\mathbf r\|\cos\theta \]
+        <p class="tf-x">หน่วย N·m = J สูตรนี้ใช้แรงคงที่และการกระจัดระหว่างต้นกับปลาย ถ้าแรงแปรตามตำแหน่งหรือเส้นทาง ใช้ \(W=\int_C\mathbf F(\mathbf r)\cdot d\mathbf r\) ไม่แทนแรงที่จุดเดียวลงไปโดยพลการ</p>
+      </div><div class="tf wide" id="D11" data-k="mechanical power instantaneous velocity watt กำลัง ความเร็ว วัตต์">
+        <p class="tf-n"><b><span class="fid">D11</span> Instantaneous mechanical power</b> กำลังกลขณะหนึ่ง</p>
+        \[ P=\frac{dW}{dt}=\mathbf F\cdot\mathbf v \]
+        <p class="tf-x">แรงและความเร็วต้องวัดในกรอบอ้างอิงเดียวกัน หน่วย N·m/s = W ค่าบวกคือแรงถ่ายพลังงานเข้าสู่การเคลื่อนที่ ค่าลบคือแรงดึงพลังงานออก เช่น การเบรก</p>
+      </div></div>
+      <figure class="la-fig">
+        <svg viewBox="0 0 630 315" role="img" aria-labelledby="d-work-title d-work-desc">
+          <title id="d-work-title">งานใช้เฉพาะองค์ประกอบแรงตามการกระจัด</title><desc id="d-work-desc">แรง F เท่ากับ (50,20) นิวตัน ชี้ขึ้นขวา รถเคลื่อนตามแนว x เป็นระยะ 4 เมตร องค์ประกอบแนวนอน 50 นิวตันให้งาน 200 จูล ส่วนแนวตั้ง 20 นิวตันตั้งฉากกับการกระจัดจึงให้งานศูนย์</desc>
+          <defs><marker id="d-work-f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#38bdf8"/></marker><marker id="d-work-s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#fb923c"/></marker></defs>
+          <g stroke="currentColor" fill="none" stroke-width="1.5" opacity=".5"><path d="M50 210H370M90 235V58"/><path d="M90 130H290V210" stroke-dasharray="5 5"/></g><path d="M90 210L290 130" stroke="#38bdf8" stroke-width="5" marker-end="url(#d-work-f)"/><path d="M90 210H290" stroke="#fb923c" stroke-width="4" marker-end="url(#d-work-s)"/><path d="M90 264H330" stroke="#fb923c" stroke-width="4" marker-end="url(#d-work-s)"/>
+          <g fill="currentColor" font-size="17"><text x="299" y="120">F = (50,20) N</text><text x="140" y="237">Fx = 50 N</text><text x="85" y="119">Fy = 20 N</text><text x="139" y="296">Δr = (4,0) m</text><text x="386" y="197">W = 50(4) + 20(0)</text><text x="386" y="232">= 200 J</text><text x="379" y="70">ภาพแสดงทิศเชิงแผนผัง</text><text x="379" y="98">แรงและระยะใช้คนละหน่วย</text></g>
+        </svg><figcaption>ภาพแสดงทิศ: ส่วนแรงแนวตั้งไม่ทำงานเมื่อการกระจัดมีเฉพาะแนวนอน แรงและการกระจัดไม่ใช้สเกลกายภาพร่วมกัน</figcaption>
+      </figure>
+      <div class="wx" id="ex-d-work"><div class="wx-head"><span class="mono">ตัวอย่าง D-5 · รถเข็นกับแรงเอียง</span><h3>แรงคงที่ \(\mathbf F=(50,20,0)\,\mathrm N\) ทำให้จุดที่แรงกระทำเคลื่อน \(\Delta\mathbf r=(4,0,0)\,\mathrm m\) แรงนี้ทำงานเท่าไร?</h3></div><ol class="steps"><li><p>ระบุว่าโจทย์ถามงานจากแรงนี้ ไม่จำเป็นต้องเท่ากับงานสุทธิจากแรงทั้งหมด</p></li><li><p>\(W=50(4)+20(0)+0(0)=200\,\mathrm{N\cdot m}\)</p></li><li><p>ส่วนแรง 20 N ตาม y ตั้งฉากกับการกระจัดจึงไม่มีงาน ใช้ขนาดแรง \(\sqrt{2900}\) คูณ 4 โดยไม่คูณ cos จะได้ค่ามากเกินจริง</p></li></ol><p class="answer">งานจากแรงนี้ = 200 J</p></div>
+      <div class="wx" id="ex-d-power"><div class="wx-head"><span class="mono">ตัวอย่าง D-6 · กำลังกลที่ไม่ใช่ขนาดแรงคูณขนาดความเร็ว</span><h3>ขณะหนึ่ง \(\mathbf F=(12,-5,0)\,\mathrm N\), \(\mathbf v=(2,1,0)\,\mathrm{m/s}\) หาค่ากำลังของแรงนี้</h3></div><ol class="steps"><li><p>\(P=\mathbf F\cdot\mathbf v=12(2)+(-5)(1)+0=19\,\mathrm W\)</p></li><li><p>แยกดูรายแกน: x ให้ +24 W ส่วน y ให้ −5 W เพราะแรงตาม y สวนความเร็วตาม y</p></li><li><p>รวมได้ +19 W แรงนี้ถ่ายพลังงานสุทธิเข้าสู่การเคลื่อนที่ขณะนั้น</p></li></ol><p class="answer">กำลังทันที 19 W</p></div>
+      <div class="note"><b>แรงคงที่ที่ทำงานลบ:</b> แรงเสียดทาน \((-30,0)\,\mathrm N\) กับการกระจัด \((5,0)\,\mathrm m\) ให้งาน −150 J ส่วนแรงโน้มถ่วง \((0,-100)\,\mathrm N\) กับการกระจัดแนวนอน (3,0) m ให้งาน 0 J ต้องพิจารณาการกระจัดของจุดที่แรงกระทำตามแบบจำลองที่เลือก</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering-geometry">
+      <h2 id="engineering-geometry">8. เรขาคณิตวิศวกรรม: ทิศทาง ระนาบ และฟลักซ์</h2>
+      <p>หุ่นยนต์และระบบภาพสามมิติต้องตรวจว่าทิศของเครื่องมือเข้าหาพื้นผิวมากน้อยเพียงใด ถ้า n เป็นเวกเตอร์ปกติของพื้นผิว ดอทกับทิศการเคลื่อนที่บอกส่วนที่เคลื่อนเข้าหรือออกจากพื้นผิว ส่วนที่เหลือเป็นการไถลไปตามพื้นผิว</p>
+      <div class="tf-grid"><div class="tf wide" id="D12" data-k="plane normal direction cosines perpendicular flux ระนาบ ปกติ ฟลักซ์ ทิศทาง">
+        <p class="tf-n"><b><span class="fid">D12</span> Normal component and oriented flux</b> ส่วนตั้งฉากกับพื้นผิว</p>
+        \[ v_n=\mathbf v\cdot\widehat{\mathbf n},\qquad\Phi=\mathbf B\cdot\mathbf A=BA\cos\theta,\qquad\mathbf A=A\widehat{\mathbf n} \]
+        <p class="tf-x">สูตรฟลักซ์แม่เหล็กนี้ใช้สนาม B สม่ำเสมอบนพื้นผิวระนาบ พื้นที่ A และทิศปกติที่เลือก หน่วย T·m² = Wb ถ้าสนามไม่สม่ำเสมอหรือพื้นผิวโค้ง ใช้ \(\Phi=\int_S\mathbf B\cdot\widehat{\mathbf n}\,dA\)</p>
+      </div></div>
+      <div class="wx" id="ex-d-flux"><div class="wx-head"><span class="mono">ตัวอย่าง D-7 · ฟลักซ์ผ่านหน้าตัดคอยล์</span><h3>สนามสม่ำเสมอ 0.20 T ทำมุม 60° กับเวกเตอร์ปกติของพื้นที่ 0.010 m² ฟลักซ์เป็นเท่าไร?</h3></div><ol class="steps"><li><p>มุมที่ให้วัดกับ <strong>ปกติของผิว</strong> จึงใช้ cos 60° ได้ ถ้าวัดกับระนาบผิวต้องใช้มุมเติมเต็ม</p></li><li><p>\(\Phi=(0.20)(0.010)\cos60^\circ=0.0010\,\mathrm{Wb}=1.0\,\mathrm{mWb}\)</p></li><li><p>ถ้ากลับทิศปกติ ฟลักซ์กลับเครื่องหมาย แต่สนามและพื้นที่ทางกายภาพเท่าเดิม ตัวอย่างนี้เป็นฟลักซ์ต่อหนึ่งผิว; flux linkage ของ N รอบเหมือนกันคือ \(N\Phi\)</p></li></ol><p class="answer">ฟลักซ์ 1.0 mWb ตามทิศปกติที่เลือก</p></div>
+      <p>ในเรขาคณิต จุด x อยู่ในระนาบที่ผ่าน q และมีปกติ n เมื่อ \(\mathbf n\cdot(\mathbf x-\mathbf q)=0\) สำหรับจุดนอกระนาบ ค่า \(\mathbf n\cdot(\mathbf x-\mathbf q)/\|\mathbf n\|\) เป็นระยะแบบมีเครื่องหมาย หากถามระยะทั่วไปให้ใช้ค่าสัมบูรณ์ ดูการหาเท้าฉากใน <a href="/learn/vector-algebra/components-projection/#distance">บทการฉาย</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="signals">
+      <h2 id="signals">9. สัญญาณ ข้อมูล และ cosine similarity <span class="lv lv-i">ต่อยอด</span></h2>
+      <p>มองค่าที่วัด n เวลาเป็นเวกเตอร์ n มิติ เช่น x เป็นรูปแบบที่ต้องการตรวจหาและ y เป็นข้อมูลจากเซนเซอร์ ดอทมากอาจมาจากรูปร่างคล้ายกัน หรือเพียงเพราะสัญญาณมีแอมพลิจูดสูง การหารด้วยความยาวทั้งสองช่วยวัดความสอดคล้องของรูปร่างในเชิงทิศ</p>
+      <div class="tf-grid"><div class="tf wide" id="D13" data-k="cosine similarity normalized dot correlation signal data ความคล้าย สัญญาณ ข้อมูล normalized">
+        <p class="tf-n"><b><span class="fid">D13</span> Cosine similarity</b> ดอทที่ปรับขนาดออก</p>
+        \[ s=\frac{\mathbf x\cdot\mathbf y}{\|\mathbf x\|\|\mathbf y\|},\qquad -1\le s\le1,\qquad\mathbf x,\mathbf y\ne\mathbf0 \]
+        <p class="tf-x">s = 1 คือทิศเดียวกัน, 0 คือ orthogonal, −1 คือสวนทาง เป็นตัวเลขไม่มีหน่วย ถ้าจะเทียบกับ Pearson correlation ต้องลบค่าเฉลี่ยของข้อมูลก่อน และตรวจว่าความแปรปรวนไม่เป็นศูนย์</p>
+      </div></div>
+      <div class="wx" id="ex-d-similarity"><div class="wx-head"><span class="mono">ตัวอย่าง D-8 · รูปร่างเดียวกันแต่ระดับต่างกัน</span><h3>ให้ \(\mathbf x=(1,2,1)\), \(\mathbf y=(2,4,2)\) เปรียบเทียบดอทกับ cosine similarity</h3></div><ol class="steps"><li><p>ดอท = \(1(2)+2(4)+1(2)=12\)</p></li><li><p>\(\|\mathbf x\|=\sqrt6\), \(\|\mathbf y\|=2\sqrt6\) จึงได้ \(s=12/(\sqrt6\,2\sqrt6)=1\)</p></li><li><p>y มีแอมพลิจูดสองเท่าของ x แต่รูปร่างมีทิศเดียวกัน ถ้าแทน y ด้วย −y ค่าความคล้ายจะเป็น −1</p></li></ol><p class="answer">Dot = 12 · Cosine similarity = 1</p></div>
+      <p>ก่อนใช้กับข้อมูลจริง ให้ตรวจว่าช่องตรงกัน เวลา sampling ตรงกัน และหน่วยหรือการปรับสเกลเหมาะสม หากรวมความยาว ความดัน และอุณหภูมิไว้ในเวกเตอร์เดียวกัน ค่าดอทจะขึ้นกับหน่วยที่เลือกอย่างมาก ต้องกำหนดการ normalize หรือ weighting จากความหมายของงาน ไม่ใช่ใช้สูตรแล้วตีความทันที</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">10. ข้อผิดพลาดที่พบบ่อย</h2>
+      <div class="note warn"><ul class="la-check"><li><strong>ตอบดอทเป็นเวกเตอร์:</strong> (3,4)·(2,1) = 10 ไม่ใช่ (6,4) เพราะต้องบวกผลคูณด้วย</li><li><strong>ใช้มิติหรือกรอบอ้างอิงต่างกัน:</strong> แปลงให้เป็นพิกัดเดียวกันก่อน เวกเตอร์ใน 2D กับ 3D ต้องกำหนดการฝัง เช่น z = 0 อย่างชัดเจน</li><li><strong>ดอทศูนย์แล้วอ้างมุมฉากโดยไม่ตรวจเวกเตอร์ศูนย์:</strong> สูตรพิกัดใช้ได้ แต่สูตรหามุมใช้ไม่ได้เมื่อมีเวกเตอร์ศูนย์</li><li><strong>ลืมความยาวในสูตร cosine:</strong> ดอทอย่างเดียวไม่ใช่ cos มุม ต้องหารด้วยความยาวทั้งสอง</li><li><strong>เอาค่าสัมบูรณ์ก่อนหามุม:</strong> ทำให้ข้อมูลว่าทิศสวนกันหายไป ใช้ค่าสัมบูรณ์เมื่อโจทย์ถามมุมระหว่างเส้นไม่มีทิศเท่านั้น</li><li><strong>อ่าน \(\cos^{-1}\) เป็นส่วนกลับ:</strong> หมายถึง inverse function arccos</li><li><strong>หางานด้วยขนาดแรงคูณระยะทุกครั้ง:</strong> ต้องใช้ส่วนตามการกระจัด หรือคูณ cos มุมด้วย</li><li><strong>สับสนกับ cross product:</strong> ดอทให้สเกลาร์และใช้ cos ส่วน cross ใน 3D ให้เวกเตอร์ปกติและขนาดใช้ sin</li><li><strong>ตัดดอทเหมือนการหารจำนวน:</strong> ดอทเท่ากันไม่ได้แปลว่าเวกเตอร์เท่ากัน และไม่มีการหารด้วยเวกเตอร์ในสูตรนี้</li></ul></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="exercises">
+      <h2 id="exercises">11. แบบฝึกหัดพร้อมเฉลย</h2>
+      <div class="wx" id="ex-d-practice1"><div class="wx-head"><span class="mono">แบบฝึก D-A · มุม 120°</span><h3>หา dot product และมุมระหว่าง \(\mathbf a=(2,0)\), \(\mathbf b=(-1,\sqrt3)\)</h3></div><ol class="steps"><li><p>ดอท = −2 และความยาวทั้งคู่ = 2</p></li><li><p>\(\cos\theta=-2/(2\cdot2)=-1/2\) จึงได้ 120°</p></li><li><p>มุมป้านตรงกับเครื่องหมายลบ ส่วนค่าฉาย a ตาม b เป็น \(-2/2=-1\)</p></li></ol><p class="answer">Dot = −2 · มุม 120°</p></div>
+      <div class="wx" id="ex-d-practice2"><div class="wx-head"><span class="mono">แบบฝึก D-B · ตรวจตั้งฉากสามมิติ</span><h3>ให้ \(\mathbf a=(2,-1,3)\), \(\mathbf b=(1,5,1)\) จงหาดอทและมุม</h3></div><ol class="steps"><li><p>\(\mathbf a\cdot\mathbf b=2(1)+(-1)(5)+3(1)=0\)</p></li><li><p>ทั้งคู่ไม่เป็นศูนย์ จึงได้มุม 90° โดยไม่ต้องกด arccos</p></li></ol><p class="answer">Dot = 0 · มุม 90°</p></div>
+      <div class="wx" id="ex-d-practice3"><div class="wx-head"><span class="mono">แบบฝึก D-C · งานจากแรงสวนบางแกน</span><h3>แรงคงที่ \(\mathbf F=(10,-4,2)\,\mathrm N\) กับการกระจัด \(\Delta\mathbf r=(3,2,0)\,\mathrm m\) ให้งานเท่าไร?</h3></div><ol class="steps"><li><p>\(W=10(3)+(-4)(2)+2(0)=30-8=22\,\mathrm J\)</p></li><li><p>ส่วน x ให้ +30 J ส่วน y ให้ −8 J ส่วน z ไม่มีการกระจัดจึงให้ 0 J</p></li></ol><p class="answer">22 J</p></div>
+      <div class="wx" id="ex-d-practice4"><div class="wx-head"><span class="mono">แบบฝึก D-D · กรณีศูนย์</span><h3>\(\mathbf0\cdot(1,2,3)\) เป็นเท่าไร และมุมระหว่างสองเวกเตอร์เป็นเท่าไร?</h3></div><ol class="steps"><li><p>ดอท = \(0(1)+0(2)+0(3)=0\)</p></li><li><p>ความยาวเวกเตอร์แรกเป็น 0 สูตรหามุมต้องหารด้วย 0 จึงใช้ไม่ได้ และเวกเตอร์ศูนย์ไม่มีทิศ</p></li></ol><p class="answer">Dot = 0 · มุมไม่นิยาม</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="formula-summary">
+      <h2 id="formula-summary">12. สรุปสูตร: เลือกใช้ตามคำถาม</h2>
+      <div class="table-wrap"><table><thead><tr><th>คำถาม</th><th>สูตรหลัก</th><th>จุดตรวจ</th></tr></thead><tbody><tr><td>คำนวณดอทจากพิกัด</td><td><a href="#D1">D1</a>: \(\sum_ra_rb_r\)</td><td>มิติและแกนเดียวกัน ผลเป็นสเกลาร์</td></tr><tr><td>หามุมระหว่างเวกเตอร์</td><td><a href="#D4">D4</a>: \(\arccos[(\mathbf a\cdot\mathbf b)/(\|\mathbf a\|\|\mathbf b\|)]\)</td><td>ทั้งคู่ไม่เป็นศูนย์</td></tr><tr><td>ตรวจตั้งฉาก</td><td><a href="#D5">D5</a>: \(\mathbf a\cdot\mathbf b=0\)</td><td>มุม 90° ต้องไม่มีเวกเตอร์ศูนย์</td></tr><tr><td>หาขนาดหรือระยะ</td><td><a href="#D7">D7</a>: \(\|\mathbf a\|=\sqrt{\mathbf a\cdot\mathbf a}\)</td><td>ระยะใช้เวกเตอร์ผลต่าง</td></tr><tr><td>ส่วนตามแนวหนึ่ง</td><td><a href="#D9">D9</a>: scalar / vector projection</td><td>เป้าหมายไม่เป็นศูนย์</td></tr><tr><td>งานจากแรงคงที่</td><td><a href="#D10">D10</a>: \(W=\mathbf F\cdot\Delta\mathbf r\)</td><td>หน่วย J</td></tr><tr><td>กำลังกลทันที</td><td><a href="#D11">D11</a>: \(P=\mathbf F\cdot\mathbf v\)</td><td>หน่วย W</td></tr><tr><td>ฟลักซ์สม่ำเสมอผ่านระนาบ</td><td><a href="#D12">D12</a>: \(\Phi=\mathbf B\cdot\mathbf A\)</td><td>มุมกับเวกเตอร์ปกติ</td></tr><tr><td>ความสอดคล้องของทิศข้อมูล</td><td><a href="#D13">D13</a>: normalized dot</td><td>ตรวจการจัดช่องและสเกล</td></tr></tbody></table></div>
+      <p>ต่อจากส่วนตามทิศ ไปสู่ส่วนที่ตั้งฉากและโมเมนต์ด้วย <a href="/learn/vector-algebra/cross-product/">cross product</a> ดูตัวอย่างที่รวมสองผลคูณใน <a href="/learn/vector-algebra/engineering-applications/">การประยุกต์ทางวิศวกรรม</a> หรือทดลองเปลี่ยนพิกัดใน <a href="/learn/vector-algebra/vector-lab/">ห้องทดลองเวกเตอร์ 2D–3D</a></p>
+    </section>
+    <section class="tsec" aria-labelledby="references">
+      <h2 id="references">แหล่งอ้างอิงและอ่านต่อ</h2>
+      <ul><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product" target="_blank" rel="noopener">OpenStax, Calculus Volume 3, §2.3 The Dot Product</a> — นิยามเรขาคณิตและพิกัด projection และงาน</li><li><a href="https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/1.-vectors-and-matrices/part-a-vectors-determinants-and-planes/" target="_blank" rel="noopener">MIT OpenCourseWare, 18.02SC, Vectors, Determinants and Planes</a> — dot product มุม การตั้งฉาก และระนาบ พร้อมโจทย์สำหรับฝึก</li><li><a href="https://openstax.org/books/university-physics-volume-1/pages/7-1-work" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, §7.1 Work</a> และ <a href="https://openstax.org/books/university-physics-volume-1/pages/7-4-power" target="_blank" rel="noopener">§7.4 Power</a> — เงื่อนไขทางฟิสิกส์และหน่วยของงาน/กำลัง</li></ul>
+      <p>ใช้แหล่งอ้างอิงประกอบการตรวจนิยามและศึกษาต่อ ตัวอย่างในหน้านี้เขียนขึ้นเพื่อแสดงขั้นตอนคำนวณในบริบทวิศวกรรม โดยระบุสมมติฐานของแต่ละสูตรไว้ใกล้สูตร</p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

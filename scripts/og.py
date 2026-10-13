@@ -5,9 +5,14 @@ Usage (after `npm install` and `node build.mjs`, which writes src/og-manifest.js
 Needs Python Playwright with Chromium. Fonts come from node_modules/@fontsource (no network).
 Output: images/og/<key>.jpg — build.mjs picks these up automatically.
 """
+import argparse
 import html
+import functools
+import http.server
+import threading
 import json
 import pathlib
+import shutil
 
 from playwright.sync_api import sync_playwright
 
@@ -58,24 +63,61 @@ h1{{margin-top:14px;font:700 {size}px/1.22 Trirong,serif;color:#fff}}
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--prefix", default="", help="Render only manifest keys starting with this prefix")
+    parser.add_argument("--chromium", help="Path to an installed Chromium executable")
+    args = parser.parse_args()
     pages = json.loads((ROOT / "src/og-manifest.json").read_text("utf-8"))
-    with sync_playwright() as p:
-        b = p.chromium.launch()
-        pg = b.new_page(viewport={"width": 1200, "height": 630})
-        for e in pages:
-            t = e["title"]
-            size = 66 if len(t) <= 22 else 56 if len(t) <= 40 else 48
-            doc = TEMPLATE.format(fonts=FONTS, sym=html.escape(e["sym"]), eyebrow=html.escape(e["eyebrow"]),
-                                  title=html.escape(t), sub=html.escape(e["sub"]), size=size)
-            tmp = OUT / "_tmp.html"
-            tmp.write_text(doc, "utf-8")
-            pg.goto(tmp.as_uri())
-            pg.evaluate("document.fonts.ready")
-            pg.wait_for_timeout(150)
-            pg.screenshot(path=str(OUT / f"{e['key']}.jpg"), type="jpeg", quality=86)
-            print("og", e["key"])
-        (OUT / "_tmp.html").unlink(missing_ok=True)
-        b.close()
+    pages = [e for e in pages if e["key"].startswith(args.prefix)]
+    if not pages:
+        parser.error("No manifest entries matched --prefix")
+
+    # A loopback server also works in managed Chromium where file:// is blocked.
+    class QuietHandler(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, format, *args):
+            pass
+
+    handler = functools.partial(QuietHandler, directory=str(ROOT))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    origin = f"http://127.0.0.1:{server.server_port}"
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    tmp = OUT / "_tmp.html"
+    try:
+        with sync_playwright() as p:
+            executable = args.chromium or shutil.which("chromium")
+            b = p.chromium.launch(**({"executable_path": executable} if executable else {}))
+            pg = b.new_page(viewport={"width": 1200, "height": 630})
+            fonts = FONTS.replace(FS, origin + "/node_modules/@fontsource")
+            for e in pages:
+                t = e["title"]
+                size = 66 if len(t) <= 22 else 56 if len(t) <= 40 else 48
+                doc = TEMPLATE.format(fonts=fonts, sym=html.escape(e["sym"]), eyebrow=html.escape(e["eyebrow"]),
+                                      title=html.escape(t), sub=html.escape(e["sub"]), size=size)
+                if e["key"].startswith("learn-vector-algebra"):
+                    slug = e["key"].removeprefix("learn-vector-algebra").lstrip("-") or "overview"
+                    artwork = ROOT / "images/vector-algebra" / f"{slug}.svg"
+                    if not artwork.is_file():
+                        raise FileNotFoundError(f"Missing vector illustration: {artwork}")
+                    doc = doc.replace('<div class="sym">', '<div class="sym" style="display:none">')
+                    doc = doc.replace('</head>', '<style>.wrap{right:570px}.eyebrow{font-size:20px;margin-top:34px}h1{font-size:52px}.sub{font-size:24px}.foot{font-size:20px;flex-wrap:wrap;gap:6px}.art{position:absolute;right:28px;top:158px;width:540px;height:330px;object-fit:contain}</style></head>')
+                    doc = doc.replace('<div class="bar">', f'<img class="art" src="{origin}/images/vector-algebra/{slug}.svg" alt=""><div class="bar">')
+                tmp.write_text(doc, "utf-8")
+                # Each key needs a distinct URL: Last-Modified has one-second
+                # resolution, so reusing a URL can return the preceding card.
+                pg.goto(origin + "/images/og/_tmp.html?key=" + e["key"])
+                if pg.locator("h1").text_content() != t:
+                    raise RuntimeError(f"Rendered title does not match {e['key']}")
+                pg.evaluate("document.fonts.ready")
+                pg.wait_for_function("Array.from(document.images).every(i => i.complete && i.naturalWidth > 0)")
+                pg.screenshot(path=str(OUT / f"{e['key']}.jpg"), type="jpeg", quality=86)
+                print("og", e["key"])
+            b.close()
+    finally:
+        tmp.unlink(missing_ok=True)
+        server.shutdown()
+        server.server_close()
+        thread.join()
 
 
 if __name__ == "__main__":

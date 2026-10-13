@@ -1,0 +1,220 @@
+<!--meta
+{
+  "title": "Cross Product: ครอสโปรดักต์ กฎมือขวา พื้นที่ โมเมนต์ และ Triple Product | อาจารย์มด",
+  "h1": "Cross Product — ครอสโปรดักต์และทิศตั้งฉาก",
+  "description": "เรียน Cross Product ตั้งแต่ภาพเรขาคณิต กฎมือขวา ดีเทอร์มิแนนต์และเครื่องหมายองค์ประกอบ เวกเตอร์ 2 มิติฝังใน 3 มิติ พื้นที่ เวกเตอร์ปกติ Scalar และ Vector Triple Product พร้อมตัวอย่างทีละขั้น สูตรอ้างอิง และแบบฝึกหัดมีเฉลย",
+  "ogTitle": "Cross Product: เห็นทิศ เข้าใจพื้นที่ คำนวณองค์ประกอบได้จริง",
+  "lesson": "vector-algebra",
+  "sub": "cross-product",
+  "nav": "vec",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Cross product", "Right-hand rule", "Oriented area", "Surface normal", "Scalar triple product", "Vector triple product", "Torque"],
+  "scripts": ["/assets/linalg.js", "/assets/vector-lab.js"],
+  "faq": [
+    {"q":"Dot product กับ Cross product ต่างกันอย่างไร?","a":"Dot product ให้สเกลาร์และวัดส่วนที่ขนานกัน โดย a·b = |a||b|cosθ ส่วน Cross product ในสามมิติให้เวกเตอร์ตั้งฉากกับทั้งสองตัว มีขนาด |a||b|sinθ และทิศตามกฎมือขวา"},
+    {"q":"ทำไมองค์ประกอบ j ของ Cross product ต้องระวังเครื่องหมาย?","a":"เมื่อขยายรูปดีเทอร์มิแนนต์ตามแถวแรก เครื่องหมายโคแฟกเตอร์เป็นบวก ลบ บวก จึงได้องค์ประกอบ y เป็น az bx − ax bz ถ้าสลับลำดับการลบแล้วใส่ลบเพิ่มอีกจะผิด"},
+    {"q":"เวกเตอร์สองมิติหา Cross product ได้ไหม?","a":"ฝังเวกเตอร์ (ax, ay) เป็น (ax, ay, 0) ในสามมิติ แล้วผลคือ (0, 0, ax by − ay bx) บางบริบทเรียกจำนวนองค์ประกอบ z นี้ว่า 2D cross product ซึ่งเป็นสเกลาร์พื้นที่มีเครื่องหมาย ต้องระบุข้อตกลงให้ชัด"},
+    {"q":"Cross product เป็นศูนย์หมายถึงอะไร?","a":"ถ้าทั้งสองเวกเตอร์ไม่เป็นศูนย์ หมายถึงขนานหรือสวนทางกัน ถ้าเวกเตอร์ตัวใดเป็นศูนย์ก็ได้ผลศูนย์เช่นกัน จึงหาทิศปกติหนึ่งหน่วยจากผลศูนย์ไม่ได้"},
+    {"q":"Cross product ใช้กับเวกเตอร์จำนวนมิติใดก็ได้หรือไม่?","a":"สูตรเวกเตอร์สามองค์ประกอบและกฎมือขวาในบทนี้ใช้กับปริภูมิยุคลิดสามมิติที่มีฐานตั้งฉากหนึ่งหน่วยแบบมือขวา ไม่ใช่สูตรทั่วไปสำหรับเวกเตอร์ n มิติ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/vector-algebra/">พีชคณิตเวกเตอร์</a></li><li>Cross Product</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// พีชคณิตเวกเตอร์ · Cross Product</p>
+      <h1>Cross Product — ครอสโปรดักต์และทิศตั้งฉาก</h1>
+      <p class="lede">ถ้า Dot product ถามว่า “แรงช่วยการเคลื่อนที่มากแค่ไหน” Cross product ถามว่า “แรงทำให้หมุนรอบแกนใด มากแค่ไหน” เริ่มจากพื้นที่ของสี่เหลี่ยมด้านขนาน แล้วค่อยอ่านทิศตามกฎมือขวาและคำนวณทีละองค์ประกอบ ก่อนต่อยอดไปเวกเตอร์ปกติ ปริมาตร และงานวิศวกรรม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#components">คำนวณองค์ประกอบ</a><a class="btn btn-ghost btn-sm" href="#right-hand">กฎมือขวา</a><a class="btn btn-ghost btn-sm" href="#two-d">กรณี 2 มิติ</a><a class="btn btn-ghost btn-sm" href="#summary">สรุปสูตร</a></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul><li>\(\mathbf a\times\mathbf b\) เป็นเวกเตอร์ตั้งฉากกับทั้ง \(\mathbf a\) และ \(\mathbf b\) เมื่อผลไม่เป็นศูนย์</li><li>ขนาด \(\|\mathbf a\|\|\mathbf b\|\sin\theta\) เท่ากับพื้นที่สี่เหลี่ยมด้านขนาน</li><li>สลับลำดับแล้วกลับเครื่องหมาย: \(\mathbf b\times\mathbf a=-\mathbf a\times\mathbf b\)</li><li>สูตรบทนี้ใช้ฐานคาร์ทีเซียนตั้งฉากหนึ่งหน่วยแบบมือขวาในสามมิติ; เวกเตอร์ 2 มิติเติมองค์ประกอบ \(z=0\) ก่อน</li></ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search"><label for="tfFilter">ค้นหาสูตรในหน้านี้</label><input id="tfFilter" type="search" placeholder="เช่น cross, พื้นที่, ปริมาตร, normal, triple" autocomplete="off"><span class="tf-count mono" id="tfCount" aria-live="polite"></span><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button></div>
+
+    <section class="tsec" aria-labelledby="geometry">
+      <h2 id="geometry">1. Cross product เกิดจากพื้นที่และทิศตั้งฉาก</h2>
+      <p>ให้เวกเตอร์จริง \(\mathbf a,\mathbf b\in\mathbb R^3\) มีจุดเริ่มต้นเดียวกัน มุมเล็กระหว่างทั้งคู่คือ \(0\le\theta\le\pi\) สร้างสี่เหลี่ยมด้านขนานโดยใช้เวกเตอร์ทั้งสองเป็นด้าน ฐานยาว \(\|\mathbf a\|\) และสูง \(\|\mathbf b\|\sin\theta\) จึงได้พื้นที่เป็นผลคูณฐานกับสูง Cross product เก็บทั้งขนาดพื้นที่นี้และทิศปกติของระนาบไว้ในเวกเตอร์เดียว</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 660 300" role="img" aria-labelledby="cross-area-title cross-area-desc">
+          <title id="cross-area-title">พื้นที่ของสี่เหลี่ยมด้านขนานจากเวกเตอร์ a และ b</title><desc id="cross-area-desc">เวกเตอร์ a เป็นฐานไปทางขวา เวกเตอร์ b เอียงขึ้น สี่เหลี่ยมด้านขนานมีความสูงเท่ากับความยาว b คูณไซน์ของมุม theta วงกลมมีจุดกลางแทนเวกเตอร์ปกติออกจากจอ</desc>
+          <defs><marker id="cross-area-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs>
+          <path d="M85 238 L365 238 L465 73 L185 73 Z" fill="#38bdf8" fill-opacity="0.14" stroke="#38bdf8" stroke-width="2"/>
+          <path d="M85 238 H365" fill="none" stroke="#38bdf8" stroke-width="4" marker-end="url(#cross-area-arrow)"/>
+          <path d="M85 238 L185 73" fill="none" stroke="#f59e0b" stroke-width="4" marker-end="url(#cross-area-arrow)"/>
+          <path d="M185 73 V238 M185 218 H205 V238" fill="none" stroke="currentColor" stroke-opacity="0.7" stroke-width="2" stroke-dasharray="5 5"/>
+          <path d="M126 238 A41 41 0 0 0 106 203" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="282" cy="149" r="21" fill="none" stroke="#a78bfa" stroke-width="3"/><circle cx="282" cy="149" r="5" fill="#a78bfa"/>
+          <g fill="currentColor" font-size="18" font-family="sans-serif"><text x="220" y="273">a: base |a|</text><text x="100" y="131">b</text><text x="130" y="221">θ</text><text x="202" y="195">h = |b| sin θ</text><text x="320" y="143">a × b</text><text x="320" y="167">out of page</text><text x="494" y="91">Area</text><text x="494" y="119">|a| |b| sin θ</text></g>
+        </svg>
+        <figcaption>ขนาดของ Cross product เท่ากับพื้นที่ แต่คำตอบยังมีทิศด้วย จุดในวงกลมหมายถึงหัวลูกศรพุ่งออกจากหน้าจอ</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="C1" data-k="cross magnitude sine area geometry นิยาม ขนาด พื้นที่ ครอส">
+          <p class="tf-n"><b><span class="fid">C1</span> Geometric cross product</b> ขนาดและทิศ</p>
+          \[\mathbf a\times\mathbf b=\|\mathbf a\|\|\mathbf b\|\sin\theta\,\hat{\mathbf n},\qquad \|\mathbf a\times\mathbf b\|=\|\mathbf a\|\|\mathbf b\|\sin\theta\]
+          <p class="tf-x">\(\hat{\mathbf n}\) เป็นเวกเตอร์หนึ่งหน่วยตั้งฉากตามกฎมือขวาจาก \(\mathbf a\) ไป \(\mathbf b\) ถ้าเวกเตอร์ตัวใดเป็นศูนย์หรือทั้งคู่ขนานกัน ผลคือ \(\mathbf0\) และไม่เลือกทิศปกติจากผลนั้น</p>
+        </div>
+      </div>
+      <p>กรณี \(\theta=0^\circ\) หรือ \(180^\circ\) สี่เหลี่ยมยุบเป็นเส้น พื้นที่เป็นศูนย์ กรณี \(90^\circ\) ได้ขนาดมากที่สุดสำหรับความยาวเวกเตอร์คงที่ ต่างจาก Dot product ที่เป็นศูนย์เมื่อเวกเตอร์ตั้งฉากกัน ทบทวนการแยกความหมายได้ที่ <a href="/learn/vector-algebra/dot-product/">Dot product</a></p>
+      <div class="note"><b>หน่วยของผลคูณ:</b> หากทั้งสองเวกเตอร์เป็นการกระจัดหน่วยเมตร ขนาด Cross product มีหน่วย \(\mathrm{m^2}\) ถ้าเป็นตำแหน่งกับแรง จะได้ \(\mathrm{m}\cdot\mathrm N\) ซึ่งเป็นหน่วยของโมเมนต์แรง ความหมายขึ้นกับปริมาณที่นำมาคูณ ไม่ได้เป็นพื้นที่ทางกายภาพทุกครั้ง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="right-hand">
+      <h2 id="right-hand">2. กฎมือขวาและลำดับของเวกเตอร์</h2>
+      <p>ใช้มือขวาโค้งนิ้วจากเวกเตอร์ตัวแรก \(\mathbf a\) ไปเวกเตอร์ตัวที่สอง \(\mathbf b\) ผ่านมุมระหว่าง 0 ถึง 180 องศา นิ้วโป้งชี้ทิศของ \(\mathbf a\times\mathbf b\) เมื่อลองสลับลำดับ นิ้วจะโค้งอีกด้าน นิ้วโป้งจึงกลับทิศ นี่คือเหตุผลทางเรขาคณิตของเครื่องหมายลบ</p>
+      <figure class="la-fig">
+        <svg viewBox="0 0 660 280" role="img" aria-labelledby="cross-basis-title cross-basis-desc">
+          <title id="cross-basis-title">ฐานแบบมือขวาและการสลับลำดับ Cross product</title><desc id="cross-basis-desc">ด้านซ้าย i ชี้ขวา j ชี้ขึ้น ทำให้ i cross j เป็น k ออกจากจอ ด้านขวาแสดงลำดับวงรอบ i ไป j ไป k ที่ให้เครื่องหมายบวก การย้อนลำดับให้เครื่องหมายลบ</desc>
+          <defs><marker id="cross-basis-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs>
+          <path d="M125 205 H278 M125 205 V48" fill="none" stroke="currentColor" stroke-width="3" marker-end="url(#cross-basis-arrow)"/>
+          <circle cx="125" cy="205" r="18" fill="none" stroke="#a78bfa" stroke-width="3"/><circle cx="125" cy="205" r="4" fill="#a78bfa"/>
+          <path d="M186 196 A64 64 0 0 0 136 142" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#cross-basis-arrow)"/>
+          <path d="M474 72 L552 177 M526 214 L411 214 M385 179 L450 77" fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#cross-basis-arrow)"/>
+          <g fill="currentColor" font-size="20" font-family="sans-serif"><text x="285" y="212">i (+x)</text><text x="83" y="35">j (+y)</text><text x="76" y="252">k (+z), out</text><text x="162" y="151">i → j</text><text x="448" y="65">i</text><text x="557" y="214">j</text><text x="369" y="216">k</text><text x="410" y="150">cyclic: +</text><text x="380" y="259">reverse order: −</text></g>
+        </svg>
+        <figcaption>ฐานคาร์ทีเซียนแบบมือขวา: \(\hat{\mathbf i}\times\hat{\mathbf j}=\hat{\mathbf k}\) และวงรอบ \(i\to j\to k\to i\) ให้เครื่องหมายบวก</figcaption>
+      </figure>
+      <div class="tf-grid">
+        <div class="tf wide" id="C2" data-k="basis right hand cyclic i j k กฎมือขวา ฐาน สลับลำดับ">
+          <p class="tf-n"><b><span class="fid">C2</span> Basis products</b> ผลคูณฐานที่ต้องจำ</p>
+          \[\hat{\mathbf i}\times\hat{\mathbf j}=\hat{\mathbf k},\quad\hat{\mathbf j}\times\hat{\mathbf k}=\hat{\mathbf i},\quad\hat{\mathbf k}\times\hat{\mathbf i}=\hat{\mathbf j}\]
+          \[\hat{\mathbf j}\times\hat{\mathbf i}=-\hat{\mathbf k},\quad\hat{\mathbf k}\times\hat{\mathbf j}=-\hat{\mathbf i},\quad\hat{\mathbf i}\times\hat{\mathbf k}=-\hat{\mathbf j},\quad\hat{\mathbf e}\times\hat{\mathbf e}=\mathbf0\]
+          <p class="tf-x">\(\hat{\mathbf e}\) ในพจน์สุดท้ายเป็นฐานตัวเดียวกัน เมื่อเขียนภาพบนกระดาษ ใช้ \(\odot\) แทนพุ่งออก และ \(\otimes\) แทนพุ่งเข้า</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-cross-direction"><div class="wx-head"><span class="mono">ตัวอย่าง C-1 · อ่านทิศโดยยังไม่คำนวณ</span><h3>ให้ \(\mathbf a=3\hat{\mathbf i}\), \(\mathbf b=4\hat{\mathbf j}\) หา \(\mathbf a\times\mathbf b\) และ \(\mathbf b\times\mathbf a\)</h3></div><ol class="steps"><li><p>ความยาวคือ 3 และ 4 ตั้งฉากกัน จึงได้ขนาด \(3\cdot4\cdot\sin90^\circ=12\)</p></li><li><p>จาก \(\hat{\mathbf i}\) ไป \(\hat{\mathbf j}\) ได้ \(+\hat{\mathbf k}\) จึง \(\mathbf a\times\mathbf b=12\hat{\mathbf k}\)</p></li><li><p>ย้อนลำดับได้ \(\mathbf b\times\mathbf a=-12\hat{\mathbf k}\) ขนาดเท่ากัน แต่ทิศตรงข้าม</p></li></ol><p class="answer">\(\mathbf a\times\mathbf b=(0,0,12)\), \(\mathbf b\times\mathbf a=(0,0,-12)\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="components">
+      <h2 id="components">3. สูตรองค์ประกอบและดีเทอร์มิแนนต์: ระวังเครื่องหมายแกน y</h2>
+      <p>ก่อนคำนวณให้เวกเตอร์ทั้งคู่ใช้ฐานเดียวกัน หากอุปกรณ์วัดตัวหนึ่งใช้พิกัดโลก อีกตัวใช้พิกัดตัวเครื่อง ต้องแปลงพิกัดให้ตรงกันก่อน สูตรต่อไปนี้สมมติฐาน \(\hat{\mathbf i},\hat{\mathbf j},\hat{\mathbf k}\) ตั้งฉาก หน่วยยาวเท่ากับ 1 และมีลำดับแบบมือขวา</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="C3" data-k="component determinant y sign i j k องค์ประกอบ ดีเทอร์มิแนนต์ เครื่องหมาย">
+          <p class="tf-n"><b><span class="fid">C3</span> Component formula</b> คำนวณสามองค์ประกอบ</p>
+          \[\begin{aligned}\mathbf a\times\mathbf b&=(a_yb_z-a_zb_y)\hat{\mathbf i}+(a_zb_x-a_xb_z)\hat{\mathbf j}+(a_xb_y-a_yb_x)\hat{\mathbf k}\\&=\begin{vmatrix}\hat{\mathbf i}&\hat{\mathbf j}&\hat{\mathbf k}\\a_x&a_y&a_z\\b_x&b_y&b_z\end{vmatrix}\end{aligned}\]
+          <p class="tf-x">รูปดีเทอร์มิแนนต์เป็นสัญลักษณ์ช่วยจำการขยาย ไม่ใช่ดีเทอร์มิแนนต์ตัวเลขธรรมดา เพราะแถวแรกมีเวกเตอร์ ขยายแถวแรกได้เครื่องหมาย \(+,-,+\): \(\hat{\mathbf i}(a_yb_z-a_zb_y)-\hat{\mathbf j}(a_xb_z-a_zb_x)+\hat{\mathbf k}(a_xb_y-a_yb_x)\) สูตรบรรทัดแรกกระจายลบของพจน์ \(j\) ให้แล้ว</p>
+        </div>
+        <div class="tf wide" id="C4" data-k="orthogonality checking dot normal perpendicular ตรวจ ตั้งฉาก">
+          <p class="tf-n"><b><span class="fid">C4</span> Orthogonality checks</b> ตรวจคำตอบด้วย Dot product</p>
+          \[(\mathbf a\times\mathbf b)\cdot\mathbf a=0,\qquad(\mathbf a\times\mathbf b)\cdot\mathbf b=0\]
+          <p class="tf-x">คำตอบถูกต้องต้องผ่านทั้งสองเงื่อนไข แต่เงื่อนไขนี้เพียงอย่างเดียวยังตรวจขนาดหรือการกลับเครื่องหมายไม่ได้ ต้องตรวจสูตรองค์ประกอบและกฎมือขวาด้วย</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-cross-components"><div class="wx-head"><span class="mono">ตัวอย่าง C-2 · คิดทีละแกนและตรวจสองวิธี</span><h3>หา \(\mathbf a\times\mathbf b\) เมื่อ \(\mathbf a=(2,-1,3)\), \(\mathbf b=(1,4,-2)\)</h3></div>
+        <ol class="steps"><li><p>แกน \(x\): \(a_yb_z-a_zb_y=(-1)(-2)-(3)(4)=2-12=-10\)</p></li><li><p>แกน \(y\): \(a_zb_x-a_xb_z=(3)(1)-(2)(-2)=3+4=7\) หากใช้ดีเทอร์มิแนนต์ พจน์ในวงเล็บคือ \(-7\) แล้วคูณลบหน้า \(j\) ได้ \(+7\)</p></li><li><p>แกน \(z\): \(a_xb_y-a_yb_x=(2)(4)-(-1)(1)=8+1=9\)</p></li><li><p>ตรวจตั้งฉากกับ \(\mathbf a\): \((-10)(2)+(7)(-1)+(9)(3)=-20-7+27=0\) และกับ \(\mathbf b\): \(-10+28-18=0\)</p></li><li><p>ตรวจขนาด: \(\|\mathbf a\|^2=14\), \(\|\mathbf b\|^2=21\), \(\mathbf a\cdot\mathbf b=-8\) จึง \(\|\mathbf a\times\mathbf b\|^2=14(21)-(-8)^2=230\) ตรงกับ \((-10)^2+7^2+9^2=230\)</p></li></ol>
+        <p class="answer">\(\mathbf a\times\mathbf b=(-10,7,9)\), ขนาด \(\sqrt{230}\approx15.166\)</p>
+      </div>
+      <p>สูตรองค์ประกอบมาจากการแจกแจง \((a_x\hat{\mathbf i}+a_y\hat{\mathbf j}+a_z\hat{\mathbf k})\times(b_x\hat{\mathbf i}+b_y\hat{\mathbf j}+b_z\hat{\mathbf k})\) เป็น 9 พจน์ พจน์ที่คูณฐานเดียวกันหายไป เหลือ 6 พจน์ ใช้ C2 รวมเป็นสามแกน ดังนั้นสูตรไม่ได้เป็นเพียงกฎจำเครื่องหมาย แต่สอดคล้องกับความหมายของฐานทุกพจน์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="two-d">
+      <h2 id="two-d">4. เวกเตอร์ 2 มิติ: องค์ประกอบ z และพื้นที่มีเครื่องหมาย</h2>
+      <p>ถ้าเวกเตอร์อยู่ในระนาบ \(xy\) ให้เติมศูนย์เป็น \(\mathbf a=(a_x,a_y,0)\), \(\mathbf b=(b_x,b_y,0)\) ผลคูณจะชี้ตามแกน \(z\) เท่านั้น บางโปรแกรมคืนค่าตัวเลขเดียว \(a_xb_y-a_yb_x\) เรียกว่า 2D cross แต่ตัวเลขนี้เป็นองค์ประกอบ \(z\) ของ Cross product สามมิติ จึงต้องแยกจากเวกเตอร์ผลลัพธ์</p>
+      <div class="tf-grid">
+        <div class="tf wide" id="C5" data-k="2D signed area orientation clockwise counterclockwise สองมิติ พื้นที่มีเครื่องหมาย ทวนเข็ม">
+          <p class="tf-n"><b><span class="fid">C5</span> Planar signed cross</b> ครอสบนระนาบ</p>
+          \[(a_x,a_y,0)\times(b_x,b_y,0)=(0,0,a_xb_y-a_yb_x),\qquad A_{\rm triangle}=\tfrac12|a_xb_y-a_yb_x|\]
+          <p class="tf-x">เมื่อ \(+x\) ชี้ขวา \(+y\) ชี้ขึ้น และมองจากด้าน \(+z\) เข้าหาจุดกำเนิด ค่าบวกหมายถึงการหมุนจาก \(\mathbf a\) ไป \(\mathbf b\) ทวนเข็มนาฬิกาผ่านมุมไม่เกิน \(180^\circ\); ค่าลบตามเข็ม ระวังพิกัดจอที่แกน \(y\) ชี้ลง เพราะภาพจะดูสลับทิศ</p>
+        </div>
+      </div>
+      <div class="wx" id="ex-cross-area"><div class="wx-head"><span class="mono">ตัวอย่าง C-3 · พื้นที่สามเหลี่ยมจากจุดสามจุด</span><h3>ให้ \(A=(1,1)\), \(B=(5,2)\), \(C=(2,4)\) หาพื้นที่และทิศเรียงจุด</h3></div><ol class="steps"><li><p>สร้างเวกเตอร์จากจุดเริ่มต้นเดียวกัน: \(\overrightarrow{AB}=(4,1)\), \(\overrightarrow{AC}=(1,3)\) อย่า Cross ตำแหน่ง \(B\) กับ \(C\) โดยตรง เพราะสามเหลี่ยมไม่ได้เริ่มที่จุดกำเนิด</p></li><li><p>องค์ประกอบ \(z=4(3)-1(1)=11\) ดังนั้น \(\overrightarrow{AB}\times\overrightarrow{AC}=(0,0,11)\)</p></li><li><p>พื้นที่สามเหลี่ยมคือครึ่งหนึ่งของพื้นที่สี่เหลี่ยม: \(A=11/2=5.5\) ตารางหน่วย เครื่องหมายบวกบอกว่า \(A\to B\to C\) เรียงทวนเข็มในพิกัดมาตรฐาน</p></li></ol><p class="answer">พื้นที่ \(5.5\) ตารางหน่วย · ลำดับจุดทวนเข็มนาฬิกา · หากสลับ \(B,C\) พื้นที่ยังเท่าเดิม แต่เครื่องหมายเปลี่ยน</p></div>
+      <p>ในงาน CAD หรือเมชสามเหลี่ยม เครื่องหมายนี้ช่วยกำหนดการเรียงจุดและด้านหน้าของพื้นผิว เมื่อมีค่าทศนิยมใกล้ศูนย์มาก ควรเทียบกับเกณฑ์ที่สัมพันธ์กับสเกลของพิกัดและความแม่นยำของการวัด ไม่ตัดสินด้วยการเท่ากับศูนย์แบบตัวเลขลอยตัวเพียงอย่างเดียว</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+      <h2 id="properties">5. สมบัติที่ใช้ได้ และเหตุผลที่ห้ามสลับวงเล็บ</h2>
+      <div class="tf-grid">
+        <div class="tf wide" id="C6" data-k="properties distributive bilinear anti commutative สมบัติ แจกแจง สเกลาร์ สลับที่">
+          <p class="tf-n"><b><span class="fid">C6</span> Algebraic properties</b> สมบัติพีชคณิต</p>
+          \[\begin{gathered}\mathbf a\times\mathbf b=-\mathbf b\times\mathbf a,\qquad \mathbf a\times\mathbf a=\mathbf0\\\mathbf a\times(\mathbf b+\mathbf c)=\mathbf a\times\mathbf b+\mathbf a\times\mathbf c\\(\mathbf a+\mathbf b)\times\mathbf c=\mathbf a\times\mathbf c+\mathbf b\times\mathbf c\\(\alpha\mathbf a)\times(\beta\mathbf b)=\alpha\beta(\mathbf a\times\mathbf b)\end{gathered}\]
+          <p class="tf-x">ใช้ได้กับสเกลาร์จริง \(\alpha,\beta\) การดึงสเกลาร์ออกไม่สลับลำดับเวกเตอร์</p>
+        </div>
+        <div class="tf wide" id="C7" data-k="Lagrange identity norm square dot cross sine ตรวจขนาด อัตลักษณ์ ลากรองจ์">
+          <p class="tf-n"><b><span class="fid">C7</span> Lagrange's identity</b> ตรวจขนาดโดยไม่หามุม</p>
+          \[\|\mathbf a\times\mathbf b\|^2=\|\mathbf a\|^2\|\mathbf b\|^2-(\mathbf a\cdot\mathbf b)^2\]
+          <p class="tf-x">มาจาก \(\sin^2\theta=1-\cos^2\theta\) ใช้ตรวจตัวอย่าง C-2 ได้ทันที ถ้าคำนวณตัวเลขลอยตัวแล้วได้ติดลบเล็กน้อยในกรณีเกือบขนาน ให้ตรวจความคลาดเคลื่อนและความแม่นยำก่อนถอดราก</p>
+        </div>
+      </div>
+      <div class="note warn"><b>Cross product ไม่เปลี่ยนกลุ่ม:</b> ให้ \(\mathbf a=\hat{\mathbf i}\), \(\mathbf b=\hat{\mathbf i}\), \(\mathbf c=\hat{\mathbf j}\) จะได้ \((\mathbf a\times\mathbf b)\times\mathbf c=\mathbf0\) แต่ \(\mathbf a\times(\mathbf b\times\mathbf c)=\hat{\mathbf i}\times\hat{\mathbf k}=-\hat{\mathbf j}\) จึงห้ามลบวงเล็บหรือเลื่อนวงเล็บตามใจ</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="normal">
+      <h2 id="normal">6. เวกเตอร์ปกติและสมการระนาบ</h2>
+      <p>สองทิศที่ไม่ขนานกันในระนาบกำหนดทิศตั้งฉากได้ด้วย Cross product หากต้องการปกติหนึ่งหน่วยให้นำผลหารด้วยความยาว ถ้าผลเป็นศูนย์ แสดงว่าสองทิศไม่พอที่จะกำหนดระนาบ ต้องเลือกเวกเตอร์อิสระอีกตัว</p>
+      <div class="tf-grid"><div class="tf wide" id="C8" data-k="normal unit plane surface ระนาบ เวกเตอร์ปกติ หนึ่งหน่วย">
+        <p class="tf-n"><b><span class="fid">C8</span> Normal and plane</b> ปกติหนึ่งหน่วยและสมการระนาบ</p>
+        \[\hat{\mathbf n}=\frac{\mathbf a\times\mathbf b}{\|\mathbf a\times\mathbf b\|},\qquad \mathbf n\cdot(\mathbf x-\mathbf p)=0,\quad \mathbf n=\mathbf a\times\mathbf b\ne\mathbf0\]
+        <p class="tf-x">\(\mathbf p\) เป็นจุดหนึ่งบนระนาบ และ \(\mathbf x=(x,y,z)\) เป็นจุดทั่วไป \(-\hat{\mathbf n}\) ก็เป็นปกติอีกด้านของระนาบเดียวกัน แต่มีผลต่อเครื่องหมายของฟลักซ์และการเรียงเมช</p>
+      </div></div>
+      <div class="wx" id="ex-cross-plane"><div class="wx-head"><span class="mono">ตัวอย่าง C-4 · หา normal ของแผ่นในสามมิติ</span><h3>ระนาบผ่าน \(P=(1,2,-1)\) และขนานกับ \(\mathbf a=(2,-1,3)\), \(\mathbf b=(1,4,-2)\) หาสมการระนาบ</h3></div><ol class="steps"><li><p>ใช้ผลจาก C-2: \(\mathbf n=(-10,7,9)\) ไม่เป็นศูนย์ จึงกำหนดระนาบได้</p></li><li><p>ตั้ง \(\mathbf n\cdot(\mathbf x-\mathbf p)=0\): \(-10(x-1)+7(y-2)+9(z+1)=0\)</p></li><li><p>จัดรูปเป็น \(-10x+7y+9z+5=0\) ตรวจแทน \(P\) ได้ \(-10+14-9+5=0\)</p></li></ol><p class="answer">ระนาบ \(-10x+7y+9z+5=0\) · ปกติหนึ่งหน่วย \(\hat{\mathbf n}=(-10,7,9)/\sqrt{230}\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="triple">
+      <h2 id="triple">7. Scalar triple product: ปริมาตรและการอยู่ร่วมระนาบ</h2>
+      <p>Cross สองเวกเตอร์ให้เวกเตอร์พื้นที่ แล้ว Dot กับเวกเตอร์ตัวที่สามเพื่อดึงเฉพาะความสูงตามปกติ ผลจึงเป็น “พื้นที่ฐาน × ความสูงมีเครื่องหมาย” สังเกตว่าสูตรนี้ให้สเกลาร์ ต่างจาก Cross สองครั้งที่หัวข้อถัดไป</p>
+      <div class="tf-grid"><div class="tf wide" id="C9" data-k="scalar triple volume determinant coplanar ปริมาตร ร่วมระนาบ สามเวกเตอร์">
+        <p class="tf-n"><b><span class="fid">C9</span> Scalar triple product</b> ปริมาตรมีเครื่องหมาย</p>
+        \[s=\mathbf a\cdot(\mathbf b\times\mathbf c)=\begin{vmatrix}a_x&a_y&a_z\\b_x&b_y&b_z\\c_x&c_y&c_z\end{vmatrix},\qquad V_{\rm parallelepiped}=|s|,\qquad V_{\rm tetrahedron}=\frac{|s|}{6}\]
+        <p class="tf-x">หมุนลำดับแบบวงรอบแล้วค่าเดิม: \(\mathbf a\cdot(\mathbf b\times\mathbf c)=\mathbf b\cdot(\mathbf c\times\mathbf a)=\mathbf c\cdot(\mathbf a\times\mathbf b)\) สลับสองตัวแล้วเครื่องหมายกลับ ถ้า \(s=0\) เวกเตอร์สามตัวพึ่งพาเชิงเส้นและอยู่ในระนาบผ่านจุดกำเนิดร่วมกันได้ ปริมาตรเป็นศูนย์</p>
+      </div></div>
+      <div class="wx" id="ex-cross-volume"><div class="wx-head"><span class="mono">ตัวอย่าง C-5 · ปริมาตรกล่องเอียง</span><h3>ขอบจากมุมเดียวกันเป็น \(\mathbf a=(2,0,0)\,\mathrm m\), \(\mathbf b=(1,3,0)\,\mathrm m\), \(\mathbf c=(0,1,4)\,\mathrm m\)</h3></div><ol class="steps"><li><p>หา \(\mathbf b\times\mathbf c=(12,-4,1)\,\mathrm{m^2}\)</p></li><li><p>Dot กับ \(\mathbf a\): \(s=2(12)+0(-4)+0(1)=24\,\mathrm{m^3}\)</p></li><li><p>ตรวจเรขาคณิต: พื้นที่ฐาน \(\|\mathbf a\times\mathbf b\|=6\,\mathrm{m^2}\) ความสูงตามแกน \(z=4\,\mathrm m\) จึง \(6\cdot4=24\,\mathrm{m^3}\)</p></li></ol><p class="answer">กล่องเอียงมีปริมาตร \(24\,\mathrm{m^3}\) · ทรงสี่หน้าที่ใช้สามขอบนี้จากจุดเดียวกันมีปริมาตร \(4\,\mathrm{m^3}\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="vector-triple">
+      <h2 id="vector-triple">8. Vector triple product: สูตร BAC–CAB</h2>
+      <p>ครอสซ้อนครอส เช่น \(\mathbf a\times(\mathbf b\times\mathbf c)\) ยังเป็นเวกเตอร์ โดยผลอยู่ในระนาบที่กางโดย \(\mathbf b,\mathbf c\) อัตลักษณ์ต่อไปนี้ทำให้เปลี่ยน Cross ซ้อนเป็นการคูณเวกเตอร์ด้วยสเกลาร์ Dot ได้ และย้ำว่าต้องรักษาวงเล็บ</p>
+      <div class="tf-grid"><div class="tf wide" id="C10" data-k="vector triple BAC CAB nested cross เวกเตอร์สามชั้น วงเล็บ">
+        <p class="tf-n"><b><span class="fid">C10</span> Vector triple product</b> BAC–CAB และวงเล็บอีกด้าน</p>
+        \[\mathbf a\times(\mathbf b\times\mathbf c)=\mathbf b(\mathbf a\cdot\mathbf c)-\mathbf c(\mathbf a\cdot\mathbf b)\]
+        \[(\mathbf a\times\mathbf b)\times\mathbf c=\mathbf b(\mathbf a\cdot\mathbf c)-\mathbf a(\mathbf b\cdot\mathbf c)\]
+        <p class="tf-x">จำ BAC–CAB สำหรับสูตรแรก: เวกเตอร์ \(b\) คูณ Dot ของ \(a,c\) ลบเวกเตอร์ \(c\) คูณ Dot ของ \(a,b\) สูตรที่สองมีเวกเตอร์ตัวหลังพจน์ลบต่างกัน จึงห้ามเปลี่ยนกลุ่ม</p>
+      </div><div class="tf wide" id="C11" data-k="double cross perpendicular projection หนึ่งหน่วย ฉาย ตั้งฉาก">
+        <p class="tf-n"><b><span class="fid">C11</span> Double cross and projection</b> ดึงส่วนตั้งฉากกับแนวหนึ่งหน่วย</p>
+        \[\hat{\mathbf u}\times(\mathbf a\times\hat{\mathbf u})=\mathbf a-(\mathbf a\cdot\hat{\mathbf u})\hat{\mathbf u}=\mathbf a_\perp,\qquad\|\hat{\mathbf u}\|=1\]
+        <p class="tf-x">สูตรนี้เชื่อมกับ <a href="/learn/vector-algebra/components-projection/">Component และ Projection</a> เพราะแยกส่วนขนานออก เหลือส่วนตั้งฉาก หากใช้ \(\hat{\mathbf u}\times(\hat{\mathbf u}\times\mathbf a)\) จะได้ \(-\mathbf a_\perp\) เนื่องจากลำดับกลับกัน</p>
+      </div></div>
+      <div class="wx" id="ex-cross-double"><div class="wx-head"><span class="mono">ตัวอย่าง C-6 · ดึงองค์ประกอบบนระนาบ xy</span><h3>ให้ \(\mathbf a=(3,4,5)\), \(\hat{\mathbf u}=\hat{\mathbf k}\) คำนวณ \(\hat{\mathbf u}\times(\mathbf a\times\hat{\mathbf u})\)</h3></div><ol class="steps"><li><p>ครอสด้านใน: \((3,4,5)\times(0,0,1)=(4,-3,0)\)</p></li><li><p>ครอสด้านนอก: \((0,0,1)\times(4,-3,0)=(3,4,0)\)</p></li><li><p>ตรวจ C11: \(\mathbf a\cdot\hat{\mathbf k}=5\) จึง \(\mathbf a-5\hat{\mathbf k}=(3,4,0)\)</p></li></ol><p class="answer">ผล \((3,4,0)\) คือส่วนของ \(\mathbf a\) ที่ตั้งฉากกับแกน \(z\) ไม่ใช่ส่วนขนานกับแกน \(z\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+      <h2 id="engineering">9. เหตุใดวิศวกรรมจึงใช้ Cross product</h2>
+      <div class="table-wrap"><table><thead><tr><th>งาน</th><th>สูตร</th><th>ความหมาย</th></tr></thead><tbody><tr><td>โมเมนต์แรงรอบจุด O</td><td>\(\boldsymbol\tau_O=\mathbf r_{OP}\times\mathbf F\)</td><td>ขนาดวัดการหมุน ทิศบอกแกนหมุน โดย \(\mathbf r\) เริ่มจากจุดอ้างอิงไปจุดออกแรง</td></tr><tr><td>แรงแม่เหล็กต่อประจุ</td><td>\(\mathbf F_B=q\mathbf v\times\mathbf B\)</td><td>ตั้งฉากกับความเร็วและสนาม ประจุลบกลับทิศจากกฎมือขวา</td></tr><tr><td>แรงต่อสายตรงในสนามสม่ำเสมอ</td><td>\(\mathbf F_B=I\mathbf L\times\mathbf B\)</td><td>\(\mathbf L\) ชี้ตามกระแสแบบดั้งเดิม เฉพาะส่วนสายที่อยู่ในสนาม</td></tr><tr><td>หุ่นยนต์ข้อต่อหมุน</td><td>\(\mathbf v=\boldsymbol\omega\times\mathbf r\)</td><td>ความเร็วสัมผัสตั้งฉากกับแนวรัศมี</td></tr></tbody></table></div>
+      <p>ดูโจทย์ที่แทนค่าหน่วยจริง พร้อมเงื่อนไขการใช้สูตรและการตรวจความสมเหตุผลได้ที่ <a href="/learn/vector-algebra/engineering-applications/">การประยุกต์เวกเตอร์ทางวิศวกรรม</a> หรือทดลองเปลี่ยนองค์ประกอบและดูทิศผลคูณใน <a href="/learn/vector-algebra/vector-lab/">Vector Lab</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+      <h2 id="mistakes">10. ข้อผิดพลาดที่พบบ่อยและวิธีตรวจ</h2>
+      <ul class="la-check"><li><b>คิดว่า Cross ให้ตัวเลขเหมือน Dot:</b> Cross ในบทนี้ให้เวกเตอร์สามองค์ประกอบ ส่วนขนาดของมันเป็นสเกลาร์</li><li><b>ลืมลบของแกน y:</b> ใช้ \(a_zb_x-a_xb_z\) หรือใช้โคแฟกเตอร์ \(-\hat{\mathbf j}(a_xb_z-a_zb_x)\) อย่างใดอย่างหนึ่ง อย่าใส่ลบซ้ำ</li><li><b>สลับลำดับโดยคิดว่าไม่ต่าง:</b> เขียนชื่อเวกเตอร์ตัวแรกและตัวที่สองไว้เสมอ เช่นโมเมนต์ใช้ \(\mathbf r\times\mathbf F\)</li><li><b>ผลเป็นศูนย์แล้วหารหาปกติหนึ่งหน่วย:</b> หารด้วยศูนย์ไม่ได้ ต้องเลือกสองทิศที่ไม่ขนานกัน</li><li><b>พื้นที่สามเหลี่ยมไม่หารสอง หรือปริมาตรทรงสี่หน้าไม่หารหก:</b> ขนาด Cross คือพื้นที่สี่เหลี่ยมด้านขนาน และขนาด scalar triple คือปริมาตรกล่องเอียง</li><li><b>ใช้เวกเตอร์คนละระบบพิกัด:</b> แปลงให้เป็นฐานเดียวกันก่อน ผลในฐานมือซ้ายต้องจัดการข้อตกลงการวางแนวอย่างถูกต้อง</li><li><b>นำเฟสเซอร์ AC มาอ่านเป็นลูกศรในอวกาศ:</b> มุมเฟสในระนาบเชิงซ้อนแสดงความสัมพันธ์ตามเวลา ไม่ใช่มุมระหว่างแรงหรือสนามใน \(\mathbb R^3\) โดยอัตโนมัติ</li></ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+      <h2 id="practice">11. แบบฝึกหัดพร้อมเฉลย</h2>
+      <p>ลองทำโดยปิดเฉลยก่อน ทุกข้อควรเขียนลำดับเวกเตอร์และตรวจทิศหรือหน่วยอย่างน้อยหนึ่งวิธี</p>
+      <ol><li>ให้ \(\mathbf a=(1,2,0)\), \(\mathbf b=(3,-1,0)\) หา Cross และพื้นที่สามเหลี่ยมที่กางด้วยสองเวกเตอร์</li><li>ให้ \(\mathbf a=(1,0,2)\), \(\mathbf b=(0,3,1)\) หา Cross และตรวจว่าตั้งฉากกับทั้งคู่</li><li>เวกเตอร์สองตัวมีขนาด 5 และ 8 ทำมุม \(30^\circ\) พื้นที่สี่เหลี่ยมด้านขนานและสามเหลี่ยมเท่าไร?</li><li>ให้ \(\mathbf a=(2,4,6)\), \(\mathbf b=(-1,-2,-3)\) หา Cross และอธิบายเหตุผลทางเรขาคณิต</li><li>ให้ขอบ \((1,0,0)\), \((0,2,0)\), \((1,1,3)\) หน่วยเมตร หา scalar triple และปริมาตรทรงสี่หน้า</li><li>ให้ \(\mathbf a=(2,-1,4)\), \(\hat{\mathbf u}=\hat{\mathbf i}\) หา \(\hat{\mathbf u}\times(\mathbf a\times\hat{\mathbf u})\)</li></ol>
+      <details class="note"><summary>เปิดเฉลยและจุดตรวจคำตอบ</summary><ol><li>\(\mathbf a\times\mathbf b=(0,0,-7)\) เพราะ \(1(-1)-2(3)=-7\) พื้นที่สามเหลี่ยม \(7/2=3.5\) ตารางหน่วย</li><li>\((-6,-1,3)\); Dot กับ \(\mathbf a\) ได้ \(-6+6=0\) และกับ \(\mathbf b\) ได้ \(-3+3=0\)</li><li>สี่เหลี่ยม \(5\cdot8\cdot\sin30^\circ=20\) ตารางหน่วย สามเหลี่ยม 10 ตารางหน่วย</li><li>\(\mathbf0\) เพราะ \(\mathbf a=-2\mathbf b\) จึงอยู่แนวเดียวกันและสวนทาง</li><li>scalar triple \(s=6\,\mathrm{m^3}\) เพราะ \((0,2,0)\times(1,1,3)=(6,0,-2)\); ทรงสี่หน้า \(|s|/6=1\,\mathrm{m^3}\)</li><li>\(\mathbf a-(\mathbf a\cdot\hat{\mathbf i})\hat{\mathbf i}=(0,-1,4)\) เป็นส่วนตั้งฉากกับแกน \(x\)</li></ol></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+      <h2 id="summary">12. สรุปสูตร Cross product</h2>
+      <div class="table-wrap"><table><thead><tr><th>ต้องการหา</th><th>สูตร</th><th>รหัส</th></tr></thead><tbody><tr><td>ขนาดผลคูณ</td><td>\(\|\mathbf a\|\|\mathbf b\|\sin\theta\)</td><td><a href="#C1">C1</a></td></tr><tr><td>องค์ประกอบ</td><td>\((a_yb_z-a_zb_y,\ a_zb_x-a_xb_z,\ a_xb_y-a_yb_x)\)</td><td><a href="#C3">C3</a></td></tr><tr><td>ตรวจตั้งฉาก</td><td>\((\mathbf a\times\mathbf b)\cdot\mathbf a=(\mathbf a\times\mathbf b)\cdot\mathbf b=0\)</td><td><a href="#C4">C4</a></td></tr><tr><td>พื้นที่สามเหลี่ยม</td><td>\(\tfrac12\|\mathbf a\times\mathbf b\|\)</td><td><a href="#C5">C5</a></td></tr><tr><td>ตรวจขนาด</td><td>\(\|\mathbf a\times\mathbf b\|^2=\|\mathbf a\|^2\|\mathbf b\|^2-(\mathbf a\cdot\mathbf b)^2\)</td><td><a href="#C7">C7</a></td></tr><tr><td>ปกติหนึ่งหน่วย</td><td>\((\mathbf a\times\mathbf b)/\|\mathbf a\times\mathbf b\|\)</td><td><a href="#C8">C8</a></td></tr><tr><td>ปริมาตรกล่องเอียง</td><td>\(|\mathbf a\cdot(\mathbf b\times\mathbf c)|\)</td><td><a href="#C9">C9</a></td></tr><tr><td>Cross ซ้อน</td><td>\(\mathbf a\times(\mathbf b\times\mathbf c)=\mathbf b(\mathbf a\cdot\mathbf c)-\mathbf c(\mathbf a\cdot\mathbf b)\)</td><td><a href="#C10">C10</a></td></tr></tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sources">
+      <h2 id="sources">13. แหล่งอ่านต่อและขอบเขตของบทเรียน</h2>
+      <p>เนื้อหานี้ใช้เวกเตอร์จริงในปริภูมิยุคลิดและฐานคาร์ทีเซียนแบบมือขวา ตัวอย่างตัวเลขเป็นโจทย์สาธิตที่เขียนขึ้นเพื่ออธิบายสูตร ไม่ใช่ข้อมูลทดสอบอุปกรณ์จริง อ่านนิยามและพิสูจน์เพิ่มเติมจากตำราเปิดต่อไปนี้</p>
+      <ul><li><a href="https://openstax.org/books/calculus-volume-3/pages/2-4-the-cross-product" target="_blank" rel="noopener">OpenStax, Calculus Volume 3 — §2.4 The Cross Product</a>: กฎมือขวา องค์ประกอบ พื้นที่ Scalar triple product และการประยุกต์โมเมนต์</li><li><a href="https://openstax.org/books/university-physics-volume-1/pages/10-6-torque" target="_blank" rel="noopener">OpenStax, University Physics Volume 1 — §10.6 Torque</a>: แขนโมเมนต์และความหมายทางกายภาพของ \(\mathbf r\times\mathbf F\)</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/11-2-magnetic-fields-and-lines" target="_blank" rel="noopener">OpenStax, University Physics Volume 2 — §11.2 Magnetic Fields and Lines</a>: แรงแม่เหล็กต่อประจุและกฎมือขวา</li></ul>
+      <p>บทถัดไป <a href="/learn/vector-algebra/engineering-applications/">การประยุกต์เวกเตอร์ทางวิศวกรรม</a> จะรวมการบวก การฉาย Dot และ Cross เพื่อแก้โจทย์แรง งาน โมเมนต์ และสนามแม่เหล็กอย่างเป็นขั้นตอน</p>
+    </section>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>
