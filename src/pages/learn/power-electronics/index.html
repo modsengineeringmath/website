@@ -1,0 +1,161 @@
+<!--meta
+{
+  "title": "อิเล็กทรอนิกส์กำลัง (Power Electronics): บั๊ก บูสต์ บั๊ก-บูสต์ ชุค ตัวชดเชย การควบคุม และแล็บจำลองฟรี | อาจารย์มด",
+  "h1": "อิเล็กทรอนิกส์กำลัง (Power Electronics)",
+  "description": "เรียนอิเล็กทรอนิกส์กำลังภาษาไทยตั้งแต่พื้นฐานถึงระดับปริญญาโท 18 หน้า: บั๊ก บูสต์ บั๊ก-บูสต์ ชุคคอนเวอร์เตอร์ volt-second balance ริปเปิล CCM/DCM แบบจำลองสัญญาณเล็ก ออกแบบตัวชดเชย Type II Type III peak current mode ควบคุมด้วยออปแอมป์และไมโครคอนโทรลเลอร์ ตัวสังเกตกระแส AI ช่วยควบคุม ออกแบบตัวเหนี่ยวนำ แหล่งจ่ายทดสอบ เลือกชิปควบคุม SMPS เทคนิคหน้างาน วิเคราะห์อาการเสีย และแล็บจำลองคอนเวอร์เตอร์พร้อมออสซิลโลสโคปฟรี",
+  "ogTitle": "อิเล็กทรอนิกส์กำลัง: จากบั๊กคอนเวอร์เตอร์ถึงตัวชดเชย + แล็บจำลองฟรี",
+  "lesson": "power-electronics",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Power electronics", "DC-DC converter", "Buck converter", "Boost converter", "Buck-boost converter", "Ćuk converter", "Compensator", "Switched-mode power supply", "Inductor design"],
+  "scripts": ["/assets/lesson.js", "/assets/pe-sim.js", "/assets/pe-lab.js"],
+  "jsonld": [
+    {
+      "@type": "Course",
+      "@id": "https://modsengineeringmath.com/learn/power-electronics/#course",
+      "name": "อิเล็กทรอนิกส์กำลัง (Power Electronics)",
+      "alternateName": ["Power Electronics (Thai)", "วงจรแปลงผันกำลัง", "DC-DC Converters"],
+      "description": "ชุดบทเรียน 18 หน้าและแล็บจำลอง: วงจรแปลงผัน DC-DC (บั๊ก บูสต์ บั๊ก-บูสต์ ชุค) แบบจำลองสัญญาณเล็ก ตัวชดเชย การควบคุมแบบอนาล็อกและดิจิทัล ตัวสังเกต AI ออกแบบตัวเหนี่ยวนำ แหล่งจ่ายทดสอบ เลือกชิป SMPS เทคนิคหน้างาน และวิเคราะห์อาการเสีย",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "educationalLevel": ["Undergraduate", "Graduate"],
+      "teaches": ["Volt-second and charge balance", "Buck, boost, buck-boost and Cuk converters", "CCM and DCM", "State-space averaging", "Type II and Type III compensator design", "Peak current mode and slope compensation", "Digital control of converters", "State observers", "Power inductor design", "Converter troubleshooting"],
+      "coursePrerequisites": ["https://modsengineeringmath.com/learn/laplace-transform/", "https://modsengineeringmath.com/learn/control-systems/"],
+      "provider": {"@id": "https://modsengineeringmath.com/#mod"},
+      "url": "https://modsengineeringmath.com/learn/power-electronics/",
+      "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT20H"},
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB", "category": "Free"}
+    }
+  ],
+  "faq": [
+    {"q": "ควรเริ่มเรียนอิเล็กทรอนิกส์กำลังจากหัวข้อไหน?", "a": "เริ่มจากบั๊กคอนเวอร์เตอร์ เพราะใช้หลัก volt-second balance และ charge balance ที่ใช้ได้กับทุกวงจร แล้วลองในแล็บจำลอง จากนั้นค่อยไปบูสต์ บั๊ก-บูสต์ ชุค และการควบคุม"},
+    {"q": "ต้องรู้คณิตศาสตร์อะไรก่อน?", "a": "สมการเชิงอนุพันธ์อันดับหนึ่งและสอง Laplace transform ฟังก์ชันถ่ายโอนและ Bode plot เมทริกซ์และ state space สำหรับแบบจำลอง และ z-transform สำหรับการควบคุมดิจิทัล ทุกหัวข้อมีบทเรียนบนเว็บนี้"},
+    {"q": "แล็บจำลองใช้ทำอะไรได้บ้าง?", "a": "จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ และชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้านผ่านเรกติไฟเออร์ หรือโซลาร์เซลล์ เลือกโหลดและตัวควบคุม ดูรูปคลื่นบนออสซิลโลสโคป 2 ช่อง ฉีดสัญญาณจากฟังก์ชันเจนเนอเรเตอร์ และคำนวณตัวเหนี่ยวนำ มีใบงาน 10 ชุด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>อิเล็กทรอนิกส์กำลัง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13 · Power Electronics · ป.ตรี → ป.โท</p>
+      <h1>อิเล็กทรอนิกส์กำลัง (Power Electronics)</h1>
+      <p class="lede">อิเล็กทรอนิกส์กำลังคือการแปลงและควบคุมพลังงานไฟฟ้าด้วยสวิตช์สารกึ่งตัวนำให้มีประสิทธิภาพสูงสุด ตั้งแต่ที่ชาร์จโทรศัพท์จนถึงอินเวอร์เตอร์รถยนต์ไฟฟ้า หัวใจของวิชาไม่ใช่การจำวงจร แต่คือคณิตศาสตร์ของการสวิตช์ — volt-second balance การเฉลี่ยสถานะ Laplace และ z-transform — แล้วนำไปออกแบบ วัด และแก้ปัญหาของจริง ชุดนี้มี 18 หน้า <!--formula-count:power-electronics--> สูตรที่มีรหัสอ้างอิงถาวร <!--example-count:power-electronics--> ตัวอย่างวิธีทำ และแล็บจำลองที่ใช้ได้ทันทีในเบราว์เซอร์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="/learn/power-electronics/buck-converter/">เริ่มที่บั๊กคอนเวอร์เตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/power-electronics/converter-lab/">แล็บจำลอง</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">ค้นหาสูตร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สถานะคงตัว: \(\langle v_L\rangle = 0\) (volt-second) และ \(\langle i_C\rangle = 0\) (charge) ให้อัตราส่วนแปลงผันของทุกวงจร</li>
+          <li>บั๊ก \(D\) · บูสต์ \(\frac{1}{1-D}\) · บั๊ก-บูสต์และชุค \(-\frac{D}{1-D}\)</li>
+          <li>เฉลี่ยตลอดคาบแล้ว linearize ได้ \(G_{vd}(s)\) → ออกแบบตัวชดเชยด้วย Bode</li>
+          <li>ของจริงพังที่ layout การวัด และแม่เหล็ก มากกว่าที่สมการ — ดูหมวดภาคปฏิบัติ</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปวส. · ป.ตรี ปี 2–3</span><span><span class="lv lv-i">กลาง</span> ป.ตรี ปี 3–4</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="ratio">
+    <h2 id="ratio">สมการที่ต้องรู้ตั้งแต่วันแรก <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ในสถานะคงตัว แรงดันเฉลี่ยบนตัวเหนี่ยวนำและกระแสเฉลี่ยของตัวเก็บประจุเป็นศูนย์ สองบรรทัดนี้ให้อัตราส่วนแปลงผัน \(M(D)\) ของทุกวงจร</p>
+    <p>\[ \langle v_L\rangle = \frac{1}{T_s}\int_0^{T_s} v_L\,dt = 0 \qquad \langle i_C\rangle = \frac{1}{T_s}\int_0^{T_s} i_C\,dt = 0 \]</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วงจร</th><th>\(V_o/V_{in}\) (CCM)</th><th>แรงดันบนสวิตช์</th><th>กระแสขาเข้า</th><th>ข้อสังเกตด้านควบคุม</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/learn/power-electronics/buck-converter/">บั๊ก</a></td><td>\(D\)</td><td>\(V_{in}\)</td><td>เป็นพัลส์</td><td>ไม่มี RHP zero ควบคุมง่าย</td></tr>
+        <tr><td><a href="/learn/power-electronics/boost-converter/">บูสต์</a></td><td>\(\dfrac{1}{1-D}\)</td><td>\(V_o\)</td><td>ต่อเนื่อง</td><td>มี RHP zero</td></tr>
+        <tr><td><a href="/learn/power-electronics/buck-boost-converter/">บั๊ก-บูสต์</a></td><td>\(-\dfrac{D}{1-D}\)</td><td>\(V_{in}+|V_o|\)</td><td>เป็นพัลส์</td><td>มี RHP zero กลับขั้ว</td></tr>
+        <tr><td><a href="/learn/power-electronics/cuk-converter/">ชุค</a></td><td>\(-\dfrac{D}{1-D}\)</td><td>\(V_{in}+|V_o|\)</td><td>ต่อเนื่อง (เข้าและออก)</td><td>อันดับสี่ ต้องหน่วง</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="start">
+    <h2 id="start">เริ่มตามระดับของคุณ</h2>
+    <div class="la-levels">
+      <div class="la-level">
+        <p><span class="lv lv-b">พื้นฐาน</span></p>
+        <p>ปวส. ป.ตรี ปีแรก ๆ หรือช่างที่อยากเข้าใจว่าวงจรทำงานอย่างไร</p>
+        <p><a href="/learn/power-electronics/buck-converter/">บั๊ก</a> → <a href="/learn/power-electronics/converter-lab/">แล็บจำลอง</a> → <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a> → <a href="/learn/power-electronics/engineering-techniques/">เทคนิคหน้างาน</a></p>
+      </div>
+      <div class="la-level">
+        <p><span class="lv lv-i">กลาง</span></p>
+        <p>ป.ตรี ปี 3–4 ที่ต้องออกแบบวงจรและลูปควบคุมจริง</p>
+        <p><a href="/learn/power-electronics/boost-converter/">บูสต์</a> → <a href="/learn/power-electronics/small-signal-model/">แบบจำลองสัญญาณเล็ก</a> → <a href="/learn/power-electronics/compensator-design/">ตัวชดเชย</a> → <a href="/learn/power-electronics/analog-control/">ออปแอมป์</a> → <a href="/learn/power-electronics/inductor-design/">ตัวเหนี่ยวนำ</a></p>
+      </div>
+      <div class="la-level">
+        <p><span class="lv lv-a">ขั้นสูง</span></p>
+        <p>ป.โท งานวิจัย และวิศวกรออกแบบผลิตภัณฑ์</p>
+        <p><a href="/learn/power-electronics/cuk-converter/">ชุค</a> → <a href="/learn/power-electronics/digital-control/">ควบคุมดิจิทัล</a> → <a href="/learn/power-electronics/observers/">ตัวสังเกต</a> → <a href="/learn/power-electronics/ai-control/">AI ช่วยควบคุม</a></p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">ทุกบทในชุดนี้</h2>
+    <!--series-cards:power-electronics-->
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">ลองเลย: แล็บคอนเวอร์เตอร์ขนาดเล็ก</h2>
+    <p>บั๊ก 24 V → 12 V แบบ open loop เปลี่ยนวงจร duty ค่า L C หรือโหลด แล้วดูกระแสตัวเหนี่ยวนำและแรงดันขาออกบนสโคปทันที ฉบับเต็มพร้อมเครื่องคำนวณตัวเหนี่ยวนำและใบงานอยู่ที่ <a href="/learn/power-electronics/converter-lab/">แล็บจำลอง</a></p>
+    <div class="pe-lab" id="peTry" data-topo="buck" data-preset="buck-basic" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">ค้นหาสูตรทั้งหมดในที่เดียว</h2>
+    <p>ทุกสูตรมีรหัสถาวร (B บั๊ก · U บูสต์ · W บั๊ก-บูสต์ · K ชุค · S แบบจำลอง · C ตัวชดเชย · A อนาล็อก · Z ดิจิทัล · O ตัวสังเกต · L ตัวเหนี่ยวนำ · V แหล่งจ่าย) อ้างอิงข้ามหน้าได้</p>
+    <!--formula-index:power-electronics-->
+    </section>
+
+    <section class="tsec" aria-labelledby="prereq">
+    <h2 id="prereq">คณิตศาสตร์ที่ใช้ และอยู่ตรงไหนบนเว็บนี้</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ความรู้</th><th>ใช้ทำอะไรในวิชานี้</th><th>บทเรียน</th></tr></thead>
+      <tbody>
+        <tr><td>สมการเชิงอนุพันธ์อันดับ 1–2</td><td>ไฟฟ้าบน L C RLC ระหว่างสวิตช์</td><td><a href="/learn/first-order-system/">ระบบอันดับ 1</a> · <a href="/learn/second-order-system/">ระบบอันดับ 2</a></td></tr>
+        <tr><td>Laplace ฟังก์ชันถ่ายโอน Bode</td><td>แบบจำลองสัญญาณเล็ก ตัวชดเชย</td><td><a href="/learn/laplace-transform/">Laplace</a> · <a href="/learn/control-systems/bode-plot/">Bode</a></td></tr>
+        <tr><td>เมทริกซ์และ state space</td><td>state-space averaging ตัวสังเกต</td><td><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a> · <a href="/learn/control-systems/state-space/">state space</a></td></tr>
+        <tr><td>อนุกรมฟูเรียร์</td><td>ริปเปิล ฮาร์มอนิก EMI</td><td><a href="/learn/fourier-series/dc-dc-converters/">ฟูเรียร์ในคอนเวอร์เตอร์ DC-DC</a></td></tr>
+        <tr><td>z-transform</td><td>การควบคุมดิจิทัล</td><td><a href="/learn/control-systems/digital-control/">ระบบควบคุมดิจิทัล</a></td></tr>
+        <tr><td>ออปแอมป์และสโคป</td><td>error amplifier การวัดในแล็บ</td><td><a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a> · <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">หัวข้อที่จะเพิ่มต่อไป</h2>
+    <p>ชุดนี้ออกแบบให้ขยายได้ บทถัดไปตามลำดับ: SEPIC และ Zeta · synchronous และ interleaved converter · วงจรเรียงกระแสและ PFC · LLC resonant และ soft switching · Dual Active Bridge · อินเวอร์เตอร์ SPWM/SVPWM และการควบคุมแบบ dq · SiC/GaN · EV charger</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">ตำราอ้างอิงมาตรฐาน</h2>
+    <ol>
+      <li>R. W. Erickson &amp; D. Maksimović, <i>Fundamentals of Power Electronics</i>, 3rd ed., Springer — มาตรฐานด้านแบบจำลองและการควบคุม</li>
+      <li>N. Mohan, T. Undeland, W. Robbins, <i>Power Electronics: Converters, Applications, and Design</i> — ภาพรวมกว้าง</li>
+      <li>M. K. Kazimierczuk, <i>Pulse-Width Modulated DC-DC Power Converters</i> — สูตรออกแบบละเอียด</li>
+      <li>C. Basso, <i>Designing Control Loops for Linear and Switching Power Supplies</i> — ตัวชดเชยเชิงปฏิบัติ</li>
+      <li>R. D. Middlebrook &amp; S. Ćuk (1976), "A General Unified Approach to Modelling Switching-Converter Power Stages" — ต้นกำเนิด state-space averaging</li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

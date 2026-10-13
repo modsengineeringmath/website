@@ -117,3 +117,22 @@ the formula (`<div class="wtfig"><!--FIG:fs-wt-…--><!--/FIG--></div>`) and the
 - Worked-example numbers were checked with numpy/scipy/sympy and against the lab engine (Node) before publishing.
 - Short URLs (`/fourier`, `/harmonics`, `/thd`, `/ieee519`, `/harmonic-analyzer`, `/power-analyzer`, `/parseval`, `/gibbs`,
   `/spwm`, `/fft` …) are in `_redirects`.
+
+## Power electronics (added 2026-10-13)
+Series `power-electronics` in `TOPICS` (build.mjs), topic 13, 4 parts × 17 sub-pages: DC-DC (buck-converter B, boost-converter U,
+buck-boost-converter W, cuk-converter K), control (small-signal-model S, compensator-design C, analog-control A, digital-control Z,
+observers O, ai-control), hardware (inductor-design L, test-power-sources V, controller-selection, switching-power-supply),
+practice (engineering-techniques, troubleshooting, converter-lab). Formula cards use the same markup as the other series and appear
+in the hub's formula index; the series is in `MD_SERIES` (Markdown copies for AI assistants).
+- Engine `assets/pe-sim.js` (`window.PESim`; in Node copy it to `.cjs` because package.json is `"type": "module"`): switching-level
+  simulator (fixed step ≈ Ts/120) of buck / boost / inverting buck-boost / Cuk with Rds(on), diode Vf, DCR, ESR, CCM/DCM; sources
+  battery / 50 Hz mains through transformer + bridge + bulk C / PV single-diode model; loads R / constant current / step; control
+  open loop, digital voltage-mode PI (anti-windup, soft-start), peak current mode + slope compensation, P&O MPPT (measures panel
+  power, perturbs every 4 ms, step ≥ the simulator's PWM resolution); `designCalc` for L/C sizing. Checked against the textbook
+  equations (buck 24→12 V, boost 24→48 V, PV MPP 96 W at 18.6 V).
+- UI `assets/pe-lab.js`: `<div class="pe-lab" data-topo="buck|boost|buckboost|cuk" data-preset="<name>" [data-compact] [data-full-link] [data-hash]>`
+  — 2-channel oscilloscope (min/max envelope), function generator into Vref or duty, sources, loads, controller, L/C + turns calculator.
+  Presets are in `PRESETS` at the top of `pe-lab.js`; `<button data-pe-preset="<name>" [data-pe-target="<lab id>"]>` loads one;
+  `/learn/power-electronics/converter-lab/#preset=<name>` opens the full lab with it. Styles: "POWER ELECTRONICS CONVERTER LAB" in site.css.
+- Short URLs (`/power-electronics`, `/pe`, `/buck`, `/boost`, `/cuk`, `/compensator`, `/type-iii`, `/smps`, `/converter-lab` …) are in `_redirects`.
+- Next topics planned on the hub: SEPIC/Zeta, synchronous & interleaved, rectifiers & PFC, LLC & soft switching, DAB, inverters, SiC/GaN, EV charger.

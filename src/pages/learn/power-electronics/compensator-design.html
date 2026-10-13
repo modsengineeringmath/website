@@ -1,0 +1,190 @@
+<!--meta
+{
+  "title": "ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation | อาจารย์มด",
+  "h1": "ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation",
+  "description": "ออกแบบตัวชดเชย (compensator) ของคอนเวอร์เตอร์ DC-DC ด้วยออปแอมป์: เป้าหมายลูป phase margin gain margin ข้อจำกัดความถี่ครอสโอเวอร์ วิธี k-factor ของ Venable สูตรค่า R C ของ Type II และ Type III ตัวอย่างบั๊ก 24 V ได้ fc 5.4 kHz PM 62° ตรวจด้วย python-control และ peak current mode กับ slope compensation",
+  "ogTitle": "ออกแบบตัวชดเชย · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "compensator-design",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Compensator",
+    "Type III compensator",
+    "Phase margin",
+    "Peak current mode control",
+    "Slope compensation"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "เลือก Type II หรือ Type III อย่างไร?",
+      "a": "ดูเฟสที่ต้องเพิ่ม ถ้าน้อยกว่า 90° ใช้ Type II ได้ ซึ่งมักเป็นกรณี current mode หรือ DCM ถ้าพืชมีขั้วคู่ LC ที่ทำให้เฟสตกเกือบ 180° อย่าง voltage mode ใน CCM ต้องใช้ Type III ที่ให้เฟสได้ถึง 180°"
+    },
+    {
+      "q": "subharmonic oscillation คืออะไร?",
+      "a": "ใน peak current mode เมื่อ duty เกิน 0.5 การรบกวนของกระแสตัวเหนี่ยวนำจะขยายขึ้นทุกคาบ เห็นเป็นกระแสคาบคู่คาบคี่ไม่เท่ากันที่ความถี่ fs/2 แก้ด้วยการเพิ่มความชันชดเชยอย่างน้อยครึ่งหนึ่งของความชันขาลงของกระแส"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ออกแบบตัวชดเชย</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.6 · อิเล็กทรอนิกส์กำลัง · Compensator Design</p>
+      <h1>ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation</h1>
+      <p class="lede">เป้าหมายลูป เฟสมาร์จิน ขีดจำกัดความถี่ครอสโอเวอร์ สูตรค่า R C ของ Type II/III ด้วย k-factor ตัวอย่างบั๊กที่ตรวจด้วย python-control และ peak current mode</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#compensator-types">ชนิดตัวชดเชย</a>
+        <a class="btn btn-ghost btn-sm" href="#k-factor">วิธี k-factor</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f_c \le f_s/10\) และ \(\le f_{RHPZ}/5\), PM 45–70°</li>
+          <li>Boost เฟส = PM − P − 90° แล้วเลือก Type ตามที่ต้องการ</li>
+          <li>Type III: \(k = \tan^2(\text{Boost}/4 + 45^\circ)\)</li>
+          <li>PCMC ที่ D มากกว่า 0.5 ต้อง slope comp \(m_a \ge m_2/2\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>@@H2 loop-goals|เป้าหมายของลูป@@
+\(T(s) = G_c(s)\,F_m\,G_{vd}(s)\,H\) ต้องให้</p>
+<ul>
+<li><strong>ความถี่ตัดข้าม</strong> \(f_c\): สูงพอให้ตอบสนองเร็ว แต่ต่ำกว่าขีดจำกัดทางกายภาพ</li>
+<li><strong>Phase margin</strong> 45–70° (60° ≈ overshoot ต่ำ, ไม่ช้าเกิน), <strong>Gain margin</strong> ≥ 10 dB</li>
+<li>อินทิเกรเตอร์ที่ DC → ความผิดพลาดสถานะคงตัวเป็นศูนย์</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ข้อจำกัดของ \(f_c\)</th>
+<th>เหตุผล</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\(f_c \le f_s/10\) (อนาล็อก), \(\le f_s/20\) (ดิจิทัล)</td>
+<td>สมมติฐานการเฉลี่ย + delay ของการสุ่ม</td>
+</tr>
+<tr>
+<td>\(f_c \le f_{RHPZ}/5\)</td>
+<td>boost / buck-boost (ประเมินที่ \(V_{in,min}\), \(I_{max}\))</td>
+</tr>
+<tr>
+<td>\(f_c\) ต่ำกว่าเรโซแนนซ์ของ input filter</td>
+<td>เกณฑ์ Middlebrook</td>
+</tr>
+</tbody></table></div>
+</section>
+
+    <section class="tsec" aria-labelledby="compensator-types">
+    <h2 id="compensator-types">ชนิดตัวชดเชย (Op-amp, ป้อนจาก \(R_1\) เข้าขา inverting)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ชนิด</th>
+<th>ฟังก์ชันถ่ายโอน</th>
+<th>ให้เฟสเพิ่ม</th>
+<th>ใช้กับ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Type I</td>
+<td>\(\dfrac{1}{sR_1C_1}\)</td>
+<td>0°</td>
+<td>ระบบขั้วเดียวช้าๆ</td>
+</tr>
+<tr>
+<td>Type II</td>
+<td>\(\dfrac{1+sR_2C_1}{sR_1(C_1+C_2)\left(1+sR_2\frac{C_1C_2}{C_1+C_2}\right)}\)</td>
+<td>สูงสุด 90°</td>
+<td>Current mode, DCM, buck ที่ ESR zero ต่ำ</td>
+</tr>
+<tr>
+<td>Type III</td>
+<td>Type II × \(\dfrac{1+s(R_1+R_3)C_3}{1+sR_3C_3}\)</td>
+<td>สูงสุด 180°</td>
+<td>Voltage mode CCM (ขั้วคู่ LC)</td>
+</tr>
+</tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="k-factor">
+    <h2 id="k-factor">วิธี k-factor (Venable)</h2>
+<ol>
+<li>เลือก \(f_c\) และ PM; อ่านเฟสพืช \(P\) (องศา, ติดลบ) และขนาด \(|F_mG_{vd}H|\) ที่ \(f_c\) → \(G = 1/|F_mG_{vd}H|\)</li>
+<li>เฟสที่ต้องเพิ่ม: \(\text{Boost} = PM - P - 90^\circ\)</li>
+<li><strong>Type II:</strong> \(k=\tan(\text{Boost}/2+45^\circ)\) แล้ว</li>
+</ol>
+<div class="tf" id="C1" data-k="type ii component values (k-factor) ค่า r c ของ type ii"><p class="tf-n"><b><span class="fid">C1</span> Type II component values (k-factor)</b> ค่า R C ของ Type II</p>
+        \[ C_2=\frac{1}{2\pi f_c G R_1 k},\quad C_1=C_2(k^2-1),\quad R_2=\frac{k}{2\pi f_c C_1} \]</div>
+<ol start="4">
+<li><strong>Type III:</strong> \(k=\tan^2(\text{Boost}/4+45^\circ)\) แล้ว</li>
+</ol>
+<div class="tf" id="C2" data-k="type iii component values (k-factor) ค่า r c ของ type iii"><p class="tf-n"><b><span class="fid">C2</span> Type III component values (k-factor)</b> ค่า R C ของ Type III</p>
+        \[ C_2=\frac{1}{2\pi f_c G R_1},\; C_1=C_2(k-1),\; R_2=\frac{\sqrt k}{2\pi f_cC_1},\; R_3=\frac{R_1}{k-1},\; C_3=\frac{1}{2\pi f_c\sqrt k R_3} \]</div>
+<p>ศูนย์คู่อยู่ที่ \(f_c/\sqrt k\), ขั้วคู่ที่ \(f_c\sqrt k\)</p>
+<p>@@H2 buck-example|ตัวอย่าง: Buck voltage mode (ค่าเดียวกับซิมูเลเตอร์)@@
+\(V_{in}=24\) V, \(L=C=100\ \mu\), ESR 20 mΩ, \(R=10\ \Omega\), \(f_s=50\) kHz, \(V_M=1\) V, ตัวแบ่ง \(H = 2.5/12 = 0.208\)</p>
+<ul>
+<li>\(f_0 = 1.59\) kHz, \(Q = 10\), \(f_{esr}=79.6\) kHz → เลือก \(f_c = 5\) kHz</li>
+<li>\(|G_{vd}(f_c)| \approx V_{in}(f_0/f_c)^2 = 2.43\) → \(|F_mG_{vd}H| = 0.506\) → \(G = 1.98\)</li>
+<li>\(P\approx -176^\circ\) → Boost \(= 60+176-90=146^\circ\) → Type III, \(k = \tan^2(81.5^\circ)=44.8\)</li>
+<li>\(R_1 = 10\text{ k}\Omega\): \(C_2=1.6\) nF, \(C_1=70\) nF, \(R_2=3.0\) kΩ, \(R_3=228\ \Omega\), \(C_3=21\) nF</li>
+<li>ศูนย์ที่ 747 Hz (ต่ำกว่า \(f_0\) — ดี), ขั้วที่ 33 kHz (ต่ำกว่า \(f_s\))</li>
+</ul>
+<div class="note note-warn"><b>Q สูง</b> \(Q=10\) แปลว่ายอดเรโซแนนซ์ +20 dB — ถ้าโหลดเบาลง Q สูงขึ้นอีก ตรวจ gain margin ที่โหลดน้อยสุดเสมอ และตรวจทุกมุมของ \(V_{in}\), \(I_o\), อุณหภูมิ, tolerance ของ L/C (±20–30%)</div>
+
+<h3>สคริปต์ตรวจลูป</h3>
+<pre class="code"><code class="lang-python">s=ct.tf('s'); Vin,L,C,R,ESR,H,VM=24,100e-6,100e-6,10,0.02,0.208,1
+Gvd=Vin*(1+s*ESR*C)/(L*C*s**2+(L/R+ESR*C)*s+1)
+R1,R2,R3,C1,C2,C3=10e3,3.0e3,228,70e-9,1.6e-9,21e-9
+Gc=(1+s*R2*C1)*(1+s*(R1+R3)*C3)/(s*R1*(C1+C2)*(1+s*R2*C1*C2/(C1+C2))*(1+s*R3*C3))
+T=Gc*Gvd*H/VM
+gm,pm,wg,wc=ct.margin(T); print(f&quot;fc={wc/2/np.pi:.0f} Hz  PM={pm:.1f} deg  GM={20*np.log10(gm):.1f} dB&quot;)</code></pre>
+<p>@@H2 peak-current-mode|Peak current mode (PCMC)@@
+ลูปในวัดกระแสพีกของ L/สวิตช์ ลูปนอกสร้างค่าอ้างอิงกระแส \(i_c\) ผลคือ L &quot;หายไป&quot; จากลูปนอก:</p>
+<div class="tf" id="C3" data-k="pcmc control-to-output (buck) ฟังก์ชันถ่ายโอนโหมดกระแส"><p class="tf-n"><b><span class="fid">C3</span> PCMC control-to-output (buck)</b> ฟังก์ชันถ่ายโอนโหมดกระแส</p>
+        \[ G_{vc}(s)\approx \frac{R}{R_i}\cdot\frac{1+s\,ESR\,C}{1+sRC}\cdot F_h(s)\quad(\text{buck}) \]</div>
+<p>โดย \(R_i\) คือ gain ของการวัดกระแส (V/A), \(F_h\) คือผลของการสุ่ม (ขั้วคู่ที่ \(f_s/2\))</p>
+<p><strong>Slope compensation:</strong> เมื่อ \(D>0.5\) การรบกวนกระแสจะขยายทุกคาบ (subharmonic oscillation) เงื่อนไขเสถียร:</p>
+<div class="tf" id="C4" data-k="slope compensation condition เงื่อนไขความชันชดเชย"><p class="tf-n"><b><span class="fid">C4</span> Slope compensation condition</b> เงื่อนไขความชันชดเชย</p>
+        \[ m_a \ge \tfrac12 m_2,\qquad Q_{f_s/2}=\frac{1}{\pi\left(m_cD'-0.5\right)},\; m_c = 1+\frac{m_a}{m_1} \]</div>
+<p>เลือก \(m_a \approx 0.5\)–\(1\times m_2\) ให้ \(Q \approx 1\) (\(m_2\) = ความชันขาลงของกระแส; buck: \(V_o/L\))</p>
+<p><strong>ตัวชดเชย Type II สำหรับ PCMC:</strong> วางศูนย์ที่ขั้วโหลด \(1/(2\pi RC)\) (ที่โหลดเต็ม), ขั้วที่ \(f_{esr}\) หรือ \(f_s/2\) ตัวเลือกใด ต่ำกว่า, \(f_c \approx f_s/10\)</p>
+<p><strong>ทดลองในซิม:</strong> ตั้ง Boost, PCMC, slope k = 0 → สังเกตกระแสแกว่งที่ \(f_s/2\) (คาบคู่-คาบคี่ไม่เท่ากัน) → เพิ่ม k = 0.5 แล้วหายไป</p>
+<p>@@H2 advanced|ทางเลือกอื่นระดับปริญญาโท@@
+Average current mode (PFC, charger), V² / COT, Sliding-mode, Model predictive control (MPC), Robust \(H_\infty\) — จะเพิ่มในบทถัดไป</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

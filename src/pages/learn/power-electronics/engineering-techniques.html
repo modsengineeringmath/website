@@ -1,0 +1,169 @@
+<!--meta
+{
+  "title": "เทคนิคเชิงช่างและวิศวกรรมสำหรับวงจรสวิตชิ่ง: Layout, Snubber, การวัด, Bode, Bring-up และงานประจำ | อาจารย์มด",
+  "h1": "เทคนิคเชิงช่างและวิศวกรรมสำหรับวงจรสวิตชิ่ง: Layout, Snubber, การวัด, Bode, Bring-up และงานประจำ",
+  "description": "เทคนิคหน้างานสำหรับคอนเวอร์เตอร์ DC-DC: วาง PCB ให้ hot loop เล็ก Kelvin sense ออกแบบ RC snubber จากความถี่ ringing วิธีวัดด้วยออสซิลโลสโคปที่ถูกต้อง วัดลูปเกนด้วยตัวต้านทานฉีด ขั้นตอน bring-up ตารางงานประจำและบำรุงรักษา และ derating",
+  "ogTitle": "เทคนิคหน้างาน · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "engineering-techniques",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Printed circuit board layout",
+    "Snubber",
+    "Oscilloscope probing",
+    "Loop gain measurement",
+    "Maintenance"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ทำไมวัดริปเปิลแล้วเห็นหนามสูงผิดปกติ?",
+      "a": "ส่วนใหญ่มาจากสายกราวด์ยาวของโพรบที่รับสนามแม่เหล็กจาก hot loop ให้ใช้ ground spring แตะคร่อมตัวเก็บประจุขาออกโดยตรง ตั้ง bandwidth limit 20 MHz และ AC coupling"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>เทคนิคหน้างาน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.15 · อิเล็กทรอนิกส์กำลัง · Engineering Techniques & Routine Work</p>
+      <h1>เทคนิคเชิงช่างและวิศวกรรมสำหรับวงจรสวิตชิ่ง: Layout, Snubber, การวัด, Bode, Bring-up และงานประจำ</h1>
+      <p class="lede">hot loop และ layout ออกแบบ RC snubber วัดด้วยสโคปให้ถูก วัดลูปเกนจริง ขั้นตอน bring-up 7 ขั้น ตารางงานบำรุงรักษา และกฎจากประสบการณ์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#layout">Layout</a>
+        <a class="btn btn-ghost btn-sm" href="#snubber">RC Snubber</a>
+        <a class="btn btn-ghost btn-sm" href="#probing">การวัดด้วยออสซิลโลสโคปให้ถูก</a>
+        <a class="btn btn-ghost btn-sm" href="#bode">การวัด Loop Gain</a>
+        <a class="btn btn-ghost btn-sm" href="#bring-up">ขั้นตอน bring-up มาตรฐาน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>1 nH × 10 A/ns = 10 V spike → hot loop ต้องเล็กที่สุด</li>
+          <li>Snubber: \(C_s = 3\text{–}4C_{par}\), \(R_s = \sqrt{L_{par}/C_{par}}\)</li>
+          <li>ถอดสายกราวด์ยาวของโพรบ ใช้ ground spring</li>
+          <li>เปลี่ยนทีละอย่าง บันทึกทุกครั้ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+
+    <section class="tsec" aria-labelledby="layout">
+    <h2 id="layout">Layout: หัวใจที่ทำให้วงจรเดียวกันทำงานต่างกัน</h2>
+<ul>
+<li><strong>Hot loop</strong> (เส้นทางที่กระแสเปลี่ยนแบบขั้นบันได): Buck = \(C_{in}\) → Q → ไดโอด/สวิตช์ล่าง → \(C_{in}\); Boost = Q → ไดโอด → \(C_{out}\) → Q ต้อง <strong>สั้นและแคบเป็นพื้นที่ที่เล็กที่สุด</strong> (ทุก 1 nH × 10 A/ns = 10 V spike)</li>
+<li>ใช้ระนาบกราวด์เต็มชั้นใต้ hot loop (ลด L ด้วยกระแสสะท้อน)</li>
+<li>Switch node: พื้นที่ทองแดงเล็กที่สุดเท่าที่ระบายความร้อนได้ (เป็นแหล่ง E-field)</li>
+<li>ตัวแบ่งแรงดันป้อนกลับ: วางใกล้ IC, ต่อจากจุดที่ต้องการคุม (Kelvin) อยู่ห่าง switch node/ขด</li>
+<li>Shunt วัดกระแส: ต่อสาย sense แบบ <strong>Kelvin</strong> (4 สาย) แล้วเดินคู่กันไปที่ amp</li>
+<li>กราวด์สัญญาณ (AGND) รวมกับกราวด์กำลัง (PGND) <strong>จุดเดียว</strong> ใกล้ขา GND ของคอนโทรลเลอร์</li>
+</ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="snubber">
+    <h2 id="snubber">RC Snubber (ลด ringing บน switch node/ไดโอด)</h2>
+<ol>
+<li>วัดความถี่ ringing เดิม \(f_1\)</li>
+<li>ต่อ \(C_{add}\) คร่อมจุดนั้น จนความถี่ลดเหลือ \(f_1/2\) → \(C_{par} = C_{add}/3\)</li>
+<li>\(L_{par} = \dfrac{1}{(2\pi f_1)^2C_{par}}\)</li>
+<li>เลือก \(C_s = 3\)–\(4\,C_{par}\), \(R_s = \sqrt{L_{par}/C_{par}}\)</li>
+<li>กำลังสูญเสีย \(P_{R} \approx C_sV^2f_s\) — เลือกตัวต้านทานแบบ non-inductive</li>
+</ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="probing">
+    <h2 id="probing">การวัดด้วยออสซิลโลสโคปให้ถูก</h2>
+<ul>
+<li><strong>ถอดสายกราวด์ยาว (จระเข้)</strong> ใช้ ground spring/tip-and-barrel แตะจุดโดยตรง — สายกราวด์ 15 cm สร้าง ringing ปลอมหลายสิบ MHz</li>
+<li>วัด high-side/off-line ใช้ <strong>differential probe</strong> ห้ามตัดสายดิน (floating scope) เด็ดขาด</li>
+<li>กระแส: current probe (Hall/Rogowski) หรือ shunt coaxial; <strong>deskew</strong> probe แรงดัน-กระแสก่อนคำนวณกำลัง</li>
+<li>Ripple ขาออก: ตั้ง BW limit 20 MHz, AC coupling, วัดคร่อมตัวเก็บประจุโดยตรง</li>
+<li>อย่าวัดบนตัวต้านทานกราวด์ร่วมโดยลืมว่าโพรบสองช่องใช้กราวด์เดียวกัน (ลัดวงจรผ่านสโคป!)</li>
+</ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="bode">
+    <h2 id="bode">การวัด Loop Gain (Bode) จริง</h2>
+<ol>
+<li>ใส่ตัวต้านทานฉีด \(R_{inj}\) = 10–50 Ω ระหว่างจุดขาออกกับตัวแบ่งป้อนกลับ</li>
+<li>ฉีดสัญญาณ sine แยกฉนวน (injection transformer, เช่น Bode 100/Picotest J2100A หรือ FRA ในตัวสโคปรุ่นใหม่) ข้าม \(R_{inj}\)</li>
+<li>วัด \(T = v_y/v_x\) (ฝั่งหลัง/ฝั่งก่อนตัวต้านทาน) กวาด 10 Hz – \(f_s/2\)</li>
+<li>ขนาดสัญญาณ: เล็กพอให้เป็นเชิงเส้น (ripple ที่ฉีดไม่เกิน ~1–5% ของ \(V_o\)) แต่ใหญ่พอเหนือสัญญาณรบกวน</li>
+<li>วัดทุกมุม: \(V_{in}\) ต่ำ/สูง, โหลดน้อย/เต็ม, เย็น/ร้อน</li>
+</ol>
+<p><strong>ไม่มีเครื่อง FRA?</strong> ใช้ฟังก์ชันเจนฯ + สโคปวัดทีละความถี่ หรือฉีดในซอฟต์แวร์ของ MCU (ดู <a href="/learn/power-electronics/digital-control/">ดิจิทัล</a>) — ในซิมของเว็บนี้ใช้หลักเดียวกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="bring-up">
+    <h2 id="bring-up">ขั้นตอน bring-up มาตรฐาน</h2>
+<ol>
+<li>ตรวจด้วยตา: ขั้วตัวเก็บประจุ ไดโอด ทิศ MOSFET, ลัดวงจร (วัดความต้านทาน Vin–GND, Vout–GND)</li>
+<li>จ่ายไฟเลี้ยงคอนโทรลเลอร์อย่างเดียว ตรวจสัญญาณเกต (แอมพลิจูด, dead-time, ความถี่)</li>
+<li>ภาคกำลังด้วย bench supply จำกัดกระแส \(V_{in}\) ต่ำ 25% → ดู switch node, \(i_L\)</li>
+<li>เพิ่ม \(V_{in}\) เป็นขั้น → โหลด 10% → 50% → 100% บันทึกประสิทธิภาพและอุณหภูมิ</li>
+<li>ทดสอบป้องกัน: OCP (ลัดวงจรขาออกผ่าน MOSFET โหลด), OVP, UVLO, OTP</li>
+<li>Step load, line step, start-up ที่โหลดเต็ม/ไม่มีโหลด/pre-bias</li>
+<li>Burn-in ที่อุณหภูมิสูง 4–24 ชม.</li>
+</ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="routine">
+    <h2 id="routine">งานประจำ/บำรุงรักษา (Routine)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>รอบ</th>
+<th>รายการ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ทุกวัน/ทุกครั้งใช้งาน</td>
+<td>เสียงผิดปกติ (หอน = แกว่ง/ขดคลาย), กลิ่นไหม้, อุณหภูมิเทียบปกติ</td>
+</tr>
+<tr>
+<td>รายเดือน</td>
+<td>ทำความสะอาดฝุ่น พัดลม ตรวจแรงขันขั้วต่อ (torque)</td>
+</tr>
+<tr>
+<td>ราย 6–12 เดือน</td>
+<td>ถ่ายภาพความร้อน (thermal camera), วัด ripple ขาออกเทียบค่าแรกติดตั้ง, ESR ตัวเก็บประจุ</td>
+</tr>
+<tr>
+<td>ตามอายุ</td>
+<td>เปลี่ยนตัวเก็บประจุอิเล็กโตรไลต์: อายุลดครึ่งทุกอุณหภูมิเพิ่ม 10 °C (\(L = L_0\cdot2^{(T_0-T)/10}\))</td>
+</tr>
+</tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rules-of-thumb">
+    <h2 id="rules-of-thumb">กฎจากประสบการณ์ (rules of thumb)</h2>
+<ul>
+<li>Derate: แรงดัน MOSFET/ไดโอด ≥ 1.5× ใช้งาน, ตัวเก็บประจุอิเล็กโตรไลต์ ≤ 80% พิกัดแรงดัน, เซรามิก X7R สูญเสียค่าความจุ 30–70% ภายใต้ DC bias</li>
+<li>ทุกการแก้ปัญหา: <strong>เปลี่ยนทีละอย่าง</strong> บันทึกผลทุกครั้ง</li>
+</ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

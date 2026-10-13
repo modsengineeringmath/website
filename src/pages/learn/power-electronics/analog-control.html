@@ -1,0 +1,177 @@
+<!--meta
+{
+  "title": "ควบคุมคอนเวอร์เตอร์แบบอนาล็อกด้วยออปแอมป์: PWM, Error Amplifier, วัดกระแส, TL494, UC3843 | อาจารย์มด",
+  "h1": "ควบคุมคอนเวอร์เตอร์แบบอนาล็อกด้วยออปแอมป์: PWM, Error Amplifier, วัดกระแส, TL494, UC3843",
+  "description": "สร้างตัวควบคุมคอนเวอร์เตอร์ DC-DC แบบอนาล็อก: วงจรสร้างคลื่นสามเหลี่ยมด้วยออปแอมป์ comparator PWM error amplifier Type II/III การเลือกออปแอมป์ตาม GBW การวัดกระแสด้วย shunt DCR Hall CT leading-edge blanking และการใช้ TL494 UC3843 TL431 กับ optocoupler",
+  "ogTitle": "ควบคุมแบบอนาล็อก · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "analog-control",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Operational amplifier",
+    "Pulse-width modulation",
+    "Error amplifier",
+    "Current sensing",
+    "TL494",
+    "UC3843"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ใช้ LM358 ทำ error amplifier ได้ไหม?",
+      "a": "ได้สำหรับลูปช้า GBW ราว 1 MHz พอสำหรับครอสโอเวอร์ไม่กี่กิโลเฮิรตซ์ ถ้าต้องการลูปเร็วหรือ Type III ที่มีขั้วที่ความถี่สูง ควรใช้ออปแอมป์ GBW 3–10 MHz ขึ้นไป ไม่งั้นขั้วของออปแอมป์จะกินเฟสมาร์จิน"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ควบคุมแบบอนาล็อก</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.7 · อิเล็กทรอนิกส์กำลัง · Analog Control with Op-Amps</p>
+      <h1>ควบคุมคอนเวอร์เตอร์แบบอนาล็อกด้วยออปแอมป์: PWM, Error Amplifier, วัดกระแส, TL494, UC3843</h1>
+      <p class="lede">สร้าง PWM ด้วยออปแอมป์ล้วน error amplifier การเลือกออปแอมป์ วิธีวัดกระแส 4 แบบ ชิปคลาสสิก TL494 UC384x TL431 + optocoupler และเช็กลิสต์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#error-amplifier">Error amplifier</a>
+        <a class="btn btn-ghost btn-sm" href="#current-sensing">การวัดกระแส</a>
+        <a class="btn btn-ghost btn-sm" href="#classic-ics">ชิปควบคุมคลาสสิกที่ยังไม่ตกย</a>
+        <a class="btn btn-ghost btn-sm" href="#checklist">Checklist วงจรอนาล็อก</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(d = v_c/V_M\) — feedforward \(V_M \propto V_{in}\) ตัดผลของแรงดันขาเข้า</li>
+          <li>สามเหลี่ยม \(f = R_B/(4R_ARC)\)</li>
+          <li>GBW ของออปแอมป์ ≥ 10 เท่าของที่ต้องการ</li>
+          <li>PCMC ต้องมี leading-edge blanking</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>@@H2 voltage-mode|สถาปัตยกรรม Voltage mode@@
+@@CODE0@@
+duty: \(d = v_c/V_M\) เมื่อ ramp สูง \(V_M\) (ใส่ฟีดฟอร์เวิร์ด \(V_M \propto V_{in}\) ทำให้ลูป gain ไม่ขึ้นกับ \(V_{in}\) และตัด \(G_{vg}\) ได้)</p>
+<p>@@H2 opamp-pwm|สร้าง PWM ด้วย op-amp ล้วน (เหมาะกับแลปการสอน)@@
+<strong>ตัวสร้างคลื่นสามเหลี่ยม</strong>: Schmitt trigger (comparator + \(R_A\), \(R_B\)) ต่อกับ integrator (\(R\), \(C\))</p>
+<div class="tf" id="A1" data-k="op-amp triangle generator วงจรสร้างคลื่นสามเหลี่ยม"><p class="tf-n"><b><span class="fid">A1</span> Op-amp triangle generator</b> วงจรสร้างคลื่นสามเหลี่ยม</p>
+        \[ f = \frac{R_B}{4R_A R C},\qquad V_{tri,pp} = 2V_{sat}\frac{R_A}{R_B} \]</div>
+<p>ตัวอย่าง: \(R=10\) kΩ, \(C=1\) nF, \(R_A=10\) kΩ, \(R_B=20\) kΩ → \(f = 50\) kHz ใช้ op-amp ที่ slew rate ≥ \(4 V_{pp} f\) (เช่น ≥ 2 V/µs ที่ 50 kHz, 10 Vpp) และ comparator แยก (LM393 ช้าแต่ใช้ได้ถึง ~100 kHz; TLV3501/LT1016 สำหรับเร็ว)</p>
+</section>
+
+    <section class="tsec" aria-labelledby="error-amplifier">
+    <h2 id="error-amplifier">Error amplifier</h2>
+<ul>
+<li>ใช้สูตร Type II/III จาก <a href="/learn/power-electronics/compensator-design/">การออกแบบตัวชดเชย</a></li>
+<li><strong>ต้องเลือก op-amp ให้ GBW ≥ 10× ของ gain ที่ต้องการ ณ ความถี่ขั้วสูงสุด</strong> ไม่งั้นขั้วของ op-amp จะกินเฟส</li>
+<li>ตัวต้านทาน \(R_1\) (บนของตัวแบ่ง) เป็นส่วนของตัวชดเชย; \(R_{bottom}\) ไม่มีผลกับ AC (ขา inverting เป็น virtual ground) จึงตั้ง DC ได้อิสระ</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ระดับ</th>
+<th>Op-amp แนะนำ</th>
+<th>หมายเหตุ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ราคาถูก/สอน</td>
+<td>LM358, TL072</td>
+<td>GBW 1–3 MHz, ใช้ได้ถึง \(f_c\) ~ 5 kHz</td>
+</tr>
+<tr>
+<td>ทั่วไป ทนทาน</td>
+<td>OPA2171, TLV9062, MCP6022</td>
+<td>rail-to-rail, GBW 3–10 MHz</td>
+</tr>
+<tr>
+<td>ความเร็วสูง</td>
+<td>OPA2350, AD8065</td>
+<td>ลูปกระแสเร็ว</td>
+</tr>
+</tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="current-sensing">
+    <h2 id="current-sensing">การวัดกระแส</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>วิธี</th>
+<th>ข้อดี</th>
+<th>ข้อควรระวัง</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shunt + amp (INA240, INA181)</td>
+<td>แม่น ราคาถูก</td>
+<td>สูญเสีย \(I^2R\), common-mode สูงต้องใช้ amp ที่ทน PWM</td>
+</tr>
+<tr>
+<td>DCR sensing (\(R_sC_s = L/r_L\))</td>
+<td>ไม่มีการสูญเสียเพิ่ม</td>
+<td>DCR เปลี่ยนตามอุณหภูมิ ~0.39%/°C</td>
+</tr>
+<tr>
+<td>Hall/magnetic (ACS7xx, TMCS)</td>
+<td>มีฉนวน</td>
+<td>แบนด์วิดท์/offset</td>
+</tr>
+<tr>
+<td>Current transformer</td>
+<td>ใช้ใน off-line SMPS</td>
+<td>วัดได้เฉพาะ AC/พัลส์ ต้อง reset แกน</td>
+</tr>
+</tbody></table></div>
+<p>สำหรับ PCMC ต้องมี <strong>leading-edge blanking</strong> (100–300 ns) หรือ RC กรองหนามจากการคืนตัวของไดโอด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="classic-ics">
+    <h2 id="classic-ics">ชิปควบคุมคลาสสิกที่ยังไม่ตกยุค</h2>
+<ul>
+<li><strong>TL494 / KA7500</strong> — voltage mode, มี error amp 2 ตัว (แรงดัน+กระแสจำกัด), dead-time ปรับได้, push-pull output ใช้สอนได้ดีมาก</li>
+<li><strong>UC3842/3/4/5 (UC384x)</strong> — peak current mode, มี error amp + LEB ภายใน, ทนทาน ใช้แพร่หลายใน flyback/forward</li>
+<li><strong>TL431 + optocoupler (PC817)</strong> — error amp แบบแยกฉนวนมาตรฐาน: ลูปมีสองเส้นทาง (fast lane ผ่านตัวต้านทาน LED) ต้องคิด CTR และขั้วของ opto (~5–20 kHz)</li>
+<li>ชิปรุ่นปัจจุบันดู <a href="/learn/power-electronics/controller-selection/">การเลือกตัวควบคุม</a></li>
+</ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">Checklist วงจรอนาล็อก</h2>
+<ol>
+<li>Soft-start: ค่อยๆ ยก \(V_{ref}\) (RC บน ref หรือ SS pin) ป้องกันกระแสพุ่งและ overshoot</li>
+<li>Anti-windup: clamp เอาต์พุต error amp (Zener/diode) ตอนจำกัดกระแส</li>
+<li>ต่อ \(V_{ref}\) ด้วย 100 nF ใกล้ขา; กราวด์สัญญาณแยกจากกราวด์กำลังแล้วรวมจุดเดียว</li>
+<li>ตรวจด้วยการฉีดสัญญาณวัด Bode จริง — ดู <a href="/learn/power-electronics/engineering-techniques/#bode">เทคนิคเชิงช่าง</a></li>
+</ol>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

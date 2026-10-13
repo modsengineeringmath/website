@@ -1,0 +1,175 @@
+<!--meta
+{
+  "title": "ออกแบบและพันตัวเหนี่ยวนำกำลัง: เลือกแกน จำนวนรอบ ช่องอากาศ ลวด และการสูญเสีย | อาจารย์มด",
+  "h1": "ออกแบบและพันตัวเหนี่ยวนำกำลัง: เลือกแกน จำนวนรอบ ช่องอากาศ ลวด และการสูญเสีย",
+  "description": "ออกแบบตัวเหนี่ยวนำสำหรับคอนเวอร์เตอร์ DC-DC ทีละขั้น: L = N²·AL ตรวจ Bpk กับ Bsat area product เลือกขนาดแกน ช่องอากาศ ขนาดลวดและ skin depth การสูญเสียแกนแบบ Steinmetz เปรียบเทียบเฟอร์ไรต์ ผงเหล็ก sendust MPP และวิธีวัดค่า L และกระแสอิ่มตัวด้วย pulse test",
+  "ogTitle": "ออกแบบตัวเหนี่ยวนำ · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "inductor-design",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Inductor",
+    "Magnetic core",
+    "Air gap",
+    "Skin effect",
+    "Ferrite"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ตัวเหนี่ยวนำอิ่มตัวดูได้อย่างไร?",
+      "a": "ดูกระแสตัวเหนี่ยวนำบนสโคป ปกติเป็นสามเหลี่ยมเส้นตรง ถ้าใกล้ยอดแล้วความชันเพิ่มขึ้นเป็นหางยกขึ้น แปลว่าค่า L ลดลงเพราะแกนอิ่มตัว ต้องเพิ่มรอบ ใช้แกนใหญ่ขึ้น หรือเพิ่มช่องอากาศ"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ออกแบบตัวเหนี่ยวนำ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.11 · อิเล็กทรอนิกส์กำลัง · Power Inductor Design</p>
+      <h1>ออกแบบและพันตัวเหนี่ยวนำกำลัง: เลือกแกน จำนวนรอบ ช่องอากาศ ลวด และการสูญเสีย</h1>
+      <p class="lede">สมการ L = N²A<sub>L</sub> ความหนาแน่นฟลักซ์ area product ขั้นตอนออกแบบพร้อมตัวเลข skin depth Steinmetz เลือกวัสดุแกน และวิธีวัด L กับกระแสอิ่มตัวในแล็บ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#equations">สมการพื้นฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#area-product">เลือกขนาดแกนด้วย Area Produc</a>
+        <a class="btn btn-ghost btn-sm" href="#design-steps">ขั้นตอนออกแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#skin-depth">Skin depth และลวด Litz</a>
+        <a class="btn btn-ghost btn-sm" href="#core-loss">การสูญเสียแกน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(L = N^2A_L\), ตรวจ \(B_{pk} = LI_{pk}/(NA_e) \lt B_{sat}\)</li>
+          <li>ช่องอากาศเก็บพลังงานเกือบทั้งหมด</li>
+          <li>ที่ 50 kHz skin depth ≈ 0.30 mm</li>
+          <li>การสูญเสียแกนใช้ \(\Delta B/2\) ไม่ใช่ \(B_{pk}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>@@H2 inputs|ข้อมูลตั้งต้นจากวงจร@@
+จากบท <a href="/learn/power-electronics/buck-converter/">Buck</a>/<a href="/learn/power-electronics/boost-converter/">Boost</a>: \(L\), \(I_{L,dc}\), \(\Delta i_L\), \(I_{pk}=I_{L,dc}+\Delta i_L/2\), \(I_{rms}=\sqrt{I_{dc}^2+\Delta i_L^2/12}\), \(f_s\)</p>
+</section>
+
+    <section class="tsec" aria-labelledby="equations">
+    <h2 id="equations">สมการพื้นฐาน</h2>
+<div class="tf" id="L1" data-k="inductance, flux density, gapped core ความเหนี่ยวนำและฟลักซ์"><p class="tf-n"><b><span class="fid">L1</span> Inductance, flux density, gapped core</b> ความเหนี่ยวนำและฟลักซ์</p>
+        \[ L = N^2 A_L,\qquad
+B_{pk} = \frac{L\,I_{pk}}{N A_e} \lt B_{sat},\qquad
+L \approx \frac{\mu_0 N^2 A_e}{l_g + l_e/\mu_r} \]</div>
+<p><strong>ช่องอากาศ</strong> \(l_g\) เก็บพลังงานเกือบทั้งหมด (\(\tfrac12 LI^2\)) และทำให้ L ไม่ขึ้นกับ \(\mu_r\) ของแกนที่เปลี่ยนตามอุณหภูมิ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="area-product">
+    <h2 id="area-product">เลือกขนาดแกนด้วย Area Product</h2>
+<div class="tf" id="L2" data-k="area product ผลคูณพื้นที่แกน"><p class="tf-n"><b><span class="fid">L2</span> Area product</b> ผลคูณพื้นที่แกน</p>
+        \[ A_p = W_aA_e \ge \frac{L\,I_{pk}\,I_{rms}}{B_{max}\,J\,K_u} \]</div>
+<p>\(K_u\) ≈ 0.3–0.4 (fill factor), \(J\) ≈ 4–6 A/mm² (ระบายความร้อนธรรมชาติ), \(B_{max}\) ≈ 0.25–0.3 T (ferrite ที่ 100 °C)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="design-steps">
+    <h2 id="design-steps">ขั้นตอนออกแบบ (ตัวอย่าง Buck 333 µH, \(I_{pk}\) 1.38 A, \(I_{rms}\) 1.2 A)</h2>
+<ol>
+<li>\(A_p \ge \dfrac{333\mu \times 1.38 \times 1.2}{0.25 \times 5\times10^6 \times 0.35} = 1.26\times10^{-9}\,\text{m}^4 = 1260\ \text{mm}^4\) → เลือก EE25 หรือ PQ20/16 (\(A_p\) ≈ 2000–4000 mm⁴)</li>
+<li>สมมติ \(A_e = 50\) mm² → \(N \ge \dfrac{LI_{pk}}{B_{max}A_e} = \dfrac{333\mu\times1.38}{0.25\times50\mu} = 37\) รอบ</li>
+<li>\(A_L\) ที่ต้องการ \(= L/N^2 = 243\) nH/N² → สั่งแกนแบบมีช่องอากาศค่านี้ หรือคำนวณ \(l_g \approx \mu_0N^2A_e/L = 0.26\) mm (แบ่งครึ่งเป็น spacer 0.13 mm ต่อขา ถ้าแกน EE)</li>
+<li>ลวด: \(A_{cu} = I_{rms}/J = 0.24\) mm² → Ø 0.55 mm; ตรวจ skin depth</li>
+<li>ตรวจหน้าต่าง: \(N A_{cu}/(K_u W_a) \le 1\)</li>
+<li>ประเมินการสูญเสียและอุณหภูมิ</li>
+</ol>
+<p>เครื่องคำนวณใน <a href="/learn/power-electronics/converter-lab/">ห้องแลปจำลอง</a> ทำขั้นตอน 2–4 ให้อัตโนมัติ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="skin-depth">
+    <h2 id="skin-depth">Skin depth และลวด Litz</h2>
+<div class="tf" id="L3" data-k="skin depth ความลึกผิว"><p class="tf-n"><b><span class="fid">L3</span> Skin depth</b> ความลึกผิว</p>
+        \[ \delta = \sqrt{\frac{\rho}{\pi f \mu_0}} \approx \frac{66}{\sqrt{f\,[\text{Hz}]}}\ \text{mm (Cu, 20}^\circ\text{C)} \]</div>
+<p>ที่ 50 kHz → \(\delta\) ≈ 0.30 mm ลวดที่ Ø เกิน \(2\delta\) จะใช้พื้นที่ไม่เต็ม → ใช้ลวดเล็กหลายเส้นขนานหรือ Litz (สำคัญกับ AC ripple สูง เช่น DCM, flyback)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="core-loss">
+    <h2 id="core-loss">การสูญเสียแกน (Steinmetz)</h2>
+<div class="tf" id="L4" data-k="steinmetz core loss การสูญเสียแกน"><p class="tf-n"><b><span class="fid">L4</span> Steinmetz core loss</b> การสูญเสียแกน</p>
+        \[ P_v = k\,f^{\alpha}\,(\Delta B/2)^{\beta}\quad[\text{W/m}^3] \]</div>
+<p>ใช้ \(\Delta B\) (ส่วนแกว่ง) ไม่ใช่ \(B_{pk}\)! ค่า \(k,\alpha,\beta\) จากดาต้าชีตวัสดุ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="core-materials">
+    <h2 id="core-materials">เลือกวัสดุแกน</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>วัสดุ</th>
+<th>\(B_{sat}\)</th>
+<th>จุดเด่น</th>
+<th>ใช้กับ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ferrite (N87, 3C90, PC95)</td>
+<td>0.35–0.5 T</td>
+<td>สูญเสียต่ำที่ความถี่สูง, อิ่มตัวแบบ &quot;หักศอก&quot;</td>
+<td>หม้อแปลง, L ที่ ripple สูง</td>
+</tr>
+<tr>
+<td>Iron powder (-26, -52)</td>
+<td>1.0+ T</td>
+<td>ราคาถูก, อิ่มตัวนุ่ม</td>
+<td>DC filter ripple ต่ำ, ความถี่ต่ำ</td>
+</tr>
+<tr>
+<td>Sendust / Kool Mµ</td>
+<td>1.0 T</td>
+<td>อิ่มตัวนุ่ม, สูญเสียปานกลาง</td>
+<td>Buck/Boost กำลังกลาง, PFC</td>
+</tr>
+<tr>
+<td>High Flux / MPP</td>
+<td>1.5 / 0.75 T</td>
+<td>DC bias ดีมาก</td>
+<td>งานแม่นยำ, กระแสสูง</td>
+</tr>
+</tbody></table></div>
+<p>แกน powder มี <strong>DC bias roll-off</strong>: \(\mu\) ลดลงเมื่อ H สูง → L ที่โหลดเต็มอาจเหลือ 60–80% ต้องใช้กราฟในดาต้าชีตคำนวณ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="measurement">
+    <h2 id="measurement">วัดในแลป</h2>
+<ul>
+<li><strong>LCR meter</strong> ที่ความถี่ใกล้ \(f_s\) (ไม่มี DC bias → ไม่บอกการอิ่มตัว)</li>
+<li><strong>Pulse test หากระแสอิ่มตัว:</strong> จ่ายพัลส์แรงดัน \(V\) ผ่าน MOSFET วัดกระแสด้วย current probe; \(L = V/(di/dt)\) ช่วงที่เป็นเส้นตรง จุดที่ความชันเพิ่มขึ้นเร็วคือ \(I_{sat}\)</li>
+<li><strong>วิธี ringing:</strong> ต่อ \(C\) ที่รู้ค่า วัดความถี่เรโซแนนซ์ \(L = 1/((2\pi f)^2C)\)</li>
+</ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

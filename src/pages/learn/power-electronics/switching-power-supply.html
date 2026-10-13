@@ -1,0 +1,151 @@
+<!--meta
+{
+  "title": "แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย | อาจารย์มด",
+  "h1": "แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย",
+  "description": "ภาพรวมแหล่งจ่ายไฟสวิตชิ่งที่ต่อไฟบ้าน: EMI filter PFC boost ตัวแปลงแยกฉนวน flyback forward push-pull half/full-bridge LLC พร้อมอัตราส่วนแปลงผัน ขั้นตอนออกแบบ flyback แรงดันสะท้อน RCD clamp และมาตรฐาน IEC 62368-1 CISPR 32 IEC 61000-3-2",
+  "ogTitle": "แหล่งจ่ายสวิตชิ่ง · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "switching-power-supply",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Switched-mode power supply",
+    "Flyback converter",
+    "Forward converter",
+    "LLC resonant converter",
+    "Power factor correction"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "flyback เหมาะกับกำลังเท่าไร?",
+      "a": "เหมาะประมาณไม่เกิน 100–150 W เพราะหม้อแปลงต้องเก็บพลังงานทั้งหมดในช่องอากาศและ leakage inductance สร้างแรงดันกระชากที่ต้องดูดซับ กำลังสูงกว่านี้นิยม forward, half/full-bridge หรือ LLC"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>แหล่งจ่ายสวิตชิ่ง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.14 · อิเล็กทรอนิกส์กำลัง · Switching Power Supply (SMPS)</p>
+      <h1>แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย</h1>
+      <p class="lede">โครงสร้างแหล่งจ่ายต่อไฟบ้าน EMI filter PFC ตระกูลวงจรแยกฉนวน ขั้นตอนออกแบบ flyback 7 ขั้น มาตรฐาน IEC 62368-1 และ CISPR 32</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#isolated-topologies">ตระกูลวงจรแยกฉนวน</a>
+        <a class="btn btn-ghost btn-sm" href="#flyback-design">ขั้นตอนออกแบบ Flyback</a>
+        <a class="btn btn-ghost btn-sm" href="#safety-emi">ความปลอดภัยและมาตรฐาน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>Flyback = buck-boost + หม้อแปลง: \(\frac{N_s}{N_p}\frac{D}{1-D}\)</li>
+          <li>Forward = buck + หม้อแปลง ต้อง reset แกน</li>
+          <li>เกิน ~75 W ต้องมี PFC</li>
+          <li>ทดลอง off-line ต้องมีหม้อแปลงแยกขดและ differential probe</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+<section class="tsec"><p>@@H2 offline-structure|โครงสร้างแหล่งจ่ายต่อไฟบ้าน (off-line)@@
+@@CODE0@@
+PFC บังคับตามมาตรฐานฮาร์มอนิก (IEC 61000-3-2) เมื่อกำลังเกิน ~75 W</p>
+</section>
+
+    <section class="tsec" aria-labelledby="isolated-topologies">
+    <h2 id="isolated-topologies">ตระกูลวงจรแยกฉนวน</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>วงจร</th>
+<th>ได้มาจาก</th>
+<th>\(V_o/V_{in}\)</th>
+<th>กำลังเหมาะสม</th>
+<th>ข้อสังเกต</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Flyback</td>
+<td>Buck-boost</td>
+<td>\(\dfrac{N_s}{N_p}\dfrac{D}{1-D}\)</td>
+<td>≤ 100–150 W</td>
+<td>ชิ้นส่วนน้อย, หม้อแปลงเก็บพลังงาน (มี gap), leakage → ต้อง clamp/snubber</td>
+</tr>
+<tr>
+<td>Forward</td>
+<td>Buck</td>
+<td>\(\dfrac{N_s}{N_p}D\)</td>
+<td>100–500 W</td>
+<td>ต้อง reset แกน, \(D \le 0.5\) (ขด reset 1:1)</td>
+</tr>
+<tr>
+<td>Push-pull</td>
+<td>Buck ×2</td>
+<td>\(2\dfrac{N_s}{N_p}D\)</td>
+<td>แรงดันต่ำ กระแสสูง</td>
+<td>ระวัง flux walking</td>
+</tr>
+<tr>
+<td>Half/Full-bridge</td>
+<td>Buck</td>
+<td>\(\dfrac{N_s}{N_p}D\) (HB: ×½)</td>
+<td>300 W – หลาย kW</td>
+<td>ใช้แกนเต็ม 2 ทิศ</td>
+</tr>
+<tr>
+<td>LLC resonant</td>
+<td>Bridge + tank</td>
+<td>ขึ้นกับ \(f_s/f_r\)</td>
+<td>100 W – หลาย kW</td>
+<td>ZVS ฝั่งปฐม, ZCS ฝั่งทุติย, ประสิทธิภาพ 95%+</td>
+</tr>
+</tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="flyback-design">
+    <h2 id="flyback-design">ขั้นตอนออกแบบ Flyback (CCM/DCM)</h2>
+<ol>
+<li>กำหนด \(V_{in,min}\) (bulk ต่ำสุด), \(V_o\), \(P_o\), \(f_s\), \(D_{max}\) ≈ 0.45</li>
+<li>แรงดันสะท้อน \(V_{OR} = \dfrac{N_p}{N_s}(V_o+V_F)\) เลือกให้ \(V_{in,max}+V_{OR}+V_{spike} \lt\) 0.8 × \(V_{DS,max}\)</li>
+<li>อัตราส่วนรอบ \(n = N_p/N_s\) จาก \(D_{max} = \dfrac{V_{OR}}{V_{OR}+V_{in,min}}\)</li>
+<li>\(L_p\) จากโหมดที่ต้องการ (DCM: \(L_p \le \dfrac{(V_{in,min}D_{max})^2}{2P_{in}f_s}\))</li>
+<li>เลือกแกน/ช่องอากาศ/จำนวนรอบ (เหมือน <a href="/learn/power-electronics/inductor-design/">ออกแบบตัวเหนี่ยวนำ</a>) + ฉนวนตามมาตรฐาน (creepage/clearance, ลวด triple-insulated)</li>
+<li>Clamp RCD: \(V_{clamp} \approx 1.5V_{OR}\), \(P = \tfrac12 L_{lk}I_{pk}^2f_s\dfrac{V_{clamp}}{V_{clamp}-V_{OR}}\)</li>
+<li>ลูปป้อนกลับ: current mode (UC384x หรือ IC รุ่นใหม่) + TL431/opto — ระวัง RHP zero ใน CCM flyback</li>
+</ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="safety-emi">
+    <h2 id="safety-emi">ความปลอดภัยและมาตรฐาน</h2>
+<ul>
+<li><strong>IEC 62368-1</strong> (ความปลอดภัยอุปกรณ์ ICT/AV), ฉนวนแบบ reinforced ระหว่างปฐม-ทุติย</li>
+<li><strong>EMI:</strong> CISPR 32 (conducted 150 kHz–30 MHz, radiated)</li>
+<li>กระแสรั่วผ่าน Y-cap จำกัด (สำคัญกับเครื่องมือแพทย์)</li>
+<li>ทดลอง off-line ต้องใช้ isolation transformer + variac + differential probe — ดู <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a></li>
+</ul>
+<p>@@H2 next|หัวข้อที่จะเพิ่ม (ระดับ ป.โท)@@
+PFC แบบ totem-pole (GaN/SiC), LLC: First Harmonic Approximation และการออกแบบ tank, Active clamp flyback, Phase-shift full-bridge, DAB สำหรับ EV/ESS, synchronous rectification ฝั่งทุติยภูมิ</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,139 @@
+<!--meta
+{
+  "title": "ตัวสังเกตกระแสและสถานะ (Observer) ในคอนเวอร์เตอร์ และการเฝ้าสังเกตสภาวะแวดล้อม | อาจารย์มด",
+  "h1": "ตัวสังเกตกระแสและสถานะ (Observer) ในคอนเวอร์เตอร์ และการเฝ้าสังเกตสภาวะแวดล้อม",
+  "description": "ประมาณกระแสตัวเหนี่ยวนำและกระแสโหลดโดยไม่ใช้เซนเซอร์: Luenberger observer ของบั๊ก extended-state/disturbance observer สำหรับ load-current feedforward Kalman filter ข้อจำกัด และการเฝ้าสังเกตเหตุการณ์แวดล้อม เช่น input voltage feedforward อุณหภูมิ ESR ของตัวเก็บประจุ การอิ่มตัวของแกน และ event log",
+  "ogTitle": "ตัวสังเกตกระแส · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "observers",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "State observer",
+    "Luenberger observer",
+    "Kalman filter",
+    "Disturbance observer",
+    "Condition monitoring"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ประมาณกระแสตัวเหนี่ยวนำโดยไม่ใช้เซนเซอร์ได้อย่างไร?",
+      "a": "ใช้แบบจำลองเฉลี่ยของวงจรร่วมกับค่าที่วัดได้คือแรงดันขาออก แรงดันขาเข้า และ duty แล้วสร้าง Luenberger observer ที่ป้อนกลับความต่างระหว่างแรงดันที่วัดกับที่ประมาณ ค่าประมาณจะลู่เข้าค่าจริงด้วยความเร็วที่กำหนดจากขั้วของตัวสังเกต"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ตัวสังเกตกระแส</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.9 · อิเล็กทรอนิกส์กำลัง · Observers & Condition Monitoring</p>
+      <h1>ตัวสังเกตกระแสและสถานะ (Observer) ในคอนเวอร์เตอร์ และการเฝ้าสังเกตสภาวะแวดล้อม</h1>
+      <p class="lede">Luenberger observer ประมาณ i<sub>L</sub> disturbance observer ประมาณกระแสโหลดเพื่อ feedforward Kalman filter ข้อควรระวัง และการเฝ้าสังเกต V<sub>in</sub> อุณหภูมิ ESR และการอิ่มตัว</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#caveats">ข้อควรระวังของการสังเกต</a>
+        <a class="btn btn-ghost btn-sm" href="#condition-monitoring">การเฝ้าสังเกตเหตุการณ์แวดล้อ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ขั้วตัวสังเกตเร็วกว่าลูปควบคุม 3–5 เท่า</li>
+          <li>เพิ่มสถานะ \(i_o\) → feedforward ลด load-step dip</li>
+          <li>ห้ามใช้ค่าประมาณทำ OCP</li>
+          <li>\(\widehat{ESR} = \Delta v_{o,f_s}/\Delta i_L\) ใช้ทำนายอายุตัวเก็บประจุ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>@@H2 why-observe|ทำไมต้องสังเกตแทนวัด@@
+เซนเซอร์กระแสเพิ่มต้นทุน การสูญเสีย สัญญาณรบกวน และจุดเสีย ถ้าเรารู้แบบจำลองและวัด \(v_o\), \(v_{in}\), \(d\) ได้ เราประมาณ \(i_L\) และกระแสโหลดได้</p>
+<p>@@H2 luenberger|Luenberger observer สำหรับ Buck@@
+แบบจำลองเฉลี่ย (\(\mathbf x=[i_L\;v_o]^T\), กระแสโหลด \(i_o\) เป็นสัญญาณรบกวน):</p>
+<div class="tf" id="O1" data-k="averaged buck state model แบบจำลองสถานะของบั๊ก"><p class="tf-n"><b><span class="fid">O1</span> Averaged buck state model</b> แบบจำลองสถานะของบั๊ก</p>
+        \[ \dot{\mathbf x} = \underbrace{\begin{bmatrix}-r_L/L & -1/L\\ 1/C & 0\end{bmatrix}}_{A}\mathbf x + \begin{bmatrix}v_{in}/L\\0\end{bmatrix}d + \begin{bmatrix}0\\-1/C\end{bmatrix}i_o,\qquad y = v_o \]</div>
+<p>ตัวสังเกต: \(\dot{\hat{\mathbf x}} = A\hat{\mathbf x} + B d + L_o(y - \hat y)\) เลือก \(L_o\) ให้ขั้วของ \(A - L_oC_y\) เร็วกว่าลูปควบคุม 3–5 เท่า แต่ช้ากว่า \(f_s/5\)</p>
+<p>@@H2 load-observer|ประมาณกระแสโหลดด้วย Extended-state / Disturbance observer@@
+เพิ่มสถานะ \(i_o\) โดยสมมติ \(\dot i_o \approx 0\):</p>
+<div class="tf" id="O2" data-k="extended-state load observer ตัวสังเกตกระแสโหลด"><p class="tf-n"><b><span class="fid">O2</span> Extended-state load observer</b> ตัวสังเกตกระแสโหลด</p>
+        \[ \mathbf z = [i_L\; v_o\; i_o]^T,\quad \dot{\hat i}_o = l_3(v_o - \hat v_o) \]</div>
+<p>นำ \(\hat i_o\) ไปทำ <strong>load-current feedforward</strong> → load-step dip ลดลงอย่างมาก (เทคนิคที่ใช้ใน VRM และ EV charger)</p>
+<p>@@H2 kalman|Kalman filter@@
+เมื่อสัญญาณวัดมีสัญญาณรบกวนมาก (ADC + สวิตชิ่ง) ใช้ Kalman แบบดิสครีต: ทำนาย \(\hat x^-=A_d\hat x + B_d u\), \(P^-=A_dPA_d^T+Q\) แล้วแก้ไข \(K=P^-C^T(CP^-C^T+R)^{-1}\) — ปรับ \(Q\) (ความไม่แน่นอนของแบบจำลอง) กับ \(R\) (สัญญาณรบกวนวัด) เป็นตัวแลกระหว่างความเร็วกับความเรียบ</p>
+</section>
+
+    <section class="tsec" aria-labelledby="caveats">
+    <h2 id="caveats">ข้อควรระวังของการสังเกต</h2>
+<ul>
+<li>ความผิดพลาดของ \(L\), \(C\), \(r_L\) (±20%) → ค่าประมาณเอนเอียง → ใช้ร่วมกับเซนเซอร์ราคาถูกความเร็วต่ำ (fusion)</li>
+<li><strong>การป้องกันกระแสเกินห้ามพึ่งค่าประมาณ</strong> ต้องมีวงจรตรวจจริงเสมอ</li>
+</ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="condition-monitoring">
+    <h2 id="condition-monitoring">การเฝ้าสังเกตเหตุการณ์แวดล้อม (Condition &amp; Event Monitoring)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>สิ่งที่สังเกต</th>
+<th>วิธี</th>
+<th>ใช้ทำอะไร</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\(V_{in}\) เปลี่ยน</td>
+<td>วัด + <strong>input voltage feedforward</strong> (\(d \propto 1/V_{in}\))</td>
+<td>ลด \(G_{vg}\), ทนแหล่งจ่ายผันผวน (โซลาร์, แบต)</td>
+</tr>
+<tr>
+<td>อุณหภูมิฮีตซิงก์/ขด</td>
+<td>NTC ใกล้ MOSFET</td>
+<td>derating, ชดเชย DCR</td>
+</tr>
+<tr>
+<td>ESR ของ \(C_{out}\) เพิ่ม</td>
+<td>วัด ripple ที่ \(f_s\) เทียบกับ \(\Delta i_L\) → \(\widehat{ESR} = \Delta v_{o,f_s}/\Delta i_L\)</td>
+<td>ทำนายอายุตัวเก็บประจุ (ESR ×2 = หมดอายุ)</td>
+</tr>
+<tr>
+<td>L เข้าใกล้อิ่มตัว</td>
+<td>ความชันกระแสขาขึ้นเพิ่มผิดปกติ</td>
+<td>ลดกระแสพีก</td>
+</tr>
+<tr>
+<td>เหตุการณ์ผิดปกติ (OVP, brown-out, ลัดวงจร)</td>
+<td>บันทึก event log + timestamp</td>
+<td>วิเคราะห์ย้อนหลัง/บำรุงรักษาเชิงพยากรณ์ — ดู <a href="/learn/power-electronics/ai-control/">AI ช่วยควบคุม</a></td>
+</tr>
+</tbody></table></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

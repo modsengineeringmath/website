@@ -1,0 +1,113 @@
+<!--meta
+{
+  "title": "ควบคุมคอนเวอร์เตอร์ DC-DC แบบดิจิทัล: ADC, DPWM, Limit Cycle, Tustin และโค้ด PI | อาจารย์มด",
+  "h1": "ควบคุมคอนเวอร์เตอร์ DC-DC แบบดิจิทัล: ADC, DPWM, Limit Cycle, Tustin และโค้ด PI",
+  "description": "ควบคุมคอนเวอร์เตอร์ DC-DC ด้วยไมโครคอนโทรลเลอร์: สุ่ม ADC ให้ตรงจังหวะ PWM ดีเลย์และเฟสที่เสีย ความละเอียด DPWM และ limit cycle high-resolution PWM แปลงตัวชดเชยด้วย Tustin เป็น 2P2Z/3P3Z โค้ด PI ภาษา C พร้อม anti-windup และขั้นตอน bring-up",
+  "ogTitle": "ควบคุมแบบดิจิทัล · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "digital-control",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Digital control",
+    "Digital pulse-width modulation",
+    "Limit cycle",
+    "Bilinear transform",
+    "Microcontroller"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "limit cycle ในคอนเวอร์เตอร์ดิจิทัลคืออะไร?",
+      "a": "เมื่อ DPWM หยาบกว่า ADC แรงดันขาออกไม่มีระดับ duty ที่ตรงค่าอ้างอิงพอดี อินทิเกรเตอร์จึงกระโดดไปมาระหว่างสองระดับ เกิดการแกว่งความถี่ต่ำ แก้ด้วย high-resolution PWM หรือ dithering"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ควบคุมแบบดิจิทัล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.8 · อิเล็กทรอนิกส์กำลัง · Digital Control</p>
+      <h1>ควบคุมคอนเวอร์เตอร์ DC-DC แบบดิจิทัล: ADC, DPWM, Limit Cycle, Tustin และโค้ด PI</h1>
+      <p class="lede">จังหวะสุ่มสัญญาณ ดีเลย์ ความละเอียด DPWM กับ limit cycle แปลงตัวชดเชยด้วย Tustin โค้ด PI พร้อม anti-windup การป้องกันในฮาร์ดแวร์ และขั้นตอน bring-up</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#bring-up">ขั้นตอน bring-up</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สุ่มกลางช่วง ON/OFF ได้ค่าเฉลี่ย iL โดยไม่ต้องกรอง</li>
+          <li>ดีเลย์ \(\approx 1.5T_s\) กินเฟส \(360^\circ f_cT_d\)</li>
+          <li>ไม่เกิด limit cycle: DPWM ต้องละเอียดกว่า ADC</li>
+          <li>OCP ต้องอยู่ในฮาร์ดแวร์ ไม่ผ่าน CPU</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>@@H2 structure|โครงสร้าง@@
+ADC สุ่ม \(v_o\) (และ \(i_L\)) → ตัวชดเชยดิจิทัล \(G_c(z)\) → DPWM (ตัวนับ) → gate driver</p>
+<p><strong>สิ่งที่ต่างจากอนาล็อก:</strong> (1) delay จากการสุ่ม-คำนวณ-อัปเดต (2) quantization ทั้ง ADC และ PWM (3) aliasing</p>
+<p>@@H2 sampling|จังหวะการสุ่ม@@
+สุ่ม <strong>ตรงกลางช่วง ON หรือ OFF</strong> (ใช้ trigger จาก timer PWM) จะได้ค่าเฉลี่ยของ \(i_L\) โดยไม่ต้องกรอง และหลบหนามจากการสวิตช์ — เป็นเทคนิคมาตรฐานของ C2000/STM32 HRTIM/dsPIC</p>
+<p>Delay รวมโดยประมาณ \(T_d \approx T_{conv} + T_{calc} + T_s/2\) (ZOH) → เฟสหาย \(\phi = -360^\circ f_c T_d\) เช่น \(f_s = 100\) kHz, \(T_d = 1.5T_s\), \(f_c = 5\) kHz → เสียเฟส 27°</p>
+<p>@@H2 dpwm-limit-cycle|ความละเอียดและ limit cycle@@
+ความละเอียดแรงดันขาออกจาก DPWM (buck): \(\Delta V_o = V_{in}/2^{N_{PWM}}\) โดย \(2^{N_{PWM}} = f_{clk}/f_s\)
+<strong>เงื่อนไขไม่เกิด limit cycle:</strong> \(\Delta V_{o,DPWM} \lt \Delta V_{o,ADC}\) (PWM ละเอียดกว่า ADC) + ตัวควบคุมต้องมีอินทิเกรเตอร์ และ gain ของอินทิเกรเตอร์ไม่สูงเกิน</p>
+<p>ตัวอย่าง: clock 170 MHz, \(f_s = 200\) kHz → 850 count (≈9.7 บิต) → \(24/850 = 28\) mV ขณะที่ ADC 12 บิตกับตัวแบ่ง 3.3/15 V → 3.7 mV ⇒ เกิด limit cycle! ต้องใช้ <strong>High-resolution PWM</strong> (HRTIM 184 ps ใน STM32G4, HRPWM ใน C2000 ~150 ps) หรือ dithering</p>
+<p>@@H2 discretization|แปลงตัวชดเชยต่อเนื่อง → ดิจิทัล@@
+Tustin (bilinear) พร้อม prewarp ที่ \(f_c\):</p>
+<div class="tf" id="Z1" data-k="tustin (bilinear) transform การแปลงบิลิเนียร์"><p class="tf-n"><b><span class="fid">Z1</span> Tustin (bilinear) transform</b> การแปลงบิลิเนียร์</p>
+        \[ s \leftarrow \frac{2}{T}\frac{1-z^{-1}}{1+z^{-1}} \]</div>
+<p>ได้รูปทั่วไป (2P2Z / 3P3Z):</p>
+<div class="tf" id="Z2" data-k="2p2z / 3p3z difference equation สมการผลต่างของตัวชดเชย"><p class="tf-n"><b><span class="fid">Z2</span> 2P2Z / 3P3Z difference equation</b> สมการผลต่างของตัวชดเชย</p>
+        \[ u[n] = \sum_{k=0}^{3} b_k\, e[n-k] - \sum_{k=1}^{3} a_k u[n-k] \]</div>
+<p>หรือออกแบบโดยตรงใน z-domain (direct digital design) เมื่อ \(f_c\) ใกล้ \(f_s/10\)</p>
+<p>@@H2 pi-code|โค้ด PI ภาษา C (จุดลอยตัว, เรียกใน ISR ของ ADC)@@
+@@CODE0@@
+ซิมูเลเตอร์ของเว็บนี้ใช้อัลกอริทึมเดียวกัน (โหมด Voltage-mode PI) — ลองเพิ่ม Ki จนแกว่ง แล้วสังเกตผลของ soft-start</p>
+<p>@@H2 hardware-protection|การป้องกันที่ต้องทำในฮาร์ดแวร์ ไม่ใช่ซอฟต์แวร์@@
+OCP แบบ cycle-by-cycle ต้องใช้ comparator ภายใน MCU ต่อเข้าตัว PWM โดยตรง (fault input / blanking window) ไม่ผ่าน CPU — ซอฟต์แวร์ค้าง/รีเซ็ตต้องไม่ทำให้สวิตช์ค้าง ON</p>
+<p>@@H2 mcu|MCU ที่แนะนำ@@
+ดูตารางเต็มที่ <a href="/learn/power-electronics/controller-selection/">การเลือกตัวควบคุม</a> — โดยสรุป: <strong>TI C2000 (F28003x/F28P55x/F28P65x)</strong>, <strong>STM32G474 (HRTIM)</strong>, <strong>Microchip dsPIC33CK/CH และ dsPIC33A</strong> เป็นสายที่ออกแบบมาเพื่อ power conversion โดยตรง; ESP32/Arduino เหมาะกับลูปช้า (MPPT, ชาร์จแบต, การสื่อสาร) แต่ไม่ควรใช้กับลูปกระแสเร็ว</p>
+</section>
+
+    <section class="tsec" aria-labelledby="bring-up">
+    <h2 id="bring-up">ขั้นตอน bring-up</h2>
+<ol>
+<li>รันลูปเปิด: ตรวจ ADC scaling, ทิศทาง, offset</li>
+<li>ปิดลูปด้วย gain ต่ำ, \(V_{in}\) ต่ำ ผ่านแหล่งจ่ายจำกัดกระแส</li>
+<li>วัด Bode โดยฉีดสัญญาณในซอฟต์แวร์ (เพิ่ม sine ที่ค่าอ้างอิงหรือ duty — เหมือนฟังก์ชันเจนฯ ในซิม) แล้วอ่านกลับผ่าน DAC/UART</li>
+<li>ทดสอบ step load, \(V_{in}\) ต่ำ-สูง, อุณหภูมิ</li>
+</ol>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

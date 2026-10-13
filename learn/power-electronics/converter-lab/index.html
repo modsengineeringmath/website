@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ | อาจารย์มด</title>
+<meta name="description" content="แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/power-electronics/converter-lab/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/power-electronics/converter-lab/">
+<meta property="og:title" content="แล็บจำลอง · อิเล็กทรอนิกส์กำลัง">
+<meta property="og:description" content="แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-power-electronics-converter-lab.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="แล็บจำลอง · อิเล็กทรอนิกส์กำลัง">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="แล็บจำลอง · อิเล็กทรอนิกส์กำลัง">
+<meta name="twitter:description" content="แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-power-electronics-converter-lab.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/power-electronics/converter-lab/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/power-electronics/converter-lab/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=149ca666">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-electronics/converter-lab/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-electronics/converter-lab/#article","headline":"แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ","description":"แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-electronics/converter-lab/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-electronics/converter-lab/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Circuit simulation","Virtual laboratory","DC-DC converter","Oscilloscope","Function generator"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-electronics/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-electronics-converter-lab.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อิเล็กทรอนิกส์กำลัง","item":"https://modsengineeringmath.com/learn/power-electronics/"},{"@type":"ListItem","position":4,"name":"แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ","item":"https://modsengineeringmath.com/learn/power-electronics/converter-lab/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ซิมูเลเตอร์นี้ต่างจาก SPICE อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เป็นแบบจำลองระดับการสวิตช์ที่รวมค่าแฝงหลักคือ Rds(on) Vf DCR ESR และอิมพีแดนซ์ของแหล่งจ่าย ทำงานในเบราว์เซอร์ทันทีโดยไม่ต้องติดตั้ง แต่ไม่จำลอง ringing จากค่าแฝงของ PCB reverse recovery การอิ่มตัวของแกน และความร้อน ซึ่งต้องเรียนจากการวัดจริงหรือ SPICE"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/trigonometry/" >ตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/" >อินทิกรัล</a>
+      <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น</a>
+      <a href="/learn/first-order-system/" >ระบบอันดับ 1</a>
+      <a href="/learn/second-order-system/" >ระบบอันดับ 2</a>
+      <a href="/learn/signals/" >สัญญาณ</a>
+      <a href="/learn/fourier-series/" >อนุกรมฟูเรียร์</a>
+      <a class="nav-sub" href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิกเสมือนจริง</a>
+      <a class="nav-sub" href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a class="nav-sub" href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+      <a class="nav-sub" href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+      <a class="nav-sub" href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+      <a href="/learn/power-electronics/" aria-current="page">อิเล็กทรอนิกส์กำลัง</a>
+      <a class="nav-sub" href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+      <a class="nav-sub" href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+      <a class="nav-sub" href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+      <a class="nav-sub" href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+      <a href="/learn/function-generator/" >แล็บ FG + สโคป</a>
+      <a class="nav-sub" href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง (แล็บเสมือนจริง)</a>
+      <a class="nav-sub" href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/" >ระบบควบคุม</a>
+      <a class="nav-sub" href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+      <a class="nav-sub" href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a class="nav-sub" href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+      <a class="nav-sub" href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+      <a class="nav-sub" href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+      <a class="nav-sub" href="/learn/control-systems/robotics/">โรโบติกส์</a>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#how-to">วิธีใช้</a></li><li><a href="#worksheets">ใบงานทดลอง</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>แล็บจำลอง</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในอิเล็กทรอนิกส์กำลัง"><span class="sn-title mono">Power Electronics</span><div class="sn-list"><a href="/learn/power-electronics/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/power-electronics/engineering-techniques/"><span class="sn-n">15</span>เทคนิคหน้างาน</a><a href="/learn/power-electronics/troubleshooting/"><span class="sn-n">16</span>วิเคราะห์อาการเสีย</a><a href="/learn/power-electronics/converter-lab/" aria-current="page"><span class="sn-n">17</span>แล็บจำลอง</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 17 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · วงจรแปลงผัน DC-DC</span><div class="sn-list"><a href="/learn/power-electronics/buck-converter/"><span class="sn-n">1</span>บั๊ก</a><a href="/learn/power-electronics/boost-converter/"><span class="sn-n">2</span>บูสต์</a><a href="/learn/power-electronics/buck-boost-converter/"><span class="sn-n">3</span>บั๊ก-บูสต์</a><a href="/learn/power-electronics/cuk-converter/"><span class="sn-n">4</span>ชุค (Ćuk)</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · การควบคุมและตัวชดเชย</span><div class="sn-list"><a href="/learn/power-electronics/small-signal-model/"><span class="sn-n">5</span>แบบจำลองสัญญาณเล็ก</a><a href="/learn/power-electronics/compensator-design/"><span class="sn-n">6</span>ออกแบบตัวชดเชย</a><a href="/learn/power-electronics/analog-control/"><span class="sn-n">7</span>ควบคุมแบบอนาล็อก</a><a href="/learn/power-electronics/digital-control/"><span class="sn-n">8</span>ควบคุมแบบดิจิทัล</a><a href="/learn/power-electronics/observers/"><span class="sn-n">9</span>ตัวสังเกตกระแส</a><a href="/learn/power-electronics/ai-control/"><span class="sn-n">10</span>AI ช่วยควบคุม</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · ออกแบบฮาร์ดแวร์</span><div class="sn-list"><a href="/learn/power-electronics/inductor-design/"><span class="sn-n">11</span>ออกแบบตัวเหนี่ยวนำ</a><a href="/learn/power-electronics/test-power-sources/"><span class="sn-n">12</span>แหล่งจ่ายทดสอบ</a><a href="/learn/power-electronics/controller-selection/"><span class="sn-n">13</span>เลือกชิปควบคุม</a><a href="/learn/power-electronics/switching-power-supply/"><span class="sn-n">14</span>แหล่งจ่ายสวิตชิ่ง</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · ภาคปฏิบัติและแล็บ</span><div class="sn-list"><a href="/learn/power-electronics/engineering-techniques/"><span class="sn-n">15</span>เทคนิคหน้างาน</a><a href="/learn/power-electronics/troubleshooting/"><span class="sn-n">16</span>วิเคราะห์อาการเสีย</a><a href="/learn/power-electronics/converter-lab/" aria-current="page"><span class="sn-n">17</span>แล็บจำลอง</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 13.17 · อิเล็กทรอนิกส์กำลัง · DC-DC Converter Simulator Lab</p>
+      <h1>แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ</h1>
+      <p class="lede">ซิมูเลเตอร์ระดับการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค กับแบตเตอรี่ ไฟบ้าน โซลาร์ โหลด 3 แบบ ตัวควบคุม 4 โหมด สโคป 2 ช่อง ฟังก์ชันเจนฯ คำนวณ L และใบงาน 10 ชุด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#how-to">วิธีใช้</a>
+        <a class="btn btn-ghost btn-sm" href="#worksheets">ใบงานทดลอง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>จำลองทุกจังหวะสวิตช์ ไม่ใช่แบบเฉลี่ย</li>
+          <li>แหล่งจ่าย 3 แบบ โหลด 3 แบบ ตัวควบคุม 4 โหมด</li>
+          <li>สโคปเป็นเอนเวโลป min–max ไม่เกิด aliasing</li>
+          <li>ใบงาน 10 ชุด กดปุ่มโหลด preset ได้ทันที</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#how-to">วิธีใช้</a></li><li><a href="#worksheets">ใบงานทดลอง</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+<section class="tsec"><p>ซิมูเลเตอร์นี้คำนวณ <strong>ทุกจังหวะการสวิตช์จริง</strong> (ไม่ใช่แบบเฉลี่ย) ด้วยขั้นเวลา ~1/120 ของคาบ รวมผลของ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>d</mi><mi>s</mi><mo stretchy="false">(</mo><mi>o</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></msub></mrow><annotation encoding="application/x-tex">R_{ds(on)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0385em;vertical-align:-0.3552em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">s</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">V_F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> ไดโอด, DCR ขด, ESR ตัวเก็บประจุ, CCM/DCM และอิมพีแดนซ์ของแหล่งจ่าย ทำงานในเบราว์เซอร์ทั้งหมด</p>
+<div class="pe-lab" data-topo="buck" id="peLab" data-hash><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+
+
+</section>
+
+    <section class="tsec" aria-labelledby="how-to">
+    <h2 id="how-to">วิธีใช้</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ส่วน</th>
+<th>ใช้ทำอะไร</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>① แหล่งจ่าย</td>
+<td>แบตเตอรี่ / ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลง+บริดจ์ / แผงโซลาร์</td>
+</tr>
+<tr>
+<td>② ภาคกำลัง</td>
+<td>ความถี่สวิตช์, L, C, ค่าแฝง</td>
+</tr>
+<tr>
+<td>③ โหลด</td>
+<td>ตัวต้านทาน / กระแสคงที่ (e-load) / step load</td>
+</tr>
+<tr>
+<td>④ ตัวควบคุม</td>
+<td>Open loop, Voltage-mode PI ดิจิทัล, Peak current mode + slope compensation, MPPT</td>
+</tr>
+<tr>
+<td>⑤ ฟังก์ชันเจนฯ</td>
+<td>ฉีด square/sine/triangle เข้าที่ Vref หรือ Duty</td>
+</tr>
+<tr>
+<td>สโคป</td>
+<td>เลือกสัญญาณ 2 ช่อง, time/div, ค่าเฉลี่ย/p-p แสดงอัตโนมัติ (ภาพเป็นเอนเวโลป min–max จึงไม่เกิด aliasing)</td>
+</tr>
+<tr>
+<td>⑥ คำนวณ L/C</td>
+<td>หา L, C, จำนวนรอบ, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mrow><mi>p</mi><mi>k</mi></mrow></msub></mrow><annotation encoding="application/x-tex">B_{pk}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>, ขนาดลวด แล้วกด &quot;ใช้ค่านี้ในซิม&quot;</td>
+</tr>
+</tbody></table></div>
+<div class="note"><b>ขอบเขตของแบบจำลอง</b> สวิตช์และไดโอดเป็นแบบอุดมคติ + ค่าแฝงหลัก ไม่จำลอง ringing จาก L/C แฝงของ PCB, reverse recovery, การอิ่มตัวของแกน และความร้อน — ปรากฏการณ์เหล่านี้ต้องเรียนจาก <a href="/learn/power-electronics/engineering-techniques/">เทคนิคเชิงช่าง</a> และการวัดจริง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worksheets">
+    <h2 id="worksheets">ใบงานทดลอง</h2>
+<div class="pe-ws" id="ws1"><p><b>แลป 1 — Volt-second balance (Buck):</b> Open loop, D = 0.3, 0.5, 0.7 บันทึก Vout เทียบ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><msub><mi>V</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">DV_{in}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> อธิบายความต่างด้วย <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>d</mi><mi>s</mi><mo stretchy="false">(</mo><mi>o</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></msub></mrow><annotation encoding="application/x-tex">R_{ds(on)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0385em;vertical-align:-0.3552em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">s</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">V_F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-basic" data-pe-target="peLab">โหลดการตั้งค่าแลป 1 ↑</button></div>
+
+<div class="pe-ws" id="ws2"><p><b>แลป 2 — Ripple และ CCM/DCM:</b> CH1 = iL, เพิ่ม R จาก 10 → 200 Ω หาค่า R ที่เริ่มเข้า DCM เทียบสูตร <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mrow><mi>c</mi><mi>r</mi><mi>i</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">K_{crit}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">cr</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-dcm" data-pe-target="peLab">โหลดการตั้งค่าแลป 2 ↑</button></div>
+
+<div class="pe-ws" id="ws3"><p><b>แลป 3 — ออกแบบตัวเหนี่ยวนำ:</b> ใช้ส่วน ⑥ ออกแบบ ΔiL = 20% แล้วยืนยัน ΔiL ในสโคป</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-basic" data-pe-target="peLab">โหลดการตั้งค่าแลป 3 ↑</button></div>
+
+<div class="pe-ws" id="ws4"><p><b>แลป 4 — Boost และขีดจำกัดอัตราขยาย:</b> Open loop เพิ่ม D จาก 0.5 → 0.95 พร้อม ESR(L) = 0.2 Ω วาดกราฟ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">V_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>–<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> หาจุดสูงสุด</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="boost-gain-limit" data-pe-target="peLab">โหลดการตั้งค่าแลป 4 ↑</button></div>
+
+<div class="pe-ws" id="ws5"><p><b>แลป 5 — Step load และตัวชดเชย:</b> Voltage-mode PI, step load 10 → 5 Ω ปรับ Kp, Ki ดู overshoot/settling บันทึกค่าที่ดีที่สุด</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-vmc-step" data-pe-target="peLab">โหลดการตั้งค่าแลป 5 ↑</button></div>
+
+<div class="pe-ws" id="ws6"><p><b>แลป 6 — Peak current mode & subharmonic:</b> Boost, PCMC, slope k = 0 → 0.5 → 1 บันทึกรูปคลื่น iL</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="boost-subharmonic" data-pe-target="peLab">โหลดการตั้งค่าแลป 6 ↑</button></div>
+
+<div class="pe-ws" id="ws7"><p><b>แลป 7 — วัด <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>G</mi><mrow><mi>v</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">G_{vd}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> ด้วยฟังก์ชันเจนฯ:</b> Buck open loop, ฉีด sine เข้า Duty แอมพลิจูด 0.01 ที่ 200 Hz – 10 kHz วัด p-p ของ Vout คำนวณ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><msub><mi>G</mi><mrow><mi>v</mi><mi>d</mi></mrow></msub><mi mathvariant="normal">∣</mi><mo>=</mo><mi mathvariant="normal">Δ</mi><msub><mi>V</mi><mrow><mi>o</mi><mo separator="true">,</mo><mi>p</mi><mi>p</mi></mrow></msub><mi mathvariant="normal">/</mi><mn>0.02</mn></mrow><annotation encoding="application/x-tex">|G_{vd}| = \Delta V_{o,pp}/0.02</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">pp</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">/0.02</span></span></span></span> เทียบกับสูตร หา <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">f_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> จากยอดเรโซแนนซ์</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-gvd" data-pe-target="peLab">โหลดการตั้งค่าแลป 7 ↑</button></div>
+
+<div class="pe-ws" id="ws8"><p><b>แลป 8 — แหล่งจ่ายไฟบ้าน:</b> เลือกไฟบ้าน 24 Vrms, Cin 1000 µF, time/div 5 ms ดู ripple 100 Hz ที่ Vin และดูว่าลูป PI กำจัดออกจาก Vout ได้แค่ไหน ลด Cin ลงจนลูปไม่ไหว</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="mains" data-pe-target="peLab">โหลดการตั้งค่าแลป 8 ↑</button></div>
+
+<div class="pe-ws" id="ws9"><p><b>แลป 9 — โซลาร์ + MPPT:</b> แหล่ง = โซลาร์, ตัวควบคุม = MPPT, เปลี่ยน G = 1000 → 500 W/m² ดู Vin และ Pin ปรับ R โหลดให้ระบบหา MPP ได้</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="solar-mppt" data-pe-target="peLab">โหลดการตั้งค่าแลป 9 ↑</button></div>
+
+<div class="pe-ws" id="ws10"><p><b>แลป 10 — Ćuk:</b> ลด C1 ทีละขั้น ดูริปเปิลและการหน่วงของ VC1, เปรียบเทียบ ripple ของกระแสขาเข้า (CH = Iin) กับ Buck-Boost</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="cuk-damping" data-pe-target="peLab">โหลดการตั้งค่าแลป 10 ↑</button></div>
+
+<p>@@H2 next-steps|ต่อยอดสู่ของจริง@@
+เมื่อได้ค่าจากซิม → <a href="/learn/power-electronics/inductor-design/">ออกแบบตัวเหนี่ยวนำ</a> → <a href="/learn/power-electronics/controller-selection/">เลือกตัวควบคุม</a> → <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a> → bring-up ตาม <a href="/learn/power-electronics/engineering-techniques/">เทคนิคเชิงช่าง</a></p>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>ซิมูเลเตอร์นี้ต่างจาก SPICE อย่างไร?</summary><p>เป็นแบบจำลองระดับการสวิตช์ที่รวมค่าแฝงหลักคือ Rds(on) Vf DCR ESR และอิมพีแดนซ์ของแหล่งจ่าย ทำงานในเบราว์เซอร์ทันทีโดยไม่ต้องติดตั้ง แต่ไม่จำลอง ringing จากค่าแฝงของ PCB reverse recovery การอิ่มตัวของแกน และความร้อน ซึ่งต้องเรียนจากการวัดจริงหรือ SPICE</p></details></section>
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fpower-electronics%2Fconverter-lab%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fpower-electronics%2Fconverter-lab%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fpower-electronics%2Fconverter-lab%2F&amp;text=%E0%B9%81%E0%B8%A5%E0%B9%87%E0%B8%9A%E0%B8%88%E0%B8%B3%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20DC-DC%3A%20%E0%B8%AD%E0%B8%AD%E0%B8%AA%E0%B8%8B%E0%B8%B4%E0%B8%A5%E0%B9%82%E0%B8%A5%E0%B8%AA%E0%B9%82%E0%B8%84%E0%B8%9B%20%E0%B8%9F%E0%B8%B1%E0%B8%87%E0%B8%81%E0%B9%8C%E0%B8%8A%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%88%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B9%80%E0%B8%A3%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B9%81%E0%B8%AB%E0%B8%A5%E0%B9%88%E0%B8%87%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2%20%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%84%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%93%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%99%E0%B8%B3" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/power-electronics/converter-lab/" data-share-title="แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/power-electronics/troubleshooting/"><span class="mono">← หน้าก่อนหน้า</span><b>วิเคราะห์อาการเสียของคอนเวอร์เตอร์และแหล่งจ่ายไฟสวิตชิ่ง: อาการ สาเหตุ วิธีตรวจ</b></a><a class="pager-next" href="/learn/"><span class="mono">ไปต่อ →</span><b>คลังความรู้ทั้งหมด</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=149ca666" defer></script>
+<script src="/assets/lesson.js?v=149ca666" defer></script>
+<script src="/assets/pe-sim.js?v=149ca666" defer></script>
+<script src="/assets/pe-lab.js?v=149ca666" defer></script>
+</body>
+</html>

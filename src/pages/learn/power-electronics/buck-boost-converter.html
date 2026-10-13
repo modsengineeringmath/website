@@ -1,0 +1,168 @@
+<!--meta
+{
+  "title": "บั๊ก-บูสต์คอนเวอร์เตอร์: แบบกลับขั้ว แบบ 4 สวิตช์ และการเลือกโทโพโลยี | อาจารย์มด",
+  "h1": "บั๊ก-บูสต์คอนเวอร์เตอร์: แบบกลับขั้ว แบบ 4 สวิตช์ และการเลือกโทโพโลยี",
+  "description": "บั๊ก-บูสต์คอนเวอร์เตอร์แบบกลับขั้ว (inverting) และแบบ 4 สวิตช์ไม่กลับขั้ว: อัตราส่วน −D/(1−D) ความเค้นแรงดันและกระแส ขอบ DCM ฟังก์ชันถ่ายโอนและ RHP zero การป้อนกลับเมื่อขาออกเป็นลบ และตารางเลือกโทโพโลยีเทียบ SEPIC Ćuk flyback",
+  "ogTitle": "บั๊ก-บูสต์ · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "buck-boost-converter",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Buck-boost converter",
+    "Inverting converter",
+    "Four-switch buck-boost",
+    "SEPIC"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "บั๊ก-บูสต์ต่างจาก flyback อย่างไร?",
+      "a": "ทำงานเหมือนกันคือเก็บพลังงานในตัวเหนี่ยวนำช่วงสวิตช์นำแล้วปล่อยให้ขาออกช่วงสวิตช์ดับ flyback เปลี่ยนตัวเหนี่ยวนำเป็นหม้อแปลงที่มีขดสองชุด จึงได้ฉนวนไฟฟ้าและปรับอัตราส่วนด้วยจำนวนรอบ"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>บั๊ก-บูสต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.3 · อิเล็กทรอนิกส์กำลัง · Buck-Boost Converter</p>
+      <h1>บั๊ก-บูสต์คอนเวอร์เตอร์: แบบกลับขั้ว แบบ 4 สวิตช์ และการเลือกโทโพโลยี</h1>
+      <p class="lede">บั๊ก-บูสต์กลับขั้ว −D/(1−D) ความเค้น V<sub>in</sub> + |V<sub>o</sub>| RHP zero บั๊ก-บูสต์ 4 สวิตช์แบบไม่กลับขั้ว และตารางเลือกระหว่าง SEPIC Ćuk และ flyback</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#inverting">Inverting buck-boost</a>
+        <a class="btn btn-ghost btn-sm" href="#stress">ความเค้นสูงกว่า Buck/Boost</a>
+        <a class="btn btn-ghost btn-sm" href="#small-signal">แบบจำลองสัญญาณเล็ก</a>
+        <a class="btn btn-ghost btn-sm" href="#selection">เลือกใช้อย่างไร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(V_o/V_{in} = -D/(1-D)\) — D น้อยกว่า 0.5 ลด มากกว่า 0.5 เพิ่ม</li>
+          <li>สวิตช์และไดโอดรับ \(V_{in}+|V_o|\)</li>
+          <li>RHP zero ต่ำกว่าบูสต์ด้วยปัจจัย 1/D</li>
+          <li>ต้องการขั้วบวกประสิทธิภาพสูง → 4-switch buck-boost</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+
+    <section class="tsec" aria-labelledby="inverting">
+    <h2 id="inverting">Inverting buck-boost</h2>
+<ul>
+<li><strong>ON:</strong> \(v_L = V_{in}\), ไดโอดกลับไบแอส — โหลดได้พลังงานจาก C</li>
+<li><strong>OFF:</strong> \(v_L = V_o\) (ซึ่งเป็นลบ) — L ปล่อยพลังงานทั้งหมดไปขาออก (<em>ไม่มี</em> เส้นทางตรงจาก Vin สู่ Vout)</li>
+</ul>
+<div class="tf" id="W1" data-k="volt-second balance (buck-boost) อัตราส่วนแปลงผัน"><p class="tf-n"><b><span class="fid">W1</span> Volt-second balance (buck-boost)</b> อัตราส่วนแปลงผัน</p>
+        \[ V_{in}D + V_o(1-D) = 0 \;\Rightarrow\; \boxed{\frac{V_o}{V_{in}} = -\frac{D}{1-D}},\qquad I_L = \frac{I_o}{1-D} = I_{in}+I_o \]</div>
+<p>\(D \lt 0.5\) ลดแรงดัน, \(D \gt 0.5\) เพิ่มแรงดัน — นี่คือ <strong>flyback ที่ไม่มีหม้อแปลง</strong> (\(L\) เป็นตัวเก็บพลังงานล้วน)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="stress">
+    <h2 id="stress">ความเค้นสูงกว่า Buck/Boost</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ปริมาณ</th>
+<th>ค่า</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>แรงดันสวิตช์/ไดโอด</td>
+<td>\(V_{in} + \lvert V_o\rvert\)</td>
+</tr>
+<tr>
+<td>กระแสพีก</td>
+<td>\(I_o/(1-D) + \Delta i_L/2\)</td>
+</tr>
+<tr>
+<td>\(\Delta i_L\)</td>
+<td>\(V_{in}D/(Lf_s)\)</td>
+</tr>
+<tr>
+<td>\(\Delta v_o\)</td>
+<td>\(I_oD/(Cf_s)\) + ESR term</td>
+</tr>
+<tr>
+<td>พลังงานต่อคาบที่ L ต้องเก็บ</td>
+<td>\(P_o T_s\) ทั้งหมด → แกนใหญ่กว่า buck ที่กำลังเท่ากัน</td>
+</tr>
+</tbody></table></div>
+<p>ขอบ CCM: \(K_{crit}=(1-D)^2\); DCM: \(\lvert M\rvert = D/\sqrt{K}\) (ไม่ขึ้นกับ \(V_{in}\) ในเชิงอัตราส่วน — สะดวกสำหรับ LED driver)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="small-signal">
+    <h2 id="small-signal">แบบจำลองสัญญาณเล็ก</h2>
+<div class="tf" id="W2" data-k="buck-boost gvd with rhp zero ฟังก์ชันถ่ายโอนและ rhp zero"><p class="tf-n"><b><span class="fid">W2</span> Buck-boost Gvd with RHP zero</b> ฟังก์ชันถ่ายโอนและ RHP zero</p>
+        \[ G_{vd}(s) = -\frac{V_{in}}{(1-D)^2}\cdot\frac{1 - s\dfrac{DL}{R(1-D)^2}}{\dfrac{LC}{(1-D)^2}s^2 + \dfrac{L}{R(1-D)^2}s + 1},
+\qquad \omega_{RHPZ} = \frac{R(1-D)^2}{DL} \]</div>
+<p>RHP zero ต่ำกว่า boost ด้วยปัจจัย \(1/D\) — ยิ่งเพิ่มแรงดันมาก ยิ่งต้องจำกัดแบนด์วิดท์</p>
+<div class="note"><b>เรื่องสัญญาณป้อนกลับขั้วลบ</b> Vout เป็นลบเทียบกับกราวด์ร่วม ต้องใช้ op-amp แบบ inverting (หรือวงจร level-shift) ป้อนกลับให้คอนโทรลเลอร์ ซิมูเลเตอร์บนเว็บนี้แสดงขนาด \(\lvert V_o\rvert\)</div>
+
+<p>@@H2 four-switch|Non-inverting 4-switch buck-boost@@
+ใช้สองขาสวิตช์ (buck leg + boost leg) กับ L ตัวเดียว ทำงาน 3 โหมด: buck (\(V_{in} \gt V_o\)), boost (\(V_{in} \lt V_o\)) และ buck-boost ช่วงเปลี่ยนผ่าน ข้อดี: ขั้วบวก, ความเค้น = \(\max(V_{in},V_o)\), ประสิทธิภาพ 95–98% เหมาะกับแบตเตอรี่ Li-ion ที่แรงดันคร่อมค่าเป้าหมาย, USB-PD, ระบบ 12 V รถยนต์ (cold crank) ตัวอย่างชิปควบคุมดู <a href="/learn/power-electronics/controller-selection/">การเลือกตัวควบคุม</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="selection">
+    <h2 id="selection">เลือกใช้อย่างไร</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ต้องการ</th>
+<th>เลือก</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ขาออกกลับขั้ว ราคาถูก กำลังต่ำ</td>
+<td>Inverting buck-boost</td>
+</tr>
+<tr>
+<td>ขาออกบวก Vin คร่อม Vo กำลังต่ำ-กลาง</td>
+<td>SEPIC</td>
+</tr>
+<tr>
+<td>ขาออกบวก ประสิทธิภาพสูง กำลังกลาง-สูง</td>
+<td>4-switch buck-boost</td>
+</tr>
+<tr>
+<td>กระแสเข้า-ออกต่อเนื่อง EMI ต่ำ (กลับขั้ว)</td>
+<td><a href="/learn/power-electronics/cuk-converter/">Ćuk</a></td>
+</tr>
+<tr>
+<td>ต้องการฉนวนไฟฟ้า</td>
+<td>Flyback (<a href="/learn/power-electronics/switching-power-supply/">SMPS</a>)</td>
+</tr>
+</tbody></table></div>
+<div class="pe-lab" data-topo="buckboost" data-preset="buckboost-basic" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

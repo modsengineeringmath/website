@@ -1,0 +1,143 @@
+<!--meta
+{
+  "title": "แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ | อาจารย์มด",
+  "h1": "แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ",
+  "description": "แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด",
+  "ogTitle": "แล็บจำลอง · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "converter-lab",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Circuit simulation",
+    "Virtual laboratory",
+    "DC-DC converter",
+    "Oscilloscope",
+    "Function generator"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ซิมูเลเตอร์นี้ต่างจาก SPICE อย่างไร?",
+      "a": "เป็นแบบจำลองระดับการสวิตช์ที่รวมค่าแฝงหลักคือ Rds(on) Vf DCR ESR และอิมพีแดนซ์ของแหล่งจ่าย ทำงานในเบราว์เซอร์ทันทีโดยไม่ต้องติดตั้ง แต่ไม่จำลอง ringing จากค่าแฝงของ PCB reverse recovery การอิ่มตัวของแกน และความร้อน ซึ่งต้องเรียนจากการวัดจริงหรือ SPICE"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>แล็บจำลอง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.17 · อิเล็กทรอนิกส์กำลัง · DC-DC Converter Simulator Lab</p>
+      <h1>แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ</h1>
+      <p class="lede">ซิมูเลเตอร์ระดับการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค กับแบตเตอรี่ ไฟบ้าน โซลาร์ โหลด 3 แบบ ตัวควบคุม 4 โหมด สโคป 2 ช่อง ฟังก์ชันเจนฯ คำนวณ L และใบงาน 10 ชุด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#how-to">วิธีใช้</a>
+        <a class="btn btn-ghost btn-sm" href="#worksheets">ใบงานทดลอง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>จำลองทุกจังหวะสวิตช์ ไม่ใช่แบบเฉลี่ย</li>
+          <li>แหล่งจ่าย 3 แบบ โหลด 3 แบบ ตัวควบคุม 4 โหมด</li>
+          <li>สโคปเป็นเอนเวโลป min–max ไม่เกิด aliasing</li>
+          <li>ใบงาน 10 ชุด กดปุ่มโหลด preset ได้ทันที</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+<section class="tsec"><p>ซิมูเลเตอร์นี้คำนวณ <strong>ทุกจังหวะการสวิตช์จริง</strong> (ไม่ใช่แบบเฉลี่ย) ด้วยขั้นเวลา ~1/120 ของคาบ รวมผลของ \(R_{ds(on)}\), \(V_F\) ไดโอด, DCR ขด, ESR ตัวเก็บประจุ, CCM/DCM และอิมพีแดนซ์ของแหล่งจ่าย ทำงานในเบราว์เซอร์ทั้งหมด</p>
+<div class="pe-lab" data-topo="buck" id="peLab" data-hash><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+
+
+</section>
+
+    <section class="tsec" aria-labelledby="how-to">
+    <h2 id="how-to">วิธีใช้</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ส่วน</th>
+<th>ใช้ทำอะไร</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>① แหล่งจ่าย</td>
+<td>แบตเตอรี่ / ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลง+บริดจ์ / แผงโซลาร์</td>
+</tr>
+<tr>
+<td>② ภาคกำลัง</td>
+<td>ความถี่สวิตช์, L, C, ค่าแฝง</td>
+</tr>
+<tr>
+<td>③ โหลด</td>
+<td>ตัวต้านทาน / กระแสคงที่ (e-load) / step load</td>
+</tr>
+<tr>
+<td>④ ตัวควบคุม</td>
+<td>Open loop, Voltage-mode PI ดิจิทัล, Peak current mode + slope compensation, MPPT</td>
+</tr>
+<tr>
+<td>⑤ ฟังก์ชันเจนฯ</td>
+<td>ฉีด square/sine/triangle เข้าที่ Vref หรือ Duty</td>
+</tr>
+<tr>
+<td>สโคป</td>
+<td>เลือกสัญญาณ 2 ช่อง, time/div, ค่าเฉลี่ย/p-p แสดงอัตโนมัติ (ภาพเป็นเอนเวโลป min–max จึงไม่เกิด aliasing)</td>
+</tr>
+<tr>
+<td>⑥ คำนวณ L/C</td>
+<td>หา L, C, จำนวนรอบ, \(B_{pk}\), ขนาดลวด แล้วกด &quot;ใช้ค่านี้ในซิม&quot;</td>
+</tr>
+</tbody></table></div>
+<div class="note"><b>ขอบเขตของแบบจำลอง</b> สวิตช์และไดโอดเป็นแบบอุดมคติ + ค่าแฝงหลัก ไม่จำลอง ringing จาก L/C แฝงของ PCB, reverse recovery, การอิ่มตัวของแกน และความร้อน — ปรากฏการณ์เหล่านี้ต้องเรียนจาก <a href="/learn/power-electronics/engineering-techniques/">เทคนิคเชิงช่าง</a> และการวัดจริง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="worksheets">
+    <h2 id="worksheets">ใบงานทดลอง</h2>
+<div class="pe-ws" id="ws1"><p><b>แลป 1 — Volt-second balance (Buck):</b> Open loop, D = 0.3, 0.5, 0.7 บันทึก Vout เทียบ \(DV_{in}\) อธิบายความต่างด้วย \(R_{ds(on)}\), \(V_F\)</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-basic" data-pe-target="peLab">โหลดการตั้งค่าแลป 1 ↑</button></div>
+
+<div class="pe-ws" id="ws2"><p><b>แลป 2 — Ripple และ CCM/DCM:</b> CH1 = iL, เพิ่ม R จาก 10 → 200 Ω หาค่า R ที่เริ่มเข้า DCM เทียบสูตร \(K_{crit}\)</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-dcm" data-pe-target="peLab">โหลดการตั้งค่าแลป 2 ↑</button></div>
+
+<div class="pe-ws" id="ws3"><p><b>แลป 3 — ออกแบบตัวเหนี่ยวนำ:</b> ใช้ส่วน ⑥ ออกแบบ ΔiL = 20% แล้วยืนยัน ΔiL ในสโคป</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-basic" data-pe-target="peLab">โหลดการตั้งค่าแลป 3 ↑</button></div>
+
+<div class="pe-ws" id="ws4"><p><b>แลป 4 — Boost และขีดจำกัดอัตราขยาย:</b> Open loop เพิ่ม D จาก 0.5 → 0.95 พร้อม ESR(L) = 0.2 Ω วาดกราฟ \(V_o\)–\(D\) หาจุดสูงสุด</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="boost-gain-limit" data-pe-target="peLab">โหลดการตั้งค่าแลป 4 ↑</button></div>
+
+<div class="pe-ws" id="ws5"><p><b>แลป 5 — Step load และตัวชดเชย:</b> Voltage-mode PI, step load 10 → 5 Ω ปรับ Kp, Ki ดู overshoot/settling บันทึกค่าที่ดีที่สุด</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-vmc-step" data-pe-target="peLab">โหลดการตั้งค่าแลป 5 ↑</button></div>
+
+<div class="pe-ws" id="ws6"><p><b>แลป 6 — Peak current mode & subharmonic:</b> Boost, PCMC, slope k = 0 → 0.5 → 1 บันทึกรูปคลื่น iL</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="boost-subharmonic" data-pe-target="peLab">โหลดการตั้งค่าแลป 6 ↑</button></div>
+
+<div class="pe-ws" id="ws7"><p><b>แลป 7 — วัด \(G_{vd}\) ด้วยฟังก์ชันเจนฯ:</b> Buck open loop, ฉีด sine เข้า Duty แอมพลิจูด 0.01 ที่ 200 Hz – 10 kHz วัด p-p ของ Vout คำนวณ \(|G_{vd}| = \Delta V_{o,pp}/0.02\) เทียบกับสูตร หา \(f_0\) จากยอดเรโซแนนซ์</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="buck-gvd" data-pe-target="peLab">โหลดการตั้งค่าแลป 7 ↑</button></div>
+
+<div class="pe-ws" id="ws8"><p><b>แลป 8 — แหล่งจ่ายไฟบ้าน:</b> เลือกไฟบ้าน 24 Vrms, Cin 1000 µF, time/div 5 ms ดู ripple 100 Hz ที่ Vin และดูว่าลูป PI กำจัดออกจาก Vout ได้แค่ไหน ลด Cin ลงจนลูปไม่ไหว</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="mains" data-pe-target="peLab">โหลดการตั้งค่าแลป 8 ↑</button></div>
+
+<div class="pe-ws" id="ws9"><p><b>แลป 9 — โซลาร์ + MPPT:</b> แหล่ง = โซลาร์, ตัวควบคุม = MPPT, เปลี่ยน G = 1000 → 500 W/m² ดู Vin และ Pin ปรับ R โหลดให้ระบบหา MPP ได้</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="solar-mppt" data-pe-target="peLab">โหลดการตั้งค่าแลป 9 ↑</button></div>
+
+<div class="pe-ws" id="ws10"><p><b>แลป 10 — Ćuk:</b> ลด C1 ทีละขั้น ดูริปเปิลและการหน่วงของ VC1, เปรียบเทียบ ripple ของกระแสขาเข้า (CH = Iin) กับ Buck-Boost</p><button type="button" class="btn btn-ghost btn-sm" data-pe-preset="cuk-damping" data-pe-target="peLab">โหลดการตั้งค่าแลป 10 ↑</button></div>
+
+<p>@@H2 next-steps|ต่อยอดสู่ของจริง@@
+เมื่อได้ค่าจากซิม → <a href="/learn/power-electronics/inductor-design/">ออกแบบตัวเหนี่ยวนำ</a> → <a href="/learn/power-electronics/controller-selection/">เลือกตัวควบคุม</a> → <a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a> → bring-up ตาม <a href="/learn/power-electronics/engineering-techniques/">เทคนิคเชิงช่าง</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

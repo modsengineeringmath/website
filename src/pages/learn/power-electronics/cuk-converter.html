@@ -1,0 +1,142 @@
+<!--meta
+{
+  "title": "ชุคคอนเวอร์เตอร์ (Ćuk Converter): ตัวเก็บประจุคัปปลิ้ง การออกแบบ การหน่วง และ zero ripple | อาจารย์มด",
+  "h1": "ชุคคอนเวอร์เตอร์ (Ćuk Converter): ตัวเก็บประจุคัปปลิ้ง การออกแบบ การหน่วง และ zero ripple",
+  "description": "ชุคคอนเวอร์เตอร์ (Ćuk converter) ละเอียด: การทำงานผ่านตัวเก็บประจุคัปปลิ้ง VC1 = Vin + |Vo| อัตราส่วน −D/(1−D) สมการออกแบบ L1 L2 C1 C2 กระแส RMS ของ C1 ไดนามิกอันดับสี่ การหน่วงด้วย RC coupled inductor และ ripple steering พร้อมซิมูเลชัน",
+  "ogTitle": "ชุค (Ćuk) · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "cuk-converter",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Ćuk converter",
+    "Coupled inductor",
+    "Zero-ripple converter",
+    "DC-DC converter"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ข้อดีหลักของ Ćuk คืออะไร?",
+      "a": "กระแสขาเข้าและขาออกต่อเนื่องเพราะมีตัวเหนี่ยวนำอยู่ทั้งสองฝั่ง ฟิลเตอร์ EMI จึงเล็ก และถ้าพันตัวเหนี่ยวนำสองตัวบนแกนเดียวกันอย่างเหมาะสม จะย้ายริปเปิลไปอยู่ขดเดียวจนอีกขดแทบไม่มีริปเปิล"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>ชุค (Ćuk)</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.4 · อิเล็กทรอนิกส์กำลัง · Ćuk Converter</p>
+      <h1>ชุคคอนเวอร์เตอร์ (Ćuk Converter): ตัวเก็บประจุคัปปลิ้ง การออกแบบ การหน่วง และ zero ripple</h1>
+      <p class="lede">ถ่ายโอนพลังงานผ่านตัวเก็บประจุ C1 สมการออกแบบ L1 L2 C1 ไดนามิกอันดับสี่และการหน่วง coupled inductor กับกระแสริปเปิลเกือบศูนย์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#operation">การทำงาน</a>
+        <a class="btn btn-ghost btn-sm" href="#design-equations">สมการออกแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#pros-cons">ข้อดี-ข้อเสีย</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(V_{C1} = V_{in}+|V_o|\), \(V_o/V_{in} = -D/(1-D)\)</li>
+          <li>กระแสทั้งขาเข้าและขาออกต่อเนื่อง → EMI ต่ำ</li>
+          <li>C1 ต้องเป็นฟิล์มหรือเซรามิก รับ RMS สูง</li>
+          <li>อันดับสี่ → ต้องหน่วงเรโซแนนซ์ก่อนปิดลูป</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ripple, duty, gvd, ESR, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+<section class="tsec"><p>คิดค้นโดย Slobodan Ćuk (Caltech, 1976) — เป็น <strong>boost ต่ออนุกรมกับ buck</strong> โดยใช้ตัวเก็บประจุ \(C_1\) เป็นตัวถ่ายโอนพลังงานแทนตัวเหนี่ยวนำ</p>
+</section>
+
+    <section class="tsec" aria-labelledby="operation">
+    <h2 id="operation">การทำงาน</h2>
+<ul>
+<li><strong>ON (Q นำ):</strong> \(L_1\) รับพลังงานจาก \(V_{in}\); \(C_1\) คายประจุผ่าน Q ไปยัง \(L_2\) และโหลด</li>
+<li><strong>OFF (D นำ):</strong> \(L_1\) ชาร์จ \(C_1\) ผ่านไดโอด; \(L_2\) ปล่อยพลังงานให้โหลดผ่านไดโอด</li>
+</ul>
+<p>Volt-second บน \(L_1\) และ \(L_2\):</p>
+<div class="tf" id="K1" data-k="coupling-capacitor voltage แรงดันบน c1"><p class="tf-n"><b><span class="fid">K1</span> Coupling-capacitor voltage</b> แรงดันบน C1</p>
+        \[ V_{in}D + (V_{in}-V_{C1})(1-D)=0 \Rightarrow V_{C1}=\frac{V_{in}}{1-D} = V_{in}+\lvert V_o\rvert \]</div>
+<div class="tf" id="K2" data-k="ćuk conversion ratio อัตราส่วนแปลงผัน"><p class="tf-n"><b><span class="fid">K2</span> Ćuk conversion ratio</b> อัตราส่วนแปลงผัน</p>
+        \[ (V_{C1}+V_o)D + V_o(1-D)=0 \Rightarrow \boxed{\frac{V_o}{V_{in}} = -\frac{D}{1-D}} \]</div>
+<p>Charge balance บน \(C_1\): \(I_{L1}(1-D) = I_{L2}D\) → \(I_{L1} = I_{in}\), \(I_{L2}=I_o\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="design-equations">
+    <h2 id="design-equations">สมการออกแบบ</h2>
+<div class="tf" id="K3" data-k="ćuk design ripples สมการออกแบบ"><p class="tf-n"><b><span class="fid">K3</span> Ćuk design ripples</b> สมการออกแบบ</p>
+        \[ \Delta i_{L1} = \frac{V_{in}D}{L_1 f_s},\quad
+\Delta i_{L2} = \frac{V_{in}D}{L_2 f_s},\quad
+\Delta v_{C1} = \frac{I_o D}{C_1 f_s},\quad
+\Delta v_o = \frac{\Delta i_{L2}}{8C_2 f_s} \]</div>
+<p>\(C_1\) รับ RMS current สูง: \(I_{C1,rms}=\sqrt{I_{L1}^2(1-D)+I_{L2}^2D}\) → ใช้ฟิล์ม (PP) หรือเซรามิกแรงดันสูง <strong>ห้ามใช้อิเล็กโตรไลต์</strong> ต้องทนแรงดัน \(\ge 1.5(V_{in}+\lvert V_o\rvert)\)</p>
+<p>@@H2 damping|ไดนามิกอันดับสี่และการหน่วง@@
+สถานะ 4 ตัว (\(i_{L1}, i_{L2}, v_{C1}, v_{C2}\)) ทำให้มีขั้วคู่ซับซ้อนสองคู่ เรโซแนนซ์ \(L_1\)–\(C_1\) และ \(L_2\)–\(C_1\) มักมี Q สูง และ \(G_{vd}\) มีคู่ศูนย์ (บางกรณีอยู่ครึ่งขวา) ทำให้เฟสตกถึง −360°</p>
+<p><strong>วิธีแก้เชิงวิศวกรรม:</strong></p>
+<ol>
+<li>เพิ่ม \(R_d\)–\(C_d\) damping ขนาน \(C_1\) โดย \(C_d \approx 4C_1\), \(R_d \approx \sqrt{L_{eq}/C_1}\)</li>
+<li>ใช้ current-mode ที่วัดผลรวม \(i_{L1}+i_{L2}\) (= กระแสสวิตช์)</li>
+<li>จำกัด \(f_c\) ให้ต่ำกว่าเรโซแนนซ์ต่ำสุดอย่างน้อย 3–5 เท่า</li>
+</ol>
+<p>@@H2 coupled-inductor|Coupled inductor และ zero-ripple@@
+พัน \(L_1\), \(L_2\) บนแกนเดียวกัน (แรงดันบนทั้งสองเท่ากันทุกช่วงเวลา) เลือก coupling \(k = n\) (อัตราส่วนรอบ) ทำให้ ripple ย้ายไปอยู่ขดเดียว — อีกขดได้กระแส <strong>ripple เกือบศูนย์</strong> (ripple steering) ลด EMI ขาเข้าหรือขาออกได้มาก เป็นจุดเด่นที่ทำให้ Ćuk ใช้ในงานเซนเซอร์, LED และโซลาร์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pros-cons">
+    <h2 id="pros-cons">ข้อดี-ข้อเสีย</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>✅</th>
+<th>❌</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>กระแสเข้า-ออกต่อเนื่อง, ฟิลเตอร์ EMI เล็ก</td>
+<td>กลับขั้ว</td>
+</tr>
+<tr>
+<td>ripple ต่ำมาก (โดยเฉพาะ coupled)</td>
+<td>ชิ้นส่วนมาก, C1 รับความเค้นสูง</td>
+</tr>
+<tr>
+<td>ขยายเป็นแบบมีฉนวน (isolated Ćuk) ได้</td>
+<td>ควบคุมยาก (อันดับ 4)</td>
+</tr>
+</tbody></table></div>
+<div class="pe-lab" data-topo="cuk" data-preset="cuk-basic" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+
+
+<p><strong>ทดลอง:</strong> ลด C1 เป็น 2 µF แล้วเปิดโหมด Voltage-mode PI → สังเกตริปเปิลและการหน่วงของ VC1 (CH2) ว่าเฉลี่ยใกล้ \(V_{in}+\lvert V_o\rvert\)</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

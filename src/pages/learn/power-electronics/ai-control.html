@@ -1,0 +1,150 @@
+<!--meta
+{
+  "title": "AI ช่วยควบคุมและวินิจฉัยคอนเวอร์เตอร์: ปรับจูนอัตโนมัติ RL วินิจฉัยจากรูปคลื่น และ LLM | อาจารย์มด",
+  "h1": "AI ช่วยควบคุมและวินิจฉัยคอนเวอร์เตอร์: ปรับจูนอัตโนมัติ RL วินิจฉัยจากรูปคลื่น และ LLM",
+  "description": "ใช้ AI และ machine learning กับคอนเวอร์เตอร์ DC-DC อย่างปลอดภัย: สถาปัตยกรรมแบ่งชั้น ปรับจูนอัตโนมัติด้วย Bayesian optimization reinforcement learning neural-network observer MPPT ใต้เงาบางส่วน วินิจฉัยความผิดพลาดจากคุณลักษณะรูปคลื่น บำรุงรักษาเชิงพยากรณ์ และการใช้ LLM เป็นผู้ช่วยวิศวกรพร้อมตัวอย่าง prompt",
+  "ogTitle": "AI ช่วยควบคุม · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "ai-control",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-13",
+  "updated": "2026-10-13",
+  "level": [
+    "Undergraduate",
+    "Graduate"
+  ],
+  "about": [
+    "Artificial intelligence",
+    "Machine learning",
+    "Reinforcement learning",
+    "Fault diagnosis",
+    "Predictive maintenance"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/pe-sim.js",
+    "/assets/pe-lab.js"
+  ],
+  "faq": [
+    {
+      "q": "ใช้ AI ควบคุมคอนเวอร์เตอร์แทน PID ได้ไหม?",
+      "a": "ในงานวิจัยทำได้ แต่ในผลิตภัณฑ์ควรให้ลูปเร็วเป็นตัวควบคุมที่พิสูจน์เสถียรภาพได้ แล้วใช้ AI ในชั้นกำกับดูแล เช่น ปรับเกน เลือกโหมด ทำนายความผิดพลาด โดยจำกัดขอบเขตค่าที่ AI สั่งได้"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li>AI ช่วยควบคุม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 13.10 · อิเล็กทรอนิกส์กำลัง · AI-Assisted Control & Diagnosis</p>
+      <h1>AI ช่วยควบคุมและวินิจฉัยคอนเวอร์เตอร์: ปรับจูนอัตโนมัติ RL วินิจฉัยจากรูปคลื่น และ LLM</h1>
+      <p class="lede">แบ่งชั้นให้ปลอดภัย ลูปเร็วต้องเชิงกำหนด AI อยู่ชั้นกำกับ ปรับจูนอัตโนมัติ RL วินิจฉัยความผิดพลาดจากรูปคลื่น บำรุงรักษาเชิงพยากรณ์ และใช้ LLM เป็นผู้ช่วยออกแบบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#safety-layers">หลักความปลอดภัยข้อแรก</a>
+        <a class="btn btn-ghost btn-sm" href="#ai-methods">รูปแบบการใช้ AI</a>
+        <a class="btn btn-ghost btn-sm" href="#research">แนวทางวิจัยระดับปริญญาโท</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ลูปกระแสและ OCP ต้องเชิงกำหนด AI ห้ามแตะ</li>
+          <li>AI ปรับพารามิเตอร์ภายในขอบเขตที่ clamp</li>
+          <li>คุณลักษณะรูปคลื่นบอก L ESR Rds(on) slope comp และ PM</li>
+          <li>ทุกคำตอบของ LLM ต้องคำนวณซ้ำ ซิม และวัดจริง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+
+    <section class="tsec" aria-labelledby="safety-layers">
+    <h2 id="safety-layers">หลักความปลอดภัยข้อแรก</h2>
+<blockquote>
+<p><strong>ลูปในที่เร็ว (กระแส, OCP) ต้องเป็นอัลกอริทึมเชิงกำหนด (deterministic) ที่พิสูจน์เสถียรภาพได้</strong> AI ทำงานในชั้น <em>กำกับดูแล</em> (supervisory): ปรับพารามิเตอร์ วางแผน ทำนาย วินิจฉัย — ภายใต้ขอบเขตที่ถูก clamp เสมอ</p>
+</blockquote>
+<pre class="code"><code>[AI/ML: จูน, ทำนาย, วินิจฉัย]  ← ms–ชั่วโมง
+        │ ปรับ Kp, Ki, Vref, โหมด (มีขอบเขต)
+[ลูปแรงดัน PI / Type III]       ← 100 µs–ms
+[ลูปกระแส + OCP ฮาร์ดแวร์]       ← µs (ห้าม AI แตะ)</code></pre>
+    </section>
+
+    <section class="tsec" aria-labelledby="ai-methods">
+    <h2 id="ai-methods">รูปแบบการใช้ AI</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>งาน</th>
+<th>เทคนิค</th>
+<th>สถานะความพร้อม</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ปรับจูนตัวควบคุมอัตโนมัติ</td>
+<td>Bayesian optimization / GA บน digital twin แล้วยืนยันบน HIL</td>
+<td>ใช้จริงได้</td>
+</tr>
+<tr>
+<td>ประมาณสถานะ/โหลด</td>
+<td>NN หรือ Gaussian process เสริม observer แบบจำลอง</td>
+<td>งานวิจัย-ใช้จริงบางส่วน</td>
+</tr>
+<tr>
+<td>ควบคุมแบบ RL</td>
+<td>DDPG/PPO เรียนบนซิม แล้วกลั่นเป็นตาราง/โครงข่ายเล็ก (policy distillation)</td>
+<td>งานวิจัยระดับ ป.โท-เอก</td>
+</tr>
+<tr>
+<td>MPPT โซลาร์ใต้เงาบางส่วน</td>
+<td>หาค่าสูงสุดสากล (global MPP) ด้วย PSO/NN</td>
+<td>ใช้จริงได้</td>
+</tr>
+<tr>
+<td>วินิจฉัยความผิดพลาด</td>
+<td>ดึงคุณลักษณะ (ripple, ความชัน iL, ประสิทธิภาพ, อุณหภูมิ) → random forest / 1D-CNN</td>
+<td>ใช้จริงได้</td>
+</tr>
+<tr>
+<td>บำรุงรักษาเชิงพยากรณ์</td>
+<td>ติดตาม ESR, \(R_{ds(on)}\), \(V_F\) เทียบเวลา → ประมาณอายุ (RUL)</td>
+<td>ใช้จริงได้</td>
+</tr>
+</tbody></table></div>
+<p>@@H2 waveform-diagnosis|ตัวอย่าง: วินิจฉัยจากรูปคลื่น@@
+คุณลักษณะที่วัดได้ง่ายและสื่อความหมาย:</p>
+<ul>
+<li>\(\Delta i_L\) เทียบค่าทฤษฎี → L ลดลง (แกนแตก/อิ่มตัว)</li>
+<li>ripple \(v_o\) ที่ \(f_s\) / \(\Delta i_L\) → ESR ตัวเก็บประจุ</li>
+<li>ประสิทธิภาพลดที่โหลดเท่าเดิม → \(R_{ds(on)}\)/ไดโอดเสื่อม</li>
+<li>ripple ความถี่ \(f_s/2\) → subharmonic (slope comp ไม่พอ)</li>
+<li>การแกว่งความถี่ต่ำหลัง step load → phase margin ต่ำ</li>
+</ul>
+<p>ใช้ <a href="/learn/power-electronics/converter-lab/">ห้องแลปจำลอง</a> สร้างชุดข้อมูล: เปลี่ยน L, ESR, \(R_{on}\) แบบสุ่ม บันทึกค่าที่วัดได้ → ฝึกโมเดลจำแนก — เป็นหัวข้อโครงงาน/วิทยานิพนธ์ที่ดี</p>
+<p>@@H2 llm-assistant|ใช้ LLM (เช่น Claude) เป็นผู้ช่วยวิศวกร@@
+ได้ผลดีเมื่อให้ข้อมูลครบและขอให้แสดงที่มา:
+@@CODE1@@
+<strong>ต้องตรวจทุกครั้ง</strong> ด้วยการคำนวณซ้ำ ซิม และวัดจริง — LLM อาจคำนวณผิดหรืออ้างค่าในดาต้าชีตผิด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="research">
+    <h2 id="research">แนวทางวิจัยระดับปริญญาโท</h2>
+<ul>
+<li>Physics-informed neural network (PINN) เป็นแบบจำลองของคอนเวอร์เตอร์</li>
+<li>Safe RL ที่มี control barrier function รับประกันขอบเขต</li>
+<li>Federated learning สำหรับ fleet ของ EV charger / อินเวอร์เตอร์โซลาร์</li>
+<li>TinyML บน MCU (STM32/ESP32) สำหรับวินิจฉัย ณ หน้างาน</li>
+</ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

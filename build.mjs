@@ -273,6 +273,58 @@ export const TOPICS = [
         summary: "สังเคราะห์และวิเคราะห์ฟูเรียร์ ป้อนคลื่นเข้าวงจรทีละฮาร์มอนิก และวัดโหลดจริง 10 แบบด้วยสโคปกับเครื่องวิเคราะห์กำลัง พร้อมแปลผลอัตโนมัติ วิธีคำนวณทีละขั้น ใบงาน และกรณีศึกษาหน้างาน" },
     ],
   },
+  {
+    // Topic 13: Power electronics — DC-DC converters, modeling & control, hardware, practice, with the switching-level
+    // converter lab (assets/pe-sim.js + pe-lab.js). Same series machinery as control-systems (parts, live(), formula index).
+    slug: "power-electronics",
+    title: "อิเล็กทรอนิกส์กำลัง",
+    en: "Power Electronics",
+    sym: "⚡",
+    summary: "วงจรแปลงผัน DC-DC บั๊ก บูสต์ บั๊ก-บูสต์ ชุค ตั้งแต่ volt-second balance ถึงแบบจำลองสัญญาณเล็ก ออกแบบตัวชดเชย Type II/III peak current mode ควบคุมด้วยออปแอมป์และไมโครคอนโทรลเลอร์ ตัวสังเกต AI ออกแบบตัวเหนี่ยวนำ แหล่งจ่ายทดสอบ SMPS เทคนิคหน้างาน วิเคราะห์อาการเสีย พร้อมแล็บจำลองคอนเวอร์เตอร์",
+    fxHint: "พิมพ์ เช่น duty, ripple, volt-second, dcm, rhp, gvd, type iii, k-factor, slope, tustin, observer, air gap, bulk capacitor, mppt",
+    parts: [
+      { id: "dc-dc", n: 1, title: "วงจรแปลงผัน DC-DC", en: "DC-DC Converters", blurb: "บั๊ก บูสต์ บั๊ก-บูสต์ และชุค ตั้งแต่ volt-second balance ริปเปิล CCM/DCM ความเค้น การสูญเสีย จนถึงฟังก์ชันถ่ายโอนและตัวอย่างออกแบบ" },
+      { id: "control", n: 2, title: "การควบคุมและตัวชดเชย", en: "Modeling & Control", blurb: "แบบจำลองสัญญาณเล็ก ออกแบบตัวชดเชย Type II/III ควบคุมด้วยออปแอมป์และไมโครคอนโทรลเลอร์ ตัวสังเกตสถานะ และ AI ช่วยควบคุม" },
+      { id: "hardware", n: 3, title: "ออกแบบฮาร์ดแวร์", en: "Hardware Design", blurb: "พันตัวเหนี่ยวนำ เลือกแหล่งจ่ายทดสอบ เลือกชิปควบคุมและไมโครคอนโทรลเลอร์ และภาพรวมแหล่งจ่ายไฟสวิตชิ่ง" },
+      { id: "practice", n: 4, title: "ภาคปฏิบัติและแล็บ", en: "Practice & Lab", blurb: "เทคนิคหน้างาน การวัด การ bring-up งานบำรุงรักษา วิเคราะห์อาการเสีย และแล็บจำลองคอนเวอร์เตอร์พร้อมใบงาน" },
+    ],
+    sub: [
+      { slug: "buck-converter", part: "dc-dc", short: "บั๊ก", title: "บั๊กคอนเวอร์เตอร์ (Buck Converter): หลักการ สูตร ริปเปิล CCM/DCM การออกแบบ และฟังก์ชันถ่ายโอน", en: "Buck Converter", sym: "↓V", prefix: "B",
+        summary: "วงจรลดแรงดัน: volt-second balance V_o = DV_in ริปเปิลกระแสและแรงดัน ขอบ CCM/DCM ความเค้นของอุปกรณ์ การสูญเสีย G_vd(s) และตัวอย่างออกแบบ 24 V → 12 V" },
+      { slug: "boost-converter", part: "dc-dc", short: "บูสต์", title: "บูสต์คอนเวอร์เตอร์ (Boost Converter): สูตร ขีดจำกัดอัตราขยาย RHP zero และการออกแบบ", en: "Boost Converter", sym: "↑V", prefix: "U",
+        summary: "วงจรเพิ่มแรงดัน 1/(1−D) ความต้านทานแฝงจำกัดอัตราขยาย ริปเปิลและ ESR ขอบ DCM อันตรายเมื่อไร้โหลด RHP zero และตัวอย่าง 24 V → 48 V" },
+      { slug: "buck-boost-converter", part: "dc-dc", short: "บั๊ก-บูสต์", title: "บั๊ก-บูสต์คอนเวอร์เตอร์: แบบกลับขั้ว แบบ 4 สวิตช์ และการเลือกโทโพโลยี", en: "Buck-Boost Converter", sym: "±V", prefix: "W",
+        summary: "บั๊ก-บูสต์กลับขั้ว −D/(1−D) ความเค้น V_in + |V_o| RHP zero บั๊ก-บูสต์ 4 สวิตช์แบบไม่กลับขั้ว และตารางเลือกระหว่าง SEPIC Ćuk และ flyback" },
+      { slug: "cuk-converter", part: "dc-dc", short: "ชุค (Ćuk)", title: "ชุคคอนเวอร์เตอร์ (Ćuk Converter): ตัวเก็บประจุคัปปลิ้ง การออกแบบ การหน่วง และ zero ripple", en: "Ćuk Converter", sym: "Ć", prefix: "K",
+        summary: "ถ่ายโอนพลังงานผ่านตัวเก็บประจุ C1 สมการออกแบบ L1 L2 C1 ไดนามิกอันดับสี่และการหน่วง coupled inductor กับกระแสริปเปิลเกือบศูนย์" },
+      { slug: "small-signal-model", part: "control", short: "แบบจำลองสัญญาณเล็ก", title: "แบบจำลองสัญญาณเล็กของคอนเวอร์เตอร์ DC-DC: State-Space Averaging และฟังก์ชันถ่ายโอน", en: "Small-Signal Modeling", sym: "Gvd", prefix: "S",
+        summary: "เฉลี่ยสถานะตลอดคาบแล้ว linearize ได้ G_vd G_vg Z_out ตารางฟังก์ชันถ่ายโอนของบั๊ก บูสต์ บั๊ก-บูสต์ PWM gain ลูปเกน และเกณฑ์ฟิลเตอร์ขาเข้าของ Middlebrook" },
+      { slug: "compensator-design", part: "control", short: "ออกแบบตัวชดเชย", title: "ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation", en: "Compensator Design", sym: "Type III", prefix: "C",
+        summary: "เป้าหมายลูป เฟสมาร์จิน ขีดจำกัดความถี่ครอสโอเวอร์ สูตรค่า R C ของ Type II/III ด้วย k-factor ตัวอย่างบั๊กที่ตรวจด้วย python-control และ peak current mode" },
+      { slug: "analog-control", part: "control", short: "ควบคุมแบบอนาล็อก", title: "ควบคุมคอนเวอร์เตอร์แบบอนาล็อกด้วยออปแอมป์: PWM, Error Amplifier, วัดกระแส, TL494, UC3843", en: "Analog Control with Op-Amps", sym: "op-amp", prefix: "A",
+        summary: "สร้าง PWM ด้วยออปแอมป์ล้วน error amplifier การเลือกออปแอมป์ วิธีวัดกระแส 4 แบบ ชิปคลาสสิก TL494 UC384x TL431 + optocoupler และเช็กลิสต์" },
+      { slug: "digital-control", part: "control", short: "ควบคุมแบบดิจิทัล", title: "ควบคุมคอนเวอร์เตอร์ DC-DC แบบดิจิทัล: ADC, DPWM, Limit Cycle, Tustin และโค้ด PI", en: "Digital Control", sym: "z⁻¹", prefix: "Z",
+        summary: "จังหวะสุ่มสัญญาณ ดีเลย์ ความละเอียด DPWM กับ limit cycle แปลงตัวชดเชยด้วย Tustin โค้ด PI พร้อม anti-windup การป้องกันในฮาร์ดแวร์ และขั้นตอน bring-up" },
+      { slug: "observers", part: "control", short: "ตัวสังเกตกระแส", title: "ตัวสังเกตกระแสและสถานะ (Observer) ในคอนเวอร์เตอร์ และการเฝ้าสังเกตสภาวะแวดล้อม", en: "Observers & Condition Monitoring", sym: "x̂", prefix: "O",
+        summary: "Luenberger observer ประมาณ i_L disturbance observer ประมาณกระแสโหลดเพื่อ feedforward Kalman filter ข้อควรระวัง และการเฝ้าสังเกต V_in อุณหภูมิ ESR และการอิ่มตัว" },
+      { slug: "ai-control", part: "control", short: "AI ช่วยควบคุม", title: "AI ช่วยควบคุมและวินิจฉัยคอนเวอร์เตอร์: ปรับจูนอัตโนมัติ RL วินิจฉัยจากรูปคลื่น และ LLM", en: "AI-Assisted Control & Diagnosis", sym: "AI",
+        summary: "แบ่งชั้นให้ปลอดภัย ลูปเร็วต้องเชิงกำหนด AI อยู่ชั้นกำกับ ปรับจูนอัตโนมัติ RL วินิจฉัยความผิดพลาดจากรูปคลื่น บำรุงรักษาเชิงพยากรณ์ และใช้ LLM เป็นผู้ช่วยออกแบบ" },
+      { slug: "inductor-design", part: "hardware", short: "ออกแบบตัวเหนี่ยวนำ", title: "ออกแบบและพันตัวเหนี่ยวนำกำลัง: เลือกแกน จำนวนรอบ ช่องอากาศ ลวด และการสูญเสีย", en: "Power Inductor Design", sym: "N²A_L", prefix: "L",
+        summary: "สมการ L = N²A_L ความหนาแน่นฟลักซ์ area product ขั้นตอนออกแบบพร้อมตัวเลข skin depth Steinmetz เลือกวัสดุแกน และวิธีวัด L กับกระแสอิ่มตัวในแล็บ" },
+      { slug: "test-power-sources", part: "hardware", short: "แหล่งจ่ายทดสอบ", title: "แหล่งจ่ายไฟสำหรับทดสอบวงจร: แบตเตอรี่ ไฟบ้าน 220 V ผ่านเรกติไฟเออร์ และโซลาร์เซลล์", en: "Test Power Sources", sym: "⚡", prefix: "V",
+        summary: "กฎทองของการทดสอบ แบตเตอรี่ 3 ชนิด คำนวณตัวเก็บประจุหลังบริดจ์ inrush ฟิวส์ หม้อแปลงแยกขด แบบจำลองแผงโซลาร์ MPPT และตารางเลือกแหล่งจ่าย" },
+      { slug: "controller-selection", part: "hardware", short: "เลือกชิปควบคุม", title: "เลือกชิปควบคุมและไมโครคอนโทรลเลอร์สำหรับคอนเวอร์เตอร์: รุ่นปัจจุบันและรุ่นที่ไม่ตกยุค", en: "Controller & MCU Selection", sym: "IC",
+        summary: "กรอบการตัดสินใจ ชิปอนาล็อกคลาสสิก TL494 SG3525 UC3843 TL431 ชิปรุ่นปัจจุบัน MCU C2000 STM32G4 dsPIC33 gate driver และคำเตือนเรื่องของปลอม" },
+      { slug: "switching-power-supply", part: "hardware", short: "แหล่งจ่ายสวิตชิ่ง", title: "แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย", en: "Switching Power Supply (SMPS)", sym: "SMPS", prefix: "F",
+        summary: "โครงสร้างแหล่งจ่ายต่อไฟบ้าน EMI filter PFC ตระกูลวงจรแยกฉนวน ขั้นตอนออกแบบ flyback 7 ขั้น มาตรฐาน IEC 62368-1 และ CISPR 32" },
+      { slug: "engineering-techniques", part: "practice", short: "เทคนิคหน้างาน", title: "เทคนิคเชิงช่างและวิศวกรรมสำหรับวงจรสวิตชิ่ง: Layout, Snubber, การวัด, Bode, Bring-up และงานประจำ", en: "Engineering Techniques & Routine Work", sym: "⚙",
+        summary: "hot loop และ layout ออกแบบ RC snubber วัดด้วยสโคปให้ถูก วัดลูปเกนจริง ขั้นตอน bring-up 7 ขั้น ตารางงานบำรุงรักษา และกฎจากประสบการณ์" },
+      { slug: "troubleshooting", part: "practice", short: "วิเคราะห์อาการเสีย", title: "วิเคราะห์อาการเสียของคอนเวอร์เตอร์และแหล่งจ่ายไฟสวิตชิ่ง: อาการ สาเหตุ วิธีตรวจ", en: "Troubleshooting", sym: "⚠",
+        summary: "วิธีคิดแบบเป็นระบบ ตาราง 17 อาการ เช่น ไม่มีเอาต์พุต hiccup แกว่ง เสียงหอน MOSFET ระเบิด แกนอิ่มตัว ริปเปิลสูง EMI และวิธีฝึกด้วยซิมูเลเตอร์" },
+      { slug: "converter-lab", part: "practice", short: "แล็บจำลอง", title: "แล็บจำลองคอนเวอร์เตอร์ DC-DC: ออสซิลโลสโคป ฟังก์ชันเจนเนอเรเตอร์ แหล่งจ่าย โหลด และคำนวณตัวเหนี่ยวนำ", en: "DC-DC Converter Simulator Lab", sym: "▶", tag: "แล็บโต้ตอบ + ใบงาน 10 ชุด",
+        summary: "ซิมูเลเตอร์ระดับการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค กับแบตเตอรี่ ไฟบ้าน โซลาร์ โหลด 3 แบบ ตัวควบคุม 4 โหมด สโคป 2 ช่อง ฟังก์ชันเจนฯ คำนวณ L และใบงาน 10 ชุด" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -666,7 +718,7 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["fourier-series"];
+const MD_SERIES = ["fourier-series", "power-electronics"];
 const MD_GUIDES = [{ src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)" }];
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
@@ -811,6 +863,8 @@ const LABS = [
   ["Harmonic analyzer lab: virtual oscilloscope + power analyzer", "fourier-series/analyzer-lab", "free browser-based power-quality bench in three tabs: (1) Fourier synthesis/analysis of 13 waveforms or any typed x(t) with closed-form coefficients, partial sums, Gibbs and σ-smoothing, amplitude/%/dB/phase spectrum and step-by-step working (symmetry, Euler formulas, coefficient table, Parseval check); (2) periodic waveform into RC/RL/LC/RLC solved harmonic by harmonic and compared with the exact periodic steady state; (3) oscilloscope + power analyzer for 10 loads (resistor, RL motor, SMPS/LED capacitor-input bridge, bridge + choke, TRIAC, active PFC, 6-pulse with α and overlap, 12-pulse, VFD, custom spectrum) reading U, I, I1, CF, P, Q1, S, D, PF, DPF, THD-U, THD-I, TDD, K-factor and neutral current, harmonic bars against IEEE 519-2022 / PEA-MEA / IEC 61000-3-2 limits, source strength Isc/IL and X/R, mitigation (line reactor, DC choke, plain/detuned capacitor, tuned filter, active filter) with automatic diagnosis; 16 worksheets with answers and 6 field case studies; presets via #preset=<name>"],
   ["Fourier series formula index", "fourier-series#formulas", "every Fourier-series and harmonics formula with a citable ID (F basics, T coefficients, S symmetry, C complex/spectrum, P convergence/Parseval, W waveform table, A circuit analysis, H power/THD/PF/IEEE 519, R rectifiers, V inverters/PWM, B DC-DC converters, M mitigation, D DFT/FFT) in one searchable list"],
   ["Fourier series table of 18 waveforms", "fourier-series/waveform-table", "Fourier series, RMS and THD of square, pulse, triangle, sawtooth, half/full-wave rectified sine, 6-pulse line current, TRIAC phase control, clipped sine, SMPS current, quasi-square, six-step, SPWM, trapezoid and inductor-ripple waveforms, each with a thumbnail and a link to its derivation"],
+  ["DC-DC converter simulator lab", "power-electronics/converter-lab", "free browser-based switching-level (cycle-by-cycle) simulator of buck, boost, inverting buck-boost and Cuk converters with Rds(on), diode Vf, inductor DCR and capacitor ESR; sources: battery with internal resistance, 220 V 50 Hz mains through transformer + bridge rectifier + bulk capacitor, or PV panel (single-diode model); loads: resistor, constant current (e-load), step load; control: open loop, digital voltage-mode PI with anti-windup and soft-start, peak current mode with slope compensation, P&O MPPT; 2-channel oscilloscope with min/max envelope, function generator injecting square/sine/triangle into Vref or duty (for Gvd measurement), efficiency/CCM-DCM readouts, L/C design and inductor turns/flux/wire calculator; 10 worksheets with one-click presets via #preset=<name>"],
+  ["Power electronics formula index", "power-electronics#formulas", "every DC-DC converter formula with a citable ID (B buck, U boost, W buck-boost, K Cuk, S small-signal model, C compensator design, A analog control, Z digital control, O observers, L inductor design, V test sources) in one searchable list"],
   ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
 ];
 fs.writeFileSync(
