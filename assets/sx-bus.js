@@ -331,11 +331,12 @@
     host.appendChild(field("แท็ก", t));
     var chips = h("div", { cls: "sx-flt" });
     ["FT-101", "FIC-101", "FV-101", "LT-201", "LAHH-201", "PDT-305", "TE-401", "TT-401", "TIC-401", "TY-401", "PSV-501", "FQI-601", "AIT-701", "ZT-801"].forEach(function (c) {
-      var b = h("button", { type: "button", "aria-pressed": "false" }, c); b.addEventListener("click", function () { t.value = c; run(); }); chips.appendChild(b);
+      var b = h("button", { type: "button", cls: "sx-chip", "aria-pressed": "false" }, c); b.addEventListener("click", function () { t.value = c; run(); }); chips.appendChild(b);
     });
     host.appendChild(chips);
     var out = h("div", { cls: "sx-out", "aria-live": "polite" }); host.appendChild(out);
     function run() {
+      $$("button", chips).forEach(function (x) { x.setAttribute("aria-pressed", String(x.textContent === t.value.trim().toUpperCase())); });
       var r = decodeTag(t.value);
       if (!r) { out.innerHTML = warn("รูปแบบแท็กไม่ถูกต้อง: ตัวอักษร (1–6 ตัว) ตามด้วยเลขลูป"); return; }
       if (r.err) { out.innerHTML = warn(r.err); return; }
