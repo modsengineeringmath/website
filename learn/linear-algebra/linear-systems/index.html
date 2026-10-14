@@ -38,8 +38,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
+<link rel="stylesheet" href="/assets/site.css?v=94c6e111">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/linear-systems/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/#article","headline":"ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)","description":"แก้ระบบสมการเชิงเส้นด้วยเมทริกซ์แต่งเติม การดำเนินการตามแถว การกำจัดแบบเกาส์ เกาส์-จอร์แดน รูปแบบขั้นบันได REF และ RREF แรงก์ เงื่อนไขมีคำตอบเดียว ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด ระบบเอกพันธ์ การแยก LU ระบบป่วย และวิธีกำลังสองน้อยสุด พร้อมวิธีทำทีละขั้น","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["System of linear equations","Augmented matrix","Gaussian elimination","Gauss–Jordan elimination","Row echelon form","Rank","Rouché–Capelli theorem","LU decomposition","Least squares","Condition number"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-linear-systems.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์","item":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"รู้ได้อย่างไรว่าระบบสมการไม่มีคำตอบ?","acceptedAnswer":{"@type":"Answer","text":"ลดแถวเมทริกซ์แต่งเติม [Amidmathbf b] ถ้าเจอแถว [0\\ 0\\ cdots\\ 0mid c] ที่ c ne 0 แปลว่า 0 = c เป็นไปไม่ได้ ระบบจึงไม่มีคำตอบ ในภาษาแรงก์คือ operatorname{rank}A lt operatorname{rank}[Amidmathbf b]"}},{"@type":"Question","name":"คำตอบไม่จำกัดเขียนอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ลดแถวเป็น RREF หลักที่ไม่มีตัวหลัก (pivot) คือตัวแปรอิสระ ตั้งให้เป็นพารามิเตอร์ เช่น z = t แล้วเขียนตัวแปรอื่นในรูป t จำนวนพารามิเตอร์เท่ากับจำนวนตัวแปรลบแรงก์"}},{"@type":"Question","name":"เกาส์กับเกาส์-จอร์แดนต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เกาส์ลดแถวจนเป็นขั้นบันได (สามเหลี่ยมบน) แล้วแทนค่าย้อนกลับจากล่างขึ้นบน เกาส์-จอร์แดนลดต่อจนตัวหลักเป็น 1 และเหนือ-ใต้ตัวหลักเป็นศูนย์หมด อ่านคำตอบได้ทันที เกาส์ใช้การคำนวณน้อยกว่าเล็กน้อย เกาส์-จอร์แดนเหมาะกับการหาอินเวอร์ส"}},{"@type":"Question","name":"ทำไมโปรแกรมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์?","acceptedAnswer":{"@type":"Answer","text":"เพราะต้องหาดีเทอร์มิแนนต์ n+1 ตัว ซึ่งช้ากว่าการลดแถวมากเมื่อ n ใหญ่ โปรแกรมอย่าง MATLAB, NumPy และ SPICE ใช้การแยก LU พร้อมการสลับแถว (partial pivoting) ซึ่งทั้งเร็วและเสถียรเชิงตัวเลข"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
@@ -58,47 +59,131 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
-        <div class="nav-list" id="navg1">
-          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
-          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
           <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
-          <a href="/learn/linear-algebra/" aria-current="page">พีชคณิตเชิงเส้น · เมทริกซ์</a>
-          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
-          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
         </div>
       </div>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list nav-list-wide" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
-          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
-          <span class="nav-h">พื้นฐาน 2D / 3D</span>
-          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
-          <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
-          <span class="nav-h">แรงและกลศาสตร์</span>
-          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
-          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
-          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
-          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
-          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
-          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
-          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
-          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
-          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
-          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
-          <span class="nav-h">ห้องแล็บ</span>
-          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
-          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
-          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
-          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" aria-current="page">ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
       </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
         <div class="nav-list" id="navg2">
@@ -234,8 +319,8 @@
   <article class="lesson int-page la-page" id="laArticle">
     <header>
       <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ระบบสมการเชิงเส้น</li></ol>
-      <nav class="series-nav" aria-label="หน้าย่อยในพีชคณิตเชิงเส้น"><span class="sn-title mono">Linear Algebra</span><div class="sn-list"><a href="/learn/linear-algebra/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/linear-algebra/matrices/"><span class="sn-n">1</span>เมทริกซ์</a><a href="/learn/linear-algebra/determinants/"><span class="sn-n">2</span>ดีเทอร์มิแนนต์</a><a href="/learn/linear-algebra/linear-systems/" aria-current="page"><span class="sn-n">3</span>ระบบสมการ</a><a href="/learn/linear-algebra/inverse/"><span class="sn-n">4</span>อินเวอร์ส</a><a href="/learn/linear-algebra/cramers-rule/"><span class="sn-n">5</span>คราเมอร์</a><a href="/learn/linear-algebra/eigenvalues/"><span class="sn-n">6</span>ค่าเฉพาะ λ</a><a href="/learn/linear-algebra/ee-applications/"><span class="sn-n">7</span>งานไฟฟ้า</a></div></nav>
-      <p class="eyebrow">// บทที่ 5.3 · พีชคณิตเชิงเส้น · Systems of Linear Equations</p>
+      <nav class="series-nav" aria-label="หน้าย่อยในพีชคณิตเชิงเส้น"><span class="sn-title mono">Linear Algebra</span><div class="sn-list"><a href="/learn/linear-algebra/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/linear-algebra/matrices/"><span class="sn-n">1</span>เมทริกซ์</a><a href="/learn/linear-algebra/determinants/"><span class="sn-n">2</span>ดีเทอร์มิแนนต์</a><a href="/learn/linear-algebra/linear-systems/" aria-current="page"><span class="sn-n">3</span>ระบบสมการ</a><a href="/learn/linear-algebra/inverse/"><span class="sn-n">4</span>อินเวอร์ส</a><a href="/learn/linear-algebra/cramers-rule/"><span class="sn-n">5</span>คราเมอร์</a><a href="/learn/linear-algebra/eigenvalues/"><span class="sn-n">6</span>ค่าเฉพาะ λ</a><a href="/learn/linear-algebra/ee-applications/"><span class="sn-n">7</span>งานไฟฟ้า</a><a href="/learn/linear-algebra/engineering-applications/"><span class="sn-n">8</span>ประยุกต์ ไฟฟ้า · เครื่องกล · โยธา</a><a href="/learn/linear-algebra/matrix-lab/"><span class="sn-n">9</span>แล็บเมทริกซ์</a></div></nav>
+      <p class="eyebrow">// บทที่ 7.3 · พีชคณิตเชิงเส้น · Systems of Linear Equations</p>
       <h1>ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)</h1>
       <p class="lede">การลดแถว (row reduction) คือวิธีที่ทรงพลังที่สุดของพีชคณิตเชิงเส้น ใช้ได้กับทุกระบบ ทุกขนาด ทั้งที่มีคำตอบเดียว ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด และเป็นวิธีที่โปรแกรมจำลองวงจรอย่าง SPICE ใช้จริง หน้านี้เริ่มจากภาพของเส้นตรงตัดกันแบบ ม.ปลาย ไปจนถึงแรงก์ การแยก LU และกำลังสองน้อยสุด สูตรใช้รหัส L</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-12">12 ต.ค. 2569</time></span></div>
@@ -898,7 +983,7 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=4e5aea51" defer></script>
-<script src="/assets/linalg.js?v=4e5aea51" defer></script>
+<script src="/assets/site.js?v=94c6e111" defer></script>
+<script src="/assets/linalg.js?v=94c6e111" defer></script>
 </body>
 </html>

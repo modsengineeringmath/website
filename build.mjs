@@ -41,6 +41,14 @@ const ASSET_V = crypto.createHash("sha1").update(
 // ---------------------------------------------------------------------------
 export const TOPICS = [
   {
+    // Topics 1–5: the calculus track (split out of the old combined "คณิตศาสตร์" menu on 2026-10-14)
+    slug: "functions",
+    title: "ฟังก์ชัน: โดเมน เรนจ์ กราฟ และการแปลง",
+    en: "Functions",
+    sym: "f(x)",
+    summary: "ฟังก์ชันคืออะไร โดเมน เรนจ์ กราฟของฟังก์ชันพื้นฐาน การเลื่อน ยืด สะท้อน ฟังก์ชันประกอบ ฟังก์ชันผกผัน ฟังก์ชันเป็นช่วง และสัญญาณขั้นบันได แรมป์ เอกซ์โพเนนเชียล ไซน์ในงานวิศวกรรม พร้อมแล็บกราฟโต้ตอบ",
+  },
+  {
     slug: "trigonometry",
     title: "สูตรตรีโกณมิติและตารางค่า",
     en: "Trigonometric Identities & Table",
@@ -48,18 +56,37 @@ export const TOPICS = [
     summary: "วงกลมหนึ่งหน่วยแบบโต้ตอบ สูตรครบทุกหมวดพร้อมชื่ออังกฤษ และตาราง sin cos tan ทุก 0.05° ตั้งแต่ 0° ถึง 90° ทั้งองศาและเรเดียน",
   },
   {
-    slug: "calculus-basics",
-    title: "แคลคูลัสเบื้องต้น",
-    en: "Basic Calculus",
-    sym: "f′",
-    summary: "ลิมิต อนุพันธ์ และปริพันธ์ พร้อมตัวอย่างกระแสในตัวเก็บประจุและค่า RMS",
+    slug: "limits",
+    title: "ลิมิตและความต่อเนื่อง",
+    en: "Limits & Continuity",
+    sym: "lim",
+    summary: "ลิมิตจากกราฟและตาราง นิยาม ε–δ แบบโต้ตอบ ลิมิตทางเดียว สมบัติของลิมิต รูปแบบ 0/0 ลิมิตที่อนันต์ ลิมิตตรีโกณ e ทฤษฎีบทแซนด์วิช ความต่อเนื่อง IVT และกฎของโลปิตาล",
   },
   {
+    // A series: hub = the derivative lesson, plus the engineering-applications page
+    slug: "differential-calculus",
+    title: "อนุพันธ์ (Differential Calculus)",
+    en: "Differential Calculus",
+    sym: "dy/dx",
+    summary: "นิยามอนุพันธ์จากเส้นตัด–เส้นสัมผัส สูตรอนุพันธ์ครบ กฎลูกโซ่ อนุพันธ์โดยปริยาย อันดับสูง ค่าสุดขีด อัตราสัมพัทธ์ การประมาณเชิงเส้น นิวตัน-ราฟสัน และการประยุกต์ในงานไฟฟ้า เครื่องกล โยธา",
+    sub: [
+      { slug: "engineering-applications", short: "การประยุกต์ ไฟฟ้า · เครื่องกล · โยธา", title: "การประยุกต์อนุพันธ์ทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา", en: "Applications of Derivatives in Electrical, Mechanical & Civil Engineering", sym: "d/dt", prefix: "A",
+        summary: "i = C dv/dt, v = L di/dt ถ่ายโอนกำลังสูงสุด ความไว ความเร็ว-ความเร่ง กลไกข้อเหวี่ยง ออกแบบภาชนะต้นทุนต่ำสุด ความชันและความโค้งของคาน แรงเฉือน dM/dx และการหาค่าเหมาะสมที่สุด" },
+    ],
+  },
+  {
+    // A series: hub = the integral formulas page; calculus-basics moved in here as 5.1 (old URL /learn/calculus-basics/ redirects)
     slug: "integral-calculus",
     title: "อินทิกรัล: สูตรและวิธีทำ",
     en: "Integral Calculus",
     sym: "∫",
-    summary: "สูตรอินทิเกรตพร้อมชื่อสากล คุณสมบัติ สูตรสำเร็จ และวิธีทำทีละขั้น: เปลี่ยนตัวแปร u หารยาว เศษส่วนย่อย ทีละส่วน และอินทิกรัลจำกัดเขต",
+    summary: "สูตรอินทิเกรตพร้อมชื่อสากล คุณสมบัติ สูตรสำเร็จ และวิธีทำทีละขั้น: เปลี่ยนตัวแปร u หารยาว เศษส่วนย่อย ทีละส่วน อินทิกรัลจำกัดเขต พร้อมแคลคูลัสเบื้องต้นและการประยุกต์ในงานไฟฟ้า เครื่องกล โยธา",
+    sub: [
+      { slug: "calculus-basics", short: "แคลคูลัสเบื้องต้น", title: "แคลคูลัสเบื้องต้นสำหรับวิศวกรรมไฟฟ้า", en: "Basic Calculus", sym: "f′", tag: "ทบทวนก่อนอินทิกรัล",
+        summary: "ลิมิต อนุพันธ์ และปริพันธ์ในหน้าเดียว พร้อมตัวอย่างกระแสในตัวเก็บประจุ พลังงานที่สะสม และค่า RMS ของไฟบ้าน 220 V" },
+      { slug: "engineering-applications", short: "การประยุกต์ ไฟฟ้า · เครื่องกล · โยธา", title: "การประยุกต์อินทิกรัลทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา", en: "Applications of Integrals in Electrical, Mechanical & Civil Engineering", sym: "∫dx", prefix: "A",
+        summary: "ประจุ พลังงาน ค่าเฉลี่ยและ RMS งานของแรง จุดศูนย์ถ่วง โมเมนต์ความเฉื่อย แรงดันน้ำบนเขื่อน ปริมาตรดินขุด-ถม และแล็บคาน น้ำหนัก → แรงเฉือน → โมเมนต์ → ความชัน → การโก่ง" },
+    ],
   },
   {
     // Topic 4: vectors — redone 2026-10-14 as a 5-part series (basics, products, mechanics, electrical, labs) with the
@@ -137,15 +164,33 @@ export const TOPICS = [
         summary: "สมการลักษณะเฉพาะ ค่าซ้ำ ค่าเชิงซ้อน การทำให้เป็นเมทริกซ์ทแยงมุม เมทริกซ์สมมาตร เคย์ลีย์-แฮมิลตัน และเมทริกซ์เอกซ์โพเนนเชียล" },
       { slug: "ee-applications", short: "งานไฟฟ้า", title: "ประยุกต์ในวิศวกรรมไฟฟ้า", en: "Applications in Electrical Engineering", sym: "Ω", prefix: "A",
         summary: "เมช โนด แหล่งจ่ายไม่อิสระ เฟเซอร์ AC ฟังก์ชันถ่ายโอน ปริภูมิสถานะ RLC สองพอร์ต องค์ประกอบสมมาตร และ Y-bus" },
+      { slug: "engineering-applications", short: "ประยุกต์ ไฟฟ้า · เครื่องกล · โยธา", title: "การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา", en: "Linear Algebra in Electrical, Mechanical & Civil Engineering", sym: "K u = f", prefix: "G",
+        summary: "เมทริกซ์อุบัติการณ์กับ KCL/KVL การไหลของกำลังเชิงเส้น ระบบมวล-สปริงหลายองศาอิสระและโหมดการสั่น วิธีสติฟเนส โครงข้อหมุน (truss) การปรับแก้งานรังวัดด้วยกำลังสองน้อยสุด และสมดุลโครงข่ายจราจร พร้อมแล็บ" },
+      { slug: "matrix-lab", short: "แล็บเมทริกซ์", title: "แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2", en: "Matrix Lab", sym: "⊞", tag: "แล็บโต้ตอบ + เครื่องคิดเลข",
+        summary: "ดีเทอร์มิแนนต์ อินเวอร์ส แก้ Ax = b และค่าเฉพาะด้วยเศษส่วนแม่นตรงทีละขั้น ดูการคูณเมทริกซ์ทีละช่อง และลากหลักของเมทริกซ์ 2×2 ดูพื้นที่กับทิศเวกเตอร์เฉพาะ" },
     ],
   },
   {
+    // A series since 2026-10-14: hub = definition, existence, table and roadmap; sub-pages go deep (complex analysis → ROC → properties → ODEs → inverse)
     slug: "laplace-transform",
     title: "การแปลงลาปลาซ",
     en: "Laplace Transform",
     sym: "ℒ",
-    summary: "นิยาม ตาราง เศษส่วนย่อย และการแก้วงจร RC ใน s-domain",
+    summary: "นิยาม การมีอยู่ ตารางคู่การแปลง จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์ เรซิดิว แผนภาพโพล-ซีโร่และ ROC คุณสมบัติครบทุกข้อ การแก้สมการเชิงอนุพันธ์อันดับหนึ่ง-สอง และการแปลงลาปลาซผกผันระดับตำรา Ogata พร้อมแล็บโต้ตอบ",
     playlist: "PLAJhR5azwWpLgWalcHsCEE8q_bPJv0Eaa",
+    fxHint: "พิมพ์ เช่น euler, cauchy-riemann, residue, roc, pole, time shift, convolution, final value, partial fraction, repeated, complex poles, heaviside",
+    sub: [
+      { slug: "complex-analysis", short: "จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์", title: "จำนวนเชิงซ้อน ตัวแปรเชิงซ้อน ฟังก์ชันวิเคราะห์ และเรซิดิว สำหรับการแปลงลาปลาซ", en: "Complex Variables, Analytic Functions & Residues", sym: "z", prefix: "Z",
+        summary: "รูปคาร์ทีเซียน เชิงขั้ว ออยเลอร์ ราก n ตัว ระนาบ s ฟังก์ชันเชิงซ้อนและการส่ง (mapping) ลิมิต อนุพันธ์ สมการโคชี-รีมันน์ ฟังก์ชันวิเคราะห์ ภาวะเอกฐาน อนุกรมโลรองต์ เรซิดิว และทฤษฎีบทเรซิดิว" },
+      { slug: "pole-zero-roc", short: "โพล · ซีโร่ · ROC", title: "แผนภาพโพล-ซีโร่และบริเวณลู่เข้า (ROC) ของการแปลงลาปลาซ", en: "Pole–Zero Diagrams & Region of Convergence", sym: "×○", prefix: "R",
+        summary: "โพล ซีโร่ อันดับ แผนภาพบนระนาบ s ROC ของสัญญาณด้านขวา ด้านซ้าย สองด้าน และช่วงจำกัด สมบัติ ROC ทั้ง 8 ข้อ ตารางคู่การแปลงพร้อม ROC ตำแหน่งโพลกับรูปคลื่น เสถียรภาพ และความเป็นเหตุเป็นผล" },
+      { slug: "properties", short: "คุณสมบัติการแปลง", title: "คุณสมบัติของการแปลงลาปลาซครบทุกข้อ พร้อมพิสูจน์และตัวอย่าง", en: "Properties of the Laplace Transform", sym: "ℒ{·}", prefix: "P",
+        summary: "เชิงเส้น เลื่อนเวลา เลื่อนความถี่ สเกลเวลา อนุพันธ์ ปริพันธ์ คูณด้วย t หารด้วย t คอนโวลูชัน ฟังก์ชันคาบ ทฤษฎีบทค่าเริ่มต้น-ค่าสุดท้าย พร้อมผลต่อ ROC" },
+      { slug: "differential-equations", short: "แก้สมการเชิงอนุพันธ์", title: "แก้สมการเชิงอนุพันธ์อันดับหนึ่งและอันดับสองด้วยการแปลงลาปลาซ", en: "Solving ODEs with the Laplace Transform", sym: "y″", prefix: "Q",
+        summary: "ขั้นตอนมาตรฐาน อันดับหนึ่ง RC RL อันดับสอง RLC มวล-สปริง-ตัวหน่วง ผลตอบสนองอิสระกับบังคับ สัมประสิทธิ์ตัวแปร ระบบสมการ และอินพุตไม่ต่อเนื่อง พร้อมตัวแก้สมการโต้ตอบ" },
+      { slug: "inverse-laplace-transform", short: "Inverse Laplace", title: "การแปลงลาปลาซผกผัน (Inverse Laplace Transform) ครบทุกกรณี", en: "Inverse Laplace Transform", sym: "ℒ⁻¹", prefix: "V",
+        summary: "เศษส่วนย่อยโพลเดี่ยว โพลซ้ำ โพลเชิงซ้อน เศษส่วนไม่แท้ วิธีปิดตัวประกอบของเฮวิไซด์ สูตรอนุพันธ์สำหรับโพลซ้ำ เติมกำลังสอง ตัวหน่วงเวลา คอนโวลูชัน อินทิกรัลบรอมวิชกับเรซิดิว และเครื่องคิดเลขแสดงวิธีทำ" },
+    ],
   },
   {
     slug: "first-order-system",
@@ -932,7 +977,7 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor"];
+const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor"];
 const MD_GUIDES = [
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",

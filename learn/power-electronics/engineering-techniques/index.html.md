@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # เทคนิคเชิงช่างและวิศวกรรมสำหรับวงจรสวิตชิ่ง: Layout, Snubber, การวัด, Bode, Bring-up และงานประจำ
 
-// บทที่ 13.15 · อิเล็กทรอนิกส์กำลัง · Engineering Techniques & Routine Work
+// บทที่ 15.15 · อิเล็กทรอนิกส์กำลัง · Engineering Techniques & Routine Work
 
 
 hot loop และ layout ออกแบบ RC snubber วัดด้วยสโคปให้ถูก วัดลูปเกนจริง ขั้นตอน bring-up 7 ขั้น ตารางงานบำรุงรักษา และกฎจากประสบการณ์

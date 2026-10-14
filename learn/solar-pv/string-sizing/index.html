@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
+<link rel="stylesheet" href="/assets/site.css?v=94c6e111">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/string-sizing/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/#article","headline":"ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio","description":"วิธีคำนวณจำนวนแผงโซลาร์ต่อสตริงและจำนวนสตริงต่อ MPPT แบบละเอียด: แรงดัน Voc ที่อุณหภูมิต่ำสุด Vmp ที่เซลล์ร้อนสุด ช่วง MPPT และ full-load MPPT กระแส Imp และ Isc ต่อ MPPT DC/AC ratio และ clipping สตริงหลายทิศ พร้อมเครื่องคำนวณออนไลน์และตัวอย่างระบบ 5 kW 10 kW 100 kW","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PV string sizing","Solar inverter","MPPT voltage range","DC/AC ratio"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-string-sizing.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio","item":"https://modsengineeringmath.com/learn/solar-pv/string-sizing/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ต่อแผงโซลาร์อนุกรมได้สูงสุดกี่แผง?","acceptedAnswer":{"@type":"Answer","text":"หาร Vdc สูงสุดของอินเวอร์เตอร์ด้วย Voc ของแผงที่อุณหภูมิต่ำสุดของพื้นที่ แล้วปัดลง เช่น อินเวอร์เตอร์ 600 V แผง Voc 52.2 V β −0.25 %/°C ที่ 10 °C Voc เพิ่มเป็น 54.2 V ต่อได้สูงสุด 11 แผง ต้องใช้ Voc ตอนหนาวเพราะแรงดันสูงที่สุดเกิดตอนเช้าที่อากาศเย็นและแผงยังไม่ร้อน"}},{"@type":"Question","name":"DC/AC ratio ควรเป็นเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"สำหรับประเทศไทยนิยม 1.1–1.3 คือแผงใหญ่กว่าพิกัดอินเวอร์เตอร์ 10–30 % เพราะแผงแทบไม่เคยจ่ายถึงพิกัด STC จากอุณหภูมิและการสูญเสีย การสูญเสียจากการตัดยอด (clipping) ที่ 1.2–1.3 มักไม่เกิน 1–2 % แต่ได้พลังงานช่วงเช้าเย็นเพิ่ม ต้องไม่เกินค่าที่ผู้ผลิตอินเวอร์เตอร์อนุญาตและเงื่อนไขของการไฟฟ้า"}},{"@type":"Question","name":"แผงสองทิศต่อเข้า MPPT เดียวกันได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ควร สตริงที่ขนานกันต้องมีแรงดัน MPP ใกล้กัน ถ้าทิศต่างกัน แสงและอุณหภูมิต่างกัน จุด MPP ไม่ตรงกันทำให้เสียพลังงาน ให้แยกแต่ละทิศไปคนละ MPPT หรือใช้ optimizer ถ้าจำเป็นต้องรวม ต้องเป็นสตริงจำนวนแผงเท่ากันและยอมรับการสูญเสีย"}}]}]}</script>
@@ -59,47 +59,131 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
-        <div class="nav-list" id="navg1">
-          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
-          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
           <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
-          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
-          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
-          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
         </div>
       </div>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list nav-list-wide" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
-          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
-          <span class="nav-h">พื้นฐาน 2D / 3D</span>
-          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
-          <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
-          <span class="nav-h">แรงและกลศาสตร์</span>
-          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
-          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
-          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
-          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
-          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
-          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
-          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
-          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
-          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
-          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
-          <span class="nav-h">ห้องแล็บ</span>
-          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
-          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
-          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
-          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
       </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
         <div class="nav-list" id="navg2">
@@ -236,7 +320,7 @@
     <header>
       <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์</a></li><li>ออกแบบสตริง</li></ol>
       <nav class="series-nav" aria-label="หน้าย่อยในออกแบบระบบโซลาร์เซลล์"><span class="sn-title mono">Solar PV System Design</span><div class="sn-list"><a href="/learn/solar-pv/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/solar-pv/system-types/"><span class="sn-n">4</span>ชนิดระบบ · ขนานไฟ</a><a href="/learn/solar-pv/string-sizing/" aria-current="page"><span class="sn-n">5</span>ออกแบบสตริง</a><a href="/learn/solar-pv/wiring-protection/"><span class="sn-n">6</span>สายไฟ · ป้องกัน</a><a href="/learn/solar-pv/battery-storage/"><span class="sn-n">7</span>แบตเตอรี่</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 19 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · พื้นฐานและการเลือกแผง</span><div class="sn-list"><a href="/learn/solar-pv/pv-cell/"><span class="sn-n">1</span>เซลล์และเส้น I-V</a><a href="/learn/solar-pv/solar-resource/"><span class="sn-n">2</span>แสงอาทิตย์ · มุม · เงา</a><a href="/learn/solar-pv/panel-selection/"><span class="sn-n">3</span>เลือกแผง</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · ออกแบบระบบและการจ่ายไฟ</span><div class="sn-list"><a href="/learn/solar-pv/system-types/"><span class="sn-n">4</span>ชนิดระบบ · ขนานไฟ</a><a href="/learn/solar-pv/string-sizing/" aria-current="page"><span class="sn-n">5</span>ออกแบบสตริง</a><a href="/learn/solar-pv/wiring-protection/"><span class="sn-n">6</span>สายไฟ · ป้องกัน</a><a href="/learn/solar-pv/battery-storage/"><span class="sn-n">7</span>แบตเตอรี่</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · คาดการณ์ล่วงหน้าและความคุ้มค่า</span><div class="sn-list"><a href="/learn/solar-pv/energy-yield/"><span class="sn-n">8</span>คาดการณ์พลังงาน</a><a href="/learn/solar-pv/load-sizing/"><span class="sn-n">9</span>ขนาดจากบิลค่าไฟ</a><a href="/learn/solar-pv/economics/"><span class="sn-n">10</span>ความคุ้มค่า</a><a href="/learn/solar-pv/forecasting-monitoring/"><span class="sn-n">11</span>พยากรณ์ · เฝ้าติดตาม</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · อิเล็กทรอนิกส์กำลังในระบบโซลาร์</span><div class="sn-list"><a href="/learn/solar-pv/mppt/"><span class="sn-n">12</span>MPPT</a><a href="/learn/solar-pv/pv-inverter/"><span class="sn-n">13</span>อินเวอร์เตอร์</a><a href="/learn/solar-pv/controller-selection/"><span class="sn-n">14</span>เลือกตัวควบคุม</a></div></div><div class="sn-part"><span class="sn-pt mono">5 · งานประยุกต์และภาคปฏิบัติ</span><div class="sn-list"><a href="/learn/solar-pv/solar-air-conditioner/"><span class="sn-n">15</span>โซลาร์จ่ายแอร์</a><a href="/learn/solar-pv/solar-farm/"><span class="sn-n">16</span>โซลาร์ฟาร์ม</a><a href="/learn/solar-pv/solar-agriculture/"><span class="sn-n">17</span>ปั๊มน้ำ · เกษตร</a><a href="/learn/solar-pv/installation-maintenance/"><span class="sn-n">18</span>ติดตั้ง · บำรุงรักษา</a><a href="/learn/solar-pv/design-lab/"><span class="sn-n">19</span>เครื่องมือออกแบบ</a></div></div></details></nav>
-      <p class="eyebrow">// บทที่ 14.5 · ออกแบบระบบโซลาร์เซลล์ · String Sizing &amp; Inverter Matching</p>
+      <p class="eyebrow">// บทที่ 16.5 · ออกแบบระบบโซลาร์เซลล์ · String Sizing &amp; Inverter Matching</p>
       <h1>ออกแบบสตริงและจับคู่อินเวอร์เตอร์: Voc ตอนหนาว ช่วง MPPT กระแส และ DC/AC ratio</h1>
       <p class="lede">อินเวอร์เตอร์รับแรงดันได้ในหน้าต่างหนึ่ง และรับกระแสได้ไม่เกินค่าหนึ่ง ส่วนแรงดันของสตริงเปลี่ยนตามอุณหภูมิทุกวัน การออกแบบสตริงคือการเลือก “แผงกี่แผงต่ออนุกรม และกี่สตริงต่อขนาน” ให้สตริงอยู่ในหน้าต่างนั้น ทั้งในเช้าที่หนาวที่สุดและเที่ยงที่ร้อนที่สุดของปี — พลาดด้านบนอินเวอร์เตอร์พัง พลาดด้านล่างเสียพลังงานทุกบ่าย</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-13">13 ต.ค. 2569</time></span></div>
@@ -467,8 +551,8 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=4e5aea51" defer></script>
-<script src="/assets/lesson.js?v=4e5aea51" defer></script>
-<script src="/assets/pv-calc.js?v=4e5aea51" defer></script>
+<script src="/assets/site.js?v=94c6e111" defer></script>
+<script src="/assets/lesson.js?v=94c6e111" defer></script>
+<script src="/assets/pv-calc.js?v=94c6e111" defer></script>
 </body>
 </html>

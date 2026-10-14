@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation
 
-// บทที่ 13.6 · อิเล็กทรอนิกส์กำลัง · Compensator Design
+// บทที่ 15.6 · อิเล็กทรอนิกส์กำลัง · Compensator Design
 
 
 เป้าหมายลูป เฟสมาร์จิน ขีดจำกัดความถี่ครอสโอเวอร์ สูตรค่า R C ของ Type II/III ด้วย k-factor ตัวอย่างบั๊กที่ตรวจด้วย python-control และ peak current mode

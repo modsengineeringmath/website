@@ -1,0 +1,259 @@
+<!--meta
+{
+  "title": "การแปลงลาปลาซ (Laplace Transform) ครบชุด: นิยาม ตาราง ROC คุณสมบัติ แก้สมการ และ Inverse Laplace | อาจารย์มด",
+  "h1": "การแปลงลาปลาซ (Laplace Transform): นิยาม ตาราง และเส้นทางเรียนครบชุด",
+  "description": "การแปลงลาปลาซภาษาไทยครบชุด นิยาม เงื่อนไขการมีอยู่ ตารางคู่การแปลงพร้อม ROC จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์ เรซิดิว แผนภาพโพล-ซีโร่ คุณสมบัติครบทุกข้อ การแก้สมการเชิงอนุพันธ์ และการแปลงลาปลาซผกผันระดับตำรา Ogata พร้อมเครื่องคิดเลขแสดงวิธีทำและแล็บโต้ตอบ โดยอาจารย์มด",
+  "ogTitle": "การแปลงลาปลาซครบชุด: ตั้งแต่จำนวนเชิงซ้อนถึง Inverse Laplace",
+  "lesson": "laplace-transform",
+  "nav": "lap",
+  "katex": true,
+  "published": "2026-10-07",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Laplace transform", "Region of convergence", "Transform pairs", "Inverse Laplace transform", "Partial fractions", "Transfer function", "Complex analysis"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/cs-core.js", "/assets/lap-core.js", "/assets/lap-lab.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "name": "เครื่องคิดเลขการแปลงลาปลาซผกผันแสดงวิธีทำ",
+      "alternateName": "Step-by-step inverse Laplace transform calculator (Thai)",
+      "url": "https://modsengineeringmath.com/learn/laplace-transform/inverse-laplace-transform/#calculator",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB"},
+      "featureList": ["Partial-fraction expansion with simple, repeated and complex poles", "Long division for improper fractions (impulse terms)", "Time delay e^(-Ts)", "Residue formulas shown step by step", "Plot of f(t)"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "ทำไมต้องใช้การแปลงลาปลาซ แทนการแก้สมการเชิงอนุพันธ์โดยตรง?", "a": "เพราะลาปลาซเปลี่ยนการหาอนุพันธ์ให้เป็นการคูณด้วย \\(s\\) สมการเชิงอนุพันธ์จึงกลายเป็นพีชคณิต และยังรวมเงื่อนไขเริ่มต้นเข้าไปในสมการได้ในขั้นตอนเดียว จากนั้นแปลงกลับด้วยเศษส่วนย่อย"},
+    {"q": "ตัวแปร s ในการแปลงลาปลาซคืออะไร?", "a": "\\(s = \\sigma + j\\omega\\) เป็นความถี่เชิงซ้อน ส่วนจริง \\(\\sigma\\) บอกการลดลงหรือเพิ่มขึ้นแบบเอกซ์โพเนนเชียล ส่วนจินตภาพ \\(\\omega\\) บอกการแกว่ง เพราะ \\(e^{st} = e^{\\sigma t}(\\cos\\omega t + j\\sin\\omega t)\\)"},
+    {"q": "ROC (บริเวณลู่เข้า) คืออะไร สำคัญอย่างไร?", "a": "ROC คือเซตของค่า \\(s\\) ที่ทำให้อินทิกรัลลาปลาซลู่เข้า สำหรับการแปลงด้านเดียวคือครึ่งระนาบทางขวาของโพลขวาสุด ในการแปลงสองด้าน ฟังก์ชัน \\(X(s)\\) เดียวกันแต่ ROC ต่างกันจะเป็นสัญญาณคนละตัว และ ROC ยังบอกความเป็นเหตุเป็นผลและเสถียรภาพของระบบด้วย"},
+    {"q": "การแปลงลาปลาซต่างจากการแปลงฟูริเยร์อย่างไร?", "a": "การแปลงฟูริเยร์มองสัญญาณบนแกน \\(j\\omega\\) เท่านั้น ส่วนลาปลาซขยายไปทั้งระนาบ \\(s = \\sigma + j\\omega\\) จึงจัดการกับสัญญาณที่โตขึ้น ผลตอบสนองชั่วครู่ และเงื่อนไขเริ่มต้นได้ ถ้า ROC ครอบแกน \\(j\\omega\\) จะได้การแปลงฟูริเยร์จากการแทน \\(s = j\\omega\\)"},
+    {"q": "ควรเรียนหน้าไหนก่อน?", "a": "ถ้าพื้นจำนวนเชิงซ้อนยังไม่แน่น เริ่มที่หน้า 8.1 จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์ ต่อด้วย 8.2 โพล-ซีโร่และ ROC แล้ว 8.3 คุณสมบัติ 8.4 การแก้สมการเชิงอนุพันธ์ และ 8.5 การแปลงลาปลาซผกผัน ถ้ากำลังทำการบ้าน ไปที่เครื่องคิดเลขในหน้า 8.5 ได้เลย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page la-hub">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>การแปลงลาปลาซ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 8 · คณิตศาสตร์วิศวกรรม · Laplace Transform</p>
+      <h1>การแปลงลาปลาซ (Laplace Transform): นิยาม ตาราง และเส้นทางเรียนครบชุด</h1>
+      <p class="lede">วงจรที่มีตัวเก็บประจุและตัวเหนี่ยวนำให้สมการเชิงอนุพันธ์ ซึ่งแก้ตรง ๆ ได้ยาก การแปลงลาปลาซเปลี่ยนปัญหานี้ให้เป็นพีชคณิต แก้เสร็จแล้วค่อยแปลงกลับ และยังเป็นรากฐานของฟังก์ชันถ่ายโอนในวิชาระบบควบคุม หน้านี้คือภาพรวม นิยาม และตาราง ส่วนรายละเอียดเชิงลึกแยกเป็น 5 หน้า ตั้งแต่จำนวนเชิงซ้อนและเรซิดิว ไปจนถึงการแปลงกลับทุกกรณีแบบตำรา Ogata</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลข Inverse Laplace</a>
+        <a class="btn btn-ghost btn-sm" href="#table">ตารางคู่การแปลง</a>
+        <a class="btn btn-ghost btn-sm" href="#pages">ทั้ง 5 หน้าย่อย</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">ค้นหาสูตร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>นิยาม \(F(s) = \int_{0^-}^\infty f(t)\,e^{-st}\,dt\) โดย \(s = \sigma + j\omega\) และอินทิกรัลลู่เข้าเฉพาะใน ROC</li>
+          <li>หาอนุพันธ์ในโดเมนเวลา = คูณด้วย \(s\): \(\mathcal{L}\{f'\} = sF(s) - f(0^-)\) <a href="/learn/laplace-transform/properties/">คุณสมบัติครบ</a></li>
+          <li>คำตอบใน s มักเป็นเศษส่วนพหุนาม แปลงกลับด้วยเศษส่วนย่อยหรือเรซิดิว <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace</a></li>
+          <li>ตำแหน่งโพลบนระนาบ s บอกรูปร่างคำตอบทั้งหมด: ซ้าย = ลดลง ขวา = โตขึ้น ห่างแกนจริง = แกว่ง <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่และ ROC</a></li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1–2</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">แนวคิด: เปลี่ยนแคลคูลัสเป็นพีชคณิต <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="flow" aria-label="ขั้นตอนการใช้การแปลงลาปลาซ">
+      <div><b>โดเมนเวลา</b>สมการเชิงอนุพันธ์ของวงจร</div>
+      <i aria-hidden="true">→ ℒ →</i>
+      <div><b>โดเมน s</b>แก้สมการพีชคณิตหา \(Y(s)\)</div>
+      <i aria-hidden="true">→ ℒ⁻¹ →</i>
+      <div><b>โดเมนเวลา</b>ได้คำตอบ \(y(t)\)</div>
+    </div>
+    <p>เทียบได้กับการใช้ลอการิทึมเปลี่ยนการคูณเป็นการบวก การแปลงลาปลาซเปลี่ยนการหาอนุพันธ์เป็นการคูณด้วย \(s\) และเปลี่ยนคอนโวลูชันเป็นการคูณธรรมดา งานยากจึงกลายเป็นงานง่าย สิ่งที่ต้องจ่ายคือเราต้องทำงานกับตัวแปรเชิงซ้อน \(s\) ซึ่งเป็นเหตุผลที่ชุดนี้เริ่มจาก<a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์</a></p>
+    <p>เหตุที่ใช้ \(e^{-st}\) เป็นตัวคูณ: ฟังก์ชัน \(e^{st}\) เป็นฟังก์ชันเฉพาะ (eigenfunction) ของระบบเชิงเส้นไม่แปรตามเวลาทุกระบบ ป้อน \(e^{st}\) เข้าไปจะได้ \(H(s)\,e^{st}\) ออกมา การแปลงลาปลาซคือการแยกสัญญาณใด ๆ ออกเป็นผลรวมของ \(e^{st}\) แล้วถามว่าแต่ละตัวมีน้ำหนักเท่าไร</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">นิยามการแปลงลาปลาซ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="definition unilateral one-sided laplace นิยาม ด้านเดียว">
+        <p class="tf-n"><b><span class="fid">L1</span> Unilateral Laplace transform</b> การแปลงลาปลาซด้านเดียว</p>
+        \[ F(s) = \mathcal{L}\{f(t)\} = \int_{0^-}^{\infty} f(t)\,e^{-st}\,dt, \qquad s = \sigma + j\omega \]
+        <p class="tf-x">ขีดล่าง \(0^-\) ทำให้อิมพัลส์ \(\delta(t)\) ที่ \(t = 0\) ถูกนับรวม และเงื่อนไขเริ่มต้นใช้ค่าก่อนสวิตช์ทำงาน \(f(0^-)\) ซึ่งเป็นค่าที่วัดได้จริงในวงจร</p>
+      </div>
+      <div class="tf" id="L2" data-k="bilateral two-sided laplace สองด้าน">
+        <p class="tf-n"><b><span class="fid">L2</span> Bilateral Laplace transform</b> การแปลงสองด้าน</p>
+        \[ X(s) = \int_{-\infty}^{\infty} x(t)\,e^{-st}\,dt \]
+        <p class="tf-x">ใช้ในวิชาสัญญาณและระบบ ต้องระบุ ROC คู่กับ \(X(s)\) เสมอ ดู<a href="/learn/laplace-transform/pole-zero-roc/">หน้า ROC</a></p>
+      </div>
+      <div class="tf" id="L3" data-k="inverse bromwich integral ผกผัน">
+        <p class="tf-n"><b><span class="fid">L3</span> Inverse (Bromwich) integral</b> การแปลงกลับ</p>
+        \[ f(t) = \frac{1}{2\pi j}\int_{c - j\infty}^{c + j\infty} F(s)\,e^{st}\,ds \]
+        <p class="tf-x">เส้น \(\operatorname{Re}s = c\) ต้องอยู่ใน ROC ในทางปฏิบัติคำนวณด้วยเรซิดิวหรือเศษส่วนย่อย ดู<a href="/learn/laplace-transform/inverse-laplace-transform/#bromwich">หน้า 8.5</a></p>
+      </div>
+      <div class="tf wide" id="L4" data-k="existence exponential order piecewise continuous การมีอยู่">
+        <p class="tf-n"><b><span class="fid">L4</span> Existence</b> เงื่อนไขการมีอยู่ (เงื่อนไขพอเพียง)</p>
+        \[ f \text{ ต่อเนื่องเป็นช่วงบน } [0, \infty) \ \text{และ}\ |f(t)| \le Me^{\alpha t} \ \Rightarrow\ F(s) \text{ มีค่าสำหรับ } \operatorname{Re}s > \alpha \]
+        <p class="tf-x">เรียกว่า \(f\) มี <b>อันดับเอกซ์โพเนนเชียล</b> (exponential order) \(\alpha\) ฟังก์ชันที่วิศวกรใช้เกือบทั้งหมดผ่านเงื่อนไขนี้ ตัวอย่างที่ไม่ผ่านคือ \(e^{t^2}\) ซึ่งโตเร็วกว่าเอกซ์โพเนนเชียลทุกตัว จึงไม่มีการแปลงลาปลาซ</p>
+      </div>
+    </div>
+
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · จากนิยาม</span><h3>หา \(\mathcal{L}\{e^{-at}\}\) และ ROC</h3></div>
+      <ol class="steps">
+        <li>\[ \mathcal{L}\{e^{-at}\} = \int_0^{\infty} e^{-at}e^{-st}\,dt = \int_0^{\infty} e^{-(s+a)t}\,dt \]</li>
+        <li><p>อินทิเกรตได้ แต่ขอบบนต้องเป็นศูนย์ ซึ่งเกิดขึ้นเมื่อ \(\operatorname{Re}(s+a) > 0\) เท่านั้น เพราะ \(|e^{-(s+a)t}| = e^{-(\sigma+a)t}\)</p>
+          \[ = \left[\frac{-e^{-(s+a)t}}{s+a}\right]_0^{\infty} = 0 - \left(\frac{-1}{s+a}\right) = \frac{1}{s+a} \]</li>
+      </ol>
+      <p class="answer">\(\mathcal{L}\{e^{-at}\} = \dfrac{1}{s+a}\) ROC: \(\operatorname{Re}s > -a\) · ให้ \(a = 0\) ได้ \(\mathcal{L}\{1\} = \dfrac{1}{s}\), ROC: \(\operatorname{Re}s > 0\)</p>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2 · ใช้ออยเลอร์แทนการอินทิเกรตทีละส่วน</span><h3>หา \(\mathcal{L}\{\cos\omega t\}\) และ \(\mathcal{L}\{\sin\omega t\}\)</h3></div>
+      <ol class="steps">
+        <li><p>ใช้ \(e^{j\omega t} = \cos\omega t + j\sin\omega t\) และผลจากตัวอย่าง L-1 ด้วย \(a = -j\omega\)</p>
+          \[ \mathcal{L}\{e^{j\omega t}\} = \frac{1}{s - j\omega} = \frac{s + j\omega}{s^2 + \omega^2} = \frac{s}{s^2+\omega^2} + j\,\frac{\omega}{s^2+\omega^2} \]</li>
+        <li><p>เทียบส่วนจริงกับส่วนจินตภาพ (ลาปลาซเป็นเชิงเส้น และสำหรับ \(s\) จริงผลของ cos, sin เป็นจริง)</p></li>
+      </ol>
+      <p class="answer">\(\mathcal{L}\{\cos\omega t\} = \dfrac{s}{s^2+\omega^2}\), \(\ \mathcal{L}\{\sin\omega t\} = \dfrac{\omega}{s^2+\omega^2}\), ROC: \(\operatorname{Re}s > 0\) · โพลอยู่ที่ \(\pm j\omega\) บนแกนจินตภาพพอดี จึงแกว่งค้างไม่ลดลง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">ทั้ง 5 หน้าในชุดการแปลงลาปลาซ</h2>
+    <p>เรียงจากพื้นฐานคณิตศาสตร์ไปสู่การใช้งาน อ่านตามลำดับ 8.1 ถึง 8.5 หรือกระโดดไปหน้าที่ต้องการ ตัวอักษรท้ายการ์ดคือรหัสสูตรของหน้านั้น</p>
+    <!--series-cards:laplace-transform-->
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางคู่การแปลงที่ใช้บ่อย พร้อม ROC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทุกคู่ในตารางเป็นการแปลงด้านเดียว (\(f(t) = 0\) เมื่อ \(t &lt; 0\) หรือคูณด้วย \(u(t)\) อยู่แล้ว) ROC ทุกบรรทัดคือครึ่งระนาบทางขวาของโพลขวาสุด ตารางสองด้านพร้อมสัญญาณด้านซ้ายอยู่ใน<a href="/learn/laplace-transform/pole-zero-roc/#pairs">หน้า ROC</a></p>
+    <div class="table-wrap">
+      <table class="lt-table">
+        <thead><tr><th>#</th><th>\(f(t),\ t \ge 0\)</th><th>\(F(s)\)</th><th>ROC</th><th>โพล</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>\(\delta(t)\)</td><td>\(1\)</td><td>ทั้งระนาบ</td><td>ไม่มี</td></tr>
+          <tr><td>2</td><td>\(\delta(t-T)\)</td><td>\(e^{-sT}\)</td><td>ทั้งระนาบ</td><td>ไม่มี</td></tr>
+          <tr><td>3</td><td>\(u(t)\) หรือ \(1\)</td><td>\(\dfrac{1}{s}\)</td><td>\(\sigma > 0\)</td><td>\(0\)</td></tr>
+          <tr><td>4</td><td>\(u(t - T)\)</td><td>\(\dfrac{e^{-sT}}{s}\)</td><td>\(\sigma > 0\)</td><td>\(0\)</td></tr>
+          <tr><td>5</td><td>\(t\)</td><td>\(\dfrac{1}{s^2}\)</td><td>\(\sigma > 0\)</td><td>\(0\) (ซ้ำ 2)</td></tr>
+          <tr><td>6</td><td>\(t^n,\ n = 1, 2, \dots\)</td><td>\(\dfrac{n!}{s^{n+1}}\)</td><td>\(\sigma > 0\)</td><td>\(0\) (ซ้ำ \(n+1\))</td></tr>
+          <tr><td>7</td><td>\(e^{-at}\)</td><td>\(\dfrac{1}{s+a}\)</td><td>\(\sigma > -a\)</td><td>\(-a\)</td></tr>
+          <tr><td>8</td><td>\(t\,e^{-at}\)</td><td>\(\dfrac{1}{(s+a)^2}\)</td><td>\(\sigma > -a\)</td><td>\(-a\) (ซ้ำ 2)</td></tr>
+          <tr><td>9</td><td>\(\dfrac{t^{n-1}}{(n-1)!}e^{-at}\)</td><td>\(\dfrac{1}{(s+a)^n}\)</td><td>\(\sigma > -a\)</td><td>\(-a\) (ซ้ำ \(n\))</td></tr>
+          <tr><td>10</td><td>\(\sin\omega t\)</td><td>\(\dfrac{\omega}{s^2+\omega^2}\)</td><td>\(\sigma > 0\)</td><td>\(\pm j\omega\)</td></tr>
+          <tr><td>11</td><td>\(\cos\omega t\)</td><td>\(\dfrac{s}{s^2+\omega^2}\)</td><td>\(\sigma > 0\)</td><td>\(\pm j\omega\)</td></tr>
+          <tr><td>12</td><td>\(e^{-at}\sin\omega t\)</td><td>\(\dfrac{\omega}{(s+a)^2+\omega^2}\)</td><td>\(\sigma > -a\)</td><td>\(-a \pm j\omega\)</td></tr>
+          <tr><td>13</td><td>\(e^{-at}\cos\omega t\)</td><td>\(\dfrac{s+a}{(s+a)^2+\omega^2}\)</td><td>\(\sigma > -a\)</td><td>\(-a \pm j\omega\)</td></tr>
+          <tr><td>14</td><td>\(\sinh at\)</td><td>\(\dfrac{a}{s^2-a^2}\)</td><td>\(\sigma > |a|\)</td><td>\(\pm a\)</td></tr>
+          <tr><td>15</td><td>\(\cosh at\)</td><td>\(\dfrac{s}{s^2-a^2}\)</td><td>\(\sigma > |a|\)</td><td>\(\pm a\)</td></tr>
+          <tr><td>16</td><td>\(\dfrac{1}{b-a}\left(e^{-at} - e^{-bt}\right)\)</td><td>\(\dfrac{1}{(s+a)(s+b)}\)</td><td>\(\sigma > -\min(a,b)\)</td><td>\(-a,\ -b\)</td></tr>
+          <tr><td>17</td><td>\(\dfrac{1}{a}\left(1 - e^{-at}\right)\)</td><td>\(\dfrac{1}{s(s+a)}\)</td><td>\(\sigma > \max(0,-a)\)</td><td>\(0,\ -a\)</td></tr>
+          <tr><td>18</td><td>\(t\sin\omega t\)</td><td>\(\dfrac{2\omega s}{(s^2+\omega^2)^2}\)</td><td>\(\sigma > 0\)</td><td>\(\pm j\omega\) (ซ้ำ 2)</td></tr>
+          <tr><td>19</td><td>\(t\cos\omega t\)</td><td>\(\dfrac{s^2-\omega^2}{(s^2+\omega^2)^2}\)</td><td>\(\sigma > 0\)</td><td>\(\pm j\omega\) (ซ้ำ 2)</td></tr>
+          <tr><td>20</td><td>\(\dfrac{1}{2\omega^3}(\sin\omega t - \omega t\cos\omega t)\)</td><td>\(\dfrac{1}{(s^2+\omega^2)^2}\)</td><td>\(\sigma > 0\)</td><td>\(\pm j\omega\) (ซ้ำ 2)</td></tr>
+          <tr><td>21</td><td>\(\dfrac{\omega_n}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_n t}\sin\omega_d t\)</td><td>\(\dfrac{\omega_n^2}{s^2+2\zeta\omega_n s+\omega_n^2}\)</td><td>\(\sigma > -\zeta\omega_n\)</td><td>\(-\zeta\omega_n \pm j\omega_d\)</td></tr>
+          <tr><td>22</td><td>\(1 - \dfrac{e^{-\zeta\omega_n t}}{\sqrt{1-\zeta^2}}\sin(\omega_d t + \phi),\ \phi = \cos^{-1}\zeta\)</td><td>\(\dfrac{\omega_n^2}{s(s^2+2\zeta\omega_n s+\omega_n^2)}\)</td><td>\(\sigma > 0\)</td><td>\(0,\ -\zeta\omega_n \pm j\omega_d\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">\(\omega_d = \omega_n\sqrt{1-\zeta^2}\) ใช้ได้เมื่อ \(0 &lt; \zeta &lt; 1\) · แถว 21–22 คือผลตอบสนองอิมพัลส์และขั้นบันไดของระบบอันดับสองมาตรฐาน ดูแบบโต้ตอบได้ใน<a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติสำคัญโดยย่อ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สมบัติ</th><th>โดเมนเวลา</th><th>โดเมน s</th></tr></thead>
+        <tbody>
+          <tr><td>เชิงเส้น</td><td>\(af(t) + bg(t)\)</td><td>\(aF(s) + bG(s)\)</td></tr>
+          <tr><td>เลื่อนทางเวลา</td><td>\(f(t-T)\,u(t-T)\)</td><td>\(e^{-sT}F(s)\)</td></tr>
+          <tr><td>เลื่อนทางความถี่</td><td>\(e^{-at}f(t)\)</td><td>\(F(s+a)\)</td></tr>
+          <tr><td>สเกลเวลา</td><td>\(f(at),\ a > 0\)</td><td>\(\tfrac{1}{a}F(s/a)\)</td></tr>
+          <tr><td>อนุพันธ์</td><td>\(f'(t)\)</td><td>\(sF(s) - f(0^-)\)</td></tr>
+          <tr><td>อนุพันธ์อันดับสอง</td><td>\(f''(t)\)</td><td>\(s^2F(s) - sf(0^-) - f'(0^-)\)</td></tr>
+          <tr><td>ปริพันธ์</td><td>\(\int_0^t f(\tau)\,d\tau\)</td><td>\(\dfrac{F(s)}{s}\)</td></tr>
+          <tr><td>คูณด้วย \(t\)</td><td>\(t\,f(t)\)</td><td>\(-\dfrac{dF}{ds}\)</td></tr>
+          <tr><td>คอนโวลูชัน</td><td>\((f*g)(t)\)</td><td>\(F(s)G(s)\)</td></tr>
+          <tr><td>ค่าเริ่มต้น · ค่าสุดท้าย</td><td>\(f(0^+),\ f(\infty)\)</td><td>\(\lim_{s\to\infty}sF(s),\ \lim_{s\to 0}sF(s)\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>สมบัติอนุพันธ์คือหัวใจของทั้งบท เงื่อนไขเริ่มต้นเข้ามาอยู่ในสมการเองโดยอัตโนมัติ ที่มา ข้อควรระวัง ผลต่อ ROC และแล็บพิสูจน์ด้วยตัวเลขของทุกข้ออยู่ใน<a href="/learn/laplace-transform/properties/">หน้า 8.3 คุณสมบัติของการแปลงลาปลาซ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inverse">
+    <h2 id="inverse">การแปลงกลับด้วยเศษส่วนย่อย <span class="lv lv-i">กลาง</span></h2>
+    <p>คำตอบในโดเมน s มักเป็นเศษส่วนของพหุนาม วิธีมาตรฐานคือแยกเป็นเศษส่วนย่อยที่มีอยู่ในตาราง แล้วแปลงกลับทีละพจน์ มีสี่กรณีหลัก: โพลเดี่ยวจริง โพลเชิงซ้อน โพลซ้ำ และเศษส่วนไม่แท้ ซึ่งอธิบายครบพร้อมตัวอย่างแบบ Ogata ใน<a href="/learn/laplace-transform/inverse-laplace-transform/">หน้า 8.5</a> ลองเครื่องคิดเลขด้านล่างได้เลย</p>
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · ปิดตัวประกอบ (cover-up)</span><h3>หา \(f(t)\) เมื่อ \(F(s) = \dfrac{s+5}{(s+1)(s+2)}\)</h3><button type="button" class="wx-btn" data-lap-f="(s+5)/((s+1)(s+2))">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li>\[ \frac{s+5}{(s+1)(s+2)} = \frac{A}{s+1} + \frac{B}{s+2} \]</li>
+        <li><p>ปิด \((s+1)\) แล้วแทน \(s = -1\) · ปิด \((s+2)\) แล้วแทน \(s = -2\)</p>
+          \[ A = \frac{-1+5}{-1+2} = 4 \qquad B = \frac{-2+5}{-2+1} = -3 \]</li>
+      </ol>
+      <p class="answer">\(f(t) = 4e^{-t} - 3e^{-2t}\) สำหรับ \(t \ge 0\)</p>
+      <p class="check">ตรวจด้วยทฤษฎีบทค่าเริ่มต้น: \(f(0^+) = \lim_{s\to\infty}sF(s) = 1\) และ \(4 - 3 = 1\) ✓</p>
+    </div>
+    <div class="lap-inv" id="calc" data-f="(s+3)/((s+1)(s+2)^2)"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rc-circuit">
+    <h2 id="rc-circuit">แก้วงจร RC ด้วยลาปลาซ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>วงจร RC อนุกรม ตัวเก็บประจุไม่มีประจุเริ่มต้น \(v(0^-) = 0\) ป้อนแรงดันขั้นบันได \(V\,u(t)\) จาก KVL จะได้</p>
+    \[ RC\,\frac{dv}{dt} + v = V\,u(t) \]
+    <div class="wx" id="ex-l4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-4 · วงจร</span><h3>หาแรงดันคร่อมตัวเก็บประจุ \(v(t)\)</h3></div>
+      <ol class="steps">
+        <li><p>แปลงลาปลาซทั้งสองข้าง ใช้ \(\mathcal{L}\{v'\} = sV_C(s) - v(0^-) = sV_C(s)\)</p>
+          \[ RC\,sV_C(s) + V_C(s) = \frac{V}{s} \ \Rightarrow\ V_C(s) = \frac{V}{s\,(RCs + 1)} = V\left(\frac{1}{s} - \frac{1}{s + 1/RC}\right) \]</li>
+        <li><p>เปิดตารางแถว 3 และ 7 แปลงกลับทีละพจน์</p>
+          \[ v(t) = V\left(1 - e^{-t/RC}\right) \]</li>
+        <li><p>ตัวเลข \(R = 10\ \text{k}\Omega\), \(C = 100\ \mu\text{F}\), \(V = 5\) V: \(\tau = RC = 1\) s</p>
+          \[ v(1) = 5\left(1 - e^{-1}\right) \approx 3.16\ \text{V} \]</li>
+      </ol>
+      <p class="answer">ตัวเก็บประจุชาร์จได้ประมาณ 63% ของแรงดันเต็มภายในหนึ่งค่าคงตัวเวลา โดยไม่ต้องแก้สมการเชิงอนุพันธ์โดยตรงเลย ลองปรับ R และ C ใน<a href="/learn/first-order-system/#lab">แล็บระบบอันดับหนึ่ง</a> หรือแก้สมการแบบอื่นใน<a href="/learn/laplace-transform/differential-equations/">หน้า 8.4</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="transfer-function">
+    <h2 id="transfer-function">ฟังก์ชันถ่ายโอน <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อเงื่อนไขเริ่มต้นเป็นศูนย์ อัตราส่วนของเอาต์พุตต่ออินพุตในโดเมน s ไม่ขึ้นกับสัญญาณที่ป้อน แต่ขึ้นกับตัวระบบเท่านั้น เรียกว่าฟังก์ชันถ่ายโอน และ \(h(t) = \mathcal{L}^{-1}\{H(s)\}\) คือผลตอบสนองอิมพัลส์ เพราะ \(\mathcal{L}\{\delta(t)\} = 1\)</p>
+    <div class="tf-grid">
+      <div class="tf" id="L5" data-k="transfer function impulse response ฟังก์ชันถ่ายโอน">
+        <p class="tf-n"><b><span class="fid">L5</span> Transfer function</b> ฟังก์ชันถ่ายโอน</p>
+        \[ H(s) = \frac{Y(s)}{X(s)}\bigg|_{\text{IC} = 0}, \qquad y(t) = (h * x)(t) \]
+      </div>
+      <div class="tf" id="L6" data-k="second order standard form zeta omega n อันดับสอง">
+        <p class="tf-n"><b><span class="fid">L6</span> Standard second-order system</b> ระบบอันดับสองมาตรฐาน</p>
+        \[ H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2} \]
+      </div>
+    </div>
+    <p>วงจร RC เป็นตัวอย่างของระบบอันดับหนึ่ง \(G(s) = \dfrac{K}{\tau s + 1}\) ซึ่งมีบทเรียนและแล็บแยกไว้ที่<a href="/learn/first-order-system/">ระบบอันดับหนึ่ง</a> ระบบอันดับสองพบในวงจร RLC และระบบควบคุม \(\omega_n\) ยืดหรือหดแกนเวลา ส่วน \(\zeta\) กำหนดรูปร่าง เมื่อ \(\zeta &lt; 1\) จะพุ่งเกินแล้วแกว่งก่อนเข้าที่ <a href="/learn/second-order-system/">เปิดแล็บระบบอันดับสอง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="cs-next">
+    <h2 id="cs-next">ใช้ลาปลาซต่อในระบบควบคุมและงานไฟฟ้า</h2>
+    <p>ฟังก์ชันถ่ายโอนคือภาษาหลักของ<a href="/learn/control-systems/">วิศวกรรมระบบควบคุม</a> ต่อยอดได้ทันทีที่<a href="/learn/control-systems/modeling/">แบบจำลองวงจร RLC และมอเตอร์</a> <a href="/learn/control-systems/block-diagrams/">บล็อกไดอะแกรม</a> <a href="/learn/control-systems/steady-state-error/">ทฤษฎีบทค่าสุดท้ายกับความผิดพลาดอยู่ตัว</a> และ<a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพเราท์–เฮอร์วิตซ์</a> ส่วนการแก้ระบบสมการวงจรหลายลูปในโดเมน s ใช้<a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์กับตัวแปร s</a></p>
+    <p class="hint">ถ้าสนใจสถานะคงตัวของวงจรที่ป้อนด้วยคลื่นคาบที่ไม่ใช่ไซน์ (อินเวอร์เตอร์ เรกติไฟเออร์ PWM) ใช้ \(H(s)\) ที่ \(s = jn\omega_0\) ทีละฮาร์มอนิกตาม<a href="/learn/fourier-series/circuit-analysis/">วิเคราะห์วงจรด้วยอนุกรมฟูเรียร์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">ค้นหาสูตรทั้งหมดในชุดลาปลาซ</h2>
+    <p>รวมทุกสูตรจากหน้า 8.1–8.5 พร้อมรหัสถาวร (Z จำนวนเชิงซ้อน · R โพล-ซีโร่และ ROC · P คุณสมบัติ · Q สมการเชิงอนุพันธ์ · V การแปลงกลับ) พิมพ์ไทยหรืออังกฤษก็ได้ เช่น <code>residue</code> <code>ROC</code> <code>final value</code> หรือรหัสตรง ๆ เช่น <code>V8</code></p>
+    <!--formula-index:laplace-transform-->
+    </section>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -830,8 +830,15 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest(".calc-go"); if (!b) return;
     var box = calcs[0];
-    if (!box) { location.href = "/learn/linear-algebra/#calculator"; return; }
+    if (!box) { location.href = "/learn/linear-algebra/matrix-lab/#calc=" + encodeURIComponent(b.getAttribute("data-calc")); return; }
     box._load(b.getAttribute("data-calc"));
     box.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+  // a link to …/matrix-lab/#calc=mode=inv&A=… opens the matrix lab with that problem loaded
+  (function () {
+    var m = /^#calc=(.+)$/.exec(location.hash);
+    if (!m || !calcs[0]) return;
+    try { calcs[0]._load(decodeURIComponent(m[1])); } catch (e) { return; }
+    setTimeout(function () { calcs[0].scrollIntoView({ block: "start" }); }, 60);
+  })();
 })();

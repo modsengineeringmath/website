@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=4e5aea51">
+<link rel="stylesheet" href="/assets/site.css?v=94c6e111">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/measurements/#article","headline":"เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)","description":"เทคนิควัดด้วยออสซิลโลสโคปและเครื่องกำเนิดสัญญาณ: ความคลาดเคลื่อนในการอ่านกราติคูล วัดความถี่แบบนับหลายคาบ วัดเฟสจาก Δt และวงรีลิสซาจู วัดผลตอบสนองความถี่ทีละจุดและแบบกวาด เขียนกราฟโบด วัดอิมพีแดนซ์ด้วยตัวต้านทานอนุกรม วัดความต้านทานขาเข้า การเฉลี่ยลดนอยส์ และวิธีเขียนรายงานแล็บ พร้อมสูตรรหัส B และสโคปจำลอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/measurements/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/measurements/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Measurement uncertainty","Phase measurement","Lissajous figure","Frequency response","Bode plot","Frequency sweep","Impedance measurement","Input impedance","Signal averaging"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-measurements.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)","item":"https://modsengineeringmath.com/learn/function-generator/measurements/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"วัดมุมเฟสด้วยออสซิลโลสโคปทำอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"มีสองวิธี วิธีแรกวัดเวลาห่าง Δt ระหว่างจุดตัดศูนย์ขาขึ้นของสองช่อง แล้วใช้ φ = −360°·Δt/T ถ้าช่องที่สองตามหลังจะได้เฟสติดลบ วิธีที่สองใช้โหมด XY ได้วงรีลิสซาจู แล้วใช้ sin|φ| = y₀/y_max วิธีแรกบอกเครื่องหมายได้ วิธีที่สองแม่นที่มุมเล็กแต่ไม่บอกว่านำหรือตาม"}},{"@type":"Question","name":"เขียนกราฟโบดจากการทดลองต้องวัดกี่ความถี่?","acceptedAnswer":{"@type":"Answer","text":"อย่างน้อย 3 จุดต่อดีเคด เช่น 1, 2, 5 × 10ⁿ และเพิ่มจุดถี่ขึ้นรอบความถี่ตัดหรือเรโซแนนซ์ วัดอัตราส่วน V_out/V_in เทียบกับแรงดันขาเข้าวงจรที่วัดจริงทุกจุด ไม่ใช้ค่าที่ตั้งบนเครื่องกำเนิดสัญญาณ แล้วพล็อต 20 log₁₀(V_out/V_in) และมุมเฟสบนแกนความถี่แบบล็อก"}},{"@type":"Question","name":"ทำไมต้องวัดแรงดันขาเข้าทุกครั้ง ทั้งที่ตั้งค่าบนเครื่องกำเนิดสัญญาณไว้แล้ว?","acceptedAnswer":{"@type":"Answer","text":"เพราะเครื่องกำเนิดสัญญาณมีความต้านทานขาออก 50 Ω แรงดันที่ขั้วจึงเปลี่ยนตามอิมพีแดนซ์ขาเข้าของวงจร ซึ่งเปลี่ยนตามความถี่ เช่น วงจร RLC ที่เรโซแนนซ์ การวัดอัตราส่วน CH2/CH1 ที่ขาเข้าวงจรจริงจะตัดผลของ 50 Ω และความคลาดเคลื่อนแอมพลิจูดของเครื่องออกไปหมด"}},{"@type":"Question","name":"ค่าที่อ่านจากออสซิลโลสโคปแม่นยำแค่ไหน?","acceptedAnswer":{"@type":"Answer","text":"สโคป 8 บิตทั่วไปมีความแม่นยำอัตราขยาย DC ราว ±3 % บวกความคลาดเคลื่อนการอ่านกราติคูลราว ±0.1 ช่อง ถ้าภาพสูง 6 ช่อง ความคลาดเคลื่อนรวมราว ±3.5 % ส่วนเวลาแม่นกว่ามาก ราว 25–50 ppm บวกความคลาดเคลื่อนการอ่าน จึงควรให้ภาพใหญ่เต็มจอและวัดหลายคาบ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -58,47 +58,131 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">คณิตศาสตร์</button>
-        <div class="nav-list" id="navg1">
-          <a href="/learn/trigonometry/" >ตรีโกณมิติ · ตารางค่า</a>
-          <a href="/learn/calculus-basics/" >แคลคูลัสเบื้องต้น</a>
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
           <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
-          <a href="/learn/linear-algebra/" >พีชคณิตเชิงเส้น · เมทริกซ์</a>
-          <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์</a>
-          <a href="/learn/laplace-transform/" >การแปลงลาปลาซ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
         </div>
       </div>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
-        <div class="nav-list nav-list-wide" id="navvec">
-          <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
-          <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
-          <span class="nav-h">พื้นฐาน 2D / 3D</span>
-          <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
-          <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
-          <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
-          <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
-          <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
-          <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
-          <span class="nav-h">แรงและกลศาสตร์</span>
-          <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
-          <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
-          <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
-          <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
-          <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
-          <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
-          <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
-          <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
-          <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
-          <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
-          <span class="nav-h">ห้องแล็บ</span>
-          <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
-          <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
-          <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
-          <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
       </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
         <div class="nav-list" id="navg2">
@@ -235,7 +319,7 @@
     <header>
       <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/function-generator/">แล็บ FG + สโคป</a></li><li>เทคนิคการวัด</li></ol>
       <nav class="series-nav" aria-label="หน้าย่อยในแล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป"><span class="sn-title mono">Function Generator &amp; Oscilloscope Lab</span><div class="sn-list"><a href="/learn/function-generator/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/function-generator/waveforms/"><span class="sn-n">1</span>อ่านค่าสัญญาณ</a><a href="/learn/function-generator/generator/"><span class="sn-n">2</span>เครื่องกำเนิดสัญญาณ</a><a href="/learn/function-generator/oscilloscope/"><span class="sn-n">3</span>ออสซิลโลสโคป</a><a href="/learn/function-generator/simulator/"><span class="sn-n">4</span>แล็บจำลอง</a><a href="/learn/function-generator/measurements/" aria-current="page"><span class="sn-n">5</span>เทคนิคการวัด</a><a href="/learn/function-generator/rc-rlc/"><span class="sn-n">6</span>RC · RLC</a><a href="/learn/function-generator/op-amp/"><span class="sn-n">7</span>ออปแอมป์</a><a href="/learn/function-generator/build/"><span class="sn-n">8</span>สร้างเครื่องเอง</a><a href="/learn/function-generator/applications/"><span class="sn-n">9</span>งานประยุกต์</a></div></nav>
-      <p class="eyebrow">// บทที่ 10.5 · แล็บ FG + สโคป · Measurement Techniques</p>
+      <p class="eyebrow">// บทที่ 12.5 · แล็บ FG + สโคป · Measurement Techniques</p>
       <h1>เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)</h1>
       <p class="lede">รู้จักปุ่มแล้ว ขั้นต่อไปคือวัดให้ได้ตัวเลขที่เชื่อถือได้และเขียนลงรายงานได้ หน้านี้รวมวิธีที่ใช้ในแล็บวงจรไฟฟ้า สัญญาณและระบบ และอิเล็กทรอนิกส์ทุกวิชา: ความคลาดเคลื่อน การวัดความถี่และเฟส วงรีลิสซาจู การเก็บข้อมูลเพื่อเขียนกราฟโบด การกวาดความถี่ และการวัดอิมพีแดนซ์ด้วยของที่มีบนโต๊ะ สูตรใช้รหัส B</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-12">12 ต.ค. 2569</time></span></div>
@@ -635,12 +719,12 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=4e5aea51" defer></script>
-<script src="/assets/lesson.js?v=4e5aea51" defer></script>
-<script src="/assets/fgcalc.js?v=4e5aea51" defer></script>
-<script src="/assets/fgs-core.js?v=4e5aea51" defer></script>
-<script src="/assets/fgs-scope.js?v=4e5aea51" defer></script>
-<script src="/assets/fgs-ui.js?v=4e5aea51" defer></script>
-<script src="/assets/fgs-app.js?v=4e5aea51" defer></script>
+<script src="/assets/site.js?v=94c6e111" defer></script>
+<script src="/assets/lesson.js?v=94c6e111" defer></script>
+<script src="/assets/fgcalc.js?v=94c6e111" defer></script>
+<script src="/assets/fgs-core.js?v=94c6e111" defer></script>
+<script src="/assets/fgs-scope.js?v=94c6e111" defer></script>
+<script src="/assets/fgs-ui.js?v=94c6e111" defer></script>
+<script src="/assets/fgs-app.js?v=94c6e111" defer></script>
 </body>
 </html>

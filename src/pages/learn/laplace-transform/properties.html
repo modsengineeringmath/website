@@ -1,0 +1,377 @@
+<!--meta
+{
+  "title": "คุณสมบัติของการแปลงลาปลาซครบทุกข้อ: เชิงเส้น เลื่อนเวลา เลื่อนความถี่ อนุพันธ์ ปริพันธ์ คอนโวลูชัน ค่าเริ่มต้น ค่าสุดท้าย | อาจารย์มด",
+  "h1": "คุณสมบัติของการแปลงลาปลาซครบทุกข้อ พร้อมพิสูจน์และตัวอย่าง",
+  "description": "รวมคุณสมบัติของการแปลงลาปลาซพร้อมชื่อภาษาอังกฤษ พิสูจน์สั้น ผลต่อ ROC และตัวอย่าง เชิงเส้น การเลื่อนทางเวลา การเลื่อนทางความถี่ การสเกลเวลา การกลับเวลา อนุพันธ์อันดับหนึ่งถึง n ปริพันธ์ คูณด้วย t หารด้วย t คอนโวลูชัน การคูณ ฟังก์ชันคาบ ทฤษฎีบทค่าเริ่มต้นและค่าสุดท้ายพร้อมเงื่อนไข และแล็บที่พิสูจน์ทุกคุณสมบัติด้วยตัวเลข",
+  "ogTitle": "คุณสมบัติลาปลาซครบทุกข้อ: พิสูจน์ ตัวอย่าง และแล็บพิสูจน์ด้วยตัวเลข",
+  "lesson": "laplace-transform",
+  "sub": "properties",
+  "nav": "lap",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Properties of the Laplace transform", "Time shifting", "Frequency shifting", "Differentiation property", "Integration property", "Convolution theorem", "Initial value theorem", "Final value theorem", "Periodic function"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/cs-core.js", "/assets/lap-core.js", "/assets/lap-lab.js"],
+  "faq": [
+    {"q": "ℒ{t·u(t−2)} ใช้การเลื่อนเวลาได้เลยไหม?", "a": "ไม่ได้ทันที เพราะสมบัติการเลื่อนเวลาต้องการรูป \\(f(t-T)u(t-T)\\) ต้องเขียน \\(t = (t-2) + 2\\) ก่อน ได้ \\(\\mathcal L\\{t\\,u(t-2)\\} = e^{-2s}\\left(\\frac{1}{s^2} + \\frac{2}{s}\\right)\\)"},
+    {"q": "ใช้ทฤษฎีบทค่าสุดท้ายได้เมื่อไร?", "a": "เมื่อ \\(sF(s)\\) มีโพลทุกตัวอยู่ครึ่งซ้ายของระนาบ s เท่านั้น (อนุญาตให้ \\(F(s)\\) มีโพลเดี่ยวที่ \\(s = 0\\) ได้) ถ้ามีโพลบนแกน jω อื่นหรือครึ่งขวา \\(f(t)\\) ไม่มีค่าสุดท้าย และสูตรจะให้คำตอบที่ผิดโดยไม่เตือน"},
+    {"q": "ทำไมสมบัติอนุพันธ์ใช้ f(0⁻) ไม่ใช่ f(0⁺)?", "a": "เพราะนิยามด้วยขอบล่าง \\(0^-\\) รวมอิมพัลส์ที่ \\(t = 0\\) ไว้ด้วย และ \\(f(0^-)\\) คือสภาวะก่อนสวิตช์ทำงาน ซึ่งเป็นค่าที่วิศวกรรู้จริง (เช่นแรงดันตัวเก็บประจุก่อนปิดสวิตช์) ถ้าสัญญาณต่อเนื่องที่ t = 0 สองค่านี้เท่ากัน"},
+    {"q": "คอนโวลูชันในโดเมนเวลาเป็นการคูณในโดเมน s ใช้ทำอะไร?", "a": "ใช้หาเอาต์พุตของระบบ \\(Y(s) = H(s)X(s)\\) โดยไม่ต้องอินทิเกรตคอนโวลูชัน และใช้แปลงกลับผลคูณของสองฟังก์ชันที่รู้ตัวผกผันแต่ละตัว เช่น \\(\\mathcal L^{-1}\\{1/(s^2+1)^2\\} = \\sin t * \\sin t\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/laplace-transform/">การแปลงลาปลาซ</a></li><li>คุณสมบัติการแปลง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 8.3 · การแปลงลาปลาซ · Properties</p>
+      <h1>คุณสมบัติของการแปลงลาปลาซครบทุกข้อ พร้อมพิสูจน์และตัวอย่าง</h1>
+      <p class="lede">ตารางคู่การแปลงมีไม่กี่สิบบรรทัด แต่ด้วยคุณสมบัติในหน้านี้ เราสร้างการแปลงของฟังก์ชันได้แทบไม่จำกัดโดยไม่ต้องอินทิเกรตจากนิยามอีกเลย ทุกข้อมีชื่อภาษาอังกฤษ พิสูจน์สั้น ข้อควรระวัง และตัวอย่าง ท้ายหน้ามีแล็บที่คำนวณ \(g(t)\) จากนิยามในโดเมนเวลาเทียบกับ \(\mathcal L^{-1}\{G(s)\}\) ให้เห็นว่าสูตรถูกจริง สูตรใช้รหัส P</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#summary">ตารางสรุป</a>
+        <a class="btn btn-ghost btn-sm" href="#time-shift">เลื่อนเวลา</a>
+        <a class="btn btn-ghost btn-sm" href="#differentiation">อนุพันธ์</a>
+        <a class="btn btn-ghost btn-sm" href="#convolution">คอนโวลูชัน</a>
+        <a class="btn btn-ghost btn-sm" href="#limit-theorems">ค่าเริ่มต้น-สุดท้าย</a>
+        <a class="btn btn-ghost btn-sm" href="#lab">แล็บพิสูจน์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เวลา “เลื่อน” → คูณ \(e^{-sT}\) · คูณ \(e^{-at}\) → เลื่อน \(s\) ไปเป็น \(s + a\)</li>
+          <li>อนุพันธ์ → คูณ \(s\) ลบค่าเริ่มต้น · ปริพันธ์ → หาร \(s\)</li>
+          <li>คูณ \(t\) → \(-d/ds\) · คอนโวลูชัน → คูณกัน</li>
+          <li>\(f(0^+) = \lim_{s\to\infty}sF(s)\) · \(f(\infty) = \lim_{s\to 0}sF(s)\) ใช้ได้เมื่อโพลของ \(sF(s)\) อยู่ครึ่งซ้ายทั้งหมด</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 2</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น shift, derivative, integral, convolution, final value, periodic" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="summary">
+    <h2 id="summary">ตารางสรุปคุณสมบัติทั้งหมด</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รหัส</th><th>ชื่อ (English)</th><th>\(f(t)\)</th><th>\(F(s)\)</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#P1">P1</a></td><td>เชิงเส้น (Linearity)</td><td>\(af(t) + bg(t)\)</td><td>\(aF(s) + bG(s)\)</td></tr>
+          <tr><td><a href="#P2">P2</a></td><td>เลื่อนทางเวลา (Time shifting)</td><td>\(f(t-T)u(t-T)\)</td><td>\(e^{-sT}F(s)\)</td></tr>
+          <tr><td><a href="#P3">P3</a></td><td>เลื่อนทางความถี่ (Frequency / s-shifting)</td><td>\(e^{-at}f(t)\)</td><td>\(F(s+a)\)</td></tr>
+          <tr><td><a href="#P4">P4</a></td><td>สเกลเวลา (Time scaling)</td><td>\(f(at),\ a>0\)</td><td>\(\tfrac{1}{a}F(\tfrac{s}{a})\)</td></tr>
+          <tr><td><a href="#P5">P5</a></td><td>กลับเวลา (Time reversal, สองด้าน)</td><td>\(f(-t)\)</td><td>\(F(-s)\)</td></tr>
+          <tr><td><a href="#P6">P6</a></td><td>อนุพันธ์ (Differentiation in t)</td><td>\(f'(t)\)</td><td>\(sF(s) - f(0^-)\)</td></tr>
+          <tr><td><a href="#P7">P7</a></td><td>อนุพันธ์อันดับ n</td><td>\(f^{(n)}(t)\)</td><td>\(s^nF - s^{n-1}f(0^-) - \cdots - f^{(n-1)}(0^-)\)</td></tr>
+          <tr><td><a href="#P8">P8</a></td><td>ปริพันธ์ (Integration in t)</td><td>\(\int_{0^-}^t f(\tau)d\tau\)</td><td>\(\dfrac{F(s)}{s}\)</td></tr>
+          <tr><td><a href="#P9">P9</a></td><td>คูณด้วย t (Differentiation in s)</td><td>\(t\,f(t)\)</td><td>\(-F'(s)\)</td></tr>
+          <tr><td><a href="#P10">P10</a></td><td>คูณด้วย \(t^n\)</td><td>\(t^nf(t)\)</td><td>\((-1)^nF^{(n)}(s)\)</td></tr>
+          <tr><td><a href="#P11">P11</a></td><td>หารด้วย t (Integration in s)</td><td>\(f(t)/t\)</td><td>\(\int_s^\infty F(u)\,du\)</td></tr>
+          <tr><td><a href="#P12">P12</a></td><td>คอนโวลูชัน (Convolution)</td><td>\((f*g)(t)\)</td><td>\(F(s)G(s)\)</td></tr>
+          <tr><td><a href="#P13">P13</a></td><td>การคูณ (Complex convolution)</td><td>\(f(t)g(t)\)</td><td>\(\tfrac{1}{2\pi j}\int F(p)G(s-p)dp\)</td></tr>
+          <tr><td><a href="#P14">P14</a></td><td>ฟังก์ชันคาบ (Periodic function)</td><td>\(f(t + T) = f(t)\)</td><td>\(\dfrac{\int_0^T f e^{-st}dt}{1 - e^{-sT}}\)</td></tr>
+          <tr><td><a href="#P15">P15</a></td><td>ทฤษฎีบทค่าเริ่มต้น (Initial value)</td><td>\(f(0^+)\)</td><td>\(\lim_{s\to\infty}sF(s)\)</td></tr>
+          <tr><td><a href="#P16">P16</a></td><td>ทฤษฎีบทค่าสุดท้าย (Final value)</td><td>\(f(\infty)\)</td><td>\(\lim_{s\to 0}sF(s)\)</td></tr>
+          <tr><td><a href="#P17">P17</a></td><td>สังยุค (Conjugation)</td><td>\(\overline{f(t)}\)</td><td>\(\overline{F(\bar s)}\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <!-- ============ linearity ============ -->
+    <section class="tsec" aria-labelledby="linearity">
+    <h2 id="linearity">เชิงเส้น (Linearity) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P1" data-k="linearity superposition เชิงเส้น ซ้อนทับ">
+        <p class="tf-n"><b><span class="fid">P1</span> Linearity</b> เชิงเส้น</p>
+        \[ \mathcal L\{af(t) + bg(t)\} = aF(s) + bG(s),\qquad \text{ROC} \supseteq R_f \cap R_g \]
+        <p class="tf-x">พิสูจน์: อินทิกรัลเป็นตัวดำเนินการเชิงเส้น · ทำให้ใช้ตารางกับผลรวมทีละพจน์ได้ และเป็นฐานของการแยกเศษส่วนย่อย</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>\(\mathcal L\{3 - 2e^{-4t} + 5\cos 2t\}\)</h3></div>
+      <ol class="steps"><li>\[ = \frac{3}{s} - \frac{2}{s+4} + \frac{5s}{s^2+4},\quad \operatorname{Re}s > 0 \]</li></ol>
+      <p class="answer">ROC คือส่วนร่วม \(\sigma > 0\) ∩ \(\sigma > -4\) ∩ \(\sigma > 0\) = \(\sigma > 0\)</p>
+    </div>
+    </section>
+
+    <!-- ============ time shift ============ -->
+    <section class="tsec" aria-labelledby="time-shift">
+    <h2 id="time-shift">การเลื่อนทางเวลา (Time Shifting / Second Shifting Theorem) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P2" data-k="time shift delay second shifting theorem e^-sT เลื่อนเวลา หน่วงเวลา">
+        <p class="tf-n"><b><span class="fid">P2</span> Time shifting</b> เลื่อนทางเวลา (หน่วงเวลา)</p>
+        \[ \mathcal L\{f(t - T)\,u(t - T)\} = e^{-sT}F(s),\quad T \ge 0 \]
+        <p class="tf-x">พิสูจน์: แทน \(\tau = t - T\) ใน \(\int_T^\infty f(t-T)e^{-st}dt = e^{-sT}\int_0^\infty f(\tau)e^{-s\tau}d\tau\) · ROC เท่าเดิม · ต้องอยู่ในรูป “ฟังก์ชันของ \((t - T)\) คูณ \(u(t - T)\)” เท่านั้น</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-2 · กับดักที่เจอบ่อยที่สุด</span><h3>\(\mathcal L\{t\,u(t-2)\}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(t\) ยังไม่อยู่ในรูปของ \((t-2)\) จัดรูปก่อน: \(t = (t - 2) + 2\)</p>\[ t\,u(t-2) = (t-2)u(t-2) + 2u(t-2) \]</li>
+        <li><p>ใช้ P2 กับ \(f(t) = t\) และ \(f(t) = 2\)</p>\[ \mathcal L = e^{-2s}\left(\frac{1}{s^2} + \frac{2}{s}\right) = \frac{e^{-2s}(1 + 2s)}{s^2} \]</li>
+      </ol>
+      <p class="answer">\(\dfrac{(1+2s)e^{-2s}}{s^2}\) · ถ้าตอบ \(e^{-2s}/s^2\) แปลว่าแปลง \((t-2)u(t-2)\) ไม่ใช่ \(t\,u(t-2)\)</p>
+    </div>
+    <div class="wx" id="ex-p3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-3 · พัลส์และสัญญาณเป็นช่วง</span><h3>\(f(t) = 5\) เมื่อ \(1 \le t &lt; 3\) และเป็น 0 นอกช่วงนี้</h3></div>
+      <ol class="steps">
+        <li>\[ f(t) = 5\left[u(t-1) - u(t-3)\right] \]</li>
+        <li>\[ F(s) = \frac{5\left(e^{-s} - e^{-3s}\right)}{s} \]</li>
+      </ol>
+      <p class="answer">\(F(s) = \dfrac{5(e^{-s} - e^{-3s})}{s}\) แปลงกลับในเครื่องคิดเลขได้ <button type="button" class="wx-btn" data-lap-f="5(e^(-s)-e^(-3s))/s">ลองแปลงกลับ</button></p>
+    </div>
+    </section>
+
+    <!-- ============ s shift ============ -->
+    <section class="tsec" aria-labelledby="s-shift">
+    <h2 id="s-shift">การเลื่อนทางความถี่ (Frequency Shifting / First Shifting Theorem) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P3" data-k="frequency shift s shift first shifting theorem damping e^-at เลื่อนความถี่">
+        <p class="tf-n"><b><span class="fid">P3</span> s-shifting</b> เลื่อนทางความถี่</p>
+        \[ \mathcal L\{e^{-at}f(t)\} = F(s + a),\qquad \text{ROC เลื่อนไป } -\operatorname{Re}a \]
+        <p class="tf-x">พิสูจน์: \(\int e^{-at}f(t)e^{-st}dt = \int f(t)e^{-(s+a)t}dt\) · ในระนาบ s ทุกโพลและซีโร่เลื่อนไปทางซ้าย \(a\) หน่วย: คูณการหน่วงในเวลา = ย้ายโพลไปซ้าย</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-4</span><h3>\(\mathcal L\{t^2e^{-3t}\}\) และ \(\mathcal L\{e^{-2t}\sin 5t\}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\mathcal L\{t^2\} = 2/s^3\) แล้วแทน \(s \to s + 3\)</p>\[ \mathcal L\{t^2e^{-3t}\} = \frac{2}{(s+3)^3} \]</li>
+        <li><p>\(\mathcal L\{\sin 5t\} = 5/(s^2+25)\) แล้วแทน \(s \to s + 2\)</p>\[ \mathcal L\{e^{-2t}\sin 5t\} = \frac{5}{(s+2)^2 + 25} = \frac{5}{s^2 + 4s + 29} \]</li>
+      </ol>
+      <p class="answer">ในทางกลับกัน เมื่อเห็นตัวส่วน \(s^2 + 4s + 29\) ให้ <b>เติมกำลังสองสมบูรณ์</b> เป็น \((s+2)^2 + 5^2\) แล้วอ่านกลับได้ทันที ซึ่งเป็นเทคนิคหลักของโพลเชิงซ้อนใน<a href="/learn/laplace-transform/inverse-laplace-transform/#complex-poles">หน้า 8.5</a></p>
+    </div>
+    </section>
+
+    <!-- ============ scaling, reversal ============ -->
+    <section class="tsec" aria-labelledby="scaling">
+    <h2 id="scaling">สเกลเวลาและการกลับเวลา <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="P4" data-k="time scaling compress expand สเกลเวลา">
+        <p class="tf-n"><b><span class="fid">P4</span> Time scaling</b> สเกลเวลา</p>
+        \[ \mathcal L\{f(at)\} = \frac{1}{a}F\!\left(\frac{s}{a}\right),\quad a > 0 \]
+        <p class="tf-x">บีบเวลาให้เร็วขึ้น \(a\) เท่า = โพลทุกตัวคูณ \(a\) (ไกลจุดกำเนิดขึ้น)</p>
+      </div>
+      <div class="tf" id="P5" data-k="time reversal bilateral f(-t) F(-s) กลับเวลา">
+        <p class="tf-n"><b><span class="fid">P5</span> Time reversal</b> กลับเวลา (การแปลงสองด้าน)</p>
+        \[ \mathcal L\{f(-t)\} = F(-s),\quad \text{ROC} \to -\text{ROC} \]
+        <p class="tf-x">ใช้ไม่ได้กับการแปลงด้านเดียว เพราะ \(f(-t)\) อยู่ในเวลาติดลบ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-5</span><h3>จาก \(\mathcal L\{\sin t\} = \dfrac{1}{s^2+1}\) หา \(\mathcal L\{\sin 3t\}\) ด้วย P4</h3></div>
+      <ol class="steps"><li>\[ \mathcal L\{\sin 3t\} = \frac{1}{3}\cdot\frac{1}{(s/3)^2 + 1} = \frac{1}{3}\cdot\frac{9}{s^2 + 9} = \frac{3}{s^2+9} \]</li></ol>
+      <p class="answer">ตรงกับตาราง \(\omega/(s^2+\omega^2)\) ที่ \(\omega = 3\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ differentiation ============ -->
+    <section class="tsec" aria-labelledby="differentiation">
+    <h2 id="differentiation">การหาอนุพันธ์ในโดเมนเวลา (Differentiation) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นี่คือคุณสมบัติที่ทำให้ลาปลาซมีค่าที่สุด: แคลคูลัสกลายเป็นพีชคณิต และเงื่อนไขเริ่มต้นเข้ามาเองในสมการ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P6" data-k="differentiation derivative property sF(s) - f(0) initial condition อนุพันธ์">
+        <p class="tf-n"><b><span class="fid">P6</span> Differentiation in t</b> อนุพันธ์อันดับหนึ่ง</p>
+        \[ \mathcal L\{f'(t)\} = sF(s) - f(0^-) \]
+        <p class="tf-x">พิสูจน์ด้วยอินทิเกรตทีละส่วน (\(u = e^{-st},\ dv = f'dt\)): \(\int_{0^-}^\infty f'e^{-st}dt = \left[fe^{-st}\right]_{0^-}^\infty + s\int_{0^-}^\infty fe^{-st}dt = -f(0^-) + sF(s)\) (ขอบบนเป็นศูนย์ใน ROC) <a href="/learn/integral-calculus/#by-parts">ทบทวนการอินทิเกรตทีละส่วน</a></p>
+      </div>
+      <div class="tf wide" id="P7" data-k="second derivative nth derivative s^2F initial conditions อนุพันธ์อันดับสอง อันดับ n">
+        <p class="tf-n"><b><span class="fid">P7</span> Higher derivatives</b> อนุพันธ์อันดับสองและอันดับ n</p>
+        \[ \mathcal L\{f''\} = s^2F(s) - sf(0^-) - f'(0^-),\qquad \mathcal L\{f^{(n)}\} = s^nF(s) - \sum_{k=1}^{n}s^{n-k}f^{(k-1)}(0^-) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-p6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-6 · ได้ cos มาฟรีจาก sin</span><h3>ใช้ P6 หา \(\mathcal L\{\cos\omega t\}\) จาก \(\mathcal L\{\sin\omega t\} = \dfrac{\omega}{s^2+\omega^2}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(f = \sin\omega t,\ f' = \omega\cos\omega t,\ f(0) = 0\)</p>\[ \mathcal L\{\omega\cos\omega t\} = s\cdot\frac{\omega}{s^2+\omega^2} - 0 \]</li>
+      </ol>
+      <p class="answer">\(\mathcal L\{\cos\omega t\} = \dfrac{s}{s^2+\omega^2}\)</p>
+    </div>
+    <div class="wx" id="ex-p7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-7 · แบบจำลองวงจรในโดเมน s</span><h3>เขียนความสัมพันธ์ของตัวเหนี่ยวนำและตัวเก็บประจุในโดเมน s รวมค่าเริ่มต้น</h3></div>
+      <ol class="steps">
+        <li><p>ตัวเหนี่ยวนำ \(v = L\,di/dt\):</p>\[ V(s) = sL\,I(s) - L\,i(0^-) \]<p>อิมพีแดนซ์ \(sL\) อนุกรมกับแหล่งแรงดัน \(L\,i(0^-)\) (ขั้วต้านกระแสเดิม)</p></li>
+        <li><p>ตัวเก็บประจุ \(i = C\,dv/dt\):</p>\[ I(s) = sC\,V(s) - C\,v(0^-)\ \Rightarrow\ V(s) = \frac{1}{sC}I(s) + \frac{v(0^-)}{s} \]<p>อิมพีแดนซ์ \(1/(sC)\) อนุกรมกับแหล่งแรงดัน \(v(0^-)/s\)</p></li>
+      </ol>
+      <p class="answer">วงจรที่มีค่าเริ่มต้นจึงวิเคราะห์ด้วย KVL/KCL แบบพีชคณิตได้ทันทีในโดเมน s ใช้ต่อในหน้า<a href="/learn/laplace-transform/differential-equations/#circuits">แก้สมการเชิงอนุพันธ์</a></p>
+    </div>
+    </section>
+
+    <!-- ============ integration ============ -->
+    <section class="tsec" aria-labelledby="integration">
+    <h2 id="integration">การหาปริพันธ์ในโดเมนเวลา (Integration) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P8" data-k="integration property F(s)/s divide by s ปริพันธ์">
+        <p class="tf-n"><b><span class="fid">P8</span> Integration in t</b> ปริพันธ์</p>
+        \[ \mathcal L\left\{\int_{0^-}^{t}f(\tau)\,d\tau\right\} = \frac{F(s)}{s} \]
+        <p class="tf-x">พิสูจน์: ให้ \(g = \int_0^t f\) แล้ว \(g' = f,\ g(0) = 0\) ใช้ P6: \(F = sG - 0\) · ตรงข้ามกับอนุพันธ์: หารด้วย \(s\) = เพิ่มโพลที่จุดกำเนิด</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-8</span><h3>\(\mathcal L^{-1}\left\{\dfrac{1}{s(s^2+1)}\right\}\) โดยไม่ใช้เศษส่วนย่อย</h3></div>
+      <ol class="steps">
+        <li><p>มองเป็น \(\dfrac{1}{s}\cdot\dfrac{1}{s^2+1}\) โดย \(\mathcal L^{-1}\{1/(s^2+1)\} = \sin t\) ใช้ P8</p>\[ \mathcal L^{-1} = \int_0^t \sin\tau\,d\tau = 1 - \cos t \]</li>
+      </ol>
+      <p class="answer">\(1 - \cos t,\ t \ge 0\)</p>
+    </div>
+    </section>
+
+    <!-- ============ s-domain differentiation ============ -->
+    <section class="tsec" aria-labelledby="multiply-t">
+    <h2 id="multiply-t">คูณด้วย t และหารด้วย t (อนุพันธ์และปริพันธ์ในโดเมน s) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="P9" data-k="multiplication by t differentiation in s -dF/ds คูณด้วย t">
+        <p class="tf-n"><b><span class="fid">P9</span> Multiplication by t</b> คูณด้วย t</p>
+        \[ \mathcal L\{t\,f(t)\} = -\frac{dF(s)}{ds} \]
+        <p class="tf-x">พิสูจน์: \(\frac{d}{ds}\int fe^{-st}dt = \int f\,(-t)e^{-st}dt\) · เป็นที่มาของพจน์ \(t\,e^{pt}\) จากโพลซ้ำ</p>
+      </div>
+      <div class="tf" id="P10" data-k="multiplication by t^n nth derivative in s คูณด้วย t ยกกำลัง n">
+        <p class="tf-n"><b><span class="fid">P10</span> Multiplication by tⁿ</b> คูณด้วย tⁿ</p>
+        \[ \mathcal L\{t^nf(t)\} = (-1)^n\frac{d^nF(s)}{ds^n} \]
+      </div>
+      <div class="tf wide" id="P11" data-k="division by t integration in s หารด้วย t sin t over t">
+        <p class="tf-n"><b><span class="fid">P11</span> Division by t</b> หารด้วย t</p>
+        \[ \mathcal L\left\{\frac{f(t)}{t}\right\} = \int_s^\infty F(u)\,du,\quad \text{ถ้า } \lim_{t\to 0^+}f(t)/t \text{ มีค่า} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-p9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-9 · เรโซแนนซ์</span><h3>\(\mathcal L\{t\sin\omega t\}\)</h3></div>
+      <ol class="steps"><li>\[ -\frac{d}{ds}\frac{\omega}{s^2+\omega^2} = -\omega\cdot\frac{-2s}{(s^2+\omega^2)^2} = \frac{2\omega s}{(s^2+\omega^2)^2} \]</li></ol>
+      <p class="answer">\(\dfrac{2\omega s}{(s^2+\omega^2)^2}\) โพลซ้ำบนแกน jω ให้แอมพลิจูดโตเชิงเส้นตามเวลา คือเรโซแนนซ์เมื่อป้อนความถี่ตรงกับความถี่ธรรมชาติ</p>
+    </div>
+    <div class="wx" id="ex-p10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-10 · อินทิกรัลดิริชเลต์ด้วยลาปลาซ</span><h3>หา \(\mathcal L\left\{\dfrac{\sin t}{t}\right\}\) แล้วสรุปค่า \(\int_0^\infty\dfrac{\sin t}{t}dt\)</h3></div>
+      <ol class="steps">
+        <li>\[ \mathcal L\left\{\frac{\sin t}{t}\right\} = \int_s^\infty\frac{du}{u^2+1} = \frac{\pi}{2} - \tan^{-1}s = \tan^{-1}\frac{1}{s} \]</li>
+        <li><p>อินทิกรัลที่ต้องการคือค่าของการแปลงที่ \(s \to 0^+\)</p>\[ \int_0^\infty\frac{\sin t}{t}dt = \lim_{s\to0^+}\tan^{-1}\frac1s = \frac{\pi}{2} \]</li>
+      </ol>
+      <p class="answer">\(\pi/2\) — อินทิกรัลที่หาด้วยวิธีปกติไม่ได้ แต่ลาปลาซหาได้ในสองบรรทัด</p>
+    </div>
+    </section>
+
+    <!-- ============ convolution ============ -->
+    <section class="tsec" aria-labelledby="convolution">
+    <h2 id="convolution">คอนโวลูชันและการคูณ (Convolution Theorem) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P12" data-k="convolution theorem product F(s)G(s) คอนโวลูชัน">
+        <p class="tf-n"><b><span class="fid">P12</span> Convolution</b> คอนโวลูชัน → คูณ</p>
+        \[ \mathcal L\{(f*g)(t)\} = F(s)\,G(s),\qquad (f*g)(t) = \int_0^t f(\tau)\,g(t - \tau)\,d\tau \]
+        <p class="tf-x">เอาต์พุตของระบบ LTI \(y = h * x\) จึงหาได้จาก \(Y(s) = H(s)X(s)\) เป็นเหตุผลที่ฟังก์ชันถ่ายโอนนิยามเป็นอัตราส่วน</p>
+      </div>
+      <div class="tf wide" id="P13" data-k="multiplication complex convolution product f g การคูณ">
+        <p class="tf-n"><b><span class="fid">P13</span> Multiplication</b> การคูณในเวลา (คอนโวลูชันเชิงซ้อน)</p>
+        \[ \mathcal L\{f(t)g(t)\} = \frac{1}{2\pi j}\int_{c-j\infty}^{c+j\infty}F(p)\,G(s - p)\,dp \]
+        <p class="tf-x">ใช้น้อยในงานวงจร พบในการมอดูเลชันและการวิเคราะห์สัญญาณสุ่ม</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-11 · แปลงกลับด้วยคอนโวลูชัน</span><h3>\(\mathcal L^{-1}\left\{\dfrac{1}{(s^2+1)^2}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>เป็นผลคูณ \(\dfrac{1}{s^2+1}\cdot\dfrac{1}{s^2+1}\) ซึ่งแต่ละตัวคือ \(\sin t\)</p>\[ f(t) = \int_0^t\sin\tau\,\sin(t - \tau)\,d\tau \]</li>
+        <li><p>ใช้ผลคูณเป็นผลบวก \(\sin A\sin B = \tfrac12[\cos(A-B) - \cos(A+B)]\)</p>\[ = \frac12\int_0^t\left[\cos(2\tau - t) - \cos t\right]d\tau = \frac12\left[\frac{\sin(2\tau - t)}{2}\right]_0^t - \frac{t\cos t}{2} = \frac{\sin t}{2} - \frac{t\cos t}{2} \]</li>
+      </ol>
+      <p class="answer">\(f(t) = \tfrac12(\sin t - t\cos t)\) ตรงกับตารางแถว 20 บนหน้าภาพรวม <button type="button" class="wx-btn" data-lap-f="1/(s^2+1)^2">ตรวจด้วยเศษส่วนย่อย</button></p>
+    </div>
+    </section>
+
+    <!-- ============ periodic ============ -->
+    <section class="tsec" aria-labelledby="periodic">
+    <h2 id="periodic">ฟังก์ชันคาบ (Periodic Functions) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P14" data-k="periodic function one period 1 - e^-sT ฟังก์ชันคาบ">
+        <p class="tf-n"><b><span class="fid">P14</span> Periodic function</b> ฟังก์ชันคาบ \(T\)</p>
+        \[ \mathcal L\{f(t)\} = \frac{F_1(s)}{1 - e^{-sT}},\qquad F_1(s) = \int_0^T f(t)\,e^{-st}\,dt \]
+        <p class="tf-x">พิสูจน์: \(f = f_1(t) + f_1(t-T)u(t-T) + f_1(t-2T)u(t-2T) + \cdots\) ใช้ P2 ได้อนุกรมเรขาคณิต \(F_1(1 + e^{-sT} + e^{-2sT} + \cdots)\) · ตัวส่วนมีรากที่ \(s = j2\pi k/T\) คือฮาร์มอนิกของอนุกรมฟูเรียร์</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p12">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-12 · คลื่นสี่เหลี่ยม PWM 50%</span><h3>\(f = 1\) เมื่อ \(0 &lt; t &lt; a\), \(f = 0\) เมื่อ \(a &lt; t &lt; 2a\) และซ้ำทุก \(T = 2a\)</h3></div>
+      <ol class="steps">
+        <li>\[ F_1(s) = \int_0^a e^{-st}dt = \frac{1 - e^{-as}}{s} \]</li>
+        <li>\[ F(s) = \frac{1 - e^{-as}}{s\left(1 - e^{-2as}\right)} = \frac{1 - e^{-as}}{s(1 - e^{-as})(1 + e^{-as})} = \frac{1}{s\left(1 + e^{-as}\right)} \]</li>
+      </ol>
+      <p class="answer">\(F(s) = \dfrac{1}{s(1 + e^{-as})}\) ใช้กับวงจรที่ป้อนด้วย PWM เช่น<a href="/learn/power-electronics/buck-converter/">บั๊กคอนเวอร์เตอร์</a></p>
+    </div>
+    <div class="wx" id="ex-p13">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-13 · เรกติไฟเออร์เต็มคลื่น</span><h3>\(f(t) = |\sin t|\) คาบ \(T = \pi\)</h3></div>
+      <ol class="steps">
+        <li><p>\(F_1(s) = \int_0^\pi\sin t\,e^{-st}dt = \dfrac{1 + e^{-\pi s}}{s^2 + 1}\) (อินทิเกรตทีละส่วนสองครั้ง)</p></li>
+        <li>\[ F(s) = \frac{1 + e^{-\pi s}}{(s^2+1)(1 - e^{-\pi s})} = \frac{1}{s^2+1}\coth\frac{\pi s}{2} \]</li>
+      </ol>
+      <p class="answer">\(\dfrac{\coth(\pi s/2)}{s^2+1}\) ฮาร์มอนิกของแรงดันเรกติไฟเออร์ดูต่อได้ใน<a href="/learn/fourier-series/rectifiers/">อนุกรมฟูเรียร์ของเรกติไฟเออร์</a></p>
+    </div>
+    </section>
+
+    <!-- ============ limit theorems ============ -->
+    <section class="tsec" aria-labelledby="limit-theorems">
+    <h2 id="limit-theorems">ทฤษฎีบทค่าเริ่มต้นและค่าสุดท้าย <span class="lv lv-i">กลาง</span></h2>
+    <p>สองทฤษฎีบทนี้หาค่า \(f(0^+)\) และ \(f(\infty)\) โดยไม่ต้องแปลงกลับ ใช้ตรวจคำตอบและหาความผิดพลาดอยู่ตัวในระบบควบคุม แต่ทฤษฎีบทค่าสุดท้ายมีเงื่อนไขที่ต้องตรวจทุกครั้ง</p>
+    <div class="tf-grid">
+      <div class="tf" id="P15" data-k="initial value theorem f(0+) lim s to infinity ค่าเริ่มต้น">
+        <p class="tf-n"><b><span class="fid">P15</span> Initial value theorem</b> ทฤษฎีบทค่าเริ่มต้น</p>
+        \[ f(0^+) = \lim_{s\to\infty}sF(s) \]
+        <p class="tf-x">ใช้ได้เมื่อ \(F(s)\) เป็นตรรกยะแท้อย่างเข้ม (ไม่มีอิมพัลส์ที่ t = 0) · หา \(f'(0^+)\) ได้จาก \(\lim_{s\to\infty}s[sF(s) - f(0^+)]\)</p>
+      </div>
+      <div class="tf" id="P16" data-k="final value theorem steady state f(infinity) lim s to 0 conditions ค่าสุดท้าย">
+        <p class="tf-n"><b><span class="fid">P16</span> Final value theorem</b> ทฤษฎีบทค่าสุดท้าย</p>
+        \[ f(\infty) = \lim_{s\to 0}sF(s) \]
+        <p class="tf-x">ใช้ได้<b>เฉพาะ</b>เมื่อโพลทุกตัวของ \(sF(s)\) อยู่ครึ่งซ้าย (F มีโพลเดี่ยวที่ 0 ได้) ถ้ามีโพลบนแกน jω (นอกจาก 0) หรือครึ่งขวา \(f(\infty)\) ไม่มี</p>
+      </div>
+      <div class="tf" id="P17" data-k="conjugation complex conjugate สังยุค">
+        <p class="tf-n"><b><span class="fid">P17</span> Conjugation</b> สังยุค</p>
+        \[ \mathcal L\{\overline{f(t)}\} = \overline{F(\bar s)} \]
+        <p class="tf-x">ผลที่ตามมา: \(f\) จริง ⇒ \(F(\bar s) = \overline{F(s)}\) โพลและเรซิดิวจึงมาเป็นคู่สังยุค</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p14">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-14 · ใช้ได้</span><h3>\(F(s) = \dfrac{s+2}{s(s+1)(s+4)}\) หา \(f(0^+)\) และ \(f(\infty)\)</h3><button type="button" class="wx-btn" data-lap-f="(s+2)/(s(s+1)(s+4))">ตรวจด้วยการแปลงกลับ</button></div>
+      <ol class="steps">
+        <li>\[ f(0^+) = \lim_{s\to\infty}\frac{s+2}{(s+1)(s+4)} = 0 \]</li>
+        <li><p>โพลของ \(sF(s) = \dfrac{s+2}{(s+1)(s+4)}\) คือ −1, −4 อยู่ครึ่งซ้ายทั้งหมด ✓ ใช้ทฤษฎีบทได้</p>\[ f(\infty) = \lim_{s\to 0}\frac{s+2}{(s+1)(s+4)} = \frac{2}{4} = \frac12 \]</li>
+      </ol>
+      <p class="answer">\(f(0^+) = 0,\ f(\infty) = \tfrac12\) ตรงกับ \(f(t) = \tfrac12 - \tfrac13e^{-t} - \tfrac16e^{-4t}\) ซึ่งที่ \(t = 0\) ได้ \(\tfrac12 - \tfrac13 - \tfrac16 = 0\) ✓</p>
+    </div>
+    <div class="wx" id="ex-p15">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-15 · ใช้ไม่ได้ (กับดัก)</span><h3>ลองใช้ทฤษฎีบทค่าสุดท้ายกับ \(F_1 = \dfrac{1}{s^2+4}\) และ \(F_2 = \dfrac{1}{s-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\lim_{s\to 0}sF_1 = 0\) แต่ \(f_1 = \tfrac12\sin 2t\) แกว่งตลอด ไม่มีค่าสุดท้าย (โพล \(\pm 2j\) บนแกน jω ✗)</p></li>
+        <li><p>\(\lim_{s\to 0}sF_2 = 0\) แต่ \(f_2 = e^{t} \to \infty\) (โพล +1 ครึ่งขวา ✗)</p></li>
+      </ol>
+      <p class="answer">สูตรให้ “0” ทั้งสองกรณีโดยไม่เตือนเลย ตรวจตำแหน่งโพลก่อนใช้ทุกครั้ง</p>
+    </div>
+    </section>
+
+    <!-- ============ LAB ============ -->
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บพิสูจน์คุณสมบัติด้วยตัวเลข</h2>
+    <p>เลือกสัญญาณตั้งต้นและคุณสมบัติ แล็บจะคำนวณ \(g(t)\) สองทาง: เส้นสีส้มคำนวณจากนิยามในโดเมนเวลา (เลื่อน คูณ อินทิเกรตเชิงตัวเลข หรือคอนโวลูชันเชิงตัวเลข) ส่วนจุดสีน้ำเงินมาจากการแปลงกลับ \(G(s)\) ที่ได้จากสูตรคุณสมบัติด้วยเศษส่วนย่อย ถ้าสูตรถูก จุดต้องอยู่บนเส้นทุกจุด สังเกต G(s) ที่เปลี่ยนไปด้วย</p>
+    <div class="lap-prop" data-base="damped" data-prop="sshift"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">อ่านต่อและแหล่งอ้างอิง</h2>
+    <ul>
+      <li>K. Ogata, <i>Modern Control Engineering</i>, บท Laplace transform: ทฤษฎีบทการเลื่อน อนุพันธ์ ปริพันธ์ ค่าเริ่มต้นและค่าสุดท้าย</li>
+      <li>E. Kreyszig, <i>Advanced Engineering Mathematics</i>, บท Laplace Transforms (first/second shifting theorems, periodic functions, convolution)</li>
+      <li>Oppenheim &amp; Willsky, <i>Signals and Systems</i>, ตาราง 9.1 คุณสมบัติพร้อม ROC</li>
+      <li>ใช้คุณสมบัติจริง: <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a> · <a href="/learn/laplace-transform/inverse-laplace-transform/">แปลงกลับ</a> · <a href="/learn/control-systems/steady-state-error/">ทฤษฎีบทค่าสุดท้ายกับความผิดพลาดอยู่ตัว</a></li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
