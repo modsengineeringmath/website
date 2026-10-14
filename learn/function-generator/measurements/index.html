@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=4d69d95a">
+<link rel="stylesheet" href="/assets/site.css?v=0093ccd3">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/measurements/#article","headline":"เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)","description":"เทคนิควัดด้วยออสซิลโลสโคปและเครื่องกำเนิดสัญญาณ: ความคลาดเคลื่อนในการอ่านกราติคูล วัดความถี่แบบนับหลายคาบ วัดเฟสจาก Δt และวงรีลิสซาจู วัดผลตอบสนองความถี่ทีละจุดและแบบกวาด เขียนกราฟโบด วัดอิมพีแดนซ์ด้วยตัวต้านทานอนุกรม วัดความต้านทานขาเข้า การเฉลี่ยลดนอยส์ และวิธีเขียนรายงานแล็บ พร้อมสูตรรหัส B และสโคปจำลอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/measurements/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/measurements/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Measurement uncertainty","Phase measurement","Lissajous figure","Frequency response","Bode plot","Frequency sweep","Impedance measurement","Input impedance","Signal averaging"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-measurements.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"เทคนิคการวัด: แอมพลิจูด ความถี่ เฟส ลิสซาจู และผลตอบสนองความถี่ (Bode)","item":"https://modsengineeringmath.com/learn/function-generator/measurements/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"วัดมุมเฟสด้วยออสซิลโลสโคปทำอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"มีสองวิธี วิธีแรกวัดเวลาห่าง Δt ระหว่างจุดตัดศูนย์ขาขึ้นของสองช่อง แล้วใช้ φ = −360°·Δt/T ถ้าช่องที่สองตามหลังจะได้เฟสติดลบ วิธีที่สองใช้โหมด XY ได้วงรีลิสซาจู แล้วใช้ sin|φ| = y₀/y_max วิธีแรกบอกเครื่องหมายได้ วิธีที่สองแม่นที่มุมเล็กแต่ไม่บอกว่านำหรือตาม"}},{"@type":"Question","name":"เขียนกราฟโบดจากการทดลองต้องวัดกี่ความถี่?","acceptedAnswer":{"@type":"Answer","text":"อย่างน้อย 3 จุดต่อดีเคด เช่น 1, 2, 5 × 10ⁿ และเพิ่มจุดถี่ขึ้นรอบความถี่ตัดหรือเรโซแนนซ์ วัดอัตราส่วน V_out/V_in เทียบกับแรงดันขาเข้าวงจรที่วัดจริงทุกจุด ไม่ใช้ค่าที่ตั้งบนเครื่องกำเนิดสัญญาณ แล้วพล็อต 20 log₁₀(V_out/V_in) และมุมเฟสบนแกนความถี่แบบล็อก"}},{"@type":"Question","name":"ทำไมต้องวัดแรงดันขาเข้าทุกครั้ง ทั้งที่ตั้งค่าบนเครื่องกำเนิดสัญญาณไว้แล้ว?","acceptedAnswer":{"@type":"Answer","text":"เพราะเครื่องกำเนิดสัญญาณมีความต้านทานขาออก 50 Ω แรงดันที่ขั้วจึงเปลี่ยนตามอิมพีแดนซ์ขาเข้าของวงจร ซึ่งเปลี่ยนตามความถี่ เช่น วงจร RLC ที่เรโซแนนซ์ การวัดอัตราส่วน CH2/CH1 ที่ขาเข้าวงจรจริงจะตัดผลของ 50 Ω และความคลาดเคลื่อนแอมพลิจูดของเครื่องออกไปหมด"}},{"@type":"Question","name":"ค่าที่อ่านจากออสซิลโลสโคปแม่นยำแค่ไหน?","acceptedAnswer":{"@type":"Answer","text":"สโคป 8 บิตทั่วไปมีความแม่นยำอัตราขยาย DC ราว ±3 % บวกความคลาดเคลื่อนการอ่านกราติคูลราว ±0.1 ช่อง ถ้าภาพสูง 6 ช่อง ความคลาดเคลื่อนรวมราว ±3.5 % ส่วนเวลาแม่นกว่ามาก ราว 25–50 ppm บวกความคลาดเคลื่อนการอ่าน จึงควรให้ภาพใหญ่เต็มจอและวัดหลายคาบ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -765,12 +765,12 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=4d69d95a" defer></script>
-<script src="/assets/lesson.js?v=4d69d95a" defer></script>
-<script src="/assets/fgcalc.js?v=4d69d95a" defer></script>
-<script src="/assets/fgs-core.js?v=4d69d95a" defer></script>
-<script src="/assets/fgs-scope.js?v=4d69d95a" defer></script>
-<script src="/assets/fgs-ui.js?v=4d69d95a" defer></script>
-<script src="/assets/fgs-app.js?v=4d69d95a" defer></script>
+<script src="/assets/site.js?v=0093ccd3" defer></script>
+<script src="/assets/lesson.js?v=0093ccd3" defer></script>
+<script src="/assets/fgcalc.js?v=0093ccd3" defer></script>
+<script src="/assets/fgs-core.js?v=0093ccd3" defer></script>
+<script src="/assets/fgs-scope.js?v=0093ccd3" defer></script>
+<script src="/assets/fgs-ui.js?v=0093ccd3" defer></script>
+<script src="/assets/fgs-app.js?v=0093ccd3" defer></script>
 </body>
 </html>

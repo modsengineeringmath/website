@@ -4,7 +4,7 @@
    <div class="sx-modbus" [data-fc="3"] [data-addr="0"] [data-qty="2"]></div>  Modbus RTU/TCP request + response with a virtual transmitter
    <div class="sx-crc"></div>                            CRC-16 (Modbus) for any hex frame
    <div class="sx-f32" [data-v="23.75"]></div>           float32 ↔ two registers, four byte orders
-   <div class="sx-tag" [data-tag="LIC-101"]></div>       ISA-5.1 instrument tag decoder
+   <div class="sx-tagdec" [data-tag="LIC-101"]></div>    ISA-5.1 instrument tag decoder
    <div class="sx-cal" [data-lrv="0" data-urv="100" data-u="°C" data-tol="0.5"]></div>  5-point calibration worksheet (as-found / as-left)
    <button data-sx-loop="fault" data-v="open" [data-target="id"]> sets a fault on the loop simulator of the page. */
 (function (root) {
@@ -387,7 +387,7 @@
 
   K.onReady(function () {
     $$(".sx-loop").forEach(loopSim); $$(".sx-hart").forEach(hartLab); $$(".sx-modbus").forEach(modbusLab); $$(".sx-crc").forEach(crcLab);
-    $$(".sx-f32").forEach(f32Lab); $$(".sx-tag").forEach(tagLab); $$(".sx-cal").forEach(calLab);
+    $$(".sx-f32").forEach(f32Lab); $$(".sx-tagdec").forEach(tagLab); $$(".sx-cal").forEach(calLab);
     $$("button[data-sx-loop]").forEach(function (b) {
       b.addEventListener("click", function () {
         var tgt = b.getAttribute("data-target") ? document.getElementById(b.getAttribute("data-target")) : document.querySelector(".sx-loop");

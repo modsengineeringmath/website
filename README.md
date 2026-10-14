@@ -229,7 +229,7 @@ practice (pid-symbols, installation-calibration K, instrumentation-lab). Hub for
   `<div class="fg-calc sx-calc" data-sx="rtd|tc|cjc|ntc|ptx|reynolds|orifice|mag|ultra|vortex|hydro|dplevel|radar|usonic|tankvol|bridge|loadcell|encoder|shunt|ct|adc|loop|scale|fbseg|rs485|battery">`;
   `<button data-sx-fill="key" data-vals='{...}'>` refills one. Verified: NIST tables (K 100 °C = 4.096 mV), Pt100 138.5055 Ω, `fluids` library for ISO 5167, CRC `01 03 00 00 00 02` → `C4 0B`.
 - `assets/sx-bus.js` (needs sx-calc.js): `.sx-loop` 4–20 mA loop simulator (faults; `button[data-sx-loop=fault][data-v]`), `.sx-hart`, `.sx-modbus`
-  (frame builder + virtual transmitter), `.sx-crc`, `.sx-f32`, `.sx-tag` (ISA-5.1 decoder), `.sx-cal` (5-point calibration sheet).
+  (frame builder + virtual transmitter), `.sx-crc`, `.sx-f32`, `.sx-tagdec` (ISA-5.1 decoder), `.sx-cal` (5-point calibration sheet).
 - `assets/sx-plant.js`: `<div class="sx-plant" data-preset="level-pid" [data-compact]>` virtual plant (tank, VFD pump, valve, heater, LT/FT/PT/TT with NE 43,
   two PID loops, alarms, interlock, live Modbus map, 8 faults). Presets in `PRESETS`; `button[data-plant-preset]`, `button[data-plant-fault]`. Used on the home page too.
 - `assets/sx-std.js` standards database (64 entries with country/city) + selector by sensor type.
