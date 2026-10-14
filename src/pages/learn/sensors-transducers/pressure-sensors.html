@@ -1,0 +1,153 @@
+<!--meta
+{
+  "title": "การวัดความดัน: Absolute Gauge DP ท่อเบอร์ดอง สเตรนเกจ ไพอีโซรีซิสทีฟ คาปาซิทีฟ ทรานสมิตเตอร์ความดัน turndown และซีลไดอะแฟรม | อาจารย์มด",
+  "h1": "การวัดความดัน: Absolute · Gauge · DP จากเบอร์ดองถึงทรานสมิตเตอร์อัจฉริยะ",
+  "description": "การวัดความดันสำหรับงานอุตสาหกรรม: ความดันสัมบูรณ์ ความดันเกจ ความดันผลต่าง หน่วย Pa bar psi mmH2O หลักการเซนเซอร์ท่อเบอร์ดอง ไดอะแฟรมสเตรนเกจ ไพอีโซรีซิสทีฟ MEMS คาปาซิทีฟ และเรโซแนนต์ ทรานสมิตเตอร์ DP แมนิโฟลด์ 3 วาล์ว การเลือกช่วง turndown งบความคลาดเคลื่อน ซีลไดอะแฟรมและการแก้ head ของ capillary พร้อมเครื่องคำนวณ",
+  "ogTitle": "การวัดความดัน: Absolute Gauge DP และทรานสมิตเตอร์",
+  "og": {"title": "การวัดความดัน · ทรานสมิตเตอร์ DP"},
+  "lesson": "sensors-transducers",
+  "sub": "pressure-sensors",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Pressure measurement", "Pressure transmitter", "Differential pressure", "Bourdon tube", "Piezoresistive sensor", "Capacitive sensor", "Turndown"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "ความดันเกจกับความดันสัมบูรณ์ต่างกันอย่างไร?", "a": "ความดันสัมบูรณ์ (absolute) วัดเทียบกับสุญญากาศสมบูรณ์ ส่วนความดันเกจ (gauge) วัดเทียบกับความดันบรรยากาศ ณ ที่นั้น ความสัมพันธ์คือ P_abs = P_gauge + P_atm โดย P_atm ประมาณ 101.325 kPa ที่ระดับน้ำทะเลแต่เปลี่ยนตามอากาศและความสูง งานถังเปิด ปั๊ม ท่อทั่วไปใช้เกจ งานสุญญากาศ การกลั่น และการชดเชยแก๊สใช้สัมบูรณ์"},
+    {"q": "turndown ของทรานสมิตเตอร์ความดันคืออะไร?", "a": "คืออัตราส่วนระหว่างช่วงสูงสุดของรุ่น (URL) กับ span ที่ตั้งใช้งาน เช่น รุ่น 40 bar ตั้ง 0–10 bar ได้ turndown 4:1 ทรานสมิตเตอร์อัจฉริยะตั้ง span ได้แคบลงหลายสิบเท่า แต่ความคลาดจากอุณหภูมิและเสถียรภาพมักกำหนดเป็น % ของ URL จึงโตขึ้นเมื่อคิดเป็น % ของ span ควรเลือกรุ่นที่ URL ใกล้ช่วงใช้งาน"},
+    {"q": "แมนิโฟลด์ 3 วาล์วใช้ทำอะไร?", "a": "ใช้กับทรานสมิตเตอร์ความดันผลต่าง ประกอบด้วยวาล์วตัดด้านสูง วาล์วตัดด้านต่ำ และวาล์วปรับสมดุล (equalizing) ตรงกลาง ใช้ตรวจศูนย์โดยไม่ถอดเครื่อง และป้องกันไม่ให้ไดอะแฟรมรับความดันจากด้านเดียวระหว่างเปิดใช้งาน ลำดับที่ถูกคือเปิดวาล์วสมดุลก่อน แล้วเปิดด้านสูง ปิดวาล์วสมดุล จากนั้นเปิดด้านต่ำ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.8 การวัดความดัน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.8 · Sensors &amp; Transducers · Pressure Measurement</p>
+      <h1>การวัดความดัน: <em>Absolute · Gauge · DP จากเบอร์ดองถึงทรานสมิตเตอร์อัจฉริยะ</em></h1>
+      <p class="lede">ความดันเป็นปริมาณ "สองหน้าที่": วัดเพื่อดูความดันเอง และเป็นทางผ่านไปสู่การวัดระดับ (ความดันของน้ำหนักของเหลว) และอัตราการไหล (ความดันผลต่างข้ามตัวจำกัดการไหล) ทรานสมิตเตอร์ความดันผลต่างจึงเป็นเครื่องมือวัดที่มีจำนวนติดตั้งมากที่สุดชนิดหนึ่งในโรงงานกระบวนการ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#ref">Absolute · Gauge · DP</a>
+        <a class="btn btn-ghost btn-sm" href="#sensors">หลักการเซนเซอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#tx">ทรานสมิตเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#range">ช่วงและ turndown</a>
+        <a class="btn btn-ghost btn-sm" href="#seal">ซีลไดอะแฟรม</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(P_\text{abs} = P_g + P_\text{atm}\) · DP วัดผลต่างของสองพอร์ต · 1 bar = 100 kPa ≈ 10.2 m ของน้ำ</li>
+          <li>เซนเซอร์หลัก: ไดอะแฟรม + สเตรนเกจ/ไพอีโซรีซิสทีฟ/คาปาซิทีฟ/เรโซแนนต์ — ทุกแบบแปลงความดันเป็นการเปลี่ยนรูปเล็ก ๆ ก่อน</li>
+          <li>turndown = URL/span · ความคลาดจากอุณหภูมิและ drift มักเป็น % URL → อย่าเลือกรุ่นใหญ่เกินงาน</li>
+          <li>ซีลไดอะแฟรมกับ capillary ทำให้ศูนย์เลื่อนตามระยะสูงต่ำ \(\rho_\text{fill}\,g\,\Delta h\) ต้องตั้งค่าแก้</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น gauge, absolute, ρgh, turndown, capacitance, seal" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="ref">
+    <h2 id="ref">ความดันเทียบกับอะไร: Absolute · Gauge · Differential <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="P1" data-k="pressure definition force area pascal ความดัน แรง พื้นที่"><p class="tf-n"><b><span class="fid">P1</span> Pressure</b> ความดัน</p>
+        \[ P = \frac{F}{A} \qquad 1\ \text{Pa} = 1\ \text{N/m}^2 \qquad 1\ \text{bar} = 10^5\ \text{Pa} \]</div>
+<div class="tf" id="P2" data-k="absolute gauge atmospheric vacuum ความดันสัมบูรณ์ เกจ บรรยากาศ สุญญากาศ"><p class="tf-n"><b><span class="fid">P2</span> Absolute and gauge</b> สัมบูรณ์กับเกจ</p>
+        \[ P_\text{abs} = P_g + P_\text{atm} \qquad P_\text{atm,std} = 101.325\ \text{kPa} \qquad \Delta P = P_1 - P_2 \]</div>
+<div class="tf" id="P3" data-k="hydrostatic pressure rho g h head water column ความดันไฮโดรสแตติก หัวน้ำ"><p class="tf-n"><b><span class="fid">P3</span> Hydrostatic pressure</b> ความดันจากของเหลวสูง h</p>
+        \[ P = \rho\,g\,h \qquad 10\ \text{m H}_2\text{O} \approx 98.07\ \text{kPa} \approx 0.98\ \text{bar} \]</div>
+    <figure class="xfig"><!--FIG:sx-pressure-ref--><svg class="xf" viewBox="0 0 740 280" role="img" aria-label="ความดันสัมบูรณ์ ความดันเกจ ความดันผลต่าง และสุญญากาศ เทียบกับความดันบรรยากาศ"><defs><marker id="sx-pressure-ref-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-ln" x1="40" y1="225" x2="700" y2="225"/><text x="46" y="243" class="xf-m">สุญญากาศสมบูรณ์ = 0 Pa abs</text><line class="xf-dash" x1="40" y1="140" x2="700" y2="140"/><text x="700" y="132" class="xf-m" text-anchor="end">ความดันบรรยากาศ ≈ 101.325 kPa abs</text><circle class="xf-dot" cx="160" cy="50" r="5"/><text x="172" y="46" class="xf-h">จุด A</text><line class="xf-a" x1="110" y1="225" x2="110" y2="56" marker-end="url(#sx-pressure-ref-ah)"/><text x="104" y="130" class="xf-ta" text-anchor="end">P_abs</text><line class="xf-b" x1="160" y1="140" x2="160" y2="58" marker-end="url(#sx-pressure-ref-ah)"/><text x="168" y="104" class="xf-tb">P_g (+)</text><circle class="xf-dot" cx="380" cy="185" r="5"/><text x="392" y="200" class="xf-h">จุด B</text><line class="xf-a" x1="330" y1="225" x2="330" y2="192" marker-end="url(#sx-pressure-ref-ah)"/><text x="324" y="214" class="xf-ta" text-anchor="end">P_abs</text><line class="xf-b" x1="380" y1="140" x2="380" y2="178" marker-end="url(#sx-pressure-ref-ah)"/><text x="388" y="166" class="xf-tb">สุญญากาศเกจ (−)</text><circle class="xf-dot" cx="560" cy="60" r="5"/><circle class="xf-dot" cx="560" cy="110" r="5"/><text x="572" y="64" class="xf-h">P₁</text><text x="572" y="114" class="xf-h">P₂</text><line class="xf-c" x1="540" y1="66" x2="540" y2="104" marker-end="url(#sx-pressure-ref-ah)" marker-start="url(#sx-pressure-ref-ah)"/><text x="532" y="90" class="xf-tc" text-anchor="end">ΔP = P₁ − P₂</text><text x="370" y="268" class="xf-m" text-anchor="middle">P_abs = P_g + P_atm  ·  ทรานสมิตเตอร์ DP วัดผลต่างของสองพอร์ต ไม่ขึ้นกับบรรยากาศ</text></svg><!--/FIG--><figcaption>รูป 1 · จุด A อยู่เหนือบรรยากาศ (เกจเป็นบวก) จุด B ต่ำกว่าบรรยากาศ (สุญญากาศ) ส่วน DP วัดผลต่างระหว่างสองจุดใดก็ได้</figcaption></figure>
+    <p>กับดักในดาต้าชีต: หน่วย "psig" กับ "psia" ต่างกัน 14.7 psi และ "bar(g)" กับ "bar(a)" ต่างกันราว 1 bar ทรานสมิตเตอร์เกจรุ่นที่ปิดผนึก (sealed gauge) อ้างอิงบรรยากาศมาตรฐานคงที่แทนบรรยากาศจริง ส่วนหน่วยหัวน้ำ mmH₂O และ inH₂O ต้องระบุอุณหภูมิอ้างอิงของน้ำด้วย (4 °C, 20 °C หรือ 68 °F ให้ค่าต่างกันเล็กน้อย) แปลงหน่วยได้ที่ <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sensors">
+    <h2 id="sensors">หลักการเซนเซอร์ความดัน <span class="lv lv-i">กลาง</span></h2>
+    <p>เส้นทางประวัติศาสตร์ของการวัดความดันคือการหาวิธี "เห็น" การเปลี่ยนรูปที่เล็กลงเรื่อย ๆ: ค.ศ. 1643 Torricelli ใช้คอลัมน์ปรอท ค.ศ. 1849 Eugène Bourdon ชาวฝรั่งเศสจดสิทธิบัตรท่อโค้งที่ยืดตัวเมื่อมีความดัน ซึ่งยังเป็นเกจหน้าปัดส่วนใหญ่ในปัจจุบัน ปี 1938 สเตรนเกจแบบลวดถูกคิดค้นในสหรัฐฯ และปี 1954 C. S. Smith แห่ง Bell Labs รายงานผลไพอีโซรีซิสทีฟในซิลิคอนและเจอร์เมเนียมที่แรงกว่าโลหะหลายสิบเท่า เปิดทางสู่เซนเซอร์ MEMS ที่ใช้กันในรถยนต์ เครื่องมือแพทย์ และทรานสมิตเตอร์</p>
+    <figure class="xfig"><!--FIG:sx-pressure-sensors--><svg class="xf" viewBox="0 0 780 250" role="img" aria-label="หลักการเซนเซอร์ความดัน: ท่อเบอร์ดอง ไดอะแฟรมกับสเตรนเกจ ไพอีโซรีซิสทีฟซิลิคอน และเซลล์ DP แบบคาปาซิทีฟ"><defs><marker id="sx-pressure-sensors-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="100" y="22" class="xf-h" text-anchor="middle">1 · ท่อเบอร์ดอง</text><path class="xf-a" d="M 100 200 L 100 170 A 55 55 0 1 1 150 130"/><path class="xf-thin" d="M 100 200 L 100 170 A 47 47 0 1 1 142 132"/><line class="xf-ln" x1="148" y1="128" x2="116" y2="118"/><circle class="xf-dot" cx="100" cy="115" r="4"/><line class="xf-b" x1="100" y1="115" x2="80" y2="78" marker-end="url(#sx-pressure-sensors-ah)"/><text x="100" y="236" class="xf-k" text-anchor="middle">P ทำให้ท่อพยายามยืดตรง</text><line class="xf-ln" x1="80" y1="218" x2="98" y2="204" marker-end="url(#sx-pressure-sensors-ah)"/><text x="76" y="222" class="xf-m" text-anchor="end">P</text><text x="290" y="22" class="xf-h" text-anchor="middle">2 · ไดอะแฟรม + สเตรนเกจ</text><rect class="xf-metal" x="230" y="120" width="120" height="70" rx="4"/><path class="xf-a" d="M 230 120 Q 290 100 350 120"/><rect class="xf-boxb" x="245" y="104" width="20" height="7" rx="1"/><rect class="xf-boxb" x="305" y="104" width="20" height="7" rx="1"/><text x="290" y="92" class="xf-k" text-anchor="middle">ε ที่ขอบ (−) และกลาง (+)</text><line class="xf-ln" x1="290" y1="226" x2="290" y2="194" marker-end="url(#sx-pressure-sensors-ah)"/><text x="300" y="222" class="xf-m">P</text><text x="290" y="244" class="xf-k" text-anchor="middle">ต่อเป็นบริดจ์เต็ม 4 แขน</text><text x="480" y="22" class="xf-h" text-anchor="middle">3 · ไพอีโซรีซิสทีฟ (MEMS Si)</text><path class="xf-boxa" d="M420 110 L460 110 L470 150 L490 150 L500 110 L540 110 L540 180 L420 180 Z"/><rect class="xf-boxb" x="450" y="104" width="12" height="5" rx="1"/><rect class="xf-boxb" x="498" y="104" width="12" height="5" rx="1"/><text x="480" y="96" class="xf-k" text-anchor="middle">ตัวต้านทานแพร่ในแผ่นซิลิคอนบาง</text><text x="480" y="200" class="xf-k" text-anchor="middle">ΔR/R ≈ π·σ ไวกว่าโลหะ ~50 เท่า</text><text x="480" y="216" class="xf-k" text-anchor="middle">ต้องชดเชยอุณหภูมิ</text><text x="675" y="22" class="xf-h" text-anchor="middle">4 · เซลล์ DP คาปาซิทีฟ</text><rect class="xf-metal" x="610" y="60" width="130" height="140" rx="10"/><line class="xf-a" x1="675" y1="70" x2="675" y2="190"/><path class="xf-b" d="M 650 75 Q 638 130 650 185"/><path class="xf-b" d="M 700 75 Q 712 130 700 185"/><text x="640" y="214" class="xf-m" text-anchor="middle">C_H</text><text x="710" y="214" class="xf-m" text-anchor="middle">C_L</text><line class="xf-ln" x1="590" y1="130" x2="610" y2="130" marker-end="url(#sx-pressure-sensors-ah)"/><text x="594" y="122" class="xf-k">H</text><line class="xf-ln" x1="760" y1="130" x2="740" y2="130" marker-end="url(#sx-pressure-sensors-ah)"/><text x="750" y="122" class="xf-k">L</text><text x="675" y="238" class="xf-m" text-anchor="middle">(C_H − C_L)/(C_H + C_L) ∝ ΔP</text></svg><!--/FIG--><figcaption>รูป 2 · ทุกแบบแปลงความดันเป็นการเปลี่ยนรูปก่อน แล้วจึงอ่านการเปลี่ยนรูปด้วยกลไก ความต้านทาน ความจุ หรือความถี่</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หลักการ</th><th>สิ่งที่วัด</th><th>จุดเด่น</th><th>ข้อจำกัด</th><th>ใช้ที่ไหน</th></tr></thead>
+      <tbody>
+        <tr><td>ท่อเบอร์ดอง · ไดอะแฟรม · เบลโลว์ (กลไก)</td><td>การเคลื่อนที่ → เข็ม</td><td>ไม่ใช้ไฟ ทน ถูก</td><td>อ่านด้วยตา คลาส 0.6–2.5 ตาม EN 837</td><td>เกจหน้างาน</td></tr>
+        <tr><td>ไดอะแฟรมโลหะ + สเตรนเกจฟอยล์/ฟิล์มบาง</td><td>\(\Delta R/R = GF\,\varepsilon\)</td><td>ทนความดันสูง ทนสั่น</td><td>สัญญาณ mV ต้องขยาย</td><td>ไฮดรอลิก เครื่องจักร</td></tr>
+        <tr><td>ไพอีโซรีซิสทีฟซิลิคอน (MEMS)</td><td>ΔR จากความเค้นในผลึก</td><td>ไว เล็ก ราคาต่ำในปริมาณมาก</td><td>ไวต่ออุณหภูมิ ต้องชดเชย</td><td>OEM รถยนต์ HVAC ทรานสมิตเตอร์</td></tr>
+        <tr><td>คาปาซิทีฟ (เซลล์ DP)</td><td>ระยะห่างระหว่างแผ่น → C</td><td>ความละเอียดสูง ทนการรับความดันเกิน</td><td>วงจรวัดซับซ้อนกว่า</td><td>ทรานสมิตเตอร์ DP กระบวนการ</td></tr>
+        <tr><td>ซิลิคอนเรโซแนนต์</td><td>ความถี่ธรรมชาติเปลี่ยนตามความเค้น</td><td>เอาต์พุตเป็นความถี่ (ดิจิทัลโดยธรรมชาติ) เสถียรมาก</td><td>ซับซ้อน ราคาสูง</td><td>ทรานสมิตเตอร์แม่นยำสูง</td></tr>
+        <tr><td>ไพอีโซอิเล็กทริก</td><td>ประจุ ∝ แรงที่เปลี่ยน</td><td>เร็วมาก (kHz–MHz)</td><td>วัดค่าคงที่ (สถิต) ไม่ได้</td><td>ความดันในห้องเผาไหม้ การระเบิด</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P4" data-k="capacitance parallel plate differential capacitive dp cell ความจุ แผ่นขนาน คาปาซิทีฟ"><p class="tf-n"><b><span class="fid">P4</span> Differential capacitive cell</b> เซลล์ความจุผลต่าง</p>
+        \[ C = \frac{\varepsilon A}{d} \qquad \frac{C_H - C_L}{C_H + C_L} \;\propto\; \Delta P \]</div>
+    <p>แผ่นไดอะแฟรมกลางเคลื่อนเข้าหาแผ่นหนึ่งและออกจากอีกแผ่น อัตราส่วน (C<sub>H</sub> − C<sub>L</sub>)/(C<sub>H</sub> + C<sub>L</sub>) ทำให้ค่าคงตัว ε และ A ตัดกันเอง ผลของอุณหภูมิต่อของเหลวในเซลล์จึงลดลง แผ่นขนาดเส้นผ่านศูนย์กลาง 10 mm ห่าง 0.1 mm มีความจุเพียงราว 7 pF วงจรต้องวัดการเปลี่ยนระดับเฟมโตฟารัด — เหตุที่ภาคอิเล็กทรอนิกส์ต้องอยู่ติดเซลล์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="tx">
+    <h2 id="tx">กายวิภาคของทรานสมิตเตอร์ความดันและการติดตั้ง <span class="lv lv-i">กลาง</span></h2>
+    <ol>
+      <li><b>ไดอะแฟรมแยก (isolating diaphragm)</b> สัมผัสของไหล เลือกวัสดุตามความกัดกร่อน (316L, Hastelloy C, Tantalum) แล้วถ่ายความดันผ่าน <b>ของเหลวบรรจุ (fill fluid)</b> เช่น ซิลิโคนออยล์ ไปยังเซนเซอร์</li>
+      <li><b>โมดูลเซนเซอร์</b> มีเซนเซอร์ความดันและเซนเซอร์อุณหภูมิสำหรับชดเชย ค่าคงตัวการชดเชยถูกวัดและบันทึกในหน่วยความจำตั้งแต่โรงงาน</li>
+      <li><b>ภาคอิเล็กทรอนิกส์</b> แปลงเป็นค่าดิจิทัล ทำ linearization, damping, จัดช่วง LRV/URV และส่งออก 4–20 mA + HART หรือฟิลด์บัส</li>
+    </ol>
+    <p><b>แมนิโฟลด์ 3 วาล์ว</b> (ด้านสูง · สมดุล · ด้านต่ำ) คืออุปกรณ์คู่กับทรานสมิตเตอร์ DP ลำดับการเปิดใช้งานที่ปลอดภัย: เปิดวาล์วสมดุล → เปิดด้านสูงช้า ๆ → ปิดวาล์วสมดุล → เปิดด้านต่ำ การปิดให้ทำย้อนกลับ ลำดับนี้ป้องกันไม่ให้ไดอะแฟรมรับความดันสถิตเต็มที่จากด้านเดียว ระบบแก๊สที่เป็นพิษหรือไอน้ำใช้แมนิโฟลด์ 5 วาล์ว (มีวาล์วระบายและทดสอบเพิ่ม)</p>
+    <ul>
+      <li><b>ของเหลว</b>: ติดทรานสมิตเตอร์ต่ำกว่าจุดต่อ ท่อลาดลงหาเครื่องเพื่อไล่ฟองแก๊สออก</li>
+      <li><b>แก๊ส</b>: ติดสูงกว่าจุดต่อ ท่อลาดลงกลับสู่ท่อหลักเพื่อให้น้ำที่ควบแน่นไหลกลับ</li>
+      <li><b>ไอน้ำ</b>: ใช้ท่อขดหางหมู (siphon) ให้น้ำควบแน่นขังเป็นตัวกั้นความร้อน และเติมน้ำทั้งสองขาของ DP ให้ระดับเท่ากัน</li>
+      <li><b>ความดันกระเพื่อม (pulsation)</b> จากปั๊มลูกสูบ: ใช้ snubber หรือ damping อย่าตั้ง damping ยาวจนลูปควบคุมช้าเกิน</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="range">
+    <h2 id="range">เลือกช่วงวัดและ turndown ด้วยงบความคลาดเคลื่อน <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="P5" data-k="turndown rangeability url span transmitter เทิร์นดาวน์ ช่วงวัด"><p class="tf-n"><b><span class="fid">P5</span> Turndown</b> อัตราส่วนการลดช่วง</p>
+        \[ TD = \frac{URL}{\text{span}} \qquad \text{span} = URV - LRV \]</div>
+<div class="tf" id="P6" data-k="total probable error root sum square rss accuracy budget งบความคลาดเคลื่อน"><p class="tf-n"><b><span class="fid">P6</span> Total probable error (RSS)</b> ความคลาดรวมแบบรากกำลังสองของผลบวกกำลังสอง</p>
+        \[ e_\text{tot} = \sqrt{e_\text{ref}^2 + e_\text{temp}^2 + e_\text{static}^2 + e_\text{stab}^2 + \cdots} \]</div>
+<div class="tf" id="P7" data-k="span dependent url dependent error percent of span percent of url ความคลาดตามช่วง"><p class="tf-n"><b><span class="fid">P7</span> % of span vs % of URL</b> แปลงสเปกให้หน่วยเดียวกัน</p>
+        \[ e\ [\%\,\text{span}] = e\ [\%\,URL] \times TD \]</div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>ใช้งาน 0–10 bar: เลือกรุ่น URL 40 bar หรือ 16 bar ดี?</h3></div>
+<ol class="steps">
+<li><p>สเปกสมมติ: ความแม่นอ้างอิง ±0.075 % span · ผลอุณหภูมิ ±0.05 % URL ต่อ 28 °C (ใช้งานเปลี่ยน 20 °C) · เสถียรภาพ ±0.1 % URL/ปี สอบเทียบทุกปี</p></li>
+<li><p>URL 40 bar (TD 4:1): \(0.0075,\ 0.0143,\ 0.0400\) bar → P6: \(e = 0.0431\ \text{bar} = 0.43\,\%\) ของ span</p></li>
+<li><p>URL 16 bar (TD 1.6:1): \(0.0075,\ 0.0057,\ 0.0160\) bar → \(e = 0.0186\ \text{bar} = 0.19\,\%\) ของ span</p></li>
+<li><p>สรุป: รุ่นที่ช่วงใกล้งานแม่นกว่าสองเท่าแม้ตัวเลข "ความแม่นอ้างอิง" บนหน้าปกเท่ากัน ส่วนที่ครอบงำคือเสถียรภาพซึ่งคิดเป็น % URL</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="ptx" data-vals='{"url":"40"}'>ลอง URL 40 bar</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="ptx" data-vals='{"url":"16"}'>ลอง URL 16 bar</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="ptx"></div>
+    <p>สำหรับเกจหน้าปัด EN 837-1 กำหนดคลาสความแม่น (เช่น 0.6, 1.0, 1.6, 2.5 % ของเต็มสเกล) แนวปฏิบัติทั่วไปคือเลือกสเกลให้ความดันใช้งานปกติอยู่ราวครึ่งถึงสองในสามของหน้าปัด เพื่อให้อ่านง่ายและมีที่เหลือรับความดันกระชาก</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="seal">
+    <h2 id="seal">ซีลไดอะแฟรมและ capillary: เมื่อของไหลแตะเครื่องโดยตรงไม่ได้ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ของไหลที่หนืด กัดกร่อน ตกผลึก ร้อนจัด หรือต้องรักษาความสะอาด (อาหาร ยา) ใช้ <b>ซีลไดอะแฟรมระยะไกล</b>: ไดอะแฟรมติดที่ท่อหรือถัง ต่อกับทรานสมิตเตอร์ด้วยท่อ capillary ที่บรรจุของเหลว ข้อแลกเปลี่ยนคือเวลาตอบสนองช้าลง ผลอุณหภูมิของน้ำมันในท่อ และ <b>ความดันจากคอลัมน์ของเหลวบรรจุ</b></p>
+<div class="tf" id="P8" data-k="remote seal capillary fill fluid head correction zero shift ซีลไดอะแฟรม ของเหลวบรรจุ"><p class="tf-n"><b><span class="fid">P8</span> Seal head correction</b> การแก้ศูนย์จากของเหลวบรรจุ</p>
+        \[ \Delta P_\text{head} = \rho_\text{fill}\,g\,\Delta h \qquad \Delta h = \text{ซีลอยู่สูงกว่าทรานสมิตเตอร์ (+)} \]</div>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">ตัวอย่าง P-2</span><h3>ซีลอยู่สูงกว่าทรานสมิตเตอร์ 5 m ของเหลวบรรจุ ρ = 934 kg/m³</h3></div>
+<ol class="steps">
+<li><p>P8: \(934 \times 9.807 \times 5 = 45.8\ \text{kPa} = 0.458\ \text{bar}\)</p></li>
+<li><p>ทรานสมิตเตอร์เห็นความดันเพิ่มขึ้นคงที่ 0.458 bar ตลอดเวลา ต้องตั้งค่าแก้ศูนย์ (zero elevation/suppression) หรือทำ zero trim หลังติดตั้ง</p></li>
+<li><p>ถ้าช่วงใช้งานคือ 0–1 bar ค่าผิดนี้คือ 46 % ของ span — ความผิดที่พบจริงเมื่อย้ายตำแหน่งทรานสมิตเตอร์โดยไม่ตั้งค่าใหม่</p></li>
+</ol></div>
+    <p>หลักการเดียวกันนี้คือหัวใจของการวัดระดับด้วย DP ในถังปิด อ่านต่อที่ <a href="/learn/sensors-transducers/level-measurement/#dp">การวัดระดับ: ขาเปียกและขาแห้ง</a> และการวัดอัตราการไหลด้วย DP ที่ <a href="/learn/sensors-transducers/flow-measurement/#dp">แผ่นออริฟิซ ISO 5167</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>IEC 61298 (ชุด) Process measurement and control devices — General methods and procedures for evaluating performance · IEC 60770 Transmitters for use in industrial-process control systems</li>
+      <li>EN 837-1/-2/-3 Pressure gauges (Bourdon tube, selection and installation, diaphragm and capsule gauges)</li>
+      <li>Smith, C. S. (1954) Piezoresistance Effect in Germanium and Silicon, Physical Review 94, 42</li>
+      <li><a href="https://www.bipm.org/en/measurement-units" rel="noopener">BIPM — The International System of Units (หน่วย Pa)</a></li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

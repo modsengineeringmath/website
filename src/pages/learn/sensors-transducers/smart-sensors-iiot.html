@@ -1,0 +1,140 @@
+<!--meta
+{
+  "title": "เซนเซอร์อัจฉริยะและ IIoT: MEMS การวินิจฉัยตัวเอง NE 107 IEEE 1451 TEDS WirelessHART ISA100 LoRaWAN OPC UA MQTT และการบำรุงรักษาเชิงพยากรณ์ | อาจารย์มด",
+  "h1": "เซนเซอร์อัจฉริยะและ IIoT: หลักการสมัยใหม่ของการวัด",
+  "description": "หลักการสมัยใหม่ของเซนเซอร์และเครื่องมือวัด: เซนเซอร์อัจฉริยะที่ชดเชยและวินิจฉัยตัวเองตาม NAMUR NE 107 เซนเซอร์ MEMS IEEE 1451 และ TEDS เครือข่ายไร้สาย WirelessHART ISA100.11a LoRaWAN NB-IoT สถาปัตยกรรม ISA-95 กับ IIoT เกตเวย์ edge OPC UA MQTT NAMUR Open Architecture การบำรุงรักษาเชิงพยากรณ์ ความปลอดภัยไซเบอร์ IEC 62443 และการคำนวณอายุแบตเตอรี่",
+  "ogTitle": "เซนเซอร์อัจฉริยะ IIoT: MEMS WirelessHART OPC UA MQTT",
+  "og": {"title": "เซนเซอร์อัจฉริยะ · IIoT"},
+  "lesson": "sensors-transducers",
+  "sub": "smart-sensors-iiot",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate", "Professional"],
+  "about": ["Smart sensor", "MEMS", "IEEE 1451", "WirelessHART", "LoRaWAN", "OPC UA", "MQTT", "Industrial Internet of Things", "Predictive maintenance"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "เซนเซอร์อัจฉริยะ (smart sensor) ต่างจากเซนเซอร์ธรรมดาอย่างไร?", "a": "เซนเซอร์อัจฉริยะมีหน่วยประมวลผลในตัว ทำหน้าที่ชดเชยอุณหภูมิและความไม่เชิงเส้นด้วยตัวเลข แปลงเป็นหน่วยวิศวกรรม ตั้งค่าจากระยะไกล วินิจฉัยตัวเองและรายงานสถานะ (เช่น ตามหมวด NAMUR NE 107) และสื่อสารแบบดิจิทัลผ่าน HART ฟิลด์บัส IO-Link หรือไร้สาย สิ่งที่ได้ไม่ใช่แค่ค่าวัด แต่รวมถึงความน่าเชื่อถือของค่าวัดนั้นด้วย"},
+    {"q": "ควรใช้ OPC UA หรือ MQTT?", "a": "ใช้คู่กันได้ OPC UA เด่นเรื่องแบบจำลองข้อมูลที่มีความหมายครบ (หน่วย ช่วง ความสัมพันธ์ของอุปกรณ์) และความปลอดภัยในตัว เหมาะกับการเชื่อมระหว่างเครื่องจักรกับระบบควบคุม ส่วน MQTT เป็นโปรโตคอล publish/subscribe ที่เบามากผ่านโบรกเกอร์ เหมาะกับการส่งข้อมูลจำนวนมากจาก edge ขึ้นคลาวด์ ปัจจุบัน OPC UA ก็มีรูปแบบ publish/subscribe ผ่าน MQTT ได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.17 เซนเซอร์อัจฉริยะ · IIoT</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.17 · Sensors &amp; Transducers · Smart Sensors &amp; IIoT</p>
+      <h1>เซนเซอร์อัจฉริยะและ IIoT: <em>หลักการสมัยใหม่ของการวัด</em></h1>
+      <p class="lede">เซนเซอร์ราคาถูกลงจนแทบเป็นสินค้าทั่วไป สิ่งที่มีค่าขึ้นคือ <b>ข้อมูลที่เชื่อถือได้และไปถึงคนที่ใช้ตัดสินใจ</b> หน้านี้อธิบายว่าเซนเซอร์ยุคใหม่ "คิด" อะไรในตัวเอง ส่งข้อมูลอย่างไรโดยไม่ต้องเดินสาย และข้อมูลเดินทางจากหน้างานถึงคลาวด์โดยไม่รบกวนลูปควบคุมได้อย่างไร</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#smart">เซนเซอร์อัจฉริยะ</a>
+        <a class="btn btn-ghost btn-sm" href="#mems">MEMS</a>
+        <a class="btn btn-ghost btn-sm" href="#wireless">ไร้สาย</a>
+        <a class="btn btn-ghost btn-sm" href="#arch">สถาปัตยกรรม IIoT</a>
+        <a class="btn btn-ghost btn-sm" href="#pdm">บำรุงรักษาเชิงพยากรณ์</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น duty cycle, battery, mems, link budget, data rate" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="smart">
+    <h2 id="smart">อะไรทำให้เซนเซอร์ "อัจฉริยะ" <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="sx-grid">
+      <div class="sx-card"><h3>ชดเชยด้วยตัวเลข</h3><p>เซนเซอร์ถูกวัดที่หลายอุณหภูมิและหลายความดันในโรงงานผลิต ค่าคงตัวถูกบันทึกในหน่วยความจำ ไมโครคอนโทรลเลอร์คำนวณแก้ทุกครั้งที่วัด</p></div>
+      <div class="sx-card"><h3>หลายตัวแปรในเครื่องเดียว</h3><p>ทรานสมิตเตอร์ DP วัดความดันสถิตและอุณหภูมิไปด้วย จึงคำนวณอัตราไหลเชิงมวลที่ชดเชยแล้วได้ในตัว</p></div>
+      <div class="sx-card"><h3>วินิจฉัยตัวเอง</h3><p>ตรวจเซนเซอร์ขาด ท่อตัน การเกาะ แรงดันไม่พอ และรายงานตามหมวด NE 107 แทนการส่งค่าผิดอย่างเงียบ ๆ</p></div>
+      <div class="sx-card"><h3>บอกว่าตัวเองคือใคร</h3><p>ไฟล์คำอธิบายอุปกรณ์ (DD, EDD, FDI, IODD) และ TEDS ทำให้ระบบรู้หน่วย ช่วง และความสามารถโดยไม่ต้องป้อนเอง</p></div>
+    </div>
+    <div class="table-wrap"><table>
+      <caption>NAMUR NE 107: สี่สถานะที่อุปกรณ์รายงาน</caption>
+      <thead><tr><th>สัญลักษณ์</th><th>สถานะ</th><th>ความหมายต่อผู้ปฏิบัติงาน</th></tr></thead>
+      <tbody>
+        <tr><td>F</td><td>Failure · ล้มเหลว</td><td>ค่าวัดใช้ไม่ได้ ต้องเข้าแก้ทันที</td></tr>
+        <tr><td>C</td><td>Function check · ตรวจสอบ</td><td>อยู่ระหว่างทดสอบ/ตั้งค่า ค่าชั่วคราวไม่ใช่ค่าจริง</td></tr>
+        <tr><td>S</td><td>Out of specification · นอกสเปก</td><td>ทำงานนอกเงื่อนไขที่ออกแบบ ค่าอาจคลาดเกินสเปก</td></tr>
+        <tr><td>M</td><td>Maintenance required · ต้องบำรุงรักษา</td><td>ยังวัดได้ แต่ควรวางแผนซ่อมก่อนจะล้มเหลว</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>IEEE 1451 (ISO/IEC/IEEE 21451)</b> กำหนดอินเทอร์เฟซของ "ทรานส์ดิวเซอร์อัจฉริยะ" และ <b>TEDS</b> (Transducer Electronic Data Sheet) — หน่วยความจำเล็ก ๆ ในเซนเซอร์ที่เก็บผู้ผลิต รุ่น หมายเลขเครื่อง ความไว และวันสอบเทียบ เครื่องอ่านจึงตั้งค่าตัวเองได้เมื่อเสียบเซนเซอร์ (plug and play) แนวคิดนี้พบมากในแอกเซเลอโรมิเตอร์และโหลดเซลล์ของงานทดสอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mems">
+    <h2 id="mems">MEMS: เครื่องจักรขนาดไมโครบนชิปซิลิคอน <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:sx-mems--><svg class="xf" viewBox="0 0 720 220" role="img" aria-label="โครงสร้างแอกเซเลอโรมิเตอร์ MEMS แบบหวี: มวลเคลื่อนที่ได้ แขวนด้วยสปริงซิลิคอน ระยะห่างระหว่างนิ้วหวีเปลี่ยนค่าความจุ"><defs><marker id="sx-mems-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="220" y="70" width="280" height="80" rx="4"/><text x="360" y="115" class="xf-k" text-anchor="middle">มวลพิสูจน์ (proof mass)</text><rect class="xf-metal" x="160" y="60" width="40" height="100" rx="2"/><path class="xf-ln" d="M 200 110 l 10 -10 l 10 20 l 10 -20 l 10 20"/><rect class="xf-metal" x="520" y="60" width="40" height="100" rx="2"/><path class="xf-ln" d="M 520 110 l -10 -10 l -10 20 l -10 -20 l -10 20"/><rect class="xf-boxa" x="240" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="256" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="278" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="294" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="316" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="332" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="354" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="370" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="392" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="408" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="430" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="446" y="162" width="8" height="36" rx="1"/><rect class="xf-boxa" x="468" y="150" width="8" height="36" rx="1"/><rect class="xf-metal" x="484" y="162" width="8" height="36" rx="1"/><line class="xf-b" x1="360" y1="30" x2="420" y2="30" marker-end="url(#sx-mems-ah)"/><text x="430" y="34" class="xf-tb">a</text><text x="360" y="214" class="xf-m" text-anchor="middle">ระยะห่างเปลี่ยน → C₁ − C₂ ∝ ความเร่ง · ขนาดทั้งชิป ~ 1–3 mm</text><text x="100" y="110" class="xf-k" text-anchor="middle">สปริง</text></svg><!--/FIG--><figcaption>รูป 1 · แอกเซเลอโรมิเตอร์ MEMS แบบหวี มวลขนาดไมโครกรัมที่แขวนด้วยสปริงซิลิคอน</figcaption></figure>
+    <p>MEMS (Micro-Electro-Mechanical Systems) ใช้กระบวนการผลิตแบบเดียวกับชิป สร้างโครงสร้างเชิงกลขนาดไมโครเมตรร่วมกับวงจรอ่านค่า ต้นทศวรรษ 1990 แอกเซเลอโรมิเตอร์ MEMS สำหรับถุงลมนิรภัยรถยนต์พิสูจน์ว่าทำได้ในปริมาณมากและเชื่อถือได้ ปัจจุบันเซนเซอร์ความดัน ความเร่ง ไจโรสโคป ไมโครโฟน และแก๊สจำนวนมากเป็น MEMS</p>
+<div class="tf" id="N1" data-k="mems accelerometer spring mass natural frequency displacement แอกเซเลอโรมิเตอร์ มวลสปริง"><p class="tf-n"><b><span class="fid">N1</span> Spring–mass accelerometer</b> แอกเซเลอโรมิเตอร์มวล–สปริง</p>
+        \[ x = \frac{m\,a}{k} = \frac{a}{\omega_n^2} \qquad \omega_n = \sqrt{k/m} \]</div>
+    <p>สมการนี้บอกการแลกเปลี่ยนหลักของการออกแบบ: ความถี่ธรรมชาติสูง (วัดสัญญาณเร็วได้) ทำให้การกระจัดต่อความเร่งน้อยลง (ไวน้อยลง) แอกเซเลอโรมิเตอร์ที่ \(\omega_n = 2\pi \times 5\ \text{kHz}\) เคลื่อนเพียงราว 10 นาโนเมตรต่อ 1 g วงจรอ่านค่าความจุจึงต้องละเอียดระดับอัตโตฟารัด — ทำได้เพราะวงจรอยู่บนชิปเดียวกัน ส่วนพื้นฐานระบบมวล–สปริง–แดมเปอร์ดูได้ที่ <a href="/learn/second-order-system/">ระบบอันดับสอง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="wireless">
+    <h2 id="wireless">เซนเซอร์ไร้สายในอุตสาหกรรม <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เทคโนโลยี</th><th>มาตรฐาน</th><th>ย่าน · โทโพโลยี</th><th>ระยะ</th><th>ใช้กับ</th></tr></thead>
+      <tbody>
+        <tr><td>WirelessHART</td><td>IEC 62591</td><td>2.4 GHz IEEE 802.15.4 · เมช</td><td>สิบถึงร้อยเมตรต่อฮอป</td><td>เครื่องมือวัดกระบวนการ เฝ้าดู</td></tr>
+        <tr><td>ISA100.11a</td><td>IEC 62734</td><td>2.4 GHz IEEE 802.15.4 · เมช/ดาว</td><td>สิบถึงร้อยเมตร</td><td>เครื่องมือวัดกระบวนการ</td></tr>
+        <tr><td>LoRaWAN</td><td>LoRa Alliance</td><td>ย่าน sub-GHz ไม่ต้องขอใบอนุญาต · ดาว</td><td>หลายกิโลเมตร</td><td>มิเตอร์น้ำ เกษตร สิ่งแวดล้อม</td></tr>
+        <tr><td>NB-IoT · LTE-M</td><td>3GPP</td><td>เครือข่ายมือถือ</td><td>ครอบคลุมตามเครือข่าย</td><td>มิเตอร์อัจฉริยะ อุปกรณ์กระจายตัว</td></tr>
+        <tr><td>Bluetooth LE</td><td>Bluetooth SIG</td><td>2.4 GHz · จุดต่อจุด/เมช</td><td>สิบเมตร</td><td>ตั้งค่าเครื่องมือด้วยมือถือ</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="N2" data-k="duty cycle average current sleep active battery กระแสเฉลี่ย ดิวตี้ไซเคิล"><p class="tf-n"><b><span class="fid">N2</span> Average current of a duty-cycled node</b> กระแสเฉลี่ยของโหนดที่หลับ–ตื่น</p>
+        \[ D = \frac{t_\text{on}}{T} \qquad \bar I = D\,I_\text{on} + (1 - D)\,I_\text{sleep} \]</div>
+<div class="tf" id="N3" data-k="battery lifetime capacity mah derating อายุแบตเตอรี่"><p class="tf-n"><b><span class="fid">N3</span> Battery lifetime</b> อายุแบตเตอรี่</p>
+        \[ t_\text{life} = \frac{C\,(1 - k_\text{derate})}{\bar I} \]</div>
+<div class="wx" id="ex-n-1"><div class="wx-head"><span class="mono">ตัวอย่าง N-1</span><h3>แบตเตอรี่ 2600 mAh ตื่นวัด+ส่ง 30 mA นาน 150 ms หลับ 5 µA</h3></div>
+<ol class="steps">
+<li><p>ส่งทุก 60 s: \(D = 0.25\,\%\) → N2: \(\bar I = 80\ \mu\text{A}\) → N3 (เผื่อ 30 %): <b>2.6 ปี</b></p></li>
+<li><p>ส่งทุก 10 s: \(\bar I = 455\ \mu\text{A}\) → 0.46 ปี · ส่งทุก 10 นาที: \(\bar I = 12.5\ \mu\text{A}\) → คำนวณได้ 16.6 ปี</p></li>
+<li><p>ตัวเลข 16.6 ปีเกินอายุการเก็บและการคายประจุเองของแบตเตอรี่ส่วนใหญ่ เมื่อกระแสเฉลี่ยต่ำมาก ข้อจำกัดจริงคือเคมีของแบตเตอรี่ ไม่ใช่วงจร และกระแสหลับกลายเป็น 40 % ของพลังงานทั้งหมด</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="battery" data-vals='{"per":"60"}'>ทุก 60 s</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="battery" data-vals='{"per":"10"}'>ทุก 10 s</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="battery" data-vals='{"per":"600"}'>ทุก 10 นาที</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="battery"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arch">
+    <h2 id="arch">สถาปัตยกรรม: จากพีระมิด ISA-95 สู่ช่องทางที่สอง <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:sx-pyramid--><svg class="xf" viewBox="0 0 860 300" role="img" aria-label="พีระมิดระบบอัตโนมัติตาม ISA-95 เทียบกับสถาปัตยกรรม IIoT ที่ส่งข้อมูลเซนเซอร์ขึ้นคลาวด์ผ่านช่องทางที่สอง"><defs><marker id="sx-pyramid-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="xf-boxa" d="M190 30 L270 30 L302 70 L158 70 Z"/><text x="230" y="55" class="xf-k" text-anchor="middle">4 · ERP</text><text x="314" y="55" class="xf-k">วัน–สัปดาห์</text><path class="xf-boxa" d="M158 76 L302 76 L334 116 L126 116 Z"/><text x="230" y="101" class="xf-k" text-anchor="middle">3 · MES</text><text x="346" y="101" class="xf-k">ชั่วโมง</text><path class="xf-boxa" d="M126 122 L334 122 L366 162 L94 162 Z"/><text x="230" y="147" class="xf-k" text-anchor="middle">2 · SCADA / HMI</text><text x="378" y="147" class="xf-k">วินาที</text><path class="xf-boxa" d="M94 168 L366 168 L398 208 L62 208 Z"/><text x="230" y="193" class="xf-k" text-anchor="middle">1 · PLC / DCS</text><text x="410" y="193" class="xf-k">มิลลิวินาที</text><path class="xf-boxb" d="M62 214 L398 214 L430 254 L30 254 Z"/><text x="230" y="239" class="xf-k" text-anchor="middle">0 · เซนเซอร์ / แอคชูเอเตอร์</text><text x="442" y="239" class="xf-k">ต่อเนื่อง</text><text x="230" y="290" class="xf-m" text-anchor="middle">ISA-95 / IEC 62264: ข้อมูลไหลทีละชั้น</text><rect class="xf-boxc" x="590" y="30" width="220" height="44" rx="10"/><text x="700" y="57" class="xf-h" text-anchor="middle">คลาวด์ · Analytics · AI</text><rect class="xf-boxa" x="550" y="140" width="130" height="44" rx="10"/><text x="615" y="167" class="xf-k" text-anchor="middle">PLC/DCS (ควบคุม)</text><rect class="xf-boxc" x="710" y="140" width="130" height="44" rx="10"/><text x="775" y="159" class="xf-k" text-anchor="middle">Edge gateway</text><text x="775" y="175" class="xf-k" text-anchor="middle">OPC UA · MQTT</text><rect class="xf-boxb" x="600" y="225" width="200" height="40" rx="10"/><text x="700" y="250" class="xf-k" text-anchor="middle">เซนเซอร์อัจฉริยะ (HART · APL)</text><line class="xf-ln" x1="660" y1="225" x2="630" y2="186" marker-end="url(#sx-pyramid-ah)"/><line class="xf-c" x1="740" y1="225" x2="770" y2="186" marker-end="url(#sx-pyramid-ah)"/><line class="xf-c" x1="775" y1="140" x2="740" y2="76" marker-end="url(#sx-pyramid-ah)"/><text x="764" y="112" class="xf-tc">ช่องทางที่สอง</text><text x="700" y="290" class="xf-k" text-anchor="middle">NAMUR Open Architecture: อ่านข้อมูลโดยไม่รบกวนลูปควบคุม</text></svg><!--/FIG--><figcaption>รูป 2 · ซ้าย: ข้อมูลไหลทีละชั้นตาม ISA-95 · ขวา: NAMUR Open Architecture เพิ่มช่องทางที่สองสำหรับเฝ้าดูและวิเคราะห์ โดยลูปควบคุมยังอยู่ในระบบเดิม</figcaption></figure>
+    <ul>
+      <li><b>Edge gateway</b>: อยู่ใกล้เครื่องจักร อ่านข้อมูลจาก PLC/HART/Modbus กรอง บีบอัด และส่งต่อ ช่วยลดปริมาณข้อมูลและยังทำงานได้เมื่ออินเทอร์เน็ตขาด</li>
+      <li><b>OPC UA</b> (IEC 62541): แบบจำลองข้อมูลพร้อมความหมาย (ชื่อ หน่วย ช่วง ความสัมพันธ์) การเข้ารหัสและการยืนยันตัวตนในตัว มี companion specification สำหรับอุตสาหกรรมเฉพาะ</li>
+      <li><b>MQTT</b> (มาตรฐาน OASIS และ ISO/IEC 20922): publish/subscribe ผ่านโบรกเกอร์ หัวข้อ (topic) เป็นลำดับชั้น คุณภาพบริการ QoS 0/1/2 เบาพอสำหรับอุปกรณ์เล็ก ข้อกำหนด Sparkplug เพิ่มโครงสร้างข้อมูลสำหรับงานอุตสาหกรรม</li>
+      <li><b>NAMUR Open Architecture (NE 175)</b>: ให้ข้อมูลไหลออกจากระบบควบคุมทางเดียวผ่านช่องทางที่สอง เพื่อวิเคราะห์โดยไม่เสี่ยงต่อความปลอดภัยของการควบคุม</li>
+    </ul>
+<div class="wx" id="ex-n-2"><div class="wx-head"><span class="mono">ตัวอย่าง N-2</span><h3>เซนเซอร์ 100 จุด ส่งค่าทุกวินาที ค่าละ 8 ไบต์ (เวลา + ค่า)</h3></div>
+<ol class="steps">
+<li><p>\(100 \times 86\,400 \times 8 = 69\ \text{MB}\) ต่อวันก่อนรวมส่วนหัวโปรโตคอล</p></li>
+<li><p>การส่ง "เมื่อค่าเปลี่ยนเกิน deadband" (report by exception) ของค่าที่เปลี่ยนช้าอย่างระดับหรืออุณหภูมิลดข้อมูลได้หลายสิบเท่า — เหตุที่ edge gateway และ OPC UA มีพารามิเตอร์ deadband</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pdm">
+    <h2 id="pdm">การบำรุงรักษาเชิงพยากรณ์และความปลอดภัยไซเบอร์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>การบำรุงรักษาเปลี่ยนจาก "ซ่อมเมื่อเสีย" (reactive) เป็น "ตามรอบเวลา" (preventive) แล้วเป็น "ตามสภาพ" (condition-based) และ "เชิงพยากรณ์" (predictive) ซึ่งใช้ข้อมูลเซนเซอร์คาดการณ์ว่าเมื่อใดจะเสีย ตัวอย่างข้อมูลที่ใช้: การสั่นสะเทือนและสเปกตรัมของปั๊มและมอเตอร์ (<a href="/learn/fourier-series/dft-fft/">FFT</a>) อุณหภูมิตลับลูกปืน กระแสมอเตอร์ เสียงสัญญาณวาล์ว และการวินิจฉัยจากทรานสมิตเตอร์ HART</p>
+    <p>ข้อควรระวัง: แบบจำลอง AI เรียนรู้จากข้อมูลที่ได้รับ ถ้าเซนเซอร์ไม่ได้สอบเทียบหรือ drift ไปแล้ว ผลวิเคราะห์ก็ผิดตาม การสอบเทียบและการจัดการคุณภาพข้อมูลจึงเป็นรากฐานของระบบอัจฉริยะ ไม่ใช่เรื่องรอง (ดู <a href="/learn/sensors-transducers/installation-calibration/">การสอบเทียบ</a>)</p>
+    <p><b>ความปลอดภัยไซเบอร์</b>: ชุดมาตรฐาน IEC 62443 กำหนดแนวทางแบ่งโซนและช่องทางสื่อสาร (zones and conduits) ระดับความปลอดภัย และข้อกำหนดสำหรับผู้ผลิตอุปกรณ์และผู้รวมระบบ หลักง่ายที่สุดคือไม่ต่อเครือข่ายควบคุมตรงกับอินเทอร์เน็ต และให้ข้อมูลไหลออกทางเดียวเมื่อเป็นไปได้</p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>NAMUR NE 107 Self-monitoring and diagnosis of field devices · NAMUR NE 175 NAMUR Open Architecture</li>
+      <li>ISO/IEC/IEEE 21451 (IEEE 1451) Smart transducer interface standards</li>
+      <li>IEC 62591 WirelessHART · IEC 62734 ISA100.11a · IEC 62541 OPC UA · ISO/IEC 20922 MQTT · IEC 62264 (ISA-95)</li>
+      <li>IEC 62443 (ชุด) Security for industrial automation and control systems</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

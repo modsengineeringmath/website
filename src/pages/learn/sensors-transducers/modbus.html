@@ -1,0 +1,183 @@
+<!--meta
+{
+  "title": "Modbus RTU และ Modbus TCP: RS-485 เฟรม ฟังก์ชันโค้ด 03 04 06 16 รีจิสเตอร์ 40001 CRC-16 Float32 และการแก้ปัญหา | อาจารย์มด",
+  "h1": "Modbus RTU และ Modbus TCP: จากสาย RS-485 ถึงไบต์ในเฟรม",
+  "description": "Modbus ฉบับใช้งานจริง: RS-485 การต่อแบบเดซี่เชน ตัวต้านทานปลายสาย 120 Ω ไบแอส แบบจำลองข้อมูล coils discrete inputs input registers holding registers แอดเดรส 40001 กับแอดเดรสในเฟรม ฟังก์ชันโค้ด 01 03 04 05 06 15 16 exception เฟรม RTU กับ MBAP ของ Modbus TCP การคำนวณ CRC-16 เวลาอักขระ t3.5 รอบโพล การอ่าน Float32 และลำดับไบต์ ABCD CDAB พร้อมเครื่องสร้างเฟรมและเครื่องคำนวณ CRC",
+  "ogTitle": "Modbus RTU/TCP: เฟรม CRC-16 รีจิสเตอร์ Float32",
+  "og": {"title": "Modbus RTU · TCP · CRC-16"},
+  "lesson": "sensors-transducers",
+  "sub": "modbus",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Modbus RTU", "Modbus TCP", "RS-485", "CRC-16", "Holding register", "IEEE 754 float"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js", "/assets/sx-bus.js"],
+  "faq": [
+    {"q": "แอดเดรส 40001 ในคู่มือกับแอดเดรสในเฟรม Modbus ต่างกันอย่างไร?", "a": "40001 เป็นการเขียนแบบดั้งเดิมที่ตัวเลขแรก 4 บอกตาราง holding register และนับเริ่มจาก 1 ส่วนในเฟรมจริงส่งเฉพาะออฟเซ็ตที่นับจาก 0 ดังนั้น 40001 คือแอดเดรส 0x0000 และ 40010 คือ 0x0009 โปรแกรมหลายตัวให้เลือกว่าจะใช้แบบใด ความผิดพลาดที่พบบ่อยที่สุดคืออ่านเลื่อนไปหนึ่งรีจิสเตอร์"},
+    {"q": "ทำไมอ่านค่า float จาก Modbus แล้วได้ตัวเลขแปลก ๆ?", "a": "Modbus กำหนดเพียงรีจิสเตอร์ 16 บิตแบบ big-endian ค่า float 32 บิตจึงต้องใช้สองรีจิสเตอร์ และผู้ผลิตแต่ละรายเรียงคำต่างกัน ลำดับที่พบบ่อยคือ ABCD (คำสูงก่อน) และ CDAB (คำต่ำก่อน) ถ้าเลือกผิด ค่าที่ได้จะเป็นเลขเล็กมากหรือใหญ่มากผิดปกติ วิธีแก้คือลองทุกลำดับกับค่าที่รู้ เช่น อุณหภูมิห้อง แล้วเลือกลำดับที่สมเหตุสมผล"},
+    {"q": "RS-485 ต้องใส่ตัวต้านทานปลายสายที่ไหน?", "a": "ใส่ตัวต้านทานประมาณ 120 Ω (เท่ากับอิมพีแดนซ์ลักษณะของสาย) ที่ปลายทั้งสองของบัสเท่านั้น ไม่ใช่ทุกอุปกรณ์ และต่ออุปกรณ์แบบเดซี่เชนเรียงต่อกัน ไม่ต่อแบบดาว นอกจากนี้ควรมีไบแอส (pull-up/pull-down) ที่มาสเตอร์หนึ่งชุด เพื่อให้บัสอยู่ในสถานะที่แน่นอนเมื่อไม่มีใครส่ง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.15 Modbus</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.15 · Sensors &amp; Transducers · Modbus RTU &amp; TCP</p>
+      <h1>Modbus RTU และ Modbus TCP: <em>จากสาย RS-485 ถึงไบต์ในเฟรม</em></h1>
+      <p class="lede">Modbus เกิดขึ้นในปี 1979 ที่ Modicon ผู้ผลิต PLC ในสหรัฐฯ (ปัจจุบันอยู่ในเครือ Schneider Electric ของฝรั่งเศส) ความเรียบง่ายและการเปิดให้ใช้ฟรีทำให้มันกลายเป็นภาษาพื้นฐานของมิเตอร์ไฟฟ้า อินเวอร์เตอร์ ทรานสมิตเตอร์ และ PLC แทบทุกยี่ห้อ หน้านี้อธิบายจนสร้างและอ่านเฟรมได้ด้วยตัวเอง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#builder">เครื่องสร้างเฟรม</a>
+        <a class="btn btn-ghost btn-sm" href="#rs485">RS-485</a>
+        <a class="btn btn-ghost btn-sm" href="#model">รีจิสเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#frame">เฟรมและ CRC</a>
+        <a class="btn btn-ghost btn-sm" href="#float">Float32</a>
+        <a class="btn btn-ghost btn-sm" href="#debug">แก้ปัญหา</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>มาสเตอร์ถาม สเลฟตอบ · RTU บน RS-485 (สเลฟ 1–247) · TCP พอร์ต 502</li>
+          <li>4 ตาราง: coils · discrete inputs · input registers · holding registers — "40001" = แอดเดรส 0 ในเฟรม</li>
+          <li>อ่าน 2 รีจิสเตอร์จากสเลฟ 1: <code>01 03 00 00 00 02 C4 0B</code> · CRC ไบต์ต่ำก่อน</li>
+          <li>float32 ใช้ 2 รีจิสเตอร์ ลำดับคำ ABCD หรือ CDAB แล้วแต่ผู้ผลิต</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น 40001, crc, t3.5, poll, float, mbap" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="rs485">
+    <h2 id="rs485">ชั้นกายภาพ: RS-485 <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>RS-485 (TIA/EIA-485) ส่งข้อมูลด้วยผลต่างแรงดันระหว่างสองสาย สัญญาณรบกวนที่เหนี่ยวนำเข้าทั้งสองสายเท่า ๆ กันจึงหักล้างกัน ทำให้ส่งได้ไกลถึงราว 1200 m ที่ความเร็วต่ำ บัสเดียวรองรับ 32 unit load (ทรานซีฟเวอร์รุ่นใหม่ที่เป็น 1/8 unit load ทำให้ต่อได้มากกว่านั้น) ขณะที่ Modbus เองกำหนดแอดเดรสสเลฟได้ 1–247</p>
+    <figure class="xfig"><!--FIG:sx-rs485--><svg class="xf" viewBox="0 0 780 240" role="img" aria-label="บัส RS-485 สำหรับ Modbus RTU: ต่อแบบเดซี่เชน ตัวต้านทานปลายสาย 120 โอห์ม ที่สองปลาย และไบแอสที่มาสเตอร์"><defs><marker id="sx-rs485-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-a" x1="80" y1="110" x2="720" y2="110"/><line class="xf-b" x1="80" y1="140" x2="720" y2="140"/><text x="724" y="114" class="xf-ta">D+ (B)</text><text x="724" y="144" class="xf-tb">D− (A)</text><path class="xf-ln" d="M90 110 L90 117.5 L84 118.8 L96 121.2 L84 123.8 L96 126.2 L84 128.8 L96 131.2 L90 132.5 L90 140"/><text x="96" y="104" class="xf-k">120 Ω</text><path class="xf-ln" d="M700 110 L700 117.5 L694 118.8 L706 121.2 L694 123.8 L706 126.2 L694 128.8 L706 131.2 L700 132.5 L700 140"/><text x="694" y="104" class="xf-k" text-anchor="end">120 Ω</text><rect class="xf-boxb" x="20" y="40" width="110" height="46" rx="8"/><text x="75" y="60" class="xf-h" text-anchor="middle">มาสเตอร์</text><text x="75" y="77" class="xf-k" text-anchor="middle">PLC · ไบแอส</text><line class="xf-ln" x1="70" y1="86" x2="70" y2="110"/><line class="xf-ln" x1="80" y1="86" x2="80" y2="140"/><rect class="xf-boxa" x="160" y="175" width="100" height="40" rx="8"/><text x="210" y="199" class="xf-k" text-anchor="middle">ID 1 มิเตอร์</text><line class="xf-ln" x1="204" y1="175" x2="204" y2="110"/><line class="xf-ln" x1="216" y1="175" x2="216" y2="140"/><rect class="xf-boxa" x="290" y="175" width="100" height="40" rx="8"/><text x="340" y="199" class="xf-k" text-anchor="middle">ID 2 ทรานสมิตเตอร์</text><line class="xf-ln" x1="334" y1="175" x2="334" y2="110"/><line class="xf-ln" x1="346" y1="175" x2="346" y2="140"/><rect class="xf-boxa" x="420" y="175" width="100" height="40" rx="8"/><text x="470" y="199" class="xf-k" text-anchor="middle">ID 3 อินเวอร์เตอร์</text><line class="xf-ln" x1="464" y1="175" x2="464" y2="110"/><line class="xf-ln" x1="476" y1="175" x2="476" y2="140"/><rect class="xf-boxa" x="550" y="175" width="100" height="40" rx="8"/><text x="600" y="199" class="xf-k" text-anchor="middle">ID 4 …</text><line class="xf-ln" x1="594" y1="175" x2="594" y2="110"/><line class="xf-ln" x1="606" y1="175" x2="606" y2="140"/><text x="400" y="30" class="xf-m" text-anchor="middle">ระยะรวม ≤ 1200 m · ≤ 32 unit load ต่อเซกเมนต์ · สายคู่บิดเกลียวมีชีลด์ + สายกราวด์อ้างอิง</text><text x="400" y="232" class="xf-k" text-anchor="middle">ห้ามต่อแบบดาว (star) หรือกิ่งยาว — สัญญาณสะท้อนทำให้ CRC ผิดเป็นระยะ</text></svg><!--/FIG--><figcaption>รูป 1 · บัส RS-485 ที่ถูกต้อง: เดซี่เชนจากมาสเตอร์ไปยังสเลฟตัวสุดท้าย ตัวต้านทานปลายสายสองตัว และไบแอสหนึ่งชุด</figcaption></figure>
+    <ul>
+      <li><b>สาย</b>: คู่บิดเกลียวมีชีลด์ อิมพีแดนซ์ราว 120 Ω พร้อมสายที่สามเป็นกราวด์อ้างอิง (common) — RS-485 ไม่ใช่ "สองสายจริง" แรงดันโหมดร่วมต้องอยู่ในขอบเขตของทรานซีฟเวอร์</li>
+      <li><b>ชื่อขั้ว</b>: มาตรฐานเรียก A/B แต่ผู้ผลิตหลายรายสลับกัน ถ้าต่อแล้วไม่ตอบ ลองสลับสองสายก่อนทำอย่างอื่น (ไม่ทำให้อุปกรณ์เสีย)</li>
+      <li><b>ค่าเริ่มต้นของ Modbus serial line</b>: 8 บิตข้อมูล พาริตีคู่ (Even) 1 stop · ถ้าไม่ใช้พาริตีต้องใช้ 2 stop bit เพื่อให้ยังเป็น 11 บิตต่ออักขระ (ในทางปฏิบัติหลายอุปกรณ์ตั้ง 8N1)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="model">
+    <h2 id="model">แบบจำลองข้อมูล: 4 ตารางและแอดเดรส <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ตาราง</th><th>ขนาด</th><th>อ่าน/เขียน</th><th>แบบเดิม</th><th>ฟังก์ชันโค้ด</th><th>ตัวอย่าง</th></tr></thead>
+      <tbody>
+        <tr><td>Coils</td><td>1 บิต</td><td>อ่าน/เขียน</td><td>0xxxx</td><td>01 อ่าน · 05 เขียนตัวเดียว · 15 เขียนหลายตัว</td><td>สั่งเปิดปั๊ม รีเซ็ตเตือน</td></tr>
+        <tr><td>Discrete inputs</td><td>1 บิต</td><td>อ่านอย่างเดียว</td><td>1xxxx</td><td>02</td><td>สถานะสวิตช์</td></tr>
+        <tr><td>Input registers</td><td>16 บิต</td><td>อ่านอย่างเดียว</td><td>3xxxx</td><td>04</td><td>ค่าวัด</td></tr>
+        <tr><td>Holding registers</td><td>16 บิต</td><td>อ่าน/เขียน</td><td>4xxxx</td><td>03 อ่าน · 06 เขียนตัวเดียว · 16 เขียนหลายตัว</td><td>ค่าวัด ค่าตั้ง ช่วงวัด</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="D1" data-k="modbus address offset 40001 zero based register numbering แอดเดรส รีจิสเตอร์"><p class="tf-n"><b><span class="fid">D1</span> Register number vs PDU address</b> เลขรีจิสเตอร์กับแอดเดรสในเฟรม</p>
+        \[ \text{แอดเดรสในเฟรม} = \text{เลขแบบ 4xxxx} - 40001 \qquad 40001 \to \texttt{0x0000},\;\; 40010 \to \texttt{0x0009} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="frame">
+    <h2 id="frame">เฟรม RTU, เฟรม TCP และ CRC-16 <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:sx-modbus-frame--><svg class="xf" viewBox="0 0 780 200" role="img" aria-label="โครงสร้างเฟรม Modbus RTU และ Modbus TCP ของคำขออ่านรีจิสเตอร์ฟังก์ชัน 03"><defs><marker id="sx-modbus-frame-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="20" y="30" class="xf-h">RTU (RS-485)</text><rect class="xf-bg" x="20" y="40" width="90" height="44" rx="4"/><text x="65" y="59" class="xf-m" text-anchor="middle">≥ 3.5 อักขระ</text><text x="65" y="76" class="xf-k" text-anchor="middle">เงียบ</text><rect class="xf-boxa" x="114" y="40" width="70" height="44" rx="4"/><text x="149" y="59" class="xf-m" text-anchor="middle">01</text><text x="149" y="76" class="xf-k" text-anchor="middle">Slave</text><rect class="xf-boxb" x="188" y="40" width="80" height="44" rx="4"/><text x="228" y="59" class="xf-m" text-anchor="middle">03</text><text x="228" y="76" class="xf-k" text-anchor="middle">Function</text><rect class="xf-boxc" x="272" y="40" width="100" height="44" rx="4"/><text x="322" y="59" class="xf-m" text-anchor="middle">00 00</text><text x="322" y="76" class="xf-k" text-anchor="middle">Start addr</text><rect class="xf-boxc" x="376" y="40" width="100" height="44" rx="4"/><text x="426" y="59" class="xf-m" text-anchor="middle">00 02</text><text x="426" y="76" class="xf-k" text-anchor="middle">Quantity</text><rect class="xf-box" x="480" y="40" width="100" height="44" rx="4"/><text x="530" y="59" class="xf-m" text-anchor="middle">C4 0B</text><text x="530" y="76" class="xf-k" text-anchor="middle">CRC lo hi</text><rect class="xf-bg" x="584" y="40" width="90" height="44" rx="4"/><text x="629" y="59" class="xf-m" text-anchor="middle">≥ 3.5 อักขระ</text><text x="629" y="76" class="xf-k" text-anchor="middle">เงียบ</text><text x="20" y="120" class="xf-h">TCP (พอร์ต 502)</text><rect class="xf-box" x="20" y="130" width="90" height="44" rx="4"/><text x="65" y="149" class="xf-m" text-anchor="middle">00 01</text><text x="65" y="166" class="xf-k" text-anchor="middle">Transaction</text><rect class="xf-box" x="114" y="130" width="80" height="44" rx="4"/><text x="154" y="149" class="xf-m" text-anchor="middle">00 00</text><text x="154" y="166" class="xf-k" text-anchor="middle">Protocol</text><rect class="xf-box" x="198" y="130" width="80" height="44" rx="4"/><text x="238" y="149" class="xf-m" text-anchor="middle">00 06</text><text x="238" y="166" class="xf-k" text-anchor="middle">Length</text><rect class="xf-boxa" x="282" y="130" width="60" height="44" rx="4"/><text x="312" y="149" class="xf-m" text-anchor="middle">01</text><text x="312" y="166" class="xf-k" text-anchor="middle">Unit</text><rect class="xf-boxb" x="346" y="130" width="80" height="44" rx="4"/><text x="386" y="149" class="xf-m" text-anchor="middle">03</text><text x="386" y="166" class="xf-k" text-anchor="middle">Function</text><rect class="xf-boxc" x="430" y="130" width="140" height="44" rx="4"/><text x="500" y="149" class="xf-m" text-anchor="middle">00 00 00 02</text><text x="500" y="166" class="xf-k" text-anchor="middle">Data</text><text x="590" y="166" class="xf-k">PDU เดียวกัน · TCP ไม่มี CRC</text></svg><!--/FIG--><figcaption>รูป 2 · PDU (ฟังก์ชัน + ข้อมูล) เหมือนกันทั้งสองแบบ RTU ห่อด้วยแอดเดรสสเลฟกับ CRC ส่วน TCP ห่อด้วย MBAP header 7 ไบต์</figcaption></figure>
+<div class="tf" id="D2" data-k="crc 16 modbus polynomial a001 reflected 8005 init ffff ซีอาร์ซี"><p class="tf-n"><b><span class="fid">D2</span> Modbus CRC-16</b> การตรวจสอบความผิดพลาด</p>
+        \[ g(x) = x^{16} + x^{15} + x^2 + 1 \;(\texttt{0x8005},\ \text{กลับบิต } \texttt{0xA001}) \qquad \text{ค่าเริ่ม } \texttt{0xFFFF} \;\cdot\; \text{ส่งไบต์ต่ำก่อน} \]</div>
+    <ol>
+      <li>ตั้ง CRC = 0xFFFF</li>
+      <li>XOR ไบต์ข้อมูลเข้ากับไบต์ต่ำของ CRC</li>
+      <li>เลื่อนขวา 8 ครั้ง ทุกครั้งที่บิตที่หลุดออกเป็น 1 ให้ XOR ด้วย 0xA001</li>
+      <li>ทำซ้ำทุกไบต์ ผลลัพธ์ส่งไบต์ต่ำก่อน — คุณสมบัติที่ใช้ตรวจ: CRC ของทั้งเฟรมรวม CRC แล้วต้องได้ 0</li>
+    </ol>
+<div class="wx" id="ex-d-1"><div class="wx-head"><span class="mono">ตัวอย่าง D-1</span><h3>อ่าน 40001–40002 (float อุณหภูมิ) จากสเลฟ 1</h3></div>
+<ol class="steps">
+<li><p>D1: 40001 → แอดเดรส 0x0000 · จำนวน 2 → PDU <code>03 00 00 00 02</code></p></li>
+<li><p>D2: CRC ของ <code>01 03 00 00 00 02</code> = 0x0BC4 → ส่ง <code>C4 0B</code> · คำขอเต็ม <code>01 03 00 00 00 02 C4 0B</code></p></li>
+<li><p>คำตอบ: <code>01 03 04 41 BE 00 00 8E 2B</code> — byte count 04 แล้วตามด้วยข้อมูล 4 ไบต์</p></li>
+<li><p>D6: <code>41 BE 00 00</code> แบบ ABCD = <b>23.75</b> °C</p></li>
+</ol></div>
+    <div class="sx-crc" data-hex="01 03 04 41 BE 00 00 8E 2B"><noscript>ต้องเปิด JavaScript</noscript></div>
+    <div class="table-wrap"><table>
+      <caption>Exception: สเลฟตอบด้วยฟังก์ชันโค้ด + 0x80 ตามด้วยรหัส</caption>
+      <thead><tr><th>รหัส</th><th>ชื่อ</th><th>สาเหตุที่พบบ่อย</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>ILLEGAL FUNCTION</td><td>อุปกรณ์ไม่รองรับฟังก์ชันนั้น เช่น ใช้ 03 กับอุปกรณ์ที่มีแต่ input register</td></tr>
+        <tr><td>02</td><td>ILLEGAL DATA ADDRESS</td><td>แอดเดรสเลื่อนหนึ่ง (0-based/1-based) หรืออ่านข้ามช่วงที่ไม่มี</td></tr>
+        <tr><td>03</td><td>ILLEGAL DATA VALUE</td><td>จำนวนเกิน 125 รีจิสเตอร์ หรือค่าที่เขียนนอกขอบเขต</td></tr>
+        <tr><td>04</td><td>SERVER DEVICE FAILURE</td><td>อุปกรณ์ทำคำสั่งไม่สำเร็จ</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Modbus TCP</b> ตัด CRC ออก (TCP/IP ตรวจความถูกต้องเอง) และเพิ่ม MBAP header: Transaction ID 2 ไบต์ (จับคู่คำถาม–คำตอบ) · Protocol ID = 0 · Length 2 ไบต์ · Unit ID 1 ไบต์ (ใช้เมื่อผ่านเกตเวย์ไปยังสเลฟ RTU) ใช้พอร์ต 502 ส่วน Modbus/TCP Security ห่อด้วย TLS ที่พอร์ต 802</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="builder">
+    <h2 id="builder">เครื่องสร้างเฟรม Modbus กับทรานสมิตเตอร์เสมือน <span class="lv lv-i">กลาง</span></h2>
+    <p>เลือกฟังก์ชัน แอดเดรส และจำนวน แล้วดูคำขอทั้งแบบ RTU และ TCP พร้อมคำตอบจริงจากทรานสมิตเตอร์เสมือน ลองอ่านแอดเดรส 20 (ได้ exception 02) ลองใช้ฟังก์ชัน 01 (exception 01) และลองเขียนค่าเข้ารีจิสเตอร์ 9</p>
+    <div class="sx-modbus" data-fc="3" data-addr="0" data-qty="2"><noscript>ต้องเปิด JavaScript</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="timing">
+    <h2 id="timing">เวลาบนสายและรอบการโพล <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="D3" data-k="character time baud bits per character 11 bits เวลาอักขระ"><p class="tf-n"><b><span class="fid">D3</span> Character time</b> เวลาต่ออักขระ</p>
+        \[ t_\text{char} = \frac{11\ \text{bit}}{\text{baud}} \qquad (1\ \text{start} + 8\ \text{data} + 1\ \text{parity} + 1\ \text{stop}) \]</div>
+<div class="tf" id="D4" data-k="t3.5 t1.5 inter frame silent interval rtu framing ช่องว่างระหว่างเฟรม"><p class="tf-n"><b><span class="fid">D4</span> RTU framing gaps</b> ช่องว่างระหว่างเฟรม</p>
+        \[ t_{3.5} = 3.5\,t_\text{char} \quad t_{1.5} = 1.5\,t_\text{char} \qquad \text{baud} > 19200:\ t_{3.5} = 1.75\ \text{ms},\ t_{1.5} = 0.75\ \text{ms} \]</div>
+<div class="tf" id="D5" data-k="polling cycle time scan time master slaves รอบโพล"><p class="tf-n"><b><span class="fid">D5</span> Polling cycle</b> รอบโพลทั้งบัส</p>
+        \[ T_\text{cycle} \approx \sum_{\text{slaves}}\left[(n_\text{req} + n_\text{resp})\,t_\text{char} + 2t_{3.5} + t_\text{proc}\right] \]</div>
+<div class="wx" id="ex-d-2"><div class="wx-head"><span class="mono">ตัวอย่าง D-2</span><h3>มิเตอร์ 8 ตัว อ่านตัวละ 10 รีจิสเตอร์ ที่ 19200 8E1</h3></div>
+<ol class="steps">
+<li><p>D3: \(t_\text{char} = 11/19200 = 573\ \mu\text{s}\) · D4: \(t_{3.5} = 2.0\ \text{ms}\)</p></li>
+<li><p>คำขอ 8 ไบต์ คำตอบ \(5 + 2(10) = 25\) ไบต์ → บนสาย \(33 \times 0.573 = 18.9\ \text{ms}\)</p></li>
+<li><p>D5 (สเลฟประมวลผล 5 ms): \(18.9 + 4.0 + 5 = 27.9\ \text{ms}\) ต่อตัว → <b>223 ms</b> ต่อรอบ</p></li>
+<li><p>เพิ่มเป็น 115200 baud ได้ 93 ms — ไม่ลดลง 6 เท่าเพราะเวลาประมวลผลและ t3.5 ขั้นต่ำไม่ลดตาม Modbus RTU จึงเหมาะกับการเฝ้าดูและตั้งค่า ไม่ใช่การควบคุมความเร็วสูง</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="rs485" data-vals='{"baud":"19200"}'>19200</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="rs485" data-vals='{"baud":"115200"}'>115200</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="rs485"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="float">
+    <h2 id="float">ค่า 32 บิตบนรีจิสเตอร์ 16 บิต: Float32 และลำดับคำ <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="D6" data-k="ieee 754 float32 single precision sign exponent mantissa byte order abcd cdab ทศนิยม ลำดับไบต์"><p class="tf-n"><b><span class="fid">D6</span> IEEE 754 single precision</b> เลขทศนิยม 32 บิต</p>
+        \[ x = (-1)^s \times 1.f \times 2^{\,e - 127} \qquad \texttt{0x41BE0000} = 1.484375 \times 2^4 = 23.75 \]</div>
+<div class="wx" id="ex-d-3"><div class="wx-head"><span class="mono">ตัวอย่าง D-3</span><h3>อ่านได้ N = 0x0000, N+1 = 0x41BE</h3></div>
+<ol class="steps">
+<li><p>ตีความแบบ ABCD: <code>00 00 41 BE</code> = 2.4 × 10⁻⁴¹ — เล็กจนไม่สมเหตุสมผล</p></li>
+<li><p>ตีความแบบ CDAB (สลับคำ): <code>41 BE 00 00</code> = <b>23.75</b> → อุปกรณ์นี้ส่งคำต่ำก่อน</p></li>
+<li><p>บันทึกลำดับคำไว้ในเอกสาร I/O list ทุกครั้ง เพราะอุปกรณ์รุ่นอื่นของผู้ผลิตเดียวกันอาจไม่เหมือนกัน</p></li>
+</ol></div>
+    <div class="sx-f32" data-v="23.75"><noscript>ต้องเปิด JavaScript</noscript></div>
+    <p>อุปกรณ์บางรุ่นเลี่ยงปัญหานี้ด้วยการส่งจำนวนเต็มที่ขยายสเกล เช่น 2375 แทน 23.75 (×100) ซึ่งต้องรู้ตัวคูณจากคู่มือ และระวังค่าลบ (int16 แบบ two's complement) กับค่าที่เกิน 32767</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="debug">
+    <h2 id="debug">เช็กลิสต์แก้ปัญหา Modbus หน้างาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการ</th><th>ตรวจอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>ไม่ตอบเลย (timeout)</td><td>แอดเดรสสเลฟ · baud/พาริตี/stop ตรงกันทุกตัว · สาย A/B สลับ · มีอุปกรณ์สองตัวใช้แอดเดรสเดียวกัน</td></tr>
+        <tr><td>ตอบบ้าง CRC ผิดบ้าง</td><td>ตัวต้านทานปลายสายขาดหรือมีมากเกินไป · ต่อแบบดาว · ไม่มีไบแอส · สายใกล้สายกำลังหรือไดรฟ์</td></tr>
+        <tr><td>ได้ exception 02</td><td>แอดเดรสเลื่อนหนึ่ง (0-based/1-based) · อ่านเกินช่วงที่อุปกรณ์มี</td></tr>
+        <tr><td>ค่าผิดแบบสุดขั้ว</td><td>ลำดับคำ/ไบต์ของ float · ตัวคูณสเกล · signed/unsigned</td></tr>
+        <tr><td>ช้า ข้อมูลไม่ทันใจ</td><td>รวมการอ่านเป็นบล็อกเดียว (ลดจำนวนคำขอ) · ลด timeout · แบ่งบัสเป็นหลายพอร์ต</td></tr>
+      </tbody>
+    </table></div>
+    <p>ข้อควรรู้ด้านความปลอดภัยไซเบอร์: Modbus แบบดั้งเดิมไม่มีการยืนยันตัวตน ใครเข้าถึงเครือข่ายได้ก็สั่งเขียนค่าได้ ระบบที่ต่ออินเทอร์เน็ตต้องแยกเครือข่ายและใช้แนวทางตามชุดมาตรฐาน IEC 62443 ต่อไป: <a href="/learn/sensors-transducers/fieldbus/">ฟิลด์บัสและ Industrial Ethernet</a> · ดูรีจิสเตอร์ที่อัปเดตสดใน <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li><a href="https://www.modbus.org/specs.php" rel="noopener">Modbus Organization — MODBUS Application Protocol Specification V1.1b3 · MODBUS over Serial Line V1.02 · MODBUS Messaging on TCP/IP Implementation Guide</a></li>
+      <li>TIA/EIA-485-A Electrical Characteristics of Generators and Receivers for Use in Balanced Digital Multipoint Systems</li>
+      <li>IEEE 754-2019 Standard for Floating-Point Arithmetic · IEC 62443 (ชุด) Security for industrial automation and control systems</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

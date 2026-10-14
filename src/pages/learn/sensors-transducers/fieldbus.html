@@ -1,0 +1,159 @@
+<!--meta
+{
+  "title": "ฟิลด์บัสและ Industrial Ethernet: PROFIBUS DP/PA FOUNDATION Fieldbus H1 IO-Link AS-i PROFINET EtherNet/IP EtherCAT และ Ethernet-APL | อาจารย์มด",
+  "h1": "ฟิลด์บัสและ Industrial Ethernet: จาก PROFIBUS ถึง Ethernet-APL",
+  "description": "เปรียบเทียบเครือข่ายภาคสนามสำหรับเซนเซอร์และเครื่องมือวัด: PROFIBUS DP และ PA, FOUNDATION Fieldbus H1 และ HSE ชั้นกายภาพ IEC 61158-2 สาย Type A งบกระแสเซกเมนต์ FISCO, IO-Link (IEC 61131-9), AS-Interface, CANopen, PROFINET, EtherNet/IP, EtherCAT, OPC UA และ Ethernet-APL บน IEEE 802.3cg 10BASE-T1L พร้อมประเทศและองค์กรต้นกำเนิด และเครื่องคำนวณเซกเมนต์",
+  "ogTitle": "ฟิลด์บัส: PROFIBUS FOUNDATION Fieldbus IO-Link Ethernet-APL",
+  "og": {"title": "ฟิลด์บัส · Industrial Ethernet · APL"},
+  "lesson": "sensors-transducers",
+  "sub": "fieldbus",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate", "Professional"],
+  "about": ["Fieldbus", "PROFIBUS", "FOUNDATION Fieldbus", "IO-Link", "PROFINET", "EtherNet/IP", "Ethernet-APL"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "PROFIBUS DP กับ PROFIBUS PA ต่างกันอย่างไร?", "a": "ใช้โปรโตคอลชุดเดียวกันแต่ชั้นกายภาพต่างกัน DP ใช้ RS-485 ความเร็ว 9.6 kbit/s ถึง 12 Mbit/s สำหรับรีโมต I/O ไดรฟ์ และอุปกรณ์ในตู้ ส่วน PA ใช้ MBP ตาม IEC 61158-2 ความเร็ว 31.25 kbit/s จ่ายไฟให้อุปกรณ์บนสายคู่เดียวกันและออกแบบเป็นแบบปลอดภัยในตัวได้ จึงใช้กับทรานสมิตเตอร์ในพื้นที่อันตราย เชื่อมสองแบบด้วย DP/PA coupler"},
+    {"q": "IO-Link ต่างจากฟิลด์บัสอย่างไร?", "a": "IO-Link (IEC 61131-9) เป็นการเชื่อมต่อแบบจุดต่อจุดระหว่างพอร์ตของ IO-Link master กับเซนเซอร์หรือแอคชูเอเตอร์หนึ่งตัว ใช้สายไม่มีชีลด์ 3 เส้นแบบเดียวกับเซนเซอร์ 24 V ทั่วไป ยาวได้ถึง 20 m ไม่ใช่บัส ตัว master เองจึงต่อขึ้นสู่ PROFINET EtherNet/IP หรือเครือข่ายอื่นอีกชั้นหนึ่ง จุดเด่นคือส่งค่าวัด พารามิเตอร์ และการวินิจฉัยของเซนเซอร์ราคาถูกได้ และเปลี่ยนเซนเซอร์แล้วโหลดพารามิเตอร์กลับอัตโนมัติ"},
+    {"q": "Ethernet-APL คืออะไร?", "a": "Ethernet-APL (Advanced Physical Layer) คือชั้นกายภาพอีเทอร์เน็ตแบบสองสายสำหรับอุตสาหกรรมกระบวนการ อิงมาตรฐาน IEEE 802.3cg 10BASE-T1L ความเร็ว 10 Mbit/s ส่งทั้งข้อมูลและไฟเลี้ยงบนคู่สายเดียว ยาว trunk ได้ถึงราว 1000 m และออกแบบให้ปลอดภัยในตัวสำหรับพื้นที่อันตรายได้ ทำให้ทรานสมิตเตอร์ในภาคสนามใช้โปรโตคอลอีเทอร์เน็ตอย่าง PROFINET, EtherNet/IP, HART-IP หรือ OPC UA ได้โดยตรง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.16 ฟิลด์บัส</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.16 · Sensors &amp; Transducers · Fieldbus &amp; Industrial Ethernet</p>
+      <h1>ฟิลด์บัสและ Industrial Ethernet: <em>จาก PROFIBUS ถึง Ethernet-APL</em></h1>
+      <p class="lede">เมื่อหนึ่งคู่สายต่อเครื่องมือวัดได้หลายสิบตัวและส่งทั้งค่าวัด สถานะ และการวินิจฉัย ปริมาณสายในโรงงานลดลงมาก แต่ทศวรรษ 1990 ก็กลายเป็น "สงครามฟิลด์บัส" ระหว่างค่ายยุโรปกับอเมริกา ผลลัพธ์คือมาตรฐาน IEC 61158 ที่รวมหลายโปรโตคอลไว้ด้วยกัน หน้านี้ช่วยให้รู้ว่าแต่ละตัวมาจากไหน เหมาะกับงานแบบใด และคำนวณเซกเมนต์ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#compare">ตารางเปรียบเทียบ</a>
+        <a class="btn btn-ghost btn-sm" href="#profibus">PROFIBUS</a>
+        <a class="btn btn-ghost btn-sm" href="#ff">FOUNDATION Fieldbus</a>
+        <a class="btn btn-ghost btn-sm" href="#segment">คำนวณเซกเมนต์</a>
+        <a class="btn btn-ghost btn-sm" href="#iolink">IO-Link</a>
+        <a class="btn btn-ghost btn-sm" href="#ethernet">Ethernet · APL</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>PROFIBUS (เยอรมนี): DP บน RS-485 ถึง 12 Mbit/s · PA บน MBP 31.25 kbit/s จ่ายไฟบนสาย</li>
+          <li>FOUNDATION Fieldbus H1 (สหรัฐฯ): ชั้นกายภาพเดียวกับ PA แต่รันบล็อก PID ในอุปกรณ์ภาคสนามได้</li>
+          <li>เซกเมนต์: \(V_\text{end} = V_\text{ps} - I_\text{tot}R_\text{trunk} \ge 9\ \text{V}\) · สาย Type A 44 Ω/km · ยาวรวม ≤ 1900 m</li>
+          <li>อนาคต: IO-Link สำหรับเซนเซอร์ในเครื่องจักร และ Ethernet-APL 10 Mbit/s สองสายสำหรับเครื่องมือวัดกระบวนการ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น segment, trunk, manchester, io-link, apl" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">ภาพรวม: ใคร มาจากไหน ใช้ที่ไหน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เครือข่าย</th><th>ต้นกำเนิด · ผู้ดูแล</th><th>ชั้นกายภาพ</th><th>ความเร็ว</th><th>ไฟบนสาย</th><th>งานหลัก</th></tr></thead>
+      <tbody>
+        <tr><td><b>Modbus RTU/TCP</b></td><td>Modicon สหรัฐฯ 1979 · Modbus Organization</td><td>RS-485 · Ethernet</td><td>≤ 115.2 kbit/s · 100 Mbit/s</td><td>ไม่</td><td>มิเตอร์ อินเวอร์เตอร์ อุปกรณ์ทั่วไป</td></tr>
+        <tr><td><b>PROFIBUS DP</b></td><td>เยอรมนี ปลายทศวรรษ 1980 · PI (Karlsruhe)</td><td>RS-485</td><td>9.6 kbit/s – 12 Mbit/s</td><td>ไม่</td><td>รีโมต I/O ไดรฟ์ งานโรงงานผลิต</td></tr>
+        <tr><td><b>PROFIBUS PA</b></td><td>เยอรมนี · PI</td><td>MBP (IEC 61158-2)</td><td>31.25 kbit/s</td><td>ใช่ · Ex i</td><td>ทรานสมิตเตอร์ วาล์ว ในกระบวนการ</td></tr>
+        <tr><td><b>FOUNDATION Fieldbus H1</b></td><td>สหรัฐฯ 1994 · FieldComm Group</td><td>MBP (IEC 61158-2)</td><td>31.25 kbit/s</td><td>ใช่ · Ex i</td><td>กระบวนการ ควบคุมในภาคสนาม</td></tr>
+        <tr><td><b>HART</b></td><td>สหรัฐฯ กลางทศวรรษ 1980 · FieldComm Group</td><td>FSK บน 4–20 mA</td><td>1.2 kbit/s</td><td>ใช่</td><td>ตั้งค่าและวินิจฉัยทรานสมิตเตอร์</td></tr>
+        <tr><td><b>AS-Interface</b></td><td>เยอรมนี ทศวรรษ 1990 · AS-International</td><td>สายแบนสองเส้น</td><td>รอบ ≈ 5 ms</td><td>ใช่</td><td>สวิตช์ เซนเซอร์ไบนารี</td></tr>
+        <tr><td><b>CANopen · DeviceNet</b></td><td>CAN จาก Bosch เยอรมนี · CiA / ODVA สหรัฐฯ</td><td>CAN (ISO 11898)</td><td>≤ 1 Mbit/s</td><td>DeviceNet ใช่</td><td>เครื่องจักร ยานยนต์ หุ่นยนต์</td></tr>
+        <tr><td><b>IO-Link</b></td><td>กลุ่มผู้ผลิตยุโรป 2006 · IEC 61131-9</td><td>จุดต่อจุด 3 สาย ≤ 20 m</td><td>4.8 / 38.4 / 230.4 kbaud</td><td>ใช่ (24 V)</td><td>เซนเซอร์อัจฉริยะในเครื่องจักร</td></tr>
+        <tr><td><b>PROFINET</b></td><td>เยอรมนี · PI</td><td>Ethernet (+ APL)</td><td>100 Mbit/s ขึ้นไป</td><td>ผ่าน APL</td><td>โรงงานและกระบวนการ เวลาจริง</td></tr>
+        <tr><td><b>EtherNet/IP</b></td><td>สหรัฐฯ · ODVA</td><td>Ethernet (+ APL)</td><td>100 Mbit/s ขึ้นไป</td><td>ผ่าน APL</td><td>PLC กลุ่ม CIP</td></tr>
+        <tr><td><b>EtherCAT</b></td><td>Beckhoff เยอรมนี 2003 · ETG</td><td>Ethernet</td><td>100 Mbit/s</td><td>ไม่</td><td>โมชันคอนโทรล รอบระดับไมโครวินาที</td></tr>
+        <tr><td><b>Ethernet-APL</b></td><td>ความร่วมมือ PI · ODVA · FieldComm · OPC Foundation (ออกสู่ตลาดราว 2021–2022)</td><td>IEEE 802.3cg 10BASE-T1L</td><td>10 Mbit/s</td><td>ใช่ · Ex i</td><td>ทรานสมิตเตอร์ยุคใหม่</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sx-src">รายละเอียดประเทศและองค์กรของมาตรฐานทั้งหมดอยู่ใน <a href="/learn/sensors-transducers/electrical-standards/">ฐานข้อมูลมาตรฐาน</a> ส่วนลำดับเหตุการณ์อยู่ใน <a href="/learn/sensors-transducers/history-technology/">ประวัติและวิวัฒนาการ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="profibus">
+    <h2 id="profibus">PROFIBUS DP และ PA <span class="lv lv-i">กลาง</span></h2>
+    <p>PROFIBUS (Process Field Bus) เริ่มจากโครงการวิจัยที่รัฐบาลเยอรมนีสนับสนุนร่วมกับบริษัทและสถาบันจำนวนมากตั้งแต่ปี 1987 กลายเป็นมาตรฐานเยอรมัน (DIN 19245) ยุโรป (EN 50170) และต่อมาอยู่ใน IEC 61158/61784 ผู้ดูแลคือ PROFIBUS &amp; PROFINET International (PI) ที่เมือง Karlsruhe</p>
+    <ul>
+      <li><b>DP (Decentralized Periphery)</b>: RS-485 ความเร็วเลือกได้ตั้งแต่ 9.6 kbit/s (ระยะได้ราว 1200 m ต่อเซกเมนต์) จนถึง 12 Mbit/s (ราว 100 m) แอดเดรส 0–125 ไม่เกิน 32 สถานีต่อเซกเมนต์ถ้าไม่มี repeater มาสเตอร์ส่งโทเคนต่อกันและแต่ละมาสเตอร์โพลสเลฟของตัวเองแบบวนรอบ คอนเน็กเตอร์ DB9 สีม่วงพร้อมสวิตช์ terminator ในตัวคือภาพที่คุ้นตา</li>
+      <li><b>PA (Process Automation)</b>: ชั้นกายภาพ MBP (Manchester coded, Bus Powered) ตาม IEC 61158-2 ที่ 31.25 kbit/s อุปกรณ์รับไฟจากสายและสื่อสารด้วยการมอดูเลตกระแส จึงเดินสายเหมือนลูป 4–20 mA เดิมแต่ต่อหลายตัว และออกแบบเป็นแบบปลอดภัยในตัวตามแนวคิด FISCO ได้</li>
+      <li><b>DP/PA coupler หรือ link</b> แปลงระหว่างสองความเร็ว ให้ PLC ตัวเดียวคุมทั้งเครื่องจักรและเครื่องมือวัด</li>
+    </ul>
+<div class="tf" id="B1" data-k="manchester coding mbp iec 61158-2 31.25 kbit bit time แมนเชสเตอร์"><p class="tf-n"><b><span class="fid">B1</span> MBP physical layer (IEC 61158-2)</b> ชั้นกายภาพ MBP</p>
+        \[ 31.25\ \text{kbit/s} \;\Rightarrow\; T_\text{bit} = 32\ \mu\text{s} \qquad \text{Manchester: ทุกบิตมีขอบเปลี่ยนกลางบิต → ไม่มีค่าเฉลี่ย DC} \]</div>
+    <p>การเข้ารหัสแมนเชสเตอร์ทำให้สัญญาณข้อมูลมีค่าเฉลี่ยเป็นศูนย์ ไฟ DC ที่เลี้ยงอุปกรณ์จึงอยู่ร่วมกับข้อมูลบนสายเดียวได้ — หลักการเดียวกับ HART ที่ซ้อนบน 4–20 mA</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ff">
+    <h2 id="ff">FOUNDATION Fieldbus: ย้ายการควบคุมไปที่ภาคสนาม <span class="lv lv-i">กลาง</span></h2>
+    <p>Fieldbus Foundation ก่อตั้งในสหรัฐฯ ปี 1994 จากการรวมกลุ่มที่แข่งขันกันก่อนหน้า ปี 2015 รวมกับ HART Communication Foundation เป็น FieldComm Group จุดต่างจาก PROFIBUS PA คือแนวคิด <b>function block</b>: ทรานสมิตเตอร์มีบล็อก AI วาล์วมีบล็อก AO และ PID ซึ่งทำงานบนอุปกรณ์ใดก็ได้ในเซกเมนต์ ตัวจัดตาราง LAS (Link Active Scheduler) กำหนดเวลาส่งข้อมูลแต่ละรอบ (macrocycle) ลูปควบคุมจึงทำงานต่อได้แม้ DCS หยุดสื่อสาร</p>
+    <figure class="xfig"><!--FIG:sx-fieldbus-topo--><svg class="xf" viewBox="0 0 780 260" role="img" aria-label="โทโพโลยีฟิลด์บัสแบบ trunk และ spur: แหล่งจ่ายพร้อมตัวปรับสภาพ เทอร์มิเนเตอร์สองปลาย และกล่องแยกสายไปยังอุปกรณ์"><defs><marker id="sx-fieldbus-topo-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxb" x="20" y="60" width="120" height="60" rx="8"/><text x="80" y="85" class="xf-h" text-anchor="middle">DCS / H1 card</text><text x="80" y="103" class="xf-k" text-anchor="middle">หรือ DP/PA coupler</text><rect class="xf-boxc" x="20" y="140" width="120" height="46" rx="8"/><text x="80" y="160" class="xf-k" text-anchor="middle">แหล่งจ่าย + power</text><text x="80" y="176" class="xf-k" text-anchor="middle">conditioner</text><line class="xf-a" x1="140" y1="100" x2="600" y2="100"/><line class="xf-ln" x1="140" y1="160" x2="170" y2="160"/><line class="xf-ln" x1="170" y1="160" x2="170" y2="100"/><rect class="xf-box" x="160" y="92" width="16" height="16" rx="2"/><text x="168" y="86" class="xf-k" text-anchor="middle">T</text><text x="370" y="92" class="xf-k" text-anchor="middle">trunk สายคู่บิดเกลียวมีชีลด์ (31.25 kbit/s + ไฟ DC บนสายเดียว)</text><rect class="xf-box" x="270" y="100" width="60" height="30" rx="4"/><text x="300" y="120" class="xf-k" text-anchor="middle">JB</text><line class="xf-ln" x1="260" y1="130" x2="260" y2="190"/><circle class="xf-boxa" cx="260" cy="205" r="15"/><text x="260" y="209" class="xf-k" text-anchor="middle">PT</text><line class="xf-ln" x1="300" y1="130" x2="300" y2="190"/><circle class="xf-boxa" cx="300" cy="205" r="15"/><text x="300" y="209" class="xf-k" text-anchor="middle">FT</text><line class="xf-ln" x1="340" y1="130" x2="340" y2="190"/><circle class="xf-boxa" cx="340" cy="205" r="15"/><text x="340" y="209" class="xf-k" text-anchor="middle">TT</text><rect class="xf-box" x="490" y="100" width="60" height="30" rx="4"/><text x="520" y="120" class="xf-k" text-anchor="middle">JB</text><line class="xf-ln" x1="480" y1="130" x2="480" y2="190"/><circle class="xf-boxa" cx="480" cy="205" r="15"/><text x="480" y="209" class="xf-k" text-anchor="middle">LT</text><line class="xf-ln" x1="520" y1="130" x2="520" y2="190"/><circle class="xf-boxa" cx="520" cy="205" r="15"/><text x="520" y="209" class="xf-k" text-anchor="middle">AT</text><line class="xf-ln" x1="560" y1="130" x2="560" y2="190"/><circle class="xf-boxa" cx="560" cy="205" r="15"/><text x="560" y="209" class="xf-k" text-anchor="middle">FV</text><rect class="xf-box" x="600" y="92" width="16" height="16" rx="2"/><text x="608" y="86" class="xf-k" text-anchor="middle">T</text><text x="640" y="104" class="xf-k">เทอร์มิเนเตอร์</text><text x="390" y="246" class="xf-m" text-anchor="middle">spur ต่อออกจากกล่องแยกสาย (มักมีลิมิตกระแสลัดวงจรต่อ spur) · ความยาวรวมสาย Type A ≤ 1900 m</text></svg><!--/FIG--><figcaption>รูป 1 · โทโพโลยีแบบ trunk และ spur ที่ใช้กับ H1 และ PROFIBUS PA</figcaption></figure>
+    <ul>
+      <li><b>สาย Type A</b>: คู่บิดเกลียวมีชีลด์ประมาณ 18 AWG อิมพีแดนซ์ 100 Ω ที่ 31.25 kHz ความต้านทานลูป 44 Ω/km ความยาวรวม trunk + spur ไม่เกิน 1900 m</li>
+      <li><b>เทอร์มิเนเตอร์</b>: สองตัวที่ปลายทั้งสองของ trunk (RC 100 Ω อนุกรม 1 µF) ไม่มีหรือมีเกินทำให้สื่อสารผิดพลาดเป็นระยะ</li>
+      <li><b>แหล่งจ่ายต้องมี power conditioner</b> (อิมพีแดนซ์สูงที่ความถี่สัญญาณ) แหล่งจ่าย DC ธรรมดาจะลัดวงจรสัญญาณทิ้ง</li>
+      <li><b>จำนวนอุปกรณ์</b>: ทฤษฎีสูงสุด 32 ตัว แต่ในทางปฏิบัติจำกัดด้วยงบกระแส ความเร็วรอบ และ Ex มักออกแบบ 8–16 ตัวต่อเซกเมนต์</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="segment">
+    <h2 id="segment">คำนวณเซกเมนต์: กระแส แรงดันปลายสาย และความยาว <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="B2" data-k="segment voltage drop trunk current fieldbus power เซกเมนต์ แรงดันตก"><p class="tf-n"><b><span class="fid">B2</span> Segment voltage at the far end</b> แรงดันที่ปลายเซกเมนต์</p>
+        \[ V_\text{end} = V_\text{ps} - I_\text{tot}\,r_\text{loop}\,L \;\ge\; V_\text{dev,min} \approx 9\ \text{V} \]</div>
+<div class="tf" id="B3" data-k="maximum trunk length fieldbus segment design ความยาวสูงสุด"><p class="tf-n"><b><span class="fid">B3</span> Maximum trunk length by voltage</b> ความยาวสูงสุดตามแรงดัน</p>
+        \[ L_\text{max} = \frac{V_\text{ps} - V_\text{dev,min}}{I_\text{tot}\,r_\text{loop}} \qquad \text{และ } L \le 1900\ \text{m (รวม spur)} \]</div>
+<div class="wx" id="ex-b-1"><div class="wx-head"><span class="mono">ตัวอย่าง B-1</span><h3>เซกเมนต์ H1: อุปกรณ์ 12 ตัว ตัวละ 20 mA แหล่งจ่าย 28 V trunk 600 m</h3></div>
+<ol class="steps">
+<li><p>กระแสรวมเผื่อ 20 %: \(12 \times 20 \times 1.2 = 288\ \text{mA}\)</p></li>
+<li><p>B2: \(28 - 0.288 \times 44 \times 0.6 = 20.4\ \text{V}\) ≥ 9 V ผ่าน</p></li>
+<li><p>B3: \(L_\text{max} = 19/(0.288 \times 44) = 1.50\ \text{km}\) — ข้อจำกัดด้านแรงดันยังหลวม แต่ถ้าเป็นเซกเมนต์ Ex แหล่งจ่ายแบบปลอดภัยในตัวให้กระแสได้น้อยกว่ามาก จำนวนอุปกรณ์จะถูกจำกัดด้วยกระแสก่อน</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="fbseg" data-vals='{"nd":"12","trunk":"600"}'>12 อุปกรณ์</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="fbseg" data-vals='{"nd":"16","trunk":"1200"}'>16 อุปกรณ์ 1.2 km</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="fbseg"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="iolink">
+    <h2 id="iolink">IO-Link และ AS-Interface: ดิจิทัลถึงเซนเซอร์ตัวเล็กที่สุด <span class="lv lv-i">กลาง</span></h2>
+    <p><b>IO-Link</b> (IEC 61131-9 ชื่อทางการ SDCI) ไม่ใช่บัส แต่เป็นการเชื่อมต่อจุดต่อจุดระหว่างพอร์ตของ IO-Link master กับเซนเซอร์หนึ่งตัว ใช้คอนเน็กเตอร์ M12 และสายสามเส้นไม่มีชีลด์แบบเดียวกับพร็อกซิมิตีสวิตช์ทั่วไป (ยาวได้ถึง 20 m) ความเร็ว COM1 4.8, COM2 38.4 และ COM3 230.4 kbaud สิ่งที่ได้คือค่าวัดหลายตัว พารามิเตอร์ และเหตุการณ์วินิจฉัยจากเซนเซอร์ราคาไม่แพง ไฟล์คำอธิบาย <b>IODD</b> บอก master ว่าเซนเซอร์มีข้อมูลอะไร และเมื่อเปลี่ยนเซนเซอร์ใหม่ master โหลดพารามิเตอร์คืนให้อัตโนมัติ</p>
+    <p><b>AS-Interface</b> (IEC 62026-2) ใช้สายแบนสีเหลืองสองเส้นที่เสียบด้วยการเจาะฉนวน ส่งทั้งไฟและข้อมูลสำหรับสวิตช์และวาล์วไบนารีจำนวนมากในเครื่องจักรและสายพาน งานที่ต้องการเพียงสถานะเปิด/ปิดจึงลดสายได้มาก</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ethernet">
+    <h2 id="ethernet">Industrial Ethernet, OPC UA และ Ethernet-APL <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>อีเทอร์เน็ตธรรมดาไม่รับประกันเวลา ผู้ผลิตจึงเพิ่มกลไกเวลาจริงต่างกัน: PROFINET แยกระดับ RT และ IRT, EtherNet/IP ใช้ CIP บน TCP/UDP, EtherCAT ให้เฟรมเดียววิ่งผ่านทุกอุปกรณ์และแต่ละตัวอ่าน/เขียนขณะเฟรมผ่าน (processing on the fly) จึงได้รอบระดับสิบไมโครวินาทีสำหรับโมชันคอนโทรล แนวโน้มปัจจุบันคือ TSN (Time-Sensitive Networking ชุด IEEE 802.1) ที่ทำให้หลายโปรโตคอลแชร์สายเดียวกันได้</p>
+    <p><b>OPC UA</b> (IEC 62541, OPC Foundation) ไม่ใช่ฟิลด์บัส แต่เป็นแบบจำลองข้อมูลและการสื่อสารที่ปลอดภัยระหว่างอุปกรณ์ เกตเวย์ และระบบ IT ใช้ทั้งแบบ client/server และ publish/subscribe — เป็นภาษากลางที่ทำให้ข้อมูลเซนเซอร์ "มีความหมาย" (หน่วย ช่วง สถานะ) เมื่อขึ้นไปถึงคลาวด์</p>
+    <p><b>Ethernet-APL</b> แก้ปัญหาสุดท้ายของโรงงานกระบวนการ: อีเทอร์เน็ตทั่วไปต้องใช้สาย 4–8 เส้น ระยะ 100 m และไม่ปลอดภัยในตัว APL อิง IEEE 802.3cg (10BASE-T1L, 2019) ใช้สายคู่เดียวแบบ Type A เดิม 10 Mbit/s ส่งไฟและข้อมูล trunk ได้ราว 1000 m spur ราว 200 m และมีแนวคิด Ex สำหรับสองสาย (2-WISE, IEC TS 60079-47) ผลคือทรานสมิตเตอร์ในพื้นที่อันตรายพูด PROFINET, EtherNet/IP, HART-IP หรือ OPC UA ได้ตรงถึงระบบควบคุม</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกอย่างไรในโครงการจริง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>เริ่มจากระบบควบคุมที่มี</b>: PLC/DCS ยี่ห้อใดถนัดโปรโตคอลใด (ค่ายยุโรปมักเป็น PROFIBUS/PROFINET ค่ายสหรัฐฯ มักเป็น EtherNet/IP หรือ FOUNDATION Fieldbus)</li>
+      <li><b>พื้นที่อันตรายหรือไม่</b>: ต้องการแบบปลอดภัยในตัว → 4–20 mA/HART, PROFIBUS PA, FF H1 หรือ Ethernet-APL</li>
+      <li><b>ต้องการความเร็วแค่ไหน</b>: ลูปกระบวนการ (วินาที) ใช้ได้ทุกแบบ · โมชันคอนโทรล (มิลลิวินาที) ต้อง Industrial Ethernet แบบเวลาจริง</li>
+      <li><b>ใครดูแลหลังส่งมอบ</b>: ทักษะของช่างในโรงงานและเครื่องมือวินิจฉัยสำคัญพอ ๆ กับสเปก ระบบที่ง่ายกว่ามักชนะในระยะยาว</li>
+      <li><b>ข้อมูลไปไหนต่อ</b>: ถ้าต้องการวิเคราะห์ข้อมูลระดับองค์กร วางทาง OPC UA หรือ MQTT ไว้ตั้งแต่แรก — ดู <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะและ IIoT</a></li>
+    </ol>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>IEC 61158 (ชุด) Industrial communication networks — Fieldbus specifications · IEC 61784 (ชุด) Profiles</li>
+      <li>IEC 61131-9 Single-drop digital communication interface for small sensors and actuators (SDCI, IO-Link) · IEC 62026-2 AS-i</li>
+      <li>IEEE 802.3cg-2019 (10BASE-T1L) · IEC TS 60079-47 2-WISE · <a href="https://www.ethernet-apl.org/" rel="noopener">Ethernet-APL</a></li>
+      <li><a href="https://www.profibus.com/" rel="noopener">PROFIBUS &amp; PROFINET International (PI)</a> · <a href="https://www.fieldcommgroup.org/" rel="noopener">FieldComm Group</a> · <a href="https://opcfoundation.org/" rel="noopener">OPC Foundation</a> · IEC 62541 OPC UA</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

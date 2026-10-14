@@ -1,0 +1,154 @@
+<!--meta
+{
+  "title": "เซนเซอร์วัดกระแสและแรงดัน: ชันต์ หม้อแปลงกระแส CT IEC 61869 ภาระ VA คลาส 0.5 5P10 ฮอลล์ลูปปิด โรโกวสกี และการวัดแรงดันแบบแยกโดดเดี่ยว | อาจารย์มด",
+  "h1": "เซนเซอร์วัดกระแสและแรงดัน",
+  "description": "การวัดกระแสและแรงดันสำหรับมิเตอร์ ระบบป้องกัน และอิเล็กทรอนิกส์กำลัง: ตัวต้านทานชันต์และการต่อ Kelvin หม้อแปลงกระแส (CT) ตาม IEC 61869-2 อัตราส่วน ภาระ VA คลาสวัด 0.2S 0.5 และคลาสป้องกัน 5P10 อันตรายของการเปิดวงจรทุติยภูมิ เซนเซอร์ฮอลล์แบบลูปเปิดและลูปปิด ฟลักซ์เกต ขดโรโกวสกี ตัวแบ่งแรงดัน VT และแอมป์แยกโดดเดี่ยว พร้อมเครื่องคำนวณ",
+  "ogTitle": "วัดกระแส: ชันต์ CT ฮอลล์ โรโกวสกี",
+  "og": {"title": "วัดกระแส · CT · ฮอลล์ · โรโกวสกี"},
+  "lesson": "sensors-transducers",
+  "sub": "current-voltage-sensing",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Current sensing", "Shunt resistor", "Current transformer", "Hall effect sensor", "Rogowski coil", "Voltage transformer"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "ทำไมห้ามเปิดวงจรด้านทุติยภูมิของ CT ขณะมีกระแส?", "a": "CT ถูกขับด้วยกระแสด้านปฐมภูมิ ขดทุติยภูมิพยายามส่งกระแส Ip/N ออกไปเสมอ ถ้าวงจรถูกเปิด อิมพีแดนซ์โหลดกลายเป็นอนันต์ แกนเหล็กจะอิ่มตัวและเกิดแรงดันพีคสูงมากที่ขั้ว อาจถึงหลายกิโลโวลต์ อันตรายต่อชีวิตและทำให้ฉนวนเสียหาย ก่อนถอดมิเตอร์ต้องลัดวงจรขั้วทุติยภูมิด้วยเทอร์มินัลลัดวงจร (shorting terminal) เสมอ"},
+    {"q": "CT คลาส 0.5 กับ 5P10 ต่างกันอย่างไร?", "a": "คลาส 0.5 เป็น CT สำหรับวัด ความคลาดอัตราส่วนไม่เกิน ±0.5 % ที่กระแสพิกัดและภาระพิกัด และตั้งใจให้อิ่มตัวเร็วเมื่อเกิดลัดวงจรเพื่อปกป้องมิเตอร์ ส่วน 5P10 เป็น CT สำหรับป้องกัน ความคลาดรวมไม่เกิน 5 % จนถึง 10 เท่าของกระแสพิกัด เพื่อให้รีเลย์เห็นกระแสลัดวงจรได้ถูกต้อง ใช้แทนกันไม่ได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.12 กระแส · แรงดัน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.12 · Sensors &amp; Transducers · Current &amp; Voltage Sensing</p>
+      <h1>เซนเซอร์วัดกระแสและแรงดัน: <em>ชันต์ CT ฮอลล์ และโรโกวสกี</em></h1>
+      <p class="lede">สำหรับวิศวกรไฟฟ้า กระแสและแรงดันคือปริมาณที่วัดบ่อยที่สุด ตั้งแต่มิเตอร์ค่าไฟ รีเลย์ป้องกัน ไปจนถึงลูปควบคุมกระแสของคอนเวอร์เตอร์ที่ต้องเร็วระดับไมโครวินาที แต่ละงานต้องการคุณสมบัติต่างกัน: ความแม่น แบนด์วิดท์ การแยกโดดเดี่ยว และช่วงกระแสลัดวงจร</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#compare">เปรียบเทียบ</a>
+        <a class="btn btn-ghost btn-sm" href="#shunt">ชันต์</a>
+        <a class="btn btn-ghost btn-sm" href="#ct">CT</a>
+        <a class="btn btn-ghost btn-sm" href="#hall">ฮอลล์</a>
+        <a class="btn btn-ghost btn-sm" href="#rogowski">โรโกวสกี</a>
+        <a class="btn btn-ghost btn-sm" href="#voltage">แรงดัน</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น shunt, burden, ct ratio, hall, rogowski, divider" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">สี่เทคโนโลยีหลักในภาพเดียว <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:sx-current-sensors--><svg class="xf" viewBox="0 0 780 240" role="img" aria-label="เซนเซอร์วัดกระแส: ชันต์ หม้อแปลงกระแส ฮอลล์แบบลูปปิด และขดโรโกวสกี"><defs><marker id="sx-current-sensors-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="95" y="22" class="xf-h" text-anchor="middle">ชันต์ (Kelvin 4 ขั้ว)</text><line class="xf-ln" x1="20" y1="120" x2="60" y2="120" marker-end="url(#sx-current-sensors-ah)"/><rect class="xf-metal" x="60" y="108" width="70" height="24" rx="3"/><line class="xf-ln" x1="130" y1="120" x2="170" y2="120" marker-end="url(#sx-current-sensors-ah)"/><line class="xf-a" x1="72" y1="108" x2="72" y2="70"/><line class="xf-a" x1="118" y1="108" x2="118" y2="70"/><text x="95" y="64" class="xf-ta" text-anchor="middle">V = I·R</text><text x="95" y="160" class="xf-k" text-anchor="middle">DC/AC · ไม่แยกโดดเดี่ยว</text><text x="95" y="176" class="xf-k" text-anchor="middle">มีกำลังสูญเสีย I²R</text><text x="285" y="22" class="xf-h" text-anchor="middle">หม้อแปลงกระแส (CT)</text><circle class="xf-metal" cx="285" cy="120" r="42"/><circle class="xf-bg" cx="285" cy="120" r="26"/><line class="xf-b" x1="285" y1="50" x2="285" y2="190" marker-end="url(#sx-current-sensors-ah)"/><text x="292" y="60" class="xf-tb">I_p</text><line class="xf-a" x1="324.2" y1="140" x2="306.4" y2="130.9"/><line class="xf-a" x1="314.4" y1="152.7" x2="301.1" y2="137.8"/><line class="xf-a" x1="300.8" y1="161.1" x2="293.6" y2="142.4"/><line class="xf-a" x1="285" y1="164" x2="285" y2="144"/><line class="xf-a" x1="269.2" y1="161.1" x2="276.4" y2="142.4"/><line class="xf-a" x1="255.6" y1="152.7" x2="268.9" y2="137.8"/><line class="xf-a" x1="245.8" y1="140" x2="263.6" y2="130.9"/><text x="285" y="208" class="xf-k" text-anchor="middle">AC เท่านั้น · I_s = I_p/N</text><text x="285" y="224" class="xf-k" text-anchor="middle">ห้ามเปิดวงจรทุติยภูมิ</text><text x="475" y="22" class="xf-h" text-anchor="middle">ฮอลล์ลูปปิด</text><path class="xf-metal" d="M 435 80 L 515 80 L 515 160 L 435 160 L 435 128 M 435 112 L 435 80"/><rect class="xf-boxa" x="428" y="112" width="14" height="16" rx="2"/><text x="420" y="124" class="xf-k" text-anchor="end">H</text><line class="xf-b" x1="475" y1="50" x2="475" y2="190" marker-end="url(#sx-current-sensors-ah)"/><line class="xf-a" x1="515" y1="92" x2="525" y2="96"/><line class="xf-a" x1="515" y1="106" x2="525" y2="110"/><line class="xf-a" x1="515" y1="120" x2="525" y2="124"/><line class="xf-a" x1="515" y1="134" x2="525" y2="138"/><line class="xf-a" x1="515" y1="148" x2="525" y2="152"/><text x="475" y="208" class="xf-k" text-anchor="middle">DC ถึง ~200 kHz · แยกโดดเดี่ยว</text><text x="475" y="224" class="xf-k" text-anchor="middle">ชดเชยฟลักซ์ให้เป็นศูนย์</text><text x="675" y="22" class="xf-h" text-anchor="middle">ขดโรโกวสกี</text><path class="xf-a" d="M723 120 L726.8 121.6 L728.8 123.4 L728 125 L724.7 126.3 L720.5 127.2 L717.1 128.1 L716 129.2 L717.6 131 L720.9 133.4 L724.1 136.1 L725.6 138.3 L724.5 139.7 L721.1 140.1 L716.8 139.8 L713.2 139.6 L711.8 140.3 L712.7 142.4 L715.1 145.6 L717.5 149.1 L718.4 151.8 L717.1 152.9 L713.8 152.3 L709.7 150.8 L706.3 149.6 L704.6 149.8 L704.8 152 L706.2 155.7 L707.6 159.7 L707.8 162.6 L706.2 163.4 L703.3 162 L699.8 159.5 L696.8 157.3 L695 156.9 L694.6 159 L694.9 162.9 L695.1 167.1 L694.5 170.1 L692.8 170.5 L690.4 168.4 L687.8 165 L685.5 162 L683.9 161.1 L682.9 162.8 L682 166.5 L681 170.7 L679.7 173.5 L678 173.5 L676.2 171 L674.6 167 L673.3 163.4 L672 161.9 L670.6 163.1 L668.7 166.4 L666.6 170.2 L664.5 172.6 L662.8 172.3 L661.8 169.4 L661.4 165.2 L661.2 161.3 L660.4 159.4 L658.7 160 L656 162.7 L652.9 165.7 L650.2 167.4 L648.6 166.8 L648.4 163.9 L649.2 159.7 L650.1 155.9 L649.9 153.7 L648.2 153.8 L645 155.5 L641.1 157.5 L638 158.5 L636.5 157.6 L637.1 154.8 L639 151 L640.9 147.5 L641.5 145.3 L639.9 144.8 L636.4 145.5 L632.1 146.4 L628.7 146.6 L627.5 145.3 L628.7 142.8 L631.6 139.7 L634.4 136.9 L635.7 134.9 L634.4 134 L630.9 133.6 L626.6 133.3 L623.2 132.5 L622.2 131 L624 128.9 L627.6 126.8 L631.2 124.9 L633 123.3 L632.2 122 L629 120.7 L625 119.2 L621.9 117.5 L621.3 115.7 L623.4 114.3 L627.4 113.2 L631.4 112.4 L633.8 111.4 L633.5 110 L630.9 107.9 L627.4 105.3 L624.8 102.7 L624.6 100.8 L626.9 100 L631 100 L635.2 100.4 L637.8 100.2 L638 98.8 L636.2 96.1 L633.6 92.6 L631.7 89.4 L631.9 87.5 L634.4 87.2 L638.3 88.4 L642.2 89.9 L644.8 90.5 L645.5 89.3 L644.6 86.3 L643 82.2 L642.1 78.6 L642.8 76.7 L645.1 77 L648.5 79.2 L651.8 81.8 L654.3 83.2 L655.3 82.4 L655.3 79.2 L655 74.9 L655.1 71.1 L656.2 69.4 L658.3 70.3 L660.9 73.2 L663.4 76.7 L665.4 78.8 L666.7 78.4 L667.6 75.5 L668.4 71.3 L669.6 67.6 L671.2 66.1 L672.9 67.5 L674.6 71 L676.1 75 L677.3 77.7 L678.7 77.8 L680.3 75.4 L682.3 71.6 L684.5 68.3 L686.4 67.2 L687.8 68.9 L688.4 72.6 L688.7 76.9 L689.1 80 L690.3 80.6 L692.5 78.8 L695.5 75.8 L698.5 73.2 L700.8 72.5 L701.6 74.4 L701.3 78.2 L700.3 82.4 L699.8 85.5 L700.7 86.5 L703.3 85.5 L707 83.4 L710.6 81.8 L713 81.7 L713.4 83.6 L712.1 87.1 L710 90.9 L708.6 93.8 L709 95.1 L711.7 94.9 L715.8 94 L719.8 93.3 L722.2 93.9 L722.2 95.8 L720 98.7 L716.9 101.8 L714.7 104.2 L714.6 105.7 L717.1 106.2 L721.3 106.5 L725.3 107 L727.6 108.2 L727.2 110 L724.3 112.1 L720.5 114.2 L717.6 116 L717 117.3 L719.1 118.6 L723 120"/><line class="xf-b" x1="675" y1="50" x2="675" y2="190" marker-end="url(#sx-current-sensors-ah)"/><text x="675" y="208" class="xf-k" text-anchor="middle">แกนอากาศ · v = M·di/dt</text><text x="675" y="224" class="xf-k" text-anchor="middle">ต้องอินทิเกรต · ไม่อิ่มตัว</text></svg><!--/FIG--><figcaption>รูป 1 · ชันต์วัดแรงดันตกตรง ๆ ส่วนอีกสามแบบวัดสนามแม่เหล็กรอบตัวนำ จึงแยกโดดเดี่ยวจากวงจรกำลังได้</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>คุณสมบัติ</th><th>ชันต์</th><th>CT</th><th>ฮอลล์ลูปปิด</th><th>โรโกวสกี</th></tr></thead>
+      <tbody>
+        <tr><td>DC</td><td>ได้</td><td>ไม่ได้</td><td>ได้</td><td>ไม่ได้</td></tr>
+        <tr><td>แยกโดดเดี่ยว</td><td>ไม่ (ต้องมีแอมป์แยก)</td><td>ได้</td><td>ได้</td><td>ได้</td></tr>
+        <tr><td>แบนด์วิดท์</td><td>สูงมาก (จำกัดด้วยค่าเหนี่ยวนำแฝง)</td><td>50/60 Hz และฮาร์มอนิก</td><td>DC ถึงราว 100–200 kHz</td><td>สูง (Hz ถึง MHz)</td></tr>
+        <tr><td>อิ่มตัว</td><td>ไม่ (แต่ร้อน)</td><td>ได้ที่กระแสสูง/DC offset</td><td>ได้เมื่อเกินพิกัด</td><td>ไม่ (แกนอากาศ)</td></tr>
+        <tr><td>ใช้ที่ไหน</td><td>แบตเตอรี่ คอนเวอร์เตอร์ มิเตอร์ DC</td><td>มิเตอร์ค่าไฟ รีเลย์ป้องกัน</td><td>อินเวอร์เตอร์ ไดรฟ์ โซลาร์</td><td>วัดกระแสใหญ่ ชั่วคราว คุณภาพไฟฟ้า</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="shunt">
+    <h2 id="shunt">ตัวต้านทานชันต์และการต่อ Kelvin <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="V1" data-k="shunt resistor ohm law sense resistor ชันต์ ตัวต้านทานวัดกระแส"><p class="tf-n"><b><span class="fid">V1</span> Shunt</b> ชันต์</p>
+        \[ R_\text{sh} = \frac{V_\text{FS}}{I_\text{FS}} \qquad P = I^2 R_\text{sh} = I\,V_\text{FS} \]</div>
+<div class="tf" id="V2" data-k="temperature coefficient tcr shunt drift ppm สัมประสิทธิ์อุณหภูมิ"><p class="tf-n"><b><span class="fid">V2</span> Thermal drift</b> ความคลาดจากอุณหภูมิ</p>
+        \[ \frac{\Delta R}{R} = TCR \times \Delta T \]</div>
+<div class="wx" id="ex-v-1"><div class="wx-head"><span class="mono">ตัวอย่าง V-1</span><h3>ชันต์ 50 A / 75 mV ร้อนขึ้น 40 °C TCR 20 ppm/°C</h3></div>
+<ol class="steps">
+<li><p>V1: \(R = 0.075/50 = 1.5\ \text{m}\Omega\) · กำลัง 3.75 W ที่พิกัด</p></li>
+<li><p>V2: \(20\times10^{-6} \times 40 = 0.08\,\%\)</p></li>
+<li><p>ต่อแบบ Kelvin: สายกระแสใหญ่ต่อที่ขั้วหนึ่งคู่ สายวัดแรงดันต่อที่ขั้ว sense อีกคู่ มิฉะนั้นความต้านทานหน้าสัมผัสไม่กี่ mΩ ของสกรูจะใหญ่เท่าชันต์เอง</p></li>
+</ol></div>
+    <div class="fg-calc sx-calc" data-sx="shunt"></div>
+    <p>ในคอนเวอร์เตอร์ ชันต์ด้านต่ำ (low-side) วัดง่ายแต่ทำให้กราวด์ของโหลดลอย ชันต์ด้านสูง (high-side) ต้องใช้แอมป์วัดกระแสที่ทนแรงดันโหมดร่วมสูง ดูการใช้งานจริงใน <a href="/learn/power-electronics/controller-selection/">การเลือกชิปควบคุมของคอนเวอร์เตอร์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ct">
+    <h2 id="ct">หม้อแปลงกระแส (CT) ตาม IEC 61869-2 <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="V3" data-k="current transformer ratio turns secondary current หม้อแปลงกระแส อัตราส่วน"><p class="tf-n"><b><span class="fid">V3</span> CT ratio</b> อัตราส่วน CT</p>
+        \[ I_s = \frac{I_p}{N} \qquad \text{เช่น } 400/5\ \text{A}: N = 80 \]</div>
+<div class="tf" id="V4" data-k="ct burden va lead resistance secondary load ภาระ ซีที"><p class="tf-n"><b><span class="fid">V4</span> Burden</b> ภาระด้านทุติยภูมิ</p>
+        \[ S_b = I_{sn}^2\,(R_\text{lead,loop} + R_\text{dev}) \qquad R_\text{lead,loop} = \rho\,\frac{2\ell}{A} \]</div>
+<div class="tf" id="V5" data-k="protection ct accuracy limit factor 5p10 knee point voltage ซีทีป้องกัน แรงดันจุดเข่า"><p class="tf-n"><b><span class="fid">V5</span> Protection CT secondary voltage</b> แรงดันที่ CT ป้องกันต้องให้ได้</p>
+        \[ V_s \approx I_{sn}\cdot ALF\cdot(R_{ct} + R_b) \qquad 5P10:\ ALF = 10 \]</div>
+<div class="wx" id="ex-v-2"><div class="wx-head"><span class="mono">ตัวอย่าง V-2</span><h3>CT 400/5 A ภาระพิกัด 10 VA สาย 2.5 mm² ห่าง 30 m มิเตอร์กิน 1.5 VA</h3></div>
+<ol class="steps">
+<li><p>V4: สายไป–กลับ \(0.0175 \times 60/2.5 = 0.42\ \Omega\) → \(5^2 \times 0.42 = 10.5\ \text{VA}\) รวมมิเตอร์ 12 VA <b>เกินพิกัด 10 VA</b> ความแม่นตามคลาสไม่รับประกัน</p></li>
+<li><p>เปลี่ยนเป็น CT 400/1 A: ภาระสาย \(1^2 \times 0.42 = 0.42\ \text{VA}\) — ลดลง 25 เท่าด้วยสายเดิม</p></li>
+<li><p>นี่คือเหตุที่สถานีไฟฟ้าซึ่งสายจาก CT ถึงแผงยาวหลายร้อยเมตรนิยม CT 1 A ส่วนตู้ MDB ที่สายสั้นใช้ 5 A ได้</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="ct" data-vals='{"is":"5"}'>CT 5 A</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="ct" data-vals='{"is":"1"}'>CT 1 A</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="ct"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>คลาส</th><th>ความหมาย</th><th>ใช้กับ</th></tr></thead>
+      <tbody>
+        <tr><td>0.1 · 0.2 · 0.5 · 1</td><td>ความคลาดอัตราส่วนสูงสุด (%) ที่กระแสพิกัด</td><td>มิเตอร์ทั่วไป</td></tr>
+        <tr><td>0.2S · 0.5S</td><td>แม่นตลอดช่วงกระแสต่ำถึง 1 % ของพิกัด</td><td>มิเตอร์ซื้อขายไฟ</td></tr>
+        <tr><td>5P10 · 10P20</td><td>ความคลาดรวม 5 % หรือ 10 % จนถึง 10 หรือ 20 เท่าของกระแสพิกัด</td><td>รีเลย์ป้องกัน</td></tr>
+        <tr><td>PX (ชื่อเดิม Class X)</td><td>กำหนดด้วยแรงดันจุดเข่าและความต้านทานขด</td><td>รีเลย์ผลต่าง (87)</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sx-note sx-warn"><b>ความปลอดภัย:</b> ห้ามเปิดวงจรทุติยภูมิของ CT ขณะมีกระแส แรงดันที่ขั้วอาจสูงถึงกิโลโวลต์ ใช้เทอร์มินัลลัดวงจรก่อนถอดอุปกรณ์ทุกครั้ง และต่อลงดินด้านทุติยภูมิที่จุดเดียว การเลือก CT สำหรับระบบป้องกันอ่านต่อที่ <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="hall">
+    <h2 id="hall">เซนเซอร์ฮอลล์: ลูปเปิด ลูปปิด และฟลักซ์เกต <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="V6" data-k="hall effect voltage carrier density magnetic field ฮอลล์"><p class="tf-n"><b><span class="fid">V6</span> Hall voltage</b> แรงดันฮอลล์</p>
+        \[ V_H = \frac{I_\text{bias}\,B}{n\,q\,t} \]</div>
+<div class="tf" id="V7" data-k="closed loop hall compensation coil turns ratio measuring resistor ฮอลล์ลูปปิด"><p class="tf-n"><b><span class="fid">V7</span> Closed-loop (compensated) Hall sensor</b> ฮอลล์แบบชดเชยฟลักซ์</p>
+        \[ I_s = \frac{I_p}{N_s} \qquad V_\text{out} = I_s\,R_M \]</div>
+    <p><b>ลูปเปิด</b>: เซนเซอร์ฮอลล์อยู่ในช่องว่างของแกนเหล็ก อ่านสนามโดยตรง ถูกและกินไฟน้อย แต่ค่าเปลี่ยนตามอุณหภูมิและความไม่เชิงเส้นของแกน <b>ลูปปิด</b>: วงจรขับกระแสเข้าขดชดเชยให้ฟลักซ์ในแกนเป็นศูนย์ตลอดเวลา กระแสขดชดเชยจึงเป็นภาพย่อของกระแสปฐมภูมิด้วยอัตราส่วนรอบ ได้ความแม่นและแบนด์วิดท์ดีขึ้นมาก ตัวอย่าง: อัตราส่วน 1:1000 กระแส 50 A → 50 mA ผ่าน R<sub>M</sub> 50 Ω ได้ 2.5 V <b>ฟลักซ์เกต</b> ใช้หลักการอิ่มตัวของแกนเพื่อวัด DC ได้แม่นที่สุดในกลุ่มนี้ ใช้ในเครื่องมือวัดแม่นยำและการตรวจกระแสรั่ว DC ของเครื่องชาร์จ EV (ดู <a href="/learn/ev-charging/safety-standards/">RCD Type B</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="rogowski">
+    <h2 id="rogowski">ขดโรโกวสกี <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="V8" data-k="rogowski coil mutual inductance di/dt integrator โรโกวสกี อินทิเกรเตอร์"><p class="tf-n"><b><span class="fid">V8</span> Rogowski coil</b> ขดโรโกวสกี</p>
+        \[ v(t) = M\,\frac{di}{dt} \quad\Rightarrow\quad i(t) = \frac{1}{M}\int v\,dt \qquad \text{ไซน์: } V = 2\pi f M I \]</div>
+<div class="wx" id="ex-v-3"><div class="wx-head"><span class="mono">ตัวอย่าง V-3</span><h3>ขดโรโกวสกีความไว 100 mV/kA ที่ 50 Hz</h3></div>
+<ol class="steps">
+<li><p>V8: \(M = 0.1/(2\pi \cdot 50 \cdot 1000) = 318\ \text{nH}\)</p></li>
+<li><p>กระแส 400 A ที่ 50 Hz ให้ 40 mV · ฮาร์มอนิกที่ 3 ขนาด 400 A ให้ 120 mV เพราะเอาต์พุตแปรตามความถี่</p></li>
+<li><p>ผลคือต้องมีอินทิเกรเตอร์ (แอนะล็อกหรือดิจิทัล) เพื่อให้สเปกตรัมกลับมาแบน ข้อดีที่แลกมาคือไม่อิ่มตัว เบา และพันรอบสายขนาดใหญ่ได้โดยไม่ต้องตัดวงจร</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="voltage">
+    <h2 id="voltage">การวัดแรงดัน: ตัวแบ่ง VT และแอมป์แยกโดดเดี่ยว <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="V9" data-k="resistive voltage divider ratio power dissipation ตัวแบ่งแรงดัน"><p class="tf-n"><b><span class="fid">V9</span> Resistive divider</b> ตัวแบ่งแรงดัน</p>
+        \[ V_\text{out} = V_\text{in}\,\frac{R_2}{R_1 + R_2} \qquad P_{R1} \approx \frac{V_\text{in}^2}{R_1} \]</div>
+    <ul>
+      <li><b>ตัวแบ่งแรงดัน + แอมป์แยกโดดเดี่ยว</b> (isolated amplifier หรือ ADC แบบ isolated sigma-delta) ใช้ในอินเวอร์เตอร์และมิเตอร์อิเล็กทรอนิกส์ R1 ต้องแบ่งเป็นหลายตัวอนุกรมเพื่อทนแรงดันและระยะห่างตามมาตรฐานความปลอดภัย</li>
+      <li><b>หม้อแปลงแรงดัน (VT/PT)</b> ตาม IEC 61869-3 แปลงแรงดันสูงเป็น 100 V หรือ 110 V ด้านทุติยภูมิ ข้อห้ามสลับกับ CT: <b>ห้ามลัดวงจรด้านทุติยภูมิของ VT</b></li>
+      <li><b>โพรบผลต่างแรงสูง</b> สำหรับออสซิลโลสโคปเมื่อวัดวงจรที่ไม่ได้อ้างอิงกราวด์ — ดู <a href="/learn/function-generator/measurements/">เทคนิคการวัดด้วยสโคป</a></li>
+      <li><b>ประเภทการวัด CAT II/III/IV</b> ตาม IEC 61010 บอกระดับแรงดันกระชากที่เครื่องมือวัดทนได้ตามตำแหน่งในระบบไฟฟ้า มัลติมิเตอร์ที่ใช้ที่ตู้เมนต้องเป็น CAT III หรือ IV</li>
+    </ul>
+    <p>ลองนำเซนเซอร์เหล่านี้ไปใช้จริงใน <a href="/learn/power-factor/pf-measurement/">การวัดเพาเวอร์แฟกเตอร์</a> และ <a href="/learn/fourier-series/power-harmonics/">การวิเคราะห์ฮาร์มอนิก</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>IEC 61869-1/-2/-3 Instrument transformers — General, Current transformers, Inductive voltage transformers</li>
+      <li>IEC 61010-1 Safety requirements for electrical equipment for measurement, control, and laboratory use</li>
+      <li>IEC 62053-21/-22 Static meters for active energy · IEEE C57.13 Instrument transformers</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

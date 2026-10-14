@@ -1,0 +1,161 @@
+<!--meta
+{
+  "title": "เซนเซอร์แรง น้ำหนัก ตำแหน่ง และการเคลื่อนที่: สเตรนเกจ สะพานวีตสโตน โหลดเซลล์ mV/V LVDT เอนโค้ดเดอร์ พร็อกซิมิตีสวิตช์ NPN PNP | อาจารย์มด",
+  "h1": "แรง น้ำหนัก ตำแหน่ง และการเคลื่อนที่",
+  "description": "เซนเซอร์เชิงกลสำหรับเครื่องจักรและกระบวนการ: ความเครียดและ gauge factor สะพานวีตสโตนแบบ quarter half full bridge โหลดเซลล์ mV/V การต่อ 6 สาย ความละเอียด ADC และ OIML R 60 เซนเซอร์ตำแหน่ง LVDT โพเทนชิโอมิเตอร์ เอ็ดดีเคอร์เรนต์ เลเซอร์ เอนโค้ดเดอร์แบบ incremental และ absolute พร็อกซิมิตีสวิตช์ NPN PNP NAMUR และเซนเซอร์ความเร็วและการสั่นสะเทือน พร้อมเครื่องคำนวณ",
+  "ogTitle": "สเตรนเกจ โหลดเซลล์ เอนโค้ดเดอร์ พร็อกซิมิตี",
+  "og": {"title": "แรง · น้ำหนัก · ตำแหน่ง"},
+  "lesson": "sensors-transducers",
+  "sub": "force-position",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Strain gauge", "Wheatstone bridge", "Load cell", "LVDT", "Rotary encoder", "Proximity sensor"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "โหลดเซลล์ 2 mV/V หมายถึงอะไร?", "a": "หมายถึงที่น้ำหนักเต็มพิกัด โหลดเซลล์ให้แรงดันเอาต์พุต 2 mV ต่อแรงดันกระตุ้นทุก 1 V ถ้ากระตุ้นด้วย 5 V สัญญาณเต็มพิกัดคือ 10 mV และแปรตามน้ำหนักแบบเชิงเส้น เช่น โหลดเซลล์ 500 kg ที่รับน้ำหนัก 120 kg ให้ 2.4 mV การระบุเป็น mV/V ทำให้ค่าไม่ขึ้นกับแรงดันกระตุ้น และเครื่องอ่านแบบ ratiometric ก็หักผลของแรงดันกระตุ้นที่แกว่งออกไปได้"},
+    {"q": "พร็อกซิมิตีสวิตช์ NPN กับ PNP ต่างกันอย่างไร?", "a": "ทั้งคู่เป็นเซนเซอร์ 3 สาย (ไฟบวก ไฟลบ สัญญาณ) PNP (sourcing) จ่ายไฟบวกออกที่ขาสัญญาณเมื่อตรวจพบ จึงต่อกับอินพุต PLC แบบ sinking ส่วน NPN (sinking) ดึงขาสัญญาณลงลบเมื่อตรวจพบ ต่อกับอินพุตแบบ sourcing ยุโรปนิยม PNP ส่วนอุปกรณ์จากเอเชียหลายรายนิยม NPN ต้องเลือกให้ตรงกับการ์ดอินพุต"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.11 แรง · ตำแหน่ง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.11 · Sensors &amp; Transducers · Force, Weight &amp; Position</p>
+      <h1>แรง น้ำหนัก ตำแหน่ง <em>และการเคลื่อนที่</em></h1>
+      <p class="lede">ในขณะที่โรงงานกระบวนการวัดอุณหภูมิ ความดัน การไหล และระดับ เครื่องจักรวัดแรง น้ำหนัก ตำแหน่ง และความเร็ว หน้านี้เริ่มจากสเตรนเกจซึ่งเป็นหัวใจของโหลดเซลล์และเซนเซอร์ความดันจำนวนมาก แล้วไปสู่เซนเซอร์ตำแหน่งและสวิตช์ที่พบในทุกตู้ควบคุม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#strain">สเตรนเกจ</a>
+        <a class="btn btn-ghost btn-sm" href="#loadcell">โหลดเซลล์</a>
+        <a class="btn btn-ghost btn-sm" href="#position">ตำแหน่ง</a>
+        <a class="btn btn-ghost btn-sm" href="#encoder">เอนโค้ดเดอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#prox">พร็อกซิมิตี</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\Delta R/R = GF\,\varepsilon\) · GF ≈ 2 · 500 µε ทำให้ R เปลี่ยนเพียง 0.1 %</li>
+          <li>quarter bridge \(V_o \approx V_{ex}GF\varepsilon/4\) · full bridge 4 เท่า และชดเชยอุณหภูมิในตัว</li>
+          <li>โหลดเซลล์ 2 mV/V ที่ 5 V = 10 mV เต็มพิกัด → ต้อง ADC ความละเอียดสูงและสัญญาณรบกวนต่ำ</li>
+          <li>เอนโค้ดเดอร์ \(n = 60f/PPR\) · นับ ×4 จากขอบ A/B · PNP ต่อกับอินพุต sinking</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น strain, gauge factor, bridge, mv/v, lvdt, encoder, rpm" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="strain">
+    <h2 id="strain">สเตรนเกจและสะพานวีตสโตน <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="R1" data-k="strain gauge factor resistance change epsilon stress young modulus สเตรนเกจ ความเครียด"><p class="tf-n"><b><span class="fid">R1</span> Strain gauge</b> สเตรนเกจ</p>
+        \[ \varepsilon = \frac{\Delta L}{L} \qquad \sigma = E\,\varepsilon \qquad \frac{\Delta R}{R} = GF\cdot\varepsilon \quad (GF \approx 2 \text{ สำหรับฟอยล์โลหะ}) \]</div>
+<div class="tf" id="R2" data-k="wheatstone bridge quarter bridge output nonlinearity วีตสโตน ควอเตอร์บริดจ์"><p class="tf-n"><b><span class="fid">R2</span> Quarter bridge</b> สเตรนเกจตัวเดียวในบริดจ์</p>
+        \[ V_o = V_{ex}\,\frac{GF\,\varepsilon}{4 + 2\,GF\,\varepsilon} \;\approx\; \frac{V_{ex}\,GF\,\varepsilon}{4} \]</div>
+<div class="tf" id="R3" data-k="half bridge full bridge temperature compensation ฮาล์ฟบริดจ์ ฟูลบริดจ์ ชดเชยอุณหภูมิ"><p class="tf-n"><b><span class="fid">R3</span> Half and full bridge</b> สองและสี่แขนทำงาน</p>
+        \[ V_{o,\text{half}} = \frac{V_{ex}\,GF\,\varepsilon}{2} \qquad V_{o,\text{full}} = V_{ex}\,GF\,\varepsilon \]</div>
+    <figure class="xfig"><!--FIG:sx-bridge--><svg class="xf" viewBox="0 0 720 290" role="img" aria-label="สะพานวีตสโตนกับสเตรนเกจแบบ quarter bridge และโหลดเซลล์แบบ full bridge"><defs><marker id="sx-bridge-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-ln" x1="170" y1="48" x2="90" y2="128"/><rect class="xf-box" x="114" y="79" width="32" height="18" rx="3"/><text x="130" y="92" class="xf-k" text-anchor="middle">R₁</text><line class="xf-ln" x1="170" y1="48" x2="250" y2="128"/><rect class="xf-box" x="194" y="79" width="32" height="18" rx="3"/><text x="210" y="92" class="xf-k" text-anchor="middle">R₂</text><line class="xf-ln" x1="90" y1="128" x2="170" y2="208"/><rect class="xf-box" x="114" y="159" width="32" height="18" rx="3"/><text x="130" y="172" class="xf-k" text-anchor="middle">R₃</text><line class="xf-a" x1="250" y1="128" x2="170" y2="208"/><rect class="xf-boxa" x="194" y="159" width="32" height="18" rx="3"/><text x="210" y="172" class="xf-k" text-anchor="middle">SG</text><line class="xf-ln" x1="170" y1="48" x2="170" y2="30"/><text x="178" y="40" class="xf-m">+V_ex</text><line class="xf-ln" x1="170" y1="208" x2="170" y2="220"/><text x="178" y="220" class="xf-m">0 V</text><circle class="xf-dot" cx="90" cy="128" r="4"/><circle class="xf-dot" cx="250" cy="128" r="4"/><path class="xf-dash" d="M 90 128 L 76 128 L 76 260 L 130 260"/><path class="xf-dash" d="M 250 128 L 264 128 L 264 260 L 210 260"/><text x="170" y="264" class="xf-h" text-anchor="middle">V_o</text><text x="170" y="284" class="xf-m" text-anchor="middle">V_o ≈ V_ex·GF·ε/4</text><text x="170" y="18" class="xf-h" text-anchor="middle">quarter bridge</text><text x="550" y="20" class="xf-h" text-anchor="middle">โหลดเซลล์แบบคาน (full bridge)</text><rect class="xf-metal" x="400" y="80" width="40" height="120" rx="2"/><rect class="xf-metal" x="440" y="110" width="240" height="40" rx="2"/><rect class="xf-boxb" x="520" y="104" width="22" height="6" rx="1"/><rect class="xf-boxb" x="590" y="104" width="22" height="6" rx="1"/><rect class="xf-boxa" x="520" y="150" width="22" height="6" rx="1"/><rect class="xf-boxa" x="590" y="150" width="22" height="6" rx="1"/><text x="566" y="98" class="xf-tb" text-anchor="middle">ยืด (+ε)</text><text x="566" y="172" class="xf-ta" text-anchor="middle">หด (−ε)</text><line class="xf-ln" x1="665" y1="60" x2="665" y2="106" marker-end="url(#sx-bridge-ah)"/><text x="672" y="70" class="xf-h">F</text><text x="550" y="210" class="xf-k" text-anchor="middle">สเปกตัวอย่าง: 2 mV/V ที่พิกัด, V_ex 5–10 V</text><text x="550" y="228" class="xf-k" text-anchor="middle">เต็มพิกัดที่ 5 V → 10 mV</text></svg><!--/FIG--><figcaption>รูป 1 · ซ้าย: สเตรนเกจหนึ่งตัวในบริดจ์ · ขวา: คานรับแรงที่ติดสเตรนเกจสองด้าน ด้านบนยืด ด้านล่างหด</figcaption></figure>
+<div class="wx" id="ex-r-1"><div class="wx-head"><span class="mono">ตัวอย่าง R-1</span><h3>คานเหล็กเครียด 500 µε GF = 2 กระตุ้น 5 V</h3></div>
+<ol class="steps">
+<li><p>R1: \(\Delta R/R = 2 \times 500\times10^{-6} = 0.1\,\%\) — สเตรนเกจ 350 Ω เปลี่ยนเพียง 0.35 Ω</p></li>
+<li><p>R2 quarter: \(V_o = 5(0.001)/(4.002) = 1.2494\ \text{mV}\) (ประมาณเชิงเส้น 1.25 mV คลาด 0.05 %)</p></li>
+<li><p>R3 full bridge: \(5\ \text{mV}\) — สัญญาณ 4 เท่า และถ้าอุณหภูมิเปลี่ยน ทุกแขนเปลี่ยนเท่ากัน บริดจ์ยังสมดุล</p></li>
+<li><p>ขยาย 200 เท่าด้วยอินสทรูเมนเทชันแอมป์ได้ 1.0 V (ดู <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ</a>)</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="bridge" data-vals='{"cfg":"quarter"}'>quarter</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="bridge" data-vals='{"cfg":"full"}'>full</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="bridge"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="loadcell">
+    <h2 id="loadcell">โหลดเซลล์: mV/V การต่อ 6 สาย และความละเอียดที่ได้จริง <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="R4" data-k="load cell rated output mv/v excitation weight ratiometric โหลดเซลล์ เอาต์พุตพิกัด"><p class="tf-n"><b><span class="fid">R4</span> Load cell output</b> เอาต์พุตของโหลดเซลล์</p>
+        \[ V_o = S\,V_{ex}\,\frac{W}{W_\text{cap}} \qquad S = \text{rated output (mV/V)} \]</div>
+<div class="wx" id="ex-r-2"><div class="wx-head"><span class="mono">ตัวอย่าง R-2</span><h3>โหลดเซลล์ 500 kg 2 mV/V กระตุ้น 5 V ADC ±20 mV ได้ 18 บิตสะอาด</h3></div>
+<ol class="steps">
+<li><p>R4: เต็มพิกัด 10 mV · ที่ 120 kg ได้ 2.4 mV</p></li>
+<li><p>1 หลักของ ADC = \(40\ \text{mV}/2^{18} = 153\ \text{nV}\) → \(153\ \text{nV}/10\ \text{mV} \times 500\ \text{kg} = 7.6\ \text{g}\)</p></li>
+<li><p>สัญญาณใช้เพียงครึ่งช่วง ADC — ถ้าเลือกช่วง ±10 mV จะละเอียดขึ้นสองเท่า ADC ชั่งน้ำหนักจึงมี PGA (gain 64–128) ในตัว</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="loadcell" data-vals='{"fs":"20"}'>ช่วง ±20 mV</button><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="loadcell" data-vals='{"fs":"10"}'>ช่วง ±10 mV</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="loadcell"></div>
+    <ul>
+      <li><b>ต่อ 6 สาย</b> (excitation ±, sense ±, signal ±): สาย sense วัดแรงดันกระตุ้นที่ตัวโหลดเซลล์จริง หักแรงดันตกในสายยาวและผลอุณหภูมิของสาย</li>
+      <li><b>อ่านแบบ ratiometric</b>: ADC ใช้แรงดันกระตุ้นเป็นแรงดันอ้างอิงด้วย ความแกว่งของแหล่งจ่ายจึงหักล้างกัน</li>
+      <li><b>คลาสตาม OIML R 60</b>: เช่น C3 คือโหลดเซลล์ที่ผ่านการทดสอบที่ 3000 ช่วงแบ่ง ใช้กับเครื่องชั่งเชิงพาณิชย์ตาม OIML R 76 ซึ่งในไทยต้องผ่านการตรวจรับรองตามกฎหมายชั่งตวงวัด</li>
+      <li><b>ปัจจัยกลไก</b>: แรงด้านข้าง การบิด การยึดที่ไม่ขนาน และการขยายตัวจากความร้อนของโครงสร้าง มักทำให้ผิดมากกว่าตัวโหลดเซลล์เอง</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="position">
+    <h2 id="position">เซนเซอร์ตำแหน่งและระยะ <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>หลักการ</th><th>ช่วงและความละเอียดทั่วไป</th><th>ใช้ที่ไหน</th></tr></thead>
+      <tbody>
+        <tr><td>โพเทนชิโอมิเตอร์</td><td>แบ่งแรงดันด้วยหน้าสัมผัสเลื่อน</td><td>ไม่กี่มิลลิเมตรถึงเมตร</td><td>ตำแหน่งวาล์ว คันโยก ราคาต่ำ (สึกหรอ)</td></tr>
+        <tr><td>LVDT</td><td>หม้อแปลงที่แกนเคลื่อน ขดทุติยภูมิสองขดต่ออนุกรมกลับเฟส</td><td>±0.1 mm ถึง ±500 mm ความละเอียดสูงมาก</td><td>ทดสอบวัสดุ วัดการเคลื่อนของวาล์ว ไม่สัมผัส ไม่สึก</td></tr>
+        <tr><td>เอ็ดดีเคอร์เรนต์ (proximity probe)</td><td>อิมพีแดนซ์ของขดเปลี่ยนตามระยะถึงโลหะ</td><td>0–2 mm ระดับไมโครเมตร</td><td>วัดการสั่นของเพลาในเครื่องจักรหมุน (API 670)</td></tr>
+        <tr><td>คาปาซิทีฟ</td><td>ความจุเปลี่ยนตามระยะ</td><td>ระดับนาโนเมตร</td><td>เครื่องจักรแม่นยำ เซมิคอนดักเตอร์</td></tr>
+        <tr><td>แมกนีโตสตริกทีฟ</td><td>เวลาเดินทางของคลื่นบิดในลวดถึงแม่เหล็ก</td><td>ถึงหลายเมตร ระดับไมโครเมตร</td><td>กระบอกไฮดรอลิก ระดับของเหลว</td></tr>
+        <tr><td>เลเซอร์ (triangulation · time of flight)</td><td>มุมสะท้อน · เวลาเดินทางของแสง</td><td>มิลลิเมตรถึงหลายสิบเมตร</td><td>วัดชิ้นงานบนสายพาน ระยะรถเครน</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="R5" data-k="lvdt linear variable differential transformer output displacement phase แอลวีดีที"><p class="tf-n"><b><span class="fid">R5</span> LVDT</b> หม้อแปลงผลต่างเชิงเส้น</p>
+        \[ V_o = V_{s1} - V_{s2} \approx k\,x \qquad \text{เฟสของ } V_o \text{ บอกทิศ } (\pm x) \]</div>
+    <p>ที่ตำแหน่งกลาง ขดทุติยภูมิทั้งสองได้แรงดันเท่ากันและหักล้างกันเป็นศูนย์ วงจรถอดสัญญาณแบบ synchronous demodulation ใช้เฟสเทียบกับแรงดันกระตุ้นเพื่อบอกว่าแกนเลื่อนไปทางใด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="encoder">
+    <h2 id="encoder">เอนโค้ดเดอร์: incremental และ absolute <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:sx-encoder--><svg class="xf" viewBox="0 0 720 220" role="img" aria-label="สัญญาณเอนโค้ดเดอร์แบบ quadrature: A และ B ต่างเฟส 90 องศา และพัลส์ Z หนึ่งครั้งต่อรอบ"><defs><marker id="sx-encoder-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="40" y="60" class="xf-h" text-anchor="middle">A</text><path class="xf-a" d="M80 45 L81 45 L82 45 L83 45 L84 45 L85 45 L86 45 L87 45 L88 45 L89 45 L90 45 L91 45 L92 45 L93 45 L94 45 L95 45 L96 45 L97 45 L98 45 L99 45 L100 45 L101 45 L102 45 L103 45 L104 45 L105 45 L106 45 L107 45 L108 45 L109 45 L110 45 L111 45 L112 45 L113 45 L114 45 L115 45 L116 45 L117 45 L118 45 L119 45 L120 45 L121 45 L122 45 L123 45 L124 45 L125 45 L126 45 L127 45 L128 45 L129 45 L130 45 L131 45 L132 45 L133 45 L134 45 L135 45 L136 45 L137 45 L138 45 L139 45 L140 45 L140 70 L141 70 L142 70 L143 70 L144 70 L145 70 L146 70 L147 70 L148 70 L149 70 L150 70 L151 70 L152 70 L153 70 L154 70 L155 70 L156 70 L157 70 L158 70 L159 70 L160 70 L161 70 L162 70 L163 70 L164 70 L165 70 L166 70 L167 70 L168 70 L169 70 L170 70 L171 70 L172 70 L173 70 L174 70 L175 70 L176 70 L177 70 L178 70 L179 70 L180 70 L181 70 L182 70 L183 70 L184 70 L185 70 L186 70 L187 70 L188 70 L189 70 L190 70 L191 70 L192 70 L193 70 L194 70 L195 70 L196 70 L197 70 L198 70 L199 70 L200 70 L200 45 L201 45 L202 45 L203 45 L204 45 L205 45 L206 45 L207 45 L208 45 L209 45 L210 45 L211 45 L212 45 L213 45 L214 45 L215 45 L216 45 L217 45 L218 45 L219 45 L220 45 L221 45 L222 45 L223 45 L224 45 L225 45 L226 45 L227 45 L228 45 L229 45 L230 45 L231 45 L232 45 L233 45 L234 45 L235 45 L236 45 L237 45 L238 45 L239 45 L240 45 L241 45 L242 45 L243 45 L244 45 L245 45 L246 45 L247 45 L248 45 L249 45 L250 45 L251 45 L252 45 L253 45 L254 45 L255 45 L256 45 L257 45 L258 45 L259 45 L260 45 L260 70 L261 70 L262 70 L263 70 L264 70 L265 70 L266 70 L267 70 L268 70 L269 70 L270 70 L271 70 L272 70 L273 70 L274 70 L275 70 L276 70 L277 70 L278 70 L279 70 L280 70 L281 70 L282 70 L283 70 L284 70 L285 70 L286 70 L287 70 L288 70 L289 70 L290 70 L291 70 L292 70 L293 70 L294 70 L295 70 L296 70 L297 70 L298 70 L299 70 L300 70 L301 70 L302 70 L303 70 L304 70 L305 70 L306 70 L307 70 L308 70 L309 70 L310 70 L311 70 L312 70 L313 70 L314 70 L315 70 L316 70 L317 70 L318 70 L319 70 L320 70 L320 45 L321 45 L322 45 L323 45 L324 45 L325 45 L326 45 L327 45 L328 45 L329 45 L330 45 L331 45 L332 45 L333 45 L334 45 L335 45 L336 45 L337 45 L338 45 L339 45 L340 45 L341 45 L342 45 L343 45 L344 45 L345 45 L346 45 L347 45 L348 45 L349 45 L350 45 L351 45 L352 45 L353 45 L354 45 L355 45 L356 45 L357 45 L358 45 L359 45 L360 45 L361 45 L362 45 L363 45 L364 45 L365 45 L366 45 L367 45 L368 45 L369 45 L370 45 L371 45 L372 45 L373 45 L374 45 L375 45 L376 45 L377 45 L378 45 L379 45 L380 45 L380 70 L381 70 L382 70 L383 70 L384 70 L385 70 L386 70 L387 70 L388 70 L389 70 L390 70 L391 70 L392 70 L393 70 L394 70 L395 70 L396 70 L397 70 L398 70 L399 70 L400 70 L401 70 L402 70 L403 70 L404 70 L405 70 L406 70 L407 70 L408 70 L409 70 L410 70 L411 70 L412 70 L413 70 L414 70 L415 70 L416 70 L417 70 L418 70 L419 70 L420 70 L421 70 L422 70 L423 70 L424 70 L425 70 L426 70 L427 70 L428 70 L429 70 L430 70 L431 70 L432 70 L433 70 L434 70 L435 70 L436 70 L437 70 L438 70 L439 70 L440 70 L440 45 L441 45 L442 45 L443 45 L444 45 L445 45 L446 45 L447 45 L448 45 L449 45 L450 45 L451 45 L452 45 L453 45 L454 45 L455 45 L456 45 L457 45 L458 45 L459 45 L460 45 L461 45 L462 45 L463 45 L464 45 L465 45 L466 45 L467 45 L468 45 L469 45 L470 45 L471 45 L472 45 L473 45 L474 45 L475 45 L476 45 L477 45 L478 45 L479 45 L480 45 L481 45 L482 45 L483 45 L484 45 L485 45 L486 45 L487 45 L488 45 L489 45 L490 45 L491 45 L492 45 L493 45 L494 45 L495 45 L496 45 L497 45 L498 45 L499 45 L500 45 L500 70 L501 70 L502 70 L503 70 L504 70 L505 70 L506 70 L507 70 L508 70 L509 70 L510 70 L511 70 L512 70 L513 70 L514 70 L515 70 L516 70 L517 70 L518 70 L519 70 L520 70 L521 70 L522 70 L523 70 L524 70 L525 70 L526 70 L527 70 L528 70 L529 70 L530 70 L531 70 L532 70 L533 70 L534 70 L535 70 L536 70 L537 70 L538 70 L539 70 L540 70 L541 70 L542 70 L543 70 L544 70 L545 70 L546 70 L547 70 L548 70 L549 70 L550 70 L551 70 L552 70 L553 70 L554 70 L555 70 L556 70 L557 70 L558 70 L559 70 L560 70 L560 45 L561 45 L562 45 L563 45 L564 45 L565 45 L566 45 L567 45 L568 45 L569 45 L570 45 L571 45 L572 45 L573 45 L574 45 L575 45 L576 45 L577 45 L578 45 L579 45 L580 45 L581 45 L582 45 L583 45 L584 45 L585 45 L586 45 L587 45 L588 45 L589 45 L590 45 L591 45 L592 45 L593 45 L594 45 L595 45 L596 45 L597 45 L598 45 L599 45 L600 45 L601 45 L602 45 L603 45 L604 45 L605 45 L606 45 L607 45 L608 45 L609 45 L610 45 L611 45 L612 45 L613 45 L614 45 L615 45 L616 45 L617 45 L618 45 L619 45 L620 45 L620 70 L621 70 L622 70 L623 70 L624 70 L625 70 L626 70 L627 70 L628 70 L629 70 L630 70 L631 70 L632 70 L633 70 L634 70 L635 70 L636 70 L637 70 L638 70 L639 70 L640 70 L641 70 L642 70 L643 70 L644 70 L645 70 L646 70 L647 70 L648 70 L649 70 L650 70 L651 70 L652 70 L653 70 L654 70 L655 70 L656 70 L657 70 L658 70 L659 70 L660 70 L661 70 L662 70 L663 70 L664 70 L665 70 L666 70 L667 70 L668 70 L669 70 L670 70 L671 70 L672 70 L673 70 L674 70 L675 70 L676 70 L677 70 L678 70 L679 70 L680 70 L680 45"/><text x="40" y="115" class="xf-h" text-anchor="middle">B</text><path class="xf-b" d="M80 100 L81 100 L82 100 L83 100 L84 100 L85 100 L86 100 L87 100 L88 100 L89 100 L90 100 L91 100 L92 100 L93 100 L94 100 L95 100 L96 100 L97 100 L98 100 L99 100 L100 100 L101 100 L102 100 L103 100 L104 100 L105 100 L106 100 L107 100 L108 100 L109 100 L110 100 L110 125 L111 125 L112 125 L113 125 L114 125 L115 125 L116 125 L117 125 L118 125 L119 125 L120 125 L121 125 L122 125 L123 125 L124 125 L125 125 L126 125 L127 125 L128 125 L129 125 L130 125 L131 125 L132 125 L133 125 L134 125 L135 125 L136 125 L137 125 L138 125 L139 125 L140 125 L141 125 L142 125 L143 125 L144 125 L145 125 L146 125 L147 125 L148 125 L149 125 L150 125 L151 125 L152 125 L153 125 L154 125 L155 125 L156 125 L157 125 L158 125 L159 125 L160 125 L161 125 L162 125 L163 125 L164 125 L165 125 L166 125 L167 125 L168 125 L169 125 L170 125 L170 100 L171 100 L172 100 L173 100 L174 100 L175 100 L176 100 L177 100 L178 100 L179 100 L180 100 L181 100 L182 100 L183 100 L184 100 L185 100 L186 100 L187 100 L188 100 L189 100 L190 100 L191 100 L192 100 L193 100 L194 100 L195 100 L196 100 L197 100 L198 100 L199 100 L200 100 L201 100 L202 100 L203 100 L204 100 L205 100 L206 100 L207 100 L208 100 L209 100 L210 100 L211 100 L212 100 L213 100 L214 100 L215 100 L216 100 L217 100 L218 100 L219 100 L220 100 L221 100 L222 100 L223 100 L224 100 L225 100 L226 100 L227 100 L228 100 L229 100 L230 100 L230 125 L231 125 L232 125 L233 125 L234 125 L235 125 L236 125 L237 125 L238 125 L239 125 L240 125 L241 125 L242 125 L243 125 L244 125 L245 125 L246 125 L247 125 L248 125 L249 125 L250 125 L251 125 L252 125 L253 125 L254 125 L255 125 L256 125 L257 125 L258 125 L259 125 L260 125 L261 125 L262 125 L263 125 L264 125 L265 125 L266 125 L267 125 L268 125 L269 125 L270 125 L271 125 L272 125 L273 125 L274 125 L275 125 L276 125 L277 125 L278 125 L279 125 L280 125 L281 125 L282 125 L283 125 L284 125 L285 125 L286 125 L287 125 L288 125 L289 125 L290 125 L290 100 L291 100 L292 100 L293 100 L294 100 L295 100 L296 100 L297 100 L298 100 L299 100 L300 100 L301 100 L302 100 L303 100 L304 100 L305 100 L306 100 L307 100 L308 100 L309 100 L310 100 L311 100 L312 100 L313 100 L314 100 L315 100 L316 100 L317 100 L318 100 L319 100 L320 100 L321 100 L322 100 L323 100 L324 100 L325 100 L326 100 L327 100 L328 100 L329 100 L330 100 L331 100 L332 100 L333 100 L334 100 L335 100 L336 100 L337 100 L338 100 L339 100 L340 100 L341 100 L342 100 L343 100 L344 100 L345 100 L346 100 L347 100 L348 100 L349 100 L350 100 L350 125 L351 125 L352 125 L353 125 L354 125 L355 125 L356 125 L357 125 L358 125 L359 125 L360 125 L361 125 L362 125 L363 125 L364 125 L365 125 L366 125 L367 125 L368 125 L369 125 L370 125 L371 125 L372 125 L373 125 L374 125 L375 125 L376 125 L377 125 L378 125 L379 125 L380 125 L381 125 L382 125 L383 125 L384 125 L385 125 L386 125 L387 125 L388 125 L389 125 L390 125 L391 125 L392 125 L393 125 L394 125 L395 125 L396 125 L397 125 L398 125 L399 125 L400 125 L401 125 L402 125 L403 125 L404 125 L405 125 L406 125 L407 125 L408 125 L409 125 L410 125 L410 100 L411 100 L412 100 L413 100 L414 100 L415 100 L416 100 L417 100 L418 100 L419 100 L420 100 L421 100 L422 100 L423 100 L424 100 L425 100 L426 100 L427 100 L428 100 L429 100 L430 100 L431 100 L432 100 L433 100 L434 100 L435 100 L436 100 L437 100 L438 100 L439 100 L440 100 L441 100 L442 100 L443 100 L444 100 L445 100 L446 100 L447 100 L448 100 L449 100 L450 100 L451 100 L452 100 L453 100 L454 100 L455 100 L456 100 L457 100 L458 100 L459 100 L460 100 L461 100 L462 100 L463 100 L464 100 L465 100 L466 100 L467 100 L468 100 L469 100 L470 100 L470 125 L471 125 L472 125 L473 125 L474 125 L475 125 L476 125 L477 125 L478 125 L479 125 L480 125 L481 125 L482 125 L483 125 L484 125 L485 125 L486 125 L487 125 L488 125 L489 125 L490 125 L491 125 L492 125 L493 125 L494 125 L495 125 L496 125 L497 125 L498 125 L499 125 L500 125 L501 125 L502 125 L503 125 L504 125 L505 125 L506 125 L507 125 L508 125 L509 125 L510 125 L511 125 L512 125 L513 125 L514 125 L515 125 L516 125 L517 125 L518 125 L519 125 L520 125 L521 125 L522 125 L523 125 L524 125 L525 125 L526 125 L527 125 L528 125 L529 125 L530 125 L530 100 L531 100 L532 100 L533 100 L534 100 L535 100 L536 100 L537 100 L538 100 L539 100 L540 100 L541 100 L542 100 L543 100 L544 100 L545 100 L546 100 L547 100 L548 100 L549 100 L550 100 L551 100 L552 100 L553 100 L554 100 L555 100 L556 100 L557 100 L558 100 L559 100 L560 100 L561 100 L562 100 L563 100 L564 100 L565 100 L566 100 L567 100 L568 100 L569 100 L570 100 L571 100 L572 100 L573 100 L574 100 L575 100 L576 100 L577 100 L578 100 L579 100 L580 100 L581 100 L582 100 L583 100 L584 100 L585 100 L586 100 L587 100 L588 100 L589 100 L590 100 L590 125 L591 125 L592 125 L593 125 L594 125 L595 125 L596 125 L597 125 L598 125 L599 125 L600 125 L601 125 L602 125 L603 125 L604 125 L605 125 L606 125 L607 125 L608 125 L609 125 L610 125 L611 125 L612 125 L613 125 L614 125 L615 125 L616 125 L617 125 L618 125 L619 125 L620 125 L621 125 L622 125 L623 125 L624 125 L625 125 L626 125 L627 125 L628 125 L629 125 L630 125 L631 125 L632 125 L633 125 L634 125 L635 125 L636 125 L637 125 L638 125 L639 125 L640 125 L641 125 L642 125 L643 125 L644 125 L645 125 L646 125 L647 125 L648 125 L649 125 L650 125 L650 100 L651 100 L652 100 L653 100 L654 100 L655 100 L656 100 L657 100 L658 100 L659 100 L660 100 L661 100 L662 100 L663 100 L664 100 L665 100 L666 100 L667 100 L668 100 L669 100 L670 100 L671 100 L672 100 L673 100 L674 100 L675 100 L676 100 L677 100 L678 100 L679 100 L680 100"/><text x="40" y="170" class="xf-h" text-anchor="middle">Z</text><path class="xf-c" d="M80 180 L380 180 L380 155 L410 155 L410 180 L680 180"/><line class="xf-grid" x1="80" y1="30" x2="80" y2="205"/><line class="xf-grid" x1="110" y1="30" x2="110" y2="205"/><line class="xf-grid" x1="140" y1="30" x2="140" y2="205"/><line class="xf-grid" x1="170" y1="30" x2="170" y2="205"/><line class="xf-grid" x1="200" y1="30" x2="200" y2="205"/><line class="xf-grid" x1="230" y1="30" x2="230" y2="205"/><line class="xf-grid" x1="260" y1="30" x2="260" y2="205"/><line class="xf-grid" x1="290" y1="30" x2="290" y2="205"/><line class="xf-grid" x1="320" y1="30" x2="320" y2="205"/><line class="xf-grid" x1="350" y1="30" x2="350" y2="205"/><line class="xf-grid" x1="380" y1="30" x2="380" y2="205"/><line class="xf-grid" x1="410" y1="30" x2="410" y2="205"/><line class="xf-grid" x1="440" y1="30" x2="440" y2="205"/><line class="xf-grid" x1="470" y1="30" x2="470" y2="205"/><line class="xf-grid" x1="500" y1="30" x2="500" y2="205"/><line class="xf-grid" x1="530" y1="30" x2="530" y2="205"/><line class="xf-grid" x1="560" y1="30" x2="560" y2="205"/><line class="xf-grid" x1="590" y1="30" x2="590" y2="205"/><line class="xf-grid" x1="620" y1="30" x2="620" y2="205"/><line class="xf-grid" x1="650" y1="30" x2="650" y2="205"/><line class="xf-grid" x1="680" y1="30" x2="680" y2="205"/><text x="185" y="214" class="xf-k" text-anchor="middle">4 ขอบต่อคาบ → นับ ×4</text><text x="540" y="214" class="xf-k" text-anchor="middle">A นำ B = หมุนตามเข็ม · B นำ A = ทวนเข็ม</text></svg><!--/FIG--><figcaption>รูป 2 · สัญญาณ A และ B ต่างเฟส 90° ทำให้รู้ทิศและนับได้ 4 ขอบต่อคาบ</figcaption></figure>
+<div class="tf" id="R6" data-k="encoder speed rpm frequency ppr pulses per revolution เอนโค้ดเดอร์ ความเร็วรอบ"><p class="tf-n"><b><span class="fid">R6</span> Speed from pulse frequency</b> ความเร็วรอบจากความถี่</p>
+        \[ n\ [\text{rpm}] = \frac{60\,f}{PPR} \]</div>
+<div class="tf" id="R7" data-k="encoder angular resolution quadrature x4 counting ความละเอียดมุม"><p class="tf-n"><b><span class="fid">R7</span> Angular resolution</b> ความละเอียดมุม</p>
+        \[ \Delta\theta = \frac{360^\circ}{m\cdot PPR} \qquad m = 1, 2, 4 \]</div>
+<div class="wx" id="ex-r-3"><div class="wx-head"><span class="mono">ตัวอย่าง R-3</span><h3>เอนโค้ดเดอร์ 1024 PPR สัญญาณ A 20 kHz</h3></div>
+<ol class="steps">
+<li><p>R6: \(n = 60(20\,000)/1024 = 1171.9\ \text{rpm}\)</p></li>
+<li><p>R7 ×4: \(360/4096 = 0.088^\circ\)</p></li>
+<li><p>นับความถี่ใน gate 10 ms ได้ 800 ขอบ → ความละเอียดความเร็ว 1.46 rpm — ถ้าต้องการละเอียดกว่านี้ที่ความเร็วต่ำ ต้องวัดคาบระหว่างขอบแทน</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="encoder" data-vals='{"f":"20"}'>เปิดในเครื่องคำนวณ</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="encoder"></div>
+    <p><b>เอนโค้ดเดอร์แบบ absolute</b> ให้รหัสตำแหน่งเฉพาะทุกมุม (มักเป็น Gray code ที่เปลี่ยนทีละหนึ่งบิต) ไม่ต้องหาจุดอ้างอิงหลังเปิดเครื่อง แบบ multi-turn นับจำนวนรอบได้ด้วย ส่งข้อมูลผ่านอินเทอร์เฟซอนุกรมเช่น SSI, BiSS หรือโปรโตคอลเฉพาะผู้ผลิต ส่วน <b>รีโซลเวอร์</b> (หม้อแปลงหมุน) ทนความร้อนและการสั่นสะเทือน นิยมในมอเตอร์ของรถยนต์ไฟฟ้าและงานอากาศยาน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="prox">
+    <h2 id="prox">พร็อกซิมิตีสวิตช์: NPN, PNP และ NAMUR <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ตรวจจับ</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>อินดักทีฟ</td><td>โลหะ</td><td>ระยะลดลงกับโลหะที่ไม่ใช่เหล็ก (correction factor) · IEC 60947-5-2</td></tr>
+        <tr><td>คาปาซิทีฟ</td><td>เกือบทุกวัสดุ รวมของเหลวผ่านผนังพลาสติก</td><td>ไวต่อความชื้นและการเกาะ ต้องปรับความไว</td></tr>
+        <tr><td>โฟโตอิเล็กทริก</td><td>วัตถุที่บังหรือสะท้อนแสง</td><td>แบบ through-beam ไกลที่สุด แบบ diffuse ติดตั้งง่ายที่สุด</td></tr>
+        <tr><td>อัลตราโซนิก</td><td>วัตถุโปร่งใสหรือสีต่าง ๆ</td><td>มีระยะบอดใกล้หน้าเซนเซอร์</td></tr>
+        <tr><td>NAMUR (IEC 60947-5-6)</td><td>เซนเซอร์สองสาย 8.2 V ที่กระแสเปลี่ยน ≤ 1.2 mA / ≥ 2.1 mA</td><td>ตรวจสายขาด/ลัดวงจรได้ ใช้กับแบเรียร์ในพื้นที่อันตราย</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>PNP (sourcing)</b> จ่ายไฟบวกออกที่ขาสัญญาณเมื่อตรวจพบ ต่อกับอินพุต PLC แบบ sinking (ขาร่วมเป็นลบ) · <b>NPN (sinking)</b> ดึงขาสัญญาณลงลบ ต่อกับอินพุตแบบ sourcing (ขาร่วมเป็นบวก) สลับกันแล้วอินพุตจะไม่ติดเลย จึงต้องดูจากสเปกการ์ดอินพุตก่อนสั่งซื้อ ส่วนเซนเซอร์ IO-Link รุ่นใหม่ส่งได้ทั้งสถานะสวิตช์และค่าระยะจริงบนสายเดิม (ดู <a href="/learn/sensors-transducers/fieldbus/#iolink">IO-Link</a>)</p>
+    <p><b>ความเร็วและการสั่นสะเทือน</b>: แอกเซเลอโรมิเตอร์ไพอีโซแบบ IEPE (กระตุ้นด้วยกระแสคงที่ 2–20 mA บนสายโคแอกเซียล) ใช้วัดการสั่นของปั๊มและมอเตอร์ เกณฑ์ประเมินความรุนแรงของการสั่นเทียบกับชนิดเครื่องจักรอยู่ในชุดมาตรฐาน ISO 20816 (ฉบับเดิม ISO 10816) และใช้ <a href="/learn/fourier-series/dft-fft/">FFT</a> วิเคราะห์ความถี่เพื่อหาสาเหตุ</p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>OIML R 60 Metrological regulation for load cells · OIML R 76 Non-automatic weighing instruments</li>
+      <li>IEC 60947-5-2 Proximity switches · IEC 60947-5-6 DC interface for proximity sensors and switching amplifiers (NAMUR)</li>
+      <li>API Standard 670 Machinery Protection Systems · ISO 20816 (ชุด) Mechanical vibration — Measurement and evaluation of machine vibration</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

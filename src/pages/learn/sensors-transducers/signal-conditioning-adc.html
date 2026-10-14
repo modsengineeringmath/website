@@ -1,0 +1,154 @@
+<!--meta
+{
+  "title": "การปรับสภาพสัญญาณและ ADC สำหรับเซนเซอร์: อินสทรูเมนเทชันแอมป์ CMRR ฟิลเตอร์กันรอยต่อ Nyquist LSB ENOB สัญญาณรบกวน กราวด์ และงบความคลาดเคลื่อน | อาจารย์มด",
+  "h1": "การปรับสภาพสัญญาณและ ADC: จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้",
+  "description": "ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC",
+  "ogTitle": "ปรับสภาพสัญญาณและ ADC: INA CMRR Nyquist ENOB",
+  "og": {"title": "ปรับสภาพสัญญาณ · ADC"},
+  "lesson": "sensors-transducers",
+  "sub": "signal-conditioning-adc",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["Signal conditioning", "Instrumentation amplifier", "CMRR", "Anti-aliasing filter", "Analog-to-digital converter", "ENOB", "Grounding and shielding"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "ทำไมต้องมีฟิลเตอร์ก่อน ADC?", "a": "เพราะสัญญาณที่มีความถี่สูงกว่าครึ่งหนึ่งของอัตราการสุ่ม (ความถี่ Nyquist) จะปรากฏหลังสุ่มเป็นความถี่ต่ำปลอม (aliasing) และแยกออกจากสัญญาณจริงไม่ได้อีกต่อไป เช่น สัญญาณรบกวน 50 Hz ที่ถูกสุ่มด้วย 60 ครั้งต่อวินาทีจะดูเหมือนสัญญาณ 10 Hz ฟิลเตอร์กันรอยต่อต้องลดสัญญาณเหล่านี้ก่อนการสุ่ม ไม่ใช่หลังการสุ่ม"},
+    {"q": "ADC 24 บิตแม่นกว่า 16 บิตจริงหรือ?", "a": "ไม่เสมอไป จำนวนบิตบอกความละเอียดของรหัส แต่ความแม่นจริงขึ้นกับสัญญาณรบกวน (ENOB หรือ noise-free bits) ความคลาดของแรงดันอ้างอิง offset gain และ drift ตามอุณหภูมิ ADC 24 บิตหลายรุ่นมีบิตที่ใช้ได้จริงประมาณ 18–21 บิตเมื่อสุ่มช้า และต่ำกว่านั้นเมื่อสุ่มเร็ว ต้องดู ENOB ที่อัตราการสุ่มที่ใช้งานจริง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.13 ปรับสภาพสัญญาณ · ADC</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.13 · Sensors &amp; Transducers · Signal Conditioning &amp; ADC</p>
+      <h1>การปรับสภาพสัญญาณและ ADC: <em>จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้</em></h1>
+      <p class="lede">เซนเซอร์ส่วนใหญ่ให้สัญญาณเล็กมาก (µV ถึง mV) หรือไม่ได้ให้แรงดันเลย (ความต้านทาน ความจุ) ภาคปรับสภาพสัญญาณทำให้มันมีขนาด รูปแบบ และความสะอาดพอที่ ADC จะแปลงเป็นตัวเลขได้ถูกต้อง หน้านี้คือ "ข้างใน" ของทรานสมิตเตอร์และการ์ดอินพุตทุกชนิด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#chain">ห่วงโซ่</a>
+        <a class="btn btn-ghost btn-sm" href="#ina">INA · CMRR</a>
+        <a class="btn btn-ghost btn-sm" href="#alias">การสุ่ม · aliasing</a>
+        <a class="btn btn-ghost btn-sm" href="#adc">ADC</a>
+        <a class="btn btn-ghost btn-sm" href="#noise">สัญญาณรบกวน · กราวด์</a>
+        <a class="btn btn-ghost btn-sm" href="#budget">งบความคลาด</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น gain, cmrr, nyquist, lsb, enob, johnson noise, rss" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="chain">
+    <h2 id="chain">ห่วงโซ่ปรับสภาพสัญญาณ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:sx-chain--><svg class="xf" viewBox="0 0 780 210" role="img" aria-label="ห่วงโซ่ปรับสภาพสัญญาณ: เซนเซอร์ แอมป์เครื่องมือวัด ฟิลเตอร์กันรอยต่อ ADC ตัวแยกโดดเดี่ยว และไมโครคอนโทรลเลอร์"><defs><marker id="sx-chain-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="14" y="60" width="106" height="70" rx="10"/><text x="67" y="90" class="xf-h" text-anchor="middle">เซนเซอร์</text><text x="67" y="112" class="xf-k" text-anchor="middle">mV · Ω · pF</text><line class="xf-ln" x1="122" y1="95" x2="138" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxa" x="142" y="60" width="106" height="70" rx="10"/><text x="195" y="90" class="xf-h" text-anchor="middle">INA</text><text x="195" y="112" class="xf-k" text-anchor="middle">G = 1+49.4k/R_G</text><line class="xf-ln" x1="250" y1="95" x2="266" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxa" x="270" y="60" width="106" height="70" rx="10"/><text x="323" y="90" class="xf-h" text-anchor="middle">ฟิลเตอร์</text><text x="323" y="112" class="xf-k" text-anchor="middle">anti-aliasing</text><line class="xf-ln" x1="378" y1="95" x2="394" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxb" x="398" y="60" width="106" height="70" rx="10"/><text x="451" y="90" class="xf-h" text-anchor="middle">ADC</text><text x="451" y="112" class="xf-k" text-anchor="middle">N บิต · f_s</text><line class="xf-ln" x1="506" y1="95" x2="522" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxc" x="526" y="60" width="106" height="70" rx="10"/><text x="579" y="90" class="xf-h" text-anchor="middle">Isolator</text><text x="579" y="112" class="xf-k" text-anchor="middle">≥ 1.5 kV</text><line class="xf-ln" x1="634" y1="95" x2="650" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxb" x="654" y="60" width="106" height="70" rx="10"/><text x="707" y="90" class="xf-h" text-anchor="middle">MCU</text><text x="707" y="112" class="xf-k" text-anchor="middle">สเกล · ชดเชย</text><line class="xf-dash" x1="579" y1="40" x2="579" y2="150"/><text x="579" y="34" class="xf-k" text-anchor="middle">กำแพงแยกโดดเดี่ยว</text><text x="390" y="176" class="xf-m" text-anchor="middle">กติกาสำคัญ: กรองก่อนสุ่ม (f_c < f_s/2) · ขยายให้เต็มช่วง ADC · แยกกราวด์ที่จุดเดียว</text><text x="390" y="196" class="xf-k" text-anchor="middle">ความคลาดรวมของห่วงโซ่ ≈ √(Σ e_i²) เมื่อแต่ละแหล่งเป็นอิสระต่อกัน</text></svg><!--/FIG--><figcaption>รูป 1 · หน้าที่ของแต่ละขั้น: กระตุ้น → ขยายแบบผลต่าง → กรอง → สุ่มและแปลง → แยกโดดเดี่ยว → ประมวลผล</figcaption></figure>
+    <ol>
+      <li><b>กระตุ้น (excitation)</b>: เซนเซอร์แบบ passive ต้องมีแหล่งแรงดันหรือกระแสคงที่ เช่น กระแส 1 mA สำหรับ RTD แรงดัน 5–10 V สำหรับบริดจ์</li>
+      <li><b>ขยายแบบผลต่าง</b>: รับเฉพาะผลต่างระหว่างสองขา ปฏิเสธแรงดันที่ขึ้นลงพร้อมกัน (โหมดร่วม)</li>
+      <li><b>กรอง</b>: ตัดความถี่ที่ไม่ต้องการและกันรอยต่อก่อนสุ่ม</li>
+      <li><b>ชดเชยและทำให้เป็นเชิงเส้น</b>: CJC ของเทอร์โมคัปเปิล สมการ CVD ของ RTD — ทำในเชิงตัวเลขหลัง ADC</li>
+      <li><b>แยกโดดเดี่ยว</b>: ตัดเส้นทางกระแสกราวด์และป้องกันแรงดันสูงข้ามมาฝั่งระบบควบคุม</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="ina">
+    <h2 id="ina">อินสทรูเมนเทชันแอมป์และ CMRR <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A1" data-k="instrumentation amplifier gain three op amp rg อินสทรูเมนเทชันแอมป์ อัตราขยาย"><p class="tf-n"><b><span class="fid">A1</span> Three-op-amp instrumentation amplifier</b> อินสทรูเมนเทชันแอมป์แบบสามออปแอมป์</p>
+        \[ V_o = \left(1 + \frac{2R_1}{R_G}\right)\frac{R_3}{R_2}\,(V_+ - V_-) \]</div>
+<div class="tf" id="A2" data-k="cmrr common mode rejection ratio decibel error การปฏิเสธโหมดร่วม"><p class="tf-n"><b><span class="fid">A2</span> CMRR</b> อัตราการปฏิเสธโหมดร่วม</p>
+        \[ CMRR = 20\log_{10}\frac{A_d}{A_{cm}} \qquad V_\text{err,RTI} = \frac{V_{cm}}{10^{CMRR/20}} \]</div>
+<div class="wx" id="ex-a-1"><div class="wx-head"><span class="mono">ตัวอย่าง A-1</span><h3>บริดจ์ให้ 1 mV มีแรงดัน 50 Hz โหมดร่วม 1 V จากสายยาว</h3></div>
+<ol class="steps">
+<li><p>แอมป์ CMRR 100 dB: \(1/10^5 = 10\ \mu\text{V}\) อ้างอิงที่อินพุต = 1 % ของสัญญาณ</p></li>
+<li><p>ถ้าใช้ออปแอมป์แบบผลต่างธรรมดาที่ตัวต้านทานคลาด 1 % CMRR อาจเหลือราว 40 dB → 10 mV ใหญ่กว่าสัญญาณ 10 เท่า</p></li>
+<li><p>สรุป: วงจรผลต่างที่ทำจากตัวต้านทานแยกชิ้นไม่พอสำหรับสัญญาณระดับมิลลิโวลต์ ต้องใช้ INA ที่ตัวต้านทานถูกตัดแต่งในชิป</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="alias">
+    <h2 id="alias">การสุ่มสัญญาณ Nyquist และฟิลเตอร์กันรอยต่อ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A3" data-k="nyquist sampling theorem aliasing frequency folding การสุ่ม ไนควิสต์ รอยต่อ"><p class="tf-n"><b><span class="fid">A3</span> Sampling theorem and alias frequency</b> ทฤษฎีการสุ่มและความถี่ปลอม</p>
+        \[ f_s > 2 f_\text{max} \qquad f_\text{alias} = \left| f - k f_s \right| \;\;(k \text{ ทำให้ค่าน้อยที่สุด}) \]</div>
+<div class="tf" id="A4" data-k="rc low pass filter cutoff frequency anti aliasing ฟิลเตอร์ความถี่ตัด"><p class="tf-n"><b><span class="fid">A4</span> First-order RC low-pass</b> ฟิลเตอร์ RC อันดับหนึ่ง</p>
+        \[ f_c = \frac{1}{2\pi RC} \qquad |H(f)| = \frac{1}{\sqrt{1 + (f/f_c)^2}} \]</div>
+<div class="wx" id="ex-a-2"><div class="wx-head"><span class="mono">ตัวอย่าง A-2</span><h3>สุ่มอุณหภูมิ 60 ครั้งต่อวินาที มีสัญญาณรบกวน 50 Hz ปน</h3></div>
+<ol class="steps">
+<li><p>A3: \(|50 - 60| = 10\ \text{Hz}\) — สัญญาณรบกวนกลายเป็นการแกว่ง 10 Hz ที่ดูเหมือนอุณหภูมิเปลี่ยนจริง</p></li>
+<li><p>แก้ด้วย RC \(R = 10\ \text{k}\Omega,\ C = 1.6\ \mu\text{F}\): \(f_c = 9.9\ \text{Hz}\) ลด 50 Hz ลงเหลือ ≈ 20 % (−14 dB) ถ้ายังไม่พอใช้ฟิลเตอร์อันดับสูงขึ้น หรือ ADC แบบ sigma-delta ที่มีร่องลด 50/60 Hz ในตัว</p></li>
+<li><p>อีกวิธีที่ทรานสมิตเตอร์ใช้: เฉลี่ยค่าในหนึ่งรอบไฟพอดี (20 ms สำหรับ 50 Hz) ซึ่งให้ศูนย์ที่ 50 Hz และทุกฮาร์มอนิก</p></li>
+</ol></div>
+    <p>ทบทวนพื้นฐานการสุ่มและสเปกตรัมได้ที่ <a href="/learn/fourier-series/dft-fft/">DFT และ FFT</a> และ <a href="/learn/signals/">สัญญาณและระบบ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="adc">
+    <h2 id="adc">ADC: ความละเอียด SNR และ ENOB <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A5" data-k="adc lsb resolution full scale range bits ความละเอียด"><p class="tf-n"><b><span class="fid">A5</span> LSB size</b> ขนาด 1 LSB</p>
+        \[ 1\ \text{LSB} = \frac{FSR}{2^N} \]</div>
+<div class="tf" id="A6" data-k="ideal snr quantization noise 6.02n 1.76 สัญญาณต่อสัญญาณรบกวน"><p class="tf-n"><b><span class="fid">A6</span> Ideal quantisation SNR</b> SNR ในอุดมคติ</p>
+        \[ SNR_\text{ideal} = 6.02N + 1.76\ \text{dB} \]</div>
+<div class="tf" id="A7" data-k="enob effective number of bits sinad บิตที่ใช้ได้จริง"><p class="tf-n"><b><span class="fid">A7</span> Effective number of bits</b> จำนวนบิตที่ใช้ได้จริง</p>
+        \[ ENOB = \frac{SINAD - 1.76}{6.02} \]</div>
+<div class="wx" id="ex-a-3"><div class="wx-head"><span class="mono">ตัวอย่าง A-3</span><h3>การ์ด AI 16 บิต ช่วง 10 V SINAD 88 dB วัดอุณหภูมิช่วง 0–250 °C</h3></div>
+<ol class="steps">
+<li><p>A5: \(10/65\,536 = 152.6\ \mu\text{V}\) ต่อหลัก</p></li>
+<li><p>A7: \(ENOB = (88 - 1.76)/6.02 = 14.3\) บิต</p></li>
+<li><p>ความละเอียดจริง \(250/2^{14.3} = 0.012\ ^\circ\text{C}\) (ตามจำนวนบิตจะได้ 0.0038 °C) ทั้งสองค่าเล็กกว่าความคลาดของเซนเซอร์มาก — ADC ไม่ใช่คอขวดของระบบนี้</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="adc" data-vals='{"bits":"16","sinad":"88"}'>เปิดในเครื่องคำนวณ</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="adc"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ADC</th><th>หลักการ</th><th>ความละเอียด · ความเร็วทั่วไป</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td>SAR</td><td>เทียบแบบไบนารีทีละบิต</td><td>12–18 บิต · kS/s ถึง MS/s</td><td>วัดกระแสคอนเวอร์เตอร์ หลายช่องสลับกัน การควบคุมเร็ว</td></tr>
+        <tr><td>Sigma-delta</td><td>สุ่มเกินแล้วกรองดิจิทัล</td><td>16–32 บิต · S/s ถึง kS/s</td><td>โหลดเซลล์ เทอร์โมคัปเปิล RTD มิเตอร์พลังงาน</td></tr>
+        <tr><td>Pipeline · Flash</td><td>หลายขั้นขนาน</td><td>8–16 บิต · สิบ MS/s ถึง GS/s</td><td>ออสซิลโลสโคป สื่อสาร</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="noise">
+    <h2 id="noise">สัญญาณรบกวน กราวด์ ชีลด์ และการแยกโดดเดี่ยว <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="A8" data-k="johnson nyquist thermal noise resistor bandwidth สัญญาณรบกวนความร้อน"><p class="tf-n"><b><span class="fid">A8</span> Thermal (Johnson–Nyquist) noise</b> สัญญาณรบกวนความร้อน</p>
+        \[ v_n = \sqrt{4kTRB} \qquad 350\ \Omega,\ 10\ \text{Hz},\ 300\ \text{K}:\ v_n \approx 7.6\ \text{nV}_\text{rms} \]</div>
+    <p>สัญญาณรบกวนความร้อนแปรตาม \(\sqrt{B}\) การจำกัดแบนด์วิดท์ให้เท่าที่จำเป็นจึงเป็นวิธีลดสัญญาณรบกวนที่ได้ผลที่สุด เซนเซอร์อุตสาหกรรมส่วนใหญ่เปลี่ยนช้า (อุณหภูมิ ระดับ) การเฉลี่ย N ค่าลดสัญญาณรบกวนสุ่มลง \(\sqrt N\) เท่า</p>
+    <ul>
+      <li><b>สายคู่บิดเกลียว</b> ลดการเหนี่ยวนำจากสนามแม่เหล็ก (พื้นที่วงลูปเล็กและสลับทิศทุกเกลียว)</li>
+      <li><b>ชีลด์</b> กันสนามไฟฟ้า ต่อกราวด์ที่ปลายด้านเดียว (มักเป็นด้านตู้ควบคุม) สำหรับสัญญาณแอนะล็อกความถี่ต่ำ เพื่อไม่ให้ชีลด์กลายเป็นเส้นทางกระแสกราวด์</li>
+      <li><b>กราวด์ลูป</b>: สองจุดกราวด์ที่ศักย์ต่างกันทำให้กระแสไหลในสายสัญญาณ แก้ด้วยการแยกโดดเดี่ยว (ออปโต แม่เหล็ก หรือความจุ) หรือ isolator สำเร็จรูปบนราง DIN</li>
+      <li><b>แยกสายสัญญาณออกจากสายกำลัง</b> และข้ามกันที่มุมฉาก สายขาออกของอินเวอร์เตอร์เป็นแหล่งสัญญาณรบกวนความถี่สูงที่แรงที่สุดในตู้</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="budget">
+    <h2 id="budget">งบความคลาดเคลื่อนทั้งห่วงโซ่ <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="A9" data-k="error budget root sum square independent sources total uncertainty งบความคลาดเคลื่อน"><p class="tf-n"><b><span class="fid">A9</span> Chain error budget</b> งบความคลาดทั้งห่วงโซ่</p>
+        \[ e_\text{tot} = \sqrt{e_\text{sensor}^2 + e_\text{tx}^2 + e_\text{ADC}^2 + e_\text{wiring}^2 + \cdots} \qquad (\text{แหล่งอิสระต่อกัน}) \]</div>
+<div class="wx" id="ex-a-4"><div class="wx-head"><span class="mono">ตัวอย่าง A-4</span><h3>Pt100 เกรด A ที่ 0 °C + ทรานสมิตเตอร์ + การ์ด AI + ผลอุณหภูมิตู้</h3></div>
+<ol class="steps">
+<li><p>สมมติ: เซนเซอร์ ±0.15 °C · ทรานสมิตเตอร์ ±0.10 °C · การ์ด AI ±0.05 °C · ผลอุณหภูมิแวดล้อม ±0.20 °C</p></li>
+<li><p>A9: \(\sqrt{0.15^2 + 0.10^2 + 0.05^2 + 0.20^2} = 0.27\ ^\circ\text{C}\)</p></li>
+<li><p>ถ้าบวกตรงได้ 0.50 °C ซึ่งเป็นกรณีเลวสุดที่แทบไม่เกิดพร้อมกัน การปรับปรุงที่คุ้มที่สุดคือแหล่งที่ใหญ่ที่สุด (ผลอุณหภูมิ) ไม่ใช่การซื้อ ADC ที่ละเอียดขึ้น</p></li>
+</ol></div>
+    <p>หลักการประเมินความไม่แน่นอนแบบเต็มตาม GUM อยู่ที่ <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยาและการสอบกลับ</a> ส่วนสัญญาณที่ออกจากทรานสมิตเตอร์ไปยังระบบควบคุมอ่านต่อที่ <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>JCGM 100:2008 (GUM) Evaluation of measurement data — Guide to the expression of uncertainty in measurement</li>
+      <li>IEEE 1241 Standard for Terminology and Test Methods for Analog-to-Digital Converters (นิยาม SINAD และ ENOB)</li>
+      <li>Nyquist, H. (1928) Thermal Agitation of Electric Charge in Conductors, Physical Review 32</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

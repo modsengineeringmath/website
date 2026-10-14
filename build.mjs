@@ -587,35 +587,65 @@ export const TOPICS = [
     ],
   },
   {
-    // Topic 20: Sensors & transducers — pillar hub: definitions (VIM), SI units, metrology, electrical standards + labs
+    // Topic 20: Sensors & transducers — pillar series (4 parts × 20 pages): foundations/units/standards, process & physical
+    // quantities, standard signals and industrial networks, plant practice + virtual instrumentation lab.
+    // Spelling decision (hub #terms): เซนเซอร์ / ทรานส์ดิวเซอร์ / ทรานสมิตเตอร์ — Royal Institute transliteration rules.
+    // Tools: assets/sx-calc.js (EEKit calculators data-sx=…), sx-bus.js (4–20 mA loop, HART FSK, Modbus frames/CRC),
+    // sx-plant.js (virtual process plant), figures from scripts/sx_figs.py.
     slug: "sensors-transducers",
-    title: "เซ็นเซอร์และทรานสดิวเซอร์",
+    title: "เซนเซอร์และทรานส์ดิวเซอร์",
     en: "Sensors & Transducers",
     sym: "🌡",
-    summary: "หน้าแกนกลางของหมวดเซ็นเซอร์ (sensor) และทรานสดิวเซอร์ (transducer): นิยามตาม VIM ห่วงโซ่การวัด หน่วย SI มาตรวิทยาและการสอบกลับ มาตรฐานไฟฟ้า IEC ISO IEEE ISA NAMUR พร้อมประเทศต้นแบบ เครื่องแปลงหน่วย สเกล 4–20 mA และแล็บโต้ตอบ",
-    fxHint: "พิมพ์ เช่น sensor, transducer, VIM, SI, psi, 4-20 mA, NE 43, IEC 60751, ITS-90, Josephson, traceability",
+    hubFx: true, hubShort: "ภาพรวม · นิยาม", hubPrefix: "S",
+    summary: "เซนเซอร์ (sensor) ทรานส์ดิวเซอร์ (transducer) และเครื่องมือวัดคุมกระบวนการครบชุด: นิยามตาม VIM ประวัติ หน่วย SI มาตรวิทยา มาตรฐานพร้อมประเทศต้นแบบ การวัดอุณหภูมิ ความดัน อัตราการไหล ระดับ แรง ตำแหน่ง กระแส แรงดัน สัญญาณมาตรฐาน 4–20 mA HART Modbus PROFIBUS FOUNDATION Fieldbus IO-Link PROFINET Ethernet-APL เซนเซอร์อัจฉริยะ IIoT สัญลักษณ์ P&ID การสอบเทียบ และแล็บวัดคุมเสมือน",
+    fxHint: "พิมพ์ เช่น pt100, type k, cjc, ความดัน, orifice, magmeter, coriolis, radar, ระดับ, load cell, 4-20 mA, ne 43, hart, crc, modbus, profibus, adc, sil",
     parts: [
-      { id: "foundations", n: 1, title: "พื้นฐาน หน่วย และมาตรฐาน", en: "Foundations, Units & Standards", blurb: "นิยาม ห่วงโซ่การวัด หน่วย SI เครื่องแปลงหน่วย มาตรวิทยา และมาตรฐานไฟฟ้าพร้อมประเทศต้นแบบ" },
-      { id: "quantities", n: 2, title: "เซ็นเซอร์ตามปริมาณที่วัด", en: "Sensors by Quantity", blurb: "อุณหภูมิ ความดัน การไหล ระดับ แรง ตำแหน่ง กระแสและแรงดัน (กำลังจัดทำ)" },
-      { id: "signals", n: 3, title: "สัญญาณและการประยุกต์", en: "Signals & Applications", blurb: "วงจรปรับสภาพสัญญาณ ADC สัญญาณอุตสาหกรรม 4–20 mA HART และการเลือกใช้งาน (กำลังจัดทำ)" },
+      { id: "foundations", n: 1, title: "รากฐานการวัด หน่วย และมาตรฐาน", en: "Foundations, History, Units & Standards", blurb: "นิยาม ห่วงโซ่การวัด ประวัติและวิวัฒนาการ หน่วย SI เครื่องแปลงหน่วย มาตรวิทยา และมาตรฐานพร้อมประเทศต้นแบบ" },
+      { id: "quantities", n: 2, title: "เครื่องมือวัดตามปริมาณ", en: "Measuring Instruments by Quantity", blurb: "อุณหภูมิ ความดัน อัตราการไหล ระดับ แรงและตำแหน่ง กระแสและแรงดัน ตั้งแต่หลักฟิสิกส์ถึงทรานสมิตเตอร์ในโรงงาน" },
+      { id: "signals", n: 3, title: "สัญญาณมาตรฐานและเครือข่ายอุตสาหกรรม", en: "Standard Signals & Industrial Networks", blurb: "ปรับสภาพสัญญาณและ ADC, 4–20 mA กับ HART, Modbus, ฟิลด์บัสและ Industrial Ethernet, เซนเซอร์อัจฉริยะและ IIoT" },
+      { id: "practice", n: 4, title: "งานวัดคุมในโรงงานและแล็บ", en: "Plant Practice & Virtual Lab", blurb: "สัญลักษณ์ P&ID ตาม ISA-5.1 การเลือก ติดตั้ง และสอบเทียบ และห้องแล็บวัดคุมเสมือนทั้งระบบ" },
     ],
     sub: [
-      { slug: "fundamentals", part: "foundations", short: "หลักการเบื้องต้น", title: "หลักการเบื้องต้นของเซ็นเซอร์และทรานสดิวเซอร์: ห่วงโซ่การวัด ความคลาดเคลื่อน และการตอบสนอง", en: "Sensor & Transducer Fundamentals", sym: "S", prefix: "F",
+      { slug: "fundamentals", part: "foundations", short: "หลักการเบื้องต้น", title: "หลักการเบื้องต้นของเซนเซอร์และทรานส์ดิวเซอร์: ห่วงโซ่การวัด ความคลาดเคลื่อน และการตอบสนอง", en: "Sensor & Transducer Fundamentals", sym: "S", prefix: "F",
         summary: "นิยามตาม VIM ห่วงโซ่การวัด หลักการแปลงพลังงาน sensitivity hysteresis nonlinearity %FS กับ %RDG ค่าคงตัวเวลา พร้อมแล็บ 3 ชุด" },
-      { slug: "units", part: "foundations", short: "หน่วยและระบบหน่วย", title: "หน่วยและระบบหน่วยสำหรับงานเซ็นเซอร์: SI ค่าคงตัวนิยามปี 2019 คำนำหน้า และกับดักในดาต้าชีต", en: "Units & Systems of Units", sym: "SI", prefix: "U",
+      { slug: "history-technology", part: "foundations", short: "ประวัติ · วิวัฒนาการ", title: "ประวัติและวิวัฒนาการของเซนเซอร์และเครื่องมือวัดคุม: จากเทอร์โมสโคปถึง Ethernet-APL", en: "History & Evolution of Instrumentation", sym: "⌛", prefix: "H",
+        summary: "เส้นเวลา 400 ปี: ปรากฏการณ์ที่ค้นพบ ยุคนิวแมติก 3–15 psi ยุค 4–20 mA ยุคดิจิทัล HART ฟิลด์บัส และยุคเซนเซอร์อัจฉริยะ พร้อมประเทศต้นกำเนิด" },
+      { slug: "units", part: "foundations", short: "หน่วยและระบบหน่วย", title: "หน่วยและระบบหน่วยสำหรับงานเซนเซอร์: SI ค่าคงตัวนิยามปี 2019 คำนำหน้า และกับดักในดาต้าชีต", en: "Units & Systems of Units", sym: "SI", prefix: "U",
         summary: "SI 7 หน่วยฐาน หน่วยอนุพันธ์ทางไฟฟ้า คำนำหน้า ระบบหน่วยอื่น psi kgf gauss กฎการเขียน และเครื่องมือวิเคราะห์มิติ" },
       { slug: "unit-lab", part: "foundations", short: "เครื่องมือแปลงหน่วย", title: "เครื่องมือแปลงหน่วยออนไลน์ สเกล 4–20 mA และเครื่องมือเดซิเบล", en: "Unit Converter Lab", sym: "⇄", prefix: "C", tag: "เครื่องมือ",
         summary: "แปลงหน่วยแบบพิมพ์นิพจน์ psi bar kgf/cm² °C/°F rpm W/(m·K) สเกลกระแส 4–20 mA และเดซิเบล ทำงานในเบราว์เซอร์" },
       { slug: "measurement-standards", part: "foundations", short: "มาตรวิทยา", title: "มาตรฐานการวัดและมาตรวิทยา: การสอบกลับ SI ปี 2019 Josephson และ ITS-90", en: "Metrology & Measurement Standards", sym: "kg", prefix: "M",
         summary: "โซ่การสอบกลับจาก SI ถึงเซนเซอร์หน้างาน ประวัติต้นแบบ มาตรฐานไฟฟ้าควอนตัม จุดคงที่ ITS-90 และเครื่องคิดเลขงบความไม่แน่นอน" },
-      { slug: "electrical-standards", part: "foundations", short: "มาตรฐานไฟฟ้า", title: "มาตรฐานไฟฟ้าสำหรับเซ็นเซอร์: IEC ISO IEEE ISA DIN JIS มอก. และประเทศต้นแบบ", en: "Electrical Standards & Their Origins", sym: "IEC", prefix: "E", tag: "ฐานข้อมูล 37 มาตรฐาน",
-        summary: "ฐานข้อมูลมาตรฐานที่ค้นหาและกรองได้ พร้อมประเทศและองค์กรต้นแบบ และตัวเลือกมาตรฐานตามชนิดเซนเซอร์" },
-      { slug: "temperature-sensors", part: "quantities", short: "เซ็นเซอร์อุณหภูมิ", title: "เซ็นเซอร์อุณหภูมิ: เทอร์โมคัปเปิล RTD เทอร์มิสเตอร์ และ IC", en: "Temperature Sensors", sym: "°C", prefix: "T", soon: true, summary: "Pt100 ตาม IEC 60751 เทอร์โมคัปเปิลตาม IEC 60584 และการชดเชยจุดเย็น" },
-      { slug: "pressure-flow-level", part: "quantities", short: "ความดัน · การไหล · ระดับ", title: "เซ็นเซอร์ความดัน การไหล และระดับ", en: "Pressure, Flow & Level", sym: "bar", prefix: "P", soon: true, summary: "ทรานสมิตเตอร์ความดัน DP flow มิเตอร์แม่เหล็กไฟฟ้า และการวัดระดับ" },
-      { slug: "force-position", part: "quantities", short: "แรง · ตำแหน่ง", title: "เซ็นเซอร์แรง น้ำหนัก ตำแหน่ง และการเคลื่อนที่", en: "Force & Position", sym: "N", prefix: "R", soon: true, summary: "โหลดเซลล์ สเตรนเกจ LVDT เอนโค้ดเดอร์ และเซ็นเซอร์ฮอลล์" },
-      { slug: "current-voltage-sensing", part: "quantities", short: "วัดกระแส · แรงดัน", title: "เซ็นเซอร์วัดกระแสและแรงดัน: ชันต์ CT ฮอลล์ และโรโกวสกี", en: "Current & Voltage Sensing", sym: "A", prefix: "V", soon: true, summary: "ชันต์ หม้อแปลงกระแส เซ็นเซอร์ฮอลล์ และขดโรโกวสกี" },
-      { slug: "signal-conditioning-adc", part: "signals", short: "ปรับสภาพสัญญาณ · ADC", title: "การปรับสภาพสัญญาณและ ADC สำหรับเซ็นเซอร์", en: "Signal Conditioning & ADC", sym: "ADC", prefix: "A", soon: true, summary: "บริดจ์ ออปแอมป์ อินสทรูเมนเทชันแอมป์ ฟิลเตอร์ และการสุ่มสัญญาณ" },
-      { slug: "industrial-signals", part: "signals", short: "สัญญาณอุตสาหกรรม", title: "สัญญาณอุตสาหกรรม: 4–20 mA, HART, Modbus และ IO-Link", en: "Industrial Signals", sym: "mA", prefix: "I", soon: true, summary: "วงจรกระแสสองสาย NAMUR NE 43 HART และการสื่อสารภาคสนาม" },
+      { slug: "electrical-standards", part: "foundations", short: "มาตรฐาน · ประเทศต้นแบบ", title: "มาตรฐานสำหรับเซนเซอร์และเครื่องมือวัด: IEC ISO IEEE ISA NAMUR DIN JIS มอก. และประเทศต้นแบบ", en: "Standards & Their Countries of Origin", sym: "IEC", prefix: "E", tag: "ฐานข้อมูลมาตรฐาน",
+        summary: "ฐานข้อมูลมาตรฐานที่ค้นหาและกรองได้ พร้อมประเทศและองค์กรต้นแบบ แผนที่ประเทศ และตัวเลือกมาตรฐานตามชนิดเซนเซอร์" },
+      { slug: "temperature-sensors", part: "quantities", short: "อุณหภูมิ", title: "การวัดอุณหภูมิ: RTD Pt100 เทอร์โมคัปเปิล เทอร์มิสเตอร์ IC และอินฟราเรด", en: "Temperature Measurement", sym: "°C", prefix: "T",
+        summary: "สมการ Callendar–Van Dusen ตาม IEC 60751 การต่อ 2/3/4 สาย เทอร์โมคัปเปิล IEC 60584 การชดเชยจุดเย็น Steinhart–Hart ไพโรมิเตอร์ ทรานสมิตเตอร์อุณหภูมิ พร้อมเครื่องคำนวณ" },
+      { slug: "pressure-sensors", part: "quantities", short: "ความดัน", title: "การวัดความดัน: Gauge Absolute DP เบอร์ดอง สเตรนเกจ ไพอีโซรีซิสทีฟ คาปาซิทีฟ และทรานสมิตเตอร์", en: "Pressure Measurement", sym: "Pa", prefix: "P",
+        summary: "ความดันสัมบูรณ์ เกจ และผลต่าง หลักการเซนเซอร์ทุกแบบ ทรานสมิตเตอร์ DP ซีลไดอะแฟรม การเลือกช่วงและ turndown พร้อมแล็บ" },
+      { slug: "flow-measurement", part: "quantities", short: "อัตราการไหล", title: "การวัดอัตราการไหล: ออริฟิซ ISO 5167 แม่เหล็กไฟฟ้า อัลตราโซนิก วอร์เท็กซ์ คอริโอลิส และเทอร์ไบน์", en: "Flow Measurement", sym: "Q", prefix: "Q",
+        summary: "เรย์โนลด์ส์ สมการเบอร์นูลลีสู่ ISO 5167 การถอดรากที่สอง magmeter E = kBDv อัลตราโซนิกเวลาเดินทาง วอร์เท็กซ์ Strouhal คอริโอลิส และตารางเลือกมิเตอร์" },
+      { slug: "level-measurement", part: "quantities", short: "ระดับ", title: "การวัดระดับ: ความดันไฮโดรสแตติก DP เรดาร์ FMCW เรดาร์นำคลื่น อัลตราโซนิก ลูกลอย และสวิตช์ระดับ", en: "Level Measurement", sym: "h", prefix: "L",
+        summary: "h = ΔP/(ρg) ถังเปิดและถังปิด ขาเปียกขาแห้ง เรดาร์ FMCW 80 GHz TDR อัลตราโซนิก การชดเชยอุณหภูมิ ปริมาตรถังนอน และสวิตช์ระดับ" },
+      { slug: "force-position", part: "quantities", short: "แรง · ตำแหน่ง", title: "เซนเซอร์แรง น้ำหนัก ตำแหน่ง และการเคลื่อนที่: สเตรนเกจ โหลดเซลล์ LVDT เอนโค้ดเดอร์ และพร็อกซิมิตี", en: "Force, Weight & Position", sym: "N", prefix: "R",
+        summary: "สเตรนเกจและสะพานวีตสโตน โหลดเซลล์ mV/V LVDT เอนโค้ดเดอร์ A/B/Z พร็อกซิมิตีสวิตช์ NPN/PNP และความเร็วรอบ" },
+      { slug: "current-voltage-sensing", part: "quantities", short: "กระแส · แรงดัน", title: "เซนเซอร์วัดกระแสและแรงดัน: ชันต์ CT ฮอลล์ โรโกวสกี และตัวแบ่งแรงดันแบบแยกโดดเดี่ยว", en: "Current & Voltage Sensing", sym: "A", prefix: "V",
+        summary: "ชันต์และ Kelvin หม้อแปลงกระแส IEC 61869 คลาสและภาระ ฮอลล์ open/closed loop ขดโรโกวสกี และการวัดแรงดันแบบแยกโดดเดี่ยว" },
+      { slug: "signal-conditioning-adc", part: "signals", short: "ปรับสภาพสัญญาณ · ADC", title: "การปรับสภาพสัญญาณและ ADC: บริดจ์ อินสทรูเมนเทชันแอมป์ ฟิลเตอร์ การแยกโดดเดี่ยว และการสุ่ม", en: "Signal Conditioning & ADC", sym: "ADC", prefix: "A",
+        summary: "สะพานวีตสโตน INA CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ความละเอียด LSB ENOB สัญญาณรบกวน การต่อกราวด์ และงบความคลาดเคลื่อนทั้งห่วงโซ่" },
+      { slug: "industrial-signals", part: "signals", short: "4–20 mA · HART", title: "สัญญาณมาตรฐานอุตสาหกรรม: 4–20 mA สองสาย 0–10 V NAMUR NE 43 และ HART", en: "Standard Signals: 4–20 mA & HART", sym: "mA", prefix: "I",
+        summary: "ทำไมต้อง 4–20 mA ลูปสองสาย สามสาย สี่สาย งบแรงดันลูปและความต้านทานโหลด NE 43 HART FSK 1200/2200 Hz พร้อมซิมูเลเตอร์ลูปและโมเด็ม HART" },
+      { slug: "modbus", part: "signals", short: "Modbus RTU · TCP", title: "Modbus RTU และ Modbus TCP: RS-485 เฟรม ฟังก์ชันโค้ด รีจิสเตอร์ CRC-16 และ Float32", en: "Modbus RTU & TCP", sym: "01", prefix: "D",
+        summary: "RS-485 การต่อสายและเทอร์มิเนเตอร์ แบบจำลองข้อมูล 4 ตาราง ฟังก์ชันโค้ด 03/04/06/16 คำนวณ CRC-16 และเวลาเฟรม แปลง Float32 สลับไบต์ พร้อมเครื่องสร้างเฟรม" },
+      { slug: "fieldbus", part: "signals", short: "ฟิลด์บัส · Industrial Ethernet", title: "ฟิลด์บัสและ Industrial Ethernet: PROFIBUS DP/PA FOUNDATION Fieldbus IO-Link PROFINET EtherNet/IP EtherCAT และ Ethernet-APL", en: "Fieldbus & Industrial Ethernet", sym: "⇆", prefix: "B",
+        summary: "เปรียบเทียบเครือข่ายภาคสนาม: ชั้นกายภาพ ความเร็ว ระยะ การจ่ายไฟบนสาย ความปลอดภัยในตัว งบกระแสเซกเมนต์ ประเทศต้นกำเนิด และวิธีเลือก" },
+      { slug: "smart-sensors-iiot", part: "signals", short: "เซนเซอร์อัจฉริยะ · IIoT", title: "เซนเซอร์อัจฉริยะและ IIoT: MEMS เซนเซอร์ไร้สาย IEEE 1451 OPC UA MQTT และการบำรุงรักษาเชิงพยากรณ์", en: "Smart Sensors & IIoT", sym: "IoT", prefix: "N",
+        summary: "หลักการสมัยใหม่: MEMS วินิจฉัยตัวเอง TEDS WirelessHART ISA100 LoRaWAN OPC UA MQTT NAMUR Open Architecture สถาปัตยกรรม Industry 4.0 และงบพลังงานแบตเตอรี่" },
+      { slug: "pid-symbols", part: "practice", short: "P&ID · แท็กเครื่องมือ", title: "สัญลักษณ์และแท็กเครื่องมือวัดบน P&ID ตาม ISA-5.1: อ่าน FT-101 TIC-205 และวงจรควบคุม", en: "P&ID Symbols & Instrument Tags (ISA-5.1)", sym: "FT", prefix: "G",
+        summary: "ตัวอักษรตัวแรกและตัวตาม สัญลักษณ์วงกลมตามตำแหน่ง เส้นสัญญาณ ตัวอย่างลูปควบคุมระดับ อัตราไหล ความดัน อุณหภูมิ และเครื่องมือถอดรหัสแท็ก" },
+      { slug: "installation-calibration", part: "practice", short: "เลือก · ติดตั้ง · สอบเทียบ", title: "เลือก ติดตั้ง และสอบเทียบเครื่องมือวัด: ช่วงวัด IP Ex SIL การสอบเทียบ 5 จุด ลูปเช็ก และใบรับรอง", en: "Selection, Installation & Calibration", sym: "✓", prefix: "K",
+        summary: "เช็กลิสต์เลือกเครื่องมือ IP ตาม IEC 60529 พื้นที่อันตราย Ex SIL ตาม IEC 61508/61511 การสอบเทียบ as-found/as-left TUR ลูปเช็กและการแก้ปัญหาหน้างาน" },
+      { slug: "instrumentation-lab", part: "practice", short: "แล็บวัดคุมเสมือน", title: "ห้องแล็บวัดคุมเสมือน: ถังน้ำ ปั๊ม วาล์ว ทรานสมิตเตอร์ 4–20 mA Modbus และ PID ในหน้าเดียว", en: "Virtual Instrumentation & Control Lab", sym: "⚗", tag: "ซิมูเลเตอร์",
+        summary: "โรงงานจำลองแบบเรียลไทม์: LT FT PT TT ส่ง 4–20 mA เข้า PLC ควบคุม PID ใส่ความผิดพลาด (สายขาด drift ฟองอากาศ) อ่านรีจิสเตอร์ Modbus และใบงาน" },
     ],
   },
 ];
@@ -1015,13 +1045,15 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor"];
+const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers"];
 const MD_GUIDES = [
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
     desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
   { src: "src/md/solar-pv.md", out: "learn/solar-pv/guide.md", page: "/learn/solar-pv/", title: "Solar PV system design — complete guide (Thai, Markdown)",
     desc: "19-chapter structure, 10-step design workflow, key formulas with IDs (cell, resource, modules, string sizing, wiring, batteries, yield, economics, forecasting, MPPT, inverters, air conditioning, solar farms, pumping), Thai solar data, worked-example numbers, calculators, standards (IEC 61215/61730/62548/62446/62109/62116, IEEE 1547, PEA/MEA) and FAQ" },
+  { src: "src/md/sensors-transducers.md", out: "learn/sensors-transducers/guide.md", page: "/learn/sensors-transducers/", title: "Sensors, transducers & industrial instrumentation — complete guide (Thai, Markdown)",
+    desc: "spelling decision (เซนเซอร์/ทรานส์ดิวเซอร์), 20-chapter structure, verified example numbers (Pt100, thermocouple CJC, ISO 5167 orifice, magmeter, radar level, 4–20 mA loop budget, NE 43, HART, Modbus frames and CRC, fieldbus segments, SIL), standards with countries of origin, interactive tools and FAQ" },
 ];
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
@@ -1197,6 +1229,12 @@ const LABS = [
   ["Power factor simulator & virtual capacitor bank", "power-factor/pf-lab", "animated v(t), i(t), p(t) with negative-power shading, rotating phasors, power triangle, PF dial and digital meters for real loads (heater, induction motor with load-dependent PF, magnetic-ballast fluorescent, SMPS/LED without PFC with harmonics, inverter AC with PFC, fridge, custom R-X) and a 6-step capacitor bank; automatic capacitor bank over a factory day with PF controller, C/k, step arrangements, switching count and Thai kvar penalty; calculators for capacitor kvar/µF, PF penalty and payback, true PF with THD, resonance and detuned banks, motor individual compensation, two-wattmeter method; presets via #preset=<name>"],
   ["Power factor formula index", "power-factor#formulas", "every power factor formula with a citable ID (B basics, W waveforms, C correction, K capacitor banks, T billing, H harmonics, M measurement)"],
   ["Build your own signal generator", "function-generator/build", "op-amp relaxation oscillator, 555 astable, Wien-bridge oscillator, XR2206, R-2R DAC and AD9833 DDS with Arduino/ESP32 code, output stage design, DDS phase-accumulator visualiser and calculators"],
+  ["Virtual instrumentation & control lab", "sensors-transducers/instrumentation-lab", "real-time tank, VFD pump, valve and heater with LT/FT/PT/TT 4–20 mA transmitters (NAMUR NE 43), two PID loops, alarms and interlocks, live Modbus registers, eight injectable faults and four worksheets"],
+  ["4–20 mA loop simulator & HART modem", "sensors-transducers/industrial-signals", "2/3/4-wire loops, loop power budget, NE 43 failure currents, open wire, short, ground loop, HART Bell 202 FSK bits and waveform"],
+  ["Modbus RTU/TCP frame builder, CRC-16 & float32 tool", "sensors-transducers/modbus", "request/response frames with a virtual transmitter, exceptions, MBAP header, CRC-16 checker, IEEE 754 word orders ABCD/CDAB, RS-485 poll-time calculator"],
+  ["Temperature calculators (Pt100, NIST thermocouples, CJC, NTC)", "sensors-transducers/temperature-sensors", "IEC 60751 Callendar–Van Dusen with 2/3/4-wire error, NIST ITS-90 reference functions for types B E J K N R S T, cold-junction compensation, thermistor divider"],
+  ["ISO 5167 orifice, magmeter, ultrasonic & vortex calculators", "sensors-transducers/flow-measurement", "Reader-Harris/Gallagher discharge coefficient with iteration, expansibility, permanent pressure loss, square-root rangeability"],
+  ["Sensors & transducers formula index", "sensors-transducers#formulas", "every formula with a citable ID (S overview, H history, T temperature, P pressure, Q flow, L level, R force/position, V current/voltage, A conditioning/ADC, I 4–20 mA, D Modbus, B fieldbus, N IIoT, K calibration)"],
 ];
 fs.writeFileSync(
   path.join(ROOT, "llms.txt"),
@@ -1218,6 +1256,7 @@ ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug
 - Inverse Laplace calculator links: ${SITE}/learn/laplace-transform/inverse-laplace-transform/#f=(s%2B3)%2F(s%5E2%2B3s%2B2)
 - Solar PV design calculators (string sizing, energy yield, battery, air conditioner, solar pump, voltage drop, payback/NPV/IRR/LCOE): ${SITE}/learn/solar-pv/design-lab/ ; MPPT switching-level simulation: ${SITE}/learn/power-electronics/converter-lab/#preset=solar-mppt
 - Harmonic lab presets, e.g. ${SITE}/learn/fourier-series/analyzer-lab/#preset=smps (SMPS without PFC), #preset=neutral (hot neutral), #preset=six (6-pulse rectifier), #preset=cap-resonance (PF capacitor resonance), #preset=detuned (7 % detuned bank), #preset=square-gibbs, #preset=lc-buck
+- Sensors & instrumentation: virtual plant presets ${SITE}/learn/sensors-transducers/instrumentation-lab/ (level PID, aggressive tuning, density change, open wire, level + temperature); Thai spelling used on this site: เซนเซอร์ (also written เซ็นเซอร์) and ทรานส์ดิวเซอร์ (also ทรานสดิวเซอร์)
 
 ## Markdown versions (for AI assistants)
 ${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): ${g.desc}`).join("\n")}

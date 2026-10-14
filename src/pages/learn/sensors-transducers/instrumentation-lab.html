@@ -1,0 +1,134 @@
+<!--meta
+{
+  "title": "ห้องแล็บวัดคุมเสมือน: ถังน้ำ ปั๊ม VFD วาล์ว ทรานสมิตเตอร์ LT FT PT TT 4–20 mA PID Modbus และการจำลองความผิดพลาด | อาจารย์มด",
+  "h1": "ห้องแล็บวัดคุมเสมือน (Virtual Instrumentation & Control Lab)",
+  "description": "โรงงานจำลองแบบเรียลไทม์ในเบราว์เซอร์สำหรับเรียนวัดคุม: ถังน้ำ ปั๊มควบคุมความเร็ว วาล์วขาออก ฮีตเตอร์ ทรานสมิตเตอร์ระดับ อัตราไหล ความดัน และอุณหภูมิที่ส่งกระแส 4–20 mA ตาม NAMUR NE 43 ตัวควบคุม PID ระดับและอุณหภูมิแบบ auto/manual สัญญาณเตือนและอินเตอร์ล็อก รีจิสเตอร์ Modbus สด และความผิดพลาดที่ใส่ได้ เช่น สายขาด ศูนย์เลื่อน ความหนาแน่นเปลี่ยน ฟองอากาศ วาล์วค้าง พร้อมใบงาน",
+  "ogTitle": "แล็บวัดคุมเสมือน: 4–20 mA PID Modbus",
+  "og": {"title": "แล็บวัดคุมเสมือน"},
+  "lesson": "sensors-transducers",
+  "sub": "instrumentation-lab",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Process control simulator", "Level control", "PID control", "4-20 mA", "Modbus", "Fault diagnosis"],
+  "scripts": ["/assets/ee-kit.js", "/assets/sx-calc.js", "/assets/sx-plant.js"],
+  "faq": [
+    {"q": "แล็บนี้จำลองอะไรบ้าง?", "a": "ถังเปิดพื้นที่หน้าตัด 0.5 ตารางเมตร สูง 3 เมตร ปั๊มป้อนน้ำที่ปรับความเร็วได้ วาล์วขาออก และฮีตเตอร์ 150 kW ทรานสมิตเตอร์สี่ตัว (ระดับ อัตราไหล ความดัน อุณหภูมิ) ส่งกระแส 4–20 mA ที่อิ่มตัวและแจ้งความผิดพลาดตาม NAMUR NE 43 PLC จำลองทำการสเกล สัญญาณเตือน อินเตอร์ล็อก และควบคุม PID สองลูป พร้อมแสดงรีจิสเตอร์ Modbus แบบสด แบบจำลองเป็นค่าเพื่อการเรียนรู้ ไม่ได้แทนกระบวนการจริงเฉพาะแห่งใด"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.20 แล็บวัดคุมเสมือน</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.20 · Sensors &amp; Transducers · Virtual Instrumentation Lab</p>
+      <h1>ห้องแล็บวัดคุมเสมือน <em>ถังน้ำ ปั๊ม วาล์ว ทรานสมิตเตอร์ และ PID ในหน้าเดียว</em></h1>
+      <p class="lede">ภาควิชาวัดคุมมีโต๊ะแล็บที่นักศึกษาต่อทรานสมิตเตอร์เข้า PLC แล้วจูนลูปควบคุม แล็บนี้นำประสบการณ์นั้นมาไว้ในเบราว์เซอร์ และเพิ่มสิ่งที่แล็บจริงทำไม่ได้: ทำให้อุปกรณ์เสียได้ทุกแบบโดยไม่มีอะไรพังจริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">เปิดแล็บ</a>
+        <a class="btn btn-ghost btn-sm" href="#model">แบบจำลอง</a>
+        <a class="btn btn-ghost btn-sm" href="#sheets">ใบงาน</a>
+        <a class="btn btn-ghost btn-sm" href="#tools">เครื่องมืออื่นในบทนี้</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ควบคุมระดับและอุณหภูมิของถัง TK-101</h2>
+    <div class="sx-plant" data-preset="level-pid"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-preset="manual">เริ่มแบบ manual</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-preset="aggressive">จูนแรงเกิน</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-preset="heat">ระดับ + อุณหภูมิ</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-preset="density">ความหนาแน่นเปลี่ยน</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-preset="open-wire">สายขาดขณะควบคุม</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-fault="lt-noise">ใส่: ผิวน้ำกระเพื่อม</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-fault="tt-burnout">ใส่: TT ขาด</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plant-fault="pump-trip">ใส่: ปั๊มทริป</button>
+    </div>
+    <p class="sx-src">วิธีใช้: เลื่อน SP ของ LIC-101 แล้วดูเทรนด์ · กด MAN เพื่อสั่งปั๊มเอง · เปลี่ยน Kp, Ti, Td แล้วกด Enter · ขยับวาล์ว FV-102 เพื่อสร้างภาระรบกวน · เลือกความเร็วจำลอง ×1 ถึง ×30 · เปิดหัวข้อ "รีจิสเตอร์ Modbus" ด้านล่างแล็บเพื่อดูข้อมูลที่ SCADA จะอ่าน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="model">
+    <h2 id="model">แบบจำลองเบื้องหลัง</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ส่วน</th><th>แบบจำลอง (ค่าเพื่อการเรียนรู้)</th></tr></thead>
+      <tbody>
+        <tr><td>ถัง TK-101</td><td>ถังเปิดพื้นที่หน้าตัด A = 0.5 m² สูง 3 m · \(A\,dh/dt = Q_\text{in} - Q_\text{out}\)</td></tr>
+        <tr><td>ปั๊ม P-101 + VFD</td><td>\(Q_\text{in} = 20\ \text{m}^3/\text{h} \times\) ความเร็ว · ไดรฟ์เร่ง/ลดความเร็วด้วยค่าคงตัวเวลา 5 s · ความดันขาออก \(\approx 4.5s^2 - Q^2/300\) bar</td></tr>
+        <tr><td>วาล์ว FV-102</td><td>เชิงเส้น \(Q_\text{out} = K_v\,u\sqrt{h}\) โดย \(K_v = 9.8\) · เคลื่อนที่ด้วยค่าคงตัวเวลาราว 2 s</td></tr>
+        <tr><td>ฮีตเตอร์ E-104</td><td>0–150 kW · น้ำเข้า 30 °C · สมดุลพลังงาน \(\rho c_p V\,dT/dt = \dot m c_p (T_\text{in} - T) + P - UA(T - 30)\)</td></tr>
+        <tr><td>LT-101</td><td>DP ช่วง 0–3 m (ตั้งค่าที่ SG 1.0) · damping ตั้งได้</td></tr>
+        <tr><td>FT-102</td><td>magmeter ขาออก 0–15 m³/h · τ ≈ 0.5 s</td></tr>
+        <tr><td>PT-103</td><td>ความดันขาออกปั๊ม 0–6 bar</td></tr>
+        <tr><td>TT-104</td><td>Pt100 ในปลอก τ ≈ 15 s · ช่วง 0–100 °C</td></tr>
+        <tr><td>PLC</td><td>สเกล 4–20 mA · คุณภาพสัญญาณตาม NE 43 · PID แบบตำแหน่ง อนุพันธ์จากค่า PV และกันอินทิกรัลล้น · bumpless transfer · LAH 85 % · LAL 15 % · LAHH 95 % ทริปปั๊ม · TAH 80 °C</td></tr>
+      </tbody>
+    </table></div>
+    <p>ทรานสมิตเตอร์ทุกตัวส่งกระแสที่อิ่มตัวในช่วง 3.8–20.5 mA และแจ้งความผิดพลาดที่ ≤ 3.6 หรือ ≥ 21 mA เมื่อ PLC เห็นสัญญาณ BAD จะสลับลูปเป็น manual ค้างเอาต์พุตเดิม (สำหรับระดับ) หรือปิดฮีตเตอร์ (สำหรับอุณหภูมิ) ซึ่งเป็นพฤติกรรมที่พบบ่อยในระบบจริง พื้นฐานการจูน PID ดูได้ที่ <a href="/learn/control-systems/pid/">PID</a> และ <a href="/learn/control-systems/pid-tuning/">การจูน PID</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sheets">
+    <h2 id="sheets">ใบงานสำหรับห้องเรียน</h2>
+    <div class="sx-card"><h3>ใบงาน 1 · สเกลและสัญญาณ 4–20 mA</h3>
+    <ol>
+      <li>ตั้ง LIC-101 เป็น MAN ให้ปั๊ม 30 % (วาล์ว 50 %) รอให้ระดับนิ่ง จดกระแสของ LT-101 แล้วคำนวณระดับด้วยมือจากช่วง 0–3 m เทียบกับค่าที่ PLC แสดง</li>
+      <li>คำนวณว่ากระแสจะเป็นเท่าไรที่ระดับ 2.25 m แล้วปรับปั๊มจนถึงระดับนั้นเพื่อตรวจคำตอบ</li>
+      <li>เปิดตารางรีจิสเตอร์ Modbus อ่านไบต์ของ LT-101 แล้วแปลง float32 ด้วยมือ (ใช้ <a href="/learn/sensors-transducers/modbus/#float">เครื่องมือ Float32</a> ตรวจ)</li>
+    </ol></div>
+    <div class="sx-card"><h3>ใบงาน 2 · จูน PID ลูประดับ</h3>
+    <ol>
+      <li>สถานการณ์ "ควบคุมระดับด้วย PID": เปลี่ยน SP จาก 50 % เป็น 70 % จดเวลาเข้าสู่ค่า overshoot และค่าคลาดคงตัว</li>
+      <li>เปลี่ยน Ti เป็น 0 (ปิดอินทิกรัล) ทำซ้ำ อธิบายว่าทำไมระดับไม่ถึง SP</li>
+      <li>สถานการณ์ "จูนแรงเกิน": อธิบายการแกว่งจากมุมมอง Kp และ Ti แล้วหาชุดค่าที่ดีขึ้นด้วยตัวเอง</li>
+      <li>ขณะลูปนิ่ง ขยับวาล์ว FV-102 จาก 50 % เป็น 80 % (ภาระรบกวน) บันทึกการตอบสนอง</li>
+    </ol></div>
+    <div class="sx-card"><h3>ใบงาน 3 · วินิจฉัยความผิดพลาด</h3>
+    <ol>
+      <li>ใส่ "LT-101 ค่าศูนย์เลื่อน +6 %" ระดับจริงที่เห็นในถังต่างจาก PV เท่าไร PID รู้ตัวหรือไม่ วิธีตรวจหน้างานคืออะไร (ดู <a href="/learn/sensors-transducers/installation-calibration/#cal">การสอบเทียบ</a>)</li>
+      <li>ใส่ "ของเหลวหนักขึ้น SG 1.10" คำนวณระดับจริงจาก PV ด้วยสูตร \(h = P/(\rho g)\) และอธิบายว่าเรดาร์จะได้รับผลแบบเดียวกันหรือไม่</li>
+      <li>สถานการณ์ "สายขาดขณะควบคุม": อ่านกระแส สถานะ NE 43 และพฤติกรรมของลูป ถ้าระบบไม่สลับเป็น MAN จะเกิดอะไรขึ้น</li>
+      <li>ใส่ "LT-101 สัญญาณสั่น" แล้วเพิ่ม damping จาก 1 s เป็น 5 s ผลดีและผลเสียต่อการควบคุมคืออะไร</li>
+      <li>ใส่ "TT-104 เซนเซอร์ขาด" ในสถานการณ์ "ระดับ + อุณหภูมิ" ทำไมจึงเลือกแจ้งด้านสูงสำหรับวงจรฮีตเตอร์</li>
+    </ol></div>
+    <div class="sx-card"><h3>ใบงาน 4 · ความปลอดภัยและอินเตอร์ล็อก</h3>
+    <ol>
+      <li>ตั้ง MAN ปั๊ม 100 % ปิดวาล์วขาออก 10 % ดูลำดับ LAH → LAHH → ทริปปั๊ม และระดับที่ปั๊มกลับมาทำงาน</li>
+      <li>อภิปราย: ทำไม LSHH ในระบบจริงควรเป็นอุปกรณ์แยกจาก LT-101 (อ่าน <a href="/learn/sensors-transducers/installation-calibration/#sil">SIL</a>)</li>
+    </ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tools">
+    <h2 id="tools">เครื่องมือโต้ตอบทั้งหมดในบทนี้</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เครื่องมือ</th><th>อยู่ที่</th></tr></thead>
+      <tbody>
+        <tr><td>ห่วงโซ่การวัด · ความคลาดคงตัว · การตอบสนองเวลา</td><td><a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a></td></tr>
+        <tr><td>แปลงหน่วย · สเกล 4–20 mA · เดซิเบล</td><td><a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a></td></tr>
+        <tr><td>งบความไม่แน่นอน</td><td><a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา</a></td></tr>
+        <tr><td>Pt100 · เทอร์โมคัปเปิล · CJC · NTC</td><td><a href="/learn/sensors-transducers/temperature-sensors/">การวัดอุณหภูมิ</a></td></tr>
+        <tr><td>เลือกช่วงทรานสมิตเตอร์ความดัน</td><td><a href="/learn/sensors-transducers/pressure-sensors/">การวัดความดัน</a></td></tr>
+        <tr><td>ออริฟิซ ISO 5167 · magmeter · อัลตราโซนิก · วอร์เท็กซ์</td><td><a href="/learn/sensors-transducers/flow-measurement/">การวัดอัตราการไหล</a></td></tr>
+        <tr><td>ไฮโดรสแตติก · DP ขาเปียก · เรดาร์ FMCW · ปริมาตรถังนอน</td><td><a href="/learn/sensors-transducers/level-measurement/">การวัดระดับ</a></td></tr>
+        <tr><td>บริดจ์สเตรนเกจ · โหลดเซลล์ · เอนโค้ดเดอร์</td><td><a href="/learn/sensors-transducers/force-position/">แรง · ตำแหน่ง</a></td></tr>
+        <tr><td>ชันต์ · ภาระ CT</td><td><a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · แรงดัน</a></td></tr>
+        <tr><td>ADC · ENOB</td><td><a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ</a></td></tr>
+        <tr><td>ซิมูเลเตอร์ลูป 4–20 mA · โมเด็ม HART · งบลูป</td><td><a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a></td></tr>
+        <tr><td>เครื่องสร้างเฟรม Modbus · CRC-16 · Float32 · เวลาโพล</td><td><a href="/learn/sensors-transducers/modbus/">Modbus</a></td></tr>
+        <tr><td>งบเซกเมนต์ฟิลด์บัส</td><td><a href="/learn/sensors-transducers/fieldbus/">ฟิลด์บัส</a></td></tr>
+        <tr><td>อายุแบตเตอรี่เซนเซอร์ไร้สาย</td><td><a href="/learn/sensors-transducers/smart-sensors-iiot/">IIoT</a></td></tr>
+        <tr><td>ถอดรหัสแท็ก ISA-5.1</td><td><a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID</a></td></tr>
+        <tr><td>ใบบันทึกการสอบเทียบ 5 จุด</td><td><a href="/learn/sensors-transducers/installation-calibration/#cal">สอบเทียบ</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

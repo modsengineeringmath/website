@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>การปรับสภาพสัญญาณและ ADC สำหรับเซนเซอร์: อินสทรูเมนเทชันแอมป์ CMRR ฟิลเตอร์กันรอยต่อ Nyquist LSB ENOB สัญญาณรบกวน กราวด์ และงบความคลาดเคลื่อน | อาจารย์มด</title>
+<meta name="description" content="ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/">
+<meta property="og:title" content="ปรับสภาพสัญญาณและ ADC: INA CMRR Nyquist ENOB">
+<meta property="og:description" content="ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-sensors-transducers-signal-conditioning-adc.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ปรับสภาพสัญญาณและ ADC: INA CMRR Nyquist ENOB">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ปรับสภาพสัญญาณและ ADC: INA CMRR Nyquist ENOB">
+<meta name="twitter:description" content="ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-sensors-transducers-signal-conditioning-adc.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=4d69d95a">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/#article","headline":"การปรับสภาพสัญญาณและ ADC: จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้","description":"ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC","inLanguage":"th","url":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/","mainEntityOfPage":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Signal conditioning","Instrumentation amplifier","CMRR","Anti-aliasing filter","Analog-to-digital converter","ENOB","Grounding and shielding"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/sensors-transducers/#article"},"image":["https://modsengineeringmath.com/images/og/learn-sensors-transducers-signal-conditioning-adc.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เซนเซอร์และทรานส์ดิวเซอร์","item":"https://modsengineeringmath.com/learn/sensors-transducers/"},{"@type":"ListItem","position":4,"name":"การปรับสภาพสัญญาณและ ADC: บริดจ์ อินสทรูเมนเทชันแอมป์ ฟิลเตอร์ การแยกโดดเดี่ยว และการสุ่ม","item":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมต้องมีฟิลเตอร์ก่อน ADC?","acceptedAnswer":{"@type":"Answer","text":"เพราะสัญญาณที่มีความถี่สูงกว่าครึ่งหนึ่งของอัตราการสุ่ม (ความถี่ Nyquist) จะปรากฏหลังสุ่มเป็นความถี่ต่ำปลอม (aliasing) และแยกออกจากสัญญาณจริงไม่ได้อีกต่อไป เช่น สัญญาณรบกวน 50 Hz ที่ถูกสุ่มด้วย 60 ครั้งต่อวินาทีจะดูเหมือนสัญญาณ 10 Hz ฟิลเตอร์กันรอยต่อต้องลดสัญญาณเหล่านี้ก่อนการสุ่ม ไม่ใช่หลังการสุ่ม"}},{"@type":"Question","name":"ADC 24 บิตแม่นกว่า 16 บิตจริงหรือ?","acceptedAnswer":{"@type":"Answer","text":"ไม่เสมอไป จำนวนบิตบอกความละเอียดของรหัส แต่ความแม่นจริงขึ้นกับสัญญาณรบกวน (ENOB หรือ noise-free bits) ความคลาดของแรงดันอ้างอิง offset gain และ drift ตามอุณหภูมิ ADC 24 บิตหลายรุ่นมีบิตที่ใช้ได้จริงประมาณ 18–21 บิตเมื่อสุ่มช้า และต่ำกว่านั้นเมื่อสุ่มเร็ว ต้องดู ENOB ที่อัตราการสุ่มที่ใช้งานจริง"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" aria-current="page">ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
+          <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+          <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#chain">ห่วงโซ่ปรับสภาพสัญญาณ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#ina">อินสทรูเมนเทชันแอมป์และ CMRR<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#alias">การสุ่มสัญญาณ Nyquist และฟิลเตอร์กันรอยต่อ<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#adc">ADC: ความละเอียด SNR และ ENOB<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#noise">สัญญาณรบกวน กราวด์ ชีลด์ และการแยกโดดเดี่ยว<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#budget">งบความคลาดเคลื่อนทั้งห่วงโซ่<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#sources">แหล่งอ้างอิง</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.13 ปรับสภาพสัญญาณ · ADC</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในเซนเซอร์และทรานส์ดิวเซอร์"><span class="sn-title mono">Sensors &amp; Transducers</span><div class="sn-list"><a href="/learn/sensors-transducers/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/sensors-transducers/signal-conditioning-adc/" aria-current="page"><span class="sn-n">13</span>ปรับสภาพสัญญาณ · ADC</a><a href="/learn/sensors-transducers/industrial-signals/"><span class="sn-n">14</span>4–20 mA · HART</a><a href="/learn/sensors-transducers/modbus/"><span class="sn-n">15</span>Modbus RTU · TCP</a><a href="/learn/sensors-transducers/fieldbus/"><span class="sn-n">16</span>ฟิลด์บัส · Industrial Ethernet</a><a href="/learn/sensors-transducers/smart-sensors-iiot/"><span class="sn-n">17</span>เซนเซอร์อัจฉริยะ · IIoT</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 20 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · รากฐานการวัด หน่วย และมาตรฐาน</span><div class="sn-list"><a href="/learn/sensors-transducers/fundamentals/"><span class="sn-n">1</span>หลักการเบื้องต้น</a><a href="/learn/sensors-transducers/history-technology/"><span class="sn-n">2</span>ประวัติ · วิวัฒนาการ</a><a href="/learn/sensors-transducers/units/"><span class="sn-n">3</span>หน่วยและระบบหน่วย</a><a href="/learn/sensors-transducers/unit-lab/"><span class="sn-n">4</span>เครื่องมือแปลงหน่วย</a><a href="/learn/sensors-transducers/measurement-standards/"><span class="sn-n">5</span>มาตรวิทยา</a><a href="/learn/sensors-transducers/electrical-standards/"><span class="sn-n">6</span>มาตรฐาน · ประเทศต้นแบบ</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · เครื่องมือวัดตามปริมาณ</span><div class="sn-list"><a href="/learn/sensors-transducers/temperature-sensors/"><span class="sn-n">7</span>อุณหภูมิ</a><a href="/learn/sensors-transducers/pressure-sensors/"><span class="sn-n">8</span>ความดัน</a><a href="/learn/sensors-transducers/flow-measurement/"><span class="sn-n">9</span>อัตราการไหล</a><a href="/learn/sensors-transducers/level-measurement/"><span class="sn-n">10</span>ระดับ</a><a href="/learn/sensors-transducers/force-position/"><span class="sn-n">11</span>แรง · ตำแหน่ง</a><a href="/learn/sensors-transducers/current-voltage-sensing/"><span class="sn-n">12</span>กระแส · แรงดัน</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · สัญญาณมาตรฐานและเครือข่ายอุตสาหกรรม</span><div class="sn-list"><a href="/learn/sensors-transducers/signal-conditioning-adc/" aria-current="page"><span class="sn-n">13</span>ปรับสภาพสัญญาณ · ADC</a><a href="/learn/sensors-transducers/industrial-signals/"><span class="sn-n">14</span>4–20 mA · HART</a><a href="/learn/sensors-transducers/modbus/"><span class="sn-n">15</span>Modbus RTU · TCP</a><a href="/learn/sensors-transducers/fieldbus/"><span class="sn-n">16</span>ฟิลด์บัส · Industrial Ethernet</a><a href="/learn/sensors-transducers/smart-sensors-iiot/"><span class="sn-n">17</span>เซนเซอร์อัจฉริยะ · IIoT</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · งานวัดคุมในโรงงานและแล็บ</span><div class="sn-list"><a href="/learn/sensors-transducers/pid-symbols/"><span class="sn-n">18</span>P&amp;ID · แท็กเครื่องมือ</a><a href="/learn/sensors-transducers/installation-calibration/"><span class="sn-n">19</span>เลือก · ติดตั้ง · สอบเทียบ</a><a href="/learn/sensors-transducers/instrumentation-lab/"><span class="sn-n">20</span>แล็บวัดคุมเสมือน</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 20.13 · Sensors &amp; Transducers · Signal Conditioning &amp; ADC</p>
+      <h1>การปรับสภาพสัญญาณและ ADC: <em>จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้</em></h1>
+      <p class="lede">เซนเซอร์ส่วนใหญ่ให้สัญญาณเล็กมาก (µV ถึง mV) หรือไม่ได้ให้แรงดันเลย (ความต้านทาน ความจุ) ภาคปรับสภาพสัญญาณทำให้มันมีขนาด รูปแบบ และความสะอาดพอที่ ADC จะแปลงเป็นตัวเลขได้ถูกต้อง หน้านี้คือ "ข้างใน" ของทรานสมิตเตอร์และการ์ดอินพุตทุกชนิด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-14">14 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#chain">ห่วงโซ่</a>
+        <a class="btn btn-ghost btn-sm" href="#ina">INA · CMRR</a>
+        <a class="btn btn-ghost btn-sm" href="#alias">การสุ่ม · aliasing</a>
+        <a class="btn btn-ghost btn-sm" href="#adc">ADC</a>
+        <a class="btn btn-ghost btn-sm" href="#noise">สัญญาณรบกวน · กราวด์</a>
+        <a class="btn btn-ghost btn-sm" href="#budget">งบความคลาด</a>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#chain">ห่วงโซ่ปรับสภาพสัญญาณ<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#ina">อินสทรูเมนเทชันแอมป์และ CMRR<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#alias">การสุ่มสัญญาณ Nyquist และฟิลเตอร์กันรอยต่อ<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#adc">ADC: ความละเอียด SNR และ ENOB<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#noise">สัญญาณรบกวน กราวด์ ชีลด์ และการแยกโดดเดี่ยว<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#budget">งบความคลาดเคลื่อนทั้งห่วงโซ่<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#sources">แหล่งอ้างอิง</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น gain, cmrr, nyquist, lsb, enob, johnson noise, rss" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="chain">
+    <h2 id="chain">ห่วงโซ่ปรับสภาพสัญญาณ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:sx-chain--><svg class="xf" viewBox="0 0 780 210" role="img" aria-label="ห่วงโซ่ปรับสภาพสัญญาณ: เซนเซอร์ แอมป์เครื่องมือวัด ฟิลเตอร์กันรอยต่อ ADC ตัวแยกโดดเดี่ยว และไมโครคอนโทรลเลอร์"><defs><marker id="sx-chain-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="14" y="60" width="106" height="70" rx="10"/><text x="67" y="90" class="xf-h" text-anchor="middle">เซนเซอร์</text><text x="67" y="112" class="xf-k" text-anchor="middle">mV · Ω · pF</text><line class="xf-ln" x1="122" y1="95" x2="138" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxa" x="142" y="60" width="106" height="70" rx="10"/><text x="195" y="90" class="xf-h" text-anchor="middle">INA</text><text x="195" y="112" class="xf-k" text-anchor="middle">G = 1+49.4k/R_G</text><line class="xf-ln" x1="250" y1="95" x2="266" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxa" x="270" y="60" width="106" height="70" rx="10"/><text x="323" y="90" class="xf-h" text-anchor="middle">ฟิลเตอร์</text><text x="323" y="112" class="xf-k" text-anchor="middle">anti-aliasing</text><line class="xf-ln" x1="378" y1="95" x2="394" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxb" x="398" y="60" width="106" height="70" rx="10"/><text x="451" y="90" class="xf-h" text-anchor="middle">ADC</text><text x="451" y="112" class="xf-k" text-anchor="middle">N บิต · f_s</text><line class="xf-ln" x1="506" y1="95" x2="522" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxc" x="526" y="60" width="106" height="70" rx="10"/><text x="579" y="90" class="xf-h" text-anchor="middle">Isolator</text><text x="579" y="112" class="xf-k" text-anchor="middle">≥ 1.5 kV</text><line class="xf-ln" x1="634" y1="95" x2="650" y2="95" marker-end="url(#sx-chain-ah)"/><rect class="xf-boxb" x="654" y="60" width="106" height="70" rx="10"/><text x="707" y="90" class="xf-h" text-anchor="middle">MCU</text><text x="707" y="112" class="xf-k" text-anchor="middle">สเกล · ชดเชย</text><line class="xf-dash" x1="579" y1="40" x2="579" y2="150"/><text x="579" y="34" class="xf-k" text-anchor="middle">กำแพงแยกโดดเดี่ยว</text><text x="390" y="176" class="xf-m" text-anchor="middle">กติกาสำคัญ: กรองก่อนสุ่ม (f_c < f_s/2) · ขยายให้เต็มช่วง ADC · แยกกราวด์ที่จุดเดียว</text><text x="390" y="196" class="xf-k" text-anchor="middle">ความคลาดรวมของห่วงโซ่ ≈ √(Σ e_i²) เมื่อแต่ละแหล่งเป็นอิสระต่อกัน</text></svg><!--/FIG--><figcaption>รูป 1 · หน้าที่ของแต่ละขั้น: กระตุ้น → ขยายแบบผลต่าง → กรอง → สุ่มและแปลง → แยกโดดเดี่ยว → ประมวลผล</figcaption></figure>
+    <ol>
+      <li><b>กระตุ้น (excitation)</b>: เซนเซอร์แบบ passive ต้องมีแหล่งแรงดันหรือกระแสคงที่ เช่น กระแส 1 mA สำหรับ RTD แรงดัน 5–10 V สำหรับบริดจ์</li>
+      <li><b>ขยายแบบผลต่าง</b>: รับเฉพาะผลต่างระหว่างสองขา ปฏิเสธแรงดันที่ขึ้นลงพร้อมกัน (โหมดร่วม)</li>
+      <li><b>กรอง</b>: ตัดความถี่ที่ไม่ต้องการและกันรอยต่อก่อนสุ่ม</li>
+      <li><b>ชดเชยและทำให้เป็นเชิงเส้น</b>: CJC ของเทอร์โมคัปเปิล สมการ CVD ของ RTD — ทำในเชิงตัวเลขหลัง ADC</li>
+      <li><b>แยกโดดเดี่ยว</b>: ตัดเส้นทางกระแสกราวด์และป้องกันแรงดันสูงข้ามมาฝั่งระบบควบคุม</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="ina">
+    <h2 id="ina">อินสทรูเมนเทชันแอมป์และ CMRR <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A1" data-k="instrumentation amplifier gain three op amp rg อินสทรูเมนเทชันแอมป์ อัตราขยาย"><p class="tf-n"><b><span class="fid">A1</span> Three-op-amp instrumentation amplifier</b> อินสทรูเมนเทชันแอมป์แบบสามออปแอมป์</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>V</mi><mi>o</mi></msub><mo>=</mo><mrow><mo fence="true">(</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mn>2</mn><msub><mi>R</mi><mn>1</mn></msub></mrow><msub><mi>R</mi><mi>G</mi></msub></mfrac><mo fence="true">)</mo></mrow><mfrac><msub><mi>R</mi><mn>3</mn></msub><msub><mi>R</mi><mn>2</mn></msub></mfrac><mtext> </mtext><mo stretchy="false">(</mo><msub><mi>V</mi><mo>+</mo></msub><mo>−</mo><msub><mi>V</mi><mo>−</mo></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V_o = \left(1 + \frac{2R_1}{R_G}\right)\frac{R_3}{R_2}\,(V_+ - V_-)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">G</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2583em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2583em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<div class="tf" id="A2" data-k="cmrr common mode rejection ratio decibel error การปฏิเสธโหมดร่วม"><p class="tf-n"><b><span class="fid">A2</span> CMRR</b> อัตราการปฏิเสธโหมดร่วม</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>C</mi><mi>M</mi><mi>R</mi><mi>R</mi><mo>=</mo><mn>20</mn><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mfrac><msub><mi>A</mi><mi>d</mi></msub><msub><mi>A</mi><mrow><mi>c</mi><mi>m</mi></mrow></msub></mfrac><mspace width="2em"/><msub><mi>V</mi><mtext>err,RTI</mtext></msub><mo>=</mo><mfrac><msub><mi>V</mi><mrow><mi>c</mi><mi>m</mi></mrow></msub><msup><mn>10</mn><mrow><mi>C</mi><mi>M</mi><mi>R</mi><mi>R</mi><mi mathvariant="normal">/</mi><mn>20</mn></mrow></msup></mfrac></mrow><annotation encoding="application/x-tex">CMRR = 20\log_{10}\frac{A_d}{A_{cm}} \qquad V_\text{err,RTI} = \frac{V_{cm}}{10^{CMRR/20}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">CMRR</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.836em;"></span><span class="mord">20</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">err,RTI</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0643em;vertical-align:-0.704em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.296em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.814em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.00773em;">CMRR</span><span class="mord mtight">/20</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.704em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="wx" id="ex-a-1"><div class="wx-head"><span class="mono">ตัวอย่าง A-1</span><h3>บริดจ์ให้ 1 mV มีแรงดัน 50 Hz โหมดร่วม 1 V จากสายยาว</h3></div>
+<ol class="steps">
+<li><p>แอมป์ CMRR 100 dB: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><msup><mn>10</mn><mn>5</mn></msup><mo>=</mo><mn>10</mn><mtext> </mtext><mi>μ</mi><mtext>V</mtext></mrow><annotation encoding="application/x-tex">1/10^5 = 10\ \mu\text{V}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">1/1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">10</span><span class="mspace"> </span><span class="mord mathnormal">μ</span><span class="mord text"><span class="mord">V</span></span></span></span></span> อ้างอิงที่อินพุต = 1 % ของสัญญาณ</p></li>
+<li><p>ถ้าใช้ออปแอมป์แบบผลต่างธรรมดาที่ตัวต้านทานคลาด 1 % CMRR อาจเหลือราว 40 dB → 10 mV ใหญ่กว่าสัญญาณ 10 เท่า</p></li>
+<li><p>สรุป: วงจรผลต่างที่ทำจากตัวต้านทานแยกชิ้นไม่พอสำหรับสัญญาณระดับมิลลิโวลต์ ต้องใช้ INA ที่ตัวต้านทานถูกตัดแต่งในชิป</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="alias">
+    <h2 id="alias">การสุ่มสัญญาณ Nyquist และฟิลเตอร์กันรอยต่อ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A3" data-k="nyquist sampling theorem aliasing frequency folding การสุ่ม ไนควิสต์ รอยต่อ"><p class="tf-n"><b><span class="fid">A3</span> Sampling theorem and alias frequency</b> ทฤษฎีการสุ่มและความถี่ปลอม</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mi>s</mi></msub><mo>&gt;</mo><mn>2</mn><msub><mi>f</mi><mtext>max</mtext></msub><mspace width="2em"/><msub><mi>f</mi><mtext>alias</mtext></msub><mo>=</mo><mrow><mo fence="true">∣</mo><mi>f</mi><mo>−</mo><mi>k</mi><msub><mi>f</mi><mi>s</mi></msub><mo fence="true">∣</mo></mrow><mtext>  </mtext><mtext>  </mtext><mo stretchy="false">(</mo><mi>k</mi><mtext> ทำให้ค่าน้อยที่สุด</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f_s &gt; 2 f_\text{max} \qquad f_\text{alias} = \left| f - k f_s \right| \;\;(k \text{ ทำให้ค่าน้อยที่สุด})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">max</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">alias</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∣</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">∣</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord text"><span class="mord"> </span><span class="mord brahmic_fallback">ทำให้ค่าน้อยที่สุด</span></span><span class="mclose">)</span></span></span></span></span></div>
+<div class="tf" id="A4" data-k="rc low pass filter cutoff frequency anti aliasing ฟิลเตอร์ความถี่ตัด"><p class="tf-n"><b><span class="fid">A4</span> First-order RC low-pass</b> ฟิลเตอร์ RC อันดับหนึ่ง</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi><mi>R</mi><mi>C</mi></mrow></mfrac><mspace width="2em"/><mi mathvariant="normal">∣</mi><mi>H</mi><mo stretchy="false">(</mo><mi>f</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mo>=</mo><mfrac><mn>1</mn><msqrt><mrow><mn>1</mn><mo>+</mo><mo stretchy="false">(</mo><mi>f</mi><mi mathvariant="normal">/</mi><msub><mi>f</mi><mi>c</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">f_c = \frac{1}{2\pi RC} \qquad |H(f)| = \frac{1}{\sqrt{1 + (f/f_c)^2}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="mord mathnormal" style="margin-right:0.07153em;">RC</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mclose">)</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4514em;vertical-align:-1.13em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.175em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.13em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="wx" id="ex-a-2"><div class="wx-head"><span class="mono">ตัวอย่าง A-2</span><h3>สุ่มอุณหภูมิ 60 ครั้งต่อวินาที มีสัญญาณรบกวน 50 Hz ปน</h3></div>
+<ol class="steps">
+<li><p>A3: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mn>50</mn><mo>−</mo><mn>60</mn><mi mathvariant="normal">∣</mi><mo>=</mo><mn>10</mn><mtext> Hz</mtext></mrow><annotation encoding="application/x-tex">|50 - 60| = 10\ \text{Hz}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣50</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">60∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">10</span><span class="mspace"> </span><span class="mord text"><span class="mord">Hz</span></span></span></span></span> — สัญญาณรบกวนกลายเป็นการแกว่ง 10 Hz ที่ดูเหมือนอุณหภูมิเปลี่ยนจริง</p></li>
+<li><p>แก้ด้วย RC <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>10</mn><mtext> k</mtext><mi mathvariant="normal">Ω</mi><mo separator="true">,</mo><mtext> </mtext><mi>C</mi><mo>=</mo><mn>1.6</mn><mtext> </mtext><mi>μ</mi><mtext>F</mtext></mrow><annotation encoding="application/x-tex">R = 10\ \text{k}\Omega,\ C = 1.6\ \mu\text{F}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">10</span><span class="mspace"> </span><span class="mord text"><span class="mord">k</span></span><span class="mord">Ω</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">1.6</span><span class="mspace"> </span><span class="mord mathnormal">μ</span><span class="mord text"><span class="mord">F</span></span></span></span></span>: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>=</mo><mn>9.9</mn><mtext> Hz</mtext></mrow><annotation encoding="application/x-tex">f_c = 9.9\ \text{Hz}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">9.9</span><span class="mspace"> </span><span class="mord text"><span class="mord">Hz</span></span></span></span></span> ลด 50 Hz ลงเหลือ ≈ 20 % (−14 dB) ถ้ายังไม่พอใช้ฟิลเตอร์อันดับสูงขึ้น หรือ ADC แบบ sigma-delta ที่มีร่องลด 50/60 Hz ในตัว</p></li>
+<li><p>อีกวิธีที่ทรานสมิตเตอร์ใช้: เฉลี่ยค่าในหนึ่งรอบไฟพอดี (20 ms สำหรับ 50 Hz) ซึ่งให้ศูนย์ที่ 50 Hz และทุกฮาร์มอนิก</p></li>
+</ol></div>
+    <p>ทบทวนพื้นฐานการสุ่มและสเปกตรัมได้ที่ <a href="/learn/fourier-series/dft-fft/">DFT และ FFT</a> และ <a href="/learn/signals/">สัญญาณและระบบ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="adc">
+    <h2 id="adc">ADC: ความละเอียด SNR และ ENOB <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="A5" data-k="adc lsb resolution full scale range bits ความละเอียด"><p class="tf-n"><b><span class="fid">A5</span> LSB size</b> ขนาด 1 LSB</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>1</mn><mtext> LSB</mtext><mo>=</mo><mfrac><mrow><mi>F</mi><mi>S</mi><mi>R</mi></mrow><msup><mn>2</mn><mi>N</mi></msup></mfrac></mrow><annotation encoding="application/x-tex">1\ \text{LSB} = \frac{FSR}{2^N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">1</span><span class="mspace"> </span><span class="mord text"><span class="mord">LSB</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7673em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">FSR</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="tf" id="A6" data-k="ideal snr quantization noise 6.02n 1.76 สัญญาณต่อสัญญาณรบกวน"><p class="tf-n"><b><span class="fid">A6</span> Ideal quantisation SNR</b> SNR ในอุดมคติ</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>N</mi><msub><mi>R</mi><mtext>ideal</mtext></msub><mo>=</mo><mn>6.02</mn><mi>N</mi><mo>+</mo><mn>1.76</mn><mtext> dB</mtext></mrow><annotation encoding="application/x-tex">SNR_\text{ideal} = 6.02N + 1.76\ \text{dB}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">SN</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">ideal</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">6.02</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">1.76</span><span class="mspace"> </span><span class="mord text"><span class="mord">dB</span></span></span></span></span></span></div>
+<div class="tf" id="A7" data-k="enob effective number of bits sinad บิตที่ใช้ได้จริง"><p class="tf-n"><b><span class="fid">A7</span> Effective number of bits</b> จำนวนบิตที่ใช้ได้จริง</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mi>N</mi><mi>O</mi><mi>B</mi><mo>=</mo><mfrac><mrow><mi>S</mi><mi>I</mi><mi>N</mi><mi>A</mi><mi>D</mi><mo>−</mo><mn>1.76</mn></mrow><mn>6.02</mn></mfrac></mrow><annotation encoding="application/x-tex">ENOB = \frac{SINAD - 1.76}{6.02}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">ENOB</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6.02</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1.76</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="wx" id="ex-a-3"><div class="wx-head"><span class="mono">ตัวอย่าง A-3</span><h3>การ์ด AI 16 บิต ช่วง 10 V SINAD 88 dB วัดอุณหภูมิช่วง 0–250 °C</h3></div>
+<ol class="steps">
+<li><p>A5: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mi mathvariant="normal">/</mi><mn>65</mn><mtext> </mtext><mn>536</mn><mo>=</mo><mn>152.6</mn><mtext> </mtext><mi>μ</mi><mtext>V</mtext></mrow><annotation encoding="application/x-tex">10/65\,536 = 152.6\ \mu\text{V}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">10/65</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">536</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">152.6</span><span class="mspace"> </span><span class="mord mathnormal">μ</span><span class="mord text"><span class="mord">V</span></span></span></span></span> ต่อหลัก</p></li>
+<li><p>A7: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>N</mi><mi>O</mi><mi>B</mi><mo>=</mo><mo stretchy="false">(</mo><mn>88</mn><mo>−</mo><mn>1.76</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>6.02</mn><mo>=</mo><mn>14.3</mn></mrow><annotation encoding="application/x-tex">ENOB = (88 - 1.76)/6.02 = 14.3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">ENOB</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">88</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1.76</span><span class="mclose">)</span><span class="mord">/6.02</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">14.3</span></span></span></span> บิต</p></li>
+<li><p>ความละเอียดจริง <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>250</mn><mi mathvariant="normal">/</mi><msup><mn>2</mn><mn>14.3</mn></msup><mo>=</mo><mn>0.012</mn><msup><mtext> </mtext><mo>∘</mo></msup><mtext>C</mtext></mrow><annotation encoding="application/x-tex">250/2^{14.3} = 0.012\ ^\circ\text{C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">250/</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">14.3</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.012</span><span class="mord"><span class="mspace"> </span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">C</span></span></span></span></span> (ตามจำนวนบิตจะได้ 0.0038 °C) ทั้งสองค่าเล็กกว่าความคลาดของเซนเซอร์มาก — ADC ไม่ใช่คอขวดของระบบนี้</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="adc" data-vals='{"bits":"16","sinad":"88"}'>เปิดในเครื่องคำนวณ</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="adc"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ADC</th><th>หลักการ</th><th>ความละเอียด · ความเร็วทั่วไป</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td>SAR</td><td>เทียบแบบไบนารีทีละบิต</td><td>12–18 บิต · kS/s ถึง MS/s</td><td>วัดกระแสคอนเวอร์เตอร์ หลายช่องสลับกัน การควบคุมเร็ว</td></tr>
+        <tr><td>Sigma-delta</td><td>สุ่มเกินแล้วกรองดิจิทัล</td><td>16–32 บิต · S/s ถึง kS/s</td><td>โหลดเซลล์ เทอร์โมคัปเปิล RTD มิเตอร์พลังงาน</td></tr>
+        <tr><td>Pipeline · Flash</td><td>หลายขั้นขนาน</td><td>8–16 บิต · สิบ MS/s ถึง GS/s</td><td>ออสซิลโลสโคป สื่อสาร</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="noise">
+    <h2 id="noise">สัญญาณรบกวน กราวด์ ชีลด์ และการแยกโดดเดี่ยว <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="A8" data-k="johnson nyquist thermal noise resistor bandwidth สัญญาณรบกวนความร้อน"><p class="tf-n"><b><span class="fid">A8</span> Thermal (Johnson–Nyquist) noise</b> สัญญาณรบกวนความร้อน</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>v</mi><mi>n</mi></msub><mo>=</mo><msqrt><mrow><mn>4</mn><mi>k</mi><mi>T</mi><mi>R</mi><mi>B</mi></mrow></msqrt><mspace width="2em"/><mn>350</mn><mtext> </mtext><mi mathvariant="normal">Ω</mi><mo separator="true">,</mo><mtext> </mtext><mn>10</mn><mtext> Hz</mtext><mo separator="true">,</mo><mtext> </mtext><mn>300</mn><mtext> K</mtext><mo>:</mo><mtext> </mtext><msub><mi>v</mi><mi>n</mi></msub><mo>≈</mo><mn>7.6</mn><mtext> </mtext><msub><mtext>nV</mtext><mtext>rms</mtext></msub></mrow><annotation encoding="application/x-tex">v_n = \sqrt{4kTRB} \qquad 350\ \Omega,\ 10\ \text{Hz},\ 300\ \text{K}:\ v_n \approx 7.6\ \text{nV}_\text{rms}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1755em;vertical-align:-0.1944em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9811em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">4</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord mathnormal" style="margin-right:0.05017em;">TRB</span></span></span><span style="top:-2.9411em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.0589em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord">350</span><span class="mspace"> </span><span class="mord">Ω</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">10</span><span class="mspace"> </span><span class="mord text"><span class="mord">Hz</span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">300</span><span class="mspace"> </span><span class="mord text"><span class="mord">K</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6331em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord">7.6</span><span class="mspace"> </span><span class="mord"><span class="mord text"><span class="mord">nV</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">rms</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+    <p>สัญญาณรบกวนความร้อนแปรตาม <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>B</mi></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{B}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> การจำกัดแบนด์วิดท์ให้เท่าที่จำเป็นจึงเป็นวิธีลดสัญญาณรบกวนที่ได้ผลที่สุด เซนเซอร์อุตสาหกรรมส่วนใหญ่เปลี่ยนช้า (อุณหภูมิ ระดับ) การเฉลี่ย N ค่าลดสัญญาณรบกวนสุ่มลง <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>N</mi></msqrt></mrow><annotation encoding="application/x-tex">\sqrt N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;padding-left:0.833em;">N</span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> เท่า</p>
+    <ul>
+      <li><b>สายคู่บิดเกลียว</b> ลดการเหนี่ยวนำจากสนามแม่เหล็ก (พื้นที่วงลูปเล็กและสลับทิศทุกเกลียว)</li>
+      <li><b>ชีลด์</b> กันสนามไฟฟ้า ต่อกราวด์ที่ปลายด้านเดียว (มักเป็นด้านตู้ควบคุม) สำหรับสัญญาณแอนะล็อกความถี่ต่ำ เพื่อไม่ให้ชีลด์กลายเป็นเส้นทางกระแสกราวด์</li>
+      <li><b>กราวด์ลูป</b>: สองจุดกราวด์ที่ศักย์ต่างกันทำให้กระแสไหลในสายสัญญาณ แก้ด้วยการแยกโดดเดี่ยว (ออปโต แม่เหล็ก หรือความจุ) หรือ isolator สำเร็จรูปบนราง DIN</li>
+      <li><b>แยกสายสัญญาณออกจากสายกำลัง</b> และข้ามกันที่มุมฉาก สายขาออกของอินเวอร์เตอร์เป็นแหล่งสัญญาณรบกวนความถี่สูงที่แรงที่สุดในตู้</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="budget">
+    <h2 id="budget">งบความคลาดเคลื่อนทั้งห่วงโซ่ <span class="lv lv-a">ขั้นสูง</span></h2>
+<div class="tf" id="A9" data-k="error budget root sum square independent sources total uncertainty งบความคลาดเคลื่อน"><p class="tf-n"><b><span class="fid">A9</span> Chain error budget</b> งบความคลาดทั้งห่วงโซ่</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>e</mi><mtext>tot</mtext></msub><mo>=</mo><msqrt><mrow><msubsup><mi>e</mi><mtext>sensor</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>e</mi><mtext>tx</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>e</mi><mtext>ADC</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>e</mi><mtext>wiring</mtext><mn>2</mn></msubsup><mo>+</mo><mo>⋯</mo></mrow></msqrt><mspace width="2em"/><mo stretchy="false">(</mo><mtext>แหล่งอิสระต่อกัน</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">e_\text{tot} = \sqrt{e_\text{sensor}^2 + e_\text{tx}^2 + e_\text{ADC}^2 + e_\text{wiring}^2 + \cdots} \qquad (\text{แหล่งอิสระต่อกัน})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">tot</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.84em;vertical-align:-0.6176em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2224em;"><span class="svg-align" style="top:-3.8em;"><span class="pstrut" style="height:3.8em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sensor</span></span></span></span><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4542em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">tx</span></span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4065em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">ADC</span></span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2935em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4173em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wiring</span></span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4188em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="minner">⋯</span></span></span><span style="top:-3.1824em;"><span class="pstrut" style="height:3.8em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.88em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.88em" viewBox="0 0 400000 1944" preserveAspectRatio="xMinYMin slice"><path d="M983 90
+l0 -0
+c4,-6.7,10,-10,18,-10 H400000v40
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6176em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord brahmic_fallback">แหล่งอิสระต่อกัน</span></span><span class="mclose">)</span></span></span></span></span></div>
+<div class="wx" id="ex-a-4"><div class="wx-head"><span class="mono">ตัวอย่าง A-4</span><h3>Pt100 เกรด A ที่ 0 °C + ทรานสมิตเตอร์ + การ์ด AI + ผลอุณหภูมิตู้</h3></div>
+<ol class="steps">
+<li><p>สมมติ: เซนเซอร์ ±0.15 °C · ทรานสมิตเตอร์ ±0.10 °C · การ์ด AI ±0.05 °C · ผลอุณหภูมิแวดล้อม ±0.20 °C</p></li>
+<li><p>A9: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><msup><mn>0.15</mn><mn>2</mn></msup><mo>+</mo><msup><mn>0.10</mn><mn>2</mn></msup><mo>+</mo><msup><mn>0.05</mn><mn>2</mn></msup><mo>+</mo><msup><mn>0.20</mn><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mn>0.27</mn><msup><mtext> </mtext><mo>∘</mo></msup><mtext>C</mtext></mrow><annotation encoding="application/x-tex">\sqrt{0.15^2 + 0.10^2 + 0.05^2 + 0.20^2} = 0.27\ ^\circ\text{C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1266em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9134em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">0.1</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.0</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.2</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.8734em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1266em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.27</span><span class="mord"><span class="mspace"> </span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">C</span></span></span></span></span></p></li>
+<li><p>ถ้าบวกตรงได้ 0.50 °C ซึ่งเป็นกรณีเลวสุดที่แทบไม่เกิดพร้อมกัน การปรับปรุงที่คุ้มที่สุดคือแหล่งที่ใหญ่ที่สุด (ผลอุณหภูมิ) ไม่ใช่การซื้อ ADC ที่ละเอียดขึ้น</p></li>
+</ol></div>
+    <p>หลักการประเมินความไม่แน่นอนแบบเต็มตาม GUM อยู่ที่ <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยาและการสอบกลับ</a> ส่วนสัญญาณที่ออกจากทรานสมิตเตอร์ไปยังระบบควบคุมอ่านต่อที่ <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>JCGM 100:2008 (GUM) Evaluation of measurement data — Guide to the expression of uncertainty in measurement</li>
+      <li>IEEE 1241 Standard for Terminology and Test Methods for Analog-to-Digital Converters (นิยาม SINAD และ ENOB)</li>
+      <li>Nyquist, H. (1928) Thermal Agitation of Electric Charge in Conductors, Physical Review 32</li>
+    </ul></section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>ทำไมต้องมีฟิลเตอร์ก่อน ADC?</summary><p>เพราะสัญญาณที่มีความถี่สูงกว่าครึ่งหนึ่งของอัตราการสุ่ม (ความถี่ Nyquist) จะปรากฏหลังสุ่มเป็นความถี่ต่ำปลอม (aliasing) และแยกออกจากสัญญาณจริงไม่ได้อีกต่อไป เช่น สัญญาณรบกวน 50 Hz ที่ถูกสุ่มด้วย 60 ครั้งต่อวินาทีจะดูเหมือนสัญญาณ 10 Hz ฟิลเตอร์กันรอยต่อต้องลดสัญญาณเหล่านี้ก่อนการสุ่ม ไม่ใช่หลังการสุ่ม</p></details><details><summary>ADC 24 บิตแม่นกว่า 16 บิตจริงหรือ?</summary><p>ไม่เสมอไป จำนวนบิตบอกความละเอียดของรหัส แต่ความแม่นจริงขึ้นกับสัญญาณรบกวน (ENOB หรือ noise-free bits) ความคลาดของแรงดันอ้างอิง offset gain และ drift ตามอุณหภูมิ ADC 24 บิตหลายรุ่นมีบิตที่ใช้ได้จริงประมาณ 18–21 บิตเมื่อสุ่มช้า และต่ำกว่านั้นเมื่อสุ่มเร็ว ต้องดู ENOB ที่อัตราการสุ่มที่ใช้งานจริง</p></details></section>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsensors-transducers%2Fsignal-conditioning-adc%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsensors-transducers%2Fsignal-conditioning-adc%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fsensors-transducers%2Fsignal-conditioning-adc%2F&amp;text=%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9B%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%AA%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%8D%E0%B8%B2%E0%B8%93%E0%B9%81%E0%B8%A5%E0%B8%B0%20ADC%3A%20%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%A1%E0%B8%B4%E0%B8%A5%E0%B8%A5%E0%B8%B4%E0%B9%82%E0%B8%A7%E0%B8%A5%E0%B8%95%E0%B9%8C%E0%B8%96%E0%B8%B6%E0%B8%87%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B9%84%E0%B8%94%E0%B9%89" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/" data-share-title="การปรับสภาพสัญญาณและ ADC: จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/sensors-transducers/current-voltage-sensing/"><span class="mono">← หน้าก่อนหน้า</span><b>เซนเซอร์วัดกระแสและแรงดัน: ชันต์ CT ฮอลล์ โรโกวสกี และตัวแบ่งแรงดันแบบแยกโดดเดี่ยว</b></a><a class="pager-next" href="/learn/sensors-transducers/industrial-signals/"><span class="mono">หน้าถัดไป →</span><b>สัญญาณมาตรฐานอุตสาหกรรม: 4–20 mA สองสาย 0–10 V NAMUR NE 43 และ HART</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
+      <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
+      <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลทางวิศวกรรม</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
+      <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
+      <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
+      <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงลาปลาซ</a>
+      <a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผัน (Inverse Laplace)</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
+      <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=4d69d95a" defer></script>
+<script src="/assets/lesson.js?v=4d69d95a" defer></script>
+<script src="/assets/ee-kit.js?v=4d69d95a" defer></script>
+<script src="/assets/sx-calc.js?v=4d69d95a" defer></script>
+</body>
+</html>

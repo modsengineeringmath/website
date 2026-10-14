@@ -1,0 +1,179 @@
+<!--meta
+{
+  "title": "การวัดอัตราการไหล: ออริฟิซ ISO 5167 มิเตอร์แม่เหล็กไฟฟ้า อัลตราโซนิก วอร์เท็กซ์ คอริโอลิส เทอร์ไบน์ และการเลือกใช้ | อาจารย์มด",
+  "h1": "การวัดอัตราการไหล: จากเบอร์นูลลีถึงคอริโอลิส",
+  "description": "การวัดอัตราการไหลในท่อสำหรับงานอุตสาหกรรม: อัตราไหลเชิงปริมาตรและเชิงมวล เลขเรย์โนลด์ส สมการเบอร์นูลลี แผ่นออริฟิซตาม ISO 5167-2 สมการ Reader-Harris/Gallagher การถอดรากที่สองและ rangeability มิเตอร์แม่เหล็กไฟฟ้า U = kBDv อัลตราโซนิกเวลาเดินทาง วอร์เท็กซ์ Strouhal คอริโอลิส เทอร์ไบน์ ท่อตรงต้นน้ำ และตารางเลือกมิเตอร์ พร้อมเครื่องคำนวณ",
+  "ogTitle": "การวัดอัตราการไหล: ออริฟิซ magmeter อัลตราโซนิก คอริโอลิส",
+  "og": {"title": "การวัดอัตราการไหล · ISO 5167"},
+  "lesson": "sensors-transducers",
+  "sub": "flow-measurement",
+  "nav": "sx",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Flow measurement", "Orifice plate", "ISO 5167", "Electromagnetic flowmeter", "Ultrasonic flowmeter", "Vortex flowmeter", "Coriolis flowmeter"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/sx-calc.js"],
+  "faq": [
+    {"q": "มิเตอร์แม่เหล็กไฟฟ้า (magmeter) วัดอะไรได้และไม่ได้?", "a": "วัดของเหลวที่นำไฟฟ้าได้ โดยทั่วไปความนำไฟฟ้าตั้งแต่ราว 5 µS/cm ขึ้นไป เช่น น้ำประปา น้ำเสีย กรด ด่าง สลัดจ์ เยื่อกระดาษ ไม่มีชิ้นส่วนกีดขวางการไหลจึงแทบไม่มีความดันสูญเสีย แต่วัดแก๊ส ไอน้ำ น้ำมัน และน้ำบริสุทธิ์มาก (เช่น น้ำ DI) ไม่ได้ ท่อต้องเต็มเสมอ"},
+    {"q": "ทำไมมิเตอร์ DP (ออริฟิซ) ต้องถอดรากที่สอง?", "a": "เพราะสมการเบอร์นูลลีให้ความดันผลต่างแปรตามกำลังสองของความเร็ว ΔP ∝ Q² อัตราไหลจึงเป็น Q ∝ √ΔP ที่อัตราไหล 50 % ความดันผลต่างเหลือเพียง 25 % และที่ 10 % เหลือเพียง 1 % ของ span ความคลาดเล็ก ๆ ของ ΔP จึงกลายเป็นความคลาดใหญ่ของอัตราไหลที่ปลายต่ำ ทำให้มิเตอร์ DP มี rangeability ราว 3:1 ถึง 5:1"},
+    {"q": "คอริโอลิสต่างจากมิเตอร์อื่นอย่างไร?", "a": "คอริโอลิสวัดอัตราไหลเชิงมวลโดยตรงจากการบิดของท่อที่สั่น ไม่ต้องรู้ความหนาแน่น ความหนืด หรือโปรไฟล์ความเร็ว และวัดความหนาแน่นได้พร้อมกันจากความถี่สั่น แม่นมาก (โดยทั่วไป ±0.1 % ของค่าสำหรับของเหลว) แต่ราคาสูง หนัก และขนาดท่อใหญ่มีข้อจำกัด เหมาะกับงานซื้อขาย การผสมสูตร และสารเคมีมูลค่าสูง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์</a></li><li>20.9 การวัดอัตราการไหล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.9 · Sensors &amp; Transducers · Flow Measurement</p>
+      <h1>การวัดอัตราการไหล: <em>จากเบอร์นูลลีถึงคอริโอลิส</em></h1>
+      <p class="lede">อัตราการไหลคือปริมาณที่ "แพง" ที่สุดในโรงงาน เพราะใช้คิดเงิน (ซื้อขายน้ำมัน แก๊ส น้ำ) และใช้ควบคุมสัดส่วนการผสม ไม่มีมิเตอร์แบบใดดีที่สุดสำหรับทุกงาน หน้านี้อธิบายหลักฟิสิกส์ของแต่ละแบบ สมการที่ใช้จริง และวิธีเลือกให้ตรงกับของไหล</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#basics">ปริมาตรกับมวล</a>
+        <a class="btn btn-ghost btn-sm" href="#dp">ออริฟิซ ISO 5167</a>
+        <a class="btn btn-ghost btn-sm" href="#mag">แม่เหล็กไฟฟ้า</a>
+        <a class="btn btn-ghost btn-sm" href="#ultra">อัลตราโซนิก</a>
+        <a class="btn btn-ghost btn-sm" href="#coriolis">คอริโอลิส</a>
+        <a class="btn btn-ghost btn-sm" href="#select">ตารางเลือก</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(Q_v = vA\) · \(q_m = \rho Q_v\) · ตรวจ \(Re = \rho v D/\mu\) ที่อัตราไหลต่ำสุดเสมอ</li>
+          <li>DP (ออริฟิซ เวนจูรี): \(q_m \propto \sqrt{\Delta P}\) → rangeability แค่ราว 3–5 : 1 และมีความดันสูญเสียถาวร</li>
+          <li>magmeter \(U = kBDv\) (ของเหลวนำไฟฟ้า) · อัลตราโซนิก \(\Delta t \propto v\) · วอร์เท็กซ์ \(f = St\,v/d\) — ทั้งหมดเชิงเส้นกับความเร็ว</li>
+          <li>คอริโอลิสวัดมวลโดยตรงพร้อมความหนาแน่น แม่นที่สุดแต่แพงที่สุด</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น reynolds, orifice, beta, magmeter, strouhal, coriolis, k-factor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="basics">
+    <h2 id="basics">อัตราไหลเชิงปริมาตร เชิงมวล และเลขเรย์โนลด์ส <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="Q1" data-k="reynolds number laminar turbulent pipe velocity viscosity เรย์โนลด์ส ราบเรียบ ปั่นป่วน"><p class="tf-n"><b><span class="fid">Q1</span> Volumetric, mass flow and Reynolds number</b> อัตราไหลและเลขเรย์โนลด์ส</p>
+        \[ Q_v = \bar v A \qquad q_m = \rho\,Q_v \qquad Re_D = \frac{\rho \bar v D}{\mu} \]</div>
+    <p>แก๊สต้องระบุสภาวะอ้างอิงเสมอ: "Nm³/h" (normal) หรือ "Sm³/h" (standard) คือปริมาตรที่แปลงไปยังความดันและอุณหภูมิอ้างอิงซึ่งแต่ละมาตรฐานกำหนดต่างกัน (เช่น 0 °C หรือ 15 °C หรือ 60 °F) อัตราไหลเชิงมวลไม่ขึ้นกับสภาวะ จึงเป็นปริมาณที่สมดุลมวลของกระบวนการต้องการจริง</p>
+    <p>เลขเรย์โนลด์สบอกว่าการไหลราบเรียบ (โปรไฟล์ความเร็วโค้งพาราโบลา) หรือปั่นป่วน (โปรไฟล์แบนกว่า) มิเตอร์ที่วัดความเร็ว "บางเส้น" ในท่อ (อัลตราโซนิก วอร์เท็กซ์ เทอร์ไบน์) จึงต้องรู้ว่าโปรไฟล์เป็นแบบใด และนี่คือเหตุผลของข้อกำหนด <b>ท่อตรงต้นน้ำ</b>: ข้องอ วาล์ว ปั๊ม ทำให้โปรไฟล์บิดเบี้ยวและหมุนวน</p>
+    <div class="fg-calc sx-calc" data-sx="reynolds"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dp">
+    <h2 id="dp">มิเตอร์ความดันผลต่าง: แผ่นออริฟิซตาม ISO 5167 <span class="lv lv-i">กลาง</span></h2>
+    <p>ค.ศ. 1738 Daniel Bernoulli อธิบายว่าความเร็วที่เพิ่มขึ้นต้องแลกด้วยความดันที่ลดลง ค.ศ. 1797 Giovanni Battista Venturi ศึกษาผลนี้ในท่อคอดชาวอิตาลี และ ค.ศ. 1887 Clemens Herschel ในสหรัฐฯ สร้างมิเตอร์เวนจูรีสำหรับวัดน้ำ ปัจจุบันชุดมาตรฐาน ISO 5167 กำหนดรูปร่าง การติดตั้ง และสมการของออริฟิซ หัวฉีด และเวนจูรีไว้ละเอียดจนคำนวณได้โดยไม่ต้องสอบเทียบด้วยการไหลจริง — จุดเด่นที่ทำให้ออริฟิซยังใช้มากจนถึงทุกวันนี้</p>
+    <figure class="xfig"><!--FIG:sx-orifice--><svg class="xf" viewBox="0 0 760 290" role="img" aria-label="การไหลผ่านแผ่นออริฟิซ: เส้นกระแส vena contracta และความดันตามแนวท่อ"><defs><marker id="sx-orifice-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-ln" x1="30" y1="60" x2="730" y2="60"/><line class="xf-ln" x1="30" y1="140" x2="730" y2="140"/><rect class="xf-metal" x="296" y="60" width="8" height="22" rx="1"/><rect class="xf-metal" x="296" y="118" width="8" height="22" rx="1"/><path class="xf-thin" d="M 30 72 C 220 72, 270 86.0, 300 88.24 S 360 89.36, 400 89.36 S 560 72, 730 72"/><path class="xf-thin" d="M 30 86 C 220 86, 270 93.0, 300 94.12 S 360 94.68, 400 94.68 S 560 86, 730 86"/><path class="xf-thin" d="M 30 100 C 220 100, 270 100.0, 300 100.0 S 360 100.0, 400 100.0 S 560 100, 730 100"/><path class="xf-thin" d="M 30 114 C 220 114, 270 107.0, 300 105.88 S 360 105.32, 400 105.32 S 560 114, 730 114"/><path class="xf-thin" d="M 30 128 C 220 128, 270 114.0, 300 111.76 S 360 110.64, 400 110.64 S 560 128, 730 128"/><text x="380" y="154" class="xf-k" text-anchor="middle">vena contracta</text><line class="xf-b" x1="250" y1="60" x2="250" y2="40"/><text x="250" y="34" class="xf-tb" text-anchor="middle">P₁ (ต้นน้ำ)</text><line class="xf-b" x1="360" y1="60" x2="360" y2="40"/><text x="360" y="34" class="xf-tb" text-anchor="middle">P₂</text><line class="xf-thin" x1="30" y1="270" x2="730" y2="270"/><text x="30" y="186" class="xf-k">ความดัน</text><path class="xf-a" d="M30 200 L35 200 L40 200 L45 200 L50 200 L55 200 L60 200 L65 200 L70 200 L75 200 L80 200 L85 200 L90 200 L95 200 L100 200 L105 200 L110 200 L115 200 L120 200 L125 200 L130 200 L135 200 L140 200 L145 200 L150 200 L155 200 L160 200 L165 200 L170 200 L175 200 L180 200 L185 200 L190 200 L195 200 L200 200 L205 200 L210 200 L215 200 L220 200 L225 200 L230 200 L235 200 L240 200 L245 200 L250 200 L255 200 L260 200 L265 200 L270 200 L275 200 L280 200 L285 200.3 L290 201.3 L295 203 L300 205.3 L305 208.1 L310 211.3 L315 215 L320 219 L325 223.2 L330 227.5 L335 231.8 L340 236 L345 240 L350 243.7 L355 246.9 L360 249.7 L365 252 L370 253.7 L375 254.7 L380 255 L385 253.2 L390 251.4 L395 249.8 L400 248.2 L405 246.7 L410 245.3 L415 244 L420 242.8 L425 241.6 L430 240.5 L435 239.4 L440 238.4 L445 237.5 L450 236.6 L455 235.7 L460 234.9 L465 234.2 L470 233.4 L475 232.8 L480 232.1 L485 231.5 L490 230.9 L495 230.4 L500 229.9 L505 229.4 L510 228.9 L515 228.5 L520 228.1 L525 227.7 L530 227.3 L535 227 L540 226.7 L545 226.4 L550 226.1 L555 225.8 L560 225.5 L565 225.3 L570 225 L575 224.8 L580 224.6 L585 224.4 L590 224.2 L595 224 L600 223.9 L605 223.7 L610 223.5 L615 223.4 L620 223.3 L625 223.1 L630 223 L635 222.9 L640 222.8 L645 222.7 L650 222.6 L655 222.5 L660 222.4 L665 222.3 L670 222.3 L675 222.2 L680 222.1 L685 222.1 L690 222 L695 221.9 L700 221.9 L705 221.8 L710 221.8 L715 221.7 L720 221.7 L725 221.6 L730 221.6"/><line class="xf-dash" x1="250" y1="200" x2="250" y2="255"/><line class="xf-dash" x1="380" y1="200" x2="380" y2="255"/><line class="xf-b" x1="395" y1="200" x2="395" y2="255" marker-end="url(#sx-orifice-ah)" marker-start="url(#sx-orifice-ah)"/><text x="402" y="232" class="xf-tb">ΔP วัด</text><line class="xf-c" x1="700" y1="200" x2="700" y2="221" marker-end="url(#sx-orifice-ah)" marker-start="url(#sx-orifice-ah)"/><text x="694" y="214" class="xf-tc" text-anchor="end">การสูญเสียถาวร</text><text x="380" y="286" class="xf-m" text-anchor="middle">q_m = C·E·ε·(π/4)d²·√(2ΔP·ρ₁)  — อัตราไหลแปรตาม √ΔP</text></svg><!--/FIG--><figcaption>รูป 1 · ของไหลเร่งผ่านรูออริฟิซและคอดที่สุดหลังแผ่นเล็กน้อย (vena contracta) ความดันกลับคืนมาไม่หมด ส่วนที่หายไปคือพลังงานที่ปั๊มต้องจ่ายตลอดอายุการใช้งาน</figcaption></figure>
+<div class="tf" id="Q2" data-k="bernoulli continuity ideal differential pressure flow เบอร์นูลลี ความต่อเนื่อง"><p class="tf-n"><b><span class="fid">Q2</span> Ideal DP flow from Bernoulli and continuity</b> อัตราไหลในอุดมคติ</p>
+        \[ P_1 - P_2 = \tfrac12\rho\left(v_2^2 - v_1^2\right),\quad A_1v_1 = A_2v_2 \;\Rightarrow\; q_m = \frac{A_2}{\sqrt{1-\beta^4}}\sqrt{2\,\Delta P\,\rho} \]</div>
+<div class="tf" id="Q3" data-k="iso 5167 orifice mass flow discharge coefficient expansibility velocity of approach ออริฟิซ สัมประสิทธิ์"><p class="tf-n"><b><span class="fid">Q3</span> ISO 5167-1 orifice equation</b> สมการมาตรฐานของออริฟิซ</p>
+        \[ q_m = \frac{C}{\sqrt{1-\beta^4}}\;\varepsilon\;\frac{\pi}{4}d^2\sqrt{2\,\Delta P\,\rho_1} \qquad \beta = \frac{d}{D} \]</div>
+    <p>C (discharge coefficient) แก้ผลที่สมการอุดมคติไม่รวม — vena contracta และแรงเสียดทาน — ISO 5167-2 ให้สมการ Reader-Harris/Gallagher ที่ขึ้นกับ β, Re<sub>D</sub>, D และตำแหน่งรูวัด (flange, corner, D-D/2) ซึ่งต้องคำนวณวนซ้ำเพราะ Re ขึ้นกับอัตราไหลที่ยังไม่รู้ ε (expansibility) แก้การขยายตัวของแก๊ส สำหรับของเหลว ε = 1</p>
+<div class="tf" id="Q4" data-k="permanent pressure loss orifice energy cost ความดันสูญเสียถาวร"><p class="tf-n"><b><span class="fid">Q4</span> Permanent pressure loss (ISO 5167-2)</b> ความดันสูญเสียถาวร</p>
+        \[ \Delta\varpi = \frac{\sqrt{1-\beta^4(1-C^2)} - C\beta^2}{\sqrt{1-\beta^4(1-C^2)} + C\beta^2}\;\Delta P \]</div>
+<div class="wx" id="ex-q-1"><div class="wx-head"><span class="mono">ตัวอย่าง Q-1</span><h3>น้ำ ท่อ D = 100 mm ออริฟิซ d = 50 mm flange taps ΔP = 25 kPa</h3></div>
+<ol class="steps">
+<li><p>\(\beta = 0.5\), \(1/\sqrt{1-\beta^4} = 1.0328\), ของเหลว \(\varepsilon = 1\), ρ = 998 kg/m³, μ = 1.0 mPa·s</p></li>
+<li><p>วนซ้ำ Q3 กับสมการ Reader-Harris/Gallagher จนลู่เข้า: \(C = 0.6060\), \(Re_D = 1.11\times10^5\)</p></li>
+<li><p>\(q_m = 0.6060 \times 1.0328 \times \tfrac{\pi}{4}(0.05)^2\sqrt{2(25\,000)(998)} = 8.68\ \text{kg/s}\) = 31.3 m³/h ความเร็วในท่อ 1.11 m/s</p></li>
+<li><p>Q4: ความดันสูญเสียถาวร 18.3 kPa (73 % ของ ΔP) — ที่ 31 m³/h ต่อเนื่องทั้งปี คิดเป็นพลังงานปั๊มราว \(18\,300 \times 0.0087 \approx 160\ \text{W}\) ก่อนหารประสิทธิภาพปั๊ม</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="orifice" data-vals='{"D":"100","d":"50","dp":"25","fl":"ของเหลว"}'>เปิดในเครื่องคำนวณ</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="orifice"></div>
+<div class="tf" id="Q5" data-k="square root extraction rangeability turndown dp flow ถอดรากที่สอง"><p class="tf-n"><b><span class="fid">Q5</span> Square-root relation and low-flow error</b> รากที่สองและความคลาดที่อัตราไหลต่ำ</p>
+        \[ \frac{Q}{Q_\text{max}} = \sqrt{\frac{\Delta P}{\Delta P_\text{max}}} \qquad \frac{\delta Q}{Q} = \frac12\,\frac{\delta(\Delta P)}{\Delta P} \]</div>
+<div class="wx" id="ex-q-2"><div class="wx-head"><span class="mono">ตัวอย่าง Q-2</span><h3>ทรานสมิตเตอร์ DP คลาด ±0.1 % ของ span: อัตราไหลคลาดเท่าไรที่ 100 % 50 % และ 10 %</h3></div>
+<ol class="steps">
+<li><p>100 % flow → ΔP 100 % span: \(\delta Q/Q = \tfrac12(0.1/100) = 0.05\,\%\)</p></li>
+<li><p>50 % flow → ΔP 25 %: \(\tfrac12(0.1/25) = 0.2\,\%\) ของค่าอ่าน</p></li>
+<li><p>10 % flow → ΔP 1 %: \(\tfrac12(0.1/1) = 5\,\%\) ของค่าอ่าน — นี่คือเหตุผลที่ระบบควบคุมต้องมี low-flow cut-off และที่บางโรงงานติดทรานสมิตเตอร์ DP สองตัวช่วงต่างกัน</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mag">
+    <h2 id="mag">มิเตอร์แม่เหล็กไฟฟ้า (magmeter) <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:sx-flow-principles--><svg class="xf" viewBox="0 0 780 270" role="img" aria-label="หลักการมิเตอร์วัดการไหล: แม่เหล็กไฟฟ้า อัลตราโซนิกเวลาเดินทาง วอร์เท็กซ์ และคอริโอลิส"><defs><marker id="sx-flow-principles-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="100" y="20" class="xf-h" text-anchor="middle">แม่เหล็กไฟฟ้า: U = k·B·D·v</text><circle class="xf-box" cx="100" cy="130" r="60"/><circle class="xf-liq" cx="100" cy="130" r="60"/><text x="100" y="134" class="xf-h" text-anchor="middle">v ⊙</text><line class="xf-b" x1="100" y1="50" x2="100" y2="70" marker-end="url(#sx-flow-principles-ah)"/><line class="xf-b" x1="100" y1="210" x2="100" y2="190" marker-end="url(#sx-flow-principles-ah)"/><text x="110" y="56" class="xf-tb">B</text><circle class="xf-dota" cx="40" cy="130" r="5"/><circle class="xf-dota" cx="160" cy="130" r="5"/><text x="30" y="152" class="xf-k" text-anchor="middle">อิเล็กโทรด</text><text x="170" y="152" class="xf-ta" text-anchor="middle">U</text><text x="100" y="225" class="xf-k" text-anchor="middle">ของเหลวต้องนำไฟฟ้า</text><text x="290" y="20" class="xf-h" text-anchor="middle">อัลตราโซนิก: Δt ∝ v</text><line class="xf-ln" x1="210" y1="70" x2="380" y2="70"/><line class="xf-ln" x1="210" y1="190" x2="380" y2="190"/><rect class="xf-boxa" x="220" y="50" width="26" height="18" rx="3"/><rect class="xf-boxa" x="344" y="192" width="26" height="18" rx="3"/><line class="xf-a" x1="240" y1="72" x2="352" y2="188" marker-end="url(#sx-flow-principles-ah)" marker-start="url(#sx-flow-principles-ah)"/><line class="xf-b" x1="240" y1="130" x2="340" y2="130" marker-end="url(#sx-flow-principles-ah)"/><text x="290" y="124" class="xf-tb" text-anchor="middle">v</text><text x="290" y="228" class="xf-k" text-anchor="middle">t↓ (ตามกระแส) < t↑ (ทวนกระแส)</text><text x="485" y="20" class="xf-h" text-anchor="middle">วอร์เท็กซ์: f = St·v/d</text><line class="xf-ln" x1="400" y1="70" x2="575" y2="70"/><line class="xf-ln" x1="400" y1="190" x2="575" y2="190"/><path class="xf-metal" d="M435 108 L453 130 L435 152 Z"/><path class="xf-a" d="M 465 114 a 10 10 0 1 0 20 0 a 10 10 0 1 0 -20 0"/><path class="xf-a" d="M 495 146 a 10 10 0 1 1 20 0 a 10 10 0 1 1 -20 0"/><path class="xf-a" d="M 525 114 a 10 10 0 1 0 20 0 a 10 10 0 1 0 -20 0"/><path class="xf-a" d="M 553 146 a 10 10 0 1 1 20 0 a 10 10 0 1 1 -20 0"/><text x="485" y="228" class="xf-k" text-anchor="middle">กระแสวนหลุดสลับข้าง (Kármán)</text><text x="680" y="20" class="xf-h" text-anchor="middle">คอริโอลิส: Δt ∝ q_m</text><path class="xf-a" d="M 610 190 L 640 190 L 640 80 Q 680 50 720 80 L 720 190 L 750 190"/><path class="xf-thin" d="M 610 200 L 650 200 L 650 90 Q 680 66 710 90 L 710 200 L 750 200"/><circle class="xf-dot" cx="640" cy="140" r="5"/><circle class="xf-dot" cx="720" cy="140" r="5"/><circle class="xf-dota" cx="680" cy="62" r="5"/><text x="680" y="50" class="xf-k" text-anchor="middle">ขดกระตุ้น</text><text x="634" y="124" class="xf-k" text-anchor="end">ปิกออฟ 1</text><text x="726" y="124" class="xf-k">ปิกออฟ 2</text><text x="680" y="228" class="xf-k" text-anchor="middle">วัดมวลและความหนาแน่นตรง</text><text x="390" y="258" class="xf-m" text-anchor="middle">ไม่มีชิ้นส่วนเคลื่อนที่ในท่อทั้งสี่แบบ จึงบำรุงรักษาน้อยกว่ามิเตอร์ใบพัด (เทอร์ไบน์)</text></svg><!--/FIG--><figcaption>รูป 2 · สี่หลักการที่ไม่มีชิ้นส่วนเคลื่อนที่ในท่อ</figcaption></figure>
+    <p>ค.ศ. 1832 Michael Faraday พยายามวัดแรงดันที่เกิดจากน้ำในแม่น้ำเทมส์ไหลตัดสนามแม่เหล็กโลก แนวคิดนั้นกลายเป็น magmeter อุตสาหกรรมในทศวรรษ 1950 ของเหลวที่นำไฟฟ้าเปรียบเหมือนลวดตัวนำยาว D เคลื่อนที่ตัดสนาม B</p>
+<div class="tf" id="Q6" data-k="electromagnetic flowmeter magmeter faraday induced voltage electrode แม่เหล็กไฟฟ้า ฟาราเดย์"><p class="tf-n"><b><span class="fid">Q6</span> Faraday's law in a magmeter</b> กฎของฟาราเดย์</p>
+        \[ U = k\,B\,D\,\bar v \qquad Q_v = \frac{\pi D}{4kB}\,U \]</div>
+<div class="wx" id="ex-q-3"><div class="wx-head"><span class="mono">ตัวอย่าง Q-3</span><h3>น้ำ 50 m³/h ในมิเตอร์ DN100 สนาม 5 mT</h3></div>
+<ol class="steps">
+<li><p>\(\bar v = \dfrac{50/3600}{\pi(0.1)^2/4} = 1.77\ \text{m/s}\) — อยู่ในช่วงที่แนะนำ 1–5 m/s</p></li>
+<li><p>Q6 (k = 1): \(U = 0.005 \times 0.1 \times 1.77 = 884\ \mu\text{V}\)</p></li>
+<li><p>สัญญาณไมโครโวลต์ขณะที่อิเล็กโทรดมีศักย์ไฟฟ้าเคมีหลายร้อย mV — มิเตอร์จึงกระตุ้นขดลวดด้วย DC แบบพัลส์สลับขั้วแล้วหักศูนย์ทุกคาบ และต้องมีการต่อลงดินของของเหลว (grounding rings) ที่ดี</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-sx-fill="mag" data-vals='{"q":"50","d":"100"}'>เปิดในเครื่องคำนวณ</button></div></div>
+    <div class="fg-calc sx-calc" data-sx="mag"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ultra">
+    <h2 id="ultra">อัลตราโซนิกแบบเวลาเดินทาง และแบบดอปเพลอร์ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="Q7" data-k="ultrasonic transit time flowmeter upstream downstream delta t อัลตราโซนิก เวลาเดินทาง"><p class="tf-n"><b><span class="fid">Q7</span> Transit-time ultrasonic</b> อัลตราโซนิกเวลาเดินทาง</p>
+        \[ t_{\uparrow} = \frac{L}{c - v\cos\theta},\quad t_{\downarrow} = \frac{L}{c + v\cos\theta} \;\Rightarrow\; v = \frac{L\,(t_{\uparrow} - t_{\downarrow})}{2\cos\theta\;t_{\uparrow}t_{\downarrow}} \]</div>
+<div class="wx" id="ex-q-4"><div class="wx-head"><span class="mono">ตัวอย่าง Q-4</span><h3>น้ำ v = 2 m/s ท่อ 200 mm เส้นทาง 45° c = 1482 m/s</h3></div>
+<ol class="steps">
+<li><p>\(L = D/\sin 45^\circ = 282.8\ \text{mm}\)</p></li>
+<li><p>\(t_\uparrow = 191.034\ \mu\text{s}\), \(t_\downarrow = 190.670\ \mu\text{s}\) → \(\Delta t = 364\ \text{ns}\)</p></li>
+<li><p>ใส่กลับใน Q7 ได้ v = 2.000 m/s โดยไม่ต้องรู้ c — สูตรนี้ทนต่ออุณหภูมิและชนิดของเหลว แต่ต้องการวงจรจับเวลาที่ละเอียดระดับพิโควินาทีเพื่อแม่นที่ความเร็วต่ำ</p></li>
+</ol></div>
+    <div class="fg-calc sx-calc" data-sx="ultra"></div>
+    <p>แบบ <b>หนีบภายนอก (clamp-on)</b> ติดตั้งโดยไม่ต้องตัดท่อ เหมาะกับการตรวจสอบและงานชั่วคราว ความแม่นขึ้นกับข้อมูลท่อ (ความหนา วัสดุ ตะกรัน) ส่วนมิเตอร์หลายเส้นทาง (multipath) ใช้ซื้อขายแก๊สธรรมชาติตามแนวทาง AGA Report No. 9 แบบ <b>ดอปเพลอร์</b> อาศัยการสะท้อนจากฟองหรืออนุภาค จึงใช้กับน้ำเสียหรือสลัดจ์ได้ แต่แม่นน้อยกว่า</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="vortex">
+    <h2 id="vortex">วอร์เท็กซ์ เทอร์ไบน์ และแบบปริมาตรแทนที่ <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="Q8" data-k="vortex shedding strouhal number von karman frequency วอร์เท็กซ์ สตรูฮัล"><p class="tf-n"><b><span class="fid">Q8</span> Vortex shedding</b> ความถี่การหลุดของกระแสวน</p>
+        \[ f = \frac{St\,\bar v}{d} \qquad St \approx 0.2 \]</div>
+<div class="tf" id="Q9" data-k="k factor pulses per litre turbine meter pulse output เคแฟกเตอร์ พัลส์"><p class="tf-n"><b><span class="fid">Q9</span> Pulse meters: K-factor</b> มิเตอร์เอาต์พุตพัลส์</p>
+        \[ Q_v = \frac{f}{K} \qquad V = \frac{N_\text{pulse}}{K} \]</div>
+    <p>วัตถุทื่อ (bluff body) กลางท่อทำให้กระแสวนหลุดสลับข้าง (Kármán vortex street ตามชื่อ Theodore von Kármán ค.ศ. 1911) ความถี่แปรตรงกับความเร็วตราบใดที่ Strouhal number คงที่ วอร์เท็กซ์จึงวัดของเหลว แก๊ส และไอน้ำได้ด้วยหลักเดียว ข้อจำกัดคืออัตราไหลต่ำ (Re ต่ำ กระแสวนไม่สม่ำเสมอ) และการสั่นของท่อที่อาจรบกวน</p>
+    <div class="fg-calc sx-calc" data-sx="vortex"></div>
+    <p>มิเตอร์ <b>เทอร์ไบน์</b> นับรอบใบพัดด้วยพิกอัพแม่เหล็ก แม่นสูงกับของเหลวสะอาดความหนืดต่ำ แต่สึกหรอ ส่วนมิเตอร์ <b>ปริมาตรแทนที่ (positive displacement)</b> เช่น เฟืองวงรี ตักของเหลวเป็นห้อง ๆ จึงแม่นกับของหนืด (น้ำมัน กาว) และใช้ในหัวจ่ายน้ำมัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="coriolis">
+    <h2 id="coriolis">คอริโอลิส: วัดมวลและความหนาแน่นโดยตรง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>Gaspard-Gustave de Coriolis อธิบายแรงในกรอบอ้างอิงที่หมุนไว้ในปี ค.ศ. 1835 มิเตอร์คอริโอลิสเชิงพาณิชย์ปรากฏในสหรัฐฯ ปลายทศวรรษ 1970 ท่อถูกกระตุ้นให้สั่นที่ความถี่ธรรมชาติ ของไหลที่ไหลผ่านถูกเร่งและหน่วงในทิศตั้งฉาก แรงคอริโอลิสทำให้ท่อบิด ปิกออฟที่ต้นทางและปลายทางจึงเห็นการสั่นต่างเวลากัน</p>
+<div class="tf" id="Q10" data-k="coriolis mass flow time lag tube frequency density คอริโอลิส มวล ความหนาแน่น"><p class="tf-n"><b><span class="fid">Q10</span> Coriolis meter</b> หลักการคอริโอลิส</p>
+        \[ q_m = K_\text{cal}\,\Delta t \qquad f_\text{tube} = \frac{1}{2\pi}\sqrt{\frac{k}{m_\text{tube} + \rho V_\text{tube}}} \;\Rightarrow\; \rho \text{ จากความถี่} \]</div>
+    <p>เพราะวัดมวลโดยตรง ผลของความหนาแน่น ความหนืด และโปรไฟล์ความเร็วจึงแทบหมดไป และได้ความหนาแน่นกับอุณหภูมิในเครื่องเดียว จุดอ่อนคือแก๊สปนในของเหลว (two-phase) ราคา และน้ำหนัก</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="select">
+    <h2 id="select">ตารางเลือกมิเตอร์และข้อกำหนดการติดตั้ง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ของไหล</th><th>ความแม่นทั่วไป</th><th>rangeability</th><th>ความดันสูญเสีย</th><th>ท่อตรงที่ต้องการ</th><th>มาตรฐาน</th></tr></thead>
+      <tbody>
+        <tr><td>ออริฟิซ + DP</td><td>ของเหลว แก๊ส ไอน้ำ</td><td>±0.5–2 % (ระบบ)</td><td>3–5 : 1</td><td>สูง</td><td>มาก (ตาม β และข้อต่อ)</td><td>ISO 5167-2</td></tr>
+        <tr><td>เวนจูรี</td><td>ของเหลว แก๊ส</td><td>±0.5–1 %</td><td>3–5 : 1</td><td>ต่ำ</td><td>ปานกลาง</td><td>ISO 5167-4</td></tr>
+        <tr><td>แม่เหล็กไฟฟ้า</td><td>ของเหลวนำไฟฟ้า สลัดจ์</td><td>±0.2–0.5 % ของค่า</td><td>&gt; 30 : 1</td><td>เกือบศูนย์</td><td>ประมาณ 5D / 2D</td><td>ISO 20456</td></tr>
+        <tr><td>อัลตราโซนิก</td><td>ของเหลว แก๊ส</td><td>±0.5–2 % (clamp-on) · ดีกว่า 0.5 % (หลายเส้นทาง)</td><td>&gt; 50 : 1</td><td>ศูนย์</td><td>มาก (10D ขึ้นไป)</td><td>ISO 12242 · AGA 9</td></tr>
+        <tr><td>วอร์เท็กซ์</td><td>ของเหลว แก๊ส ไอน้ำ</td><td>±0.75–1 % ของค่า</td><td>10–20 : 1</td><td>ปานกลาง</td><td>ปานกลาง–มาก</td><td>ISO 12764</td></tr>
+        <tr><td>คอริโอลิส</td><td>ของเหลว แก๊ส</td><td>±0.1 % (ของเหลว)</td><td>&gt; 50 : 1</td><td>ปานกลาง–สูง</td><td>ไม่ต้อง</td><td>ISO 10790</td></tr>
+        <tr><td>เทอร์ไบน์</td><td>ของเหลวสะอาด แก๊ส</td><td>±0.25–0.5 %</td><td>10 : 1</td><td>ปานกลาง</td><td>มาก</td><td>OIML R 117 (ซื้อขาย)</td></tr>
+        <tr><td>ปริมาตรแทนที่</td><td>ของเหลวหนืด</td><td>±0.1–0.5 %</td><td>10–20 : 1</td><td>สูง</td><td>ไม่ต้อง</td><td>OIML R 117</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sx-src">ตัวเลขเป็นค่าทั่วไปเพื่อเทียบระดับ ไม่ใช่สเปกของรุ่นใด ความยาวท่อตรงที่แท้จริงขึ้นกับชนิดข้อต่อต้นน้ำ ให้ดูจากมาตรฐานและคู่มือของรุ่นที่เลือก ส่วนมิเตอร์น้ำประปาอ้างอิง ISO 4064 / OIML R 49</p>
+    <p>ลำดับคำถามที่ใช้เลือก: (1) ของไหลคืออะไร นำไฟฟ้าหรือไม่ มีของแข็งหรือแก๊สปนหรือไม่ (2) ต้องการปริมาตรหรือมวล ใช้ควบคุมหรือซื้อขาย (3) ช่วงอัตราไหลต่ำสุด–สูงสุดจริง (4) ท่อตรงที่มีอยู่และความดันสูญเสียที่ยอมได้ (5) ต้นทุนตลอดอายุ ไม่ใช่ราคาซื้อเพียงอย่างเดียว ข้อมูลอัตราไหลถูกส่งเข้าระบบด้วย <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA + HART</a> พัลส์ หรือ <a href="/learn/sensors-transducers/fieldbus/">ฟิลด์บัส</a> และนำไปควบคุมได้ในแล็บ <a href="/learn/sensors-transducers/instrumentation-lab/">วัดคุมเสมือน</a></p>
+    </section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2>
+    <ul class="sx-src">
+      <li>ISO 5167-1 และ ISO 5167-2 (ฉบับปัจจุบัน) Measurement of fluid flow by means of pressure differential devices — General principles; Orifice plates</li>
+      <li>ISO 20456 Electromagnetic flowmeters · ISO 12242 Ultrasonic transit-time meters for liquid · ISO 12764 Vortex shedding flowmeters · ISO 10790 Coriolis flowmeters</li>
+      <li>Reader-Harris, M. J. &amp; Sattary, J. A. (1990) The orifice plate discharge coefficient equation, Flow Measurement and Instrumentation 1(2)</li>
+      <li>OIML R 117 Dynamic measuring systems for liquids other than water · ISO 4064 / OIML R 49 Water meters</li>
+    </ul></section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

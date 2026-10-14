@@ -215,3 +215,25 @@ Three series in `TOPICS` (build.mjs), topics 15–17, all in `MD_SERIES`; formul
 - Static figures: `python3 scripts/math_figs.py` fills empty `<!--FIG:key--><!--/FIG-->` blocks (`--all` redraws). Classes `.mf-*` in site.css.
 - Home: `#math` section (`.math-grid` of subject cards + Laplace feature `home-lap`). Short URLs: `/functions` `/limits`
   `/derivative` `/laplace` `/inverse-laplace` `/partial-fractions` `/matrix-lab` `/truss` `/beam-lab` in `_redirects`.
+
+## Sensors & transducers (expanded 2026-10-14)
+Series `sensors-transducers` in `TOPICS` (build.mjs), topic 20, 4 parts × 20 sub-pages, in `MD_SERIES`; guide `src/md/sensors-transducers.md`
+→ `/learn/sensors-transducers/guide.md`. Parts: foundations (fundamentals F, history-technology H, units U, unit-lab C, measurement-standards M,
+electrical-standards E), quantities (temperature-sensors T, pressure-sensors P, flow-measurement Q, level-measurement L, force-position R,
+current-voltage-sensing V), signals (signal-conditioning-adc A, industrial-signals I, modbus D, fieldbus B, smart-sensors-iiot N),
+practice (pid-symbols, installation-calibration K, instrumentation-lab). Hub formulas S1–S4 (`hubFx`).
+- **Spelling decision (whole site):** เซนเซอร์ · ทรานส์ดิวเซอร์ · ทรานสมิตเตอร์ (Royal Institute transliteration rules). The variants
+  เซ็นเซอร์ / ทรานสดิวเซอร์ appear only in descriptions, JSON-LD `alternateName` and llms.txt so search still matches them. Rationale: hub `#terms`.
+- `assets/sx-calc.js` (`window.SXCalc`, needs ee-kit.js): engine (IEC 60751 CVD, NIST ITS-90 thermocouples B E J K N R S T, IEC 60584 tolerances,
+  NTC, ISO 5167-2 Reader-Harris/Gallagher orifice with iteration, Modbus CRC-16, float32 byte orders) + 26 calculators
+  `<div class="fg-calc sx-calc" data-sx="rtd|tc|cjc|ntc|ptx|reynolds|orifice|mag|ultra|vortex|hydro|dplevel|radar|usonic|tankvol|bridge|loadcell|encoder|shunt|ct|adc|loop|scale|fbseg|rs485|battery">`;
+  `<button data-sx-fill="key" data-vals='{...}'>` refills one. Verified: NIST tables (K 100 °C = 4.096 mV), Pt100 138.5055 Ω, `fluids` library for ISO 5167, CRC `01 03 00 00 00 02` → `C4 0B`.
+- `assets/sx-bus.js` (needs sx-calc.js): `.sx-loop` 4–20 mA loop simulator (faults; `button[data-sx-loop=fault][data-v]`), `.sx-hart`, `.sx-modbus`
+  (frame builder + virtual transmitter), `.sx-crc`, `.sx-f32`, `.sx-tag` (ISA-5.1 decoder), `.sx-cal` (5-point calibration sheet).
+- `assets/sx-plant.js`: `<div class="sx-plant" data-preset="level-pid" [data-compact]>` virtual plant (tank, VFD pump, valve, heater, LT/FT/PT/TT with NE 43,
+  two PID loops, alarms, interlock, live Modbus map, 8 faults). Presets in `PRESETS`; `button[data-plant-preset]`, `button[data-plant-fault]`. Used on the home page too.
+- `assets/sx-std.js` standards database (64 entries with country/city) + selector by sensor type.
+- Figures: `python3 scripts/sx_figs.py` fills empty `<!--FIG:sx-…--><!--/FIG-->` blocks (`--all` redraws); styles `.xf-*` in site.css "SENSORS SERIES".
+- Menu: own group `navg8` "เซนเซอร์ · วัดคุม" with a `nav-sec` heading "เครื่องมือวัด · วัดคุม" (hamburger). Home: section `#sensors` + hero badge.
+- Short URLs (`/sensors`, `/pt100`, `/thermocouple`, `/orifice`, `/magmeter`, `/radar-level`, `/4-20ma`, `/hart`, `/ne43`, `/modbus`, `/profibus`,
+  `/io-link`, `/p-and-id`, `/calibration`, `/sil`, `/instrument-lab` …) in `_redirects`.

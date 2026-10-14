@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=661418a3">
+<link rel="stylesheet" href="/assets/site.css?v=4d69d95a">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/cramers-rule/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/cramers-rule/#article","headline":"กฎของคราเมอร์ (Cramer's Rule) แก้ระบบสมการด้วยดีเทอร์มิแนนต์","description":"กฎของคราเมอร์ครบ สูตร x = Δx/Δ สำหรับ 2×2 และ 3×3 วิธีแทนหลักด้วยค่าคงที่ ที่มาของสูตร กรณี Δ = 0 ใช้กับจำนวนเชิงซ้อนและตัวแปร s ได้ พร้อมโจทย์วงจรที่เจอบ่อย หากระแสเมชเดียวในวงจรสามลูป วงจร AC เฟเซอร์ และฟังก์ชันถ่ายโอน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/cramers-rule/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/cramers-rule/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Cramer's rule","Determinant","Mesh analysis","Phasor","Transfer function","Characteristic equation"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-cramers-rule.jpg"],"educationalLevel":["High school","Undergraduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"กฎของคราเมอร์","item":"https://modsengineeringmath.com/learn/linear-algebra/cramers-rule/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"กฎของคราเมอร์ใช้ไม่ได้เมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อ Delta = det A = 0 หรือเมื่อเมทริกซ์ไม่จัตุรัส (จำนวนสมการไม่เท่าจำนวนตัวแปร) ระบบที่ Delta = 0 อาจไม่มีคำตอบหรือมีคำตอบไม่จำกัด ต้องตรวจด้วยการลดแถว"}},{"@type":"Question","name":"ถ้า Δ = 0 และ Δx = Δy = Δz = 0 แปลว่ามีคำตอบไม่จำกัดใช่ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่เสมอไป สำหรับ 2×2 ที่ไม่ใช่เมทริกซ์ศูนย์ใช่ แต่ตั้งแต่ 3×3 ขึ้นไปไม่จริง เช่น x + y + z = 1,\\ x + y + z = 2,\\ x + y + z = 3 มีดีเทอร์มิแนนต์ทุกตัวเป็นศูนย์ แต่ระบบไม่มีคำตอบ ต้องลดแถวตรวจเสมอ"}},{"@type":"Question","name":"คราเมอร์กับอินเวอร์สต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ให้คำตอบเท่ากันเสมอ คราเมอร์คือการเขียนสูตรอินเวอร์สแบบแอดจอยต์คูณกับ b ทีละตัวแปร ข้อดีคือหาตัวแปรเดียวได้โดยไม่ต้องหาอินเวอร์สทั้งเมทริกซ์ เหมาะกับโจทย์ที่ถามกระแสเพียงลูปเดียว"}},{"@type":"Question","name":"ใช้คราเมอร์กับวงจร AC ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้ ทุกขั้นตอนใช้แค่บวก ลบ คูณ หาร จึงใช้กับอิมพีแดนซ์จำนวนเชิงซ้อนได้ตรง ๆ คำนวณดีเทอร์มิแนนต์แบบเชิงซ้อนแล้วหาร ตอบในรูปเชิงขั้ว (ขนาดและมุม)"}}]}]}</script>
@@ -296,13 +296,37 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
-          <span class="nav-h">เซ็นเซอร์และทรานสดิวเซอร์</span>
-          <a href="/learn/sensors-transducers/" >ภาพรวม · เลือกใช้คำ</a>
-          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น · แล็บ</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" >ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
           <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
-          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย · 4–20 mA</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
           <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
-          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐานไฟฟ้า · ประเทศต้นแบบ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
         </div>
       </div>
       <a href="/#watch" >ดูคลิป</a>
@@ -832,7 +856,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
       <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
       <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
-      <a href="/learn/sensors-transducers/">เซ็นเซอร์และทรานสดิวเซอร์ (หน่วย มาตรฐาน)</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
       <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
       <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
       <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
@@ -857,7 +884,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=661418a3" defer></script>
-<script src="/assets/linalg.js?v=661418a3" defer></script>
+<script src="/assets/site.js?v=4d69d95a" defer></script>
+<script src="/assets/linalg.js?v=4d69d95a" defer></script>
 </body>
 </html>
