@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
+import { MC_PLC_TOPICS } from "./src/topics-mc-plc.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SITE = "https://modsengineeringmath.com";
@@ -648,9 +649,54 @@ export const TOPICS = [
         summary: "โรงงานจำลองแบบเรียลไทม์: LT FT PT TT ส่ง 4–20 mA เข้า PLC ควบคุม PID ใส่ความผิดพลาด (สายขาด drift ฟองอากาศ) อ่านรีจิสเตอร์ Modbus และใบงาน" },
     ],
   },
+  // Topics 21–22 (motor control, PLC) and their English editions live in src/topics-mc-plc.mjs
+  ...MC_PLC_TOPICS,
 ];
 
 // ---------------------------------------------------------------------------
+// Language: a topic with lang: "en" is an English edition (pages under src/pages/learn/en/…). Thai topics name their
+// English edition with enSlug, English topics their Thai original with thSlug; sub-pages pair up by slug.
+const UI = {
+  th: { overview: "ภาพรวม", subIn: "หน้าย่อยใน", all: (n) => `ดูครบทุกส่วน · ${n} หน้า`, part: "ส่วนที่", open: "เปิดหน้า →", soon: "เร็วๆ นี้", fx: "สูตร", lab: "แล็บโต้ตอบ",
+    opened: "เปิดแล้ว", prev: "← หน้าก่อนหน้า", next: "หน้าถัดไป →", nextT: "บทถัดไป →", back: "← ภาพรวม", more: "ไปต่อ →", lib: "คลังความรู้ทั้งหมด", libUrl: "/learn/",
+    toc: "สารบัญ", faq: "คำถามที่พบบ่อย", fxFind: "ค้นหาสูตร", fxTotal: (n) => `ทั้งหมด ${n} สูตร`, fxAll: "ทุกหน้า", fxPages: "กรองตามหน้า",
+    fxNone: "ไม่พบสูตรที่ตรงกัน ลองพิมพ์คำอื่น หรือใช้ภาษาอังกฤษ เช่น inverse, determinant, eigenvalue", share: "แชร์ให้เพื่อน", shareL: "แชร์หน้านี้", copy: "คัดลอกลิงก์",
+    home: "หน้าแรก", library: "คลังความรู้", chapter: "บทที่", pagerL: "หน้าถัดไป", locale: "th_TH", subs: (n) => `${n} หน้าย่อย →`, read: "อ่านบทเรียน →" },
+  en: { overview: "Overview", subIn: "Pages in ", all: (n) => `All parts · ${n} pages`, part: "Part", open: "Open →", soon: "Coming soon", fx: "Formulas", lab: "Interactive lab",
+    opened: "Open", prev: "← Previous", next: "Next →", nextT: "Next chapter →", back: "← Overview", more: "Continue →", lib: "All English lessons", libUrl: "/learn/en/",
+    toc: "Contents", faq: "Frequently asked questions", fxFind: "Find a formula", fxTotal: (n) => `${n} formulas`, fxAll: "All pages", fxPages: "Filter by page",
+    fxNone: "No matching formula. Try another word.", share: "Share", shareL: "Share this page", copy: "Copy link",
+    home: "Home", library: "Library", chapter: "Chapter", pagerL: "Next page", locale: "en_US", subs: (n) => `${n} pages →`, read: "Read →" },
+};
+const EN_CHROME = [
+  ["— อัปเดตล่าสุด", "— latest updates"],
+  [">ข้ามไปที่เนื้อหา<", ">Skip to content<"],
+  ["Mod's Engineering Mathematics หน้าแรก", "Mod's Engineering Mathematics home"],
+  ["<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small>", "<small>Ajarn Mod · Engineering Mathematics</small>"],
+  ['aria-label="เมนูหลัก"', 'aria-label="Main menu"'],
+  ['data-nav="home">หน้าแรก<', 'data-nav="home">Home<'],
+  ['href="/learn/" data-nav="learn">คลังความรู้<', 'href="/learn/" data-nav="learn">Library (Thai)<'],
+  ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
+  [">ดูคลิป<", ">Videos<"],
+  ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
+  [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
+  ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
+  ['aria-label="เปิดเมนู"', 'aria-label="Open menu"'],
+  ["<p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>", "<p>Engineering mathematics you truly understand, not formulas you memorise.</p>"],
+  ['aria-label="ลิงก์ในเว็บ"', 'aria-label="Site links"'],
+  ['<b class="mono">เว็บไซต์</b>', '<b class="mono">Site</b>'],
+  ['<a href="/">หน้าแรก</a>', '<a href="/">Home</a>'],
+  [">เครื่องมือเขียนบทเรียน<", ">Lesson editor<"],
+  ['aria-label="ช่องทางติดตาม"', 'aria-label="Follow"'],
+  ['<b class="mono">ติดตาม</b>', '<b class="mono">Follow</b>'],
+  [">กลับขึ้นด้านบน ↑<", ">Back to top ↑<"],
+];
+const langOf = (t) => (t && t.lang) || "th";
+const ui = (t) => UI[langOf(t)];
+const tnum = (t) => t.num || TOPICS.filter((x) => !x.lang).indexOf(t) + 1; // English editions keep the Thai chapter number
+const enDate = (iso) => new Date(iso + "T00:00:00+07:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Bangkok" });
+// the counterpart topic in the other language (or null)
+const twin = (t) => (t ? TOPICS.find((x) => x.slug === (t.lang ? t.thSlug : t.enSlug)) || null : null);
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const decode = (s) =>
@@ -711,7 +757,7 @@ function thaiDate(iso) {
 function topicCards() {
   return (
     '<div class="topic-grid">' +
-    TOPICS.map(
+    TOPICS.filter((t) => !t.lang).map(
       (t, i) => `
   <a class="topic-card" href="/learn/${t.slug}/">
     <span class="tc-top"><span class="tc-sym" aria-hidden="true">${t.sym}</span><span class="tc-num">${String(i + 1).padStart(2, "0")}</span></span>
@@ -727,11 +773,12 @@ function topicCards() {
 
 // level badges inside headings: <span class="lv lv-b">…</span> (b = basic, i = intermediate, a = advanced)
 const LV_RE = /<span class="lv lv-([bia])"[^>]*>[\s\S]*?<\/span>/g;
-function toc(html) {
+function toc(html, lang = "th") {
   const items = [...html.matchAll(/<h2 id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)];
   if (!items.length) return "";
+  const T = UI[lang].toc;
   return (
-    '<nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol>' +
+    `<nav class="toc" aria-label="${T}"><details open><summary>${T}</summary><ol>` +
     items.map(([, id, t]) => {
       const lv = /<span class="lv lv-([bia])"/.exec(t);
       return `<li><a href="#${id}">${stripTags(t.replace(LV_RE, "")).replace(/^\s*\d+\.\s+/, "")}${lv ? `<i class="toc-lv lv-${lv[1]}" aria-hidden="true"></i>` : ""}</a></li>`;
@@ -750,16 +797,17 @@ const live = (t) => (t.sub || []).filter((s) => fs.existsSync(subFile(t, s)));
 const subNo = (t, s) => t.sub.indexOf(s) + 1; // stable number, does not shift when pages are added
 
 function seriesNav(t, cur) {
+  const U = ui(t);
   const lv = new Set(live(t));
   const pill = (s) => {
     const sub = s && s.slug ? s : null;
     const here = (cur ? cur.slug : null) === (sub ? sub.slug : null);
-    return `<a href="${seriesUrl(t, sub)}"${here ? ' aria-current="page"' : ""}><span class="sn-n">${sub ? subNo(t, sub) : 0}</span>${esc(sub ? sub.short : "ภาพรวม")}</a>`;
+    return `<a href="${seriesUrl(t, sub)}"${here ? ' aria-current="page"' : ""}><span class="sn-n">${sub ? subNo(t, sub) : 0}</span>${esc(sub ? sub.short : U.overview)}</a>`;
   };
   const head = `<span class="sn-title mono">${esc(t.en)}</span>`;
   if (!t.parts) {
     const items = [null, ...t.sub];
-    return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}">${head}<div class="sn-list">${items.map(pill).join("")}</div></nav>`;
+    return `<nav class="series-nav" aria-label="${U.subIn}${esc(t.title)}">${head}<div class="sn-list">${items.map(pill).join("")}</div></nav>`;
   }
   const row = (p) => {
     const subs = t.sub.filter((s) => s.part === p.id && lv.has(s));
@@ -768,17 +816,18 @@ function seriesNav(t, cur) {
   };
   const curPart = cur ? t.parts.find((p) => p.id === cur.part) : null;
   const inline = [null, ...(curPart ? t.sub.filter((s) => s.part === curPart.id && lv.has(s)) : [])];
-  return `<nav class="series-nav" aria-label="หน้าย่อยใน${esc(t.title)}">${head}` +
+  return `<nav class="series-nav" aria-label="${U.subIn}${esc(t.title)}">${head}` +
     `<div class="sn-list">${inline.map(pill).join("")}</div>` +
-    `<details class="sn-all"${cur ? "" : " open"}><summary>ดูครบทุกส่วน · ${lv.size} หน้า</summary>${t.parts.map(row).join("")}</details></nav>`;
+    `<details class="sn-all"${cur ? "" : " open"}><summary>${U.all(lv.size)}</summary>${t.parts.map(row).join("")}</details></nav>`;
 }
 
 function seriesCards(t) {
-  const ti = TOPICS.indexOf(t) + 1;
+  const U = ui(t);
+  const ti = tnum(t);
   const lv = new Set(live(t));
   const card = (s) => {
     const n = `${ti}.${subNo(t, s)}`;
-    const foot = s.prefix ? `สูตร ${s.prefix}1, ${s.prefix}2, …` : s.tag || "แล็บโต้ตอบ";
+    const foot = s.prefix ? `${U.fx} ${s.prefix}1, ${s.prefix}2, …` : s.tag || U.lab;
     const inner = `
     <span class="tc-top"><span class="tc-sym" aria-hidden="true">${esc(s.sym)}</span><span class="tc-num">${n}</span></span>
     <b>${esc(s.title)}</b>
@@ -787,11 +836,11 @@ function seriesCards(t) {
     return lv.has(s)
       ? `
   <a class="la-card" href="${seriesUrl(t, s)}">${inner}
-    <span class="tc-foot"><span class="tc-go">เปิดหน้า →</span><span class="mono">${foot}</span></span>
+    <span class="tc-foot"><span class="tc-go">${U.open}</span><span class="mono">${foot}</span></span>
   </a>`
       : `
   <div class="la-card soon" aria-disabled="true">${inner}
-    <span class="tc-foot"><span class="tc-go">เร็วๆ นี้</span><span class="mono">${foot}</span></span>
+    <span class="tc-foot"><span class="tc-go">${U.soon}</span><span class="mono">${foot}</span></span>
   </div>`;
   };
   if (!t.parts) return '<div class="la-cards">' + t.sub.map(card).join("") + "\n</div>";
@@ -800,7 +849,7 @@ function seriesCards(t) {
     if (!subs.length) return "";
     const done = subs.filter((s) => lv.has(s)).length;
     return `<div class="cs-part" id="part-${p.id}">
-  <div class="cs-part-h"><span class="cs-part-n mono">ส่วนที่ ${p.n}</span><h3>${esc(p.title)} <small>${esc(p.en)}</small></h3><p>${esc(p.blurb)}${done < subs.length ? ` <span class="mono cs-part-soon">เปิดแล้ว ${done}/${subs.length}</span>` : ""}</p></div>
+  <div class="cs-part-h"><span class="cs-part-n mono">${U.part} ${p.n}</span><h3>${esc(p.title)}${p.en !== p.title ? ` <small>${esc(p.en)}</small>` : ""}</h3><p>${esc(p.blurb)}${done < subs.length ? ` <span class="mono cs-part-soon">${U.opened} ${done}/${subs.length}</span>` : ""}</p></div>
   <div class="la-cards">${subs.map(card).join("")}
   </div>
 </div>`;
@@ -808,14 +857,15 @@ function seriesCards(t) {
 }
 
 function seriesPager(t, s) {
+  const U = ui(t);
   const L = live(t);
   const i = L.indexOf(s), prev = L[i - 1], next = L[i + 1];
-  const ti = TOPICS.indexOf(t), nextTopic = TOPICS[ti + 1];
+  const same = TOPICS.filter((x) => langOf(x) === langOf(t)), nextTopic = same[same.indexOf(t) + 1];
   const a = (href, dir, label, title) => `<a class="pager-${dir}" href="${href}"><span class="mono">${label}</span><b>${esc(title)}</b></a>`;
-  return `<nav class="pager" aria-label="หน้าถัดไป">${
-    prev ? a(seriesUrl(t, prev), "prev", "← หน้าก่อนหน้า", prev.title) : a(seriesUrl(t), "prev", "← ภาพรวม", t.title)
+  return `<nav class="pager" aria-label="${U.pagerL}">${
+    prev ? a(seriesUrl(t, prev), "prev", U.prev, prev.title) : a(seriesUrl(t), "prev", U.back, t.title)
   }${
-    next ? a(seriesUrl(t, next), "next", "หน้าถัดไป →", next.title) : nextTopic ? a(`/learn/${nextTopic.slug}/`, "next", "บทถัดไป →", nextTopic.title) : a("/learn/", "next", "ไปต่อ →", "คลังความรู้ทั้งหมด")
+    next ? a(seriesUrl(t, next), "next", U.next, next.title) : nextTopic ? a(`/learn/${nextTopic.slug}/`, "next", U.nextT, nextTopic.title) : a(U.libUrl, "next", U.more, U.lib)
   }</nav>`;
 }
 
@@ -832,9 +882,10 @@ function seriesCount(t, kind) {
 // Formula index for a series: every <div class="tf…" id="X1" data-k="…"> card on its sub-pages, with its first display formula.
 // Card format: <div class="tf" id="M9" data-k="keywords"><p class="tf-n"><b><span class="fid">M9</span> English</b> ไทย</p> \[ … \]
 function formulaIndex(t) {
+  const U = ui(t);
   const out = [];
   // topics with hubFx also index the formula cards on the hub page itself (shown as "ภาพรวม")
-  const HUB = { slug: "", short: t.hubShort || "ภาพรวม", prefix: t.hubPrefix || "", hub: true };
+  const HUB = { slug: "", short: t.hubShort || U.overview, prefix: t.hubPrefix || "", hub: true };
   const pages = (t.hubFx ? [HUB] : []).concat(t.sub);
   pages.forEach((s) => {
     const file = s.hub ? path.join(ROOT, "src/pages/learn", t.slug, "index.html") : path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
@@ -850,22 +901,22 @@ function formulaIndex(t) {
   const hay = (f) => (f.id + " " + f.keys + " " + stripTags(f.en) + " " + f.th + " " + f.s.short + " " + f.tex.replace(/\\[[\]()]/g, " ").replace(/\\([a-zA-Z]+)/g, " $1 ")).toLowerCase().replace(/"/g, "").replace(/\s+/g, " ");
   return `<div class="fx-index" id="fxIndex">
   <div class="tf-filter fx-tools" role="search">
-    <label for="fxFilter">ค้นหาสูตร</label>
+    <label for="fxFilter">${U.fxFind}</label>
     <input id="fxFilter" type="search" placeholder="${esc(t.fxHint || "พิมพ์ เช่น inverse, det, eigen, คราเมอร์, ทรานสโพส, rank, 2x2")}" autocomplete="off">
-    <span class="tf-count mono" id="fxCount" aria-live="polite">ทั้งหมด ${out.length} สูตร</span>
+    <span class="tf-count mono" id="fxCount" aria-live="polite">${U.fxTotal(out.length)}</span>
   </div>
-  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${pages.filter((s) => s.prefix || s.hub).map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug || "hub"}">${s.prefix ? s.prefix + " · " : ""}${esc(s.short)}</button>`).join("")}</div>
+  <div class="fx-chips" role="group" aria-label="${U.fxPages}"><button type="button" aria-pressed="true" data-p="">${U.fxAll}</button>${pages.filter((s) => s.prefix || s.hub).map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug || "hub"}">${s.prefix ? s.prefix + " · " : ""}${esc(s.short)}</button>`).join("")}</div>
   <ol class="fx-list">
 ${out.map((f) => `    <li class="fx" data-p="${f.s.slug || "hub"}" data-k="${esc(hay(f))}"><a class="fx-h" href="${seriesUrl(t, f.s.hub ? null : f.s)}#${f.id}"><span class="fid">${f.id}</span><b>${f.en}</b><span class="fx-th">${esc(f.th)}</span></a>${f.tex ? `<div class="fx-f">${f.tex}</div>` : ""}</li>`).join("\n")}
   </ol>
-  <p class="fx-empty" id="fxEmpty" hidden>ไม่พบสูตรที่ตรงกัน ลองพิมพ์คำอื่น หรือใช้ภาษาอังกฤษ เช่น inverse, determinant, eigenvalue</p>
+  <p class="fx-empty" id="fxEmpty" hidden>${U.fxNone}</p>
 </div>`;
 }
 
-function faqHtml(faq) {
+function faqHtml(faq, lang = "th") {
   if (!faq?.length) return "";
   return (
-    '<section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2>' +
+    `<section class="faq" aria-labelledby="faq"><h2 id="faq">${UI[lang].faq}</h2>` +
     faq.map((f) => `<details><summary>${esc(f.q)}</summary><p>${f.a}</p></details>`).join("") +
     "</section>"
   );
@@ -944,9 +995,10 @@ function feedHtml(data) {
 // Structured data
 // ---------------------------------------------------------------------------
 function lessonSchema(meta, url, topic, ogImageUrl, sub) {
+  const U = ui(topic);
   const crumbs = [
-    { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
-    { "@type": "ListItem", position: 2, name: "คลังความรู้", item: SITE + "/learn/" },
+    { "@type": "ListItem", position: 1, name: U.home, item: SITE + "/" },
+    { "@type": "ListItem", position: 2, name: U.library, item: SITE + U.libUrl },
     { "@type": "ListItem", position: 3, name: topic.title, item: SITE + `/learn/${topic.slug}/` },
   ];
   if (sub) crumbs.push({ "@type": "ListItem", position: 4, name: sub.title, item: url });
@@ -956,7 +1008,7 @@ function lessonSchema(meta, url, topic, ogImageUrl, sub) {
       "@id": url + "#article",
       headline: meta.h1 || meta.title,
       description: meta.description,
-      inLanguage: "th",
+      inLanguage: langOf(topic),
       url,
       mainEntityOfPage: url,
       datePublished: meta.published || TODAY,
@@ -964,7 +1016,7 @@ function lessonSchema(meta, url, topic, ogImageUrl, sub) {
       author: { "@id": PERSON_ID },
       publisher: { "@id": PERSON_ID },
       about: meta.about || [sub ? sub.en : topic.en],
-      isPartOf: sub ? { "@id": SITE + `/learn/${topic.slug}/#article` } : { "@id": `${SITE}/learn/#library` },
+      isPartOf: sub ? { "@id": SITE + `/learn/${topic.slug}/#article` } : { "@id": `${SITE}${U.libUrl}#library` },
       ...(!sub && topic.sub ? { hasPart: live(topic).map((s) => ({ "@id": SITE + seriesUrl(topic, s) + "#article" })) } : {}),
       image: [ogImageUrl],
       educationalLevel: meta.level || "Undergraduate",
@@ -985,17 +1037,28 @@ function lessonSchema(meta, url, topic, ogImageUrl, sub) {
   return graph;
 }
 
+// TH ⇄ EN switch shown on pages that have a twin in the other language (marker <!--lang-switch-->)
+function langSwitch(lang, route, twRoute) {
+  if (!twRoute) return "";
+  const th = lang === "th" ? route : twRoute, en = lang === "en" ? route : twRoute;
+  const a = (l, href, label, full) => l === lang
+    ? `<span aria-current="true" lang="${l}">${label}<small>${full}</small></span>`
+    : `<a href="${href}" hreflang="${l}" lang="${l}">${label}<small>${full}</small></a>`;
+  return `<nav class="lang-sw" aria-label="${lang === "en" ? "Language" : "ภาษา"}">${a("th", th, "TH", "ภาษาไทย")}${a("en", en, "EN", "English")}</nav>`;
+}
+
 // ---------------------------------------------------------------------------
 // Share bar (lesson pages), plain-text export for llms-full.txt
 // ---------------------------------------------------------------------------
-function shareHtml(url, title) {
+function shareHtml(url, title, lang = "th") {
+  const U = UI[lang];
   const u = encodeURIComponent(url), t = encodeURIComponent(title);
-  return `<div class="share" aria-label="แชร์หน้านี้">
-  <span class="mono">แชร์ให้เพื่อน</span>
+  return `<div class="share" aria-label="${U.shareL}">
+  <span class="mono">${U.share}</span>
   <a href="https://social-plugins.line.me/lineit/share?url=${u}" target="_blank" rel="noopener">LINE</a>
   <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=${u}&amp;text=${t}" target="_blank" rel="noopener">X</a>
-  <button type="button" data-share-url="${esc(url)}" data-share-title="${esc(title)}">คัดลอกลิงก์</button>
+  <button type="button" data-share-url="${esc(url)}" data-share-title="${esc(title)}">${U.copy}</button>
 </div>`;
 }
 
@@ -1045,7 +1108,7 @@ const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers"];
+const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
@@ -1071,18 +1134,27 @@ for (const file of walk(pagesDir)) {
   if (meta.lesson && !topic) throw new Error(`Unknown lesson slug "${meta.lesson}" in ${rel}`);
   const sub = meta.sub ? topic?.sub?.find((s) => s.slug === meta.sub) : null;
   if (meta.sub && !sub) throw new Error(`Unknown sub-page "${meta.sub}" in ${rel}`);
+  const lang = meta.lang || langOf(topic);
+  const U = UI[lang];
+  // language twin: same sub-page in the other-language edition of this topic (or meta.alt for stand-alone pages)
+  const tw = twin(topic);
+  let twRoute = meta.alt || null;
+  if (!twRoute && tw) {
+    const ts = sub ? tw.sub.find((x) => x.slug === sub.slug) : null;
+    if (sub ? ts && fs.existsSync(subFile(tw, ts)) : fs.existsSync(path.join(ROOT, "src/pages/learn", tw.slug, "index.html"))) twRoute = seriesUrl(tw, ts);
+  }
   const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   const ogFile = `/images/og/${key}.jpg`;
   const ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
   if (!meta.noindex) {
     const og = meta.og || {};
-    const n = topic ? TOPICS.indexOf(topic) + 1 : 0;
+    const n = topic ? tnum(topic) : 0;
     const k = sub ? topic.sub.indexOf(sub) + 1 : 0;
     ogManifest.push({
       key,
       title: og.title || (sub ? sub.title : topic ? topic.title : meta.h1 || meta.title),
       sub: og.sub || (sub ? sub.summary : topic ? topic.summary : meta.description),
-      eyebrow: og.eyebrow || (sub ? `บทที่ ${n}.${k} · ${sub.en}` : topic ? `บทที่ ${n} · ${topic.en}` : "Mod's Engineering Mathematics"),
+      eyebrow: og.eyebrow || (sub ? `${U.chapter} ${n}.${k} · ${sub.en}` : topic ? `${U.chapter} ${n} · ${topic.en}` : "Mod's Engineering Mathematics"),
       sym: og.sym || (sub ? sub.sym : topic ? topic.sym : "∿"),
     });
   }
@@ -1090,18 +1162,19 @@ for (const file of walk(pagesDir)) {
   const fragments = {
     "<!--topic-cards-->": () => topicCards(),
     "<!--trig-table-->": () => trigTable(),
-    "<!--faq-->": () => faqHtml(meta.faq),
+    "<!--faq-->": () => faqHtml(meta.faq, lang),
+    "<!--lang-switch-->": () => langSwitch(lang, route, twRoute),
     "<!--video-->": () => videoFacade(topic),
-    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) : ""),
+    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) : ""),
     "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
-    "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${thaiDate(meta.updated)}</time>` : ""),
+    "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${lang === "en" ? enDate(meta.updated) : thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
   // <!--series-cards:slug--> and <!--formula-index:slug--> can be used on any page (hub, home)
-  body = body.replace(/<!--series-cards:([\w-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
-  body = body.replace(/<!--formula-index:([\w-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
+  body = body.replace(/<!--series-cards:([\w/-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
+  body = body.replace(/<!--formula-index:([\w/-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
   const mdExport = !meta.noindex && topic && MD_SERIES.includes(topic.slug);
   if (!meta.noindex && !meta.noLlms) {
@@ -1109,13 +1182,14 @@ for (const file of walk(pagesDir)) {
     fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text, faq: meta.faq || [] });
     if (mdExport) {
       const faqMd = (meta.faq || []).length
-        ? "\n\n## คำถามที่พบบ่อย (FAQ)\n" + meta.faq.map((f) => `\n**${f.q}**\n${f.a.replace(/\\\(([\s\S]+?)\\\)/g, (_, x) => "$" + x.trim() + "$").replace(/<[^>]+>/g, "")}`).join("\n")
+        ? (lang === "en" ? "\n\n## Frequently asked questions\n" : "\n\n## คำถามที่พบบ่อย (FAQ)\n") + meta.faq.map((f) => `\n**${f.q}**\n${f.a.replace(/\\\(([\s\S]+?)\\\)/g, (_, x) => "$" + x.trim() + "$").replace(/<[^>]+>/g, "")}`).join("\n")
         : "";
       const guide = MD_GUIDES.find((g) => g.page === route);
       const md =
-        `---\ntitle: "${(meta.h1 || meta.title).replace(/"/g, "'")}"\nurl: ${url}\nsite: "Mod's Engineering Mathematics (อาจารย์มด)"\nlanguage: th\n${meta.updated ? `updated: ${meta.updated}\n` : ""}---\n\n` +
+        `---\ntitle: "${(meta.h1 || meta.title).replace(/"/g, "'")}"\nurl: ${url}\nsite: "Mod's Engineering Mathematics (อาจารย์มด)"\nlanguage: ${lang}\n${meta.updated ? `updated: ${meta.updated}\n` : ""}---\n\n` +
         `> ${meta.description}\n\n` +
-        `ฉบับ Markdown ของ ${url} สำหรับผู้ช่วย AI และเครื่องมือค้นหา สูตรเขียนเป็น LaTeX ($…$ และ $$…$$) แล็บโต้ตอบและรูปมีเฉพาะในหน้าเว็บ` +
+        (lang === "en" ? `Markdown copy of ${url} for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.`
+          : `ฉบับ Markdown ของ ${url} สำหรับผู้ช่วย AI และเครื่องมือค้นหา สูตรเขียนเป็น LaTeX ($…$ และ $$…$$) แล็บโต้ตอบและรูปมีเฉพาะในหน้าเว็บ`) +
         (guide ? ` · คู่มือฉบับสมบูรณ์ของชุดนี้: ${SITE}/${guide.out}` : "") + "\n\n" +
         `# ${meta.h1 || meta.title}\n\n` + text.split("\n").filter((l, i, arr) => !(l.startsWith("# ") && arr.findIndex((x) => x.startsWith("# ")) === i)).join("\n").trim() + faqMd + "\n";
       const mdRel = (route === "/" ? "" : route.replace(/^\//, "")) + "index.html.md";
@@ -1124,7 +1198,7 @@ for (const file of walk(pagesDir)) {
       mdFiles.push({ path: "/" + mdRel, canonical: url });
     }
   }
-  const tocHtml = toc(body);
+  const tocHtml = toc(body, lang);
   body = body.split("<!--toc-->").join(tocHtml);
   body = renderMath(body, rel);
 
@@ -1158,9 +1232,16 @@ for (const file of walk(pagesDir)) {
     scripts,
     bodyClass: meta.bodyClass || "",
     v: ASSET_V,
+    lang,
+    ogLocale: U.locale,
+    hreflang: twRoute
+      ? [[lang, url], [lang === "th" ? "en" : "th", SITE + twRoute], ["x-default", lang === "th" ? url : SITE + twRoute]].map(([h, u]) => `<link rel="alternate" hreflang="${h}" href="${u}">`).join("\n")
+      : `<link rel="alternate" hreflang="${lang}" href="${url}">\n<link rel="alternate" hreflang="x-default" href="${url}">`,
   };
   let out = layout.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? vars[k] : `{{${k}}}`));
   // Mark the active nav item
+  // English pages: translate the site chrome (header buttons, skip link, footer); the subject menu stays bilingual-Thai
+  if (lang === "en") for (const [a, b] of EN_CHROME) out = out.split(a).join(b);
   out = out.replace(/data-nav="(\w+)"/g, (_, k) => (k === meta.nav ? 'aria-current="page"' : ""));
 
   const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");

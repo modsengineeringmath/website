@@ -27,6 +27,7 @@
   var ok = function (c, t) { return '<span class="pv-chk ' + (c ? "ok" : "bad") + '">' + (c ? "✓ " : "✗ ") + t + "</span>"; };
   var warn = function (t) { return '<span class="ee-warn">⚠ ' + t + "</span>"; };
   var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); };
+  var EN = function () { return typeof document !== "undefined" && document.documentElement.lang === "en"; };
   var uid = function (p) { return (p || "ee") + Math.random().toString(36).slice(2, 8); };
 
   function niceTicks(max, count) {
@@ -91,7 +92,7 @@
 
   function buildCalc(host, c, prefix) {
     host.innerHTML = "";
-    var h = document.createElement("p"); h.className = "fc-t"; h.innerHTML = "<b>" + c.t + "</b>" + (c.ref ? ' <span class="mono">สูตร ' + c.ref + "</span>" : ""); host.appendChild(h);
+    var h = document.createElement("p"); h.className = "fc-t"; h.innerHTML = "<b>" + c.t + "</b>" + (c.ref ? ' <span class="mono">' + (EN() ? "Ref. " : "สูตร ") + c.ref + "</span>" : ""); host.appendChild(h);
     if (c.intro) { var ip = document.createElement("p"); ip.className = "pv-note ee-intro"; ip.innerHTML = c.intro; host.appendChild(ip); }
     var form = document.createElement("div"); form.className = "fc-in"; host.appendChild(form);
     var out = document.createElement("dl"); out.className = "fc-out"; out.setAttribute("aria-live", "polite"); host.appendChild(out);
@@ -113,9 +114,9 @@
     function run() {
       var x = {}, bad = false;
       c.ins.forEach(function (d) { var v = inputs[d[0]].value; if (d[2] === "sel") x[d[0]] = v; else { x[d[0]] = parse(v); if (!isFinite(x[d[0]])) bad = true; } });
-      if (bad) { out.innerHTML = "<dt>ใส่ตัวเลขให้ครบ</dt><dd>—</dd>"; fig.innerHTML = ""; return; }
+      if (bad) { out.innerHTML = "<dt>" + (EN() ? "Enter all numbers" : "ใส่ตัวเลขให้ครบ") + "</dt><dd>—</dd>"; fig.innerHTML = ""; return; }
       var r;
-      try { r = c.f(x); } catch (e) { out.innerHTML = "<dt>คำนวณไม่ได้กับค่านี้</dt><dd>—</dd>"; fig.innerHTML = ""; return; }
+      try { r = c.f(x); } catch (e) { out.innerHTML = "<dt>" + (EN() ? "Cannot compute with these values" : "คำนวณไม่ได้กับค่านี้") + "</dt><dd>—</dd>"; fig.innerHTML = ""; return; }
       out.innerHTML = r.rows.map(function (q) { return q[0] === "—" ? '<dt class="fc-sep">' + q[1] + "</dt><dd></dd>" : "<dt>" + q[0] + "</dt><dd>" + q[1] + "</dd>"; }).join("");
       fig.innerHTML = r.svg || "";
       note.innerHTML = r.note || ""; note.hidden = !r.note;
@@ -147,7 +148,7 @@
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn();
   }
 
-  var api = { parse: parse, n: n, sig: sig, baht: baht, ok: ok, warn: warn, esc: esc, uid: uid, niceTicks: niceTicks, rangeTicks: rangeTicks, chart: chart, buildCalc: buildCalc, calcs: calcs, onReady: onReady };
+  var api = { EN: EN, parse: parse, n: n, sig: sig, baht: baht, ok: ok, warn: warn, esc: esc, uid: uid, niceTicks: niceTicks, rangeTicks: rangeTicks, chart: chart, buildCalc: buildCalc, calcs: calcs, onReady: onReady };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.EEKit = api;
 })(typeof window !== "undefined" ? window : globalThis);

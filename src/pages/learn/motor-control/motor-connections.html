@@ -1,0 +1,139 @@
+<!--meta
+{
+  "title": "การต่อขั้วมอเตอร์สตาร์และเดลต้า: กล่องขั้ว U1 V1 W1 W2 U2 V2 มอเตอร์ 230/400 V กับ 400/690 V | อาจารย์มด",
+  "h1": "การต่อขั้วมอเตอร์สตาร์และเดลต้า: กล่องขั้ว U1 V1 W1 / W2 U2 V2 มอเตอร์ 230/400 V กับ 400/690 V และการกลับทางหมุน",
+  "description": "ต่อมอเตอร์สามเฟสแบบสตาร์ (Y) และเดลต้า (Δ) ให้ถูก: แรงดันต่อขดลวด กระแสสายกับกระแสเฟส การวางแผ่นทองแดงในกล่องขั้ว U1 V1 W1 W2 U2 V2 ตาม IEC 60034-8 เลือกการต่อจากแผ่นป้าย 230/400 V และ 400/690 V มอเตอร์ไหนสตาร์-เดลต้าได้ การกลับทางหมุน และข้อผิดพลาดที่ทำให้มอเตอร์ไหม้",
+  "lesson": "motor-control",
+  "sub": "motor-connections",
+  "nav": "mc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Y-Δ transform", "Three-phase electric power", "Motor terminal box", "IEC 60034-8"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "ต่อมอเตอร์ 230/400 V แบบเดลต้าเข้าไฟ 400 V จะเกิดอะไร?", "a": "ขดลวดแต่ละชุดได้ 400 V ทั้งที่ออกแบบไว้ 230 V (เกิน √3 = 1.73 เท่า) แกนเหล็กอิ่มตัว กระแสแม่เหล็กสูงหลายเท่าตั้งแต่ตัวเปล่า โอเวอร์โหลดอาจตัด หรือถ้าตั้งผิด มอเตอร์ไหม้ในเวลาไม่นาน"},
+    {"q": "ต่อมอเตอร์ 400/690 V แบบสตาร์เข้าไฟ 400 V ได้ไหม?", "a": "หมุนได้แต่ขดลวดได้เพียง 230 V แรงบิดทุกจุดเหลือ 1/3 ถ้าใส่โหลดเกินราว 1/3 ของพิกัด สลิปจะสูง กระแสเกินพิกัดของขดลวด และร้อน ใช้ได้เฉพาะช่วงสตาร์ทของสตาร์-เดลต้า"},
+    {"q": "W2 U2 V2 ทำไมไม่เรียงเป็น U2 V2 W2?", "a": "การวางขั้วล่างเลื่อนหนึ่งตำแหน่ง (W2 ใต้ U1, U2 ใต้ V1, V2 ใต้ W1) ทำให้แผ่นทองแดงเดลต้าวางในแนวตั้งตรง ๆ ได้ U1–W2, V1–U2, W1–V2 ซึ่งคือการต่อปลายขดหนึ่งเข้ากับต้นขดถัดไปพอดี"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/motor-control/">ควบคุมมอเตอร์ AC</a></li><li>การต่อขั้ว สตาร์ · เดลต้า</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 21.3 · ควบคุมมอเตอร์ AC · Star &amp; Delta Connections</p>
+      <h1>การต่อขั้วมอเตอร์สตาร์และเดลต้า: กล่องขั้ว U1 V1 W1 / W2 U2 V2 มอเตอร์ 230/400 V กับ 400/690 V และการกลับทางหมุน</h1>
+      <p class="lede">ความผิดพลาดที่ทำให้มอเตอร์ใหม่ไหม้บ่อยที่สุดไม่ใช่วงจรควบคุม แต่คือการต่อขั้วผิดแบบ หน้านี้อธิบายว่าการต่อสตาร์กับเดลต้าต่างกันที่ “แรงดันต่อขดลวด” และวิธีอ่านแผ่นป้ายเพื่อเลือกการต่อให้ตรงกับระบบ 400 V ทุกครั้ง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>Y: ขดลวดได้ \(V_L/\sqrt3\) = 230 V · Δ: ขดลวดได้ \(V_L\) = 400 V</li>
+          <li>ขดลวดออกแบบมาให้ได้แรงดันค่าเดียว — การต่อต้องทำให้ขดลวดได้แรงดันนั้น</li>
+          <li>ป้าย 230/400 V Δ/Y → ระบบ 400 V ต่อ <b>Y</b> · ป้าย 400/690 V Δ/Y → ระบบ 400 V ต่อ <b>Δ</b></li>
+          <li>สตาร์-เดลต้าทำได้เฉพาะมอเตอร์ที่เดินปกติแบบ Δ ที่ 400 V (ป้าย 400/690 V)</li>
+          <li>กลับทางหมุน: สลับเฟสใดก็ได้สองเส้น</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น star, delta, phase current, 690" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="box">
+    <h2 id="box">กล่องขั้วหกขั้ว <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>มอเตอร์สามเฟสมีขดลวดสามชุด แต่ละชุดมีต้นและปลาย ตาม IEC 60034-8 ต้นขดเรียก U1 V1 W1 ปลายขดเรียก U2 V2 W2 (มอเตอร์เก่าใช้ U-X, V-Y, W-Z) ในกล่องขั้วแถวบนคือ U1 V1 W1 แถวล่างเรียง W2 U2 V2 การเลือก Y หรือ Δ ทำด้วยการวางแผ่นทองแดงเชื่อม (link)</p>
+    <figure class="xfig"><!--FIG:mc-terminal-box--><svg class="xf" viewBox="0 0 760 330" role="img" aria-label="กล่องขั้วมอเตอร์ 6 ขั้ว: การวางแผ่นทองแดงเชื่อม (link) สำหรับต่อแบบสตาร์ และแบบเดลต้า พร้อมขดลวดที่ได้"><defs><marker id="mc-terminal-box-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="40" y="40" width="200" height="130" rx="10"/><circle class="xf-term" cx="80" cy="75" r="11"/><text x="80" y="58" class="xf-k" text-anchor="middle">U1</text><circle class="xf-term" cx="80" cy="135" r="11"/><text x="80" y="162" class="xf-k" text-anchor="middle">W2</text><line class="xf-rail" x1="80" y1="40" x2="80" y2="64"/><text x="80" y="32" class="xf-k" text-anchor="middle">L1</text><circle class="xf-term" cx="140" cy="75" r="11"/><text x="140" y="58" class="xf-k" text-anchor="middle">V1</text><circle class="xf-term" cx="140" cy="135" r="11"/><text x="140" y="162" class="xf-k" text-anchor="middle">U2</text><line class="xf-rail" x1="140" y1="40" x2="140" y2="64"/><text x="140" y="32" class="xf-k" text-anchor="middle">L2</text><circle class="xf-term" cx="200" cy="75" r="11"/><text x="200" y="58" class="xf-k" text-anchor="middle">W1</text><circle class="xf-term" cx="200" cy="135" r="11"/><text x="200" y="162" class="xf-k" text-anchor="middle">V2</text><line class="xf-rail" x1="200" y1="40" x2="200" y2="64"/><text x="200" y="32" class="xf-k" text-anchor="middle">L3</text><rect class="xf-link" x="70" y="129" width="140" height="12" rx="3"/><text x="140" y="195" class="xf-h" text-anchor="middle">สตาร์ (Y)</text><rect class="xf-box" x="300" y="40" width="200" height="130" rx="10"/><circle class="xf-term" cx="340" cy="75" r="11"/><text x="340" y="58" class="xf-k" text-anchor="middle">U1</text><circle class="xf-term" cx="340" cy="135" r="11"/><text x="340" y="162" class="xf-k" text-anchor="middle">W2</text><line class="xf-rail" x1="340" y1="40" x2="340" y2="64"/><text x="340" y="32" class="xf-k" text-anchor="middle">L1</text><circle class="xf-term" cx="400" cy="75" r="11"/><text x="400" y="58" class="xf-k" text-anchor="middle">V1</text><circle class="xf-term" cx="400" cy="135" r="11"/><text x="400" y="162" class="xf-k" text-anchor="middle">U2</text><line class="xf-rail" x1="400" y1="40" x2="400" y2="64"/><text x="400" y="32" class="xf-k" text-anchor="middle">L2</text><circle class="xf-term" cx="460" cy="75" r="11"/><text x="460" y="58" class="xf-k" text-anchor="middle">W1</text><circle class="xf-term" cx="460" cy="135" r="11"/><text x="460" y="162" class="xf-k" text-anchor="middle">V2</text><line class="xf-rail" x1="460" y1="40" x2="460" y2="64"/><text x="460" y="32" class="xf-k" text-anchor="middle">L3</text><rect class="xf-link" x="334" y="70" width="12" height="70" rx="3"/><rect class="xf-link" x="394" y="70" width="12" height="70" rx="3"/><rect class="xf-link" x="454" y="70" width="12" height="70" rx="3"/><text x="400" y="195" class="xf-h" text-anchor="middle">เดลต้า (Δ)</text><line class="xf-a" x1="650" y1="95" x2="650" y2="45"/><line class="xf-a" x1="650" y1="95" x2="606.7" y2="120"/><line class="xf-a" x1="650" y1="95" x2="693.3" y2="120"/><text x="650" y="30" class="xf-k" text-anchor="middle">Y: ปลาย W2 U2 V2 ต่อรวมเป็นจุดนิวทรัล</text><circle class="xf-dot" cx="650" cy="95" r="4"/><path class="xf-b" d="M650 195 L600 275 L700 275 Z"/><circle class="xf-dot" cx="650" cy="195" r="3.5"/><text x="650" y="187" class="xf-k" text-anchor="middle">L1</text><circle class="xf-dot" cx="600" cy="275" r="3.5"/><text x="600" y="293" class="xf-k" text-anchor="middle">L2</text><circle class="xf-dot" cx="700" cy="275" r="3.5"/><text x="700" y="293" class="xf-k" text-anchor="middle">L3</text><text x="650" y="166" class="xf-k" text-anchor="middle">Δ: ต่อหัว-ท้ายเป็นวง</text><text x="240" y="230" class="xf-m" text-anchor="middle">Y: ขดลวดแต่ละชุดได้ 400/√3 = 230 V</text><text x="240" y="252" class="xf-m" text-anchor="middle">Δ: ขดลวดแต่ละชุดได้ 400 V เต็ม (มากกว่า √3 เท่า)</text><text x="240" y="280" class="xf-m" text-anchor="middle">ลิงก์ Δ เชื่อม U1–W2, V1–U2, W1–V2</text><text x="240" y="302" class="xf-tb" text-anchor="middle">ห้ามใส่ลิงก์เมื่อใช้สตาร์-เดลต้าสตาร์ทเตอร์ (ต้องดึงสาย 6 เส้น)</text></svg><!--/FIG--><figcaption>รูป 1 · สตาร์: แผ่นเชื่อมแนวนอนต่อ W2-U2-V2 เข้าด้วยกันเป็นจุดสตาร์ · เดลต้า: แผ่นเชื่อมแนวตั้งสามแผ่น U1–W2, V1–U2, W1–V2</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="yd">
+    <h2 id="yd">สตาร์กับเดลต้าต่างกันอย่างไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="C1" data-k="star wye connection phase voltage current สตาร์ วาย"><p class="tf-n"><b><span class="fid">C1</span> Star (Y)</b> การต่อแบบสตาร์</p>
+        \[ V_{ph} = \frac{V_L}{\sqrt{3}} \qquad I_L = I_{ph} \]</div>
+<div class="tf" id="C2" data-k="delta connection phase voltage current เดลต้า"><p class="tf-n"><b><span class="fid">C2</span> Delta (Δ)</b> การต่อแบบเดลต้า</p>
+        \[ V_{ph} = V_L \qquad I_L = \sqrt{3}\, I_{ph} \]</div>
+<div class="tf" id="C3" data-k="power same star delta กำลังเท่ากัน"><p class="tf-n"><b><span class="fid">C3</span> Power in either connection</b> กำลังของการต่อทั้งสองแบบ</p>
+        \[ P = 3\,V_{ph}\,I_{ph}\cos\varphi = \sqrt{3}\,V_L\,I_L\cos\varphi \]</div>
+<div class="tf" id="C4" data-k="star versus delta same supply one third ratio ต่อผิด หนึ่งในสาม"><p class="tf-n"><b><span class="fid">C4</span> Same windings, same supply: Y vs Δ</b> ขดลวดชุดเดิมบนไฟเดิม</p>
+        \[ \frac{V_{ph,Y}}{V_{ph,\Delta}} = \frac{1}{\sqrt3} \;\Rightarrow\; \frac{I_{L,Y}}{I_{L,\Delta}} = \frac{1}{3} \qquad \frac{T_Y}{T_\Delta} = \frac{1}{3} \]</div>
+    <p>ที่มาของ 1/3 ใน C4: แรงดันขดลวดลด √3 เท่า กระแสขดลวดจึงลด √3 เท่า และในแบบ Y กระแสสายเท่ากับกระแสขด ขณะที่แบบ Δ กระแสสายมากกว่ากระแสขด √3 เท่า รวมเป็น \(1/(\sqrt3\cdot\sqrt3) = 1/3\) ส่วนแรงบิดแปรตามกำลังสองของแรงดันขดลวด \((1/\sqrt3)^2 = 1/3\) — นี่คือพื้นฐานของสตาร์-เดลต้าสตาร์ทเตอร์</p>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">ตัวอย่าง C-1</span><h3>มอเตอร์ 7.5 kW ป้าย 400 V Δ 14.6 A ต่อเดลต้าที่ 400 V</h3></div>
+<ol class="steps">
+<li><p>C2: กระแสในขดลวด \(I_{ph} = 14.6/\sqrt3 = 8.43\) A ที่แรงดันขด 400 V</p></li>
+<li><p>ถ้าต่อ Y เพื่อสตาร์ท ขดได้ 230 V: กระแสสายตอนสตาร์ท \(95/3 = 32\) A (แทน 95 A) และแรงบิดเริ่ม \(2.2/3 = 0.73\) Tn</p></li>
+<li><p>ป้ายบรรทัด 690 V Y 8.4 A ยืนยัน: ถ้าระบบเป็น 690 V ต่อ Y แล้วกระแสสาย = กระแสขด = 8.4 A ขดลวดได้ 400 V เท่าเดิม</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกการต่อจากแผ่นป้าย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>แผ่นป้ายบอกแรงดันสองค่า ค่าน้อยคือแรงดันสายเมื่อต่อ Δ ค่ามากคือแรงดันสายเมื่อต่อ Y ทั้งสองค่าทำให้ขดลวดได้แรงดันเท่ากัน กฎใช้งาน: <b>หาบรรทัดที่แรงดันตรงกับระบบ แล้วต่อตามสัญลักษณ์ในบรรทัดนั้น</b></p>
+    <figure class="xfig"><!--FIG:mc-voltage-choice--><svg class="xf" viewBox="0 0 760 300" role="img" aria-label="เลือกการต่อขั้วจากแผ่นป้ายเมื่อใช้ไฟ 400 V: มอเตอร์ 230/400 V ต่อสตาร์ มอเตอร์ 400/690 V ต่อเดลต้าและสตาร์-เดลต้าสตาร์ทได้"><defs><marker id="mc-voltage-choice-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxb" x="270" y="14" width="220" height="42" rx="8"/><text x="380" y="40" class="xf-h" text-anchor="middle">ระบบไฟ 400 V 50 Hz</text><line class="xf-ln" x1="380" y1="56" x2="380" y2="76"/><line class="xf-ln" x1="160" y1="76" x2="600" y2="76"/><line class="xf-ln" x1="160" y1="76" x2="160" y2="96" marker-end="url(#mc-voltage-choice-ah)"/><line class="xf-ln" x1="600" y1="76" x2="600" y2="96" marker-end="url(#mc-voltage-choice-ah)"/><rect class="xf-box" x="40" y="98" width="240" height="54" rx="8"/><text x="160" y="120" class="xf-h" text-anchor="middle">แผ่นป้าย 230/400 V Δ/Y</text><text x="160" y="140" class="xf-k" text-anchor="middle">(มอเตอร์เล็ก ≤ ~3 kW)</text><rect class="xf-box" x="480" y="98" width="240" height="54" rx="8"/><text x="600" y="120" class="xf-h" text-anchor="middle">แผ่นป้าย 400/690 V Δ/Y</text><text x="600" y="140" class="xf-k" text-anchor="middle">(มอเตอร์ ≥ ~4 kW)</text><line class="xf-ln" x1="160" y1="152" x2="160" y2="176" marker-end="url(#mc-voltage-choice-ah)"/><line class="xf-ln" x1="600" y1="152" x2="600" y2="176" marker-end="url(#mc-voltage-choice-ah)"/><rect class="xf-boxa" x="40" y="178" width="240" height="54" rx="8"/><text x="160" y="200" class="xf-h" text-anchor="middle">ต่อสตาร์ (Y) ที่ 400 V</text><text x="160" y="220" class="xf-k" text-anchor="middle">สตาร์ทได้: DOL · ซอฟต์สตาร์ท · VFD</text><rect class="xf-boxa" x="480" y="178" width="240" height="54" rx="8"/><text x="600" y="200" class="xf-h" text-anchor="middle">ต่อเดลต้า (Δ) ที่ 400 V</text><text x="600" y="220" class="xf-k" text-anchor="middle">สตาร์ทได้: DOL · Y-Δ · ซอฟต์ · VFD</text><rect class="xf-boxb" x="40" y="246" width="240" height="44" rx="8"/><text x="160" y="266" class="xf-k" text-anchor="middle">✗ สตาร์-เดลต้าไม่ได้: เดลต้าที่ 400 V</text><text x="160" y="282" class="xf-k" text-anchor="middle">ทำให้ขดลวดได้แรงดันเกิน √3 เท่า → ไหม้</text><rect class="xf-boxc" x="480" y="246" width="240" height="44" rx="8"/><text x="600" y="266" class="xf-k" text-anchor="middle">✓ ช่วงสตาร์ต่อ Y: ขดลวดได้ 230 V</text><text x="600" y="282" class="xf-k" text-anchor="middle">กระแสและแรงบิดเหลือ 1/3</text><text x="380" y="112" class="xf-k" text-anchor="middle">กฎ: แรงดัน Δ บนป้าย</text><text x="380" y="128" class="xf-k" text-anchor="middle">= แรงดันสาย</text><text x="380" y="144" class="xf-k" text-anchor="middle">→ สตาร์-เดลต้าได้</text></svg><!--/FIG--><figcaption>รูป 2 · ผังตัดสินใจสำหรับระบบ 400 V 50 Hz</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>แผ่นป้าย</th><th>แรงดันต่อขดลวด</th><th>ระบบ 400 V ต่อ</th><th>สตาร์-เดลต้าได้ไหม</th><th>พบในมอเตอร์</th></tr></thead>
+      <tbody>
+        <tr><td>230/400 V Δ/Y</td><td>230 V</td><td>Y</td><td>ไม่ได้</td><td>เล็ก ราว ≤ 3 kW (ใช้กับอินเวอร์เตอร์ 1 เฟส 230 V ได้โดยต่อ Δ)</td></tr>
+        <tr><td>400/690 V Δ/Y</td><td>400 V</td><td>Δ</td><td>ได้</td><td>ราว ≥ 4 kW</td></tr>
+        <tr><td>400 V Y (3 ขั้ว)</td><td>230 V</td><td>ต่อสำเร็จจากโรงงาน</td><td>ไม่ได้</td><td>ปั๊มจุ่ม คอมเพรสเซอร์ปิด</td></tr>
+        <tr><td>380 V Δ (ป้ายเก่า)</td><td>380 V</td><td>Δ</td><td>ได้</td><td>มอเตอร์รุ่นเก่า/นำเข้า</td></tr>
+      </tbody>
+    </table></div>
+    <p class="mc-warn"><b>อันตราย:</b> ช่างบางคนจำว่า “มอเตอร์ใหญ่ต่อเดลต้า” แล้วต่อมอเตอร์ 230/400 V ขนาดใหญ่เป็นเดลต้า ผลคือขดลวดได้แรงดันเกิน 73 % ไหม้ภายในไม่กี่นาที ขนาดไม่ใช่เกณฑ์ — แผ่นป้ายเท่านั้นคือเกณฑ์</p>
+<div class="wx" id="ex-c-2"><div class="wx-head"><span class="mono">ตัวอย่าง C-2</span><h3>ปั๊ม 2.2 kW ป้าย 230/400 V Δ/Y 8.0/4.6 A ใช้ที่ไหนได้บ้าง</h3></div>
+<ol class="steps">
+<li><p>ระบบสามเฟส 400 V: ต่อ Y กระแสสาย 4.6 A ตั้งโอเวอร์โหลด 4.6 A สตาร์ทตรงหรือซอฟต์สตาร์ท</p></li>
+<li><p>บ้านมีไฟ 1 เฟส 230 V: ใช้อินเวอร์เตอร์ 1 เฟสเข้า 3 เฟส 230 V ออก แล้วต่อมอเตอร์เป็น Δ กระแสออกอินเวอร์เตอร์ 8.0 A</p></li>
+<li><p>ห้ามสตาร์-เดลต้าในระบบ 400 V เพราะช่วง Δ ขดลวดจะได้ 400 V</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="wrong">
+    <h2 id="wrong">ต่อผิดแล้วเกิดอะไร <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>กรณี</th><th>แรงดันขด</th><th>อาการ</th><th>ผล</th></tr></thead>
+      <tbody>
+        <tr><td>230/400 V ต่อ Δ ที่ 400 V</td><td>173 %</td><td>เสียงฮัมดัง กระแสตัวเปล่าเกิน In ร้อนเร็ว</td><td>ฉนวนเสื่อม ไหม้</td></tr>
+        <tr><td>400/690 V ต่อ Y ที่ 400 V</td><td>58 %</td><td>เดินตัวเปล่าปกติ ใส่โหลดแล้วรอบตก กระแสสูง</td><td>โอเวอร์โหลดตัด หรือร้อนถ้าตั้งผิด</td></tr>
+        <tr><td>ต่อขดกลับหัวหนึ่งชุด (U1–U2 สลับ)</td><td>ไม่สมดุล</td><td>สั่น เสียงดัง กระแสไม่เท่ากันมาก</td><td>ร้อน ไม่ได้แรงบิด</td></tr>
+        <tr><td>สตาร์-เดลต้าแต่ลืมถอดแผ่นเชื่อม</td><td>—</td><td>ลัดวงจรเมื่อคอนแทกเตอร์ Y หรือ Δ ดูด</td><td>เบรกเกอร์ทริป อาร์กในกล่องขั้ว</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rotation">
+    <h2 id="rotation">ทิศการหมุนและการกลับทาง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>IEC 60034-8: ต่อ L1 L2 L3 เข้า U1 V1 W1 ตามลำดับ มอเตอร์หมุนตามเข็มนาฬิกาเมื่อมองที่ปลายเพลา สลับสองเฟสใดก็ได้ ลำดับเฟสที่มอเตอร์เห็นจะกลับ สนามหมุนกลับทิศ มอเตอร์หมุนกลับ — หลักการของ <a href="/learn/motor-control/forward-reverse/">วงจรกลับทางหมุน</a></p>
+<div class="tf" id="C5" data-k="reverse rotation swap two lines direction ทิศหมุน กลับทาง"><p class="tf-n"><b><span class="fid">C5</span> Direction of rotation</b> ทิศการหมุน</p>
+        \[ L1\!\to\!U1,\ L2\!\to\!V1,\ L3\!\to\!W1 \;\Rightarrow\; \text{CW (มองปลายเพลา)} \qquad \text{สลับ 2 เส้น} \Rightarrow \text{CCW} \]</div>
+    <p class="mc-note">ในสตาร์-เดลต้า ต้องสลับทั้งชุดต้นขด (U1 V1 W1) และชุดปลายขด (W2 U2 V2) ให้สอดคล้องกัน ถ้าสลับเฉพาะชุดเดียว ช่วง Y จะหมุนกลับแต่ช่วง Δ ต่อผิดรูป (ขดลวดบางชุดได้แรงดันผิดหรือเป็นศูนย์) เกิดกระแสสูงตอนเปลี่ยนจังหวะ — วิธีที่ถูกคือสลับสองเฟสที่ต้นทางก่อนเข้าชุดสตาร์ทเตอร์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="check">
+    <h2 id="check">ตรวจก่อนจ่ายไฟ</h2>
+    <ul class="chk">
+      <li>อ่านแผ่นป้ายทั้งสองบรรทัด จดแรงดันและการต่อที่ตรงกับระบบ</li>
+      <li>วัดความต้านทานขดลวดสามชุดด้วยมิลลิโอห์มมิเตอร์ (ควรต่างกันไม่เกินราว 2 %)</li>
+      <li>วัดความเป็นฉนวนขดลวดลงโครงด้วยเมกเกอร์ 500 V DC (รายละเอียดใน <a href="/learn/motor-control/design-installation/">ออกแบบ · ทดสอบ</a>)</li>
+      <li>ขันน็อตขั้วตามแรงบิดที่กำหนด ใช้หางปลาขนาดถูกต้อง ปิดซีลกล่องขั้วให้ได้ระดับ IP</li>
+      <li>ต่อสายดินโครงมอเตอร์เข้าขั้ว PE ในกล่องขั้ว</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

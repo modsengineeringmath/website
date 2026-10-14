@@ -1,0 +1,115 @@
+<!--meta
+{
+  "title": "การควบคุมแบบลำดับขั้นด้วย PLC: สเตตแมชชีน SFC GRAFCET ไฟจราจร ถังผสมแบตช์ SET RESET CASE | อาจารย์มด",
+  "h1": "การควบคุมแบบลำดับขั้น: สเตตแมชชีน SFC/GRAFCET สัญญาณไฟจราจร สายพานคัดแยก และถังผสมแบบแบตช์",
+  "description": "ออกแบบโปรแกรม PLC แบบลำดับขั้นอย่างเป็นระบบ: แผนภาพสถานะ ขั้นและเงื่อนไขเปลี่ยนขั้นตาม SFC/GRAFCET (IEC 60848) วิธีเขียนเป็นแลดเดอร์ด้วย SET/RESET และเป็น Structured Text ด้วย CASE ตัวอย่างไฟจราจรสองทิศ ถังผสมแบบแบตช์ เติมถังอัตโนมัติ โหมดอัตโนมัติ-มือ หยุดฉุกเฉิน การกลับจุดเริ่ม และการวินิจฉัยว่าเครื่องค้างที่ขั้นไหน พร้อมซิมูเลเตอร์",
+  "lesson": "plc",
+  "sub": "sequential-control",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Finite-state machine", "Sequential function chart", "GRAFCET", "Batch processing"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "ทำไมโปรแกรมลำดับขั้นที่เขียนด้วยวงจรล็อกตัวเองหลายชั้นมักมีบั๊ก?", "a": "เพราะสถานะของเครื่องกระจายอยู่ในบิตหลายตัวที่ไม่มีกฎบังคับว่าต้องเป็นหนึ่งเดียว ทำให้เกิดสองขั้นทำงานพร้อมกันหรือไม่มีขั้นไหนทำงานได้ วิธีสเตตแมชชีนเก็บสถานะในตัวแปรเดียว (หรือบิตขั้นที่ SET/RESET คู่กันอย่างมีวินัย) ทำให้มีขั้นเดียวที่ทำงานเสมอ และรู้ทันทีว่าเครื่องค้างที่ไหน"},
+    {"q": "เอาต์พุตควรเขียนในแต่ละขั้นหรือท้ายโปรแกรม?", "a": "แนะนำให้ส่วนลำดับคำนวณแค่ “ขั้นปัจจุบัน” แล้วมีส่วนเอาต์พุตแยกที่ท้ายโปรแกรม เขียนเอาต์พุตแต่ละตัวครั้งเดียวเป็น OR ของขั้นที่ต้องการให้ทำงาน เช่น ปั๊ม = ขั้น1 OR ขั้น4 วิธีนี้ป้องกันคอยล์ซ้ำและเพิ่มเงื่อนไขโหมดมือหรือหยุดฉุกเฉินได้จุดเดียว"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>ควบคุมแบบลำดับขั้น</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.7 · PLC · Sequential Control</p>
+      <h1>การควบคุมแบบลำดับขั้น: สเตตแมชชีน SFC/GRAFCET สัญญาณไฟจราจร สายพานคัดแยก และถังผสมแบบแบตช์</h1>
+      <p class="lede">เครื่องจักรส่วนใหญ่ทำงานเป็นลำดับ: รอ → เติม → ผสม → ปล่อย → รอ การเขียนโปรแกรมลำดับด้วยวงจรล็อกตัวเองซ้อนกันได้ผลในงานเล็ก แต่จะยุ่งเหยิงเมื่อเครื่องซับซ้อน วิธีที่วิศวกรใช้คือคิดเป็น <b>สเตตแมชชีน</b> ก่อน แล้วค่อยแปลงเป็นภาษาใดก็ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ขั้นตอนออกแบบ: เขียนขั้น (state) → เงื่อนไขเปลี่ยนขั้น (transition) → เอาต์พุตของแต่ละขั้น</li>
+          <li>มีขั้นทำงานทีละหนึ่งขั้นเสมอ (ยกเว้นกิ่งขนานใน SFC)</li>
+          <li>แลดเดอร์: SET ขั้นถัดไป + RESET ขั้นปัจจุบัน ในรังเดียวกัน · ST: CASE State OF</li>
+          <li>เอาต์พุตเขียนท้ายโปรแกรมเป็น OR ของขั้น</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น step, transition, state, output" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="fsm">
+    <h2 id="fsm">สเตตแมชชีน: ขั้น เงื่อนไข เอาต์พุต <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:plc-traffic-states--><svg class="xf" viewBox="0 0 760 280" role="img" aria-label="แผนภาพสถานะไฟจราจรสี่แยก 2 ทิศ: 6 สถานะเปลี่ยนตามเวลา"><defs><marker id="plc-traffic-states-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="15" y="40" width="190" height="60" rx="30"/><text x="110" y="64" class="xf-h" text-anchor="middle">S0</text><text x="110" y="84" class="xf-k" text-anchor="middle">NS เขียว · EW แดง</text><rect class="xf-boxa" x="285" y="40" width="190" height="60" rx="30"/><text x="380" y="64" class="xf-h" text-anchor="middle">S1</text><text x="380" y="84" class="xf-k" text-anchor="middle">NS เหลือง · EW แดง</text><rect class="xf-boxa" x="555" y="40" width="190" height="60" rx="30"/><text x="650" y="64" class="xf-h" text-anchor="middle">S2</text><text x="650" y="84" class="xf-k" text-anchor="middle">แดงทุกทิศ</text><rect class="xf-boxa" x="555" y="180" width="190" height="60" rx="30"/><text x="650" y="204" class="xf-h" text-anchor="middle">S3</text><text x="650" y="224" class="xf-k" text-anchor="middle">EW เขียว · NS แดง</text><rect class="xf-boxa" x="285" y="180" width="190" height="60" rx="30"/><text x="380" y="204" class="xf-h" text-anchor="middle">S4</text><text x="380" y="224" class="xf-k" text-anchor="middle">EW เหลือง · NS แดง</text><rect class="xf-boxa" x="15" y="180" width="190" height="60" rx="30"/><text x="110" y="204" class="xf-h" text-anchor="middle">S5</text><text x="110" y="224" class="xf-k" text-anchor="middle">แดงทุกทิศ</text><line class="xf-ln" x1="205" y1="70" x2="285" y2="70" marker-end="url(#plc-traffic-states-ah)"/><text x="245" y="62" class="xf-k" text-anchor="middle">T 25 s</text><line class="xf-ln" x1="475" y1="70" x2="555" y2="70" marker-end="url(#plc-traffic-states-ah)"/><text x="515" y="62" class="xf-k" text-anchor="middle">T 3 s</text><line class="xf-ln" x1="650" y1="100" x2="650" y2="180" marker-end="url(#plc-traffic-states-ah)"/><text x="658" y="144" class="xf-k">T 2 s</text><line class="xf-ln" x1="555" y1="210" x2="475" y2="210" marker-end="url(#plc-traffic-states-ah)"/><text x="515" y="202" class="xf-k" text-anchor="middle">T 25 s</text><line class="xf-ln" x1="285" y1="210" x2="205" y2="210" marker-end="url(#plc-traffic-states-ah)"/><text x="245" y="202" class="xf-k" text-anchor="middle">T 3 s</text><line class="xf-ln" x1="110" y1="180" x2="110" y2="100" marker-end="url(#plc-traffic-states-ah)"/><text x="118" y="144" class="xf-k">T 2 s</text><text x="380" y="272" class="xf-m" text-anchor="middle">หนึ่งสถานะทำงานทีละสถานะ · เงื่อนไขเปลี่ยน = ไทเมอร์ของสถานะครบ · ปุ่มคนข้ามและโหมดกะพริบกลางคืนเพิ่มได้ง่าย</text></svg><!--/FIG--><figcaption>รูป 1 · ไฟจราจรสองทิศ: หกขั้นวนรอบ แต่ละขั้นมีไทเมอร์ของตัวเอง เงื่อนไขเปลี่ยนขั้นคือไทเมอร์ครบ</figcaption></figure>
+<div class="tf" id="S1" data-k="step activation transition fire sfc rule ขั้น เปลี่ยนขั้น"><p class="tf-n"><b><span class="fid">S1</span> Transition rule</b> กฎการเปลี่ยนขั้น</p>
+        \[ X_{n+1} \leftarrow 1,\ X_n \leftarrow 0 \quad \text{เมื่อ}\quad X_n \wedge t_{n\to n+1} \]</div>
+<div class="tf" id="S2" data-k="single active step state invariant ขั้นเดียว"><p class="tf-n"><b><span class="fid">S2</span> One active step</b> มีขั้นทำงานหนึ่งขั้น (ลำดับเชิงเส้น)</p>
+        \[ \sum_i X_i = 1 \]</div>
+<div class="tf" id="S3" data-k="output as or of steps เอาต์พุต ขั้น"><p class="tf-n"><b><span class="fid">S3</span> Outputs from steps</b> เอาต์พุตจากขั้น</p>
+        \[ Q_j = \bigvee_{i \in A_j} X_i \cdot \text{(เงื่อนไขอนุญาต)} \]</div>
+    <div class="plc-sim" data-preset="traffic"><noscript>ต้องเปิด JavaScript</noscript></div>
+    <p>ตัวอย่างไฟจราจรในซิมูเลเตอร์ใช้ไทเมอร์ต่อเป็นโซ่ (T1→T6) เป็นสเตตแมชชีนแบบง่าย: ขั้นปัจจุบันระบุได้จากไทเมอร์ตัวไหนครบแล้ว เหมาะกับลำดับที่ขึ้นกับเวลาล้วน ๆ งานที่มีเงื่อนไขจากเซนเซอร์ใช้วิธี SFC ด้านล่าง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sfc">
+    <h2 id="sfc">SFC / GRAFCET: ถังผสมแบบแบตช์ <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:plc-sfc-tank--><svg class="xf" viewBox="0 0 760 420" role="img" aria-label="SFC/GRAFCET ของถังผสมแบบแบตช์: เติมของเหลว A เติม B กวน ปล่อยออก แล้วกลับสู่ขั้นเริ่มต้น"><defs><marker id="plc-sfc-tank-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="176" y="30" width="48" height="40" rx="2"/><rect class="xf-box" x="180" y="34" width="40" height="32" rx="2"/><text x="200" y="55" class="xf-h" text-anchor="middle">0</text><text x="166" y="55" class="xf-k" text-anchor="end">รอ</text><line class="xf-ln" x1="200" y1="70" x2="200" y2="106"/><line class="xf-rail" x1="186" y1="88" x2="214" y2="88"/><text x="222" y="92" class="xf-k">START · NOT LL</text><rect class="xf-boxa" x="176" y="106" width="48" height="40" rx="2"/><text x="200" y="131" class="xf-h" text-anchor="middle">1</text><line class="xf-ln" x1="224" y1="126" x2="260" y2="126"/><rect class="xf-box" x="260" y="112" width="170" height="28" rx="2"/><text x="345" y="131" class="xf-k" text-anchor="middle">V1</text><text x="166" y="131" class="xf-k" text-anchor="end">เติม A</text><line class="xf-ln" x1="200" y1="146" x2="200" y2="182"/><line class="xf-rail" x1="186" y1="164" x2="214" y2="164"/><text x="222" y="168" class="xf-k">LM</text><rect class="xf-boxa" x="176" y="182" width="48" height="40" rx="2"/><text x="200" y="207" class="xf-h" text-anchor="middle">2</text><line class="xf-ln" x1="224" y1="202" x2="260" y2="202"/><rect class="xf-box" x="260" y="188" width="170" height="28" rx="2"/><text x="345" y="207" class="xf-k" text-anchor="middle">V2</text><text x="166" y="207" class="xf-k" text-anchor="end">เติม B</text><line class="xf-ln" x1="200" y1="222" x2="200" y2="258"/><line class="xf-rail" x1="186" y1="240" x2="214" y2="240"/><text x="222" y="244" class="xf-k">LH</text><rect class="xf-boxa" x="176" y="258" width="48" height="40" rx="2"/><text x="200" y="283" class="xf-h" text-anchor="middle">3</text><line class="xf-ln" x1="224" y1="278" x2="260" y2="278"/><rect class="xf-box" x="260" y="264" width="170" height="28" rx="2"/><text x="345" y="283" class="xf-k" text-anchor="middle">M1 · T#60s</text><text x="166" y="283" class="xf-k" text-anchor="end">กวน</text><line class="xf-ln" x1="200" y1="298" x2="200" y2="334"/><line class="xf-rail" x1="186" y1="316" x2="214" y2="316"/><text x="222" y="320" class="xf-k">T3.Q</text><rect class="xf-boxa" x="176" y="334" width="48" height="40" rx="2"/><text x="200" y="359" class="xf-h" text-anchor="middle">4</text><line class="xf-ln" x1="224" y1="354" x2="260" y2="354"/><rect class="xf-box" x="260" y="340" width="170" height="28" rx="2"/><text x="345" y="359" class="xf-k" text-anchor="middle">V3</text><text x="166" y="359" class="xf-k" text-anchor="end">ปล่อยออก</text><line class="xf-ln" x1="200" y1="374" x2="200" y2="410"/><line class="xf-rail" x1="186" y1="392" x2="214" y2="392"/><text x="222" y="396" class="xf-k">NOT LL</text><line class="xf-ln" x1="200" y1="410" x2="200" y2="414"/><line class="xf-ln" x1="200" y1="414" x2="90" y2="414"/><line class="xf-ln" x1="90" y1="414" x2="90" y2="18"/><line class="xf-ln" x1="90" y1="18" x2="200" y2="18"/><line class="xf-ln" x1="200" y1="18" x2="200" y2="30" marker-end="url(#plc-sfc-tank-ah)"/><text x="470" y="60" class="xf-k">LL LM LH = สวิตช์ระดับต่ำ กลาง สูง (1 = จมน้ำ)</text><text x="470" y="80" class="xf-k">V1 V2 วาล์วเติม · V3 วาล์วปล่อย · M1 มอเตอร์กวน</text><text x="470" y="110" class="xf-h">กฎ SFC:</text><text x="470" y="130" class="xf-k">• ขั้นที่ทำงานอยู่ทำ action ของมัน</text><text x="470" y="150" class="xf-k">• ข้ามได้เมื่อขั้นก่อนทำงานและเงื่อนไขจริง</text><text x="470" y="170" class="xf-k">  (ขั้นก่อนดับ ขั้นถัดไปติด ในสแกนเดียว)</text><text x="470" y="190" class="xf-k">• กรอบคู่ = ขั้นเริ่มต้น</text></svg><!--/FIG--><figcaption>รูป 2 · กรอบคือขั้น ขีดขวางคือเงื่อนไขเปลี่ยนขั้น กล่องด้านขวาคือ action ที่ทำขณะขั้นนั้นทำงาน</figcaption></figure>
+    <h3>แปลงเป็นแลดเดอร์ด้วย SET/RESET</h3>
+    <pre class="code"><span class="c">// ขั้นเริ่มต้นเมื่อเปิดเครื่อง (first scan)</span>
+S  X0 = FirstScan
+<span class="c">// แต่ละรัง: ขั้นปัจจุบัน AND เงื่อนไข → SET ขั้นถัดไป, RESET ขั้นปัจจุบัน</span>
+S  X1 = X0 &amp; START &amp; !LL         R  X0 = X0 &amp; START &amp; !LL
+S  X2 = X1 &amp; LM                  R  X1 = X1 &amp; LM
+S  X3 = X2 &amp; LH                  R  X2 = X2 &amp; LH
+S  X4 = X3 &amp; T3.Q                R  X3 = X3 &amp; T3.Q
+S  X0 = X4 &amp; !LL                 R  X4 = X4 &amp; !LL
+T3 = TON(X3, 60s)
+<span class="c">// ส่วนเอาต์พุต (S3)</span>
+V1 = X1 · V2 = X2 · M1 = X3 · V3 = X4</pre>
+    <h3>แปลงเป็น Structured Text ด้วย CASE</h3>
+    <pre class="code"><span class="k">CASE</span> Step <span class="k">OF</span>
+  0: <span class="k">IF</span> Start <span class="k">AND NOT</span> LL <span class="k">THEN</span> Step := 10; <span class="k">END_IF</span>
+ 10: <span class="k">IF</span> LM <span class="k">THEN</span> Step := 20; <span class="k">END_IF</span>          <span class="c">// เติม A</span>
+ 20: <span class="k">IF</span> LH <span class="k">THEN</span> Step := 30; <span class="k">END_IF</span>          <span class="c">// เติม B</span>
+ 30: <span class="k">IF</span> TMix.Q <span class="k">THEN</span> Step := 40; <span class="k">END_IF</span>      <span class="c">// กวน</span>
+ 40: <span class="k">IF NOT</span> LL <span class="k">THEN</span> Step := 0; <span class="k">END_IF</span>       <span class="c">// ปล่อย</span>
+<span class="k">END_CASE</span>
+TMix(IN := Step = 30, PT := T#60S);
+V1 := Step = 10;  V2 := Step = 20;  M1 := Step = 30;  V3 := Step = 40;</pre>
+    <p class="mc-note">เลขขั้นเว้นทีละ 10 เพื่อแทรกขั้นใหม่ภายหลังได้โดยไม่ต้องเลื่อนเลขทั้งโปรแกรม และแสดง <code>Step</code> บน HMI ช่างจะรู้ทันทีว่าเครื่องรออะไรอยู่</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="tank">
+    <h2 id="tank">ตัวอย่างเติมถังอัตโนมัติ (มีโรงงานจำลอง)</h2>
+    <p>กด START ระบบเติมน้ำจนถึง LH หยุด และเติมใหม่เมื่อระดับต่ำกว่า LL เปิดก๊อก (I0.4) ให้มีการใช้น้ำ ดูการ SET/RESET ของปั๊ม Q0.0 ตามสวิตช์ระดับ — นี่คือวงจรสองระดับแบบเดียวกับ <a href="/learn/motor-control/applied-circuits/#pump">ปั๊มลูกลอย</a> แต่เขียนในโปรแกรม</p>
+    <div class="plc-sim" data-preset="tank"><noscript>ต้องเปิด JavaScript</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="modes">
+    <h2 id="modes">โหมดอัตโนมัติ-มือ หยุด และกลับจุดเริ่ม <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>Auto / Manual:</b> โหมดมือให้สั่งเอาต์พุตทีละตัวจาก HMI แต่ยังผ่านอินเตอร์ล็อก (เช่น ห้ามเปิดวาล์วปล่อยขณะเติม) ลำดับขั้นหยุดนับขณะอยู่โหมดมือ</li>
+      <li><b>Cycle stop:</b> กดหยุดแล้วให้ทำรอบปัจจุบันจนจบก่อนหยุดที่ขั้น 0 — เหมาะกับงานที่หยุดกลางรอบแล้วเสียวัตถุดิบ</li>
+      <li><b>Immediate stop / E-stop:</b> ตัดเอาต์พุตทั้งหมดทันที เก็บขั้นที่หยุดไว้ และต้องผ่านขั้นตอนกลับจุดเริ่ม (homing) หรือกู้คืนด้วยมือก่อนเริ่มใหม่</li>
+      <li><b>Timeout ต่อขั้น:</b> ทุกขั้นที่รอเซนเซอร์ควรมีไทเมอร์เฝ้า เช่น เติมนานเกิน 5 นาทีแปลว่าวาล์วค้างหรือเซนเซอร์เสีย → แจ้งเตือนพร้อมบอกขั้น</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

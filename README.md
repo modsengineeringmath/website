@@ -237,3 +237,21 @@ practice (pid-symbols, installation-calibration K, instrumentation-lab). Hub for
 - Menu: own group `navg8` "เซนเซอร์ · วัดคุม" with a `nav-sec` heading "เครื่องมือวัด · วัดคุม" (hamburger). Home: section `#sensors` + hero badge.
 - Short URLs (`/sensors`, `/pt100`, `/thermocouple`, `/orifice`, `/magmeter`, `/radar-level`, `/4-20ma`, `/hart`, `/ne43`, `/modbus`, `/profibus`,
   `/io-link`, `/p-and-id`, `/calibration`, `/sil`, `/instrument-lab` …) in `_redirects`.
+
+## Motor control & PLC series + English editions (2026-10-14)
+Topics in `src/topics-mc-plc.mjs` (`MC_PLC_TOPICS`, spread at the end of `TOPICS`): `motor-control` (topic 21, 14 pages: induction-motor M,
+supply-systems S, motor-connections C, control-devices D, diagrams-symbols G, dol-starter L, forward-reverse R, star-delta Y, soft-starters T,
+applied-circuits A, vfd V, vfd-applications P, design-installation K, motor-lab; hub H1–H4) and `plc` (topic 22, 11 pages: plc-fundamentals F,
+io-wiring W, ladder-basics B, timers-counters T, iec-languages L, plc-motor-control M, sequential-control S, analog-pid-vfd P, commissioning-safety K, plc-lab).
+All numbers are for 230/400 V 50 Hz (TH, LA, KH, VN, MM, MY, SG). Motor model: double-cage 7.5 kW 4-pole fit (In ≈ 14 A, Is/In ≈ 6.5, Ts/Tn ≈ 2.15, Tk/Tn ≈ 3).
+- **i18n:** a topic with `lang: "en"` (`en/motor-control`, `en/plc`, pages in `src/pages/learn/en/<series>/` → `/learn/en/…`) is an English edition;
+  `enSlug`/`thSlug` link the twins. `UI` dict in build.mjs localises TOC, series nav, pager, FAQ, formula index, share, dates. `<!--lang-switch-->`
+  renders the TH/EN pill switch to the twin page (same sub slug, or `meta.alt` for stand-alone pages such as `/learn/en/`). `meta.lang` sets the
+  language of a page without a lesson. hreflang/og:locale come from the layout vars. `EN_CHROME` translates header/footer strings on English pages;
+  the subject menu stays Thai (menu group `navg9` + top-level "English" link). lesson.js / ee-kit.js switch UI strings when `<html lang="en">`.
+- Figures: `python3 scripts/mc_figs.py [files]` fills empty `<!--FIG:mc-…-->` / `<!--FIG:plc-…-->` blocks (`--all` redraws, `--list`, `--preview out.html`);
+  a key ending `-en` draws English labels. Control circuits use a small layout engine in the script (IEC 60617 symbols, IEC 81346 codes).
+- `assets/mc-calc.js` calculators `data-mc="current|speed|stardelta|starting|cable|vf|energy|scale|scan"`; `assets/mc-lab.js` starting simulator
+  `.mc-lab[data-mode=dol|fr|yd|soft|vfd][data-modes][data-load]`; `assets/plc-sim.js` ladder simulator `.plc-sim[data-preset=dol|fr|yd|flasher|traffic|tank|counter|setreset][data-edit]`
+  (text program: coils, S/R, TON/TOF/TP, CTU, P()/N(); `module.exports {compile, PRESETS}` for Node tests). All bilingual.
+- Home: section `#motor-plc`. Short URLs `/motor-control` `/dol` `/star-delta` `/vfd` `/plc` `/ladder` `/plc-lab` `/motor-lab` `/en` … in `_redirects`.

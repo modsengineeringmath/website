@@ -1,0 +1,129 @@
+<!--meta
+{
+  "title": "ทดสอบระบบ PLC ความปลอดภัยเครื่องจักร และแก้ปัญหา: ลูปเช็ก Force หยุดฉุกเฉิน IEC 60204-1 ISO 13849 | อาจารย์มด",
+  "h1": "ทดสอบระบบ PLC ความปลอดภัยเครื่องจักร และการแก้ปัญหา: ลูปเช็ก การ Force หยุดฉุกเฉิน IEC 60204-1 ISO 13849 และเอกสาร",
+  "description": "ขั้นตอนทดสอบและเดินระบบ PLC (commissioning): ตรวจก่อนจ่ายไฟ ทดสอบ I/O ทีละจุด ลูปเช็กแอนะล็อก อันตรายของการ Force บิต การสำรองและจัดเวอร์ชันโปรแกรม หมวดการหยุด 0 1 2 ตาม IEC 60204-1 หยุดฉุกเฉินด้วยรีเลย์เซฟตี้สองช่อง ระดับประสิทธิภาพ PL ตาม ISO 13849-1 และ SIL ตาม IEC 62061 ระยะติดตั้งม่านแสงตาม ISO 13855 และผังแก้ปัญหาเมื่อเครื่องไม่ทำงาน",
+  "lesson": "plc",
+  "sub": "commissioning-safety",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Commissioning", "Emergency stop", "ISO 13849", "Functional safety"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "การ Force บิตใน PLC อันตรายอย่างไร?", "a": "Force บังคับค่าบิตโดยไม่สนเงื่อนไขในโปรแกรมหรือสถานะจริงของอินพุต เครื่องอาจเคลื่อนที่ในจังหวะที่ไม่มีใครคาด อินเตอร์ล็อกในซอฟต์แวร์ถูกข้าม และถ้าลืมยกเลิก ค่า Force จะค้างไปจนเกิดเหตุ ควรมีขั้นตอนขออนุญาต แจ้งคนในพื้นที่ บันทึก และตรวจว่าไม่มี Force ค้างก่อนส่งมอบเครื่อง"},
+    {"q": "ปุ่มหยุดฉุกเฉินต่อเข้า PLC แล้วให้โปรแกรมตัดเอาต์พุตได้ไหม?", "a": "ไม่เพียงพอสำหรับ PLC มาตรฐาน หยุดฉุกเฉินต้องมีระดับความน่าเชื่อถือที่ประเมินตาม ISO 13849-1 หรือ IEC 62061 ซึ่ง PLC ทั่วไปไม่ได้รับรอง ให้ใช้รีเลย์เซฟตี้หรือ safety PLC ที่ตัดพลังงานจากอุปกรณ์ขับเคลื่อนโดยตรง แล้วนำสถานะเข้า PLC เพื่อแสดงผลและจัดลำดับการกลับมาทำงาน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>ทดสอบระบบ · ความปลอดภัย</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.9 · PLC · Commissioning &amp; Safety</p>
+      <h1>ทดสอบระบบ PLC ความปลอดภัยเครื่องจักร และการแก้ปัญหา: ลูปเช็ก การ Force หยุดฉุกเฉิน IEC 60204-1 ISO 13849 และเอกสาร</h1>
+      <p class="lede">โปรแกรมที่ผ่านซิมูเลเตอร์ยังไม่ใช่เครื่องที่พร้อมใช้ ช่วงเดินระบบคือช่วงที่เกิดอุบัติเหตุบ่อยที่สุด เพราะสายยังไม่ครบ คนยังไม่คุ้นเครื่อง และมีการแก้โปรแกรมสด หน้านี้ให้ขั้นตอนที่เป็นระบบ หลักความปลอดภัยที่บังคับในมาตรฐาน และวิธีหาจุดเสียอย่างมีหลักการ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ทดสอบเป็นชั้น: สาย → ไฟเลี้ยง → I/O ทีละจุด → ลอจิกโดยไม่มีกำลัง → เดินจริง</li>
+          <li>หยุดฉุกเฉิน = หมวดหยุด 0 หรือ 1 ผ่านอุปกรณ์เซฟตี้ ไม่ใช่ผ่านโปรแกรม PLC ทั่วไป</li>
+          <li>ระดับที่ต้องการ (PLr) มาจากการประเมินความเสี่ยง · ระยะม่านแสง \(S = K\,T + C\)</li>
+          <li>Force ทุกครั้งต้องมีขั้นตอน และต้องไม่เหลือค้างเมื่อส่งมอบ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น stop category, pl, sil, safety distance, light curtain" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="comm">
+    <h2 id="comm">ขั้นตอนทดสอบและเดินระบบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ก่อนจ่ายไฟ:</b> ตรวจสายตามแบบ ความต่อเนื่องของ PE ความเป็นฉนวนสายกำลัง (ปลดอิเล็กทรอนิกส์ออก) ขั้วขันแน่น</li>
+      <li><b>จ่ายไฟทีละส่วน:</b> ไฟควบคุม 24 VDC ก่อน วัดแรงดันที่ทุกกลุ่ม I/O · ไฟกำลังยังปลด</li>
+      <li><b>ทดสอบอินพุตทีละจุด:</b> กดปุ่ม/กระตุ้นเซนเซอร์จริงที่หน้างาน ดูบิตเปลี่ยนในซอฟต์แวร์ บันทึกในใบ I/O check</li>
+      <li><b>ทดสอบเอาต์พุตทีละจุด:</b> ขณะไฟกำลังยังปลด สั่งเอาต์พุต (ใช้โหมดทดสอบหรือ Force ตามขั้นตอน) ดูคอนแทกเตอร์ วาล์ว ไฟ ทำงานถูกตัว</li>
+      <li><b>ลูปเช็กแอนะล็อก:</b> ป้อนกระแส 4 · 12 · 20 mA ด้วยเครื่องสอบเทียบ อ่านค่าหน่วยวิศวกรรมใน PLC และบน HMI</li>
+      <li><b>ทดสอบความปลอดภัย:</b> หยุดฉุกเฉินทุกจุด ประตูนิรภัย ม่านแสง ตรวจว่าตัดพลังงานจริงและรีเซ็ตต้องทำด้วยมือ</li>
+      <li><b>ทดสอบลอจิกแห้ง:</b> เดินลำดับทั้งหมดโดยไฟกำลังปลด จำลองเซนเซอร์</li>
+      <li><b>เดินจริง:</b> ทีละมอเตอร์ ตรวจทิศ กระแส แล้วทั้งลำดับ ทั้งปกติและกรณีผิดปกติ (ดึงเซนเซอร์ ทริปโอเวอร์โหลด)</li>
+      <li><b>ส่งมอบ:</b> ไม่มี Force ค้าง สำรองโปรแกรมพร้อมคอมเมนต์ เอกสาร I/O list แบบวงจร as-built ค่าพารามิเตอร์ไดรฟ์</li>
+    </ol>
+    <p class="mc-warn"><b>การ Force:</b> ก่อน Force เอาต์พุตที่ทำให้เครื่องเคลื่อนที่ ต้องแจ้งทุกคนในพื้นที่ มีคนเฝ้าปุ่มหยุดฉุกเฉิน และบันทึก ซอฟต์แวร์ส่วนใหญ่แสดงสัญลักษณ์เตือนเมื่อมี Force — ตรวจทุกครั้งก่อนออกจากหน้างาน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="stop">
+    <h2 id="stop">หมวดการหยุดและหยุดฉุกเฉิน (IEC 60204-1) <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K1" data-k="stop category 0 1 2 iec 60204-1 หมวดการหยุด"><p class="tf-n"><b><span class="fid">K1</span> Stop categories</b> หมวดการหยุด</p>
+        \[ \text{Cat 0: ตัดพลังงานทันที} \qquad \text{Cat 1: หยุดแบบควบคุมแล้วตัดพลังงาน} \qquad \text{Cat 2: หยุดแบบควบคุม คงพลังงานไว้} \]</div>
+    <p>หยุดฉุกเฉินต้องเป็นหมวด 0 หรือ 1 เท่านั้น หมวด 1 ใช้เมื่อการตัดทันทีอันตรายกว่า เช่น เครื่องเหวี่ยงขนาดใหญ่ที่ต้องเบรกด้วยไดรฟ์ก่อนตัดไฟ (ใช้รีเลย์เซฟตี้แบบหน่วงเวลา) ปุ่มหยุดฉุกเฉินเป็นหัวเห็ดสีแดงบนพื้นเหลือง ล็อกค้างเมื่อกด หน้าสัมผัสเปิดด้วยกลไกบังคับ และการปลดล็อกปุ่มต้องไม่ทำให้เครื่องเดินเอง</p>
+    <figure class="xfig"><!--FIG:plc-estop--><svg class="xf" viewBox="0 0 780 320" role="img" aria-label="หยุดฉุกเฉินที่ถูกต้อง: ปุ่ม E-stop สองช่องเข้ารีเลย์เซฟตี้ ตัดไฟคอยล์คอนแทกเตอร์โดยตรง PLC แค่อ่านสถานะ"><defs><marker id="plc-estop-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="40" y="60" width="120" height="120" rx="10"/><text x="100" y="52" class="xf-k" text-anchor="middle">ปุ่ม E-stop 2 ช่อง</text><circle class="xf-estopc" cx="100" cy="120" r="34"/><text x="100" y="125" class="xf-h" text-anchor="middle">STOP</text><rect class="xf-boxc" x="260" y="50" width="170" height="180" rx="10"/><text x="345" y="74" class="xf-h" text-anchor="middle">รีเลย์เซฟตี้</text><text x="345" y="96" class="xf-k" text-anchor="middle">S11-S12 · S21-S22</text><text x="345" y="116" class="xf-k" text-anchor="middle">ตรวจลัดวงจรข้ามช่อง</text><text x="345" y="136" class="xf-k" text-anchor="middle">รีเซ็ตด้วยมือ S33-S34</text><text x="345" y="160" class="xf-k" text-anchor="middle">13-14 · 23-24 (NO)</text><text x="345" y="180" class="xf-k" text-anchor="middle">41-42 → PLC (สถานะ)</text><line class="xf-ln" x1="160" y1="100" x2="260" y2="100"/><line class="xf-ln" x1="160" y1="140" x2="260" y2="140"/><text x="210" y="94" class="xf-k" text-anchor="middle">CH1</text><text x="210" y="134" class="xf-k" text-anchor="middle">CH2</text><line class="xf-ln" x1="430" y1="150" x2="520" y2="150"/><line class="xf-ln" x1="430" y1="170" x2="520" y2="170"/><rect class="xf-boxa" x="520" y="130" width="60" height="60" rx="6"/><text x="550" y="165" class="xf-k" text-anchor="middle">PLC Q</text><line class="xf-ln" x1="580" y1="160" x2="640" y2="160"/><rect class="xf-coil" x="640" y="140" width="50" height="40" rx="2"/><text x="665" y="165" class="xf-k" text-anchor="middle">-K1</text><text x="570" y="214" class="xf-k" text-anchor="middle">13-14 อนุกรมกับเอาต์พุต PLC → ตัดคอยล์ได้เสมอ</text><line class="xf-ln" x1="430" y1="190" x2="470" y2="190"/><line class="xf-ln" x1="470" y1="190" x2="470" y2="260"/><line class="xf-ln" x1="470" y1="260" x2="520" y2="260"/><text x="528" y="264" class="xf-k">I1.0 สถานะ (ไม่ใช่ทางเซฟตี้)</text><text x="390" y="306" class="xf-m" text-anchor="middle">หมวดหยุด 0 (IEC 60204-1): ตัดพลังงานทันที · ระดับ PL ต้องประเมินตาม ISO 13849-1 · ห้ามใช้ PLC ทั่วไปเป็นทางเดียวของ E-stop</text></svg><!--/FIG--><figcaption>รูป 1 · รีเลย์เซฟตี้ตรวจสองช่องและการลัดข้ามช่อง หน้าสัมผัสเซฟตี้ต่ออนุกรมกับเอาต์พุต PLC จึงตัดคอยล์ได้เสมอ PLC เพียงอ่านสถานะ</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="pl">
+    <h2 id="pl">ระดับความปลอดภัย PL และ SIL <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ISO 13849-1 ประเมินความเสี่ยงจากสามปัจจัย: ความรุนแรงของการบาดเจ็บ (S1 เล็กน้อย / S2 รุนแรง) ความถี่ที่สัมผัสอันตราย (F1 นาน ๆ ครั้ง / F2 บ่อย) และโอกาสหลบเลี่ยง (P1 เป็นไปได้ / P2 แทบเป็นไปไม่ได้) ได้ระดับที่ต้องการ PLr ตั้งแต่ a ถึง e จากนั้นออกแบบฟังก์ชันความปลอดภัย (โครงสร้างหมวด B 1 2 3 4 อายุอุปกรณ์ MTTFd การตรวจจับความผิดพลาด DC) ให้ได้ PL ≥ PLr</p>
+<div class="tf" id="K2" data-k="performance level pfhd sil mapping ระดับ pl sil"><p class="tf-n"><b><span class="fid">K2</span> PL / SIL by dangerous failure rate</b> ระดับตามอัตราความล้มเหลวอันตรายต่อชั่วโมง</p>
+        \[ \text{PL d} \approx \text{SIL 2}: 10^{-7} \le PFH_D < 10^{-6} \qquad \text{PL e} \approx \text{SIL 3}: 10^{-8} \le PFH_D < 10^{-7} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ตัวอย่างฟังก์ชัน</th><th>PLr ที่พบบ่อย</th><th>วิธีทำทั่วไป</th></tr></thead>
+      <tbody>
+        <tr><td>หยุดฉุกเฉินเครื่องจักรทั่วไป</td><td>c–d</td><td>ปุ่มสองช่อง + รีเลย์เซฟตี้ + คอนแทกเตอร์สองตัวอนุกรมพร้อมป้อนกลับ</td></tr>
+        <tr><td>ประตูนิรภัยเครื่องตัด/เครื่องอัด</td><td>d–e</td><td>สวิตช์ประตูสองตัวหรือสวิตช์เข้ารหัส + safety PLC</td></tr>
+        <tr><td>ม่านแสงหน้าเครื่องปั๊ม</td><td>d–e</td><td>ม่านแสง Type 4 + ระยะติดตั้งตาม K3</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="K3" data-k="safety distance light curtain iso 13855 approach speed ระยะติดตั้ง ม่านแสง"><p class="tf-n"><b><span class="fid">K3</span> Minimum safety distance (ISO 13855)</b> ระยะติดตั้งขั้นต่ำของม่านแสง</p>
+        \[ S = K\,T + C \qquad K = 2000\ \text{mm/s (ถ้า } S \le 500\ \text{mm)},\ 1600\ \text{mm/s (ถ้ามากกว่า)} \qquad C = 8(d - 14)\ \text{mm},\ d \le 40\ \text{mm} \]</div>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">ตัวอย่าง K-1</span><h3>ม่านแสงความละเอียด 14 mm เวลาหยุดรวม 120 ms</h3></div>
+<ol class="steps">
+<li><p>เวลารวม T = เวลาตอบสนองม่านแสง + รีเลย์เซฟตี้ + เวลาหยุดของเครื่อง (วัดจริง) = 0.12 s</p></li>
+<li><p>\(C = 8(14 - 14) = 0\) · \(S = 2000(0.12) + 0 = 240\) mm ≤ 500 ✓ ใช้ K = 2000</p></li>
+<li><p>ติดตั้งม่านแสงห่างจุดอันตรายอย่างน้อย 240 mm (ขั้นต่ำตามมาตรฐานคือ 100 mm) และกันการเอื้อมข้ามด้านบน-ด้านข้าง</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trouble">
+    <h2 id="trouble">แก้ปัญหาเมื่อเครื่องไม่ทำงาน <span class="lv lv-i">กลาง</span></h2>
+    <ol>
+      <li><b>ดูสถานะ PLC:</b> RUN/STOP ไฟ ERR ไฟแบตเตอรี่ บันทึกเหตุการณ์ (diagnostic buffer)</li>
+      <li><b>ดู HMI:</b> ข้อความแจ้งเตือน ขั้นที่ค้าง (ถ้าเขียนแบบสเตตแมชชีน)</li>
+      <li><b>ไล่จากเอาต์พุตย้อนกลับ:</b> เอาต์พุตที่ควรติดแต่ไม่ติด → เปิดรังนั้นออนไลน์ → หาหน้าสัมผัสที่ “ไม่เขียว” → เป็นอินพุตหรือบิตภายใน?</li>
+      <li><b>ถ้าเป็นอินพุต:</b> ดูไฟ LED ที่โมดูล → ถ้าไม่ติด วัดแรงดันที่ขั้ว → ตรวจเซนเซอร์/สาย/ไฟเลี้ยงเซนเซอร์</li>
+      <li><b>ถ้าบิตเอาต์พุตเป็น 1 แต่อุปกรณ์ไม่ทำงาน:</b> ไฟ LED เอาต์พุต → ฟิวส์เอาต์พุต → รีเลย์ต่อกลาง → คอยล์ → อินเตอร์ล็อกฮาร์ดไวร์ (NC ช่วย, 95-96, รีเลย์เซฟตี้)</li>
+    </ol>
+    <p class="mc-note">กฎทอง: “เปลี่ยนสิ่งเดียวในเวลาเดียว และบันทึกทุกการเปลี่ยน” โดยเฉพาะการแก้โปรแกรมออนไลน์ เก็บสำเนาก่อนแก้ทุกครั้ง และตั้งชื่อไฟล์ด้วยวันที่และสาเหตุ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="docs">
+    <h2 id="docs">เอกสารที่ต้องส่งมอบ</h2>
+    <ul class="chk">
+      <li>แบบวงจรไฟฟ้าฉบับ as-built พร้อมรายการอุปกรณ์</li>
+      <li>รายการ I/O (แอดเดรส ชื่อ tag คำอธิบาย ชนิดสัญญาณ ช่วงสเกล)</li>
+      <li>โปรแกรม PLC และ HMI ที่มีคอมเมนต์ ไฟล์ต้นฉบับ (ไม่ใช่แค่ไฟล์ที่ดึงจาก PLC) พร้อมรหัสผ่านที่ส่งมอบให้เจ้าของ</li>
+      <li>ค่าพารามิเตอร์อินเวอร์เตอร์และอุปกรณ์อัจฉริยะทุกตัว</li>
+      <li>ใบ I/O check ลูปเช็ก และผลทดสอบฟังก์ชันความปลอดภัยที่ลงนาม</li>
+      <li>คู่มือการใช้งานและการกู้คืนเมื่อเครื่องหยุดฉุกเฉิน</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

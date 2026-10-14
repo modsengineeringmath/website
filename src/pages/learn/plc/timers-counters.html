@@ -1,0 +1,118 @@
+<!--meta
+{
+  "title": "ไทเมอร์และเคาน์เตอร์ PLC ตาม IEC 61131-3: TON TOF TP CTU CTD CTUD ไดอะแกรมเวลาและตัวอย่าง | อาจารย์มด",
+  "h1": "ไทเมอร์และเคาน์เตอร์ตาม IEC 61131-3: TON TOF TP CTU CTD CTUD พร้อมไดอะแกรมเวลาและตัวอย่างงานจริง",
+  "description": "ไทเมอร์และเคาน์เตอร์มาตรฐานของ PLC ทุกยี่ห้อ: TON หน่วงเวลาเปิด TOF หน่วงเวลาปิด TP พัลส์ ไดอะแกรมเวลา ET PT วงจรไฟกะพริบ เตือนก่อนเครื่องเดิน พัดลมเดินต่อหลังหยุด เคาน์เตอร์ CTU CTD CTUD นับชิ้นงาน รีเซ็ต เวลานานเกินค่าสูงสุด ความแม่นยำขึ้นกับเวลาสแกน เคาน์เตอร์ความเร็วสูง และการเทียบชื่อกับ Siemens Mitsubishi Omron",
+  "lesson": "plc",
+  "sub": "timers-counters",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Timer", "Counter (digital)", "IEC 61131-3", "Programmable logic controller"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "ไทเมอร์ PLC แม่นยำแค่ไหน?", "a": "ไทเมอร์อัปเดตเมื่อถูกประมวลผลในแต่ละสแกน ความคลาดเคลื่อนจึงประมาณหนึ่งเวลาสแกน (บวกความละเอียดของฐานเวลา เช่น 1 ms 10 ms 100 ms) งานทั่วไปไม่มีปัญหา แต่ถ้าต้องการความแม่นยำระดับมิลลิวินาทีให้ใช้ไทเมอร์ฮาร์ดแวร์ งานที่เรียกเป็นรอบ (cyclic interrupt) หรือเอาต์พุตพัลส์ของ CPU"},
+    {"q": "ไทเมอร์ไม่นับเมื่ออยู่ในส่วนโปรแกรมที่ไม่ถูกเรียก เกิดอะไรขึ้น?", "a": "ไทเมอร์แบบซอฟต์แวร์นับเฉพาะตอนคำสั่งถูกประมวลผล ถ้าอยู่ในฟังก์ชันหรือการกระโดดข้าม (jump) ที่ไม่ได้ทำงาน มันจะหยุดนับหรือค้างค่า ควรเรียกไทเมอร์ทุกสแกนแล้วควบคุมด้วยอินพุต IN แทน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>ไทเมอร์ · เคาน์เตอร์</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.4 · PLC · Timers &amp; Counters</p>
+      <h1>ไทเมอร์และเคาน์เตอร์ตาม IEC 61131-3: TON TOF TP CTU CTD CTUD พร้อมไดอะแกรมเวลาและตัวอย่างงานจริง</h1>
+      <p class="lede">ไทเมอร์และเคาน์เตอร์คือเหตุผลหลักที่ PLC แทนตู้รีเลย์ได้คุ้ม ไทเมอร์หนึ่งตัวในโปรแกรมแทนไทเมอร์จริงราคาหลายร้อยบาท และตั้งเวลาได้แม่นยำจาก HMI หน้านี้ใช้ชื่อตามมาตรฐาน IEC 61131-3 ซึ่งเป็นแม่แบบของคำสั่งในทุกยี่ห้อ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>TON: IN ต้องค้างครบ PT จึง Q = 1 · TOF: Q ค้างอีก PT หลัง IN ดับ · TP: พัลส์ยาว PT ต่อหนึ่งขอบขาขึ้น</li>
+          <li>CTU นับขอบขาขึ้นของ CU · Q = 1 เมื่อ CV ≥ PV · R ล้างค่า</li>
+          <li>ความแม่นยำ ≈ ± หนึ่งเวลาสแกน</li>
+          <li>เวลานานมาก: ใช้ไทเมอร์นาทีป้อนเคาน์เตอร์</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ton, tof, tp, ctu, flasher, accuracy" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="timers">
+    <h2 id="timers">ไทเมอร์สามแบบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-timers--><svg class="xf" viewBox="0 0 760 330" role="img" aria-label="ไดอะแกรมเวลาของไทเมอร์ IEC 61131-3: TON หน่วงเวลาเปิด TOF หน่วงเวลาปิด และ TP พัลส์ความยาวคงที่ (PT = 3 s)"><defs><marker id="plc-timers-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="xf-d" d="M110 52 L143.9 52 L143.9 32 L279.4 32 L279.4 52 L415 52 L415 32 L448.9 32 L448.9 52 L482.8 52 L482.8 32 L499.7 32 L499.7 52 L618.3 52 L618.3 32 L652.2 32 L652.2 52 L720 52"/><text x="100" y="46" class="xf-tag" text-anchor="end">IN</text><path class="xf-a" d="M110 107 L245.6 107 L245.6 87 L279.4 87 L279.4 107 L720 107"/><text x="100" y="101" class="xf-tag" text-anchor="end">TON.Q</text><path class="xf-b" d="M110 162 L143.9 162 L143.9 142 L381.1 142 L381.1 162 L415 162 L415 142 L601.4 142 L601.4 162 L618.3 162 L618.3 142 L720 142 L720 162 L720 162"/><text x="100" y="156" class="xf-tag" text-anchor="end">TOF.Q</text><path class="xf-c" d="M110 217 L143.9 217 L143.9 197 L245.6 197 L245.6 217 L415 217 L415 197 L516.7 197 L516.7 217 L618.3 217 L618.3 197 L720 197 L720 217 L720 217"/><text x="100" y="211" class="xf-tag" text-anchor="end">TP.Q</text><line class="xf-thin" x1="110" y1="260" x2="110" y2="266"/><text x="110" y="280" class="xf-k" text-anchor="middle">0</text><line class="xf-thin" x1="177.8" y1="260" x2="177.8" y2="266"/><text x="177.8" y="280" class="xf-k" text-anchor="middle">2</text><line class="xf-thin" x1="245.6" y1="260" x2="245.6" y2="266"/><text x="245.6" y="280" class="xf-k" text-anchor="middle">4</text><line class="xf-thin" x1="313.3" y1="260" x2="313.3" y2="266"/><text x="313.3" y="280" class="xf-k" text-anchor="middle">6</text><line class="xf-thin" x1="381.1" y1="260" x2="381.1" y2="266"/><text x="381.1" y="280" class="xf-k" text-anchor="middle">8</text><line class="xf-thin" x1="448.9" y1="260" x2="448.9" y2="266"/><text x="448.9" y="280" class="xf-k" text-anchor="middle">10</text><line class="xf-thin" x1="516.7" y1="260" x2="516.7" y2="266"/><text x="516.7" y="280" class="xf-k" text-anchor="middle">12</text><line class="xf-thin" x1="584.4" y1="260" x2="584.4" y2="266"/><text x="584.4" y="280" class="xf-k" text-anchor="middle">14</text><line class="xf-thin" x1="652.2" y1="260" x2="652.2" y2="266"/><text x="652.2" y="280" class="xf-k" text-anchor="middle">16</text><line class="xf-thin" x1="720" y1="260" x2="720" y2="266"/><text x="720" y="280" class="xf-k" text-anchor="middle">18</text><text x="415" y="298" class="xf-m" text-anchor="middle">เวลา (s)</text><line class="xf-thin" x1="143.9" y1="80" x2="245.6" y2="80" marker-end="url(#plc-timers-ah)" marker-start="url(#plc-timers-ah)"/><text x="194.7" y="75" class="xf-k" text-anchor="middle">PT</text><text x="465.8" y="80" class="xf-k" text-anchor="middle">พัลส์สั้นกว่า PT → TON ไม่ออก</text><text x="330.3" y="132" class="xf-k" text-anchor="middle">ค้าง 3 s หลัง IN ดับ</text><text x="509.9" y="190" class="xf-k" text-anchor="middle">IN ซ้ำระหว่างพัลส์ไม่มีผล</text><text x="380" y="322" class="xf-m" text-anchor="middle">ET (elapsed time) นับขึ้นเฉพาะช่วงที่ไทเมอร์กำลังจับเวลา</text></svg><!--/FIG--><figcaption>รูป 1 · อินพุตเดียวกัน (แถวบน) ป้อนไทเมอร์สามแบบที่ PT = 3 s</figcaption></figure>
+<div class="tf" id="T1" data-k="ton on delay timer output elapsed ไทเมอร์หน่วงเวลาเปิด"><p class="tf-n"><b><span class="fid">T1</span> TON — on-delay</b> หน่วงเวลาเปิด</p>
+        \[ ET = \begin{cases} \min(ET + \Delta t,\ PT) & IN = 1 \\ 0 & IN = 0 \end{cases} \qquad Q = IN \wedge (ET \ge PT) \]</div>
+<div class="tf" id="T2" data-k="tof off delay timer ไทเมอร์หน่วงเวลาปิด"><p class="tf-n"><b><span class="fid">T2</span> TOF — off-delay</b> หน่วงเวลาปิด</p>
+        \[ Q = IN \vee (ET < PT) \quad \text{โดย } ET \text{ เริ่มนับเมื่อ } IN: 1 \to 0,\ ET = 0 \text{ ขณะ } IN = 1 \]</div>
+<div class="tf" id="T3" data-k="tp pulse timer fixed length ไทเมอร์พัลส์"><p class="tf-n"><b><span class="fid">T3</span> TP — pulse</b> พัลส์ความยาวคงที่</p>
+        \[ Q = 1 \ \text{ช่วง } [t_0,\ t_0 + PT) \text{ หลังขอบขาขึ้นของ } IN \text{ ที่ } t_0 \ (\text{ไม่เริ่มใหม่ระหว่างพัลส์}) \]</div>
+<div class="tf" id="T4" data-k="timer accuracy scan time resolution ความแม่นยำไทเมอร์"><p class="tf-n"><b><span class="fid">T4</span> Timer accuracy</b> ความแม่นยำของไทเมอร์ซอฟต์แวร์</p>
+        \[ PT \le t_{actual} \le PT + t_{scan} + t_{base} \]</div>
+<div class="wx" id="ex-t-1"><div class="wx-head"><span class="mono">ตัวอย่าง T-1</span><h3>สายพานเตือนด้วยแตร 5 s ก่อนเดิน และพัดลมระบายความร้อนเดินต่อ 2 นาทีหลังหยุด</h3></div>
+<ol class="steps">
+<li><p>สั่งเดิน M0.0 (ล็อกตัวเองจาก START/STOP) · <code>T1 = TON(M0.0, 5s)</code></p></li>
+<li><p>แตร: <code>Q0.1 = M0.0 &amp; !T1</code> · สายพาน: <code>Q0.0 = T1</code> (เดินเมื่อครบ 5 s)</p></li>
+<li><p>พัดลม: <code>T2 = TOF(Q0.0, 120s)</code> · <code>Q0.2 = T2</code> — เดินพร้อมสายพานและค้างอีก 2 นาทีหลังสายพานหยุด</p></li>
+</ol></div>
+<div class="tf" id="T5" data-k="flasher blink period duty two timers ไฟกะพริบ"><p class="tf-n"><b><span class="fid">T5</span> Flasher from two timers</b> ไฟกะพริบด้วยไทเมอร์สองตัว</p>
+        \[ T1 = \text{TON}(EN \wedge \overline{T2},\ t_{on}) \quad T2 = \text{TON}(T1,\ t_{off}) \quad Q = EN \wedge \overline{T1} \quad (T_{period} = t_{on} + t_{off}) \]</div>
+    <div class="plc-sim" data-preset="flasher"><noscript>ต้องเปิด JavaScript</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="counters">
+    <h2 id="counters">เคาน์เตอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-counter--><svg class="xf" viewBox="0 0 760 250" role="img" aria-label="ไดอะแกรมเวลาของเคาน์เตอร์นับขึ้น CTU (PV = 4): นับขอบขาขึ้นของ CU เมื่อ CV ถึง PV เอาต์พุต Q เป็น 1 จน RESET"><defs><marker id="plc-counter-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="xf-d" d="M110 52 L153.6 52 L153.6 32 L179.7 32 L179.7 52 L218.9 52 L218.9 32 L245.1 32 L245.1 52 L284.3 52 L284.3 32 L310.4 32 L310.4 52 L349.6 52 L349.6 32 L375.8 32 L375.8 52 L415 52 L415 32 L441.1 32 L441.1 52 L480.4 52 L480.4 32 L506.5 32 L506.5 52 L720 52"/><text x="100" y="46" class="xf-tag" text-anchor="end">CU</text><path class="xf-e" d="M110 107 L567.5 107 L567.5 87 L598 87 L598 107 L720 107"/><text x="100" y="101" class="xf-tag" text-anchor="end">R</text><path class="xf-a" d="M110 175 L110 175 L110 175 L153.6 175 L153.6 167 L218.9 167 L218.9 159 L284.3 159 L284.3 151 L349.6 151 L349.6 143 L415 143 L415 135 L480.4 135 L480.4 127 L567.5 127 L567.5 175 L720 175"/><text x="100" y="170" class="xf-tag" text-anchor="end">CV</text><text x="163.6" y="163" class="xf-k">1</text><text x="228.9" y="155" class="xf-k">2</text><text x="294.3" y="147" class="xf-k">3</text><text x="359.6" y="139" class="xf-k">4</text><text x="425" y="131" class="xf-k">5</text><text x="490.4" y="123" class="xf-k">6</text><path class="xf-b" d="M110 217 L349.6 217 L349.6 197 L567.5 197 L567.5 217 L720 217"/><text x="100" y="211" class="xf-tag" text-anchor="end">Q</text><text x="458.6" y="196" class="xf-k" text-anchor="middle">CV ≥ PV = 4</text><text x="380" y="244" class="xf-m" text-anchor="middle">CV นับต่อเกิน PV ได้ (จนถึงค่าสูงสุดของชนิดข้อมูล) · RESET ทำให้ CV = 0 และ Q = 0</text></svg><!--/FIG--><figcaption>รูป 2 · CTU นับเฉพาะขอบขาขึ้นของ CU ถ้าชิ้นงานหยุดค้างหน้าเซนเซอร์ก็นับเพียงครั้งเดียว</figcaption></figure>
+<div class="tf" id="T6" data-k="ctu up counter count value preset นับขึ้น"><p class="tf-n"><b><span class="fid">T6</span> CTU — up counter</b> เคาน์เตอร์นับขึ้น</p>
+        \[ CV_{k+1} = \begin{cases} 0 & R = 1 \\ CV_k + 1 & P(CU) \\ CV_k & \text{otherwise} \end{cases} \qquad Q = (CV \ge PV) \]</div>
+<div class="tf" id="T7" data-k="ctd down counter load นับลง"><p class="tf-n"><b><span class="fid">T7</span> CTD — down counter</b> เคาน์เตอร์นับลง</p>
+        \[ CV = PV \text{ เมื่อ LD} \qquad CV_{k+1} = CV_k - 1 \text{ ที่ } P(CD) \qquad Q = (CV \le 0) \]</div>
+    <p>CTUD รวมทั้งสองในตัวเดียว (QU และ QD) ใช้นับจำนวนชิ้นงานที่อยู่ในพื้นที่ เช่น รถเข้า-ออกลานจอด หรือชิ้นงานบนบัฟเฟอร์ระหว่างสองเครื่อง</p>
+    <div class="plc-sim" data-preset="counter"><noscript>ต้องเปิด JavaScript</noscript></div>
+<div class="wx" id="ex-t-2"><div class="wx-head"><span class="mono">ตัวอย่าง T-2</span><h3>รอบเปลี่ยนไส้กรองทุก 500 ชั่วโมงทำงาน แต่ไทเมอร์ PT สูงสุด 24 ชม.</h3></div>
+<ol class="steps">
+<li><p>สร้างพัลส์ทุก 1 ชั่วโมงขณะปั๊มเดิน: <code>T1 = TON(Q0.0 &amp; !T1, 3600s)</code> (รีเซ็ตตัวเองเมื่อครบ)</p></li>
+<li><p>นับพัลส์: <code>C1 = CTU(T1, I0.5, 500)</code> · I0.5 = ปุ่มรีเซ็ตหลังเปลี่ยนไส้กรอง</p></li>
+<li><p>เตือน: <code>Q0.3 = C1</code> · ทำ C1 เป็นแบบ retentive เพื่อไม่ให้ค่าหายเมื่อไฟดับ</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="brands">
+    <h2 id="brands">ชื่อในแต่ละยี่ห้อ</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>IEC 61131-3</th><th>Siemens S7-1200/1500</th><th>Mitsubishi FX5/iQ</th><th>Omron CP/NX</th></tr></thead>
+      <tbody>
+        <tr><td>TON</td><td>TON (IEC_TIMER)</td><td>OUT T0 K50 (100 ms) / TON FB</td><td>TIM / TON</td></tr>
+        <tr><td>TOF</td><td>TOF</td><td>TOF FB (หรือวงจร)</td><td>TOF</td></tr>
+        <tr><td>TP</td><td>TP</td><td>TP FB</td><td>TP</td></tr>
+        <tr><td>CTU</td><td>CTU</td><td>OUT C0 K10 / CTU FB</td><td>CNT / CTU</td></tr>
+      </tbody>
+    </table></div>
+    <p class="mc-note">ไทเมอร์แบบเก่าของบางยี่ห้อกำหนดเป็นจำนวน “ฐานเวลา” เช่น K50 ที่ฐาน 100 ms = 5 s ตรวจฐานเวลาทุกครั้งเมื่อย้ายโปรแกรมข้ามรุ่น</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="fast">
+    <h2 id="fast">เคาน์เตอร์ความเร็วสูง <span class="lv lv-i">กลาง</span></h2>
+    <p>CTU ในโปรแกรมนับได้ไม่เกินครึ่งหนึ่งของอัตราสแกนโดยประมาณ (ต้องเห็น 0 หนึ่งสแกนและ 1 หนึ่งสแกน) เช่น สแกน 10 ms นับได้ไม่เกิน ~50 Hz และต้องหักตัวกรองอินพุต เอนโค้ดเดอร์และเซนเซอร์ความเร็วสูงต้องต่อเข้าอินพุตความเร็วสูง (HSC) ของ CPU ซึ่งนับด้วยฮาร์ดแวร์ได้ถึงหลายสิบหรือหลายร้อย kHz และรองรับสัญญาณ A/B สองเฟส</p>
+<div class="tf" id="T8" data-k="maximum counting frequency scan software counter ความถี่นับสูงสุด"><p class="tf-n"><b><span class="fid">T8</span> Software counter limit</b> ความถี่สูงสุดของเคาน์เตอร์ในโปรแกรม</p>
+        \[ f_{max} \approx \frac{1}{2\,(t_{scan} + t_{in})} \]</div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

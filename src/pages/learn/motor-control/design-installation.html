@@ -1,0 +1,151 @@
+<!--meta
+{
+  "title": "ออกแบบและติดตั้งวงจรมอเตอร์: เลือกเบรกเกอร์ ขนาดสาย แรงดันตก ตู้ควบคุม ความร้อน ทดสอบ Megger แก้ปัญหา | อาจารย์มด",
+  "h1": "ออกแบบและติดตั้งวงจรมอเตอร์: เลือกอุปกรณ์ ขนาดสาย แรงดันตกขณะสตาร์ท ตู้ควบคุม การทดสอบ และตารางแก้ปัญหา",
+  "description": "ขั้นตอนออกแบบวงจรมอเตอร์ 10 ข้อสำหรับระบบ 400 V 50 Hz: หากำลังจากโหลด เลือกมอเตอร์ วิธีสตาร์ท คอนแทกเตอร์ โอเวอร์โหลด เบรกเกอร์ พิกัดตัด ขนาดสายตามกระแสและแรงดันตก (มาตรฐานการติดตั้งทางไฟฟ้า วสท. และ IEC 60364) กระแสลัดวงจรปลายสาย ตู้ควบคุม IEC 61439 IP ความร้อนในตู้และพัดลม การวัดความเป็นฉนวน เดินเครื่องทดสอบ บำรุงรักษา และตารางอาการเสียพร้อมสาเหตุ",
+  "lesson": "motor-control",
+  "sub": "design-installation",
+  "nav": "mc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Electrical installation", "Voltage drop", "Insulation resistance test", "Control panel (engineering)"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "ค่าความเป็นฉนวนของมอเตอร์ต่ำสุดเท่าไรจึงยอมรับได้?", "a": "อุปกรณ์ไฟฟ้าของเครื่องจักรตาม IEC 60204-1 ต้องไม่น้อยกว่า 1 MΩ ที่ 500 V DC ระหว่างตัวนำกับดิน สำหรับขดลวดมอเตอร์แรงต่ำ แนวทาง IEEE 43 แนะนำค่าต่ำสุด 5 MΩ (ปรับอุณหภูมิเป็น 40 °C) และดูแนวโน้มเทียบกับค่าที่เคยวัดได้ ค่าที่ลดลงต่อเนื่องสำคัญกว่าค่าเดี่ยว"},
+    {"q": "ขนาดสายมอเตอร์เลือกจากกระแสอย่างเดียวได้ไหม?", "a": "ไม่พอ ต้องตรวจสามเรื่อง: พิกัดกระแสหลังลดพิกัดตามวิธีเดินสายและอุณหภูมิ แรงดันตกทั้งขณะเดินและขณะสตาร์ท และกระแสลัดวงจรปลายสายต้องมากพอให้อุปกรณ์ป้องกันตัดภายในเวลาที่กำหนด สายยาวมักถูกกำหนดขนาดด้วยแรงดันตก ไม่ใช่กระแส"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/motor-control/">ควบคุมมอเตอร์ AC</a></li><li>ออกแบบ · ติดตั้ง · แก้ปัญหา</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 21.13 · ควบคุมมอเตอร์ AC · Design, Installation &amp; Troubleshooting</p>
+      <h1>ออกแบบและติดตั้งวงจรมอเตอร์: เลือกอุปกรณ์ ขนาดสาย แรงดันตกขณะสตาร์ท ตู้ควบคุม การทดสอบ และตารางแก้ปัญหา</h1>
+      <p class="lede">หน้านี้รวมทุกบทก่อนหน้าเป็นงานออกแบบหนึ่งชิ้นตั้งแต่โหลดจนถึงการเดินเครื่อง พร้อมสิ่งที่ต้องตรวจหน้างานและตารางแก้ปัญหาที่รวบรวมจากอาการที่พบบ่อยที่สุด ตัวเลขทุกตัวในตัวอย่างคำนวณได้จากสูตรในหน้า</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ออกแบบตามลำดับ: โหลด → มอเตอร์ → วิธีสตาร์ท → อุปกรณ์ → สาย → ตู้ → ทดสอบ</li>
+          <li>สายต้องผ่านสามเงื่อนไข: พิกัดกระแส แรงดันตก (เดิน ≤ 3–5 % สตาร์ท ≤ 10–15 %) และกระแสลัดวงจรปลายสาย</li>
+          <li>ความร้อนในตู้: \(\Delta T = P/(kA)\) — ไดรฟ์ทำให้ต้องมีพัดลมเกือบทุกครั้ง</li>
+          <li>ก่อนจ่ายไฟ: เมกเกอร์ ≥ 1 MΩ ตรวจขันน็อต ตรวจลำดับเฟส ทดสอบวงจรควบคุมแยก</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น pump power, voltage drop, loop impedance, panel heat, megger" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="flow">
+    <h2 id="flow">ขั้นตอนออกแบบ 10 ข้อ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:mc-design-flow--><svg class="xf" viewBox="0 0 780 250" role="img" aria-label="ขั้นตอนออกแบบวงจรมอเตอร์ 10 ขั้น จากข้อมูลโหลดถึงการทดสอบเดินเครื่อง"><defs><marker id="mc-design-flow-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="20" y="40" width="132" height="56" rx="8"/><text x="86" y="62" class="xf-h" text-anchor="middle">1</text><text x="86" y="82" class="xf-k" text-anchor="middle">โหลด · kW · รอบ</text><line class="xf-ln" x1="152" y1="68" x2="172" y2="68" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxa" x="172" y="40" width="132" height="56" rx="8"/><text x="238" y="62" class="xf-h" text-anchor="middle">2</text><text x="238" y="82" class="xf-k" text-anchor="middle">เลือกมอเตอร์ IE3</text><line class="xf-ln" x1="304" y1="68" x2="324" y2="68" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxa" x="324" y="40" width="132" height="56" rx="8"/><text x="390" y="62" class="xf-h" text-anchor="middle">3</text><text x="390" y="82" class="xf-k" text-anchor="middle">วิธีสตาร์ท</text><line class="xf-ln" x1="456" y1="68" x2="476" y2="68" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxa" x="476" y="40" width="132" height="56" rx="8"/><text x="542" y="62" class="xf-h" text-anchor="middle">4</text><text x="542" y="82" class="xf-k" text-anchor="middle">คอนแทกเตอร์ AC-3</text><line class="xf-ln" x1="608" y1="68" x2="628" y2="68" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxa" x="628" y="40" width="132" height="56" rx="8"/><text x="694" y="62" class="xf-h" text-anchor="middle">5</text><text x="694" y="82" class="xf-k" text-anchor="middle">โอเวอร์โหลด · คลาส</text><rect class="xf-boxc" x="20" y="140" width="132" height="56" rx="8"/><text x="86" y="162" class="xf-h" text-anchor="middle">6</text><text x="86" y="182" class="xf-k" text-anchor="middle">MPCB/MCCB · Icu</text><line class="xf-ln" x1="152" y1="168" x2="172" y2="168" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxc" x="172" y="140" width="132" height="56" rx="8"/><text x="238" y="162" class="xf-h" text-anchor="middle">7</text><text x="238" y="182" class="xf-k" text-anchor="middle">ขนาดสาย · แรงดันตก</text><line class="xf-ln" x1="304" y1="168" x2="324" y2="168" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxc" x="324" y="140" width="132" height="56" rx="8"/><text x="390" y="162" class="xf-h" text-anchor="middle">8</text><text x="390" y="182" class="xf-k" text-anchor="middle">วงจรควบคุม · อินเตอร์ล็อก</text><line class="xf-ln" x1="456" y1="168" x2="476" y2="168" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxc" x="476" y="140" width="132" height="56" rx="8"/><text x="542" y="162" class="xf-h" text-anchor="middle">9</text><text x="542" y="182" class="xf-k" text-anchor="middle">ตู้ · IP · ความร้อน</text><line class="xf-ln" x1="608" y1="168" x2="628" y2="168" marker-end="url(#mc-design-flow-ah)"/><rect class="xf-boxc" x="628" y="140" width="132" height="56" rx="8"/><text x="694" y="162" class="xf-h" text-anchor="middle">10</text><text x="694" y="182" class="xf-k" text-anchor="middle">ทดสอบ · เดินเครื่อง</text><path class="xf-ln" d="M 720 96 L 720 116 L 86 116 L 86 136" marker-end="url(#mc-design-flow-ah)"/><text x="390" y="236" class="xf-m" text-anchor="middle">ทุกขั้นอ้างอิงมาตรฐาน: IEC 60034 · IEC 60947-4-1 · IEC 60364 / วสท. · IEC 60204-1 · IEC 61439</text></svg><!--/FIG--><figcaption>รูป 1 · ลำดับนี้ย้อนกลับได้ เช่น แรงดันตกขณะสตาร์ทสูง (ขั้น 7) อาจทำให้ต้องเปลี่ยนวิธีสตาร์ท (ขั้น 3)</figcaption></figure>
+<div class="tf" id="K1" data-k="pump power shaft rho g q h efficiency กำลังปั๊ม"><p class="tf-n"><b><span class="fid">K1</span> Shaft power of a pump or a drive</b> กำลังที่เพลาจากโหลด</p>
+        \[ P_{pump} = \frac{\rho g Q H}{\eta_p} \qquad P = T\,\omega = \frac{T\,n}{9550}\ \text{(kW)} \]</div>
+<div class="tf" id="K2" data-k="motor size margin service selection เลือกขนาดมอเตอร์"><p class="tf-n"><b><span class="fid">K2</span> Motor size margin</b> เผื่อขนาดมอเตอร์</p>
+        \[ P_{motor} \ge (1.10\text{–}1.15)\,P_{load,max} \;\rightarrow\; \text{ขนาดมาตรฐานถัดไป} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cable">
+    <h2 id="cable">ขนาดสาย แรงดันตก และกระแสลัดวงจรปลายสาย <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="K3" data-k="cable ampacity derating correction factor พิกัดกระแสสาย ลดพิกัด"><p class="tf-n"><b><span class="fid">K3</span> Cable ampacity</b> พิกัดกระแสสายหลังลดพิกัด</p>
+        \[ I_z\,k_{temp}\,k_{group} \ge I_n \qquad I_z \ge I_r\ (\text{ค่าตั้งอุปกรณ์ป้องกันโหลดเกิน}) \]</div>
+<div class="tf" id="K4" data-k="voltage drop percent running three phase แรงดันตกขณะเดิน"><p class="tf-n"><b><span class="fid">K4</span> Running voltage drop</b> แรงดันตกขณะเดิน</p>
+        \[ \Delta V\% = \frac{\sqrt3\,I_n\,L\,(R\cos\varphi + X\sin\varphi)}{V_L}\times100 \le 3\text{–}5\,\% \qquad R = \frac{\rho}{A},\ \rho_{Cu,70^\circ C} \approx 0.0225\ \Omega\,\text{mm}^2/\text{m} \]</div>
+<div class="tf" id="K5" data-k="starting voltage drop cable transformer แรงดันตกขณะสตาร์ท"><p class="tf-n"><b><span class="fid">K5</span> Starting voltage drop</b> แรงดันตกขณะสตาร์ท</p>
+        \[ \Delta V_{st}\% \approx \Delta V_{tr}\% + \frac{\sqrt3\,I_{st}\,L\,(R\cdot0.3 + X\cdot0.95)}{V_L}\times100 \le 10\text{–}15\,\% \]</div>
+<div class="tf" id="K6" data-k="loop impedance disconnection tn fault current ปลายสาย ลัดวงจร"><p class="tf-n"><b><span class="fid">K6</span> Fault at the cable end (TN system)</b> กระแสลัดลงดินปลายสายในระบบ TN</p>
+        \[ I_{f} = \frac{U_0}{Z_s} \ge I_a \qquad Z_s \approx Z_{src} + (1 + m)\,\frac{\rho L}{A_{ph}}\ \ (m = A_{ph}/A_{PE}) \]</div>
+    <p>\(U_0\) = 230 V · \(I_a\) = กระแสที่ทำให้อุปกรณ์ป้องกันตัดภายในเวลาที่มาตรฐานกำหนด (สำหรับวงจรมอเตอร์แบบติดตั้งถาวรในระบบ TN มัก 5 s; ใช้ค่าแม่เหล็กของ MPCB/เบรกเกอร์เพื่อให้ตัดทันที) ค่า Ik และเวลาตัดให้ยึดตามมาตรฐานการติดตั้งที่ใช้บังคับในประเทศนั้น</p>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">ตัวอย่าง K-1</span><h3>ปั๊ม 15 kW 4 ขั้ว 400 V ห่างตู้ 50 m หม้อแปลง 315 kVA uk 4 % สตาร์ทตรง</h3></div>
+<ol class="steps">
+<li><p>M6: \(I_n = 15{,}000/(\sqrt3 \times 400 \times 0.921 \times 0.84) = 28.0\) A · \(I_{st} = 7 \times 28 = 196\) A</p></li>
+<li><p>L2 (ที่หม้อแปลง): \(S_{sc} = 315/0.04 = 7.9\) MVA · \(S_{st} = \sqrt3(400)(196) = 136\) kVA → \(\Delta U \approx 1.7\,\%\)</p></li>
+<li><p>K3: สาย 6 mm² \(I_z \approx 36\) A × 0.87 = 31.3 A ≥ 28 A ✓</p></li>
+<li><p>K4: \(R = 0.0225/6 = 3.75\) mΩ/m → \(\Delta V = \sqrt3(28)(50)(0.00375 \times 0.84 + 0.00008 \times 0.54) = 7.7\) V = 1.9 % ✓</p></li>
+<li><p>K5: \(\sqrt3(196)(50)(0.00375 \times 0.3 + 0.00008 \times 0.95) = 20.4\) V = 5.1 % + 1.7 % = 6.8 % ✓ → สตาร์ทตรงได้</p></li>
+<li><p>อุปกรณ์: คอนแทกเตอร์ 32 A AC-3 · MPCB 24–32 A ตั้ง 28 A · PE 6 mm²</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="cable" data-in="28" data-len="50" data-pf="0.84" data-kis="7"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="panel">
+    <h2 id="panel">ตู้ควบคุม: ผัง IP และความร้อน <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:mc-panel-layout--><svg class="xf" viewBox="0 0 760 380" role="img" aria-label="ผังตู้ควบคุมมอเตอร์สตาร์-เดลต้า: เมนเบรกเกอร์ด้านบน คอนแทกเตอร์เรียงแถว รางเทอร์มินัลด้านล่าง รางเดินสาย และพัดลมระบายอากาศ"><defs><marker id="mc-panel-layout-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="140" y="20" width="480" height="340" rx="6"/><rect class="xf-paper" x="160" y="40" width="440" height="300" rx="2"/><rect class="xf-duct" x="170" y="90" width="420" height="14" rx="2"/><rect class="xf-duct" x="170" y="190" width="420" height="14" rx="2"/><rect class="xf-duct" x="170" y="290" width="420" height="14" rx="2"/><rect class="xf-boxb" x="175" y="46" width="70" height="40" rx="3"/><text x="210" y="70" class="xf-k" text-anchor="middle">-Q0</text><rect class="xf-boxb" x="260" y="46" width="50" height="40" rx="3"/><text x="285" y="70" class="xf-k" text-anchor="middle">-Q1</text><rect class="xf-box" x="320" y="52" width="40" height="30" rx="3"/><text x="340" y="71" class="xf-k" text-anchor="middle">-F3</text><rect class="xf-box" x="370" y="52" width="60" height="30" rx="3"/><text x="400" y="71" class="xf-k" text-anchor="middle">PSU 24V</text><rect class="xf-boxa" x="185" y="116" width="56" height="66" rx="3"/><text x="213" y="153" class="xf-k" text-anchor="middle">-K1</text><rect class="xf-boxa" x="255" y="116" width="56" height="66" rx="3"/><text x="283" y="153" class="xf-k" text-anchor="middle">-K2</text><rect class="xf-boxa" x="325" y="116" width="56" height="66" rx="3"/><text x="353" y="153" class="xf-k" text-anchor="middle">-K3</text><rect class="xf-box" x="395" y="116" width="50" height="34" rx="3"/><text x="420" y="137" class="xf-k" text-anchor="middle">-F2</text><rect class="xf-box" x="455" y="116" width="40" height="34" rx="3"/><text x="475" y="137" class="xf-k" text-anchor="middle">-K4T</text><rect class="xf-box" x="505" y="116" width="70" height="34" rx="3"/><text x="540" y="137" class="xf-k" text-anchor="middle">รีเลย์เฟส</text><rect class="xf-term" x="180" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="204" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="228" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="252" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="276" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="300" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="324" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="348" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="372" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="396" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="420" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="444" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="468" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="492" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="516" y="310" width="18" height="26" rx="2"/><rect class="xf-term" x="540" y="310" width="18" height="26" rx="2"/><text x="380" y="236" class="xf-k" text-anchor="middle">พื้นที่ว่างสำรอง ≥ 20 %</text><rect class="xf-box" x="560" y="210" width="40" height="40" rx="20"/><text x="580" y="234" class="xf-k" text-anchor="middle">พัดลม</text><rect class="xf-box" x="160" y="210" width="40" height="40" rx="2"/><text x="180" y="234" class="xf-k" text-anchor="middle">กรอง</text><text x="645" y="60" class="xf-k">ไฟเข้าด้านบน</text><text x="645" y="150" class="xf-k">อุปกรณ์กำลัง</text><text x="645" y="240" class="xf-k">ลมเย็นเข้าต่ำ</text><text x="645" y="256" class="xf-k">ลมร้อนออกสูง</text><text x="645" y="326" class="xf-k">เทอร์มินัล -X1</text><text x="70" y="200" class="xf-k" text-anchor="middle">ประตู:</text><text x="70" y="218" class="xf-k" text-anchor="middle">ปุ่ม ไฟ มิเตอร์</text><text x="70" y="236" class="xf-k" text-anchor="middle">เซเลกเตอร์</text></svg><!--/FIG--><figcaption>รูป 2 · วางอุปกรณ์ตามทางไหลของพลังงานจากบนลงล่าง รางเดินสายคั่นระหว่างแถว รางเทอร์มินัลอยู่ล่างสุดใกล้ทางเข้าสาย</figcaption></figure>
+    <ul>
+      <li>ตู้แรงต่ำออกแบบและทดสอบตาม IEC 61439 (ผู้ผลิตตู้ต้องตรวจขีดอุณหภูมิ ระยะห่าง พิกัดลัดวงจรของบัสบาร์)</li>
+      <li>IP54 สำหรับในโรงงานทั่วไป IP55/65 สำหรับพื้นที่ล้างน้ำหรือกลางแจ้ง (IEC 60529) — การเจาะช่องพัดลมต้องใช้ชุดพัดลม-ฟิลเตอร์ที่ได้ IP เท่าตู้</li>
+      <li>เว้นพื้นที่สำรอง 20–30 % · ระยะห่างตามคู่มือของไดรฟ์ (ด้านบน-ล่าง 100–200 mm สำหรับลม)</li>
+    </ul>
+<div class="tf" id="K7" data-k="panel heat temperature rise fan airflow enclosure ความร้อนในตู้ พัดลม"><p class="tf-n"><b><span class="fid">K7</span> Enclosure temperature rise and fan airflow</b> อุณหภูมิในตู้และปริมาณลมพัดลม</p>
+        \[ \Delta T = \frac{P_{loss}}{k\,A_e}\ \ (k \approx 5.5\ \text{W/m}^2\text{K เหล็กพ่นสี}) \qquad \dot V\,[\text{m}^3/\text{h}] \approx \frac{3.1\,P_{loss}\,[\text{W}]}{\Delta T_{allow}} \]</div>
+<div class="wx" id="ex-k-2"><div class="wx-head"><span class="mono">ตัวอย่าง K-2</span><h3>ตู้ 600 × 800 × 300 mm ติดผนัง มีไดรฟ์ 15 kW (สูญเสีย ~2.5 %)</h3></div>
+<ol class="steps">
+<li><p>\(P_{loss} \approx 0.025 \times 15{,}000 + 40 = 415\) W (รวมคอนแทกเตอร์ พาวเวอร์ซัพพลาย)</p></li>
+<li><p>พื้นที่ระบายความร้อนที่มีผล (ไม่นับด้านหลังติดผนัง) \(A_e \approx 0.6(0.8) + 0.6(0.3) + 2(0.8)(0.3) = 1.14\) m²</p></li>
+<li><p>K7: ปิดทึบ \(\Delta T = 415/(5.5 \times 1.14) = 66\) K — ห้องเครื่อง 35 °C ในตู้จะเกิน 100 °C ✗</p></li>
+<li><p>ใช้พัดลม: ยอมให้สูงกว่าภายนอก 10 K → \(\dot V = 3.1(415)/10 = 129\) m³/h → เลือกพัดลม-ฟิลเตอร์ ≥ 160 m³/h (เผื่อฟิลเตอร์ตัน)</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="test">
+    <h2 id="test">ทดสอบก่อนเดินเครื่อง <span class="lv lv-b">พื้นฐาน</span></h2>
+<div class="tf" id="K8" data-k="insulation resistance megger 500 v 1 megaohm polarization index ความเป็นฉนวน เมกเกอร์"><p class="tf-n"><b><span class="fid">K8</span> Insulation resistance acceptance</b> เกณฑ์ความเป็นฉนวน</p>
+        \[ R_{iso} \ge 1\ \text{M}\Omega\ @\ 500\ \text{V DC (IEC 60204-1)} \qquad R_{40^\circ C} \ge 5\ \text{M}\Omega\ \text{ขดลวด} < 1\ \text{kV (IEEE 43)} \qquad PI = \frac{R_{10\,min}}{R_{1\,min}} \ge 2 \]</div>
+    <ol>
+      <li><b>ตรวจด้วยตา:</b> อุปกรณ์ตรงแบบ ขนาดสาย เลขสาย ฝาครอบครบ ไม่มีเศษสายในตู้</li>
+      <li><b>ขันแน่น:</b> ขั้วกำลังทุกจุดตามแรงบิดที่ระบุ (ทำเครื่องหมายสีหลังขัน)</li>
+      <li><b>ต่อเนื่องของสายดิน:</b> วัดความต้านทาน PE จากโครงมอเตอร์ถึงบาร์ดินตู้</li>
+      <li><b>ความเป็นฉนวน:</b> ปลดอินเวอร์เตอร์/ซอฟต์สตาร์ท/อุปกรณ์อิเล็กทรอนิกส์ออกก่อน วัดสายกับมอเตอร์ 500 V DC (K8)</li>
+      <li><b>วงจรควบคุม:</b> ปลดวงจรกำลัง (ดึง MPCB ลง) จ่ายเฉพาะไฟควบคุม ทดสอบลำดับการทำงาน อินเตอร์ล็อก ไทเมอร์ หยุดฉุกเฉิน</li>
+      <li><b>ทิศหมุน:</b> ปลดคัปปลิงถ้าทำได้ กระตุกสั้น ๆ ตรวจทิศ (ปั๊มหมุนกลับนานเสียหายได้)</li>
+      <li><b>เดินจริง:</b> วัดกระแสสามเฟส แรงดัน อุณหภูมิ การสั่น เทียบกับแผ่นป้าย บันทึกเป็นค่าตั้งต้น</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="trouble">
+    <h2 id="trouble">ตารางแก้ปัญหา</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>อาการ</th><th>สาเหตุที่เป็นไปได้</th><th>ตรวจอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>กด START แล้วคอนแทกเตอร์ไม่ดูด</td><td>ฟิวส์ควบคุมขาด · โอเวอร์โหลดทริปค้าง · ปุ่ม STOP/E-stop ค้าง · สายหลุด</td><td>วัดแรงดันไล่จากราง L ทีละจุดตามแบบ</td></tr>
+        <tr><td>ดูดตอนกดแต่ปล่อยแล้วดับ</td><td>หน้าสัมผัสล็อกตัวเอง (13-14) ไม่ได้ต่อหรือเสีย</td><td>วัดคร่อม 13-14 ขณะดูด ตรวจสายขนานกับปุ่ม START</td></tr>
+        <tr><td>คอนแทกเตอร์ครางเสียงดัง</td><td>แรงดันคอยล์ต่ำ · หน้าแกนเหล็กสกปรก · วงแหวนบังเงาแตก</td><td>วัดแรงดันคอยล์ขณะดูด ทำความสะอาดหน้าแกน</td></tr>
+        <tr><td>มอเตอร์ฮัมแต่ไม่หมุน</td><td>เฟสขาด · โหลดติด · ต่อ Y ผิดกับมอเตอร์ 400/690 V ที่โหลดหนัก</td><td>วัดแรงดันสามเฟสที่ขั้วมอเตอร์ หมุนเพลาด้วยมือ (ตัดไฟก่อน)</td></tr>
+        <tr><td>โอเวอร์โหลดทริปหลังเดินไม่กี่นาที</td><td>โหลดเกินจริง · ค่าตั้งผิด · แรงดันต่ำหรือไม่สมดุล · ลูกปืนเสีย</td><td>วัดกระแสเทียบป้าย วัดแรงดัน ฟังเสียงลูกปืน</td></tr>
+        <tr><td>MPCB ทริปทันทีตอนสตาร์ท</td><td>ลัดวงจร · ฉนวนเสีย · แม่เหล็กตั้งต่ำ · สตาร์-เดลต้าเปลี่ยนจังหวะผิด</td><td>เมกเกอร์ วัดความต้านทานขด ดูช่วงที่ทริป</td></tr>
+        <tr><td>มอเตอร์ร้อนผิดปกติ ไม่ทริป</td><td>พัดลม/ครีบอุดตัน · เดินรอบต่ำด้วย VFD · ฮาร์มอนิก · อุณหภูมิห้องสูง</td><td>วัดอุณหภูมิโครง ทำความสะอาด ตรวจความถี่ใช้งาน</td></tr>
+        <tr><td>หน้าสัมผัสคอนแทกเตอร์ไหม้เร็ว</td><td>ขนาดเล็กไป · จ็อกบ่อย (AC-4) · คอยล์ดูดไม่แน่น</td><td>เทียบพิกัดกับลักษณะงาน ตรวจจำนวนครั้งต่อชั่วโมง</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="maint">
+    <h2 id="maint">บำรุงรักษาเชิงป้องกัน</h2>
+    <ul class="chk">
+      <li>ทุกเดือน: ฟังเสียง ดูอุณหภูมิ ทำความสะอาดฟิลเตอร์พัดลมตู้ ตรวจไฟแสดงสถานะ</li>
+      <li>ทุก 6 เดือน: สแกนความร้อนด้วยกล้องอินฟราเรดขณะมีโหลด (หาจุดต่อหลวม) วัดกระแสสามเฟส</li>
+      <li>ทุกปี: ขันขั้วกำลังซ้ำ ตรวจหน้าสัมผัสคอนแทกเตอร์ วัดความเป็นฉนวน บันทึกแนวโน้ม ทดสอบหยุดฉุกเฉิน</li>
+      <li>ตามชั่วโมงใช้งาน: อัดจาระบีลูกปืนตามป้ายมอเตอร์ เปลี่ยนพัดลมระบายความร้อนของไดรฟ์ (มักทุก 3–5 ปี) และคาปาซิเตอร์บัส DC ตามคู่มือ</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=7ca4322c">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/ev-charging/wallbox/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/ev-charging/wallbox/#article","headline":"ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 / 11 / 22 kW, Control Pilot PWM, Proximity และการเลือกเครื่อง","description":"วอลล์บ็อกซ์ทำงานอย่างไร: ไม่ได้แปลงไฟแต่เป็นสวิตช์อัจฉริยะ สัญญาณ Control Pilot ±12 V PWM 1 kHz duty cycle บอกกระแส I = 0.6 × D สถานะ A B C D E F วงจรตัวต้านทานฝั่งรถ 2.74 kΩ 1.3 kΩ ตัวต้านทาน Proximity บอกพิกัดสาย 1 เฟส 32 A กับ 3 เฟส ขีดจำกัด OBC dynamic load balancing OCPP และเกณฑ์เลือกซื้อ พร้อมแล็บสัญญาณ CP","inLanguage":"th","url":"https://modsengineeringmath.com/learn/ev-charging/wallbox/","mainEntityOfPage":"https://modsengineeringmath.com/learn/ev-charging/wallbox/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Charging station","SAE J1772","Pulse-width modulation","Open Charge Point Protocol"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/ev-charging/#article"},"image":["https://modsengineeringmath.com/images/og/learn-ev-charging-wallbox.jpg"],"educationalLevel":["Vocational","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน","item":"https://modsengineeringmath.com/learn/ev-charging/"},{"@type":"ListItem","position":4,"name":"ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ (Mode 3): 7.4 kW 11 kW 22 kW, Control Pilot PWM, Proximity และการเลือกเครื่อง","item":"https://modsengineeringmath.com/learn/ev-charging/wallbox/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"วอลล์บ็อกซ์ 7 kW กับ 22 kW ควรเลือกอะไร?","acceptedAnswer":{"@type":"Answer","text":"ดูที่รถและระบบไฟบ้าน รถส่วนใหญ่มี OBC 7–11 kW บ้านส่วนใหญ่เป็นไฟ 1 เฟส จึงใช้ได้สูงสุด 7.4 kW (32 A) วอลล์บ็อกซ์ 22 kW ต้องการไฟ 3 เฟส 32 A และรถที่มี OBC 22 kW ซึ่งมีน้อย สำหรับบ้านทั่วไป 7.4 kW ชาร์จได้ราว 44 km ต่อชั่วโมง เพียงพอสำหรับการชาร์จข้ามคืน"}},{"@type":"Question","name":"Control Pilot คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"เป็นสายสัญญาณเส้นเดียวในหัวชาร์จที่เครื่องชาร์จส่งคลื่นสี่เหลี่ยม ±12 V ความถี่ 1 kHz ความกว้างพัลส์ (duty cycle) บอกกระแสสูงสุดที่รถดึงได้ เช่น duty 53.3 % = 32 A ส่วนรถตอบกลับด้วยการต่อตัวต้านทานลงดินทำให้แรงดันลดเหลือ 9 V (เสียบแล้ว) หรือ 6 V (พร้อมชาร์จ) เป็นภาษาง่าย ๆ ที่ปลอดภัยแม้ไม่มีคอมพิวเตอร์"}},{"@type":"Question","name":"Dynamic load balancing จำเป็นไหม?","acceptedAnswer":{"@type":"Answer","text":"จำเป็นถ้ากระแสรวมของบ้านเมื่อรวมรถแล้วอาจเกินเมนเบรกเกอร์หรือมิเตอร์ ระบบนี้ใช้ CT วัดกระแสเข้าบ้าน แล้วลดกระแสชาร์จอัตโนมัติเมื่อบ้านใช้ไฟมาก (เช่น เปิดแอร์หลายเครื่องพร้อมเครื่องทำน้ำอุ่น) ช่วยให้ไม่ต้องขยายมิเตอร์ใหญ่เกินจำเป็น"}}]}]}</script>
@@ -59,6 +59,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
@@ -296,6 +297,35 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
         </div>
       </div>
       <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
@@ -613,9 +643,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7ca4322c" defer></script>
-<script src="/assets/lesson.js?v=7ca4322c" defer></script>
-<script src="/assets/ee-kit.js?v=7ca4322c" defer></script>
-<script src="/assets/ev-calc.js?v=7ca4322c" defer></script>
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+<script src="/assets/ee-kit.js?v=6c2eac95" defer></script>
+<script src="/assets/ev-calc.js?v=6c2eac95" defer></script>
 </body>
 </html>

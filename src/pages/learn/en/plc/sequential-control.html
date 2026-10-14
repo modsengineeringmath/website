@@ -1,0 +1,115 @@
+<!--meta
+{
+  "title": "Sequential Control with a PLC: State Machines, SFC, GRAFCET, Traffic Lights, Batch Mixing Tank, SET/RESET, CASE | Ajarn Mod",
+  "h1": "Sequential Control: State Machines, SFC/GRAFCET, Traffic Lights, Sorting Conveyors and a Batch Mixing Tank",
+  "description": "Design sequential PLC programs systematically: state diagrams, steps and transitions per SFC/GRAFCET (IEC 60848), writing them as ladder with SET/RESET and as Structured Text with CASE, worked examples of a two-direction traffic light, a batch mixing tank and automatic tank filling, auto/manual modes, emergency stop, homing, and diagnosing which step a machine is stuck in, with a simulator.",
+  "lesson": "en/plc",
+  "sub": "sequential-control",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Finite-state machine", "Sequential function chart", "GRAFCET", "Batch processing"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "Why do sequential programs built from many layers of self-holding circuits tend to be buggy?", "a": "Because the machine's state is spread over many bits with no rule forcing exactly one of them to be active, so two steps can run at once or none at all. The state-machine approach keeps the state in a single variable (or in step bits that are SET/RESET in disciplined pairs), so exactly one step is always active and you know immediately where the machine is stuck."},
+    {"q": "Should outputs be written inside each step or at the end of the program?", "a": "It is better for the sequence section to compute only the “current step”, with a separate output section at the end of the program that writes each output once as an OR of the steps that need it, e.g. Pump = Step1 OR Step4. This prevents duplicate coils and lets you add manual-mode or emergency-stop conditions in one place."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Sequential Control</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.7 · PLC · Sequential Control</p>
+      <h1>Sequential Control: State Machines, SFC/GRAFCET, Traffic Lights, Sorting Conveyors and a Batch Mixing Tank</h1>
+      <p class="lede">Most machines run as a sequence: wait → fill → mix → drain → wait. Writing a sequence with nested self-holding circuits works for small jobs but becomes a tangle as the machine grows. The engineer's method is to think of it as a <b>state machine</b> first, then translate it into any language.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Design steps: list the steps (states) → the transition conditions → the outputs of each step</li>
+          <li>Exactly one step is active at a time (except parallel branches in SFC)</li>
+          <li>Ladder: SET the next step + RESET the current step in the same rung · ST: CASE State OF</li>
+          <li>Outputs are written at the end of the program as an OR of steps</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="e.g. step, transition, state, output" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="fsm">
+    <h2 id="fsm">State machines: steps, transitions, outputs <span class="lv lv-i">Intermediate</span></h2>
+    <figure class="xfig"><!--FIG:plc-traffic-states-en--><svg class="xf" viewBox="0 0 760 280" role="img" aria-label="State diagram of a two-direction traffic light: six states advancing on timers"><defs><marker id="plc-traffic-states-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="15" y="40" width="190" height="60" rx="30"/><text x="110" y="64" class="xf-h" text-anchor="middle">S0</text><text x="110" y="84" class="xf-k" text-anchor="middle">NS green · EW red</text><rect class="xf-boxa" x="285" y="40" width="190" height="60" rx="30"/><text x="380" y="64" class="xf-h" text-anchor="middle">S1</text><text x="380" y="84" class="xf-k" text-anchor="middle">NS amber · EW red</text><rect class="xf-boxa" x="555" y="40" width="190" height="60" rx="30"/><text x="650" y="64" class="xf-h" text-anchor="middle">S2</text><text x="650" y="84" class="xf-k" text-anchor="middle">All red</text><rect class="xf-boxa" x="555" y="180" width="190" height="60" rx="30"/><text x="650" y="204" class="xf-h" text-anchor="middle">S3</text><text x="650" y="224" class="xf-k" text-anchor="middle">EW green · NS red</text><rect class="xf-boxa" x="285" y="180" width="190" height="60" rx="30"/><text x="380" y="204" class="xf-h" text-anchor="middle">S4</text><text x="380" y="224" class="xf-k" text-anchor="middle">EW amber · NS red</text><rect class="xf-boxa" x="15" y="180" width="190" height="60" rx="30"/><text x="110" y="204" class="xf-h" text-anchor="middle">S5</text><text x="110" y="224" class="xf-k" text-anchor="middle">All red</text><line class="xf-ln" x1="205" y1="70" x2="285" y2="70" marker-end="url(#plc-traffic-states-en-ah)"/><text x="245" y="62" class="xf-k" text-anchor="middle">T 25 s</text><line class="xf-ln" x1="475" y1="70" x2="555" y2="70" marker-end="url(#plc-traffic-states-en-ah)"/><text x="515" y="62" class="xf-k" text-anchor="middle">T 3 s</text><line class="xf-ln" x1="650" y1="100" x2="650" y2="180" marker-end="url(#plc-traffic-states-en-ah)"/><text x="658" y="144" class="xf-k">T 2 s</text><line class="xf-ln" x1="555" y1="210" x2="475" y2="210" marker-end="url(#plc-traffic-states-en-ah)"/><text x="515" y="202" class="xf-k" text-anchor="middle">T 25 s</text><line class="xf-ln" x1="285" y1="210" x2="205" y2="210" marker-end="url(#plc-traffic-states-en-ah)"/><text x="245" y="202" class="xf-k" text-anchor="middle">T 3 s</text><line class="xf-ln" x1="110" y1="180" x2="110" y2="100" marker-end="url(#plc-traffic-states-en-ah)"/><text x="118" y="144" class="xf-k">T 2 s</text><text x="380" y="272" class="xf-m" text-anchor="middle" textLength="748" lengthAdjust="spacingAndGlyphs">Exactly one state is active · transition = that state's timer done · pedestrian buttons and night flashing are easy to add</text></svg><!--/FIG--><figcaption>Figure 1 · Two-direction traffic light: six steps in a loop, each with its own timer; the transition condition is that timer elapsing</figcaption></figure>
+<div class="tf" id="S1" data-k="step activation transition fire sfc rule"><p class="tf-n"><b><span class="fid">S1</span> Transition rule</b></p>
+        \[ X_{n+1} \leftarrow 1,\ X_n \leftarrow 0 \quad \text{when}\quad X_n \wedge t_{n\to n+1} \]</div>
+<div class="tf" id="S2" data-k="single active step state invariant linear sequence"><p class="tf-n"><b><span class="fid">S2</span> One active step</b></p>
+        \[ \sum_i X_i = 1 \]</div>
+<div class="tf" id="S3" data-k="output as or of steps"><p class="tf-n"><b><span class="fid">S3</span> Outputs from steps</b></p>
+        \[ Q_j = \bigvee_{i \in A_j} X_i \cdot \text{(enable condition)} \]</div>
+    <div class="plc-sim" data-preset="traffic"><noscript>JavaScript is required</noscript></div>
+    <p>The traffic-light example in the simulator uses a chain of timers (T1→T6) as a simple state machine: the current step is identified by which timers have already elapsed. This suits sequences that depend purely on time. Jobs with sensor conditions use the SFC method below.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="sfc">
+    <h2 id="sfc">SFC / GRAFCET: a batch mixing tank <span class="lv lv-i">Intermediate</span></h2>
+    <figure class="xfig"><!--FIG:plc-sfc-tank-en--><svg class="xf" viewBox="0 0 760 420" role="img" aria-label="SFC/GRAFCET of a batch mixing tank: fill A, fill B, mix, drain, then return to the initial step"><defs><marker id="plc-sfc-tank-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="176" y="30" width="48" height="40" rx="2"/><rect class="xf-box" x="180" y="34" width="40" height="32" rx="2"/><text x="200" y="55" class="xf-h" text-anchor="middle">0</text><text x="166" y="55" class="xf-k" text-anchor="end">Idle</text><line class="xf-ln" x1="200" y1="70" x2="200" y2="106"/><line class="xf-rail" x1="186" y1="88" x2="214" y2="88"/><text x="222" y="92" class="xf-k">START · NOT LL</text><rect class="xf-boxa" x="176" y="106" width="48" height="40" rx="2"/><text x="200" y="131" class="xf-h" text-anchor="middle">1</text><line class="xf-ln" x1="224" y1="126" x2="260" y2="126"/><rect class="xf-box" x="260" y="112" width="170" height="28" rx="2"/><text x="345" y="131" class="xf-k" text-anchor="middle">V1</text><text x="166" y="131" class="xf-k" text-anchor="end">Fill A</text><line class="xf-ln" x1="200" y1="146" x2="200" y2="182"/><line class="xf-rail" x1="186" y1="164" x2="214" y2="164"/><text x="222" y="168" class="xf-k">LM</text><rect class="xf-boxa" x="176" y="182" width="48" height="40" rx="2"/><text x="200" y="207" class="xf-h" text-anchor="middle">2</text><line class="xf-ln" x1="224" y1="202" x2="260" y2="202"/><rect class="xf-box" x="260" y="188" width="170" height="28" rx="2"/><text x="345" y="207" class="xf-k" text-anchor="middle">V2</text><text x="166" y="207" class="xf-k" text-anchor="end">Fill B</text><line class="xf-ln" x1="200" y1="222" x2="200" y2="258"/><line class="xf-rail" x1="186" y1="240" x2="214" y2="240"/><text x="222" y="244" class="xf-k">LH</text><rect class="xf-boxa" x="176" y="258" width="48" height="40" rx="2"/><text x="200" y="283" class="xf-h" text-anchor="middle">3</text><line class="xf-ln" x1="224" y1="278" x2="260" y2="278"/><rect class="xf-box" x="260" y="264" width="170" height="28" rx="2"/><text x="345" y="283" class="xf-k" text-anchor="middle">M1 · T#60s</text><text x="166" y="283" class="xf-k" text-anchor="end">Mix</text><line class="xf-ln" x1="200" y1="298" x2="200" y2="334"/><line class="xf-rail" x1="186" y1="316" x2="214" y2="316"/><text x="222" y="320" class="xf-k">T3.Q</text><rect class="xf-boxa" x="176" y="334" width="48" height="40" rx="2"/><text x="200" y="359" class="xf-h" text-anchor="middle">4</text><line class="xf-ln" x1="224" y1="354" x2="260" y2="354"/><rect class="xf-box" x="260" y="340" width="170" height="28" rx="2"/><text x="345" y="359" class="xf-k" text-anchor="middle">V3</text><text x="166" y="359" class="xf-k" text-anchor="end">Drain</text><line class="xf-ln" x1="200" y1="374" x2="200" y2="410"/><line class="xf-rail" x1="186" y1="392" x2="214" y2="392"/><text x="222" y="396" class="xf-k">NOT LL</text><line class="xf-ln" x1="200" y1="410" x2="200" y2="414"/><line class="xf-ln" x1="200" y1="414" x2="90" y2="414"/><line class="xf-ln" x1="90" y1="414" x2="90" y2="18"/><line class="xf-ln" x1="90" y1="18" x2="200" y2="18"/><line class="xf-ln" x1="200" y1="18" x2="200" y2="30" marker-end="url(#plc-sfc-tank-en-ah)"/><text x="470" y="60" class="xf-k" textLength="284" lengthAdjust="spacingAndGlyphs">LL LM LH = low, mid, high level (1 = covered)</text><text x="470" y="80" class="xf-k" textLength="284" lengthAdjust="spacingAndGlyphs">V1 V2 inlet valves · V3 drain valve · M1 mixer</text><text x="470" y="110" class="xf-h">SFC rules:</text><text x="470" y="130" class="xf-k">• An active step runs its actions</text><text x="470" y="150" class="xf-k">• A transition fires when its step is active</text><text x="470" y="170" class="xf-k">  and its condition is true (one scan)</text><text x="470" y="190" class="xf-k">• Double box = initial step</text></svg><!--/FIG--><figcaption>Figure 2 · Boxes are steps, horizontal bars are transition conditions, and the boxes on the right are the actions performed while that step is active</figcaption></figure>
+    <h3>Converting to ladder with SET/RESET</h3>
+    <pre class="code"><span class="c">// initial step at power-up (first scan)</span>
+S  X0 = FirstScan
+<span class="c">// each rung: current step AND condition → SET next step, RESET current step</span>
+S  X1 = X0 &amp; START &amp; !LL         R  X0 = X0 &amp; START &amp; !LL
+S  X2 = X1 &amp; LM                  R  X1 = X1 &amp; LM
+S  X3 = X2 &amp; LH                  R  X2 = X2 &amp; LH
+S  X4 = X3 &amp; T3.Q                R  X3 = X3 &amp; T3.Q
+S  X0 = X4 &amp; !LL                 R  X4 = X4 &amp; !LL
+T3 = TON(X3, 60s)
+<span class="c">// output section (S3)</span>
+V1 = X1 · V2 = X2 · M1 = X3 · V3 = X4</pre>
+    <h3>Converting to Structured Text with CASE</h3>
+    <pre class="code"><span class="k">CASE</span> Step <span class="k">OF</span>
+  0: <span class="k">IF</span> Start <span class="k">AND NOT</span> LL <span class="k">THEN</span> Step := 10; <span class="k">END_IF</span>
+ 10: <span class="k">IF</span> LM <span class="k">THEN</span> Step := 20; <span class="k">END_IF</span>          <span class="c">// fill A</span>
+ 20: <span class="k">IF</span> LH <span class="k">THEN</span> Step := 30; <span class="k">END_IF</span>          <span class="c">// fill B</span>
+ 30: <span class="k">IF</span> TMix.Q <span class="k">THEN</span> Step := 40; <span class="k">END_IF</span>      <span class="c">// mix</span>
+ 40: <span class="k">IF NOT</span> LL <span class="k">THEN</span> Step := 0; <span class="k">END_IF</span>       <span class="c">// drain</span>
+<span class="k">END_CASE</span>
+TMix(IN := Step = 30, PT := T#60S);
+V1 := Step = 10;  V2 := Step = 20;  M1 := Step = 30;  V3 := Step = 40;</pre>
+    <p class="mc-note">Step numbers go up in tens so new steps can be inserted later without renumbering the whole program. Show <code>Step</code> on the HMI and the technician knows at once what the machine is waiting for.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="tank">
+    <h2 id="tank">Example: automatic tank filling (with a simulated plant)</h2>
+    <p>Press START: the system fills until LH, stops, and refills when the level falls below LL. Open the tap (I0.4) to draw water. Watch pump Q0.0 being SET/RESET by the level switches — this is the same two-level circuit as the <a href="/learn/en/motor-control/applied-circuits/#pump">float-switch pump</a>, but written in the program.</p>
+    <div class="plc-sim" data-preset="tank"><noscript>JavaScript is required</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="modes">
+    <h2 id="modes">Auto/manual modes, stopping and homing <span class="lv lv-a">Advanced</span></h2>
+    <ul>
+      <li><b>Auto / Manual:</b> manual mode lets the operator drive outputs one at a time from the HMI, but still through the interlocks (e.g. the drain valve may not open while filling). The step sequence is frozen while in manual mode.</li>
+      <li><b>Cycle stop:</b> pressing stop lets the current cycle finish before stopping at step 0 — suited to processes where stopping mid-cycle wastes material.</li>
+      <li><b>Immediate stop / E-stop:</b> cut all outputs at once, remember the step where it stopped, and require a homing sequence or manual recovery before restarting.</li>
+      <li><b>Per-step timeout:</b> every step that waits on a sensor should have a watchdog timer, e.g. filling for more than 5 minutes means a stuck valve or a failed sensor → raise an alarm that names the step.</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=7ca4322c">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/build/#article","headline":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","description":"สร้างเครื่องกำเนิดสัญญาณและสโคปทำเองตั้งแต่ระดับ ม.ปลาย ถึง ป.โท: ออสซิลเลเตอร์ผ่อนคลายด้วยออปแอมป์ เครื่องกำเนิดสี่เหลี่ยม-สามเหลี่ยม ไอซี 555 แบบ astable Wien bridge และ RC phase-shift XR2206 DAC R-2R กับตารางค่าไซน์ DDS AD9833 พร้อมโค้ด Arduino และ ESP32 ภาคขาออกปรับแอมพลิจูดและออฟเซต วงจรขาเข้าสโคปทำเอง พร้อมตัวจำลองตัวสะสมเฟส DDS เครื่องคิดเลข และสูตรรหัส K","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/build/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/build/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Relaxation oscillator","555 timer","Wien bridge oscillator","Phase-shift oscillator","Barkhausen stability criterion","R-2R ladder","Digital-to-analog converter","Direct digital synthesis","AD9833","Arduino","ESP32"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-build.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","item":"https://modsengineeringmath.com/learn/function-generator/build/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"สร้างเครื่องกำเนิดสัญญาณเองแบบไหนง่ายและคุ้มที่สุด?","acceptedAnswer":{"@type":"Answer","text":"ถ้าต้องการแค่คลื่นสี่เหลี่ยม ใช้ไอซี 555 หรือขา PWM ของไมโครคอนโทรลเลอร์ ถ้าต้องการไซน์ สามเหลี่ยม และสี่เหลี่ยมที่ตั้งความถี่ได้แม่นจาก 0.1 Hz ถึงหลาย MHz ใช้โมดูล DDS AD9833 คุมด้วย Arduino หรือ ESP32 ผ่าน SPI สามสาย แล้วเพิ่มภาคขยายด้วยออปแอมป์สำหรับปรับแอมพลิจูดและออฟเซต"}},{"@type":"Question","name":"AD9833 ตั้งค่าความถี่อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"คำนวณเลข 28 บิต M = round(f_out × 2²⁸ / f_MCLK) เช่น 1 kHz กับนาฬิกา 25 MHz ได้ M = 10737 แล้วเขียนเป็นสองคำ 14 บิตลงรีจิสเตอร์ FREQ0 โดยตั้งบิตบนเป็น 01 (0x4000 | ค่า) ลำดับคือ 0x2100 (รีเซ็ต) คำล่าง คำบน 0xC000 (เฟส) แล้ว 0x2000 สำหรับไซน์ 0x2002 สามเหลี่ยม หรือ 0x2028 สี่เหลี่ยม"}},{"@type":"Question","name":"Arduino ใช้เป็นออสซิลโลสโคปได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้สำหรับสัญญาณช้า Arduino Uno อ่าน ADC ได้ราว 9.6 kSa/s ด้วย analogRead จึงดูได้แค่ไม่กี่ร้อย Hz ถึงราว 1 kHz และรับได้เฉพาะ 0–5 V ต้องมีวงจรแบ่งแรงดันและยกระดับก่อนวัดสัญญาณที่มีค่าลบ ESP32 และการ์ดเสียงคอมพิวเตอร์เร็วกว่า แต่ยังห่างจากสโคปจริงมาก เหมาะกับการเรียนรู้หลักการสุ่มสัญญาณ"}},{"@type":"Question","name":"ทำไมออสซิลเลเตอร์ Wien bridge ต้องมีวงจรคุมแอมพลิจูด?","acceptedAnswer":{"@type":"Answer","text":"เงื่อนไข Barkhausen ต้องการเกนวงรอบเท่ากับ 1 พอดี ถ้าเกนน้อยกว่า 3 นิดเดียวการแกว่งจะหยุด ถ้ามากกว่านิดเดียวแอมพลิจูดจะโตจนออปแอมป์อิ่มตัวและไซน์ถูกตัดยอด จึงต้องมีชิ้นส่วนที่ลดเกนเมื่อแอมพลิจูดสูง เช่น ไดโอดคู่ขนานกับตัวต้านทานป้อนกลับบางส่วน หลอดไฟ หรือ JFET"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -58,6 +58,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
@@ -295,6 +296,35 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
         </div>
       </div>
       <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
@@ -805,9 +835,9 @@ void loop() {
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7ca4322c" defer></script>
-<script src="/assets/lesson.js?v=7ca4322c" defer></script>
-<script src="/assets/fgcalc.js?v=7ca4322c" defer></script>
-<script src="/assets/fgdds.js?v=7ca4322c" defer></script>
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+<script src="/assets/fgcalc.js?v=6c2eac95" defer></script>
+<script src="/assets/fgdds.js?v=6c2eac95" defer></script>
 </body>
 </html>

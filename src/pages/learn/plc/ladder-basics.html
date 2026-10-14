@@ -1,0 +1,114 @@
+<!--meta
+{
+  "title": "แลดเดอร์ไดอะแกรมพื้นฐาน PLC: หน้าสัมผัส NO NC คอยล์ AND OR ล็อกตัวเอง SET RESET ขอบสัญญาณ | อาจารย์มด",
+  "h1": "แลดเดอร์ไดอะแกรมพื้นฐาน: หน้าสัมผัส NO NC คอยล์ AND OR ล็อกตัวเอง SET RESET ขอบสัญญาณ และพีชคณิตบูลีน",
+  "description": "เรียนเขียนแลดเดอร์ไดอะแกรม (Ladder Diagram) สำหรับ PLC ตั้งแต่ต้น: อ่านแลดเดอร์เหมือนวงจรรีเลย์ หน้าสัมผัส NO NC คอยล์ วงจร AND OR NOT ตารางความจริง วงจรล็อกตัวเอง ทำไมปุ่ม STOP ที่ต่อ NC ต้องใช้หน้าสัมผัส NO ในโปรแกรม SET RESET ขอบขาขึ้นขาลง คอยล์ซ้ำ ทฤษฎีเดอมอร์แกน และรูปแบบแอดเดรสของ Siemens Mitsubishi Omron IEC พร้อมซิมูเลเตอร์",
+  "lesson": "plc",
+  "sub": "ladder-basics",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Ladder logic", "Boolean algebra", "Latch (electronics)", "Programmable logic controller"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "หน้าสัมผัส NC ในโปรแกรมกับปุ่ม NC ที่ต่อจริงเหมือนกันไหม?", "a": "ไม่เหมือน หน้าสัมผัสในโปรแกรมตรวจ “ค่าบิต” ไม่ใช่สภาพปุ่ม หน้าสัมผัส NO ในโปรแกรมนำกระแสเมื่อบิตเป็น 1 หน้าสัมผัส NC นำกระแสเมื่อบิตเป็น 0 ปุ่ม STOP ที่ต่อ NC ทำให้บิตเป็น 1 ตอนปกติ จึงต้องใช้หน้าสัมผัส NO ในโปรแกรมเพื่อให้รังทำงานตอนปกติและหยุดเมื่อกด"},
+    {"q": "ใช้ SET/RESET แทนวงจรล็อกตัวเองดีไหม?", "a": "ใช้ได้และอ่านง่ายในงานลำดับขั้น แต่ระวังสองเรื่อง: ถ้าทั้ง SET และ RESET เป็นจริงพร้อมกัน ตัวที่อยู่รังล่างกว่าชนะ และบิตที่ SET ไว้อาจคงค่าหลังไฟดับถ้าเป็นหน่วยความจำ retentive ทำให้เครื่องเดินเองเมื่อไฟกลับ งานมอเตอร์ทั่วไปวงจรล็อกตัวเองแบบเดิมปลอดภัยกว่าเพราะหลุดเองเมื่อ STOP"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>แลดเดอร์พื้นฐาน</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.3 · PLC · Ladder Basics</p>
+      <h1>แลดเดอร์ไดอะแกรมพื้นฐาน: หน้าสัมผัส NO NC คอยล์ AND OR ล็อกตัวเอง SET RESET ขอบสัญญาณ และพีชคณิตบูลีน</h1>
+      <p class="lede">แลดเดอร์ถูกออกแบบให้ช่างไฟที่อ่านวงจรรีเลย์เป็นอ่านโปรแกรมได้ทันที รางซ้ายคือ “ไฟบวก” รางขวาคือ “ศูนย์” แต่ละขั้นบันได (rung) คือเส้นทางที่ไฟจะไหลถึงคอยล์ได้ถ้าหน้าสัมผัสปิดครบ สิ่งเดียวที่ต้องเปลี่ยนความคิดคือ หน้าสัมผัสในโปรแกรมตรวจ <b>ค่าบิต</b> ไม่ใช่ตรวจปุ่ม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>─┤ ├─ NO: นำเมื่อบิต = 1 · ─┤/├─ NC: นำเมื่อบิต = 0 · ─( )─ คอยล์: เขียนผลลงบิต</li>
+          <li>อนุกรม AND · ขนาน OR · NC NOT · ทุกรังคือสมการบูลีนหนึ่งสมการ</li>
+          <li>ปุ่ม STOP ต่อ NC → ในโปรแกรมใช้ NO (สายขาด = หยุด)</li>
+          <li>คอยล์หนึ่งตัวเขียนได้ที่เดียว · ขอบสัญญาณ P/N นำกระแสหนึ่งสแกน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น and, or, de morgan, latch, set, edge, xor" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="elements">
+    <h2 id="elements">องค์ประกอบของแลดเดอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-ladder-basic--><svg class="xf" viewBox="0 0 760 360" role="img" aria-label="แลดเดอร์พื้นฐาน: AND (อนุกรม) OR (ขนาน) NOT (หน้าสัมผัส NC) และวงจรล็อกตัวเองของมอเตอร์"><defs><marker id="plc-ladder-basic-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-ln" x1="160" y1="50" x2="184" y2="50"/><line class="xf-ln" x1="206" y1="50" x2="230" y2="50"/><line class="xf-ln" x1="184" y1="38" x2="184" y2="62"/><line class="xf-ln" x1="206" y1="38" x2="206" y2="62"/><text x="195" y="32" class="xf-tag" text-anchor="middle">A</text><line class="xf-ln" x1="230" y1="50" x2="254" y2="50"/><line class="xf-ln" x1="276" y1="50" x2="300" y2="50"/><line class="xf-ln" x1="254" y1="38" x2="254" y2="62"/><line class="xf-ln" x1="276" y1="38" x2="276" y2="62"/><text x="265" y="32" class="xf-tag" text-anchor="middle">B</text><line class="xf-ln" x1="300" y1="50" x2="510" y2="50"/><path class="xf-ln" d="M 512 38 A 14 14 0 0 0 512 62 M 528 38 A 14 14 0 0 1 528 62"/><line class="xf-ln" x1="510" y1="50" x2="510" y2="50"/><line class="xf-ln" x1="530" y1="50" x2="560" y2="50"/><text x="520" y="32" class="xf-tag" text-anchor="middle">Y1</text><line class="xf-ln" x1="160" y1="120" x2="184" y2="120"/><line class="xf-ln" x1="206" y1="120" x2="230" y2="120"/><line class="xf-ln" x1="184" y1="108" x2="184" y2="132"/><line class="xf-ln" x1="206" y1="108" x2="206" y2="132"/><text x="195" y="102" class="xf-tag" text-anchor="middle">A</text><line class="xf-ln" x1="160" y1="168" x2="184" y2="168"/><line class="xf-ln" x1="206" y1="168" x2="230" y2="168"/><line class="xf-ln" x1="184" y1="156" x2="184" y2="180"/><line class="xf-ln" x1="206" y1="156" x2="206" y2="180"/><text x="195" y="150" class="xf-tag" text-anchor="middle">B</text><line class="xf-ln" x1="160" y1="120" x2="160" y2="168"/><line class="xf-ln" x1="230" y1="120" x2="230" y2="168"/><line class="xf-ln" x1="230" y1="120" x2="510" y2="120"/><path class="xf-ln" d="M 512 108 A 14 14 0 0 0 512 132 M 528 108 A 14 14 0 0 1 528 132"/><line class="xf-ln" x1="510" y1="120" x2="510" y2="120"/><line class="xf-ln" x1="530" y1="120" x2="560" y2="120"/><text x="520" y="102" class="xf-tag" text-anchor="middle">Y2</text><line class="xf-ln" x1="160" y1="238" x2="184" y2="238"/><line class="xf-ln" x1="206" y1="238" x2="230" y2="238"/><line class="xf-ln" x1="184" y1="226" x2="184" y2="250"/><line class="xf-ln" x1="206" y1="226" x2="206" y2="250"/><line class="xf-ln" x1="180" y1="250" x2="210" y2="226"/><text x="195" y="220" class="xf-tag" text-anchor="middle">A</text><line class="xf-ln" x1="230" y1="238" x2="510" y2="238"/><path class="xf-ln" d="M 512 226 A 14 14 0 0 0 512 250 M 528 226 A 14 14 0 0 1 528 250"/><line class="xf-ln" x1="510" y1="238" x2="510" y2="238"/><line class="xf-ln" x1="530" y1="238" x2="560" y2="238"/><text x="520" y="220" class="xf-tag" text-anchor="middle">Y3</text><line class="xf-ln" x1="160" y1="308" x2="184" y2="308"/><line class="xf-ln" x1="206" y1="308" x2="230" y2="308"/><line class="xf-ln" x1="184" y1="296" x2="184" y2="320"/><line class="xf-ln" x1="206" y1="296" x2="206" y2="320"/><line class="xf-ln" x1="180" y1="320" x2="210" y2="296"/><text x="195" y="290" class="xf-tag" text-anchor="middle">STOP</text><line class="xf-ln" x1="230" y1="308" x2="254" y2="308"/><line class="xf-ln" x1="276" y1="308" x2="300" y2="308"/><line class="xf-ln" x1="254" y1="296" x2="254" y2="320"/><line class="xf-ln" x1="276" y1="296" x2="276" y2="320"/><text x="265" y="290" class="xf-tag" text-anchor="middle">START</text><line class="xf-ln" x1="230" y1="356" x2="254" y2="356"/><line class="xf-ln" x1="276" y1="356" x2="300" y2="356"/><line class="xf-ln" x1="254" y1="344" x2="254" y2="368"/><line class="xf-ln" x1="276" y1="344" x2="276" y2="368"/><text x="265" y="338" class="xf-tag" text-anchor="middle">MOTOR</text><line class="xf-ln" x1="230" y1="308" x2="230" y2="356"/><line class="xf-ln" x1="300" y1="308" x2="300" y2="356"/><line class="xf-ln" x1="300" y1="308" x2="324" y2="308"/><line class="xf-ln" x1="346" y1="308" x2="370" y2="308"/><line class="xf-ln" x1="324" y1="296" x2="324" y2="320"/><line class="xf-ln" x1="346" y1="296" x2="346" y2="320"/><line class="xf-ln" x1="320" y1="320" x2="350" y2="296"/><text x="335" y="290" class="xf-tag" text-anchor="middle">OL</text><line class="xf-ln" x1="370" y1="308" x2="510" y2="308"/><path class="xf-ln" d="M 512 296 A 14 14 0 0 0 512 320 M 528 296 A 14 14 0 0 1 528 320"/><line class="xf-ln" x1="510" y1="308" x2="510" y2="308"/><line class="xf-ln" x1="530" y1="308" x2="560" y2="308"/><text x="520" y="290" class="xf-tag" text-anchor="middle">MOTOR</text><line class="xf-rail" x1="160" y1="20" x2="160" y2="386"/><line class="xf-rail" x1="560" y1="20" x2="560" y2="386"/><text x="140" y="54" class="xf-h" text-anchor="end">AND</text><text x="578" y="54" class="xf-k">Y1 = A · B</text><text x="140" y="124" class="xf-h" text-anchor="end">OR</text><text x="578" y="124" class="xf-k">Y2 = A + B</text><text x="140" y="242" class="xf-h" text-anchor="end">NOT</text><text x="578" y="242" class="xf-k">Y3 = Ā</text><text x="140" y="312" class="xf-h" text-anchor="end">ล็อกตัวเอง</text><text x="578" y="312" class="xf-k" textLength="176" lengthAdjust="spacingAndGlyphs">MOTOR = STOP̄·(START+MOTOR)·OL̄</text></svg><!--/FIG--><figcaption>รูป 1 · สี่รังพื้นฐาน: AND OR NOT และวงจรล็อกตัวเองของมอเตอร์ (เทียบกับวงจรคอนแทกเตอร์ใน <a href="/learn/motor-control/dol-starter/">DOL</a>)</figcaption></figure>
+<div class="tf" id="B1" data-k="and series contacts ladder อนุกรม"><p class="tf-n"><b><span class="fid">B1</span> AND (series)</b> AND (อนุกรม)</p>
+        \[ Y = A \cdot B \qquad \text{ST: } Y := A \text{ AND } B; \]</div>
+<div class="tf" id="B2" data-k="or parallel contacts ladder ขนาน"><p class="tf-n"><b><span class="fid">B2</span> OR (parallel)</b> OR (ขนาน)</p>
+        \[ Y = A + B \qquad \text{ST: } Y := A \text{ OR } B; \]</div>
+<div class="tf" id="B3" data-k="not normally closed contact ladder ปกติปิด"><p class="tf-n"><b><span class="fid">B3</span> NOT (NC contact)</b> NOT (หน้าสัมผัส NC)</p>
+        \[ Y = \overline{A} \qquad \text{ST: } Y := \text{NOT } A; \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>A</th><th>B</th><th>A·B</th><th>A+B</th><th>Ā</th><th>A⊕B</th></tr></thead>
+      <tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody>
+    </table></div>
+<div class="tf" id="B4" data-k="de morgan theorem nand nor เดอมอร์แกน"><p class="tf-n"><b><span class="fid">B4</span> De Morgan</b> ทฤษฎีเดอมอร์แกน</p>
+        \[ \overline{A\cdot B} = \overline{A} + \overline{B} \qquad \overline{A + B} = \overline{A}\cdot\overline{B} \]</div>
+    <p>B4 ใช้ทุกครั้งที่ต้องการ “ไม่ใช่ทั้งคู่” ในแลดเดอร์ เพราะแลดเดอร์พื้นฐานไม่มี NOT หน้าวงเล็บ ซิมูเลเตอร์ในหน้านี้ใช้กฎนี้แปลงสมการเป็นหน้าสัมผัส NO/NC ให้อัตโนมัติ</p>
+<div class="tf" id="B5" data-k="xor exclusive or two way switch เอกซ์คลูซีฟออร์"><p class="tf-n"><b><span class="fid">B5</span> XOR</b> เอกซ์คลูซีฟ-ออร์ (สวิตช์สองทาง)</p>
+        \[ Y = A\overline{B} + \overline{A}B \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="stop">
+    <h2 id="stop">ปุ่ม STOP ที่ต่อ NC กับหน้าสัมผัสในโปรแกรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-stop-nc--><svg class="xf" viewBox="0 0 780 300" role="img" aria-label="ปุ่ม STOP ต่อแบบ NC เข้าอินพุต PLC: ขณะไม่กด อินพุตเป็น 1 จึงเขียนในโปรแกรมด้วยหน้าสัมผัส NO ถ้าสายขาด อินพุตเป็น 0 มอเตอร์หยุด (fail-safe)"><defs><marker id="plc-stop-nc-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="150" y="24" class="xf-h" text-anchor="middle">การต่อสาย</text><line class="xf-rail" x1="40" y1="50" x2="260" y2="50"/><text x="36" y="54" class="xf-k" text-anchor="end">+24V</text><line class="xf-ln" x1="110" y1="50" x2="110" y2="65"/><line class="xf-ln" x1="110" y1="87" x2="110" y2="102"/><line class="xf-ln" x1="110" y1="65" x2="119" y2="65"/><line class="xf-ln" x1="110" y1="87" x2="120" y2="61"/><line class="xf-dash" x1="108" y1="76" x2="88" y2="76"/><path class="xf-ln" d="M 92 69 L 88 69 L 88 83 L 92 83"/><text x="62" y="80" class="xf-tag" text-anchor="end">-S0</text><text x="117" y="61" class="xf-k">11</text><text x="117" y="98" class="xf-k">12</text><line class="xf-ln" x1="110" y1="102" x2="110" y2="150" marker-end="url(#plc-stop-nc-ah)"/><text x="110" y="168" class="xf-tag" text-anchor="middle">I0.0</text><text x="110" y="186" class="xf-k" text-anchor="middle">= 1 ตอนปกติ</text><line class="xf-ln" x1="220" y1="50" x2="220" y2="65"/><line class="xf-ln" x1="220" y1="87" x2="220" y2="102"/><line class="xf-ln" x1="220" y1="87" x2="209" y2="64"/><line class="xf-dash" x1="214" y1="76" x2="194" y2="76"/><path class="xf-ln" d="M 198 69 L 194 69 L 194 83 L 198 83"/><text x="170" y="80" class="xf-tag" text-anchor="end">-S1</text><text x="227" y="61" class="xf-k">13</text><text x="227" y="98" class="xf-k">14</text><line class="xf-ln" x1="220" y1="102" x2="220" y2="150" marker-end="url(#plc-stop-nc-ah)"/><text x="220" y="168" class="xf-tag" text-anchor="middle">I0.1</text><text x="220" y="186" class="xf-k" text-anchor="middle">= 1 เมื่อกด</text><text x="165" y="214" class="xf-k" text-anchor="middle">STOP (NC)  ·  START (NO)</text><text x="520" y="24" class="xf-h" text-anchor="middle">โปรแกรม (ถูก)</text><line class="xf-ln" x1="340" y1="80" x2="364" y2="80"/><line class="xf-ln" x1="386" y1="80" x2="410" y2="80"/><line class="xf-ln" x1="364" y1="68" x2="364" y2="92"/><line class="xf-ln" x1="386" y1="68" x2="386" y2="92"/><text x="375" y="62" class="xf-tag" text-anchor="middle">I0.0</text><line class="xf-ln" x1="410" y1="80" x2="434" y2="80"/><line class="xf-ln" x1="456" y1="80" x2="480" y2="80"/><line class="xf-ln" x1="434" y1="68" x2="434" y2="92"/><line class="xf-ln" x1="456" y1="68" x2="456" y2="92"/><text x="445" y="62" class="xf-tag" text-anchor="middle">I0.1</text><line class="xf-ln" x1="410" y1="128" x2="434" y2="128"/><line class="xf-ln" x1="456" y1="128" x2="480" y2="128"/><line class="xf-ln" x1="434" y1="116" x2="434" y2="140"/><line class="xf-ln" x1="456" y1="116" x2="456" y2="140"/><text x="445" y="110" class="xf-tag" text-anchor="middle">Q0.0</text><line class="xf-ln" x1="410" y1="80" x2="410" y2="128"/><line class="xf-ln" x1="480" y1="80" x2="480" y2="128"/><line class="xf-ln" x1="480" y1="80" x2="650" y2="80"/><path class="xf-ln" d="M 652 68 A 14 14 0 0 0 652 92 M 668 68 A 14 14 0 0 1 668 92"/><line class="xf-ln" x1="650" y1="80" x2="650" y2="80"/><line class="xf-ln" x1="670" y1="80" x2="700" y2="80"/><text x="660" y="62" class="xf-tag" text-anchor="middle">Q0.0</text><line class="xf-rail" x1="340" y1="50" x2="340" y2="158"/><line class="xf-rail" x1="700" y1="50" x2="700" y2="158"/><text x="520" y="200" class="xf-k" text-anchor="middle">ใช้ NO กับ I0.0 เพราะสัญญาณเป็น 1 ตอนปกติ</text><text x="520" y="222" class="xf-tb" text-anchor="middle">กด STOP หรือสายขาด → I0.0 = 0 → หยุด</text><text x="390" y="268" class="xf-m" text-anchor="middle">ถ้าใช้ปุ่ม STOP แบบ NO: สายขาดแล้วกด STOP ไม่มีผล — อันตราย</text><text x="390" y="288" class="xf-m" text-anchor="middle">IEC 60204-1: คำสั่งหยุดต้องทำงานด้วยการตัดวงจร (de-energisation)</text></svg><!--/FIG--><figcaption>รูป 2 · ข้อผิดพลาดยอดนิยมของผู้เริ่มต้น: “ปุ่ม STOP เป็น NC จึงเขียนเป็นหน้าสัมผัส NC” — ผลคือมอเตอร์ไม่เดินเลย เพราะบิต I0.0 = 1 ทำให้ NC ในโปรแกรมเปิดตลอด</figcaption></figure>
+<div class="tf" id="B6" data-k="latch seal-in plc rung stop wired nc ล็อกตัวเอง plc"><p class="tf-n"><b><span class="fid">B6</span> Motor latch in a PLC</b> รังล็อกตัวเองใน PLC</p>
+        \[ Q0.0 = I0.0_{(\text{STOP, NC})}\cdot(I0.1_{(\text{START})} + Q0.0)\cdot I0.2_{(\text{OL 95-96, NC})} \]</div>
+    <div class="plc-sim" data-preset="dol"><noscript>ต้องเปิด JavaScript</noscript></div>
+    <p>ในซิมูเลเตอร์ อินพุตที่มีกรอบประคือปุ่ม NC: ไฟสีเขียวที่ I0.0 ติดอยู่แล้วโดยไม่ต้องกด ลองกด START แล้ว STOP และกดปุ่มโอเวอร์โหลดเพื่อจำลองการทริป</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="setreset">
+    <h2 id="setreset">SET RESET และขอบสัญญาณ <span class="lv lv-i">กลาง</span></h2>
+    <p>คอยล์ SET (─(S)─) ทำให้บิตเป็น 1 เมื่อรังเป็นจริง และ <b>คงค่าไว้</b> แม้รังจะเป็นเท็จ คอยล์ RESET (─(R)─) ทำให้เป็น 0 ใช้คู่กันแทนวงจรล็อกตัวเอง หน้าสัมผัสขอบขาขึ้น P (rising edge) นำกระแสเพียงหนึ่งสแกนตอนบิตเปลี่ยน 0→1 ขอบขาลง N นำหนึ่งสแกนตอน 1→0 ใช้นับครั้ง สลับสถานะ หรือสั่งงานครั้งเดียวต่อการกด</p>
+<div class="tf" id="B7" data-k="set reset latch priority sr rs เซต รีเซต"><p class="tf-n"><b><span class="fid">B7</span> Set/Reset with reset priority</b> SET/RESET แบบ RESET มาก่อน (รัง R อยู่ล่าง)</p>
+        \[ Q_{k+1} = (S + Q_k)\cdot\overline{R} \]</div>
+<div class="tf" id="B8" data-k="rising edge one shot pulse ขอบขาขึ้น"><p class="tf-n"><b><span class="fid">B8</span> Rising edge (one-shot)</b> ขอบขาขึ้น</p>
+        \[ P(A)_k = A_k\cdot\overline{A_{k-1}} \qquad N(A)_k = \overline{A_k}\cdot A_{k-1} \]</div>
+<div class="wx" id="ex-b-1"><div class="wx-head"><span class="mono">ตัวอย่าง B-1</span><h3>ปุ่มเดียวกดติด กดดับ (toggle / flip-flop)</h3></div>
+<ol class="steps">
+<li><p>สร้างพัลส์หนึ่งสแกน: \(M0.1 = P(I0.0)\)</p></li>
+<li><p>ถ้ายังดับอยู่ให้ติด: \(S\ M0.2 = M0.1\cdot\overline{Q0.1}\) · ถ้าติดอยู่ให้ดับ: \(R\ M0.2 = M0.1\cdot Q0.1\)</p></li>
+<li><p>\(Q0.1 = M0.2\) — สังเกตว่าเงื่อนไขทั้งสองอ่าน Q0.1 ค่าเดิมของสแกนก่อน จึงไม่ติดแล้วดับในสแกนเดียว ลองในซิมูเลเตอร์ตัวอย่าง “SET/RESET และขอบสัญญาณ”</p></li>
+</ol>
+<div class="pv-btns"><button type="button" class="btn btn-ghost btn-sm" data-plc-preset="setreset">เปิดในซิมูเลเตอร์ด้านบน</button></div></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rules">
+    <h2 id="rules">กฎการเขียนที่ป้องกันบั๊ก <span class="lv lv-i">กลาง</span></h2>
+    <ul class="chk">
+      <li><b>คอยล์หนึ่งตัวเขียนที่เดียว</b> — ถ้าเขียนสองรัง รังล่างทับรังบน (double coil)</li>
+      <li>ใช้หน่วยความจำภายใน (M) เป็นตัวกลาง แล้วค่อยเขียนเอาต์พุตจริง (Q) ที่ท้ายโปรแกรม ทำให้ดูแลง่าย</li>
+      <li>ตั้งชื่อสัญลักษณ์ (tag) ทุกบิต เช่น <code>M1_Run</code> <code>PB_Stop_NC</code> ไม่ใช้แอดเดรสเปล่า</li>
+      <li>เขียนคอมเมนต์ทุกรังว่า “ทำไม” ไม่ใช่ “ทำอะไร” (แลดเดอร์บอกอยู่แล้วว่าทำอะไร)</li>
+      <li>เงื่อนไขความปลอดภัย (STOP, OL, E-stop status) วางซ้ายสุดของรัง อ่านเจอก่อน</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

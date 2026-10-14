@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 | Ajarn Mod</title>
+<meta name="description" content="The steps for testing and commissioning a PLC system: pre-energisation checks, point-by-point I/O testing, analog loop checks, the dangers of forcing bits, program backup and version control, stop categories 0, 1 and 2 per IEC 60204-1, emergency stop with a dual-channel safety relay, Performance Level (PL) per ISO 13849-1 and SIL per IEC 62061, light-curtain safety distances per ISO 13855, and a troubleshooting flow for when a machine will not run.">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/en/plc/commissioning-safety/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/en/plc/commissioning-safety/">
+<meta property="og:title" content="PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 | Ajarn Mod">
+<meta property="og:description" content="The steps for testing and commissioning a PLC system: pre-energisation checks, point-by-point I/O testing, analog loop checks, the dangers of forcing bits, program backup and version control, stop categories 0, 1 and 2 per IEC 60204-1, emergency stop with a dual-channel safety relay, Performance Level (PL) per ISO 13849-1 and SIL per IEC 62061, light-curtain safety distances per ISO 13855, and a troubleshooting flow for when a machine will not run.">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-en-plc-commissioning-safety.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 | Ajarn Mod">
+<meta name="twitter:description" content="The steps for testing and commissioning a PLC system: pre-energisation checks, point-by-point I/O testing, analog loop checks, the dangers of forcing bits, program backup and version control, stop categories 0, 1 and 2 per IEC 60204-1, emergency stop with a dual-channel safety relay, Performance Level (PL) per ISO 13849-1 and SIL per IEC 62061, light-curtain safety distances per ISO 13855, and a troubleshooting flow for when a machine will not run.">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-en-plc-commissioning-safety.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="en" href="https://modsengineeringmath.com/learn/en/plc/commissioning-safety/">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/plc/commissioning-safety/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/plc/commissioning-safety/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — latest updates" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/en/plc/commissioning-safety/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/en/plc/commissioning-safety/#article","headline":"PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation","description":"The steps for testing and commissioning a PLC system: pre-energisation checks, point-by-point I/O testing, analog loop checks, the dangers of forcing bits, program backup and version control, stop categories 0, 1 and 2 per IEC 60204-1, emergency stop with a dual-channel safety relay, Performance Level (PL) per ISO 13849-1 and SIL per IEC 62061, light-curtain safety distances per ISO 13855, and a troubleshooting flow for when a machine will not run.","inLanguage":"en","url":"https://modsengineeringmath.com/learn/en/plc/commissioning-safety/","mainEntityOfPage":"https://modsengineeringmath.com/learn/en/plc/commissioning-safety/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Commissioning","Emergency stop","ISO 13849","Functional safety"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/en/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-en-plc-commissioning-safety.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Library","item":"https://modsengineeringmath.com/learn/en/"},{"@type":"ListItem","position":3,"name":"PLC Automation","item":"https://modsengineeringmath.com/learn/en/plc/"},{"@type":"ListItem","position":4,"name":"PLC commissioning, machine safety and troubleshooting: loop checks, forcing, emergency stop, IEC 60204-1, ISO 13849 and documentation","item":"https://modsengineeringmath.com/learn/en/plc/commissioning-safety/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is forcing bits in a PLC dangerous?","acceptedAnswer":{"@type":"Answer","text":"A force sets a bit regardless of the program conditions or the real state of the input. The machine may move when nobody expects it, software interlocks are bypassed, and if the force is forgotten it stays in place until an accident happens. There should be a procedure: get permission, warn everyone in the area, log it, and check that no forces remain before handing over the machine."}},{"@type":"Question","name":"Can I wire the emergency-stop button into the PLC and let the program cut the outputs?","acceptedAnswer":{"@type":"Answer","text":"Not with a standard PLC. An emergency stop needs a reliability level assessed to ISO 13849-1 or IEC 62061, which general-purpose PLCs are not certified for. Use a safety relay or a safety PLC that removes power from the actuators directly, and bring its status into the PLC for display and for sequencing the restart."}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">Skip to content</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>Ajarn Mod · Engineering Mathematics</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="Main menu">
+      <a class="nav-home" href="/" >Home</a>
+      <a href="/learn/" >Library (Thai)</a>
+      <a href="/learn/en/"  lang="en">English</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" aria-current="page">ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" >ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
+          <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+          <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
+        </div>
+      </div>
+      <a href="/#watch" >Videos</a>
+      <a href="/tools/lesson-editor/" >Tools</a>
+      <a href="/about/" >About Ajarn Mod</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="Contents"><details open><summary>Contents</summary><ol><li><a href="#comm">Testing and commissioning procedure<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#stop">Stop categories and emergency stop (IEC 60204-1)<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#pl">Safety levels: PL and SIL<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#trouble">Troubleshooting when the machine will not run<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#docs">Documentation to hand over</a></li><li><a href="#faq">Frequently asked questions</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Commissioning · Safety</li></ol>
+      <nav class="lang-sw" aria-label="Language"><a href="/learn/plc/commissioning-safety/" hreflang="th" lang="th">TH<small>ภาษาไทย</small></a><span aria-current="true" lang="en">EN<small>English</small></span></nav>
+      <nav class="series-nav" aria-label="Pages in PLC Automation"><span class="sn-title mono">PLC Automation</span><div class="sn-list"><a href="/learn/en/plc/"><span class="sn-n">0</span>Overview</a><a href="/learn/en/plc/commissioning-safety/" aria-current="page"><span class="sn-n">9</span>Commissioning &amp; safety</a><a href="/learn/en/plc/plc-lab/"><span class="sn-n">10</span>Ladder simulator</a></div><details class="sn-all"><summary>All parts · 10 pages</summary><div class="sn-part"><span class="sn-pt mono">1 · PLC Basics &amp; Hardware</span><div class="sn-list"><a href="/learn/en/plc/plc-fundamentals/"><span class="sn-n">1</span>What is a PLC · scan</a><a href="/learn/en/plc/io-wiring/"><span class="sn-n">2</span>I/O wiring · PNP/NPN</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · Programming</span><div class="sn-list"><a href="/learn/en/plc/ladder-basics/"><span class="sn-n">3</span>Ladder basics</a><a href="/learn/en/plc/timers-counters/"><span class="sn-n">4</span>Timers &amp; counters</a><a href="/learn/en/plc/iec-languages/"><span class="sn-n">5</span>IEC 61131-3 languages</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · Industrial Applications</span><div class="sn-list"><a href="/learn/en/plc/plc-motor-control/"><span class="sn-n">6</span>Motor control with a PLC</a><a href="/learn/en/plc/sequential-control/"><span class="sn-n">7</span>Sequential control</a><a href="/learn/en/plc/analog-pid-vfd/"><span class="sn-n">8</span>Analog · PID · VFD</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · Commissioning, Safety &amp; Lab</span><div class="sn-list"><a href="/learn/en/plc/commissioning-safety/" aria-current="page"><span class="sn-n">9</span>Commissioning &amp; safety</a><a href="/learn/en/plc/plc-lab/"><span class="sn-n">10</span>Ladder simulator</a></div></div></details></nav>
+      <p class="eyebrow">// Chapter 22.9 · PLC · Commissioning &amp; Safety</p>
+      <h1>PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation</h1>
+      <p class="lede">A program that passes in the simulator is not yet a machine ready for use. Commissioning is when accidents happen most often, because the wiring is incomplete, people are not yet familiar with the machine and the program is being edited live. This page gives a systematic procedure, the safety principles the standards require, and a disciplined way to find faults.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <time datetime="2026-10-14">14 Oct 2026</time></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Test in layers: wiring → supplies → I/O point by point → logic without power → live run</li>
+          <li>Emergency stop = stop category 0 or 1 through safety devices, not through a standard PLC program</li>
+          <li>The required level (PLr) comes from the risk assessment · light-curtain distance <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mi>K</mi><mtext> </mtext><mi>T</mi><mo>+</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">S = K\,T + C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span></span></span></span></li>
+          <li>Every force needs a procedure, and none may remain at handover</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="Contents"><details open><summary>Contents</summary><ol><li><a href="#comm">Testing and commissioning procedure<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#stop">Stop categories and emergency stop (IEC 60204-1)<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#pl">Safety levels: PL and SIL<i class="toc-lv lv-a" aria-hidden="true"></i></a></li><li><a href="#trouble">Troubleshooting when the machine will not run<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#docs">Documentation to hand over</a></li><li><a href="#faq">Frequently asked questions</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="e.g. stop category, pl, sil, safety distance, light curtain" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="comm">
+    <h2 id="comm">Testing and commissioning procedure <span class="lv lv-b">Basic</span></h2>
+    <ol>
+      <li><b>Before power-up:</b> check the wiring against the drawings, PE continuity, power-cable insulation resistance (with electronics disconnected) and that terminals are tight</li>
+      <li><b>Energise section by section:</b> 24 VDC control power first, measure the voltage at every I/O group · power circuit still isolated</li>
+      <li><b>Test inputs one at a time:</b> press the real button / trigger the real sensor in the field, watch the bit change in the software, record it on the I/O check sheet</li>
+      <li><b>Test outputs one at a time:</b> with the power circuit still isolated, command each output (using test mode or a force under procedure) and check the right contactor, valve or lamp operates</li>
+      <li><b>Analog loop check:</b> inject 4 · 12 · 20 mA with a calibrator and read the engineering value in the PLC and on the HMI</li>
+      <li><b>Safety tests:</b> every emergency stop, safety gate and light curtain — check that power is really removed and that reset must be done manually</li>
+      <li><b>Dry logic test:</b> run the whole sequence with the power circuit isolated, simulating sensors</li>
+      <li><b>Live run:</b> one motor at a time, checking direction and current, then the whole sequence, both normal and abnormal cases (pull a sensor, trip an overload)</li>
+      <li><b>Handover:</b> no forces left, program backed up with comments, documentation: I/O list, as-built drawings, drive parameters</li>
+    </ol>
+    <p class="mc-warn"><b>Forcing:</b> before forcing an output that makes the machine move, warn everyone in the area, have someone standing at the emergency stop, and log it. Most software shows a warning symbol while a force is active — check it every time before leaving site.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="stop">
+    <h2 id="stop">Stop categories and emergency stop (IEC 60204-1) <span class="lv lv-i">Intermediate</span></h2>
+<div class="tf" id="K1" data-k="stop category 0 1 2 iec 60204-1"><p class="tf-n"><b><span class="fid">K1</span> Stop categories</b></p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Cat 0: remove power immediately</mtext><mspace width="2em"/><mtext>Cat 1: controlled stop, then remove power</mtext><mspace width="2em"/><mtext>Cat 2: controlled stop, power kept on</mtext></mrow><annotation encoding="application/x-tex">\text{Cat 0: remove power immediately} \qquad \text{Cat 1: controlled stop, then remove power} \qquad \text{Cat 2: controlled stop, power kept on}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Cat 0: remove power immediately</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">Cat 1: controlled stop, then remove power</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">Cat 2: controlled stop, power kept on</span></span></span></span></span></span></div>
+    <p>An emergency stop must be category 0 or 1 only. Category 1 is used when cutting power immediately is more dangerous, e.g. a large centrifuge that must be braked by the drive before power is removed (using a time-delayed safety relay). The emergency-stop button is a red mushroom head on a yellow background, latches when pressed, has positively driven (direct-opening) contacts, and releasing it must not restart the machine by itself.</p>
+    <figure class="xfig"><!--FIG:plc-estop-en--><svg class="xf" viewBox="0 0 780 320" role="img" aria-label="A correct emergency stop: a dual-channel E-stop into a safety relay that cuts the contactor coils directly; the PLC only reads the status"><defs><marker id="plc-estop-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="40" y="60" width="120" height="120" rx="10"/><text x="100" y="52" class="xf-k" text-anchor="middle">E-stop, 2 channels</text><circle class="xf-estopc" cx="100" cy="120" r="34"/><text x="100" y="125" class="xf-h" text-anchor="middle">STOP</text><rect class="xf-boxc" x="260" y="50" width="170" height="180" rx="10"/><text x="345" y="74" class="xf-h" text-anchor="middle">Safety relay</text><text x="345" y="96" class="xf-k" text-anchor="middle">S11-S12 · S21-S22</text><text x="345" y="116" class="xf-k" text-anchor="middle">cross-fault monitoring</text><text x="345" y="136" class="xf-k" text-anchor="middle">manual reset S33-S34</text><text x="345" y="160" class="xf-k" text-anchor="middle">13-14 · 23-24 (NO)</text><text x="345" y="180" class="xf-k" text-anchor="middle">41-42 → PLC (status)</text><line class="xf-ln" x1="160" y1="100" x2="260" y2="100"/><line class="xf-ln" x1="160" y1="140" x2="260" y2="140"/><text x="210" y="94" class="xf-k" text-anchor="middle">CH1</text><text x="210" y="134" class="xf-k" text-anchor="middle">CH2</text><line class="xf-ln" x1="430" y1="150" x2="520" y2="150"/><line class="xf-ln" x1="430" y1="170" x2="520" y2="170"/><rect class="xf-boxa" x="520" y="130" width="60" height="60" rx="6"/><text x="550" y="165" class="xf-k" text-anchor="middle">PLC Q</text><line class="xf-ln" x1="580" y1="160" x2="640" y2="160"/><rect class="xf-coil" x="640" y="140" width="50" height="40" rx="2"/><text x="665" y="165" class="xf-k" text-anchor="middle">-K1</text><text x="570" y="214" class="xf-k" text-anchor="middle">13-14 in series with the PLC output → always cuts the coil</text><line class="xf-ln" x1="430" y1="190" x2="470" y2="190"/><line class="xf-ln" x1="470" y1="190" x2="470" y2="260"/><line class="xf-ln" x1="470" y1="260" x2="520" y2="260"/><text x="528" y="264" class="xf-k">I1.0 status (not the safety path)</text><text x="390" y="306" class="xf-m" text-anchor="middle" textLength="768" lengthAdjust="spacingAndGlyphs">Stop category 0 (IEC 60204-1): remove power immediately · assess the PL to ISO 13849-1 · never make a standard PLC the only E-stop path</text></svg><!--/FIG--><figcaption>Figure 1 · The safety relay monitors both channels and cross-channel shorts; its safety contacts are in series with the PLC output, so it can always cut the coil — the PLC only reads the status</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="pl">
+    <h2 id="pl">Safety levels: PL and SIL <span class="lv lv-a">Advanced</span></h2>
+    <p>ISO 13849-1 assesses risk from three factors: severity of injury (S1 slight / S2 serious), frequency of exposure to the hazard (F1 seldom / F2 frequent) and possibility of avoiding it (P1 possible / P2 scarcely possible). This gives the required level PLr from a to e. The safety function is then designed (category structure B, 1, 2, 3, 4; component lifetime MTTFd; diagnostic coverage DC) so that PL ≥ PLr.</p>
+<div class="tf" id="K2" data-k="performance level pfhd sil mapping dangerous failure rate per hour"><p class="tf-n"><b><span class="fid">K2</span> PL / SIL by dangerous failure rate</b></p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>PL d</mtext><mo>≈</mo><mtext>SIL 2</mtext><mo>:</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup><mo>≤</mo><mi>P</mi><mi>F</mi><msub><mi>H</mi><mi>D</mi></msub><mo>&lt;</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup><mspace width="2em"/><mtext>PL e</mtext><mo>≈</mo><mtext>SIL 3</mtext><mo>:</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><mo>≤</mo><mi>P</mi><mi>F</mi><msub><mi>H</mi><mi>D</mi></msub><mo>&lt;</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\text{PL d} \approx \text{SIL 2}: 10^{-7} \le PFH_D &lt; 10^{-6} \qquad \text{PL e} \approx \text{SIL 3}: 10^{-8} \le PFH_D &lt; 10^{-7}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">PL d</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">SIL 2</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0001em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">7</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">PF</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0813em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">D</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8641em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">6</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">PL e</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">SIL 3</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0001em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">8</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">PF</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0813em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">D</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8641em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">7</span></span></span></span></span></span></span></span></span></span></span></span></span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Example function</th><th>Typical PLr</th><th>Common implementation</th></tr></thead>
+      <tbody>
+        <tr><td>Emergency stop on a general machine</td><td>c–d</td><td>Dual-channel button + safety relay + two contactors in series with feedback</td></tr>
+        <tr><td>Safety gate on a cutting machine / press</td><td>d–e</td><td>Two gate switches or a coded switch + safety PLC</td></tr>
+        <tr><td>Light curtain in front of a press</td><td>d–e</td><td>Type 4 light curtain + mounting distance per K3</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="K3" data-k="safety distance light curtain iso 13855 approach speed mounting"><p class="tf-n"><b><span class="fid">K3</span> Minimum safety distance (ISO 13855)</b></p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>=</mo><mi>K</mi><mtext> </mtext><mi>T</mi><mo>+</mo><mi>C</mi><mspace width="2em"/><mi>K</mi><mo>=</mo><mn>2000</mn><mtext> mm/s (if </mtext><mi>S</mi><mo>≤</mo><mn>500</mn><mtext> mm)</mtext><mo separator="true">,</mo><mtext> </mtext><mn>1600</mn><mtext> mm/s (otherwise)</mtext><mspace width="2em"/><mi>C</mi><mo>=</mo><mn>8</mn><mo stretchy="false">(</mo><mi>d</mi><mo>−</mo><mn>14</mn><mo stretchy="false">)</mo><mtext> mm</mtext><mo separator="true">,</mo><mtext> </mtext><mi>d</mi><mo>≤</mo><mn>40</mn><mtext> mm</mtext></mrow><annotation encoding="application/x-tex">S = K\,T + C \qquad K = 2000\ \text{mm/s (if } S \le 500\ \text{mm)},\ 1600\ \text{mm/s (otherwise)} \qquad C = 8(d - 14)\ \text{mm},\ d \le 40\ \text{mm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:2em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2000</span><span class="mspace"> </span><span class="mord text"><span class="mord">mm/s (if </span></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">500</span><span class="mspace"> </span><span class="mord text"><span class="mord">mm)</span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1600</span><span class="mspace"> </span><span class="mord text"><span class="mord">mm/s (otherwise)</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">8</span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">14</span><span class="mclose">)</span><span class="mspace"> </span><span class="mord text"><span class="mord">mm</span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">40</span><span class="mspace"> </span><span class="mord text"><span class="mord">mm</span></span></span></span></span></span></div>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">Example K-1</span><h3>A 14 mm resolution light curtain with a total stopping time of 120 ms</h3></div>
+<ol class="steps">
+<li><p>Total time T = light-curtain response + safety relay + machine stopping time (measured) = 0.12 s</p></li>
+<li><p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mn>8</mn><mo stretchy="false">(</mo><mn>14</mn><mo>−</mo><mn>14</mn><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">C = 8(14 - 14) = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">8</span><span class="mopen">(</span><span class="mord">14</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">14</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> · <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>2000</mn><mo stretchy="false">(</mo><mn>0.12</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mo>=</mo><mn>240</mn></mrow><annotation encoding="application/x-tex">S = 2000(0.12) + 0 = 240</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2000</span><span class="mopen">(</span><span class="mord">0.12</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">240</span></span></span></span> mm ≤ 500 ✓ so K = 2000 applies</p></li>
+<li><p>Mount the light curtain at least 240 mm from the hazard point (the standard's minimum is 100 mm) and prevent reaching over the top or around the sides</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trouble">
+    <h2 id="trouble">Troubleshooting when the machine will not run <span class="lv lv-i">Intermediate</span></h2>
+    <ol>
+      <li><b>Check the PLC status:</b> RUN/STOP, ERR lamp, battery lamp, event log (diagnostic buffer)</li>
+      <li><b>Check the HMI:</b> alarm messages, the step it is stuck in (if written as a state machine)</li>
+      <li><b>Work back from the output:</b> an output that should be on but is not → open that rung online → find the contact that is “not green” → is it an input or an internal bit?</li>
+      <li><b>If it is an input:</b> look at the module LED → if off, measure the voltage at the terminal → check the sensor / wiring / sensor supply</li>
+      <li><b>If the output bit is 1 but the device does not operate:</b> output LED → output fuse → interposing relay → coil → hard-wired interlocks (auxiliary NC, 95-96, safety relay)</li>
+    </ol>
+    <p class="mc-note">Golden rule: “change one thing at a time and record every change”, especially when editing the program online. Keep a copy before every edit and name the file with the date and the reason.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="docs">
+    <h2 id="docs">Documentation to hand over</h2>
+    <ul class="chk">
+      <li>As-built electrical drawings with the bill of materials</li>
+      <li>I/O list (address, tag name, description, signal type, scaling range)</li>
+      <li>Commented PLC and HMI programs as source files (not just an upload from the PLC), with passwords handed to the owner</li>
+      <li>Parameter settings of every drive and smart device</li>
+      <li>Signed I/O check sheets, loop checks and safety-function test results</li>
+      <li>Operating manual and recovery procedure after an emergency stop</li>
+    </ul>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">Frequently asked questions</h2><details><summary>Why is forcing bits in a PLC dangerous?</summary><p>A force sets a bit regardless of the program conditions or the real state of the input. The machine may move when nobody expects it, software interlocks are bypassed, and if the force is forgotten it stays in place until an accident happens. There should be a procedure: get permission, warn everyone in the area, log it, and check that no forces remain before handing over the machine.</p></details><details><summary>Can I wire the emergency-stop button into the PLC and let the program cut the outputs?</summary><p>Not with a standard PLC. An emergency stop needs a reliability level assessed to ISO 13849-1 or IEC 62061, which general-purpose PLCs are not certified for. Use a safety relay or a safety PLC that removes power from the actuators directly, and bring its status into the PLC for display and for sequencing the restart.</p></details></section>
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <div class="share" aria-label="Share this page">
+  <span class="mono">Share</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fen%2Fplc%2Fcommissioning-safety%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fen%2Fplc%2Fcommissioning-safety%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fen%2Fplc%2Fcommissioning-safety%2F&amp;text=PLC%20Commissioning%2C%20Machine%20Safety%20and%20Troubleshooting%3A%20Loop%20Checks%2C%20Forcing%2C%20Emergency%20Stop%2C%20IEC%2060204-1%2C%20ISO%2013849%20and%20Documentation" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/en/plc/commissioning-safety/" data-share-title="PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation">Copy link</button>
+</div><nav class="pager" aria-label="Next page"><a class="pager-prev" href="/learn/en/plc/analog-pid-vfd/"><span class="mono">← Previous</span><b>Analog, PID and commanding VFDs from a PLC: 4–20 mA scaling, the PID block, constant-pressure pumping and Modbus RTU</b></a><a class="pager-next" href="/learn/en/plc/plc-lab/"><span class="mono">Next →</span><b>In-browser PLC ladder simulator: write a program, watch power flow, timers and counters, with ready-made examples</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>Engineering mathematics you truly understand, not formulas you memorise.</p>
+    </div>
+    <nav aria-label="Site links">
+      <b class="mono">Site</b>
+      <a href="/">Home</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
+      <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
+      <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลทางวิศวกรรม</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
+      <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
+      <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
+      <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงลาปลาซ</a>
+      <a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผัน (Inverse Laplace)</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
+      <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">Lesson editor</a>
+      <a href="/about/">About Ajarn Mod</a>
+    </nav>
+    <nav aria-label="Follow">
+      <b class="mono">Follow</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+</body>
+</html>

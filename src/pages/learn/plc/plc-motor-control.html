@@ -1,0 +1,125 @@
+<!--meta
+{
+  "title": "ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O อินเตอร์ล็อกฮาร์ดไวร์ ตรวจคอนแทกเตอร์ค้าง | อาจารย์มด",
+  "h1": "ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์",
+  "description": "แปลงวงจรคอนแทกเตอร์เป็นโปรแกรม PLC อย่างถูกต้องและปลอดภัย: สิ่งที่ต้องคงไว้ในฮาร์ดแวร์ (หยุดฉุกเฉิน โอเวอร์โหลด อินเตอร์ล็อก K2/K3) รายการ I/O การต่อสาย PLC กับคอยล์คอนแทกเตอร์ แลดเดอร์และ Structured Text สำหรับ DOL กลับทางหมุน และสตาร์-เดลต้าพร้อมช่วงตาย การตรวจคอนแทกเตอร์ค้างด้วยหน้าสัมผัสป้อนกลับ และซิมูเลเตอร์ให้ทดลอง",
+  "lesson": "plc",
+  "sub": "plc-motor-control",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Programmable logic controller", "Motor controller", "Wye-delta starter", "Interlock (engineering)"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "ใช้ PLC แล้วยังต้องมีหน้าสัมผัสช่วยอินเตอร์ล็อกในวงจรคอยล์อีกไหม?", "a": "ต้องมี อินเตอร์ล็อกที่ป้องกันลัดวงจร (K1/K2 กลับทาง K2/K3 สตาร์-เดลต้า) ต้องทำงานได้แม้ PLC เสีย เอาต์พุตทรานซิสเตอร์ลัดค้าง หรือมีคนสั่ง force บิต การใส่หน้าสัมผัส NC ของคอนแทกเตอร์ตรงข้ามอนุกรมกับคอยล์และอินเตอร์ล็อกทางกลจึงยังจำเป็น โปรแกรมเป็นชั้นเพิ่มเติม ไม่ใช่ชั้นเดียว"},
+    {"q": "ต่อโอเวอร์โหลดเข้า PLC อย่างเดียวได้ไหม?", "a": "ทำได้ในทางเทคนิค แต่แนวปฏิบัติที่ดีคือให้ 95-96 อนุกรมกับคอยล์คอนแทกเตอร์โดยตรง (ตัดได้แม้ PLC ค้าง) และนำ 97-98 หรือหน้าสัมผัสช่วยเข้า PLC เพื่อแสดงสถานะและบันทึกเหตุการณ์"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>ควบคุมมอเตอร์ด้วย PLC</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.6 · PLC · Motor Control with a PLC</p>
+      <h1>ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์</h1>
+      <p class="lede">เมื่อย้ายลอจิกจากตู้รีเลย์มาไว้ใน PLC สิ่งที่ได้คือความยืดหยุ่น การแสดงสถานะ และการตรวจจับความผิดปกติ แต่สิ่งที่ต้องไม่เสียไปคือความปลอดภัยของวงจรเดิม หน้านี้แบ่งชัดเจนว่าอะไรอยู่ในซอฟต์แวร์ อะไรต้องอยู่ในฮาร์ดแวร์ และให้โปรแกรมที่ใช้ได้จริงสำหรับวงจรมอเตอร์ทั้งสามแบบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>คงไว้ในฮาร์ดแวร์: หยุดฉุกเฉินผ่านรีเลย์เซฟตี้ · โอเวอร์โหลด 95-96 · อินเตอร์ล็อก NC + กลไก</li>
+          <li>PLC ทำ: ล็อกตัวเอง ลำดับ ไทเมอร์ ตรวจป้อนกลับ แจ้งเตือน นับชั่วโมง</li>
+          <li>ป้อนกลับ: \(\text{Fault} = \text{TON}(\text{Cmd} \oplus \text{FB},\ 0.5\text{–}2\ \text{s})\)</li>
+          <li>สตาร์-เดลต้า: Y ก่อน → K1 → ครบเวลา → Y ปล่อย → ช่วงตาย → Δ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น feedback, interlock, star delta, dead time" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="split">
+    <h2 id="split">แบ่งหน้าที่: ฮาร์ดแวร์กับซอฟต์แวร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>หน้าที่</th><th>ที่ไหน</th><th>เหตุผล</th></tr></thead>
+      <tbody>
+        <tr><td>หยุดฉุกเฉิน</td><td>รีเลย์เซฟตี้/safety PLC ตัดไฟคอยล์ + PLC อ่านสถานะ</td><td>ต้องทำงานแม้ PLC มาตรฐานเสียหรือถูกแก้โปรแกรม</td></tr>
+        <tr><td>โอเวอร์โหลด</td><td>95-96 อนุกรมคอยล์ + 97-98 เข้า PLC</td><td>ตัดได้แม้ PLC ค้าง และแสดงสาเหตุได้</td></tr>
+        <tr><td>อินเตอร์ล็อกกันลัดวงจร</td><td>NC ช่วย + กลไก + ในโปรแกรม</td><td>เอาต์พุตทรานซิสเตอร์ลัดค้างหรือการ force ต้องไม่ทำให้ลัดวงจร</td></tr>
+        <tr><td>ล็อกตัวเอง ลำดับ ไทเมอร์</td><td>โปรแกรม</td><td>แก้ไขง่าย ตั้งค่าจาก HMI</td></tr>
+        <tr><td>ตรวจคอนแทกเตอร์ค้าง/ไม่ดูด</td><td>โปรแกรม + หน้าสัมผัสป้อนกลับ</td><td>ตรวจได้เฉพาะเมื่อมีสมองกล</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dol">
+    <h2 id="dol">DOL ด้วย PLC และการตรวจป้อนกลับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>แอดเดรส</th><th>อุปกรณ์</th><th>ชนิด</th></tr></thead>
+      <tbody>
+        <tr><td>I0.0</td><td>-S0 STOP</td><td>NC (1 = ปกติ)</td></tr>
+        <tr><td>I0.1</td><td>-S1 START</td><td>NO</td></tr>
+        <tr><td>I0.2</td><td>-F2 97-98 หรือ 95-96 ช่วย</td><td>NC (1 = ปกติ)</td></tr>
+        <tr><td>I0.3</td><td>-K1 13-14 ป้อนกลับ</td><td>NO</td></tr>
+        <tr><td>Q0.0</td><td>-K1 คอยล์ (ผ่าน 95-96)</td><td>รีเลย์หรือรีเลย์ต่อกลาง</td></tr>
+        <tr><td>Q0.1 / Q0.2</td><td>ไฟเดิน / ไฟผิดปกติ</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="M1" data-k="motor run command latch plc คำสั่งเดิน"><p class="tf-n"><b><span class="fid">M1</span> Run command</b> คำสั่งเดิน</p>
+        \[ \text{Cmd} = I0.0\cdot I0.2\cdot\overline{\text{Fault}}\cdot(I0.1 + \text{Cmd}) \]</div>
+<div class="tf" id="M2" data-k="feedback discrepancy contactor welded fault timer ป้อนกลับ คอนแทกเตอร์ค้าง"><p class="tf-n"><b><span class="fid">M2</span> Feedback discrepancy</b> ตรวจความไม่ตรงกันของป้อนกลับ</p>
+        \[ \text{Fault} \leftarrow \text{TON}(\text{Cmd} \oplus \text{FB},\ t_{fb}) \qquad t_{fb} \approx 0.5\text{–}2\ \text{s} \]</div>
+    <p>กรณีที่ M2 จับได้: สั่งแล้วไม่ดูด (ฟิวส์คอยล์ขาด คอยล์ขาด 95-96 เปิด) และไม่ได้สั่งแต่ยังดูด (หน้าสัมผัสเชื่อมติด เอาต์พุตค้าง) — กรณีหลังอันตราย ต้องแจ้งเตือนและตัดด้วยอุปกรณ์ต้นทาง</p>
+    <div class="plc-sim" data-preset="dol"><noscript>ต้องเปิด JavaScript</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="fr">
+    <h2 id="fr">กลับทางหมุนด้วย PLC <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="M3" data-k="forward reverse plc interlock software กลับทาง plc"><p class="tf-n"><b><span class="fid">M3</span> Software interlock</b> อินเตอร์ล็อกในโปรแกรม</p>
+        \[ Q_F = \overline{S0}\,\overline{OL}\,(S_F + Q_F)\,\overline{S_R}\,\overline{Q_R}\,\overline{FB_R} \qquad Q_R = \overline{S0}\,\overline{OL}\,(S_R + Q_R)\,\overline{S_F}\,\overline{Q_F}\,\overline{FB_F} \]</div>
+    <p>เพิ่ม \(\overline{FB}\) ของอีกทิศ (ป้อนกลับจากคอนแทกเตอร์จริง) ทำให้โปรแกรมไม่สั่งทิศใหม่จนกว่าคอนแทกเตอร์เดิมปล่อยจริง และนิยมเพิ่มไทเมอร์หน่วงกลับทาง 0.5–2 s ให้มอเตอร์ชะลอ</p>
+    <div class="plc-sim" data-preset="fr"><noscript>ต้องเปิด JavaScript</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="yd">
+    <h2 id="yd">สตาร์-เดลต้าด้วย PLC <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:plc-yd-io--><svg class="xf" viewBox="0 0 780 350" role="img" aria-label="PLC ควบคุมสตาร์-เดลต้า: อินพุต STOP (NC) START โอเวอร์โหลด และหน้าสัมผัสป้อนกลับ เอาต์พุตสั่งคอยล์ K1 K2 K3 โดยยังคงอินเตอร์ล็อก K2/K3 แบบฮาร์ดไวร์"><defs><marker id="plc-yd-io-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxb" x="250" y="40" width="200" height="250" rx="10"/><text x="350" y="30" class="xf-h" text-anchor="middle">PLC</text><line class="xf-rail" x1="30" y1="50" x2="30" y2="270"/><text x="30" y="44" class="xf-k" text-anchor="middle">+24V</text><line class="xf-ln" x1="30" y1="70" x2="250" y2="70"/><circle class="xf-dotk" cx="30" cy="70" r="3.2"/><text x="260" y="74" class="xf-k">I0.0</text><text x="140" y="65" class="xf-k" text-anchor="middle">-S0 STOP (NC)</text><line class="xf-ln" x1="30" y1="106" x2="250" y2="106"/><circle class="xf-dotk" cx="30" cy="106" r="3.2"/><text x="260" y="110" class="xf-k">I0.1</text><text x="140" y="101" class="xf-k" text-anchor="middle">-S1 START (NO)</text><line class="xf-ln" x1="30" y1="142" x2="250" y2="142"/><circle class="xf-dotk" cx="30" cy="142" r="3.2"/><text x="260" y="146" class="xf-k">I0.2</text><text x="140" y="137" class="xf-k" text-anchor="middle">-F2 95-96 (NC)</text><line class="xf-ln" x1="30" y1="178" x2="250" y2="178"/><circle class="xf-dotk" cx="30" cy="178" r="3.2"/><text x="260" y="182" class="xf-k">I0.3</text><text x="140" y="173" class="xf-k" text-anchor="middle">-K1 13-14</text><line class="xf-ln" x1="30" y1="214" x2="250" y2="214"/><circle class="xf-dotk" cx="30" cy="214" r="3.2"/><text x="260" y="218" class="xf-k">I0.4</text><text x="140" y="209" class="xf-k" text-anchor="middle">-K2 13-14</text><line class="xf-ln" x1="30" y1="250" x2="250" y2="250"/><circle class="xf-dotk" cx="30" cy="250" r="3.2"/><text x="260" y="254" class="xf-k">I0.5</text><text x="140" y="245" class="xf-k" text-anchor="middle">-K3 13-14</text><line class="xf-rail" x1="740" y1="70" x2="740" y2="270"/><text x="740" y="286" class="xf-k" text-anchor="middle" textLength="68" lengthAdjust="spacingAndGlyphs">N (230 VAC)</text><text x="440" y="104" class="xf-k" text-anchor="end">Q0.0</text><line class="xf-ln" x1="450" y1="100" x2="560" y2="100"/><line class="xf-ln" x1="560" y1="100" x2="580" y2="100"/><line class="xf-ln" x1="580" y1="100" x2="620" y2="100"/><rect class="xf-coil" x="620" y="87" width="40" height="26" rx="1"/><text x="640" y="128" class="xf-tag" text-anchor="middle">-K1</text><line class="xf-ln" x1="660" y1="100" x2="740" y2="100"/><circle class="xf-dotk" cx="740" cy="100" r="3.2"/><text x="440" y="174" class="xf-k" text-anchor="end">Q0.1</text><line class="xf-ln" x1="450" y1="170" x2="560" y2="170"/><line class="xf-ln" x1="560" y1="158" x2="560" y2="182"/><line class="xf-ln" x1="580" y1="158" x2="580" y2="182"/><line class="xf-ln" x1="556" y1="182" x2="584" y2="158"/><text x="570" y="152" class="xf-k" text-anchor="middle">-K3 21-22</text><line class="xf-ln" x1="580" y1="170" x2="620" y2="170"/><rect class="xf-coil" x="620" y="157" width="40" height="26" rx="1"/><text x="640" y="198" class="xf-tag" text-anchor="middle">-K2 (Y)</text><line class="xf-ln" x1="660" y1="170" x2="740" y2="170"/><circle class="xf-dotk" cx="740" cy="170" r="3.2"/><text x="440" y="244" class="xf-k" text-anchor="end">Q0.2</text><line class="xf-ln" x1="450" y1="240" x2="560" y2="240"/><line class="xf-ln" x1="560" y1="228" x2="560" y2="252"/><line class="xf-ln" x1="580" y1="228" x2="580" y2="252"/><line class="xf-ln" x1="556" y1="252" x2="584" y2="228"/><text x="570" y="222" class="xf-k" text-anchor="middle">-K2 21-22</text><line class="xf-ln" x1="580" y1="240" x2="620" y2="240"/><rect class="xf-coil" x="620" y="227" width="40" height="26" rx="1"/><text x="640" y="268" class="xf-tag" text-anchor="middle">-K3 (Δ)</text><line class="xf-ln" x1="660" y1="240" x2="740" y2="240"/><circle class="xf-dotk" cx="740" cy="240" r="3.2"/><text x="390" y="318" class="xf-tb" text-anchor="middle">อินเตอร์ล็อกในฮาร์ดแวร์ทำงานแม้ PLC เสียหรือถูก Force</text><text x="390" y="340" class="xf-m" text-anchor="middle">ป้อนกลับ K1/K2/K3 ทำให้ PLC ตรวจคอนแทกเตอร์ค้างก่อนสั่งขั้นต่อไป</text></svg><!--/FIG--><figcaption>รูป 1 · เอาต์พุตสั่งคอยล์ผ่านหน้าสัมผัส NC ของคอนแทกเตอร์ตรงข้าม (ฮาร์ดไวร์) · อินพุตรับปุ่ม โอเวอร์โหลด และป้อนกลับทั้งสามตัว</figcaption></figure>
+<div class="tf" id="M4" data-k="star delta plc sequence timer dead time สตาร์เดลต้า plc"><p class="tf-n"><b><span class="fid">M4</span> Star–delta sequence</b> ลำดับสตาร์-เดลต้าในโปรแกรม</p>
+        \[ K_Y = \text{Run}\,\overline{T_Y}\,\overline{K_\Delta} \quad K_1 = \text{Run}\,(K_Y + K_1) \quad K_\Delta = \text{Run}\,\text{TON}(T_Y,\ t_{dead})\,\overline{K_Y}\,\overline{FB_Y} \]</div>
+    <pre class="code"><span class="c">(* Structured Text: star–delta with feedback check *)</span>
+Run := (PB_Start <span class="k">OR</span> Run) <span class="k">AND</span> PB_Stop_NC <span class="k">AND</span> OL_NC <span class="k">AND NOT</span> Fault;
+TY(IN := Run, PT := T#6S);                         <span class="c">// เวลาช่วงสตาร์</span>
+KY    := Run <span class="k">AND NOT</span> TY.Q <span class="k">AND NOT</span> KD;              <span class="c">// K2 สตาร์</span>
+K1    := Run <span class="k">AND</span> (FB_Y <span class="k">OR</span> K1);                     <span class="c">// K1 หลัง เมื่อสตาร์ดูดจริง</span>
+TDead(IN := TY.Q <span class="k">AND NOT</span> FB_Y, PT := T#80MS);    <span class="c">// รอ K2 ปล่อยจริงแล้วนับช่วงตาย</span>
+KD    := Run <span class="k">AND</span> TDead.Q;                            <span class="c">// K3 เดลต้า</span>
+TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <span class="k">XOR</span> FB_Y) <span class="k">OR</span> (KD <span class="k">XOR</span> FB_D), PT := T#1S);
+<span class="k">IF</span> TChk.Q <span class="k">OR</span> (FB_Y <span class="k">AND</span> FB_D) <span class="k">THEN</span> Fault := TRUE; <span class="k">END_IF</span></pre>
+    <p>สังเกต: ช่วงตายเริ่มนับเมื่อ <b>ป้อนกลับ</b> ของ K2 ยืนยันว่าปล่อยแล้ว ไม่ใช่เมื่อสั่งปล่อย — ป้องกันกรณีหน้าสัมผัส K2 ค้าง นี่คือสิ่งที่วงจรรีเลย์ธรรมดาทำไม่ได้ ซิมูเลเตอร์ด้านล่างเป็นรุ่นย่อที่ไม่มีป้อนกลับ</p>
+    <div class="plc-sim" data-preset="yd"><noscript>ต้องเปิด JavaScript</noscript></div>
+<div class="wx" id="ex-m-1"><div class="wx-head"><span class="mono">ตัวอย่าง M-1</span><h3>ทดสอบลำดับในซิมูเลเตอร์และตอบคำถาม</h3></div>
+<ol class="steps">
+<li><p>กด START: บันทึกลำดับที่ Q0.1 (Y) และ Q0.0 (K1) ติด — ทำไม Q0.1 ต้องติดก่อน? (เพื่อให้จุดสตาร์ต่อเสร็จก่อนจ่ายไฟเข้าขดลวด)</p></li>
+<li><p>ดูแถบ ET ของ T1 และ T2: ช่วงที่ Q0.1 ดับแต่ Q0.2 ยังไม่ติดยาวเท่าไร? (80 ms = PT ของ T2)</p></li>
+<li><p>แก้รัง Q0.1 ลบเงื่อนไข <code>!Q0.2</code> แล้วโหลดใหม่ ระบบยังทำงานไหม และทำไมอินเตอร์ล็อกนี้ยังควรอยู่?</p></li>
+</ol></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

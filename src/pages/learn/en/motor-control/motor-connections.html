@@ -1,0 +1,139 @@
+<!--meta
+{
+  "title": "Star and Delta Motor Connections: Terminal Box U1 V1 W1 W2 U2 V2, 230/400 V vs 400/690 V Motors | Mod's Engineering Mathematics",
+  "h1": "Star and Delta Motor Connections: the U1 V1 W1 / W2 U2 V2 Terminal Box, 230/400 V vs 400/690 V Motors and Reversing",
+  "description": "Connect a three-phase motor in star (Y) or delta (Δ) correctly: winding voltage, line versus phase current, placing the copper links in the U1 V1 W1 W2 U2 V2 terminal box to IEC 60034-8, choosing the connection from a 230/400 V or 400/690 V nameplate, which motors can be star–delta started, reversing rotation, and the mistakes that burn motors out.",
+  "lesson": "en/motor-control",
+  "sub": "motor-connections",
+  "nav": "mc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Y-Δ transform", "Three-phase electric power", "Motor terminal box", "IEC 60034-8"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "What happens if a 230/400 V motor is connected in delta on a 400 V supply?", "a": "Each winding gets 400 V although it was designed for 230 V (√3 = 1.73 times too much). The iron saturates and the magnetising current is several times normal even at no load. The overload may trip, or, if it is set wrong, the motor burns out within a short time."},
+    {"q": "Can a 400/690 V motor be connected in star on a 400 V supply?", "a": "It will run, but each winding gets only 230 V and the torque at every speed falls to 1/3. With more than about 1/3 of rated load the slip becomes high, the winding current exceeds its rating and the motor overheats. Star is only acceptable as the starting stage of a star–delta starter."},
+    {"q": "Why are the bottom terminals ordered W2 U2 V2 rather than U2 V2 W2?", "a": "Shifting the bottom row by one position (W2 under U1, U2 under V1, V2 under W1) lets the delta links sit straight up and down: U1–W2, V1–U2, W1–V2. Each link joins the end of one winding to the start of the next, which is exactly the delta connection."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/motor-control/">AC Motor Control</a></li><li>Star · delta connections</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 21.3 · AC Motor Control · Star &amp; Delta Connections</p>
+      <h1>Star and Delta Motor Connections: the U1 V1 W1 / W2 U2 V2 Terminal Box, 230/400 V vs 400/690 V Motors and Reversing</h1>
+      <p class="lede">The mistake that most often burns out a new motor is not in the control circuit — it is connecting the terminals the wrong way. This page explains that star and delta differ in the <b>voltage across each winding</b>, and how to read the nameplate so you choose the right connection for a 400 V system every time.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Y: each winding gets \(V_L/\sqrt3\) = 230 V · Δ: each winding gets \(V_L\) = 400 V</li>
+          <li>A winding is designed for one voltage only — the connection must give it that voltage</li>
+          <li>Nameplate 230/400 V Δ/Y → on 400 V connect <b>Y</b> · nameplate 400/690 V Δ/Y → on 400 V connect <b>Δ</b></li>
+          <li>Star–delta starting is only possible for motors that run in Δ at 400 V (400/690 V nameplate)</li>
+          <li>To reverse rotation: swap any two phases</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="Type e.g. star, delta, phase current, 690" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="box">
+    <h2 id="box">The six-terminal box <span class="lv lv-b">Basic</span></h2>
+    <p>A three-phase motor has three windings, each with a start and an end. Under IEC 60034-8 the starts are called U1 V1 W1 and the ends U2 V2 W2 (older motors use U-X, V-Y, W-Z). In the terminal box the top row is U1 V1 W1 and the bottom row is ordered W2 U2 V2. You select Y or Δ by placing copper links.</p>
+    <figure class="xfig"><!--FIG:mc-terminal-box-en--><svg class="xf" viewBox="0 0 760 330" role="img" aria-label="Six-terminal motor box: link positions for star and for delta, and the resulting winding connection"><defs><marker id="mc-terminal-box-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="40" y="40" width="200" height="130" rx="10"/><circle class="xf-term" cx="80" cy="75" r="11"/><text x="80" y="58" class="xf-k" text-anchor="middle">U1</text><circle class="xf-term" cx="80" cy="135" r="11"/><text x="80" y="162" class="xf-k" text-anchor="middle">W2</text><line class="xf-rail" x1="80" y1="40" x2="80" y2="64"/><text x="80" y="32" class="xf-k" text-anchor="middle">L1</text><circle class="xf-term" cx="140" cy="75" r="11"/><text x="140" y="58" class="xf-k" text-anchor="middle">V1</text><circle class="xf-term" cx="140" cy="135" r="11"/><text x="140" y="162" class="xf-k" text-anchor="middle">U2</text><line class="xf-rail" x1="140" y1="40" x2="140" y2="64"/><text x="140" y="32" class="xf-k" text-anchor="middle">L2</text><circle class="xf-term" cx="200" cy="75" r="11"/><text x="200" y="58" class="xf-k" text-anchor="middle">W1</text><circle class="xf-term" cx="200" cy="135" r="11"/><text x="200" y="162" class="xf-k" text-anchor="middle">V2</text><line class="xf-rail" x1="200" y1="40" x2="200" y2="64"/><text x="200" y="32" class="xf-k" text-anchor="middle">L3</text><rect class="xf-link" x="70" y="129" width="140" height="12" rx="3"/><text x="140" y="195" class="xf-h" text-anchor="middle">Star (Y)</text><rect class="xf-box" x="300" y="40" width="200" height="130" rx="10"/><circle class="xf-term" cx="340" cy="75" r="11"/><text x="340" y="58" class="xf-k" text-anchor="middle">U1</text><circle class="xf-term" cx="340" cy="135" r="11"/><text x="340" y="162" class="xf-k" text-anchor="middle">W2</text><line class="xf-rail" x1="340" y1="40" x2="340" y2="64"/><text x="340" y="32" class="xf-k" text-anchor="middle">L1</text><circle class="xf-term" cx="400" cy="75" r="11"/><text x="400" y="58" class="xf-k" text-anchor="middle">V1</text><circle class="xf-term" cx="400" cy="135" r="11"/><text x="400" y="162" class="xf-k" text-anchor="middle">U2</text><line class="xf-rail" x1="400" y1="40" x2="400" y2="64"/><text x="400" y="32" class="xf-k" text-anchor="middle">L2</text><circle class="xf-term" cx="460" cy="75" r="11"/><text x="460" y="58" class="xf-k" text-anchor="middle">W1</text><circle class="xf-term" cx="460" cy="135" r="11"/><text x="460" y="162" class="xf-k" text-anchor="middle">V2</text><line class="xf-rail" x1="460" y1="40" x2="460" y2="64"/><text x="460" y="32" class="xf-k" text-anchor="middle">L3</text><rect class="xf-link" x="334" y="70" width="12" height="70" rx="3"/><rect class="xf-link" x="394" y="70" width="12" height="70" rx="3"/><rect class="xf-link" x="454" y="70" width="12" height="70" rx="3"/><text x="400" y="195" class="xf-h" text-anchor="middle">Delta (Δ)</text><line class="xf-a" x1="650" y1="95" x2="650" y2="45"/><line class="xf-a" x1="650" y1="95" x2="606.7" y2="120"/><line class="xf-a" x1="650" y1="95" x2="693.3" y2="120"/><text x="650" y="30" class="xf-k" text-anchor="middle" textLength="208" lengthAdjust="spacingAndGlyphs">Y: W2 U2 V2 joined into a star point</text><circle class="xf-dot" cx="650" cy="95" r="4"/><path class="xf-b" d="M650 195 L600 275 L700 275 Z"/><circle class="xf-dot" cx="650" cy="195" r="3.5"/><text x="650" y="187" class="xf-k" text-anchor="middle">L1</text><circle class="xf-dot" cx="600" cy="275" r="3.5"/><text x="600" y="293" class="xf-k" text-anchor="middle">L2</text><circle class="xf-dot" cx="700" cy="275" r="3.5"/><text x="700" y="293" class="xf-k" text-anchor="middle">L3</text><text x="650" y="166" class="xf-k" text-anchor="middle">Δ: windings joined head-to-tail</text><text x="240" y="230" class="xf-m" text-anchor="middle">Y: each winding gets 400/√3 = 230 V</text><text x="240" y="252" class="xf-m" text-anchor="middle">Δ: each winding gets the full 400 V (√3 times more)</text><text x="240" y="280" class="xf-m" text-anchor="middle">Δ links join U1–W2, V1–U2, W1–V2</text><text x="240" y="302" class="xf-tb" text-anchor="middle">Remove all links for a star–delta starter (six leads out)</text></svg><!--/FIG--><figcaption>Figure 1 · Star: one horizontal link joins W2-U2-V2 to form the star point · Delta: three vertical links U1–W2, V1–U2, W1–V2</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="yd">
+    <h2 id="yd">How star and delta differ <span class="lv lv-i">Intermediate</span></h2>
+<div class="tf" id="C1" data-k="star wye connection phase voltage current"><p class="tf-n"><b><span class="fid">C1</span> Star (Y)</b></p>
+        \[ V_{ph} = \frac{V_L}{\sqrt{3}} \qquad I_L = I_{ph} \]</div>
+<div class="tf" id="C2" data-k="delta connection phase voltage current"><p class="tf-n"><b><span class="fid">C2</span> Delta (Δ)</b></p>
+        \[ V_{ph} = V_L \qquad I_L = \sqrt{3}\, I_{ph} \]</div>
+<div class="tf" id="C3" data-k="power same star delta"><p class="tf-n"><b><span class="fid">C3</span> Power in either connection</b></p>
+        \[ P = 3\,V_{ph}\,I_{ph}\cos\varphi = \sqrt{3}\,V_L\,I_L\cos\varphi \]</div>
+<div class="tf" id="C4" data-k="star versus delta same supply one third ratio wrong connection"><p class="tf-n"><b><span class="fid">C4</span> Same windings, same supply: Y vs Δ</b></p>
+        \[ \frac{V_{ph,Y}}{V_{ph,\Delta}} = \frac{1}{\sqrt3} \;\Rightarrow\; \frac{I_{L,Y}}{I_{L,\Delta}} = \frac{1}{3} \qquad \frac{T_Y}{T_\Delta} = \frac{1}{3} \]</div>
+    <p>Where the 1/3 in C4 comes from: the winding voltage falls by √3, so the winding current falls by √3; in Y the line current equals the winding current, while in Δ the line current is √3 times the winding current. Together that gives \(1/(\sqrt3\cdot\sqrt3) = 1/3\). Torque varies with the square of the winding voltage, \((1/\sqrt3)^2 = 1/3\) — this is the basis of the star–delta starter.</p>
+<div class="wx" id="ex-c-1"><div class="wx-head"><span class="mono">Example C-1</span><h3>A 7.5 kW motor, nameplate 400 V Δ 14.6 A, connected in delta at 400 V</h3></div>
+<ol class="steps">
+<li><p>C2: the winding current is \(I_{ph} = 14.6/\sqrt3 = 8.43\) A at a winding voltage of 400 V.</p></li>
+<li><p>If it is connected in Y for starting, each winding gets 230 V: the starting line current is \(95/3 = 32\) A (instead of 95 A) and the starting torque is \(2.2/3 = 0.73\) Tn.</p></li>
+<li><p>The nameplate line 690 V Y 8.4 A confirms this: on a 690 V system in Y, line current = winding current = 8.4 A and each winding still gets 400 V.</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">Choosing the connection from the nameplate <span class="lv lv-b">Basic</span></h2>
+    <p>The nameplate gives two voltages. The lower one is the line voltage when connected in Δ, the higher one the line voltage when connected in Y; both give the windings the same voltage. The working rule: <b>find the line whose voltage matches the supply, and connect as the symbol on that line says.</b></p>
+    <figure class="xfig"><!--FIG:mc-voltage-choice-en--><svg class="xf" viewBox="0 0 760 300" role="img" aria-label="Choosing the connection from the nameplate on a 400 V supply: a 230/400 V motor runs in star, a 400/690 V motor runs in delta and can be star–delta started"><defs><marker id="mc-voltage-choice-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxb" x="270" y="14" width="220" height="42" rx="8"/><text x="380" y="40" class="xf-h" text-anchor="middle">Supply 400 V 50 Hz</text><line class="xf-ln" x1="380" y1="56" x2="380" y2="76"/><line class="xf-ln" x1="160" y1="76" x2="600" y2="76"/><line class="xf-ln" x1="160" y1="76" x2="160" y2="96" marker-end="url(#mc-voltage-choice-en-ah)"/><line class="xf-ln" x1="600" y1="76" x2="600" y2="96" marker-end="url(#mc-voltage-choice-en-ah)"/><rect class="xf-box" x="40" y="98" width="240" height="54" rx="8"/><text x="160" y="120" class="xf-h" text-anchor="middle">Nameplate 230/400 V Δ/Y</text><text x="160" y="140" class="xf-k" text-anchor="middle">(small motors, ≤ ~3 kW)</text><rect class="xf-box" x="480" y="98" width="240" height="54" rx="8"/><text x="600" y="120" class="xf-h" text-anchor="middle">Nameplate 400/690 V Δ/Y</text><text x="600" y="140" class="xf-k" text-anchor="middle">(motors ≥ ~4 kW)</text><line class="xf-ln" x1="160" y1="152" x2="160" y2="176" marker-end="url(#mc-voltage-choice-en-ah)"/><line class="xf-ln" x1="600" y1="152" x2="600" y2="176" marker-end="url(#mc-voltage-choice-en-ah)"/><rect class="xf-boxa" x="40" y="178" width="240" height="54" rx="8"/><text x="160" y="200" class="xf-h" text-anchor="middle">Connect in STAR (Y) on 400 V</text><text x="160" y="220" class="xf-k" text-anchor="middle">Start: DOL · soft starter · VFD</text><rect class="xf-boxa" x="480" y="178" width="240" height="54" rx="8"/><text x="600" y="200" class="xf-h" text-anchor="middle">Connect in DELTA (Δ) on 400 V</text><text x="600" y="220" class="xf-k" text-anchor="middle">Start: DOL · Y–Δ · soft · VFD</text><rect class="xf-boxb" x="40" y="246" width="240" height="44" rx="8"/><text x="160" y="266" class="xf-k" text-anchor="middle">✗ No star–delta: delta on 400 V</text><text x="160" y="282" class="xf-k" text-anchor="middle">puts √3× voltage on windings → burns</text><rect class="xf-boxc" x="480" y="246" width="240" height="44" rx="8"/><text x="600" y="266" class="xf-k" text-anchor="middle">✓ During start Y: 230 V per winding</text><text x="600" y="282" class="xf-k" text-anchor="middle">current and torque fall to 1/3</text><text x="380" y="112" class="xf-k" text-anchor="middle">Rule: plate Δ voltage</text><text x="380" y="128" class="xf-k" text-anchor="middle">= line voltage</text><text x="380" y="144" class="xf-k" text-anchor="middle">→ Y–Δ possible</text></svg><!--/FIG--><figcaption>Figure 2 · Decision chart for a 400 V 50 Hz system</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Nameplate</th><th>Winding voltage</th><th>Connection on 400 V</th><th>Star–delta possible?</th><th>Found on</th></tr></thead>
+      <tbody>
+        <tr><td>230/400 V Δ/Y</td><td>230 V</td><td>Y</td><td>No</td><td>Small motors, about ≤ 3 kW (can run from a single-phase 230 V-input VFD when connected in Δ)</td></tr>
+        <tr><td>400/690 V Δ/Y</td><td>400 V</td><td>Δ</td><td>Yes</td><td>About ≥ 4 kW</td></tr>
+        <tr><td>400 V Y (3 terminals)</td><td>230 V</td><td>Connected at the factory</td><td>No</td><td>Submersible pumps, hermetic compressors</td></tr>
+        <tr><td>380 V Δ (old nameplate)</td><td>380 V</td><td>Δ</td><td>Yes</td><td>Older or imported motors</td></tr>
+      </tbody>
+    </table></div>
+    <p class="mc-warn"><b>Danger:</b> some electricians remember “big motors are connected in delta” and connect a large 230/400 V motor in delta. The windings then get 73 % too much voltage and burn out within minutes. Size is not the criterion — only the nameplate is.</p>
+<div class="wx" id="ex-c-2"><div class="wx-head"><span class="mono">Example C-2</span><h3>A 2.2 kW pump, nameplate 230/400 V Δ/Y 8.0/4.6 A — where can it be used?</h3></div>
+<ol class="steps">
+<li><p>Three-phase 400 V system: connect Y, line current 4.6 A, set the overload to 4.6 A, and start it direct-on-line or with a soft starter.</p></li>
+<li><p>A house with single-phase 230 V: use a VFD with single-phase input and 3-phase 230 V output, and connect the motor in Δ. The drive output current is 8.0 A.</p></li>
+<li><p>Never use star–delta on a 400 V system, because in the Δ stage the windings would get 400 V.</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="wrong">
+    <h2 id="wrong">What happens with a wrong connection <span class="lv lv-i">Intermediate</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Case</th><th>Winding voltage</th><th>Symptoms</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>230/400 V connected Δ at 400 V</td><td>173 %</td><td>Loud hum, no-load current above In, heats quickly</td><td>Insulation breakdown, burn-out</td></tr>
+        <tr><td>400/690 V connected Y at 400 V</td><td>58 %</td><td>Runs normally at no load; under load the speed drops and current is high</td><td>Overload trips, or overheating if set wrong</td></tr>
+        <tr><td>One winding reversed (U1–U2 swapped)</td><td>Unbalanced</td><td>Vibration, noise, very unequal currents</td><td>Overheating, no useful torque</td></tr>
+        <tr><td>Star–delta starter but the links were left in</td><td>—</td><td>Short circuit when the Y or Δ contactor closes</td><td>Breaker trips, arcing in the terminal box</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rotation">
+    <h2 id="rotation">Direction of rotation and reversing <span class="lv lv-b">Basic</span></h2>
+    <p>IEC 60034-8: with L1 L2 L3 connected to U1 V1 W1 in that order, the motor turns clockwise when viewed from the shaft end. Swap any two phases and the phase sequence seen by the motor reverses, the rotating field reverses and the motor turns the other way — the principle of the <a href="/learn/en/motor-control/forward-reverse/">reversing circuit</a>.</p>
+<div class="tf" id="C5" data-k="reverse rotation swap two lines direction"><p class="tf-n"><b><span class="fid">C5</span> Direction of rotation</b></p>
+        \[ L1\!\to\!U1,\ L2\!\to\!V1,\ L3\!\to\!W1 \;\Rightarrow\; \text{CW (viewed from shaft end)} \qquad \text{swap 2 lines} \Rightarrow \text{CCW} \]</div>
+    <p class="mc-note">With star–delta, both the winding starts (U1 V1 W1) and the winding ends (W2 U2 V2) must be swapped consistently. If only one set is swapped, the Y stage turns backwards but the Δ stage is wired wrongly (some windings get the wrong voltage or none at all) and a high current flows at changeover. The correct method is to swap two phases upstream, before they enter the starter.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="check">
+    <h2 id="check">Checks before energising</h2>
+    <ul class="chk">
+      <li>Read both nameplate lines and note the voltage and connection that match the supply</li>
+      <li>Measure the resistance of all three windings with a milliohmmeter (they should differ by no more than about 2 %)</li>
+      <li>Measure winding-to-frame insulation resistance with a 500 V DC megger (details in <a href="/learn/en/motor-control/design-installation/">Design · testing</a>)</li>
+      <li>Tighten terminal nuts to the specified torque, use correctly sized lugs, and seal the terminal box to maintain its IP rating</li>
+      <li>Connect the motor frame earth to the PE terminal in the terminal box</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

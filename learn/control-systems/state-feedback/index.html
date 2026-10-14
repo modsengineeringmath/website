@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=7ca4322c">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/state-feedback/#article","headline":"ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR","description":"ออกแบบตัวควบคุมป้อนกลับสถานะ u = −Kx + N̄r วางขั้ววงปิดด้วยการเทียบสัมประสิทธิ์และสูตร Ackermann เกนอ้างอิง N̄ เพิ่มอินทิเกรเตอร์เพื่อกำจัดความผิดพลาดค้าง ตัวสังเกตสถานะแบบ Luenberger หลักการแยกส่วน ตัวควบคุมที่เหมาะสมที่สุดแบบ LQR สมการริคคาติ และแนวคิดตัวกรองคาลมาน พร้อมตัวอย่างเซอร์โวมอเตอร์ที่ตรวจด้วย python-control","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/state-feedback/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/state-feedback/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Full state feedback","Pole placement","Ackermann's formula","State observer","Luenberger observer","Separation principle","Linear–quadratic regulator","Riccati equation","Kalman filter"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-state-feedback.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR","item":"https://modsengineeringmath.com/learn/control-systems/state-feedback/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ป้อนกลับสถานะต่างจาก PID อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"PID ใช้ความผิดพลาดของเอาต์พุตเดียว ส่วนป้อนกลับสถานะใช้ทุกสถานะ (ตำแหน่ง ความเร็ว กระแส ฯลฯ) จึงวางขั้ววงปิดได้ทุกตัวตามต้องการ ระบบอันดับสองที่ป้อนกลับตำแหน่งและความเร็วคือ PD ในอีกรูปหนึ่ง แต่สำหรับระบบอันดับสูงและหลายอินพุต ป้อนกลับสถานะทรงพลังกว่ามาก"}},{"@type":"Question","name":"ไม่ได้วัดทุกสถานะ จะใช้ป้อนกลับสถานะได้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้ตัวสังเกต (observer) ซึ่งเป็นแบบจำลองที่วิ่งขนานกับระบบจริงในไมโครคอนโทรลเลอร์ แก้ด้วยความต่างระหว่างเอาต์พุตที่วัดกับที่ประมาณ แล้วป้อนกลับสถานะที่ประมาณได้ หลักการแยกส่วนรับประกันว่าออกแบบตัวควบคุมและตัวสังเกตแยกกันได้"}},{"@type":"Question","name":"LQR เลือก Q และ R อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เริ่มจากกฎของไบรสัน (Bryson): Q เป็นทแยงมุม 1/(ค่าสูงสุดที่ยอมรับได้ของสถานะ)² และ R = 1/(ค่าสูงสุดของอินพุต)² แล้วปรับ เพิ่ม Q ทำให้สถานะเข้าเร็วขึ้นแต่ใช้อินพุตมาก เพิ่ม R ประหยัดอินพุตแต่ช้าลง"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -58,6 +58,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
@@ -295,6 +296,35 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
         </div>
       </div>
       <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
@@ -576,7 +606,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7ca4322c" defer></script>
+<script src="/assets/site.js?v=6c2eac95" defer></script>
 
 </body>
 </html>

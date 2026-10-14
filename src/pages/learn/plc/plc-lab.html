@@ -1,0 +1,89 @@
+<!--meta
+{
+  "title": "ซิมูเลเตอร์ PLC แลดเดอร์ในเบราว์เซอร์: เขียนโปรแกรม เห็นกระแสไหล ไทเมอร์ เคาน์เตอร์ ตัวอย่างพร้อมใช้ | อาจารย์มด",
+  "h1": "ซิมูเลเตอร์ PLC แลดเดอร์ในเบราว์เซอร์: เขียนโปรแกรม เห็นกระแสไหล ไทเมอร์ เคาน์เตอร์ และตัวอย่างพร้อมใช้",
+  "description": "ซิมูเลเตอร์ PLC ฟรีภาษาไทย ไม่ต้องติดตั้ง: เขียนโปรแกรมแบบข้อความ (Boolean/ST) แล้วแสดงเป็นแลดเดอร์อัตโนมัติ กดอินพุตปุ่ม NO NC สวิตช์ เห็นกระแสไหลในแต่ละรัง ไทเมอร์ TON TOF TP เคาน์เตอร์ CTU SET RESET ขอบสัญญาณ ปรับเวลาสแกน ตัวอย่าง DOL กลับทางหมุน สตาร์-เดลต้า ไฟกะพริบ ไฟจราจร เติมถังพร้อมโรงงานจำลอง สายพานนับชิ้น และใบงาน 8 ชุด",
+  "lesson": "plc",
+  "sub": "plc-lab",
+  "nav": "plc",
+  "katex": false,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Ladder logic", "Programmable logic controller", "Simulation"],
+  "scripts": ["/assets/plc-sim.js"],
+  "faq": [
+    {"q": "ซิมูเลเตอร์นี้ใช้แทน PLC จริงได้ไหม?", "a": "ใช้ฝึกตรรกะ ลำดับการสแกน ไทเมอร์ และเคาน์เตอร์ได้ดี แต่ไม่ได้จำลองฮาร์ดแวร์ การสื่อสาร หรือคำสั่งเฉพาะยี่ห้อ เมื่อเข้าใจแล้วให้ฝึกต่อกับซอฟต์แวร์ของผู้ผลิตที่มีซิมูเลเตอร์ของตัวเอง หรือกับ PLC จริงในห้องแล็บ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>ซิมูเลเตอร์แลดเดอร์</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.10 · PLC · Ladder Simulator</p>
+      <h1>ซิมูเลเตอร์ PLC แลดเดอร์ในเบราว์เซอร์: เขียนโปรแกรม เห็นกระแสไหล ไทเมอร์ เคาน์เตอร์ และตัวอย่างพร้อมใช้</h1>
+      <p class="lede">เปิดหน้านี้แล้วเริ่มเขียน PLC ได้ทันที เลือกตัวอย่างจากเมนู กดอินพุตทางซ้าย ดูเส้นสีเขียวที่บอกว่ากระแสไหลถึงตรงไหน แล้วเปิด “แก้ไขโปรแกรม” เพื่อเขียนรังของคุณเอง โปรแกรมจะถูกวาดเป็นแลดเดอร์ให้อัตโนมัติ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">ซิมูเลเตอร์</h2>
+    <div class="plc-sim" id="plcLab" data-preset="dol"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="dol" data-plc-target="plcLab">DOL</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="fr" data-plc-target="plcLab">กลับทาง</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="yd" data-plc-target="plcLab">สตาร์-เดลต้า</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="flasher" data-plc-target="plcLab">ไฟกะพริบ</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="traffic" data-plc-target="plcLab">ไฟจราจร</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="tank" data-plc-target="plcLab">เติมถัง</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="counter" data-plc-target="plcLab">นับชิ้นงาน</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="setreset" data-plc-target="plcLab">SET/RESET</button>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="syntax">
+    <h2 id="syntax">ไวยากรณ์ของโปรแกรม</h2>
+    <p>หนึ่งบรรทัดคือหนึ่งรัง เขียนเป็นสมการบูลีนคล้าย Structured Text ข้อความหลัง <code>#</code> หรือ <code>//</code> เป็นคอมเมนต์ (แสดงข้างรัง)</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เขียน</th><th>ความหมาย</th><th>ในแลดเดอร์</th></tr></thead>
+      <tbody>
+        <tr><td><code>Q0.0 = I0.1 &amp; I0.2</code></td><td>AND</td><td>หน้าสัมผัสอนุกรม → คอยล์</td></tr>
+        <tr><td><code>Q0.0 = I0.1 | Q0.0</code></td><td>OR</td><td>หน้าสัมผัสขนาน</td></tr>
+        <tr><td><code>!I0.2</code></td><td>NOT</td><td>หน้าสัมผัส NC</td></tr>
+        <tr><td><code>S Q0.0 = …</code> / <code>R Q0.0 = …</code></td><td>SET / RESET</td><td>คอยล์ (S) / (R)</td></tr>
+        <tr><td><code>P(I0.1)</code> / <code>N(I0.1)</code></td><td>ขอบขาขึ้น / ขาลง</td><td>หน้าสัมผัสมีตัว P / N</td></tr>
+        <tr><td><code>T1 = TON(I0.0, 5s)</code></td><td>ไทเมอร์ TON TOF TP เวลาเป็น s หรือ ms</td><td>บล็อก TON T1 · ใช้ <code>T1</code> เป็นหน้าสัมผัส Q</td></tr>
+        <tr><td><code>C1 = CTU(I0.2, I0.3, 6)</code></td><td>เคาน์เตอร์นับขึ้น (นับ, รีเซ็ต, PV)</td><td>บล็อก CTU C1 · ใช้ <code>C1</code> เป็นหน้าสัมผัส Q</td></tr>
+      </tbody>
+    </table></div>
+    <p>ตัวแปร: <code>I0.0–I1.7</code> อินพุต (เขียนไม่ได้) · <code>Q0.0–Q1.7</code> เอาต์พุต · <code>M0.0–M9.7</code> หน่วยความจำ · <code>T1…</code> <code>C1…</code> · <code>TRUE</code> <code>FALSE</code> · ใช้ <code>AND OR NOT</code> แทน <code>&amp; | !</code> ได้ · NOT หน้าวงเล็บจะถูกกระจายด้วยทฤษฎีเดอมอร์แกนก่อนวาด</p>
+    <p>ปุ่มที่มีกรอบประเป็นอุปกรณ์ต่อแบบ NC: อินพุตเป็น 1 เมื่อไม่ได้กด · อินพุตจาก “โรงงานจำลอง” (ระดับน้ำ เซนเซอร์นับชิ้น) กดไม่ได้ เปลี่ยนตามสภาพจำลอง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ws">
+    <h2 id="ws">ใบงาน 8 ชุด</h2>
+    <div class="mc-grid">
+      <div class="mc-card"><h3>1 · ล็อกตัวเอง</h3><p>ตัวอย่าง DOL: ลบ <code>| Q0.0</code> ออกแล้วโหลด อธิบายผล จากนั้นเปลี่ยน <code>I0.0</code> เป็น <code>!I0.0</code> แล้วอธิบายว่าทำไมมอเตอร์ไม่เดินเลย</p></div>
+      <div class="mc-card"><h3>2 · ควบคุมสองจุด</h3><p>เพิ่มปุ่ม STOP2 (I0.3) และ START2 (I0.4) ให้ DOL ตามกฎ STOP อนุกรม START ขนาน (อินพุตใหม่ในซิมูเลเตอร์เป็นปุ่ม NO จึงเขียน STOP2 เป็น <code>!I0.3</code>)</p></div>
+      <div class="mc-card"><h3>3 · อินเตอร์ล็อก</h3><p>ตัวอย่างกลับทาง: กด FWD และ REV พร้อมกัน (สองนิ้ว) Q ตัวไหนติด ลบ <code>&amp; !Q0.1</code> ออกแล้วลองใหม่ อธิบายความเสี่ยง</p></div>
+      <div class="mc-card"><h3>4 · ช่วงตาย</h3><p>ตัวอย่างสตาร์-เดลต้า: เปลี่ยน T2 เป็น 0ms สังเกตโรงงานจำลองตอนเปลี่ยนจังหวะ จากนั้นลบ <code>&amp; !Q0.1</code> ในรัง Q0.2</p></div>
+      <div class="mc-card"><h3>5 · เวลาสแกน</h3><p>ตัวอย่างนับชิ้นงาน: เพิ่มเวลาสแกนเป็น 200 ms เคาน์เตอร์ยังนับครบไหม เทียบกับสูตร <a href="/learn/plc/plc-fundamentals/#F4">F4</a></p></div>
+      <div class="mc-card"><h3>6 · ไฟกะพริบ</h3><p>แก้ให้ติด 0.2 s ดับ 0.8 s แล้วทำไฟกะพริบสองดวงสลับกัน (Q0.0 และ Q0.1)</p></div>
+      <div class="mc-card"><h3>7 · ไฟจราจรกลางคืน</h3><p>เพิ่มสวิตช์ I0.1 “โหมดกลางคืน” ที่ทำให้ไฟเหลืองทั้งสองทิศกะพริบ และไฟอื่นดับ</p></div>
+      <div class="mc-card"><h3>8 · เติมถังพร้อมเตือน</h3><p>เพิ่มไทเมอร์เฝ้า: ถ้าปั๊มเดินนานเกิน 20 s แต่ยังไม่ถึง LH ให้หยุดปั๊มและติดไฟเตือน Q0.3 จนกด RESET (I0.5)</p></div>
+    </div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

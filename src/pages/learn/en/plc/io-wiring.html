@@ -1,0 +1,137 @@
+<!--meta
+{
+  "title": "PLC I/O Wiring: Sinking, Sourcing, PNP/NPN 2- and 3-Wire Sensors, Relay and Transistor Outputs, 24 VDC | Mod's Engineering Mathematics",
+  "h1": "PLC Input/Output Wiring: Sinking and Sourcing, PNP/NPN Sensors, Relay and Transistor Outputs, Inductive Loads and the 24 VDC Supply",
+  "description": "Wire PLC I/O correctly every time: 24 VDC Type 1, 2 and 3 inputs to IEC 61131-2, sinking and sourcing inputs, 3-wire PNP and NPN sensors with brown, black and blue wire colours, 2-wire sensors and leakage current, relay, transistor and triac outputs, flyback diodes, RC snubbers, interposing relays, 4–20 mA analog signals, shielding, earthing the 0 V, and sizing the power supply.",
+  "lesson": "en/plc",
+  "sub": "io-wiring",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Sinking and sourcing", "Proximity sensor", "Flyback diode", "IEC 61131-2"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "Which type of input does a PNP sensor connect to?", "a": "A PNP sensor puts +24 V out on its signal wire (it is a source, i.e. sourcing), so it must connect to an input that takes current in and returns it to 0 V (a sinking input). In practice, on a PLC with a common COM terminal, connect the COM of that input group to 0 V. An NPN sensor pulls the signal down to 0 V, so its group COM must go to +24 V."},
+    {"q": "Why does a 2-wire sensor make an input stay on?", "a": "A 2-wire sensor needs current to power itself even in the OFF state (a leakage current of 0.5–1.5 mA). If this current exceeds the maximum OFF current the input accepts, the PLC reads the input as permanently ON. Use a Type 3 input, or fit a bleeder resistor in parallel with the input as the manual specifies."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>I/O wiring · PNP/NPN</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.2 · PLC · I/O Wiring</p>
+      <h1>PLC Input/Output Wiring: Sinking and Sourcing, PNP/NPN Sensors, Relay and Transistor Outputs, Inductive Loads and the 24 VDC Supply</h1>
+      <p class="lede">A correct program is worthless if the inputs read wrong or the outputs burn out. This page explains wiring by the direction of current, not by memorising rules. Once you understand “who supplies and who receives”, sinking versus sourcing and PNP versus NPN will never confuse you again.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>PNP supplies +24 V → use a sinking input (COM → 0 V) · NPN pulls down to 0 V → use a sourcing input (COM → +24 V)</li>
+          <li>3-wire sensor: brown +24 V · blue 0 V · black signal</li>
+          <li>Relay output: AC or DC, slow, wears out · transistor: DC only, fast, no wear</li>
+          <li>DC coils get a diode · AC coils get an RC snubber or varistor · large loads go through an interposing relay</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="Type e.g. input current, type 3, leakage, flyback, power supply" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="inputs">
+    <h2 id="inputs">24 VDC inputs: sinking and sourcing <span class="lv lv-b">Basic</span></h2>
+    <p>Inside a digital input is an optocoupler in series with a resistor; current can flow through its LED in one direction only. The names sinking and sourcing describe the direction of current <b>at the input terminal</b>: a sinking input “receives” current (an external device must supply +24 V to it), while a sourcing input “supplies” current out (the external device must pull it down to 0 V). Many modern PLCs can be wired either way, depending on which supply terminal the group's COM is connected to.</p>
+    <figure class="xfig"><!--FIG:plc-sink-source-en--><svg class="xf" viewBox="0 0 780 320" role="img" aria-label="Sinking PLC input (current flows in, use PNP sensors) and sourcing input (current flows out, use NPN sensors) with current direction"><defs><marker id="plc-sink-source-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="200" y="22" class="xf-h" text-anchor="middle">Sinking input + PNP sensor</text><line class="xf-rail" x1="30" y1="50" x2="380" y2="50"/><text x="28" y="54" class="xf-k" text-anchor="end" textLength="22" lengthAdjust="spacingAndGlyphs">+24V</text><line class="xf-pe" x1="30" y1="280" x2="380" y2="280"/><text x="28" y="284" class="xf-k" text-anchor="end">0V</text><rect class="xf-boxa" x="50" y="100" width="110" height="120" rx="8"/><text x="105" y="92" class="xf-h" text-anchor="middle">PNP</text><text x="105" y="124" class="xf-k" text-anchor="middle">Brown +</text><text x="105" y="160" class="xf-k" text-anchor="middle">Black = signal</text><text x="105" y="196" class="xf-k" text-anchor="middle">Blue −</text><line class="xf-ln" x1="70" y1="50" x2="70" y2="100"/><line class="xf-ln" x1="70" y1="220" x2="70" y2="280"/><rect class="xf-boxb" x="250" y="100" width="120" height="140" rx="8"/><text x="310" y="92" class="xf-h" text-anchor="middle">PLC DI</text><line class="xf-a" x1="160" y1="160" x2="250" y2="160" marker-end="url(#plc-sink-source-en-ah)"/><text x="205" y="152" class="xf-ta" text-anchor="middle">I</text><text x="270" y="164" class="xf-k">I0.0</text><path class="xf-ln" d="M 320 150 l 0 20 m -8 -10 l 16 0"/><rect class="xf-box" x="314" y="186" width="12" height="26" rx="1"/><line class="xf-ln" x1="320" y1="212" x2="320" y2="230"/><line class="xf-ln" x1="320" y1="230" x2="350" y2="230"/><line class="xf-ln" x1="350" y1="230" x2="350" y2="280"/><text x="344" y="262" class="xf-k" text-anchor="end">COM→0V</text><text x="205" y="306" class="xf-m" text-anchor="middle">Sensor 'sources' +24 V into the input</text><text x="590" y="22" class="xf-h" text-anchor="middle">Sourcing input + NPN sensor</text><line class="xf-rail" x1="420" y1="50" x2="770" y2="50"/><text x="418" y="54" class="xf-k" text-anchor="end">+24V</text><line class="xf-pe" x1="420" y1="280" x2="770" y2="280"/><text x="418" y="284" class="xf-k" text-anchor="end">0V</text><rect class="xf-boxa" x="440" y="100" width="110" height="120" rx="8"/><text x="495" y="92" class="xf-h" text-anchor="middle">NPN</text><text x="495" y="124" class="xf-k" text-anchor="middle">Brown +</text><text x="495" y="160" class="xf-k" text-anchor="middle">Black = signal</text><text x="495" y="196" class="xf-k" text-anchor="middle">Blue −</text><line class="xf-ln" x1="460" y1="50" x2="460" y2="100"/><line class="xf-ln" x1="460" y1="220" x2="460" y2="280"/><rect class="xf-boxb" x="640" y="100" width="120" height="140" rx="8"/><text x="700" y="92" class="xf-h" text-anchor="middle">PLC DI</text><line class="xf-a" x1="550" y1="160" x2="640" y2="160" marker-start="url(#plc-sink-source-en-ah)"/><text x="595" y="152" class="xf-ta" text-anchor="middle">I</text><text x="660" y="164" class="xf-k">I0.0</text><path class="xf-ln" d="M 710 150 l 0 20 m -8 -10 l 16 0"/><rect class="xf-box" x="704" y="186" width="12" height="26" rx="1"/><line class="xf-ln" x1="710" y1="212" x2="710" y2="230"/><line class="xf-ln" x1="710" y1="230" x2="740" y2="230"/><line class="xf-ln" x1="740" y1="230" x2="740" y2="50"/><text x="734" y="120" class="xf-k" text-anchor="end">COM→+24V</text><text x="595" y="306" class="xf-m" text-anchor="middle">Sensor 'sinks' the input to 0 V</text></svg><!--/FIG--><figcaption>Figure 1 · The arrows show the current direction: a PNP sensor “pushes” current from +24 V into the input · an NPN sensor “pulls” current from the input down to 0 V</figcaption></figure>
+<div class="tf" id="W1" data-k="input current optocoupler resistor"><p class="tf-n"><b><span class="fid">W1</span> Input current</b></p>
+        \[ I_{in} \approx \frac{V - V_{LED}}{R_{in}} \approx \frac{24 - 1.2}{4.7\ \text{k}\Omega} \approx 5\ \text{mA} \]</div>
+    <div class="table-wrap"><table>
+      <caption>24 VDC input types to IEC 61131-2 (approximate values — check the PLC manual)</caption>
+      <thead><tr><th>Type</th><th>ON</th><th>OFF</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td>Type 1</td><td>≥ 15 V and ≥ 2 mA</td><td>≤ 5 V or ≤ 0.5 mA</td><td>Contacts, switches, 3-wire sensors</td></tr>
+        <tr><td>Type 2</td><td>≥ 11 V and ≥ 6 mA</td><td>≤ 5 V or ≤ 2 mA</td><td>High-current devices (rare)</td></tr>
+        <tr><td>Type 3</td><td>≥ 11 V and ≥ 2 mA</td><td>≤ 5 V or ≤ 1.5 mA</td><td>2-wire sensors (high leakage) and general use</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="W2" data-k="two wire sensor leakage off current bleeder resistor"><p class="tf-n"><b><span class="fid">W2</span> Two-wire sensor compatibility</b></p>
+        \[ I_{leak,sensor} \le I_{OFF,max} \qquad V_{drop,sensor} \le 24 - V_{ON,min} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sensors">
+    <h2 id="sensors">3-wire sensors and wire colours <span class="lv lv-b">Basic</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Wire (IEC 60947-5-2)</th><th>Function</th><th>PNP</th><th>NPN</th></tr></thead>
+      <tbody>
+        <tr><td>Brown (BN)</td><td>+24 V</td><td>+24 V</td><td>+24 V</td></tr>
+        <tr><td>Blue (BU)</td><td>0 V</td><td>0 V</td><td>0 V</td></tr>
+        <tr><td>Black (BK)</td><td>NO signal</td><td>Active = +24 V</td><td>Active = 0 V</td></tr>
+        <tr><td>White (WH)</td><td>NC signal (4-wire models)</td><td>Inverted</td><td>Inverted</td></tr>
+      </tbody>
+    </table></div>
+    <p>In Asia you will meet both PNP (common on European machines) and NPN (common on older Japanese machines). <b>Spare parts must match the type.</b> Connecting the wrong sensor type does not cause immediate damage, but the input will not work or will read inverted.</p>
+<div class="wx" id="ex-w-1"><div class="wx-head"><span class="mono">Example W-1</span><h3>Replacing an NPN sensor with a PNP one on a machine whose input COM is wired to +24 V</h3></div>
+<ol class="steps">
+<li><p>The input group is currently sourcing (COM → +24 V), so it works only with NPN sensors.</p></li>
+<li><p>If the whole group is changed to PNP: move the group COM to 0 V and check that no NPN devices remain in that group.</p></li>
+<li><p>If only one sensor is changed and the COM cannot be moved: buy an NPN sensor as before, or use a relay or signal-converter module.</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="outputs">
+    <h2 id="outputs">Outputs: relay, transistor, triac <span class="lv lv-i">Intermediate</span></h2>
+    <figure class="xfig"><!--FIG:plc-outputs-en--><svg class="xf" viewBox="0 0 780 290" role="img" aria-label="PLC outputs: relay outputs switch AC or DC but are slow and wear; transistor (PNP sourcing) outputs are fast but DC only; fit a diode across DC coils and an RC snubber across AC coils"><defs><marker id="plc-outputs-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="190" y="24" class="xf-h" text-anchor="middle">Relay output → 230 VAC contactor coil</text><rect class="xf-boxb" x="30" y="50" width="120" height="180" rx="8"/><text x="90" y="70" class="xf-k" text-anchor="middle">PLC DO</text><line class="xf-ln" x1="90" y1="100" x2="90" y2="115"/><line class="xf-ln" x1="90" y1="137" x2="90" y2="152"/><line class="xf-ln" x1="90" y1="137" x2="79" y2="114"/><text x="110" y="128" class="xf-k">Q0.0</text><line class="xf-ln" x1="90" y1="152" x2="90" y2="200"/><text x="70" y="216" class="xf-k" text-anchor="middle">COM</text><line class="xf-ln" x1="90" y1="100" x2="90" y2="80"/><line class="xf-ln" x1="90" y1="80" x2="240" y2="80"/><line class="xf-ln" x1="240" y1="80" x2="240" y2="93"/><line class="xf-ln" x1="240" y1="119" x2="240" y2="132"/><rect class="xf-coil" x="225" y="93" width="30" height="26" rx="1"/><text x="204" y="110" class="xf-tag" text-anchor="end">-K1</text><text x="247" y="91" class="xf-k">A1</text><text x="247" y="128" class="xf-k">A2</text><line class="xf-ln" x1="240" y1="132" x2="240" y2="200"/><line class="xf-ln" x1="90" y1="200" x2="240" y2="200"/><rect class="xf-box" x="270" y="112" width="30" height="16" rx="2"/><text x="285" y="145" class="xf-k" text-anchor="middle">RC</text><line class="xf-ln" x1="240" y1="104" x2="285" y2="104"/><line class="xf-ln" x1="285" y1="104" x2="285" y2="112"/><line class="xf-ln" x1="285" y1="128" x2="285" y2="156"/><line class="xf-ln" x1="240" y1="156" x2="285" y2="156"/><text x="190" y="250" class="xf-k" text-anchor="middle">230 VAC L → COM · N → A2 · ~2 A per point max</text><text x="190" y="268" class="xf-k" text-anchor="middle">Electrical life ~10⁵–10⁶ operations</text><text x="590" y="24" class="xf-h" text-anchor="middle">PNP transistor output → 24 VDC relay/solenoid</text><rect class="xf-boxb" x="430" y="50" width="120" height="180" rx="8"/><text x="490" y="70" class="xf-k" text-anchor="middle">PLC DO</text><circle class="xf-box" cx="490" cy="125" r="18"/><line class="xf-ln" x1="482" y1="112" x2="482" y2="138"/><line class="xf-ln" x1="482" y1="120" x2="496" y2="110"/><line class="xf-ln" x1="482" y1="130" x2="496" y2="140"/><text x="515" y="130" class="xf-k">Q0.1</text><line class="xf-ln" x1="490" y1="80" x2="490" y2="107"/><line class="xf-ln" x1="490" y1="143" x2="490" y2="165"/><line class="xf-ln" x1="490" y1="165" x2="640" y2="165"/><line class="xf-ln" x1="490" y1="80" x2="490" y2="50"/><text x="490" y="44" class="xf-k" text-anchor="middle">+24V</text><line class="xf-ln" x1="640" y1="165" x2="640" y2="178"/><line class="xf-ln" x1="640" y1="204" x2="640" y2="217"/><rect class="xf-coil" x="625" y="178" width="30" height="26" rx="1"/><text x="604" y="195" class="xf-tag" text-anchor="end">-K2</text><text x="647" y="176" class="xf-k">A1</text><text x="647" y="213" class="xf-k">A2</text><line class="xf-ln" x1="640" y1="217" x2="640" y2="240"/><line class="xf-ln" x1="640" y1="240" x2="470" y2="240"/><text x="462" y="244" class="xf-k" text-anchor="end">0V</text><path class="xf-ln" d="M 690 182 l -8 14 l 16 0 z"/><line class="xf-ln" x1="682" y1="182" x2="698" y2="182"/><line class="xf-ln" x1="640" y1="175" x2="690" y2="175"/><line class="xf-ln" x1="690" y1="175" x2="690" y2="182"/><line class="xf-ln" x1="690" y1="196" x2="690" y2="207"/><line class="xf-ln" x1="640" y1="207" x2="690" y2="207"/><text x="704" y="196" class="xf-k">Diode</text><text x="590" y="268" class="xf-k" text-anchor="middle">Fast (&lt; 1 ms), no wear · DC only · ~0.5 A per point</text></svg><!--/FIG--><figcaption>Figure 2 · A 230 VAC contactor coil driven from a relay output with an RC snubber · a 24 VDC relay driven from a PNP transistor output with a diode</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Type</th><th>Load</th><th>Speed</th><th>Life</th><th>Cautions</th></tr></thead>
+      <tbody>
+        <tr><td>Relay</td><td>AC/DC ≤ 2 A per point</td><td>~10 ms</td><td>10⁵–10⁶ operations (less with inductive loads)</td><td>Unsuitable for frequent switching (PWM, fast-flashing lamps)</td></tr>
+        <tr><td>Transistor (PNP/NPN)</td><td>DC 0.3–0.5 A per point</td><td>&lt; 1 ms (µs on fast models)</td><td>No wear</td><td>DC only; can fail on a short circuit (some models are self-protected)</td></tr>
+        <tr><td>Triac (SSR)</td><td>AC 0.5–1 A</td><td>Half a cycle</td><td>No wear</td><td>Off-state leakage may stop a small coil from dropping out</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="W3" data-k="inductive kick flyback diode voltage spike"><p class="tf-n"><b><span class="fid">W3</span> Inductive kick</b></p>
+        \[ v_L = L\frac{di}{dt} \qquad \text{no suppressor: several hundred volts} \qquad \text{with a diode: } V_{clamp} \approx V_{supply} + 0.7\ \text{V} \]</div>
+    <p>A diode clamps the voltage best but makes the coil drop out more slowly (the current circulates for longer). If a fast release is needed, use a Zener diode or a varistor. AC coils use an RC snubber or a varistor; modern contactors accept plug-in surge-suppressor modules on A1–A2.</p>
+    <h3>Interposing relays</h3>
+    <p>When a load exceeds the output rating, needs a different voltage, or the PLC circuit must be isolated from the field, use a small 24 VDC DIN-rail relay as an intermediary. If it fails you replace a relay costing a few dollars instead of an output module.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="analog">
+    <h2 id="analog">Analog signal wiring <span class="lv lv-i">Intermediate</span></h2>
+    <ul>
+      <li>Use shielded twisted-pair cable and earth the shield at the panel end only (unless the manual specifies both ends with an equipotential bonding conductor).</li>
+      <li>4–20 mA tolerates noise and long cable runs better than 0–10 V and can detect a broken wire (below 3.6 mA) — details in <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 (Thai)</a>.</li>
+      <li>A 2-wire transmitter is wired as a loop: +24 V → transmitter → current input → 0 V. Check the loop voltage budget as well.</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="psu">
+    <h2 id="psu">The 24 VDC power supply and earthing <span class="lv lv-i">Intermediate</span></h2>
+<div class="tf" id="W4" data-k="power supply sizing 24 v current margin"><p class="tf-n"><b><span class="fid">W4</span> 24 VDC supply sizing</b></p>
+        \[ I_{PSU} \ge 1.25\left(I_{CPU} + \sum I_{in} + \sum I_{sensor} + \sum I_{out\,(\text{simultaneous})}\right) \]</div>
+<div class="wx" id="ex-w-2"><div class="wx-head"><span class="mono">Example W-2</span><h3>CPU 0.4 A · 24 inputs × 5 mA · 10 sensors × 20 mA · 8 interposing relays × 25 mA · 4 solenoids × 0.3 A</h3></div>
+<ol class="steps">
+<li><p>Total \(0.4 + 0.12 + 0.2 + 0.2 + 1.2 = 2.12\) A</p></li>
+<li><p>W4: \(1.25 \times 2.12 = 2.65\) A → a 24 V 5 A power supply (or put the solenoids on a separate supply so their inrush current does not disturb the CPU)</p></li>
+</ol></div>
+    <p>IEC 60204-1 recommends that the 24 VDC circuit be a PELV system with the 0 V terminal earthed at a single point in the panel, so that an earth fault on a control wire blows a fuse instead of making a device operate unintentionally. Fit separate 24 V fuses or circuit-breakers for the input group, the output group and the CPU.</p>
+    <p class="mc-warn"><b>Emergency stop:</b> never rely on an ordinary PLC input alone for an emergency stop. It must be wired through a safety relay or a safety PLC that removes power directly, with the PLC only reading its status (see <a href="/learn/en/plc/commissioning-safety/">Safety</a>).</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

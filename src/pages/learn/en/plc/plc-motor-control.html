@@ -1,0 +1,125 @@
+<!--meta
+{
+  "title": "Motor Control with a PLC: DOL, Reversing, Star–Delta, I/O Lists, Hard-Wired Interlocks, Welded-Contactor Detection | Ajarn Mod",
+  "h1": "Motor Control with a PLC: DOL, Reversing, Star–Delta, I/O Lists, Wiring, Hard-Wired Interlocks and Contactor Feedback Monitoring",
+  "description": "Convert contactor circuits into PLC programs correctly and safely: what must stay in hardware (emergency stop, overload, K2/K3 interlocks), I/O lists, wiring the PLC to contactor coils, ladder and Structured Text for DOL, reversing and star–delta with a dead time, detecting welded contactors with feedback contacts, and a simulator to try it.",
+  "lesson": "en/plc",
+  "sub": "plc-motor-control",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Programmable logic controller", "Motor controller", "Wye-delta starter", "Interlock (engineering)"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "With a PLC, do I still need auxiliary-contact interlocks in the coil circuit?", "a": "Yes. The interlocks that prevent short circuits (K1/K2 for reversing, K2/K3 for star–delta) must work even if the PLC fails, a transistor output shorts on, or someone forces a bit. An NC contact of the opposing contactor in series with each coil, plus a mechanical interlock, is still required. The program is an additional layer, not the only one."},
+    {"q": "Can I wire the overload relay only to the PLC?", "a": "Technically yes, but good practice is to put 95-96 in series with the contactor coil directly (so it trips even if the PLC hangs) and bring 97-98 or an auxiliary contact into the PLC for status display and event logging."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Motor Control with a PLC</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.6 · PLC · Motor Control with a PLC</p>
+      <h1>Motor Control with a PLC: DOL, Reversing, Star–Delta, I/O Lists, Wiring, Hard-Wired Interlocks and Contactor Feedback Monitoring</h1>
+      <p class="lede">Moving the logic from a relay panel into a PLC gains flexibility, status display and fault detection — but the safety of the original circuit must not be lost. This page draws a clear line between what lives in software and what must stay in hardware, and gives working programs for all three motor circuits.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Keep in hardware: emergency stop via a safety relay · overload 95-96 · NC + mechanical interlocks</li>
+          <li>The PLC does: self-holding, sequencing, timers, feedback checks, alarms, run-hour counting</li>
+          <li>Feedback: \(\text{Fault} = \text{TON}(\text{Cmd} \oplus \text{FB},\ 0.5\text{–}2\ \text{s})\)</li>
+          <li>Star–delta: Y first → K1 → time elapsed → Y drops out → dead time → Δ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="e.g. feedback, interlock, star delta, dead time" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="split">
+    <h2 id="split">Dividing the jobs: hardware vs software <span class="lv lv-b">Basic</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Function</th><th>Where</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Emergency stop</td><td>Safety relay / safety PLC cuts coil power + PLC reads the status</td><td>Must work even if the standard PLC fails or its program is edited</td></tr>
+        <tr><td>Overload</td><td>95-96 in series with the coil + 97-98 into the PLC</td><td>Trips even if the PLC hangs, and the cause can be displayed</td></tr>
+        <tr><td>Short-circuit interlock</td><td>Auxiliary NC + mechanical + in the program</td><td>A shorted transistor output or a forced bit must not cause a short circuit</td></tr>
+        <tr><td>Self-holding, sequencing, timers</td><td>Program</td><td>Easy to change, settable from the HMI</td></tr>
+        <tr><td>Detecting a welded / non-pulling contactor</td><td>Program + feedback contacts</td><td>Only possible when there is a controller with logic</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dol">
+    <h2 id="dol">DOL with a PLC and feedback checking <span class="lv lv-b">Basic</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Address</th><th>Device</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>I0.0</td><td>-S0 STOP</td><td>NC (1 = healthy)</td></tr>
+        <tr><td>I0.1</td><td>-S1 START</td><td>NO</td></tr>
+        <tr><td>I0.2</td><td>-F2 97-98 or auxiliary 95-96</td><td>NC (1 = healthy)</td></tr>
+        <tr><td>I0.3</td><td>-K1 13-14 feedback</td><td>NO</td></tr>
+        <tr><td>Q0.0</td><td>-K1 coil (via 95-96)</td><td>Relay or interposing relay</td></tr>
+        <tr><td>Q0.1 / Q0.2</td><td>Run lamp / fault lamp</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="M1" data-k="motor run command latch plc"><p class="tf-n"><b><span class="fid">M1</span> Run command</b></p>
+        \[ \text{Cmd} = I0.0\cdot I0.2\cdot\overline{\text{Fault}}\cdot(I0.1 + \text{Cmd}) \]</div>
+<div class="tf" id="M2" data-k="feedback discrepancy contactor welded fault timer"><p class="tf-n"><b><span class="fid">M2</span> Feedback discrepancy</b></p>
+        \[ \text{Fault} \leftarrow \text{TON}(\text{Cmd} \oplus \text{FB},\ t_{fb}) \qquad t_{fb} \approx 0.5\text{–}2\ \text{s} \]</div>
+    <p>What M2 catches: commanded but not pulled in (blown coil fuse, open coil, 95-96 open) and not commanded but still pulled in (welded contacts, stuck output). The second case is dangerous: raise an alarm and disconnect with the upstream device.</p>
+    <div class="plc-sim" data-preset="dol"><noscript>JavaScript is required</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="fr">
+    <h2 id="fr">Reversing with a PLC <span class="lv lv-i">Intermediate</span></h2>
+<div class="tf" id="M3" data-k="forward reverse plc interlock software"><p class="tf-n"><b><span class="fid">M3</span> Software interlock</b></p>
+        \[ Q_F = \overline{S0}\,\overline{OL}\,(S_F + Q_F)\,\overline{S_R}\,\overline{Q_R}\,\overline{FB_R} \qquad Q_R = \overline{S0}\,\overline{OL}\,(S_R + Q_R)\,\overline{S_F}\,\overline{Q_F}\,\overline{FB_F} \]</div>
+    <p>Adding \(\overline{FB}\) of the other direction (feedback from the real contactor) stops the program commanding the new direction until the old contactor has actually dropped out. A reversal delay timer of 0.5–2 s is also commonly added to let the motor slow down.</p>
+    <div class="plc-sim" data-preset="fr"><noscript>JavaScript is required</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="yd">
+    <h2 id="yd">Star–delta with a PLC <span class="lv lv-i">Intermediate</span></h2>
+    <figure class="xfig"><!--FIG:plc-yd-io-en--><svg class="xf" viewBox="0 0 780 350" role="img" aria-label="PLC star–delta control: inputs STOP (NC), START, overload and feedback contacts; outputs drive K1 K2 K3 coils with the K2/K3 interlock kept hard-wired"><defs><marker id="plc-yd-io-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxb" x="250" y="40" width="200" height="250" rx="10"/><text x="350" y="30" class="xf-h" text-anchor="middle">PLC</text><line class="xf-rail" x1="30" y1="50" x2="30" y2="270"/><text x="30" y="44" class="xf-k" text-anchor="middle">+24V</text><line class="xf-ln" x1="30" y1="70" x2="250" y2="70"/><circle class="xf-dotk" cx="30" cy="70" r="3.2"/><text x="260" y="74" class="xf-k">I0.0</text><text x="140" y="65" class="xf-k" text-anchor="middle">-S0 STOP (NC)</text><line class="xf-ln" x1="30" y1="106" x2="250" y2="106"/><circle class="xf-dotk" cx="30" cy="106" r="3.2"/><text x="260" y="110" class="xf-k">I0.1</text><text x="140" y="101" class="xf-k" text-anchor="middle">-S1 START (NO)</text><line class="xf-ln" x1="30" y1="142" x2="250" y2="142"/><circle class="xf-dotk" cx="30" cy="142" r="3.2"/><text x="260" y="146" class="xf-k">I0.2</text><text x="140" y="137" class="xf-k" text-anchor="middle">-F2 95-96 (NC)</text><line class="xf-ln" x1="30" y1="178" x2="250" y2="178"/><circle class="xf-dotk" cx="30" cy="178" r="3.2"/><text x="260" y="182" class="xf-k">I0.3</text><text x="140" y="173" class="xf-k" text-anchor="middle">-K1 13-14</text><line class="xf-ln" x1="30" y1="214" x2="250" y2="214"/><circle class="xf-dotk" cx="30" cy="214" r="3.2"/><text x="260" y="218" class="xf-k">I0.4</text><text x="140" y="209" class="xf-k" text-anchor="middle">-K2 13-14</text><line class="xf-ln" x1="30" y1="250" x2="250" y2="250"/><circle class="xf-dotk" cx="30" cy="250" r="3.2"/><text x="260" y="254" class="xf-k">I0.5</text><text x="140" y="245" class="xf-k" text-anchor="middle">-K3 13-14</text><line class="xf-rail" x1="740" y1="70" x2="740" y2="270"/><text x="740" y="286" class="xf-k" text-anchor="middle" textLength="68" lengthAdjust="spacingAndGlyphs">N (230 VAC)</text><text x="440" y="104" class="xf-k" text-anchor="end">Q0.0</text><line class="xf-ln" x1="450" y1="100" x2="560" y2="100"/><line class="xf-ln" x1="560" y1="100" x2="580" y2="100"/><line class="xf-ln" x1="580" y1="100" x2="620" y2="100"/><rect class="xf-coil" x="620" y="87" width="40" height="26" rx="1"/><text x="640" y="128" class="xf-tag" text-anchor="middle">-K1</text><line class="xf-ln" x1="660" y1="100" x2="740" y2="100"/><circle class="xf-dotk" cx="740" cy="100" r="3.2"/><text x="440" y="174" class="xf-k" text-anchor="end">Q0.1</text><line class="xf-ln" x1="450" y1="170" x2="560" y2="170"/><line class="xf-ln" x1="560" y1="158" x2="560" y2="182"/><line class="xf-ln" x1="580" y1="158" x2="580" y2="182"/><line class="xf-ln" x1="556" y1="182" x2="584" y2="158"/><text x="570" y="152" class="xf-k" text-anchor="middle">-K3 21-22</text><line class="xf-ln" x1="580" y1="170" x2="620" y2="170"/><rect class="xf-coil" x="620" y="157" width="40" height="26" rx="1"/><text x="640" y="198" class="xf-tag" text-anchor="middle">-K2 (Y)</text><line class="xf-ln" x1="660" y1="170" x2="740" y2="170"/><circle class="xf-dotk" cx="740" cy="170" r="3.2"/><text x="440" y="244" class="xf-k" text-anchor="end">Q0.2</text><line class="xf-ln" x1="450" y1="240" x2="560" y2="240"/><line class="xf-ln" x1="560" y1="228" x2="560" y2="252"/><line class="xf-ln" x1="580" y1="228" x2="580" y2="252"/><line class="xf-ln" x1="556" y1="252" x2="584" y2="228"/><text x="570" y="222" class="xf-k" text-anchor="middle">-K2 21-22</text><line class="xf-ln" x1="580" y1="240" x2="620" y2="240"/><rect class="xf-coil" x="620" y="227" width="40" height="26" rx="1"/><text x="640" y="268" class="xf-tag" text-anchor="middle">-K3 (Δ)</text><line class="xf-ln" x1="660" y1="240" x2="740" y2="240"/><circle class="xf-dotk" cx="740" cy="240" r="3.2"/><text x="390" y="318" class="xf-tb" text-anchor="middle">The hardware interlock still works if the PLC fails or is forced</text><text x="390" y="340" class="xf-m" text-anchor="middle">K1/K2/K3 feedback lets the PLC detect a welded contactor before the next step</text></svg><!--/FIG--><figcaption>Figure 1 · Outputs drive the coils through NC contacts of the opposing contactor (hard-wired) · inputs read the buttons, the overload and all three feedback contacts</figcaption></figure>
+<div class="tf" id="M4" data-k="star delta plc sequence timer dead time"><p class="tf-n"><b><span class="fid">M4</span> Star–delta sequence</b></p>
+        \[ K_Y = \text{Run}\,\overline{T_Y}\,\overline{K_\Delta} \quad K_1 = \text{Run}\,(K_Y + K_1) \quad K_\Delta = \text{Run}\,\text{TON}(T_Y,\ t_{dead})\,\overline{K_Y}\,\overline{FB_Y} \]</div>
+    <pre class="code"><span class="c">(* Structured Text: star–delta with feedback check *)</span>
+Run := (PB_Start <span class="k">OR</span> Run) <span class="k">AND</span> PB_Stop_NC <span class="k">AND</span> OL_NC <span class="k">AND NOT</span> Fault;
+TY(IN := Run, PT := T#6S);                         <span class="c">// star period</span>
+KY    := Run <span class="k">AND NOT</span> TY.Q <span class="k">AND NOT</span> KD;              <span class="c">// K2 star</span>
+K1    := Run <span class="k">AND</span> (FB_Y <span class="k">OR</span> K1);                     <span class="c">// K1 after star has really pulled in</span>
+TDead(IN := TY.Q <span class="k">AND NOT</span> FB_Y, PT := T#80MS);    <span class="c">// wait for K2 to really drop out, then time the dead band</span>
+KD    := Run <span class="k">AND</span> TDead.Q;                            <span class="c">// K3 delta</span>
+TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <span class="k">XOR</span> FB_Y) <span class="k">OR</span> (KD <span class="k">XOR</span> FB_D), PT := T#1S);
+<span class="k">IF</span> TChk.Q <span class="k">OR</span> (FB_Y <span class="k">AND</span> FB_D) <span class="k">THEN</span> Fault := TRUE; <span class="k">END_IF</span></pre>
+    <p>Note: the dead time starts when the <b>feedback</b> from K2 confirms it has dropped out, not when it is commanded off — this protects against a welded K2 contact. A plain relay circuit cannot do this. The simulator below is a simplified version without feedback.</p>
+    <div class="plc-sim" data-preset="yd"><noscript>JavaScript is required</noscript></div>
+<div class="wx" id="ex-m-1"><div class="wx-head"><span class="mono">Example M-1</span><h3>Test the sequence in the simulator and answer the questions</h3></div>
+<ol class="steps">
+<li><p>Press START: record the order in which Q0.1 (Y) and Q0.0 (K1) turn on — why must Q0.1 come on first? (So the star point is made before the windings are energised.)</p></li>
+<li><p>Watch the ET bars of T1 and T2: how long is Q0.1 off while Q0.2 is not yet on? (80 ms = the PT of T2.)</p></li>
+<li><p>Edit the Q0.1 rung to remove the <code>!Q0.2</code> condition and reload. Does the system still work, and why should this interlock stay anyway?</p></li>
+</ol></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,118 @@
+<!--meta
+{
+  "title": "PLC Timers and Counters to IEC 61131-3: TON, TOF, TP, CTU, CTD, CTUD, Timing Diagrams and Examples | Mod's Engineering Mathematics",
+  "h1": "Timers and Counters to IEC 61131-3: TON, TOF, TP, CTU, CTD and CTUD with Timing Diagrams and Real-World Examples",
+  "description": "The standard timers and counters found in every PLC brand: TON on-delay, TOF off-delay and TP pulse timers, timing diagrams, ET and PT, flasher circuits, a pre-start warning, a fan that runs on after stop, CTU, CTD and CTUD counters for counting parts, resetting, times longer than the maximum preset, accuracy that depends on scan time, high-speed counters, and the equivalent names in Siemens, Mitsubishi and Omron.",
+  "lesson": "en/plc",
+  "sub": "timers-counters",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Timer", "Counter (digital)", "IEC 61131-3", "Programmable logic controller"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "faq": [
+    {"q": "How accurate is a PLC timer?", "a": "A timer is updated when it is executed in each scan, so its error is about one scan time (plus the resolution of its time base, e.g. 1 ms, 10 ms or 100 ms). That is fine for general work, but if you need millisecond accuracy use a hardware timer, a cyclic-interrupt task or the CPU's pulse outputs."},
+    {"q": "A timer stops timing when it is in a part of the program that is not called. What is happening?", "a": "A software timer only times while its instruction is being executed. If it sits inside a function or a jumped-over section that is not running, it stops timing or freezes its value. Call the timer every scan and control it through its IN input instead."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Timers · counters</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.4 · PLC · Timers &amp; Counters</p>
+      <h1>Timers and Counters to IEC 61131-3: TON, TOF, TP, CTU, CTD and CTUD with Timing Diagrams and Real-World Examples</h1>
+      <p class="lede">Timers and counters are the main reason a PLC pays for itself against a relay panel. One timer in the program replaces a physical timer relay costing tens of dollars, and its time can be set precisely from the HMI. This page uses the names from IEC 61131-3, which is the template for the instructions of every brand.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>TON: IN must stay on for the full PT before Q = 1 · TOF: Q stays on for PT after IN goes off · TP: one pulse of length PT per rising edge</li>
+          <li>CTU counts rising edges of CU · Q = 1 when CV ≥ PV · R clears it</li>
+          <li>Accuracy ≈ ± one scan time</li>
+          <li>Very long times: use a minute timer feeding a counter</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="Type e.g. ton, tof, tp, ctu, flasher, accuracy" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="timers">
+    <h2 id="timers">The three timer types <span class="lv lv-b">Basic</span></h2>
+    <figure class="xfig"><!--FIG:plc-timers-en--><svg class="xf" viewBox="0 0 760 330" role="img" aria-label="IEC 61131-3 timer timing diagrams: TON on-delay, TOF off-delay and TP fixed-length pulse (PT = 3 s)"><defs><marker id="plc-timers-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="xf-d" d="M110 52 L143.9 52 L143.9 32 L279.4 32 L279.4 52 L415 52 L415 32 L448.9 32 L448.9 52 L482.8 52 L482.8 32 L499.7 32 L499.7 52 L618.3 52 L618.3 32 L652.2 32 L652.2 52 L720 52"/><text x="100" y="46" class="xf-tag" text-anchor="end">IN</text><path class="xf-a" d="M110 107 L245.6 107 L245.6 87 L279.4 87 L279.4 107 L720 107"/><text x="100" y="101" class="xf-tag" text-anchor="end">TON.Q</text><path class="xf-b" d="M110 162 L143.9 162 L143.9 142 L381.1 142 L381.1 162 L415 162 L415 142 L601.4 142 L601.4 162 L618.3 162 L618.3 142 L720 142 L720 162 L720 162"/><text x="100" y="156" class="xf-tag" text-anchor="end">TOF.Q</text><path class="xf-c" d="M110 217 L143.9 217 L143.9 197 L245.6 197 L245.6 217 L415 217 L415 197 L516.7 197 L516.7 217 L618.3 217 L618.3 197 L720 197 L720 217 L720 217"/><text x="100" y="211" class="xf-tag" text-anchor="end">TP.Q</text><line class="xf-thin" x1="110" y1="260" x2="110" y2="266"/><text x="110" y="280" class="xf-k" text-anchor="middle">0</text><line class="xf-thin" x1="177.8" y1="260" x2="177.8" y2="266"/><text x="177.8" y="280" class="xf-k" text-anchor="middle">2</text><line class="xf-thin" x1="245.6" y1="260" x2="245.6" y2="266"/><text x="245.6" y="280" class="xf-k" text-anchor="middle">4</text><line class="xf-thin" x1="313.3" y1="260" x2="313.3" y2="266"/><text x="313.3" y="280" class="xf-k" text-anchor="middle">6</text><line class="xf-thin" x1="381.1" y1="260" x2="381.1" y2="266"/><text x="381.1" y="280" class="xf-k" text-anchor="middle">8</text><line class="xf-thin" x1="448.9" y1="260" x2="448.9" y2="266"/><text x="448.9" y="280" class="xf-k" text-anchor="middle">10</text><line class="xf-thin" x1="516.7" y1="260" x2="516.7" y2="266"/><text x="516.7" y="280" class="xf-k" text-anchor="middle">12</text><line class="xf-thin" x1="584.4" y1="260" x2="584.4" y2="266"/><text x="584.4" y="280" class="xf-k" text-anchor="middle">14</text><line class="xf-thin" x1="652.2" y1="260" x2="652.2" y2="266"/><text x="652.2" y="280" class="xf-k" text-anchor="middle">16</text><line class="xf-thin" x1="720" y1="260" x2="720" y2="266"/><text x="720" y="280" class="xf-k" text-anchor="middle">18</text><text x="415" y="298" class="xf-m" text-anchor="middle">Time (s)</text><line class="xf-thin" x1="143.9" y1="80" x2="245.6" y2="80" marker-end="url(#plc-timers-en-ah)" marker-start="url(#plc-timers-en-ah)"/><text x="194.7" y="75" class="xf-k" text-anchor="middle">PT</text><text x="465.8" y="80" class="xf-k" text-anchor="middle">pulses shorter than PT → no TON output</text><text x="330.3" y="132" class="xf-k" text-anchor="middle">holds 3 s after IN falls</text><text x="509.9" y="190" class="xf-k" text-anchor="middle">IN during the pulse is ignored</text><text x="380" y="322" class="xf-m" text-anchor="middle">ET (elapsed time) counts up only while the timer is timing</text></svg><!--/FIG--><figcaption>Figure 1 · The same input (top row) driving the three timer types with PT = 3 s</figcaption></figure>
+<div class="tf" id="T1" data-k="ton on delay timer output elapsed"><p class="tf-n"><b><span class="fid">T1</span> TON — on-delay</b></p>
+        \[ ET = \begin{cases} \min(ET + \Delta t,\ PT) & IN = 1 \\ 0 & IN = 0 \end{cases} \qquad Q = IN \wedge (ET \ge PT) \]</div>
+<div class="tf" id="T2" data-k="tof off delay timer"><p class="tf-n"><b><span class="fid">T2</span> TOF — off-delay</b></p>
+        \[ Q = IN \vee (ET < PT) \quad \text{where } ET \text{ starts timing when } IN: 1 \to 0,\ ET = 0 \text{ while } IN = 1 \]</div>
+<div class="tf" id="T3" data-k="tp pulse timer fixed length"><p class="tf-n"><b><span class="fid">T3</span> TP — fixed-length pulse</b></p>
+        \[ Q = 1 \ \text{during } [t_0,\ t_0 + PT) \text{ after a rising edge of } IN \text{ at } t_0 \ (\text{not retriggered during the pulse}) \]</div>
+<div class="tf" id="T4" data-k="timer accuracy scan time resolution"><p class="tf-n"><b><span class="fid">T4</span> Software timer accuracy</b></p>
+        \[ PT \le t_{actual} \le PT + t_{scan} + t_{base} \]</div>
+<div class="wx" id="ex-t-1"><div class="wx-head"><span class="mono">Example T-1</span><h3>A conveyor that sounds a horn for 5 s before starting, with a cooling fan that runs on for 2 minutes after it stops</h3></div>
+<ol class="steps">
+<li><p>Run command M0.0 (seal-in from START/STOP) · <code>T1 = TON(M0.0, 5s)</code></p></li>
+<li><p>Horn: <code>Q0.1 = M0.0 &amp; !T1</code> · conveyor: <code>Q0.0 = T1</code> (runs once the 5 s are up)</p></li>
+<li><p>Fan: <code>T2 = TOF(Q0.0, 120s)</code> · <code>Q0.2 = T2</code> — runs together with the conveyor and stays on for another 2 minutes after the conveyor stops</p></li>
+</ol></div>
+<div class="tf" id="T5" data-k="flasher blink period duty two timers"><p class="tf-n"><b><span class="fid">T5</span> Flasher from two timers</b></p>
+        \[ T1 = \text{TON}(EN \wedge \overline{T2},\ t_{on}) \quad T2 = \text{TON}(T1,\ t_{off}) \quad Q = EN \wedge \overline{T1} \quad (T_{period} = t_{on} + t_{off}) \]</div>
+    <div class="plc-sim" data-preset="flasher"><noscript>JavaScript is needed for the simulator</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="counters">
+    <h2 id="counters">Counters <span class="lv lv-b">Basic</span></h2>
+    <figure class="xfig"><!--FIG:plc-counter-en--><svg class="xf" viewBox="0 0 760 250" role="img" aria-label="Up-counter CTU timing (PV = 4): counts rising edges of CU; Q turns on when CV reaches PV until RESET"><defs><marker id="plc-counter-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><path class="xf-d" d="M110 52 L153.6 52 L153.6 32 L179.7 32 L179.7 52 L218.9 52 L218.9 32 L245.1 32 L245.1 52 L284.3 52 L284.3 32 L310.4 32 L310.4 52 L349.6 52 L349.6 32 L375.8 32 L375.8 52 L415 52 L415 32 L441.1 32 L441.1 52 L480.4 52 L480.4 32 L506.5 32 L506.5 52 L720 52"/><text x="100" y="46" class="xf-tag" text-anchor="end">CU</text><path class="xf-e" d="M110 107 L567.5 107 L567.5 87 L598 87 L598 107 L720 107"/><text x="100" y="101" class="xf-tag" text-anchor="end">R</text><path class="xf-a" d="M110 175 L110 175 L110 175 L153.6 175 L153.6 167 L218.9 167 L218.9 159 L284.3 159 L284.3 151 L349.6 151 L349.6 143 L415 143 L415 135 L480.4 135 L480.4 127 L567.5 127 L567.5 175 L720 175"/><text x="100" y="170" class="xf-tag" text-anchor="end">CV</text><text x="163.6" y="163" class="xf-k">1</text><text x="228.9" y="155" class="xf-k">2</text><text x="294.3" y="147" class="xf-k">3</text><text x="359.6" y="139" class="xf-k">4</text><text x="425" y="131" class="xf-k">5</text><text x="490.4" y="123" class="xf-k">6</text><path class="xf-b" d="M110 217 L349.6 217 L349.6 197 L567.5 197 L567.5 217 L720 217"/><text x="100" y="211" class="xf-tag" text-anchor="end">Q</text><text x="458.6" y="196" class="xf-k" text-anchor="middle">CV ≥ PV = 4</text><text x="380" y="244" class="xf-m" text-anchor="middle">CV keeps counting past PV (up to the data-type maximum) · RESET clears CV and Q</text></svg><!--/FIG--><figcaption>Figure 2 · CTU counts only rising edges of CU, so a part that stops in front of the sensor is counted only once</figcaption></figure>
+<div class="tf" id="T6" data-k="ctu up counter count value preset"><p class="tf-n"><b><span class="fid">T6</span> CTU — up counter</b></p>
+        \[ CV_{k+1} = \begin{cases} 0 & R = 1 \\ CV_k + 1 & P(CU) \\ CV_k & \text{otherwise} \end{cases} \qquad Q = (CV \ge PV) \]</div>
+<div class="tf" id="T7" data-k="ctd down counter load"><p class="tf-n"><b><span class="fid">T7</span> CTD — down counter</b></p>
+        \[ CV = PV \text{ on LD} \qquad CV_{k+1} = CV_k - 1 \text{ at } P(CD) \qquad Q = (CV \le 0) \]</div>
+    <p>CTUD combines both in one block (QU and QD). Use it to count how many items are inside an area, such as cars entering and leaving a car park, or parts in a buffer between two machines.</p>
+    <div class="plc-sim" data-preset="counter"><noscript>JavaScript is needed for the simulator</noscript></div>
+<div class="wx" id="ex-t-2"><div class="wx-head"><span class="mono">Example T-2</span><h3>A filter change every 500 running hours, but the maximum timer PT is 24 h</h3></div>
+<ol class="steps">
+<li><p>Create a pulse every hour while the pump runs: <code>T1 = TON(Q0.0 &amp; !T1, 3600s)</code> (resets itself when done)</p></li>
+<li><p>Count the pulses: <code>C1 = CTU(T1, I0.5, 500)</code> · I0.5 = reset button pressed after changing the filter</p></li>
+<li><p>Warning: <code>Q0.3 = C1</code> · make C1 retentive so its value is not lost in a power failure</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="brands">
+    <h2 id="brands">Names in each brand</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>IEC 61131-3</th><th>Siemens S7-1200/1500</th><th>Mitsubishi FX5/iQ</th><th>Omron CP/NX</th></tr></thead>
+      <tbody>
+        <tr><td>TON</td><td>TON (IEC_TIMER)</td><td>OUT T0 K50 (100 ms) / TON FB</td><td>TIM / TON</td></tr>
+        <tr><td>TOF</td><td>TOF</td><td>TOF FB (or a circuit)</td><td>TOF</td></tr>
+        <tr><td>TP</td><td>TP</td><td>TP FB</td><td>TP</td></tr>
+        <tr><td>CTU</td><td>CTU</td><td>OUT C0 K10 / CTU FB</td><td>CNT / CTU</td></tr>
+      </tbody>
+    </table></div>
+    <p class="mc-note">Older timers in some brands are set as a number of “time-base” units, e.g. K50 on a 100 ms base = 5 s. Always check the time base when moving a program between models.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="fast">
+    <h2 id="fast">High-speed counters <span class="lv lv-i">Intermediate</span></h2>
+    <p>A CTU in the program can count at no more than about half the scan rate (it must see 0 for one scan and 1 for one scan). For example, a 10 ms scan counts no faster than ~50 Hz, and the input filter time must be subtracted too. Encoders and high-speed sensors must be wired to the CPU's high-speed counter (HSC) inputs, which count in hardware at tens or hundreds of kHz and support two-phase A/B signals.</p>
+<div class="tf" id="T8" data-k="maximum counting frequency scan software counter"><p class="tf-n"><b><span class="fid">T8</span> Software counter limit</b></p>
+        \[ f_{max} \approx \frac{1}{2\,(t_{scan} + t_{in})} \]</div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

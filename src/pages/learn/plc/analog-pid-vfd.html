@@ -1,0 +1,129 @@
+<!--meta
+{
+  "title": "อนาล็อก PID และการสั่งอินเวอร์เตอร์ด้วย PLC: สเกล 4–20 mA ตรวจสายขาด PID ปั๊มแรงดันคงที่ Modbus RTU | อาจารย์มด",
+  "h1": "อนาล็อก PID และการสั่งงานอินเวอร์เตอร์ด้วย PLC: สเกล 4–20 mA บล็อก PID ปั๊มแรงดันคงที่ และ Modbus RTU",
+  "description": "งานแอนะล็อกใน PLC ครบชุด: ความละเอียด ADC สูตรสเกลค่าดิบเป็นหน่วยวิศวกรรม (Siemens 0–27648 Mitsubishi Omron) ตรวจสายขาดตาม NE 43 บล็อก PID แบบ positional และ discrete ค่าตั้ง Kp Ti Td การปรับจูนเบื้องต้น ตัวอย่างปั๊มแรงดันคงที่ สั่งอินเวอร์เตอร์ด้วยดิจิทัล อนาล็อก และ Modbus RTU พร้อมแผนที่รีจิสเตอร์ตัวอย่าง control word สถานะ และความถี่หน่วย 0.01 Hz",
+  "lesson": "plc",
+  "sub": "analog-pid-vfd",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["Analog-to-digital converter", "PID controller", "Modbus", "Variable-frequency drive"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "ใช้ PID ใน PLC หรือใน VFD ดีกว่า?", "a": "ถ้าเป็นลูปเดียวที่ทรานสมิตเตอร์ต่อเข้า VFD ได้ตรง PID ใน VFD ง่ายและตอบสนองเร็ว ทำงานต่อได้แม้ PLC ขัดข้อง ถ้าต้องประสานหลายปั๊ม มีหลายเงื่อนไข หรือต้องบันทึกและปรับจาก SCADA PID ใน PLC ยืดหยุ่นกว่า"},
+    {"q": "Modbus สั่งความถี่ 35.5 Hz ต้องส่งค่าอะไร?", "a": "ขึ้นกับหน่วยของรีจิสเตอร์ในคู่มือไดรฟ์ ไดรฟ์หลายยี่ห้อใช้หน่วย 0.01 Hz จึงส่ง 3550 บางยี่ห้อใช้สัดส่วนของความถี่สูงสุด เช่น 0–16384 หรือ 0–10000 = 0–100 % ต้องอ่านคู่มือและทดสอบด้วยค่าต่ำก่อนเสมอ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>อนาล็อก · PID · สั่ง VFD</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.8 · PLC · Analog, PID &amp; VFD</p>
+      <h1>อนาล็อก PID และการสั่งงานอินเวอร์เตอร์ด้วย PLC: สเกล 4–20 mA บล็อก PID ปั๊มแรงดันคงที่ และ Modbus RTU</h1>
+      <p class="lede">โลกจริงไม่ได้มีแค่ 0 กับ 1: ความดัน ระดับ อุณหภูมิ และความเร็วมอเตอร์เป็นค่าต่อเนื่อง หน้านี้พาจากตัวเลขดิบในโมดูลแอนะล็อกไปสู่ลูปควบคุมความดันที่สั่งอินเวอร์เตอร์ ซึ่งเป็นงานที่พบมากที่สุดในอาคารและโรงงาน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>สเกล: \(y = y_{min} + (x - x_{min})(y_{max} - y_{min})/(x_{max} - x_{min})\) คำนวณเป็น REAL</li>
+          <li>ต่ำกว่า 3.6 mA หรือเกิน 21 mA = ความผิดพลาด ไม่ใช่ค่าวัด</li>
+          <li>PID: \(u = K_p\left(e + \frac{1}{T_i}\int e\,dt + T_d\frac{de}{dt}\right)\) · เริ่มจูนด้วย PI</li>
+          <li>สั่ง VFD: DI + AI ง่ายที่สุด · Modbus ได้ข้อมูลกลับ (กระแส ความผิดพลาด) ด้วยสายคู่เดียว</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น scaling, resolution, wire break, pid, modbus" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="scale">
+    <h2 id="scale">จากค่าดิบสู่หน่วยวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-scaling--><svg class="xf" viewBox="0 0 760 280" role="img" aria-label="การสเกลค่าแอนะล็อก: ค่าดิบ 0–27648 (4–20 mA ของ Siemens) แปลงเป็น 0–10 bar ด้วยสมการเส้นตรง และค่าต่ำกว่า 4 mA ใช้ตรวจสายขาด"><defs><marker id="plc-scaling-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-grid" x1="70" y1="208.3" x2="450" y2="208.3"/><text x="64" y="212.3" class="xf-k" text-anchor="end">0</text><line class="xf-grid" x1="70" y1="166.7" x2="450" y2="166.7"/><text x="64" y="170.7" class="xf-k" text-anchor="end">2.5</text><line class="xf-grid" x1="70" y1="125" x2="450" y2="125"/><text x="64" y="129" class="xf-k" text-anchor="end">5</text><line class="xf-grid" x1="70" y1="83.3" x2="450" y2="83.3"/><text x="64" y="87.3" class="xf-k" text-anchor="end">7.5</text><line class="xf-grid" x1="70" y1="41.7" x2="450" y2="41.7"/><text x="64" y="45.7" class="xf-k" text-anchor="end">10</text><line class="xf-grid" x1="70" y1="25" x2="70" y2="225"/><text x="70" y="240" class="xf-k" text-anchor="middle">0</text><line class="xf-grid" x1="156.4" y1="25" x2="156.4" y2="225"/><text x="156.4" y="240" class="xf-k" text-anchor="middle">6912</text><line class="xf-grid" x1="242.7" y1="25" x2="242.7" y2="225"/><text x="242.7" y="240" class="xf-k" text-anchor="middle">13824</text><line class="xf-grid" x1="329.1" y1="25" x2="329.1" y2="225"/><text x="329.1" y="240" class="xf-k" text-anchor="middle">20736</text><line class="xf-grid" x1="415.5" y1="25" x2="415.5" y2="225"/><text x="415.5" y="240" class="xf-k" text-anchor="middle">27648</text><line class="xf-thin" x1="70" y1="225" x2="450" y2="225"/><line class="xf-thin" x1="70" y1="25" x2="70" y2="225"/><text x="260" y="257" class="xf-m" text-anchor="middle">ค่าดิบจาก ADC</text><text x="30" y="125" class="xf-m" text-anchor="middle" transform="rotate(-90 30 125)">bar</text><path class="xf-b" d="M70 208.3 L415.5 41.7"/><path class="xf-dash" d="M415.5 41.7 L432.3 33.3"/><circle class="xf-dotk" cx="156.4" cy="166.7" r="3.2"/><circle class="xf-dotk" cx="242.7" cy="125" r="3.2"/><circle class="xf-dotk" cx="329.1" cy="83.3" r="3.2"/><text x="250.7" y="143" class="xf-k">13824 → 5.0 bar</text><text x="490" y="50" class="xf-k">y = y_min + (x − x_min)·</text><text x="490" y="66" class="xf-k">    (y_max − y_min)/(x_max − x_min)</text><text x="490" y="100" class="xf-k">4 mA</text><text x="570" y="100" class="xf-k">0</text><text x="660" y="100" class="xf-k">0 bar</text><text x="490" y="124" class="xf-k">12 mA</text><text x="570" y="124" class="xf-k">13824</text><text x="660" y="124" class="xf-k">5 bar</text><text x="490" y="148" class="xf-k">20 mA</text><text x="570" y="148" class="xf-k">27648</text><text x="660" y="148" class="xf-k">10 bar</text><text x="490" y="172" class="xf-k">&lt; 3.6 mA</text><text x="570" y="172" class="xf-k">ติดลบ/ต่ำ</text><text x="660" y="172" class="xf-k">สายขาด!</text><text x="380" y="270" class="xf-m" text-anchor="middle">ยี่ห้ออื่น: Mitsubishi 0–4000 หรือ 0–32000 · Omron 0–4000/0–8000 · ดูคู่มือโมดูล ตั้งช่วงให้ตรงกับทรานสมิตเตอร์</text></svg><!--/FIG--><figcaption>รูป 1 · ทรานสมิตเตอร์ความดัน 0–10 bar 4–20 mA เข้าโมดูลแอนะล็อกที่ให้ค่าดิบ 0–27648</figcaption></figure>
+<div class="tf" id="P1" data-k="linear scaling raw to engineering units สเกลเชิงเส้น"><p class="tf-n"><b><span class="fid">P1</span> Linear scaling</b> สเกลเชิงเส้น</p>
+        \[ y = y_{min} + (x - x_{min})\,\frac{y_{max} - y_{min}}{x_{max} - x_{min}} \]</div>
+<div class="tf" id="P2" data-k="adc resolution lsb bits ความละเอียด adc"><p class="tf-n"><b><span class="fid">P2</span> Resolution</b> ความละเอียดต่อหนึ่งหน่วยดิบ</p>
+        \[ \Delta y = \frac{y_{max} - y_{min}}{x_{max} - x_{min}} \qquad \text{เช่น } \frac{10\ \text{bar}}{27648} = 0.36\ \text{mbar} \]</div>
+<div class="tf" id="P3" data-k="wire break namur ne43 current limits สายขาด"><p class="tf-n"><b><span class="fid">P3</span> Signal validity (NAMUR NE 43)</b> ตรวจความถูกต้องของสัญญาณ</p>
+        \[ 3.8 \le I \le 20.5\ \text{mA ค่าวัดเชื่อได้} \qquad I \le 3.6 \text{ หรือ } I \ge 21\ \text{mA → ความผิดพลาด} \]</div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>สเกลค่าดิบ 13824 ด้วย INT แล้วเกิดศูนย์</h3></div>
+<ol class="steps">
+<li><p>ผิด: <code>Bar := Raw / 27648 * 10;</code> ใช้ INT → 13824/27648 = 0 (ปัดทิ้ง) → 0 bar</p></li>
+<li><p>ผิดอีกแบบ: <code>Raw * 10 / 27648</code> ด้วย INT → 27648 × 10 = 276480 ล้น INT</p></li>
+<li><p>ถูก: <code>Bar := INT_TO_REAL(Raw) * 10.0 / 27648.0;</code> → 5.0 bar</p></li>
+<li><p>ตรวจ P3: โมดูล Siemens ให้ค่าดิบติดลบเมื่อกระแสต่ำกว่า 4 mA (ลงไปถึง −4864 ≈ 1.185 mA) และเมื่อเปิดการวินิจฉัยสายขาดจะรายงานค่าพิเศษ (32767) — ตรวจทั้งช่วงค่าดิบตาม P3 และบิตสถานะของโมดูล</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="scale"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pid">
+    <h2 id="pid">บล็อก PID ใน PLC <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:plc-pid-loop--><svg class="xf" viewBox="0 0 780 240" role="img" aria-label="ลูปควบคุมความดันคงที่: PLC อ่านความดันจากทรานสมิตเตอร์ 4–20 mA คำนวณ PID แล้วส่งความถี่ไปยัง VFD ที่ขับปั๊ม"><defs><marker id="plc-pid-loop-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="40" y="104" class="xf-h" text-anchor="middle">SP</text><line class="xf-ln" x1="55" y1="100" x2="105" y2="100" marker-end="url(#plc-pid-loop-ah)"/><circle class="xf-box" cx="118" cy="100" r="13"/><text x="118" y="105" class="xf-k" text-anchor="middle">Σ</text><text x="106" y="92" class="xf-k">+</text><text x="110" y="128" class="xf-k">−</text><rect class="xf-boxa" x="150" y="74" width="110" height="52" rx="8"/><text x="205" y="97" class="xf-h" text-anchor="middle">PID</text><text x="205" y="115" class="xf-k" text-anchor="middle">Kp Ti Td</text><rect class="xf-box" x="300" y="74" width="110" height="52" rx="8"/><text x="355" y="97" class="xf-h" text-anchor="middle">VFD</text><text x="355" y="115" class="xf-k" text-anchor="middle">0–50 Hz</text><rect class="xf-box" x="450" y="74" width="110" height="52" rx="8"/><text x="505" y="97" class="xf-h" text-anchor="middle">ปั๊ม + ท่อ</text><text x="505" y="115" class="xf-k" text-anchor="middle">ความดัน</text><rect class="xf-box" x="600" y="74" width="110" height="52" rx="8"/><text x="655" y="97" class="xf-h" text-anchor="middle">PT</text><text x="655" y="115" class="xf-k" text-anchor="middle">4–20 mA</text><line class="xf-ln" x1="131" y1="100" x2="150" y2="100" marker-end="url(#plc-pid-loop-ah)"/><line class="xf-ln" x1="260" y1="100" x2="300" y2="100" marker-end="url(#plc-pid-loop-ah)"/><text x="280" y="92" class="xf-k" text-anchor="middle">AO/Modbus</text><line class="xf-ln" x1="410" y1="100" x2="450" y2="100" marker-end="url(#plc-pid-loop-ah)"/><line class="xf-ln" x1="560" y1="100" x2="600" y2="100" marker-end="url(#plc-pid-loop-ah)"/><line class="xf-ln" x1="710" y1="100" x2="750" y2="100"/><line class="xf-ln" x1="750" y1="100" x2="750" y2="180"/><line class="xf-ln" x1="750" y1="180" x2="118" y2="180"/><line class="xf-ln" x1="118" y1="180" x2="118" y2="113" marker-end="url(#plc-pid-loop-ah)"/><text x="430" y="196" class="xf-k" text-anchor="middle">PV (ค่าวัด) ผ่านอินพุตแอนะล็อก + การสเกล</text><rect class="xf-boxc" x="150" y="20" width="260" height="36" rx="6"/><text x="280" y="43" class="xf-k" text-anchor="middle">PLC: สเกล → PID → จำกัด → เอาต์พุต</text><text x="390" y="232" class="xf-m" text-anchor="middle">หรือใช้ PID ในตัว VFD ก็ได้ (ต่อ PT เข้า AI ของ VFD) — PLC สั่งแค่ RUN และค่าเป้าหมาย</text></svg><!--/FIG--><figcaption>รูป 2 · ลูปความดันคงที่: SP − PV = e → PID → ความถี่ → VFD → ปั๊ม → ความดัน → ทรานสมิตเตอร์</figcaption></figure>
+<div class="tf" id="P4" data-k="pid positional standard form kp ti td สมการ pid"><p class="tf-n"><b><span class="fid">P4</span> PID (standard form)</b> PID แบบมาตรฐาน</p>
+        \[ u(t) = K_p\left(e + \frac{1}{T_i}\int_0^t e\,d\tau + T_d\,\frac{de}{dt}\right) \qquad e = SP - PV \]</div>
+<div class="tf" id="P5" data-k="discrete pid sample time digital implementation pid ดิจิทัล"><p class="tf-n"><b><span class="fid">P5</span> Discrete PID</b> PID ดิจิทัล (คาบสุ่ม \(T_s\))</p>
+        \[ u_k = K_p\left(e_k + \frac{T_s}{T_i}\sum_{j=0}^{k} e_j - \frac{T_d}{T_s}(PV_k - PV_{k-1})\right) \]</div>
+    <p>เทอมอนุพันธ์ใช้ PV แทน e (derivative on measurement) เพื่อไม่ให้กระชากเมื่อเปลี่ยน SP และต้องมี anti-windup: เมื่อเอาต์พุตชนขีด (เช่น 50 Hz) ให้หยุดสะสมอินทิกรัล งานปั๊ม-พัดลมส่วนใหญ่ใช้แค่ PI (Td = 0) เพราะสัญญาณความดันมีสัญญาณรบกวนมาก</p>
+    <h3>จูนเริ่มต้นสำหรับปั๊มแรงดันคงที่</h3>
+    <ol>
+      <li>เริ่ม Kp เล็ก (เช่น 0.5 ของสเกลเต็ม) Ti ยาว (เช่น 5 s) Td = 0</li>
+      <li>เพิ่ม Kp จนเริ่มแกว่ง แล้วลดลงครึ่งหนึ่ง</li>
+      <li>ลด Ti ทีละน้อยจนค่ากลับเข้าเป้าเร็วพอโดยไม่แกว่ง (ปกติ 1–5 s สำหรับความดันน้ำ)</li>
+      <li>ทดสอบด้วยการเปิด-ปิดก๊อกจริง ดูทั้งการตกและการพุ่งเกิน</li>
+    </ol>
+    <p>ทดลองผลของ Kp Ti Td ได้ใน <a href="/learn/control-systems/pid/">แล็บ PID</a> และลูปความดันกับปั๊ม VFD ใน <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="vfd">
+    <h2 id="vfd">สั่งอินเวอร์เตอร์จาก PLC <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วิธี</th><th>สาย</th><th>ข้อดี</th><th>ข้อจำกัด</th></tr></thead>
+      <tbody>
+        <tr><td>ดิจิทัล + preset speed</td><td>DO → DI หลายเส้น</td><td>ง่าย ทนสัญญาณรบกวน</td><td>ได้ไม่กี่ความเร็ว</td></tr>
+        <tr><td>ดิจิทัล + แอนะล็อก</td><td>DO → RUN · AO → AI (4–20 mA)</td><td>ปรับต่อเนื่อง เข้าใจง่าย</td><td>ได้ข้อมูลกลับเพียงสิ่งที่เดินสายไว้ (AO, รีเลย์)</td></tr>
+        <tr><td>Modbus RTU (RS-485)</td><td>สายคู่บิดเกลียว 1 คู่ ต่อหลายไดรฟ์</td><td>อ่านกระแส ความถี่ ความผิดพลาด ตั้งพารามิเตอร์ได้</td><td>ต้องตั้งค่าการสื่อสาร ตอบสนองช้ากว่าเมื่อมีหลายสถานี</td></tr>
+        <tr><td>Industrial Ethernet</td><td>PROFINET EtherNet/IP Modbus TCP EtherCAT</td><td>เร็ว ข้อมูลมาก วินิจฉัยครบ</td><td>ต้องการโมดูลและการตั้งค่าเครือข่าย</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P6" data-k="modbus frequency register units 0.01 hz รีจิสเตอร์ความถี่"><p class="tf-n"><b><span class="fid">P6</span> Frequency setpoint over Modbus</b> ค่าความถี่ที่ส่งทาง Modbus</p>
+        \[ \text{Reg} = \frac{f}{0.01\ \text{Hz}} \quad (35.5\ \text{Hz} \to 3550) \qquad \text{หรือ} \quad \text{Reg} = \frac{f}{f_{max}}\times \text{Scale}_{100\%} \]</div>
+    <div class="table-wrap"><table>
+      <caption>แผนที่รีจิสเตอร์ตัวอย่าง (สมมติเพื่อการเรียน — ทุกยี่ห้อต่างกัน ต้องใช้คู่มือจริง)</caption>
+      <thead><tr><th>รีจิสเตอร์</th><th>ชื่อ</th><th>อ่าน/เขียน</th><th>ค่า</th></tr></thead>
+      <tbody>
+        <tr><td>40001</td><td>Control word</td><td>W</td><td>บิต 0 = RUN · บิต 1 = REV · บิต 2 = RESET</td></tr>
+        <tr><td>40002</td><td>Frequency reference</td><td>W</td><td>0.01 Hz</td></tr>
+        <tr><td>40011</td><td>Status word</td><td>R</td><td>บิต 0 = Ready · บิต 1 = Running · บิต 3 = Fault</td></tr>
+        <tr><td>40012</td><td>Output frequency</td><td>R</td><td>0.01 Hz</td></tr>
+        <tr><td>40013</td><td>Output current</td><td>R</td><td>0.1 A</td></tr>
+        <tr><td>40014</td><td>Fault code</td><td>R</td><td>รหัสตามคู่มือ</td></tr>
+      </tbody>
+    </table></div>
+    <p>การต่อ RS-485 การคำนวณ CRC-16 และเครื่องสร้างเฟรมอยู่ใน <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a> ข้อควรจำ: ตั้ง “communication timeout” ในไดรฟ์ ถ้า PLC เงียบเกินเวลาที่ตั้งให้ไดรฟ์หยุด มิฉะนั้นเมื่อสายสื่อสารขาด ไดรฟ์จะเดินค้างที่ความถี่สุดท้าย</p>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">ตัวอย่าง P-2</span><h3>PLC ส่ง 4–20 mA ให้ VFD ช่วง 20–50 Hz ต้องการ 42 Hz</h3></div>
+<ol class="steps">
+<li><p>กลับสูตร P1: \(I = 4 + 16\,(42 - 20)/(50 - 20) = 4 + 11.73 = 15.73\) mA</p></li>
+<li><p>ถ้าเอาต์พุตแอนะล็อก 0–27648 = 4–20 mA: ค่าดิบ \(= 27648 \times 11.73/16 = 20275\)</p></li>
+<li><p>ตั้งไดรฟ์ให้ตรวจ AI ต่ำกว่า 2 mA ว่าสายขาด และเลือกการตอบสนอง (หยุด/ความเร็วสำรอง)</p></li>
+</ol></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

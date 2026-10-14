@@ -1,0 +1,89 @@
+<!--meta
+{
+  "title": "PLC Ladder Simulator in the Browser: Write Programs, See Power Flow, Timers, Counters, Ready-Made Examples | Ajarn Mod",
+  "h1": "PLC Ladder Simulator in the Browser: Write Programs, See Power Flow, Timers, Counters and Ready-Made Examples",
+  "description": "A free PLC simulator with nothing to install: write programs as text (Boolean/ST) and see them drawn as ladder automatically, operate NO and NC push-button and switch inputs, watch power flow through each rung, TON TOF TP timers, CTU counters, SET/RESET, edge detection, adjustable scan time, examples for DOL, reversing, star–delta, a flasher, traffic lights, tank filling with a simulated plant, a parts-counting conveyor, and 8 worksheets.",
+  "lesson": "en/plc",
+  "sub": "plc-lab",
+  "nav": "plc",
+  "katex": false,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Ladder logic", "Programmable logic controller", "Simulation"],
+  "scripts": ["/assets/plc-sim.js"],
+  "faq": [
+    {"q": "Can this simulator replace a real PLC?", "a": "It is good for practising logic, scan order, timers and counters, but it does not simulate hardware, communications or brand-specific instructions. Once you understand the basics, continue with the manufacturer's software, which has its own simulator, or with a real PLC in the lab."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Ladder Simulator</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.10 · PLC · Ladder Simulator</p>
+      <h1>PLC Ladder Simulator in the Browser: Write Programs, See Power Flow, Timers, Counters and Ready-Made Examples</h1>
+      <p class="lede">Open this page and start programming a PLC straight away. Pick an example from the menu, press the inputs on the left, watch the green lines showing how far power flows, then open “Edit the program” to write your own rungs. The program is drawn as ladder for you automatically.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="sim">
+    <h2 id="sim">Simulator</h2>
+    <div class="plc-sim" id="plcLab" data-preset="dol"><noscript>JavaScript is required to use the simulator</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="dol" data-plc-target="plcLab">DOL</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="fr" data-plc-target="plcLab">Reversing</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="yd" data-plc-target="plcLab">Star–delta</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="flasher" data-plc-target="plcLab">Flasher</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="traffic" data-plc-target="plcLab">Traffic light</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="tank" data-plc-target="plcLab">Tank filling</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="counter" data-plc-target="plcLab">Parts counter</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-plc-preset="setreset" data-plc-target="plcLab">SET/RESET</button>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="syntax">
+    <h2 id="syntax">Program syntax</h2>
+    <p>One line is one rung, written as a Boolean equation similar to Structured Text. Text after <code>#</code> or <code>//</code> is a comment (shown beside the rung).</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Write</th><th>Meaning</th><th>In ladder</th></tr></thead>
+      <tbody>
+        <tr><td><code>Q0.0 = I0.1 &amp; I0.2</code></td><td>AND</td><td>Contacts in series → coil</td></tr>
+        <tr><td><code>Q0.0 = I0.1 | Q0.0</code></td><td>OR</td><td>Contacts in parallel</td></tr>
+        <tr><td><code>!I0.2</code></td><td>NOT</td><td>NC contact</td></tr>
+        <tr><td><code>S Q0.0 = …</code> / <code>R Q0.0 = …</code></td><td>SET / RESET</td><td>Coil (S) / (R)</td></tr>
+        <tr><td><code>P(I0.1)</code> / <code>N(I0.1)</code></td><td>Rising / falling edge</td><td>Contact marked P / N</td></tr>
+        <tr><td><code>T1 = TON(I0.0, 5s)</code></td><td>TON, TOF, TP timers; time in s or ms</td><td>TON block T1 · use <code>T1</code> as its Q contact</td></tr>
+        <tr><td><code>C1 = CTU(I0.2, I0.3, 6)</code></td><td>Up-counter (count, reset, PV)</td><td>CTU block C1 · use <code>C1</code> as its Q contact</td></tr>
+      </tbody>
+    </table></div>
+    <p>Variables: <code>I0.0–I1.7</code> inputs (read-only) · <code>Q0.0–Q1.7</code> outputs · <code>M0.0–M9.7</code> memory · <code>T1…</code> <code>C1…</code> · <code>TRUE</code> <code>FALSE</code> · <code>AND OR NOT</code> may be used instead of <code>&amp; | !</code> · a NOT in front of brackets is distributed with De Morgan's theorem before drawing.</p>
+    <p>Buttons with a dashed border are NC-wired devices: the input is 1 when not pressed · inputs from the “simulated plant” (water level, part-counting sensor) cannot be pressed; they change with the simulated process.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ws">
+    <h2 id="ws">8 worksheets</h2>
+    <div class="mc-grid">
+      <div class="mc-card"><h3>1 · Self-holding</h3><p>DOL example: delete <code>| Q0.0</code> and load. Explain the result. Then change <code>I0.0</code> to <code>!I0.0</code> and explain why the motor will not run at all.</p></div>
+      <div class="mc-card"><h3>2 · Two-location control</h3><p>Add STOP2 (I0.3) and START2 (I0.4) buttons to the DOL circuit following the rule STOPs in series, STARTs in parallel (new inputs in the simulator are NO buttons, so write STOP2 as <code>!I0.3</code>).</p></div>
+      <div class="mc-card"><h3>3 · Interlock</h3><p>Reversing example: press FWD and REV at the same time (two fingers). Which Q turns on? Delete <code>&amp; !Q0.1</code> and try again. Explain the risk.</p></div>
+      <div class="mc-card"><h3>4 · Dead time</h3><p>Star–delta example: change T2 to 0ms and watch the simulated plant at the changeover. Then delete <code>&amp; !Q0.1</code> in the Q0.2 rung.</p></div>
+      <div class="mc-card"><h3>5 · Scan time</h3><p>Parts-counter example: increase the scan time to 200 ms. Does the counter still count every part? Compare with formula <a href="/learn/en/plc/plc-fundamentals/#F4">F4</a>.</p></div>
+      <div class="mc-card"><h3>6 · Flasher</h3><p>Change it to on 0.2 s, off 0.8 s, then make two lamps flash alternately (Q0.0 and Q0.1).</p></div>
+      <div class="mc-card"><h3>7 · Night-mode traffic light</h3><p>Add a switch I0.1 “night mode” that makes the amber lamps in both directions flash and turns all other lamps off.</p></div>
+      <div class="mc-card"><h3>8 · Tank filling with an alarm</h3><p>Add a watchdog timer: if the pump runs for more than 20 s without reaching LH, stop the pump and light alarm lamp Q0.3 until RESET (I0.5) is pressed.</p></div>
+    </div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

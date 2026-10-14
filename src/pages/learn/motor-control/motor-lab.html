@@ -1,0 +1,78 @@
+<!--meta
+{
+  "title": "ซิมูเลเตอร์วงจรสตาร์ทมอเตอร์: DOL กลับทางหมุน สตาร์-เดลต้า ซอฟต์สตาร์ท อินเวอร์เตอร์ พร้อมใบงาน | อาจารย์มด",
+  "h1": "ซิมูเลเตอร์วงจรสตาร์ทมอเตอร์: DOL กลับทางหมุน สตาร์-เดลต้า ซอฟต์สตาร์ท และอินเวอร์เตอร์",
+  "description": "ซิมูเลเตอร์สตาร์ทมอเตอร์เหนี่ยวนำ 7.5 kW 400 V 50 Hz ฟรีบนเบราว์เซอร์: กด START STOP เห็นคอนแทกเตอร์ดูด ไทเมอร์นับ สถานะวงจรควบคุม กราฟกระแส ความเร็ว แรงบิดแบบเรียลไทม์ จากแบบจำลองวงจรสมมูลโรเตอร์กรงคู่และสมการการเคลื่อนที่ เปลี่ยนโหลดปั๊ม สายพาน พัดลม ตั้งไทเมอร์และช่วงตาย ใส่ความผิดพลาดเฟสขาดและโอเวอร์โหลด พร้อมใบงาน 6 ชุด",
+  "lesson": "motor-control",
+  "sub": "motor-lab",
+  "nav": "mc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Motor controller", "Simulation", "Wye-delta starter", "Variable-frequency drive"],
+  "scripts": ["/assets/lesson.js", "/assets/mc-lab.js"],
+  "faq": [
+    {"q": "ซิมูเลเตอร์นี้แม่นยำแค่ไหน?", "a": "แบบจำลองเป็นวงจรสมมูลต่อเฟสของมอเตอร์ 7.5 kW 4 ขั้วแบบโรเตอร์กรงคู่ ปรับให้ตรงข้อมูลแคตตาล็อกทั่วไป (In ≈ 14 A, Ia/In ≈ 6.5, Ta/Tn ≈ 2.2, Tk/Tn ≈ 3.0) คำนวณสภาวะคงตัวที่แต่ละความเร็วแล้วรวมกับสมการการเคลื่อนที่ จึงเหมาะกับการเรียนรู้แนวโน้มและการเปรียบเทียบ ไม่จำลองทรานเซียนต์ทางไฟฟ้าละเอียด (ยกเว้นกระแสกระชากตอนเปลี่ยนจังหวะที่ใส่แบบประมาณ)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/motor-control/">ควบคุมมอเตอร์ AC</a></li><li>ซิมูเลเตอร์วงจรสตาร์ท</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 21.14 · ควบคุมมอเตอร์ AC · Starter Simulator</p>
+      <h1>ซิมูเลเตอร์วงจรสตาร์ทมอเตอร์: DOL กลับทางหมุน สตาร์-เดลต้า ซอฟต์สตาร์ท และอินเวอร์เตอร์</h1>
+      <p class="lede">ห้องแล็บเสมือนสำหรับลองสิ่งที่ทำจริงไม่ได้หรือไม่ควรทำ: สตาร์ทโหลดหนักด้วยสตาร์-เดลต้า ตั้งไทเมอร์สั้นเกิน ปล่อยให้เฟสขาด หรือกลับทางขณะหมุน ทุกตัวเลขมาจากแบบจำลองมอเตอร์ตัวเดียวกับในบทเรียน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>วิธีใช้</b>
+        <ul>
+          <li>เลือกวิธีสตาร์ทจากแท็บ · กด START/STOP เหมือนปุ่มจริง (กดค้างได้)</li>
+          <li>ซ้าย: วงจรกำลัง คอนแทกเตอร์ที่ดูดเป็นสีเขียว สายที่มีไฟเป็นสีแดง และสถานะวงจรควบคุมทีละขั้น</li>
+          <li>ขวา: มิเตอร์และกราฟ 20 วินาทีล่าสุด · ด้านล่างปรับโหลด ค่าตั้ง และความผิดพลาด</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">ซิมูเลเตอร์</h2>
+    <div class="mc-lab" id="mcLab" data-mode="dol"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="btn btn-ghost btn-sm" data-mc-lab="dol" data-mc-target="mcLab">DOL</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-mc-lab="fr" data-mc-target="mcLab">กลับทางหมุน</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-mc-lab="yd" data-mc-target="mcLab">สตาร์-เดลต้า</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-mc-lab="soft" data-mc-target="mcLab">ซอฟต์สตาร์ท</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-mc-lab="vfd" data-mc-target="mcLab">VFD</button>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="model">
+    <h2 id="model">แบบจำลองเบื้องหลัง</h2>
+    <p>ทุก 1 ms โปรแกรมคำนวณสลิปจากความเร็วปัจจุบัน แก้วงจรสมมูลต่อเฟส (R₁ X₁ Xm และโรเตอร์กรงคู่) ที่แรงดันและความถี่ที่มอเตอร์ได้รับในขณะนั้น ได้กระแสและแรงบิด แล้วอินทิเกรตสมการ \(J\,d\omega/dt = T_m - T_L\) โอเวอร์โหลดใช้แบบจำลองความร้อนอันดับหนึ่ง \(d\theta/dt = ((I/I_r)^2 - \theta)/\tau\) ตัดเมื่อ \(\theta \ge 1.2^2\) ซึ่งให้เส้นโค้งแบบคลาส 10 ในช่วงสตาร์-เดลต้า กระแสและแรงบิดในช่วง Y เป็น 1/3 ของเดลต้าตามสูตร <a href="/learn/motor-control/star-delta/#Y1">Y1</a>–<a href="/learn/motor-control/star-delta/#Y2">Y2</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ws">
+    <h2 id="ws">ใบงาน 6 ชุด</h2>
+    <div class="mc-grid">
+      <div class="mc-card"><h3>1 · กระแสสตาร์ทตรง</h3><p>DOL โหลดปั๊ม 0.7 Tn: บันทึกกระแสสูงสุด เวลาที่ความเร็วถึง 1400 rpm และกระแสขณะเดิน เทียบกับ Ia/In บนแผ่นป้าย</p><p><b>คาดว่า:</b> ~90 A (6.5 In) เร่งไม่ถึง 1 s</p></div>
+      <div class="mc-card"><h3>2 · สตาร์-เดลต้าปกติ</h3><p>โหลด 0.7 Tn ไทเมอร์ 6 s: บันทึกกระแสช่วง Y กระแสกระชากตอนเปลี่ยน คิดเป็นเท่าของ In และอัตราส่วนกับ DOL</p><p><b>คาดว่า:</b> ช่วง Y ≈ 1/3 ของ DOL</p></div>
+      <div class="mc-card"><h3>3 · ไทเมอร์สั้นเกิน</h3><p>ตั้งไทเมอร์ 0.5 s ทำซ้ำใบงาน 2 กระแสกระชากเปลี่ยนไปเท่าไร อธิบายด้วยกราฟใน <a href="/learn/motor-control/star-delta/#timer">หน้าสตาร์-เดลต้า</a></p></div>
+      <div class="mc-card"><h3>4 · โหลดหนักกับสตาร์-เดลต้า</h3><p>เปลี่ยนเป็นสายพาน 1.0 Tn ช่วง Y มอเตอร์ถึงความเร็วเท่าไร ทำไม ลองซอฟต์สตาร์ทจำกัด 3 In และ VFD กับโหลดเดียวกัน วิธีไหนเหมาะ</p></div>
+      <div class="mc-card"><h3>5 · เฟสขาด</h3><p>เดิน DOL โหลด 0.7 Tn แล้วติ๊กเฟสขาด สังเกตกระแส ความเร็ว และเวลาที่โอเวอร์โหลดตัด จากนั้นหยุดแล้วสตาร์ทใหม่ขณะเฟสยังขาด</p><p><b>คาดว่า:</b> สตาร์ทไม่ได้ กระแสสูงค้าง</p></div>
+      <div class="mc-card"><h3>6 · กลับทางขณะหมุน</h3><p>แท็บกลับทาง ติ๊ก “ไม่มีอินเตอร์ล็อกผ่าน STOP” เดินหน้าจนเต็มรอบแล้วกดถอยหลัง บันทึกกระแสสูงสุดและเวลาที่ผ่านศูนย์ คำนวณพลังงานด้วย <a href="/learn/motor-control/forward-reverse/#R5">R5</a></p></div>
+    </div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

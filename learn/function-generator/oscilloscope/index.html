@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=7ca4322c">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/oscilloscope/#article","headline":"ออสซิลโลสโคป: V/div Time/div ทริกเกอร์ โพรบ และแบนด์วิดท์","description":"วิธีใช้ออสซิลโลสโคปตั้งแต่อ่านกราติคูล ตั้ง V/div และ Time/div ทริกเกอร์ให้ภาพนิ่ง โพรบ 1× 10× และการชดเชยโพรบ คัปปลิง AC DC แบนด์วิดท์กับเวลาขาขึ้น อัตราสุ่มและอเลียสซิง FFT การวัดอัตโนมัติ และความปลอดภัยเรื่องกราวด์ พร้อมสูตรรหัส O ตัวอย่างวิธีทำ และสโคปจำลองให้ลองหมุนเอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/oscilloscope/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/oscilloscope/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Oscilloscope","Trigger","Oscilloscope probe","Probe compensation","Bandwidth","Rise time","Sampling rate","Aliasing","Fast Fourier transform","Electrical safety"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-oscilloscope.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"ออสซิลโลสโคป: V/div Time/div ทริกเกอร์ โพรบ และแบนด์วิดท์","item":"https://modsengineeringmath.com/learn/function-generator/oscilloscope/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมภาพบนออสซิลโลสโคปวิ่งไม่นิ่ง?","acceptedAnswer":{"@type":"Answer","text":"เกือบทุกครั้งเป็นเพราะทริกเกอร์ ระดับทริกเกอร์อยู่นอกช่วงของสัญญาณ เลือกแหล่งทริกเกอร์ผิดช่อง หรือสัญญาณมีหลายความถี่ปนกัน ให้กดปุ่ม 50% เพื่อตั้งระดับไว้กลางสัญญาณ เลือกแหล่งเป็นช่องที่มีสัญญาณ และถ้ามาจากเครื่องกำเนิดสัญญาณ ให้ต่อขั้ว SYNC เข้า EXT TRIG"}},{"@type":"Question","name":"โพรบ 1× กับ 10× ต่างกันอย่างไร ควรใช้แบบไหน?","acceptedAnswer":{"@type":"Answer","text":"โพรบ 10× ลดทอนสัญญาณ 10 เท่า แต่มีความต้านทานอินพุต 10 MΩ และความจุเพียงราว 10–15 pF แบนด์วิดท์หลายร้อย MHz จึงรบกวนวงจรน้อยกว่ามาก โพรบ 1× มีแบนด์วิดท์เพียงราว 6 MHz และความจุราว 100 pF เหมาะเฉพาะสัญญาณเล็กมากความถี่ต่ำ งานทั่วไปให้ใช้ 10× และตั้งเมนูโพรบของสโคปเป็น 10× ให้ตรงกัน"}},{"@type":"Question","name":"สโคป 100 MHz วัดสัญญาณ 100 MHz ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้แต่ค่าจะต่ำไปราว 30 % เพราะแบนด์วิดท์คือความถี่ที่แอมพลิจูดลดลง 3 dB ถ้าต้องการความคลาดเคลื่อนไม่เกินราว 2–3 % ควรเลือกสโคปที่แบนด์วิดท์อย่างน้อย 5 เท่าของความถี่ที่วัด สำหรับคลื่นสี่เหลี่ยมให้คิดจากเวลาขาขึ้นด้วยสูตร BW ≈ 0.35/t_r"}},{"@type":"Question","name":"หนีบกราวด์โพรบที่จุดไหนก็ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ได้ คลิปกราวด์ของโพรบต่อกับสายดินของปลั๊กสโคปโดยตรง ต้องหนีบที่กราวด์ของวงจรเท่านั้น ถ้าวงจรต่อไฟบ้านโดยไม่มีหม้อแปลงแยก หรือจุดที่วัดไม่ใช่กราวด์ จะเกิดลัดวงจรผ่านโพรบ ให้วัดแบบผลต่างสองช่อง (CH1 − CH2) ใช้โพรบดิฟเฟอเรนเชียล หรือหม้อแปลงแยกที่ฝั่งวงจร"}},{"@type":"Question","name":"อัตราสุ่ม 1 GSa/s แต่ทำไมที่ Time/div ช้า ๆ สโคปบอกแค่ไม่กี่ kSa/s?","acceptedAnswer":{"@type":"Answer","text":"หน่วยความจำมีจำนวนจุดจำกัด อัตราสุ่มจริงเท่ากับจำนวนจุดหารด้วยเวลาทั้งจอ f_s = N/(10 t_{div}) เช่น 10,000 จุดที่ 5 ms/div ได้เพียง 200 kSa/s ถ้าสัญญาณมีความถี่สูงกว่าครึ่งหนึ่งของค่านี้ จะเกิดอเลียสซิง เห็นความถี่ผิด ให้ลด Time/div ลงก่อนเสมอแล้วค่อยขยายออก"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -58,6 +58,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
@@ -295,6 +296,35 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
         </div>
       </div>
       <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
@@ -904,12 +934,12 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7ca4322c" defer></script>
-<script src="/assets/lesson.js?v=7ca4322c" defer></script>
-<script src="/assets/fgcalc.js?v=7ca4322c" defer></script>
-<script src="/assets/fgs-core.js?v=7ca4322c" defer></script>
-<script src="/assets/fgs-scope.js?v=7ca4322c" defer></script>
-<script src="/assets/fgs-ui.js?v=7ca4322c" defer></script>
-<script src="/assets/fgs-app.js?v=7ca4322c" defer></script>
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+<script src="/assets/fgcalc.js?v=6c2eac95" defer></script>
+<script src="/assets/fgs-core.js?v=6c2eac95" defer></script>
+<script src="/assets/fgs-scope.js?v=6c2eac95" defer></script>
+<script src="/assets/fgs-ui.js?v=6c2eac95" defer></script>
+<script src="/assets/fgs-app.js?v=6c2eac95" defer></script>
 </body>
 </html>

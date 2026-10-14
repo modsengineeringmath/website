@@ -1,0 +1,167 @@
+<!--meta
+{
+  "title": "PLC Programming Languages to IEC 61131-3: LD, FBD, ST, SFC, IL — One Program in Several Languages, Data Types, Function Blocks | Mod's Engineering Mathematics",
+  "h1": "PLC Programming Languages to IEC 61131-3: LD, FBD, ST, SFC and IL — One Program in Several Languages, Data Types and Choosing a Language",
+  "description": "The standard languages of every PLC brand under IEC 61131-3: Ladder Diagram (LD), Function Block Diagram (FBD), Structured Text (ST), Sequential Function Chart (SFC) and the withdrawn Instruction List (IL). The same motor-control program written in every language, the BOOL, INT, DINT, REAL and TIME data types, literals such as T#5s, functions versus function blocks, building a reusable motor FB, and when to use which language.",
+  "lesson": "en/plc",
+  "sub": "iec-languages",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["IEC 61131-3", "Structured text", "Function block diagram", "Sequential function chart"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "Should I program a PLC in ladder or Structured Text?", "a": "Choose by the job: for on/off logic and interlocks that technicians must read and diagnose on site, ladder is best. For calculations, data handling, recipes, loops and complex state machines, ST is shorter and clearer. Sequences suit SFC. Real projects usually mix languages, wrapping the complex parts in function blocks that are called from ladder."},
+    {"q": "What is the difference between a function (FUNCTION) and a function block (FUNCTION_BLOCK)?", "a": "A function has no memory and always gives the same result for the same inputs, e.g. scaling a value. A function block has internal variables that keep their values from scan to scan and must be instantiated, e.g. timers, counters, PID or a motor-control block."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>IEC 61131-3 languages</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.5 · PLC · IEC 61131-3 Languages</p>
+      <h1>PLC Programming Languages to IEC 61131-3: LD, FBD, ST, SFC and IL — One Program in Several Languages, Data Types and Choosing a Language</h1>
+      <p class="lede">IEC 61131-3 defines five languages for every PLC brand, so that someone who learned on one brand can read another. This page writes the same task — a self-holding motor with a 5-second warning horn — in every language, so you can see what each one is good at.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>LD: bit logic that reads like a relay circuit · FBD: wired blocks, suits process control</li>
+          <li>ST: a Pascal-like text language, suits calculations, loops, data and state machines</li>
+          <li>SFC: steps and transitions, suits sequences · IL: withdrawn in the 2013 edition</li>
+          <li>FUNCTION has no memory · FUNCTION_BLOCK has memory (timers, PID)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="Type e.g. int range, time literal, assignment, case" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="task">
+    <h2 id="task">One task, five languages <span class="lv lv-b">Basic</span></h2>
+    <p>Inputs: STOP (NC), START · outputs: Horn, Conveyor · press START and the horn sounds for 5 s, then the conveyor runs; press STOP and everything stops.</p>
+    <h3>Ladder Diagram (LD)</h3>
+    <pre class="code">  I0.0(STOP)   I0.1(START)                       M0.0
+──┤ ├────────┬──┤ ├──────┬───────────────────────( )──   <span class="c">run command (seal-in)</span>
+             │  M0.0     │
+             └──┤ ├──────┘
+  M0.0                       ┌─TON T1──┐
+──┤ ├────────────────────────┤IN      Q├───────────      <span class="c">time 5 s</span>
+                      T#5s ──┤PT    ET├
+  M0.0        T1                                  Q0.1
+──┤ ├────────┤/├────────────────────────────────( )──   <span class="c">horn</span>
+  T1                                              Q0.0
+──┤ ├───────────────────────────────────────────( )──   <span class="c">conveyor</span></pre>
+    <h3>Function Block Diagram (FBD)</h3>
+    <pre class="code">          ┌──────┐
+ START ───┤  ≥1  │      ┌──────┐
+ Run ─────┤      ├──────┤  &amp;   ├──── Run
+          └──────┘ STOP─┤      │
+                        └──────┘
+          ┌─TON───┐                  ┌──────┐
+ Run ─────┤IN    Q├──── T1.Q ───────┤  &amp;   │
+  T#5s ───┤PT  ET├     Run ─────────┤      ├──── Horn
+          └───────┘    T1.Q ──o─────┤      │      (o = inverted)
+                                     └──────┘
+ T1.Q ───────────────────────────────────────── Conveyor</pre>
+    <h3>Structured Text (ST)</h3>
+    <pre class="code"><span class="k">VAR</span>
+    Run      : BOOL;
+    T1       : TON;
+<span class="k">END_VAR</span>
+
+Run := (PB_Start <span class="k">OR</span> Run) <span class="k">AND</span> PB_Stop_NC;      <span class="c">// seal-in</span>
+T1(IN := Run, PT := T#5S);                       <span class="c">// call the timer instance every scan</span>
+Horn     := Run <span class="k">AND NOT</span> T1.Q;
+Conveyor := T1.Q;</pre>
+    <h3>Sequential Function Chart (SFC)</h3>
+    <pre class="code">  ╔════════╗
+  ║ 0 Wait ║
+  ╚═══╤════╝
+    ──┼── START
+  ┌───┴────┐   ┌────────────┐
+  │ 1 Warn ├───┤ N  Horn    │
+  └───┬────┘   └────────────┘
+    ──┼── Step1.T >= T#5s
+  ┌───┴────┐   ┌────────────┐
+  │ 2 Run  ├───┤ N Conveyor │
+  └───┬────┘   └────────────┘
+    ──┼── NOT PB_Stop_NC
+      └──────► back to step 0</pre>
+    <h3>Instruction List (IL) — a withdrawn language</h3>
+    <pre class="code">LD   PB_Start
+OR   Run
+AND  PB_Stop_NC
+ST   Run</pre>
+    <p class="mc-note">IL resembles assembly language. It was removed from the third edition of IEC 61131-3 (2013) but is still found in older programs (Siemens STL, Mitsubishi List).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">Data types and literals <span class="lv lv-i">Intermediate</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Type</th><th>Size</th><th>Range</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td>BOOL</td><td>1 bit</td><td>FALSE / TRUE</td><td>Digital I/O, status</td></tr>
+        <tr><td>INT</td><td>16 bits</td><td>−32 768 … 32 767</td><td>Raw analog values, counters</td></tr>
+        <tr><td>DINT</td><td>32 bits</td><td>−2 147 483 648 … 2 147 483 647</td><td>Large counters, encoder positions</td></tr>
+        <tr><td>REAL</td><td>32-bit IEEE 754</td><td>~7 significant digits</td><td>Engineering values, PID</td></tr>
+        <tr><td>TIME</td><td>32 bits (ms)</td><td>T#0ms … T#24d20h…</td><td>Timer presets</td></tr>
+        <tr><td>WORD / DWORD</td><td>16 / 32 bits</td><td>Bit patterns</td><td>Multi-bit status, Modbus registers</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="L1" data-k="integer range two complement int dint"><p class="tf-n"><b><span class="fid">L1</span> Signed integer range</b></p>
+        \[ -2^{n-1} \le x \le 2^{n-1} - 1 \qquad n = 16 \Rightarrow -32768 \ldots 32767 \]</div>
+<div class="tf" id="L2" data-k="integer division overflow scaling order int real"><p class="tf-n"><b><span class="fid">L2</span> Integer pitfalls in scaling</b></p>
+        \[ \frac{27648 \times 10}{27648} \;\text{(INT overflows at the multiplication)} \qquad \frac{13824}{27648}\times 10 = 0 \;\text{(division truncates before the multiplication)} \]</div>
+    <p>How to avoid them: convert to REAL before calculating (<code>INT_TO_REAL</code>), or use DINT and multiply before dividing — a scaling example is in <a href="/learn/en/plc/analog-pid-vfd/">Analog · PID</a>.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="fb">
+    <h2 id="fb">Building a reusable motor function block <span class="lv lv-a">Advanced</span></h2>
+    <p>A plant with 50 motors should not write the seal-in circuit, feedback check and hour counter 50 times. Build one FB and call 50 instances of it.</p>
+    <pre class="code"><span class="k">FUNCTION_BLOCK</span> FB_Motor
+<span class="k">VAR_INPUT</span>  Start, Stop_NC, OL_NC, Feedback : BOOL; FbTime : TIME := T#2S; <span class="k">END_VAR</span>
+<span class="k">VAR_OUTPUT</span> Run, Fault : BOOL; Hours : REAL; <span class="k">END_VAR</span>
+<span class="k">VAR</span> Cmd : BOOL; TFb : TON; THr : TON; <span class="k">END_VAR</span>
+
+Cmd := (Start <span class="k">OR</span> Cmd) <span class="k">AND</span> Stop_NC <span class="k">AND</span> OL_NC <span class="k">AND NOT</span> Fault;
+TFb(IN := Cmd <span class="k">XOR</span> Feedback, PT := FbTime);   <span class="c">// commanded but no feedback, or feedback without a command</span>
+<span class="k">IF</span> TFb.Q <span class="k">THEN</span> Fault := TRUE; <span class="k">END_IF</span>          <span class="c">// Fault is reset from the HMI</span>
+Run := Cmd;
+THr(IN := Feedback <span class="k">AND NOT</span> THr.Q, PT := T#36S);  <span class="c">// pulse every 0.01 h</span>
+<span class="k">IF</span> THr.Q <span class="k">THEN</span> Hours := Hours + 0.01; <span class="k">END_IF</span>
+<span class="k">END_FUNCTION_BLOCK</span></pre>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">Choosing the right language for the job</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Task</th><th>Best language</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Interlocks, seal-in circuits, safety-related logic</td><td>LD</td><td>Site technicians can monitor it online and diagnose it at once</td></tr>
+        <tr><td>Process control loops, PID blocks</td><td>FBD</td><td>Shows the signal flow</td></tr>
+        <tr><td>Calculations, recipes, arrays, strings, communications</td><td>ST</td><td>Concise, with loops and conditions</td></tr>
+        <tr><td>Machines that work in steps, batch processes</td><td>SFC (or ST with CASE)</td><td>Shows the active step, so you can see at once which step it is stuck in</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

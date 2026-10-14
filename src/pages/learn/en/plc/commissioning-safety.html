@@ -1,0 +1,129 @@
+<!--meta
+{
+  "title": "PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 | Ajarn Mod",
+  "h1": "PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation",
+  "description": "The steps for testing and commissioning a PLC system: pre-energisation checks, point-by-point I/O testing, analog loop checks, the dangers of forcing bits, program backup and version control, stop categories 0, 1 and 2 per IEC 60204-1, emergency stop with a dual-channel safety relay, Performance Level (PL) per ISO 13849-1 and SIL per IEC 62061, light-curtain safety distances per ISO 13855, and a troubleshooting flow for when a machine will not run.",
+  "lesson": "en/plc",
+  "sub": "commissioning-safety",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Commissioning", "Emergency stop", "ISO 13849", "Functional safety"],
+  "scripts": ["/assets/lesson.js"],
+  "faq": [
+    {"q": "Why is forcing bits in a PLC dangerous?", "a": "A force sets a bit regardless of the program conditions or the real state of the input. The machine may move when nobody expects it, software interlocks are bypassed, and if the force is forgotten it stays in place until an accident happens. There should be a procedure: get permission, warn everyone in the area, log it, and check that no forces remain before handing over the machine."},
+    {"q": "Can I wire the emergency-stop button into the PLC and let the program cut the outputs?", "a": "Not with a standard PLC. An emergency stop needs a reliability level assessed to ISO 13849-1 or IEC 62061, which general-purpose PLCs are not certified for. Use a safety relay or a safety PLC that removes power from the actuators directly, and bring its status into the PLC for display and for sequencing the restart."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Commissioning · Safety</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.9 · PLC · Commissioning &amp; Safety</p>
+      <h1>PLC Commissioning, Machine Safety and Troubleshooting: Loop Checks, Forcing, Emergency Stop, IEC 60204-1, ISO 13849 and Documentation</h1>
+      <p class="lede">A program that passes in the simulator is not yet a machine ready for use. Commissioning is when accidents happen most often, because the wiring is incomplete, people are not yet familiar with the machine and the program is being edited live. This page gives a systematic procedure, the safety principles the standards require, and a disciplined way to find faults.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Test in layers: wiring → supplies → I/O point by point → logic without power → live run</li>
+          <li>Emergency stop = stop category 0 or 1 through safety devices, not through a standard PLC program</li>
+          <li>The required level (PLr) comes from the risk assessment · light-curtain distance \(S = K\,T + C\)</li>
+          <li>Every force needs a procedure, and none may remain at handover</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="e.g. stop category, pl, sil, safety distance, light curtain" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="comm">
+    <h2 id="comm">Testing and commissioning procedure <span class="lv lv-b">Basic</span></h2>
+    <ol>
+      <li><b>Before power-up:</b> check the wiring against the drawings, PE continuity, power-cable insulation resistance (with electronics disconnected) and that terminals are tight</li>
+      <li><b>Energise section by section:</b> 24 VDC control power first, measure the voltage at every I/O group · power circuit still isolated</li>
+      <li><b>Test inputs one at a time:</b> press the real button / trigger the real sensor in the field, watch the bit change in the software, record it on the I/O check sheet</li>
+      <li><b>Test outputs one at a time:</b> with the power circuit still isolated, command each output (using test mode or a force under procedure) and check the right contactor, valve or lamp operates</li>
+      <li><b>Analog loop check:</b> inject 4 · 12 · 20 mA with a calibrator and read the engineering value in the PLC and on the HMI</li>
+      <li><b>Safety tests:</b> every emergency stop, safety gate and light curtain — check that power is really removed and that reset must be done manually</li>
+      <li><b>Dry logic test:</b> run the whole sequence with the power circuit isolated, simulating sensors</li>
+      <li><b>Live run:</b> one motor at a time, checking direction and current, then the whole sequence, both normal and abnormal cases (pull a sensor, trip an overload)</li>
+      <li><b>Handover:</b> no forces left, program backed up with comments, documentation: I/O list, as-built drawings, drive parameters</li>
+    </ol>
+    <p class="mc-warn"><b>Forcing:</b> before forcing an output that makes the machine move, warn everyone in the area, have someone standing at the emergency stop, and log it. Most software shows a warning symbol while a force is active — check it every time before leaving site.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="stop">
+    <h2 id="stop">Stop categories and emergency stop (IEC 60204-1) <span class="lv lv-i">Intermediate</span></h2>
+<div class="tf" id="K1" data-k="stop category 0 1 2 iec 60204-1"><p class="tf-n"><b><span class="fid">K1</span> Stop categories</b></p>
+        \[ \text{Cat 0: remove power immediately} \qquad \text{Cat 1: controlled stop, then remove power} \qquad \text{Cat 2: controlled stop, power kept on} \]</div>
+    <p>An emergency stop must be category 0 or 1 only. Category 1 is used when cutting power immediately is more dangerous, e.g. a large centrifuge that must be braked by the drive before power is removed (using a time-delayed safety relay). The emergency-stop button is a red mushroom head on a yellow background, latches when pressed, has positively driven (direct-opening) contacts, and releasing it must not restart the machine by itself.</p>
+    <figure class="xfig"><!--FIG:plc-estop-en--><svg class="xf" viewBox="0 0 780 320" role="img" aria-label="A correct emergency stop: a dual-channel E-stop into a safety relay that cuts the contactor coils directly; the PLC only reads the status"><defs><marker id="plc-estop-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="40" y="60" width="120" height="120" rx="10"/><text x="100" y="52" class="xf-k" text-anchor="middle">E-stop, 2 channels</text><circle class="xf-estopc" cx="100" cy="120" r="34"/><text x="100" y="125" class="xf-h" text-anchor="middle">STOP</text><rect class="xf-boxc" x="260" y="50" width="170" height="180" rx="10"/><text x="345" y="74" class="xf-h" text-anchor="middle">Safety relay</text><text x="345" y="96" class="xf-k" text-anchor="middle">S11-S12 · S21-S22</text><text x="345" y="116" class="xf-k" text-anchor="middle">cross-fault monitoring</text><text x="345" y="136" class="xf-k" text-anchor="middle">manual reset S33-S34</text><text x="345" y="160" class="xf-k" text-anchor="middle">13-14 · 23-24 (NO)</text><text x="345" y="180" class="xf-k" text-anchor="middle">41-42 → PLC (status)</text><line class="xf-ln" x1="160" y1="100" x2="260" y2="100"/><line class="xf-ln" x1="160" y1="140" x2="260" y2="140"/><text x="210" y="94" class="xf-k" text-anchor="middle">CH1</text><text x="210" y="134" class="xf-k" text-anchor="middle">CH2</text><line class="xf-ln" x1="430" y1="150" x2="520" y2="150"/><line class="xf-ln" x1="430" y1="170" x2="520" y2="170"/><rect class="xf-boxa" x="520" y="130" width="60" height="60" rx="6"/><text x="550" y="165" class="xf-k" text-anchor="middle">PLC Q</text><line class="xf-ln" x1="580" y1="160" x2="640" y2="160"/><rect class="xf-coil" x="640" y="140" width="50" height="40" rx="2"/><text x="665" y="165" class="xf-k" text-anchor="middle">-K1</text><text x="570" y="214" class="xf-k" text-anchor="middle">13-14 in series with the PLC output → always cuts the coil</text><line class="xf-ln" x1="430" y1="190" x2="470" y2="190"/><line class="xf-ln" x1="470" y1="190" x2="470" y2="260"/><line class="xf-ln" x1="470" y1="260" x2="520" y2="260"/><text x="528" y="264" class="xf-k">I1.0 status (not the safety path)</text><text x="390" y="306" class="xf-m" text-anchor="middle" textLength="768" lengthAdjust="spacingAndGlyphs">Stop category 0 (IEC 60204-1): remove power immediately · assess the PL to ISO 13849-1 · never make a standard PLC the only E-stop path</text></svg><!--/FIG--><figcaption>Figure 1 · The safety relay monitors both channels and cross-channel shorts; its safety contacts are in series with the PLC output, so it can always cut the coil — the PLC only reads the status</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="pl">
+    <h2 id="pl">Safety levels: PL and SIL <span class="lv lv-a">Advanced</span></h2>
+    <p>ISO 13849-1 assesses risk from three factors: severity of injury (S1 slight / S2 serious), frequency of exposure to the hazard (F1 seldom / F2 frequent) and possibility of avoiding it (P1 possible / P2 scarcely possible). This gives the required level PLr from a to e. The safety function is then designed (category structure B, 1, 2, 3, 4; component lifetime MTTFd; diagnostic coverage DC) so that PL ≥ PLr.</p>
+<div class="tf" id="K2" data-k="performance level pfhd sil mapping dangerous failure rate per hour"><p class="tf-n"><b><span class="fid">K2</span> PL / SIL by dangerous failure rate</b></p>
+        \[ \text{PL d} \approx \text{SIL 2}: 10^{-7} \le PFH_D < 10^{-6} \qquad \text{PL e} \approx \text{SIL 3}: 10^{-8} \le PFH_D < 10^{-7} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Example function</th><th>Typical PLr</th><th>Common implementation</th></tr></thead>
+      <tbody>
+        <tr><td>Emergency stop on a general machine</td><td>c–d</td><td>Dual-channel button + safety relay + two contactors in series with feedback</td></tr>
+        <tr><td>Safety gate on a cutting machine / press</td><td>d–e</td><td>Two gate switches or a coded switch + safety PLC</td></tr>
+        <tr><td>Light curtain in front of a press</td><td>d–e</td><td>Type 4 light curtain + mounting distance per K3</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="K3" data-k="safety distance light curtain iso 13855 approach speed mounting"><p class="tf-n"><b><span class="fid">K3</span> Minimum safety distance (ISO 13855)</b></p>
+        \[ S = K\,T + C \qquad K = 2000\ \text{mm/s (if } S \le 500\ \text{mm)},\ 1600\ \text{mm/s (otherwise)} \qquad C = 8(d - 14)\ \text{mm},\ d \le 40\ \text{mm} \]</div>
+<div class="wx" id="ex-k-1"><div class="wx-head"><span class="mono">Example K-1</span><h3>A 14 mm resolution light curtain with a total stopping time of 120 ms</h3></div>
+<ol class="steps">
+<li><p>Total time T = light-curtain response + safety relay + machine stopping time (measured) = 0.12 s</p></li>
+<li><p>\(C = 8(14 - 14) = 0\) · \(S = 2000(0.12) + 0 = 240\) mm ≤ 500 ✓ so K = 2000 applies</p></li>
+<li><p>Mount the light curtain at least 240 mm from the hazard point (the standard's minimum is 100 mm) and prevent reaching over the top or around the sides</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trouble">
+    <h2 id="trouble">Troubleshooting when the machine will not run <span class="lv lv-i">Intermediate</span></h2>
+    <ol>
+      <li><b>Check the PLC status:</b> RUN/STOP, ERR lamp, battery lamp, event log (diagnostic buffer)</li>
+      <li><b>Check the HMI:</b> alarm messages, the step it is stuck in (if written as a state machine)</li>
+      <li><b>Work back from the output:</b> an output that should be on but is not → open that rung online → find the contact that is “not green” → is it an input or an internal bit?</li>
+      <li><b>If it is an input:</b> look at the module LED → if off, measure the voltage at the terminal → check the sensor / wiring / sensor supply</li>
+      <li><b>If the output bit is 1 but the device does not operate:</b> output LED → output fuse → interposing relay → coil → hard-wired interlocks (auxiliary NC, 95-96, safety relay)</li>
+    </ol>
+    <p class="mc-note">Golden rule: “change one thing at a time and record every change”, especially when editing the program online. Keep a copy before every edit and name the file with the date and the reason.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="docs">
+    <h2 id="docs">Documentation to hand over</h2>
+    <ul class="chk">
+      <li>As-built electrical drawings with the bill of materials</li>
+      <li>I/O list (address, tag name, description, signal type, scaling range)</li>
+      <li>Commented PLC and HMI programs as source files (not just an upload from the PLC), with passwords handed to the owner</li>
+      <li>Parameter settings of every drive and smart device</li>
+      <li>Signed I/O check sheets, loop checks and safety-function test results</li>
+      <li>Operating manual and recovery procedure after an emergency stop</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

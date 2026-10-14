@@ -1,0 +1,151 @@
+<!--meta
+{
+  "title": "การควบคุมอัตโนมัติด้วย PLC: แลดเดอร์ ไทเมอร์ เคาน์เตอร์ IEC 61131-3 ควบคุมมอเตอร์ พร้อมซิมูเลเตอร์ | อาจารย์มด",
+  "h1": "การควบคุมอัตโนมัติด้วย PLC",
+  "description": "ชุดบทเรียน PLC ภาษาไทยครบชุด: PLC คืออะไร วงรอบการสแกน การต่อสายอินพุต-เอาต์พุต PNP NPN ซิงก์ ซอร์ส แลดเดอร์ไดอะแกรม ไทเมอร์ เคาน์เตอร์ ภาษา IEC 61131-3 (LD FBD ST SFC) ควบคุมมอเตอร์ DOL กลับทาง สตาร์-เดลต้า การควบคุมแบบลำดับขั้น อนาล็อก 4–20 mA PID สั่งอินเวอร์เตอร์ Modbus การทดสอบระบบและความปลอดภัยเครื่องจักร พร้อมซิมูเลเตอร์แลดเดอร์ในเบราว์เซอร์",
+  "ogTitle": "PLC: แลดเดอร์ ไทเมอร์ ควบคุมมอเตอร์ + ซิมูเลเตอร์",
+  "og": {"title": "การควบคุมอัตโนมัติด้วย PLC + ซิมูเลเตอร์แลดเดอร์"},
+  "lesson": "plc",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Programmable logic controller", "Ladder logic", "IEC 61131-3", "Industrial automation"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "jsonld": [
+    {
+      "@type": "Course",
+      "@id": "https://modsengineeringmath.com/learn/plc/#course",
+      "name": "การควบคุมอัตโนมัติด้วย PLC (PLC Automation)",
+      "alternateName": ["พีแอลซี", "PLC เบื้องต้น", "Ladder diagram ภาษาไทย", "PLC course Thai"],
+      "description": "ชุดบทเรียน 10 หน้า: พื้นฐาน PLC การต่อสาย I/O แลดเดอร์ ไทเมอร์ เคาน์เตอร์ ภาษา IEC 61131-3 ควบคุมมอเตอร์ ลำดับขั้น อนาล็อก PID สั่ง VFD ทดสอบระบบ ความปลอดภัย และซิมูเลเตอร์",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "educationalLevel": ["Vocational", "Undergraduate"],
+      "teaches": ["PLC scan cycle", "Sinking and sourcing I/O", "Ladder logic", "IEC 61131-3 timers and counters", "Structured Text", "Sequential function chart", "Analog scaling and PID", "Machine safety"],
+      "provider": {"@id": "https://modsengineeringmath.com/#mod"},
+      "url": "https://modsengineeringmath.com/learn/plc/",
+      "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT14H"},
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB", "category": "Free"}
+    }
+  ],
+  "faq": [
+    {"q": "เรียน PLC ต้องรู้อะไรก่อน?", "a": "ควรเข้าใจวงจรควบคุมด้วยคอนแทกเตอร์ (ล็อกตัวเอง อินเตอร์ล็อก ไทเมอร์) เพราะแลดเดอร์ถูกออกแบบให้อ่านเหมือนวงจรรีเลย์ และรู้ไฟฟ้าพื้นฐาน 24 VDC กับ 230 VAC เพื่อต่อสาย I/O ได้ถูก ทั้งหมดนี้อยู่ในชุดควบคุมมอเตอร์บนเว็บนี้"},
+    {"q": "ควรเริ่มกับ PLC ยี่ห้อไหน?", "a": "หลักการเหมือนกันทุกยี่ห้อเพราะอิงมาตรฐาน IEC 61131 เลือกยี่ห้อที่ใช้ในโรงงานหรือสถานศึกษาใกล้ตัว และที่มีซอฟต์แวร์ฟรีพร้อมซิมูเลเตอร์ ในภูมิภาคนี้พบ Mitsubishi, Omron, Siemens, Delta, Schneider, Rockwell และ Keyence บ่อย"},
+    {"q": "PLC ต่างจาก Arduino หรือไมโครคอนโทรลเลอร์อย่างไร?", "a": "PLC ออกแบบมาสำหรับสภาพแวดล้อมโรงงาน: I/O 24 VDC ที่ทนสัญญาณรบกวนและมีการแยกโดดเดี่ยว ทำงานแบบสแกนที่คาดเดาได้ มีการวินิจฉัยตัวเอง ภาษาตามมาตรฐาน ซ่อมและเปลี่ยนโมดูลได้ระหว่างใช้งาน และผ่านการรับรองตามมาตรฐานอุตสาหกรรม ส่วนไมโครคอนโทรลเลอร์ยืดหยุ่นและถูกกว่า แต่ผู้ใช้ต้องสร้างความทนทานเหล่านี้เอง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>PLC</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22 · PLC Automation · ช่างไฟฟ้า → นักศึกษา → วิศวกร</p>
+      <h1>การควบคุมอัตโนมัติด้วย PLC</h1>
+      <p class="lede">PLC (Programmable Logic Controller) แทนที่ตู้รีเลย์นับร้อยตัวด้วยโปรแกรมที่แก้ไขได้ ชุดนี้สอนตั้งแต่ PLC สแกนอย่างไร ต่อเซนเซอร์ PNP/NPN ให้ถูก เขียนแลดเดอร์ ไทเมอร์ เคาน์เตอร์ ไปจนถึงควบคุมมอเตอร์ สตาร์-เดลต้า ระบบลำดับขั้น อนาล็อก PID และการสั่งอินเวอร์เตอร์ ทุกตัวอย่างลองได้ทันทีในซิมูเลเตอร์ในหน้าเว็บ มี <!--formula-count:plc--> สูตรที่มีรหัสอ้างอิง และ <!--example-count:plc--> ตัวอย่าง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#try">ลองซิมูเลเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#path">เส้นทางเรียน</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/plc/plc-motor-control/">ควบคุมมอเตอร์ด้วย PLC</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">ค้นหาสูตร</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>PLC วนทำสามอย่างซ้ำทุกไม่กี่มิลลิวินาที: อ่านอินพุต → รันโปรแกรม → เขียนเอาต์พุต</li>
+          <li>แลดเดอร์: อนุกรม = AND · ขนาน = OR · NC = NOT · วงจรล็อกตัวเองเหมือนคอนแทกเตอร์</li>
+          <li>เซนเซอร์ PNP คู่กับอินพุตแบบซิงก์ (COM ลง 0 V) · NPN คู่กับซอร์ส</li>
+          <li>ปุ่ม STOP และหยุดฉุกเฉินต่อแบบ NC และอินเตอร์ล็อกสำคัญต้องคงไว้ในฮาร์ดแวร์</li>
+          <li>ไทเมอร์ TON TOF TP และเคาน์เตอร์ CTU CTD ตาม IEC 61131-3 ใช้ได้ทุกยี่ห้อ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="path">
+    <h2 id="path">เส้นทางเรียนตามระดับ</h2>
+    <div class="ee-cards">
+      <div class="ee-card"><p class="mono">ระดับ 1 · ช่าง · ปวช.–ปวส.</p><h3>ต่อสายและเขียนแลดเดอร์</h3><p>PLC คืออะไร ต่อ I/O แลดเดอร์ ล็อกตัวเอง ไทเมอร์ เคาน์เตอร์</p><p><a href="/learn/plc/plc-fundamentals/">พื้นฐาน</a> → <a href="/learn/plc/io-wiring/">ต่อสาย I/O</a> → <a href="/learn/plc/ladder-basics/">แลดเดอร์</a> → <a href="/learn/plc/timers-counters/">ไทเมอร์</a></p></div>
+      <div class="ee-card"><p class="mono">ระดับ 2 · ช่างเทคนิค · โปรแกรมเมอร์</p><h3>งานจริงในโรงงาน</h3><p>ควบคุมมอเตอร์ ลำดับขั้น อนาล็อก สั่ง VFD ทดสอบระบบ</p><p><a href="/learn/plc/plc-motor-control/">ควบคุมมอเตอร์</a> → <a href="/learn/plc/sequential-control/">ลำดับขั้น</a> → <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID</a></p></div>
+      <div class="ee-card"><p class="mono">ระดับ 3 · นักศึกษาวิศวกรรม · วิศวกร</p><h3>ออกแบบเชิงระบบ</h3><p>พีชคณิตบูลีน สเตตแมชชีน SFC ST เวลาตอบสนอง PID เชิงตัวเลข ความปลอดภัยเชิงฟังก์ชัน</p><p><a href="/learn/plc/iec-languages/">IEC 61131-3</a> → <a href="/learn/plc/sequential-control/">SFC</a> → <a href="/learn/plc/commissioning-safety/">ความปลอดภัย</a></p></div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">ลองเลย: PLC สตาร์-เดลต้าในเบราว์เซอร์</h2>
+    <p>กด START (I0.1) แล้วดูเส้นสีเขียวไหลในแลดเดอร์ ไทเมอร์ T1 นับ 6 วินาที K2 (สตาร์) ปล่อย รอช่วงตาย 80 ms แล้ว K3 (เดลต้า) ดูด เลือกตัวอย่างอื่นจากเมนู หรือเปิด “แก้ไขโปรแกรม” เพื่อเขียนเอง ซิมูเลเตอร์เต็มพร้อมใบงานอยู่ที่ <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a></p>
+    <div class="plc-sim" data-preset="yd"><noscript>ต้องเปิด JavaScript เพื่อใช้ซิมูเลเตอร์</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="key">
+    <h2 id="key">สมการหลักที่ใช้ทั้งชุด</h2>
+<div class="tf" id="H1" data-k="scan cycle response time เวลาสแกน เวลาตอบสนอง"><p class="tf-n"><b><span class="fid">H1</span> Worst-case response</b> เวลาตอบสนองแย่ที่สุด</p>
+        \[ t_{resp,max} \approx t_{in} + 2\,t_{scan} + t_{out} \]</div>
+<div class="tf" id="H2" data-k="ladder boolean latch self holding ล็อกตัวเอง แลดเดอร์"><p class="tf-n"><b><span class="fid">H2</span> Latch rung</b> แลดเดอร์ล็อกตัวเอง</p>
+        \[ Q = \overline{\text{STOP}}\cdot(\text{START} + Q) \;\;\equiv\;\; \text{STOP ต่อ NC → ในโปรแกรมใช้หน้าสัมผัส NO} \]</div>
+<div class="tf" id="H3" data-k="ton timer output elapsed time ไทเมอร์หน่วงเปิด"><p class="tf-n"><b><span class="fid">H3</span> On-delay timer</b> ไทเมอร์หน่วงเวลาเปิด</p>
+        \[ Q_{TON} = IN \wedge (ET \ge PT) \qquad ET \le PT \]</div>
+<div class="tf" id="H4" data-k="analog scaling linear raw engineering สเกลค่าแอนะล็อก"><p class="tf-n"><b><span class="fid">H4</span> Analog scaling</b> สเกลค่าแอนะล็อก</p>
+        \[ y = y_{min} + (x - x_{min})\,\frac{y_{max} - y_{min}}{x_{max} - x_{min}} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="brands">
+    <h2 id="brands">PLC ที่พบในภูมิภาคและการเรียกชื่อแอดเดรส</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ยี่ห้อ (ตัวอย่างรุ่น)</th><th>อินพุต</th><th>เอาต์พุต</th><th>หน่วยความจำ</th><th>ซอฟต์แวร์</th></tr></thead>
+      <tbody>
+        <tr><td>IEC 61131-3 (มาตรฐาน)</td><td>%IX0.0</td><td>%QX0.0</td><td>%MX0.0</td><td>CODESYS และอื่น ๆ</td></tr>
+        <tr><td>Siemens (S7-1200/1500)</td><td>I0.0</td><td>Q0.0</td><td>M0.0</td><td>TIA Portal</td></tr>
+        <tr><td>Mitsubishi (FX5U, iQ-R)</td><td>X0</td><td>Y0</td><td>M0</td><td>GX Works3</td></tr>
+        <tr><td>Omron (CP1, NX/NJ)</td><td>0.00</td><td>100.00</td><td>W0.00</td><td>CX-Programmer / Sysmac Studio</td></tr>
+        <tr><td>Delta (DVP, AS)</td><td>X0</td><td>Y0</td><td>M0</td><td>ISPSoft</td></tr>
+        <tr><td>Rockwell (Micro800, CompactLogix)</td><td>_IO_EM_DI_00 / tag</td><td>_IO_EM_DO_00 / tag</td><td>tag</td><td>CCW / Studio 5000</td></tr>
+      </tbody>
+    </table></div>
+    <p>ชุดนี้ใช้รูปแบบ I0.0 / Q0.0 / M0.0 แบบ Siemens เพราะอ่านง่ายและแปลงไปยี่ห้ออื่นได้ตรงไปตรงมา</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">ทุกบทในชุดนี้</h2>
+    <!--series-cards:plc-->
+    </section>
+
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">ค้นหาสูตรทั้งหมดในที่เดียว</h2>
+    <p>รหัส: H ภาพรวม · F พื้นฐาน · W ต่อสาย I/O · B แลดเดอร์ · T ไทเมอร์/เคาน์เตอร์ · L ภาษา · M มอเตอร์ · S ลำดับขั้น · P อนาล็อก/PID · K ทดสอบ/ความปลอดภัย</p>
+    <!--formula-index:plc-->
+    </section>
+
+    <section class="tsec" aria-labelledby="related">
+    <h2 id="related">ต่อยอดบนเว็บนี้</h2>
+    <ul>
+      <li><a href="/learn/motor-control/">การควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</a> — วงจรคอนแทกเตอร์ทุกแบบที่นำมาเขียนเป็นแลดเดอร์ในชุดนี้</li>
+      <li><a href="/learn/sensors-transducers/industrial-signals/">สัญญาณ 4–20 mA และ HART</a> · <a href="/learn/sensors-transducers/modbus/">Modbus RTU/TCP</a> · <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือนที่มี PLC</a></li>
+      <li><a href="/learn/control-systems/pid/">ระบบควบคุม: PID</a> — ทฤษฎีเบื้องหลังบล็อก PID ใน PLC</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">มาตรฐานและแหล่งอ้างอิง</h2>
+    <ul>
+      <li>IEC 61131-1 (ภาพรวม) · IEC 61131-2 (ฮาร์ดแวร์ ชนิดอินพุต 24 VDC) · IEC 61131-3 (ภาษาโปรแกรม)</li>
+      <li>IEC 60204-1 (อุปกรณ์ไฟฟ้าของเครื่องจักร หมวดการหยุด) · ISO 13849-1 / IEC 62061 (ความปลอดภัยเชิงฟังก์ชันของเครื่องจักร)</li>
+      <li>IEC 60848 (GRAFCET) · Modbus Application Protocol Specification (Modbus Organization)</li>
+      <li>F. D. Petruzella, <i>Programmable Logic Controllers</i> · W. Bolton, <i>Programmable Logic Controllers</i> · คู่มือของผู้ผลิต PLC</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

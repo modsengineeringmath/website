@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน IEC 61131 และการเลือก PLC | อาจารย์มด</title>
+<meta name="description" content="พื้นฐาน PLC (Programmable Logic Controller) สำหรับงานอุตสาหกรรม: ประวัติจากตู้รีเลย์สู่ PLC สถาปัตยกรรม พาวเวอร์ซัพพลาย CPU หน่วยความจำ โมดูลอินพุตเอาต์พุต วงรอบการสแกนแบบอ่านอินพุต-รันโปรแกรม-เขียนเอาต์พุต อิมเมจ I/O เวลาสแกนและเวลาตอบสนอง พัลส์สั้นสุดที่จับได้ PLC แบบคอมแพกต์ โมดูลาร์ เซฟตี้ เทียบรีเลย์และไมโครคอนโทรลเลอร์ และขั้นตอนเลือก PLC">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/plc/plc-fundamentals/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/plc/plc-fundamentals/">
+<meta property="og:title" content="PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน IEC 61131 และการเลือก PLC | อาจารย์มด">
+<meta property="og:description" content="พื้นฐาน PLC (Programmable Logic Controller) สำหรับงานอุตสาหกรรม: ประวัติจากตู้รีเลย์สู่ PLC สถาปัตยกรรม พาวเวอร์ซัพพลาย CPU หน่วยความจำ โมดูลอินพุตเอาต์พุต วงรอบการสแกนแบบอ่านอินพุต-รันโปรแกรม-เขียนเอาต์พุต อิมเมจ I/O เวลาสแกนและเวลาตอบสนอง พัลส์สั้นสุดที่จับได้ PLC แบบคอมแพกต์ โมดูลาร์ เซฟตี้ เทียบรีเลย์และไมโครคอนโทรลเลอร์ และขั้นตอนเลือก PLC">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/learn-plc-plc-fundamentals.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน IEC 61131 และการเลือก PLC | อาจารย์มด">
+<meta name="twitter:description" content="พื้นฐาน PLC (Programmable Logic Controller) สำหรับงานอุตสาหกรรม: ประวัติจากตู้รีเลย์สู่ PLC สถาปัตยกรรม พาวเวอร์ซัพพลาย CPU หน่วยความจำ โมดูลอินพุตเอาต์พุต วงรอบการสแกนแบบอ่านอินพุต-รันโปรแกรม-เขียนเอาต์พุต อิมเมจ I/O เวลาสแกนและเวลาตอบสนอง พัลส์สั้นสุดที่จับได้ PLC แบบคอมแพกต์ โมดูลาร์ เซฟตี้ เทียบรีเลย์และไมโครคอนโทรลเลอร์ และขั้นตอนเลือก PLC">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/learn-plc-plc-fundamentals.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/plc/plc-fundamentals/">
+<link rel="alternate" hreflang="en" href="https://modsengineeringmath.com/learn/en/plc/plc-fundamentals/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/plc/plc-fundamentals/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/plc/plc-fundamentals/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/plc/plc-fundamentals/#article","headline":"PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC","description":"พื้นฐาน PLC (Programmable Logic Controller) สำหรับงานอุตสาหกรรม: ประวัติจากตู้รีเลย์สู่ PLC สถาปัตยกรรม พาวเวอร์ซัพพลาย CPU หน่วยความจำ โมดูลอินพุตเอาต์พุต วงรอบการสแกนแบบอ่านอินพุต-รันโปรแกรม-เขียนเอาต์พุต อิมเมจ I/O เวลาสแกนและเวลาตอบสนอง พัลส์สั้นสุดที่จับได้ PLC แบบคอมแพกต์ โมดูลาร์ เซฟตี้ เทียบรีเลย์และไมโครคอนโทรลเลอร์ และขั้นตอนเลือก PLC","inLanguage":"th","url":"https://modsengineeringmath.com/learn/plc/plc-fundamentals/","mainEntityOfPage":"https://modsengineeringmath.com/learn/plc/plc-fundamentals/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Programmable logic controller","Scan cycle","IEC 61131","Industrial control system"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-plc-plc-fundamentals.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"การควบคุมอัตโนมัติด้วย PLC","item":"https://modsengineeringmath.com/learn/plc/"},{"@type":"ListItem","position":4,"name":"PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC","item":"https://modsengineeringmath.com/learn/plc/plc-fundamentals/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ถ้ากดปุ่มเร็วกว่าเวลาสแกน PLC จะเห็นไหม?","acceptedAnswer":{"@type":"Answer","text":"อาจไม่เห็น อินพุตถูกอ่านครั้งเดียวตอนต้นสแกน ถ้าพัลส์สั้นกว่าเวลาสแกนบวกเวลากรองอินพุต อาจเกิดและหายไประหว่างการอ่านสองครั้ง สัญญาณเร็ว (เอนโค้ดเดอร์ เซนเซอร์นับชิ้นงานความเร็วสูง) ต้องใช้อินพุตความเร็วสูง ตัวนับฮาร์ดแวร์ หรืออินเตอร์รัปต์"}},{"@type":"Question","name":"ทำไมเขียนคอยล์เดียวกันสองที่แล้วโปรแกรมทำงานผิด?","acceptedAnswer":{"@type":"Answer","text":"เพราะ PLC ประมวลผลจากบนลงล่าง ค่าที่คอยล์ตัวล่างเขียนจะทับค่าจากตัวบนก่อนเอาต์พุตถูกส่งออกตอนจบสแกน ผลคือคอยล์ตัวบนดูเหมือนไม่ทำงาน (double coil syndrome) ให้รวมเงื่อนไขไว้ในรังเดียว หรือใช้ SET/RESET อย่างตั้งใจ"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" aria-current="page">ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" >ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
+          <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+          <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#arch">โครงสร้างของ PLC<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#scan">วงรอบการสแกน<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#types">ชนิดของ PLC<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#iec">มาตรฐาน IEC 61131<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#select">เลือก PLC อย่างไร<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>PLC คืออะไร · สแกน</li></ol>
+      <nav class="lang-sw" aria-label="ภาษา"><span aria-current="true" lang="th">TH<small>ภาษาไทย</small></span><a href="/learn/en/plc/plc-fundamentals/" hreflang="en" lang="en">EN<small>English</small></a></nav>
+      <nav class="series-nav" aria-label="หน้าย่อยในการควบคุมอัตโนมัติด้วย PLC"><span class="sn-title mono">PLC Automation</span><div class="sn-list"><a href="/learn/plc/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/plc/plc-fundamentals/" aria-current="page"><span class="sn-n">1</span>PLC คืออะไร · สแกน</a><a href="/learn/plc/io-wiring/"><span class="sn-n">2</span>ต่อสาย I/O · PNP/NPN</a></div><details class="sn-all"><summary>ดูครบทุกส่วน · 10 หน้า</summary><div class="sn-part"><span class="sn-pt mono">1 · พื้นฐาน PLC และฮาร์ดแวร์</span><div class="sn-list"><a href="/learn/plc/plc-fundamentals/" aria-current="page"><span class="sn-n">1</span>PLC คืออะไร · สแกน</a><a href="/learn/plc/io-wiring/"><span class="sn-n">2</span>ต่อสาย I/O · PNP/NPN</a></div></div><div class="sn-part"><span class="sn-pt mono">2 · การเขียนโปรแกรม</span><div class="sn-list"><a href="/learn/plc/ladder-basics/"><span class="sn-n">3</span>แลดเดอร์พื้นฐาน</a><a href="/learn/plc/timers-counters/"><span class="sn-n">4</span>ไทเมอร์ · เคาน์เตอร์</a><a href="/learn/plc/iec-languages/"><span class="sn-n">5</span>ภาษา IEC 61131-3</a></div></div><div class="sn-part"><span class="sn-pt mono">3 · งานประยุกต์ในโรงงาน</span><div class="sn-list"><a href="/learn/plc/plc-motor-control/"><span class="sn-n">6</span>ควบคุมมอเตอร์ด้วย PLC</a><a href="/learn/plc/sequential-control/"><span class="sn-n">7</span>ควบคุมแบบลำดับขั้น</a><a href="/learn/plc/analog-pid-vfd/"><span class="sn-n">8</span>อนาล็อก · PID · สั่ง VFD</a></div></div><div class="sn-part"><span class="sn-pt mono">4 · ติดตั้ง ความปลอดภัย และแล็บ</span><div class="sn-list"><a href="/learn/plc/commissioning-safety/"><span class="sn-n">9</span>ทดสอบระบบ · ความปลอดภัย</a><a href="/learn/plc/plc-lab/"><span class="sn-n">10</span>ซิมูเลเตอร์แลดเดอร์</a></div></div></details></nav>
+      <p class="eyebrow">// บทที่ 22.1 · PLC · What Is a PLC</p>
+      <h1>PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC</h1>
+      <p class="lede">ปี 1968 โรงงานเกียร์ของ General Motors ต้องการเลิกต่อสายตู้รีเลย์ใหม่ทุกครั้งที่เปลี่ยนรุ่นรถ โจทย์นั้นทำให้เกิด PLC เครื่องแรก (Modicon 084) ความคิดหลักยังเหมือนเดิมจนถึงวันนี้: คอมพิวเตอร์ที่ทนสภาพโรงงาน อ่านอินพุตจากสวิตช์และเซนเซอร์ ตัดสินใจด้วยโปรแกรมที่ช่างไฟอ่านเข้าใจ แล้วสั่งเอาต์พุต — ทำซ้ำอย่างคาดเดาได้ไม่รู้จบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-14">14 ต.ค. 2569</time></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>PLC = แหล่งจ่ายไฟ + CPU + หน่วยความจำ + โมดูล I/O + พอร์ตสื่อสาร</li>
+          <li>หนึ่งสแกน: อ่านอินพุตเข้าอิมเมจ → รันโปรแกรมบนลงล่าง → เขียนเอาต์พุต → งานระบบ</li>
+          <li>เวลาสแกนทั่วไป 1–20 ms · เวลาตอบสนองแย่ที่สุด ≈ หน่วงอินพุต + 2 สแกน + หน่วงเอาต์พุต</li>
+          <li>จุดแข็งคือความทนทานและการทำงานที่คาดเดาได้ (deterministic) ไม่ใช่ความเร็ว</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#arch">โครงสร้างของ PLC<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#scan">วงรอบการสแกน<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#types">ชนิดของ PLC<i class="toc-lv lv-b" aria-hidden="true"></i></a></li><li><a href="#iec">มาตรฐาน IEC 61131<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#select">เลือก PLC อย่างไร<i class="toc-lv lv-i" aria-hidden="true"></i></a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น scan time, response, pulse, spare" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="arch">
+    <h2 id="arch">โครงสร้างของ PLC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-architecture--><svg class="xf" viewBox="0 0 780 300" role="img" aria-label="โครงสร้าง PLC: แหล่งจ่ายไฟ CPU หน่วยความจำ โมดูลอินพุต-เอาต์พุต การสื่อสาร และอุปกรณ์ภาคสนาม"><defs><marker id="plc-architecture-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="220" y="60" width="340" height="170" rx="10"/><rect class="xf-boxc" x="235" y="75" width="70" height="140" rx="6"/><text x="270" y="140" class="xf-h" text-anchor="middle">PSU</text><text x="270" y="158" class="xf-k" text-anchor="middle">24 VDC</text><rect class="xf-boxa" x="315" y="75" width="110" height="140" rx="6"/><text x="370" y="120" class="xf-h" text-anchor="middle">CPU</text><text x="370" y="142" class="xf-k" text-anchor="middle">โปรแกรม · ข้อมูล</text><text x="370" y="160" class="xf-k" text-anchor="middle">ไทเมอร์ · เคาน์เตอร์</text><text x="370" y="178" class="xf-k" text-anchor="middle">พอร์ตสื่อสาร</text><rect class="xf-boxb" x="435" y="75" width="55" height="140" rx="6"/><text x="462" y="150" class="xf-h" text-anchor="middle">DI</text><rect class="xf-boxb" x="495" y="75" width="55" height="140" rx="6"/><text x="522" y="150" class="xf-h" text-anchor="middle">DO</text><rect class="xf-box" x="20" y="56" width="170" height="26" rx="6"/><text x="105" y="73" class="xf-k" text-anchor="middle">ปุ่มกด · ซีเลกเตอร์</text><line class="xf-ln" x1="190" y1="70" x2="220" y2="70" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="90" width="170" height="26" rx="6"/><text x="105" y="107" class="xf-k" text-anchor="middle">ลิมิตสวิตช์</text><line class="xf-ln" x1="190" y1="104" x2="220" y2="104" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="124" width="170" height="26" rx="6"/><text x="105" y="141" class="xf-k" text-anchor="middle">พร็อกซิมิตี PNP/NPN</text><line class="xf-ln" x1="190" y1="138" x2="220" y2="138" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="158" width="170" height="26" rx="6"/><text x="105" y="175" class="xf-k" text-anchor="middle">หน้าสัมผัสโอเวอร์โหลด</text><line class="xf-ln" x1="190" y1="172" x2="220" y2="172" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="192" width="170" height="26" rx="6"/><text x="105" y="209" class="xf-k" text-anchor="middle">ทรานสมิตเตอร์ 4–20 mA</text><line class="xf-ln" x1="190" y1="206" x2="220" y2="206" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="56" width="170" height="26" rx="6"/><text x="675" y="73" class="xf-k" text-anchor="middle">คอยล์คอนแทกเตอร์</text><line class="xf-ln" x1="560" y1="70" x2="590" y2="70" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="90" width="170" height="26" rx="6"/><text x="675" y="107" class="xf-k" text-anchor="middle">หลอดไฟ · ไซเรน</text><line class="xf-ln" x1="560" y1="104" x2="590" y2="104" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="124" width="170" height="26" rx="6"/><text x="675" y="141" class="xf-k" text-anchor="middle">โซลินอยด์วาล์ว</text><line class="xf-ln" x1="560" y1="138" x2="590" y2="138" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="158" width="170" height="26" rx="6"/><text x="675" y="175" class="xf-k" text-anchor="middle">คำสั่ง VFD</text><line class="xf-ln" x1="560" y1="172" x2="590" y2="172" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="192" width="170" height="26" rx="6"/><text x="675" y="209" class="xf-k" text-anchor="middle">วาล์วควบคุม 4–20 mA</text><line class="xf-ln" x1="560" y1="206" x2="590" y2="206" marker-end="url(#plc-architecture-ah)"/><rect class="xf-boxc" x="300" y="250" width="180" height="34" rx="6"/><text x="390" y="272" class="xf-k" text-anchor="middle">HMI · SCADA · โปรแกรมเมอร์</text><line class="xf-ln" x1="370" y1="230" x2="370" y2="250" marker-end="url(#plc-architecture-ah)" marker-start="url(#plc-architecture-ah)"/><text x="390" y="30" class="xf-h" text-anchor="middle">อินพุต → ตัดสินใจตามโปรแกรม → เอาต์พุต</text></svg><!--/FIG--><figcaption>รูป 1 · PLC เป็นตัวกลางระหว่างอุปกรณ์ภาคสนามสองฝั่ง: ฝั่งที่ “บอก” (ปุ่ม เซนเซอร์) และฝั่งที่ “ทำ” (คอนแทกเตอร์ วาล์ว ไฟ)</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ส่วน</th><th>หน้าที่</th><th>สิ่งที่ควรรู้</th></tr></thead>
+      <tbody>
+        <tr><td>Power supply</td><td>แปลง 230 VAC เป็น 24 VDC ให้ CPU และ I/O</td><td>ใช้แหล่งแยกสำหรับโหลดภาคสนามที่กินกระแสมาก (โซลินอยด์)</td></tr>
+        <tr><td>CPU</td><td>รันโปรแกรม จัดการ I/O และการสื่อสาร</td><td>ดูความเร็วต่อคำสั่ง ขนาดหน่วยความจำ ฟังก์ชันพิเศษ (PID ตัวนับเร็ว)</td></tr>
+        <tr><td>Memory</td><td>เก็บโปรแกรม ข้อมูล ค่าตั้ง</td><td>ข้อมูลแบบ retentive คงค่าเมื่อไฟดับ (แบตเตอรี่/แฟลช)</td></tr>
+        <tr><td>Digital I/O</td><td>สัญญาณ 0/1 จากสวิตช์และไปยังคอยล์</td><td>24 VDC ซิงก์/ซอร์ส เอาต์พุตรีเลย์/ทรานซิสเตอร์</td></tr>
+        <tr><td>Analog I/O</td><td>สัญญาณต่อเนื่อง 4–20 mA, 0–10 V</td><td>ความละเอียด 12–16 บิต ต้องสเกลเป็นหน่วยวิศวกรรม</td></tr>
+        <tr><td>Communication</td><td>คุยกับ HMI SCADA ไดรฟ์ PLC อื่น</td><td>Ethernet (PROFINET, EtherNet/IP, Modbus TCP) RS-485 (Modbus RTU)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="scan">
+    <h2 id="scan">วงรอบการสแกน <span class="lv lv-i">กลาง</span></h2>
+    <p>PLC ไม่ได้ “ดู” อินพุตตลอดเวลา ตอนต้นสแกนมันถ่ายรูปสถานะขั้วอินพุตทั้งหมดลงตาราง <b>อิมเมจอินพุต</b> จากนั้นรันโปรแกรมทีละรังจากบนลงล่างโดยอ่านจากรูปนั้น ผลของคอยล์เขียนลง <b>อิมเมจเอาต์พุต</b> ซึ่งส่งไปที่ขั้วเอาต์พุตพร้อมกันตอนจบสแกน การทำงานแบบนี้ทำให้ตลอดสแกนหนึ่งค่าอินพุตไม่เปลี่ยนกลางคัน ผลลัพธ์จึงคาดเดาได้</p>
+    <figure class="xfig"><!--FIG:plc-scan--><svg class="xf" viewBox="0 0 760 300" role="img" aria-label="วงรอบการสแกนของ PLC: อ่านอินพุตเข้าอิมเมจ ประมวลผลโปรแกรมจากบนลงล่าง เขียนเอาต์พุต และงานระบบ วนซ้ำทุก 1–50 ms"><defs><marker id="plc-scan-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="112" y="26" width="156" height="44" rx="8"/><text x="190" y="45" class="xf-h" text-anchor="middle">1 อ่านอินพุต</text><text x="190" y="62" class="xf-k" text-anchor="middle">ขั้ว → อิมเมจ I</text><rect class="xf-boxb" x="214" y="128" width="156" height="44" rx="8"/><text x="292" y="147" class="xf-h" text-anchor="middle">2 รันโปรแกรม</text><text x="292" y="164" class="xf-k" text-anchor="middle">บน → ล่าง, ซ้าย → ขวา</text><rect class="xf-boxc" x="112" y="230" width="156" height="44" rx="8"/><text x="190" y="249" class="xf-h" text-anchor="middle">3 เขียนเอาต์พุต</text><text x="190" y="266" class="xf-k" text-anchor="middle">อิมเมจ Q → ขั้ว</text><rect class="xf-box" x="10" y="128" width="156" height="44" rx="8"/><text x="88" y="147" class="xf-h" text-anchor="middle">4 งานระบบ</text><text x="88" y="164" class="xf-k" text-anchor="middle">สื่อสาร · ตรวจตัวเอง</text><path class="xf-ln" d="M 237.9 59.9 A 102 102 0 0 1 280.1 102.1" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 280.1 197.9 A 102 102 0 0 1 237.9 240.1" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 142.1 240.1 A 102 102 0 0 1 99.9 197.9" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 99.9 102.1 A 102 102 0 0 1 142.1 59.9" marker-end="url(#plc-scan-ah)"/><text x="190" y="154" class="xf-h" text-anchor="middle">1 สแกน</text><text x="605" y="60" class="xf-k" text-anchor="middle">เวลาตอบสนองแย่ที่สุด ≈ 2 × สแกน + หน่วงอินพุต</text><line class="xf-grid" x1="470" y1="90" x2="470" y2="230"/><text x="470" y="245" class="xf-k" text-anchor="middle">0</text><line class="xf-grid" x1="537.5" y1="90" x2="537.5" y2="230"/><text x="537.5" y="245" class="xf-k" text-anchor="middle">1</text><line class="xf-grid" x1="605" y1="90" x2="605" y2="230"/><text x="605" y="245" class="xf-k" text-anchor="middle">2</text><line class="xf-grid" x1="672.5" y1="90" x2="672.5" y2="230"/><text x="672.5" y="245" class="xf-k" text-anchor="middle">3</text><line class="xf-grid" x1="740" y1="90" x2="740" y2="230"/><text x="740" y="245" class="xf-k" text-anchor="middle">4</text><line class="xf-thin" x1="470" y1="230" x2="740" y2="230"/><line class="xf-thin" x1="470" y1="90" x2="470" y2="230"/><path class="xf-d" d="M470 121.1 L510.5 121.1 L510.5 97.8 L692.8 97.8"/><text x="464" y="119.1" class="xf-k" text-anchor="end">I0.0</text><path class="xf-a" d="M470 163.9 L537.5 163.9 L537.5 140.6 L713 140.6"/><text x="464" y="161.9" class="xf-k" text-anchor="end">อิมเมจ I</text><path class="xf-b" d="M470 206.7 L605 206.7 L605 183.3 L740 183.3"/><text x="464" y="204.7" class="xf-k" text-anchor="end">Q0.0</text><text x="605" y="266" class="xf-k" text-anchor="middle">สแกน → · ปุ่มเปลี่ยนกลางสแกน PLC เห็นสแกนถัดไป</text></svg><!--/FIG--><figcaption>รูป 2 · ขวา: ปุ่ม I0.0 เปลี่ยนกลางสแกนที่ 0 ถูกอ่านเข้าอิมเมจตอนต้นสแกนที่ 1 และเอาต์พุต Q0.0 เปลี่ยนตอนจบสแกนที่ 1 (เห็นที่ขั้วสแกนที่ 2)</figcaption></figure>
+<div class="tf" id="F1" data-k="scan time components เวลาสแกน"><p class="tf-n"><b><span class="fid">F1</span> Scan time</b> เวลาสแกน</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>t</mi><mrow><mi>s</mi><mi>c</mi><mi>a</mi><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>t</mi><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>d</mi><mtext> </mtext><mi>I</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>g</mi><mi>r</mi><mi>a</mi><mi>m</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>w</mi><mi>r</mi><mi>i</mi><mi>t</mi><mi>e</mi><mtext> </mtext><mi>Q</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>d</mi><mi>i</mi><mi>a</mi><mi>g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">t_{scan} = t_{read\,I} + t_{program} + t_{write\,Q} + t_{comm/diag}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">sc</span><span class="mord mathnormal mtight">an</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">d</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9012em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">ro</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">am</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9012em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight">Q</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9703em;vertical-align:-0.3552em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">co</span><span class="mord mathnormal mtight">mm</span><span class="mord mtight">/</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">ia</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<div class="tf" id="F2" data-k="program execution time instructions เวลาประมวลผลโปรแกรม"><p class="tf-n"><b><span class="fid">F2</span> Program execution estimate</b> เวลารันโปรแกรมโดยประมาณ</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>t</mi><mrow><mi>p</mi><mi>r</mi><mi>o</mi><mi>g</mi><mi>r</mi><mi>a</mi><mi>m</mi></mrow></msub><mo>≈</mo><msub><mi>N</mi><mrow><mi>b</mi><mi>i</mi><mi>t</mi></mrow></msub><mtext> </mtext><msub><mi>t</mi><mrow><mi>b</mi><mi>i</mi><mi>t</mi></mrow></msub><mo>+</mo><msub><mi>N</mi><mrow><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi></mrow></msub><mtext> </mtext><msub><mi>t</mi><mrow><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi></mrow></msub><mo>+</mo><msub><mi>N</mi><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi></mrow></msub><mtext> </mtext><msub><mi>t</mi><mrow><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">t_{program} \approx N_{bit}\,t_{bit} + N_{word}\,t_{word} + N_{real}\,t_{real}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9012em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">ro</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">am</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">bi</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">bi</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">or</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">or</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<div class="tf" id="F3" data-k="worst case response time filter scan output เวลาตอบสนองแย่สุด"><p class="tf-n"><b><span class="fid">F3</span> Response time</b> เวลาตอบสนองของระบบ</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>t</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>s</mi><mi>c</mi><mi>a</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><mtext>  </mtext><mo>≤</mo><mtext>  </mtext><msub><mi>t</mi><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>p</mi></mrow></msub><mtext>  </mtext><mo>≤</mo><mtext>  </mtext><msub><mi>t</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mo>+</mo><mn>2</mn><mtext> </mtext><msub><mi>t</mi><mrow><mi>s</mi><mi>c</mi><mi>a</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">t_{in} + t_{scan} + t_{out} \;\le\; t_{resp} \;\le\; t_{in} + 2\,t_{scan} + t_{out}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">sc</span><span class="mord mathnormal mtight">an</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9221em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">res</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">sc</span><span class="mord mathnormal mtight">an</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<div class="tf" id="F4" data-k="minimum pulse width detect input สัญญาณสั้นสุด"><p class="tf-n"><b><span class="fid">F4</span> Shortest pulse surely seen</b> พัลส์สั้นสุดที่ PLC จับได้แน่นอน</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>t</mi><mrow><mi>p</mi><mi>u</mi><mi>l</mi><mi>s</mi><mi>e</mi></mrow></msub><mo>&gt;</mo><msub><mi>t</mi><mrow><mi>s</mi><mi>c</mi><mi>a</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">t_{pulse} &gt; t_{scan} + t_{in}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9012em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">se</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">sc</span><span class="mord mathnormal mtight">an</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<div class="wx" id="ex-f-1"><div class="wx-head"><span class="mono">ตัวอย่าง F-1</span><h3>สายพานวิ่ง 1.2 m/s ชิ้นงานยาว 30 mm ผ่านเซนเซอร์แสง PLC สแกน 10 ms ตัวกรองอินพุต 3 ms</h3></div>
+<ol class="steps">
+<li><p>เวลาที่ชิ้นงานบังเซนเซอร์ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>0.030</mn><mi mathvariant="normal">/</mi><mn>1.2</mn><mo>=</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">t = 0.030/1.2 = 25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.030/1.2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">25</span></span></span></span> ms</p></li>
+<li><p>F4: ต้องมากกว่า <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">10 + 3 = 13</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">10</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">13</span></span></span></span> ms → 25 ms จับได้ ✓ (เผื่อเกือบสองเท่า)</p></li>
+<li><p>ถ้าสายพานเร่งเป็น 3 m/s: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">t = 10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span> ms < 13 ms → อาจหลุด ต้องใช้อินพุตความเร็วสูงหรือตัวนับฮาร์ดแวร์</p></li>
+<li><p>F3: เวลาตั้งแต่ชิ้นงานถึงเซนเซอร์จนลมเป่าคัดแยก (เอาต์พุตทรานซิสเตอร์ 0.1 ms + โซลินอยด์ 15 ms) แย่สุด ≈ 3 + 20 + 0.1 + 15 = 38 ms → ชิ้นงานเคลื่อนไป 46 mm ระหว่างนั้น ต้องติดหัวเป่าเลยเซนเซอร์ตามระยะนี้</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="scan"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">ชนิดของ PLC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ลักษณะ</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td>Nano/Compact (ตัวเดียวจบ)</td><td>CPU และ I/O ในกล่องเดียว 10–60 จุด ขยายได้เล็กน้อย</td><td>เครื่องจักรเดี่ยว ปั๊ม งานอาคาร</td></tr>
+        <tr><td>Modular (แร็ค)</td><td>เลือก CPU และโมดูล I/O สื่อสาร ตามต้องการ หลายร้อยถึงหลายพันจุด</td><td>ไลน์ผลิต โรงงานกระบวนการ</td></tr>
+        <tr><td>Safety PLC</td><td>CPU คู่ ตรวจสอบตัวเอง ได้รับรอง SIL/PL</td><td>หยุดฉุกเฉิน ม่านแสง ประตูนิรภัย ระบบเผาไหม้</td></tr>
+        <tr><td>PAC / IPC (soft PLC)</td><td>คอมพิวเตอร์อุตสาหกรรมรันรันไทม์ IEC 61131-3</td><td>งานที่ต้องการคำนวณหนัก การเคลื่อนที่หลายแกน ข้อมูลมาก</td></tr>
+        <tr><td>Smart relay</td><td>รีเลย์โปรแกรมได้ จอเล็ก ฟังก์ชันบล็อก</td><td>งานเล็กมาก แทนรีเลย์ไม่กี่ตัว</td></tr>
+      </tbody>
+    </table></div>
+    <h3>PLC เทียบรีเลย์และไมโครคอนโทรลเลอร์</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เกณฑ์</th><th>ตู้รีเลย์</th><th>PLC</th><th>ไมโครคอนโทรลเลอร์</th></tr></thead>
+      <tbody>
+        <tr><td>แก้ลอจิก</td><td>เดินสายใหม่</td><td>แก้โปรแกรม</td><td>แก้โปรแกรม (ต้องเขียน C)</td></tr>
+        <tr><td>ทนสภาพโรงงาน</td><td>สูง</td><td>สูง (IEC 61131-2 ทดสอบ EMC อุณหภูมิ การสั่น)</td><td>ผู้ใช้ต้องออกแบบเอง</td></tr>
+        <tr><td>การวินิจฉัย</td><td>ไล่วัดทีละจุด</td><td>ดูสถานะออนไลน์ บันทึกเหตุการณ์</td><td>ขึ้นกับผู้เขียน</td></tr>
+        <tr><td>ความคาดเดาได้</td><td>สูง</td><td>สูง (สแกนคงที่ watchdog)</td><td>ขึ้นกับการออกแบบ</td></tr>
+        <tr><td>ราคา/จุด</td><td>ต่ำเมื่องานเล็กมาก</td><td>ปานกลาง</td><td>ต่ำมาก</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="iec">
+    <h2 id="iec">มาตรฐาน IEC 61131 <span class="lv lv-i">กลาง</span></h2>
+    <p>IEC 61131 ทำให้ความรู้ PLC ข้ามยี่ห้อได้ ส่วนที่ช่างและวิศวกรใช้บ่อย:</p>
+    <ul>
+      <li><b>ส่วนที่ 2 (อุปกรณ์):</b> ชนิดอินพุต 24 VDC Type 1/2/3 ช่วงแรงดัน ON/OFF การทดสอบ EMC — รายละเอียดใน <a href="/learn/plc/io-wiring/">ต่อสาย I/O</a></li>
+      <li><b>ส่วนที่ 3 (ภาษา):</b> LD FBD ST SFC (และ IL ที่ถูกยกเลิกในฉบับ 2013) ชนิดข้อมูล ไทเมอร์ เคาน์เตอร์มาตรฐาน — ดู <a href="/learn/plc/iec-languages/">ภาษา IEC 61131-3</a></li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="select">
+    <h2 id="select">เลือก PLC อย่างไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F5" data-k="io count spare margin จำนวนจุด สำรอง"><p class="tf-n"><b><span class="fid">F5</span> I/O count with spare</b> จำนวนจุด I/O พร้อมสำรอง</p>
+        <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>N</mi><mrow><mi>I</mi><mi mathvariant="normal">/</mi><mi>O</mi></mrow></msub><mo>=</mo><mrow><mo fence="true">⌈</mo><mn>1.2</mn><mtext> </mtext><msub><mi>N</mi><mrow><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi></mrow></msub><mo fence="true">⌉</mo></mrow><mspace width="1em"/><mo stretchy="false">(</mo><mtext>สำรอง 15–25 %</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">N_{I/O} = \left\lceil 1.2\,N_{required} \right\rceil \quad (\text{สำรอง 15–25 \%})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0385em;vertical-align:-0.3552em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span><span class="mord mtight">/</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">O</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">⌈</span><span class="mord">1.2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">⌉</span></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord brahmic_fallback">สำรอง</span><span class="mord"> 15–25 %</span></span><span class="mclose">)</span></span></span></span></span></div>
+    <ol>
+      <li>ทำรายการ I/O: นับอินพุต-เอาต์พุตดิจิทัล แอนะล็อก อินพุตความเร็วสูง พร้อมชนิด (PNP/NPN, 4–20 mA)</li>
+      <li>เวลาตอบสนองที่ต้องการ (F3) และฟังก์ชันพิเศษ (PID, ตัวนับ, การเคลื่อนที่)</li>
+      <li>การสื่อสารกับ HMI ไดรฟ์ ระบบ SCADA ที่มีอยู่ในโรงงาน</li>
+      <li>ความปลอดภัย: ต้องการ safety PLC/รีเลย์เซฟตี้หรือไม่</li>
+      <li>สภาพแวดล้อม: อุณหภูมิตู้ ความชื้น การสั่น</li>
+      <li>มาตรฐานของโรงงานและอะไหล่ที่มีอยู่ — ยี่ห้อที่ช่างดูแลเป็นอยู่แล้วมักคุ้มกว่ายี่ห้อที่ถูกกว่า</li>
+    </ol>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>ถ้ากดปุ่มเร็วกว่าเวลาสแกน PLC จะเห็นไหม?</summary><p>อาจไม่เห็น อินพุตถูกอ่านครั้งเดียวตอนต้นสแกน ถ้าพัลส์สั้นกว่าเวลาสแกนบวกเวลากรองอินพุต อาจเกิดและหายไประหว่างการอ่านสองครั้ง สัญญาณเร็ว (เอนโค้ดเดอร์ เซนเซอร์นับชิ้นงานความเร็วสูง) ต้องใช้อินพุตความเร็วสูง ตัวนับฮาร์ดแวร์ หรืออินเตอร์รัปต์</p></details><details><summary>ทำไมเขียนคอยล์เดียวกันสองที่แล้วโปรแกรมทำงานผิด?</summary><p>เพราะ PLC ประมวลผลจากบนลงล่าง ค่าที่คอยล์ตัวล่างเขียนจะทับค่าจากตัวบนก่อนเอาต์พุตถูกส่งออกตอนจบสแกน ผลคือคอยล์ตัวบนดูเหมือนไม่ทำงาน (double coil syndrome) ให้รวมเงื่อนไขไว้ในรังเดียว หรือใช้ SET/RESET อย่างตั้งใจ</p></details></section>
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fplc%2Fplc-fundamentals%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fplc%2Fplc-fundamentals%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fplc%2Fplc-fundamentals%2F&amp;text=PLC%20%E0%B8%84%E0%B8%B7%E0%B8%AD%E0%B8%AD%E0%B8%B0%E0%B9%84%E0%B8%A3%3A%20%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%87%E0%B8%AA%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%87%20CPU%20%E0%B8%AB%E0%B8%99%E0%B9%88%E0%B8%A7%E0%B8%A2%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%88%E0%B8%B3%20I%2FO%20%E0%B8%A7%E0%B8%87%E0%B8%A3%E0%B8%AD%E0%B8%9A%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B9%81%E0%B8%81%E0%B8%99%20%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B9%81%E0%B8%81%E0%B8%99%20%E0%B8%A1%E0%B8%B2%E0%B8%95%E0%B8%A3%E0%B8%90%E0%B8%B2%E0%B8%99%20IEC%2061131%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%81%20PLC" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/plc/plc-fundamentals/" data-share-title="PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/plc/"><span class="mono">← ภาพรวม</span><b>การควบคุมอัตโนมัติด้วย PLC</b></a><a class="pager-next" href="/learn/plc/io-wiring/"><span class="mono">หน้าถัดไป →</span><b>การต่อสายอินพุต-เอาต์พุต PLC: ซิงก์-ซอร์ส เซนเซอร์ PNP/NPN เอาต์พุตรีเลย์-ทรานซิสเตอร์ โหลดเหนี่ยวนำ และแหล่งจ่าย 24 VDC</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
+      <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
+      <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลทางวิศวกรรม</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
+      <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
+      <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
+      <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงลาปลาซ</a>
+      <a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผัน (Inverse Laplace)</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
+      <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+<script src="/assets/ee-kit.js?v=6c2eac95" defer></script>
+<script src="/assets/mc-calc.js?v=6c2eac95" defer></script>
+</body>
+</html>

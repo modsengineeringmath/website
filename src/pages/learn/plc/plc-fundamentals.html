@@ -1,0 +1,144 @@
+<!--meta
+{
+  "title": "PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน IEC 61131 และการเลือก PLC | อาจารย์มด",
+  "h1": "PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC",
+  "description": "พื้นฐาน PLC (Programmable Logic Controller) สำหรับงานอุตสาหกรรม: ประวัติจากตู้รีเลย์สู่ PLC สถาปัตยกรรม พาวเวอร์ซัพพลาย CPU หน่วยความจำ โมดูลอินพุตเอาต์พุต วงรอบการสแกนแบบอ่านอินพุต-รันโปรแกรม-เขียนเอาต์พุต อิมเมจ I/O เวลาสแกนและเวลาตอบสนอง พัลส์สั้นสุดที่จับได้ PLC แบบคอมแพกต์ โมดูลาร์ เซฟตี้ เทียบรีเลย์และไมโครคอนโทรลเลอร์ และขั้นตอนเลือก PLC",
+  "lesson": "plc",
+  "sub": "plc-fundamentals",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Programmable logic controller", "Scan cycle", "IEC 61131", "Industrial control system"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "ถ้ากดปุ่มเร็วกว่าเวลาสแกน PLC จะเห็นไหม?", "a": "อาจไม่เห็น อินพุตถูกอ่านครั้งเดียวตอนต้นสแกน ถ้าพัลส์สั้นกว่าเวลาสแกนบวกเวลากรองอินพุต อาจเกิดและหายไประหว่างการอ่านสองครั้ง สัญญาณเร็ว (เอนโค้ดเดอร์ เซนเซอร์นับชิ้นงานความเร็วสูง) ต้องใช้อินพุตความเร็วสูง ตัวนับฮาร์ดแวร์ หรืออินเตอร์รัปต์"},
+    {"q": "ทำไมเขียนคอยล์เดียวกันสองที่แล้วโปรแกรมทำงานผิด?", "a": "เพราะ PLC ประมวลผลจากบนลงล่าง ค่าที่คอยล์ตัวล่างเขียนจะทับค่าจากตัวบนก่อนเอาต์พุตถูกส่งออกตอนจบสแกน ผลคือคอยล์ตัวบนดูเหมือนไม่ทำงาน (double coil syndrome) ให้รวมเงื่อนไขไว้ในรังเดียว หรือใช้ SET/RESET อย่างตั้งใจ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/plc/">PLC</a></li><li>PLC คืออะไร · สแกน</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 22.1 · PLC · What Is a PLC</p>
+      <h1>PLC คืออะไร: โครงสร้าง CPU หน่วยความจำ I/O วงรอบการสแกน เวลาสแกน มาตรฐาน IEC 61131 และการเลือก PLC</h1>
+      <p class="lede">ปี 1968 โรงงานเกียร์ของ General Motors ต้องการเลิกต่อสายตู้รีเลย์ใหม่ทุกครั้งที่เปลี่ยนรุ่นรถ โจทย์นั้นทำให้เกิด PLC เครื่องแรก (Modicon 084) ความคิดหลักยังเหมือนเดิมจนถึงวันนี้: คอมพิวเตอร์ที่ทนสภาพโรงงาน อ่านอินพุตจากสวิตช์และเซนเซอร์ ตัดสินใจด้วยโปรแกรมที่ช่างไฟอ่านเข้าใจ แล้วสั่งเอาต์พุต — ทำซ้ำอย่างคาดเดาได้ไม่รู้จบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>PLC = แหล่งจ่ายไฟ + CPU + หน่วยความจำ + โมดูล I/O + พอร์ตสื่อสาร</li>
+          <li>หนึ่งสแกน: อ่านอินพุตเข้าอิมเมจ → รันโปรแกรมบนลงล่าง → เขียนเอาต์พุต → งานระบบ</li>
+          <li>เวลาสแกนทั่วไป 1–20 ms · เวลาตอบสนองแย่ที่สุด ≈ หน่วงอินพุต + 2 สแกน + หน่วงเอาต์พุต</li>
+          <li>จุดแข็งคือความทนทานและการทำงานที่คาดเดาได้ (deterministic) ไม่ใช่ความเร็ว</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น scan time, response, pulse, spare" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="arch">
+    <h2 id="arch">โครงสร้างของ PLC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="xfig"><!--FIG:plc-architecture--><svg class="xf" viewBox="0 0 780 300" role="img" aria-label="โครงสร้าง PLC: แหล่งจ่ายไฟ CPU หน่วยความจำ โมดูลอินพุต-เอาต์พุต การสื่อสาร และอุปกรณ์ภาคสนาม"><defs><marker id="plc-architecture-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-box" x="220" y="60" width="340" height="170" rx="10"/><rect class="xf-boxc" x="235" y="75" width="70" height="140" rx="6"/><text x="270" y="140" class="xf-h" text-anchor="middle">PSU</text><text x="270" y="158" class="xf-k" text-anchor="middle">24 VDC</text><rect class="xf-boxa" x="315" y="75" width="110" height="140" rx="6"/><text x="370" y="120" class="xf-h" text-anchor="middle">CPU</text><text x="370" y="142" class="xf-k" text-anchor="middle">โปรแกรม · ข้อมูล</text><text x="370" y="160" class="xf-k" text-anchor="middle">ไทเมอร์ · เคาน์เตอร์</text><text x="370" y="178" class="xf-k" text-anchor="middle">พอร์ตสื่อสาร</text><rect class="xf-boxb" x="435" y="75" width="55" height="140" rx="6"/><text x="462" y="150" class="xf-h" text-anchor="middle">DI</text><rect class="xf-boxb" x="495" y="75" width="55" height="140" rx="6"/><text x="522" y="150" class="xf-h" text-anchor="middle">DO</text><rect class="xf-box" x="20" y="56" width="170" height="26" rx="6"/><text x="105" y="73" class="xf-k" text-anchor="middle">ปุ่มกด · ซีเลกเตอร์</text><line class="xf-ln" x1="190" y1="70" x2="220" y2="70" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="90" width="170" height="26" rx="6"/><text x="105" y="107" class="xf-k" text-anchor="middle">ลิมิตสวิตช์</text><line class="xf-ln" x1="190" y1="104" x2="220" y2="104" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="124" width="170" height="26" rx="6"/><text x="105" y="141" class="xf-k" text-anchor="middle">พร็อกซิมิตี PNP/NPN</text><line class="xf-ln" x1="190" y1="138" x2="220" y2="138" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="158" width="170" height="26" rx="6"/><text x="105" y="175" class="xf-k" text-anchor="middle">หน้าสัมผัสโอเวอร์โหลด</text><line class="xf-ln" x1="190" y1="172" x2="220" y2="172" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="20" y="192" width="170" height="26" rx="6"/><text x="105" y="209" class="xf-k" text-anchor="middle">ทรานสมิตเตอร์ 4–20 mA</text><line class="xf-ln" x1="190" y1="206" x2="220" y2="206" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="56" width="170" height="26" rx="6"/><text x="675" y="73" class="xf-k" text-anchor="middle">คอยล์คอนแทกเตอร์</text><line class="xf-ln" x1="560" y1="70" x2="590" y2="70" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="90" width="170" height="26" rx="6"/><text x="675" y="107" class="xf-k" text-anchor="middle">หลอดไฟ · ไซเรน</text><line class="xf-ln" x1="560" y1="104" x2="590" y2="104" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="124" width="170" height="26" rx="6"/><text x="675" y="141" class="xf-k" text-anchor="middle">โซลินอยด์วาล์ว</text><line class="xf-ln" x1="560" y1="138" x2="590" y2="138" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="158" width="170" height="26" rx="6"/><text x="675" y="175" class="xf-k" text-anchor="middle">คำสั่ง VFD</text><line class="xf-ln" x1="560" y1="172" x2="590" y2="172" marker-end="url(#plc-architecture-ah)"/><rect class="xf-box" x="590" y="192" width="170" height="26" rx="6"/><text x="675" y="209" class="xf-k" text-anchor="middle">วาล์วควบคุม 4–20 mA</text><line class="xf-ln" x1="560" y1="206" x2="590" y2="206" marker-end="url(#plc-architecture-ah)"/><rect class="xf-boxc" x="300" y="250" width="180" height="34" rx="6"/><text x="390" y="272" class="xf-k" text-anchor="middle">HMI · SCADA · โปรแกรมเมอร์</text><line class="xf-ln" x1="370" y1="230" x2="370" y2="250" marker-end="url(#plc-architecture-ah)" marker-start="url(#plc-architecture-ah)"/><text x="390" y="30" class="xf-h" text-anchor="middle">อินพุต → ตัดสินใจตามโปรแกรม → เอาต์พุต</text></svg><!--/FIG--><figcaption>รูป 1 · PLC เป็นตัวกลางระหว่างอุปกรณ์ภาคสนามสองฝั่ง: ฝั่งที่ “บอก” (ปุ่ม เซนเซอร์) และฝั่งที่ “ทำ” (คอนแทกเตอร์ วาล์ว ไฟ)</figcaption></figure>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ส่วน</th><th>หน้าที่</th><th>สิ่งที่ควรรู้</th></tr></thead>
+      <tbody>
+        <tr><td>Power supply</td><td>แปลง 230 VAC เป็น 24 VDC ให้ CPU และ I/O</td><td>ใช้แหล่งแยกสำหรับโหลดภาคสนามที่กินกระแสมาก (โซลินอยด์)</td></tr>
+        <tr><td>CPU</td><td>รันโปรแกรม จัดการ I/O และการสื่อสาร</td><td>ดูความเร็วต่อคำสั่ง ขนาดหน่วยความจำ ฟังก์ชันพิเศษ (PID ตัวนับเร็ว)</td></tr>
+        <tr><td>Memory</td><td>เก็บโปรแกรม ข้อมูล ค่าตั้ง</td><td>ข้อมูลแบบ retentive คงค่าเมื่อไฟดับ (แบตเตอรี่/แฟลช)</td></tr>
+        <tr><td>Digital I/O</td><td>สัญญาณ 0/1 จากสวิตช์และไปยังคอยล์</td><td>24 VDC ซิงก์/ซอร์ส เอาต์พุตรีเลย์/ทรานซิสเตอร์</td></tr>
+        <tr><td>Analog I/O</td><td>สัญญาณต่อเนื่อง 4–20 mA, 0–10 V</td><td>ความละเอียด 12–16 บิต ต้องสเกลเป็นหน่วยวิศวกรรม</td></tr>
+        <tr><td>Communication</td><td>คุยกับ HMI SCADA ไดรฟ์ PLC อื่น</td><td>Ethernet (PROFINET, EtherNet/IP, Modbus TCP) RS-485 (Modbus RTU)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="scan">
+    <h2 id="scan">วงรอบการสแกน <span class="lv lv-i">กลาง</span></h2>
+    <p>PLC ไม่ได้ “ดู” อินพุตตลอดเวลา ตอนต้นสแกนมันถ่ายรูปสถานะขั้วอินพุตทั้งหมดลงตาราง <b>อิมเมจอินพุต</b> จากนั้นรันโปรแกรมทีละรังจากบนลงล่างโดยอ่านจากรูปนั้น ผลของคอยล์เขียนลง <b>อิมเมจเอาต์พุต</b> ซึ่งส่งไปที่ขั้วเอาต์พุตพร้อมกันตอนจบสแกน การทำงานแบบนี้ทำให้ตลอดสแกนหนึ่งค่าอินพุตไม่เปลี่ยนกลางคัน ผลลัพธ์จึงคาดเดาได้</p>
+    <figure class="xfig"><!--FIG:plc-scan--><svg class="xf" viewBox="0 0 760 300" role="img" aria-label="วงรอบการสแกนของ PLC: อ่านอินพุตเข้าอิมเมจ ประมวลผลโปรแกรมจากบนลงล่าง เขียนเอาต์พุต และงานระบบ วนซ้ำทุก 1–50 ms"><defs><marker id="plc-scan-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><rect class="xf-boxa" x="112" y="26" width="156" height="44" rx="8"/><text x="190" y="45" class="xf-h" text-anchor="middle">1 อ่านอินพุต</text><text x="190" y="62" class="xf-k" text-anchor="middle">ขั้ว → อิมเมจ I</text><rect class="xf-boxb" x="214" y="128" width="156" height="44" rx="8"/><text x="292" y="147" class="xf-h" text-anchor="middle">2 รันโปรแกรม</text><text x="292" y="164" class="xf-k" text-anchor="middle">บน → ล่าง, ซ้าย → ขวา</text><rect class="xf-boxc" x="112" y="230" width="156" height="44" rx="8"/><text x="190" y="249" class="xf-h" text-anchor="middle">3 เขียนเอาต์พุต</text><text x="190" y="266" class="xf-k" text-anchor="middle">อิมเมจ Q → ขั้ว</text><rect class="xf-box" x="10" y="128" width="156" height="44" rx="8"/><text x="88" y="147" class="xf-h" text-anchor="middle">4 งานระบบ</text><text x="88" y="164" class="xf-k" text-anchor="middle">สื่อสาร · ตรวจตัวเอง</text><path class="xf-ln" d="M 237.9 59.9 A 102 102 0 0 1 280.1 102.1" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 280.1 197.9 A 102 102 0 0 1 237.9 240.1" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 142.1 240.1 A 102 102 0 0 1 99.9 197.9" marker-end="url(#plc-scan-ah)"/><path class="xf-ln" d="M 99.9 102.1 A 102 102 0 0 1 142.1 59.9" marker-end="url(#plc-scan-ah)"/><text x="190" y="154" class="xf-h" text-anchor="middle">1 สแกน</text><text x="605" y="60" class="xf-k" text-anchor="middle">เวลาตอบสนองแย่ที่สุด ≈ 2 × สแกน + หน่วงอินพุต</text><line class="xf-grid" x1="470" y1="90" x2="470" y2="230"/><text x="470" y="245" class="xf-k" text-anchor="middle">0</text><line class="xf-grid" x1="537.5" y1="90" x2="537.5" y2="230"/><text x="537.5" y="245" class="xf-k" text-anchor="middle">1</text><line class="xf-grid" x1="605" y1="90" x2="605" y2="230"/><text x="605" y="245" class="xf-k" text-anchor="middle">2</text><line class="xf-grid" x1="672.5" y1="90" x2="672.5" y2="230"/><text x="672.5" y="245" class="xf-k" text-anchor="middle">3</text><line class="xf-grid" x1="740" y1="90" x2="740" y2="230"/><text x="740" y="245" class="xf-k" text-anchor="middle">4</text><line class="xf-thin" x1="470" y1="230" x2="740" y2="230"/><line class="xf-thin" x1="470" y1="90" x2="470" y2="230"/><path class="xf-d" d="M470 121.1 L510.5 121.1 L510.5 97.8 L692.8 97.8"/><text x="464" y="119.1" class="xf-k" text-anchor="end">I0.0</text><path class="xf-a" d="M470 163.9 L537.5 163.9 L537.5 140.6 L713 140.6"/><text x="464" y="161.9" class="xf-k" text-anchor="end">อิมเมจ I</text><path class="xf-b" d="M470 206.7 L605 206.7 L605 183.3 L740 183.3"/><text x="464" y="204.7" class="xf-k" text-anchor="end">Q0.0</text><text x="605" y="266" class="xf-k" text-anchor="middle">สแกน → · ปุ่มเปลี่ยนกลางสแกน PLC เห็นสแกนถัดไป</text></svg><!--/FIG--><figcaption>รูป 2 · ขวา: ปุ่ม I0.0 เปลี่ยนกลางสแกนที่ 0 ถูกอ่านเข้าอิมเมจตอนต้นสแกนที่ 1 และเอาต์พุต Q0.0 เปลี่ยนตอนจบสแกนที่ 1 (เห็นที่ขั้วสแกนที่ 2)</figcaption></figure>
+<div class="tf" id="F1" data-k="scan time components เวลาสแกน"><p class="tf-n"><b><span class="fid">F1</span> Scan time</b> เวลาสแกน</p>
+        \[ t_{scan} = t_{read\,I} + t_{program} + t_{write\,Q} + t_{comm/diag} \]</div>
+<div class="tf" id="F2" data-k="program execution time instructions เวลาประมวลผลโปรแกรม"><p class="tf-n"><b><span class="fid">F2</span> Program execution estimate</b> เวลารันโปรแกรมโดยประมาณ</p>
+        \[ t_{program} \approx N_{bit}\,t_{bit} + N_{word}\,t_{word} + N_{real}\,t_{real} \]</div>
+<div class="tf" id="F3" data-k="worst case response time filter scan output เวลาตอบสนองแย่สุด"><p class="tf-n"><b><span class="fid">F3</span> Response time</b> เวลาตอบสนองของระบบ</p>
+        \[ t_{in} + t_{scan} + t_{out} \;\le\; t_{resp} \;\le\; t_{in} + 2\,t_{scan} + t_{out} \]</div>
+<div class="tf" id="F4" data-k="minimum pulse width detect input สัญญาณสั้นสุด"><p class="tf-n"><b><span class="fid">F4</span> Shortest pulse surely seen</b> พัลส์สั้นสุดที่ PLC จับได้แน่นอน</p>
+        \[ t_{pulse} > t_{scan} + t_{in} \]</div>
+<div class="wx" id="ex-f-1"><div class="wx-head"><span class="mono">ตัวอย่าง F-1</span><h3>สายพานวิ่ง 1.2 m/s ชิ้นงานยาว 30 mm ผ่านเซนเซอร์แสง PLC สแกน 10 ms ตัวกรองอินพุต 3 ms</h3></div>
+<ol class="steps">
+<li><p>เวลาที่ชิ้นงานบังเซนเซอร์ \(t = 0.030/1.2 = 25\) ms</p></li>
+<li><p>F4: ต้องมากกว่า \(10 + 3 = 13\) ms → 25 ms จับได้ ✓ (เผื่อเกือบสองเท่า)</p></li>
+<li><p>ถ้าสายพานเร่งเป็น 3 m/s: \(t = 10\) ms < 13 ms → อาจหลุด ต้องใช้อินพุตความเร็วสูงหรือตัวนับฮาร์ดแวร์</p></li>
+<li><p>F3: เวลาตั้งแต่ชิ้นงานถึงเซนเซอร์จนลมเป่าคัดแยก (เอาต์พุตทรานซิสเตอร์ 0.1 ms + โซลินอยด์ 15 ms) แย่สุด ≈ 3 + 20 + 0.1 + 15 = 38 ms → ชิ้นงานเคลื่อนไป 46 mm ระหว่างนั้น ต้องติดหัวเป่าเลยเซนเซอร์ตามระยะนี้</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="scan"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">ชนิดของ PLC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ชนิด</th><th>ลักษณะ</th><th>เหมาะกับ</th></tr></thead>
+      <tbody>
+        <tr><td>Nano/Compact (ตัวเดียวจบ)</td><td>CPU และ I/O ในกล่องเดียว 10–60 จุด ขยายได้เล็กน้อย</td><td>เครื่องจักรเดี่ยว ปั๊ม งานอาคาร</td></tr>
+        <tr><td>Modular (แร็ค)</td><td>เลือก CPU และโมดูล I/O สื่อสาร ตามต้องการ หลายร้อยถึงหลายพันจุด</td><td>ไลน์ผลิต โรงงานกระบวนการ</td></tr>
+        <tr><td>Safety PLC</td><td>CPU คู่ ตรวจสอบตัวเอง ได้รับรอง SIL/PL</td><td>หยุดฉุกเฉิน ม่านแสง ประตูนิรภัย ระบบเผาไหม้</td></tr>
+        <tr><td>PAC / IPC (soft PLC)</td><td>คอมพิวเตอร์อุตสาหกรรมรันรันไทม์ IEC 61131-3</td><td>งานที่ต้องการคำนวณหนัก การเคลื่อนที่หลายแกน ข้อมูลมาก</td></tr>
+        <tr><td>Smart relay</td><td>รีเลย์โปรแกรมได้ จอเล็ก ฟังก์ชันบล็อก</td><td>งานเล็กมาก แทนรีเลย์ไม่กี่ตัว</td></tr>
+      </tbody>
+    </table></div>
+    <h3>PLC เทียบรีเลย์และไมโครคอนโทรลเลอร์</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>เกณฑ์</th><th>ตู้รีเลย์</th><th>PLC</th><th>ไมโครคอนโทรลเลอร์</th></tr></thead>
+      <tbody>
+        <tr><td>แก้ลอจิก</td><td>เดินสายใหม่</td><td>แก้โปรแกรม</td><td>แก้โปรแกรม (ต้องเขียน C)</td></tr>
+        <tr><td>ทนสภาพโรงงาน</td><td>สูง</td><td>สูง (IEC 61131-2 ทดสอบ EMC อุณหภูมิ การสั่น)</td><td>ผู้ใช้ต้องออกแบบเอง</td></tr>
+        <tr><td>การวินิจฉัย</td><td>ไล่วัดทีละจุด</td><td>ดูสถานะออนไลน์ บันทึกเหตุการณ์</td><td>ขึ้นกับผู้เขียน</td></tr>
+        <tr><td>ความคาดเดาได้</td><td>สูง</td><td>สูง (สแกนคงที่ watchdog)</td><td>ขึ้นกับการออกแบบ</td></tr>
+        <tr><td>ราคา/จุด</td><td>ต่ำเมื่องานเล็กมาก</td><td>ปานกลาง</td><td>ต่ำมาก</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="iec">
+    <h2 id="iec">มาตรฐาน IEC 61131 <span class="lv lv-i">กลาง</span></h2>
+    <p>IEC 61131 ทำให้ความรู้ PLC ข้ามยี่ห้อได้ ส่วนที่ช่างและวิศวกรใช้บ่อย:</p>
+    <ul>
+      <li><b>ส่วนที่ 2 (อุปกรณ์):</b> ชนิดอินพุต 24 VDC Type 1/2/3 ช่วงแรงดัน ON/OFF การทดสอบ EMC — รายละเอียดใน <a href="/learn/plc/io-wiring/">ต่อสาย I/O</a></li>
+      <li><b>ส่วนที่ 3 (ภาษา):</b> LD FBD ST SFC (และ IL ที่ถูกยกเลิกในฉบับ 2013) ชนิดข้อมูล ไทเมอร์ เคาน์เตอร์มาตรฐาน — ดู <a href="/learn/plc/iec-languages/">ภาษา IEC 61131-3</a></li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="select">
+    <h2 id="select">เลือก PLC อย่างไร <span class="lv lv-i">กลาง</span></h2>
+<div class="tf" id="F5" data-k="io count spare margin จำนวนจุด สำรอง"><p class="tf-n"><b><span class="fid">F5</span> I/O count with spare</b> จำนวนจุด I/O พร้อมสำรอง</p>
+        \[ N_{I/O} = \left\lceil 1.2\,N_{required} \right\rceil \quad (\text{สำรอง 15–25 \%}) \]</div>
+    <ol>
+      <li>ทำรายการ I/O: นับอินพุต-เอาต์พุตดิจิทัล แอนะล็อก อินพุตความเร็วสูง พร้อมชนิด (PNP/NPN, 4–20 mA)</li>
+      <li>เวลาตอบสนองที่ต้องการ (F3) และฟังก์ชันพิเศษ (PID, ตัวนับ, การเคลื่อนที่)</li>
+      <li>การสื่อสารกับ HMI ไดรฟ์ ระบบ SCADA ที่มีอยู่ในโรงงาน</li>
+      <li>ความปลอดภัย: ต้องการ safety PLC/รีเลย์เซฟตี้หรือไม่</li>
+      <li>สภาพแวดล้อม: อุณหภูมิตู้ ความชื้น การสั่น</li>
+      <li>มาตรฐานของโรงงานและอะไหล่ที่มีอยู่ — ยี่ห้อที่ช่างดูแลเป็นอยู่แล้วมักคุ้มกว่ายี่ห้อที่ถูกกว่า</li>
+    </ol>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

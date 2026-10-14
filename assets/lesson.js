@@ -2,6 +2,9 @@
    step-by-step worked examples and the series formula index on a hub page. Same markup as linalg.js. */
 (function () {
   "use strict";
+  var EN = document.documentElement.lang === "en";
+  var T = EN ? { step: "▶ Step by step", show: "Show solution", hide: "Hide solution", nextS: "Next step", again: "↺ Restart", pOn: "Practice mode: hide solutions", pOff: "Exit practice mode", less: "Show fewer ↑", all: function (n) { return "Show all " + n + " formulas ↓"; } }
+    : { step: "▶ ดูทีละขั้น", show: "ดูวิธีทำ", hide: "ซ่อนวิธีทำ", nextS: "ขั้นถัดไป", again: "↺ เริ่มใหม่", pOn: "โหมดฝึกทำ: ซ่อนวิธีทำ", pOff: "ออกจากโหมดฝึกทำ", less: "ย่อรายการ ↑", all: function (n) { return "แสดงทั้งหมด " + n + " สูตร ↓"; } };
   var $ = function (id) { return document.getElementById(id); };
   var art = document.querySelector("article.lesson");
   // ======================================================================= formula filter (per page)
@@ -40,7 +43,7 @@
         sec.hidden = !all && n === 0;
         total += n;
       });
-      $("tfCount").textContent = total ? "พบ " + total + " สูตร" : "ไม่พบในหน้านี้ ลองค้นทุกหน้าที่หน้าภาพรวม";
+      $("tfCount").textContent = total ? (EN ? total + " found" : "พบ " + total + " สูตร") : (EN ? "Not on this page — try the formula index on the overview page" : "ไม่พบในหน้านี้ ลองค้นทุกหน้าที่หน้าภาพรวม");
     }
     inp.addEventListener("input", run);
     inp.addEventListener("keydown", function (e) { if (e.key === "Escape") { inp.value = ""; run(); } });
@@ -56,7 +59,7 @@
       if (!head || !steps.length) return;
       var bar = document.createElement("div");
       bar.className = "wx-bar";
-      bar.innerHTML = '<button type="button" class="wx-btn" data-act="step">▶ ดูทีละขั้น</button><button type="button" class="wx-btn" data-act="show" hidden>ดูวิธีทำ</button>';
+      bar.innerHTML = '<button type="button" class="wx-btn" data-act="step">' + T.step + '</button><button type="button" class="wx-btn" data-act="show" hidden>' + T.show + '</button>';
       var go = head.querySelector(".calc-go");
       if (go) bar.appendChild(go);
       head.appendChild(bar);
@@ -66,7 +69,7 @@
         steps.forEach(function (li, i) { li.classList.toggle("st-hide", shown >= 0 && i > shown); });
         var done = shown < 0 || shown >= steps.length - 1;
         wx.classList.toggle("st-pending", !done);
-        stepBtn.textContent = shown < 0 ? "▶ ดูทีละขั้น" : !done ? "ขั้นถัดไป (" + (shown + 2) + "/" + steps.length + ") ▶" : "↺ เริ่มใหม่";
+        stepBtn.textContent = shown < 0 ? T.step : !done ? T.nextS + " (" + (shown + 2) + "/" + steps.length + ") ▶" : T.again;
       }
       stepBtn.addEventListener("click", function () {
         wx.classList.add("open");
@@ -74,15 +77,15 @@
         paint();
         if (shown > 0) steps[shown].scrollIntoView({ block: "nearest", behavior: "smooth" });
       });
-      showBtn.addEventListener("click", function () { wx.classList.toggle("open"); showBtn.textContent = wx.classList.contains("open") ? "ซ่อนวิธีทำ" : "ดูวิธีทำ"; });
-      wx._reset = function (practice) { shown = -1; paint(); showBtn.hidden = !practice; showBtn.textContent = "ดูวิธีทำ"; wx.classList.remove("open"); };
+      showBtn.addEventListener("click", function () { wx.classList.toggle("open"); showBtn.textContent = wx.classList.contains("open") ? T.hide : T.show; });
+      wx._reset = function (practice) { shown = -1; paint(); showBtn.hidden = !practice; showBtn.textContent = T.show; wx.classList.remove("open"); };
     });
     var pb = $("practiceBtn");
     if (pb) pb.addEventListener("click", function () {
       var on = !art.classList.contains("practice");
       art.classList.toggle("practice", on);
       pb.setAttribute("aria-pressed", on ? "true" : "false");
-      pb.textContent = on ? "ออกจากโหมดฝึกทำ" : "โหมดฝึกทำ: ซ่อนวิธีทำ";
+      pb.textContent = on ? T.pOff : T.pOn;
       examples.forEach(function (wx) { if (wx._reset) wx._reset(on); });
     });
   })();
@@ -113,8 +116,8 @@
         li.hidden = !ok || (limited && n > LIMIT);
       });
       more.hidden = !!terms.length || !!page;
-      more.textContent = expanded ? "ย่อรายการ ↑" : "แสดงทั้งหมด " + items.length + " สูตร ↓";
-      $("fxCount").textContent = (terms.length || page ? "พบ " : "ทั้งหมด ") + n + " สูตร";
+      more.textContent = expanded ? T.less : T.all(items.length);
+      $("fxCount").textContent = EN ? n + (terms.length || page ? " found" : " formulas") : (terms.length || page ? "พบ " : "ทั้งหมด ") + n + " สูตร";
       $("fxEmpty").hidden = n > 0;
     }
     inp.addEventListener("input", run);

@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=7ca4322c">
+<link rel="stylesheet" href="/assets/site.css?v=6c2eac95">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/fourier-series/dft-fft/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/#article","headline":"จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร","description":"เชื่อมอนุกรมฟูเรียร์กับ DFT/FFT ที่เครื่องวัดใช้จริง: สุ่มสัญญาณ N จุดต่อคาบได้สัมประสิทธิ์ cn = X[k]/N ความละเอียดความถี่ fs/N อเลียสซิงของฮาร์มอนิกสูง การรั่วของสเปกตรัม (leakage) เมื่อความถี่ไม่ตรง หน้าต่าง Hann และ flat-top มาตรฐาน IEC 61000-4-7 หน้าต่าง 10 คาบ 200 ms ช่องละ 5 Hz การรวมกลุ่มฮาร์มอนิก การอ่าน dBV จาก FFT บนออสซิลโลสโคป และอัลกอริทึม Goertzel พร้อมโค้ดสำหรับไมโครคอนโทรลเลอร์ ESP32","inLanguage":"th","url":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/","mainEntityOfPage":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Discrete Fourier transform","Fast Fourier transform","Aliasing","Spectral leakage","Window function","IEC 61000-4-7","Goertzel algorithm","Power analyzer"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/fourier-series/#article"},"image":["https://modsengineeringmath.com/images/og/learn-fourier-series-dft-fft.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก","item":"https://modsengineeringmath.com/learn/fourier-series/"},{"@type":"ListItem","position":4,"name":"จากอนุกรมฟูเรียร์สู่ DFT และ FFT: เครื่องวัดคำนวณฮาร์มอนิกอย่างไร","item":"https://modsengineeringmath.com/learn/fourier-series/dft-fft/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"DFT กับอนุกรมฟูเรียร์เกี่ยวกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าสุ่มสัญญาณคาบจำนวน N จุดเท่ากันพอดีในหนึ่งคาบ (หรือจำนวนเต็มคาบ) DFT ของข้อมูลนั้นหารด้วย N คือสัมประสิทธิ์ฟูเรียร์ c_k ตรงตัว ตราบที่สัญญาณไม่มีฮาร์มอนิกเกินครึ่งหนึ่งของความถี่สุ่ม FFT เป็นแค่วิธีคำนวณ DFT ที่เร็ว"}},{"@type":"Question","name":"ทำไมเครื่องวิเคราะห์กำลังใช้หน้าต่าง 10 คาบ?","acceptedAnswer":{"@type":"Answer","text":"IEC 61000-4-7 กำหนดหน้าต่าง 10 คาบที่ 50 Hz (12 คาบที่ 60 Hz) ประมาณ 200 ms ได้ความละเอียด 5 Hz ฮาร์มอนิกที่ h อยู่ช่องที่ 10h และช่องระหว่างนั้นใช้วัดอินเตอร์ฮาร์มอนิก การสุ่มต้องซิงก์กับความถี่ไฟจริงเพื่อไม่ให้เกิด leakage"}},{"@type":"Question","name":"spectral leakage คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าหน้าต่างไม่ครอบจำนวนเต็มคาบพอดี DFT มองว่าสัญญาณมีรอยต่อที่ขอบหน้าต่าง พลังงานของฮาร์มอนิกจึงรั่วไปช่องข้างเคียง ค่าแอมพลิจูดผิดและเกิดเส้นปลอม แก้ด้วยการซิงก์อัตราสุ่มกับความถี่ (PLL) ใช้หน้าต่าง Hann หรือ flat-top และการรวมกลุ่มช่อง"}},{"@type":"Question","name":"Goertzel ดีกว่า FFT เมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อต้องการแค่ไม่กี่ความถี่ เช่นฮาร์มอนิก 1 ถึง 15 ของไฟ 50 Hz บนไมโครคอนโทรลเลอร์ Goertzel คำนวณแต่ละช่องด้วยลูปเดียว ใช้หน่วยความจำน้อย ทำได้ทีละตัวอย่างระหว่างสุ่ม ส่วน FFT คุ้มกว่าเมื่อต้องการทุกช่อง"}}]}]}</script>
@@ -59,6 +59,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
       <div class="nav-grp">
@@ -296,6 +297,35 @@
           <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
           <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
           <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
         </div>
       </div>
       <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
@@ -668,10 +698,10 @@ float thd_percent(const float *x) {
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7ca4322c" defer></script>
-<script src="/assets/lesson.js?v=7ca4322c" defer></script>
-<script src="/assets/sigexpr.js?v=7ca4322c" defer></script>
-<script src="/assets/fs-core.js?v=7ca4322c" defer></script>
-<script src="/assets/fs-lab.js?v=7ca4322c" defer></script>
+<script src="/assets/site.js?v=6c2eac95" defer></script>
+<script src="/assets/lesson.js?v=6c2eac95" defer></script>
+<script src="/assets/sigexpr.js?v=6c2eac95" defer></script>
+<script src="/assets/fs-core.js?v=6c2eac95" defer></script>
+<script src="/assets/fs-lab.js?v=6c2eac95" defer></script>
 </body>
 </html>

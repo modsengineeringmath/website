@@ -1,0 +1,129 @@
+<!--meta
+{
+  "title": "Analog, PID and VFD Control with a PLC: 4–20 mA Scaling, Wire-Break Detection, Constant-Pressure Pump PID, Modbus RTU | Ajarn Mod",
+  "h1": "Analog, PID and Drive Control with a PLC: 4–20 mA Scaling, the PID Block, a Constant-Pressure Pump and Modbus RTU",
+  "description": "Analog work in a PLC from start to finish: ADC resolution, scaling raw counts to engineering units (Siemens 0–27648, Mitsubishi, Omron), wire-break detection per NAMUR NE 43, the positional and discrete PID block, Kp Ti Td settings, basic tuning, a constant-pressure pump example, and commanding a VFD by digital, analog and Modbus RTU signals with an example register map, control and status words, and frequency in 0.01 Hz units.",
+  "lesson": "en/plc",
+  "sub": "analog-pid-vfd",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["Analog-to-digital converter", "PID controller", "Modbus", "Variable-frequency drive"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "Is it better to run PID in the PLC or in the VFD?", "a": "For a single loop where the transmitter can be wired straight into the VFD, the drive's own PID is simple, responds quickly and keeps working even if the PLC fails. If several pumps must be coordinated, there are many conditions, or the loop must be logged and adjusted from SCADA, PID in the PLC is more flexible."},
+    {"q": "What value do I send over Modbus to command 35.5 Hz?", "a": "It depends on the register units in the drive manual. Many drives use 0.01 Hz units, so you send 3550. Some use a fraction of maximum frequency, e.g. 0–16384 or 0–10000 = 0–100 %. Always read the manual and test with a low value first."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/plc/">PLC Automation</a></li><li>Analog · PID · VFD</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22.8 · PLC · Analog, PID &amp; VFD</p>
+      <h1>Analog, PID and Drive Control with a PLC: 4–20 mA Scaling, the PID Block, a Constant-Pressure Pump and Modbus RTU</h1>
+      <p class="lede">The real world is not just 0 and 1: pressure, level, temperature and motor speed are continuous quantities. This page goes from the raw number in an analog module to a pressure-control loop that commands a drive — the most common job in buildings and factories.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Scaling: \(y = y_{min} + (x - x_{min})(y_{max} - y_{min})/(x_{max} - x_{min})\), computed in REAL</li>
+          <li>Below 3.6 mA or above 21 mA is a fault, not a measurement</li>
+          <li>PID: \(u = K_p\left(e + \frac{1}{T_i}\int e\,dt + T_d\frac{de}{dt}\right)\) · start tuning with PI</li>
+          <li>Commanding a VFD: DI + AI is simplest · Modbus returns data (current, faults) over a single pair</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Search formulas on this page</label>
+      <input id="tfFilter" type="search" placeholder="e.g. scaling, resolution, wire break, pid, modbus" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="scale">
+    <h2 id="scale">From raw counts to engineering units <span class="lv lv-b">Basic</span></h2>
+    <figure class="xfig"><!--FIG:plc-scaling-en--><svg class="xf" viewBox="0 0 760 280" role="img" aria-label="Analog scaling: raw 0–27648 (4–20 mA on Siemens) mapped to 0–10 bar with a straight line; below 4 mA flags a broken wire"><defs><marker id="plc-scaling-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-grid" x1="70" y1="208.3" x2="450" y2="208.3"/><text x="64" y="212.3" class="xf-k" text-anchor="end">0</text><line class="xf-grid" x1="70" y1="166.7" x2="450" y2="166.7"/><text x="64" y="170.7" class="xf-k" text-anchor="end">2.5</text><line class="xf-grid" x1="70" y1="125" x2="450" y2="125"/><text x="64" y="129" class="xf-k" text-anchor="end">5</text><line class="xf-grid" x1="70" y1="83.3" x2="450" y2="83.3"/><text x="64" y="87.3" class="xf-k" text-anchor="end">7.5</text><line class="xf-grid" x1="70" y1="41.7" x2="450" y2="41.7"/><text x="64" y="45.7" class="xf-k" text-anchor="end">10</text><line class="xf-grid" x1="70" y1="25" x2="70" y2="225"/><text x="70" y="240" class="xf-k" text-anchor="middle">0</text><line class="xf-grid" x1="156.4" y1="25" x2="156.4" y2="225"/><text x="156.4" y="240" class="xf-k" text-anchor="middle">6912</text><line class="xf-grid" x1="242.7" y1="25" x2="242.7" y2="225"/><text x="242.7" y="240" class="xf-k" text-anchor="middle">13824</text><line class="xf-grid" x1="329.1" y1="25" x2="329.1" y2="225"/><text x="329.1" y="240" class="xf-k" text-anchor="middle">20736</text><line class="xf-grid" x1="415.5" y1="25" x2="415.5" y2="225"/><text x="415.5" y="240" class="xf-k" text-anchor="middle">27648</text><line class="xf-thin" x1="70" y1="225" x2="450" y2="225"/><line class="xf-thin" x1="70" y1="25" x2="70" y2="225"/><text x="260" y="257" class="xf-m" text-anchor="middle">Raw ADC value</text><text x="30" y="125" class="xf-m" text-anchor="middle" transform="rotate(-90 30 125)">bar</text><path class="xf-b" d="M70 208.3 L415.5 41.7"/><path class="xf-dash" d="M415.5 41.7 L432.3 33.3"/><circle class="xf-dotk" cx="156.4" cy="166.7" r="3.2"/><circle class="xf-dotk" cx="242.7" cy="125" r="3.2"/><circle class="xf-dotk" cx="329.1" cy="83.3" r="3.2"/><text x="250.7" y="143" class="xf-k">13824 → 5.0 bar</text><text x="490" y="50" class="xf-k">y = y_min + (x − x_min)·</text><text x="490" y="66" class="xf-k">    (y_max − y_min)/(x_max − x_min)</text><text x="490" y="100" class="xf-k">4 mA</text><text x="570" y="100" class="xf-k">0</text><text x="660" y="100" class="xf-k">0 bar</text><text x="490" y="124" class="xf-k">12 mA</text><text x="570" y="124" class="xf-k">13824</text><text x="660" y="124" class="xf-k">5 bar</text><text x="490" y="148" class="xf-k">20 mA</text><text x="570" y="148" class="xf-k">27648</text><text x="660" y="148" class="xf-k">10 bar</text><text x="490" y="172" class="xf-k">&lt; 3.6 mA</text><text x="570" y="172" class="xf-k">negative/low</text><text x="660" y="172" class="xf-k">wire break!</text><text x="380" y="270" class="xf-m" text-anchor="middle" textLength="748" lengthAdjust="spacingAndGlyphs">Other brands: Mitsubishi 0–4000 or 0–32000 · Omron 0–4000/0–8000 · check the module manual and match the transmitter range</text></svg><!--/FIG--><figcaption>Figure 1 · A 0–10 bar, 4–20 mA pressure transmitter into an analog module that returns raw counts of 0–27648</figcaption></figure>
+<div class="tf" id="P1" data-k="linear scaling raw to engineering units"><p class="tf-n"><b><span class="fid">P1</span> Linear scaling</b></p>
+        \[ y = y_{min} + (x - x_{min})\,\frac{y_{max} - y_{min}}{x_{max} - x_{min}} \]</div>
+<div class="tf" id="P2" data-k="adc resolution lsb bits per count"><p class="tf-n"><b><span class="fid">P2</span> Resolution per raw count</b></p>
+        \[ \Delta y = \frac{y_{max} - y_{min}}{x_{max} - x_{min}} \qquad \text{e.g. } \frac{10\ \text{bar}}{27648} = 0.36\ \text{mbar} \]</div>
+<div class="tf" id="P3" data-k="wire break namur ne43 current limits signal validity"><p class="tf-n"><b><span class="fid">P3</span> Signal validity (NAMUR NE 43)</b></p>
+        \[ 3.8 \le I \le 20.5\ \text{mA: valid measurement} \qquad I \le 3.6 \text{ or } I \ge 21\ \text{mA → fault} \]</div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">Example P-1</span><h3>Scaling a raw value of 13824 with INT gives zero</h3></div>
+<ol class="steps">
+<li><p>Wrong: <code>Bar := Raw / 27648 * 10;</code> in INT → 13824/27648 = 0 (truncated) → 0 bar</p></li>
+<li><p>Also wrong: <code>Raw * 10 / 27648</code> in INT → 27648 × 10 = 276480 overflows INT</p></li>
+<li><p>Right: <code>Bar := INT_TO_REAL(Raw) * 10.0 / 27648.0;</code> → 5.0 bar</p></li>
+<li><p>Check P3: Siemens modules return negative raw values when the current is below 4 mA (down to −4864 ≈ 1.185 mA), and with wire-break diagnostics enabled they report a special value (32767) — check both the raw range per P3 and the module's status bits.</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="scale"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pid">
+    <h2 id="pid">The PID block in a PLC <span class="lv lv-i">Intermediate</span></h2>
+    <figure class="xfig"><!--FIG:plc-pid-loop-en--><svg class="xf" viewBox="0 0 780 240" role="img" aria-label="Constant-pressure loop: the PLC reads pressure from a 4–20 mA transmitter, runs PID and sends a frequency to the VFD driving the pump"><defs><marker id="plc-pid-loop-en-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><text x="40" y="104" class="xf-h" text-anchor="middle">SP</text><line class="xf-ln" x1="55" y1="100" x2="105" y2="100" marker-end="url(#plc-pid-loop-en-ah)"/><circle class="xf-box" cx="118" cy="100" r="13"/><text x="118" y="105" class="xf-k" text-anchor="middle">Σ</text><text x="106" y="92" class="xf-k">+</text><text x="110" y="128" class="xf-k">−</text><rect class="xf-boxa" x="150" y="74" width="110" height="52" rx="8"/><text x="205" y="97" class="xf-h" text-anchor="middle">PID</text><text x="205" y="115" class="xf-k" text-anchor="middle">Kp Ti Td</text><rect class="xf-box" x="300" y="74" width="110" height="52" rx="8"/><text x="355" y="97" class="xf-h" text-anchor="middle">VFD</text><text x="355" y="115" class="xf-k" text-anchor="middle">0–50 Hz</text><rect class="xf-box" x="450" y="74" width="110" height="52" rx="8"/><text x="505" y="97" class="xf-h" text-anchor="middle">Pump + pipe</text><text x="505" y="115" class="xf-k" text-anchor="middle">pressure</text><rect class="xf-box" x="600" y="74" width="110" height="52" rx="8"/><text x="655" y="97" class="xf-h" text-anchor="middle">PT</text><text x="655" y="115" class="xf-k" text-anchor="middle">4–20 mA</text><line class="xf-ln" x1="131" y1="100" x2="150" y2="100" marker-end="url(#plc-pid-loop-en-ah)"/><line class="xf-ln" x1="260" y1="100" x2="300" y2="100" marker-end="url(#plc-pid-loop-en-ah)"/><text x="280" y="92" class="xf-k" text-anchor="middle">AO/Modbus</text><line class="xf-ln" x1="410" y1="100" x2="450" y2="100" marker-end="url(#plc-pid-loop-en-ah)"/><line class="xf-ln" x1="560" y1="100" x2="600" y2="100" marker-end="url(#plc-pid-loop-en-ah)"/><line class="xf-ln" x1="710" y1="100" x2="750" y2="100"/><line class="xf-ln" x1="750" y1="100" x2="750" y2="180"/><line class="xf-ln" x1="750" y1="180" x2="118" y2="180"/><line class="xf-ln" x1="118" y1="180" x2="118" y2="113" marker-end="url(#plc-pid-loop-en-ah)"/><text x="430" y="196" class="xf-k" text-anchor="middle">PV (measured) via analog input + scaling</text><rect class="xf-boxc" x="150" y="20" width="260" height="36" rx="6"/><text x="280" y="43" class="xf-k" text-anchor="middle">PLC: scale → PID → limit → output</text><text x="390" y="232" class="xf-m" text-anchor="middle">Alternatively use the VFD's built-in PID (PT into the VFD's AI) — the PLC only sends RUN and the setpoint</text></svg><!--/FIG--><figcaption>Figure 2 · Constant-pressure loop: SP − PV = e → PID → frequency → VFD → pump → pressure → transmitter</figcaption></figure>
+<div class="tf" id="P4" data-k="pid positional standard form kp ti td equation"><p class="tf-n"><b><span class="fid">P4</span> PID (standard form)</b></p>
+        \[ u(t) = K_p\left(e + \frac{1}{T_i}\int_0^t e\,d\tau + T_d\,\frac{de}{dt}\right) \qquad e = SP - PV \]</div>
+<div class="tf" id="P5" data-k="discrete pid sample time digital implementation"><p class="tf-n"><b><span class="fid">P5</span> Discrete PID (sample time \(T_s\))</b></p>
+        \[ u_k = K_p\left(e_k + \frac{T_s}{T_i}\sum_{j=0}^{k} e_j - \frac{T_d}{T_s}(PV_k - PV_{k-1})\right) \]</div>
+    <p>The derivative term uses PV instead of e (derivative on measurement) so the output does not kick when SP changes, and anti-windup is needed: when the output hits its limit (e.g. 50 Hz), stop accumulating the integral. Most pump and fan loops use PI only (Td = 0) because pressure signals are noisy.</p>
+    <h3>Initial tuning for a constant-pressure pump</h3>
+    <ol>
+      <li>Start with a small Kp (e.g. 0.5 of full scale), a long Ti (e.g. 5 s) and Td = 0</li>
+      <li>Increase Kp until it starts to oscillate, then halve it</li>
+      <li>Reduce Ti gradually until the value returns to setpoint quickly enough without oscillating (typically 1–5 s for water pressure)</li>
+      <li>Test by actually opening and closing taps, watching both the dip and the overshoot</li>
+    </ol>
+    <p>Try the effect of Kp, Ti and Td in the <a href="/learn/control-systems/pid/">PID lab (Thai)</a>, and a pressure loop with a VFD pump in the <a href="/learn/sensors-transducers/instrumentation-lab/">virtual instrumentation lab (Thai)</a>.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="vfd">
+    <h2 id="vfd">Commanding a drive from the PLC <span class="lv lv-i">Intermediate</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Method</th><th>Wiring</th><th>Advantages</th><th>Limitations</th></tr></thead>
+      <tbody>
+        <tr><td>Digital + preset speeds</td><td>Several DO → DI wires</td><td>Simple, noise-immune</td><td>Only a few speeds</td></tr>
+        <tr><td>Digital + analog</td><td>DO → RUN · AO → AI (4–20 mA)</td><td>Continuous adjustment, easy to understand</td><td>Feedback limited to what is wired (AO, relays)</td></tr>
+        <tr><td>Modbus RTU (RS-485)</td><td>One twisted pair, several drives</td><td>Read current, frequency and faults; set parameters</td><td>Communication settings needed; slower response with many stations</td></tr>
+        <tr><td>Industrial Ethernet</td><td>PROFINET, EtherNet/IP, Modbus TCP, EtherCAT</td><td>Fast, lots of data, full diagnostics</td><td>Needs a module and network configuration</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P6" data-k="modbus frequency register units 0.01 hz setpoint"><p class="tf-n"><b><span class="fid">P6</span> Frequency setpoint over Modbus</b></p>
+        \[ \text{Reg} = \frac{f}{0.01\ \text{Hz}} \quad (35.5\ \text{Hz} \to 3550) \qquad \text{or} \quad \text{Reg} = \frac{f}{f_{max}}\times \text{Scale}_{100\%} \]</div>
+    <div class="table-wrap"><table>
+      <caption>Example register map (hypothetical, for learning — every brand differs; use the real manual)</caption>
+      <thead><tr><th>Register</th><th>Name</th><th>Read/write</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>40001</td><td>Control word</td><td>W</td><td>Bit 0 = RUN · bit 1 = REV · bit 2 = RESET</td></tr>
+        <tr><td>40002</td><td>Frequency reference</td><td>W</td><td>0.01 Hz</td></tr>
+        <tr><td>40011</td><td>Status word</td><td>R</td><td>Bit 0 = Ready · bit 1 = Running · bit 3 = Fault</td></tr>
+        <tr><td>40012</td><td>Output frequency</td><td>R</td><td>0.01 Hz</td></tr>
+        <tr><td>40013</td><td>Output current</td><td>R</td><td>0.1 A</td></tr>
+        <tr><td>40014</td><td>Fault code</td><td>R</td><td>Code per the manual</td></tr>
+      </tbody>
+    </table></div>
+    <p>RS-485 wiring, CRC-16 calculation and a frame builder are in <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP (Thai)</a>. Remember: set the “communication timeout” in the drive so it stops if the PLC is silent for longer than the set time — otherwise, if the communication cable breaks, the drive keeps running at the last frequency.</p>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">Example P-2</span><h3>The PLC sends 4–20 mA to a VFD ranged 20–50 Hz; 42 Hz is wanted</h3></div>
+<ol class="steps">
+<li><p>Invert P1: \(I = 4 + 16\,(42 - 20)/(50 - 20) = 4 + 11.73 = 15.73\) mA</p></li>
+<li><p>If the analog output is 0–27648 = 4–20 mA: raw value \(= 27648 \times 11.73/16 = 20275\)</p></li>
+<li><p>Set the drive to treat AI below 2 mA as a broken wire and choose the response (stop / fallback speed)</p></li>
+</ol></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

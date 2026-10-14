@@ -1,0 +1,151 @@
+<!--meta
+{
+  "title": "PLC Automation: Ladder Logic, Timers, Counters, IEC 61131-3 and Motor Control, with a Simulator | Mod's Engineering Mathematics",
+  "h1": "PLC Automation",
+  "description": "A complete PLC course: what a PLC is, the scan cycle, input and output wiring with PNP, NPN, sinking and sourcing, ladder diagrams, timers, counters, the IEC 61131-3 languages (LD, FBD, ST, SFC), DOL, reversing and star–delta motor control, sequential control, 4–20 mA analog and PID, commanding VFDs over Modbus, commissioning and machine safety, with an in-browser ladder simulator.",
+  "ogTitle": "PLC: Ladder Logic, Timers, Motor Control + Simulator",
+  "og": {"title": "PLC Automation + Ladder Simulator"},
+  "lesson": "en/plc",
+  "nav": "plc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Programmable logic controller", "Ladder logic", "IEC 61131-3", "Industrial automation"],
+  "scripts": ["/assets/lesson.js", "/assets/plc-sim.js"],
+  "jsonld": [
+    {
+      "@type": "Course",
+      "@id": "https://modsengineeringmath.com/learn/en/plc/#course",
+      "name": "PLC Automation",
+      "alternateName": ["Introduction to PLCs", "Ladder diagram course", "PLC programming course"],
+      "description": "A 10-page course: PLC fundamentals, I/O wiring, ladder logic, timers, counters, the IEC 61131-3 languages, motor control, sequential control, analog and PID, commanding VFDs, commissioning, safety and a simulator.",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "educationalLevel": ["Vocational", "Undergraduate"],
+      "teaches": ["PLC scan cycle", "Sinking and sourcing I/O", "Ladder logic", "IEC 61131-3 timers and counters", "Structured Text", "Sequential function chart", "Analog scaling and PID", "Machine safety"],
+      "provider": {"@id": "https://modsengineeringmath.com/#mod"},
+      "url": "https://modsengineeringmath.com/learn/en/plc/",
+      "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT14H"},
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB", "category": "Free"}
+    }
+  ],
+  "faq": [
+    {"q": "What should I know before learning PLCs?", "a": "You should understand contactor control circuits (self-holding, interlocks, timers), because ladder logic is designed to read like a relay circuit, and basic 24 VDC and 230 VAC electrics so you can wire I/O correctly. All of this is covered in the motor-control course on this site."},
+    {"q": "Which PLC brand should I start with?", "a": "The principles are the same for every brand because they follow IEC 61131. Choose a brand used in the factories or schools near you, and one with free software and a simulator. In this region Mitsubishi, Omron, Siemens, Delta, Schneider, Rockwell and Keyence are common."},
+    {"q": "How is a PLC different from an Arduino or a microcontroller?", "a": "A PLC is designed for the factory environment: noise-immune, isolated 24 VDC I/O, a predictable scan, self-diagnostics, standardised languages, modules that can be serviced and replaced in use, and certification to industrial standards. A microcontroller is more flexible and cheaper, but the user has to build all that robustness themselves."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li>PLC Automation</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 22 · PLC Automation · electrician → student → engineer</p>
+      <h1>PLC Automation</h1>
+      <p class="lede">A PLC (Programmable Logic Controller) replaces panels of hundreds of relays with a program you can edit. This course runs from how a PLC scans, through wiring PNP/NPN sensors correctly, writing ladder logic, timers and counters, to motor control, star–delta, sequential systems, analog and PID, and commanding VFDs. Every example can be tried straight away in the simulator on the page. There are <!--formula-count:en/plc--> formulas with citable IDs and <!--example-count:en/plc--> worked examples.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#try">Try the simulator</a>
+        <a class="btn btn-ghost btn-sm" href="#path">Learning path</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/en/plc/ladder-basics/">Ladder basics</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/en/plc/plc-motor-control/">Motor control with a PLC</a>
+        <a class="btn btn-ghost btn-sm" href="#formulas">Find a formula</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>A PLC repeats three things every few milliseconds: read inputs → run the program → write outputs</li>
+          <li>Ladder: series = AND · parallel = OR · NC = NOT · a self-holding rung works like a contactor</li>
+          <li>A PNP sensor pairs with a sinking input (COM to 0 V) · NPN pairs with sourcing</li>
+          <li>STOP and emergency-stop buttons are wired NC, and critical interlocks must stay in hardware</li>
+          <li>IEC 61131-3 timers TON, TOF, TP and counters CTU, CTD work on every brand</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="path">
+    <h2 id="path">Learning path by level</h2>
+    <div class="ee-cards">
+      <div class="ee-card"><p class="mono">Level 1 · electrician · vocational</p><h3>Wire it and write ladder logic</h3><p>What a PLC is, I/O wiring, ladder, self-holding, timers, counters</p><p><a href="/learn/en/plc/plc-fundamentals/">Fundamentals</a> → <a href="/learn/en/plc/io-wiring/">I/O wiring</a> → <a href="/learn/en/plc/ladder-basics/">Ladder</a> → <a href="/learn/en/plc/timers-counters/">Timers</a></p></div>
+      <div class="ee-card"><p class="mono">Level 2 · technician · programmer</p><h3>Real factory work</h3><p>Motor control, sequential control, analog, commanding VFDs, commissioning</p><p><a href="/learn/en/plc/plc-motor-control/">Motor control</a> → <a href="/learn/en/plc/sequential-control/">Sequential control</a> → <a href="/learn/en/plc/analog-pid-vfd/">Analog · PID</a></p></div>
+      <div class="ee-card"><p class="mono">Level 3 · engineering student · engineer</p><h3>System-level design</h3><p>Boolean algebra, state machines, SFC, ST, response time, discrete PID, functional safety</p><p><a href="/learn/en/plc/iec-languages/">IEC 61131-3</a> → <a href="/learn/en/plc/sequential-control/">SFC</a> → <a href="/learn/en/plc/commissioning-safety/">Safety</a></p></div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">Try it: a star–delta PLC in your browser</h2>
+    <p>Press START (I0.1) and watch the green power flow through the ladder. Timer T1 counts 6 seconds, K2 (star) drops out, there is an 80 ms dead time, then K3 (delta) pulls in. Choose another example from the menu, or open “Edit the program” to write your own. The full simulator with worksheets is at <a href="/learn/en/plc/plc-lab/">Ladder simulator</a>.</p>
+    <div class="plc-sim" data-preset="yd"><noscript>JavaScript is needed for the simulator</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="key">
+    <h2 id="key">Key equations used throughout</h2>
+<div class="tf" id="H1" data-k="scan cycle response time worst case"><p class="tf-n"><b><span class="fid">H1</span> Worst-case response</b></p>
+        \[ t_{resp,max} \approx t_{in} + 2\,t_{scan} + t_{out} \]</div>
+<div class="tf" id="H2" data-k="ladder boolean latch self holding seal in"><p class="tf-n"><b><span class="fid">H2</span> Latch rung</b></p>
+        \[ Q = \overline{\text{STOP}}\cdot(\text{START} + Q) \;\;\equiv\;\; \text{STOP wired NC → NO contact in the program} \]</div>
+<div class="tf" id="H3" data-k="ton timer output elapsed time on delay"><p class="tf-n"><b><span class="fid">H3</span> On-delay timer</b></p>
+        \[ Q_{TON} = IN \wedge (ET \ge PT) \qquad ET \le PT \]</div>
+<div class="tf" id="H4" data-k="analog scaling linear raw engineering units"><p class="tf-n"><b><span class="fid">H4</span> Analog scaling</b></p>
+        \[ y = y_{min} + (x - x_{min})\,\frac{y_{max} - y_{min}}{x_{max} - x_{min}} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="brands">
+    <h2 id="brands">PLCs found in the region and their address notation</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Brand (example models)</th><th>Input</th><th>Output</th><th>Memory</th><th>Software</th></tr></thead>
+      <tbody>
+        <tr><td>IEC 61131-3 (standard)</td><td>%IX0.0</td><td>%QX0.0</td><td>%MX0.0</td><td>CODESYS and others</td></tr>
+        <tr><td>Siemens (S7-1200/1500)</td><td>I0.0</td><td>Q0.0</td><td>M0.0</td><td>TIA Portal</td></tr>
+        <tr><td>Mitsubishi (FX5U, iQ-R)</td><td>X0</td><td>Y0</td><td>M0</td><td>GX Works3</td></tr>
+        <tr><td>Omron (CP1, NX/NJ)</td><td>0.00</td><td>100.00</td><td>W0.00</td><td>CX-Programmer / Sysmac Studio</td></tr>
+        <tr><td>Delta (DVP, AS)</td><td>X0</td><td>Y0</td><td>M0</td><td>ISPSoft</td></tr>
+        <tr><td>Rockwell (Micro800, CompactLogix)</td><td>_IO_EM_DI_00 / tag</td><td>_IO_EM_DO_00 / tag</td><td>tag</td><td>CCW / Studio 5000</td></tr>
+      </tbody>
+    </table></div>
+    <p>This course uses Siemens-style I0.0 / Q0.0 / M0.0 addresses because they are easy to read and translate directly to other brands.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">Every page in this course</h2>
+    <!--series-cards:en/plc-->
+    </section>
+
+    <section class="tsec" aria-labelledby="formulas">
+    <h2 id="formulas">Search every formula in one place</h2>
+    <p>Prefixes: H overview · F fundamentals · W I/O wiring · B ladder · T timers/counters · L languages · M motors · S sequential · P analog/PID · K commissioning/safety</p>
+    <!--formula-index:en/plc-->
+    </section>
+
+    <section class="tsec" aria-labelledby="related">
+    <h2 id="related">Related on this site</h2>
+    <ul>
+      <li><a href="/learn/en/motor-control/">AC Motor Control</a> — every contactor circuit that this course rewrites as ladder logic</li>
+      <li><a href="/learn/sensors-transducers/industrial-signals/">4–20 mA signals and HART (Thai)</a> · <a href="/learn/sensors-transducers/modbus/">Modbus RTU/TCP (Thai)</a> · <a href="/learn/sensors-transducers/instrumentation-lab/">Virtual instrumentation lab with a PLC (Thai)</a></li>
+      <li><a href="/learn/control-systems/pid/">Control systems: PID (Thai)</a> — the theory behind the PLC's PID block</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">Standards and references</h2>
+    <ul>
+      <li>IEC 61131-1 (overview) · IEC 61131-2 (hardware, 24 VDC input types) · IEC 61131-3 (programming languages)</li>
+      <li>IEC 60204-1 (electrical equipment of machines, stop categories) · ISO 13849-1 / IEC 62061 (functional safety of machinery)</li>
+      <li>IEC 60848 (GRAFCET) · Modbus Application Protocol Specification (Modbus Organization)</li>
+      <li>F. D. Petruzella, <i>Programmable Logic Controllers</i> · W. Bolton, <i>Programmable Logic Controllers</i> · PLC manufacturers' manuals</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

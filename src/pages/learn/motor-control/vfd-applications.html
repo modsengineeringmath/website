@@ -1,0 +1,179 @@
+<!--meta
+{
+  "title": "ตั้งค่าและใช้งานอินเวอร์เตอร์: พารามิเตอร์ ความเร็วสเต็ป 0–10 V 4–20 mA ปั๊มแรงดันคงที่ PID ประหยัดพลังงาน | อาจารย์มด",
+  "h1": "ตั้งค่าและใช้งานอินเวอร์เตอร์: พารามิเตอร์พื้นฐาน ความเร็วหลายสเต็ป 0–10 V / 4–20 mA ปั๊มแรงดันคงที่ PID และการประหยัดพลังงานตามกฎแอฟฟินิตี",
+  "description": "ขั้นตอนตั้งค่าอินเวอร์เตอร์ (VFD) 12 ข้อที่ใช้ได้ทุกยี่ห้อ: ข้อมูลแผ่นป้าย auto-tune เวลาเร่ง-ลด แหล่งคำสั่ง ความเร็วสเต็ปด้วยอินพุตดิจิทัล อินพุตแอนะล็อก 0–10 V และ 4–20 mA ปั๊มน้ำแรงดันคงที่ด้วย PID ในไดรฟ์ สายพาน พัดลม กฎแอฟฟินิตี Q ∝ n, H ∝ n², P ∝ n³ คำนวณพลังงานที่ประหยัดและระยะคืนทุน ลดพิกัดตามอุณหภูมิในภูมิอากาศร้อนชื้น บายพาส และรหัสความผิดพลาดที่พบบ่อย",
+  "lesson": "motor-control",
+  "sub": "vfd-applications",
+  "nav": "mc",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Vocational", "Undergraduate"],
+  "about": ["Variable-frequency drive", "Affinity laws", "PID controller", "Energy conservation"],
+  "scripts": ["/assets/lesson.js", "/assets/ee-kit.js", "/assets/mc-calc.js"],
+  "faq": [
+    {"q": "ลดความเร็วปั๊มลงครึ่งหนึ่งประหยัดไฟกี่เปอร์เซ็นต์?", "a": "ตามกฎแอฟฟินิตีในระบบที่ไม่มีหัวสถิต กำลังลดเหลือ (0.5)³ = 12.5 % คือประหยัดเกือบ 88 % แต่ระบบจริงที่ต้องยกน้ำขึ้นที่สูงต้องคงความเร็วไว้ระดับหนึ่งเพื่อเอาชนะหัวสถิต จึงประหยัดน้อยกว่านี้มาก ใช้กราฟระบบหรือเครื่องคำนวณในหน้านี้ที่ใส่สัดส่วนหัวสถิตได้"},
+    {"q": "อินเวอร์เตอร์ทริป OC (overcurrent) ตอนเร่ง แก้อย่างไร?", "a": "เพิ่มเวลาเร่ง (accel time) ตรวจว่าใส่ค่ากระแสและกำลังมอเตอร์ถูกต้องและทำ auto-tune แล้ว ตรวจสายมอเตอร์ลัดวงจรหรือรั่วลงดิน และดูว่าโหลดติดขัดทางกลหรือไม่ ถ้าโหลดเฉื่อยสูงจริงอาจต้องเลือกอินเวอร์เตอร์พิกัด heavy duty"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page mc" id="mcArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/motor-control/">ควบคุมมอเตอร์ AC</a></li><li>ตั้งค่า · งานประยุกต์ VFD</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 21.12 · ควบคุมมอเตอร์ AC · VFD Setup &amp; Applications</p>
+      <h1>ตั้งค่าและใช้งานอินเวอร์เตอร์: พารามิเตอร์พื้นฐาน ความเร็วหลายสเต็ป 0–10 V / 4–20 mA ปั๊มแรงดันคงที่ PID และการประหยัดพลังงานตามกฎแอฟฟินิตี</h1>
+      <p class="lede">อินเวอร์เตอร์แต่ละยี่ห้อตั้งชื่อพารามิเตอร์ต่างกัน แต่สิ่งที่ต้องตั้งเหมือนกันทุกยี่ห้อ หน้านี้ให้ลำดับการตั้งค่าที่ใช้ได้ทั่วไป ตัวอย่างงานที่พบบ่อยที่สุด และวิธีพิสูจน์ด้วยตัวเลขว่าอินเวอร์เตอร์คุ้มค่าหรือไม่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ใส่ข้อมูลแผ่นป้ายให้ครบ แล้ว auto-tune ก่อนทำอย่างอื่น</li>
+          <li>เวลาเร่ง-ลดสั้นเกิน → ทริป OC/OV · ยาวเกิน → ตอบสนองช้า</li>
+          <li>แอนะล็อก: \(f = f_{min} + (f_{max} - f_{min})\cdot\frac{x - x_0}{x_1 - x_0}\)</li>
+          <li>ปั๊ม-พัดลม: \(P \propto n^3\) ลด 20 % ความเร็ว กำลังเหลือ ~51 % (ถ้าไม่มีหัวสถิต)</li>
+          <li>ภูมิอากาศร้อนชื้น: ตรวจอุณหภูมิในตู้ ลดพิกัดตามคู่มือ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น accel, scaling, affinity, energy, payback" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="setup">
+    <h2 id="setup">ขั้นตอนตั้งค่า 12 ข้อ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>รีเซ็ตเป็นค่าโรงงาน</b> (เมื่อรับเครื่องเก่ามาใช้ใหม่)</li>
+      <li><b>ข้อมูลมอเตอร์:</b> แรงดัน กระแส กำลัง ความถี่ ความเร็ว cos φ จากแผ่นป้าย (ตามการต่อ Y/Δ ที่ใช้จริง)</li>
+      <li><b>Auto-tune:</b> แบบหยุดนิ่ง (static) ถ้าแยกโหลดไม่ได้ แบบหมุน (rotating) ถ้าปลดโหลดได้</li>
+      <li><b>โหมดควบคุม:</b> V/f สำหรับปั๊ม-พัดลม หรือหลายมอเตอร์ · vector สำหรับแรงบิดสูงที่รอบต่ำ</li>
+      <li><b>ความถี่ต่ำสุด-สูงสุด:</b> เช่น 20–50 Hz สำหรับปั๊ม (ต่ำกว่านั้นน้ำไม่ขึ้น)</li>
+      <li><b>เวลาเร่ง-ลด:</b> เริ่ม 5–10 s แล้วปรับ (ดู P1)</li>
+      <li><b>วิธีหยุด:</b> ramp (ลดตามเวลา) หรือ coast (ปล่อยหมุนอิสระ) — พัดลมใหญ่มัก coast</li>
+      <li><b>แหล่งคำสั่ง:</b> keypad / ขั้วต่อ (DI) / สื่อสาร (Modbus) · แหล่งความเร็ว: keypad / AI / preset / bus</li>
+      <li><b>อินพุตดิจิทัล:</b> RUN FWD, RUN REV, reset, preset speed, external fault</li>
+      <li><b>อินพุตแอนะล็อก:</b> ชนิด (0–10 V หรือ 4–20 mA) และการสเกล (ดู P2)</li>
+      <li><b>เอาต์พุต:</b> รีเลย์ fault/run ไปไฟแสดงหรือ PLC · AO แสดงความถี่หรือกระแส</li>
+      <li><b>ทดสอบ:</b> เดินตัวเปล่า ตรวจทิศหมุน (กลับทางด้วยพารามิเตอร์ได้) ใส่โหลด วัดกระแส บันทึกค่าทั้งหมด</li>
+    </ol>
+    <div class="table-wrap"><table>
+      <caption>ชื่อพารามิเตอร์ที่หน้าที่ตรงกัน (ตัวอย่างคำที่ผู้ผลิตใช้)</caption>
+      <thead><tr><th>หน้าที่</th><th>คำที่พบในคู่มือ</th></tr></thead>
+      <tbody>
+        <tr><td>กระแสพิกัดมอเตอร์</td><td>Motor rated current · Rated motor current · Nominal current</td></tr>
+        <tr><td>เวลาเร่ง / ลด</td><td>Acceleration time · Ramp-up time · Accel 1 / Decel 1</td></tr>
+        <tr><td>แหล่งคำสั่งเดิน</td><td>Run command source · Control place · Operation mode</td></tr>
+        <tr><td>แหล่งความถี่</td><td>Frequency reference · Speed setpoint source</td></tr>
+        <tr><td>ความถี่สวิตช์</td><td>Carrier frequency · PWM frequency · Switching frequency</td></tr>
+      </tbody>
+    </table></div>
+<div class="tf" id="P1" data-k="acceleration time inertia torque vfd ramp เวลาเร่ง"><p class="tf-n"><b><span class="fid">P1</span> Minimum ramp time</b> เวลาเร่งต่ำสุดที่ไม่ทริป</p>
+        \[ t_{acc,min} \approx \frac{J\,\omega_n}{T_{lim} - \overline{T_L}} \qquad T_{lim} \approx 1.5\,T_n\ \ (\text{ตามขีดกระแสไดรฟ์}) \]</div>
+<div class="tf" id="P2" data-k="analog input scaling frequency 0-10 v 4-20 ma สเกลแอนะล็อก"><p class="tf-n"><b><span class="fid">P2</span> Analog reference scaling</b> สเกลอินพุตแอนะล็อก</p>
+        \[ f = f_{min} + (f_{max} - f_{min})\,\frac{x - x_0}{x_1 - x_0} \qquad x: 0\text{–}10\ \text{V หรือ } 4\text{–}20\ \text{mA} \]</div>
+<div class="wx" id="ex-p-1"><div class="wx-head"><span class="mono">ตัวอย่าง P-1</span><h3>PLC ส่ง 12 mA ปั๊มตั้งช่วง 20–50 Hz</h3></div>
+<ol class="steps">
+<li><p>P2: \(f = 20 + 30\,(12 - 4)/(20 - 4) = 20 + 15 = 35\) Hz</p></li>
+<li><p>ถ้าสาย 4–20 mA ขาด สัญญาณเป็น 0 mA — ตั้งให้ไดรฟ์ตรวจ “signal loss” (< 2–3 mA) แล้วหยุดหรือเดินความเร็วสำรอง แทนการตีความว่าคือ 20 Hz</p></li>
+</ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="speeds">
+    <h2 id="speeds">ความเร็วหลายสเต็ปด้วยอินพุตดิจิทัล <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ใช้อินพุตดิจิทัลสองหรือสามขาเลือกความเร็วตั้งไว้ล่วงหน้าแบบเลขฐานสอง เหมาะกับสายพานหรือเครื่องผสมที่ใช้ไม่กี่ความเร็ว และสั่งจากสวิตช์เลือกหรือ PLC ได้โดยไม่ต้องใช้แอนะล็อก</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>DI3</th><th>DI4</th><th>ความเร็วที่ได้</th><th>ตัวอย่างค่า</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>ความถี่หลัก (keypad/AI)</td><td>50 Hz</td></tr>
+        <tr><td>1</td><td>0</td><td>Preset 1</td><td>15 Hz (จ็อก/ตั้งตำแหน่ง)</td></tr>
+        <tr><td>0</td><td>1</td><td>Preset 2</td><td>30 Hz</td></tr>
+        <tr><td>1</td><td>1</td><td>Preset 3</td><td>45 Hz</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pump">
+    <h2 id="pump">ปั๊มน้ำแรงดันคงที่ด้วย PID ในไดรฟ์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ระบบประปาอาคารแบบบูสเตอร์ใช้ทรานสมิตเตอร์ความดัน 4–20 mA ต่อเข้า AI ของไดรฟ์ ตั้งค่าเป้าหมาย (เช่น 3.5 bar) ไดรฟ์คำนวณ PID ปรับความถี่ให้ความดันคงที่แม้การใช้น้ำเปลี่ยน ฟังก์ชันที่ควรตั้ง:</p>
+    <ul>
+      <li><b>Sleep / wake-up:</b> เมื่อไม่มีการใช้น้ำ ความถี่ลดถึงค่าต่ำนานเกินเวลาหนึ่ง ไดรฟ์หยุดปั๊ม และกลับมาเดินเมื่อความดันตกต่ำกว่าเป้าหมายระดับหนึ่ง</li>
+      <li><b>Dry-run protection:</b> กระแสหรือกำลังต่ำผิดปกติที่ความถี่สูง = ปั๊มเดินแห้ง ให้หยุดและแจ้งเตือน</li>
+      <li><b>Pipe fill:</b> เติมท่อช้า ๆ ตอนเริ่มเพื่อกันค้อนน้ำ</li>
+      <li><b>Multi-pump:</b> ไดรฟ์หลายรุ่นสั่งปั๊มตัวที่สอง (DOL หรือไดรฟ์อีกตัว) เมื่อความต้องการเกิน</li>
+    </ul>
+    <p>ทฤษฎีของ PID และการปรับจูนอยู่ใน <a href="/learn/control-systems/pid/">ระบบควบคุม: PID</a> และตัวอย่าง PLC สั่ง VFD อยู่ใน <a href="/learn/plc/analog-pid-vfd/">PLC อนาล็อก PID</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="affinity">
+    <h2 id="affinity">กฎแอฟฟินิตีและการประหยัดพลังงาน <span class="lv lv-i">กลาง</span></h2>
+    <figure class="xfig"><!--FIG:mc-affinity--><svg class="xf" viewBox="0 0 760 320" role="img" aria-label="กฎแอฟฟินิตีของปั๊มและพัดลม: อัตราไหลแปรตามความเร็ว ความดันตามกำลังสอง กำลังตามกำลังสาม เปรียบเทียบกำลังที่ใช้เมื่อหรี่วาล์วกับปรับรอบด้วย VFD"><defs><marker id="mc-affinity-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="xf-ah" d="M0 0 L10 5 L0 10z"/></marker></defs><line class="xf-grid" x1="60" y1="250" x2="350" y2="250"/><text x="54" y="254" class="xf-k" text-anchor="end">0</text><line class="xf-grid" x1="60" y1="195" x2="350" y2="195"/><text x="54" y="199" class="xf-k" text-anchor="end">25</text><line class="xf-grid" x1="60" y1="140" x2="350" y2="140"/><text x="54" y="144" class="xf-k" text-anchor="end">50</text><line class="xf-grid" x1="60" y1="85" x2="350" y2="85"/><text x="54" y="89" class="xf-k" text-anchor="end">75</text><line class="xf-grid" x1="60" y1="30" x2="350" y2="30"/><text x="54" y="34" class="xf-k" text-anchor="end">100</text><line class="xf-grid" x1="60" y1="30" x2="60" y2="250"/><text x="60" y="265" class="xf-k" text-anchor="middle">0</text><line class="xf-grid" x1="132.5" y1="30" x2="132.5" y2="250"/><text x="132.5" y="265" class="xf-k" text-anchor="middle">25</text><line class="xf-grid" x1="205" y1="30" x2="205" y2="250"/><text x="205" y="265" class="xf-k" text-anchor="middle">50</text><line class="xf-grid" x1="277.5" y1="30" x2="277.5" y2="250"/><text x="277.5" y="265" class="xf-k" text-anchor="middle">75</text><line class="xf-grid" x1="350" y1="30" x2="350" y2="250"/><text x="350" y="265" class="xf-k" text-anchor="middle">100</text><line class="xf-thin" x1="60" y1="250" x2="350" y2="250"/><line class="xf-thin" x1="60" y1="30" x2="60" y2="250"/><text x="205" y="282" class="xf-m" text-anchor="middle">ความเร็ว (%)</text><text x="20" y="140" class="xf-m" text-anchor="middle" transform="rotate(-90 20 140)">%</text><path class="xf-a" d="M60 250 L74.5 239 L89 228 L103.5 217 L118 206 L132.5 195 L147 184 L161.5 173 L176 162 L190.5 151 L205 140 L219.5 129 L234 118 L248.5 107 L263 96 L277.5 85 L292 74 L306.5 63 L321 52 L335.5 41 L350 30"/><path class="xf-c" d="M60 250 L74.5 249.4 L89 247.8 L103.5 245.1 L118 241.2 L132.5 236.2 L147 230.2 L161.5 223.1 L176 214.8 L190.5 205.4 L205 195 L219.5 183.4 L234 170.8 L248.5 157.1 L263 142.2 L277.5 126.2 L292 109.2 L306.5 91 L321 71.8 L335.5 51.5 L350 30"/><path class="xf-b" d="M60 250 L74.5 250 L89 249.8 L103.5 249.3 L118 248.2 L132.5 246.6 L147 244.1 L161.5 240.6 L176 235.9 L190.5 230 L205 222.5 L219.5 213.4 L234 202.5 L248.5 189.6 L263 174.5 L277.5 157.2 L292 137.4 L306.5 114.9 L321 89.6 L335.5 61.4 L350 30"/><text x="239.8" y="100.4" class="xf-ta">Q ∝ n</text><text x="286.2" y="144.4" class="xf-tc">H ∝ n²</text><text x="321" y="184" class="xf-tb">P ∝ n³</text><line class="xf-grid" x1="440" y1="250" x2="730" y2="250"/><text x="434" y="254" class="xf-k" text-anchor="end">0</text><line class="xf-grid" x1="440" y1="200" x2="730" y2="200"/><text x="434" y="204" class="xf-k" text-anchor="end">25</text><line class="xf-grid" x1="440" y1="150" x2="730" y2="150"/><text x="434" y="154" class="xf-k" text-anchor="end">50</text><line class="xf-grid" x1="440" y1="100" x2="730" y2="100"/><text x="434" y="104" class="xf-k" text-anchor="end">75</text><line class="xf-grid" x1="440" y1="50" x2="730" y2="50"/><text x="434" y="54" class="xf-k" text-anchor="end">100</text><line class="xf-grid" x1="440" y1="30" x2="440" y2="250"/><text x="440" y="265" class="xf-k" text-anchor="middle">40</text><line class="xf-grid" x1="512.5" y1="30" x2="512.5" y2="250"/><text x="512.5" y="265" class="xf-k" text-anchor="middle">55</text><line class="xf-grid" x1="585" y1="30" x2="585" y2="250"/><text x="585" y="265" class="xf-k" text-anchor="middle">70</text><line class="xf-grid" x1="657.5" y1="30" x2="657.5" y2="250"/><text x="657.5" y="265" class="xf-k" text-anchor="middle">85</text><line class="xf-grid" x1="730" y1="30" x2="730" y2="250"/><text x="730" y="265" class="xf-k" text-anchor="middle">100</text><line class="xf-thin" x1="440" y1="250" x2="730" y2="250"/><line class="xf-thin" x1="440" y1="30" x2="440" y2="250"/><text x="585" y="282" class="xf-m" text-anchor="middle">อัตราไหล (%)</text><text x="400" y="140" class="xf-m" text-anchor="middle" transform="rotate(-90 400 140)">กำลังไฟฟ้า (%)</text><path class="xf-dash" d="M440 104 L449.7 102.2 L459.3 100.4 L469 98.6 L478.7 96.8 L488.3 95 L498 93.2 L507.7 91.4 L517.3 89.6 L527 87.8 L536.7 86 L546.3 84.2 L556 82.4 L565.7 80.6 L575.3 78.8 L585 77 L594.7 75.2 L604.3 73.4 L614 71.6 L623.7 69.8 L633.3 68 L643 66.2 L652.7 64.4 L662.3 62.6 L672 60.8 L681.7 59 L691.3 57.2 L701 55.4 L710.7 53.6 L720.3 51.8 L730 50"/><path class="xf-b" d="M440 221.4 L449.7 219.5 L459.3 217.3 L469 215 L478.7 212.5 L488.3 209.8 L498 206.8 L507.7 203.6 L517.3 200.2 L527 196.5 L536.7 192.5 L546.3 188.3 L556 183.8 L565.7 179 L575.3 173.9 L585 168.4 L594.7 162.7 L604.3 156.6 L614 150.2 L623.7 143.5 L633.3 136.4 L643 128.9 L652.7 121.1 L662.3 112.9 L672 104.2 L681.7 95.2 L691.3 85.8 L701 76 L710.7 65.7 L720.3 55 L730 43.8"/><text x="469" y="82" class="xf-k">หรี่วาล์ว/แดมเปอร์</text><text x="546.3" y="214" class="xf-tb">VFD ลดรอบ</text><line class="xf-e" x1="633.3" y1="68" x2="633.3" y2="136.4" marker-end="url(#mc-affinity-ah)" marker-start="url(#mc-affinity-ah)"/><text x="639.3" y="102.2" class="xf-k">ประหยัด ≈ 34 %</text><text x="380" y="310" class="xf-m" text-anchor="middle">ระบบที่มีหัวสถิต (ยกน้ำขึ้นที่สูง) ประหยัดน้อยกว่ากฎ n³ — ต้องคำนวณจากจุดทำงานบนกราฟระบบ</text></svg><!--/FIG--><figcaption>รูป 1 · ซ้าย: กฎแอฟฟินิตี · ขวา: ที่อัตราไหล 80 % การหรี่วาล์วยังใช้กำลังราว 90 % ขณะที่ VFD ใช้ราว 55 %</figcaption></figure>
+<div class="tf" id="P3" data-k="affinity flow speed proportional อัตราไหล ความเร็ว"><p class="tf-n"><b><span class="fid">P3</span> Affinity law — flow</b> อัตราไหล</p>
+        \[ \frac{Q_2}{Q_1} = \frac{n_2}{n_1} \]</div>
+<div class="tf" id="P4" data-k="affinity head pressure speed squared หัว ความดัน"><p class="tf-n"><b><span class="fid">P4</span> Affinity law — head</b> หัวหรือความดัน</p>
+        \[ \frac{H_2}{H_1} = \left(\frac{n_2}{n_1}\right)^2 \]</div>
+<div class="tf" id="P5" data-k="affinity power speed cube กำลัง ยกกำลังสาม"><p class="tf-n"><b><span class="fid">P5</span> Affinity law — power</b> กำลัง</p>
+        \[ \frac{P_2}{P_1} = \left(\frac{n_2}{n_1}\right)^3 \]</div>
+<div class="tf" id="P6" data-k="system curve static head speed required หัวสถิต กราฟระบบ"><p class="tf-n"><b><span class="fid">P6</span> System with static head</b> ระบบที่มีหัวสถิต</p>
+        \[ H_{sys} = H_{st} + kQ^2 \qquad \frac{n}{n_1} \approx \sqrt{h_0 + (1 - h_0)q^2} \quad (h_0 = H_{st}/H_1,\ q = Q/Q_1) \]</div>
+<div class="tf" id="P7" data-k="energy saving kwh year money savings พลังงานที่ประหยัด"><p class="tf-n"><b><span class="fid">P7</span> Energy saved</b> พลังงานที่ประหยัดต่อปี</p>
+        \[ \Delta E = (P_{throttle} - P_{VFD})\,h \qquad \text{เงิน} = \Delta E \times \text{ค่าไฟต่อ kWh} \]</div>
+<div class="tf" id="P8" data-k="simple payback years ระยะคืนทุน"><p class="tf-n"><b><span class="fid">P8</span> Simple payback</b> ระยะคืนทุนอย่างง่าย</p>
+        \[ t_{payback} = \frac{\text{ราคา VFD ติดตั้ง}}{\text{เงินที่ประหยัดต่อปี}} \]</div>
+<div class="wx" id="ex-p-2"><div class="wx-head"><span class="mono">ตัวอย่าง P-2</span><h3>พัดลมระบายอากาศ 30 kW เดิน 6,000 ชม./ปี ใช้อัตราไหลเฉลี่ย 75 % ค่าไฟ 4.5 บาท/kWh</h3></div>
+<ol class="steps">
+<li><p>หรี่แดมเปอร์: \(P \approx 30(0.55 + 0.45 \times 0.75) = 26.6\) kW</p></li>
+<li><p>VFD (P5, ไม่มีหัวสถิต): \(30 \times 0.75^3 / 0.97 + 0.6 = 13.6\) kW (รวมสูญเสียไดรฟ์)</p></li>
+<li><p>P7: \(\Delta E = (26.6 - 13.6)(6000) = 78{,}000\) kWh/ปี ≈ 351,000 บาท/ปี</p></li>
+<li><p>P8: ไดรฟ์ติดตั้ง 180,000 บาท → คืนทุน ~0.5 ปี</p></li>
+</ol></div>
+    <div class="fg-calc mc-calc" data-mc="energy"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="climate">
+    <h2 id="climate">ติดตั้งในภูมิอากาศร้อนชื้น <span class="lv lv-i">กลาง</span></h2>
+    <ul>
+      <li>พิกัดอินเวอร์เตอร์ส่วนใหญ่กำหนดที่อุณหภูมิแวดล้อม 40 °C (บางรุ่น 50 °C) เกินกว่านั้นลดพิกัดประมาณ 1–2.5 %/°C ตามคู่มือ — ตู้กลางแดดในเขตร้อนภายในอาจเกิน 50 °C</li>
+      <li>สูงเหนือน้ำทะเลเกิน 1000 m ลดพิกัด ~1 % ต่อ 100 m</li>
+      <li>ความชื้นสูงและการกลั่นตัว: ใช้ฮีตเตอร์กันชื้นในตู้ที่หยุดเดินนาน และเลือกแผงวงจรเคลือบ (conformal coating, 3C2/3C3)</li>
+      <li>ระบายความร้อน: กำลังสูญเสียของไดรฟ์ ~2–3 % ของกำลัง ต้องรวมในการคำนวณพัดลมตู้ (ดู <a href="/learn/motor-control/design-installation/#K7">K7</a>)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="bypass">
+    <h2 id="bypass">บายพาสและมอเตอร์หลายตัว <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>งานสำคัญ (ปั๊มดับเพลิงห้ามใช้ VFD เป็นทางเดียว ปั๊มน้ำเสียหลัก) อาจต้องมีบายพาส: คอนแทกเตอร์ KM-VFD (ด้านออกไดรฟ์) และ KM-BYP (จากเมนตรงเข้ามอเตอร์) อินเตอร์ล็อกทั้งไฟฟ้าและกลไก สลับได้เมื่อไดรฟ์หยุดและมอเตอร์ไม่มีไฟเท่านั้น และต้องมีโอเวอร์โหลดสำหรับเส้นทางบายพาส ไดรฟ์ตัวเดียวขับมอเตอร์หลายตัวพร้อมกันได้ในโหมด V/f โดยเลือกไดรฟ์ ≥ ผลรวมกระแส × 1.1 และมีโอเวอร์โหลดแยกแต่ละตัว</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="faults">
+    <h2 id="faults">รหัสความผิดพลาดที่พบบ่อย</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รหัส (ทั่วไป)</th><th>ความหมาย</th><th>สาเหตุ/วิธีแก้</th></tr></thead>
+      <tbody>
+        <tr><td>OC / Overcurrent</td><td>กระแสเกินทันที</td><td>เร่งเร็วเกิน สายมอเตอร์ลัด ไม่ได้ auto-tune บูสต์สูงเกิน</td></tr>
+        <tr><td>OV / DC overvoltage</td><td>บัส DC สูงเกิน</td><td>ลดความเร็วเร็วเกิน โหลดดันกลับ ไฟเข้าสูง → เพิ่ม decel หรือใส่ตัวต้านทานเบรก</td></tr>
+        <tr><td>UV / Undervoltage</td><td>บัส DC ต่ำ</td><td>ไฟตก เฟสเข้าขาด ฟิวส์ด้านเข้าขาด</td></tr>
+        <tr><td>OH / Overtemperature</td><td>ฮีตซิงก์ร้อน</td><td>พัดลมไดรฟ์เสีย ตู้ร้อน ฝุ่นอุดตัน ความถี่สวิตช์สูง</td></tr>
+        <tr><td>OL / Motor overload</td><td>แบบจำลองความร้อนมอเตอร์เต็ม</td><td>โหลดเกิน เดินรอบต่ำแรงบิดสูงนาน ตั้งค่ากระแสมอเตอร์ผิด</td></tr>
+        <tr><td>GF / Earth fault</td><td>กระแสรั่วลงดินด้านออก</td><td>ฉนวนสายหรือมอเตอร์เสื่อม ความชื้นในกล่องขั้ว</td></tr>
+        <tr><td>PHL / Input phase loss</td><td>เฟสเข้าขาดหรือไม่สมดุล</td><td>ตรวจฟิวส์ ขั้วต่อ แรงดันสามเฟส</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
