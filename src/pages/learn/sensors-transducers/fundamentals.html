@@ -1,0 +1,134 @@
+<!--meta
+{
+  "title": "หลักการเบื้องต้นของเซ็นเซอร์และทรานสดิวเซอร์ | อาจารย์มด",
+  "h1": "หลักการเบื้องต้น: ห่วงโซ่การวัด ความคลาดเคลื่อน และการตอบสนอง",
+  "description": "หลักการเซ็นเซอร์และทรานสดิวเซอร์: measuring chain, หลักการแปลงพลังงาน, sensitivity, hysteresis, nonlinearity, %FS กับ %RDG, ค่าคงตัวเวลา พร้อมแล็บโต้ตอบ",
+  "ogTitle": "หลักการเบื้องต้น",
+  "og": {
+    "title": "หลักการเบื้องต้น"
+  },
+  "lesson": "sensors-transducers",
+  "nav": "sx",
+  "katex": false,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": [
+    "Vocational",
+    "Undergraduate"
+  ],
+  "about": [
+    "Sensor",
+    "Transducer",
+    "Measuring chain",
+    "Sensitivity",
+    "Hysteresis",
+    "Nonlinearity",
+    "Time constant"
+  ],
+  "scripts": [
+    "/assets/sx-fund.js"
+  ],
+  "sub": "fundamentals"
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page sx" id="sxArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sensors-transducers/">เซ็นเซอร์และทรานสดิวเซอร์</a></li><li>20.1 หลักการเบื้องต้น</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 20.1 · Sensors & Transducers · Fundamentals</p>
+      <h1>หลักการเบื้องต้น: <em>ห่วงโซ่การวัด ความคลาดเคลื่อน และการตอบสนอง</em></h1>
+      <p class="lede">เซ็นเซอร์ (sensor) ทำอะไร ต่างจากทรานสดิวเซอร์ (transducer) อย่างไร สเปกที่เห็นในดาต้าชีตหมายความว่าอะไร พร้อมแล็บ 3 ชุดให้ลองปรับเอง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#chain">ห่วงโซ่การวัด</a><a class="btn btn-ghost btn-sm" href="#static">แล็บโต้ตอบ</a></div>
+      
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec">
+<h2 id="chain">1 · ห่วงโซ่การวัด (measuring chain)</h2>
+<p>ปริมาณทางกายภาพไม่เดินทางเข้าคอมพิวเตอร์โดยตรง ต้องผ่านลำดับขั้น: <b>เซ็นเซอร์ (sensor)</b> รับรู้ปริมาณ → <b>ภาคปรับสภาพสัญญาณ</b> ทำให้สัญญาณมีขนาดและรูปแบบที่เหมาะสม → <b>ตัวแปลง A/D</b> → <b>ซอฟต์แวร์</b> แปลงกลับเป็นหน่วยวิศวกรรม VIM เรียกลำดับนี้ว่า <i>measuring chain</i> (3.10) ความคลาดเคลื่อนของทุกขั้นสะสมเข้าด้วยกัน</p>
+<div class="sx-lab"><div class="sx-cap">// แล็บ 1 · ห่วงโซ่การวัด</div><h3>เลือกเซนเซอร์ แล้วกดแต่ละขั้นเพื่อดูตัวเลขจริง</h3>
+<label>ตัวอย่าง<select id="chain-ex"></select></label>
+<div id="chain-root"></div>
+<div class="sx-out" id="chain-detail" aria-live="polite"></div></div>
+
+<h2 id="principle">2 · เซนเซอร์เปลี่ยนปริมาณเป็นสัญญาณได้อย่างไร</h2>
+<p>เซนเซอร์ส่วนใหญ่อาศัยปรากฏการณ์ทางฟิสิกส์เพียงไม่กี่แบบ แบ่งได้เป็นสองตระกูล: <b>แบบ passive</b> (ต้องมีแหล่งกระตุ้น เช่น กระแสหรือแรงดันกระตุ้น) และ <b>แบบ active/self-generating</b> (สร้างแรงดันหรือประจุเอง)</p>
+<table>
+<tr><th>ปรากฏการณ์</th><th>ชนิด</th><th>ตัวอย่างเซนเซอร์</th><th>ปริมาณที่เปลี่ยน</th></tr>
+<tr><td>ความต้านทานเปลี่ยนตามอุณหภูมิ</td><td>passive</td><td>RTD (Pt100), เทอร์มิสเตอร์</td><td>R</td></tr>
+<tr><td>ความต้านทานเปลี่ยนตามความเครียด</td><td>passive</td><td>สเตรนเกจ โหลดเซลล์ ความดันแบบพีโซรีซิสทีฟ</td><td>ΔR/R = GF·ε</td></tr>
+<tr><td>เทอร์โมอิเล็กทริก (Seebeck)</td><td>active</td><td>เทอร์โมคัปเปิล</td><td>แรงเคลื่อนไฟฟ้า (µV–mV)</td></tr>
+<tr><td>พีโซอิเล็กทริก</td><td>active</td><td>เซนเซอร์สั่นสะเทือน/แรงกระแทก</td><td>ประจุ Q</td></tr>
+<tr><td>ความจุไฟฟ้า</td><td>passive</td><td>ระยะ ระดับ ความชื้น ความดันแบบคาปาซิทีฟ</td><td>C</td></tr>
+<tr><td>ความเหนี่ยวนำ/การเหนี่ยวนำร่วม</td><td>passive</td><td>LVDT, เซนเซอร์ใกล้เคียงแบบเหนี่ยวนำ, CT</td><td>L, M</td></tr>
+<tr><td>ฮอลล์ (Hall)</td><td>passive</td><td>เซนเซอร์สนามแม่เหล็ก/กระแสไม่สัมผัส</td><td>V<sub>H</sub> ∝ B</td></tr>
+<tr><td>โฟโตอิเล็กทริก</td><td>active/passive</td><td>โฟโตไดโอด เซลล์แสงอาทิตย์ เซนเซอร์แสง</td><td>กระแส/แรงดัน</td></tr>
+<tr><td>เคมีไฟฟ้า</td><td>active/passive</td><td>pH, เซนเซอร์ออกซิเจน/แก๊ส</td><td>แรงดัน/กระแส</td></tr>
+</table>
+<div class="sx-grid">
+<figure class="sx-card"><svg class="fig" viewBox="0 0 220 150" role="img" aria-label="กราฟความต้านทานของ Pt100 เทียบอุณหภูมิ"><line class="l" x1="30" y1="120" x2="205" y2="120"/><line class="l" x1="30" y1="120" x2="30" y2="14"/><polyline fill="none" stroke="var(--acc)" stroke-width="2.4" points="30,104 80,86 130,67 180,48"/><circle class="a" cx="30" cy="104" r="3"/><circle class="a" cx="180" cy="48" r="3"/><text x="36" y="100" font-size="11">100 Ω (0 °C)</text><text x="112" y="44" font-size="11">175.9 Ω (200 °C)</text><text x="150" y="136" font-size="11">T →</text><text x="8" y="14" font-size="11">R</text></svg><figcaption><b>RTD</b>: R เพิ่มเกือบเป็นเส้นตรงตามอุณหภูมิ ค่า Pt100 ที่ 200 °C ≈ 175.86 Ω</figcaption></figure>
+<figure class="sx-card"><svg class="fig" viewBox="0 0 220 150" role="img" aria-label="ภาพวาดเทอร์โมคัปเปิลสองโลหะต่อกันที่จุดวัด"><path d="M20 50 H100 L150 75 L100 100 H20" fill="none" stroke="var(--acc)" stroke-width="3"/><path d="M20 50 H100 L150 75" fill="none" stroke="var(--acc2)" stroke-width="3"/><circle cx="150" cy="75" r="6" class="b"/><text x="125" y="62" font-size="11">จุดวัด (ร้อน)</text><text x="22" y="42" font-size="11">โลหะ A</text><text x="22" y="118" font-size="11">โลหะ B</text><text x="22" y="140" font-size="11">V = S·(T<tspan font-size="8">hot</tspan> − T<tspan font-size="8">cold</tspan>)</text></svg><figcaption><b>เทอร์โมคัปเปิล</b>: วัดผลต่างระหว่างจุดวัดกับจุดอ้างอิง จึงต้องชดเชย cold junction ชนิด K ให้ ≈ 41 µV/°C</figcaption></figure>
+<figure class="sx-card"><svg class="fig" viewBox="0 0 220 150" role="img" aria-label="ลายเส้นตัวนำของสเตรนเกจ"><rect x="30" y="20" width="160" height="100" rx="6" fill="none" stroke="var(--mut)"/><polyline fill="none" stroke="var(--acc)" stroke-width="2.4" points="50,35 170,35 170,48 50,48 50,61 170,61 170,74 50,74 50,87 170,87 170,100 50,100"/><line x1="50" y1="100" x2="50" y2="130" class="l"/><line x1="170" y1="35" x2="170" y2="15" class="l"/><text x="64" y="138" font-size="11">ΔR/R = GF · ε</text><text x="34" y="14" font-size="11">←  แกนไวต่อแรงดึง  →</text></svg><figcaption><b>สเตรนเกจ</b>: ตัวนำเส้นบางเรียงขนาน ยืดแล้ว R เพิ่ม ค่า GF ทั่วไปประมาณ 2 สำหรับฟอยล์โลหะ</figcaption></figure>
+</div>
+<div class="sx-note"><b>ตัวอย่างคำนวณ:</b> สเตรนเกจ GF = 2 รับความเครียด ε = 1000 µε → ΔR/R = 2 × 1000×10⁻⁶ = 2×10⁻³ บริดจ์ 1/4 ให้ V<sub>o</sub>/V<sub>ex</sub> ≈ GF·ε/4 = 0.5 mV/V เมื่อกระตุ้นด้วย 10 V ได้ราว 5 mV จึงต้องขยายสัญญาณก่อนเข้า ADC</div>
+<div class="sx-eq">R(T) = R<sub>0</sub>(1 + A·T + B·T²) &nbsp;·&nbsp; A = 3.9083×10⁻³ °C⁻¹, B = −5.775×10⁻⁷ °C⁻² (0–850 °C, Pt100 ตาม IEC 60751)</div>
+
+<h2 id="static">3 · คุณลักษณะสถิต (static characteristics)</h2>
+<p>บอกว่าเซนเซอร์ทำงานเที่ยงตรงเพียงใดเมื่ออินพุตเปลี่ยนช้ามาก ศัพท์ด้านล่างอิงความหมายตาม VIM และแนวปฏิบัติทางเครื่องมือวัด</p>
+<table>
+<tr><th>คุณลักษณะ</th><th>ความหมาย</th><th>ข้อควรระวัง</th></tr>
+<tr><td>ช่วงวัด (range) / สแปน (span)</td><td>ช่วงของปริมาณที่เซนเซอร์วัดได้ตามสเปก / ผลต่างปลายบน–ปลายล่าง</td><td>"FS" คือ full scale = span ของช่วงวัด</td></tr>
+<tr><td>ความไว (sensitivity) S</td><td>S = Δy/Δx ความชันของเส้นโค้งอินพุต–เอาต์พุต</td><td>หน่วยมีมิติ เช่น mV/V, mV/bar, µV/°C</td></tr>
+<tr><td>ออฟเซ็ต/ศูนย์ (offset, zero error)</td><td>เอาต์พุตเมื่ออินพุตเป็นศูนย์ ที่ควรเป็นศูนย์</td><td>ปรับได้โดย "zeroing/tare"</td></tr>
+<tr><td>ความไม่เป็นเส้นตรง (nonlinearity)</td><td>ส่วนเบี่ยงเบนสูงสุดจากเส้นตรงอ้างอิง</td><td>ต้องบอกว่าเทียบเส้นตรงแบบใด (best-fit, end-point)</td></tr>
+<tr><td>ฮิสเทอรีซิส (hysteresis)</td><td>ผลต่างของเอาต์พุตที่อินพุตเดียวกัน เมื่อวัดขาขึ้นเทียบขาลง</td><td>สูงสุดมักอยู่กลางสเกล</td></tr>
+<tr><td>ความซ้ำได้ (repeatability)</td><td>ผลวัดใกล้เคียงกันเมื่อวัดซ้ำภายใต้เงื่อนไขเดิม</td><td>ไม่เท่ากับความถูกต้อง</td></tr>
+<tr><td>ความละเอียด (resolution)</td><td>การเปลี่ยนแปลงที่เล็กที่สุดที่แสดง/ตรวจพบได้</td><td>ADC 16 บิตให้ 1 ส่วนใน 65 536 ของสเกล แต่ความถูกต้องอาจแย่กว่านั้นมาก</td></tr>
+<tr><td>ความถูกต้อง (accuracy)</td><td>ความใกล้เคียงของค่าที่วัดกับค่าจริงของปริมาณ</td><td>เป็นแนวคิดเชิงคุณภาพ ตัวเลขที่แท้คือ "ความไม่แน่นอน" (ดูบทมาตรวิทยา)</td></tr>
+<tr><td>ดริฟต์ (drift)</td><td>การเปลี่ยนค่าเมื่อเวลาผ่านไปหรืออุณหภูมิเปลี่ยน</td><td>ระบุเป็น %FS/ปี, ppm/°C</td></tr>
+</table>
+<div class="sx-lab"><div class="sx-cap">// แล็บ 2 · ความคลาดเคลื่อนสถิต</div><h3>ใส่ความคลาดเคลื่อนแต่ละชนิด แล้วดูผลรวม</h3>
+<p style="margin:0">เส้นสีเขียวน้ำเงินคือขาขึ้น เส้นสีส้มคือขาลง เส้นประคืออุดมคติ กราฟล่างแสดงความคลาดเคลื่อน</p>
+<div class="sx-row">
+<label>ความคลาดเกน (%) <span id="sgv">0</span><input id="sg" type="range" min="-5" max="5" step="0.1" value="0"></label>
+<label>ออฟเซ็ต (%FS) <span id="sov">0</span><input id="so" type="range" min="-5" max="5" step="0.1" value="0"></label>
+<label>ไม่เป็นเส้นตรง (%FS) <span id="snv">0</span><input id="sn" type="range" min="-5" max="5" step="0.1" value="0"></label>
+<label>ฮิสเทอรีซิส (%FS) <span id="shv">0</span><input id="sh" type="range" min="0" max="5" step="0.1" value="0"></label>
+<label>สัญญาณรบกวน rms (%FS) <span id="szv">0</span><input id="sz" type="range" min="0" max="2" step="0.05" value="0"></label>
+</div>
+<div class="sx-row"><button type="button" id="stat-seed">สุ่มสัญญาณรบกวนใหม่</button><button type="button" class="sx-ghost" id="stat-reset">รีเซ็ต</button></div>
+<canvas id="stat-cv" width="860" height="440" role="img" aria-label="กราฟอินพุตเทียบเอาต์พุตและความคลาดเคลื่อน"></canvas>
+<div class="sx-out" id="stat-out" aria-live="polite"></div></div>
+<p><b>อ่านสเปกให้เป็น:</b> "±0.5 %FS" หมายถึงความคลาดคงที่เท่ากันทุกจุดของสเกล ส่วน "±0.5 %RDG" (ของค่าที่อ่าน) ลดลงตามค่าที่อ่านได้ ตัวอย่างโหลดเซลล์ 100 kg ± 0.1 %FS = ± 0.1 kg ทุกที่ ถ้าวัดของหนัก 5 kg ความคลาด 0.1 kg คิดเป็น 2 %RDG แล้ว เลือกช่วงวัดให้ค่าปกติอยู่ราว 50–80 % ของสเกล</p>
+
+<h2 id="dynamic">4 · คุณลักษณะพลวัต (dynamic characteristics)</h2>
+<p>เซนเซอร์จริงไม่ตอบสนองทันที เซนเซอร์อุณหภูมิต้องรอให้ความร้อนไหลเข้าปลายวัด ระบบส่วนใหญ่จำลองได้ด้วยระบบอันดับหนึ่งที่มีค่าคงตัวเวลา τ:</p>
+<div class="sx-eq">τ·dy/dt + y = S·x(t) &nbsp;⇒&nbsp; y(t) = S·x<sub>∞</sub>(1 − e<sup>−t/τ</sup>) &nbsp;·&nbsp; |H(jω)| = 1/√(1 + (ωτ)²) &nbsp;·&nbsp; f<sub>c</sub> = 1/(2πτ)</div>
+<p>แนวคิดเดียวกับแล็บ <a href="/learn/first-order-system/">ระบบอันดับหนึ่ง</a> ในบทที่ 9 ที่นี่นำมาใช้กับเซนเซอร์ที่วัดได้จริง เช่น เทอร์โมคัปเปิลเปลือยในอากาศ τ ≈ วินาที ส่วนในปลอกโลหะในของเหลวอาจเป็นสิบวินาที</p>
+<div class="sx-lab"><div class="sx-cap">// แล็บ 3 · การตอบสนองเวลา</div><h3>เซนเซอร์ที่ช้าอ่านค่าผิดไปเท่าไร</h3>
+<div class="sx-row">
+<label>ค่าคงตัวเวลา τ (วินาที) <span id="dtv"></span><input id="dt" type="range" min="0.1" max="5" step="0.05" value="1"></label>
+<label>ความถี่อินพุตไซน์ (Hz) <span id="dfv"></span><input id="df" type="range" min="-2" max="1" step="0.02" value="-0.3"></label>
+</div>
+<canvas id="dyn-cv" width="860" height="320" role="img" aria-label="การตอบสนองขั้นบันไดของเซนเซอร์ระบบอันดับหนึ่ง"></canvas>
+<div class="sx-out" id="dyn-out" aria-live="polite"></div></div>
+<p>กฎจำง่าย: รอ ≈ 5τ จึงเข้าใกล้ค่าจริง 99.3 % และถ้าต้องการวัดสัญญาณที่เปลี่ยนเร็วขึ้นต้องเลือกเซนเซอร์ที่ τ น้อยลง ไม่ใช่เพียงขยายสัญญาณ</p>
+
+<h2 id="select">5 · เช็กลิสต์เลือกเซนเซอร์</h2>
+<ol>
+<li><b>ปริมาณและช่วงวัด:</b> ค่าปกติ ค่าสูงสุดชั่วขณะ (overload) ค่าต่ำสุดที่ต้องแยกได้</li>
+<li><b>ความไม่แน่นอนที่ยอมรับได้:</b> ต้องดีกว่าข้อกำหนดของงานอย่างน้อย 3–4 เท่า (แนวปฏิบัติของห้องสอบเทียบเรียกว่า TUR 4:1)</li>
+<li><b>เวลาตอบสนอง:</b> τ และความถี่ที่ต้องการวัด</li>
+<li><b>เอาต์พุต:</b> mV, 0–10 V, 4–20 mA, ดิจิทัล และต้องมีภาคปรับสภาพหรือไม่</li>
+<li><b>สภาพแวดล้อม:</b> อุณหภูมิ ความชื้น การสั่นสะเทือน EMC และระดับ IP</li>
+<li><b>มาตรฐานและใบรับรอง:</b> ที่ต้องการสอบกลับได้ ใบ Ex, SIL (ดูบท <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐานไฟฟ้า</a>)</li>
+<li><b>ต้นทุนทั้งวงจรชีวิต:</b> สอบเทียบ บำรุงรักษา อะไหล่</li>
+</ol>
+</section>
+
+    <section class="tsec sx-src" aria-labelledby="sources"><h2 id="sources">แหล่งอ้างอิง</h2><ul class="sx-src"><li><a href="https://jcgm.bipm.org/vim/en/" rel="noopener">VIM (JCGM 200) — 3.7 measuring transducer, 3.8 sensor, 3.10 measuring chain</a></li><li><a href="https://webstore.iec.ch/" rel="noopener">IEC 60751 — Industrial platinum resistance thermometers (IEC Webstore)</a></li><li><a href="https://webstore.iec.ch/" rel="noopener">IEC 60584-1 — Thermocouples: EMF specifications and tolerances (IEC Webstore)</a></li><li><a href="https://its90.nist.gov/" rel="noopener">NIST ITS-90 Thermocouple Database</a></li></ul></section>
+  </article>
+</div>

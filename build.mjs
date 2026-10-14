@@ -586,6 +586,38 @@ export const TOPICS = [
         summary: "เลือกโหลดจริง เช่น มอเตอร์ หลอดไฟ ฮีตเตอร์ ไดรเวอร์ LED เปิดคาปาซิเตอร์ทีละขั้น เห็นคลื่น v i p เฟสเซอร์หมุน สามเหลี่ยมกำลัง มิเตอร์ และค่าไฟ พร้อมตู้คาปาซิเตอร์อัตโนมัติจำลองตลอดวันทำงาน" },
     ],
   },
+  {
+    // Topic 20: Sensors & transducers — pillar hub: definitions (VIM), SI units, metrology, electrical standards + labs
+    slug: "sensors-transducers",
+    title: "เซ็นเซอร์และทรานสดิวเซอร์",
+    en: "Sensors & Transducers",
+    sym: "🌡",
+    summary: "หน้าแกนกลางของหมวดเซ็นเซอร์ (sensor) และทรานสดิวเซอร์ (transducer): นิยามตาม VIM ห่วงโซ่การวัด หน่วย SI มาตรวิทยาและการสอบกลับ มาตรฐานไฟฟ้า IEC ISO IEEE ISA NAMUR พร้อมประเทศต้นแบบ เครื่องแปลงหน่วย สเกล 4–20 mA และแล็บโต้ตอบ",
+    fxHint: "พิมพ์ เช่น sensor, transducer, VIM, SI, psi, 4-20 mA, NE 43, IEC 60751, ITS-90, Josephson, traceability",
+    parts: [
+      { id: "foundations", n: 1, title: "พื้นฐาน หน่วย และมาตรฐาน", en: "Foundations, Units & Standards", blurb: "นิยาม ห่วงโซ่การวัด หน่วย SI เครื่องแปลงหน่วย มาตรวิทยา และมาตรฐานไฟฟ้าพร้อมประเทศต้นแบบ" },
+      { id: "quantities", n: 2, title: "เซ็นเซอร์ตามปริมาณที่วัด", en: "Sensors by Quantity", blurb: "อุณหภูมิ ความดัน การไหล ระดับ แรง ตำแหน่ง กระแสและแรงดัน (กำลังจัดทำ)" },
+      { id: "signals", n: 3, title: "สัญญาณและการประยุกต์", en: "Signals & Applications", blurb: "วงจรปรับสภาพสัญญาณ ADC สัญญาณอุตสาหกรรม 4–20 mA HART และการเลือกใช้งาน (กำลังจัดทำ)" },
+    ],
+    sub: [
+      { slug: "fundamentals", part: "foundations", short: "หลักการเบื้องต้น", title: "หลักการเบื้องต้นของเซ็นเซอร์และทรานสดิวเซอร์: ห่วงโซ่การวัด ความคลาดเคลื่อน และการตอบสนอง", en: "Sensor & Transducer Fundamentals", sym: "S", prefix: "F",
+        summary: "นิยามตาม VIM ห่วงโซ่การวัด หลักการแปลงพลังงาน sensitivity hysteresis nonlinearity %FS กับ %RDG ค่าคงตัวเวลา พร้อมแล็บ 3 ชุด" },
+      { slug: "units", part: "foundations", short: "หน่วยและระบบหน่วย", title: "หน่วยและระบบหน่วยสำหรับงานเซ็นเซอร์: SI ค่าคงตัวนิยามปี 2019 คำนำหน้า และกับดักในดาต้าชีต", en: "Units & Systems of Units", sym: "SI", prefix: "U",
+        summary: "SI 7 หน่วยฐาน หน่วยอนุพันธ์ทางไฟฟ้า คำนำหน้า ระบบหน่วยอื่น psi kgf gauss กฎการเขียน และเครื่องมือวิเคราะห์มิติ" },
+      { slug: "unit-lab", part: "foundations", short: "เครื่องมือแปลงหน่วย", title: "เครื่องมือแปลงหน่วยออนไลน์ สเกล 4–20 mA และเครื่องมือเดซิเบล", en: "Unit Converter Lab", sym: "⇄", prefix: "C", tag: "เครื่องมือ",
+        summary: "แปลงหน่วยแบบพิมพ์นิพจน์ psi bar kgf/cm² °C/°F rpm W/(m·K) สเกลกระแส 4–20 mA และเดซิเบล ทำงานในเบราว์เซอร์" },
+      { slug: "measurement-standards", part: "foundations", short: "มาตรวิทยา", title: "มาตรฐานการวัดและมาตรวิทยา: การสอบกลับ SI ปี 2019 Josephson และ ITS-90", en: "Metrology & Measurement Standards", sym: "kg", prefix: "M",
+        summary: "โซ่การสอบกลับจาก SI ถึงเซนเซอร์หน้างาน ประวัติต้นแบบ มาตรฐานไฟฟ้าควอนตัม จุดคงที่ ITS-90 และเครื่องคิดเลขงบความไม่แน่นอน" },
+      { slug: "electrical-standards", part: "foundations", short: "มาตรฐานไฟฟ้า", title: "มาตรฐานไฟฟ้าสำหรับเซ็นเซอร์: IEC ISO IEEE ISA DIN JIS มอก. และประเทศต้นแบบ", en: "Electrical Standards & Their Origins", sym: "IEC", prefix: "E", tag: "ฐานข้อมูล 37 มาตรฐาน",
+        summary: "ฐานข้อมูลมาตรฐานที่ค้นหาและกรองได้ พร้อมประเทศและองค์กรต้นแบบ และตัวเลือกมาตรฐานตามชนิดเซนเซอร์" },
+      { slug: "temperature-sensors", part: "quantities", short: "เซ็นเซอร์อุณหภูมิ", title: "เซ็นเซอร์อุณหภูมิ: เทอร์โมคัปเปิล RTD เทอร์มิสเตอร์ และ IC", en: "Temperature Sensors", sym: "°C", prefix: "T", soon: true, summary: "Pt100 ตาม IEC 60751 เทอร์โมคัปเปิลตาม IEC 60584 และการชดเชยจุดเย็น" },
+      { slug: "pressure-flow-level", part: "quantities", short: "ความดัน · การไหล · ระดับ", title: "เซ็นเซอร์ความดัน การไหล และระดับ", en: "Pressure, Flow & Level", sym: "bar", prefix: "P", soon: true, summary: "ทรานสมิตเตอร์ความดัน DP flow มิเตอร์แม่เหล็กไฟฟ้า และการวัดระดับ" },
+      { slug: "force-position", part: "quantities", short: "แรง · ตำแหน่ง", title: "เซ็นเซอร์แรง น้ำหนัก ตำแหน่ง และการเคลื่อนที่", en: "Force & Position", sym: "N", prefix: "R", soon: true, summary: "โหลดเซลล์ สเตรนเกจ LVDT เอนโค้ดเดอร์ และเซ็นเซอร์ฮอลล์" },
+      { slug: "current-voltage-sensing", part: "quantities", short: "วัดกระแส · แรงดัน", title: "เซ็นเซอร์วัดกระแสและแรงดัน: ชันต์ CT ฮอลล์ และโรโกวสกี", en: "Current & Voltage Sensing", sym: "A", prefix: "V", soon: true, summary: "ชันต์ หม้อแปลงกระแส เซ็นเซอร์ฮอลล์ และขดโรโกวสกี" },
+      { slug: "signal-conditioning-adc", part: "signals", short: "ปรับสภาพสัญญาณ · ADC", title: "การปรับสภาพสัญญาณและ ADC สำหรับเซ็นเซอร์", en: "Signal Conditioning & ADC", sym: "ADC", prefix: "A", soon: true, summary: "บริดจ์ ออปแอมป์ อินสทรูเมนเทชันแอมป์ ฟิลเตอร์ และการสุ่มสัญญาณ" },
+      { slug: "industrial-signals", part: "signals", short: "สัญญาณอุตสาหกรรม", title: "สัญญาณอุตสาหกรรม: 4–20 mA, HART, Modbus และ IO-Link", en: "Industrial Signals", sym: "mA", prefix: "I", soon: true, summary: "วงจรกระแสสองสาย NAMUR NE 43 HART และการสื่อสารภาคสนาม" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
