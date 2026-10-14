@@ -1,0 +1,300 @@
+<!--meta
+{
+  "title": "อนุพันธ์ (Differential Calculus): นิยาม สูตรอนุพันธ์ครบ กฎลูกโซ่ ค่าสูงสุด-ต่ำสุด นิวตัน-ราฟสัน พร้อมแล็บ | อาจารย์มด",
+  "h1": "อนุพันธ์ (Differential Calculus): นิยาม สูตร และวิธีทำทีละขั้น",
+  "description": "อนุพันธ์ภาษาไทยครบในหน้าเดียว นิยามจากเส้นตัดสู่เส้นสัมผัสแบบลากได้ สูตรอนุพันธ์พร้อมชื่อสากลทุกกลุ่ม ผลคูณ ผลหาร กฎลูกโซ่ อนุพันธ์โดยปริยาย ลอการิทึม ตรีโกณผกผัน อันดับสูง อิงพารามิเตอร์ อัตราสัมพัทธ์ ค่าสูงสุด-ต่ำสุด เว้า จุดเปลี่ยนเว้า ทฤษฎีบทค่าเฉลี่ย การประมาณเชิงเส้น และวิธีนิวตัน-ราฟสัน พร้อมหน้าการประยุกต์ในงานไฟฟ้า เครื่องกล และโยธา",
+  "ogTitle": "อนุพันธ์ครบ: จากเส้นตัดถึงนิวตัน-ราฟสัน พร้อมแล็บลากได้",
+  "lesson": "differential-calculus",
+  "nav": "der",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Derivative", "Differentiation rules", "Chain rule", "Implicit differentiation", "Related rates", "Extrema", "Concavity", "Mean value theorem", "Linear approximation", "Newton's method"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/sigexpr.js", "/assets/mathkit.js", "/assets/calc-lab.js"],
+  "faq": [
+    {"q": "อนุพันธ์คืออะไรในภาษาง่าย ๆ?", "a": "อัตราการเปลี่ยนแปลง ณ ขณะหนึ่ง หรือความชันของเส้นสัมผัสกราฟ เช่น ความเร็วคืออนุพันธ์ของตำแหน่ง กระแสคืออนุพันธ์ของประจุ และกระแสในตัวเก็บประจุเป็นสัดส่วนกับอนุพันธ์ของแรงดัน \\(i = C\\,dv/dt\\)"},
+    {"q": "กฎลูกโซ่ใช้เมื่อไร?", "a": "เมื่อมีฟังก์ชันซ้อนฟังก์ชัน เช่น \\(\\sin(\\omega t)\\), \\(e^{-t/\\tau}\\), \\((3x^2+1)^5\\) ให้หาอนุพันธ์ของฟังก์ชันชั้นนอกโดยคงข้างในไว้ แล้วคูณด้วยอนุพันธ์ของข้างใน \\(\\frac{d}{dx}f(g(x)) = f'(g(x))g'(x)\\)"},
+    {"q": "หาค่าสูงสุด-ต่ำสุดอย่างไร?", "a": "หาจุดวิกฤตที่ f′ = 0 หรือไม่นิยาม แล้วทดสอบด้วยอนุพันธ์อันดับสอง (f″ < 0 สูงสุด, f″ > 0 ต่ำสุด) หรือดูการเปลี่ยนเครื่องหมายของ f′ ถ้าเป็นช่วงปิดต้องเทียบกับค่าที่ปลายช่วงด้วย"},
+    {"q": "ฟังก์ชันต่อเนื่องหาอนุพันธ์ได้เสมอไหม?", "a": "ไม่ หาอนุพันธ์ได้ทำให้ต่อเนื่อง แต่กลับกันไม่จริง เช่น \\(|x|\\) ต่อเนื่องที่ x = 0 แต่มีมุมแหลม ความชันซ้ายเป็น −1 ขวาเป็น 1 จึงไม่มีอนุพันธ์ที่จุดนั้น"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page la-hub">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>อนุพันธ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 4 · คณิตศาสตร์วิศวกรรม · Differential Calculus</p>
+      <h1>อนุพันธ์ (Differential Calculus): นิยาม สูตร และวิธีทำทีละขั้น</h1>
+      <p class="lede">อนุพันธ์วัดว่าสิ่งหนึ่งเปลี่ยนเร็วแค่ไหนเทียบกับอีกสิ่ง เป็นภาษาของความเร็ว กระแส กำลัง ความชันของคาน และการหาจุดที่ดีที่สุด หน้านี้รวมทุกอย่างที่ต้องใช้ตั้งแต่นิยามที่ลากดูได้ สูตรครบทุกกลุ่มพร้อมรหัส D ไปจนถึงการหาค่าสุดขีดและนิวตัน-ราฟสัน ส่วนตัวอย่างงานจริงในวิศวกรรมไฟฟ้า เครื่องกล และโยธา แยกไว้ใน<a href="/learn/differential-calculus/engineering-applications/">หน้าการประยุกต์</a></p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#tangent-lab">แล็บเส้นสัมผัส</a>
+        <a class="btn btn-ghost btn-sm" href="#rules">สูตรอนุพันธ์</a>
+        <a class="btn btn-ghost btn-sm" href="#chain-rule">กฎลูกโซ่</a>
+        <a class="btn btn-ghost btn-sm" href="#extrema">ค่าสูงสุด-ต่ำสุด</a>
+        <a class="btn btn-ghost btn-sm" href="/learn/differential-calculus/engineering-applications/">การประยุกต์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f'(x) = \lim_{h\to0}\frac{f(x+h) - f(x)}{h}\) = ความชันของเส้นสัมผัส = อัตราการเปลี่ยนแปลงขณะหนึ่ง</li>
+          <li>\((x^n)' = nx^{n-1}\) · \((uv)' = u'v + uv'\) · \((u/v)' = (u'v - uv')/v^2\) · \(f(g(x))' = f'(g)g'\)</li>
+          <li>จุดวิกฤต f′ = 0 → f″ &lt; 0 สูงสุด · f″ &gt; 0 ต่ำสุด</li>
+          <li>ใกล้จุด a: \(f(x) \approx f(a) + f'(a)(x - a)\) และหารากด้วย \(x_{n+1} = x_n - f/f'\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> เชิงตัวเลข</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น product, quotient, chain, sin, ln, arctan, implicit, newton" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">นิยาม: จากเส้นตัดสู่เส้นสัมผัส <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ความชันของเส้นตัดผ่านสองจุดบนกราฟคืออัตราการเปลี่ยนแปลงเฉลี่ย เมื่อเลื่อนจุดที่สองเข้าหาจุดแรก (h → 0) เส้นตัดจะหมุนเข้าหาเส้นสัมผัส ความชันที่ได้คืออนุพันธ์</p>
+    <figure class="lt-wide"><!--FIG:der-secant--><svg class="mf" viewBox="0 0 720 280" role="img" aria-label="เส้นตัดเข้าใกล้เส้นสัมผัสเมื่อ h เข้าใกล้ศูนย์"><rect class="mf-bg" x="20" y="20" width="440" height="240" rx="6"/><line class="mf-ax" x1="20" y1="241.5" x2="460" y2="241.5"/><line class="mf-ax" x1="124.8" y1="20" x2="124.8" y2="260"/><clipPath id="g3"><rect x="20" y="20" width="440" height="240"/></clipPath><g clip-path="url(#g3)"><path class="mf-sig" d="M20 140L21.5 140.1L22.9 140.3L24.4 140.4L25.9 140.6L27.3 140.8L28.8 141L30.3 141.2L31.7 141.4L33.2 141.6L34.7 141.8L36.1 142L37.6 142.3L39.1 142.5L40.5 142.8L42 143.1L43.5 143.4L44.9 143.6L46.4 143.9L47.9 144.2L49.3 144.6L50.8 144.9L52.3 145.2L53.7 145.5L55.2 145.9L56.7 146.2L58.1 146.6L59.6 146.9L61.1 147.3L62.5 147.7L64 148.1L65.5 148.5L66.9 148.9L68.4 149.3L69.9 149.7L71.3 150.1L72.8 150.5L74.3 150.9L75.7 151.4L77.2 151.8L78.7 152.2L80.1 152.7L81.6 153.1L83.1 153.6L84.5 154L86 154.5L87.5 155L88.9 155.4L90.4 155.9L91.9 156.4L93.3 156.9L94.8 157.3L96.3 157.8L97.7 158.3L99.2 158.8L100.7 159.3L102.1 159.8L103.6 160.3L105.1 160.8L106.5 161.3L108 161.8L109.5 162.3L110.9 162.8L112.4 163.4L113.9 163.9L115.3 164.4L116.8 164.9L118.3 165.4L119.7 165.9L121.2 166.4L122.7 167L124.1 167.5L125.6 168L127.1 168.5L128.5 169L130 169.5L131.5 170.1L132.9 170.6L134.4 171.1L135.9 171.6L137.3 172.1L138.8 172.6L140.3 173.1L141.7 173.6L143.2 174.1L144.7 174.6L146.1 175.1L147.6 175.6L149.1 176.1L150.5 176.6L152 177.1L153.5 177.6L154.9 178.1L156.4 178.6L157.9 179.1L159.3 179.5L160.8 180L162.3 180.5L163.7 181L165.2 181.4L166.7 181.9L168.1 182.3L169.6 182.8L171.1 183.2L172.5 183.7L174 184.1L175.5 184.5L176.9 184.9L178.4 185.4L179.9 185.8L181.3 186.2L182.8 186.6L184.3 187L185.7 187.4L187.2 187.7L188.7 188.1L190.1 188.5L191.6 188.9L193.1 189.2L194.5 189.6L196 189.9L197.5 190.2L198.9 190.6L200.4 190.9L201.9 191.2L203.3 191.5L204.8 191.8L206.3 192.1L207.7 192.3L209.2 192.6L210.7 192.9L212.1 193.1L213.6 193.4L215.1 193.6L216.5 193.8L218 194L219.5 194.3L220.9 194.4L222.4 194.6L223.9 194.8L225.3 195L226.8 195.1L228.3 195.3L229.7 195.4L231.2 195.5L232.7 195.6L234.1 195.7L235.6 195.8L237.1 195.9L238.5 196L240 196L241.5 196.1L242.9 196.1L244.4 196.1L245.9 196.1L247.3 196.1L248.8 196.1L250.3 196.1L251.7 196L253.2 195.9L254.7 195.9L256.1 195.8L257.6 195.7L259.1 195.6L260.5 195.5L262 195.3L263.5 195.2L264.9 195L266.4 194.8L267.9 194.6L269.3 194.4L270.8 194.2L272.3 193.9L273.7 193.7L275.2 193.4L276.7 193.1L278.1 192.8L279.6 192.5L281.1 192.1L282.5 191.8L284 191.4L285.5 191L286.9 190.6L288.4 190.2L289.9 189.7L291.3 189.3L292.8 188.8L294.3 188.3L295.7 187.8L297.2 187.3L298.7 186.8L300.1 186.2L301.6 185.6L303.1 185L304.5 184.4L306 183.8L307.5 183.1L308.9 182.5L310.4 181.8L311.9 181L313.3 180.3L314.8 179.6L316.3 178.8L317.7 178L319.2 177.2L320.7 176.4L322.1 175.5L323.6 174.7L325.1 173.8L326.5 172.9L328 171.9L329.5 171L330.9 170L332.4 169L333.9 168L335.3 166.9L336.8 165.9L338.3 164.8L339.7 163.7L341.2 162.6L342.7 161.4L344.1 160.3L345.6 159.1L347.1 157.8L348.5 156.6L350 155.3L351.5 154.1L352.9 152.7L354.4 151.4L355.9 150L357.3 148.7L358.8 147.3L360.3 145.8L361.7 144.4L363.2 142.9L364.7 141.4L366.1 139.9L367.6 138.3L369.1 136.7L370.5 135.1L372 133.5L373.5 131.8L374.9 130.2L376.4 128.5L377.9 126.7L379.3 125L380.8 123.2L382.3 121.4L383.7 119.5L385.2 117.7L386.7 115.8L388.1 113.8L389.6 111.9L391.1 109.9L392.5 107.9L394 105.9L395.5 103.8L396.9 101.8L398.4 99.6L399.9 97.5L401.3 95.3L402.8 93.1L404.3 90.9L405.7 88.6L407.2 86.4L408.7 84L410.1 81.7L411.6 79.3L413.1 76.9L414.5 74.5L416 72L417.5 69.5L418.9 67L420.4 64.4L421.9 61.9L423.3 59.2L424.8 56.6L426.3 53.9L427.7 51.2L429.2 48.5L430.7 45.7L432.1 42.9L433.6 40L435.1 37.2L436.5 34.3L438 31.3L439.5 28.4L440.9 25.4L442.4 22.4L443.9 19.3L445.3 16.2L446.8 13.1L448.3 9.9L449.7 6.7L451.2 3.5L452.7 0.2L454.1 -3.1L455.6 -6.4L457.1 -9.8L458.5 -13.2L460 -16.6"/><line class="mf-dash" x1="20" y1="312.8" x2="460" y2="66.2"/><circle class="mf-dot2" cx="397.1" cy="101.5" r="3.5"/><line class="mf-dash" x1="20" y1="241.7" x2="460" y2="144.4"/><circle class="mf-dot2" cx="323.8" cy="174.5" r="3.5"/><line class="mf-dash" x1="20" y1="202" x2="460" y2="188.1"/><circle class="mf-dot2" cx="271.4" cy="194.1" r="3.5"/><line class="mf-sig3" x1="20" y1="176.9" x2="460" y2="215.7"/><circle class="mf-dot" cx="229.5" cy="195.4" r="4.5"/></g><text class="mf-lab" x="480" y="50" text-anchor="start">เส้นประ: เส้นตัดผ่าน (x₀, f(x₀))</text><text class="mf-lab" x="480" y="70" text-anchor="start">และ (x₀ + h, f(x₀ + h))</text><text class="mf-l" x="480" y="100" text-anchor="start">h = 1.6 → 0.9 → 0.4 → 0</text><text class="mf-lab" x="480" y="130" text-anchor="start">เส้นเขียว: เส้นสัมผัส ความชัน f′(x₀)</text><text class="mf-k" x="480" y="160" text-anchor="start">f(x) = x³/4 − x + 2,  x₀ = 1</text><text class="mf-k" x="480" y="178" text-anchor="start">ความชันเส้นตัด: 1.59 → 0.63 → 0.09</text><text class="mf-k" x="480" y="196" text-anchor="start">f′(1) = −0.25</text></svg><!--/FIG--></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="D1" data-k="derivative definition limit difference quotient นิยาม อนุพันธ์ ผลหารผลต่าง">
+        <p class="tf-n"><b><span class="fid">D1</span> Derivative</b> นิยามอนุพันธ์</p>
+        \[ f'(x) = \frac{dy}{dx} = \lim_{h\to 0}\frac{f(x+h) - f(x)}{h} \]
+        <p class="tf-x">สัญลักษณ์: \(f'(x)\) (ลากรองจ์) · \(\frac{dy}{dx}\) (ไลบ์นิซ) · \(\dot x\) (นิวตัน ใช้กับเวลา) · \(Df\)</p>
+      </div>
+      <div class="tf" id="D2" data-k="tangent line equation point slope เส้นสัมผัส">
+        <p class="tf-n"><b><span class="fid">D2</span> Tangent line</b> สมการเส้นสัมผัส</p>
+        \[ y = f(a) + f'(a)(x - a) \]
+      </div>
+      <div class="tf" id="D3" data-k="differentiable implies continuous abs corner หาอนุพันธ์ได้ ต่อเนื่อง">
+        <p class="tf-n"><b><span class="fid">D3</span> Differentiability</b> หาอนุพันธ์ได้ ⇒ ต่อเนื่อง</p>
+        \[ f'(a) \text{ มีค่า} \Rightarrow f \text{ ต่อเนื่องที่ } a\quad(\text{กลับกันไม่จริง: } |x| \text{ ที่ } 0) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-1 · จากนิยาม</span><h3>หาอนุพันธ์ของ \(f(x) = x^2\) และ \(g(x) = \sqrt x\) จากนิยาม</h3></div>
+      <ol class="steps">
+        <li>\[ \frac{(x+h)^2 - x^2}{h} = \frac{2xh + h^2}{h} = 2x + h \xrightarrow{h\to0} 2x \]</li>
+        <li><p>คูณคอนจูเกต (เหมือน<a href="/learn/limits/#ex-l5">ตัวอย่าง L-5</a>)</p>\[ \frac{\sqrt{x+h} - \sqrt x}{h}\cdot\frac{\sqrt{x+h} + \sqrt x}{\sqrt{x+h} + \sqrt x} = \frac{1}{\sqrt{x+h} + \sqrt x} \xrightarrow{h\to0} \frac{1}{2\sqrt x} \]</li>
+      </ol>
+      <p class="answer">\((x^2)' = 2x\), \((\sqrt x)' = \dfrac{1}{2\sqrt x}\) ตรงกับกฎยกกำลัง \(nx^{n-1}\) ที่ \(n = 2\) และ \(n = \tfrac12\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tangent-lab">
+    <h2 id="tangent-lab">แล็บเส้นตัด → เส้นสัมผัส และกราฟของอนุพันธ์</h2>
+    <p>ลากจุดสีส้มไปตามกราฟ และเลื่อน h ลงไปที่ศูนย์ กราฟล่างคือ \(f'(x)\) (เขียว) และ \(f''(x)\) (ม่วง เส้นประ) จุดเขียวบนแกน x คือจุดวิกฤตที่ f′ = 0 สังเกตว่าตรงที่ f′ เป็นบวก กราฟบนกำลังขึ้นเสมอ พิมพ์ฟังก์ชันของคุณเองได้</p>
+    <div class="cl-tangent" data-f="x^3-3x" data-x0="1.5" data-show="deriv,second"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rules">
+    <h2 id="rules">สูตรอนุพันธ์ครบทุกกลุ่ม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <h3>กฎพื้นฐาน</h3>
+    <div class="tf-grid">
+      <div class="tf" id="D4" data-k="constant rule อนุพันธ์ค่าคงที่"><p class="tf-n"><b><span class="fid">D4</span> Constant rule</b> ค่าคงที่</p>\[ \frac{d}{dx}c = 0 \]</div>
+      <div class="tf" id="D5" data-k="power rule x^n กฎยกกำลัง"><p class="tf-n"><b><span class="fid">D5</span> Power rule</b> กฎยกกำลัง</p>\[ \frac{d}{dx}x^n = nx^{n-1},\quad n \in \mathbb{R} \]</div>
+      <div class="tf" id="D6" data-k="constant multiple sum difference linearity ผลบวก ตัวคูณ"><p class="tf-n"><b><span class="fid">D6</span> Linearity</b> ผลบวกและตัวคูณ</p>\[ (af + bg)' = af' + bg' \]</div>
+      <div class="tf" id="D7" data-k="product rule ผลคูณ"><p class="tf-n"><b><span class="fid">D7</span> Product rule</b> ผลคูณ</p>\[ (uv)' = u'v + uv' \]</div>
+      <div class="tf" id="D8" data-k="quotient rule ผลหาร"><p class="tf-n"><b><span class="fid">D8</span> Quotient rule</b> ผลหาร</p>\[ \left(\frac uv\right)' = \frac{u'v - uv'}{v^2} \]</div>
+      <div class="tf" id="D9" data-k="chain rule composite กฎลูกโซ่"><p class="tf-n"><b><span class="fid">D9</span> Chain rule</b> กฎลูกโซ่</p>\[ \frac{d}{dx}f\big(g(x)\big) = f'\big(g(x)\big)\,g'(x),\qquad \frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx} \]</div>
+    </div>
+    <h3>เอกซ์โพเนนเชียลและลอการิทึม</h3>
+    <div class="tf-grid">
+      <div class="tf" id="D10" data-k="exponential e^x derivative เอกซ์โพเนนเชียล"><p class="tf-n"><b><span class="fid">D10</span> Natural exponential</b></p>\[ \frac{d}{dx}e^x = e^x,\qquad \frac{d}{dx}e^{ax} = ae^{ax} \]</div>
+      <div class="tf" id="D11" data-k="a^x general exponential"><p class="tf-n"><b><span class="fid">D11</span> General exponential</b></p>\[ \frac{d}{dx}a^x = a^x\ln a \]</div>
+      <div class="tf" id="D12" data-k="natural log ln x derivative ลอการิทึม"><p class="tf-n"><b><span class="fid">D12</span> Natural logarithm</b></p>\[ \frac{d}{dx}\ln|x| = \frac1x \]</div>
+      <div class="tf" id="D13" data-k="log base a derivative"><p class="tf-n"><b><span class="fid">D13</span> Logarithm base a</b></p>\[ \frac{d}{dx}\log_ax = \frac{1}{x\ln a} \]</div>
+    </div>
+    <h3>ตรีโกณมิติ</h3>
+    <div class="tf-grid">
+      <div class="tf" id="D14" data-k="sin cos derivative ไซน์ โคไซน์"><p class="tf-n"><b><span class="fid">D14</span> sin, cos</b></p>\[ (\sin x)' = \cos x,\qquad (\cos x)' = -\sin x \]</div>
+      <div class="tf" id="D15" data-k="tan cot derivative แทนเจนต์"><p class="tf-n"><b><span class="fid">D15</span> tan, cot</b></p>\[ (\tan x)' = \sec^2x,\qquad (\cot x)' = -\csc^2x \]</div>
+      <div class="tf" id="D16" data-k="sec csc derivative ซีแคนต์"><p class="tf-n"><b><span class="fid">D16</span> sec, csc</b></p>\[ (\sec x)' = \sec x\tan x,\qquad (\csc x)' = -\csc x\cot x \]</div>
+    </div>
+    <h3>ตรีโกณผกผันและไฮเพอร์โบลิก</h3>
+    <div class="tf-grid">
+      <div class="tf" id="D17" data-k="arcsin arccos inverse sine cosine derivative ตรีโกณผกผัน"><p class="tf-n"><b><span class="fid">D17</span> arcsin, arccos</b></p>\[ (\sin^{-1}x)' = \frac{1}{\sqrt{1-x^2}},\qquad (\cos^{-1}x)' = -\frac{1}{\sqrt{1-x^2}} \]</div>
+      <div class="tf" id="D18" data-k="arctan inverse tangent derivative"><p class="tf-n"><b><span class="fid">D18</span> arctan, arccot</b></p>\[ (\tan^{-1}x)' = \frac{1}{1+x^2},\qquad (\cot^{-1}x)' = -\frac{1}{1+x^2} \]</div>
+      <div class="tf" id="D19" data-k="sinh cosh hyperbolic derivative ไฮเพอร์โบลิก"><p class="tf-n"><b><span class="fid">D19</span> Hyperbolic</b></p>\[ (\sinh x)' = \cosh x,\qquad (\cosh x)' = \sinh x \]</div>
+    </div>
+    <div class="wx" id="ex-d2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-2 · ผลคูณและผลหาร</span><h3>(ก) \(\dfrac{d}{dx}\left(x^2\sin x\right)\) (ข) \(\dfrac{d}{dx}\dfrac{x^2+1}{x-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(u = x^2,\ v = \sin x\) <a class="tag tf" href="#D7">D7</a></p>\[ 2x\sin x + x^2\cos x \]</li>
+        <li><p>(ข) \(u = x^2 + 1,\ v = x - 1\) <a class="tag tf" href="#D8">D8</a></p>\[ \frac{2x(x-1) - (x^2+1)(1)}{(x-1)^2} = \frac{x^2 - 2x - 1}{(x-1)^2} \]</li>
+      </ol>
+      <p class="answer">(ก) \(2x\sin x + x^2\cos x\) · (ข) \(\dfrac{x^2 - 2x - 1}{(x-1)^2}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="chain-rule">
+    <h2 id="chain-rule">กฎลูกโซ่ อนุพันธ์โดยปริยาย และลอการิทึม <span class="lv lv-i">กลาง</span></h2>
+    <div class="wx" id="ex-d3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-3 · กฎลูกโซ่</span><h3>(ก) \(\dfrac{d}{dx}(3x^2+1)^5\) (ข) \(\dfrac{d}{dt}V_m\sin(\omega t + \phi)\) (ค) \(\dfrac{d}{dt}e^{-t/\tau}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ชั้นนอก \((\ )^5\) ชั้นใน \(3x^2 + 1\) <a class="tag tf" href="#D9">D9</a></p>\[ 5(3x^2+1)^4\cdot 6x = 30x(3x^2+1)^4 \]</li>
+        <li><p>(ข) \(V_m\cos(\omega t + \phi)\cdot\omega = \omega V_m\cos(\omega t + \phi)\) — ความถี่ยิ่งสูง อนุพันธ์ยิ่งใหญ่</p></li>
+        <li><p>(ค) \(e^{-t/\tau}\cdot\left(-\dfrac1\tau\right) = -\dfrac{1}{\tau}e^{-t/\tau}\) — ความชันเริ่มต้นเป็น \(-1/\tau\)</p></li>
+      </ol>
+      <p class="answer">กฎลูกโซ่คือเหตุที่ \(i = C\,dv/dt\) ของแรงดันไซน์ได้ \(\omega CV_m\) และเป็นที่มาของ \(X_C = 1/(\omega C)\)</p>
+    </div>
+    <div class="tf-grid">
+      <div class="tf" id="D20" data-k="implicit differentiation dy/dx อนุพันธ์โดยปริยาย">
+        <p class="tf-n"><b><span class="fid">D20</span> Implicit differentiation</b> อนุพันธ์โดยปริยาย</p>
+        \[ F(x, y) = 0 \Rightarrow \text{หาอนุพันธ์ทั้งสองข้างเทียบ } x \text{ โดยถือ } y = y(x) \]
+      </div>
+      <div class="tf" id="D21" data-k="logarithmic differentiation x^x ln อนุพันธ์ลอการิทึม">
+        <p class="tf-n"><b><span class="fid">D21</span> Logarithmic differentiation</b> ใส่ ln ก่อนหาอนุพันธ์</p>
+        \[ y = f(x)^{g(x)} \Rightarrow \frac{y'}{y} = \frac{d}{dx}\big[g\ln f\big] \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-4 · โดยปริยายและลอการิทึม</span><h3>(ก) ความชันของวงกลม \(x^2 + y^2 = 25\) ที่ \((3, 4)\) (ข) \(\dfrac{d}{dx}x^x\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(2x + 2y\,y' = 0 \Rightarrow y' = -x/y\) ที่ \((3, 4)\): \(y' = -\tfrac34\)</p></li>
+        <li><p>(ข) \(\ln y = x\ln x \Rightarrow \dfrac{y'}{y} = \ln x + 1 \Rightarrow y' = x^x(\ln x + 1)\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(-\tfrac34\) (ตั้งฉากกับรัศมีที่มีความชัน \(\tfrac43\)) · (ข) \(x^x(1 + \ln x)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="higher">
+    <h2 id="higher">อนุพันธ์อันดับสูง และฟังก์ชันอิงพารามิเตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="D22" data-k="higher order second derivative acceleration อันดับสอง อันดับสูง">
+        <p class="tf-n"><b><span class="fid">D22</span> Higher derivatives</b> อนุพันธ์อันดับสูง</p>
+        \[ f''(x) = \frac{d^2y}{dx^2},\quad f^{(n)}(x) = \frac{d^ny}{dx^n} \]
+        <p class="tf-x">ตำแหน่ง → ความเร็ว → ความเร่ง → jerk · \(f''\) บอกความเว้า</p>
+      </div>
+      <div class="tf" id="D23" data-k="parametric derivative dy/dx = (dy/dt)/(dx/dt) อิงพารามิเตอร์">
+        <p class="tf-n"><b><span class="fid">D23</span> Parametric curves</b> อิงพารามิเตอร์</p>
+        \[ \frac{dy}{dx} = \frac{dy/dt}{dx/dt},\qquad \frac{d^2y}{dx^2} = \frac{\frac{d}{dt}\left(\frac{dy}{dx}\right)}{dx/dt} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-5 · การสั่นแบบฮาร์มอนิก</span><h3>แสดงว่า \(y = A\cos\omega t + B\sin\omega t\) สอดคล้อง \(y'' + \omega^2 y = 0\)</h3></div>
+      <ol class="steps">
+        <li>\[ y' = -A\omega\sin\omega t + B\omega\cos\omega t,\qquad y'' = -A\omega^2\cos\omega t - B\omega^2\sin\omega t = -\omega^2y \]</li>
+      </ol>
+      <p class="answer">\(y'' + \omega^2y = 0\) ✓ คือสมการของวงจร LC ไม่มีความต้านทานและมวล-สปริงไม่มีแรงหน่วง ความถี่ \(\omega = 1/\sqrt{LC}\) หรือ \(\sqrt{k/m}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="related-rates">
+    <h2 id="related-rates">อัตราสัมพัทธ์ (Related Rates) <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อหลายปริมาณเปลี่ยนตามเวลาและผูกกันด้วยสมการ ให้หาอนุพันธ์ทั้งสมการเทียบ t (ใช้กฎลูกโซ่ทุกตัวแปร) แล้วแทนค่า ณ ขณะที่ถาม</p>
+    <div class="wx" id="ex-d6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-6 · บันไดลื่น</span><h3>บันไดยาว 5 m พิงผนัง ปลายล่างเลื่อนออกด้วยอัตรา 0.5 m/s ขณะปลายล่างห่างผนัง 3 m ปลายบนเลื่อนลงเร็วเท่าใด</h3></div>
+      <ol class="steps">
+        <li><p>\(x^2 + y^2 = 25\) หาอนุพันธ์เทียบ t: \(2x\dot x + 2y\dot y = 0\)</p></li>
+        <li><p>ขณะ \(x = 3\): \(y = 4\)</p>\[ \dot y = -\frac{x\dot x}{y} = -\frac{3(0.5)}{4} = -0.375\ \text{m/s} \]</li>
+      </ol>
+      <p class="answer">ปลายบนเลื่อนลง 0.375 m/s (เครื่องหมายลบ = ลดลง)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="extrema">
+    <h2 id="extrema">ค่าสูงสุด ต่ำสุด ความเว้า และการวาดกราฟ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <figure class="lt-wide"><!--FIG:der-extrema--><svg class="mf" viewBox="0 0 720 330" role="img" aria-label="ค่าสูงสุด ต่ำสุด และจุดเปลี่ยนเว้า จากอนุพันธ์อันดับหนึ่งและสอง"><rect class="mf-bg" x="20" y="24" width="330" height="280" rx="6"/><line class="mf-ax" x1="20" y1="164" x2="350" y2="164"/><line class="mf-ax" x1="185" y1="24" x2="185" y2="304"/><clipPath id="g3"><rect x="20" y="24" width="330" height="280"/></clipPath><g clip-path="url(#g3)"><path class="mf-sig" d="M20 395.8L21.1 387.9L22.2 380.1L23.3 372.4L24.4 364.9L25.5 357.5L26.6 350.2L27.7 343L28.8 335.9L29.9 329L31 322.2L32.1 315.5L33.2 308.9L34.3 302.5L35.4 296.1L36.5 289.9L37.6 283.8L38.7 277.8L39.8 272L40.9 266.2L42 260.6L43.1 255L44.2 249.6L45.3 244.3L46.4 239.1L47.5 234L48.6 229L49.7 224.1L50.8 219.4L51.9 214.7L53 210.1L54.1 205.7L55.2 201.3L56.3 197L57.4 192.9L58.5 188.8L59.6 184.9L60.7 181L61.8 177.3L62.9 173.6L64 170L65.1 166.5L66.2 163.2L67.3 159.9L68.4 156.7L69.5 153.6L70.6 150.5L71.7 147.6L72.8 144.8L73.9 142L75 139.4L76.1 136.8L77.2 134.3L78.3 131.9L79.4 129.6L80.5 127.3L81.6 125.2L82.7 123.1L83.8 121.1L84.9 119.2L86 117.3L87.1 115.5L88.2 113.9L89.3 112.2L90.4 110.7L91.5 109.2L92.6 107.9L93.7 106.5L94.8 105.3L95.9 104.1L97 103L98.1 102L99.2 101L100.3 100.1L101.4 99.3L102.5 98.5L103.6 97.8L104.7 97.1L105.8 96.5L106.9 96L108 95.6L109.1 95.2L110.2 94.8L111.3 94.6L112.4 94.3L113.5 94.2L114.6 94.1L115.7 94L116.8 94L117.9 94.1L119 94.2L120.1 94.3L121.2 94.5L122.3 94.8L123.4 95.1L124.5 95.5L125.6 95.9L126.7 96.3L127.8 96.8L128.9 97.3L130 97.9L131.1 98.5L132.2 99.2L133.3 99.9L134.4 100.7L135.5 101.5L136.6 102.3L137.7 103.2L138.8 104.1L139.9 105L141 106L142.1 107L143.2 108L144.3 109.1L145.4 110.2L146.5 111.3L147.6 112.5L148.7 113.7L149.8 114.9L150.9 116.2L152 117.5L153.1 118.8L154.2 120.1L155.3 121.5L156.4 122.8L157.5 124.2L158.6 125.7L159.7 127.1L160.8 128.6L161.9 130L163 131.5L164.1 133.1L165.2 134.6L166.3 136.1L167.4 137.7L168.5 139.3L169.6 140.9L170.7 142.5L171.8 144.1L172.9 145.7L174 147.3L175.1 149L176.2 150.6L177.3 152.3L178.4 154L179.5 155.6L180.6 157.3L181.7 159L182.8 160.6L183.9 162.3L185 164L186.1 165.7L187.2 167.4L188.3 169L189.4 170.7L190.5 172.4L191.6 174L192.7 175.7L193.8 177.4L194.9 179L196 180.7L197.1 182.3L198.2 183.9L199.3 185.5L200.4 187.1L201.5 188.7L202.6 190.3L203.7 191.9L204.8 193.4L205.9 194.9L207 196.5L208.1 198L209.2 199.4L210.3 200.9L211.4 202.3L212.5 203.8L213.6 205.2L214.7 206.5L215.8 207.9L216.9 209.2L218 210.5L219.1 211.8L220.2 213.1L221.3 214.3L222.4 215.5L223.5 216.7L224.6 217.8L225.7 218.9L226.8 220L227.9 221L229 222L230.1 223L231.2 223.9L232.3 224.8L233.4 225.7L234.5 226.5L235.6 227.3L236.7 228.1L237.8 228.8L238.9 229.5L240 230.1L241.1 230.7L242.2 231.2L243.3 231.7L244.4 232.1L245.5 232.5L246.6 232.9L247.7 233.2L248.8 233.5L249.9 233.7L251 233.8L252.1 233.9L253.2 234L254.3 234L255.4 233.9L256.5 233.8L257.6 233.7L258.7 233.4L259.8 233.2L260.9 232.8L262 232.4L263.1 232L264.2 231.5L265.3 230.9L266.4 230.2L267.5 229.5L268.6 228.7L269.7 227.9L270.8 227L271.9 226L273 225L274.1 223.9L275.2 222.7L276.3 221.5L277.4 220.1L278.5 218.8L279.6 217.3L280.7 215.8L281.8 214.1L282.9 212.5L284 210.7L285.1 208.8L286.2 206.9L287.3 204.9L288.4 202.8L289.5 200.7L290.6 198.4L291.7 196.1L292.8 193.7L293.9 191.2L295 188.6L296.1 186L297.2 183.2L298.3 180.4L299.4 177.5L300.5 174.4L301.6 171.3L302.7 168.1L303.8 164.8L304.9 161.5L306 158L307.1 154.4L308.2 150.7L309.3 147L310.4 143.1L311.5 139.2L312.6 135.1L313.7 131L314.8 126.7L315.9 122.3L317 117.9L318.1 113.3L319.2 108.6L320.3 103.9L321.4 99L322.5 94L323.6 88.9L324.7 83.7L325.8 78.4L326.9 73L328 67.4L329.1 61.8L330.2 56L331.3 50.2L332.4 44.2L333.5 38.1L334.6 31.9L335.7 25.5L336.8 19.1L337.9 12.5L339 5.8L340.1 -1L341.2 -7.9L342.3 -15L343.4 -22.2L344.5 -29.5L345.6 -36.9L346.7 -44.4L347.8 -52.1L348.9 -59.9L350 -67.8"/></g><circle class="mf-dot" cx="116.2" cy="94" r="3.6"/><circle class="mf-dot" cx="253.8" cy="234" r="3.6"/><circle class="mf-zero" cx="185" cy="164" r="3.6"/><text class="mf-lab" x="22" y="18" text-anchor="start">f(x) = x³ − 3x</text><rect class="mf-bg" x="370" y="24" width="330" height="130" rx="6"/><line class="mf-ax" x1="370" y1="121.5" x2="700" y2="121.5"/><line class="mf-ax" x1="535" y1="24" x2="535" y2="154"/><clipPath id="g12"><rect x="370" y="24" width="330" height="130"/></clipPath><g clip-path="url(#g12)"><path class="mf-sig3" d="M370 5.5L371.1 7.3L372.2 9.2L373.3 11L374.4 12.9L375.5 14.7L376.6 16.5L377.7 18.3L378.8 20.1L379.9 21.8L381 23.6L382.1 25.3L383.2 27L384.3 28.8L385.4 30.5L386.5 32.2L387.6 33.8L388.7 35.5L389.8 37.1L390.9 38.8L392 40.4L393.1 42L394.2 43.6L395.3 45.2L396.4 46.8L397.5 48.4L398.6 49.9L399.7 51.5L400.8 53L401.9 54.5L403 56L404.1 57.5L405.2 59L406.3 60.5L407.4 61.9L408.5 63.4L409.6 64.8L410.7 66.2L411.8 67.6L412.9 69L414 70.4L415.1 71.7L416.2 73.1L417.3 74.4L418.4 75.8L419.5 77.1L420.6 78.4L421.7 79.7L422.8 81L423.9 82.2L425 83.5L426.1 84.7L427.2 85.9L428.3 87.2L429.4 88.4L430.5 89.6L431.6 90.7L432.7 91.9L433.8 93.1L434.9 94.2L436 95.3L437.1 96.4L438.2 97.6L439.3 98.6L440.4 99.7L441.5 100.8L442.6 101.8L443.7 102.9L444.8 103.9L445.9 104.9L447 105.9L448.1 106.9L449.2 107.9L450.3 108.9L451.4 109.8L452.5 110.8L453.6 111.7L454.7 112.6L455.8 113.5L456.9 114.4L458 115.3L459.1 116.2L460.2 117L461.3 117.9L462.4 118.7L463.5 119.5L464.6 120.3L465.7 121.1L466.8 121.9L467.9 122.7L469 123.4L470.1 124.2L471.2 124.9L472.3 125.6L473.4 126.3L474.5 127L475.6 127.7L476.7 128.3L477.8 129L478.9 129.6L480 130.3L481.1 130.9L482.2 131.5L483.3 132.1L484.4 132.7L485.5 133.2L486.6 133.8L487.7 134.3L488.8 134.9L489.9 135.4L491 135.9L492.1 136.4L493.2 136.9L494.3 137.3L495.4 137.8L496.5 138.2L497.6 138.7L498.7 139.1L499.8 139.5L500.9 139.9L502 140.3L503.1 140.6L504.2 141L505.3 141.3L506.4 141.7L507.5 142L508.6 142.3L509.7 142.6L510.8 142.9L511.9 143.1L513 143.4L514.1 143.6L515.2 143.9L516.3 144.1L517.4 144.3L518.5 144.5L519.6 144.7L520.7 144.8L521.8 145L522.9 145.1L524 145.3L525.1 145.4L526.2 145.5L527.3 145.6L528.4 145.7L529.5 145.7L530.6 145.8L531.7 145.8L532.8 145.9L533.9 145.9L535 145.9L536.1 145.9L537.2 145.9L538.3 145.8L539.4 145.8L540.5 145.7L541.6 145.7L542.7 145.6L543.8 145.5L544.9 145.4L546 145.3L547.1 145.1L548.2 145L549.3 144.8L550.4 144.7L551.5 144.5L552.6 144.3L553.7 144.1L554.8 143.9L555.9 143.6L557 143.4L558.1 143.1L559.2 142.9L560.3 142.6L561.4 142.3L562.5 142L563.6 141.7L564.7 141.3L565.8 141L566.9 140.6L568 140.3L569.1 139.9L570.2 139.5L571.3 139.1L572.4 138.7L573.5 138.2L574.6 137.8L575.7 137.3L576.8 136.9L577.9 136.4L579 135.9L580.1 135.4L581.2 134.9L582.3 134.3L583.4 133.8L584.5 133.2L585.6 132.7L586.7 132.1L587.8 131.5L588.9 130.9L590 130.3L591.1 129.6L592.2 129L593.3 128.3L594.4 127.7L595.5 127L596.6 126.3L597.7 125.6L598.8 124.9L599.9 124.2L601 123.4L602.1 122.7L603.2 121.9L604.3 121.1L605.4 120.3L606.5 119.5L607.6 118.7L608.7 117.9L609.8 117L610.9 116.2L612 115.3L613.1 114.4L614.2 113.5L615.3 112.6L616.4 111.7L617.5 110.8L618.6 109.8L619.7 108.9L620.8 107.9L621.9 106.9L623 105.9L624.1 104.9L625.2 103.9L626.3 102.9L627.4 101.8L628.5 100.8L629.6 99.7L630.7 98.6L631.8 97.6L632.9 96.4L634 95.3L635.1 94.2L636.2 93.1L637.3 91.9L638.4 90.7L639.5 89.6L640.6 88.4L641.7 87.2L642.8 85.9L643.9 84.7L645 83.5L646.1 82.2L647.2 81L648.3 79.7L649.4 78.4L650.5 77.1L651.6 75.8L652.7 74.4L653.8 73.1L654.9 71.7L656 70.4L657.1 69L658.2 67.6L659.3 66.2L660.4 64.8L661.5 63.4L662.6 61.9L663.7 60.5L664.8 59L665.9 57.5L667 56L668.1 54.5L669.2 53L670.3 51.5L671.4 49.9L672.5 48.4L673.6 46.8L674.7 45.2L675.8 43.6L676.9 42L678 40.4L679.1 38.8L680.2 37.1L681.3 35.5L682.4 33.8L683.5 32.2L684.6 30.5L685.7 28.8L686.8 27L687.9 25.3L689 23.6L690.1 21.8L691.2 20.1L692.3 18.3L693.4 16.5L694.5 14.7L695.6 12.9L696.7 11L697.8 9.2L698.9 7.3L700 5.5"/></g><circle class="mf-dot" cx="466.2" cy="121.5" r="3.6"/><circle class="mf-dot" cx="603.8" cy="121.5" r="3.6"/><text class="mf-lab" x="372" y="18" text-anchor="start">f′(x) = 3x² − 3 (ศูนย์ที่ x = ±1)</text><rect class="mf-bg" x="370" y="180" width="330" height="124" rx="6"/><line class="mf-ax" x1="370" y1="242" x2="700" y2="242"/><line class="mf-ax" x1="535" y1="180" x2="535" y2="304"/><clipPath id="g20"><rect x="370" y="180" width="330" height="124"/></clipPath><g clip-path="url(#g20)"><path class="mf-s1" d="M370 305.8L371.1 305.3L372.2 304.9L373.3 304.5L374.4 304.1L375.5 303.6L376.6 303.2L377.7 302.8L378.8 302.4L379.9 301.9L381 301.5L382.1 301.1L383.2 300.7L384.3 300.2L385.4 299.8L386.5 299.4L387.6 299L388.7 298.5L389.8 298.1L390.9 297.7L392 297.3L393.1 296.8L394.2 296.4L395.3 296L396.4 295.6L397.5 295.1L398.6 294.7L399.7 294.3L400.8 293.9L401.9 293.4L403 293L404.1 292.6L405.2 292.2L406.3 291.7L407.4 291.3L408.5 290.9L409.6 290.5L410.7 290L411.8 289.6L412.9 289.2L414 288.8L415.1 288.3L416.2 287.9L417.3 287.5L418.4 287.1L419.5 286.6L420.6 286.2L421.7 285.8L422.8 285.4L423.9 284.9L425 284.5L426.1 284.1L427.2 283.7L428.3 283.2L429.4 282.8L430.5 282.4L431.6 282L432.7 281.5L433.8 281.1L434.9 280.7L436 280.3L437.1 279.8L438.2 279.4L439.3 279L440.4 278.6L441.5 278.1L442.6 277.7L443.7 277.3L444.8 276.9L445.9 276.4L447 276L448.1 275.6L449.2 275.2L450.3 274.7L451.4 274.3L452.5 273.9L453.6 273.5L454.7 273L455.8 272.6L456.9 272.2L458 271.8L459.1 271.3L460.2 270.9L461.3 270.5L462.4 270.1L463.5 269.6L464.6 269.2L465.7 268.8L466.8 268.4L467.9 267.9L469 267.5L470.1 267.1L471.2 266.7L472.3 266.2L473.4 265.8L474.5 265.4L475.6 265L476.7 264.5L477.8 264.1L478.9 263.7L480 263.3L481.1 262.8L482.2 262.4L483.3 262L484.4 261.6L485.5 261.1L486.6 260.7L487.7 260.3L488.8 259.9L489.9 259.4L491 259L492.1 258.6L493.2 258.2L494.3 257.7L495.4 257.3L496.5 256.9L497.6 256.5L498.7 256L499.8 255.6L500.9 255.2L502 254.8L503.1 254.3L504.2 253.9L505.3 253.5L506.4 253.1L507.5 252.6L508.6 252.2L509.7 251.8L510.8 251.4L511.9 250.9L513 250.5L514.1 250.1L515.2 249.7L516.3 249.2L517.4 248.8L518.5 248.4L519.6 248L520.7 247.5L521.8 247.1L522.9 246.7L524 246.3L525.1 245.8L526.2 245.4L527.3 245L528.4 244.6L529.5 244.1L530.6 243.7L531.7 243.3L532.8 242.9L533.9 242.4L535 242L536.1 241.6L537.2 241.1L538.3 240.7L539.4 240.3L540.5 239.9L541.6 239.4L542.7 239L543.8 238.6L544.9 238.2L546 237.7L547.1 237.3L548.2 236.9L549.3 236.5L550.4 236L551.5 235.6L552.6 235.2L553.7 234.8L554.8 234.3L555.9 233.9L557 233.5L558.1 233.1L559.2 232.6L560.3 232.2L561.4 231.8L562.5 231.4L563.6 230.9L564.7 230.5L565.8 230.1L566.9 229.7L568 229.2L569.1 228.8L570.2 228.4L571.3 228L572.4 227.5L573.5 227.1L574.6 226.7L575.7 226.3L576.8 225.8L577.9 225.4L579 225L580.1 224.6L581.2 224.1L582.3 223.7L583.4 223.3L584.5 222.9L585.6 222.4L586.7 222L587.8 221.6L588.9 221.2L590 220.7L591.1 220.3L592.2 219.9L593.3 219.5L594.4 219L595.5 218.6L596.6 218.2L597.7 217.8L598.8 217.3L599.9 216.9L601 216.5L602.1 216.1L603.2 215.6L604.3 215.2L605.4 214.8L606.5 214.4L607.6 213.9L608.7 213.5L609.8 213.1L610.9 212.7L612 212.2L613.1 211.8L614.2 211.4L615.3 211L616.4 210.5L617.5 210.1L618.6 209.7L619.7 209.3L620.8 208.8L621.9 208.4L623 208L624.1 207.6L625.2 207.1L626.3 206.7L627.4 206.3L628.5 205.9L629.6 205.4L630.7 205L631.8 204.6L632.9 204.2L634 203.7L635.1 203.3L636.2 202.9L637.3 202.5L638.4 202L639.5 201.6L640.6 201.2L641.7 200.8L642.8 200.3L643.9 199.9L645 199.5L646.1 199.1L647.2 198.6L648.3 198.2L649.4 197.8L650.5 197.4L651.6 196.9L652.7 196.5L653.8 196.1L654.9 195.7L656 195.2L657.1 194.8L658.2 194.4L659.3 194L660.4 193.5L661.5 193.1L662.6 192.7L663.7 192.3L664.8 191.8L665.9 191.4L667 191L668.1 190.6L669.2 190.1L670.3 189.7L671.4 189.3L672.5 188.9L673.6 188.4L674.7 188L675.8 187.6L676.9 187.2L678 186.7L679.1 186.3L680.2 185.9L681.3 185.5L682.4 185L683.5 184.6L684.6 184.2L685.7 183.8L686.8 183.3L687.9 182.9L689 182.5L690.1 182.1L691.2 181.6L692.3 181.2L693.4 180.8L694.5 180.4L695.6 179.9L696.7 179.5L697.8 179.1L698.9 178.7L700 178.2"/></g><circle class="mf-zero" cx="535" cy="242" r="3.6"/><text class="mf-lab" x="372" y="174" text-anchor="start">f″(x) = 6x (ศูนย์ที่ x = 0 จุดเปลี่ยนเว้า)</text><text class="mf-k" x="24" y="322" text-anchor="start">x = −1: f′ = 0, f″ < 0 → สูงสุดสัมพัทธ์ (2) · x = 1: f′ = 0, f″ > 0 → ต่ำสุดสัมพัทธ์ (−2) · x = 0: f″ เปลี่ยนเครื่องหมาย → จุดเปลี่ยนเว้า</text></svg><!--/FIG--></figure>
+    <div class="tf-grid">
+      <div class="tf" id="D24" data-k="critical point stationary f'=0 จุดวิกฤต">
+        <p class="tf-n"><b><span class="fid">D24</span> Critical points</b> จุดวิกฤต</p>
+        \[ f'(c) = 0 \text{ หรือ } f'(c) \text{ ไม่นิยาม} \]
+      </div>
+      <div class="tf" id="D25" data-k="first derivative test sign change increasing decreasing ทดสอบอนุพันธ์อันดับหนึ่ง">
+        <p class="tf-n"><b><span class="fid">D25</span> First derivative test</b></p>
+        \[ f': +\to- \Rightarrow \text{สูงสุด},\qquad -\to+ \Rightarrow \text{ต่ำสุด} \]
+      </div>
+      <div class="tf" id="D26" data-k="second derivative test concavity maximum minimum ทดสอบอนุพันธ์อันดับสอง">
+        <p class="tf-n"><b><span class="fid">D26</span> Second derivative test</b></p>
+        \[ f'(c) = 0:\ f''(c) &lt; 0 \Rightarrow \text{สูงสุด},\ f''(c) > 0 \Rightarrow \text{ต่ำสุด} \]
+      </div>
+      <div class="tf" id="D27" data-k="concave up down inflection point เว้าขึ้น เว้าลง จุดเปลี่ยนเว้า">
+        <p class="tf-n"><b><span class="fid">D27</span> Concavity &amp; inflection</b> ความเว้า</p>
+        \[ f'' > 0 \text{ เว้าขึ้น},\ f'' &lt; 0 \text{ เว้าลง},\ f'' \text{ เปลี่ยนเครื่องหมาย} \Rightarrow \text{จุดเปลี่ยนเว้า} \]
+      </div>
+      <div class="tf wide" id="D28" data-k="closed interval method absolute extrema endpoints ค่าสุดขีดสัมบูรณ์ ช่วงปิด">
+        <p class="tf-n"><b><span class="fid">D28</span> Closed-interval method</b> ค่าสุดขีดสัมบูรณ์บน [a, b]</p>
+        \[ \max_{[a,b]}f = \max\{f(a),\ f(b),\ f(c_1),\ \dots\},\quad c_i = \text{จุดวิกฤตใน } (a, b) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-7 · ค่าสุดขีดบนช่วงปิด</span><h3>หาค่าสูงสุดและต่ำสุดสัมบูรณ์ของ \(f(x) = x^3 - 3x\) บน \([-2, 3]\)</h3></div>
+      <ol class="steps">
+        <li><p>\(f'(x) = 3x^2 - 3 = 0 \Rightarrow x = \pm1\) (อยู่ในช่วงทั้งคู่)</p></li>
+        <li><p>เทียบค่า: \(f(-2) = -2\), \(f(-1) = 2\), \(f(1) = -2\), \(f(3) = 18\)</p></li>
+      </ol>
+      <p class="answer">สูงสุดสัมบูรณ์ 18 ที่ \(x = 3\) (ปลายช่วง ไม่ใช่จุดวิกฤต) · ต่ำสุดสัมบูรณ์ −2 ที่ \(x = -2\) และ \(x = 1\) · ค่า 2 ที่ \(x = -1\) เป็นเพียงสูงสุดสัมพัทธ์</p>
+    </div>
+    <p>ปัญหาหาค่าเหมาะสมในงานจริง (กล่อง กระป๋อง ถ่ายโอนกำลังสูงสุด คานจากซุง) พร้อมแล็บ อยู่ใน<a href="/learn/differential-calculus/engineering-applications/#optimization">หน้าการประยุกต์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mvt">
+    <h2 id="mvt">ทฤษฎีบทค่าเฉลี่ยและการประมาณเชิงเส้น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="D29" data-k="mean value theorem rolle MVT ทฤษฎีบทค่าเฉลี่ย โรล">
+        <p class="tf-n"><b><span class="fid">D29</span> Mean value theorem</b> ทฤษฎีบทค่าเฉลี่ย</p>
+        \[ \exists c \in (a, b):\ f'(c) = \frac{f(b) - f(a)}{b - a} \]
+        <p class="tf-x">f ต่อเนื่องบน [a, b] หาอนุพันธ์ได้บน (a, b) · กรณี \(f(a) = f(b)\) คือทฤษฎีบทของโรล · ตัวอย่าง: ขับรถเฉลี่ย 90 km/h แปลว่ามีขณะหนึ่งที่มาตรวัดชี้ 90 พอดี</p>
+      </div>
+      <div class="tf" id="D30" data-k="linear approximation linearization tangent line approximation การประมาณเชิงเส้น">
+        <p class="tf-n"><b><span class="fid">D30</span> Linearization</b> การประมาณเชิงเส้น</p>
+        \[ f(x) \approx f(a) + f'(a)(x - a) \]
+        <p class="tf-x">พื้นฐานของแบบจำลองสัญญาณเล็ก (small-signal) ของทรานซิสเตอร์และการทำให้ระบบไม่เชิงเส้นเป็นเชิงเส้นในวิชาควบคุม</p>
+      </div>
+      <div class="tf wide" id="D31" data-k="differential error propagation relative error dy = f'dx ดิฟเฟอเรนเชียล ความคลาดเคลื่อน">
+        <p class="tf-n"><b><span class="fid">D31</span> Differentials &amp; error propagation</b> การแพร่ของความคลาดเคลื่อน</p>
+        \[ dy = f'(x)\,dx,\qquad y = kx^n \Rightarrow \frac{dy}{y} = n\frac{dx}{x} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-8 · ประมาณและความคลาดเคลื่อน</span><h3>(ก) ประมาณ \(\sqrt{4.1}\) (ข) วัด \(V = 230\) V คลาด ±1% กำลังในตัวต้านทาน \(P = V^2/R\) คลาดกี่ %</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(f = \sqrt x,\ a = 4\): \(f(4) = 2,\ f'(4) = \tfrac{1}{4}\)</p>\[ \sqrt{4.1} \approx 2 + \tfrac14(0.1) = 2.025 \]</li>
+        <li><p>(ข) \(P \propto V^2\) ใช้ D31 ด้วย \(n = 2\): \(\dfrac{dP}{P} = 2\dfrac{dV}{V} = 2(\pm1\%)\)</p></li>
+      </ol>
+      <p class="answer">(ก) 2.025 (ค่าจริง 2.02485 คลาด 0.007%) · (ข) ±2% ความคลาดเคลื่อนสัมพัทธ์คูณด้วยเลขชี้กำลังเสมอ</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="newton">
+    <h2 id="newton">วิธีนิวตัน-ราฟสัน (Newton–Raphson) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>หารากของ \(f(x) = 0\) โดยลากเส้นสัมผัสที่จุดปัจจุบันลงไปตัดแกน x แล้วใช้จุดตัดเป็นค่าประมาณถัดไป ใกล้รากจำนวนหลักทศนิยมที่ถูกเพิ่มเป็นสองเท่าทุกรอบ (ลู่เข้าแบบกำลังสอง) โปรแกรมจำลองวงจรอย่าง SPICE ใช้วิธีนี้หาจุดทำงานของไดโอดและทรานซิสเตอร์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D32" data-k="newton raphson method iteration root finding นิวตัน ราฟสัน หาราก">
+        <p class="tf-n"><b><span class="fid">D32</span> Newton–Raphson iteration</b></p>
+        \[ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \]
+        <p class="tf-x">ล้มเหลวได้ถ้า \(f'(x_n) \approx 0\) หรือเริ่มไกลรากเกินไป · \(\sqrt{a}\): \(x_{n+1} = \tfrac12\left(x_n + \tfrac{a}{x_n}\right)\) (วิธีของชาวบาบิโลน)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-9 · ตัวอย่างดั้งเดิมของนิวตัน</span><h3>หารากของ \(x^3 - 2x - 5 = 0\) เริ่มที่ \(x_0 = 2\)</h3></div>
+      <ol class="steps">
+        <li><p>\(f'(x) = 3x^2 - 2\) · \(x_1 = 2 - \dfrac{8 - 4 - 5}{12 - 2} = 2 + 0.1 = 2.1\)</p></li>
+        <li><p>\(x_2 = 2.1 - \dfrac{9.261 - 4.2 - 5}{13.23 - 2} = 2.1 - \dfrac{0.061}{11.23} = 2.0945681\)</p></li>
+        <li><p>\(x_3 = 2.0945515\) · \(x_4 = 2.0945514815\)</p></li>
+      </ol>
+      <p class="answer">ราก \(\approx 2.0945514815\) ใช้เพียง 4 รอบได้ 10 หลัก</p>
+    </div>
+    <div class="cl-newton" data-f="x^3-2x-5" data-x0="2"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">หน้าในชุดอนุพันธ์และค้นหาสูตร</h2>
+    <!--series-cards:differential-calculus-->
+    <!--formula-index:differential-calculus-->
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

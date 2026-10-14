@@ -284,6 +284,158 @@ def damping():
     return c.svg()
 
 
+# ---------------------------------------------------------------- calculus figures
+def graph(c, x, y, w, h, fn, x0, x1, y0, y1, title=None, cls="mf-sig", n=300, extra=None, dots=None):
+    sx = lambda t: x + (t - x0) / (x1 - x0) * w
+    sy = lambda v: y + (y1 - v) / (y1 - y0) * h
+    c.rect(x, y, w, h, "mf-bg", 6)
+    if y0 < 0 < y1:
+        c.line(x, sy(0), x + w, sy(0), "mf-ax")
+    if x0 < 0 < x1:
+        c.line(sx(0), y, sx(0), y + h, "mf-ax")
+    fns = fn if isinstance(fn, list) else [(fn, cls)]
+    c.add(f'<clipPath id="g{len(c.p)}"><rect x="{f1(x)}" y="{f1(y)}" width="{f1(w)}" height="{f1(h)}"/></clipPath>')
+    cid = f"g{len(c.p) - 1}"
+    body = ""
+    for f, k in fns:
+        d, pen, prev = "", False, None
+        for i in range(n + 1):
+            t = x0 + (x1 - x0) * i / n
+            try:
+                v = f(t)
+            except Exception:
+                v = None
+            if v is None or v != v or abs(v) > 1e4 or (prev is not None and abs(v - prev) > (y1 - y0) * 3):
+                pen = False
+                prev = v if v is not None and v == v else None
+                continue
+            d += ("L" if pen else "M") + f"{f1(sx(t))} {f1(sy(max(y0 - (y1-y0), min(y1 + (y1-y0), v))))}"
+            pen, prev = True, v
+        body += f'<path class="{k}" d="{d}"/>'
+    if extra:
+        body += extra(sx, sy)
+    c.add(f'<g clip-path="url(#{cid})">{body}</g>')
+    for (dx, dy, open_) in (dots or []):
+        c.add(f'<circle class="{"mf-zero" if open_ else "mf-dot"}" cx="{f1(sx(dx))}" cy="{f1(sy(dy))}" r="3.6"/>')
+    if title:
+        c.text(x + 2, y - 6, title, "mf-lab")
+    return sx, sy
+
+
+@fig("fn-library")
+def fn_library():
+    c = S(720, 560, "กราฟของฟังก์ชันพื้นฐาน 12 แบบ")
+    items = [
+        ("y = x", lambda x: x, (-3, 3, -3, 3), None),
+        ("y = x²", lambda x: x * x, (-3, 3, -1, 5), None),
+        ("y = x³", lambda x: x ** 3, (-2, 2, -4, 4), None),
+        ("y = √x", lambda x: math.sqrt(x) if x >= 0 else None, (-1, 5, -0.5, 2.5), [(0, 0, False)]),
+        ("y = |x|", abs, (-3, 3, -1, 3), None),
+        ("y = 1/x", lambda x: 1 / x if abs(x) > 1e-9 else None, (-3, 3, -4, 4), None),
+        ("y = eˣ", math.exp, (-3, 2, -0.5, 5), [(0, 1, False)]),
+        ("y = ln x", lambda x: math.log(x) if x > 0 else None, (-0.5, 5, -3, 2), [(1, 0, False)]),
+        ("y = sin x", math.sin, (-7, 7, -1.5, 1.5), None),
+        ("y = cos x", math.cos, (-7, 7, -1.5, 1.5), None),
+        ("y = tan x", lambda x: math.tan(x) if abs(math.cos(x)) > 0.02 else None, (-4.7, 4.7, -4, 4), None),
+        ("y = u(x) ขั้นบันได", lambda x: 1.0 if x >= 0 else 0.0, (-3, 3, -0.5, 1.5), [(0, 0, True), (0, 1, False)]),
+    ]
+    for i, (t, f, r, dots) in enumerate(items):
+        col, row = i % 4, i // 4
+        x0, y0 = 14 + col * 177, 24 + row * 182
+        if t.startswith("y = u"):
+            def ext(sx, sy):
+                return f'<path class="mf-sig" d="M{f1(sx(-3))} {f1(sy(0))}L{f1(sx(0))} {f1(sy(0))}M{f1(sx(0))} {f1(sy(1))}L{f1(sx(3))} {f1(sy(1))}"/>'
+            graph(c, x0, y0, 165, 150, [], *r, title=t, extra=ext, dots=dots)
+        else:
+            graph(c, x0, y0, 165, 150, f, *r, title=t, dots=dots)
+    return c.svg()
+
+
+@fig("lim-hole")
+def lim_hole():
+    c = S(720, 230, "ลิมิตที่มีรู ลิมิตกระโดด และลิมิตอนันต์")
+    graph(c, 14, 30, 220, 180, lambda x: x + 2 if abs(x - 2) > 1e-9 else None, -0.5, 4, 0, 6.5, title="รู: lim = 4 แต่ f(2) ไม่นิยาม", dots=[(2, 4, True)],
+          extra=lambda sx, sy: f'<line class="mf-dash" x1="{f1(sx(2))}" x2="{f1(sx(2))}" y1="{f1(sy(0))}" y2="{f1(sy(4))}"/><line class="mf-dash" x1="{f1(sx(-0.5))}" x2="{f1(sx(2))}" y1="{f1(sy(4))}" y2="{f1(sy(4))}"/>')
+    graph(c, 250, 30, 220, 180, [], -2, 2, -1.6, 1.6, title="กระโดด: |x|/x ซ้าย −1 ขวา 1", dots=[(0, -1, True), (0, 1, True)],
+          extra=lambda sx, sy: f'<path class="mf-sig" d="M{f1(sx(-2))} {f1(sy(-1))}L{f1(sx(0))} {f1(sy(-1))}M{f1(sx(0))} {f1(sy(1))}L{f1(sx(2))} {f1(sy(1))}"/>')
+    graph(c, 486, 30, 220, 180, lambda x: 1 / (x * x) if abs(x) > 0.05 else None, -2, 2, -0.5, 8, title="อนันต์: 1/x² → ∞ ที่ x = 0")
+    return c.svg()
+
+
+@fig("der-secant")
+def der_secant():
+    c = S(720, 280, "เส้นตัดเข้าใกล้เส้นสัมผัสเมื่อ h เข้าใกล้ศูนย์")
+    f = lambda x: 0.25 * x ** 3 - x + 2
+    df = lambda x: 0.75 * x * x - 1
+    x0 = 1.0
+    def ext(sx, sy):
+        out = ""
+        for h, cls in [(1.6, "mf-dash"), (0.9, "mf-dash"), (0.4, "mf-dash")]:
+            m = (f(x0 + h) - f(x0)) / h
+            out += f'<line class="{cls}" x1="{f1(sx(-1))}" y1="{f1(sy(f(x0) + m * (-1 - x0)))}" x2="{f1(sx(3.2))}" y2="{f1(sy(f(x0) + m * (3.2 - x0)))}"/>'
+            out += f'<circle class="mf-dot2" cx="{f1(sx(x0 + h))}" cy="{f1(sy(f(x0 + h)))}" r="3.5"/>'
+        m = df(x0)
+        out += f'<line class="mf-sig3" x1="{f1(sx(-1))}" y1="{f1(sy(f(x0) + m * (-1 - x0)))}" x2="{f1(sx(3.2))}" y2="{f1(sy(f(x0) + m * (3.2 - x0)))}"/>'
+        out += f'<circle class="mf-dot" cx="{f1(sx(x0))}" cy="{f1(sy(f(x0)))}" r="4.5"/>'
+        return out
+    graph(c, 20, 20, 440, 240, f, -1, 3.2, -0.5, 6, extra=ext)
+    c.text(480, 50, "เส้นประ: เส้นตัดผ่าน (x₀, f(x₀))", "mf-lab")
+    c.text(480, 70, "และ (x₀ + h, f(x₀ + h))", "mf-lab")
+    c.text(480, 100, "h = 1.6 → 0.9 → 0.4 → 0", "mf-l")
+    c.text(480, 130, "เส้นเขียว: เส้นสัมผัส ความชัน f′(x₀)", "mf-lab")
+    c.text(480, 160, "f(x) = x³/4 − x + 2,  x₀ = 1", "mf-k")
+    c.text(480, 178, "ความชันเส้นตัด: 1.59 → 0.63 → 0.09", "mf-k")
+    c.text(480, 196, "f′(1) = −0.25", "mf-k")
+    return c.svg()
+
+
+@fig("der-extrema")
+def der_extrema():
+    c = S(720, 330, "ค่าสูงสุด ต่ำสุด และจุดเปลี่ยนเว้า จากอนุพันธ์อันดับหนึ่งและสอง")
+    f = lambda x: x ** 3 - 3 * x
+    graph(c, 20, 24, 330, 280, f, -2.4, 2.4, -4, 4, title="f(x) = x³ − 3x", dots=[(-1, 2, False), (1, -2, False), (0, 0, True)])
+    graph(c, 370, 24, 330, 130, [(lambda x: 3 * x * x - 3, "mf-sig3")], -2.4, 2.4, -4, 12, title="f′(x) = 3x² − 3 (ศูนย์ที่ x = ±1)", dots=[(-1, 0, False), (1, 0, False)])
+    graph(c, 370, 180, 330, 124, [(lambda x: 6 * x, "mf-s1")], -2.4, 2.4, -14, 14, title="f″(x) = 6x (ศูนย์ที่ x = 0 จุดเปลี่ยนเว้า)", dots=[(0, 0, True)])
+    c.text(24, 322, "x = −1: f′ = 0, f″ < 0 → สูงสุดสัมพัทธ์ (2) · x = 1: f′ = 0, f″ > 0 → ต่ำสุดสัมพัทธ์ (−2) · x = 0: f″ เปลี่ยนเครื่องหมาย → จุดเปลี่ยนเว้า", "mf-k")
+    return c.svg()
+
+
+@fig("int-centroid")
+def int_centroid():
+    c = S(420, 260, "เซนทรอยด์ของพื้นที่ใต้ y = x^2 จาก 0 ถึง 2")
+    def ext(sx, sy):
+        pts = " ".join(f"{f1(sx(x))},{f1(sy(x * x))}" for x in [i * 2 / 60 for i in range(61)])
+        out = f'<polygon class="mf-fill" points="{f1(sx(0))},{f1(sy(0))} {pts} {f1(sx(2))},{f1(sy(0))}"/>'
+        out += f'<rect class="mf-fill2" x="{f1(sx(1.2))}" y="{f1(sy(1.44))}" width="{f1(sx(1.27) - sx(1.2))}" height="{f1(sy(0) - sy(1.44))}"/>'
+        out += f'<circle class="mf-dot" cx="{f1(sx(1.5))}" cy="{f1(sy(1.2))}" r="5"/>'
+        return out
+    graph(c, 20, 16, 380, 220, lambda x: x * x, -0.2, 2.3, -0.3, 4.4, extra=ext)
+    c.text(250, 150, "(x̄, ȳ) = (1.5, 1.2)", "mf-lab")
+    c.text(150, 210, "แถบ dA = y dx", "mf-k")
+    return c.svg()
+
+
+@fig("int-dam")
+def int_dam():
+    c = S(520, 280, "แรงดันน้ำเพิ่มเชิงเส้นตามความลึก แรงลัพธ์กระทำที่ 2/3 ของความลึก")
+    x0, y0, H = 300, 30, 220
+    c.add(f'<rect class="mf-fill2" x="20" y="{y0}" width="{x0 - 20}" height="{H}"/>')
+    c.add(f'<path class="mf-box" d="M{x0} {y0 - 10} L{x0} {y0 + H} L{x0 + 120} {y0 + H} L{x0 + 40} {y0 - 10} Z"/>')
+    for i in range(1, 11):
+        y = y0 + H * i / 10
+        L = 18 * i
+        c.add(f'<line class="mf-line" x1="{x0 - L}" y1="{f1(y)}" x2="{x0 - 3}" y2="{f1(y)}"/>')
+        c.add(f'<path class="mf-arrow" d="M{x0 - 2} {f1(y)} l-8 -4 v8 z"/>')
+    c.add(f'<line class="mf-dash" x1="{x0 - 180}" y1="{y0}" x2="{x0}" y2="{y0 + H}"/>')
+    yc = y0 + H * 2 / 3
+    c.add(f'<line class="mf-pole" x1="{x0 - 120}" y1="{f1(yc)}" x2="{x0 - 4}" y2="{f1(yc)}" style="stroke-width:4"/>')
+    c.text(x0 - 260, yc - 8, "F = 9.81 MN ที่ลึก 2H/3 = 6.67 m", "mf-lab")
+    c.text(30, y0 + 16, "ผิวน้ำ h = 0", "mf-k")
+    c.text(30, y0 + H - 6, "h = H = 10 m: p = ρgH = 98.1 kPa", "mf-k")
+    c.text(x0 + 46, y0 + 60, "เขื่อน", "mf-lab")
+    return c.svg()
+
+
 # ---------------------------------------------------------------- run
 def main():
     force = "--all" in sys.argv

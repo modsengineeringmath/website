@@ -1,0 +1,268 @@
+<!--meta
+{
+  "title": "การประยุกต์อินทิกรัลทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา: ประจุ พลังงาน RMS งาน จุดศูนย์ถ่วง แรงดันน้ำ คาน ปริมาตรดิน | อาจารย์มด",
+  "h1": "การประยุกต์อินทิกรัลทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา",
+  "description": "อินทิกรัลในงานวิศวกรรมจริงพร้อมตัวอย่างตัวเลข ไฟฟ้า: ประจุ แรงดันตัวเก็บประจุ พลังงานใน C และ L ค่าเฉลี่ยและ RMS · เครื่องกล: งานของแรง สปริง จุดศูนย์ถ่วง โมเมนต์ความเฉื่อย อิมพัลส์ งานสูบน้ำ · โยธา: แรงดันน้ำบนเขื่อน โมเมนต์ความเฉื่อยของหน้าตัด แรงลัพธ์น้ำหนักแผ่ ปริมาตรงานดินด้วยสี่เหลี่ยมคางหมูและซิมป์สัน และแล็บคานตั้งแต่น้ำหนักถึงการโก่ง",
+  "ogTitle": "อินทิกรัลในงานไฟฟ้า เครื่องกล โยธา พร้อมแล็บคาน",
+  "lesson": "integral-calculus",
+  "sub": "engineering-applications",
+  "nav": "int",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["Applications of integrals", "Electric charge", "Energy storage", "RMS value", "Work", "Centroid", "Moment of inertia", "Hydrostatic force", "Beam deflection", "Earthwork volume", "Simpson's rule"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/sigexpr.js", "/assets/mathkit.js", "/assets/calc-lab.js"],
+  "faq": [
+    {"q": "ทำไม RMS ของไฟบ้านจึงเป็นค่ายอดหาร √2?", "a": "เพราะ RMS คือรากที่สองของค่าเฉลี่ยของกำลังสอง \\(\\sqrt{\\frac1T\\int v^2dt}\\) และค่าเฉลี่ยของ \\(\\sin^2\\) ในหนึ่งคาบเท่ากับ 1/2 จึงได้ \\(V_m/\\sqrt2\\) ใช้ได้เฉพาะคลื่นไซน์ คลื่นรูปอื่นต้องอินทิเกรตใหม่"},
+    {"q": "แรงดันน้ำบนเขื่อนกระทำที่จุดใด?", "a": "แรงดันเพิ่มขึ้นเชิงเส้นตามความลึก แรงลัพธ์บนผนังแนวตั้งสี่เหลี่ยมจึงกระทำที่ 2/3 ของความลึกจากผิวน้ำ (จุดศูนย์กลางของแรงดัน) ไม่ใช่ที่ครึ่งความลึก หาได้จาก \\(\\int h\\,dF / \\int dF\\)"},
+    {"q": "การโก่งของคานหาด้วยอินทิกรัลอย่างไร?", "a": "เริ่มจาก \\(EI\\,y'' = M(x)\\) อินทิเกรตครั้งแรกได้ความชัน อินทิเกรตครั้งที่สองได้การโก่ง แล้วหาค่าคงที่สองตัวจากเงื่อนไขที่ฐานรองรับ เช่น คานช่วงเดียว y(0) = y(L) = 0 คานยื่น y(0) = y′(0) = 0 เรียกว่าวิธีอินทิเกรตสองครั้ง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/integral-calculus/">อินทิกรัล</a></li><li>การประยุกต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 5.2 · อินทิกรัล · Engineering Applications</p>
+      <h1>การประยุกต์อินทิกรัลทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา</h1>
+      <p class="lede">ถ้าอนุพันธ์ถามว่า “เปลี่ยนเร็วแค่ไหน” อินทิกรัลถามว่า “สะสมได้เท่าไร” วิศวกรไฟฟ้าใช้นับประจุ พลังงาน และค่า RMS วิศวกรเครื่องกลใช้หางาน จุดศูนย์ถ่วง และโมเมนต์ความเฉื่อย วิศวกรโยธาใช้หาแรงดันน้ำบนเขื่อน คุณสมบัติหน้าตัด การโก่งของคาน และปริมาตรดินขุด-ถม ทุกตัวอย่างมีตัวเลขจริง และมีแล็บคานให้เห็นสายอินทิกรัลจากน้ำหนักถึงการโก่ง สูตรใช้รหัส A</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#beam-lab">แล็บคาน</a>
+        <a class="btn btn-ghost btn-sm" href="#electrical">ไฟฟ้า</a>
+        <a class="btn btn-ghost btn-sm" href="#mechanical">เครื่องกล</a>
+        <a class="btn btn-ghost btn-sm" href="#civil">โยธา</a>
+        <a class="btn btn-ghost btn-sm" href="#numerical">อินทิเกรตเชิงตัวเลข</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ทุกปัญหาใช้ความคิดเดียว: แบ่งเป็นชิ้นเล็ก \(dQ = (\text{ความหนาแน่น})\,dx\) แล้วรวมด้วย \(\int\)</li>
+          <li>ไฟฟ้า: \(q = \int i\,dt\), \(W = \int p\,dt\), \(V_{\text{rms}} = \sqrt{\frac1T\int v^2dt}\)</li>
+          <li>เครื่องกล: \(W = \int F\,dx\), \(\bar x = \frac{\int x\,dA}{\int dA}\), \(I = \int r^2dm\)</li>
+          <li>โยธา: \(F = \int\rho gh\,dA\), \(I = \int y^2dA\), \(EIy'' = M\) อินทิเกรตสองครั้งได้การโก่ง</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น charge, energy, rms, work, centroid, inertia, dam, beam, simpson" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">ความคิดเดียวที่ใช้ทุกสาขา: แบ่งแล้วรวม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A1" data-k="element method slice and sum riemann sum accumulation แบ่งแล้วรวม">
+        <p class="tf-n"><b><span class="fid">A1</span> Element method</b> แบ่งเป็นชิ้นเล็กแล้วรวม</p>
+        \[ Q = \lim_{n\to\infty}\sum_{k=1}^{n}\rho(x_k)\,\Delta x = \int_a^b\rho(x)\,dx \]
+        <p class="tf-x">ขั้นตอน: (1) เลือกตัวแปรที่ปริมาณเปลี่ยนตาม (2) เขียนชิ้นเล็ก \(dQ\) ในรูปที่ “คงที่ภายในชิ้น” (3) อินทิเกรตตลอดช่วง · ทบทวน<a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขตและผลบวกรีมันน์</a></p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ===================== ELECTRICAL ===================== -->
+    <section class="tsec" aria-labelledby="electrical">
+    <h2 id="electrical">วิศวกรรมไฟฟ้า: ประจุ พลังงาน ค่าเฉลี่ย และ RMS <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="A2" data-k="charge current integral q = int i dt ประจุ">
+        <p class="tf-n"><b><span class="fid">A2</span> Charge</b> ประจุ</p>
+        \[ q = \int_{t_1}^{t_2}i(t)\,dt \]
+      </div>
+      <div class="tf" id="A3" data-k="capacitor voltage integral of current แรงดันตัวเก็บประจุ">
+        <p class="tf-n"><b><span class="fid">A3</span> Capacitor voltage</b> แรงดันตัวเก็บประจุ</p>
+        \[ v_C(t) = v_C(0) + \frac1C\int_0^t i(\tau)\,d\tau \]
+      </div>
+      <div class="tf" id="A4" data-k="energy power integral W = int p dt stored energy capacitor inductor พลังงาน">
+        <p class="tf-n"><b><span class="fid">A4</span> Energy</b> พลังงาน</p>
+        \[ W = \int p\,dt,\qquad W_C = \int_0^V Cv\,dv = \tfrac12CV^2,\qquad W_L = \tfrac12LI^2 \]
+      </div>
+      <div class="tf" id="A5" data-k="average rms value root mean square ค่าเฉลี่ย ค่าประสิทธิผล">
+        <p class="tf-n"><b><span class="fid">A5</span> Average &amp; RMS</b> ค่าเฉลี่ยและค่าประสิทธิผล</p>
+        \[ V_{\text{avg}} = \frac1T\int_0^Tv\,dt,\qquad V_{\text{rms}} = \sqrt{\frac1T\int_0^Tv^2\,dt} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-ie1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-1 · ประจุจากกระแสลดลง</span><h3>กระแส \(i(t) = 2e^{-3t}\) A ไหลเข้าตัวเก็บประจุ หาประจุที่สะสมใน 1 s แรก และทั้งหมด</h3></div>
+      <ol class="steps">
+        <li>\[ q(1) = \int_0^1 2e^{-3t}dt = \left[-\tfrac23e^{-3t}\right]_0^1 = \tfrac23\left(1 - e^{-3}\right) = 0.6335\ \text{C} \]</li>
+        <li>\[ q(\infty) = \int_0^\infty 2e^{-3t}dt = \tfrac23\ \text{C} \]</li>
+      </ol>
+      <p class="answer">0.634 C ใน 1 วินาที (95% ของทั้งหมด เพราะ 1 s = 3τ) ทั้งหมด 0.667 C</p>
+    </div>
+    <div class="wx" id="ex-ie2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-2 · ชาร์จด้วยกระแสคงที่ และพลังงานในขดลวด</span><h3>(ก) \(C = 100\ \mu\)F เริ่ม 0 V ป้อนกระแสคงที่ 5 mA นาน 2 s (ข) \(L = 0.2\) H มีกระแส 3 A</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(v = \dfrac{1}{C}\int_0^2 0.005\,dt = \dfrac{0.01}{10^{-4}} = 100\) V แรงดันขึ้นเป็นเส้นตรง (หลักของวงจรสร้างคลื่นฟันเลื่อย)</p></li>
+        <li><p>(ข) \(W = \int_0^{3} L\,i\,di = \tfrac12(0.2)(9) = 0.9\) J</p></li>
+      </ol>
+      <p class="answer">(ก) 100 V · (ข) 0.9 J ตัวเลขนี้คือพลังงานที่ไดโอดฟรีวีลต้องรับเมื่อตัดกระแส</p>
+    </div>
+    <div class="wx" id="ex-ie3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-3 · เรียงกระแสครึ่งคลื่น</span><h3>หาค่าเฉลี่ยและ RMS ของ \(v = V_m\sin\omega t\) ช่วงครึ่งบวก และ 0 ช่วงครึ่งลบ เมื่อ \(V_m = 311\) V</h3></div>
+      <ol class="steps">
+        <li><p>ใช้ \(\theta = \omega t\) คาบ \(2\pi\)</p>\[ V_{\text{avg}} = \frac{1}{2\pi}\int_0^\pi V_m\sin\theta\,d\theta = \frac{V_m}{2\pi}\left[-\cos\theta\right]_0^\pi = \frac{V_m}{\pi} \]</li>
+        <li>\[ V_{\text{rms}}^2 = \frac{1}{2\pi}\int_0^\pi V_m^2\sin^2\theta\,d\theta = \frac{V_m^2}{2\pi}\cdot\frac{\pi}{2} = \frac{V_m^2}{4} \Rightarrow V_{\text{rms}} = \frac{V_m}{2} \]</li>
+      </ol>
+      <p class="answer">\(V_{\text{avg}} = 311/\pi = 99.0\) V, \(V_{\text{rms}} = 155.5\) V เลือกรูปคลื่นในแล็บด้านล่างแล้วเทียบได้ทันที</p>
+    </div>
+    <div class="cl-rms" data-wave="half"></div>
+    </section>
+
+    <!-- ===================== MECHANICAL ===================== -->
+    <section class="tsec" aria-labelledby="mechanical">
+    <h2 id="mechanical">วิศวกรรมเครื่องกล: งาน จุดศูนย์ถ่วง ความเฉื่อย และอิมพัลส์ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="A6" data-k="work variable force spring hooke งาน สปริง">
+        <p class="tf-n"><b><span class="fid">A6</span> Work</b> งานของแรงที่เปลี่ยนค่า</p>
+        \[ W = \int_a^bF(x)\,dx,\qquad W_{\text{spring}} = \int_{x_1}^{x_2}kx\,dx = \tfrac12k\left(x_2^2 - x_1^2\right) \]
+      </div>
+      <div class="tf" id="A7" data-k="centroid center of mass area x bar y bar จุดศูนย์ถ่วง เซนทรอยด์">
+        <p class="tf-n"><b><span class="fid">A7</span> Centroid of an area</b> เซนทรอยด์</p>
+        \[ \bar x = \frac{\int x\,dA}{\int dA},\qquad \bar y = \frac{\int \tfrac{y}{2}\,y\,dx}{\int y\,dx}\ (\text{แถบแนวตั้งใต้ } y = f(x)) \]
+      </div>
+      <div class="tf" id="A8" data-k="mass moment of inertia rod disk I = int r^2 dm โมเมนต์ความเฉื่อย">
+        <p class="tf-n"><b><span class="fid">A8</span> Mass moment of inertia</b> โมเมนต์ความเฉื่อยของมวล</p>
+        \[ I = \int r^2\,dm,\quad I_{\text{rod, end}} = \tfrac13mL^2,\quad I_{\text{disk}} = \tfrac12mR^2 \]
+      </div>
+      <div class="tf" id="A9" data-k="impulse momentum force time integral อิมพัลส์">
+        <p class="tf-n"><b><span class="fid">A9</span> Impulse</b> อิมพัลส์</p>
+        \[ J = \int F\,dt = \Delta p \]
+      </div>
+    </div>
+    <div class="wx" id="ex-im1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-4 · งานยืดสปริง</span><h3>สปริง \(k = 2000\) N/m ยืดจาก 5 cm เป็น 15 cm ต้องใช้งานเท่าใด</h3></div>
+      <ol class="steps"><li>\[ W = \int_{0.05}^{0.15}2000x\,dx = 1000\left(0.15^2 - 0.05^2\right) = 1000(0.02) = 20\ \text{J} \]</li></ol>
+      <p class="answer">20 J (ไม่ใช่ \(kx\cdot\Delta x = 2000(0.1)(0.1)\) เพราะแรงไม่คงที่)</p>
+    </div>
+    <div class="wx" id="ex-im2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-5 · เซนทรอยด์ของพื้นที่ใต้พาราโบลา</span><h3>พื้นที่ใต้ \(y = x^2\) จาก \(x = 0\) ถึง 2</h3></div>
+      <ol class="steps">
+        <li>\[ A = \int_0^2x^2dx = \tfrac83 \]</li>
+        <li>\[ \bar x = \frac{\int_0^2 x\cdot x^2dx}{A} = \frac{4}{8/3} = 1.5,\qquad \bar y = \frac{\int_0^2\tfrac12(x^2)^2dx}{A} = \frac{32/10}{8/3} = 1.2 \]</li>
+      </ol>
+      <p class="answer">\((\bar x, \bar y) = (1.5, 1.2)\) เอียงไปทางขวาเพราะพื้นที่ส่วนใหญ่อยู่ที่ x มาก</p>
+      <figure><!--FIG:int-centroid--><svg class="mf" viewBox="0 0 420 260" role="img" aria-label="เซนทรอยด์ของพื้นที่ใต้ y = x^2 จาก 0 ถึง 2"><rect class="mf-bg" x="20" y="16" width="380" height="220" rx="6"/><line class="mf-ax" x1="20" y1="222" x2="400" y2="222"/><line class="mf-ax" x1="50.4" y1="16" x2="50.4" y2="236"/><clipPath id="g3"><rect x="20" y="16" width="380" height="220"/></clipPath><g clip-path="url(#g3)"><path class="mf-sig" d="M20 220.1L21.3 220.2L22.5 220.4L23.8 220.5L25.1 220.7L26.3 220.8L27.6 220.9L28.9 221L30.1 221.1L31.4 221.2L32.7 221.3L33.9 221.4L35.2 221.5L36.5 221.6L37.7 221.6L39 221.7L40.3 221.7L41.5 221.8L42.8 221.8L44.1 221.9L45.3 221.9L46.6 221.9L47.9 221.9L49.1 222L50.4 222L51.7 222L52.9 221.9L54.2 221.9L55.5 221.9L56.7 221.9L58 221.8L59.3 221.8L60.5 221.7L61.8 221.7L63.1 221.6L64.3 221.6L65.6 221.5L66.9 221.4L68.1 221.3L69.4 221.2L70.7 221.1L71.9 221L73.2 220.9L74.5 220.8L75.7 220.7L77 220.5L78.3 220.4L79.5 220.2L80.8 220.1L82.1 219.9L83.3 219.8L84.6 219.6L85.9 219.4L87.1 219.2L88.4 219L89.7 218.8L90.9 218.6L92.2 218.4L93.5 218.2L94.7 218L96 217.7L97.3 217.5L98.5 217.3L99.8 217L101.1 216.8L102.3 216.5L103.6 216.2L104.9 215.9L106.1 215.7L107.4 215.4L108.7 215.1L109.9 214.8L111.2 214.5L112.5 214.2L113.7 213.8L115 213.5L116.3 213.2L117.5 212.8L118.8 212.5L120.1 212.1L121.3 211.8L122.6 211.4L123.9 211L125.1 210.6L126.4 210.3L127.7 209.9L128.9 209.5L130.2 209.1L131.5 208.6L132.7 208.2L134 207.8L135.3 207.4L136.5 206.9L137.8 206.5L139.1 206L140.3 205.6L141.6 205.1L142.9 204.6L144.1 204.2L145.4 203.7L146.7 203.2L147.9 202.7L149.2 202.2L150.5 201.7L151.7 201.2L153 200.6L154.3 200.1L155.5 199.6L156.8 199L158.1 198.5L159.3 197.9L160.6 197.4L161.9 196.8L163.1 196.2L164.4 195.6L165.7 195L166.9 194.4L168.2 193.8L169.5 193.2L170.7 192.6L172 192L173.3 191.4L174.5 190.7L175.8 190.1L177.1 189.5L178.3 188.8L179.6 188.1L180.9 187.5L182.1 186.8L183.4 186.1L184.7 185.4L185.9 184.7L187.2 184L188.5 183.3L189.7 182.6L191 181.9L192.3 181.2L193.5 180.5L194.8 179.7L196.1 179L197.3 178.2L198.6 177.5L199.9 176.7L201.1 175.9L202.4 175.1L203.7 174.4L204.9 173.6L206.2 172.8L207.5 172L208.7 171.2L210 170.4L211.3 169.5L212.5 168.7L213.8 167.9L215.1 167L216.3 166.2L217.6 165.3L218.9 164.5L220.1 163.6L221.4 162.7L222.7 161.8L223.9 160.9L225.2 160.1L226.5 159.2L227.7 158.2L229 157.3L230.3 156.4L231.5 155.5L232.8 154.6L234.1 153.6L235.3 152.7L236.6 151.7L237.9 150.8L239.1 149.8L240.4 148.8L241.7 147.8L242.9 146.9L244.2 145.9L245.5 144.9L246.7 143.9L248 142.9L249.3 141.8L250.5 140.8L251.8 139.8L253.1 138.7L254.3 137.7L255.6 136.6L256.9 135.6L258.1 134.5L259.4 133.5L260.7 132.4L261.9 131.3L263.2 130.2L264.5 129.1L265.7 128L267 126.9L268.3 125.8L269.5 124.7L270.8 123.5L272.1 122.4L273.3 121.3L274.6 120.1L275.9 119L277.1 117.8L278.4 116.6L279.7 115.5L280.9 114.3L282.2 113.1L283.5 111.9L284.7 110.7L286 109.5L287.3 108.3L288.5 107.1L289.8 105.8L291.1 104.6L292.3 103.4L293.6 102.1L294.9 100.9L296.1 99.6L297.4 98.4L298.7 97.1L299.9 95.8L301.2 94.5L302.5 93.2L303.7 91.9L305 90.6L306.3 89.3L307.5 88L308.8 86.7L310.1 85.4L311.3 84L312.6 82.7L313.9 81.3L315.1 80L316.4 78.6L317.7 77.2L318.9 75.9L320.2 74.5L321.5 73.1L322.7 71.7L324 70.3L325.3 68.9L326.5 67.5L327.8 66.1L329.1 64.6L330.3 63.2L331.6 61.8L332.9 60.3L334.1 58.9L335.4 57.4L336.7 55.9L337.9 54.5L339.2 53L340.5 51.5L341.7 50L343 48.5L344.3 47L345.5 45.5L346.8 44L348.1 42.4L349.3 40.9L350.6 39.4L351.9 37.8L353.1 36.3L354.4 34.7L355.7 33.2L356.9 31.6L358.2 30L359.5 28.4L360.7 26.8L362 25.2L363.3 23.6L364.5 22L365.8 20.4L367.1 18.8L368.3 17.2L369.6 15.5L370.9 13.9L372.1 12.2L373.4 10.6L374.7 8.9L375.9 7.3L377.2 5.6L378.5 3.9L379.7 2.2L381 0.5L382.3 -1.2L383.5 -2.9L384.8 -4.6L386.1 -6.3L387.3 -8L388.6 -9.8L389.9 -11.5L391.1 -13.3L392.4 -15L393.7 -16.8L394.9 -18.5L396.2 -20.3L397.5 -22.1L398.7 -23.9L400 -25.7"/><polygon class="mf-fill" points="50.4,222 50.4,222 55.5,221.9 60.5,221.7 65.6,221.5 70.7,221.1 75.7,220.7 80.8,220.1 85.9,219.4 90.9,218.6 96,217.7 101.1,216.8 106.1,215.7 111.2,214.5 116.3,213.2 121.3,211.8 126.4,210.3 131.5,208.6 136.5,206.9 141.6,205.1 146.7,203.2 151.7,201.2 156.8,199 161.9,196.8 166.9,194.4 172,192 177.1,189.5 182.1,186.8 187.2,184 192.3,181.2 197.3,178.2 202.4,175.1 207.5,172 212.5,168.7 217.6,165.3 222.7,161.8 227.7,158.2 232.8,154.6 237.9,150.8 242.9,146.9 248,142.9 253.1,138.7 258.1,134.5 263.2,130.2 268.3,125.8 273.3,121.3 278.4,116.6 283.5,111.9 288.5,107.1 293.6,102.1 298.7,97.1 303.7,91.9 308.8,86.7 313.9,81.3 318.9,75.9 324,70.3 329.1,64.6 334.1,58.9 339.2,53 344.3,47 349.3,40.9 354.4,34.7 354.4,222"/><rect class="mf-fill2" x="232.8" y="154.6" width="10.6" height="67.4"/><circle class="mf-dot" cx="278.4" cy="165.8" r="5"/></g><text class="mf-lab" x="250" y="150" text-anchor="start">(x̄, ȳ) = (1.5, 1.2)</text><text class="mf-k" x="150" y="210" text-anchor="start">แถบ dA = y dx</text></svg><!--/FIG--></figure>
+    </div>
+    <div class="wx" id="ex-im3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-6 · ความเฉื่อยของแกนหมุน และอิมพัลส์</span><h3>(ก) แท่งยาว L มวล m หมุนรอบปลาย (ข) แรงกระแทก \(F = 500\sin(\pi t/0.01)\) N นาน 0.01 s</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(dm = \tfrac mL dx\): \(I = \int_0^L x^2\tfrac mL dx = \tfrac13mL^2\)</p></li>
+        <li><p>(ข) \(J = \int_0^{0.01}500\sin\dfrac{\pi t}{0.01}dt = 500\cdot\dfrac{0.01}{\pi}\left[-\cos\dfrac{\pi t}{0.01}\right]_0^{0.01} = \dfrac{10}{\pi} = 3.18\) N·s</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac13mL^2\) (มากกว่ารอบจุดกึ่งกลาง \(\tfrac1{12}mL^2\) ถึง 4 เท่า) · (ข) 3.18 N·s</p>
+    </div>
+    <div class="wx" id="ex-im4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-7 · งานสูบน้ำออกจากถัง</span><h3>ถังทรงกระบอกรัศมี 1 m สูง 3 m เต็มน้ำ สูบออกทางขอบบนทั้งหมด (\(\rho = 1000\) kg/m³)</h3></div>
+      <ol class="steps">
+        <li><p>ชิ้นน้ำบางที่ความสูง y หนา dy: น้ำหนัก \(\rho g\pi(1)^2dy\) ต้องยกขึ้น \(3 - y\)</p></li>
+        <li>\[ W = \int_0^3 1000(9.81)\pi(3 - y)\,dy = 9810\pi\left[3y - \tfrac{y^2}{2}\right]_0^3 = 9810\pi(4.5) = 138.7\ \text{kJ} \]</li>
+      </ol>
+      <p class="answer">138.7 kJ ปั๊ม 1 kW ที่ประสิทธิภาพ 60% ใช้เวลาราว 231 s</p>
+    </div>
+    </section>
+
+    <!-- ===================== CIVIL ===================== -->
+    <section class="tsec" aria-labelledby="civil">
+    <h2 id="civil">วิศวกรรมโยธา: เขื่อน หน้าตัด น้ำหนักแผ่ และคาน <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="A10" data-k="hydrostatic force dam pressure center of pressure แรงดันน้ำ เขื่อน">
+        <p class="tf-n"><b><span class="fid">A10</span> Hydrostatic force</b> แรงดันน้ำ</p>
+        \[ F = \int_0^H\rho g h\,w(h)\,dh,\qquad h_{cp} = \frac{\int h\,dF}{\int dF} \]
+      </div>
+      <div class="tf" id="A11" data-k="second moment of area rectangle bh^3/12 โมเมนต์ความเฉื่อยของพื้นที่">
+        <p class="tf-n"><b><span class="fid">A11</span> Second moment of area</b> โมเมนต์ความเฉื่อยของหน้าตัด</p>
+        \[ I_x = \int y^2\,dA,\qquad I_{\text{rect}} = \int_{-h/2}^{h/2}y^2b\,dy = \frac{bh^3}{12} \]
+      </div>
+      <div class="tf" id="A12" data-k="distributed load resultant location triangular load แรงลัพธ์น้ำหนักแผ่">
+        <p class="tf-n"><b><span class="fid">A12</span> Distributed load resultant</b> แรงลัพธ์ของน้ำหนักแผ่</p>
+        \[ R = \int_0^Lw(x)\,dx,\qquad \bar x = \frac{\int_0^Lx\,w(x)\,dx}{R} \]
+      </div>
+      <div class="tf" id="A13" data-k="double integration beam deflection boundary conditions อินทิเกรตสองครั้ง การโก่ง">
+        <p class="tf-n"><b><span class="fid">A13</span> Double integration</b> การโก่งด้วยการอินทิเกรตสองครั้ง</p>
+        \[ EI\,y' = \int M\,dx + C_1,\qquad EI\,y = \iint M\,dx\,dx + C_1x + C_2 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-ic1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-8 · แรงดันน้ำบนเขื่อน</span><h3>หน้าเขื่อนแนวตั้งกว้าง 20 m น้ำลึก 10 m หาแรงลัพธ์และตำแหน่ง</h3></div>
+      <ol class="steps">
+        <li>\[ F = \int_0^{10}1000(9.81)h(20)\,dh = 196{,}200\left[\tfrac{h^2}{2}\right]_0^{10} = 9.81\times10^6\ \text{N} \]</li>
+        <li>\[ h_{cp} = \frac{\int_0^{10}h\cdot h\,dh}{\int_0^{10}h\,dh} = \frac{1000/3}{50} = 6.67\ \text{m} \]</li>
+      </ol>
+      <p class="answer">9.81 MN กระทำที่ลึก 6.67 m (2/3 ของความลึก) เป็นจุดที่ใช้คำนวณโมเมนต์พลิกคว่ำของเขื่อน</p>
+      <figure><!--FIG:int-dam--><svg class="mf" viewBox="0 0 520 280" role="img" aria-label="แรงดันน้ำเพิ่มเชิงเส้นตามความลึก แรงลัพธ์กระทำที่ 2/3 ของความลึก"><rect class="mf-fill2" x="20" y="30" width="280" height="220"/><path class="mf-box" d="M300 20 L300 250 L420 250 L340 20 Z"/><line class="mf-line" x1="282" y1="52" x2="297" y2="52"/><path class="mf-arrow" d="M298 52 l-8 -4 v8 z"/><line class="mf-line" x1="264" y1="74" x2="297" y2="74"/><path class="mf-arrow" d="M298 74 l-8 -4 v8 z"/><line class="mf-line" x1="246" y1="96" x2="297" y2="96"/><path class="mf-arrow" d="M298 96 l-8 -4 v8 z"/><line class="mf-line" x1="228" y1="118" x2="297" y2="118"/><path class="mf-arrow" d="M298 118 l-8 -4 v8 z"/><line class="mf-line" x1="210" y1="140" x2="297" y2="140"/><path class="mf-arrow" d="M298 140 l-8 -4 v8 z"/><line class="mf-line" x1="192" y1="162" x2="297" y2="162"/><path class="mf-arrow" d="M298 162 l-8 -4 v8 z"/><line class="mf-line" x1="174" y1="184" x2="297" y2="184"/><path class="mf-arrow" d="M298 184 l-8 -4 v8 z"/><line class="mf-line" x1="156" y1="206" x2="297" y2="206"/><path class="mf-arrow" d="M298 206 l-8 -4 v8 z"/><line class="mf-line" x1="138" y1="228" x2="297" y2="228"/><path class="mf-arrow" d="M298 228 l-8 -4 v8 z"/><line class="mf-line" x1="120" y1="250" x2="297" y2="250"/><path class="mf-arrow" d="M298 250 l-8 -4 v8 z"/><line class="mf-dash" x1="120" y1="30" x2="300" y2="250"/><line class="mf-pole" x1="180" y1="176.7" x2="296" y2="176.7" style="stroke-width:4"/><text class="mf-lab" x="40" y="168.7" text-anchor="start">F = 9.81 MN ที่ลึก 2H/3 = 6.67 m</text><text class="mf-k" x="30" y="46" text-anchor="start">ผิวน้ำ h = 0</text><text class="mf-k" x="30" y="244" text-anchor="start">h = H = 10 m: p = ρgH = 98.1 kPa</text><text class="mf-lab" x="346" y="90" text-anchor="start">เขื่อน</text></svg><!--/FIG--></figure>
+    </div>
+    <div class="wx" id="ex-ic2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-9 · หน้าตัดคานและน้ำหนักแผ่สามเหลี่ยม</span><h3>(ก) \(I\) ของหน้าตัด 20 × 40 cm (ข) น้ำหนักแผ่ \(w = 12x/6\) kN/m บนคานยาว 6 m</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(I = \dfrac{bh^3}{12} = \dfrac{0.2(0.4)^3}{12} = 1.067\times10^{-3}\) m⁴ (วางด้านยาวตั้งแข็งกว่าวางนอน 4 เท่า เพราะ h ยกกำลัง 3)</p></li>
+        <li><p>(ข) \(R = \int_0^6 2x\,dx = 36\) kN · \(\bar x = \dfrac{\int_0^6 2x^2dx}{36} = \dfrac{144}{36} = 4\) m (2/3 ของความยาวจากปลายที่ศูนย์)</p></li>
+      </ol>
+      <p class="answer">(ก) \(1.067\times10^{-3}\) m⁴ · (ข) 36 kN ที่ x = 4 m</p>
+    </div>
+    <div class="wx" id="ex-ic3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-10 · การโก่งของคานยื่น</span><h3>คานยื่นยาว L ยึดแน่นที่ x = 0 รับแรง P ที่ปลาย หาการโก่งที่ปลาย</h3></div>
+      <ol class="steps">
+        <li><p>\(M(x) = -P(L - x)\) <a class="tag tf" href="#A13">A13</a></p>\[ EIy' = -P\left(Lx - \tfrac{x^2}{2}\right) + C_1,\quad y'(0) = 0 \Rightarrow C_1 = 0 \]</li>
+        <li>\[ EIy = -P\left(\tfrac{Lx^2}{2} - \tfrac{x^3}{6}\right) + C_2,\quad y(0) = 0 \Rightarrow C_2 = 0 \]</li>
+        <li>\[ y(L) = -\frac{P}{EI}\left(\frac{L^3}{2} - \frac{L^3}{6}\right) = -\frac{PL^3}{3EI} \]</li>
+      </ol>
+      <p class="answer">\(\delta = PL^3/(3EI)\) เช่น P = 10 kN, L = 3 m, EI = 20,000 kN·m² ได้ 4.5 mm · ตรวจด้วยแล็บด้านล่าง (เลือกคานยื่น ตั้ง w = 0)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="beam-lab">
+    <h2 id="beam-lab">แล็บคาน: น้ำหนัก → แรงเฉือน → โมเมนต์ → ความชัน → การโก่ง</h2>
+    <p>ห้ากราฟนี้คือสายอินทิกรัลที่สวยที่สุดในวิศวกรรม: อินทิเกรตน้ำหนักได้แรงเฉือน อินทิเกรตแรงเฉือนได้โมเมนต์ อินทิเกรตโมเมนต์ (หาร EI) ได้ความชัน อินทิเกรตอีกครั้งได้การโก่ง ย้อนกลับขึ้นไปคือการหาอนุพันธ์ ลองเลื่อนตำแหน่งแรงแล้วดูว่าโมเมนต์สูงสุดตามแรงเฉือนที่เปลี่ยนเครื่องหมายเสมอ และการโก่งสูงสุดอยู่ตรงที่ความชันเป็นศูนย์</p>
+    <div class="cl-beam" data-type="ss" data-load="both"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="numerical">
+    <h2 id="numerical">อินทิเกรตเชิงตัวเลข: งานดินและข้อมูลสนาม <span class="lv lv-i">กลาง</span></h2>
+    <p>ในงานสนามเรามีแต่ตัวเลขที่วัดได้เป็นช่วง ๆ ไม่มีสูตร เช่น พื้นที่หน้าตัดดินทุก 20 m หรือกระแสที่บันทึกทุก 1 ms จึงอินทิเกรตด้วยกฎสี่เหลี่ยมคางหมูหรือซิมป์สัน</p>
+    <div class="tf-grid">
+      <div class="tf" id="A14" data-k="trapezoidal rule numerical integration กฎสี่เหลี่ยมคางหมู">
+        <p class="tf-n"><b><span class="fid">A14</span> Trapezoidal rule</b> สี่เหลี่ยมคางหมู</p>
+        \[ \int_a^bf\,dx \approx h\left[\tfrac{f_0}{2} + f_1 + \cdots + f_{n-1} + \tfrac{f_n}{2}\right] \]
+        <p class="tf-x">ในงานทางเรียกว่าวิธีพื้นที่ปลายเฉลี่ย (average end area)</p>
+      </div>
+      <div class="tf" id="A15" data-k="simpson rule numerical integration even intervals กฎของซิมป์สัน">
+        <p class="tf-n"><b><span class="fid">A15</span> Simpson's rule</b> ซิมป์สัน (n คู่)</p>
+        \[ \int_a^bf\,dx \approx \frac h3\left[f_0 + 4f_1 + 2f_2 + 4f_3 + \cdots + 4f_{n-1} + f_n\right] \]
+        <p class="tf-x">แม่นตรงกับพหุนามถึงดีกรีสาม ใกล้สูตรปริซมอยด์ (prismoidal formula) ของงานดิน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-in1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-11 · ปริมาตรงานดินขุด</span><h3>พื้นที่หน้าตัดดินขุดทุก 20 m: 12, 18, 25, 21, 15 m² หาปริมาตรรวม 80 m</h3></div>
+      <ol class="steps">
+        <li><p>สี่เหลี่ยมคางหมู</p>\[ V \approx 20\left[\tfrac{12}{2} + 18 + 25 + 21 + \tfrac{15}{2}\right] = 20(77.5) = 1550\ \text{m}^3 \]</li>
+        <li><p>ซิมป์สัน (4 ช่วง)</p>\[ V \approx \frac{20}{3}\left[12 + 4(18) + 2(25) + 4(21) + 15\right] = \frac{20}{3}(233) = 1553.3\ \text{m}^3 \]</li>
+      </ol>
+      <p class="answer">ประมาณ 1,550 m³ สองวิธีต่างกันเพียง 0.2% ใช้คำนวณค่าขนส่งดินและค่าจ้างเหมา</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">อ่านต่อ</h2>
+    <ul>
+      <li>เทคนิคอินทิเกรตทั้งหมด: <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a> · ทบทวนพื้นฐาน: <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น</a></li>
+      <li>ด้านกลับ (อัตราการเปลี่ยนแปลง): <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์</a></li>
+      <li>อินทิกรัลในการวิเคราะห์ฮาร์มอนิก: <a href="/learn/fourier-series/coefficients/">สัมประสิทธิ์ฟูเรียร์</a> · พลังงานและเพาเวอร์แฟกเตอร์: <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v i p</a></li>
+      <li>R. C. Hibbeler, <i>Mechanics of Materials</i> และ <i>Statics</i> · F. M. White, <i>Fluid Mechanics</i> (hydrostatic force)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

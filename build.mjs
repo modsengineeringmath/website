@@ -65,6 +65,7 @@ export const TOPICS = [
   {
     // A series: hub = the derivative lesson, plus the engineering-applications page
     slug: "differential-calculus",
+    hubFx: true, hubShort: "สูตรอนุพันธ์", hubPrefix: "D",
     title: "อนุพันธ์ (Differential Calculus)",
     en: "Differential Calculus",
     sym: "dy/dx",
@@ -77,6 +78,7 @@ export const TOPICS = [
   {
     // A series: hub = the integral formulas page; calculus-basics moved in here as 5.1 (old URL /learn/calculus-basics/ redirects)
     slug: "integral-calculus",
+    hubFx: true, hubShort: "สูตรอินทิกรัล (หน้าหลัก)", hubPrefix: "",
     title: "อินทิกรัล: สูตรและวิธีทำ",
     en: "Integral Calculus",
     sym: "∫",
@@ -173,6 +175,7 @@ export const TOPICS = [
   {
     // A series since 2026-10-14: hub = definition, existence, table and roadmap; sub-pages go deep (complex analysis → ROC → properties → ODEs → inverse)
     slug: "laplace-transform",
+    hubFx: true, hubShort: "นิยาม · ตาราง", hubPrefix: "L",
     title: "การแปลงลาปลาซ",
     en: "Laplace Transform",
     sym: "ℒ",
@@ -768,8 +771,11 @@ function seriesCount(t, kind) {
 // Card format: <div class="tf" id="M9" data-k="keywords"><p class="tf-n"><b><span class="fid">M9</span> English</b> ไทย</p> \[ … \]
 function formulaIndex(t) {
   const out = [];
-  t.sub.forEach((s) => {
-    const file = path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
+  // topics with hubFx also index the formula cards on the hub page itself (shown as "ภาพรวม")
+  const HUB = { slug: "", short: t.hubShort || "ภาพรวม", prefix: t.hubPrefix || "", hub: true };
+  const pages = (t.hubFx ? [HUB] : []).concat(t.sub);
+  pages.forEach((s) => {
+    const file = s.hub ? path.join(ROOT, "src/pages/learn", t.slug, "index.html") : path.join(ROOT, "src/pages/learn", t.slug, s.slug + ".html");
     if (!fs.existsSync(file)) return;
     const src = fs.readFileSync(file, "utf8");
     const re = /<div class="tf[^"]*" id="([A-Z]\d+[a-z]?)" data-k="([^"]*)">\s*<p class="tf-n"><b><span class="fid">[^<]*<\/span>\s*([\s\S]*?)<\/b>([\s\S]*?)<\/p>\s*(?:<div class="wtfig">[\s\S]*?<\/div>\s*)?(\\\[[\s\S]*?\\\])?/g;
@@ -786,9 +792,9 @@ function formulaIndex(t) {
     <input id="fxFilter" type="search" placeholder="${esc(t.fxHint || "พิมพ์ เช่น inverse, det, eigen, คราเมอร์, ทรานสโพส, rank, 2x2")}" autocomplete="off">
     <span class="tf-count mono" id="fxCount" aria-live="polite">ทั้งหมด ${out.length} สูตร</span>
   </div>
-  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${t.sub.filter((s) => s.prefix).map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug}">${s.prefix} · ${esc(s.short)}</button>`).join("")}</div>
+  <div class="fx-chips" role="group" aria-label="กรองตามหน้า"><button type="button" aria-pressed="true" data-p="">ทุกหน้า</button>${pages.filter((s) => s.prefix || s.hub).map((s) => `<button type="button" aria-pressed="false" data-p="${s.slug || "hub"}">${s.prefix ? s.prefix + " · " : ""}${esc(s.short)}</button>`).join("")}</div>
   <ol class="fx-list">
-${out.map((f) => `    <li class="fx" data-p="${f.s.slug}" data-k="${esc(hay(f))}"><a class="fx-h" href="${seriesUrl(t, f.s)}#${f.id}"><span class="fid">${f.id}</span><b>${f.en}</b><span class="fx-th">${esc(f.th)}</span></a>${f.tex ? `<div class="fx-f">${f.tex}</div>` : ""}</li>`).join("\n")}
+${out.map((f) => `    <li class="fx" data-p="${f.s.slug || "hub"}" data-k="${esc(hay(f))}"><a class="fx-h" href="${seriesUrl(t, f.s.hub ? null : f.s)}#${f.id}"><span class="fid">${f.id}</span><b>${f.en}</b><span class="fx-th">${esc(f.th)}</span></a>${f.tex ? `<div class="fx-f">${f.tex}</div>` : ""}</li>`).join("\n")}
   </ol>
   <p class="fx-empty" id="fxEmpty" hidden>ไม่พบสูตรที่ตรงกัน ลองพิมพ์คำอื่น หรือใช้ภาษาอังกฤษ เช่น inverse, determinant, eigenvalue</p>
 </div>`;

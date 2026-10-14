@@ -1,0 +1,223 @@
+<!--meta
+{
+  "title": "การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา: โครงถัก สติฟเนส โหมดการสั่น การไหลของกำลัง กำลังสองน้อยสุด | อาจารย์มด",
+  "h1": "การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา",
+  "description": "พีชคณิตเชิงเส้นในงานวิศวกรรมจริงพร้อมตัวเลข ไฟฟ้า: เมทริกซ์อุบัติการณ์ KCL KVL และ G = AYAᵀ การไหลของกำลังแบบ DC การสอบเทียบเซนเซอร์ด้วยกำลังสองน้อยสุด · เครื่องกล: ระบบมวล-สปริงหลายองศาอิสระ ค่าเฉพาะคือความถี่ธรรมชาติ วิธีสติฟเนส · โยธา: โครงถักด้วยวิธีจุดต่อแบบเมทริกซ์ ชิ้นส่วนแกน การปรับแก้งานระดับ และสมดุลการจราจร พร้อมแล็บโครงถักและแล็บโหมดการสั่น",
+  "ogTitle": "พีชคณิตเชิงเส้นในงานไฟฟ้า เครื่องกล โยธา: โครงถัก โหมดการสั่น การไหลของกำลัง",
+  "lesson": "linear-algebra",
+  "sub": "engineering-applications",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Incidence matrix", "Nodal analysis", "DC power flow", "Least squares", "Multi-degree-of-freedom vibration", "Natural frequencies", "Direct stiffness method", "Truss analysis", "Leveling network adjustment", "Traffic flow network"],
+  "scripts": ["/assets/linalg.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/la-eng.js"],
+  "faq": [
+    {"q": "ทำไมงานโครงสร้างและงานวงจรใช้เมทริกซ์เหมือนกัน?", "a": "เพราะทั้งคู่คือเครือข่ายที่ต้องสมดุลทุกจุดต่อ วงจรใช้ KCL (ผลรวมกระแสเป็นศูนย์) โครงสร้างใช้ผลรวมแรงเป็นศูนย์ เมื่อเขียนครบทุกจุดได้ระบบสมการ Ax = b และเมทริกซ์ความนำของวงจรกับเมทริกซ์สติฟเนสของโครงสร้างมีรูปแบบเดียวกัน คือสมมาตร ทแยงเด่น และสร้างจาก AᵀKA"},
+    {"q": "ค่าเฉพาะเกี่ยวกับการสั่นอย่างไร?", "a": "ระบบมวล-สปริงหลายองศาอิสระมีสมการ Mẍ + Kx = 0 ลองคำตอบ x = φ sin ωt ได้ (K − ω²M)φ = 0 ซึ่งคือปัญหาค่าเฉพาะ ค่าเฉพาะ ω² ให้ความถี่ธรรมชาติ และเวกเตอร์เฉพาะ φ คือรูปโหมดการสั่น อาคารหลายชั้นและเพลาเครื่องจักรวิเคราะห์ด้วยวิธีนี้"},
+    {"q": "ระบบสมการที่มีสมการมากกว่าตัวไม่รู้ใช้ทำอะไร?", "a": "ใช้กับข้อมูลที่วัดซ้ำและมีความคลาดเคลื่อน เช่น งานระดับที่วัดเกินจำนวนหมุด หรือสอบเทียบเซนเซอร์หลายจุด ไม่มีคำตอบที่ตรงทุกสมการ จึงหาคำตอบที่ผลรวมกำลังสองของความคลาดเคลื่อนน้อยสุดด้วยสมการปกติ AᵀAx = Aᵀb"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>การประยุกต์ ไฟฟ้า · เครื่องกล · โยธา</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 7.8 · พีชคณิตเชิงเส้น · Engineering Applications</p>
+      <h1>การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา</h1>
+      <p class="lede">ทุกครั้งที่วิศวกรมีหลายสิ่งที่ผูกกันเป็นเครือข่าย ไม่ว่าจะเป็นโนดในวงจร บัสในระบบไฟฟ้า มวลในเครื่องจักร จุดต่อในโครงถัก หรือหมุดในงานสำรวจ ผลลัพธ์คือระบบสมการเชิงเส้น หน้านี้รวบรวมงานจริงจากสามสาขาที่ใช้เครื่องมือในชุดนี้ทั้งหมด: การลดแถว อินเวอร์ส ค่าเฉพาะ และกำลังสองน้อยสุด พร้อมแล็บโครงถักและแล็บโหมดการสั่นให้ลองเปลี่ยนค่าเอง สูตรใช้รหัส G</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#truss">แล็บโครงถัก</a>
+        <a class="btn btn-ghost btn-sm" href="#vibration">แล็บโหมดการสั่น</a>
+        <a class="btn btn-ghost btn-sm" href="#electrical">ไฟฟ้า</a>
+        <a class="btn btn-ghost btn-sm" href="#mechanical">เครื่องกล</a>
+        <a class="btn btn-ghost btn-sm" href="#civil">โยธา</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เครือข่าย + สมดุลทุกจุด = \(A\mathbf x = \mathbf b\) (KCL, ΣF = 0, การอนุรักษ์ปริมาณรถ)</li>
+          <li>เมทริกซ์ความนำ \(G = AYA^T\) กับเมทริกซ์สติฟเนส \(K = A^TkA\) มีโครงสร้างเดียวกัน</li>
+          <li>การสั่น: \((K - \omega^2M)\boldsymbol\phi = 0\) ค่าเฉพาะคือความถี่ธรรมชาติ</li>
+          <li>ข้อมูลเกิน: \(A^TA\hat{\mathbf x} = A^T\mathbf b\) (กำลังสองน้อยสุด)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น incidence, power flow, least squares, vibration, stiffness, truss, leveling, traffic" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ===================== ELECTRICAL ===================== -->
+    <section class="tsec" aria-labelledby="electrical">
+    <h2 id="electrical">วิศวกรรมไฟฟ้า: เมทริกซ์อุบัติการณ์ การไหลของกำลัง และการสอบเทียบ <span class="lv lv-i">กลาง</span></h2>
+    <p>หน้า<a href="/learn/linear-algebra/ee-applications/">ประยุกต์ในวิศวกรรมไฟฟ้า</a>มีเมช โนด เฟสเซอร์ สองพอร์ต และ Y-bus ครบแล้ว หัวข้อนี้เพิ่มมุมมองที่เป็นระบบที่สุด คือเขียนวงจรทั้งวงด้วยเมทริกซ์อุบัติการณ์ ซึ่งเป็นวิธีที่โปรแกรมจำลองวงจรอย่าง SPICE ใช้จริง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="G1" data-k="incidence matrix kcl kvl nodal conductance G = A Y A^T เมทริกซ์อุบัติการณ์">
+        <p class="tf-n"><b><span class="fid">G1</span> Incidence matrix formulation</b> เมทริกซ์อุบัติการณ์</p>
+        \[ \text{KCL: } A\mathbf i = \mathbf 0,\quad \text{KVL: } \mathbf v = A^T\mathbf e,\quad \mathbf i = Y\mathbf v + \mathbf j_s \ \Rightarrow\ \underbrace{AYA^T}_{G}\,\mathbf e = -A\mathbf j_s \]
+        <p class="tf-x">\(A\) (โนด × กิ่ง) มี +1 ที่โนดที่กระแสออก −1 ที่โนดที่กระแสเข้า · \(Y\) = เมทริกซ์ทแยงของความนำกิ่ง · \(\mathbf e\) = แรงดันโนด</p>
+      </div>
+      <div class="tf" id="G2" data-k="dc power flow B theta P susceptance linearized การไหลของกำลังแบบ DC">
+        <p class="tf-n"><b><span class="fid">G2</span> DC power flow</b> การไหลของกำลังแบบ DC</p>
+        \[ \mathbf P = B'\boldsymbol\theta,\qquad P_{ij} = \frac{\theta_i - \theta_j}{X_{ij}} \]
+        <p class="tf-x">ประมาณจากสมการโหลดโฟลว์จริง (แรงดัน 1 pu, ไม่คิด R, มุมเล็ก) ใช้วางแผนระบบส่งและวิเคราะห์ความมั่นคง N−1</p>
+      </div>
+      <div class="tf" id="G3" data-k="least squares normal equations calibration regression AtA กำลังสองน้อยสุด สอบเทียบ">
+        <p class="tf-n"><b><span class="fid">G3</span> Least squares</b> กำลังสองน้อยสุด</p>
+        \[ \min\|A\mathbf x - \mathbf b\|^2 \Rightarrow A^TA\,\hat{\mathbf x} = A^T\mathbf b \]
+      </div>
+    </div>
+    <div class="wx" id="ex-g1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-1 · สร้าง G = AYAᵀ</span><h3>แหล่งกระแส 2 A ป้อนโนด 1 · กิ่ง: \(G_a = 1\) S (โนด 1–กราวด์), \(G_b = 0.5\) S (โนด 1–โนด 2), \(G_c = 0.25\) S (โนด 2–กราวด์)</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1.5,-0.5;-0.5,0.75&amp;b=2,0">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>เมทริกซ์อุบัติการณ์ (แถว = โนด 1, 2 · หลัก = กิ่ง a, b, c โดยกำหนดทิศกระแสจากโนดเลขน้อยไปมาก/กราวด์)</p>\[ A = \begin{bmatrix} 1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix},\quad Y = \operatorname{diag}(1,\ 0.5,\ 0.25) \]</li>
+        <li>\[ G = AYA^T = \begin{bmatrix} 1 + 0.5 & -0.5 \\ -0.5 & 0.5 + 0.25 \end{bmatrix} = \begin{bmatrix} 1.5 & -0.5 \\ -0.5 & 0.75 \end{bmatrix} \]</li>
+        <li><p>แก้ \(G\mathbf e = \mathbf i_s = (2, 0)\): \(\det G = 0.875\)</p>\[ e_1 = \frac{2(0.75)}{0.875} = 1.714\ \text{V},\qquad e_2 = \frac{0.5(2)}{0.875} = 1.143\ \text{V} \]</li>
+      </ol>
+      <p class="answer">\(e_1 = 1.714\) V, \(e_2 = 1.143\) V · G ที่ได้ตรงกับ “กฎการมอง” ทแยง = ผลรวมความนำที่ต่อโนด นอกทแยง = ลบความนำร่วม <a href="/learn/linear-algebra/ee-applications/#A1">A1</a></p>
+      <p class="check">ตรวจ KCL โนด 2: \(0.5(1.714 - 1.143) = 0.286 = 0.25(1.143)\) ✓</p>
+    </div>
+    <div class="wx" id="ex-g2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-2 · การไหลของกำลังแบบ DC ระบบ 3 บัส</span><h3>บัส 1 เป็นสแล็ก (θ₁ = 0) · \(X_{12} = 0.1,\ X_{13} = 0.2,\ X_{23} = 0.25\) pu · โหลดบัส 2 = 0.8 pu บัส 3 = 0.6 pu</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=14,-4;-4,9&amp;b=-0.8,-0.6">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>ตัดแถว-หลักของสแล็กออก \(B'_{22} = \tfrac1{0.1} + \tfrac1{0.25} = 14\), \(B'_{33} = \tfrac1{0.2} + \tfrac1{0.25} = 9\), \(B'_{23} = -4\)</p>\[ \begin{bmatrix} 14 & -4 \\ -4 & 9 \end{bmatrix}\begin{bmatrix}\theta_2\\\theta_3\end{bmatrix} = \begin{bmatrix}-0.8\\-0.6\end{bmatrix} \]</li>
+        <li>\[ \theta_2 = \frac{-0.8(9) - (-4)(-0.6)}{110} = -0.0873,\qquad \theta_3 = \frac{14(-0.6) - (-4)(-0.8)}{110} = -0.1055\ \text{rad} \]</li>
+        <li>\[ P_{12} = \frac{0 + 0.0873}{0.1} = 0.873,\quad P_{13} = \frac{0.1055}{0.2} = 0.527,\quad P_{23} = \frac{-0.0873 + 0.1055}{0.25} = 0.073\ \text{pu} \]</li>
+      </ol>
+      <p class="answer">สแล็กจ่าย 1.4 pu แยกไปสายต่าง ๆ ตามความต้านทานไฟฟ้าจินตภาพ ไม่ใช่เส้นทางที่สั้นที่สุด</p>
+      <p class="check">ตรวจบัส 2: เข้า 0.873 − ออก 0.073 = 0.8 ✓ · บัส 3: 0.527 + 0.073 = 0.6 ✓</p>
+    </div>
+    <div class="wx" id="ex-g3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-3 · สอบเทียบเทอร์โมคัปเปิลด้วยกำลังสองน้อยสุด</span><h3>อุณหภูมิ 0, 25, 50, 75, 100 °C อ่านได้ 0.02, 1.02, 2.05, 3.03, 4.10 mV หาเส้นตรง \(y = ax + b\)</h3></div>
+      <ol class="steps">
+        <li><p>5 สมการ 2 ตัวไม่รู้ \(A = \begin{bmatrix} x_i & 1\end{bmatrix}\) ใช้ G3</p>\[ A^TA = \begin{bmatrix} \sum x^2 & \sum x \\ \sum x & n\end{bmatrix} = \begin{bmatrix} 18750 & 250 \\ 250 & 5\end{bmatrix},\quad A^T\mathbf y = \begin{bmatrix} 765.25 \\ 10.22\end{bmatrix} \]</li>
+        <li>\[ a = \frac{5(765.25) - 250(10.22)}{5(18750) - 250^2} = \frac{1271.25}{31250} = 0.04068,\qquad b = \frac{10.22 - 250a}{5} = 0.010 \]</li>
+      </ol>
+      <p class="answer">\(y = 0.04068x + 0.010\) mV ความไว 40.7 µV/°C ใกล้ค่ามาตรฐานของเทอร์โมคัปเปิลชนิด K (≈ 41 µV/°C)</p>
+    </div>
+    </section>
+
+    <!-- ===================== MECHANICAL ===================== -->
+    <section class="tsec" aria-labelledby="mechanical">
+    <h2 id="mechanical">วิศวกรรมเครื่องกล: การสั่นหลายองศาอิสระและวิธีสติฟเนส <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="G4" data-k="mdof vibration eigenvalue natural frequency mode shape K - w^2 M การสั่น โหมด ความถี่ธรรมชาติ">
+        <p class="tf-n"><b><span class="fid">G4</span> Free vibration of MDOF systems</b> การสั่นอิสระหลายองศาอิสระ</p>
+        \[ M\ddot{\mathbf x} + K\mathbf x = \mathbf 0,\quad \mathbf x = \boldsymbol\phi\sin\omega t \ \Rightarrow\ (K - \omega^2M)\boldsymbol\phi = \mathbf 0,\quad \det(K - \omega^2M) = 0 \]
+        <p class="tf-x">ค่าเฉพาะ \(\omega^2\) → ความถี่ธรรมชาติ \(f = \omega/2\pi\) · เวกเตอร์เฉพาะ \(\boldsymbol\phi\) → รูปโหมด · ทบทวน<a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะและเวกเตอร์เฉพาะ</a></p>
+      </div>
+      <div class="tf" id="G5" data-k="spring element stiffness matrix assembly direct stiffness เมทริกซ์สติฟเนส ประกอบ">
+        <p class="tf-n"><b><span class="fid">G5</span> Spring / bar element</b> ชิ้นส่วนสปริงหรือแท่งรับแรงตามแกน</p>
+        \[ k_e = \frac{EA}{L}\begin{bmatrix} 1 & -1 \\ -1 & 1\end{bmatrix},\qquad K = \sum_e (\text{วาง } k_e \text{ ลงตำแหน่งของโนดตัวเอง}) \]
+      </div>
+      <div class="tf" id="G6" data-k="global stiffness equation K u = F boundary conditions สมการสติฟเนส">
+        <p class="tf-n"><b><span class="fid">G6</span> Stiffness equation</b> สมการสติฟเนส</p>
+        \[ K\mathbf u = \mathbf F \]
+        <p class="tf-x">ตัดแถว-หลักของจุดยึดออกก่อนแก้ (K เต็มเป็นเอกฐานเพราะโครงสร้างลอยตัวได้) · เป็นหัวใจของวิธีไฟไนต์เอลิเมนต์</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-g4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-4 · มวล-สปริง 2 องศาอิสระ</span><h3>\(m_1 = m_2 = 1\) kg, \(k_1 = k_2 = 100\) N/m (ผนัง–\(k_1\)–\(m_1\)–\(k_2\)–\(m_2\)) หาความถี่ธรรมชาติและรูปโหมด</h3><button type="button" class="wx-btn calc-go" data-calc="mode=eig&amp;A=200,-100;-100,100">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li>\[ K = \begin{bmatrix} k_1 + k_2 & -k_2 \\ -k_2 & k_2\end{bmatrix} = \begin{bmatrix} 200 & -100 \\ -100 & 100\end{bmatrix},\quad M = I \]</li>
+        <li>\[ \det(K - \lambda I) = \lambda^2 - 300\lambda + 10000 = 0 \Rightarrow \lambda = 150 \mp 50\sqrt5 = 38.20,\ 261.80 \]</li>
+        <li><p>\(\omega = \sqrt\lambda\): \(\omega_1 = 6.18\) rad/s (0.98 Hz), \(\omega_2 = 16.18\) rad/s (2.58 Hz)</p></li>
+        <li><p>รูปโหมดจากแถวแรก \((200 - \lambda)\phi_1 = 100\phi_2\): \(\boldsymbol\phi_1 = [1,\ 1.618]\), \(\boldsymbol\phi_2 = [1,\ -0.618]\)</p></li>
+      </ol>
+      <p class="answer">โหมด 1: เคลื่อนทิศเดียวกัน มวลบนแกว่งมากกว่า 1.618 เท่า · โหมด 2: สวนทางกัน (อัตราส่วนทองคำปรากฏเพราะค่าเฉพาะมี √5)</p>
+    </div>
+    <div class="wx" id="ex-g5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-5 · ประกอบเมทริกซ์สติฟเนส</span><h3>แท่งสองท่อนต่ออนุกรม ยึดที่โนด 1 · \(k_1 = EA/L = 2000\) kN/m, \(k_2 = 1000\) kN/m · แรง 30 kN ดึงที่โนด 3</h3></div>
+      <ol class="steps">
+        <li><p>ประกอบ (G5)</p>\[ K = \begin{bmatrix} 2000 & -2000 & 0 \\ -2000 & 3000 & -1000 \\ 0 & -1000 & 1000\end{bmatrix} \]</li>
+        <li><p>ตัดแถว-หลักที่ 1 (\(u_1 = 0\))</p>\[ \begin{bmatrix} 3000 & -1000 \\ -1000 & 1000\end{bmatrix}\begin{bmatrix}u_2\\u_3\end{bmatrix} = \begin{bmatrix}0\\30\end{bmatrix} \Rightarrow u_2 = 0.015,\ u_3 = 0.045\ \text{m} \]</li>
+      </ol>
+      <p class="answer">ยืด 15 mm และ 45 mm · แรงในแท่ง: \(2000(0.015) = 30\) kN และ \(1000(0.03) = 30\) kN เท่ากันตามที่ควร (อนุกรม) · ความแข็งรวม \(30/0.045 = 667\) kN/m = \((1/k_1 + 1/k_2)^{-1}\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="vibration">
+    <h2 id="vibration">แล็บโหมดการสั่น: มวล-สปริง และอาคาร 3 ชั้นแบบง่าย</h2>
+    <p>ปรับมวลและความแข็งของสปริง แล็บจะแก้ \(\det(K - \omega^2M) = 0\) ด้วยวิธีจาโคบีบนเมทริกซ์สมมาตร \(M^{-1/2}KM^{-1/2}\) แสดงความถี่ธรรมชาติและรูปโหมดพร้อมภาพเคลื่อนไหว แบบ 3 มวลเทียบได้กับอาคาร 3 ชั้นที่พื้นเป็นมวลและเสาเป็นสปริงแรงเฉือน</p>
+    <div class="la-modes" data-n="2"></div>
+    </section>
+
+    <!-- ===================== CIVIL ===================== -->
+    <section class="tsec" aria-labelledby="civil">
+    <h2 id="civil">วิศวกรรมโยธา: โครงถัก งานระดับ และเครือข่ายจราจร <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="G7" data-k="truss method of joints matrix statically determinate m + r = 2j โครงถัก วิธีจุดต่อ">
+        <p class="tf-n"><b><span class="fid">G7</span> Truss by the method of joints</b> โครงถักด้วยวิธีจุดต่อ</p>
+        \[ \sum F_x = 0,\ \sum F_y = 0 \text{ ทุกจุดต่อ} \Rightarrow A\mathbf f = \mathbf b,\qquad m + r = 2j \ (\text{ดีเทอร์มิเนตสถิต}) \]
+        <p class="tf-x">หลักของชิ้นส่วนมีโคไซน์แสดงทิศ \((\cos\theta, \sin\theta)\) ที่จุดต้น และค่าตรงข้ามที่จุดปลาย · \(m + r &gt; 2j\) อินดีเทอร์มิเนต ต้องใช้วิธีสติฟเนส (G5–G6)</p>
+      </div>
+      <div class="tf" id="G8" data-k="leveling network adjustment least squares survey elevations การปรับแก้งานระดับ">
+        <p class="tf-n"><b><span class="fid">G8</span> Leveling adjustment</b> ปรับแก้งานระดับ</p>
+        \[ H_j - H_i = \Delta h_{ij} + v_{ij},\quad \min\sum v^2 \Rightarrow A^TA\hat{\mathbf H} = A^T\mathbf b \]
+      </div>
+      <div class="tf" id="G9" data-k="traffic flow network conservation intersection underdetermined free variable เครือข่ายจราจร">
+        <p class="tf-n"><b><span class="fid">G9</span> Network flow balance</b> สมดุลเครือข่ายจราจร/ท่อ</p>
+        \[ \text{เข้า} = \text{ออก ทุกทางแยก} \Rightarrow A\mathbf x = \mathbf b,\ \operatorname{rank}A &lt; n \Rightarrow \text{มีตัวแปรอิสระ} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-g6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-6 · โครงถักสามเหลี่ยม</span><h3>A(0,0) หมุด · C(6,0) ลูกกลิ้ง · B(3,4) รับแรง 10 kN ลง หาแรงในชิ้นส่วน</h3></div>
+      <ol class="steps">
+        <li><p>ทิศของ AB: \((3, 4)/5\) · BC: \((3, -4)/5\) · AC: \((1, 0)\) · ตัวไม่รู้ \(F_{AB}, F_{BC}, F_{AC}, A_x, A_y, C_y\) (6 ตัว = 2 × 3 จุด)</p></li>
+        <li><p>จุด A: \(0.6F_{AB} + F_{AC} + A_x = 0\), \(0.8F_{AB} + A_y = 0\) · จุด B: \(-0.6F_{AB} + 0.6F_{BC} = 0\), \(-0.8F_{AB} - 0.8F_{BC} = 10\) · จุด C: \(-0.6F_{BC} - F_{AC} = 0\), \(0.8F_{BC} + C_y = 0\)</p></li>
+        <li><p>จากจุด B: \(F_{AB} = F_{BC} = -6.25\) kN · แทนกลับ: \(F_{AC} = 3.75\) kN, \(A_y = C_y = 5\) kN, \(A_x = 0\)</p></li>
+      </ol>
+      <p class="answer">AB และ BC อัด 6.25 kN · AC ดึง 3.75 kN · ลองในแล็บด้านล่าง (เลือกสามเหลี่ยม ตั้ง P = 10)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="truss">
+    <h2 id="truss">แล็บโครงถัก: วิธีจุดต่อในรูปเมทริกซ์</h2>
+    <p>แล็บสร้างเมทริกซ์ \([A\,|\,\mathbf b]\) จากรูปทรงจริงทุกครั้งที่เปลี่ยนแรง แล้วแก้ด้วยการกำจัดแบบเกาส์ เส้นสีน้ำเงินคือแรงดึง ส้มคือแรงอัด ลองย้ายจุดที่แรงกระทำแล้วดูว่าชิ้นส่วนไหนเปลี่ยนจากดึงเป็นอัด และชิ้นส่วนไหนกลายเป็นชิ้นที่ไม่รับแรง (zero-force member)</p>
+    <div class="la-truss" data-preset="warren"></div>
+    <div class="wx" id="ex-g7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-7 · ปรับแก้งานระดับ</span><h3>หมุด A สูง 100.000 m วัดได้ A→B +2.003, B→C +1.498, A→C +3.506 m หาระดับ B และ C</h3></div>
+      <ol class="steps">
+        <li><p>3 สมการ 2 ตัวไม่รู้ (ปิดวงคลาด \(2.003 + 1.498 - 3.506 = -0.005\) m)</p>\[ A = \begin{bmatrix} 1 & 0 \\ -1 & 1 \\ 0 & 1\end{bmatrix},\ \mathbf b = \begin{bmatrix} 102.003 \\ 1.498 \\ 103.506\end{bmatrix} \]</li>
+        <li>\[ A^TA = \begin{bmatrix} 2 & -1 \\ -1 & 2\end{bmatrix},\quad A^T\mathbf b = \begin{bmatrix} 100.505 \\ 105.004\end{bmatrix} \]</li>
+        <li>\[ H_B = \frac{2(100.505) + 105.004}{3} = 102.0047,\qquad H_C = \frac{100.505 + 2(105.004)}{3} = 103.5043\ \text{m} \]</li>
+      </ol>
+      <p class="answer">\(H_B = 102.0047\) m, \(H_C = 103.5043\) m ความคลาด 5 mm ถูกกระจายเท่า ๆ กันให้ทุกการวัด (1.67 mm ต่อเส้น)</p>
+    </div>
+    <div class="wx" id="ex-g8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-8 · เครือข่ายจราจรมีคำตอบไม่จำกัด</span><h3>วงเดินรถทางเดียว A→B→C→D→A รถเข้า-ออกที่ทางแยก (คัน/ชม.): A เข้า 300 ออก 100 · B เข้า 200 ออก 400 · C เข้า 350 ออก 150 · D เข้า 100 ออก 300</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=1,0,0,-1;1,-1,0,0;0,1,-1,0;0,0,1,-1&amp;b=200,200,-200,200">ลองในเครื่องคิดเลข</button></div>
+      <ol class="steps">
+        <li><p>ให้ \(x_1 = AB,\ x_2 = BC,\ x_3 = CD,\ x_4 = DA\) เขียนเข้า = ออก</p>\[ x_1 - x_4 = 200,\quad x_1 - x_2 = 200,\quad x_2 - x_3 = -200,\quad x_3 - x_4 = 200 \]</li>
+        <li><p>ลดแถวแล้วพบแถวศูนย์ (แรงก์ 3) → ตัวแปรอิสระหนึ่งตัว ให้ \(x_4 = t\)</p>\[ x_1 = t + 200,\quad x_2 = t,\quad x_3 = t + 200 \]</li>
+      </ol>
+      <p class="answer">ปริมาณรถในวงหมุนเวียนได้อิสระ (t ≥ 0) ข้อมูลแค่นี้หาไม่ได้ว่าถนน DA มีรถกี่คัน ต้องติดตั้งเครื่องนับเพิ่มหนึ่งจุด · ถ้าปิดถนน DA (t = 0) BC ก็ว่างด้วย ขณะที่ AB และ CD ต้องรับ 200 คัน/ชม.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">อ่านต่อ</h2>
+    <ul>
+      <li>เครื่องมือที่ใช้ในหน้านี้: <a href="/learn/linear-algebra/linear-systems/">ลดแถวและแรงก์</a> · <a href="/learn/linear-algebra/linear-systems/#least-squares">กำลังสองน้อยสุด</a> · <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a> · <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์</a></li>
+      <li>วงจรและระบบไฟฟ้ากำลังเชิงลึก: <a href="/learn/linear-algebra/ee-applications/">ประยุกต์ในวิศวกรรมไฟฟ้า</a> · <a href="/learn/power-systems/">ระบบไฟฟ้ากำลัง</a></li>
+      <li>แรงและโครงสร้างด้วยเวกเตอร์: <a href="/learn/vector-algebra/force-systems/">ระบบแรงและสมดุล</a></li>
+      <li>G. Strang, <i>Introduction to Linear Algebra</i> (บท Applications: graphs, networks, least squares) · Hibbeler, <i>Structural Analysis</i> (truss, stiffness method) · Chopra, <i>Dynamics of Structures</i> (MDOF modes)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

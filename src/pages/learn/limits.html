@@ -1,0 +1,299 @@
+<!--meta
+{
+  "title": "ลิมิตและความต่อเนื่อง (Limits & Continuity): นิยาม ε–δ เทคนิค 0/0 ลิมิตที่อนันต์ โลปิตาล พร้อมแล็บ | อาจารย์มด",
+  "h1": "ลิมิตและความต่อเนื่อง (Limits &amp; Continuity)",
+  "description": "ลิมิตภาษาไทยครบในหน้าเดียว ความหมายจากกราฟและตาราง นิยาม ε–δ แบบลากได้ ลิมิตซ้าย-ขวา สมบัติของลิมิต เทคนิครูปแบบ 0/0 แยกตัวประกอบ คอนจูเกต ลิมิตตรีโกณ sin x/x ทฤษฎีบทแซนด์วิช ลิมิตที่อนันต์และเส้นกำกับ ค่า e ความต่อเนื่อง ทฤษฎีบทค่าระหว่างกลาง และกฎของโลปิตาลทุกรูปแบบ พร้อมตัวอย่างงานไฟฟ้า",
+  "ogTitle": "ลิมิตและความต่อเนื่อง: เข้าใจ ε–δ ด้วยแล็บที่ลากได้",
+  "lesson": "limits",
+  "nav": "lim",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["High school", "Undergraduate"],
+  "about": ["Limit", "Epsilon-delta definition", "One-sided limits", "Indeterminate forms", "Squeeze theorem", "Limits at infinity", "Asymptotes", "Continuity", "Intermediate value theorem", "L'Hôpital's rule"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/sigexpr.js", "/assets/mathkit.js", "/assets/calc-lab.js"],
+  "faq": [
+    {"q": "ลิมิตกับค่าของฟังก์ชันต่างกันอย่างไร?", "a": "ลิมิตบอกว่าฟังก์ชันเข้าใกล้ค่าอะไรเมื่อ x เข้าใกล้ a โดยไม่สนว่า f(a) เป็นเท่าไรหรือนิยามหรือไม่ เช่น \\((x^2-4)/(x-2)\\) ไม่นิยามที่ x = 2 แต่ลิมิตเท่ากับ 4 ถ้าลิมิตเท่ากับค่าฟังก์ชันพอดี เราเรียกว่าฟังก์ชันต่อเนื่องที่จุดนั้น"},
+    {"q": "0/0 แปลว่าลิมิตเป็นศูนย์หรือไม่มีค่าใช่ไหม?", "a": "ไม่ใช่ 0/0 เป็นรูปแบบยังไม่กำหนด (indeterminate) แปลว่ายังตอบไม่ได้ ต้องจัดรูปก่อน เช่น แยกตัวประกอบแล้วตัดกัน คูณคอนจูเกต หรือใช้กฎของโลปิตาล คำตอบอาจเป็นจำนวนใดก็ได้"},
+    {"q": "ใช้กฎของโลปิตาลได้เมื่อไร?", "a": "เฉพาะรูปแบบ 0/0 หรือ ∞/∞ เท่านั้น และต้องหาอนุพันธ์ของเศษและส่วนแยกกัน (ไม่ใช่กฎผลหาร) รูปแบบอื่น เช่น 0·∞, ∞ − ∞, 1^∞ ต้องแปลงให้เป็น 0/0 หรือ ∞/∞ ก่อน"},
+    {"q": "ทำไมวิศวกรต้องเรียนนิยาม ε–δ?", "a": "เพราะเป็นภาษาเดียวกับข้อกำหนดทางวิศวกรรม: ‘ถ้าต้องการให้เอาต์พุตคลาดไม่เกิน ε ต้องคุมอินพุตให้คลาดไม่เกิน δ’ เช่นการกำหนดค่าความคลาดเคลื่อนของอุปกรณ์ และเป็นพื้นฐานของนิยามอนุพันธ์ ความต่อเนื่อง และเสถียรภาพ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>ลิมิตและความต่อเนื่อง</li></ol>
+      <p class="eyebrow">// บทที่ 3 · คณิตศาสตร์วิศวกรรม · Limits &amp; Continuity</p>
+      <h1>ลิมิตและความต่อเนื่อง (Limits &amp; Continuity)</h1>
+      <p class="lede">ลิมิตคือเครื่องมือที่ให้เราพูดถึง “ค่าที่เข้าใกล้” ได้อย่างแม่นยำ แม้ฟังก์ชันจะไม่นิยามที่จุดนั้น อนุพันธ์ อินทิกรัล อนุกรม และทฤษฎีบทค่าเริ่มต้น-ค่าสุดท้ายของลาปลาซ ล้วนนิยามด้วยลิมิต หน้านี้เริ่มจากสัญชาตญาณ ไปสู่นิยาม ε–δ ที่ลากดูได้ เทคนิคหาลิมิตทุกแบบที่ออกสอบ และจบที่กฎของโลปิตาล</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#epsilon-delta">แล็บ ε–δ</a>
+        <a class="btn btn-ghost btn-sm" href="#indeterminate">เทคนิค 0/0</a>
+        <a class="btn btn-ghost btn-sm" href="#infinity">ลิมิตที่อนันต์</a>
+        <a class="btn btn-ghost btn-sm" href="#continuity">ความต่อเนื่อง</a>
+        <a class="btn btn-ghost btn-sm" href="#lhopital">โลปิตาล</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\lim_{x\to a}f(x) = L\): ทำให้ \(f(x)\) ใกล้ \(L\) เท่าไรก็ได้ ด้วยการเอา \(x\) ไปใกล้ \(a\) มากพอ</li>
+          <li>ลิมิตมี ⇔ ลิมิตซ้าย = ลิมิตขวา · แทนค่าได้เลยถ้าฟังก์ชันต่อเนื่อง</li>
+          <li>0/0: แยกตัวประกอบ · คอนจูเกต · \(\sin x/x \to 1\) · โลปิตาล</li>
+          <li>ต่อเนื่อง ⇔ \(f(a)\) มีค่า + ลิมิตมี + สองค่าเท่ากัน</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น epsilon, one-sided, sin x/x, infinity, e, continuity, lhopital" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">ลิมิตคืออะไร: ดูจากตารางและกราฟ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ลองถามว่า \(f(x) = \dfrac{x^2 - 4}{x - 2}\) มีค่าเท่าไรที่ \(x = 2\) แทนตรง ๆ ได้ \(0/0\) ซึ่งไม่มีความหมาย แต่ถ้าแทน \(x = 1.9,\ 1.99,\ 1.999\) จะได้ \(3.9,\ 3.99,\ 3.999\) และจากอีกด้าน \(2.1,\ 2.01\) ได้ \(4.1,\ 4.01\) ค่าเข้าใกล้ 4 อย่างชัดเจน กราฟเป็นเส้นตรง \(y = x + 2\) ที่มี “รูโหว่” ที่ \((2, 4)\)</p>
+    <figure class="lt-wide"><!--FIG:lim-hole--><svg class="mf" viewBox="0 0 720 230" role="img" aria-label="ลิมิตที่มีรู ลิมิตกระโดด และลิมิตอนันต์"><rect class="mf-bg" x="14" y="30" width="220" height="180" rx="6"/><line class="mf-ax" x1="38.4" y1="30" x2="38.4" y2="210"/><clipPath id="g2"><rect x="14" y="30" width="220" height="180"/></clipPath><g clip-path="url(#g2)"><path class="mf-sig" d="M14 168.5L14.7 168L15.5 167.6L16.2 167.2L16.9 166.8L17.7 166.4L18.4 166L19.1 165.6L19.9 165.1L20.6 164.7L21.3 164.3L22.1 163.9L22.8 163.5L23.5 163.1L24.3 162.6L25 162.2L25.7 161.8L26.5 161.4L27.2 161L27.9 160.6L28.7 160.2L29.4 159.7L30.1 159.3L30.9 158.9L31.6 158.5L32.3 158.1L33.1 157.7L33.8 157.2L34.5 156.8L35.3 156.4L36 156L36.7 155.6L37.5 155.2L38.2 154.8L38.9 154.3L39.7 153.9L40.4 153.5L41.1 153.1L41.9 152.7L42.6 152.3L43.3 151.8L44.1 151.4L44.8 151L45.5 150.6L46.3 150.2L47 149.8L47.7 149.4L48.5 148.9L49.2 148.5L49.9 148.1L50.7 147.7L51.4 147.3L52.1 146.9L52.9 146.4L53.6 146L54.3 145.6L55.1 145.2L55.8 144.8L56.5 144.4L57.3 144L58 143.5L58.7 143.1L59.5 142.7L60.2 142.3L60.9 141.9L61.7 141.5L62.4 141L63.1 140.6L63.9 140.2L64.6 139.8L65.3 139.4L66.1 139L66.8 138.6L67.5 138.1L68.3 137.7L69 137.3L69.7 136.9L70.5 136.5L71.2 136.1L71.9 135.6L72.7 135.2L73.4 134.8L74.1 134.4L74.9 134L75.6 133.6L76.3 133.2L77.1 132.7L77.8 132.3L78.5 131.9L79.3 131.5L80 131.1L80.7 130.7L81.5 130.2L82.2 129.8L82.9 129.4L83.7 129L84.4 128.6L85.1 128.2L85.9 127.8L86.6 127.3L87.3 126.9L88.1 126.5L88.8 126.1L89.5 125.7L90.3 125.3L91 124.8L91.7 124.4L92.5 124L93.2 123.6L93.9 123.2L94.7 122.8L95.4 122.4L96.1 121.9L96.9 121.5L97.6 121.1L98.3 120.7L99.1 120.3L99.8 119.9L100.5 119.4L101.3 119L102 118.6L102.7 118.2L103.5 117.8L104.2 117.4L104.9 117L105.7 116.5L106.4 116.1L107.1 115.7L107.9 115.3L108.6 114.9L109.3 114.5L110.1 114L110.8 113.6L111.5 113.2L112.3 112.8L113 112.4L113.7 112L114.5 111.6L115.2 111.1L115.9 110.7L116.7 110.3L117.4 109.9L118.1 109.5L118.9 109.1L119.6 108.6L120.3 108.2L121.1 107.8L121.8 107.4L122.5 107L123.3 106.6L124 106.2L124.7 105.7L125.5 105.3L126.2 104.9L126.9 104.5L127.7 104.1L128.4 103.7L129.1 103.2L129.9 102.8L130.6 102.4L131.3 102L132.1 101.6L132.8 101.2L133.5 100.8L134.3 100.3L135 99.9L135.7 99.5L136.5 99.1L137.2 98.7L137.9 98.3L138.7 97.8L139.4 97.4L140.1 97L140.9 96.6L141.6 96.2L142.3 95.8L143.1 95.4L143.8 94.9L144.5 94.5L145.3 94.1L146 93.7L146.7 93.3L147.5 92.9L148.2 92.4L148.9 92L149.7 91.6L150.4 91.2L151.1 90.8L151.9 90.4L152.6 90L153.3 89.5L154.1 89.1L154.8 88.7L155.5 88.3L156.3 87.9L157 87.5L157.7 87L158.5 86.6L159.2 86.2L159.9 85.8L160.7 85.4L161.4 85L162.1 84.6L162.9 84.1L163.6 83.7L164.3 83.3L165.1 82.9L165.8 82.5L166.5 82.1L167.3 81.6L168 81.2L168.7 80.8L169.5 80.4L170.2 80L170.9 79.6L171.7 79.2L172.4 78.7L173.1 78.3L173.9 77.9L174.6 77.5L175.3 77.1L176.1 76.7L176.8 76.2L177.5 75.8L178.3 75.4L179 75L179.7 74.6L180.5 74.2L181.2 73.8L181.9 73.3L182.7 72.9L183.4 72.5L184.1 72.1L184.9 71.7L185.6 71.3L186.3 70.8L187.1 70.4L187.8 70L188.5 69.6L189.3 69.2L190 68.8L190.7 68.4L191.5 67.9L192.2 67.5L192.9 67.1L193.7 66.7L194.4 66.3L195.1 65.9L195.9 65.4L196.6 65L197.3 64.6L198.1 64.2L198.8 63.8L199.5 63.4L200.3 63L201 62.5L201.7 62.1L202.5 61.7L203.2 61.3L203.9 60.9L204.7 60.5L205.4 60L206.1 59.6L206.9 59.2L207.6 58.8L208.3 58.4L209.1 58L209.8 57.6L210.5 57.1L211.3 56.7L212 56.3L212.7 55.9L213.5 55.5L214.2 55.1L214.9 54.6L215.7 54.2L216.4 53.8L217.1 53.4L217.9 53L218.6 52.6L219.3 52.2L220.1 51.7L220.8 51.3L221.5 50.9L222.3 50.5L223 50.1L223.7 49.7L224.5 49.2L225.2 48.8L225.9 48.4L226.7 48L227.4 47.6L228.1 47.2L228.9 46.8L229.6 46.3L230.3 45.9L231.1 45.5L231.8 45.1L232.5 44.7L233.3 44.3L234 43.8"/><line class="mf-dash" x1="136.2" x2="136.2" y1="210" y2="99.2"/><line class="mf-dash" x1="14" x2="136.2" y1="99.2" y2="99.2"/></g><circle class="mf-zero" cx="136.2" cy="99.2" r="3.6"/><text class="mf-lab" x="16" y="24" text-anchor="start">รู: lim = 4 แต่ f(2) ไม่นิยาม</text><rect class="mf-bg" x="250" y="30" width="220" height="180" rx="6"/><line class="mf-ax" x1="250" y1="120" x2="470" y2="120"/><line class="mf-ax" x1="360" y1="30" x2="360" y2="210"/><clipPath id="g9"><rect x="250" y="30" width="220" height="180"/></clipPath><g clip-path="url(#g9)"><path class="mf-sig" d="M250 176.2L360 176.2M360 63.8L470 63.8"/></g><circle class="mf-zero" cx="360" cy="176.2" r="3.6"/><circle class="mf-zero" cx="360" cy="63.8" r="3.6"/><text class="mf-lab" x="252" y="24" text-anchor="start">กระโดด: |x|/x ซ้าย −1 ขวา 1</text><rect class="mf-bg" x="486" y="30" width="220" height="180" rx="6"/><line class="mf-ax" x1="486" y1="199.4" x2="706" y2="199.4"/><line class="mf-ax" x1="596" y1="30" x2="596" y2="210"/><clipPath id="g17"><rect x="486" y="30" width="220" height="180"/></clipPath><g clip-path="url(#g17)"><path class="mf-sig" d="M486 194.1L486.7 194L487.5 194L488.2 193.9L488.9 193.8L489.7 193.7L490.4 193.7L491.1 193.6L491.9 193.5L492.6 193.4L493.3 193.3L494.1 193.2L494.8 193.2L495.5 193.1L496.3 193L497 192.9L497.7 192.8L498.5 192.7L499.2 192.6L499.9 192.5L500.7 192.4L501.4 192.3L502.1 192.1L502.9 192L503.6 191.9L504.3 191.8L505.1 191.7L505.8 191.5L506.5 191.4L507.3 191.3L508 191.1L508.7 191L509.5 190.9L510.2 190.7L510.9 190.6L511.7 190.4L512.4 190.2L513.1 190.1L513.9 189.9L514.6 189.7L515.3 189.6L516.1 189.4L516.8 189.2L517.5 189L518.3 188.8L519 188.6L519.7 188.4L520.5 188.2L521.2 188L521.9 187.7L522.7 187.5L523.4 187.3L524.1 187L524.9 186.8L525.6 186.5L526.3 186.2L527.1 185.9L527.8 185.6L528.5 185.3L529.3 185L530 184.7L530.7 184.4L531.5 184L532.2 183.7L532.9 183.3L533.7 182.9L534.4 182.5L535.1 182.1L535.9 181.7L536.6 181.3L537.3 180.8L538.1 180.3L538.8 179.8L539.5 179.3L540.3 178.8L541 178.2L541.7 177.7L542.5 177.1L543.2 176.4L543.9 175.8L544.7 175.1L545.4 174.4L546.1 173.7L546.9 172.9L547.6 172.1L548.3 171.2L549.1 170.3L549.8 169.4L550.5 168.4L551.3 167.4L552 166.3L552.7 165.2L553.5 164L554.2 162.7L554.9 161.4L555.7 160L556.4 158.6L557.1 157L557.9 155.4L558.6 153.6L559.3 151.8L560.1 149.8L560.8 147.7L561.5 145.5L562.3 143.1L563 140.6L563.7 137.9L564.5 135L565.2 131.9L565.9 128.6L566.7 125L567.4 121.1L568.1 116.9L568.9 112.4L569.6 107.5L570.3 102.2L571.1 96.4L571.8 90L572.5 83.1L573.3 75.5L574 67.1L574.7 57.8L575.5 47.5L576.2 36L576.9 23.2L577.7 8.8L578.4 -7.4L579.1 -25.8L579.9 -46.7L580.6 -70.7L581.3 -98.4L582.1 -130.6L582.8 -150L583.5 -150L584.3 -150L585 -150L585.7 -150L586.5 -150L587.2 -150L587.9 -150L588.7 -150L589.4 -150L590.1 -150M598.9 -150M602.6 -150L603.3 -150L604.1 -150L604.8 -150L605.5 -150L606.3 -150L607 -150L607.7 -150L608.5 -150L609.2 -150L609.9 -130.6L610.7 -98.4L611.4 -70.7L612.1 -46.7L612.9 -25.8L613.6 -7.4L614.3 8.8L615.1 23.2L615.8 36L616.5 47.5L617.3 57.8L618 67.1L618.7 75.5L619.5 83.1L620.2 90L620.9 96.4L621.7 102.2L622.4 107.5L623.1 112.4L623.9 116.9L624.6 121.1L625.3 125L626.1 128.6L626.8 131.9L627.5 135L628.3 137.9L629 140.6L629.7 143.1L630.5 145.5L631.2 147.7L631.9 149.8L632.7 151.8L633.4 153.6L634.1 155.4L634.9 157L635.6 158.6L636.3 160L637.1 161.4L637.8 162.7L638.5 164L639.3 165.2L640 166.3L640.7 167.4L641.5 168.4L642.2 169.4L642.9 170.3L643.7 171.2L644.4 172.1L645.1 172.9L645.9 173.7L646.6 174.4L647.3 175.1L648.1 175.8L648.8 176.4L649.5 177.1L650.3 177.7L651 178.2L651.7 178.8L652.5 179.3L653.2 179.8L653.9 180.3L654.7 180.8L655.4 181.3L656.1 181.7L656.9 182.1L657.6 182.5L658.3 182.9L659.1 183.3L659.8 183.7L660.5 184L661.3 184.4L662 184.7L662.7 185L663.5 185.3L664.2 185.6L664.9 185.9L665.7 186.2L666.4 186.5L667.1 186.8L667.9 187L668.6 187.3L669.3 187.5L670.1 187.7L670.8 188L671.5 188.2L672.3 188.4L673 188.6L673.7 188.8L674.5 189L675.2 189.2L675.9 189.4L676.7 189.6L677.4 189.7L678.1 189.9L678.9 190.1L679.6 190.2L680.3 190.4L681.1 190.6L681.8 190.7L682.5 190.9L683.3 191L684 191.1L684.7 191.3L685.5 191.4L686.2 191.5L686.9 191.7L687.7 191.8L688.4 191.9L689.1 192L689.9 192.1L690.6 192.3L691.3 192.4L692.1 192.5L692.8 192.6L693.5 192.7L694.3 192.8L695 192.9L695.7 193L696.5 193.1L697.2 193.2L697.9 193.2L698.7 193.3L699.4 193.4L700.1 193.5L700.9 193.6L701.6 193.7L702.3 193.7L703.1 193.8L703.8 193.9L704.5 194L705.3 194L706 194.1"/></g><text class="mf-lab" x="488" y="24" text-anchor="start">อนันต์: 1/x² → ∞ ที่ x = 0</text></svg><!--/FIG--><figcaption>ซ้าย: \(f(x) = (x^2-4)/(x-2)\) มีรูที่ x = 2 แต่ลิมิตเท่ากับ 4 · กลาง: ลิมิตซ้าย ≠ ลิมิตขวา (กระโดด) · ขวา: ลิมิตเป็นอนันต์ (เส้นกำกับแนวตั้ง)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="limit notation informal definition ลิมิต สัญลักษณ์">
+        <p class="tf-n"><b><span class="fid">L1</span> Limit (informal)</b> ลิมิต</p>
+        \[ \lim_{x\to a}f(x) = L \]
+        <p class="tf-x">อ่านว่า “ลิมิตของ f(x) เมื่อ x เข้าใกล้ a เท่ากับ L” · ไม่สนค่า \(f(a)\) สนเฉพาะค่ารอบ ๆ a</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="epsilon-delta">
+    <h2 id="epsilon-delta">นิยาม ε–δ (แบบลากดูได้) <span class="lv lv-i">กลาง</span></h2>
+    <p>คำว่า “ใกล้” ต้องวัดเป็นตัวเลขได้ นิยามของโคชีบอกว่า: ใครก็ตามท้าเรามาด้วยความคลาดเคลื่อน \(\varepsilon\) ของเอาต์พุต เราต้องหาความคลาดเคลื่อน \(\delta\) ของอินพุตที่รับประกันได้เสมอ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L2" data-k="epsilon delta definition formal cauchy นิยาม เอปไซลอน เดลตา">
+        <p class="tf-n"><b><span class="fid">L2</span> ε–δ definition</b> นิยามเชิงรูปนัย</p>
+        \[ \lim_{x\to a}f(x) = L \iff \forall\varepsilon > 0\ \exists\delta > 0:\ 0 &lt; |x - a| &lt; \delta \Rightarrow |f(x) - L| &lt; \varepsilon \]
+      </div>
+    </div>
+    <p>ในแล็บ แถบสีน้ำเงินคือ \(L \pm \varepsilon\) แถบสีเขียวคือ \(\delta\) ที่ใหญ่ที่สุดที่ยังทำให้กราฟอยู่ในแถบน้ำเงินทั้งหมด ลองลด ε แล้วดู δ เล็กลงตาม ซูมเข้าเพื่อดูว่ารูโหว่ไม่เคยหายไป และลองตัวอย่าง “ซ้าย ≠ ขวา” กับ “แกว่ง” เพื่อดูกรณีที่หา δ ไม่ได้</p>
+    <div class="cl-limit" data-f="(x^2-4)/(x-2)" data-a="2" data-eps="0.5"></div>
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · พิสูจน์ด้วย ε–δ</span><h3>พิสูจน์ว่า \(\lim_{x\to 3}(2x - 1) = 5\)</h3></div>
+      <ol class="steps">
+        <li><p>ร่าง: ต้องการ \(|(2x - 1) - 5| = 2|x - 3| &lt; \varepsilon\) ซึ่งเป็นจริงเมื่อ \(|x - 3| &lt; \varepsilon/2\)</p></li>
+        <li><p>พิสูจน์: ให้ \(\varepsilon > 0\) ใด ๆ เลือก \(\delta = \varepsilon/2\) ถ้า \(0 &lt; |x - 3| &lt; \delta\) แล้ว \(|f(x) - 5| = 2|x - 3| &lt; 2\delta = \varepsilon\) ∎</p></li>
+      </ol>
+      <p class="answer">\(\delta = \varepsilon/2\): ฟังก์ชันชันเท่ากับ 2 จึงต้องคุมอินพุตแคบกว่าเอาต์พุตครึ่งหนึ่ง ความชันคือสิ่งที่อนุพันธ์จะวัด</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="one-sided">
+    <h2 id="one-sided">ลิมิตทางเดียว: ซ้ายและขวา <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="L3" data-k="one-sided limit left right a- a+ ลิมิตซ้าย ลิมิตขวา">
+        <p class="tf-n"><b><span class="fid">L3</span> One-sided limits</b> ลิมิตซ้าย ขวา</p>
+        \[ \lim_{x\to a^-}f(x),\qquad \lim_{x\to a^+}f(x) \]
+      </div>
+      <div class="tf" id="L4" data-k="two-sided limit exists left equals right ลิมิตมีค่า">
+        <p class="tf-n"><b><span class="fid">L4</span> Existence</b> ลิมิตสองด้านมีค่า</p>
+        \[ \lim_{x\to a}f(x) = L \iff \lim_{x\to a^-}f = \lim_{x\to a^+}f = L \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2</span><h3>(ก) \(\lim_{x\to 0}\dfrac{|x|}{x}\) (ข) \(f(x) = x + 1\) เมื่อ \(x &lt; 3\) และ \(7 - x\) เมื่อ \(x \ge 3\) หา \(\lim_{x\to3}f(x)\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(x &lt; 0\): \(|x|/x = -1\) · \(x > 0\): \(= 1\) ลิมิตซ้าย −1 ≠ ลิมิตขวา 1</p></li>
+        <li><p>(ข) ซ้าย: \(3 + 1 = 4\) · ขวา: \(7 - 3 = 4\) เท่ากัน</p></li>
+      </ol>
+      <p class="answer">(ก) ไม่มีลิมิต (กระโดด) · (ข) \(\lim = 4\) และ \(f(3) = 4\) จึงต่อเนื่องที่ x = 3 ด้วย</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="laws">
+    <h2 id="laws">สมบัติของลิมิต <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L5" data-k="limit laws sum product quotient power constant สมบัติ ลิมิต">
+        <p class="tf-n"><b><span class="fid">L5</span> Limit laws</b> ถ้า \(\lim f = A,\ \lim g = B\)</p>
+        \[ \lim(f \pm g) = A \pm B,\quad \lim(fg) = AB,\quad \lim\frac fg = \frac AB\ (B \ne 0),\quad \lim f^n = A^n,\quad \lim\sqrt[n]{f} = \sqrt[n]{A} \]
+      </div>
+      <div class="tf" id="L6" data-k="direct substitution polynomial rational continuous แทนค่า">
+        <p class="tf-n"><b><span class="fid">L6</span> Direct substitution</b> แทนค่าได้ทันที</p>
+        \[ \lim_{x\to a}f(x) = f(a) \quad\text{ถ้า } f \text{ ต่อเนื่องที่ } a \]
+        <p class="tf-x">พหุนาม ตรรกยะ (ส่วนไม่เป็นศูนย์) ราก ตรีโกณ เอกซ์โพเนนเชียล ลอการิทึม ต่อเนื่องบนโดเมนทั้งหมด</p>
+      </div>
+      <div class="tf" id="L7" data-k="squeeze sandwich theorem บีบ แซนด์วิช">
+        <p class="tf-n"><b><span class="fid">L7</span> Squeeze theorem</b> ทฤษฎีบทแซนด์วิช</p>
+        \[ g \le f \le h,\ \lim g = \lim h = L \Rightarrow \lim f = L \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · แซนด์วิช</span><h3>\(\lim_{x\to 0}x^2\sin\dfrac{1}{x}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\sin(1/x)\) แกว่งไม่มีลิมิต ใช้กฎผลคูณไม่ได้ แต่ \(-1 \le \sin(1/x) \le 1\)</p>\[ -x^2 \le x^2\sin\frac1x \le x^2 \]</li>
+        <li><p>ทั้ง \(-x^2\) และ \(x^2\) เข้าหา 0 <a class="tag tf" href="#L7">L7</a></p></li>
+      </ol>
+      <p class="answer">\(\lim = 0\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="indeterminate">
+    <h2 id="indeterminate">รูปแบบ 0/0: แยกตัวประกอบ คอนจูเกต และจัดรูป <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้าแทนค่าแล้วได้ \(0/0\) แปลว่าเศษกับส่วนมีตัวประกอบ \((x - a)\) ร่วมกันซ่อนอยู่ งานของเราคือดึงมันออกมาตัดทิ้ง</p>
+    <div class="wx" id="ex-l4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-4 · แยกตัวประกอบ</span><h3>\(\lim_{x\to 2}\dfrac{x^2 - 4}{x - 2}\) และ \(\lim_{x\to 1}\dfrac{x^3 - 1}{x^2 - 1}\)</h3></div>
+      <ol class="steps">
+        <li>\[ \frac{(x-2)(x+2)}{x-2} = x + 2 \to 4 \]</li>
+        <li>\[ \frac{(x-1)(x^2+x+1)}{(x-1)(x+1)} = \frac{x^2 + x + 1}{x + 1} \to \frac{3}{2} \]</li>
+      </ol>
+      <p class="answer">\(4\) และ \(\tfrac32\) · ตัดได้เพราะขณะ “เข้าใกล้” \(x \ne a\)</p>
+    </div>
+    <div class="wx" id="ex-l5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-5 · คูณคอนจูเกต</span><h3>\(\lim_{x\to 0}\dfrac{\sqrt{x + 4} - 2}{x}\)</h3></div>
+      <ol class="steps">
+        <li>\[ \frac{\sqrt{x+4} - 2}{x}\cdot\frac{\sqrt{x+4} + 2}{\sqrt{x+4} + 2} = \frac{(x + 4) - 4}{x(\sqrt{x+4} + 2)} = \frac{1}{\sqrt{x+4} + 2} \]</li>
+        <li>\[ \to \frac{1}{2 + 2} = \frac14 \]</li>
+      </ol>
+      <p class="answer">\(\tfrac14\) ซึ่งคือความชันของ \(\sqrt{x}\) ที่ \(x = 4\) (ผลหารผลต่างของอนุพันธ์)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trig-limits">
+    <h2 id="trig-limits">ลิมิตตรีโกณมิติและค่า e <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="L8" data-k="sin x over x limit 1 squeeze geometry sinc ลิมิตตรีโกณ">
+        <p class="tf-n"><b><span class="fid">L8</span> Fundamental trig limit</b> ลิมิตพื้นฐาน</p>
+        \[ \lim_{x\to 0}\frac{\sin x}{x} = 1,\qquad \lim_{x\to 0}\frac{1 - \cos x}{x} = 0,\qquad \lim_{x\to0}\frac{1-\cos x}{x^2} = \frac12 \]
+        <p class="tf-x">พิสูจน์ด้วยแซนด์วิช: \(\cos x \le \frac{\sin x}{x} \le 1\) จากพื้นที่สามเหลี่ยมกับเซกเตอร์ในวงกลมหนึ่งหน่วย · x ต้องเป็นเรเดียน · ฟังก์ชัน \(\operatorname{sinc}\) ในสัญญาณมาจากลิมิตนี้</p>
+      </div>
+      <div class="tf" id="L9" data-k="number e definition compound interest exponential limit ค่า e">
+        <p class="tf-n"><b><span class="fid">L9</span> The number e</b> ค่า e</p>
+        \[ e = \lim_{n\to\infty}\left(1 + \frac1n\right)^n = \lim_{x\to 0}(1 + x)^{1/x} \approx 2.71828 \]
+        \[ \lim_{x\to0}\frac{e^x - 1}{x} = 1,\qquad \lim_{x\to 0}\frac{\ln(1+x)}{x} = 1 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-6</span><h3>(ก) \(\lim_{x\to0}\dfrac{\sin 3x}{x}\) (ข) \(\lim_{x\to0}\dfrac{\tan x}{x}\) (ค) \(\lim_{x\to\infty}\left(1 + \dfrac2x\right)^x\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) คูณและหารด้วย 3: \(3\cdot\dfrac{\sin 3x}{3x} \to 3\cdot 1 = 3\)</p></li>
+        <li><p>(ข) \(\dfrac{\sin x}{x}\cdot\dfrac{1}{\cos x} \to 1\cdot 1 = 1\)</p></li>
+        <li><p>(ค) ให้ \(n = x/2\): \(\left(1 + \dfrac1n\right)^{2n} = \left[\left(1 + \dfrac1n\right)^n\right]^2 \to e^2\)</p></li>
+      </ol>
+      <p class="answer">\(3,\ 1,\ e^2\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="infinity">
+    <h2 id="infinity">ลิมิตที่อนันต์ ลิมิตอนันต์ และเส้นกำกับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L10" data-k="limit at infinity rational degree leading coefficient horizontal asymptote ลิมิตที่อนันต์ เส้นกำกับแนวนอน">
+        <p class="tf-n"><b><span class="fid">L10</span> Rational functions at ∞</b> ฟังก์ชันตรรกยะเมื่อ x → ∞</p>
+        \[ \lim_{x\to\infty}\frac{a_nx^n + \cdots}{b_mx^m + \cdots} = \begin{cases} 0, & n &lt; m \\ a_n/b_m, & n = m \\ \pm\infty, & n > m \end{cases} \]
+        <p class="tf-x">วิธีทำ: หารทั้งเศษและส่วนด้วยกำลังสูงสุดของตัวส่วน ค่าที่ได้คือเส้นกำกับแนวนอน</p>
+      </div>
+      <div class="tf" id="L11" data-k="vertical asymptote infinite limit เส้นกำกับแนวตั้ง">
+        <p class="tf-n"><b><span class="fid">L11</span> Vertical asymptote</b> เส้นกำกับแนวตั้ง</p>
+        \[ \lim_{x\to a^\pm}f(x) = \pm\infty \Rightarrow x = a \text{ เป็นเส้นกำกับแนวตั้ง} \]
+      </div>
+      <div class="tf" id="L12" data-k="oblique slant asymptote long division เส้นกำกับเฉียง">
+        <p class="tf-n"><b><span class="fid">L12</span> Oblique asymptote</b> เส้นกำกับเฉียง</p>
+        \[ f(x) = mx + b + r(x),\ r(x)\to 0 \Rightarrow y = mx + b \]
+        <p class="tf-x">เกิดเมื่อดีกรีเศษมากกว่าส่วนหนึ่งพอดี หาด้วยการหารยาว</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-7 · เส้นกำกับทั้งสามแบบ</span><h3>(ก) \(\lim_{x\to\infty}\dfrac{3x^2 + 2x}{5x^2 - 1}\) (ข) เส้นกำกับของ \(\dfrac{x+1}{x-2}\) (ค) เส้นกำกับของ \(\dfrac{x^2+1}{x-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) หารด้วย \(x^2\): \(\dfrac{3 + 2/x}{5 - 1/x^2} \to \dfrac35\)</p></li>
+        <li><p>(ข) แนวตั้ง \(x = 2\) (ส่วนเป็นศูนย์ เศษไม่เป็นศูนย์) · แนวนอน \(y = 1\) (ดีกรีเท่ากัน 1/1)</p></li>
+        <li><p>(ค) หารยาว \(\dfrac{x^2+1}{x-1} = x + 1 + \dfrac{2}{x-1}\) → แนวเฉียง \(y = x + 1\) และแนวตั้ง \(x = 1\)</p></li>
+      </ol>
+      <p class="answer">\(\tfrac35\) · \(x = 2,\ y = 1\) · \(y = x + 1,\ x = 1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="continuity">
+    <h2 id="continuity">ความต่อเนื่องและทฤษฎีบทค่าระหว่างกลาง <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L13" data-k="continuity three conditions definition ความต่อเนื่อง">
+        <p class="tf-n"><b><span class="fid">L13</span> Continuity at a point</b> ต่อเนื่องที่ x = a</p>
+        \[ \text{(1) } f(a) \text{ มีค่า}\quad \text{(2) } \lim_{x\to a}f(x) \text{ มีค่า}\quad \text{(3) } \lim_{x\to a}f(x) = f(a) \]
+        <p class="tf-x">ผิดข้อใดข้อหนึ่ง = ไม่ต่อเนื่อง: ถอดได้ (รู · แก้ได้ด้วยการนิยามค่าใหม่) · กระโดด (ซ้าย ≠ ขวา) · อนันต์ (เส้นกำกับแนวตั้ง) · แกว่ง (\(\sin(1/x)\))</p>
+      </div>
+      <div class="tf wide" id="L14" data-k="intermediate value theorem ivt root bisection ทฤษฎีบทค่าระหว่างกลาง แบ่งครึ่ง">
+        <p class="tf-n"><b><span class="fid">L14</span> Intermediate value theorem</b> ทฤษฎีบทค่าระหว่างกลาง</p>
+        \[ f \text{ ต่อเนื่องบน } [a, b],\ f(a) &lt; N &lt; f(b) \Rightarrow \exists c \in (a, b):\ f(c) = N \]
+        <p class="tf-x">ถ้า \(f(a)\) กับ \(f(b)\) ต่างเครื่องหมาย ต้องมีรากระหว่างนั้น เป็นหลักของวิธีแบ่งครึ่งช่วง (bisection) ที่ใช้หาจุดทำงานของวงจรไม่เชิงเส้น</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-8 · ทำให้ต่อเนื่อง</span><h3>หา \(k\) ที่ทำให้ \(f(x) = kx + 1\) เมื่อ \(x \le 2\) และ \(x^2 - k\) เมื่อ \(x > 2\) ต่อเนื่องทุกจุด</h3></div>
+      <ol class="steps">
+        <li><p>แต่ละช่วงเป็นพหุนาม ต่อเนื่องอยู่แล้ว ต้องตรวจที่รอยต่อ x = 2 เท่านั้น</p>\[ \lim_{x\to2^-}f = 2k + 1,\qquad \lim_{x\to2^+}f = 4 - k \]</li>
+        <li>\[ 2k + 1 = 4 - k \Rightarrow k = 1 \]</li>
+      </ol>
+      <p class="answer">\(k = 1\) (ทั้งสองข้างเท่ากับ 3 และ \(f(2) = 3\))</p>
+    </div>
+    <div class="wx" id="ex-l9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-9 · แบ่งครึ่งช่วงหาราก</span><h3>แสดงว่า \(x^3 - x - 1 = 0\) มีรากใน \([1, 2]\) แล้วประมาณค่า</h3></div>
+      <ol class="steps">
+        <li><p>\(f(1) = -1 &lt; 0\), \(f(2) = 5 > 0\) และ f ต่อเนื่อง → มีรากใน \((1, 2)\) <a class="tag tf" href="#L14">L14</a></p></li>
+        <li><p>\(f(1.5) = 0.875 > 0\) → ราก ∈ \((1, 1.5)\) · \(f(1.25) = -0.297 &lt; 0\) → ∈ \((1.25, 1.5)\) · \(f(1.375) = 0.225\) → ∈ \((1.25, 1.375)\) …</p></li>
+      </ol>
+      <p class="answer">ลู่เข้าสู่ \(x \approx 1.3247\) (ทุกรอบช่วงแคบลงครึ่งหนึ่ง) วิธี<a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>เร็วกว่ามากแต่ต้องใช้อนุพันธ์</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lhopital">
+    <h2 id="lhopital">กฎของโลปิตาล (L'Hôpital's Rule) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="L15" data-k="lhopital rule 0/0 infinity/infinity derivative โลปิตาล">
+        <p class="tf-n"><b><span class="fid">L15</span> L'Hôpital's rule</b> กฎของโลปิตาล</p>
+        \[ \frac{f(x)}{g(x)} \to \frac00 \text{ หรือ } \frac{\infty}{\infty} \ \Rightarrow\ \lim\frac{f(x)}{g(x)} = \lim\frac{f'(x)}{g'(x)} \]
+        <p class="tf-x">หาอนุพันธ์เศษและส่วน<b>แยกกัน</b> ไม่ใช่กฎผลหาร · ใช้ซ้ำได้ถ้ายังเป็น 0/0 · ต้องการ<a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์</a></p>
+      </div>
+      <div class="tf wide" id="L16" data-k="other indeterminate forms 0 times infinity infinity minus infinity 1^infinity 0^0 รูปแบบยังไม่กำหนด">
+        <p class="tf-n"><b><span class="fid">L16</span> Other indeterminate forms</b> แปลงรูปก่อนใช้</p>
+        \[ 0\cdot\infty \to \frac{f}{1/g} \qquad \infty - \infty \to \text{รวมเศษส่วน} \qquad 1^\infty,\ 0^0,\ \infty^0 \to e^{\lim g\ln f} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-10 · โลปิตาลทุกรูปแบบ</span><h3>(ก) \(\lim_{x\to0}\dfrac{e^x - 1 - x}{x^2}\) (ข) \(\lim_{x\to\infty}xe^{-x}\) (ค) \(\lim_{x\to0^+}x\ln x\) (ง) \(\lim_{x\to0^+}x^x\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) 0/0 สองครั้ง: \(\dfrac{e^x - 1}{2x} \to \dfrac{e^x}{2} \to \dfrac12\)</p></li>
+        <li><p>(ข) \(\infty\cdot0\) → \(\dfrac{x}{e^x}\) (∞/∞) → \(\dfrac{1}{e^x} \to 0\) · เอกซ์โพเนนเชียลชนะพหุนามเสมอ</p></li>
+        <li><p>(ค) \(0\cdot(-\infty)\) → \(\dfrac{\ln x}{1/x}\) → \(\dfrac{1/x}{-1/x^2} = -x \to 0\)</p></li>
+        <li><p>(ง) \(0^0\) → \(x^x = e^{x\ln x} \to e^0 = 1\) (ใช้ผล (ค))</p></li>
+      </ol>
+      <p class="answer">\(\tfrac12,\ 0,\ 0,\ 1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">ลิมิตในงานวิศวกรรมไฟฟ้า <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ลิมิต</th><th>ความหมายทางวิศวกรรม</th></tr></thead>
+        <tbody>
+          <tr><td>\(\lim_{t\to\infty}V\left(1 - e^{-t/\tau}\right) = V\)</td><td>ค่าสุดท้ายของการชาร์จ (สถานะคงตัว) ใช้ทฤษฎีบทค่าสุดท้ายของลาปลาซหาได้โดยไม่แปลงกลับ <a href="/learn/laplace-transform/properties/#limit-theorems">P16</a></td></tr>
+          <tr><td>\(\lim_{\Delta t\to0}\dfrac{\Delta q}{\Delta t} = \dfrac{dq}{dt} = i\)</td><td>นิยามกระแสไฟฟ้าคืออนุพันธ์ของประจุ</td></tr>
+          <tr><td>\(v_C(0^-) = v_C(0^+)\)</td><td>แรงดันตัวเก็บประจุต่อเนื่องเสมอ (ไม่กระโดด) เพราะต้องใช้กระแสอนันต์</td></tr>
+          <tr><td>\(\lim_{\omega\to\infty}\left|\dfrac{1}{1 + j\omega RC}\right| = 0\)</td><td>วงจร RC ตัดความถี่สูง (low-pass)</td></tr>
+          <tr><td>\(\lim_{x\to 0}\dfrac{\sin\pi x}{\pi x} = 1\)</td><td>ฟังก์ชัน sinc มีค่า 1 ที่ศูนย์ เป็นสเปกตรัมของพัลส์สี่เหลี่ยม</td></tr>
+          <tr><td>\(\lim_{n\to\infty}\left(1 + \dfrac{r}{n}\right)^{n} = e^{r}\)</td><td>การเติบโตต่อเนื่อง ที่มาของ \(e\) ในสมการประจุ-คายประจุ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">บทต่อไป: <a href="/learn/differential-calculus/">อนุพันธ์</a> คือลิมิตของผลหารผลต่าง \(\lim_{h\to0}\frac{f(x+h) - f(x)}{h}\)</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

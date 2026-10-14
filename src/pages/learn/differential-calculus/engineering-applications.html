@@ -1,0 +1,268 @@
+<!--meta
+{
+  "title": "การประยุกต์อนุพันธ์ทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา: i = C dv/dt ถ่ายโอนกำลังสูงสุด กลไกข้อเหวี่ยง คาน และการออกแบบเหมาะสม | อาจารย์มด",
+  "h1": "การประยุกต์อนุพันธ์ทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา",
+  "description": "อนุพันธ์ในงานวิศวกรรมจริงพร้อมตัวอย่างตัวเลข ไฟฟ้า: กระแสตัวเก็บประจุ แรงดันตัวเหนี่ยวนำ กฎของฟาราเดย์ ถ่ายโอนกำลังสูงสุด ความต้านทานสัญญาณเล็กของไดโอด ความไว · เครื่องกล: ความเร็ว ความเร่ง กลไกข้อเหวี่ยง-ก้านสูบ การนำความร้อน กำลังสูงสุดของมอเตอร์ · โยธา: ความชันและโมเมนต์ของคาน การโก่ง โค้งทางดิ่งของถนน หน้าตัดรางน้ำที่ดีที่สุด และความคลาดเคลื่อนงานสำรวจ พร้อมแล็บโต้ตอบ",
+  "ogTitle": "อนุพันธ์ในงานไฟฟ้า เครื่องกล โยธา: ตัวอย่างจริงพร้อมแล็บ",
+  "lesson": "differential-calculus",
+  "sub": "engineering-applications",
+  "nav": "der",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["Undergraduate"],
+  "about": ["Applications of derivatives", "Capacitor current", "Inductor voltage", "Maximum power transfer", "Kinematics", "Slider-crank mechanism", "Beam deflection", "Optimization", "Error propagation"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/sigexpr.js", "/assets/mathkit.js", "/assets/calc-lab.js"],
+  "faq": [
+    {"q": "วิศวกรไฟฟ้าใช้อนุพันธ์ทำอะไรบ่อยที่สุด?", "a": "ความสัมพันธ์ของตัวเก็บประจุ \\(i = C\\,dv/dt\\) และตัวเหนี่ยวนำ \\(v = L\\,di/dt\\) ซึ่งทำให้วงจร RC RL RLC เป็นสมการเชิงอนุพันธ์ กฎของฟาราเดย์ในหม้อแปลงและมอเตอร์ และการหาค่าเหมาะสม เช่นการถ่ายโอนกำลังสูงสุด"},
+    {"q": "ทำไมรีเลย์ต้องมีไดโอดคร่อม?", "a": "เพราะเมื่อตัดกระแสในขดลวดทันที \\(di/dt\\) มีค่ามาก แรงดัน \\(v = L\\,di/dt\\) จึงพุ่งเป็นพันโวลต์และทำลายทรานซิสเตอร์ที่ขับ ไดโอดฟรีวีลให้ทางกระแสไหลต่อจนค่อย ๆ ลดลง"},
+    {"q": "ทำไมโมเมนต์ดัดสูงสุดของคานอยู่ตรงที่แรงเฉือนเป็นศูนย์?", "a": "เพราะ \\(dM/dx = V\\) โมเมนต์มีค่าสุดขีดตรงที่อนุพันธ์เป็นศูนย์ คือที่แรงเฉือนเปลี่ยนเครื่องหมาย หลักเดียวกับการหาค่าสูงสุดของฟังก์ชันใด ๆ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-calculus/">อนุพันธ์</a></li><li>การประยุกต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 4.1 · อนุพันธ์ · Engineering Applications</p>
+      <h1>การประยุกต์อนุพันธ์ทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา</h1>
+      <p class="lede">อนุพันธ์ไม่ใช่แค่แบบฝึกหัดในห้อง ทุกสาขาวิศวกรรมใช้มันทุกวัน: วิศวกรไฟฟ้าใช้หากระแสในตัวเก็บประจุและแรงดันกระชากของขดลวด วิศวกรเครื่องกลใช้หาความเร็วและความเร่งของกลไก วิศวกรโยธาใช้อ่านความชันและโมเมนต์ของคาน และทุกสาขาใช้หาจุดที่ดีที่สุด หน้านี้แยกตามสาขา ทุกตัวอย่างมีตัวเลขจริงและแล็บให้ลอง สูตรใช้รหัส A</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#electrical">ไฟฟ้า</a>
+        <a class="btn btn-ghost btn-sm" href="#mechanical">เครื่องกล</a>
+        <a class="btn btn-ghost btn-sm" href="#civil">โยธา</a>
+        <a class="btn btn-ghost btn-sm" href="#optimization">ออกแบบเหมาะสม</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ไฟฟ้า: \(i = C\frac{dv}{dt}\), \(v = L\frac{di}{dt}\), \(e = -N\frac{d\Phi}{dt}\), กำลังสูงสุดเมื่อ \(R_L = R_s\)</li>
+          <li>เครื่องกล: \(v = \dot x,\ a = \dot v\), \(q = -k\frac{dT}{dx}\), \(P = T\omega\) สูงสุดที่ครึ่งความเร็วไร้โหลด</li>
+          <li>โยธา: \(V = \frac{dM}{dx}\), \(\theta = \frac{dy}{dx}\), \(M = EI\frac{d^2y}{dx^2}\) โมเมนต์สูงสุดที่ V = 0</li>
+          <li>ทุกสาขา: ค่าเหมาะสมอยู่ที่อนุพันธ์ = 0 และความคลาดเคลื่อน \(dy = f'(x)dx\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น capacitor, inductor, faraday, power, crank, heat, beam, curve, channel" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ===================== ELECTRICAL ===================== -->
+    <section class="tsec" aria-labelledby="electrical">
+    <h2 id="electrical">วิศวกรรมไฟฟ้า: C, L, ฟาราเดย์ และกำลัง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="A1" data-k="capacitor current i = C dv/dt ตัวเก็บประจุ กระแส">
+        <p class="tf-n"><b><span class="fid">A1</span> Capacitor</b> ตัวเก็บประจุ</p>
+        \[ i_C = C\frac{dv_C}{dt} \]
+        <p class="tf-x">แรงดันคงที่ → ไม่มีกระแส (DC เปิดวงจร) · แรงดันกระโดด → กระแสอนันต์ จึงเป็นไปไม่ได้</p>
+      </div>
+      <div class="tf" id="A2" data-k="inductor voltage v = L di/dt ตัวเหนี่ยวนำ แรงดัน">
+        <p class="tf-n"><b><span class="fid">A2</span> Inductor</b> ตัวเหนี่ยวนำ</p>
+        \[ v_L = L\frac{di_L}{dt} \]
+        <p class="tf-x">กระแสคงที่ → ไม่มีแรงดัน (DC ลัดวงจร) · ตัดกระแสเร็ว → แรงดันกระชากสูงมาก</p>
+      </div>
+      <div class="tf" id="A3" data-k="faraday law induced emf flux linkage กฎของฟาราเดย์ แรงเคลื่อน">
+        <p class="tf-n"><b><span class="fid">A3</span> Faraday's law</b> กฎของฟาราเดย์</p>
+        \[ e = -N\frac{d\Phi}{dt} = -\frac{d\lambda}{dt} \]
+      </div>
+      <div class="tf" id="A4" data-k="maximum power transfer load resistance ถ่ายโอนกำลังสูงสุด">
+        <p class="tf-n"><b><span class="fid">A4</span> Maximum power transfer</b> ถ่ายโอนกำลังสูงสุด</p>
+        \[ P = \frac{V_s^2R_L}{(R_s + R_L)^2},\quad \frac{dP}{dR_L} = 0 \Rightarrow R_L = R_s,\ P_{\max} = \frac{V_s^2}{4R_s} \]
+      </div>
+      <div class="tf" id="A5" data-k="small signal resistance diode dynamic resistance r_d = nVT/ID สัญญาณเล็ก">
+        <p class="tf-n"><b><span class="fid">A5</span> Small-signal resistance</b> ความต้านทานพลวัต</p>
+        \[ r_d = \frac{dV_D}{dI_D} = \frac{nV_T}{I_D} \]
+        <p class="tf-x">ความชันของกราฟ I-V ที่จุดทำงาน = การประมาณเชิงเส้น <a href="/learn/differential-calculus/#D30">D30</a></p>
+      </div>
+      <div class="tf" id="A6" data-k="sensitivity relative change partial derivative tolerance ความไว">
+        <p class="tf-n"><b><span class="fid">A6</span> Sensitivity</b> ความไว</p>
+        \[ S_x^y = \frac{\partial y}{\partial x}\cdot\frac{x}{y} \approx \frac{\Delta y/y}{\Delta x/x} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-ae1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-1 · กระแสตัวเก็บประจุ</span><h3>\(v(t) = 10\sin(100\pi t)\) V คร่อม \(C = 10\ \mu\text{F}\) หา \(i(t)\)</h3></div>
+      <ol class="steps">
+        <li>\[ i = C\frac{dv}{dt} = 10\times10^{-6}\cdot 10\cdot100\pi\cos(100\pi t) = 0.0314\cos(100\pi t)\ \text{A} \]</li>
+      </ol>
+      <p class="answer">ยอด 31.4 mA และกระแสนำหน้าแรงดัน 90° (cos นำ sin) ตรงกับ \(X_C = 1/(\omega C) = 318\ \Omega\): \(10/318 = 31.4\) mA ✓</p>
+    </div>
+    <div class="wx" id="ex-ae2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-2 · แรงดันกระชากของรีเลย์</span><h3>ขดลวด \(L = 50\) mH มีกระแส 2 A (ก) เพิ่มกระแสจาก 0 ถึง 2 A ใน 1 ms (ข) ตัดกระแสเหลือ 0 ใน 10 µs</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(v = 0.05\times\dfrac{2}{10^{-3}} = 100\) V</p></li>
+        <li><p>(ข) \(v = 0.05\times\dfrac{2}{10^{-5}} = 10{,}000\) V</p></li>
+      </ol>
+      <p class="answer">ตัดเร็วขึ้น 100 เท่า แรงดันสูงขึ้น 100 เท่าเป็น 10 kV จึงต้องมีไดโอดฟรีวีลคร่อมขดลวดเสมอ</p>
+    </div>
+    <div class="cl-cap" data-wave="trap"></div>
+    <div class="wx" id="ex-ae3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-3 · กฎของฟาราเดย์ในหม้อแปลง</span><h3>ฟลักซ์ \(\Phi = 0.02\sin(100\pi t)\) Wb ผ่านขดลวด 100 รอบ หาแรงเคลื่อนเหนี่ยวนำ</h3></div>
+      <ol class="steps">
+        <li>\[ e = -N\frac{d\Phi}{dt} = -100\cdot0.02\cdot100\pi\cos(100\pi t) = -628.3\cos(100\pi t)\ \text{V} \]</li>
+      </ol>
+      <p class="answer">ยอด 628 V (RMS ≈ 444 V) ตรงกับสมการหม้อแปลง \(E_{\text{rms}} = 4.44fN\Phi_m = 4.44(50)(100)(0.02) = 444\) V ✓ — 4.44 มาจาก \(2\pi/\sqrt2\) ซึ่งได้จากการหาอนุพันธ์</p>
+    </div>
+    <div class="wx" id="ex-ae4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-4 · ถ่ายโอนกำลังสูงสุด</span><h3>แหล่งจ่าย 12 V ความต้านทานภายใน 4 Ω ต่อโหลด \(R_L\) หาค่าที่ได้กำลังสูงสุด</h3></div>
+      <ol class="steps">
+        <li>\[ P = \frac{144R_L}{(4 + R_L)^2},\quad \frac{dP}{dR_L} = 144\frac{(4 + R_L) - 2R_L}{(4 + R_L)^3} = \frac{144(4 - R_L)}{(4 + R_L)^3} \]</li>
+        <li><p>\(dP/dR_L = 0 \Rightarrow R_L = 4\ \Omega\) (ก่อนหน้าเป็นบวก หลังเป็นลบ → สูงสุด)</p>\[ P_{\max} = \frac{144\cdot4}{64} = 9\ \text{W} \]</li>
+      </ol>
+      <p class="answer">\(R_L = 4\ \Omega\), \(P_{\max} = 9\) W ประสิทธิภาพตอนนั้นแค่ 50% ระบบไฟฟ้ากำลังจึงไม่ทำงานที่จุดนี้ แต่วงจรสื่อสารและสายอากาศจับคู่ให้ได้กำลังสูงสุด</p>
+    </div>
+    <div class="wx" id="ex-ae5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-5 · ความต้านทานสัญญาณเล็กและความไว</span><h3>(ก) ไดโอดทำงานที่ \(I_D = 1\) mA, \(nV_T = 26\) mV หา \(r_d\) (ข) วงจรแบ่งแรงดัน \(R_1 = R_2\) ถ้า \(R_2\) คลาด 1% \(V_o\) คลาดเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(r_d = 26\text{ mV}/1\text{ mA} = 26\ \Omega\)</p></li>
+        <li><p>(ข) \(V_o = V_i\dfrac{R_2}{R_1 + R_2}\): \(S = \dfrac{\partial V_o}{\partial R_2}\dfrac{R_2}{V_o} = \dfrac{R_1}{R_1 + R_2} = 0.5\)</p></li>
+      </ol>
+      <p class="answer">(ก) 26 Ω · (ข) 0.5% — ความไวบอกว่าควรใช้ตัวต้านทานเกรดไหน</p>
+    </div>
+    </section>
+
+    <!-- ===================== MECHANICAL ===================== -->
+    <section class="tsec" aria-labelledby="mechanical">
+    <h2 id="mechanical">วิศวกรรมเครื่องกล: การเคลื่อนที่ กลไก ความร้อน และกำลัง <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="A7" data-k="velocity acceleration kinematics jerk ความเร็ว ความเร่ง">
+        <p class="tf-n"><b><span class="fid">A7</span> Kinematics</b> จลนศาสตร์</p>
+        \[ v = \frac{dx}{dt},\quad a = \frac{dv}{dt} = \frac{d^2x}{dt^2},\quad a = v\frac{dv}{dx} \]
+      </div>
+      <div class="tf" id="A8" data-k="slider crank piston position velocity acceleration ข้อเหวี่ยง ลูกสูบ">
+        <p class="tf-n"><b><span class="fid">A8</span> Slider–crank</b> ข้อเหวี่ยง-ก้านสูบ</p>
+        \[ x(\theta) = r\cos\theta + \sqrt{l^2 - r^2\sin^2\theta},\quad v = \omega\frac{dx}{d\theta},\quad a \approx -r\omega^2\left(\cos\theta + \frac rl\cos2\theta\right) \]
+      </div>
+      <div class="tf" id="A9" data-k="newton second law momentum force rate F = dp/dt">
+        <p class="tf-n"><b><span class="fid">A9</span> Newton's second law</b></p>
+        \[ F = \frac{dp}{dt} = m\frac{dv}{dt}\ (m \text{ คงที่}) \]
+      </div>
+      <div class="tf" id="A10" data-k="fourier law heat conduction flux gradient การนำความร้อน">
+        <p class="tf-n"><b><span class="fid">A10</span> Fourier's law</b> การนำความร้อน</p>
+        \[ q = -k\frac{dT}{dx}\ \ (\text{W/m}^2) \]
+      </div>
+      <div class="tf" id="A11" data-k="motor power torque speed maximum power กำลังมอเตอร์ แรงบิด">
+        <p class="tf-n"><b><span class="fid">A11</span> Motor power</b> กำลังของมอเตอร์ DC</p>
+        \[ T = T_0\left(1 - \frac{\omega}{\omega_0}\right),\ P = T\omega \Rightarrow P_{\max} = \frac{T_0\omega_0}{4}\ \text{ที่ } \omega = \frac{\omega_0}{2} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-am1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-6 · ตำแหน่ง ความเร็ว ความเร่ง</span><h3>\(x(t) = 2t^3 - 9t^2 + 12t\) m หาเวลาที่หยุดนิ่งและเวลาที่ความเร่งเป็นศูนย์</h3></div>
+      <ol class="steps">
+        <li>\[ v = 6t^2 - 18t + 12 = 6(t - 1)(t - 2) = 0 \Rightarrow t = 1,\ 2\ \text{s} \]</li>
+        <li>\[ a = 12t - 18 = 0 \Rightarrow t = 1.5\ \text{s} \]</li>
+      </ol>
+      <p class="answer">หยุดที่ t = 1 s (x = 5 m) และ t = 2 s (x = 4 m) ถอยหลังในช่วง 1–2 s · ความเร่งเปลี่ยนเครื่องหมายที่ 1.5 s (จุดเปลี่ยนเว้าของ x(t))</p>
+    </div>
+    <div class="wx" id="ex-am2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-7 · ลูกสูบ</span><h3>\(r = 5\) cm, \(l = 15\) cm หมุน 600 rpm หาความเร็วลูกสูบที่ \(\theta = 90^\circ\) และความเร่งที่ \(\theta = 0^\circ\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\omega = 600\cdot2\pi/60 = 62.83\) rad/s · \(\dfrac{dx}{d\theta} = -r\sin\theta - \dfrac{r^2\sin\theta\cos\theta}{\sqrt{l^2 - r^2\sin^2\theta}}\) ที่ 90°: \(= -5\) cm/rad</p>\[ v = -5\times62.83 = -314\ \text{cm/s} = -3.14\ \text{m/s} \]</li>
+        <li><p>ที่ 0°: \(a = -r\omega^2(1 + r/l) = -5(3948)(1.333) = -26{,}319\) cm/s²</p></li>
+      </ol>
+      <p class="answer">\(|v| = 3.14\) m/s ที่ 90° · \(|a| \approx 263\) m/s² ≈ 27 g ที่ศูนย์ตายบน ความเร่งนี้คูณมวลลูกสูบคือแรงที่ก้านสูบต้องรับ</p>
+    </div>
+    <div class="cl-crank"></div>
+    <div class="wx" id="ex-am3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-8 · ความร้อนผ่านผนัง และกำลังมอเตอร์</span><h3>(ก) ผนัง \(k = 0.8\) W/m·K หนา 0.2 m ด้านใน 30 °C ด้านนอก 20 °C (ข) มอเตอร์ \(T_0 = 2\) N·m, \(\omega_0 = 300\) rad/s</h3></div>
+      <ol class="steps">
+        <li><p>(ก) อุณหภูมิลดลงเชิงเส้น \(dT/dx = -10/0.2 = -50\) K/m → \(q = -0.8(-50) = 40\) W/m²</p></li>
+        <li><p>(ข) \(P = 2\omega - \tfrac{2}{300}\omega^2\), \(dP/d\omega = 2 - \tfrac{4}{300}\omega = 0 \Rightarrow \omega = 150\) rad/s, \(P = 150\) W</p></li>
+      </ol>
+      <p class="answer">(ก) 40 W/m² · (ข) กำลังสูงสุด 150 W ที่ 150 rad/s (≈ 1432 rpm) ครึ่งหนึ่งของความเร็วไร้โหลด</p>
+    </div>
+    </section>
+
+    <!-- ===================== CIVIL ===================== -->
+    <section class="tsec" aria-labelledby="civil">
+    <h2 id="civil">วิศวกรรมโยธา: คาน ถนน รางน้ำ และงานสำรวจ <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="A12" data-k="beam load shear moment slope deflection relations คาน แรงเฉือน โมเมนต์ ความชัน การโก่ง">
+        <p class="tf-n"><b><span class="fid">A12</span> Beam relations</b> ความสัมพันธ์ของคาน</p>
+        \[ \frac{dV}{dx} = -w(x),\qquad \frac{dM}{dx} = V(x),\qquad \theta = \frac{dy}{dx},\qquad EI\frac{d^2y}{dx^2} = M(x) \]
+        <p class="tf-x">อนุพันธ์ไล่จากการโก่งขึ้นไปหาน้ำหนัก ส่วนการอินทิเกรตไล่ลงมา ดู<a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคานในหน้าอินทิกรัล</a></p>
+      </div>
+      <div class="tf" id="A13" data-k="parabolic vertical curve road grade highest point โค้งทางดิ่ง ถนน">
+        <p class="tf-n"><b><span class="fid">A13</span> Vertical curve</b> โค้งทางดิ่งแบบพาราโบลา</p>
+        \[ y = g_1x + \frac{g_2 - g_1}{2L}x^2,\quad y' = 0 \Rightarrow x = \frac{g_1L}{g_1 - g_2} \]
+      </div>
+      <div class="tf" id="A14" data-k="best hydraulic section rectangular channel wetted perimeter หน้าตัดรางน้ำ">
+        <p class="tf-n"><b><span class="fid">A14</span> Best rectangular channel</b> หน้าตัดรางน้ำดีที่สุด</p>
+        \[ P = \frac{A}{y} + 2y,\quad \frac{dP}{dy} = 0 \Rightarrow b = 2y \]
+      </div>
+    </div>
+    <div class="wx" id="ex-ac1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-9 · โมเมนต์สูงสุดของคาน</span><h3>คานช่วงเดียว \(L = 6\) m รับน้ำหนักแผ่ \(w = 10\) kN/m หาโมเมนต์ดัดสูงสุด</h3></div>
+      <ol class="steps">
+        <li><p>แรงปฏิกิริยา \(wL/2 = 30\) kN · \(M(x) = 30x - 5x^2\)</p></li>
+        <li><p>\(\dfrac{dM}{dx} = 30 - 10x = V(x) = 0 \Rightarrow x = 3\) m (กลางคาน) <a class="tag tf" href="#A12">A12</a></p>\[ M_{\max} = 30(3) - 5(9) = 45\ \text{kN}\cdot\text{m} = \frac{wL^2}{8} \]</li>
+      </ol>
+      <p class="answer">45 kN·m ที่กลางคาน ตรงจุดที่แรงเฉือนเป็นศูนย์</p>
+    </div>
+    <div class="wx" id="ex-ac2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-10 · ความชันที่ฐานและการโก่งสูงสุด</span><h3>คานเดิม \(EI = 20{,}000\) kN·m² เส้นโก่ง \(y = -\dfrac{wx}{24EI}\left(L^3 - 2Lx^2 + x^3\right)\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\theta = y' = -\dfrac{w}{24EI}\left(L^3 - 6Lx^2 + 4x^3\right)\) ที่ฐาน \(x = 0\):</p>\[ \theta_0 = -\frac{wL^3}{24EI} = -\frac{10(216)}{480{,}000} = -0.0045\ \text{rad} \]</li>
+        <li><p>โก่งสูงสุดที่ \(\theta = 0\) คือ \(x = L/2\) (สมมาตร)</p>\[ y_{\max} = -\frac{5wL^4}{384EI} = -\frac{5(10)(1296)}{7{,}680{,}000} = -8.44\ \text{mm} \]</li>
+      </ol>
+      <p class="answer">θ ที่ฐาน 0.0045 rad (0.26°) · โก่ง 8.44 mm ≈ L/711 ผ่านเกณฑ์ทั่วไป L/360</p>
+    </div>
+    <div class="wx" id="ex-ac3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-11 · จุดสูงสุดของโค้งทางดิ่ง</span><h3>ทางขึ้นลาด +3% เปลี่ยนเป็นลง −2% ด้วยโค้งยาว 200 m จุดสูงสุดอยู่ที่ใด</h3></div>
+      <ol class="steps">
+        <li>\[ y' = 0.03 + \frac{-0.02 - 0.03}{200}x = 0 \Rightarrow x = \frac{0.03(200)}{0.05} = 120\ \text{m} \]</li>
+        <li>\[ y(120) = 0.03(120) - \frac{0.05}{400}(120)^2 = 3.6 - 1.8 = 1.8\ \text{m} \]</li>
+      </ol>
+      <p class="answer">ที่ 120 m จากจุดเริ่มโค้ง สูงกว่าจุดเริ่ม 1.8 m (ตำแหน่งท่อระบายน้ำและระยะมองเห็น)</p>
+    </div>
+    <div class="wx" id="ex-ac4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-12 · รางน้ำและงานสำรวจ</span><h3>(ก) รางสี่เหลี่ยมพื้นที่หน้าตัด 8 m² ขนาดใดใช้วัสดุบุน้อยสุด (ข) วัดรัศมีลานวงกลม 50 m คลาด ±0.05 m พื้นที่คลาดเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{dP}{dy} = -\dfrac{8}{y^2} + 2 = 0 \Rightarrow y = 2\) m, \(b = 4\) m, \(P = 8\) m <a class="tag tf" href="#A14">A14</a></p></li>
+        <li><p>(ข) \(dA = 2\pi r\,dr = 2\pi(50)(0.05) = 15.7\) m² (สัมพัทธ์ \(2\,dr/r = 0.2\%\))</p></li>
+      </ol>
+      <p class="answer">(ก) กว้าง 4 m ลึก 2 m · (ข) ±15.7 m² จากพื้นที่ 7,854 m²</p>
+    </div>
+    </section>
+
+    <!-- ===================== OPTIMIZATION ===================== -->
+    <section class="tsec" aria-labelledby="optimization">
+    <h2 id="optimization">แล็บออกแบบให้เหมาะสมที่สุด (ทุกสาขา)</h2>
+    <p>ห้าโจทย์คลาสสิกจากสามสาขา ลากจุดบนกราฟบนเพื่อเปลี่ยนค่า x กราฟล่างคืออนุพันธ์ จุดที่ดีที่สุดอยู่ตรงที่อนุพันธ์ข้ามแกนศูนย์ทุกโจทย์ วิธีคิดเหมือนกันหมด: เขียนปริมาณที่ต้องการให้เป็นฟังก์ชันของตัวแปรเดียว หาอนุพันธ์ ตั้งเท่ากับศูนย์ แล้วตรวจว่าเป็นสูงสุดหรือต่ำสุด</p>
+    <div class="cl-opt" data-preset="power"></div>
+    <div class="wx" id="ex-ao1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง A-13 · กระป๋องใช้วัสดุน้อยสุด</span><h3>กระป๋องทรงกระบอกปิดหัวท้าย ปริมาตร 1 ลิตร (1000 cm³) ใช้แผ่นโลหะน้อยที่สุดเมื่อมีขนาดเท่าใด</h3></div>
+      <ol class="steps">
+        <li><p>\(\pi r^2h = 1000 \Rightarrow h = \dfrac{1000}{\pi r^2}\) · พื้นที่ผิว \(A = 2\pi r^2 + 2\pi rh = 2\pi r^2 + \dfrac{2000}{r}\)</p></li>
+        <li>\[ A'(r) = 4\pi r - \frac{2000}{r^2} = 0 \Rightarrow r^3 = \frac{500}{\pi} \Rightarrow r = 5.42\ \text{cm} \]</li>
+        <li><p>\(A''(r) = 4\pi + 4000/r^3 > 0\) → ต่ำสุด · \(h = 1000/(\pi\cdot5.42^2) = 10.84\) cm</p></li>
+      </ol>
+      <p class="answer">\(r = 5.42\) cm, \(h = 10.84\) cm คือ \(h = 2r\): สูงเท่าเส้นผ่านศูนย์กลาง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="refs">
+    <h2 id="refs">อ่านต่อ</h2>
+    <ul>
+      <li>สูตรและวิธีหาอนุพันธ์ทั้งหมด: <a href="/learn/differential-calculus/">หน้าหลักอนุพันธ์</a></li>
+      <li>ด้านกลับ (สะสม): <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลในงานไฟฟ้า เครื่องกล โยธา</a> พร้อมแล็บคาน</li>
+      <li>สมการเชิงอนุพันธ์ของวงจรและกลไก: <a href="/learn/laplace-transform/differential-equations/">แก้ด้วยการแปลงลาปลาซ</a></li>
+      <li>R. C. Hibbeler, <i>Mechanics of Materials</i> (คาน) · Alexander &amp; Sadiku, <i>Fundamentals of Electric Circuits</i> (C, L) · Stewart, <i>Calculus</i> (applications of differentiation)</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

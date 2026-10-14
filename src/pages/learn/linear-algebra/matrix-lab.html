@@ -1,0 +1,106 @@
+<!--meta
+{
+  "title": "แล็บเมทริกซ์: เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ ดีเทอร์มิแนนต์ อินเวอร์ส แก้ระบบสมการ ค่าเฉพาะ | อาจารย์มด",
+  "h1": "แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2",
+  "description": "แล็บเมทริกซ์ออนไลน์ภาษาไทย เครื่องคิดเลขเมทริกซ์ 2×2 ถึง 4×4 แสดงวิธีทำทีละขั้นด้วยเศษส่วนแม่นตรง หาดีเทอร์มิแนนต์ อินเวอร์สด้วยเกาส์-จอร์แดน แก้ Ax = b พร้อมกฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ ตัวช่วยดูการคูณเมทริกซ์ทีละช่อง และแล็บลากหลักของเมทริกซ์ 2×2 ดูพื้นที่ (det) กับทิศเวกเตอร์เฉพาะ ใช้ตรวจการบ้านได้ทันที",
+  "ogTitle": "แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำแบบเศษส่วน",
+  "lesson": "linear-algebra",
+  "sub": "matrix-lab",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-14",
+  "updated": "2026-10-14",
+  "level": ["High school", "Undergraduate", "Graduate"],
+  "about": ["Matrix calculator", "Determinant", "Inverse matrix", "Gauss–Jordan elimination", "Cramer's rule", "Eigenvalues and eigenvectors", "Matrix multiplication"],
+  "scripts": ["/assets/linalg.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "name": "แล็บเมทริกซ์: เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ",
+      "alternateName": "Matrix lab: step-by-step matrix calculator (Thai)",
+      "url": "https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "THB"},
+      "featureList": ["Determinant by cofactor expansion or row reduction", "Inverse by Gauss–Jordan with exact fractions", "Solve Ax = b: unique, none or infinitely many solutions, with Cramer's rule", "Characteristic polynomial, eigenvalues and eigenvectors", "Matrix multiplication explainer", "Draggable 2×2 transformation lab"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {"q": "เครื่องคิดเลขนี้คำนวณแบบปัดเศษไหม?", "a": "ไม่ปัด ดีเทอร์มิแนนต์ อินเวอร์ส การแก้ระบบ และพหุนามลักษณะเฉพาะคำนวณด้วยเศษส่วนแม่นตรงทุกขั้น ค่าเฉพาะที่เป็นจำนวนตรรกยะได้แบบแม่นตรง ค่าที่เป็นรากที่สองแสดงในรูปราก ส่วนกรณีอื่นแสดงทศนิยม 6 ตำแหน่ง รวมค่าเชิงซ้อน"},
+    {"q": "ใส่เศษส่วนหรือทศนิยมได้ไหม?", "a": "ได้ทั้งจำนวนเต็ม ทศนิยม และเศษส่วน เช่น -3/4 หรือ 0.25 รองรับเมทริกซ์ 2×2 ถึง 4×4"},
+    {"q": "ส่งโจทย์ให้เพื่อนเปิดดูได้อย่างไร?", "a": "ปุ่ม “ลองในเครื่องคิดเลข” ในทุกหน้าของชุดพีชคณิตเชิงเส้นจะเปิดหน้านี้พร้อมโจทย์ ลิงก์มีรูปแบบ /learn/linear-algebra/matrix-lab/#calc=mode=inv&A=1,2;3,4 คัดลอกส่งต่อได้เลย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>แล็บเมทริกซ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 7.9 · พีชคณิตเชิงเส้น · Matrix Lab</p>
+      <h1>แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2</h1>
+      <p class="lede">รวมเครื่องมือเมทริกซ์ทั้งหมดของชุดพีชคณิตเชิงเส้นไว้ในหน้าเดียว ใส่โจทย์ของคุณเองแล้วดูวิธีทำทุกขั้นด้วยเศษส่วนแม่นตรง เหมือนเขียนบนกระดาน ใช้ตรวจการบ้าน เตรียมสอบ หรือเช็กตัวเลขในงานวงจรและโครงสร้าง ปุ่ม “ลองในเครื่องคิดเลข” จากทุกหน้าในชุดจะพาโจทย์มาที่นี่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">เครื่องคิดเลข</a>
+        <a class="btn btn-ghost btn-sm" href="#product">ดูการคูณทีละช่อง</a>
+        <a class="btn btn-ghost btn-sm" href="#transform">แล็บ 2×2</a>
+        <a class="btn btn-ghost btn-sm" href="#presets">โจทย์ตัวอย่าง</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</h2>
+    <p>เลือกโหมด (แก้ระบบสมการ · ดีเทอร์มิแนนต์ · อินเวอร์ส · ค่าเฉพาะ) และขนาด 2×2 ถึง 4×4 รับจำนวนเต็ม ทศนิยม และเศษส่วน เช่น <code>-3/4</code> ทุกขั้นคำนวณแบบเศษส่วน ไม่มีการปัดเศษ</p>
+    <div class="mx-calc" data-modes="solve,det,inv,eig" data-mode="solve" data-n="3" data-a="1,1,1;2,-1,1;1,2,-1" data-b="6,3,2"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="presets">
+    <h2 id="presets">โจทย์ตัวอย่างพร้อมใส่ในเครื่องคิดเลข</h2>
+    <div class="la-help">
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=6,-2,0;-2,5,-2;0,-2,4&amp;b=40,0,0"><b>วงจรสามลูป (เมช)</b><span>เมทริกซ์ความต้านทาน 3×3 · แก้หากระแส</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=1.5,-0.5;-0.5,0.75&amp;b=2,0"><b>วิเคราะห์โนด 2 โนด</b><span>เมทริกซ์ความนำ G · หาแรงดันโนด</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=14,-4;-4,9&amp;b=-0.8,-0.6"><b>การไหลของกำลังแบบ DC</b><span>B′θ = P ระบบ 3 บัส</span></button>
+      <button type="button" class="calc-go" data-calc="mode=eig&amp;A=200,-100;-100,100"><b>โหมดการสั่นมวล-สปริง</b><span>ค่าเฉพาะ = ω² ของระบบ 2 องศาอิสระ</span></button>
+      <button type="button" class="calc-go" data-calc="mode=inv&amp;A=2,-1,0;-1,2,-1;0,-1,2"><b>อินเวอร์สเมทริกซ์สติฟเนส</b><span>เมทริกซ์ไตรทแยงของโครงสร้าง 3 ช่วง</span></button>
+      <button type="button" class="calc-go" data-calc="mode=det&amp;A=1,2,3,4;2,1,0,3;0,1,2,1;3,0,1,2"><b>ดีเทอร์มิแนนต์ 4×4</b><span>กระจายโคแฟกเตอร์หรือลดแถว</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=1,0,0,-1;1,-1,0,0;0,1,-1,0;0,0,1,-1&amp;b=200,200,-200,200"><b>ระบบที่มีคำตอบไม่จำกัด</b><span>เครือข่ายจราจร · ตัวแปรอิสระ</span></button>
+      <button type="button" class="calc-go" data-calc="mode=eig&amp;A=0,1;-5,-2"><b>ค่าเฉพาะเชิงซ้อน</b><span>เมทริกซ์ปริภูมิสถานะของวงจร RLC</span></button>
+    </div>
+    <p class="hint">กดแล้วเครื่องคิดเลขด้านบนจะรับโจทย์ให้อัตโนมัติ ที่มาของแต่ละโจทย์อยู่ใน<a href="/learn/linear-algebra/ee-applications/">งานวงจรไฟฟ้า</a> และ<a href="/learn/linear-algebra/engineering-applications/">งานไฟฟ้า เครื่องกล โยธา</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="product">
+    <h2 id="product">ดูการคูณเมทริกซ์ทีละช่อง</h2>
+    <p>ชี้หรือแตะที่ช่องของผลคูณ แล้วดูว่าแถวไหนของ A คูณกับหลักไหนของ B สิ่งที่ต้องจำ: ขนาดด้านในต้องเท่ากัน (m×<b>n</b> คูณ <b>n</b>×p ได้ m×p) อ่านทฤษฎีใน<a href="/learn/linear-algebra/matrices/#multiplication">หน้าเมทริกซ์</a></p>
+    <div class="mx-prod" data-a="2,-1,3;0,4,1" data-b="1,2;3,0;-2,5">
+      <p class="mxp-h"><b>ลองแตะช่องคำตอบ</b> แล้วดูว่ามาจากแถวไหนคูณหลักไหน</p>
+      <div class="mxp-row" aria-live="polite"></div>
+      <p class="mxp-sum"></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="transform">
+    <h2 id="transform">แล็บการแปลง 2×2: ดีเทอร์มิแนนต์คือพื้นที่ ค่าเฉพาะคือทิศที่ไม่ถูกหมุน</h2>
+    <p>ลากหลักทั้งสองของเมทริกซ์ ตารางกริดและวงกลมหนึ่งหน่วยจะถูกแปลงตาม ในโหมดดีเทอร์มิแนนต์ พื้นที่สี่เหลี่ยมด้านขนานคือ \(|\det A|\) (กลับด้านเมื่อ det &lt; 0) ในโหมดค่าเฉพาะ เส้นเขียวคือทิศที่ \(A\mathbf v\) ขนานกับ \(\mathbf v\)</p>
+    <div class="la-lab" data-mode="det" data-m="3,1;1,2" id="mlDet">
+      <p class="hint">กำลังโหลดแล็บ ลากหัวลูกศรของหลักที่ 1 (ส้ม) และหลักที่ 2 (ฟ้า) เพื่อดูพื้นที่เปลี่ยน</p>
+    </div>
+    <div class="la-lab" data-mode="eig" data-m="2,1;1,2" id="mlEig">
+      <p class="hint">กำลังโหลดแล็บ ลากจุดดำบนวงกลมเพื่อหมุน v หรือลากหัวลูกศรของหลัก เพื่อเปลี่ยนเมทริกซ์</p>
+    </div>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

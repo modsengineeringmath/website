@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แล็บเมทริกซ์: เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ ดีเทอร์มิแนนต์ อินเวอร์ส แก้ระบบสมการ ค่าเฉพาะ | อาจารย์มด</title>
+<meta name="description" content="แล็บเมทริกซ์ออนไลน์ภาษาไทย เครื่องคิดเลขเมทริกซ์ 2×2 ถึง 4×4 แสดงวิธีทำทีละขั้นด้วยเศษส่วนแม่นตรง หาดีเทอร์มิแนนต์ อินเวอร์สด้วยเกาส์-จอร์แดน แก้ Ax = b พร้อมกฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ ตัวช่วยดูการคูณเมทริกซ์ทีละช่อง และแล็บลากหลักของเมทริกซ์ 2×2 ดูพื้นที่ (det) กับทิศเวกเตอร์เฉพาะ ใช้ตรวจการบ้านได้ทันที">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/">
+<meta property="og:title" content="แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำแบบเศษส่วน">
+<meta property="og:description" content="แล็บเมทริกซ์ออนไลน์ภาษาไทย เครื่องคิดเลขเมทริกซ์ 2×2 ถึง 4×4 แสดงวิธีทำทีละขั้นด้วยเศษส่วนแม่นตรง หาดีเทอร์มิแนนต์ อินเวอร์สด้วยเกาส์-จอร์แดน แก้ Ax = b พร้อมกฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ ตัวช่วยดูการคูณเมทริกซ์ทีละช่อง และแล็บลากหลักของเมทริกซ์ 2×2 ดูพื้นที่ (det) กับทิศเวกเตอร์เฉพาะ ใช้ตรวจการบ้านได้ทันที">
+<meta property="og:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำแบบเศษส่วน">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำแบบเศษส่วน">
+<meta name="twitter:description" content="แล็บเมทริกซ์ออนไลน์ภาษาไทย เครื่องคิดเลขเมทริกซ์ 2×2 ถึง 4×4 แสดงวิธีทำทีละขั้นด้วยเศษส่วนแม่นตรง หาดีเทอร์มิแนนต์ อินเวอร์สด้วยเกาส์-จอร์แดน แก้ Ax = b พร้อมกฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ ตัวช่วยดูการคูณเมทริกซ์ทีละช่อง และแล็บลากหลักของเมทริกซ์ 2×2 ดูพื้นที่ (det) กับทิศเวกเตอร์เฉพาะ ใช้ตรวจการบ้านได้ทันที">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=413a1824">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"แล็บเมทริกซ์: เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ","alternateName":"Matrix lab: step-by-step matrix calculator (Thai)","url":"https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","inLanguage":"th","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"THB"},"featureList":["Determinant by cofactor expansion or row reduction","Inverse by Gauss–Jordan with exact fractions","Solve Ax = b: unique, none or infinitely many solutions, with Cramer's rule","Characteristic polynomial, eigenvalues and eigenvectors","Matrix multiplication explainer","Draggable 2×2 transformation lab"],"author":{"@id":"https://modsengineeringmath.com/#mod"}},{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/#article","headline":"แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2","description":"แล็บเมทริกซ์ออนไลน์ภาษาไทย เครื่องคิดเลขเมทริกซ์ 2×2 ถึง 4×4 แสดงวิธีทำทีละขั้นด้วยเศษส่วนแม่นตรง หาดีเทอร์มิแนนต์ อินเวอร์สด้วยเกาส์-จอร์แดน แก้ Ax = b พร้อมกฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ ตัวช่วยดูการคูณเมทริกซ์ทีละช่อง และแล็บลากหลักของเมทริกซ์ 2×2 ดูพื้นที่ (det) กับทิศเวกเตอร์เฉพาะ ใช้ตรวจการบ้านได้ทันที","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Matrix calculator","Determinant","Inverse matrix","Gauss–Jordan elimination","Cramer's rule","Eigenvalues and eigenvectors","Matrix multiplication"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/cover.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2","item":"https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"เครื่องคิดเลขนี้คำนวณแบบปัดเศษไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ปัด ดีเทอร์มิแนนต์ อินเวอร์ส การแก้ระบบ และพหุนามลักษณะเฉพาะคำนวณด้วยเศษส่วนแม่นตรงทุกขั้น ค่าเฉพาะที่เป็นจำนวนตรรกยะได้แบบแม่นตรง ค่าที่เป็นรากที่สองแสดงในรูปราก ส่วนกรณีอื่นแสดงทศนิยม 6 ตำแหน่ง รวมค่าเชิงซ้อน"}},{"@type":"Question","name":"ใส่เศษส่วนหรือทศนิยมได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้ทั้งจำนวนเต็ม ทศนิยม และเศษส่วน เช่น -3/4 หรือ 0.25 รองรับเมทริกซ์ 2×2 ถึง 4×4"}},{"@type":"Question","name":"ส่งโจทย์ให้เพื่อนเปิดดูได้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ปุ่ม “ลองในเครื่องคิดเลข” ในทุกหน้าของชุดพีชคณิตเชิงเส้นจะเปิดหน้านี้พร้อมโจทย์ ลิงก์มีรูปแบบ /learn/linear-algebra/matrix-lab/#calc=mode=inv&A=1,2;3,4 คัดลอกส่งต่อได้เลย"}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" aria-current="page">ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <a href="/#watch" >ดูคลิป</a>
+      <a href="/tools/lesson-editor/" >เครื่องมือ</a>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a></li><li><a href="#presets">โจทย์ตัวอย่างพร้อมใส่ในเครื่องคิดเลข</a></li><li><a href="#product">ดูการคูณเมทริกซ์ทีละช่อง</a></li><li><a href="#transform">แล็บการแปลง 2×2: ดีเทอร์มิแนนต์คือพื้นที่ ค่าเฉพาะคือทิศที่ไม่ถูกหมุน</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>แล็บเมทริกซ์</li></ol>
+      <nav class="series-nav" aria-label="หน้าย่อยในพีชคณิตเชิงเส้น"><span class="sn-title mono">Linear Algebra</span><div class="sn-list"><a href="/learn/linear-algebra/"><span class="sn-n">0</span>ภาพรวม</a><a href="/learn/linear-algebra/matrices/"><span class="sn-n">1</span>เมทริกซ์</a><a href="/learn/linear-algebra/determinants/"><span class="sn-n">2</span>ดีเทอร์มิแนนต์</a><a href="/learn/linear-algebra/linear-systems/"><span class="sn-n">3</span>ระบบสมการ</a><a href="/learn/linear-algebra/inverse/"><span class="sn-n">4</span>อินเวอร์ส</a><a href="/learn/linear-algebra/cramers-rule/"><span class="sn-n">5</span>คราเมอร์</a><a href="/learn/linear-algebra/eigenvalues/"><span class="sn-n">6</span>ค่าเฉพาะ λ</a><a href="/learn/linear-algebra/ee-applications/"><span class="sn-n">7</span>งานไฟฟ้า</a><a href="/learn/linear-algebra/engineering-applications/"><span class="sn-n">8</span>ประยุกต์ ไฟฟ้า · เครื่องกล · โยธา</a><a href="/learn/linear-algebra/matrix-lab/" aria-current="page"><span class="sn-n">9</span>แล็บเมทริกซ์</a></div></nav>
+      <p class="eyebrow">// บทที่ 7.9 · พีชคณิตเชิงเส้น · Matrix Lab</p>
+      <h1>แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2</h1>
+      <p class="lede">รวมเครื่องมือเมทริกซ์ทั้งหมดของชุดพีชคณิตเชิงเส้นไว้ในหน้าเดียว ใส่โจทย์ของคุณเองแล้วดูวิธีทำทุกขั้นด้วยเศษส่วนแม่นตรง เหมือนเขียนบนกระดาน ใช้ตรวจการบ้าน เตรียมสอบ หรือเช็กตัวเลขในงานวงจรและโครงสร้าง ปุ่ม “ลองในเครื่องคิดเลข” จากทุกหน้าในชุดจะพาโจทย์มาที่นี่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-10-14">14 ต.ค. 2569</time></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">เครื่องคิดเลข</a>
+        <a class="btn btn-ghost btn-sm" href="#product">ดูการคูณทีละช่อง</a>
+        <a class="btn btn-ghost btn-sm" href="#transform">แล็บ 2×2</a>
+        <a class="btn btn-ghost btn-sm" href="#presets">โจทย์ตัวอย่าง</a>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a></li><li><a href="#presets">โจทย์ตัวอย่างพร้อมใส่ในเครื่องคิดเลข</a></li><li><a href="#product">ดูการคูณเมทริกซ์ทีละช่อง</a></li><li><a href="#transform">แล็บการแปลง 2×2: ดีเทอร์มิแนนต์คือพื้นที่ ค่าเฉพาะคือทิศที่ไม่ถูกหมุน</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ol></details></nav></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</h2>
+    <p>เลือกโหมด (แก้ระบบสมการ · ดีเทอร์มิแนนต์ · อินเวอร์ส · ค่าเฉพาะ) และขนาด 2×2 ถึง 4×4 รับจำนวนเต็ม ทศนิยม และเศษส่วน เช่น <code>-3/4</code> ทุกขั้นคำนวณแบบเศษส่วน ไม่มีการปัดเศษ</p>
+    <div class="mx-calc" data-modes="solve,det,inv,eig" data-mode="solve" data-n="3" data-a="1,1,1;2,-1,1;1,2,-1" data-b="6,3,2"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="presets">
+    <h2 id="presets">โจทย์ตัวอย่างพร้อมใส่ในเครื่องคิดเลข</h2>
+    <div class="la-help">
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=6,-2,0;-2,5,-2;0,-2,4&amp;b=40,0,0"><b>วงจรสามลูป (เมช)</b><span>เมทริกซ์ความต้านทาน 3×3 · แก้หากระแส</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=1.5,-0.5;-0.5,0.75&amp;b=2,0"><b>วิเคราะห์โนด 2 โนด</b><span>เมทริกซ์ความนำ G · หาแรงดันโนด</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=14,-4;-4,9&amp;b=-0.8,-0.6"><b>การไหลของกำลังแบบ DC</b><span>B′θ = P ระบบ 3 บัส</span></button>
+      <button type="button" class="calc-go" data-calc="mode=eig&amp;A=200,-100;-100,100"><b>โหมดการสั่นมวล-สปริง</b><span>ค่าเฉพาะ = ω² ของระบบ 2 องศาอิสระ</span></button>
+      <button type="button" class="calc-go" data-calc="mode=inv&amp;A=2,-1,0;-1,2,-1;0,-1,2"><b>อินเวอร์สเมทริกซ์สติฟเนส</b><span>เมทริกซ์ไตรทแยงของโครงสร้าง 3 ช่วง</span></button>
+      <button type="button" class="calc-go" data-calc="mode=det&amp;A=1,2,3,4;2,1,0,3;0,1,2,1;3,0,1,2"><b>ดีเทอร์มิแนนต์ 4×4</b><span>กระจายโคแฟกเตอร์หรือลดแถว</span></button>
+      <button type="button" class="calc-go" data-calc="mode=solve&amp;A=1,0,0,-1;1,-1,0,0;0,1,-1,0;0,0,1,-1&amp;b=200,200,-200,200"><b>ระบบที่มีคำตอบไม่จำกัด</b><span>เครือข่ายจราจร · ตัวแปรอิสระ</span></button>
+      <button type="button" class="calc-go" data-calc="mode=eig&amp;A=0,1;-5,-2"><b>ค่าเฉพาะเชิงซ้อน</b><span>เมทริกซ์ปริภูมิสถานะของวงจร RLC</span></button>
+    </div>
+    <p class="hint">กดแล้วเครื่องคิดเลขด้านบนจะรับโจทย์ให้อัตโนมัติ ที่มาของแต่ละโจทย์อยู่ใน<a href="/learn/linear-algebra/ee-applications/">งานวงจรไฟฟ้า</a> และ<a href="/learn/linear-algebra/engineering-applications/">งานไฟฟ้า เครื่องกล โยธา</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="product">
+    <h2 id="product">ดูการคูณเมทริกซ์ทีละช่อง</h2>
+    <p>ชี้หรือแตะที่ช่องของผลคูณ แล้วดูว่าแถวไหนของ A คูณกับหลักไหนของ B สิ่งที่ต้องจำ: ขนาดด้านในต้องเท่ากัน (m×<b>n</b> คูณ <b>n</b>×p ได้ m×p) อ่านทฤษฎีใน<a href="/learn/linear-algebra/matrices/#multiplication">หน้าเมทริกซ์</a></p>
+    <div class="mx-prod" data-a="2,-1,3;0,4,1" data-b="1,2;3,0;-2,5">
+      <p class="mxp-h"><b>ลองแตะช่องคำตอบ</b> แล้วดูว่ามาจากแถวไหนคูณหลักไหน</p>
+      <div class="mxp-row" aria-live="polite"></div>
+      <p class="mxp-sum"></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="transform">
+    <h2 id="transform">แล็บการแปลง 2×2: ดีเทอร์มิแนนต์คือพื้นที่ ค่าเฉพาะคือทิศที่ไม่ถูกหมุน</h2>
+    <p>ลากหลักทั้งสองของเมทริกซ์ ตารางกริดและวงกลมหนึ่งหน่วยจะถูกแปลงตาม ในโหมดดีเทอร์มิแนนต์ พื้นที่สี่เหลี่ยมด้านขนานคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>det</mi><mo>⁡</mo><mi>A</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\det A|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">det</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">A</span><span class="mord">∣</span></span></span></span> (กลับด้านเมื่อ det &lt; 0) ในโหมดค่าเฉพาะ เส้นเขียวคือทิศที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold">v</mi></mrow><annotation encoding="application/x-tex">A\mathbf v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathbf" style="margin-right:0.01597em;">v</span></span></span></span> ขนานกับ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">v</mi></mrow><annotation encoding="application/x-tex">\mathbf v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span></span></span></span></p>
+    <div class="la-lab" data-mode="det" data-m="3,1;1,2" id="mlDet">
+      <p class="hint">กำลังโหลดแล็บ ลากหัวลูกศรของหลักที่ 1 (ส้ม) และหลักที่ 2 (ฟ้า) เพื่อดูพื้นที่เปลี่ยน</p>
+    </div>
+    <div class="la-lab" data-mode="eig" data-m="2,1;1,2" id="mlEig">
+      <p class="hint">กำลังโหลดแล็บ ลากจุดดำบนวงกลมเพื่อหมุน v หรือลากหัวลูกศรของหลัก เพื่อเปลี่ยนเมทริกซ์</p>
+    </div>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">คำถามที่พบบ่อย</h2><details><summary>เครื่องคิดเลขนี้คำนวณแบบปัดเศษไหม?</summary><p>ไม่ปัด ดีเทอร์มิแนนต์ อินเวอร์ส การแก้ระบบ และพหุนามลักษณะเฉพาะคำนวณด้วยเศษส่วนแม่นตรงทุกขั้น ค่าเฉพาะที่เป็นจำนวนตรรกยะได้แบบแม่นตรง ค่าที่เป็นรากที่สองแสดงในรูปราก ส่วนกรณีอื่นแสดงทศนิยม 6 ตำแหน่ง รวมค่าเชิงซ้อน</p></details><details><summary>ใส่เศษส่วนหรือทศนิยมได้ไหม?</summary><p>ได้ทั้งจำนวนเต็ม ทศนิยม และเศษส่วน เช่น -3/4 หรือ 0.25 รองรับเมทริกซ์ 2×2 ถึง 4×4</p></details><details><summary>ส่งโจทย์ให้เพื่อนเปิดดูได้อย่างไร?</summary><p>ปุ่ม “ลองในเครื่องคิดเลข” ในทุกหน้าของชุดพีชคณิตเชิงเส้นจะเปิดหน้านี้พร้อมโจทย์ ลิงก์มีรูปแบบ /learn/linear-algebra/matrix-lab/#calc=mode=inv&A=1,2;3,4 คัดลอกส่งต่อได้เลย</p></details></section>
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Flinear-algebra%2Fmatrix-lab%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Flinear-algebra%2Fmatrix-lab%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Flinear-algebra%2Fmatrix-lab%2F&amp;text=%E0%B9%81%E0%B8%A5%E0%B9%87%E0%B8%9A%E0%B9%80%E0%B8%A1%E0%B8%97%E0%B8%A3%E0%B8%B4%E0%B8%81%E0%B8%8B%E0%B9%8C%3A%20%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%B4%E0%B8%94%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B9%81%E0%B8%AA%E0%B8%94%E0%B8%87%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5%E0%B8%97%E0%B8%B3%20%E0%B8%94%E0%B8%B9%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%B9%E0%B8%93%E0%B8%97%E0%B8%B5%E0%B8%A5%E0%B8%B0%E0%B8%8A%E0%B9%88%E0%B8%AD%E0%B8%87%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%81%E0%B8%9B%E0%B8%A5%E0%B8%87%202%C3%972" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/learn/linear-algebra/matrix-lab/" data-share-title="แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2">คัดลอกลิงก์</button>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/linear-algebra/engineering-applications/"><span class="mono">← หน้าก่อนหน้า</span><b>การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา</b></a><a class="pager-next" href="/learn/laplace-transform/"><span class="mono">บทถัดไป →</span><b>การแปลงลาปลาซ</b></a></nav>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/#calculator">เครื่องคิดเลขเมทริกซ์แสดงวิธีทำ</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=413a1824" defer></script>
+<script src="/assets/linalg.js?v=413a1824" defer></script>
+</body>
+</html>
