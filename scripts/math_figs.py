@@ -436,6 +436,27 @@ def int_dam():
     return c.svg()
 
 
+@fig("home-lap")
+def home_lap():
+    c = S(560, 300, "ระนาบ s ของ H(s) = 2(s+3)/((s+1)(s^2+4s+8)) พร้อม ROC และผลตอบสนองอิมพัลส์ h(t)")
+    P = Plane(c, 12, 26, 270, 250, (-4, 1.5), (-3, 3), tick=1, title="ระนาบ s · ROC: Re s > −1")
+    P.roc(-1, 1e10)
+    P.zero(-3)
+    P.pole(-1)
+    P.pole(-2, 2)
+    P.pole(-2, -2)
+    c.text(P.sx(-3), P.sy(0) - 12, "ซีโร่", "mf-lab", "middle")
+    c.text(P.sx(-2) + 10, P.sy(2) + 4, "−2±2j", "mf-lab")
+    h = lambda t: 0.8 * math.exp(-t) - 0.8 * math.exp(-2 * t) * math.cos(2 * t) + 0.6 * math.exp(-2 * t) * math.sin(2 * t) if t >= 0 else 0
+    mini(c, 300, 26, 248, 150, h, -0.5, 6, title="h(t) = ℒ⁻¹{H(s)}")
+    c.text(300, 198, "h(t) = 0.8e^(−t)", "mf-k")
+    c.text(300, 214, "     − 0.8e^(−2t)cos 2t", "mf-k")
+    c.text(300, 230, "     + 0.6e^(−2t)sin 2t", "mf-k")
+    c.text(300, 254, "โพล −1 ใกล้แกน jω สุด = โพลเด่น", "mf-k")
+    c.text(300, 272, "ROC ครอบแกน jω → เสถียร", "mf-k")
+    return c.svg()
+
+
 # ---------------------------------------------------------------- run
 def main():
     force = "--all" in sys.argv

@@ -158,7 +158,7 @@ calculator engine in Node.
 `src/layout.html` groups the menu: `<div class="nav-grp"><button class="nav-tg" aria-controls>` + `<div class="nav-list [nav-list-r] [nav-list-wide]">`
 (links and `<span class="nav-h">` headings). Below 1600 px the hamburger panel shows the groups as an accordion (the group of the
 current page opens automatically, the current link is highlighted by `site.js` via `.nav-here`); from 1600 px they are dropdowns
-(hover, focus or click; Esc closes). `data-nav` keys: home learn trig calc int vec la lap fos sos sig fg fs cs pe pv watch tools about.
+(hover, focus or click; Esc closes). `data-nav` keys: home learn fn trig lim der int vec la lap fos sos sig fg fs cs pe pv watch tools about.
 To add a page to the menu, add a link to the right group; to add a series, add a group.
 
 ## Vector algebra series (added 2026-10-13)
@@ -194,3 +194,24 @@ Three series in `TOPICS` (build.mjs), topics 15–17, all in `MD_SERIES`; formul
   - In Node, copy the files to `.cjs` and set `globalThis.EEKit = require("./ee-kit.cjs")` before requiring a calculator file.
 - Thai tariffs (2025 rates, Ft as an input), cable ampacity and meter tables are rounded teaching values; worked-example numbers were checked against the engines in Node.
 - Menu: one group "ไฟฟ้ากำลัง" (`data-nav` ev ps pf). Short URLs (`/ev`, `/wallbox`, `/tou`, `/per-unit`, `/tcc`, `/pf`, `/pf-lab` …) are in `_redirects`.
+
+## Mathematics split into subjects · calculus track · Laplace series (added 2026-10-14)
+- Menu: the old combined math dropdown is gone. Inside `<div class="nav-math">` each subject has its own group, in reading order:
+  `fn` functions · `trig` trigonometry · `lim` limits · `der` derivatives · `int` integrals · `vec` vectors · `la` linear algebra · `lap` Laplace.
+  From 1600 px `.nav-math` is a second tab row under the header; below that it is a "คณิตศาสตร์" heading in the hamburger panel
+  (CSS "MATH TABS" block). `<span class="nav-sec">` headings separate math from electrical engineering.
+- Chapters (TOPICS order): 1 functions, 2 trigonometry, 3 limits, 4 differential-calculus (+ `engineering-applications`, prefix A),
+  5 integral-calculus (+ `calculus-basics`, + `engineering-applications`), 6 vector-algebra, 7 linear-algebra (+ `matrix-lab`,
+  + `engineering-applications`, prefix G), 8 laplace-transform (series: `complex-analysis` Z, `pole-zero-roc` R, `properties` P,
+  `differential-equations` Q, `inverse-laplace-transform` V; hub formulas prefix L). Everything after Laplace moved up by 2.
+  `/learn/calculus-basics/` redirects to `/learn/integral-calculus/calculus-basics/`.
+- `hubFx: true` + `hubShort`/`hubPrefix` on a topic adds the hub page's own formulas to the series formula index.
+- New scripts: `assets/mathkit.js` (MK: rationals, nice numbers, TeX, SVG plot with draggable marks), `assets/lap-core.js`
+  (LapCore: parse rational F(s) with e^(-Ts) delays, poles with multiplicity, residues, f(t) and step-by-step TeX; checked against sympy),
+  `assets/lap-lab.js` (widgets `.lap-inv` `.lap-pz` `.lap-cplx` `.lap-map` `.lap-surf` `.lap-res` `.lap-prop` `.lap-ode`;
+  `<button data-lap-f="...">` loads the calculator, `#f=` in the URL too; `data-lap-ode='{"order":2,"a":1,...}'`),
+  `assets/calc-lab.js` (`.cl-fn` `.cl-limit` `.cl-tangent` `.cl-newton` `.cl-opt` `.cl-cap` `.cl-crank` `.cl-rms` `.cl-beam`),
+  `assets/la-eng.js` (`.la-truss`, `.la-modes`). Matrix calculator links: `/learn/linear-algebra/matrix-lab/#calc=`.
+- Static figures: `python3 scripts/math_figs.py` fills empty `<!--FIG:key--><!--/FIG-->` blocks (`--all` redraws). Classes `.mf-*` in site.css.
+- Home: `#math` section (`.math-grid` of subject cards + Laplace feature `home-lap`). Short URLs: `/functions` `/limits`
+  `/derivative` `/laplace` `/inverse-laplace` `/partial-fractions` `/matrix-lab` `/truss` `/beam-lab` in `_redirects`.
