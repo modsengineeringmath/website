@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/robotics/#article","headline":"ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ","description":"ระบบควบคุมหุ่นยนต์สำหรับวิศวกรไฟฟ้า จลนศาสตร์ตรงและผกผันของแขนกลสองข้อต่อ จาโคเบียนและภาวะเอกฐาน สมการพลศาสตร์แขนกล ควบคุมข้อต่ออิสระด้วย PD/PID ชดเชยแรงโน้มถ่วง computed torque control การสร้างวิถีแบบพหุนามกำลังสามและห้า หุ่นยนต์ล้อแบบ differential drive การนำทางไปยังเป้าหมาย หุ่นยนต์ทรงตัวสองล้อ และไอเดียโปรเจกต์หุ่นยนต์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/robotics/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/robotics/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Robotics","Robot control","Forward kinematics","Inverse kinematics","Jacobian matrix","Computed torque control","Trajectory planning","Differential drive robot","Self-balancing robot"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-robotics.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ","item":"https://modsengineeringmath.com/learn/control-systems/robotics/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมควบคุมแขนกลด้วย PID แยกแต่ละข้อต่อได้?","acceptedAnswer":{"@type":"Answer","text":"เพราะข้อต่อส่วนใหญ่มีเกียร์ทดสูง ความเฉื่อยของโหลดที่สะท้อนมายังมอเตอร์ลดลงตามกำลังสองของอัตราทด ผลกระทบระหว่างข้อต่อ (coupling) จึงเล็กเมื่อเทียบกับความเฉื่อยของมอเตอร์เอง มองเป็นการรบกวนที่ PID จัดการได้ แต่หุ่นยนต์ที่ขับตรง (direct drive) หรือเคลื่อนที่เร็วมาก ต้องใช้ computed torque"}},{"@type":"Question","name":"ภาวะเอกฐาน (singularity) คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือท่าที่จาโคเบียนเสียแรงก์ (ดีเทอร์มิแนนต์เป็นศูนย์) เช่น แขนกลเหยียดตรงสุด ปลายแขนเคลื่อนในบางทิศไม่ได้ และการคำนวณความเร็วข้อต่อจากความเร็วปลายแขนจะได้ค่าอนันต์ ต้องวางแผนวิถีให้ห่างจากท่าเหล่านี้"}},{"@type":"Question","name":"หุ่นยนต์ทรงตัวสองล้อควบคุมอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เป็นลูกตุ้มกลับหัวบนล้อ พลานต์ไม่เสถียรวงเปิด นิยมใช้ LQR กับสถานะ มุมเอียง อัตราเอียง ตำแหน่ง และความเร็วล้อ หรือ PID สองลูป (ลูปในคุมมุมเอียง ลูปนอกคุมความเร็ว) มุมเอียงได้จากการหลอมรวมไจโรกับ accelerometer"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -59,6 +59,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -554,7 +555,7 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Frobotics%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Frobotics%2F&amp;text=%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B9%82%E0%B8%A3%E0%B9%82%E0%B8%9A%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B8%AA%E0%B9%8C%3A%20%E0%B9%81%E0%B8%82%E0%B8%99%E0%B8%81%E0%B8%A5%20%E0%B8%AB%E0%B8%B8%E0%B9%88%E0%B8%99%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C%E0%B9%80%E0%B8%84%E0%B8%A5%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%99%E0%B8%97%E0%B8%B5%E0%B9%88%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%95%E0%B9%88%E0%B8%AD" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/control-systems/robotics/" data-share-title="ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/mechatronics/"><span class="mono">← หน้าก่อนหน้า</span><b>ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด</b></a><a class="pager-next" href="/learn/control-systems/power-electronics-control/"><span class="mono">หน้าถัดไป →</span><b>ควบคุมตัวแปลงกำลัง: จากฟังก์ชันถ่ายโอนบั๊กคอนเวอร์เตอร์ ถึงตัวชดเชย Type II/III</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/mechatronics/"><span class="mono">← หน้าก่อนหน้า</span><b>ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด</b></a><a class="pager-next" href="/learn/control-systems/power-electronics-control/"><span class="mono">หน้าถัดไป →</span><b>ควบคุมตัวแปลงกำลัง: จากฟังก์ชันถ่ายโอนบั๊กคอนเวอร์เตอร์ ถึงตัวชดเชย Type II/III</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/what-is-pid-controller/">PID Controller คืออะไร: Kp Ki Kd ทำงานอย่างไร และจูนอย่างไร</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -570,6 +571,7 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -639,9 +641,9 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-core.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-ui.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-pid.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
+<script src="/assets/cs-core.js?v=e9c86215" defer></script>
+<script src="/assets/cs-ui.js?v=e9c86215" defer></script>
+<script src="/assets/cs-pid.js?v=e9c86215" defer></script>
 </body>
 </html>

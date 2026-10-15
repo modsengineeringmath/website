@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/linear-systems/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/#article","headline":"ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)","description":"แก้ระบบสมการเชิงเส้นด้วยเมทริกซ์แต่งเติม การดำเนินการตามแถว การกำจัดแบบเกาส์ เกาส์-จอร์แดน รูปแบบขั้นบันได REF และ RREF แรงก์ เงื่อนไขมีคำตอบเดียว ไม่มีคำตอบ หรือมีคำตอบไม่จำกัด ระบบเอกพันธ์ การแยก LU ระบบป่วย และวิธีกำลังสองน้อยสุด พร้อมวิธีทำทีละขั้น","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["System of linear equations","Augmented matrix","Gaussian elimination","Gauss–Jordan elimination","Row echelon form","Rank","Rouché–Capelli theorem","LU decomposition","Least squares","Condition number"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-linear-systems.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์","item":"https://modsengineeringmath.com/learn/linear-algebra/linear-systems/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"รู้ได้อย่างไรว่าระบบสมการไม่มีคำตอบ?","acceptedAnswer":{"@type":"Answer","text":"ลดแถวเมทริกซ์แต่งเติม [Amidmathbf b] ถ้าเจอแถว [0\\ 0\\ cdots\\ 0mid c] ที่ c ne 0 แปลว่า 0 = c เป็นไปไม่ได้ ระบบจึงไม่มีคำตอบ ในภาษาแรงก์คือ operatorname{rank}A lt operatorname{rank}[Amidmathbf b]"}},{"@type":"Question","name":"คำตอบไม่จำกัดเขียนอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ลดแถวเป็น RREF หลักที่ไม่มีตัวหลัก (pivot) คือตัวแปรอิสระ ตั้งให้เป็นพารามิเตอร์ เช่น z = t แล้วเขียนตัวแปรอื่นในรูป t จำนวนพารามิเตอร์เท่ากับจำนวนตัวแปรลบแรงก์"}},{"@type":"Question","name":"เกาส์กับเกาส์-จอร์แดนต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เกาส์ลดแถวจนเป็นขั้นบันได (สามเหลี่ยมบน) แล้วแทนค่าย้อนกลับจากล่างขึ้นบน เกาส์-จอร์แดนลดต่อจนตัวหลักเป็น 1 และเหนือ-ใต้ตัวหลักเป็นศูนย์หมด อ่านคำตอบได้ทันที เกาส์ใช้การคำนวณน้อยกว่าเล็กน้อย เกาส์-จอร์แดนเหมาะกับการหาอินเวอร์ส"}},{"@type":"Question","name":"ทำไมโปรแกรมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์?","acceptedAnswer":{"@type":"Answer","text":"เพราะต้องหาดีเทอร์มิแนนต์ n+1 ตัว ซึ่งช้ากว่าการลดแถวมากเมื่อ n ใหญ่ โปรแกรมอย่าง MATLAB, NumPy และ SPICE ใช้การแยก LU พร้อมการสลับแถว (partial pivoting) ซึ่งทั้งเร็วและเสถียรเชิงตัวเลข"}}]}]}</script>
@@ -60,6 +60,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -982,7 +983,7 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Flinear-algebra%2Flinear-systems%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Flinear-algebra%2Flinear-systems%2F&amp;text=%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%AA%E0%B8%A1%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%8A%E0%B8%B4%E0%B8%87%E0%B9%80%E0%B8%AA%E0%B9%89%E0%B8%99%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%81%E0%B8%B3%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%AA%E0%B9%8C%20(Systems%20of%20Linear%20Equations)" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/linear-algebra/linear-systems/" data-share-title="ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (Systems of Linear Equations)">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/linear-algebra/determinants/"><span class="mono">← หน้าก่อนหน้า</span><b>ดีเทอร์มิแนนต์</b></a><a class="pager-next" href="/learn/linear-algebra/inverse/"><span class="mono">หน้าถัดไป →</span><b>อินเวอร์สของเมทริกซ์</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/linear-algebra/determinants/"><span class="mono">← หน้าก่อนหน้า</span><b>ดีเทอร์มิแนนต์</b></a><a class="pager-next" href="/learn/linear-algebra/inverse/"><span class="mono">หน้าถัดไป →</span><b>อินเวอร์สของเมทริกซ์</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/determinant-and-inverse-matrix/">วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -998,6 +999,7 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -1067,7 +1069,7 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
-<script src="/assets/linalg.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
+<script src="/assets/linalg.js?v=e9c86215" defer></script>
 </body>
 </html>

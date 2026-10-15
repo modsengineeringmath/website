@@ -689,6 +689,7 @@ const EN_CHROME = [
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
   ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
+  ['data-nav="blog">บทความ<', 'data-nav="blog">Articles (Thai)<'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
   ['aria-label="เปิดเมนู"', 'aria-label="Open menu"'],
@@ -1117,6 +1118,88 @@ const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
+
+// ---------------------------------------------------------------------------
+// Blog (/blog/): short search-oriented articles that answer one question each and link into the lesson series.
+// A post is src/pages/blog/<slug>.html with "blog": true in its meta block (plus "tag", "series", "published").
+// "draft": true keeps a post out of the lists, sitemap and llms.txt (the page itself is still built with noindex).
+// ---------------------------------------------------------------------------
+const blogPosts = (() => {
+  const dir = path.join(pagesDir, "blog");
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".html") && f !== "index.html")
+    .map((f) => {
+      const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
+      if (!m) throw new Error(`Missing <!--meta--> in blog/${f}`);
+      const meta = JSON.parse(m[1]);
+      const slug = f.replace(/\.html$/, "");
+      return { ...meta, slug, route: `/blog/${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
+    })
+    .filter((p) => !p.draft)
+    .sort((a, b) => (b.published || "").localeCompare(a.published || "") || a.slug.localeCompare(b.slug));
+})();
+const blogCard = (p) => `
+  <a class="blog-card" href="${p.route}">
+    <span class="bc-tag mono">${esc(p.tag || "บทความ")}</span>
+    <b>${esc(p.h1 || p.title)}</b>
+    <span class="bc-sum">${esc(p.description.length > 150 ? p.description.slice(0, 148).replace(/\s+\S*$/, "") + "…" : p.description)}</span>
+    <span class="bc-foot"><time datetime="${p.published}">${thaiDate(p.published)}</time><span class="bc-go">อ่านบทความ →</span></span>
+  </a>`;
+const blogGrid = (list) => `<div class="blog-grid">${list.map(blogCard).join("")}\n</div>`;
+// posts that belong to a lesson series, shown at the bottom of every page of that series
+const blogForTopic = (t) => {
+  const list = blogPosts.filter((p) => p.series.includes(t.slug));
+  if (!list.length || t.lang) return "";
+  return `<aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul>${list.map((p) => `<li><a href="${p.route}">${esc(p.h1 || p.title)}</a></li>`).join("")}</ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>`;
+};
+// more posts at the bottom of a post: same series or tag first, then the newest
+const blogMore = (cur) => {
+  const score = (p) => p.series.filter((s) => cur.series.includes(s)).length * 2 + (p.tag && p.tag === cur.tag ? 1 : 0);
+  const list = blogPosts.filter((p) => p.slug !== cur.slug).sort((a, b) => score(b) - score(a)).slice(0, 3);
+  return list.length ? `<section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">บทความอื่นที่น่าอ่าน</h2>${blogGrid(list)}</section>` : "";
+};
+function postSchema(meta, url, ogImageUrl) {
+  const graph = [
+    {
+      "@type": "BlogPosting",
+      "@id": url + "#article",
+      headline: meta.h1 || meta.title,
+      description: meta.description,
+      inLanguage: "th",
+      url,
+      mainEntityOfPage: url,
+      datePublished: meta.published || TODAY,
+      dateModified: meta.updated || meta.published || TODAY,
+      author: { "@id": PERSON_ID },
+      publisher: { "@id": PERSON_ID },
+      about: meta.about || [meta.tag],
+      isPartOf: { "@id": SITE + "/blog/#blog" },
+      image: [ogImageUrl],
+      ...(meta.keywords ? { keywords: meta.keywords.join(", ") } : {}),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
+        { "@type": "ListItem", position: 2, name: "บทความ", item: SITE + "/blog/" },
+        { "@type": "ListItem", position: 3, name: meta.h1 || meta.title, item: url },
+      ],
+    },
+  ];
+  if (meta.faq?.length)
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: meta.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: stripTags(f.a.replace(/\\\(|\\\)|\\\[|\\\]/g, "").replace(/\\,/g, " ").replace(/\\(\w+)/g, "$1")) },
+      })),
+    });
+  return graph;
+}
+
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
 const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
@@ -1137,6 +1220,8 @@ for (const file of walk(pagesDir)) {
   const m = raw.match(/^<!--meta\s*([\s\S]*?)-->\s*/);
   if (!m) throw new Error(`Missing <!--meta {...} --> block in ${rel}`);
   const meta = JSON.parse(m[1]);
+  if (meta.draft) meta.noindex = true;
+  const isPost = !!meta.blog;
   let body = raw.slice(m[0].length);
   const route = routeFor(rel);
   const url = SITE + route;
@@ -1175,7 +1260,15 @@ for (const file of walk(pagesDir)) {
     "<!--faq-->": () => faqHtml(meta.faq, lang),
     "<!--lang-switch-->": () => langSwitch(lang, route, twRoute),
     "<!--video-->": () => videoFacade(topic),
-    "<!--pager-->": () => (topic ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) : ""),
+    "<!--pager-->": () =>
+      topic
+        ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + blogForTopic(topic)
+        : isPost
+          ? shareHtml(url, meta.h1 || meta.title, lang) + blogMore(blogPosts.find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" })
+          : "",
+    "<!--blog-list-->": () => blogGrid(blogPosts),
+    "<!--blog-latest-->": () => blogGrid(blogPosts.slice(0, 3)),
+    "<!--blog-count-->": () => String(blogPosts.length),
     "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
@@ -1214,6 +1307,17 @@ for (const file of walk(pagesDir)) {
 
   let graph = [...(meta.jsonld || [])];
   if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
+  else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage));
+  if (route === "/blog/")
+    graph.push({
+      "@type": "Blog",
+      "@id": SITE + "/blog/#blog",
+      url,
+      name: "บทความ — Mod's Engineering Mathematics",
+      inLanguage: "th",
+      publisher: { "@id": PERSON_ID },
+      blogPost: blogPosts.map((p) => ({ "@type": "BlogPosting", "@id": SITE + p.route + "#article", headline: p.h1 || p.title, url: SITE + p.route, datePublished: p.published })),
+    });
   const jsonld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`
     : "";
@@ -1233,7 +1337,7 @@ for (const file of walk(pagesDir)) {
     canonical: url,
     ogTitle: esc(meta.ogTitle || meta.title),
     ogDescription: esc(meta.ogDescription || meta.description),
-    ogType: topic ? "article" : meta.ogType || "website",
+    ogType: topic || isPost ? "article" : meta.ogType || "website",
     ogImage: SITE + ogImage,
     ogImageAlt: esc(meta.ogTitle || meta.h1 || meta.title),
     headExtra,
@@ -1257,7 +1361,7 @@ for (const file of walk(pagesDir)) {
   const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
-  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic ? "0.8" : "0.9" });
+  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost ? "0.8" : "0.9" });
   console.log("built", route);
 }
 
@@ -1345,6 +1449,10 @@ When citing, please name "Mod's Engineering Mathematics (อาจารย์�
 
 ## Lessons (reading order)
 ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}` + (t.sub ? "\n" + live(t).map((s) => `  - [${s.en} — ${s.title}](${SITE}${seriesUrl(t, s)}): ${s.summary}`).join("\n") : "")).join("\n")}
+
+## Articles (short answers to common search questions, each linking into the lessons)
+- [All articles](${SITE}/blog/)
+${blogPosts.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}

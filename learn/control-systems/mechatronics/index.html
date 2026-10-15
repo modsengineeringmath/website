@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/mechatronics/#article","headline":"ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด","description":"ระบบควบคุมในงานเมคาทรอนิกส์ องค์ประกอบ เซนเซอร์ (เอนโค้ดเดอร์ Hall IMU วัดกระแส) แอคชูเอเตอร์ (มอเตอร์ DC BLDC สเต็ปเปอร์ เซอร์โว) ไดรเวอร์ H-bridge และ PWM ออกแบบลูปคาสเคดกระแส ความเร็ว ตำแหน่งทีละขั้นพร้อมตัวเลขจริง feedforward แรงเสียดทาน backlash เรโซแนนซ์และฟิลเตอร์ notch ความละเอียดเอนโค้ดเดอร์ และไอเดียโปรเจกต์เมคาทรอนิกส์มากมาย","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/mechatronics/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/mechatronics/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Mechatronics","Servomechanism","Cascade control","DC motor","Brushless DC motor","Rotary encoder","H-bridge","Pulse-width modulation","Feedforward control","Notch filter"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-mechatronics.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด","item":"https://modsengineeringmath.com/learn/control-systems/mechatronics/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมเซอร์โวไดรฟ์ใช้ลูปซ้อนสามชั้น?","acceptedAnswer":{"@type":"Answer","text":"เพราะแต่ละชั้นจัดการปัญหาคนละความเร็ว ลูปกระแสในสุด (kHz) คุมแรงบิดและป้องกันกระแสเกิน ลูปความเร็ว (หลักร้อย Hz) ต้านการรบกวนจากโหลด ลูปตำแหน่งนอกสุด (หลักสิบ Hz) ทำให้ถึงเป้า ลูปในที่เร็วทำให้ลูปนอกเห็นพลานต์ที่ง่ายขึ้น และจำกัดค่าแต่ละชั้นได้อย่างปลอดภัย"}},{"@type":"Question","name":"แบนด์วิดท์ของแต่ละลูปควรห่างกันเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"กฎทั่วไปคือ 5 ถึง 10 เท่า เช่น ลูปกระแส 1–2 kHz ลูปความเร็ว 100–200 Hz ลูปตำแหน่ง 10–30 Hz ถ้าห่างน้อยกว่านั้น ลูปในจะเพิ่มเฟสล่าช้าให้ลูปนอกจนมาร์จินลดลง"}},{"@type":"Question","name":"เลือกมอเตอร์สำหรับโปรเจกต์อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"สเต็ปเปอร์เหมาะกับงานตำแหน่งเบา ๆ ไม่ต้องมีเซนเซอร์ (เครื่องพิมพ์ 3 มิติ) แต่หลุดขั้นได้ถ้าโหลดเกิน มอเตอร์ DC มีแปรงถ่านควบคุมง่าย ราคาถูก เหมาะกับหุ่นยนต์ล้อ BLDC/PMSM มีประสิทธิภาพสูงและเร็ว ต้องใช้ไดรเวอร์ FOC เหมาะกับโดรนและแขนกล ส่วนเซอร์โว RC รวมมอเตอร์ เกียร์ และตัวควบคุมตำแหน่งไว้ในตัว"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -59,6 +59,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -542,7 +543,7 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fmechatronics%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fmechatronics%2F&amp;text=%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B9%80%E0%B8%A1%E0%B8%84%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B8%AD%E0%B8%99%E0%B8%B4%E0%B8%81%E0%B8%AA%E0%B9%8C%3A%20%E0%B9%80%E0%B8%8B%E0%B8%99%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B9%81%E0%B8%AD%E0%B8%84%E0%B8%8A%E0%B8%B9%E0%B9%80%E0%B8%AD%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%A7%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%84%E0%B8%B2%E0%B8%AA%E0%B9%80%E0%B8%84%E0%B8%94" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/control-systems/mechatronics/" data-share-title="ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/nonlinear-robust/"><span class="mono">← หน้าก่อนหน้า</span><b>ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน</b></a><a class="pager-next" href="/learn/control-systems/robotics/"><span class="mono">หน้าถัดไป →</span><b>ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/nonlinear-robust/"><span class="mono">← หน้าก่อนหน้า</span><b>ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน</b></a><a class="pager-next" href="/learn/control-systems/robotics/"><span class="mono">หน้าถัดไป →</span><b>ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/what-is-pid-controller/">PID Controller คืออะไร: Kp Ki Kd ทำงานอย่างไร และจูนอย่างไร</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -558,6 +559,7 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -627,9 +629,9 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-core.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-ui.js?v=aef1e45e" defer></script>
-<script src="/assets/cs-pid.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
+<script src="/assets/cs-core.js?v=e9c86215" defer></script>
+<script src="/assets/cs-ui.js?v=e9c86215" defer></script>
+<script src="/assets/cs-pid.js?v=e9c86215" defer></script>
 </body>
 </html>

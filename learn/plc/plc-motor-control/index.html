@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/plc/plc-motor-control/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/plc/plc-motor-control/#article","headline":"ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์","description":"แปลงวงจรคอนแทกเตอร์เป็นโปรแกรม PLC อย่างถูกต้องและปลอดภัย: สิ่งที่ต้องคงไว้ในฮาร์ดแวร์ (หยุดฉุกเฉิน โอเวอร์โหลด อินเตอร์ล็อก K2/K3) รายการ I/O การต่อสาย PLC กับคอยล์คอนแทกเตอร์ แลดเดอร์และ Structured Text สำหรับ DOL กลับทางหมุน และสตาร์-เดลต้าพร้อมช่วงตาย การตรวจคอนแทกเตอร์ค้างด้วยหน้าสัมผัสป้อนกลับ และซิมูเลเตอร์ให้ทดลอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/plc/plc-motor-control/","mainEntityOfPage":"https://modsengineeringmath.com/learn/plc/plc-motor-control/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Programmable logic controller","Motor controller","Wye-delta starter","Interlock (engineering)"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-plc-plc-motor-control.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"การควบคุมอัตโนมัติด้วย PLC","item":"https://modsengineeringmath.com/learn/plc/"},{"@type":"ListItem","position":4,"name":"ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์","item":"https://modsengineeringmath.com/learn/plc/plc-motor-control/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ใช้ PLC แล้วยังต้องมีหน้าสัมผัสช่วยอินเตอร์ล็อกในวงจรคอยล์อีกไหม?","acceptedAnswer":{"@type":"Answer","text":"ต้องมี อินเตอร์ล็อกที่ป้องกันลัดวงจร (K1/K2 กลับทาง K2/K3 สตาร์-เดลต้า) ต้องทำงานได้แม้ PLC เสีย เอาต์พุตทรานซิสเตอร์ลัดค้าง หรือมีคนสั่ง force บิต การใส่หน้าสัมผัส NC ของคอนแทกเตอร์ตรงข้ามอนุกรมกับคอยล์และอินเตอร์ล็อกทางกลจึงยังจำเป็น โปรแกรมเป็นชั้นเพิ่มเติม ไม่ใช่ชั้นเดียว"}},{"@type":"Question","name":"ต่อโอเวอร์โหลดเข้า PLC อย่างเดียวได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ทำได้ในทางเทคนิค แต่แนวปฏิบัติที่ดีคือให้ 95-96 อนุกรมกับคอยล์คอนแทกเตอร์โดยตรง (ตัดได้แม้ PLC ค้าง) และนำ 97-98 หรือหน้าสัมผัสช่วยเข้า PLC เพื่อแสดงสถานะและบันทึกเหตุการณ์"}}]}]}</script>
@@ -61,6 +61,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -506,6 +507,7 @@ TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <s
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -575,8 +577,8 @@ TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <s
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
-<script src="/assets/lesson.js?v=aef1e45e" defer></script>
-<script src="/assets/plc-sim.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
+<script src="/assets/lesson.js?v=e9c86215" defer></script>
+<script src="/assets/plc-sim.js?v=e9c86215" defer></script>
 </body>
 </html>

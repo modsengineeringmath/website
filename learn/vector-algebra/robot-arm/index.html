@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/vector-algebra/robot-arm/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/#article","headline":"เวกเตอร์ในแขนกล: จลนศาสตร์ Jacobian และแรงบิดข้อต่อ","description":"เรียนแขนกลด้วยเวกเตอร์ภาษาไทย: ตำแหน่งปลายแขนเป็นผลบวกเวกเตอร์ของข้อแขน forward kinematics และ inverse kinematics ของแขน 2 ข้อต่อ (elbow-up/down) พื้นที่ทำงาน แขน 3 มิติ 3 ข้อต่อ Jacobian จาก ω × r ความเร็วปลายแขน ภาวะเอกฐาน แรงบิดข้อต่อ τ = JᵀF จากงานเสมือน และการเลือกมอเตอร์พร้อมเกียร์ มีแล็บแขนกลลากเป้าหมายได้และฉาก 3 มิติ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/","mainEntityOfPage":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Robot arm","Forward kinematics","Inverse kinematics","Jacobian matrix","Kinematic singularity","Joint torque","Virtual work","Servo motor sizing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/vector-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-vector-algebra-robot-arm.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์: จากแรงลัพธ์ถึงเฟสเซอร์","item":"https://modsengineeringmath.com/learn/vector-algebra/"},{"@type":"ListItem","position":4,"name":"เวกเตอร์ในแขนกล: จลนศาสตร์ไปข้างหน้า-ย้อนกลับ Jacobian ความเร็ว และแรงบิดข้อต่อ","item":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Forward kinematics ของแขนกลสองข้อต่อคืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือการหาตำแหน่งปลายแขนจากมุมข้อต่อ โดยบวกเวกเตอร์ของข้อแขนแต่ละท่อน p = L₁(cos θ₁, sin θ₁) + L₂(cos(θ₁+θ₂), sin(θ₁+θ₂)) มุมของท่อนที่สองต้องใช้ θ₁+θ₂ เพราะวัดเทียบกับท่อนแรก"}},{"@type":"Question","name":"Inverse kinematics หามุมข้อต่ออย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้กฎของโคไซน์กับสามเหลี่ยมฐาน-ข้อศอก-ปลายแขน cos θ₂ = (x² + y² − L₁² − L₂²)/(2L₁L₂) ได้สองคำตอบ (ข้อศอกขึ้นหรือลง) แล้ว θ₁ = atan2(y, x) − atan2(L₂ sin θ₂, L₁ + L₂ cos θ₂) ถ้า cos θ₂ อยู่นอก [−1, 1] เป้าหมายอยู่นอกพื้นที่ทำงาน"}},{"@type":"Question","name":"Jacobian ของแขนกลใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"เชื่อมความเร็วข้อต่อกับความเร็วปลายแขน v = J θ̇ และเชื่อมแรงที่ปลายแขนกับแรงบิดข้อต่อ τ = Jᵀ F เมื่อ det J = 0 (ภาวะเอกฐาน) แขนขยับปลายในบางทิศไม่ได้ และต้องใช้ความเร็วข้อต่อสูงมากเมื่อเข้าใกล้"}},{"@type":"Question","name":"เลือกมอเตอร์ข้อต่ออย่างไร?","acceptedAnswer":{"@type":"Answer","text":"หาแรงบิดสูงสุดที่ข้อต่อจาก τ = JᵀF ในท่าที่แย่ที่สุด (มักเป็นแขนเหยียดแนวนอน) รวมน้ำหนักข้อแขนเอง หารด้วยอัตราทดเกียร์และประสิทธิภาพ แล้วเผื่อค่าความปลอดภัย กระแสมอเตอร์ประมาณจาก τ_motor = K_t i"}}]}]}</script>
@@ -60,6 +60,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -587,7 +588,7 @@
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fvector-algebra%2Frobot-arm%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fvector-algebra%2Frobot-arm%2F&amp;text=%E0%B9%80%E0%B8%A7%E0%B8%81%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%83%E0%B8%99%E0%B9%81%E0%B8%82%E0%B8%99%E0%B8%81%E0%B8%A5%3A%20%E0%B8%88%E0%B8%A5%E0%B8%99%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C%20Jacobian%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B9%81%E0%B8%A3%E0%B8%87%E0%B8%9A%E0%B8%B4%E0%B8%94%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%95%E0%B9%88%E0%B8%AD" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/vector-algebra/robot-arm/" data-share-title="เวกเตอร์ในแขนกล: จลนศาสตร์ Jacobian และแรงบิดข้อต่อ">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/vector-algebra/coordinate-rotation/"><span class="mono">← หน้าก่อนหน้า</span><b>การหมุนแกนพิกัด 2D/3D: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง</b></a><a class="pager-next" href="/learn/vector-algebra/engineering-applications/"><span class="mono">หน้าถัดไป →</span><b>การประยุกต์เวกเตอร์ทางวิศวกรรม</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/vector-algebra/coordinate-rotation/"><span class="mono">← หน้าก่อนหน้า</span><b>การหมุนแกนพิกัด 2D/3D: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง</b></a><a class="pager-next" href="/learn/vector-algebra/engineering-applications/"><span class="mono">หน้าถัดไป →</span><b>การประยุกต์เวกเตอร์ทางวิศวกรรม</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/dot-product-cross-product/">Dot Product กับ Cross Product ต่างกันอย่างไร: สูตร ความหมาย ตัวอย่าง</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -603,6 +604,7 @@
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -672,9 +674,9 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
-<script src="/assets/lesson.js?v=aef1e45e" defer></script>
-<script src="/assets/vec3d.js?v=aef1e45e" defer></script>
-<script src="/assets/vec-mech.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
+<script src="/assets/lesson.js?v=e9c86215" defer></script>
+<script src="/assets/vec3d.js?v=e9c86215" defer></script>
+<script src="/assets/vec-mech.js?v=e9c86215" defer></script>
 </body>
 </html>

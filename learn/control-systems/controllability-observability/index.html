@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=aef1e45e">
+<link rel="stylesheet" href="/assets/site.css?v=e9c86215">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/#article","headline":"ความสามารถควบคุมได้และสังเกตได้ (Controllability & Observability)","description":"นิยามความสามารถควบคุมได้และสังเกตได้ของระบบปริภูมิสถานะ เมทริกซ์ควบคุมได้และเมทริกซ์สังเกตได้ของคาลมาน การทดสอบด้วยแรงก์ การทดสอบ PBH ความเป็นคู่ (duality) ความสัมพันธ์กับการหักล้างขั้ว-ศูนย์ การแยกส่วนของคาลมาน realization ที่น้อยที่สุด เสถียรภาพที่ซ่อนอยู่ และตัวอย่างจากวงจรและมอเตอร์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Controllability","Observability","Kalman rank condition","PBH test","Duality","Minimal realization","Kalman decomposition","Pole–zero cancellation"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-controllability-observability.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ความสามารถควบคุมได้และสังเกตได้ (Controllability & Observability)","item":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ควบคุมได้ (controllable) หมายความว่าอะไรในทางปฏิบัติ?","acceptedAnswer":{"@type":"Answer","text":"หมายความว่าอินพุตที่มีอยู่สามารถพาสถานะทุกตัวไปยังค่าใดก็ได้ภายในเวลาจำกัด ถ้าไม่ควบคุมได้ จะมีโหมดบางโหมดที่ตัวขับเอื้อมไม่ถึง ไม่ว่าออกแบบตัวควบคุมอย่างไรก็เปลี่ยนขั้วของโหมดนั้นไม่ได้ ถ้าโหมดนั้นไม่เสถียรก็จบ"}},{"@type":"Question","name":"ถ้าไม่สังเกตได้ จะเกิดอะไร?","acceptedAnswer":{"@type":"Answer","text":"จะมีสถานะบางส่วนที่ไม่ส่งผลถึงเอาต์พุตที่วัด จึงประมาณค่าด้วยตัวสังเกตไม่ได้ ถ้าโหมดนั้นเสถียรก็พอยอมรับได้ (detectable) แต่ถ้าไม่เสถียร สถานะภายในจะโตขึ้นโดยที่เซนเซอร์มองไม่เห็นเลย"}},{"@type":"Question","name":"ทำไมการหักล้างขั้ว-ศูนย์เกี่ยวกับเรื่องนี้?","acceptedAnswer":{"@type":"Answer","text":"ฟังก์ชันถ่ายโอนแสดงเฉพาะส่วนที่ทั้งควบคุมได้และสังเกตได้ เมื่อมีการหักล้างขั้ว-ศูนย์ แบบจำลองปริภูมิสถานะที่มีอันดับเต็มจะสูญเสียความสามารถควบคุมได้หรือสังเกตได้อย่างน้อยหนึ่งอย่าง และโหมดที่ถูกหักล้างจะหายไปจากฟังก์ชันถ่ายโอน"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -59,6 +59,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/blog/" >บทความ</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -501,7 +502,7 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fcontrollability-observability%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fcontrol-systems%2Fcontrollability-observability%2F&amp;text=%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%96%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B9%84%E0%B8%94%E0%B9%89%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%95%E0%B9%84%E0%B8%94%E0%B9%89%20(Controllability%20%26%20Observability)" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/control-systems/controllability-observability/" data-share-title="ความสามารถควบคุมได้และสังเกตได้ (Controllability &amp; Observability)">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/state-space/"><span class="mono">← หน้าก่อนหน้า</span><b>ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}</b></a><a class="pager-next" href="/learn/control-systems/state-feedback/"><span class="mono">หน้าถัดไป →</span><b>ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/control-systems/state-space/"><span class="mono">← หน้าก่อนหน้า</span><b>ปริภูมิสถานะ (State-Space): สมการสถานะ รูปแบบมาตรฐาน และ e^{At}</b></a><a class="pager-next" href="/learn/control-systems/state-feedback/"><span class="mono">หน้าถัดไป →</span><b>ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/what-is-pid-controller/">PID Controller คืออะไร: Kp Ki Kd ทำงานอย่างไร และจูนอย่างไร</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -517,6 +518,7 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -586,7 +588,7 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=aef1e45e" defer></script>
+<script src="/assets/site.js?v=e9c86215" defer></script>
 
 </body>
 </html>

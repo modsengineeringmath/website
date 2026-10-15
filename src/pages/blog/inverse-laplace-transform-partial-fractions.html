@@ -1,0 +1,128 @@
+<!--meta
+{
+  "title": "Inverse Laplace Transform ทำอย่างไร: เศษส่วนย่อย 3 กรณี พร้อมตัวอย่างทีละขั้น | อาจารย์มด",
+  "h1": "Inverse Laplace Transform ทำอย่างไร: วิธีเศษส่วนย่อย 3 กรณีพร้อมตัวอย่าง",
+  "description": "วิธีแปลงลาปลาซผกผันด้วยเศษส่วนย่อยสำหรับโพลเดี่ยว โพลซ้ำ และโพลเชิงซ้อน พร้อมตัวอย่างที่ตรวจคำตอบแล้ว และข้อควรระวังเมื่อดีกรีตัวเศษไม่น้อยกว่าตัวส่วน",
+  "ogTitle": "Inverse Laplace Transform: เศษส่วนย่อย 3 กรณี พร้อมตัวอย่าง",
+  "blog": true,
+  "tag": "Laplace",
+  "series": ["laplace-transform"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["Inverse Laplace transform", "การแปลงลาปลาซผกผัน", "เศษส่วนย่อย", "partial fractions", "โพลซ้ำ", "โพลเชิงซ้อน"],
+  "about": ["Inverse Laplace transform", "Partial fractions"],
+  "og": {"title": "Inverse Laplace ทำอย่างไร", "sub": "เศษส่วนย่อย 3 กรณี: โพลเดี่ยว โพลซ้ำ โพลเชิงซ้อน", "eyebrow": "บทความ · Laplace", "sym": "ℒ⁻¹"},
+  "faq": [
+    {"q": "ถ้าดีกรีของตัวเศษมากกว่าหรือเท่ากับตัวส่วนต้องทำอย่างไร?", "a": "ต้องหารยาวก่อนเพื่อให้เหลือเศษส่วนแท้ (ดีกรีตัวเศษน้อยกว่าตัวส่วน) เช่น \\(\\dfrac{s^2+1}{s(s+1)} = 1 + \\dfrac{-s+1}{s(s+1)}\\) จำนวน 1 ที่ได้คือแรงกระตุ้น \\(\\delta(t)\\) ในโดเมนเวลา"},
+    {"q": "วิธี cover-up (ปิดตัวประกอบ) ใช้ได้กับกรณีไหน?", "a": "ใช้หาสัมประสิทธิ์ของโพลเดี่ยวได้เร็วที่สุด โดยคูณทั้งสองข้างด้วย \\((s+p)\\) แล้วแทน \\(s=-p\\) สำหรับโพลซ้ำใช้ได้เฉพาะสัมประสิทธิ์ของเทอมกำลังสูงสุด ส่วนเทอมที่เหลือต้องหาอนุพันธ์หรือเทียบสัมประสิทธิ์"},
+    {"q": "โพลเชิงซ้อนต้องแยกเป็นเศษส่วนย่อยที่มี j เสมอไหม?", "a": "ไม่จำเป็น สำหรับสมการกำลังสองที่รากเป็นเชิงซ้อน ให้เติมกำลังสองให้ส่วนอยู่ในรูป \\((s+a)^2+\\omega^2\\) แล้วใช้คู่การแปลง \\(e^{-at}\\cos\\omega t\\) และ \\(e^{-at}\\sin\\omega t\\) ผลลัพธ์เป็นจำนวนจริงตั้งแต่ต้น"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>Inverse Laplace</li></ol>
+      <p class="eyebrow">// บทความ · Inverse Laplace Transform</p>
+      <h1>Inverse Laplace Transform ทำอย่างไร: วิธีเศษส่วนย่อย 3 กรณีพร้อมตัวอย่าง</h1>
+      <p class="lede">หลังแก้สมการในโดเมน \(s\) ได้ \(Y(s)\) เป็นเศษส่วนของพหุนาม ขั้นสุดท้ายคือแปลงกลับเป็น \(y(t)\) วิธีมาตรฐานที่ใช้ได้เกือบทุกโจทย์คือแยกเป็นเศษส่วนย่อยแล้วเปิดตาราง บทความนี้แยกเป็น 3 กรณีตามชนิดของโพล</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>แยกตัวส่วนเป็นตัวประกอบ → ดูชนิดโพล → เขียนเศษส่วนย่อย → หาสัมประสิทธิ์ → เปิดตาราง</li>
+          <li>โพลเดี่ยว: ใช้ cover-up · โพลซ้ำ: ต้องมีเทอม \((s+p)^k\) ครบทุกกำลัง · โพลเชิงซ้อน: เติมกำลังสอง</li>
+          <li>ถ้าดีกรีตัวเศษ ≥ ตัวส่วน ให้หารยากก่อน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="pairs">
+    <h2 id="pairs">คู่การแปลงที่ต้องใช้</h2>
+    <p>ทั้งสามกรณีใช้คู่การแปลงชุดเล็ก ๆ นี้ (ชุดเต็มดู <a href="/blog/laplace-transform-table/">ตารางการแปลงลาปลาซ</a>)</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>\(F(s)\)</th><th>\(f(t)\), \(t \ge 0\)</th></tr></thead>
+      <tbody>
+        <tr><td>\(\dfrac{1}{s}\)</td><td>\(1\)</td></tr>
+        <tr><td>\(\dfrac{1}{s+a}\)</td><td>\(e^{-at}\)</td></tr>
+        <tr><td>\(\dfrac{1}{(s+a)^2}\)</td><td>\(t\,e^{-at}\)</td></tr>
+        <tr><td>\(\dfrac{\omega}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\sin\omega t\)</td></tr>
+        <tr><td>\(\dfrac{s+a}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\cos\omega t\)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case1">
+    <h2 id="case1">กรณีที่ 1: โพลเดี่ยว (รากจริงไม่ซ้ำ)</h2>
+    <p>ถ้า \(F(s)=\dfrac{N(s)}{(s+p_1)(s+p_2)}\) เขียนได้เป็น \(\dfrac{A}{s+p_1}+\dfrac{B}{s+p_2}\) โดย \(A = \left[(s+p_1)F(s)\right]_{s=-p_1}\) นี่คือวิธี cover-up: ปิดตัวประกอบที่สนใจ แล้วแทนค่า \(s\) ลงในส่วนที่เหลือ</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>หา \(\mathcal{L}^{-1}\left\{\dfrac{3s+5}{(s+1)(s+2)}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>หา \(A\) ที่โพล \(s=-1\): ปิด \((s+1)\) แล้วแทน \(s=-1\)</p>\[ A = \frac{3(-1)+5}{(-1)+2} = \frac{2}{1} = 2 \]</li>
+        <li><p>หา \(B\) ที่โพล \(s=-2\)</p>\[ B = \frac{3(-2)+5}{(-2)+1} = \frac{-1}{-1} = 1 \]</li>
+        <li><p>เปิดตาราง</p>\[ F(s)=\frac{2}{s+1}+\frac{1}{s+2} \;\Rightarrow\; f(t) = 2e^{-t} + e^{-2t} \]</li>
+      </ol>
+      <p class="answer">ตรวจ: \(\dfrac{2}{s+1}+\dfrac{1}{s+2} = \dfrac{2(s+2)+(s+1)}{(s+1)(s+2)} = \dfrac{3s+5}{(s+1)(s+2)}\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case2">
+    <h2 id="case2">กรณีที่ 2: โพลซ้ำ</h2>
+    <p>โพลที่ซ้ำ \(k\) ครั้งต้องมีเทอมครบทุกกำลังตั้งแต่ 1 ถึง \(k\) เช่น \((s+1)^2\) ต้องเขียนเป็น \(\dfrac{B}{s+1}+\dfrac{C}{(s+1)^2}\) ถ้าเขียนแค่เทอมกำลังสองจะหาสัมประสิทธิ์ไม่ลงตัว สัมประสิทธิ์ของกำลังสูงสุดหาด้วย cover-up ได้ ส่วนเทอมที่เหลือหาจากอนุพันธ์</p>
+    \[ \text{ถ้า } F(s)=\frac{G(s)}{(s+p)^2}: \quad C = G(-p), \quad B = \left.\frac{dG}{ds}\right|_{s=-p} \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 2</span><h3>หา \(\mathcal{L}^{-1}\left\{\dfrac{1}{s(s+1)^2}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>เขียนรูปเศษส่วนย่อย</p>\[ \frac{1}{s(s+1)^2} = \frac{A}{s}+\frac{B}{s+1}+\frac{C}{(s+1)^2} \]</li>
+        <li><p>โพลเดี่ยวที่ \(s=0\): \(A = \dfrac{1}{(0+1)^2}=1\)</p></li>
+        <li><p>โพลซ้ำที่ \(s=-1\): ให้ \(G(s)=1/s\) จะได้ \(C=G(-1)=-1\) และ \(B=G'(-1)=-\dfrac{1}{s^2}\Big|_{s=-1}=-1\)</p></li>
+        <li><p>เปิดตาราง</p>\[ F(s)=\frac{1}{s}-\frac{1}{s+1}-\frac{1}{(s+1)^2} \;\Rightarrow\; f(t)=1-e^{-t}-t\,e^{-t} \]</li>
+      </ol>
+      <p class="answer">ตรวจค่าเริ่มต้น: \(f(0)=1-1-0=0\) ตรงกับทฤษฎีบทค่าเริ่มต้น \(\lim_{s\to\infty} sF(s)=\lim \dfrac{1}{(s+1)^2}=0\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case3">
+    <h2 id="case3">กรณีที่ 3: โพลเชิงซ้อน (เติมกำลังสอง)</h2>
+    <p>ถ้าส่วนเป็นกำลังสองที่แยกเป็นรากจริงไม่ได้ อย่าแยกเป็นจำนวนเชิงซ้อน ให้เติมกำลังสองให้เป็น \((s+a)^2+\omega^2\) แล้วจัดตัวเศษให้อยู่ในรูป \((s+a)\) กับค่าคงที่ จะตรงกับคู่ cos และ sin ที่มีตัวคูณ \(e^{-at}\)</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>หา \(\mathcal{L}^{-1}\left\{\dfrac{s+3}{s^2+2s+5}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>เติมกำลังสองที่ตัวส่วน: \(s^2+2s+5=(s+1)^2+2^2\)</p></li>
+        <li><p>จัดตัวเศษ: \(s+3=(s+1)+2\) แล้วแยก</p>\[ F(s)=\frac{s+1}{(s+1)^2+2^2}+\frac{2}{(s+1)^2+2^2} \]</li>
+        <li><p>เปิดตาราง ด้วย \(a=1\), \(\omega=2\)</p>\[ f(t)=e^{-t}\cos 2t + e^{-t}\sin 2t = e^{-t}(\cos 2t+\sin 2t) \]</li>
+      </ol>
+      <p class="answer">โพลอยู่ที่ \(s=-1\pm j2\) ผลตอบสนองจึงเป็นการแกว่งที่ความถี่ 2 rad/s ซึ่งแอมพลิจูดลดลงด้วย \(e^{-t}\) และเนื่องจากโพลอยู่ซีกซ้าย ระบบเสถียร</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="improper">
+    <h2 id="improper">เมื่อตัวเศษดีกรีสูงเกินไป</h2>
+    <p>เศษส่วนย่อยใช้ได้กับเศษส่วนแท้เท่านั้น ถ้าดีกรีตัวเศษ ≥ ตัวส่วน ให้หารยาวก่อน ผลหารที่เป็นค่าคงที่คือแรงกระตุ้น \(\delta(t)\) ส่วนผลหารที่เป็นพหุนามของ \(s\) คืออนุพันธ์ของแรงกระตุ้น ซึ่งมักบ่งบอกว่าแบบจำลองมีการหาอนุพันธ์อินพุตที่ไม่เป็นจริงในทางกายภาพ ควรตรวจโจทย์อีกครั้ง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">เช็กลิสต์ก่อนส่งคำตอบ</h2>
+    <ul>
+      <li>แทน \(t=0\) เทียบกับทฤษฎีบทค่าเริ่มต้น: \(f(0^+)=\lim_{s\to\infty}sF(s)\)</li>
+      <li>ถ้าโพลของ \(sF(s)\) อยู่ซีกซ้ายทั้งหมด (โพลเดี่ยวที่ \(s=0\) ใน \(F(s)\) ใช้ได้) ลองเทียบ \(f(\infty)\) กับ \(\lim_{s\to0}sF(s)\)</li>
+      <li>รวมเศษส่วนย่อยกลับ ต้องได้ตัวเศษเดิม</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผันครบทุกกรณี พร้อมเครื่องคิดเลขแสดงวิธีทำ</a></li>
+        <li><a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่ และ ROC</a></li>
+        <li><a href="/learn/laplace-transform/properties/">คุณสมบัติของการแปลงลาปลาซ (เลื่อนเวลา คอนโวลูชัน ฯลฯ)</a></li>
+        <li><a href="/blog/what-is-laplace-transform/">ย้อนไปอ่าน: การแปลงลาปลาซคืออะไร</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
