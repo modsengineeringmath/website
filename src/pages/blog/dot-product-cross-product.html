@@ -1,0 +1,122 @@
+<!--meta
+{
+  "title": "Dot Product กับ Cross Product ต่างกันอย่างไร: สูตร ความหมาย และตัวอย่างงานวิศวกรรม | อาจารย์มด",
+  "h1": "Dot Product กับ Cross Product ต่างกันอย่างไร: สูตร ความหมาย ตัวอย่าง",
+  "description": "เปรียบเทียบ dot product (ผลคูณเชิงสเกลาร์) กับ cross product (ผลคูณเชิงเวกเตอร์) ทั้งสูตร ความหมายทางเรขาคณิต วิธีคำนวณด้วยองค์ประกอบ และการใช้หางาน แรงบิด และมุม",
+  "ogTitle": "Dot Product กับ Cross Product ต่างกันอย่างไร",
+  "blog": true,
+  "tag": "เวกเตอร์",
+  "series": ["vector-algebra"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["dot product", "cross product", "ผลคูณเชิงสเกลาร์", "ผลคูณเชิงเวกเตอร์", "เวกเตอร์", "งาน แรงบิด"],
+  "about": ["Dot product", "Cross product", "Vectors"],
+  "og": {"title": "Dot Product vs Cross Product", "sub": "สูตร ความหมาย ตัวอย่าง: งาน แรงบิด มุมระหว่างเวกเตอร์", "eyebrow": "บทความ · เวกเตอร์", "sym": "×"},
+  "faq": [
+    {"q": "ผลลัพธ์ของ dot product และ cross product ต่างกันอย่างไร?", "a": "dot product ให้ค่าสเกลาร์ (ตัวเลขตัวเดียว) ส่วน cross product ให้เวกเตอร์ที่ตั้งฉากกับเวกเตอร์ทั้งสองและมีทิศตามกฎมือขวา ผลคูณ cross product ใช้ได้เฉพาะเวกเตอร์ 3 มิติ"},
+    {"q": "ถ้า dot product เป็นศูนย์หมายความว่าอะไร?", "a": "เวกเตอร์ทั้งสองตั้งฉากกัน (เมื่อทั้งคู่ไม่ใช่เวกเตอร์ศูนย์) เช่น แรงที่ตั้งฉากกับการเคลื่อนที่ทำงานเป็นศูนย์"},
+    {"q": "ถ้า cross product เป็นเวกเตอร์ศูนย์หมายความว่าอะไร?", "a": "เวกเตอร์ทั้งสองขนานกันหรืออยู่แนวเส้นตรงเดียวกัน เพราะ \\(\\sin\\theta = 0\\)"},
+    {"q": "ทำไม cross product สลับลำดับแล้วเครื่องหมายเปลี่ยน?", "a": "เพราะทิศของผลลัพธ์กำหนดด้วยกฎมือขวา สลับลำดับ \\(\\mathbf{b}\\times\\mathbf{a}\\) ทิศจะกลับ จึงได้ \\(\\mathbf{b}\\times\\mathbf{a}=-\\,\\mathbf{a}\\times\\mathbf{b}\\) ส่วน dot product สลับที่ได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>Dot กับ Cross product</li></ol>
+      <p class="eyebrow">// บทความ · เวกเตอร์</p>
+      <h1>Dot Product กับ Cross Product ต่างกันอย่างไร: สูตร ความหมาย ตัวอย่าง</h1>
+      <p class="lede">เวกเตอร์สองตัวคูณกันได้สองแบบ แบบแรกได้ตัวเลข แบบที่สองได้เวกเตอร์ใหม่ ทั้งสองมีความหมายทางกายภาพที่ชัดเจน: dot product ใช้หางานและมุม ส่วน cross product ใช้หาแรงบิดและพื้นที่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>Dot: \(\mathbf{a}\cdot\mathbf{b}=|\mathbf{a}||\mathbf{b}|\cos\theta=a_xb_x+a_yb_y+a_zb_z\) → <b>สเกลาร์</b></li>
+          <li>Cross: \(|\mathbf{a}\times\mathbf{b}|=|\mathbf{a}||\mathbf{b}|\sin\theta\) → <b>เวกเตอร์</b> ตั้งฉากกับทั้งคู่ ทิศตามกฎมือขวา</li>
+          <li>Dot = 0 ⇒ ตั้งฉาก · Cross = 0 ⇒ ขนาน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">เปรียบเทียบสั้น ๆ</h2>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th></th><th>Dot product \(\mathbf{a}\cdot\mathbf{b}\)</th><th>Cross product \(\mathbf{a}\times\mathbf{b}\)</th></tr></thead>
+      <tbody>
+        <tr><td>ผลลัพธ์</td><td>สเกลาร์</td><td>เวกเตอร์ (3 มิติ)</td></tr>
+        <tr><td>สูตรด้วยมุม</td><td>\(|\mathbf{a}||\mathbf{b}|\cos\theta\)</td><td>ขนาด \(|\mathbf{a}||\mathbf{b}|\sin\theta\)</td></tr>
+        <tr><td>สูตรด้วยองค์ประกอบ</td><td>\(a_xb_x+a_yb_y+a_zb_z\)</td><td>ดีเทอร์มิแนนต์ของ \(\mathbf{i},\mathbf{j},\mathbf{k}\)</td></tr>
+        <tr><td>ความหมายเรขาคณิต</td><td>ภาพฉายของเวกเตอร์หนึ่งบนอีกเวกเตอร์ × ความยาว</td><td>พื้นที่สี่เหลี่ยมด้านขนานที่เวกเตอร์ทั้งสองสร้างขึ้น</td></tr>
+        <tr><td>สลับลำดับ</td><td>เหมือนเดิม</td><td>เครื่องหมายกลับ</td></tr>
+        <tr><td>เท่ากับศูนย์เมื่อ</td><td>ตั้งฉากกัน</td><td>ขนานกัน</td></tr>
+        <tr><td>ใช้หา</td><td>งาน มุม ภาพฉาย กำลังจริง</td><td>แรงบิด สนามแม่เหล็ก ทิศตั้งฉาก</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="dot">
+    <h2 id="dot">Dot product (ผลคูณเชิงสเกลาร์)</h2>
+    <p>สำหรับ \(\mathbf{a}=(a_x,a_y,a_z)\) และ \(\mathbf{b}=(b_x,b_y,b_z)\) นำองค์ประกอบที่แกนเดียวกันมาคูณแล้วบวกกัน</p>
+    \[ \mathbf{a}\cdot\mathbf{b}=a_xb_x+a_yb_y+a_zb_z=|\mathbf{a}||\mathbf{b}|\cos\theta \]
+    <p>จึงหามุมระหว่างเวกเตอร์ได้จาก \(\cos\theta=\dfrac{\mathbf{a}\cdot\mathbf{b}}{|\mathbf{a}||\mathbf{b}|}\) ถ้าค่าเป็นบวก มุมแหลม เป็นลบ มุมป้าน</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่างงาน</span><h3>แรง 50 N ทำมุม 30° กับการเคลื่อนที่ 4 m</h3></div>
+      <ol class="steps">
+        <li>\[ W=\mathbf{F}\cdot\mathbf{d}=|\mathbf{F}||\mathbf{d}|\cos\theta=50\times4\times\cos30^\circ \]</li>
+      </ol>
+      <p class="answer">\(W = 200\times0.866 \approx 173.2\) J (เฉพาะองค์ประกอบของแรงที่ขนานการเคลื่อนที่เท่านั้นที่ทำงาน)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cross">
+    <h2 id="cross">Cross product (ผลคูณเชิงเวกเตอร์)</h2>
+    <p>ผลลัพธ์ตั้งฉากกับ \(\mathbf{a}\) และ \(\mathbf{b}\) ทิศตามกฎมือขวา: ชี้นิ้วไปตาม \(\mathbf{a}\) ม้วนไปหา \(\mathbf{b}\) นิ้วโป้งชี้ทิศของ \(\mathbf{a}\times\mathbf{b}\) คำนวณด้วยองค์ประกอบดังนี้</p>
+    \[ \mathbf{a}\times\mathbf{b}=\begin{vmatrix}\mathbf{i}&amp;\mathbf{j}&amp;\mathbf{k}\\a_x&amp;a_y&amp;a_z\\b_x&amp;b_y&amp;b_z\end{vmatrix}=(a_yb_z-a_zb_y)\,\mathbf{i}-(a_xb_z-a_zb_x)\,\mathbf{j}+(a_xb_y-a_yb_x)\,\mathbf{k} \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่างแรงบิด</span><h3>ประแจยาว 0.3 m ออกแรง 100 N ตั้งฉากกับด้ามประแจ</h3></div>
+      <ol class="steps">
+        <li>\[ \boldsymbol{\tau}=\mathbf{r}\times\mathbf{F},\quad |\boldsymbol{\tau}|=rF\sin90^\circ=0.3\times100\times1 \]</li>
+      </ol>
+      <p class="answer">\(|\boldsymbol{\tau}|=30\) N·m ทิศของแรงบิดตามแกนหมุนของน็อต ถ้าออกแรงเฉียง แรงบิดจะลดลงตาม \(\sin\theta\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="both">
+    <h2 id="both">ตัวอย่างเดียวกัน คำนวณทั้งสองแบบ</h2>
+    <p>ให้ \(\mathbf{a}=(2,3,1)\) และ \(\mathbf{b}=(1,-1,4)\)</p>
+    <div class="wx">
+      <ol class="steps">
+        <li><p>Dot product</p>\[ \mathbf{a}\cdot\mathbf{b}=2(1)+3(-1)+1(4)=3 \]</li>
+        <li><p>Cross product</p>\[ \mathbf{a}\times\mathbf{b}=\big(3\cdot4-1\cdot(-1),\; 1\cdot1-2\cdot4,\; 2\cdot(-1)-3\cdot1\big)=(13,\,-7,\,-5) \]</li>
+        <li><p>มุมระหว่างเวกเตอร์ ด้วย \(|\mathbf{a}|=\sqrt{14}\), \(|\mathbf{b}|=\sqrt{18}\)</p>\[ \cos\theta=\frac{3}{\sqrt{14}\sqrt{18}}\approx0.189\;\Rightarrow\;\theta\approx79.1^\circ \]</li>
+        <li><p>ตรวจด้วยขนาดของ cross product ต้องเท่ากับ \(|\mathbf{a}||\mathbf{b}|\sin\theta\)</p>\[ |\mathbf{a}\times\mathbf{b}|=\sqrt{13^2+7^2+5^2}=\sqrt{243}\approx15.59 \]</li>
+      </ol>
+      <p class="answer">\(\sqrt{14\times18}\,\sin79.1^\circ\approx15.87\times0.982\approx15.59\) ✓ และ \(\mathbf{a}\cdot(\mathbf{a}\times\mathbf{b})=2(13)+3(-7)+1(-5)=0\) ✓ (cross product ตั้งฉากกับ \(\mathbf{a}\))</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ee">
+    <h2 id="ee">ใช้ในงานไฟฟ้าอย่างไร</h2>
+    <ul>
+      <li><b>กำลังไฟฟ้าจริง</b> เมื่อมองเฟสเซอร์ของแรงดันและกระแส (ค่า RMS) เป็นเวกเตอร์ในระนาบ 2 มิติ กำลังจริง \(P=VI\cos\varphi\) คือ dot product ของมัน</li>
+      <li><b>แรงที่กระทำต่อลวดตัวนำ</b> \(\mathbf{F}=I\,\mathbf{L}\times\mathbf{B}\) และแรงลอเรนซ์ \(\mathbf{F}=q\,\mathbf{v}\times\mathbf{B}\) เป็น cross product</li>
+      <li><b>แรงบิดของมอเตอร์</b> \(\boldsymbol{\tau}=\mathbf{r}\times\mathbf{F}\)</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/vector-algebra/dot-product/">Dot product: มุม งาน และภาพฉาย</a></li>
+        <li><a href="/learn/vector-algebra/cross-product/">Cross product: กฎมือขวา แรงบิด พื้นที่</a></li>
+        <li><a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ ลากเวกเตอร์แล้วดู dot และ cross ทันที</a></li>
+        <li><a href="/learn/vector-algebra/phasors/">เฟสเซอร์และการวิเคราะห์วงจร AC</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

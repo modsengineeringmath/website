@@ -1,0 +1,114 @@
+<!--meta
+{
+  "title": "วิธีหา Determinant และ Inverse Matrix 2×2 และ 3×3 พร้อมตัวอย่างทีละขั้น | อาจารย์มด",
+  "h1": "วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง",
+  "description": "สอนหาดีเทอร์มิแนนต์ 2×2 และ 3×3 ด้วยโคแฟกเตอร์ และหาอินเวอร์สเมทริกซ์ด้วยสูตร adjugate พร้อมตัวอย่างตัวเลขที่ตรวจคำตอบด้วยการคูณกลับ และเงื่อนไขเมทริกซ์เอกฐาน",
+  "ogTitle": "วิธีหา Determinant และ Inverse Matrix 2×2 และ 3×3",
+  "blog": true,
+  "tag": "พีชคณิตเชิงเส้น",
+  "series": ["linear-algebra"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["determinant", "ดีเทอร์มิแนนต์", "inverse matrix", "อินเวอร์สเมทริกซ์", "เมทริกซ์ผกผัน", "โคแฟกเตอร์", "adjugate"],
+  "about": ["Determinant", "Inverse matrix", "Linear algebra"],
+  "og": {"title": "หา Determinant และ Inverse Matrix", "sub": "2×2 และ 3×3 ด้วยโคแฟกเตอร์ พร้อมตัวอย่างตรวจคำตอบ", "eyebrow": "บทความ · พีชคณิตเชิงเส้น", "sym": "det"},
+  "faq": [
+    {"q": "Determinant เป็นศูนย์หมายความว่าอะไร?", "a": "เมทริกซ์เป็นเมทริกซ์เอกฐาน (singular) ไม่มีอินเวอร์ส และระบบสมการ \\(A\\mathbf{x}=\\mathbf{b}\\) ไม่มีคำตอบเดียว คือไม่มีคำตอบหรือมีคำตอบมากมาย แถวหรือหลักของเมทริกซ์ขึ้นต่อกันเชิงเส้น"},
+    {"q": "ใช้วิธี Sarrus กับเมทริกซ์ 4×4 ได้ไหม?", "a": "ไม่ได้ วิธี Sarrus (ลากเส้นทแยง) ใช้ได้กับ 3×3 เท่านั้น เมทริกซ์ขนาดใหญ่กว่านั้นใช้การกระจายโคแฟกเตอร์ หรือการดำเนินการแถวจนเป็นเมทริกซ์สามเหลี่ยม"},
+    {"q": "ทำไมหารด้วย determinant ตอนหาอินเวอร์ส?", "a": "เพราะ \\(A\\,\\operatorname{adj}(A)=\\det(A)\\,I\\) จึงต้องหารด้วย \\(\\det(A)\\) เพื่อให้ได้เมทริกซ์เอกลักษณ์ ซึ่งทำไม่ได้เมื่อ \\(\\det(A)=0\\)"},
+    {"q": "นิยมหาอินเวอร์สด้วยวิธีไหนในทางปฏิบัติ?", "a": "ในมือเขียนสำหรับ 2×2 ใช้สูตรลัด สำหรับ 3×3 ใช้ adjugate หรือการดำเนินการแถว (เกาส์–จอร์แดน) ในโปรแกรมคอมพิวเตอร์มักแก้ \\(A\\mathbf{x}=\\mathbf{b}\\) ด้วยการแยกตัวประกอบโดยไม่คำนวณอินเวอร์สตรง ๆ เพื่อความแม่นยำ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>Determinant และ Inverse</li></ol>
+      <p class="eyebrow">// บทความ · พีชคณิตเชิงเส้น</p>
+      <h1>วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง</h1>
+      <p class="lede">ดีเทอร์มิแนนต์บอกว่าเมทริกซ์กลับด้านได้หรือไม่ ส่วนอินเวอร์สใช้แก้ระบบสมการ เช่น กระแสในวงจรหลายลูป บทความนี้ไล่วิธีคำนวณด้วยมือพร้อมตัวอย่างที่ตรวจด้วยการคูณกลับ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>2×2: \(\det\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}=ad-bc\)</li>
+          <li>3×3: กระจายตามแถวแรกด้วยโคแฟกเตอร์ (เครื่องหมายสลับ \(+\,-\,+\))</li>
+          <li>อินเวอร์ส: \(A^{-1}=\dfrac{1}{\det A}\operatorname{adj}(A)\) มีได้เมื่อ \(\det A\ne0\) เท่านั้น</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="det2">
+    <h2 id="det2">Determinant 2×2</h2>
+    \[ \det\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}=ad-bc \]
+    <p>ตัวอย่าง: \(\det\begin{pmatrix}4&amp;7\\2&amp;6\end{pmatrix}=4\cdot6-7\cdot2=24-14=10\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="det3">
+    <h2 id="det3">Determinant 3×3 ด้วยโคแฟกเตอร์</h2>
+    <p>กระจายตามแถวแรก: ตัวประกอบแต่ละตัวคูณด้วยดีเทอร์มิแนนต์ 2×2 ที่เหลือเมื่อตัดแถวและหลักของมันออก เครื่องหมายสลับ \(+,-,+\)</p>
+    \[ \det A=a_{11}M_{11}-a_{12}M_{12}+a_{13}M_{13} \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>\(A=\begin{pmatrix}2&amp;1&amp;3\\0&amp;-1&amp;4\\1&amp;2&amp;5\end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li>\[ \det A=2\begin{vmatrix}-1&amp;4\\2&amp;5\end{vmatrix}-1\begin{vmatrix}0&amp;4\\1&amp;5\end{vmatrix}+3\begin{vmatrix}0&amp;-1\\1&amp;2\end{vmatrix} \]</li>
+        <li>\[ =2(-5-8)-1(0-4)+3(0+1)=-26+4+3 \]</li>
+      </ol>
+      <p class="answer">\(\det A=-19\) (ไม่เป็นศูนย์ จึงมีอินเวอร์ส)</p>
+    </div>
+    <p>สำหรับ 3×3 ยังใช้วิธี Sarrus ได้: คัดลอกสองหลักแรกต่อท้าย รวมผลคูณเส้นทแยงลงทั้งสามเส้น ลบผลคูณเส้นทแยงขึ้นทั้งสามเส้น ได้ผลเท่ากัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inv2">
+    <h2 id="inv2">Inverse 2×2 (สูตรลัด)</h2>
+    \[ \begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&amp;-b\\-c&amp;a\end{pmatrix} \]
+    <p>สลับ \(a\) กับ \(d\) เปลี่ยนเครื่องหมาย \(b\) และ \(c\) แล้วหารด้วย determinant</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>\(N=\begin{pmatrix}4&amp;7\\2&amp;6\end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li>\[ N^{-1}=\frac{1}{10}\begin{pmatrix}6&amp;-7\\-2&amp;4\end{pmatrix}=\begin{pmatrix}0.6&amp;-0.7\\-0.2&amp;0.4\end{pmatrix} \]</li>
+        <li><p>ตรวจ แถวแรกของ \(N\) คูณหลักแรกของ \(N^{-1}\)</p>\[ 4(0.6)+7(-0.2)=2.4-1.4=1 \]</li>
+      </ol>
+      <p class="answer">และ \(4(-0.7)+7(0.4)=0\), \(2(0.6)+6(-0.2)=0\), \(2(-0.7)+6(0.4)=1\) จึงได้ \(NN^{-1}=I\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inv3">
+    <h2 id="inv3">Inverse 3×3 ด้วย adjugate</h2>
+    <p>ขั้นตอน: (1) หาเมทริกซ์โคแฟกเตอร์ \(C\) (2) สลับแถวเป็นหลัก ได้ \(\operatorname{adj}(A)=C^{T}\) (3) หารด้วย \(\det A\)</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ต่อจากตัวอย่าง \(A\) ข้างบน</span><h3>หา \(A^{-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>โคแฟกเตอร์ \(C_{ij}=(-1)^{i+j}M_{ij}\)</p>\[ C=\begin{pmatrix}-13&amp;4&amp;1\\1&amp;7&amp;-3\\7&amp;-8&amp;-2\end{pmatrix} \]</li>
+        <li><p>สลับแถวเป็นหลัก</p>\[ \operatorname{adj}(A)=C^{T}=\begin{pmatrix}-13&amp;1&amp;7\\4&amp;7&amp;-8\\1&amp;-3&amp;-2\end{pmatrix} \]</li>
+        <li><p>หารด้วย \(\det A=-19\)</p>\[ A^{-1}=\frac{1}{19}\begin{pmatrix}13&amp;-1&amp;-7\\-4&amp;-7&amp;8\\-1&amp;3&amp;2\end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">ตรวจ แถวแรกของ \(A\) คูณหลักแรกของ \(A^{-1}\): \(\dfrac{1}{19}\big(2(13)+1(-4)+3(-1)\big)=\dfrac{19}{19}=1\) ✓ และแถวแรกคูณหลักที่สอง: \(\dfrac{1}{19}\big(2(-1)+1(-7)+3(3)\big)=0\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="use">
+    <h2 id="use">ใช้ทำอะไร</h2>
+    <ul>
+      <li><b>แก้ระบบสมการ</b> \(A\mathbf{x}=\mathbf{b}\Rightarrow\mathbf{x}=A^{-1}\mathbf{b}\) เช่น กระแสลูปในวงจรไฟฟ้าหลายลูป</li>
+      <li><b>ตรวจการมีคำตอบเดียว</b> ถ้า \(\det A\ne0\) ระบบมีคำตอบเดียว</li>
+      <li><b>ค่าเฉพาะ</b> หาจาก \(\det(A-\lambda I)=0\) ในการวิเคราะห์เสถียรภาพของระบบสเตตสเปซ</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์: สมบัติ โคแฟกเตอร์ การดำเนินการแถว</a></li>
+        <li><a href="/learn/linear-algebra/inverse/">อินเวอร์สเมทริกซ์ ทั้ง adjugate และเกาส์–จอร์แดน</a></li>
+        <li><a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำทีละขั้น</a></li>
+        <li><a href="/learn/linear-algebra/ee-applications/">ประยุกต์ในวงจรไฟฟ้าและระบบไฟฟ้ากำลัง</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,107 @@
+<!--meta
+{
+  "title": "Power Factor คืออะไร: สูตร cos φ, kW kVA kvar และทำไมค่า PF ต่ำถึงเสียเงิน | อาจารย์มด",
+  "h1": "Power Factor (เพาเวอร์แฟกเตอร์) คืออะไร: สูตร cos φ และความสัมพันธ์ kW kVA kvar",
+  "description": "Power Factor คืออัตราส่วนกำลังจริงต่อกำลังปรากฏ อธิบายสามเหลี่ยมกำลัง P Q S ตัวอย่างคำนวณกระแสเมื่อ PF 0.8 กับ 1.0 PF ตามหลังกับนำหน้า และผลของฮาร์มอนิก",
+  "ogTitle": "Power Factor คืออะไร: สูตร cos φ, kW kVA kvar",
+  "blog": true,
+  "tag": "Power Factor",
+  "series": ["power-factor"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["power factor", "เพาเวอร์แฟกเตอร์", "PF คืออะไร", "cos phi", "kW kVA kvar", "สามเหลี่ยมกำลัง"],
+  "about": ["Power factor", "AC power", "Reactive power"],
+  "og": {"title": "Power Factor คืออะไร", "sub": "cos φ, kW kVA kvar และตัวอย่างคำนวณกระแส", "eyebrow": "บทความ · Power Factor", "sym": "φ"},
+  "faq": [
+    {"q": "Power Factor ที่ดีควรเป็นเท่าไร?", "a": "ยิ่งใกล้ 1.0 ยิ่งดี ในทางปฏิบัติของไทยผู้ใช้ไฟประเภทที่มีค่าปรับมักปรับ PF ให้สูงกว่า 0.85 ตามเกณฑ์ของการไฟฟ้า และออกแบบให้อยู่ราว 0.95 เพื่อเผื่อช่วงโหลดเบา ดูรายละเอียดเกณฑ์ที่หน้าเพาเวอร์แฟกเตอร์กับค่าไฟ"},
+    {"q": "PF ตามหลัง (lagging) กับนำหน้า (leading) ต่างกันอย่างไร?", "a": "ตามหลังคือกระแสตามหลังแรงดัน เกิดจากโหลดเหนี่ยวนำ เช่น มอเตอร์ หม้อแปลง ส่วนนำหน้าคือกระแสนำแรงดัน เกิดจากโหลดเก็บประจุ หรือคาปาซิเตอร์ที่ใส่มากเกินไป"},
+    {"q": "PF ต่ำทำให้เสียหายอย่างไร?", "a": "ต้องใช้กระแสมากขึ้นเพื่อกำลังจริงเท่าเดิม ทำให้สาย หม้อแปลง และเบรกเกอร์รับภาระมากขึ้น การสูญเสียในสาย (\\(I^2R\\)) และแรงดันตกเพิ่มขึ้น และผู้ใช้ไฟบางประเภทต้องเสียค่าปรับ"},
+    {"q": "PF จริง (true PF) กับ cos φ ต่างกันอย่างไร?", "a": "cos φ คือ displacement PF ของความถี่หลักเท่านั้น ถ้ากระแสบิดเบี้ยวจากฮาร์มอนิก PF จริงคือ \\(\\text{PF}=\\cos\\varphi_1/\\sqrt{1+\\text{THD}_I^2}\\) ซึ่งต่ำกว่า cos φ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>Power Factor คืออะไร</li></ol>
+      <p class="eyebrow">// บทความ · Power Factor</p>
+      <h1>Power Factor (เพาเวอร์แฟกเตอร์) คืออะไร: สูตร cos φ และความสัมพันธ์ kW kVA kvar</h1>
+      <p class="lede">Power Factor บอกว่ากำลังไฟฟ้าที่จ่ายเข้าโหลดถูกเปลี่ยนเป็นงานจริงได้กี่ส่วน ค่าต่ำหมายความว่าสายและหม้อแปลงแบกกระแสที่ไม่ได้ทำงาน บทความนี้อธิบายด้วยสามเหลี่ยมกำลังและตัวอย่างตัวเลข</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\text{PF}=\dfrac{P}{S}=\cos\varphi\) เมื่อแรงดันและกระแสเป็นไซน์</li>
+          <li>P = กำลังจริง (kW) · Q = กำลังรีแอกทีฟ (kvar) · S = กำลังปรากฏ (kVA) และ \(S^2=P^2+Q^2\)</li>
+          <li>กำลังจริงเท่าเดิม แต่ PF ต่ำ ⇒ กระแสสูงขึ้นเป็น \(1/\text{PF}\) เท่า</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="meaning">
+    <h2 id="meaning">Power Factor คืออะไร</h2>
+    <p>ในวงจรไฟฟ้ากระแสสลับ แรงดันและกระแสไม่จำเป็นต้องขึ้นลงพร้อมกัน ถ้ามันต่างเฟสกันเป็นมุม \(\varphi\) กำลังที่เปลี่ยนเป็นงานจริงจะเหลือเพียงส่วนหนึ่งของ \(V\times I\)</p>
+    \[ P = V I \cos\varphi, \qquad S = V I, \qquad \text{PF} = \frac{P}{S} = \cos\varphi \]
+    <p>ที่นี่ \(V\), \(I\) เป็นค่า RMS โหลดตัวต้านทานล้วน (ฮีตเตอร์ หลอดไส้) มี \(\varphi=0\) และ PF = 1 ส่วนมอเตอร์เหนี่ยวนำ หม้อแปลง และบัลลาสต์แกนเหล็ก มีขดลวด ทำให้กระแสตามหลังแรงดัน PF จึงต่ำกว่า 1</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="triangle">
+    <h2 id="triangle">สามเหลี่ยมกำลัง P Q S</h2>
+    <p>กำลังทั้งสามชนิดสัมพันธ์กันเป็นสามเหลี่ยมมุมฉาก</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>กำลัง</th><th>สัญลักษณ์ · หน่วย</th><th>ความหมาย</th><th>สูตร</th></tr></thead>
+      <tbody>
+        <tr><td>กำลังจริง</td><td>\(P\) · W, kW</td><td>กำลังที่เปลี่ยนเป็นงาน ความร้อน แสง หรือแรงบิด</td><td>\(VI\cos\varphi\)</td></tr>
+        <tr><td>กำลังรีแอกทีฟ</td><td>\(Q\) · var, kvar</td><td>กำลังที่วิ่งไปกลับระหว่างแหล่งจ่ายกับสนามแม่เหล็กหรือสนามไฟฟ้าในโหลด</td><td>\(VI\sin\varphi\)</td></tr>
+        <tr><td>กำลังปรากฏ</td><td>\(S\) · VA, kVA</td><td>ภาระที่สาย หม้อแปลง และเครื่องกำเนิดต้องรองรับ</td><td>\(VI=\sqrt{P^2+Q^2}\)</td></tr>
+      </tbody>
+    </table></div>
+    <p>สำหรับระบบสามเฟสสมดุล ใช้แรงดันและกระแสสาย (line) \(P=\sqrt{3}\,V_L I_L\cos\varphi\) และ \(S=\sqrt{3}\,V_L I_L\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="example">
+    <h2 id="example">ตัวอย่าง: โหลด 230 V, 10 A, PF 0.8 ตามหลัง</h2>
+    <div class="wx">
+      <ol class="steps">
+        <li><p>กำลังปรากฏและกำลังจริง</p>\[ S=VI=230\times10=2300\ \text{VA},\qquad P=S\cos\varphi=2300\times0.8=1840\ \text{W} \]</li>
+        <li><p>กำลังรีแอกทีฟจากสามเหลี่ยมกำลัง</p>\[ Q=\sqrt{S^2-P^2}=\sqrt{2300^2-1840^2}=1380\ \text{var} \]</li>
+        <li><p>ถ้าปรับ PF เป็น 1.0 โดยกำลังจริงเท่าเดิม กระแสที่ต้องใช้</p>\[ I'=\frac{P}{V}=\frac{1840}{230}=8\ \text{A} \]</li>
+        <li><p>เปรียบเทียบการสูญเสียในสาย \(\propto I^2\)</p>\[ \left(\frac{10}{8}\right)^2=1.5625 \]</li>
+      </ol>
+      <p class="answer">PF 0.8 ใช้กระแส 10 A แต่ PF 1.0 ใช้เพียง 8 A เพื่องาน 1840 W เท่ากัน กระแสต่างกัน 25 % และการสูญเสียในสายสูงกว่าประมาณ 56 % (2300 : 1840 : 1380 คือสามเหลี่ยม 5 : 4 : 3)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lag-lead">
+    <h2 id="lag-lead">PF ตามหลัง (lagging) และนำหน้า (leading)</h2>
+    <ul>
+      <li><b>ตามหลัง:</b> กระแสตามหลังแรงดัน โหลดเหนี่ยวนำ (มอเตอร์ หม้อแปลง) ซึ่งเป็นโหลดส่วนใหญ่ในโรงงาน</li>
+      <li><b>นำหน้า:</b> กระแสนำแรงดัน โหลดเก็บประจุ หรือคาปาซิเตอร์แก้ PF ที่ใส่เกินจำเป็น สายเคเบิลยาวที่ไม่มีโหลดก็ให้ผลคล้ายกัน</li>
+    </ul>
+    <p>ค่า PF อย่างเดียวบอกไม่ได้ว่าตามหลังหรือนำหน้า ต้องระบุคำกำกับ เช่น "0.8 ตามหลัง"</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="harmonics">
+    <h2 id="harmonics">เมื่อมีฮาร์มอนิก: PF จริงต่ำกว่า cos φ</h2>
+    <p>โหลดอิเล็กทรอนิกส์ เช่น สวิตชิ่งซัพพลาย และวงจรเรียงกระแส ดึงกระแสไม่เป็นไซน์ ทำให้ PF ที่แท้จริงลดลงแม้กระแสหลักจะอยู่เฟสเดียวกับแรงดัน</p>
+    \[ \text{PF}_{true}=\underbrace{\cos\varphi_1}_{\text{displacement}}\times\frac{1}{\sqrt{1+\text{THD}_I^2}} \]
+    <p>ตัวอย่าง: \(\cos\varphi_1=1\) และ \(\text{THD}_I=30\,\%\) ได้ \(\text{PF}_{true}=1/\sqrt{1.09}\approx0.958\) การติดตั้งคาปาซิเตอร์แก้ PF อย่างเดียวจึงไม่พอ และอาจก่อเรโซแนนซ์กับฮาร์มอนิก ต้องพิจารณา THD ด้วย</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/power-factor/pf-basics/">เพาเวอร์แฟกเตอร์คืออะไร: ภาพเปรียบเทียบและสามเหลี่ยมกำลังเต็มรูปแบบ</a></li>
+        <li><a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์: เห็นรูปคลื่นและเฟสเซอร์</a></li>
+        <li><a href="/learn/power-factor/pf-billing/">PF กับค่าไฟ: ค่าปรับ kvar และเกณฑ์ 0.85</a></li>
+        <li><a href="/learn/power-factor/harmonics-true-pf/">ฮาร์มอนิกกับ PF จริง</a></li>
+        <li><a href="/blog/power-factor-correction-capacitor-calculation/">ต่อไป: วิธีคำนวณคาปาซิเตอร์แก้ PF</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
