@@ -278,3 +278,7 @@ All numbers are for 230/400 V 50 Hz (TH, LA, KH, VN, MM, MY, SG). Motor model: d
   `.mc-lab[data-mode=dol|fr|yd|soft|vfd][data-modes][data-load]`; `assets/plc-sim.js` ladder simulator `.plc-sim[data-preset=dol|fr|yd|flasher|traffic|tank|counter|setreset][data-edit]`
   (text program: coils, S/R, TON/TOF/TP, CTU, P()/N(); `module.exports {compile, PRESETS}` for Node tests). All bilingual.
 - Home: section `#motor-plc`. Short URLs `/motor-control` `/dol` `/star-delta` `/vfd` `/plc` `/ladder` `/plc-lab` `/motor-lab` `/en` … in `_redirects`.
+
+### Diagram update (2026-10-15)
+- `scripts/mc_figs.py` IEC schematics now follow IEC 60617 / IEC 60204-1 more closely: fuse symbol with the conductor through it, thermal overload relay with dashed coupling and 95-96 link, breaker with I>> release, motor with terminal rings and PE bonded to the frame, column numbers + contact cross-reference box under every coil (`control(..., below=58, labels=…)`, `f.mains`), lamp colour codes, coils on the N rail. Reversing / star-delta power circuits route each tap at its own height (the old figures shorted L1-L2-L3 with one bus line).
+- New NEMA/JIC figures (`mc-nema-symbols`, `mc-nema-dol`, `mc-nema-fr`, `mc-nema-yd`) built with the ladder engine `nema_ladder()` / `NE NS NP NRN` (rung numbers, wire numbers, underlined NC refs) and single-line diagrams `mc-sld-iec`, `mc-sld-nema`. Sections `#single` and `#nema` on the diagrams-symbols page, `#nema` on dol-starter, forward-reverse and star-delta (Thai + English).

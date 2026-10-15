@@ -129,6 +129,10 @@ def _actuator(f, x, ym, act, c="xf-ln"):
             f.path(f"M {f1(x - 22)} {f1(ym - 7)} L {f1(x - 26)} {f1(ym - 7)} L {f1(x - 26)} {f1(ym + 7)} L {f1(x - 22)} {f1(ym + 7)}", c)
         else:
             f.path(f"M {f1(x - 26)} {f1(ym - 9)} A 9 9 0 0 0 {f1(x - 26)} {f1(ym + 9)} Z", "xf-estop")
+    elif act == "sel":  # manually operated, stays in position (selector): general manual operation bar
+        f.line(xa, ym, x - 24, ym, "xf-dash")
+        f.line(x - 24, ym - 8, x - 24, ym + 8, c)
+        f.line(x - 24, ym - 8, x - 30, ym - 8, c)
     elif act in ("ton", "tof"):
         f.line(xa, ym, x - 24, ym, "xf-dash")
         sweep = 1 if act == "ton" else 0
@@ -156,19 +160,48 @@ def _labels(f, x, y, h, tag, t1, t2, off=36):
         f.text(x + 7, y + h - 4, t2, "xf-k")
 
 
-def el_coil(f, x, y, tag=None, kind=None, note=None, h=H):
+def el_coil(f, x, y, tag=None, kind=None, note=None, h=H, tagside="left"):
     f.line(x, y, x, y + 13); f.line(x, y + h - 13, x, y + h)
     f.rect(x - 15, y + 13, 30, h - 26, "xf-coil", 1)
     if kind == "ton":
         f.rect(x - 15, y + 13, 9, h - 26, "xf-fill", 0)
     elif kind == "tof":
         f.rect(x + 6, y + 13, 9, h - 26, "xf-fill", 0)
-    _labels(f, x, y, h, tag, "A1", "A2")
+    if tagside == "right":
+        _labels(f, x, y, h, None, "A1", "A2")
+        f.text(x + 22, y + h / 2 + 4, tag, "xf-tag")
+    else:
+        _labels(f, x, y, h, tag, "A1", "A2")
     if note:
         f.text(x + 20, y + h / 2 + 4, note, "xf-k")
+    ref = getattr(f, "xr", {}).get(tag)
+    if ref and (ref["no"] or ref["nc"] or ref.get("main")):
+        xref_box(f, x, y + h, ref)
 
 
-def el_lamp(f, x, y, tag=None, note=None, h=H):
+def xref_box(f, x, y, ref):
+    """IEC 60204-1 / IEC 61082 contact cross-reference under a coil: column numbers where its NO and NC contacts are used."""
+    rows = [("main", ref.get("main")), ("no", ref["no"]), ("nc", ref["nc"])]
+    rows = [(k, v) for k, v in rows if v]
+    bw, bh = 70, 6 + 15 * len(rows)
+    bx, by = x + 10, y + 4
+    f.rect(bx, by, bw, bh, "xf-xref", 1)
+    for i, (k, v) in enumerate(rows):
+        yy = by + 12 + i * 15
+        gx = bx + 11
+        if k == "main":
+            for dx in (-5, 0, 5):
+                f.line(gx + dx, yy - 7, gx + dx, yy + 3, "xf-thin")
+        else:
+            f.line(gx, yy - 7, gx, yy - 3, "xf-ln"); f.line(gx, yy + 1, gx, yy + 4, "xf-ln")
+            f.line(gx, yy + 1, gx - 5, yy - 4, "xf-ln")
+            if k == "nc":
+                f.line(gx - 6, yy - 3, gx + 2, yy - 3, "xf-ln")
+        f.text(bx + 24, yy + 3, v if isinstance(v, str) else ",".join(str(c) for c in v), "xf-k")
+
+
+def el_lamp(f, x, y, tag=None, note=None, h=H, color=None):
+    """IEC 60617 indicator lamp (circle with a cross); color = IEC 60204-1 code RD / YE / GN / BU / WH."""
     f.line(x, y, x, y + 15); f.line(x, y + h - 15, x, y + h)
     r = (h - 30) / 2 + 1
     cy = y + h / 2
@@ -176,14 +209,19 @@ def el_lamp(f, x, y, tag=None, note=None, h=H):
     d = r * 0.7
     f.line(x - d, cy - d, x + d, cy + d); f.line(x - d, cy + d, x + d, cy - d)
     _labels(f, x, y, h, tag, "X1", "X2")
+    if color:
+        f.text(x + r + 5, cy - 2, color, "xf-tagk")
     if note:
-        f.text(x + 18, cy + 4, note, "xf-k")
+        f.text(x + r + 5, cy + 12, note, "xf-k")
 
 
-def el_fuse(f, x, y, tag=None, h=H):
-    f.line(x, y, x, y + h)
+def el_fuse(f, x, y, tag=None, h=H, note=None):
+    """IEC 60617 fuse: a rectangle with the conductor drawn through its full length."""
     f.rect(x - 6, y + 13, 12, h - 26, "xf-box", 1)
+    f.line(x, y, x, y + h)
     _labels(f, x, y, h, tag, None, None)
+    if note:
+        f.text(x + 14, y + h / 2 + 4, note, "xf-k")
 
 
 # ---- a tiny layout engine for IEC-style (vertical) control circuits between two rails
@@ -219,19 +257,28 @@ def size(n):
 
 
 def draw(f, n, x, y, hfill=None):
-    """Draw node n with its main wire at x from y; stretch to height hfill (extra wire at the bottom)."""
+    """Draw node n with its main wire at x from y; stretch to height hfill (extra wire).
+    Loads (coils, lamps) are aligned on one row just above the lower rail, leaving f.below px for the cross-reference box."""
     w, h = size(n)
     hh = hfill if hfill is not None else h
     if n[0] == "gap":
         return
     if n[0] == "el":
         kw = dict(n[2]); kw.pop("h", None)
-        n[1](f, x, y, **kw) if n[1] is not el_wire else None
         eh = n[2].get("h", H)
+        reg = getattr(f, "reg", None)
+        if reg is not None and n[1] is not el_wire:
+            reg.append((n[1], kw.get("tag"), x, y, kw))
         if n[1] is el_wire:
             el_wire(f, x, y, hh)
-        elif hh > eh:
-            f.line(x, y + eh, x, y + hh)
+            return
+        below = getattr(f, "below", 0) if n[1] in (el_coil, el_lamp) else 0
+        top = max(hh - eh - below, 0) if n[1] in (el_coil, el_lamp) else 0
+        if top:
+            f.line(x, y, x, y + top)
+        n[1](f, x, y + top, **kw)
+        if hh > top + eh:
+            f.line(x, y + top + eh, x, y + hh)
         return
     if n[0] == "seq":
         yy = y
@@ -251,24 +298,46 @@ def draw(f, n, x, y, hfill=None):
     f.line(xs[0], y + 12, xs[-1], y + 12)
     f.line(xs[0], y + hh - 12, xs[-1], y + hh - 12)
     f.line(x, y + hh - 12, x, y + hh)
-    for xi in xs[1:]:
-        f.dot(x, y + 12) if xi == xs[1] else None
-        f.dot(x, y + hh - 12) if xi == xs[1] else None
+    f.dot(x, y + 12)
+    f.dot(x, y + hh - 12)
     for c, xi in zip(n[1], xs):
         draw(f, c, xi, y + 12, hh - 24)
 
 
-def control(f, root, x0, ytop, rails=True, top=None, bot=None, extra=0):
-    """Draw a whole control circuit: root is a seq/par node hanging from the top rail to the bottom rail."""
+def control(f, root, x0, ytop, rails=True, top=None, bot=None, extra=0, below=0, labels=None, cols=True):
+    """Draw a whole control circuit: root hangs from the top rail to the bottom rail.
+    below: room under the loads for the contact cross-reference boxes · labels: {column: text} function texts under the circuit."""
     w, h = size(root)
-    h += extra
+    h += extra + below
+    # pass 1: find where every contact sits, so each coil can print its cross-reference (IEC 60204-1 / IEC 61082-1)
+    g = F(f.w, f.h, "", "tmp"); g.reg = []; g.below = below
+    draw(g, root, x0, ytop, h)
+    xr = {}
+    for fn, tag, x, y, kw in g.reg:
+        if not tag or fn not in (el_no, el_nc):
+            continue
+        d = xr.setdefault(tag, {"no": [], "nc": [], "main": kw.get("main")})
+        col = int(round((x - x0) / COLW)) + 1
+        (d["no"] if fn is el_no else d["nc"]).append(col)
+    for tag, d in xr.items():
+        for k in ("no", "nc"):
+            d[k] = sorted(set(d[k]))
+    f.xr, f.below, f.reg = xr, below, []
+    f.mains = getattr(f, "mains", {})
+    for tag, d in xr.items():
+        d["main"] = f.mains.get(tag)
     if rails:
         f.line(x0 - 50, ytop, x0 + w * COLW - 40, ytop, "xf-rail")
         f.line(x0 - 50, ytop + h, x0 + w * COLW - 40, ytop + h, "xf-rail")
         f.text(x0 - 54, ytop + 4, top or "L", "xf-tag", "end")
         f.text(x0 - 54, ytop + h + 4, bot or "N", "xf-tag", "end")
     draw(f, root, x0, ytop, h)
-    f.h = max(ytop + h + 54, getattr(f, "minh", 0))
+    if cols:
+        for c in range(1, w + 1):
+            f.text(x0 + (c - 1) * COLW, ytop - 8, str(c), "xf-colno", "middle")
+    for c, txt in (labels or {}).items():
+        f.text(x0 + (c - 1) * COLW, ytop + h + 20, txt, "xf-k", "middle")
+    f.h = max(ytop + h + (44 if labels else 30) + 24, getattr(f, "minh", 0))
     return w, h
 
 
@@ -278,8 +347,16 @@ def p_wires(f, xs, y1, y2, c="xf-ln"):
         f.line(x, y1, x, y2, c)
 
 
-def p_contacts(f, xs, y, tag=None, kind="km", h=50, terms=None):
-    """kind: 'km' contactor main contacts, 'q' MPCB/breaker, 'sw' isolator."""
+def p_earth(f, x, y, c="xf-ln"):
+    """IEC 60617 protective-earth symbol: three bars of decreasing length at the end of a stem."""
+    f.line(x, y, x, y + 6, c)
+    f.line(x - 9, y + 6, x + 9, y + 6, c); f.line(x - 6, y + 10, x + 6, y + 10, c); f.line(x - 3, y + 14, x + 3, y + 14, c)
+
+
+def p_contacts(f, xs, y, tag=None, kind="km", h=50, terms=None, rel="mag"):
+    """kind: 'km' contactor main contacts (IEC 60617 contactor contact with the arc-quenching bow) ·
+    'q' circuit-breaker (cross on the contact) · 'sw' switch-disconnector (bar on the contact).
+    rel: breaker release — 'mag' (short-circuit only, I>>) or 'thmag' (thermal bimetal + magnetic, MPCB)."""
     a, b = y + 14, y + h - 14
     for i, x in enumerate(xs):
         f.line(x, y, x, a); f.line(x, b, x, y + h)
@@ -288,45 +365,334 @@ def p_contacts(f, xs, y, tag=None, kind="km", h=50, terms=None):
             f.path(f"M {f1(x - 3)} {f1(a)} A 3 3 0 0 0 {f1(x + 3)} {f1(a)}", "xf-ln")
         elif kind == "q":
             f.line(x - 4, a - 4, x + 4, a + 4); f.line(x - 4, a + 4, x + 4, a - 4)
+        elif kind == "sw":
+            f.line(x - 12, a + 3, x - 3, a + 7, "xf-ln")
         if terms:
             f.text(x + 5, y + 10, terms[0][i], "xf-k"); f.text(x + 5, y + h - 3, terms[1][i], "xf-k")
     ym = (a + b) / 2
     f.line(xs[0] - 6, ym, xs[-1] - 6, ym, "xf-dash")
     if kind == "q":
-        f.line(xs[0] - 6, ym, xs[0] - 34, ym, "xf-dash")
-        f.rect(xs[0] - 60, ym - 10, 26, 20, "xf-box", 2)
-        f.text(xs[0] - 47, ym + 4, "I>", "xf-k", "middle")
+        # tripping device linked to the switching mechanism
+        f.line(xs[0] - 6, ym, xs[0] - 30, ym, "xf-dash")
+        if rel == "thmag":
+            f.rect(xs[0] - 82, ym - 10, 24, 20, "xf-box", 2)
+            f.path(f"M {f1(xs[0] - 77)} {f1(ym + 4)} l 0 -8 l 5 0 l 0 8 l 5 0 l 0 -8 l 4 0", "xf-thin")
+            f.line(xs[0] - 58, ym, xs[0] - 54, ym, "xf-dash")
+            f.rect(xs[0] - 54, ym - 10, 24, 20, "xf-box", 2)
+            f.text(xs[0] - 42, ym + 4, "I>", "xf-k", "middle")
+        else:
+            f.rect(xs[0] - 56, ym - 10, 26, 20, "xf-box", 2)
+            f.text(xs[0] - 43, ym + 4, "I>>", "xf-k", "middle")
     if tag:
-        f.text(xs[0] - (66 if kind == "q" else 30), ym + 4, tag, "xf-tag", "end")
+        f.text(xs[0] - (92 if kind == "q" and rel == "thmag" else 66 if kind == "q" else 30), ym + 4, tag, "xf-tag", "end")
 
 
-def p_overload(f, xs, y, tag=None, h=44, terms=None):
+def p_overload(f, xs, y, tag=None, h=44, terms=None, link=None):
+    """Thermal overload relay: one bimetal element per phase (IEC 60617), mechanically coupled (dashed); its NC contact 95-96 sits in the control circuit."""
     for i, x in enumerate(xs):
         f.line(x, y, x, y + 10); f.line(x, y + h - 10, x, y + h)
         f.rect(x - 7, y + 10, 14, h - 20, "xf-box", 1)
         f.path(f"M {f1(x)} {f1(y + 10)} l 0 6 l -4 0 l 0 6 l 8 0 l 0 6 l -4 0 l 0 {f1(h - 38)}", "xf-thin")
         if terms:
             f.text(x + 9, y + 9, terms[0][i], "xf-k"); f.text(x + 9, y + h - 2, terms[1][i], "xf-k")
+    ym = y + h / 2
+    for a, b in zip(xs[:-1], xs[1:]):
+        f.line(a + 7, ym, b - 7, ym, "xf-dash")
+    if link:
+        f.line(xs[-1] + 7, ym, xs[-1] + 34, ym, "xf-dash")
+        f.text(xs[-1] + 40, ym + 4, link, "xf-k")
     if tag:
         f.text(xs[0] - 14, y + h / 2 + 4, tag, "xf-tag", "end")
 
 
-def p_motor(f, xc, y, r=34, labels=("U1", "V1", "W1"), tag="-M1", xs=None, txt="M"):
+def p_motor(f, xc, y, r=34, labels=("U1", "V1", "W1"), tag="-M1", xs=None, txt="M", pe_x=None):
+    """Three-phase motor (IEC 60617): circle with M and 3~, terminal rings on the supply side;
+    pe_x: x of the PE conductor, which is brought to the frame with a dot and the earth symbol."""
     if xs:
         r = max(r, (xs[-1] - xs[0]) / 2 * 1.45)
         for x, l in zip(xs, labels):
             yy = y + r - math.sqrt(max(r * r - (x - xc) ** 2, 0))
             f.line(x, y, x, yy)
-            f.text(x + (-4 if x < xc else 4), y - 4 if x == xc else yy - 4, l, "xf-k", "end" if x < xc else None)
+            f.circ(x, yy, 3.2, "xf-term")
+            f.text(x + (-6 if x < xc else 6), (y - 4) if x == xc else yy - 5, l, "xf-k", "end" if x < xc else None)
     f.circ(xc, y + r, r, "xf-motor")
     f.text(xc, y + r - 2, txt, "xf-h", "middle")
     f.text(xc, y + r + 16, "3~", "xf-h", "middle")
-    f.text(xc + r * 0.75 + 6, y + 2 * r, tag, "xf-tag")
+    if tag:
+        f.text(xc + r * 0.75 + 6, y + 2 * r + 2, tag, "xf-tag")
+    if pe_x is not None:
+        yy = y + r
+        edge = xc - r if pe_x < xc else xc + r
+        f.line(pe_x, yy, edge, yy, "xf-pe")
+        f.dot(edge, yy, 3.5)
+        f.text(edge + (-6 if pe_x < xc else 6), yy - 6, "PE", "xf-k", "end" if pe_x < xc else None)
+        return edge
+
+
+def p_pe(f, x, y1, y2, label="PE"):
+    """Protective conductor (green-yellow in reality: dash-dot) running down the side of the diagram."""
+    f.text(x, y1 - 6, label, "xf-k", "middle")
+    f.line(x, y1, x, y2, "xf-pe")
 
 
 def rail3(f, xs, y, x2, names=("L1", "L2", "L3")):
     for x, n in zip(xs, names):
         f.line(xs[0] - 40, y + (x - xs[0]) / 3, x2, y + (x - xs[0]) / 3, "xf-rail")
+
+
+# =========================================================================== NEMA / JIC (ANSI/NEMA ICS 19, ICS 2, NFPA 79, ANSI Y32.2 / IEEE 315)
+# Ladder diagrams: two vertical rails, horizontal rungs, contacts as parallel bars, coils and lamps as circles with a letter,
+# wire numbers on the nodes, and the rung numbers of a coil's contacts printed under the coil (underlined = NC contact).
+NW = 64      # element width
+NR = 64      # row pitch
+
+
+def _wn(f, x, y, wn):
+    if wn:
+        f.text(x + 4, y - 5, str(wn), "xf-wn")
+
+
+def n_wire(f, x, y, w=NW, wn=None, **_):
+    f.line(x, y, x + w, y)
+    _wn(f, x, y, wn)
+
+
+def n_contact(f, x, y, w=NW, nc=False, tag=None, wn=None, note=None, **_):
+    """NEMA contact of a relay / contactor / timer: two parallel bars (NC adds the diagonal)."""
+    m = x + w / 2
+    f.line(x, y, m - 7, y); f.line(m + 7, y, x + w, y)
+    f.line(m - 7, y - 10, m - 7, y + 10); f.line(m + 7, y - 10, m + 7, y + 10)
+    if nc:
+        f.line(m - 12, y + 11, m + 12, y - 11)
+    if tag:
+        f.text(m, y - 17, tag, "xf-tag", "middle")
+    if note:
+        f.text(m, y + 26, note, "xf-k", "middle")
+    _wn(f, x, y, wn)
+
+
+def n_pb(f, x, y, w=NW, nc=False, tag=None, wn=None, estop=False, **_):
+    """Momentary push-button: contact symbol with the operator above (a bar; a red mushroom head for the emergency stop)."""
+    m = x + w / 2
+    n_contact(f, x, y, w, nc, None, wn)
+    if estop:
+        f.path(f"M {f1(m - 12)} {f1(y - 22)} A 12 12 0 0 1 {f1(m + 12)} {f1(y - 22)} Z", "xf-estop")
+        f.line(m, y - 22, m, y - 3, "xf-dash")
+        top = y - 36
+    else:
+        f.line(m - 11, y - 22, m + 11, y - 22)
+        f.line(m, y - 22, m, y - 3, "xf-dash")
+        top = y - 28
+    if tag:
+        f.text(m, top - 6, tag, "xf-tag", "middle")
+
+
+def n_ol(f, x, y, w=NW, tag="OL", wn=None, **_):
+    """Overload-relay contact: NC contact with the thermal (bimetal) mark under it."""
+    n_contact(f, x, y, w, True, tag, wn)
+    m = x + w / 2
+    f.path(f"M {f1(m - 9)} {f1(y + 20)} l 3 -5 l 3 10 l 3 -10 l 3 10 l 3 -10 l 3 5", "xf-thin")
+
+
+def n_fuse(f, x, y, w=NW, tag="FU", wn=None, **_):
+    m = x + w / 2
+    f.line(x, y, x + w, y)
+    f.rect(m - 12, y - 6, 24, 12, "xf-box", 1)
+    if tag:
+        f.text(m, y - 13, tag, "xf-tag", "middle")
+    _wn(f, x, y, wn)
+
+
+def n_coil(f, x, y, w=NW, tag="M", wn=None, **_):
+    """Coil of a starter (M), control relay (CR) or timer (TR): a circle with the letters inside."""
+    m = x + w / 2
+    f.line(x, y, m - 17, y); f.line(m + 17, y, x + w, y)
+    f.circ(m, y, 17, "xf-coil")
+    f.text(m, y + 5, tag, "xf-h" if len(tag) <= 2 else "xf-k", "middle")
+    _wn(f, x, y, wn)
+    ref = getattr(f, "xr", {}).get(tag)
+    if ref:
+        items = [(r, False) for r in ref["no"]] + [(r, True) for r in ref["nc"]]
+        items.sort(key=lambda t: (t[0], t[1]))
+        x0 = m - (len(items) * 15 - 3) / 2
+        for i, (r, nc) in enumerate(items):
+            xx = x0 + i * 15
+            f.text(xx + 5, y + 36, str(r), "xf-k", "middle")
+            if nc:
+                f.line(xx - 1, y + 39, xx + 11, y + 39, "xf-ln")
+
+
+def n_lamp(f, x, y, w=NW, tag="G", wn=None, name=None, **_):
+    m = x + w / 2
+    f.line(x, y, m - 15, y); f.line(m + 15, y, x + w, y)
+    f.circ(m, y, 15, "xf-box")
+    f.text(m, y + 5, tag, "xf-h", "middle")
+    if name:
+        f.text(m, y - 23, name, "xf-tag", "middle")
+    _wn(f, x, y, wn)
+
+
+# ---- horizontal layout engine:  ("el", fn, kw) · ("seq", [..]) · ("par", [..]) · ("rn", rung_no, node)
+def NE(fn, **kw):
+    return ("el", fn, kw)
+
+
+def NS(*items):
+    return ("seq", list(items))
+
+
+def NP(*items):
+    return ("par", list(items))
+
+
+def NRN(n, node):
+    return ("rn", n, node)
+
+
+def hs(n):
+    k = n[0]
+    if k == "el":
+        return n[2].get("w", NW), 1
+    if k == "rn":
+        return hs(n[2])
+    sz = [hs(c) for c in n[1]]
+    if k == "seq":
+        return sum(w for w, _ in sz), max(r for _, r in sz)
+    return max(w for w, _ in sz), sum(r for _, r in sz)
+
+
+def hd(f, n, x, y, w):
+    k = n[0]
+    if k == "el":
+        kw = {a: b for a, b in n[2].items() if a not in ("R", "w")}
+        reg = getattr(f, "reg", None)
+        if reg is not None:
+            reg.append((n[1], kw.get("tag"), kw.get("nc", False), getattr(f, "curr", 0)))
+        n[1](f, x, y, w=w, **kw)
+        return
+    if k == "rn":
+        f.curr = n[1]
+        f.text(f.xL - 20, y + 4, str(n[1]), "xf-rn", "middle")
+        hd(f, n[2], x, y, w)
+        return
+    if k == "seq":
+        items = n[1]
+        tail = []
+        while items and items[-1][0] == "el" and items[-1][2].get("R"):
+            tail.insert(0, items[-1]); items = items[:-1]
+        wh = sum(hs(c)[0] for c in items); wt = sum(hs(c)[0] for c in tail)
+        extra = w - wh - wt
+        if tail:
+            xx = x
+            for c in items:
+                cw = hs(c)[0]; hd(f, c, xx, y, cw); xx += cw
+            f.line(xx, y, x + w - wt, y)
+            xx = x + w - wt
+            for c in tail:
+                cw = hs(c)[0]; hd(f, c, xx, y, cw); xx += cw
+        else:
+            xx = x
+            for i, c in enumerate(items):
+                cw = hs(c)[0] + (extra if i == len(items) - 1 else 0)
+                hd(f, c, xx, y, cw); xx += cw
+        return
+    # parallel: stacked branches joined by vertical connectors at both ends
+    off, ys = 0, []
+    for c in n[1]:
+        ys.append(y + off * NR)
+        hd(f, c, x, y + off * NR, w)
+        off += hs(c)[1]
+    if len(ys) > 1:
+        f.line(x, ys[0], x, ys[-1]); f.line(x + w, ys[0], x + w, ys[-1])
+        for yy in ys[:-1]:
+            f.dot(x, yy); f.dot(x + w, yy)
+
+
+def nema_ladder(f, rungs, xL, xR, ytop, left="X1", right="X2", gap=18):
+    """Draw a ladder: rails xL / xR, one entry of `rungs` per rung (stacked). Returns the bottom y of the rails."""
+    g = F(f.w, f.h, "", "tmp"); g.reg = []; g.curr = 0; g.xL = xL
+    y = ytop + 44
+    for r in rungs:
+        hd(g, r, xL, y, xR - xL); y += hs(r)[1] * NR + gap
+    xr = {}
+    for fn, tag, nc, rung in g.reg:
+        if not tag or fn not in (n_contact, n_pb):
+            continue
+        d = xr.setdefault(tag, {"no": [], "nc": []})
+        d["nc" if nc else "no"].append(rung)
+    for d in xr.values():
+        d["no"] = sorted(set(d["no"])); d["nc"] = sorted(set(d["nc"]))
+    f.xr, f.reg, f.curr, f.xL = xr, [], 0, xL
+    y = ytop + 44
+    ys = []
+    for r in rungs:
+        ys.append(y)
+        hd(f, r, xL, y, xR - xL); y += hs(r)[1] * NR + gap
+    yb = y - gap + 34
+    f.line(xL, ytop, xL, yb, "xf-rail"); f.line(xR, ytop, xR, yb, "xf-rail")
+    f.text(xL, ytop - 14, left, "xf-tag", "middle"); f.text(xR, ytop - 14, right, "xf-tag", "middle")
+    return yb, ys
+
+
+# ---- NEMA power-circuit pieces (vertical)
+def n_poles(f, xs, y, tag="M", h=46, terms=True, c="xf-ln"):
+    """Power contacts of a starter/contactor: two short bars across each line (NEMA), joined by a dashed mechanical link."""
+    ym = y + h / 2
+    for x in xs:
+        f.line(x, y, x, ym - 5); f.line(x, ym + 5, x, y + h)
+        f.line(x - 10, ym - 5, x + 10, ym - 5); f.line(x - 10, ym + 5, x + 10, ym + 5)
+    f.line(xs[0] - 16, ym, xs[-1] + 16, ym, "xf-dash")
+    if tag:
+        f.text(xs[0] - 26, ym + 4, tag, "xf-tag", "end")
+    if terms:
+        for x, a, b in zip(xs, ("L1", "L2", "L3"), ("T1", "T2", "T3")):
+            f.text(x + 5, y + 9, a, "xf-k"); f.text(x + 5, y + h - 2, b, "xf-k")
+
+
+def n_heaters(f, xs, y, h=44, tag="OL", link=None):
+    """Overload-relay heater elements: a zig-zag in each line."""
+    for x in xs:
+        f.line(x, y, x, y + 8); f.line(x, y + h - 8, x, y + h)
+        f.path(f"M {f1(x)} {f1(y + 8)} l 6 3 l -12 6 l 12 6 l -12 6 l 6 3", "xf-ln")
+    ym = y + h / 2
+    for a, b in zip(xs[:-1], xs[1:]):
+        f.line(a + 8, ym, b - 8, ym, "xf-dash")
+    if link:
+        f.line(xs[-1] + 8, ym, xs[-1] + 30, ym, "xf-dash")
+        f.text(xs[-1] + 36, ym + 4, link, "xf-k")
+    if tag:
+        f.text(xs[0] - 16, ym + 4, tag, "xf-tag", "end")
+
+
+def n_disc(f, xs, y, tag="DISC", h=50, fuses=True):
+    """Fused disconnect switch: blade switch per pole with a fuse below it, poles ganged by a dashed link."""
+    a, b = y + 14, y + 36
+    for x in xs:
+        f.line(x, y, x, a); f.line(x, b, x, y + h)
+        f.line(x, b, x - 11, a - 1)
+        f.circ(x, a, 2.2, "xf-dotk")
+    f.line(xs[0] - 6, (a + b) / 2, xs[-1] - 6, (a + b) / 2, "xf-dash")
+    if tag:
+        f.text(xs[0] - 26, (a + b) / 2 + 4, tag, "xf-tag", "end")
+    if fuses:
+        for x in xs:
+            f.line(x, y + h, x, y + h + 34)
+            f.rect(x - 6, y + h + 8, 12, 18, "xf-box", 1)
+        f.text(xs[0] - 26, y + h + 21, "FU", "xf-tag", "end")
+    return y + h + (34 if fuses else 0)
+
+
+def n_xfmr(f, x, y, h=64, tag="CT"):
+    """Control transformer: primary (left) and secondary (right) windings with a core between them; leads H1/H4 and X1/X2."""
+    for xx, bulge in ((x, -1), (x + 40, 1)):
+        d = f"M {f1(xx)} {f1(y + 8)}"
+        step = (h - 16) / 4
+        for _ in range(4):
+            d += f" a 5 {f1(step / 2)} 0 0 {1 if bulge > 0 else 0} 0 {f1(step)}"
+        f.path(d, "xf-ln")
+        f.line(xx, y, xx, y + 8); f.line(xx, y + h - 8, xx, y + h)
+    f.line(x + 17, y + 6, x + 17, y + h - 6); f.line(x + 23, y + 6, x + 23, y + h - 6)
+    f.text(x + 20, y + h + 16, tag, "xf-tag", "middle")
 
 
 # =========================================================================== motor model (same as assets/mc-lab.js)
@@ -673,43 +1039,46 @@ def _():
 # =========================================================================== DEVICES
 @fig("mc-contactor")
 def _():
-    f = F(760, 300, T("โครงสร้างแมกเนติกคอนแทกเตอร์: คอยล์บนแกนเหล็กรูปตัว E ที่มีวงแหวนบังเงา อาร์เมเจอร์ สปริงดึงกลับ หน้าสัมผัสหลักและหน้าสัมผัสช่วย",
-                      "Magnetic contactor construction: coil on an E-core with shading rings, armature, return spring, main and auxiliary contacts"), "mc-contactor")
-    f.rect(220, 180, 220, 90, "xf-metal", 4)  # fixed core
-    for x in (220, 300, 380):
-        pass
-    f.rect(250, 180, 30, 60, "xf-paper", 0); f.rect(380, 180, 30, 60, "xf-paper", 0)
-    f.rect(240, 196, 50, 40, "xf-coil", 4); f.rect(370, 196, 50, 40, "xf-coil", 4)
-    f.text(330, 260, T("แกนเหล็กอยู่กับที่ (เหล็กแผ่นบาง)", "Fixed core (laminated)"), "xf-k", "middle")
-    f.rect(220, 120, 220, 40, "xf-metal", 4); f.text(330, 145, T("อาร์เมเจอร์ (เคลื่อนที่)", "Armature (moves)"), "xf-k", "middle")
-    f.rect(228, 172, 10, 8, "xf-boxb", 1); f.rect(422, 172, 10, 8, "xf-boxb", 1)
-    f.path("M 320 160 l 6 4 l -12 4 l 12 4 l -12 4 l 6 4", "xf-ln")
-    f.line(330, 120, 330, 70, "xf-ln")
-    f.rect(250, 52, 160, 18, "xf-boxa", 3)
+    f = F(760, 330, T("โครงสร้างแมกเนติกคอนแทกเตอร์: คอยล์พันรอบขาตรงกลางของแกนเหล็กรูปตัว E วงแหวนบังเงาอยู่ที่ขาด้านนอก อาร์เมเจอร์ สปริงดึงกลับ สะพานหน้าสัมผัสหลักและหน้าสัมผัสคงที่",
+                      "Magnetic contactor construction: coil wound on the centre leg of an E-core, shading rings on the outer legs, armature, return spring, moving contact bridge and fixed contacts"), "mc-contactor")
+    # contacts (top)
+    f.line(160, 36, 500, 36, "xf-rail"); f.text(150, 40, T("หน้าสัมผัสคงที่ (ขั้ว 1/L1 3/L2 5/L3)", "Fixed contacts (1/L1 3/L2 5/L3)"), "xf-k", "end")
     for x in (270, 330, 390):
         f.rect(x - 9, 40, 18, 8, "xf-metal", 2)
-    f.line(160, 36, 500, 36, "xf-rail"); f.text(150, 40, T("หน้าสัมผัสคงที่", "Fixed contacts"), "xf-k", "end")
-    f.text(520, 62, T("สะพานหน้าสัมผัส (เคลื่อนที่)", "Moving contact bridge"), "xf-k")
-    f.line(412, 60, 515, 60, "xf-thin")
-    f.text(520, 172, T("วงแหวนบังเงา กันสั่น-ฮัม", "Shading ring (stops AC hum)"), "xf-k")
-    f.line(432, 176, 515, 168, "xf-thin")
-    f.text(520, 214, T("คอยล์ A1–A2 (เช่น 230 VAC / 24 VDC)", "Coil A1–A2 (e.g. 230 VAC / 24 VDC)"), "xf-k")
-    f.line(420, 214, 515, 210, "xf-thin")
-    f.text(520, 140, T("สปริงดึงกลับเมื่อตัดไฟคอยล์", "Return spring"), "xf-k")
-    f.line(328, 168, 515, 136, "xf-thin")
-    f.text(14, 200, T("1. จ่ายไฟคอยล์ → สนามแม่เหล็ก", "1. Coil on → magnetic field"), "xf-k")
-    f.text(14, 218, T("2. ดูดอาร์เมเจอร์ลง 2–4 mm", "2. Armature pulled down"), "xf-k")
-    f.text(14, 236, T("3. NO ปิด · NC เปิด", "3. NO closes · NC opens"), "xf-k")
-    f.text(14, 254, T("4. ตัดไฟ → สปริงดันกลับ", "4. Coil off → spring returns"), "xf-k")
-    f.text(380, 292, T("ดูดติด (pick-up) ~ 85 % Uc · ปล่อย (drop-out) ~ 20–60 % Uc ตาม IEC 60947-4-1",
-                       "Pick-up ≈ 85 % Uc · drop-out ≈ 20–60 % Uc (IEC 60947-4-1)"), "xf-m", "middle")
+    f.rect(250, 52, 160, 18, "xf-boxa", 3)
+    f.line(330, 70, 330, 120, "xf-ln"); f.rect(322, 84, 16, 22, "xf-paper", 2)
+    # armature (moving part) and the air gap
+    f.rect(220, 120, 220, 36, "xf-metal", 4)
+    # fixed E-core: outer legs, centre leg (slightly shorter: residual air gap), back
+    f.rect(220, 190, 220, 76, "xf-metal", 4)
+    f.rect(256, 186, 56, 84, "xf-paper", 0); f.rect(348, 186, 56, 84, "xf-paper", 0)   # winding windows
+    f.rect(220, 186, 36, 80, "xf-metal", 2); f.rect(404, 186, 36, 80, "xf-metal", 2)    # outer legs
+    f.rect(312, 190, 36, 76, "xf-metal", 2)                                              # centre leg
+    f.rect(262, 198, 50, 60, "xf-coil", 3); f.rect(348, 198, 50, 60, "xf-coil", 3)      # coil section around the centre leg
+    f.text(287, 232, "A1", "xf-k", "middle"); f.text(373, 232, "A2", "xf-k", "middle")
+    f.rect(224, 187, 28, 6, "xf-boxb", 1); f.rect(408, 187, 28, 6, "xf-boxb", 1)         # shading rings on the outer legs
+    f.path("M 330 156 l 7 5 l -14 5 l 14 5 l -14 5 l 7 5 l 0 3", "xf-ln")                 # return spring on the centre leg
+    f.text(330, 284, T("แกนเหล็กอยู่กับที่ (เหล็กแผ่นบางอัดซ้อน)", "Fixed core (laminated steel)"), "xf-k", "middle")
+    X = 520
+    f.text(X, 62, T("สะพานหน้าสัมผัส (เคลื่อนที่ตามอาร์เมเจอร์)", "Moving contact bridge"), "xf-k"); f.line(412, 61, X - 5, 61, "xf-thin")
+    f.text(X, 116, T("อาร์เมเจอร์ (เคลื่อนที่)", "Armature (moves)"), "xf-k"); f.line(440, 132, X - 5, 112, "xf-thin")
+    f.text(X, 152, T("สปริงดึงกลับเมื่อตัดไฟคอยล์", "Return spring"), "xf-k"); f.line(337, 170, X - 5, 148, "xf-thin")
+    f.text(X, 190, T("วงแหวนบังเงา: กันสั่น-ฮัมที่ไฟ AC", "Shading ring: stops AC hum"), "xf-k"); f.line(436, 190, X - 5, 186, "xf-thin")
+    f.text(X, 232, T("คอยล์ A1–A2 (เช่น 230 VAC / 24 VDC)", "Coil A1–A2 (e.g. 230 VAC / 24 VDC)"), "xf-k"); f.line(398, 230, X - 5, 228, "xf-thin")
+    f.text(X, 262, T("ขาตรงกลางสั้นกว่าเล็กน้อย: ช่องอากาศเหลือ", "Centre leg slightly shorter: residual gap"), "xf-k"); f.line(348, 252, X - 5, 258, "xf-thin")
+    f.text(14, 196, T("1. จ่ายไฟคอยล์ → เกิดฟลักซ์แม่เหล็ก", "1. Coil on → magnetic flux"), "xf-k")
+    f.text(14, 214, T("2. ดูดอาร์เมเจอร์ลง (ช่องอากาศปิด)", "2. Armature pulled down (gap closes)"), "xf-k")
+    f.text(14, 232, T("3. NO ปิด · NC เปิด", "3. NO closes · NC opens"), "xf-k")
+    f.text(14, 250, T("4. ตัดไฟ → สปริงดันกลับ", "4. Coil off → spring returns"), "xf-k")
+    f.text(380, 312, T("ดูดติด (pick-up) 85–110 % Us · ปล่อย (drop-out) ≤ 75 % Us (ผู้ผลิตมักให้ 30–60 %) — IEC 60947-4-1",
+                       "Pick-up 85–110 % Us · drop-out ≤ 75 % Us (makers often 30–60 %) — IEC 60947-4-1"), "xf-m", "middle")
     return f.svg()
 
 
 @fig("mc-terminals")
 def _():
-    f = F(760, 260, T("เลขขั้วคอนแทกเตอร์ตาม IEC 60947: หน้าสัมผัสหลัก 1/L1–2/T1 คอยล์ A1–A2 หน้าสัมผัสช่วย NO เลขหลักหน่วย 3–4 และ NC 1–2",
-                      "Contactor terminal markings (IEC 60947): main 1/L1–2/T1, coil A1–A2, auxiliary NO units 3–4 and NC units 1–2"), "mc-terminals")
+    f = F(760, 280, T("เลขขั้วคอนแทกเตอร์ตาม IEC 60947: หน้าสัมผัสหลัก 1/L1–2/T1 3/L2–4/T2 5/L3–6/T3 คอยล์ A1–A2 หน้าสัมผัสช่วย NO หลักหน่วย 3–4 และ NC หลักหน่วย 1–2",
+                      "Contactor terminal markings (IEC 60947): main 1/L1–2/T1 3/L2–4/T2 5/L3–6/T3, coil A1–A2, auxiliary NO units 3–4 and NC units 1–2"), "mc-terminals")
     f.rect(220, 40, 320, 180, "xf-box", 10)
     xs = [270, 320, 370]
     top = ["1/L1", "3/L2", "5/L3"]; bot = ["2/T1", "4/T2", "6/T3"]
@@ -721,16 +1090,68 @@ def _():
     f.line(430, 200, 430, 240); f.circ(430, 200, 6, "xf-term"); f.text(430, 190, "14", "xf-k", "middle")
     f.line(490, 20, 490, 60); f.circ(490, 60, 6, "xf-term"); f.text(490, 80, "21 NC", "xf-k", "middle")
     f.line(490, 200, 490, 240); f.circ(490, 200, 6, "xf-term"); f.text(490, 190, "22", "xf-k", "middle")
-    f.rect(295, 112, 50, 36, "xf-coil", 2); f.text(320, 135, "A1 A2", "xf-k", "middle")
+    # coil terminals: A1 on the top, A2 on the bottom (IEC 60947-1 Annex L)
+    f.line(320, 100, 320, 112); f.rect(300, 112, 40, 36, "xf-coil", 1); f.line(320, 148, 320, 160)
+    f.circ(320, 100, 3.5, "xf-term"); f.circ(320, 160, 3.5, "xf-term")
+    f.text(348, 108, "A1", "xf-k"); f.text(348, 168, "A2", "xf-k")
     f.text(380, 136, "-K1", "xf-tag")
     f.text(110, 60, T("ด้านไฟเข้า (line)", "Line side"), "xf-k", "middle")
     f.text(110, 205, T("ด้านโหลด (มอเตอร์)", "Load side (motor)"), "xf-k", "middle")
-    f.text(640, 70, T("เลขหลักหน่วย:", "Units digit:"), "xf-h", "middle")
-    f.text(640, 92, T("1–2 = NC", "1–2 = NC"), "xf-k", "middle"); f.text(640, 110, T("3–4 = NO", "3–4 = NO"), "xf-k", "middle")
-    f.text(640, 128, T("5–6 = NC หน่วงเวลา/OL", "5–6 = NC timed/OL"), "xf-k", "middle"); f.text(640, 146, T("7–8 = NO หน่วงเวลา/OL", "7–8 = NO timed/OL"), "xf-k", "middle")
-    f.text(640, 172, T("เลขหลักสิบ = ลำดับ", "Tens digit = sequence"), "xf-k", "middle"); f.text(640, 190, "13-14, 21-22, 33-34…", "xf-k", "middle")
-    f.text(640, 214, T("โอเวอร์โหลด 95–96 NC · 97–98 NO", "Overload 95–96 NC · 97–98 NO"), "xf-k", "middle")
+    f.text(650, 62, T("หลักหน่วย = ชนิดหน้าสัมผัส", "Units digit = function"), "xf-h", "middle")
+    f.text(650, 84, T("1–2 = NC", "1–2 = NC"), "xf-k", "middle"); f.text(650, 102, T("3–4 = NO", "3–4 = NO"), "xf-k", "middle")
+    f.text(650, 120, T("5–6 = NC หน้าสัมผัสพิเศษ", "5–6 = NC special function"), "xf-k", "middle"); f.text(650, 138, T("7–8 = NO หน้าสัมผัสพิเศษ", "7–8 = NO special function"), "xf-k", "middle")
+    f.text(650, 160, T("(พิเศษ เช่น หน่วงเวลา: 15-16, 17-18)", "(special e.g. timed: 15-16, 17-18)"), "xf-k", "middle")
+    f.text(650, 184, T("หลักสิบ = ลำดับตำแหน่งบนอุปกรณ์", "Tens digit = position on the device"), "xf-k", "middle")
+    f.text(650, 202, "13-14 · 21-22 · 33-34 · 43-44", "xf-k", "middle")
+    f.text(650, 228, T("โอเวอร์โหลดรีเลย์: 95-96 NC · 97-98 NO", "Overload relay: 95-96 NC · 97-98 NO"), "xf-k", "middle")
+    f.text(380, 268, T("NEMA ไม่ใช้เลขเหล่านี้: สตาร์ตเตอร์ NEMA ใช้ L1 L2 L3 → T1 T2 T3 ที่หน้าสัมผัสหลัก (ดูหน้า NEMA ด้านล่าง)", "NEMA starters do not use these numbers: L1 L2 L3 → T1 T2 T3 on the power poles (see the NEMA section)"), "xf-k", "middle")
     return f.svg()
+
+
+# --- small single-pole drawings used by the symbol sheet
+def s_cb(f, x, y, tag=None):
+    f.line(x, y, x, y + 15); f.line(x, y + 37, x, y + 52)
+    f.line(x, y + 37, x - 11, y + 14)
+    f.line(x - 4, y + 11, x + 4, y + 19); f.line(x - 4, y + 19, x + 4, y + 11)
+    f.line(x - 5, y + 26, x - 32, y + 26, "xf-dash"); f.rect(x - 56, y + 16, 24, 20, "xf-box", 2); f.text(x - 44, y + 30, "I>>", "xf-k", "middle")
+
+
+def s_kmain(f, x, y):
+    f.line(x, y, x, y + 15); f.line(x, y + 37, x, y + 52)
+    f.line(x, y + 37, x - 11, y + 14)
+    f.path(f"M {f1(x - 3)} {f1(y + 15)} A 3 3 0 0 0 {f1(x + 3)} {f1(y + 15)}", "xf-ln")
+    f.line(x - 5, y + 26, x - 26, y + 26, "xf-dash")
+
+
+def s_iso(f, x, y):
+    f.line(x, y, x, y + 15); f.line(x, y + 37, x, y + 52)
+    f.line(x, y + 37, x - 11, y + 14)
+    f.line(x - 14, y + 18, x - 5, y + 14 + 6 - 3, "xf-ln") if False else f.line(x - 6, y + 14, x + 6, y + 14)
+    f.line(x - 5, y + 26, x - 26, y + 26, "xf-dash")
+
+
+def s_therm(f, x, y):
+    f.line(x, y, x, y + 14); f.line(x, y + 38, x, y + 52)
+    f.rect(x - 7, y + 14, 14, 24, "xf-box", 1)
+    f.path(f"M {f1(x)} {f1(y + 14)} l 0 6 l -4 0 l 0 6 l 8 0 l 0 6 l -4 0 l 0 6", "xf-thin")
+    f.line(x + 7, y + 26, x + 24, y + 26, "xf-dash")
+
+
+def s_motor(f, x, y):
+    f.line(x, y, x, y + 6)
+    f.circ(x, y + 26, 20, "xf-motor")
+    f.text(x, y + 25, "M", "xf-h", "middle"); f.text(x, y + 39, "3~", "xf-k", "middle")
+
+
+def s_earth(f, x, y):
+    p_earth(f, x, y + 14)
+    f.line(x, y, x, y + 14)
+
+
+def s_xfmr(f, x, y):
+    f.line(x, y, x, y + 8)
+    f.circ(x, y + 18, 11, "xf-box"); f.circ(x, y + 31, 11, "xf-box")
+    f.line(x, y + 40, x, y + 52)
 
 
 @fig("mc-trip-class")
@@ -772,8 +1193,8 @@ def _():
 
 @fig("mc-symbols")
 def _():
-    f = F(780, 330, T("สัญลักษณ์ IEC 60617 ที่ใช้บ่อยในวงจรควบคุมมอเตอร์ พร้อมรหัสอุปกรณ์ IEC 81346",
-                      "Common IEC 60617 symbols in motor-control circuits with IEC 81346 device codes"), "mc-symbols")
+    f = F(780, 460, T("สัญลักษณ์ IEC 60617 ที่ใช้บ่อยในวงจรควบคุมและวงจรกำลังของมอเตอร์ พร้อมรหัสอุปกรณ์ IEC 81346",
+                      "Common IEC 60617 symbols in motor control and power circuits with IEC 81346 device codes"), "mc-symbols")
     items = [
         (lambda x, y: el_no(f, x, y), T("หน้าสัมผัส NO", "NO contact"), "-K1 13-14"),
         (lambda x, y: el_nc(f, x, y), T("หน้าสัมผัส NC", "NC contact"), "-K1 21-22"),
@@ -785,19 +1206,27 @@ def _():
         (lambda x, y: el_no(f, x, y, "ton"), T("NO หน่วงเวลาเปิด", "On-delay NO"), "-K4T 17-18"),
         (lambda x, y: el_nc(f, x, y, "ton"), T("NC หน่วงเวลาเปิด", "On-delay NC"), "-K4T 15-16"),
         (lambda x, y: el_nc(f, x, y, "th"), T("โอเวอร์โหลด NC", "Overload NC"), "-F2 95-96"),
-        (lambda x, y: el_lamp(f, x, y), T("หลอดไฟแสดงสถานะ", "Pilot light"), "-P1"),
+        (lambda x, y: el_lamp(f, x, y, color="GN"), T("หลอดไฟแสดงสถานะ", "Pilot light"), "-P1"),
         (lambda x, y: el_no(f, x, y, "float"), T("สวิตช์ลูกลอย", "Float switch"), "-B1"),
         (lambda x, y: el_nc(f, x, y, "limit"), T("ลิมิตสวิตช์ NC", "Limit switch NC"), "-B2"),
         (lambda x, y: el_no(f, x, y, "press"), T("สวิตช์ความดัน", "Pressure switch"), "-B3"),
+        (lambda x, y: el_fuse(f, x, y), T("ฟิวส์", "Fuse"), "-F3"),
+        (lambda x, y: s_cb(f, x, y), T("เบรกเกอร์ (I>>)", "Circuit-breaker"), "-Q1"),
+        (lambda x, y: s_iso(f, x, y), T("สวิตช์ตัดต่อ", "Switch-disconnector"), "-Q0"),
+        (lambda x, y: s_kmain(f, x, y), T("ขั้วกำลังคอนแทกเตอร์", "Contactor pole"), "-K1 1-2"),
+        (lambda x, y: s_therm(f, x, y), T("โอเวอร์โหลดรีเลย์", "Overload relay"), "-F2 1-2"),
+        (lambda x, y: s_motor(f, x, y), T("มอเตอร์ 3 เฟส", "3-phase motor"), "-M1 U1 V1 W1"),
+        (lambda x, y: s_earth(f, x, y), T("ดินป้องกัน PE", "Protective earth"), "PE"),
     ]
     for i, (fn, lab, tag) in enumerate(items):
         col, row = i % 7, i // 7
-        x, y = 70 + col * 106, 30 + row * 150
+        x, y = 80 + col * 104, 26 + row * 130
         fn(x, y)
         f.text(x, y + 76, lab, "xf-k", "middle")
         f.text(x, y + 92, tag, "xf-tagk", "middle")
-    f.text(390, 322, T("-K คอนแทกเตอร์/รีเลย์ · -S สวิตช์ที่คนกด · -B เซนเซอร์ · -F อุปกรณ์ป้องกัน · -Q สวิตช์ตัดต่อกำลัง · -P ไฟแสดง · -M มอเตอร์",
-                       "-K contactor/relay · -S manual switch · -B sensor · -F protection · -Q power switching · -P indicator · -M motor"), "xf-m", "middle")
+    f.text(390, 408, T("-K คอนแทกเตอร์/รีเลย์ · -S สวิตช์ที่คนกด · -B เซนเซอร์ · -F อุปกรณ์ป้องกัน", "-K contactor/relay · -S manual switch · -B sensor · -F protection"), "xf-m", "middle")
+    f.text(390, 426, T("-Q สวิตช์ตัดต่อกำลัง · -P ไฟแสดง · -M มอเตอร์ · -X เทอร์มินัล · เส้นประ = ตัวต่อกลไก", "-Q power switching · -P indicator · -M motor · -X terminal · dashed = mechanical link"), "xf-m", "middle")
+    f.text(390, 444, T("ทุกสัญลักษณ์วาดในสภาพไม่มีไฟ ไม่ถูกกด (de-energised, unactuated)", "Every symbol is drawn de-energised and unactuated"), "xf-k", "middle")
     return f.svg()
 
 
@@ -811,47 +1240,48 @@ def _supply(f, xs, y, txt=None):
 
 @fig("mc-dol-power")
 def _():
-    f = F(460, 480, T("วงจรกำลังสตาร์ทตรง DOL: เบรกเกอร์ป้องกันมอเตอร์ -Q1 คอนแทกเตอร์ -K1 โอเวอร์โหลด -F2 และมอเตอร์ -M1",
-                      "DOL power circuit: motor-protection breaker -Q1, contactor -K1, overload -F2 and motor -M1"), "mc-dol-power")
+    f = F(540, 520, T("วงจรกำลังสตาร์ทตรง DOL ตาม IEC 60617: เบรกเกอร์ -Q1 (ป้องกันลัดวงจร) คอนแทกเตอร์ -K1 โอเวอร์โหลดรีเลย์ -F2 และมอเตอร์ -M1 พร้อมสาย PE ต่อเข้าโครงมอเตอร์",
+                      "DOL power circuit to IEC 60617: breaker -Q1 (short-circuit protection), contactor -K1, overload relay -F2 and motor -M1 with the PE conductor bonded to the frame"), "mc-dol-power")
     xs = [190, 230, 270]
-    _supply(f, xs, 26, "400 V 50 Hz")
+    pe = 40
+    _supply(f, xs, 30)
+    p_pe(f, pe, 30, 388)
+    T6 = (["1", "3", "5"], ["2", "4", "6"])
     p_wires(f, xs, 30, 60)
-    p_contacts(f, xs, 60, "-Q1", "q", terms=(["1", "3", "5"], ["2", "4", "6"]))
+    p_contacts(f, xs, 60, "-Q1", "q", terms=T6, rel="mag")
     p_wires(f, xs, 110, 150)
-    p_contacts(f, xs, 150, "-K1", "km", terms=(["1", "3", "5"], ["2", "4", "6"]))
+    p_contacts(f, xs, 150, "-K1", "km", terms=T6)
     p_wires(f, xs, 200, 240)
-    p_overload(f, xs, 240, "-F2", terms=(["1", "3", "5"], ["2", "4", "6"]))
+    p_overload(f, xs, 240, "-F2", terms=T6, link=T("95-96", "95-96"))
     p_wires(f, xs, 284, 330)
-    p_motor(f, 230, 330, 40, xs=xs)
-    f.line(330, 400, 360, 400, "xf-pe"); f.text(366, 404, "PE", "xf-k")
-    f.text(300, 82, T("MPCB: ป้องกันลัดวงจร", "MPCB: short circuit"), "xf-k"); f.text(300, 98, T("(+ โอเวอร์โหลดในตัว)", "(+ built-in overload)"), "xf-k")
-    f.text(300, 172, T("ตัด-ต่อมอเตอร์", "Switches the motor"), "xf-k"); f.text(300, 188, "AC-3", "xf-k")
-    f.text(300, 258, T("ป้องกันโหลดเกิน", "Overload protection"), "xf-k"); f.text(300, 274, T("ตั้ง Ir = In มอเตอร์", "Set Ir = motor In"), "xf-k")
-    f.text(230, 472, T("ถ้า -Q1 เป็น MPCB ที่มีโอเวอร์โหลดในตัว ไม่ต้องมี -F2 แยก", "If -Q1 is an MPCB with built-in overload, -F2 can be omitted"), "xf-m", "middle")
+    p_motor(f, 230, 330, 40, xs=xs, pe_x=pe)
+    X = 350
+    f.text(X, 76, T("เบรกเกอร์: ตัดลัดวงจร (I>>)", "Breaker: short circuit (I>>)"), "xf-k"); f.text(X, 92, T("และใช้เป็นสวิตช์ตัดต่อ", "and isolating switch"), "xf-k")
+    f.text(X, 166, T("คอนแทกเตอร์ AC-3: ตัด-ต่อมอเตอร์", "AC-3 contactor: makes/breaks"), "xf-k"); f.text(X, 182, T("คอยล์ A1-A2 อยู่ในวงจรควบคุม", "the motor · coil A1-A2 is in control"), "xf-k")
+    f.text(X, 244, T("โอเวอร์โหลดรีเลย์ ตั้ง Ir = In", "Overload relay, Ir = motor In"), "xf-k"); f.text(X, 260, T("หน้าสัมผัส 95-96 ต่ออนุกรมคอยล์", "contact 95-96 is in series with the coil"), "xf-k")
+    f.text(310, 314, T("-W1 สายมอเตอร์ 3Φ + PE", "-W1 motor cable 3Φ + PE"), "xf-k")
+    f.text(X - 24, 404, T("PE ต่อเข้าโครงมอเตอร์ (เขียว-เหลือง)", "PE to the motor frame (green-yellow)"), "xf-k") if False else None
+    f.text(270, 480, T("ถ้า -Q1 เป็น MPCB ที่มีเทอร์มัลในตัว (I> + I>>) ตัด -F2 ออกได้", "If -Q1 is an MPCB with a thermal release (I> + I>>), -F2 can be omitted"), "xf-m", "middle")
+    f.text(270, 500, T("เส้นประ = ตัวต่อกลไกระหว่างขั้ว · ● = จุดต่อ · เส้นตัดไม่มีจุด = ไม่ต่อกัน", "Dashed = mechanical coupling · ● = junction · crossing without a dot = no connection"), "xf-k", "middle")
     return f.svg()
 
 
 @fig("mc-dol-control")
 def _():
-    f = F(640, 470, T("วงจรควบคุม DOL แบบล็อกตัวเอง: STOP -S0 (NC) START -S1 (NO) ขนานกับหน้าสัมผัสช่วย -K1 13-14 พร้อมไฟแสดงเดินและไฟทริป",
-                      "DOL self-holding control circuit: STOP -S0 (NC), START -S1 (NO) paralleled by -K1 13-14, with run and trip lamps"), "mc-dol-control")
-    root = S(E(el_fuse, tag="-F3"), E(el_nc, act="th", tag="-F2", t1="95", t2="96"),
-             P(S(E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
+    f = F(620, 470, T("วงจรควบคุม DOL ตาม IEC 60204-1: ฟิวส์ -F3 · หน้าสัมผัสโอเวอร์โหลด -F2 95-96 · STOP -S0 (NC) · START -S1 (NO) ขนานกับ -K1 13-14 (ล็อกตัวเอง) · คอยล์ -K1 ต่อด้านนิวทรัล · ไฟเดิน (เขียว) และไฟทริป (แดง)",
+                      "DOL control circuit to IEC 60204-1: fuse -F3 · overload contact -F2 95-96 · STOP -S0 (NC) · START -S1 (NO) paralleled by -K1 13-14 (hold-in) · coil -K1 on the neutral side · run lamp (green) and trip lamp (red)"), "mc-dol-control")
+    root = S(E(el_fuse, tag="-F3", note="2 A"),
+             P(S(E(el_nc, act="th", tag="-F2", t1="95", t2="96"),
+                 E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
                  P(E(el_no, act="push", tag="-S1", t1="13", t2="14"), E(el_no, tag="-K1", t1="13", t2="14")),
                  E(el_coil, tag="-K1")),
-               S(E(el_wire), E(el_no, tag="-K1", t1="43", t2="44"), E(el_lamp, tag="-P1", note=T("เดิน", "RUN"))),
-               ))
-    control(f, root, 120, 40, top=T("L 230 V", "L 230 V"), bot="N")
-    # trip lamp from 97-98 drawn manually to the right
-    x = 120 + 3 * COLW
-    f.line(x, 40, x, 40 + 52 * 2 + 4)
-    el_no(f, x, 40 + 52 * 2 + 4, "th", "-F2", "97", "98")
-    el_lamp(f, x, 40 + 52 * 3 + 4, "-P2", T("ทริป", "TRIP"))
-    w, h = size(root)
-    f.line(x, 40 + 52 * 4 + 4, x, 40 + h)
-    f.line(120 + 2 * COLW - 40, 40, x + 30, 40, "xf-rail"); f.line(120 + 2 * COLW - 40, 40 + h, x + 30, 40 + h, "xf-rail")
-    f.text(320, f.h - 16, T("กด -S1 → K1 ดูด → 13-14 ปิดค้างไว้แทนปุ่ม (ล็อกตัวเอง) · กด -S0 หรือ F2 ทริป → K1 ปล่อย",
-                               "Press -S1 → K1 picks up → 13-14 holds it in (self-holding) · press -S0 or F2 trips → K1 drops"), "xf-m", "middle")
+               S(E(el_wire), E(el_no, tag="-K1", t1="43", t2="44"), E(el_lamp, tag="-P1", color="GN", note=T("เดิน", "RUN"))),
+               S(E(el_no, act="th", tag="-F2", t1="97", t2="98"), E(el_lamp, tag="-P2", color="YE", note=T("ทริป", "TRIP")))))
+    f.mains = {"-K1": "PWR"}
+    control(f, root, 120, 50, top="L1", bot="N", below=58,
+            labels={1: T("STOP·START·K1", "STOP·START·K1"), 2: T("ล็อกตัวเอง", "hold-in"), 3: T("ไฟ เดิน", "RUN lamp"), 4: T("ไฟ ทริป", "TRIP lamp")})
+    f.text(310, f.h - 26, T("กด -S1 → K1 ดูด → 13-14 ปิดค้างแทนปุ่ม (ล็อกตัวเอง) · กด -S0 หรือ -F2 ทริป → K1 ปล่อย", "Press -S1 → K1 picks up → 13-14 holds it in · press -S0 or -F2 trips → K1 drops"), "xf-m", "middle")
+    f.text(310, f.h - 8, T("คอยล์อยู่ติดสาย N: ถ้าสาย L เสียดิน จะไม่ทำให้คอยล์ดูดเอง (IEC 60204-1 §9.4.3)", "Coil on the N side: an earth fault on L cannot energise it (IEC 60204-1 §9.4.3)"), "xf-m", "middle")
     return f.svg()
 
 
@@ -864,7 +1294,8 @@ def _():
                S(E(el_nc, act="push", tag="-S4", t1="21", t2="22"), E(el_no, tag="-K1", t1="13", t2="14")),
                E(el_no, act="push", tag="-S4", t1="13", t2="14")),
              E(el_coil, tag="-K1"))
-    control(f, root, 120, 30, top="L", bot="N")
+    f.mains = {"-K1": "PWR"}
+    control(f, root, 120, 50, top="L1", bot="N", below=58)
     f.text(570, 70, T("-S0 STOP ในตู้", "-S0 STOP at panel"), "xf-k"); f.text(570, 88, T("-S2 STOP หน้างาน", "-S2 STOP at machine"), "xf-k")
     f.text(570, 106, T("-S1 START ในตู้", "-S1 START at panel"), "xf-k"); f.text(570, 124, T("-S3 START หน้างาน", "-S3 START at machine"), "xf-k")
     f.text(570, 142, T("-S4 JOG (ปุ่มคู่ NO+NC)", "-S4 JOG (NO+NC pair)"), "xf-k")
@@ -875,108 +1306,125 @@ def _():
 
 @fig("mc-fr-power")
 def _():
-    f = F(460, 530, T("วงจรกำลังกลับทางหมุน: -K1 เดินหน้าต่อ L1-L2-L3 ตรง -K2 ถอยหลังสลับ L1 กับ L3 มีอินเตอร์ล็อกทางกลระหว่างคอนแทกเตอร์",
-                      "Reversing power circuit: forward -K1 connects L1-L2-L3 straight, reverse -K2 swaps L1 and L3, mechanically interlocked"), "mc-fr-power")
-    xs = [150, 190, 230]
-    _supply(f, xs, 26)
+    f = F(560, 600, T("วงจรกำลังกลับทางหมุนตาม IEC: -K1 เดินหน้า ต่อ L1-L2-L3 ตรง · -K2 ถอยหลัง สลับ L1 กับ L3 มีอินเตอร์ล็อกทางกลระหว่างคอนแทกเตอร์ และ PE ต่อเข้าโครงมอเตอร์",
+                      "IEC reversing power circuit: forward -K1 connects L1-L2-L3 straight, reverse -K2 swaps L1 and L3, mechanically interlocked, PE bonded to the motor frame"), "mc-fr-power")
+    xs = [170, 210, 250]
+    xr = [310, 350, 390]
+    pe = 40
+    _supply(f, xs, 30)
+    p_pe(f, pe, 30, 438)
+    T6 = (["1", "3", "5"], ["2", "4", "6"])
     p_wires(f, xs, 30, 60)
-    p_contacts(f, xs, 60, "-Q1", "q")
-    p_wires(f, xs, 110, 140)
-    for x in xs:
-        f.dot(x, 140)
-    xr = [290, 330, 370]
-    for x, xx in zip(xs, xr):
-        f.line(x, 140, xx, 140)
-    p_wires(f, xs, 140, 160); p_wires(f, xr, 140, 160)
-    p_contacts(f, xs, 160, "-K1", "km")
-    p_contacts(f, xr, 160, None, "km")
-    f.text(400, 190, "-K2", "xf-tag")
-    p_wires(f, xs, 210, 250)
-    # K2 outputs crossed: L1->T3 position, L3->T1 position
-    f.line(290, 210, 290, 222); f.line(330, 210, 330, 232); f.line(370, 210, 370, 242)
-    f.line(290, 222, 230, 222); f.dot(230, 222)
-    f.line(330, 232, 190, 232); f.dot(190, 232)
-    f.line(370, 242, 150, 242); f.dot(150, 242)
-    f.line(245, 185, 275, 185, "xf-mech"); f.text(260, 178, "▽", "xf-k", "middle")
-    p_overload(f, xs, 250, "-F2")
-    p_wires(f, xs, 294, 340)
-    p_motor(f, 190, 340, 40, xs=xs)
-    f.text(320, 290, T("K2: L1→W, L3→U", "K2: L1→W, L3→U"), "xf-k"); f.text(320, 306, T("(สลับสองเฟส)", "(two phases swapped)"), "xf-k")
-    f.text(230, 520, T("ถ้า K1 และ K2 ดูดพร้อมกัน = ลัดวงจรเฟส L1–L3 → ต้องมีอินเตอร์ล็อก", "K1 and K2 together = an L1–L3 short circuit → interlocks are essential"), "xf-m", "middle")
+    p_contacts(f, xs, 60, "-Q1", "q", terms=T6, rel="mag")
+    p_wires(f, xs, 110, 170)
+    # three separate tap wires from L1 L2 L3 to K2, at different heights so they never touch each other (L3 highest, L1 lowest)
+    for x, xx, yy in zip(xs, xr, [150, 136, 122]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, 170); f.dot(x, yy)
+    p_contacts(f, xs, 170, "-K1", "km", terms=T6)
+    p_contacts(f, xr, 170, None, "km", terms=T6)
+    f.text(xr[-1] + 34, 200, "-K2", "xf-tag")
+    # mechanical interlock between K1 and K2
+    f.line(xs[-1] - 6, 195, xr[0] - 6, 195, "xf-mech")
+    f.path(f"M {f1((xs[-1] + xr[0]) / 2 - 7)} 189 L {f1((xs[-1] + xr[0]) / 2 + 7)} 189 L {f1((xs[-1] + xr[0]) / 2)} 201 Z", "xf-ln")
+    f.text((xs[-1] + xr[0]) / 2 - 6, 234, T("ล็อกทางกล", "mech. lock"), "xf-k", "middle")
+    p_wires(f, xs, 220, 290)
+    # K2 outputs cross over: L1 -> W1, L2 -> V1, L3 -> U1 (two phases swapped); L1 lowest horizontal first, so wires do not touch
+    for xo, xt, yy in zip(xr, [xs[2], xs[1], xs[0]], [246, 260, 274]):
+        f.line(xo, 220, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    p_overload(f, xs, 290, "-F2", terms=T6, link=T("95-96", "95-96"))
+    p_wires(f, xs, 334, 380)
+    p_motor(f, 210, 380, 40, xs=xs, pe_x=pe)
+    f.text(330, 330, T("K2 สลับ L1↔L3 → ทิศหมุนกลับ", "K2 swaps L1↔L3 → reversed rotation"), "xf-k")
+    f.text(280, 560, T("K1 และ K2 ดูดพร้อมกัน = ลัดวงจร L1–L3 → ต้องมีอินเตอร์ล็อกทั้งทางไฟฟ้าและทางกล", "K1 and K2 together = an L1–L3 short circuit → electrical AND mechanical interlocks are essential"), "xf-m", "middle")
+    f.text(280, 580, T("เส้นแต่ละเส้นต่อเข้า K2 แยกกันคนละระดับ — ไม่ลัดวงจรกัน (ตัดกันไม่มีจุด = ไม่ต่อ)", "Each tap to K2 runs at its own height — they never touch (crossing without a dot = no connection)"), "xf-k", "middle")
     return f.svg()
 
 
 @fig("mc-fr-control")
 def _():
-    f = F(660, 470, T("วงจรควบคุมกลับทางหมุนพร้อมอินเตอร์ล็อกสามชั้น: หน้าสัมผัส NC ของคอนแทกเตอร์ตรงข้าม ปุ่มกดคู่ NO+NC และอินเตอร์ล็อกทางกล",
-                      "Reversing control with three interlocks: NC auxiliary of the opposite contactor, NO+NC push-button pairs and a mechanical interlock"), "mc-fr-control")
-    root = S(E(el_nc, act="th", tag="-F2", t1="95", t2="96"), E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
+    f = F(660, 520, T("วงจรควบคุมกลับทางหมุน (IEC) พร้อมอินเตอร์ล็อกสามชั้น: หน้าสัมผัส NC ของคอนแทกเตอร์ตรงข้าม ปุ่มกดคู่ NO+NC และอินเตอร์ล็อกทางกลระหว่างคอยล์ -K1 กับ -K2",
+                      "IEC reversing control with three interlock layers: NC auxiliary of the opposite contactor, NO+NC push-button pairs and a mechanical interlock between coils -K1 and -K2"), "mc-fr-control")
+    root = S(E(el_fuse, tag="-F3"), E(el_nc, act="th", tag="-F2", t1="95", t2="96"), E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
              P(S(P(E(el_no, act="push", tag="-S1", t1="13", t2="14"), E(el_no, tag="-K1", t1="13", t2="14")),
-                 E(el_nc, act="push", tag="-S2", t1="21", t2="22"), E(el_nc, tag="-K2", t1="21", t2="22"), E(el_coil, tag="-K1", note=T("เดินหน้า", "FWD"))),
+                 E(el_nc, act="push", tag="-S2", t1="21", t2="22"), E(el_nc, tag="-K2", t1="21", t2="22"), E(el_coil, tag="-K1")),
                GAP,
                S(P(E(el_no, act="push", tag="-S2", t1="13", t2="14"), E(el_no, tag="-K2", t1="13", t2="14")),
-                 E(el_nc, act="push", tag="-S1", t1="21", t2="22"), E(el_nc, tag="-K1", t1="21", t2="22"), E(el_coil, tag="-K2", note=T("ถอยหลัง", "REV")))))
-    control(f, root, 110, 30, top="L", bot="N")
-    f.text(330, f.h - 16, T("ชั้น 1: NC ของคอนแทกเตอร์ตรงข้าม · ชั้น 2: ปุ่มคู่ NO+NC · ชั้น 3: อินเตอร์ล็อกทางกลที่ตัวคอนแทกเตอร์",
-                       "Layer 1: NC of the other contactor · layer 2: NO+NC button pairs · layer 3: mechanical interlock on the contactors"), "xf-m", "middle")
+                 E(el_nc, act="push", tag="-S1", t1="21", t2="22"), E(el_nc, tag="-K1", t1="21", t2="22"), E(el_coil, tag="-K2", tagside="right"))))
+    f.mains = {"-K1": "PWR", "-K2": "PWR"}
+    control(f, root, 110, 50, top="L1", bot="N", below=58, labels={1: T("เดินหน้า", "forward"), 2: T("ล็อกตัวเอง", "hold-in"), 4: T("ถอยหลัง", "reverse"), 5: T("ล็อกตัวเอง", "hold-in")})
+    coils = [r for r in f.reg if r[0] is el_coil]
+    if len(coils) == 2:
+        (_, _, x1, y1, _), (_, _, x2, y2, _) = coils
+        ym = y1 + H / 2
+        f.line(x1 + 15, ym, x2 - 15, ym, "xf-mech")
+        mx = (x1 + x2) / 2
+        f.path(f"M {f1(mx - 8)} {f1(ym - 7)} L {f1(mx + 8)} {f1(ym - 7)} L {f1(mx)} {f1(ym + 7)} Z", "xf-ln")
+        f.text(mx, ym - 12, T("อินเตอร์ล็อกทางกล", "mechanical interlock"), "xf-k", "middle")
+    f.text(330, f.h - 26, T("ชั้น 1: NC ของคอนแทกเตอร์ตรงข้าม · ชั้น 2: ปุ่มคู่ NO+NC", "Layer 1: NC of the other contactor · layer 2: NO+NC button pairs"), "xf-m", "middle")
+    f.text(330, f.h - 8, T("ชั้น 3: อินเตอร์ล็อกทางกลที่ตัวคอนแทกเตอร์ (เส้นประระหว่างคอยล์ -K1 และ -K2)", "Layer 3: mechanical interlock on the contactors (dashed link between coils -K1 and -K2)"), "xf-m", "middle")
     return f.svg()
 
 
 @fig("mc-yd-power")
 def _():
-    f = F(640, 500, T("วงจรกำลังสตาร์-เดลต้า: -K1 คอนแทกเตอร์หลักจ่าย U1 V1 W1 ผ่านโอเวอร์โหลด -K3 เดลต้าต่อ W2 U2 V2 กลับไปที่ L1 L2 L3 และ -K2 สตาร์ลัดปลาย W2 U2 V2 เข้าด้วยกัน",
-                      "Star–delta power circuit: main -K1 feeds U1 V1 W1 through the overload, delta -K3 connects W2 U2 V2 back to L1 L2 L3, star -K2 shorts W2 U2 V2 together"), "mc-yd-power")
-    xs = [150, 190, 230]
-    _supply(f, xs, 26, "400 V 50 Hz")
+    f = F(680, 640, T("วงจรกำลังสตาร์-เดลต้าตาม IEC: -K1 หลักจ่าย U1 V1 W1 ผ่าน -F2 · -K3 เดลต้าต่อ L1→W2, L2→U2, L3→V2 · -K2 สตาร์ลัดปลาย W2 U2 V2 เข้าด้วยกัน",
+                      "IEC star–delta power circuit: main -K1 feeds U1 V1 W1 through -F2 · delta -K3 connects L1→W2, L2→U2, L3→V2 · star -K2 shorts W2 U2 V2 together"), "mc-yd-power")
+    xs = [170, 210, 250]
+    xd = [390, 430, 470]
+    pe = 40
+    _supply(f, xs, 30)
+    T6 = (["1", "3", "5"], ["2", "4", "6"])
     p_wires(f, xs, 30, 56)
-    p_contacts(f, xs, 56, "-Q1", "q")
+    p_contacts(f, xs, 56, "-Q1", "q", terms=T6, rel="mag")
     p_wires(f, xs, 106, 130)
-    p_contacts(f, xs, 130, "-K1", "km")
-    p_wires(f, xs, 180, 212)
-    for x in xs:
-        f.dot(x, 196)
-    p_overload(f, xs, 212, "-F2")
-    p_wires(f, xs, 256, 330)
-    p_motor(f, 190, 330, 44, xs=xs)
-    # delta contactor K3, tapped after K1 (before F2) so that F2 carries the phase current
-    xd = [330, 370, 410]
-    for x, xx in zip(xs, xd):
-        f.line(x, 196, xx, 196)
-    p_wires(f, xd, 196, 222)
-    p_contacts(f, xd, 222, None, "km")
-    f.text(424, 252, "-K3 (Δ)", "xf-tag")
-    # K3 outputs: L1 → W2, L2 → U2, L3 → V2
-    xm = [470, 510, 550]
-    for x, xx, yy in zip(xd, xm, [300, 290, 280]):
-        f.line(x, 272, x, yy); f.line(x, yy, xx, yy); f.line(xx, yy, xx, 364)
-    for xx, l in zip(xm, ["W2", "U2", "V2"]):
-        f.circ(xx, 370, 6, "xf-term"); f.text(xx + 10, 366, l, "xf-k")
-    f.text(510, 344, T("ขั้วปลายขดลวด -M1", "-M1 winding ends"), "xf-k", "middle") if False else None
-    # star contactor K2 below the W2 U2 V2 terminals, bottoms tied = star point
-    p_wires(f, xm, 376, 392)
-    p_contacts(f, xm, 392, None, "km")
-    f.line(xm[0], 442, xm[-1], 442); f.line(xm[1], 442, xm[1], 452); f.text(xm[1], 468, T("จุดสตาร์", "star point"), "xf-k", "middle")
-    f.text(564, 422, "-K2 (Y)", "xf-tag")
-    f.text(440, 330, T("ไป W2 U2 V2", "to W2 U2 V2"), "xf-k", "end")
-    f.text(12, 290, T("F2 อยู่ในทาง", "F2 carries the"), "xf-k"); f.text(12, 306, T("กระแสเฟส", "phase current:"), "xf-k"); f.text(12, 322, T("ตั้ง 0.58·In", "set 0.58·In"), "xf-k")
-    f.text(320, 494, T("ช่วงสตาร์ท: K1+K2 (Y) · ช่วงเดิน: K1+K3 (Δ) · K2 กับ K3 ห้ามดูดพร้อมกัน (ลัดวงจร)",
-                       "Start: K1+K2 (Y) · run: K1+K3 (Δ) · K2 and K3 must never close together (short circuit)"), "xf-m", "middle")
+    p_contacts(f, xs, 130, "-K1", "km", terms=T6)
+    p_wires(f, xs, 180, 236)
+    # delta contactor K3 is tapped between K1 and F2 — three separate wires at different heights (L3 highest)
+    for x, xx, yy in zip(xs, xd, [220, 208, 196]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, 252); f.dot(x, yy)
+    p_overload(f, xs, 236, "-F2", terms=T6, link=T("Ir = 0.58·In", "Ir = 0.58·In"))
+    p_wires(f, xs, 280, 310)
+    # motor with six terminals: U1 V1 W1 above, W2 U2 V2 below
+    xc, ym, r = 210, 310, 58
+    p_motor(f, xc, ym, 40, xs=xs, pe_x=pe, tag=None)
+    f.text(xc - r - 36, ym + 24, "-M1", "xf-tag")
+    yc = ym + r
+    bot = []
+    for x, l in zip(xs, ["W2", "U2", "V2"]):
+        yy = yc + math.sqrt(max(r * r - (x - xc) ** 2, 0))
+        f.circ(x, yy, 3.2, "xf-term"); f.text(x + (-6 if x < xc else 6), yy + 14 if x == xc else yy + 12, l, "xf-k", "end" if x < xc else None)
+        bot.append(yy)
+    p_contacts(f, xd, 252, None, "km", terms=T6)
+    f.text(xd[-1] + 34, 282, "-K3 (Δ)", "xf-tag")
+    # K3 outputs to W2 U2 V2 (three separate horizontal wires, upper one first so wires do not touch)
+    for xo, xt, yy, b in zip(xd, xs, [452, 466, 480], bot):
+        f.line(xo, 302, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    for x, b in zip(xs, bot):
+        f.line(x, b, x, 510)
+    p_contacts(f, xs, 510, None, "km", terms=T6)
+    f.text(xs[-1] + 34, 540, "-K2 (Y)", "xf-tag")
+    f.line(xs[0], 560, xs[-1], 560); f.dot(xs[1], 560); f.line(xs[1], 560, xs[1], 570)
+    f.text(xs[1], 586, T("จุดสตาร์", "star point"), "xf-k", "middle")
+    f.text(320, 616, T("สตาร์ท: K1+K2 (Y) · เดิน: K1+K3 (Δ) · K2 กับ K3 ห้ามดูดพร้อมกัน (ลัดวงจร)", "Start: K1+K2 (Y) · run: K1+K3 (Δ) · K2 and K3 must never close together (short circuit)"), "xf-m", "middle")
+    f.text(320, 632, T("F2 อยู่ในทางกระแสเฟส → ตั้ง 0.58·In · คู่ขั้ว Δ: U1–W2 · V1–U2 · W1–V2 (= NEMA T1–T6 · T2–T4 · T3–T5)", "F2 carries the phase current → set 0.58·In · delta pairs: U1–W2 · V1–U2 · W1–V2 (= NEMA T1–T6 · T2–T4 · T3–T5)"), "xf-k", "middle")
+    p_pe(f, pe, 30, ym + r)
     return f.svg()
 
 
 @fig("mc-yd-control")
 def _():
-    f = F(720, 520, T("วงจรควบคุมสตาร์-เดลต้าแบบเปลี่ยนจังหวะเปิดวงจร: ไทเมอร์ -K4T หน่วงเปิด K2 สตาร์ดูดก่อน K1 แล้วเปลี่ยนเป็น K3 เดลต้า มีอินเตอร์ล็อก K2/K3",
-                      "Open-transition star–delta control: on-delay timer -K4T, star K2 closes before K1, then changes to delta K3, with K2/K3 interlock"), "mc-yd-control")
-    root = S(E(el_nc, act="th", tag="-F2", t1="95", t2="96"), E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
+    f = F(720, 600, T("วงจรควบคุมสตาร์-เดลต้าแบบเปลี่ยนจังหวะเปิดวงจร (IEC): ไทเมอร์ -K4T หน่วงเปิด · K2 สตาร์ดูดก่อนแล้ว K1 ตาม · ครบเวลา K2 ปล่อยแล้ว K3 เดลต้าดูด · อินเตอร์ล็อก K2/K3",
+                      "Open-transition star–delta control (IEC): on-delay timer -K4T · star K2 first, then K1 · after the delay K2 drops and delta K3 picks up · K2/K3 interlock"), "mc-yd-control")
+    root = S(E(el_fuse, tag="-F3"), E(el_nc, act="th", tag="-F2", t1="95", t2="96"), E(el_nc, act="push", tag="-S0", t1="11", t2="12"),
              P(E(el_no, act="push", tag="-S1", t1="13", t2="14"), E(el_no, tag="-K1", t1="13", t2="14")),
              P(S(E(el_wire, h=52), E(el_wire, h=52), E(el_coil, tag="-K4T", kind="ton", note="t")),
                S(E(el_nc, act="ton", tag="-K4T", t1="15", t2="16"), E(el_nc, tag="-K3", t1="21", t2="22"), E(el_coil, tag="-K2", note="Y")),
                S(P(E(el_no, tag="-K2", t1="13", t2="14"), E(el_no, tag="-K1", t1="43", t2="44")), E(el_coil, tag="-K1", note=T("หลัก", "Main"))),
                S(E(el_no, act="ton", tag="-K4T", t1="17", t2="18"), E(el_nc, tag="-K2", t1="21", t2="22"), E(el_coil, tag="-K3", note="Δ"))))
-    control(f, root, 110, 30, top="L", bot="N")
-    f.text(360, f.h - 16, T("START → K4T และ K2 (Y) → K1 ดูดตาม (ผ่าน K2 13-14) → ครบเวลา t: K2 ปล่อย แล้ว K3 (Δ) ดูด",
-                       "START → K4T and K2 (Y) → K1 follows (via K2 13-14) → after t: K2 drops, then K3 (Δ) picks up"), "xf-m", "middle")
+    f.mains = {"-K1": "PWR", "-K2": "PWR", "-K3": "PWR"}
+    control(f, root, 110, 50, top="L1", bot="N", below=58, labels={1: T("ไทเมอร์", "timer"), 2: T("สตาร์ Y", "star Y"), 3: T("หลัก K1", "main K1"), 5: T("เดลต้า Δ", "delta Δ")})
+    f.text(360, f.h - 26, T("START → K4T และ K2 (Y) → K1 ดูดตาม (ผ่าน K2 13-14)", "START → K4T and K2 (Y) → K1 follows (via K2 13-14)"), "xf-m", "middle")
+    f.text(360, f.h - 8, T("ครบเวลา t: K4T 15-16 เปิด → K2 ปล่อย → 17-18 ปิด → K3 (Δ) ดูด", "After t: K4T 15-16 opens → K2 drops → 17-18 closes → K3 (Δ) picks up"), "xf-m", "middle")
     return f.svg()
 
 
@@ -1086,10 +1534,11 @@ def _():
     f = F(720, 460, T("วงจรปั๊มน้ำอัตโนมัติด้วยสวิตช์เลือก Hand-Off-Auto ลูกลอยในถังสูง และลูกลอยป้องกันปั๊มเดินแห้งในถังล่าง",
                       "Automatic pump control with a Hand-Off-Auto selector, a float switch in the upper tank and a dry-run float in the lower tank"), "mc-pump-float")
     root = S(E(el_fuse, tag="-F3"), E(el_nc, act="th", tag="-F2", t1="95", t2="96"),
-             P(E(el_no, act="push", tag="-S1 H", t1="13", t2="14"),
-               S(E(el_no, act="push", tag="-S1 A", t1="23", t2="24"), E(el_nc, act="float", tag="-B1", t1="1", t2="2"), E(el_no, act="float", tag="-B2", t1="3", t2="4"))),
+             P(E(el_no, act="sel", tag="-S1 H", t1="13", t2="14"),
+               S(E(el_no, act="sel", tag="-S1 A", t1="23", t2="24"), E(el_nc, act="float", tag="-B1", t1="1", t2="2"), E(el_no, act="float", tag="-B2", t1="3", t2="4"))),
              E(el_coil, tag="-K1"))
-    control(f, root, 140, 30, top="L", bot="N")
+    f.mains = {"-K1": "PWR"}
+    control(f, root, 140, 50, top="L1", bot="N", below=58)
     f.text(420, 60, T("-S1 สวิตช์เลือก 3 ตำแหน่ง:", "-S1 three-position selector:"), "xf-h")
     f.text(420, 82, T("H (Hand) = เดินด้วยมือ ข้ามลูกลอย", "H (Hand) = run by hand, floats bypassed"), "xf-k")
     f.text(420, 100, T("0 (Off) = หยุด", "0 (Off) = stop"), "xf-k")
@@ -1112,8 +1561,9 @@ def _():
                GAP,
                S(E(el_no, tag="-K1", t1="23", t2="24"), E(el_wire), E(el_coil, tag="-K3T", kind="ton", note="t")),
                S(E(el_no, tag="-K1", t1="33", t2="34"), E(el_no, act="ton", tag="-K3T", t1="17", t2="18"), E(el_coil, tag="-K2", note="M2"))))
-    control(f, root, 110, 30, top="L", bot="N")
-    f.text(360, f.h - 16, T("ลำเลียงวัสดุ: สตาร์ทสายพานปลายทาง (M1) ก่อน หยุดต้นทางก่อน เพื่อไม่ให้วัสดุกองบนสายพาน",
+    f.mains = {"-K1": "PWR", "-K2": "PWR"}
+    control(f, root, 110, 50, top="L1", bot="N", below=58)
+    f.text(360, f.h - 14, T("ลำเลียงวัสดุ: สตาร์ทสายพานปลายทาง (M1) ก่อน หยุดต้นทางก่อน เพื่อไม่ให้วัสดุกองบนสายพาน",
                        "Material handling: start the downstream belt (M1) first and stop the upstream belt first so material never piles up"), "xf-m", "middle")
     return f.svg()
 
@@ -1653,6 +2103,942 @@ def _():
     f.text(390, 306, T("หมวดหยุด 0 (IEC 60204-1): ตัดพลังงานทันที · ระดับ PL ต้องประเมินตาม ISO 13849-1 · ห้ามใช้ PLC ทั่วไปเป็นทางเดียวของ E-stop",
                        "Stop category 0 (IEC 60204-1): remove power immediately · assess the PL to ISO 13849-1 · never make a standard PLC the only E-stop path"), "xf-m", "middle")
     return f.svg()
+
+
+@fig("mc-nema-dol")
+def _():
+    f = F(860, 610, T("วงจรสตาร์ทตรงตามมาตรฐาน NEMA/JIC: วงจรกำลัง (ดิสคอนเนกต์พร้อมฟิวส์ สตาร์ตเตอร์ M ฮีตเตอร์โอเวอร์โหลด OL มอเตอร์ T1 T2 T3) หม้อแปลงควบคุม 480/120 V และแลดเดอร์ควบคุมแบบ 3 สาย STOP START M OL",
+                      "DOL starter to NEMA/JIC: power circuit (fused disconnect, starter M, overload heaters OL, motor T1 T2 T3), 480/120 V control transformer and the three-wire ladder STOP START M OL"), "mc-nema-dol")
+    xs = [80, 120, 160]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 66)
+    n_poles(f, xs, yb + 66, "M")
+    yo = yb + 66 + 46
+    p_wires(f, xs, yo, yo + 30)
+    n_heaters(f, xs, yo + 30, link="OL")
+    ym = yo + 30 + 44
+    p_wires(f, xs, ym, ym + 36)
+    p_motor(f, 120, ym + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=36)
+    f.text(190, ym + 36 + 2 * 58 + 2, "MTR", "xf-tag")
+    p_pe(f, 36, 44, ym + 36 + 58, label="GND")
+    x1, y1, x2, y2 = _nema_ct(f, xs, yb)
+    # control: X1 through FU3 to the left rail, X2 (grounded) to the right rail
+    xL, xR, yt = 500, 830, 150
+    f.line(x1, y1, x1, yt); f.line(x1, yt, xL, yt)
+    f.rect(x1 + 40, yt - 6, 24, 12, "xf-box", 1); f.text(x1 + 52, yt - 13, "FU3", "xf-tagk", "middle")
+    rungs = [
+        NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="M", wn=2)), NE(n_coil, tag="M", R=True, wn=3), NE(n_ol, R=True, wn=4))),
+        NRN(2, NS(NE(n_contact, tag="M", wn=1), NE(n_lamp, tag="G", name="RUN", R=True, wn=5))),
+        NRN(3, NS(NE(n_contact, nc=True, tag="M", wn=1), NE(n_lamp, tag="R", name="OFF", R=True, wn=6))),
+    ]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    f.line(x2, y2, x2, yb2 + 28); f.line(x2, yb2 + 28, xR, yb2 + 28); f.line(xR, yb2 + 28, xR, yb2)
+    f.dot(x2, y2 + 40); f.line(x2, y2 + 40, x2 + 22, y2 + 40); p_earth(f, x2 + 22, y2 + 40)
+    f.text(x2 + 32, y2 + 66, T("X2 ต่อดิน", "X2 grounded"), "xf-k")
+    f.text(430, f.h - 22, T("ตัวเลขใต้คอยล์ M = เลขแลดเดอร์ที่มีหน้าสัมผัสของ M (ขีดเส้นใต้ = NC) · ตัวเลขบนเส้น = เลขสาย (wire number)", "Numbers under coil M = rungs that carry its contacts (underlined = NC) · numbers on the wires = wire numbers"), "xf-m", "middle")
+    f.text(430, f.h - 6, T("จุดต่อทางไฟฟ้าเดียวกันใช้เลขสายเดียวกัน · สีสาย (NFPA 79): แดง = ควบคุม 120 V AC, ดำ = กำลัง, ขาว = X2 ที่ต่อดิน", "One number per electrical node · wire colours (NFPA 79): red = 120 V AC control, black = power, white = grounded X2"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(860, 580, T("วงจรสตาร์ทตรงตามมาตรฐาน NEMA/JIC: วงจรกำลัง (ดิสคอนเนกต์พร้อมฟิวส์ สตาร์ตเตอร์ M ฮีตเตอร์โอเวอร์โหลด OL มอเตอร์ T1 T2 T3) หม้อแปลงควบคุม 480/120 V และแลดเดอร์ควบคุมแบบ 3 สาย STOP START M OL",
+                      "DOL starter to NEMA/JIC: power circuit (fused disconnect, starter M, overload heaters OL, motor T1 T2 T3), 480/120 V control transformer and the three-wire ladder STOP START M OL"), "mc-nema-dol")
+    xs = [80, 120, 160]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 66)
+    n_poles(f, xs, yb + 66, "M", terms=False)
+    yo = yb + 66 + 46
+    p_wires(f, xs, yo, yo + 30)
+    n_heaters(f, xs, yo + 30, link="OL")
+    ym = yo + 30 + 44
+    p_wires(f, xs, ym, ym + 36)
+    p_motor(f, 120, ym + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=36)
+    f.text(190, ym + 36 + 2 * 58 + 2, "MTR", "xf-tag")
+    p_pe(f, 36, 44, ym + 36 + 58, label="GND")
+    x1, y1, x2, y2 = _nema_ct(f, xs, yb)
+    # control: X1 through FU3 to the left rail, X2 (grounded) to the right rail
+    xL, xR, yt = 500, 830, 150
+    f.line(x1, y1, x1, yt); f.line(x1, yt, xL, yt)
+    f.rect(x1 + 40, yt - 6, 24, 12, "xf-box", 1); f.text(x1 + 52, yt - 13, "FU3", "xf-tagk", "middle")
+    rungs = [
+        NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="M", wn=2)), NE(n_coil, tag="M", R=True, wn=3), NE(n_ol, R=True, wn=4))),
+        NRN(2, NS(NE(n_contact, tag="M", wn=1), NE(n_lamp, tag="G", name="RUN", R=True, wn=5))),
+        NRN(3, NS(NE(n_contact, nc=True, tag="M", wn=1), NE(n_lamp, tag="R", name="OFF", R=True, wn=6))),
+    ]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    f.line(x2, y2, x2, yb2 + 28); f.line(x2, yb2 + 28, xR, yb2 + 28); f.line(xR, yb2 + 28, xR, yb2)
+    f.dot(x2, y2 + 40); f.line(x2, y2 + 40, x2 + 22, y2 + 40); p_earth(f, x2 + 22, y2 + 40)
+    f.text(x2 + 32, y2 + 66, T("X2 ต่อดิน", "X2 grounded"), "xf-k")
+    f.text(430, f.h - 22, T("ตัวเลขใต้คอยล์ M = เลขแลดเดอร์ที่มีหน้าสัมผัสของ M (ขีดเส้นใต้ = NC) · ตัวเลขบนเส้น = เลขสาย (wire number)", "Numbers under coil M = rungs that carry its contacts (underlined = NC) · numbers on the wires = wire numbers"), "xf-m", "middle")
+    f.text(430, f.h - 6, T("ต้องใช้ตัวเลขชุดเดียวกับแต่ละจุดต่อ: เส้นสีแดง = ควบคุม 120 V AC, ดำ = กำลัง, ขาว = X2 ที่ต่อดิน (NFPA 79)", "One number per electrical node; wire colours: red = 120 V AC control, black = power, white = grounded X2 (NFPA 79)"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(860, 580, T("วงจรสตาร์ทตรงตามมาตรฐาน NEMA/JIC: วงจรกำลัง (ดิสคอนเนกต์พร้อมฟิวส์ สตาร์ตเตอร์ M ฮีตเตอร์โอเวอร์โหลด OL มอเตอร์ T1 T2 T3) หม้อแปลงควบคุม 480/120 V และแลดเดอร์ควบคุมแบบ 3 สาย STOP START M OL",
+                      "DOL starter to NEMA/JIC: power circuit (fused disconnect, starter M, overload heaters OL, motor T1 T2 T3), 480/120 V control transformer and the three-wire ladder STOP START M OL"), "mc-nema-dol")
+    xs = [80, 120, 160]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 66)
+    n_poles(f, xs, yb + 66, "M", terms=False)
+    f.text(xs[2] + 14, yb + 78, "L1 L2 L3 ▸ T1 T2 T3", "xf-k")
+    yo = yb + 66 + 46
+    p_wires(f, xs, yo, yo + 30)
+    n_heaters(f, xs, yo + 30, link="OL")
+    ym = yo + 30 + 44
+    p_wires(f, xs, ym, ym + 36)
+    p_motor(f, 120, ym + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=36)
+    f.text(190, ym + 36 + 2 * 58 + 2, "MTR", "xf-tag")
+    p_pe(f, 36, 44, ym + 36 + 58, label="GND")
+    x1, y1, x2, y2 = _nema_ct(f, xs, yb)
+    # control: X1 through FU3 to the left rail, X2 (grounded) to the right rail
+    xL, xR, yt = 480, 820, 150
+    f.line(x1, y1, x1, yt - 12); f.line(x1, yt - 12, xL, yt - 12)
+    f.rect(372, yt - 18, 24, 12, "xf-box", 1); f.text(384, yt - 25, "FU3", "xf-tagk", "middle")
+    rungs = [
+        NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="M", wn=2)), NE(n_coil, tag="M", R=True, wn=3), NE(n_ol, R=True, wn=4))),
+        NRN(2, NS(NE(n_contact, tag="M", wn=1), NE(n_lamp, tag="G", name="RUN", R=True, wn=5))),
+        NRN(3, NS(NE(n_contact, nc=True, tag="M", wn=1), NE(n_lamp, tag="R", name="OFF", R=True, wn=6))),
+    ]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    f.line(x2, y2, x2, yb2 + 28); f.line(x2, yb2 + 28, xR, yb2 + 28); f.line(xR, yb2 + 28, xR, yb2)
+    f.dot(x2, y2 + 40); f.line(x2, y2 + 40, x2 + 22, y2 + 40); p_earth(f, x2 + 22, y2 + 40)
+    f.text(x2 + 34, y2 + 62, T("X2 ต่อดิน (nested)", "X2 bonded to ground"), "xf-k") if False else f.text(x2 + 40, y2 + 66, T("X2 ต่อดิน", "X2 grounded"), "xf-k")
+    f.text(430, f.h - 22, T("ตัวเลขใต้คอยล์ M = เลขแลดเดอร์ที่มีหน้าสัมผัสของ M (ขีดเส้นใต้ = NC) · ตัวเลขบนเส้น = เลขสาย (wire number)", "Numbers under coil M = rungs that carry its contacts (underlined = NC) · numbers on the wires = wire numbers"), "xf-m", "middle")
+    f.text(430, f.h - 6, T("ต้องใช้ตัวเลขชุดเดียวกับแต่ละจุดต่อ: เส้นสีแดง = ควบคุม 120 V AC, ดำ = กำลัง, ขาว = X2 ที่ต่อดิน (NFPA 79)", "One number per electrical node; wire colours: red = 120 V AC control, black = power, white = grounded X2 (NFPA 79)"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(860, 580, T("วงจรสตาร์ทตรงตามมาตรฐาน NEMA/JIC: วงจรกำลัง (ดิสคอนเนกต์พร้อมฟิวส์ สตาร์ตเตอร์ M ฮีตเตอร์โอเวอร์โหลด OL มอเตอร์ T1 T2 T3) หม้อแปลงควบคุม 480/120 V และแลดเดอร์ควบคุมแบบ 3 สาย STOP START M OL",
+                      "DOL starter to NEMA/JIC: power circuit (fused disconnect, starter M, overload heaters OL, motor T1 T2 T3), 480/120 V control transformer and the three-wire ladder STOP START M OL"), "mc-nema-dol")
+    xs = [80, 120, 160]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 66)
+    n_poles(f, xs, yb + 66, "M", terms=False)
+    f.text(xs[2] + 14, yb + 78, "L1 L2 L3 ▸ T1 T2 T3", "xf-k")
+    yo = yb + 66 + 46
+    p_wires(f, xs, yo, yo + 30)
+    n_heaters(f, xs, yo + 30, link="OL")
+    ym = yo + 30 + 44
+    p_wires(f, xs, ym, ym + 36)
+    p_motor(f, 120, ym + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=36)
+    f.text(190, ym + 36 + 2 * 58 + 2, "MTR", "xf-tag")
+    p_pe(f, 36, 44, ym + 36 + 58, label="GND")
+    x1, y1, x2, y2 = _nema_ct(f, xs, yb)
+    # control: X1 through FU3 to the left rail, X2 (grounded) to the right rail
+    xL, xR, yt = 480, 820, 150
+    f.line(x1, y1, x1, yt - 12); f.line(x1, yt - 12, xL, yt - 12)
+    f.rect(372, yt - 18, 24, 12, "xf-box", 1); f.text(384, yt - 25, "FU3", "xf-tagk", "middle")
+    rungs = [
+        NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="M", wn=2)), NE(n_coil, tag="M", R=True, wn=3), NE(n_ol, R=True, wn=4))),
+        NRN(2, NS(NE(n_contact, tag="M", wn=1), NE(n_lamp, tag="G", name="RUN", R=True, wn=5))),
+        NRN(3, NS(NE(n_contact, nc=True, tag="M", wn=1), NE(n_lamp, tag="R", name="OFF", R=True, wn=6))),
+    ]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    f.line(x2, y2, x2, yb2 + 28); f.line(x2, yb2 + 28, xR, yb2 + 28); f.line(xR, yb2 + 28, xR, yb2)
+    f.dot(x2, y2 + 40); f.line(x2, y2 + 40, x2 + 22, y2 + 40); p_earth(f, x2 + 22, y2 + 40)
+    f.text(x2 + 34, y2 + 62, T("X2 ต่อดิน (nested)", "X2 bonded to ground"), "xf-k") if False else f.text(x2 + 40, y2 + 66, T("X2 ต่อดิน", "X2 grounded"), "xf-k")
+    f.text(430, f.h - 22, T("ตัวเลขใต้คอยล์ M = เลขแลดเดอร์ที่มีหน้าสัมผัสของ M (ขีดเส้นใต้ = NC) · ตัวเลขบนเส้น = เลขสาย (wire number)", "Numbers under coil M = rungs that carry its contacts (underlined = NC) · numbers on the wires = wire numbers"), "xf-m", "middle")
+    f.text(430, f.h - 6, T("ต้องใช้ตัวเลขชุดเดียวกับแต่ละจุดต่อ: เส้นสีแดง = ควบคุม 120 V AC, ดำ = กำลัง, ขาว = X2 ที่ต่อดิน (NFPA 79)", "One number per electrical node; wire colours: red = 120 V AC control, black = power, white = grounded X2 (NFPA 79)"), "xf-k", "middle")
+    return f.svg()
+
+
+def _nema_power_head(f, xs, y0=66):
+    """Supply labels, fused disconnect (DISC / FU) and the control-transformer feed taken after the fuses. Returns y below the fuses."""
+    f.text(xs[1], 22, "480 V 3Φ 60 Hz", "xf-k", "middle")
+    for x, l in zip(xs, ("L1", "L2", "L3")):
+        f.text(x, 40, l, "xf-k", "middle"); f.line(x, 44, x, y0)
+    return n_disc(f, xs, y0, "DISC")
+
+
+def _nema_ct(f, xs, yb, xt=330, y=214):
+    """Control transformer 480/120 V: primary H1 (from L1) and H4 (from L2) through fuses, X2 grounded. Returns (x_X1, y_X1, x_X2, y_X2)."""
+    xv = xt - 36                     # vertical run of the L2 tap
+    # L1 → H1 (top primary lead) and L2 → H4 (bottom lead); each tap at its own height, L1 lowest, so the wires never touch
+    f.line(xs[0], yb + 30, xt, yb + 30); f.dot(xs[0], yb + 30); f.line(xt, yb + 30, xt, y)
+    f.rect(xt - 96, yb + 24, 24, 12, "xf-box", 1); f.text(xt - 84, yb + 17, "FU1", "xf-tagk", "middle")
+    f.line(xs[1], yb + 16, xv, yb + 16); f.dot(xs[1], yb + 16)
+    f.line(xv, yb + 16, xv, y + 84); f.line(xv, y + 84, xt, y + 84); f.line(xt, y + 84, xt, y + 64)
+    f.rect(xv - 6, y + 30, 12, 24, "xf-box", 1); f.text(xv - 12, y + 46, "FU2", "xf-tagk", "end")
+    n_xfmr(f, xt, y, tag="CT")
+    f.text(xt - 9, y + 5, "H1", "xf-k", "end"); f.text(xt - 9, y + 60, "H4", "xf-k", "end")
+    f.text(xt + 52, y + 5, "X1", "xf-k"); f.text(xt + 52, y + 60, "X2", "xf-k")
+    f.text(xt + 20, y - 8, "480 : 120 V", "xf-k", "middle")
+    return xt + 40, y, xt + 40, y + 64
+
+
+def _nema_ctl_note(f, x, y):
+    f.text(x, y, T("ควบคุม 120 V AC จากหม้อแปลงควบคุม (X1 · X2 ต่อดิน) ตามรูปสตาร์ทตรง", "120 V AC control from the control transformer (X1 · X2 grounded) as in the DOL figure"), "xf-k", "middle")
+
+
+@fig("mc-nema-fr")
+def _():
+    f = F(900, 610, T("วงจรกลับทางหมุนตามมาตรฐาน NEMA/JIC: สตาร์ตเตอร์ F (เดินหน้า) และ R (ถอยหลัง) สลับ L1 กับ L3 อินเตอร์ล็อกทางกล · แลดเดอร์มี STOP FWD REV อินเตอร์ล็อกปุ่มกดและอินเตอร์ล็อกหน้าสัมผัส NC",
+                      "Reversing starter to NEMA/JIC: contactors F (forward) and R (reverse) swapping L1 and L3, mechanically interlocked · ladder with STOP FWD REV, push-button and NC-contact interlocks"), "mc-nema-fr")
+    xs, xr = [70, 110, 150], [210, 250, 290]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 60)
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16][::-1]):
+        pass
+    # R is fed by three separate taps (L3 highest, L1 lowest) so the taps never touch
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, yb + 60); f.dot(x, yy)
+    n_poles(f, xs, yb + 60, "F"); n_poles(f, xr, yb + 60, None)
+    f.text(xr[-1] + 26, yb + 86, "R", "xf-tag")
+    ym = yb + 60 + 23
+    f.line(xs[-1] + 16, ym, xr[0] - 16, ym, "xf-mech")
+    f.text((xs[-1] + xr[0]) / 2, ym - 4, "M.I.", "xf-k", "middle")
+    yo = yb + 60 + 46
+    p_wires(f, xs, yo, yo + 60)
+    for xo, xt, yy in zip(xr, [xs[2], xs[1], xs[0]], [yo + 20, yo + 34, yo + 48]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    n_heaters(f, xs, yo + 60, link="OL")
+    ym2 = yo + 60 + 44
+    p_wires(f, xs, ym2, ym2 + 36)
+    p_motor(f, 110, ym2 + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(180, ym2 + 36 + 2 * 58, "MTR", "xf-tag")
+    p_pe(f, 30, 44, ym2 + 36 + 58, label="GND")
+    f.text(xr[-1] + 20, ym2 - 20, T("R สลับ L1↔L3", "R swaps L1↔L3"), "xf-k")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NS(NE(n_pb, nc=True, tag="STOP", wn=1),
+                NP(NRN(1, NS(NP(NE(n_pb, tag="FWD", wn=2), NE(n_contact, tag="F", wn=2)), NE(n_pb, nc=True, tag="REV", wn=3), NE(n_contact, nc=True, tag="R", wn=4), NE(n_coil, tag="F", R=True, wn=5))),
+                   NRN(2, NS(NP(NE(n_pb, tag="REV", wn=2), NE(n_contact, tag="R", wn=2)), NE(n_pb, nc=True, tag="FWD", wn=6), NE(n_contact, nc=True, tag="F", wn=7), NE(n_coil, tag="R", R=True, wn=8)))),
+                NE(n_ol, R=True, wn=9))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    # mechanical interlock between the two coils
+    xc = xR - NW - NW / 2
+    f.line(xc, ys[0] + 2 * NR + 17 - 3, xc, ys[0] + 2 * NR + 17 - 3, "xf-mech") if False else None
+    xcoil = xR - NW - NW / 2
+    f.line(xcoil + 26, ys[0] + 20, xcoil + 26, ys[0] + 2 * NR - 20, "xf-mech")
+    f.text(xcoil + 32, ys[0] + NR + 4, "M.I.", "xf-k")
+    _nema_ctl_note(f, 640, yb2 + 28)
+    f.text(450, f.h - 26, T("F และ R ห้ามดูดพร้อมกัน (ลัดวงจร L1–L3): อินเตอร์ล็อก 3 ชั้น = NC ของ F/R ในแลดเดอร์ · ปุ่ม FWD/REV แบบ NC · M.I. อินเตอร์ล็อกทางกล", "F and R must never close together (L1–L3 short circuit): 3 interlocks = NC contacts of F/R · NC halves of FWD/REV · M.I. mechanical interlock"), "xf-m", "middle")
+    f.text(450, f.h - 8, T("เลขใต้คอยล์: แลดเดอร์ที่ใช้หน้าสัมผัส (ขีดเส้นใต้ = NC) · M.I. = mechanical interlock", "Numbers under a coil: rungs using its contacts (underlined = NC) · M.I. = mechanical interlock"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(900, 640, T("วงจรกลับทางหมุนตามมาตรฐาน NEMA/JIC: สตาร์ตเตอร์ F (เดินหน้า) และ R (ถอยหลัง) สลับ L1 กับ L3 อินเตอร์ล็อกทางกล · แลดเดอร์มี STOP FWD REV อินเตอร์ล็อกปุ่มกดและอินเตอร์ล็อกหน้าสัมผัส NC",
+                      "Reversing starter to NEMA/JIC: contactors F (forward) and R (reverse) swapping L1 and L3, mechanically interlocked · ladder with STOP FWD REV, push-button and NC-contact interlocks"), "mc-nema-fr")
+    xs, xr = [70, 110, 150], [210, 250, 290]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 60)
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16][::-1]):
+        pass
+    # R is fed by three separate taps (L3 highest, L1 lowest) so the taps never touch
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, yb + 60); f.dot(x, yy)
+    n_poles(f, xs, yb + 60, "F"); n_poles(f, xr, yb + 60, None)
+    f.text(xr[-1] + 26, yb + 86, "R", "xf-tag")
+    ym = yb + 60 + 23
+    f.line(xs[-1] + 16, ym, xr[0] - 16, ym, "xf-mech")
+    f.text((xs[-1] + xr[0]) / 2, yb + 50, T("ล็อกทางกล", "mech. lock"), "xf-k", "middle")
+    yo = yb + 60 + 46
+    p_wires(f, xs, yo, yo + 60)
+    for xo, xt, yy in zip(xr, [xs[2], xs[1], xs[0]], [yo + 20, yo + 34, yo + 48]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    n_heaters(f, xs, yo + 60, link="OL")
+    ym2 = yo + 60 + 44
+    p_wires(f, xs, ym2, ym2 + 36)
+    p_motor(f, 110, ym2 + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(180, ym2 + 36 + 2 * 58, "MTR", "xf-tag")
+    p_pe(f, 30, 44, ym2 + 36 + 58, label="GND")
+    f.text(xr[-1] + 20, ym2 - 20, T("R สลับ L1↔L3", "R swaps L1↔L3"), "xf-k")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NS(NE(n_pb, nc=True, tag="STOP", wn=1),
+                NP(NRN(1, NS(NP(NE(n_pb, tag="FWD", wn=2), NE(n_contact, tag="F", wn=2)), NE(n_pb, nc=True, tag="REV", wn=3), NE(n_contact, nc=True, tag="R", wn=4), NE(n_coil, tag="F", R=True, wn=5))),
+                   NRN(2, NS(NP(NE(n_pb, tag="REV", wn=2), NE(n_contact, tag="R", wn=2)), NE(n_pb, nc=True, tag="FWD", wn=6), NE(n_contact, nc=True, tag="F", wn=7), NE(n_coil, tag="R", R=True, wn=8)))),
+                NE(n_ol, R=True, wn=9))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    # mechanical interlock between the two coils
+    xc = xR - NW - NW / 2
+    f.line(xc, ys[0] + 2 * NR + 17 - 3, xc, ys[0] + 2 * NR + 17 - 3, "xf-mech") if False else None
+    xcoil = xR - NW - NW / 2
+    f.line(xcoil + 26, ys[0] + 20, xcoil + 26, ys[0] + 2 * NR - 20, "xf-mech")
+    f.text(xcoil + 32, ys[0] + NR + 4, "M.I.", "xf-k")
+    _nema_ctl_note(f, 640, yb2 + 28)
+    f.text(450, f.h - 26, T("F และ R ห้ามดูดพร้อมกัน (ลัดวงจร L1–L3): อินเตอร์ล็อก 3 ชั้น = NC ของ F/R ในแลดเดอร์ · ปุ่ม FWD/REV แบบ NC · M.I. อินเตอร์ล็อกทางกล", "F and R must never close together (L1–L3 short circuit): 3 interlocks = NC contacts of F/R · NC halves of FWD/REV · M.I. mechanical interlock"), "xf-m", "middle")
+    f.text(450, f.h - 8, T("เลขใต้คอยล์: แลดเดอร์ที่ใช้หน้าสัมผัส (ขีดเส้นใต้ = NC) · M.I. = mechanical interlock", "Numbers under a coil: rungs using its contacts (underlined = NC) · M.I. = mechanical interlock"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(900, 640, T("วงจรกลับทางหมุนตามมาตรฐาน NEMA/JIC: สตาร์ตเตอร์ F (เดินหน้า) และ R (ถอยหลัง) สลับ L1 กับ L3 อินเตอร์ล็อกทางกล · แลดเดอร์มี STOP FWD REV อินเตอร์ล็อกปุ่มกดและอินเตอร์ล็อกหน้าสัมผัส NC",
+                      "Reversing starter to NEMA/JIC: contactors F (forward) and R (reverse) swapping L1 and L3, mechanically interlocked · ladder with STOP FWD REV, push-button and NC-contact interlocks"), "mc-nema-fr")
+    xs, xr = [70, 110, 150], [210, 250, 290]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 60)
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16][::-1]):
+        pass
+    # R is fed by three separate taps (L3 highest, L1 lowest) so the taps never touch
+    for x, xx, yy in zip(xs, xr, [yb + 44, yb + 30, yb + 16]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, yb + 60); f.dot(x, yy)
+    n_poles(f, xs, yb + 60, "F"); n_poles(f, xr, yb + 60, None)
+    f.text(xr[-1] + 26, yb + 86, "R", "xf-tag")
+    ym = yb + 60 + 23
+    f.line(xs[-1] + 16, ym, xr[0] - 16, ym, "xf-mech")
+    f.text((xs[-1] + xr[0]) / 2, ym + 22, T("ล็อกทางกล", "mech. lock"), "xf-k", "middle")
+    yo = yb + 60 + 46
+    p_wires(f, xs, yo, yo + 60)
+    for xo, xt, yy in zip(xr, [xs[2], xs[1], xs[0]], [yo + 20, yo + 34, yo + 48]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    n_heaters(f, xs, yo + 60, link="OL")
+    ym2 = yo + 60 + 44
+    p_wires(f, xs, ym2, ym2 + 36)
+    p_motor(f, 110, ym2 + 36, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(180, ym2 + 36 + 2 * 58, "MTR", "xf-tag")
+    p_pe(f, 30, 44, ym2 + 36 + 58, label="GND")
+    f.text(xr[-1] + 20, ym2 - 20, T("R สลับ L1↔L3", "R swaps L1↔L3"), "xf-k")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NS(NE(n_pb, nc=True, tag="STOP", wn=1),
+                NP(NRN(1, NS(NP(NE(n_pb, tag="FWD", wn=2), NE(n_contact, tag="F", wn=2)), NE(n_pb, nc=True, tag="REV", wn=3), NE(n_contact, nc=True, tag="R", wn=4), NE(n_coil, tag="F", R=True, wn=5))),
+                   NRN(2, NS(NP(NE(n_pb, tag="REV", wn=2), NE(n_contact, tag="R", wn=2)), NE(n_pb, nc=True, tag="FWD", wn=6), NE(n_contact, nc=True, tag="F", wn=7), NE(n_coil, tag="R", R=True, wn=8)))),
+                NE(n_ol, R=True, wn=9))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    # mechanical interlock between the two coils
+    xc = xR - NW - NW / 2
+    f.line(xc, ys[0] + 2 * NR + 17 - 3, xc, ys[0] + 2 * NR + 17 - 3, "xf-mech") if False else None
+    xcoil = xR - NW - NW / 2
+    f.line(xcoil + 26, ys[0] + 20, xcoil + 26, ys[0] + 2 * NR - 20, "xf-mech")
+    f.text(xcoil + 32, ys[0] + NR + 4, "M.I.", "xf-k")
+    _nema_ctl_note(f, 640, yb2 + 28)
+    f.text(450, f.h - 26, T("F และ R ห้ามดูดพร้อมกัน (ลัดวงจร L1–L3): อินเตอร์ล็อก 3 ชั้น = NC ของ F/R ในแลดเดอร์ · ปุ่ม FWD/REV แบบ NC · M.I. อินเตอร์ล็อกทางกล", "F and R must never close together (L1–L3 short circuit): 3 interlocks = NC contacts of F/R · NC halves of FWD/REV · M.I. mechanical interlock"), "xf-m", "middle")
+    f.text(450, f.h - 8, T("เลขใต้คอยล์: แลดเดอร์ที่ใช้หน้าสัมผัส (ขีดเส้นใต้ = NC) · M.I. = mechanical interlock", "Numbers under a coil: rungs using its contacts (underlined = NC) · M.I. = mechanical interlock"), "xf-k", "middle")
+    return f.svg()
+
+
+@fig("mc-nema-yd")
+def _():
+    f = F(900, 720, T("วงจรสตาร์-เดลต้า (wye-delta) แบบเปิดวงจรตามมาตรฐาน NEMA: 1M (ไลน์) 2M (เดลต้า) 1S (สตาร์ ลัดปลาย T4 T5 T6) ไทเมอร์ TR · ขั้วมอเตอร์ T1–T6 (T1–T6 · T2–T4 · T3–T5 เมื่อต่อเดลต้า)",
+                      "Open-transition wye–delta starter to NEMA: 1M (line), 2M (delta), 1S (wye, shorting T4 T5 T6), timer TR · motor leads T1–T6 (T1–T6 · T2–T4 · T3–T5 in delta)"), "mc-nema-yd")
+    xs, xd = [70, 110, 150], [240, 280, 320]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 56)
+    n_poles(f, xs, yb + 56, "1M")
+    y1 = yb + 56 + 46
+    p_wires(f, xs, y1, y1 + 70)
+    # 2M (delta) tapped after 1M, three separate wires (L3 highest)
+    for x, xx, yy in zip(xs, xd, [y1 + 38, y1 + 24, y1 + 10]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, y1 + 52); f.dot(x, yy)
+    n_heaters(f, xs, y1 + 70, link="OL")
+    n_poles(f, xd, y1 + 52, None)
+    f.text(xd[-1] + 26, y1 + 78, "2M", "xf-tag")
+    ym = y1 + 70 + 44
+    p_wires(f, xs, ym, ym + 30)
+    xc, r = 110, 58
+    mt = ym + 30
+    p_motor(f, xc, mt, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(xc + r - 12, mt + 2 * r + 4, "MTR", "xf-tag") if False else f.text(xc + r + 8, mt + 20, "MTR", "xf-tag")
+    yc = mt + r
+    bot = []
+    for x, l in zip(xs, ["T6", "T4", "T5"]):
+        yy = yc + math.sqrt(max(r * r - (x - xc) ** 2, 0))
+        f.circ(x, yy, 3.2, "xf-term"); f.text(x + (-6 if x < xc else 6), yy + (14 if x == xc else 12), l, "xf-k", "end" if x < xc else None)
+        bot.append(yy)
+    yo = y1 + 52 + 46
+    for xo, xt, yy in zip(xd, xs, [mt + 2 * r + 24, mt + 2 * r + 38, mt + 2 * r + 52]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    ys_ = mt + 2 * r + 76
+    for x, b in zip(xs, bot):
+        f.line(x, b, x, ys_)
+    n_poles(f, xs, ys_, None)
+    f.text(xs[-1] + 26, ys_ + 28, "1S", "xf-tag")
+    f.line(xs[0], ys_ + 46 + 16, xs[-1], ys_ + 46 + 16)
+    for x in xs:
+        f.line(x, ys_ + 46, x, ys_ + 46 + 16)
+    f.dot(xs[1], ys_ + 46 + 16)
+    p_pe(f, 30, 44, mt + r, label="GND")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="1M", wn=2)),
+                       NP(NE(n_coil, tag="TR", R=True, wn=3),
+                          NRN(2, NS(NE(n_contact, nc=True, tag="TR", note="NCTO", wn=3), NE(n_contact, nc=True, tag="2M", wn=4), NE(n_coil, tag="1S", R=True, wn=5))),
+                          NRN(3, NS(NP(NE(n_contact, tag="1S", wn=3), NE(n_contact, tag="1M", wn=3)), NE(n_coil, tag="1M", R=True, wn=6))),
+                          NRN(4, NS(NE(n_contact, tag="TR", note="NOTC", wn=3), NE(n_contact, nc=True, tag="1S", wn=7), NE(n_coil, tag="2M", R=True, wn=8)))),
+                       NE(n_ol, R=True, wn=9)))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    _nema_ctl_note(f, 650, yb2 + 28)
+    f.text(450, f.h - 44, T("เริ่ม: 1S (wye) + 1M · ครบเวลา TR: 1S ปล่อย แล้ว 2M (delta) ดูด · 1S กับ 2M ห้ามดูดพร้อมกัน", "Start: 1S (wye) + 1M · after TR times out: 1S drops, then 2M (delta) picks up · 1S and 2M must never close together"), "xf-m", "middle")
+    f.text(450, f.h - 26, T("NCTO = NC timed-open (หน่วงเปิด) · NOTC = NO timed-closed (หน่วงปิด) · ชื่อ 1M/2M/1S ต่างกันตามผู้ผลิต — ดูแบบของเครื่อง", "NCTO = NC timed-open · NOTC = NO timed-closed · contactor names 1M/2M/1S vary by maker — follow the machine drawing"), "xf-k", "middle")
+    f.text(450, f.h - 8, T("คู่ขั้วเดลต้า: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)", "Delta pairs: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)"), "xf-k", "middle")
+    return f.svg()
+
+
+def s_npole(f, x, y):
+    f.line(x, y, x, y + 21); f.line(x, y + 31, x, y + 52)
+    f.line(x - 10, y + 21, x + 10, y + 21); f.line(x - 10, y + 31, x + 10, y + 31)
+
+
+def s_nheat(f, x, y):
+    f.line(x, y, x, y + 10); f.line(x, y + 42, x, y + 52)
+    f.path(f"M {f1(x)} {f1(y + 10)} l 6 4 l -12 8 l 12 8 l -12 8 l 6 4", "xf-ln")
+
+
+def s_ndisc(f, x, y):
+    f.line(x, y, x, y + 12); f.line(x, y + 12, x, y + 14)
+    f.line(x, y + 22, x - 11, y + 8); f.circ(x, y + 8, 2.2, "xf-dotk")
+    f.line(x, y + 22, x, y + 26)
+    f.rect(x - 6, y + 26, 12, 20, "xf-box", 1); f.line(x, y + 46, x, y + 52)
+
+
+def _():
+    f = F(900, 720, T("วงจรสตาร์-เดลต้า (wye-delta) แบบเปิดวงจรตามมาตรฐาน NEMA: 1M (ไลน์) 2M (เดลต้า) 1S (สตาร์ ลัดปลาย T4 T5 T6) ไทเมอร์ TR · ขั้วมอเตอร์ T1–T6 (T1–T6 · T2–T4 · T3–T5 เมื่อต่อเดลต้า)",
+                      "Open-transition wye–delta starter to NEMA: 1M (line), 2M (delta), 1S (wye, shorting T4 T5 T6), timer TR · motor leads T1–T6 (T1–T6 · T2–T4 · T3–T5 in delta)"), "mc-nema-yd")
+    xs, xd = [70, 110, 150], [240, 280, 320]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 56)
+    n_poles(f, xs, yb + 56, "1M")
+    y1 = yb + 56 + 46
+    p_wires(f, xs, y1, y1 + 70)
+    # 2M (delta) tapped after 1M, three separate wires (L3 highest)
+    for x, xx, yy in zip(xs, xd, [y1 + 38, y1 + 24, y1 + 10]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, y1 + 52); f.dot(x, yy)
+    n_heaters(f, xs, y1 + 70, link="OL")
+    n_poles(f, xd, y1 + 52, None)
+    f.text(xd[-1] + 26, y1 + 78, "2M", "xf-tag")
+    ym = y1 + 70 + 44
+    p_wires(f, xs, ym, ym + 30)
+    xc, r = 110, 58
+    mt = ym + 30
+    p_motor(f, xc, mt, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(xc + r - 12, mt + 2 * r + 4, "MTR", "xf-tag") if False else f.text(xc + r + 8, mt + 20, "MTR", "xf-tag")
+    yc = mt + r
+    bot = []
+    for x, l in zip(xs, ["T6", "T4", "T5"]):
+        yy = yc + math.sqrt(max(r * r - (x - xc) ** 2, 0))
+        f.circ(x, yy, 3.2, "xf-term"); f.text(x + (-6 if x < xc else 6), yy + (14 if x == xc else 12), l, "xf-k", "end" if x < xc else None)
+        bot.append(yy)
+    yo = y1 + 52 + 46
+    for xo, xt, yy in zip(xd, xs, [mt + 2 * r + 24, mt + 2 * r + 38, mt + 2 * r + 52]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    ys_ = mt + 2 * r + 76
+    for x, b in zip(xs, bot):
+        f.line(x, b, x, ys_)
+    n_poles(f, xs, ys_, None)
+    f.text(xs[-1] + 26, ys_ + 28, "1S", "xf-tag")
+    f.line(xs[0], ys_ + 46 + 16, xs[-1], ys_ + 46 + 16)
+    for x in xs:
+        f.line(x, ys_ + 46, x, ys_ + 46 + 16)
+    f.dot(xs[1], ys_ + 46 + 16)
+    p_pe(f, 30, 44, mt + r, label="GND")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="1M", wn=2)),
+                       NP(NE(n_coil, tag="TR", R=True, wn=3),
+                          NRN(2, NS(NE(n_contact, nc=True, tag="TR", note="NCTO", wn=3), NE(n_contact, nc=True, tag="2M", wn=4), NE(n_coil, tag="1S", R=True, wn=5))),
+                          NRN(3, NS(NP(NE(n_contact, tag="1S", wn=3), NE(n_contact, tag="1M", wn=3)), NE(n_coil, tag="1M", R=True, wn=6))),
+                          NRN(4, NS(NE(n_contact, tag="TR", note="NOTC", wn=3), NE(n_contact, nc=True, tag="1S", wn=7), NE(n_coil, tag="2M", R=True, wn=8)))),
+                       NE(n_ol, R=True, wn=9)))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    _nema_ctl_note(f, 650, yb2 + 28)
+    f.text(450, f.h - 44, T("เริ่ม: 1S (wye) + 1M · ครบเวลา TR: 1S ปล่อย แล้ว 2M (delta) ดูด · 1S กับ 2M ห้ามดูดพร้อมกัน", "Start: 1S (wye) + 1M · after TR times out: 1S drops, then 2M (delta) picks up · 1S and 2M must never close together"), "xf-m", "middle")
+    f.text(450, f.h - 26, T("NCTO = NC timed-open (หน่วงเปิด) · NOTC = NO timed-closed (หน่วงปิด) · ชื่อ 1M/2M/1S ต่างกันตามผู้ผลิต — ดูแบบของเครื่อง", "NCTO = NC timed-open · NOTC = NO timed-closed · contactor names 1M/2M/1S vary by maker — follow the machine drawing"), "xf-k", "middle")
+    f.text(450, f.h - 8, T("คู่ขั้วเดลต้า: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)", "Delta pairs: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)"), "xf-k", "middle")
+    return f.svg()
+
+
+def s_npole(f, x, y):
+    f.line(x, y, x, y + 21); f.line(x, y + 31, x, y + 52)
+    f.line(x - 10, y + 21, x + 10, y + 21); f.line(x - 10, y + 31, x + 10, y + 31)
+
+
+def s_nheat(f, x, y):
+    f.line(x, y, x, y + 10); f.line(x, y + 42, x, y + 52)
+    f.path(f"M {f1(x)} {f1(y + 10)} l 6 4 l -12 8 l 12 8 l -12 8 l 6 4", "xf-ln")
+
+
+def s_ndisc(f, x, y):
+    f.line(x, y, x, y + 12); f.line(x, y + 12, x, y + 14)
+    f.line(x, y + 22, x - 11, y + 8); f.circ(x, y + 8, 2.2, "xf-dotk")
+    f.line(x, y + 22, x, y + 26)
+    f.rect(x - 6, y + 26, 12, 20, "xf-box", 1); f.line(x, y + 46, x, y + 52)
+
+
+def _():
+    f = F(900, 720, T("วงจรสตาร์-เดลต้า (wye-delta) แบบเปิดวงจรตามมาตรฐาน NEMA: 1M (ไลน์) 2M (เดลต้า) 1S (สตาร์ ลัดปลาย T4 T5 T6) ไทเมอร์ TR · ขั้วมอเตอร์ T1–T6 (T1–T6 · T2–T4 · T3–T5 เมื่อต่อเดลต้า)",
+                      "Open-transition wye–delta starter to NEMA: 1M (line), 2M (delta), 1S (wye, shorting T4 T5 T6), timer TR · motor leads T1–T6 (T1–T6 · T2–T4 · T3–T5 in delta)"), "mc-nema-yd")
+    xs, xd = [70, 110, 150], [240, 280, 320]
+    yb = _nema_power_head(f, xs)
+    p_wires(f, xs, yb, yb + 56)
+    n_poles(f, xs, yb + 56, "1M")
+    y1 = yb + 56 + 46
+    p_wires(f, xs, y1, y1 + 70)
+    # 2M (delta) tapped after 1M, three separate wires (L3 highest)
+    for x, xx, yy in zip(xs, xd, [y1 + 38, y1 + 24, y1 + 10]):
+        f.line(x, yy, xx, yy); f.line(xx, yy, xx, y1 + 52); f.dot(x, yy)
+    n_heaters(f, xs, y1 + 70, link="OL")
+    n_poles(f, xd, y1 + 52, None)
+    f.text(xd[-1] + 26, y1 + 78, "2M", "xf-tag")
+    ym = y1 + 70 + 44
+    p_wires(f, xs, ym, ym + 30)
+    xc, r = 110, 58
+    mt = ym + 30
+    p_motor(f, xc, mt, 40, labels=("T1", "T2", "T3"), tag=None, xs=xs, pe_x=30)
+    f.text(xc - r - 34, mt + 24, "MTR", "xf-tag")
+    yc = mt + r
+    bot = []
+    for x, l in zip(xs, ["T6", "T4", "T5"]):
+        yy = yc + math.sqrt(max(r * r - (x - xc) ** 2, 0))
+        f.circ(x, yy, 3.2, "xf-term"); f.text(x + (-6 if x < xc else 6), yy + (14 if x == xc else 12), l, "xf-k", "end" if x < xc else None)
+        bot.append(yy)
+    yo = y1 + 52 + 46
+    for xo, xt, yy in zip(xd, xs, [mt + 2 * r + 24, mt + 2 * r + 38, mt + 2 * r + 52]):
+        f.line(xo, yo, xo, yy); f.line(xo, yy, xt, yy); f.dot(xt, yy)
+    ys_ = mt + 2 * r + 76
+    for x, b in zip(xs, bot):
+        f.line(x, b, x, ys_)
+    n_poles(f, xs, ys_, None)
+    f.text(xs[-1] + 26, ys_ + 28, "1S", "xf-tag")
+    f.line(xs[0], ys_ + 46 + 16, xs[-1], ys_ + 46 + 16)
+    for x in xs:
+        f.line(x, ys_ + 46, x, ys_ + 46 + 16)
+    f.dot(xs[1], ys_ + 46 + 16)
+    p_pe(f, 30, 44, mt + r, label="GND")
+    xL, xR, yt = 470, 880, 150
+    rungs = [NRN(1, NS(NE(n_pb, nc=True, tag="STOP", wn=1), NP(NE(n_pb, tag="START", wn=2), NE(n_contact, tag="1M", wn=2)),
+                       NP(NE(n_coil, tag="TR", R=True, wn=3),
+                          NRN(2, NS(NE(n_contact, nc=True, tag="TR", note="NCTO", wn=3), NE(n_contact, nc=True, tag="2M", wn=4), NE(n_coil, tag="1S", R=True, wn=5))),
+                          NRN(3, NS(NP(NE(n_contact, tag="1S", wn=3), NE(n_contact, tag="1M", wn=3)), NE(n_coil, tag="1M", R=True, wn=6))),
+                          NRN(4, NS(NE(n_contact, tag="TR", note="NOTC", wn=3), NE(n_contact, nc=True, tag="1S", wn=7), NE(n_coil, tag="2M", R=True, wn=8)))),
+                       NE(n_ol, R=True, wn=9)))]
+    yb2, ys = nema_ladder(f, rungs, xL, xR, yt, "X1", "X2")
+    _nema_ctl_note(f, 650, yb2 + 28)
+    f.text(450, f.h - 44, T("เริ่ม: 1S (wye) + 1M · ครบเวลา TR: 1S ปล่อย แล้ว 2M (delta) ดูด · 1S กับ 2M ห้ามดูดพร้อมกัน", "Start: 1S (wye) + 1M · after TR times out: 1S drops, then 2M (delta) picks up · 1S and 2M must never close together"), "xf-m", "middle")
+    f.text(450, f.h - 26, T("NCTO = NC timed-open (หน่วงเปิด) · NOTC = NO timed-closed (หน่วงปิด) · ชื่อ 1M/2M/1S ต่างกันตามผู้ผลิต — ดูแบบของเครื่อง", "NCTO = NC timed-open · NOTC = NO timed-closed · contactor names 1M/2M/1S vary by maker — follow the machine drawing"), "xf-k", "middle")
+    f.text(450, f.h - 8, T("คู่ขั้วเดลต้า: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)", "Delta pairs: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2)"), "xf-k", "middle")
+    return f.svg()
+
+
+def s_npole(f, x, y):
+    f.line(x, y, x, y + 21); f.line(x, y + 31, x, y + 52)
+    f.line(x - 10, y + 21, x + 10, y + 21); f.line(x - 10, y + 31, x + 10, y + 31)
+
+
+def s_nheat(f, x, y):
+    f.line(x, y, x, y + 10); f.line(x, y + 42, x, y + 52)
+    f.path(f"M {f1(x)} {f1(y + 10)} l 6 4 l -12 8 l 12 8 l -12 8 l 6 4", "xf-ln")
+
+
+def s_ndisc(f, x, y):
+    f.line(x, y, x, y + 12); f.line(x, y + 12, x, y + 14)
+    f.line(x, y + 22, x - 11, y + 8); f.circ(x, y + 8, 2.2, "xf-dotk")
+    f.line(x, y + 22, x, y + 26)
+    f.rect(x - 6, y + 26, 12, 20, "xf-box", 1); f.line(x, y + 46, x, y + 52)
+
+
+@fig("mc-nema-symbols")
+def _():
+    f = F(780, 450, T("สัญลักษณ์ NEMA/JIC (ANSI Y32.2, NEMA ICS 19) ที่ใช้ในแลดเดอร์ควบคุมและวงจรกำลังของมอเตอร์ พร้อมรหัสอุปกรณ์ M CR TR OL PB FU",
+                      "NEMA/JIC symbols (ANSI Y32.2, NEMA ICS 19) for motor ladder and power circuits with device codes M CR TR OL PB FU"), "mc-nema-symbols")
+    cw, rh = 128, 128
+    ctl = [
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84), T("หน้าสัมผัส NO", "NO contact"), "M · CR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, nc=True), T("หน้าสัมผัส NC", "NC contact"), "M · CR"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84), T("ปุ่มกด NO", "Push-button NO"), "START"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True), T("ปุ่มกด NC", "Push-button NC"), "STOP"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True, estop=True), T("ปุ่มฉุกเฉิน (หัวเห็ด)", "E-stop (mushroom)"), "E-STOP"),
+        (lambda x, y: n_ol(f, x - 42, y + 30, 84), T("หน้าสัมผัสโอเวอร์โหลด NC", "Overload contact NC"), "OL"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="M"), T("คอยล์สตาร์ตเตอร์", "Starter coil"), "M"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="CR"), T("คอยล์รีเลย์ควบคุม", "Control-relay coil"), "CR"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="TR"), T("คอยล์ไทเมอร์", "Timer coil"), "TR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, note="NOTC"), T("หน้าสัมผัสไทเมอร์", "Timer contact"), "TR · NOTC/NCTO"),
+        (lambda x, y: n_lamp(f, x - 42, y + 30, 84, tag="G"), T("ไฟแสดง (ตัวอักษรบอกสี)", "Pilot light (letter = colour)"), "G · R · A · W"),
+        (lambda x, y: n_fuse(f, x - 42, y + 30, 84, tag=None), T("ฟิวส์", "Fuse"), "FU"),
+    ]
+    pw = [
+        (lambda x, y: s_motor(f, x, y), T("มอเตอร์ 3 เฟส", "3-phase motor"), "MTR · T1 T2 T3"),
+        (lambda x, y: s_nheat(f, x, y), T("ฮีตเตอร์โอเวอร์โหลด", "Overload heater"), "OL"),
+        (lambda x, y: s_npole(f, x, y), T("ขั้วกำลังสตาร์ตเตอร์", "Starter power pole"), "M · L1 → T1"),
+        (lambda x, y: s_ndisc(f, x, y), T("ดิสคอนเนกต์ + ฟิวส์", "Disconnect + fuse"), "DISC · FU"),
+        (lambda x, y: n_xfmr(f, x - 20, y - 6, 52, tag=""), T("หม้อแปลงควบคุม", "Control transformer"), "CT · H1 H4 / X1 X2"),
+        (lambda x, y: s_earth(f, x, y), T("กราวด์", "Ground"), "GND"),
+    ]
+    for i, (fn, lab, tag) in enumerate(ctl):
+        col, row = i % 6, i // 6
+        x, y = 66 + col * cw, 14 + row * rh
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    for i, (fn, lab, tag) in enumerate(pw):
+        x, y = 66 + i * cw, 14 + 2 * rh + 6
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    f.text(390, 424, T("ทุกสัญลักษณ์วาดในสภาพไม่มีไฟ ไม่ถูกกด · วงจรกำลัง: L1 L2 L3 → T1 T2 T3 · วงจรควบคุม: เลขสายบนเส้น เลขแลดเดอร์ใต้คอยล์", "Drawn de-energised and unactuated · power: L1 L2 L3 → T1 T2 T3 · control: wire numbers on the lines, rung numbers under coils"), "xf-k", "middle")
+    f.text(390, 442, T("ลูกศรของหน้าสัมผัสหน่วงเวลาต่างกันตามแบบ/ผู้ผลิต จึงระบุชนิดด้วย NOTC · NCTO · NOTO · NCTC", "Timer-contact arrows differ between legends, so the type is stated: NOTC · NCTO · NOTO · NCTC"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(780, 450, T("สัญลักษณ์ NEMA/JIC (ANSI Y32.2, NEMA ICS 19) ที่ใช้ในแลดเดอร์ควบคุมและวงจรกำลังของมอเตอร์ พร้อมรหัสอุปกรณ์ M CR TR OL PB FU",
+                      "NEMA/JIC symbols (ANSI Y32.2, NEMA ICS 19) for motor ladder and power circuits with device codes M CR TR OL PB FU"), "mc-nema-symbols")
+    cw, rh = 128, 128
+    ctl = [
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84), T("หน้าสัมผัส NO", "NO contact"), "M · CR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, nc=True), T("หน้าสัมผัส NC", "NC contact"), "M · CR"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84), T("ปุ่มกด NO", "Push-button NO"), "START"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True), T("ปุ่มกด NC", "Push-button NC"), "STOP"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True, estop=True), T("ปุ่มฉุกเฉิน (หัวเห็ด)", "E-stop (mushroom)"), "E-STOP"),
+        (lambda x, y: n_ol(f, x - 42, y + 30, 84), T("หน้าสัมผัสโอเวอร์โหลด NC", "Overload contact NC"), "OL"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="M"), T("คอยล์สตาร์ตเตอร์", "Starter coil"), "M"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="CR"), T("คอยล์รีเลย์ควบคุม", "Control-relay coil"), "CR"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="TR"), T("คอยล์ไทเมอร์", "Timer coil"), "TR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, note="NOTC"), T("หน้าสัมผัสไทเมอร์", "Timer contact"), "TR · NOTC/NCTO"),
+        (lambda x, y: n_lamp(f, x - 42, y + 30, 84, tag="G"), T("ไฟแสดง (ตัวอักษรบอกสี)", "Pilot light (letter = colour)"), "G · R · A · W"),
+        (lambda x, y: n_fuse(f, x - 42, y + 30, 84, tag=None), T("ฟิวส์", "Fuse"), "FU"),
+    ]
+    pw = [
+        (lambda x, y: s_motor(f, x, y), T("มอเตอร์ 3 เฟส", "3-phase motor"), "MTR · T1 T2 T3"),
+        (lambda x, y: s_nheat(f, x, y), T("ฮีตเตอร์โอเวอร์โหลด", "Overload heater"), "OL"),
+        (lambda x, y: s_npole(f, x, y), T("ขั้วกำลังสตาร์ตเตอร์", "Starter power pole"), "M · L1 → T1"),
+        (lambda x, y: s_ndisc(f, x, y), T("ดิสคอนเนกต์ + ฟิวส์", "Disconnect + fuse"), "DISC · FU"),
+        (lambda x, y: n_xfmr(f, x - 20, y - 6, 52, tag=""), T("หม้อแปลงควบคุม", "Control transformer"), "CT · H1 H4 / X1 X2"),
+        (lambda x, y: s_earth(f, x, y), T("กราวด์", "Ground"), "GND"),
+    ]
+    for i, (fn, lab, tag) in enumerate(ctl):
+        col, row = i % 6, i // 6
+        x, y = 66 + col * cw, 14 + row * rh
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    for i, (fn, lab, tag) in enumerate(pw):
+        x, y = 66 + i * cw, 14 + 2 * rh + 6
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    f.text(390, 424, T("ทุกสัญลักษณ์วาดในสภาพไม่มีไฟ ไม่ถูกกด · วงจรกำลัง: L1 L2 L3 → T1 T2 T3 · วงจรควบคุม: เลขสายบนเส้น เลขแลดเดอร์ใต้คอยล์", "Drawn de-energised and unactuated · power: L1 L2 L3 → T1 T2 T3 · control: wire numbers on the lines, rung numbers under coils"), "xf-k", "middle")
+    f.text(390, 442, T("ลูกศรของหน้าสัมผัสหน่วงเวลาต่างกันตามแบบ/ผู้ผลิต จึงระบุชนิดด้วย NOTC · NCTO · NOTO · NCTC", "Timer-contact arrows differ between legends, so the type is stated: NOTC · NCTO · NOTO · NCTC"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(780, 450, T("สัญลักษณ์ NEMA/JIC (ANSI Y32.2, NEMA ICS 19) ที่ใช้ในแลดเดอร์ควบคุมและวงจรกำลังของมอเตอร์ พร้อมรหัสอุปกรณ์ M CR TR OL PB FU",
+                      "NEMA/JIC symbols (ANSI Y32.2, NEMA ICS 19) for motor ladder and power circuits with device codes M CR TR OL PB FU"), "mc-nema-symbols")
+    cw, rh = 128, 128
+    ctl = [
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84), T("หน้าสัมผัส NO", "NO contact"), "M · CR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, nc=True), T("หน้าสัมผัส NC", "NC contact"), "M · CR"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84), T("ปุ่มกด NO", "Push-button NO"), "START"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True), T("ปุ่มกด NC", "Push-button NC"), "STOP"),
+        (lambda x, y: n_pb(f, x - 42, y + 36, 84, nc=True, estop=True), T("ปุ่มฉุกเฉิน (หัวเห็ด)", "E-stop (mushroom)"), "E-STOP"),
+        (lambda x, y: n_ol(f, x - 42, y + 30, 84), T("หน้าสัมผัสโอเวอร์โหลด NC", "Overload contact NC"), "OL"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="M"), T("คอยล์สตาร์ตเตอร์", "Starter coil"), "M"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="CR"), T("คอยล์รีเลย์ควบคุม", "Control-relay coil"), "CR"),
+        (lambda x, y: n_coil(f, x - 42, y + 30, 84, tag="TR"), T("คอยล์ไทเมอร์", "Timer coil"), "TR"),
+        (lambda x, y: n_contact(f, x - 42, y + 30, 84, note="NOTC"), T("หน้าสัมผัสไทเมอร์", "Timer contact"), "TR · NOTC/NCTO"),
+        (lambda x, y: n_lamp(f, x - 42, y + 30, 84, tag="G"), T("ไฟแสดง (ตัวอักษรบอกสี)", "Pilot light (letter = colour)"), "G · R · A · W"),
+        (lambda x, y: n_fuse(f, x - 42, y + 30, 84, tag=None), T("ฟิวส์", "Fuse"), "FU"),
+    ]
+    pw = [
+        (lambda x, y: s_motor(f, x, y), T("มอเตอร์ 3 เฟส", "3-phase motor"), "MTR · T1 T2 T3"),
+        (lambda x, y: s_nheat(f, x, y), T("ฮีตเตอร์โอเวอร์โหลด", "Overload heater"), "OL"),
+        (lambda x, y: s_npole(f, x, y), T("ขั้วกำลังสตาร์ตเตอร์", "Starter power pole"), "M · L1 → T1"),
+        (lambda x, y: s_ndisc(f, x, y), T("ดิสคอนเนกต์ + ฟิวส์", "Disconnect + fuse"), "DISC · FU"),
+        (lambda x, y: n_xfmr(f, x - 20, y - 6, 52, tag=""), T("หม้อแปลงควบคุม", "Control transformer"), "CT · H1 H4 / X1 X2"),
+        (lambda x, y: s_earth(f, x, y), T("กราวด์", "Ground"), "GND"),
+    ]
+    for i, (fn, lab, tag) in enumerate(ctl):
+        col, row = i % 6, i // 6
+        x, y = 66 + col * cw, 14 + row * rh
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    for i, (fn, lab, tag) in enumerate(pw):
+        x, y = 66 + i * cw, 14 + 2 * rh + 6
+        fn(x, y)
+        f.text(x, y + 82, lab, "xf-k", "middle"); f.text(x, y + 98, tag, "xf-tagk", "middle")
+    f.text(390, 424, T("ทุกสัญลักษณ์วาดในสภาพไม่มีไฟ ไม่ถูกกด · วงจรกำลัง: L1 L2 L3 → T1 T2 T3 · วงจรควบคุม: เลขสายบนเส้น เลขแลดเดอร์ใต้คอยล์", "Drawn de-energised and unactuated · power: L1 L2 L3 → T1 T2 T3 · control: wire numbers on the lines, rung numbers under coils"), "xf-k", "middle")
+    f.text(390, 442, T("ลูกศรของหน้าสัมผัสหน่วงเวลาต่างกันตามแบบ/ผู้ผลิต จึงระบุชนิดด้วย NOTC · NCTO · NOTO · NCTC", "Timer-contact arrows differ between legends, so the type is stated: NOTC · NCTO · NOTO · NCTC"), "xf-k", "middle")
+    return f.svg()
+
+
+def sl_mark3(f, x, y):
+    for i in (-1, 0, 1):
+        f.line(x - 5, y + i * 5 + 3, x + 5, y + i * 5 - 3)
+
+
+def sl_cb(f, x, y, h=44):
+    """Circuit-breaker (IEC 60617): switch with a cross on the contact end."""
+    a, b = y + 14, y + h - 12
+    f.line(x, y, x, a); f.line(x, b, x, y + h)
+    f.line(x, b, x - 11, a - 1)
+    f.line(x - 4, a - 4, x + 4, a + 4); f.line(x - 4, a + 4, x + 4, a - 4)
+
+
+def sl_k(f, x, y, h=44):
+    a, b = y + 14, y + h - 12
+    f.line(x, y, x, a); f.line(x, b, x, y + h)
+    f.line(x, b, x - 11, a - 1)
+    f.path(f"M {f1(x - 3)} {f1(a)} A 3 3 0 0 0 {f1(x + 3)} {f1(a)}", "xf-ln")
+
+
+def sl_iso(f, x, y, h=44):
+    a, b = y + 14, y + h - 12
+    f.line(x, y, x, a); f.line(x, b, x, y + h)
+    f.line(x, b, x - 11, a - 1)
+    f.line(x - 6, a, x + 6, a)
+
+
+def sl_fuse(f, x, y, h=36):
+    f.rect(x - 5, y + 8, 10, h - 16, "xf-box", 1)
+    f.line(x, y, x, y + h)
+
+
+def sl_therm(f, x, y, h=40):
+    f.line(x, y, x, y + 8); f.line(x, y + h - 8, x, y + h)
+    f.rect(x - 7, y + 8, 14, h - 16, "xf-box", 1)
+    f.path(f"M {f1(x)} {f1(y + 8)} l 0 5 l -4 0 l 0 5 l 8 0 l 0 5 l -4 0 l 0 {f1(h - 34)}", "xf-thin")
+
+
+def sl_motor(f, x, y, r=22, txt="M"):
+    f.line(x, y, x, y + 4)
+    f.circ(x, y + r + 4, r, "xf-motor")
+    f.text(x, y + r + 4, txt, "xf-h", "middle"); f.text(x, y + r + 18, "3~", "xf-k", "middle")
+
+
+def sl_ct(f, x, y):
+    f.circ(x, y, 7, "xf-box")
+
+
+def sl_amm(f, x, y, label="A"):
+    f.circ(x, y, 11, "xf-box"); f.text(x, y + 4, label, "xf-k", "middle")
+
+
+def sl_box(f, x, y, w, h, label=None, diag=False, cls="xf-boxa"):
+    f.rect(x - w / 2, y, w, h, cls, 3)
+    if diag:
+        f.line(x - w / 2, y + h, x + w / 2, y, "xf-thin")
+        f.text(x - w / 2 + 12, y + 14, "3~", "xf-k", "middle"); f.text(x + w / 2 - 12, y + h - 6, "3~", "xf-k", "middle")
+    if label:
+        f.text(x, y + h / 2 + 4, label, "xf-h", "middle")
+
+
+def sl_xfmr(f, x, y, r=19, d=28):
+    """Two-winding transformer: two overlapping circles (IEC 60617). Returns the y of its lower end."""
+    f.circ(x, y + r, r, "xf-box"); f.circ(x, y + r + d, r, "xf-box")
+    return y + 2 * r + d
+
+
+def sl_bus(f, x1, x2, y):
+    f.line(x1, y, x2, y, "xf-bus")
+
+
+@fig("mc-sld-iec")
+def _():
+    f = F(860, 760, T("ไดอะแกรมเส้นเดียว (single-line) ระบบไฟฟ้าโรงงานจ่ายมอเตอร์ตามสัญลักษณ์ IEC 60617: หม้อแปลง 22/0.4 kV → ACB → บัส MDB → ฟีดเดอร์มอเตอร์ DOL, ซอฟต์สตาร์ตเตอร์ และอินเวอร์เตอร์",
+                      "Single-line diagram of a plant motor supply to IEC 60617: 22/0.4 kV transformer → ACB → MDB busbar → DOL, soft-starter and VFD motor feeders"), "mc-sld-iec")
+    xm = 430
+    T3 = lambda a, b: T(a, b)
+    f.text(xm, 22, T("ระบบจำหน่าย 22 kV · 3~ 50 Hz", "22 kV distribution · 3~ 50 Hz"), "xf-k", "middle")
+    f.line(xm, 30, xm, 70); sl_mark3(f, xm, 50)
+    sl_iso(f, xm, 70, 52); f.text(xm + 16, 98, T("-Q10 สวิตช์ตัดต่อ (LBS)", "-Q10 load-break switch"), "xf-k")
+    f.line(xm, 122, xm, 122)
+    sl_fuse(f, xm, 122, 40); f.text(xm + 16, 146, T("-F10 ฟิวส์ HV", "-F10 HV fuse"), "xf-k")
+    f.line(xm, 162, xm, 192)
+    yb = sl_xfmr(f, xm, 192)
+    sl_delta(f, xm, 209); sl_wye(f, xm, 243); f.line(xm, 243, xm, 250); 
+    f.text(xm + 32, 218, T("-T1 หม้อแปลง 1000 kVA", "-T1 transformer 1000 kVA"), "xf-k"); f.text(xm + 32, 234, "22 / 0.4 kV · Dyn11 · uk 6 %", "xf-k")
+    f.line(xm, 250, xm - 38, 250); f.line(xm - 38, 250, xm - 38, 268); p_earth(f, xm - 38, 268)
+    f.text(xm - 46, 262, T("นิวทรัลต่อดิน", "neutral earthed"), "xf-k", "end"); f.text(xm - 46, 276, "(TN-S)", "xf-k", "end")
+    f.line(xm, yb, xm, 284); sl_mark3(f, xm, 272)
+    sl_cb(f, xm, 284, 44); f.text(xm + 16, 312, T("-Q0 ACB 1600 A (Icu 50 kA)", "-Q0 ACB 1600 A (Icu 50 kA)"), "xf-k")
+    f.line(xm, 328, xm, 392)
+    sl_ct(f, xm, 352); f.line(xm + 7, 352, xm + 56, 352, "xf-thin"); sl_amm(f, xm + 67, 352); f.text(xm + 86, 356, T("CT 1600/5 A · A", "CT 1600/5 A · A"), "xf-k")
+    sl_bus(f, 60, 810, 392)
+    f.text(64, 380, T("บัสบาร์ MDB/MCC 400/230 V · 3N~ 50 Hz", "MDB/MCC busbar 400/230 V · 3N~ 50 Hz"), "xf-m")
+    xs = [150, 430, 710]
+    for x in xs:
+        f.line(x, 392, x, 408)
+    # feeder 1: DOL
+    x = xs[0]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q1 MPCB 16 A", "-Q1 MPCB 16 A"), "xf-k")
+    f.line(x, 452, x, 470)
+    sl_k(f, x, 470, 44); f.text(x + 16, 498, T("-K1 คอนแทกเตอร์ AC-3", "-K1 AC-3 contactor"), "xf-k")
+    f.line(x, 514, x, 528)
+    sl_therm(f, x, 528, 40); f.text(x + 16, 552, T("-F2 โอเวอร์โหลด Ir 14 A", "-F2 overload Ir 14 A"), "xf-k")
+    f.line(x, 568, x, 604); sl_mark3(f, x, 586); f.text(x + 16, 590, T("-W1 สาย 4G2.5 mm²", "-W1 cable 4G2.5 mm²"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M1", "xf-tag", "middle"); f.text(x, 692, "7.5 kW · 14 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทตรง (DOL)", "direct-on-line"), "xf-k", "middle")
+    # feeder 2: soft starter
+    x = xs[1]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q2 MCCB 125 A", "-Q2 MCCB 125 A"), "xf-k")
+    f.line(x, 452, x, 480)
+    sl_box(f, x, 480, 76, 52, "U2", diag=False); f.text(x + 46, 500, T("ซอฟต์สตาร์ตเตอร์", "soft starter"), "xf-k"); f.text(x + 46, 516, T("+ คอนแทกเตอร์บายพาส", "+ bypass contactor"), "xf-k")
+    f.line(x, 532, x, 604); sl_mark3(f, x, 570); f.text(x + 16, 566, T("-W2 สาย 4G35 mm²", "-W2 cable 4G35 mm²"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M2", "xf-tag", "middle"); f.text(x, 692, "55 kW · 96 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทนุ่มนวล", "soft start"), "xf-k", "middle")
+    # feeder 3: VFD
+    x = xs[2]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q3 MCCB 63 A", "-Q3 MCCB 63 A"), "xf-k")
+    f.line(x, 452, x, 480)
+    sl_box(f, x, 480, 76, 52, None, diag=True, cls="xf-boxb"); f.text(x + 46, 500, T("-U3 อินเวอร์เตอร์", "-U3 VFD"), "xf-k"); f.text(x + 46, 516, "22 kW · 45 A", "xf-k")
+    f.line(x, 532, x, 604); sl_mark3(f, x, 570); f.text(x + 16, 566, T("-W3 สาย 4G10 มีชีลด์", "-W3 shielded 4G10"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M3", "xf-tag", "middle"); f.text(x, 692, "22 kW · 41 A", "xf-k", "middle"); f.text(x, 708, T("ปรับความเร็วได้", "variable speed"), "xf-k", "middle")
+    f.text(430, 742, T("เส้นเดียว = 3 เฟส (ขีดเฉียง 3 ขีด = 3 ตัวนำ) · ไม่แสดงวงจรควบคุม · แสดงชนิดอุปกรณ์ พิกัด สาย และการต่อดิน", "One line = three phases (three strokes = three conductors) · control circuits not shown · device type, ratings, cables and earthing are"), "xf-m", "middle") if False else f.text(430, 742, T("เส้นเดียว = 3 เฟส (ขีดเฉียง 3 ขีด = 3 ตัวนำ) · ไม่แสดงวงจรควบคุม แสดงชนิดอุปกรณ์ พิกัด สายและการต่อดิน", "One line = three phases (three strokes = three conductors) · control circuits omitted; shows device types, ratings, cables, earthing"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(860, 760, T("ไดอะแกรมเส้นเดียว (single-line) ระบบไฟฟ้าโรงงานจ่ายมอเตอร์ตามสัญลักษณ์ IEC 60617: หม้อแปลง 22/0.4 kV → ACB → บัส MDB → ฟีดเดอร์มอเตอร์ DOL, ซอฟต์สตาร์ตเตอร์ และอินเวอร์เตอร์",
+                      "Single-line diagram of a plant motor supply to IEC 60617: 22/0.4 kV transformer → ACB → MDB busbar → DOL, soft-starter and VFD motor feeders"), "mc-sld-iec")
+    xm = 430
+    T3 = lambda a, b: T(a, b)
+    f.text(xm, 22, T("ระบบจำหน่าย 22 kV · 3~ 50 Hz", "22 kV distribution · 3~ 50 Hz"), "xf-k", "middle")
+    f.line(xm, 30, xm, 70); sl_mark3(f, xm, 50)
+    sl_iso(f, xm, 70, 52); f.text(xm + 16, 98, T("-Q10 สวิตช์ตัดต่อ (LBS)", "-Q10 load-break switch"), "xf-k")
+    f.line(xm, 122, xm, 122)
+    sl_fuse(f, xm, 122, 40); f.text(xm + 16, 146, T("-F10 ฟิวส์ HV", "-F10 HV fuse"), "xf-k")
+    f.line(xm, 162, xm, 192)
+    yb = sl_xfmr(f, xm, 192)
+    f.text(xm, 217, "Δ", "xf-k", "middle"); f.text(xm - 3, 241, "Y", "xf-k", "middle"); f.text(xm + 7, 237, "n", "xf-k")
+    f.text(xm + 32, 214, T("-T1 หม้อแปลง 1000 kVA", "-T1 transformer 1000 kVA"), "xf-k"); f.text(xm + 32, 230, "22 / 0.4 kV · Dyn11 · uk 6 %", "xf-k")
+    f.line(xm - 19, 241, xm - 52, 241); f.line(xm - 52, 241, xm - 52, 258); p_earth(f, xm - 52, 258)
+    f.text(xm - 60, 232, T("จุดนิวทรัลต่อดิน", "neutral earthed"), "xf-k", "end"); f.text(xm - 60, 246, "(TN-S)", "xf-k", "end")
+    f.line(xm, yb, xm, 284); sl_mark3(f, xm, 272)
+    sl_cb(f, xm, 284, 44); f.text(xm + 16, 312, T("-Q0 ACB 1600 A (Icu 50 kA)", "-Q0 ACB 1600 A (Icu 50 kA)"), "xf-k")
+    f.line(xm, 328, xm, 392)
+    sl_ct(f, xm, 352); f.line(xm + 7, 352, xm + 56, 352, "xf-thin"); sl_amm(f, xm + 67, 352); f.text(xm + 86, 356, T("CT 1600/5 A · A", "CT 1600/5 A · A"), "xf-k")
+    sl_bus(f, 60, 810, 392)
+    f.text(64, 380, T("บัสบาร์ MDB/MCC 400/230 V · 3N~ 50 Hz", "MDB/MCC busbar 400/230 V · 3N~ 50 Hz"), "xf-m")
+    xs = [150, 430, 710]
+    for x in xs:
+        f.line(x, 392, x, 408)
+    # feeder 1: DOL
+    x = xs[0]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q1 MPCB 16 A", "-Q1 MPCB 16 A"), "xf-k")
+    f.line(x, 452, x, 470)
+    sl_k(f, x, 470, 44); f.text(x + 16, 498, T("-K1 คอนแทกเตอร์ AC-3", "-K1 AC-3 contactor"), "xf-k")
+    f.line(x, 514, x, 528)
+    sl_therm(f, x, 528, 40); f.text(x + 16, 552, T("-F2 โอเวอร์โหลด Ir 14 A", "-F2 overload Ir 14 A"), "xf-k")
+    f.line(x, 568, x, 604); sl_mark3(f, x, 586); f.text(x + 16, 590, T("-W1 สาย 4G2.5 mm²", "-W1 cable 4G2.5 mm²"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M1", "xf-tag", "middle"); f.text(x, 692, "7.5 kW · 14 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทตรง (DOL)", "direct-on-line"), "xf-k", "middle")
+    # feeder 2: soft starter
+    x = xs[1]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q2 MCCB 125 A", "-Q2 MCCB 125 A"), "xf-k")
+    f.line(x, 452, x, 480)
+    sl_box(f, x, 480, 76, 52, "U2", diag=False); f.text(x + 46, 500, T("ซอฟต์สตาร์ตเตอร์", "soft starter"), "xf-k"); f.text(x + 46, 516, T("+ คอนแทกเตอร์บายพาส", "+ bypass contactor"), "xf-k")
+    f.line(x, 532, x, 604); sl_mark3(f, x, 570); f.text(x + 16, 566, T("-W2 สาย 4G35 mm²", "-W2 cable 4G35 mm²"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M2", "xf-tag", "middle"); f.text(x, 692, "55 kW · 96 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทนุ่มนวล", "soft start"), "xf-k", "middle")
+    # feeder 3: VFD
+    x = xs[2]
+    sl_cb(f, x, 408, 44); f.text(x + 16, 436, T("-Q3 MCCB 63 A", "-Q3 MCCB 63 A"), "xf-k")
+    f.line(x, 452, x, 480)
+    sl_box(f, x, 480, 76, 52, None, diag=True, cls="xf-boxb"); f.text(x + 46, 500, T("-U3 อินเวอร์เตอร์", "-U3 VFD"), "xf-k"); f.text(x + 46, 516, "22 kW · 45 A", "xf-k")
+    f.line(x, 532, x, 604); sl_mark3(f, x, 570); f.text(x + 16, 566, T("-W3 สาย 4G10 มีชีลด์", "-W3 shielded 4G10"), "xf-k")
+    sl_motor(f, x, 604); f.text(x, 676, "-M3", "xf-tag", "middle"); f.text(x, 692, "22 kW · 41 A", "xf-k", "middle"); f.text(x, 708, T("ปรับความเร็วได้", "variable speed"), "xf-k", "middle")
+    f.text(430, 742, T("เส้นเดียว = 3 เฟส (ขีดเฉียง 3 ขีด = 3 ตัวนำ) · ไม่แสดงวงจรควบคุม · แสดงชนิดอุปกรณ์ พิกัด สาย และการต่อดิน", "One line = three phases (three strokes = three conductors) · control circuits not shown · device type, ratings, cables and earthing are"), "xf-m", "middle") if False else f.text(430, 742, T("เส้นเดียว = 3 เฟส (ขีดเฉียง 3 ขีด = 3 ตัวนำ) · ไม่แสดงวงจรควบคุม แสดงชนิดอุปกรณ์ พิกัด สายและการต่อดิน", "One line = three phases (three strokes = three conductors) · control circuits omitted; shows device types, ratings, cables, earthing"), "xf-k", "middle")
+    return f.svg()
+
+
+@fig("mc-sld-nema")
+def _():
+    f = F(860, 760, T("ไดอะแกรมเส้นเดียวแบบอเมริกา (ANSI/IEEE 315 · NEMA) ระบบ 13.8 kV → 480Y/277 V 60 Hz: เมนเบรกเกอร์ 52 บัส MCC สตาร์ตเตอร์ NEMA ขนาด 1 ซอฟต์สตาร์ตเตอร์ และ VFD",
+                      "American one-line diagram (ANSI/IEEE 315 · NEMA) for a 13.8 kV → 480Y/277 V 60 Hz system: main breaker 52, MCC bus, NEMA size 1 combination starter, solid-state starter and VFD"), "mc-sld-nema")
+    xm = 430
+    f.text(xm, 22, T("ระบบสาธารณูปโภค 13.8 kV · 3Φ 60 Hz", "Utility 13.8 kV · 3Φ 60 Hz"), "xf-k", "middle")
+    f.line(xm, 30, xm, 70); sl_mark3(f, xm, 50)
+    # fused switch: blade + fuse
+    f.line(xm, 70, xm, 84); f.line(xm, 106, xm, 112)
+    f.line(xm, 106, xm - 11, 83); f.circ(xm, 84, 2.2, "xf-dotk")
+    sl_fuse(f, xm, 112, 40); f.text(xm + 16, 98, T("สวิตช์ฟิวส์ HV", "HV fused switch"), "xf-k")
+    f.line(xm, 152, xm, 192)
+    # transformer: two circles with the winding connection inside (delta / grounded wye)
+    r = 20
+    yt = sl_xfmr(f, xm, 192, r, 28)
+    sl_delta(f, xm, 192 + r - 2); sl_wye(f, xm, 192 + r + 28 + 2)
+    f.text(xm + 34, 214, T("T1 · 1000 kVA", "T1 · 1000 kVA"), "xf-k"); f.text(xm + 34, 230, "13.8 kV Δ – 480Y/277 V", "xf-k"); f.text(xm + 34, 246, "Z = 5.75 %", "xf-k")
+    f.line(xm, 192 + r + 28 + 2, xm - 40, 192 + r + 28 + 2) if False else None
+    f.line(xm - 20, 192 + r + 28, xm - 46, 192 + r + 28); f.line(xm - 46, 192 + r + 28, xm - 46, 270); p_earth(f, xm - 46, 270)
+    f.text(xm - 54, 262, T("นิวทรัลต่อดิน", "grounded neutral"), "xf-k", "end")
+    yb = yt
+    f.line(xm, yb, xm, 296); sl_mark3(f, xm, 280)
+    # main breaker: ANSI one-line breaker = a box on the line; device number 52
+    f.rect(xm - 10, 296, 20, 20, "xf-box", 1); f.line(xm, 316, xm, 392)
+    f.text(xm + 18, 310, "52 · CB-1", "xf-tagk"); f.text(xm + 18, 326, T("เมนเบรกเกอร์ 1200 A", "main breaker 1200 A"), "xf-k")
+    sl_ct(f, xm, 352); f.line(xm + 7, 352, xm + 56, 352, "xf-thin"); sl_amm(f, xm + 67, 352); f.text(xm + 86, 356, "CT · A", "xf-k")
+    sl_bus(f, 60, 810, 392)
+    f.text(64, 380, T("บัส MCC 480Y/277 V · 3Φ 4W 60 Hz", "MCC bus 480Y/277 V · 3Φ 4W 60 Hz"), "xf-m")
+    xs = [150, 430, 710]
+    for x in xs:
+        f.line(x, 392, x, 408)
+    # feeder 1: combination starter, NEMA size 1
+    x = xs[0]
+    f.line(x, 408, x, 420); f.line(x, 442, x, 450); f.line(x, 442, x - 11, 419); f.circ(x, 420, 2.2, "xf-dotk")
+    sl_fuse(f, x, 450, 36); f.text(x + 16, 432, T("ดิสคอนเนกต์ 30 A", "30 A disconnect"), "xf-k"); f.text(x + 16, 470, T("ฟิวส์หน่วงเวลา", "time-delay fuses"), "xf-k")
+    f.line(x, 486, x, 504)
+    f.rect(x - 14, 504, 28, 28, "xf-boxa", 2); f.text(x, 523, "M", "xf-h", "middle"); f.text(x + 22, 518, T("สตาร์ตเตอร์ NEMA ขนาด 1", "NEMA size 1 starter"), "xf-k")
+    f.line(x, 532, x, 550); sl_therm(f, x, 550, 36); f.text(x + 16, 572, T("OL (49) คลาส 10", "OL (49) class 10"), "xf-k")
+    f.line(x, 586, x, 604); sl_mark3(f, x, 596)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-1", "xf-tag", "middle"); f.text(x, 692, "10 hp · 14 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทตรง (FVNR)", "full-voltage (FVNR)"), "xf-k", "middle")
+    # feeder 2: solid-state reduced-voltage starter
+    x = xs[1]
+    f.rect(x - 10, 408, 20, 20, "xf-box", 1); f.line(x, 428, x, 452); f.text(x + 18, 422, T("เบรกเกอร์ 125 A", "125 A breaker"), "xf-k")
+    sl_box(f, x, 452, 76, 52, "SSRV"); f.text(x + 46, 472, T("ซอฟต์สตาร์ตเตอร์", "solid-state starter"), "xf-k"); f.text(x + 46, 488, T("+ บายพาส (M)", "+ bypass (M)"), "xf-k")
+    f.line(x, 504, x, 604); sl_mark3(f, x, 560)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-2", "xf-tag", "middle"); f.text(x, 692, "50 hp · 65 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทนุ่มนวล", "soft start"), "xf-k", "middle")
+    # feeder 3: VFD
+    x = xs[2]
+    f.rect(x - 10, 408, 20, 20, "xf-box", 1); f.line(x, 428, x, 452); f.text(x + 18, 422, T("เบรกเกอร์ 60 A", "60 A breaker"), "xf-k")
+    sl_box(f, x, 452, 76, 52, None, diag=True, cls="xf-boxb"); f.text(x + 46, 472, "VFD", "xf-k"); f.text(x + 46, 488, "25 hp · 34 A", "xf-k")
+    f.line(x, 504, x, 604); sl_mark3(f, x, 560)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-3", "xf-tag", "middle"); f.text(x, 692, "25 hp · 34 A", "xf-k", "middle"); f.text(x, 708, T("ปรับความเร็วได้", "variable speed"), "xf-k", "middle")
+    f.text(430, 742, T("ตัวเลข 52 · 49 = รหัสอุปกรณ์ ANSI/IEEE C37.2 (เบรกเกอร์ · โอเวอร์โหลดความร้อน) · กระแส FLA จาก NEC Table 430.250 (460 V)", "52 · 49 = ANSI/IEEE C37.2 device numbers (breaker · thermal overload) · FLA from NEC Table 430.250 (460 V)"), "xf-k", "middle")
+    return f.svg()
+
+
+def _():
+    f = F(860, 760, T("ไดอะแกรมเส้นเดียวแบบอเมริกา (ANSI/IEEE 315 · NEMA) ระบบ 13.8 kV → 480Y/277 V 60 Hz: เมนเบรกเกอร์ 52 บัส MCC สตาร์ตเตอร์ NEMA ขนาด 1 ซอฟต์สตาร์ตเตอร์ และ VFD",
+                      "American one-line diagram (ANSI/IEEE 315 · NEMA) for a 13.8 kV → 480Y/277 V 60 Hz system: main breaker 52, MCC bus, NEMA size 1 combination starter, solid-state starter and VFD"), "mc-sld-nema")
+    xm = 430
+    f.text(xm, 22, T("ระบบสาธารณูปโภค 13.8 kV · 3Φ 60 Hz", "Utility 13.8 kV · 3Φ 60 Hz"), "xf-k", "middle")
+    f.line(xm, 30, xm, 70); sl_mark3(f, xm, 50)
+    # fused switch: blade + fuse
+    f.line(xm, 70, xm, 84); f.line(xm, 106, xm, 112)
+    f.line(xm, 106, xm - 11, 83); f.circ(xm, 84, 2.2, "xf-dotk")
+    sl_fuse(f, xm, 112, 40); f.text(xm + 16, 98, T("สวิตช์ฟิวส์ HV", "HV fused switch"), "xf-k")
+    f.line(xm, 152, xm, 192)
+    # transformer: two circles with the winding connection inside (delta / grounded wye)
+    r = 20
+    f.circ(xm, 192 + r, r, "xf-box"); f.circ(xm, 192 + r + 26, r, "xf-box")
+    f.path(f"M {f1(xm)} {f1(192 + r - 8)} L {f1(xm - 8)} {f1(192 + r + 6)} L {f1(xm + 8)} {f1(192 + r + 6)} Z", "xf-ln")
+    yy = 192 + r + 26
+    f.line(xm, yy, xm, yy - 8); f.line(xm, yy, xm - 7, yy + 6); f.line(xm, yy, xm + 7, yy + 6)
+    f.text(xm + 34, 214, T("T1 · 1000 kVA", "T1 · 1000 kVA"), "xf-k"); f.text(xm + 34, 230, "13.8 kV Δ – 480Y/277 V", "xf-k"); f.text(xm + 34, 246, "Z = 5.75 %", "xf-k")
+    f.line(xm + 20, yy + 4, xm + 52, yy + 4); f.line(xm + 52, yy + 4, xm + 52, yy + 22); p_earth(f, xm + 52, yy + 22)
+    yb = 192 + 2 * r + 26
+    f.line(xm, yb, xm, 296); sl_mark3(f, xm, 280)
+    # main breaker: ANSI one-line breaker = a box on the line; device number 52
+    f.rect(xm - 10, 296, 20, 20, "xf-box", 1); f.line(xm, 316, xm, 392)
+    f.text(xm + 18, 310, "52 · CB-1", "xf-tagk"); f.text(xm + 18, 326, T("เมนเบรกเกอร์ 1200 A", "main breaker 1200 A"), "xf-k")
+    sl_ct(f, xm, 352); f.line(xm + 7, 352, xm + 56, 352, "xf-thin"); sl_amm(f, xm + 67, 352); f.text(xm + 86, 356, "CT · A", "xf-k")
+    sl_bus(f, 60, 810, 392)
+    f.text(64, 380, T("บัส MCC 480Y/277 V · 3Φ 4W 60 Hz", "MCC bus 480Y/277 V · 3Φ 4W 60 Hz"), "xf-m")
+    xs = [150, 430, 710]
+    for x in xs:
+        f.line(x, 392, x, 408)
+    # feeder 1: combination starter, NEMA size 1
+    x = xs[0]
+    f.line(x, 408, x, 420); f.line(x, 442, x, 450); f.line(x, 442, x - 11, 419); f.circ(x, 420, 2.2, "xf-dotk")
+    sl_fuse(f, x, 450, 36); f.text(x + 16, 432, T("ดิสคอนเนกต์ 30 A", "30 A disconnect"), "xf-k"); f.text(x + 16, 470, T("ฟิวส์หน่วงเวลา", "time-delay fuses"), "xf-k")
+    f.line(x, 486, x, 504)
+    f.rect(x - 14, 504, 28, 28, "xf-boxa", 2); f.text(x, 523, "M", "xf-h", "middle"); f.text(x + 22, 518, T("สตาร์ตเตอร์ NEMA ขนาด 1", "NEMA size 1 starter"), "xf-k")
+    f.line(x, 532, x, 550); sl_therm(f, x, 550, 36); f.text(x + 16, 572, T("OL (49) คลาส 10", "OL (49) class 10"), "xf-k")
+    f.line(x, 586, x, 604); sl_mark3(f, x, 596)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-1", "xf-tag", "middle"); f.text(x, 692, "10 hp · 14 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทตรง (FVNR)", "full-voltage (FVNR)"), "xf-k", "middle")
+    # feeder 2: solid-state reduced-voltage starter
+    x = xs[1]
+    f.rect(x - 10, 408, 20, 20, "xf-box", 1); f.line(x, 428, x, 452); f.text(x + 18, 422, T("เบรกเกอร์ 125 A", "125 A breaker"), "xf-k")
+    sl_box(f, x, 452, 76, 52, "SSRV"); f.text(x + 46, 472, T("ซอฟต์สตาร์ตเตอร์", "solid-state starter"), "xf-k"); f.text(x + 46, 488, T("+ บายพาส (M)", "+ bypass (M)"), "xf-k")
+    f.line(x, 504, x, 604); sl_mark3(f, x, 560)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-2", "xf-tag", "middle"); f.text(x, 692, "50 hp · 65 A", "xf-k", "middle"); f.text(x, 708, T("สตาร์ทนุ่มนวล", "soft start"), "xf-k", "middle")
+    # feeder 3: VFD
+    x = xs[2]
+    f.rect(x - 10, 408, 20, 20, "xf-box", 1); f.line(x, 428, x, 452); f.text(x + 18, 422, T("เบรกเกอร์ 60 A", "60 A breaker"), "xf-k")
+    sl_box(f, x, 452, 76, 52, None, diag=True, cls="xf-boxb"); f.text(x + 46, 472, "VFD", "xf-k"); f.text(x + 46, 488, "25 hp · 34 A", "xf-k")
+    f.line(x, 504, x, 604); sl_mark3(f, x, 560)
+    sl_motor(f, x, 604); f.text(x, 676, "MTR-3", "xf-tag", "middle"); f.text(x, 692, "25 hp · 34 A", "xf-k", "middle"); f.text(x, 708, T("ปรับความเร็วได้", "variable speed"), "xf-k", "middle")
+    f.text(430, 742, T("ตัวเลข 52 · 49 = รหัสอุปกรณ์ ANSI/IEEE C37.2 (เบรกเกอร์ · โอเวอร์โหลดความร้อน) · กระแส FLA จาก NEC Table 430.250 (460 V)", "52 · 49 = ANSI/IEEE C37.2 device numbers (breaker · thermal overload) · FLA from NEC Table 430.250 (460 V)"), "xf-k", "middle")
+    return f.svg()
+
+
+def sl_delta(f, x, y, s=8):
+    f.path(f"M {f1(x)} {f1(y - s)} L {f1(x - s)} {f1(y + s * 0.7)} L {f1(x + s)} {f1(y + s * 0.7)} Z", "xf-ln")
+
+
+def sl_wye(f, x, y, s=8):
+    f.line(x, y, x, y - s); f.line(x, y, x - s * 0.87, y + s * 0.5); f.line(x, y, x + s * 0.87, y + s * 0.5)
 
 
 # --------------------------------------------------------------------------- runner

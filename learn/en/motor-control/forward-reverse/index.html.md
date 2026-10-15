@@ -61,6 +61,18 @@ JavaScript is needed for the simulator
 
 In the simulator, press forward and then immediately press reverse: the interlock will refuse. Then tick “No stop-before-reverse” and reverse while the motor is running. Watch the current shoot above the starting current and the speed pass through zero.
 
+## NEMA/JIC version: the reversing starter Intermediate
+
+A NEMA reversing starter is two contactors, F (forward) and R (reverse), on one base with a factory-fitted mechanical interlock (M.I.). R swaps L1 and L3 just like K2 in the IEC drawing.
+
+Figure 1a · NEMA/JIC reversing starter: power circuit (F straight · R swapping L1↔L3 · OL · motor T1 T2 T3) and the STOP / FWD / REV ladder with its interlocks
+
+- Three interlock layers, as in IEC: NC contacts of F and R in the opposite rung · FWD/REV buttons whose NC half is in series with the other side · M.I. on the starter
+
+- Numbers under the coils: F shows “1 2” — NO on rung 1 (hold-in) and NC on rung 2 (the interlock of R) · R shows “1 2” the other way round
+
+- One STOP serves both rungs · a single OL sits next to rail X2 · reversing from running (plugging) needs a zero-speed relay or an off-delay timer
+
 ## Reversing while running (plugging) Advanced
 
 If the motor is running forward at nearly full speed and the phases are swapped instantly, the rotating field reverses but the rotor is still turning the original way. The slip relative to the new field is therefore close to 2.

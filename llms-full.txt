@@ -7814,9 +7814,9 @@ In 30 seconds
 
 A contactor is an electromagnetically operated switch. When the coil (A1–A2) is energised, the iron core pulls in the armature, which is fixed to the contact bridge. The main contacts (NO) close the power circuit, while the auxiliary NO contacts close and the NC contacts open. When the coil is de-energised, a spring pushes everything back. The advantages: the 400 V power circuit is separated from the control circuit, it can switch millions of times, and it can be commanded remotely or from a PLC.
 
-Figure 1 · An AC coil needs a shading ring because the flux passes through zero 100 times a second. If the ring cracks, the contactor chatters and hums loudly.
+Figure 1 · The coil is wound on the centre leg of the E-shaped core; the shading rings sit on the outer legs because AC flux passes through zero 100 times a second — if a ring cracks the contactor buzzes and chatters.
 
-Figure 2 · Standard terminal numbers: main contacts have odd numbers on the line side and even numbers on the load side. Auxiliary contacts use two digits — the tens digit is the sequence number and the units digit gives the contact type.
+Figure 2 · Standard IEC 60947 terminal numbers: main contacts odd on the line side, even on the load side, coil A1 (top) A2 (bottom); auxiliary contacts use two digits — the tens digit is the position, the units digit the function (1-2 NC · 3-4 NO · 5-6 / 7-8 special function, e.g. timed) — NEMA uses L1 L2 L3 → T1 T2 T3 instead.
 
 ### The coil: AC or DC
 
@@ -7964,7 +7964,7 @@ Example D-1
 
 ## Symbols for all these devices
 
-Figure 4 · The IEC 60617 symbols used in every diagram in this series. How to read drawings in detail is covered in Symbols · Reading diagrams.
+Figure 4 · The IEC 60617 symbols used in every diagram in this series. How to read drawings in detail is covered in Symbols · Reading diagrams. · NEMA symbols are on the symbols and diagram-reading page
 
 ## Frequently asked questions
 
@@ -8169,8 +8169,8 @@ No. Three things must be checked: the current rating after derating for installa
 # Reading Motor Control Diagrams: IEC 60617 Symbols vs NEMA, IEC 81346 Reference Designations, Terminal Numbers, Wire Numbers and Cross-References
 
 URL: https://modsengineeringmath.com/learn/en/motor-control/diagrams-symbols/
-Updated: 2026-10-14
-Summary: How to read motor control circuit diagrams in the European (IEC), American (NEMA) and Japanese styles: power circuit versus control circuit, symbols for contacts, coils, timers and overload relays, the device letter codes -Q -K -F -S -P -M of IEC 81346, terminal numbers 1/L1 2/T1 A1 A2 13 14 21 22 95 96, wire numbers, terminal strips, cross-page references, and turning relay circuits into Boolean algebra.
+Updated: 2026-10-15
+Summary: How to read motor control circuit diagrams in the European (IEC), American (NEMA) and Japanese styles: power circuit versus control circuit, symbols for contacts, coils, timers and overload relays, the device letter codes -Q -K -F -S -P -M of IEC 81346, terminal numbers 1/L1 2/T1 A1 A2 13 14 21 22 95 96, wire numbers, terminal strips, cross-page references, and turning relay circuits into Boolean algebra. Adds IEC and ANSI/NEMA single-line diagrams, NEMA/JIC ladder diagrams, the NEMA starter size table and an IEC-to-NEMA device-code comparison.
 
 THภาษาไทยENEnglish
 
@@ -8190,6 +8190,8 @@ In 30 seconds
 
 - Device designation + terminal number, e.g. “-K1:13”, identifies a connection point uniquely in the whole panel
 
+- A single-line diagram shows the whole system · NEMA drawings are read as left-to-right ladders with rung numbers under the coil
+
 ## Power circuit and control circuit Basic
 
 The power circuit (main circuit) is drawn as three lines L1 L2 L3 running down from the top through the breaker, contactor and overload relay to the motor; you read it top to bottom, following the flow of energy. The control circuit is drawn between an upper rail (L or +24 V) and a lower rail (N or 0 V). Each vertical branch is called a “path” or “current path” and has a column number at the top. Symbols belonging to the same device (e.g. coil -K1 and contact -K1 13-14) may sit in different columns or on different pages; they are tied together by the device designation.
@@ -8197,6 +8199,60 @@ The power circuit (main circuit) is drawn as three lines L1 L2 L3 running down f
 Power circuit: read top → bottom
 
 Control circuit: L rail → devices → coil → N rail
+
+### What an IEC 60204-1 control schematic contains
+
+- Column numbers 1 2 3 … above the L1 rail locate every device, with a function text (e.g. “hold-in”) under the N rail
+
+- The box under a coil is the contact cross-reference (contact mirror): its NO / NC rows give the column of each contact of that coil; “PWR” = the power poles sit in the power circuit
+
+- Coils on the N rail with all contacts on the L side: an earth fault between a contact and the coil cannot pick the coil up (IEC 60204-1 clause 9.4.3)
+
+- Fuse -F3 protects the control circuit · overload contact -F2 95-96 (NC) is in series with the coil · 97-98 (NO) signals the trip
+
+- IEC 60204-1 lamp codes GN green = normal/running · YE yellow = abnormal (trip) · RD red = danger/emergency · BU blue = action required · WH white = general status
+
+- Power circuit: green-yellow dash-dot = PE conductor bonded to the motor frame · short dashes between poles = mechanical coupling · the overload is a bimetal element per phase linked to contact 95-96
+
+## The single-line (one-line) diagram Intermediate
+
+A single-line diagram is the “map” of an electrical system: one line stands for all three phases (three oblique strokes show three conductors) and the sheet shows sources, transformers, busbars, feeders, protective devices, starters and motors with their ratings — but no control circuits, terminal numbers or internal wiring. It is used to check protection coordination, calculate fault levels and plan extensions.
+
+Figure 2 · Single-line diagram with IEC 60617 symbols: 22/0.4 kV Dyn11 transformer → ACB → MDB busbar → DOL feeder (MPCB + contactor + overload), soft-starter and VFD feeders (figures are illustrative)
+
+### Read it top to bottom
+
+- Source and transformer — voltage, frequency, rating (kVA), uk %, vector group (Dyn11) and neutral earthing (TN-S)
+
+- Main breaker (ACB) — rated current and breaking capacity Icu, which must exceed the prospective fault current at the bus
+
+- CT and meters — the circle around the line is the current transformer feeding an ammeter or power meter
+
+- Busbar — the thick line: 3N~ 400/230 V · every feeder branches from it
+
+- Motor feeders — breaker/MPCB → starter (contactor + overload, soft starter or VFD) → cable (size, cores, shield) → motor (kW, current)
+
+Figure 3 · American one-line diagram (ANSI/IEEE 315): breakers are boxes on the line, ANSI/IEEE C37.2 device numbers (52 = AC circuit breaker, 49 = thermal overload), NEMA size 1 starter and FLA taken from NEC Table 430.250
+
+| Drawing | Shows | Used for |
+
+| Single-line | The whole system, one line per three phases, with ratings | Protection coordination, fault levels, expansion |
+
+| Power circuit (multi-line) | Every conductor of one feeder: L1 L2 L3 PE, terminal numbers, motor leads | Panel wiring, phase rotation |
+
+| Control schematic | Coils, contacts, buttons, sensors between rails L–N (IEC) or X1–X2 (NEMA) | Control logic, fault finding |
+
+### What a good single-line diagram must show
+
+- Voltage, frequency, system earthing (TN-S, TN-C-S, TT, IT) and the fault level at the bus (kA)
+
+- Type, rating and Icu of every breaker · fuses · protection-relay settings
+
+- Cable size, cores, material and length (for voltage drop and fault checks)
+
+- Motors: kW or hp, rated current, starting method and device codes that match the control schematic (-Q1 -K1 -F2 -M1 or DISC M OL MTR)
+
+- The symbol standard used (IEC 60617/81346 or ANSI/IEEE 315/NEMA), stated in the drawing legend
 
 ## IEC 60617 symbols Basic
 
@@ -8211,6 +8267,10 @@ Figure 1 · A dashed line from a contact shows a mechanical link, e.g. a push-bu
 - The half-circle on a timer contact shows the direction of the delay (like a parachute)
 
 - A solid dot (●) is a junction; lines that cross without a dot are not connected
+
+- A fuse is a rectangle with the conductor running through it · a contactor pole has a small bow at the contact · a circuit-breaker has a cross at the blade tip · an isolator has a bar across the blade tip
+
+- Dashed lines are mechanical links between poles or devices — the three poles of a contactor, a breaker’s trip unit, or the mechanical interlock between coils -K1 and -K2
 
 ## Device designations and terminal numbers Intermediate
 
@@ -8276,21 +8336,91 @@ Example G-1
 
 - Check: press S1 → K1 = 1 · release S1 → the K1 term holds it · press S0 or F2 trips → K1 = 0, and it does not come back by itself when released
 
-## American (NEMA/ANSI) and Japanese drawings Intermediate
+## American (NEMA/JIC) and Japanese drawings Intermediate
+
+In North America motor drawings follow NEMA ICS 19 (designations and symbols), NEMA ICS 2 (contactors, starters and NEMA sizes), NFPA 79 / JIC (electrical equipment of industrial machinery) and the NEC (installation); symbols come from ANSI Y32.2 / IEEE 315. The sheet below is the symbol set used in this series’ ladder diagrams.
+
+Figure 4 · NEMA/JIC symbols: contacts are parallel bars, NO ┤ ├ and NC ┤/├ · coils and lamps are circles with letters · overload heaters are zig-zags · power poles are two short bars across the line
 
 | Item | IEC (Europe · Thailand · ASEAN) | NEMA / JIC (North America) |
 
-| Drawing direction | Rails top and bottom, vertical circuits | Rails left and right, horizontal rungs like a ladder |
+| Drawing direction | Rails top and bottom, vertical circuits · columns 1 2 3 | Rails left and right (X1 · X2), horizontal rungs like a ladder · rung numbers 1 2 3 |
 
-| NO contact | Tilted blade | Two parallel lines ─┤ ├─ |
+| NO / NC contact | Tilted blade / blade with a bar | Two parallel bars ─┤ ├─ / with a diagonal ─┤/├─ |
 
-| NC contact | Tilted blade with a bar | Parallel lines with a diagonal ─┤/├─ |
+| Coil | Rectangle A1–A2 | Circle with letters M, CR, TR (no terminal numbers) |
 
-| Coil | Rectangle | Circle with letters M, CR, TR |
+| Device codes | -K1 -S1 -F2 -P1 -M1 | M · CR · TR · OL · PB · FU · PL · MTR |
 
-| Device codes | -K1 -S1 -F2 | M (motor starter), CR (relay), OL, PB, LS |
+| Power-pole terminals | 1/L1 2/T1 3/L2 4/T2 5/L3 6/T3 | L1 L2 L3 → T1 T2 T3 |
 
-| Control voltage | 230 VAC / 24 VDC | 120 VAC from a control transformer / 24 VDC |
+| Six-lead motor terminals | U1 V1 W1 U2 V2 W2 | T1 T2 T3 T4 T5 T6 (U1=T1 V1=T2 W1=T3 U2=T4 V2=T5 W2=T6) |
+
+| Overload | Relay -F2 95-96 at the head of the coil circuit | OL heaters in the power circuit · OL contact (NC) next to the coil, near rail X2 |
+
+| Control voltage | 230 VAC / 24 VDC | 120 VAC from a control transformer (X2 grounded) / 24 VDC |
+
+| Cross-reference | Box under the coil gives the NO/NC columns | Rung numbers under the coil · underlined = NC |
+
+| Wire numbers / colours | By sheet and column · green-yellow = PE | One number per node · NFPA 79: black = power, red = AC control, white = grounded (X2), green = ground |
+
+| Starter sizing | Rating by utilisation category AC-3 (kW, A) | NEMA size 00–9 by hp at that voltage (table below) |
+
+### Reading a NEMA ladder
+
+- Read left to right: buttons and contacts on the left, loads on the right — coil M sits at the far right with OL, next to the grounded rail X2 (the same idea as IEC’s “coil on N”)
+
+- Rung numbers outside rail X1 · wire numbers on the lines: one number per electrical node
+
+- Numbers under a coil list the rungs that carry its contacts — underlined = NC, e.g. “1 2 3” = NO on rungs 1 and 2, NC on rung 3
+
+- Contacts carry no terminal numbers such as 13-14: they are identified by device name (M, CR1, TR) · timer contacts state their type NOTC / NCTO (on-delay) or NOTO / NCTC (off-delay)
+
+- Full examples with the power circuit: direct on line · reversing · wye–delta
+
+### IEC ↔ NEMA device codes
+
+| Device | IEC | NEMA / JIC |
+
+| Breaker / MPCB | -Q1 | CB · MCP · DISC |
+
+| Contactor / starter | -K1 (-QA1) | M · F · R · 1M 2M 1S |
+
+| Control relay · timer | -K2 · -K4T | CR · TR |
+
+| Overload | -F2 (95-96) | OL |
+
+| Fuse | -F1 -F3 | FU |
+
+| START / STOP buttons | -S1 / -S0 | START / STOP (PB) |
+
+| Limit · pressure · float | -B1 -B2 -B3 | LS · PS · FS |
+
+| Pilot light | -P1 (GN, RD) | PL (G, R, A, W) |
+
+| Control transformer | -T1 | CT / CPT (H1–H4, X1–X2) |
+
+| Motor | -M1 (U1 V1 W1) | MTR (T1 T2 T3) |
+
+### NEMA starter sizes (ICS 2)
+
+| NEMA size | Continuous (A) | Max hp at 230 V | Max hp at 460 V |
+
+| 00 | 9 | 1.5 | 2 |
+
+| 0 | 18 | 3 | 5 |
+
+| 1 | 27 | 7.5 | 10 |
+
+| 2 | 45 | 15 | 25 |
+
+| 3 | 90 | 30 | 50 |
+
+| 4 | 135 | 50 | 100 |
+
+| 5 | 270 | 100 | 200 |
+
+The hp figures are maxima for full-voltage, non-plugging duty — check the manufacturer’s catalogue and NEMA ICS 2 before selecting. A NEMA size is chosen from the hp, not the measured current, whereas an IEC contactor is chosen from current and utilisation category AC-3.
 
 Current Japanese drawings use JIS C 0617, which matches IEC 60617, but older machines still carry the former symbols. Ladder diagrams in every brand of PLC are drawn horizontally, much like NEMA.
 
@@ -8312,6 +8442,12 @@ In the normal state: no coil energised, no button pressed and no force on any se
 Why do some drawings use K for contactors and others Q?
 The traditional IEC/DIN convention uses K for contactors and relays. The newer IEC 81346-2 places power contactors in class Q (switching of energy flow), e.g. -QA1, and control relays in class K, e.g. -KF1. Both styles appear on real drawings, so check the designation key page of the drawing set.
 
+How is a single-line diagram different from a power circuit?
+A single-line diagram draws one line for all three phases and covers the whole system (source, transformer, busbar, feeders, protection, motors) with ratings. A power circuit shows every conductor and terminal number of one feeder and is used for panel wiring.
+
+Why do NEMA drawings have no terminal numbers like 13-14 or 95-96?
+NEMA/JIC identifies contacts by device name (M, CR, TR, OL) and by wire numbers on the lines instead of IEC 60947 auxiliary-contact numbers. Power poles are L1 L2 L3 → T1 T2 T3, and contact locations are read from the rung numbers under the coil (underlined = NC).
+
 Mod
 
 Ajarn Mod · Teerawut Savangboon
@@ -8324,6 +8460,12 @@ In the normal state: no coil energised, no button pressed and no force on any se
 
 **Why do some drawings use K for contactors and others Q?**
 The traditional IEC/DIN convention uses K for contactors and relays. The newer IEC 81346-2 places power contactors in class Q (switching of energy flow), e.g. -QA1, and control relays in class K, e.g. -KF1. Both styles appear on real drawings, so check the designation key page of the drawing set.
+
+**How is a single-line diagram different from a power circuit?**
+A single-line diagram draws one line for all three phases and covers the whole system (source, transformer, busbar, feeders, protection, motors) with ratings. A power circuit shows every conductor and terminal number of one feeder and is used for panel wiring.
+
+**Why do NEMA drawings have no terminal numbers like 13-14 or 95-96?**
+NEMA/JIC identifies contacts by device name (M, CR, TR, OL) and by wire numbers on the lines instead of IEC 60947 auxiliary-contact numbers. Power poles are L1 L2 L3 → T1 T2 T3, and contact locations are read from the rung numbers under the coil (underlined = NC).
 
 ---
 
@@ -8371,7 +8513,7 @@ $$\Delta V = \sqrt3\, I\, L\,(R\cos\varphi + X\sin\varphi) \qquad \cos\varphi_{s
 
 ## The self-holding control circuit Basic
 
-Figure 2 · Path 1 drives the coil · path 2 is the run lamp (K1 43-44) · path 3 is the trip lamp (F2 97-98)
+Figure 2 · Column 1 drives the coil (STOP · START · K1) · column 2 is the hold-in contact · column 3 the run lamp (K1 43-44) · column 4 the trip lamp (F2 97-98) · the box under coil K1 gives the columns of its contacts
 
 ### Sequence of operation
 
@@ -8394,6 +8536,24 @@ $$K1_{\text{new}} = \overline{F2}\cdot\overline{S0}\cdot(S1 + K1_{\text{old}})$$
 Why STOP must be NC: if you used an NO button wired as “press to break”, a loose wire or a dirty contact would mean pressing STOP does nothing. With an NC button wired in series, a broken wire stops the machine by itself — it fails safe. The same reasoning applies to overload contact 95-96 and to the emergency stop.
 
 JavaScript is needed for the simulator
+
+## NEMA/JIC version: the same circuit drawn the American way Intermediate
+
+Machines from North America and plants designed to NFPA 79 / the NEC draw a DOL starter as a power circuit plus a control ladder on one sheet. This is the same circuit as figures 1–2 at 480 V 3Φ 60 Hz with 120 V control from a control transformer.
+
+Figure 2a · NEMA/JIC direct-on-line starter: disconnect + fuses → starter M (L1 L2 L3 → T1 T2 T3) → OL heaters → motor · 480/120 V control transformer (X2 grounded) → ladder STOP – START ∥ M – coil M – OL
+
+### Compared with the IEC figures 1–2
+
+- Three-wire ladder: STOP (NC) – START (NO) in parallel with auxiliary contact M (NO) – coil M – OL (NC) — the same logic as IEC, read left to right
+
+- OL sits next to the coil near grounded rail X2 (IEC puts the overload contact at the head of the circuit); the OL heaters are in the power circuit
+
+- Numbers under the coil “1 2 3”: M has NO contacts on rung 1 (hold-in) and rung 2 (RUN lamp) and an NC contact on rung 3 (OFF lamp)
+
+- Control transformer: primary fuses FU1 FU2 on H1 H4, secondary fuse FU3 on X1 and X2 grounded — the same reason as IEC’s “coil on N”: an earth fault in the control wiring must not pick up the coil
+
+- No terminal numbers 1-2, 13-14 or 95-96 — device names (M, OL) and wire numbers 1–6 take their place · NEMA starters are chosen by hp: a 10 hp 460 V motor (FLA 14 A) takes size 1 — see the table on the symbols page
 
 ## Multi-location control and jogging Intermediate
 
@@ -8511,6 +8671,18 @@ $$K1 = \overline{S0}\,\overline{F2}\,(S1 + K1)\,\overline{S2}\,\overline{K2} \qq
 JavaScript is needed for the simulator
 
 In the simulator, press forward and then immediately press reverse: the interlock will refuse. Then tick “No stop-before-reverse” and reverse while the motor is running. Watch the current shoot above the starting current and the speed pass through zero.
+
+## NEMA/JIC version: the reversing starter Intermediate
+
+A NEMA reversing starter is two contactors, F (forward) and R (reverse), on one base with a factory-fitted mechanical interlock (M.I.). R swaps L1 and L3 just like K2 in the IEC drawing.
+
+Figure 1a · NEMA/JIC reversing starter: power circuit (F straight · R swapping L1↔L3 · OL · motor T1 T2 T3) and the STOP / FWD / REV ladder with its interlocks
+
+- Three interlock layers, as in IEC: NC contacts of F and R in the opposite rung · FWD/REV buttons whose NC half is in series with the other side · M.I. on the starter
+
+- Numbers under the coils: F shows “1 2” — NO on rung 1 (hold-in) and NC on rung 2 (the interlock of R) · R shows “1 2” the other way round
+
+- One STOP serves both rungs · a single OL sits next to rail X2 · reversing from running (plugging) needs a zero-speed relay or an off-delay timer
 
 ## Reversing while running (plugging) Advanced
 
@@ -9245,6 +9417,26 @@ Figure 4 · The dead time between KM2 opening and KM3 closing is needed so that 
 Y6 Changeover dead time
 
 $$t_{dead} \approx 40\text{–}100\ \text{ms} \;>\; t_{arc,KM2} + t_{close,KM3}\ \text{margin}$$
+
+## NEMA/JIC version: the wye–delta starter and motor leads T1–T6 Intermediate
+
+North America calls star–delta “wye–delta” (open transition = the motor is briefly disconnected at the change-over). The same three contactors are used, but motor leads are T1–T6 and the control is a ladder.
+
+Figure 3a · NEMA wye–delta: 1M (line) feeds T1 T2 T3 through the OL heaters · 2M (delta) connects L1→T6, L2→T4, L3→T5 · 1S (wye) shorts T4 T5 T6 · timer TR changes over
+
+| IEC | NEMA | Role |
+
+| -K1 | 1M | Line (main) contactor |
+
+| -K2 | 1S | Star (wye), shorts T4 T5 T6 |
+
+| -K3 | 2M | Delta (run) |
+
+| -K4T | TR | Timer: contacts NCTO (15-16) and NOTC (17-18) |
+
+| U1 V1 W1 / U2 V2 W2 | T1 T2 T3 / T4 T5 T6 | Delta: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2) |
+
+The names 1M / 2M / 1S vary by manufacturer (some swap the roles of 1M and 2M) — follow the machine’s own drawing · get the delta-side phasing right: wrong T4/T5/T6 order gives a change-over surge worse than a direct start · closed-transition starters add resistors so the supply is never interrupted.
 
 ## Setting the timer and the current at changeover Advanced
 
@@ -28826,9 +29018,9 @@ THภาษาไทยENEnglish
 
 คอนแทกเตอร์คือสวิตช์ที่สั่งด้วยแม่เหล็กไฟฟ้า เมื่อจ่ายไฟเข้าคอยล์ (A1–A2) แกนเหล็กดูดอาร์เมเจอร์ซึ่งยึดกับสะพานหน้าสัมผัส หน้าสัมผัสหลัก (NO) ปิดวงจรกำลัง พร้อมกับหน้าสัมผัสช่วย NO ปิดและ NC เปิด เมื่อตัดไฟคอยล์ สปริงดันกลับ ข้อดีคือแยกวงจรกำลัง 400 V ออกจากวงจรควบคุม ตัด-ต่อได้หลายล้านครั้ง และสั่งจากระยะไกลหรือจาก PLC ได้
 
-รูป 1 · คอยล์ AC ต้องมีวงแหวนบังเงา (shading ring) เพราะฟลักซ์ผ่านศูนย์ 100 ครั้งต่อวินาที ถ้าวงแหวนแตก คอนแทกเตอร์จะสั่นและครางเสียงดัง
+รูป 1 · คอยล์พันรอบขาตรงกลางของแกนเหล็กรูปตัว E ส่วนวงแหวนบังเงา (shading ring) อยู่ที่ขาด้านนอก เพราะฟลักซ์ AC ผ่านศูนย์ 100 ครั้งต่อวินาที ถ้าวงแหวนแตก คอนแทกเตอร์จะสั่นและครางเสียงดัง
 
-รูป 2 · เลขขั้วมาตรฐาน: หน้าสัมผัสหลักเลขคี่ด้านไฟเข้า เลขคู่ด้านโหลด หน้าสัมผัสช่วยใช้เลขสองหลัก หลักสิบคือลำดับ หลักหน่วยบอกชนิด
+รูป 2 · เลขขั้วมาตรฐาน IEC 60947: หน้าสัมผัสหลักเลขคี่ด้านไฟเข้า เลขคู่ด้านโหลด คอยล์ A1 (บน) A2 (ล่าง) หน้าสัมผัสช่วยใช้เลขสองหลัก หลักสิบคือลำดับตำแหน่ง หลักหน่วยบอกชนิด (1-2 NC · 3-4 NO · 5-6 / 7-8 หน้าสัมผัสพิเศษ เช่น หน่วงเวลา) — แบบ NEMA ใช้ L1 L2 L3 → T1 T2 T3 แทน
 
 ### คอยล์: AC หรือ DC
 
@@ -28976,7 +29168,7 @@ $$S_{tr} \ge \sum S_{hold} + S_{inrush,\,max} \qquad \text{ตรวจแรง
 
 ## สัญลักษณ์ของอุปกรณ์ทั้งหมด
 
-รูป 4 · สัญลักษณ์ IEC 60617 ที่ใช้ในแบบวงจรทุกหน้าของชุดนี้ วิธีอ่านแบบละเอียดอยู่ที่ สัญลักษณ์ · อ่านแบบวงจร
+รูป 4 · สัญลักษณ์ IEC 60617 ที่ใช้ในแบบวงจรทุกหน้าของชุดนี้ วิธีอ่านแบบละเอียดอยู่ที่ สัญลักษณ์ · อ่านแบบวงจร · สัญลักษณ์แบบ NEMA ดู หน้าสัญลักษณ์และการอ่านแบบ
 
 ## คำถามที่พบบ่อย
 
@@ -29181,8 +29373,8 @@ $$R_{iso} \ge 1\ \text{M}\Omega\ @\ 500\ \text{V DC (IEC 60204-1)} \qquad R_{40^
 # อ่านแบบวงจรควบคุมมอเตอร์: สัญลักษณ์ IEC 60617 เทียบ NEMA รหัสอุปกรณ์ IEC 81346 เลขขั้ว เลขสาย และการอ้างอิงข้าม
 
 URL: https://modsengineeringmath.com/learn/motor-control/diagrams-symbols/
-Updated: 2026-10-14
-Summary: วิธีอ่านแบบวงจรไฟฟ้าควบคุมมอเตอร์ทั้งแบบยุโรป (IEC) อเมริกา (NEMA) และญี่ปุ่น: วงจรกำลังกับวงจรควบคุม สัญลักษณ์หน้าสัมผัส คอยล์ ไทเมอร์ โอเวอร์โหลด รหัสอุปกรณ์ -Q -K -F -S -P -M ตาม IEC 81346 เลขขั้ว 1/L1 2/T1 A1 A2 13 14 21 22 95 96 เลขสาย รางเทอร์มินัล การอ้างอิงข้ามหน้า และการแปลงวงจรรีเลย์เป็นพีชคณิตบูลีน
+Updated: 2026-10-15
+Summary: วิธีอ่านแบบวงจรไฟฟ้าควบคุมมอเตอร์ทั้งแบบยุโรป (IEC) อเมริกา (NEMA) และญี่ปุ่น: วงจรกำลังกับวงจรควบคุม สัญลักษณ์หน้าสัมผัส คอยล์ ไทเมอร์ โอเวอร์โหลด รหัสอุปกรณ์ -Q -K -F -S -P -M ตาม IEC 81346 เลขขั้ว 1/L1 2/T1 A1 A2 13 14 21 22 95 96 เลขสาย รางเทอร์มินัล การอ้างอิงข้ามหน้า และการแปลงวงจรรีเลย์เป็นพีชคณิตบูลีน เพิ่มไดอะแกรมเส้นเดียว (single-line) แบบ IEC และ ANSI/NEMA แลดเดอร์ NEMA/JIC ตารางขนาดสตาร์ทเตอร์ NEMA และเทียบรหัสอุปกรณ์ IEC กับ NEMA
 
 THภาษาไทยENEnglish
 
@@ -29202,13 +29394,69 @@ THภาษาไทยENEnglish
 
 - รหัสอุปกรณ์ + เลขขั้ว เช่น “-K1:13” ระบุจุดต่อได้ไม่ซ้ำในทั้งตู้
 
+- ไดอะแกรมเส้นเดียวแสดงทั้งระบบ · แบบ NEMA อ่านเป็นแลดเดอร์ซ้าย-ขวา มีเลขแลดเดอร์ใต้คอยล์
+
 ## วงจรกำลังและวงจรควบคุม พื้นฐาน
 
 วงจรกำลัง (main circuit) วาดสามเส้น L1 L2 L3 ลงจากด้านบนผ่านเบรกเกอร์ คอนแทกเตอร์ โอเวอร์โหลด ไปมอเตอร์ อ่านจากบนลงล่างตามทางไหลของพลังงาน วงจรควบคุม (control circuit) วาดระหว่างรางบน (L หรือ +24 V) กับรางล่าง (N หรือ 0 V) แต่ละเส้นทางแนวตั้งเรียกว่า “path” หรือ “current path” มีหมายเลขคอลัมน์กำกับด้านบน สัญลักษณ์ของอุปกรณ์ชิ้นเดียวกัน (เช่น คอยล์ -K1 และหน้าสัมผัส -K1 13-14) อาจอยู่คนละคอลัมน์หรือคนละหน้า เชื่อมกันด้วยรหัสอุปกรณ์
 
-วงจรกำลัง: อ่านบน → ล่าง
+วงจรกำลัง (IEC): อ่านบน → ล่างตามทางไหลของพลังงาน พร้อมเลขขั้ว 1–6 และสาย PE
 
-วงจรควบคุม: ราง L → อุปกรณ์ → คอยล์ → ราง N
+วงจรควบคุม (IEC 60204-1): ราง L1 → อุปกรณ์ → คอยล์ → ราง N พร้อมเลขคอลัมน์และตารางอ้างอิงข้าม
+
+### สิ่งที่ปรากฏในแบบวงจรควบคุม IEC 60204-1
+
+- เลขคอลัมน์ 1 2 3 … เหนือราง L1 ใช้ระบุตำแหน่งของทุกอุปกรณ์ และข้อความหน้าที่ (เช่น “ล็อกตัวเอง”) ใต้ราง N
+
+- กล่องใต้คอยล์ คือตารางอ้างอิงข้าม (contact mirror): แถว NO / NC บอกว่าหน้าสัมผัสของคอยล์นั้นอยู่ที่คอลัมน์ใด “PWR” = ขั้วกำลังอยู่ในวงจรกำลัง
+
+- คอยล์ต่อกับราง N และหน้าสัมผัสทั้งหมดต่อด้านราง L: ถ้าสายควบคุมเสียดินระหว่างหน้าสัมผัสกับคอยล์ คอยล์จะไม่ดูดเอง (IEC 60204-1 หัวข้อ 9.4.3)
+
+- ฟิวส์ -F3 ป้องกันวงจรควบคุม · หน้าสัมผัสโอเวอร์โหลด -F2 95-96 (NC) อยู่หัวสายอนุกรมกับคอยล์ · 97-98 (NO) ส่งสัญญาณทริป
+
+- รหัสสีไฟตาม IEC 60204-1 GN เขียว = ปกติ/เดิน · YE เหลือง = ผิดปกติ (ทริป) · RD แดง = อันตราย/ฉุกเฉิน · BU น้ำเงิน = ต้องดำเนินการ · WH ขาว = สถานะทั่วไป
+
+- วงจรกำลัง: เส้นประเขียว-เหลือง = ตัวนำ PE ต่อเข้าโครงมอเตอร์ · เส้นประสั้นระหว่างขั้ว = การเชื่อมทางกล · โอเวอร์โหลดเป็นขดไบเมทัลต่อกลไกถึงหน้าสัมผัส 95-96
+
+## ไดอะแกรมเส้นเดียว (single-line / one-line diagram) กลาง
+
+ไดอะแกรมเส้นเดียวคือ “แผนที่ภาพรวม” ของระบบไฟฟ้า: ใช้เส้นเดียวแทนสามเฟส (ขีดเฉียงสามขีดบนเส้นแสดงว่ามีตัวนำสามเส้น) แสดงแหล่งจ่าย หม้อแปลง บัสบาร์ ฟีดเดอร์ อุปกรณ์ป้องกัน สตาร์ทเตอร์ และมอเตอร์ พร้อมพิกัด แต่ไม่แสดงวงจรควบคุม เลขขั้ว หรือการต่อสายภายในอุปกรณ์ ใช้ตรวจการประสานอุปกรณ์ป้องกัน คำนวณกระแสลัดวงจร และวางแผนการขยายระบบ
+
+รูป 2 · ไดอะแกรมเส้นเดียวตามสัญลักษณ์ IEC 60617: หม้อแปลง 22/0.4 kV Dyn11 → ACB → บัส MDB → ฟีดเดอร์ DOL (MPCB + คอนแทกเตอร์ + โอเวอร์โหลด) ซอฟต์สตาร์ตเตอร์ และอินเวอร์เตอร์ (ตัวเลขเป็นตัวอย่างเพื่อการเรียนรู้)
+
+### อ่านจากบนลงล่าง
+
+- แหล่งจ่ายและหม้อแปลง — ระดับแรงดัน ความถี่ กำลัง (kVA) ค่า uk % กลุ่มเวกเตอร์ (Dyn11) และการต่อดินของนิวทรัล (TN-S)
+
+- เมนเบรกเกอร์ (ACB) — กระแสพิกัด และความสามารถตัดกระแสลัดวงจร Icu ต้องมากกว่ากระแสลัดวงจรที่บัส
+
+- CT และมิเตอร์ — วงกลมคล้องสายคือหม้อแปลงกระแส ต่อกับแอมมิเตอร์หรือเครื่องวัดกำลัง
+
+- บัสบาร์ — เส้นหนา: ระบบ 3N~ 400/230 V · ทุกฟีดเดอร์แยกออกจากบัสนี้
+
+- ฟีดเดอร์มอเตอร์ — เบรกเกอร์/MPCB → ตัวสตาร์ท (คอนแทกเตอร์ + โอเวอร์โหลด, ซอฟต์สตาร์ตเตอร์ หรืออินเวอร์เตอร์) → สาย (ขนาด/จำนวนแกน/ชีลด์) → มอเตอร์ (kW, กระแส)
+
+รูป 3 · ไดอะแกรมเส้นเดียวแบบอเมริกา (ANSI/IEEE 315): เบรกเกอร์เป็นกล่องสี่เหลี่ยมบนเส้น รหัสอุปกรณ์ ANSI/IEEE C37.2 (52 = เบรกเกอร์ AC, 49 = โอเวอร์โหลดความร้อน) สตาร์ตเตอร์ NEMA ขนาด 1 และกระแส FLA จากตาราง NEC 430.250
+
+| ประเภทแบบ | แสดงอะไร | ใช้ทำอะไร |
+
+| ไดอะแกรมเส้นเดียว | ระบบทั้งหมดด้วยเส้นเดียวต่อสามเฟส พร้อมพิกัด | ประสานอุปกรณ์ป้องกัน กระแสลัดวงจร ขยายระบบ |
+
+| วงจรกำลัง (power / multi-line) | ทุกตัวนำของฟีดเดอร์เดียว: L1 L2 L3 PE เลขขั้ว ขั้วมอเตอร์ | เดินสายตู้ ตรวจทิศหมุน |
+
+| วงจรควบคุม | คอยล์ หน้าสัมผัส ปุ่ม เซนเซอร์ ระหว่างราง L–N (IEC) หรือ X1–X2 (NEMA) | ตรรกะการทำงาน แก้ปัญหา |
+
+### รายการที่ไดอะแกรมเส้นเดียวที่ดีต้องมี
+
+- แรงดัน ความถี่ ระบบต่อดิน (TN-S, TN-C-S, TT, IT) และกระแสลัดวงจรที่บัส (kA)
+
+- ชนิด พิกัด และ Icu ของเบรกเกอร์ทุกตัว · ฟิวส์ · ค่าตั้งรีเลย์ป้องกัน
+
+- ขนาดสาย จำนวนแกน วัสดุ ความยาว (เพื่อตรวจแรงดันตกและกระแสลัดวงจร)
+
+- มอเตอร์: kW หรือ hp กระแสพิกัด วิธีสตาร์ท และรหัสอุปกรณ์ที่ตรงกับแบบวงจรควบคุม (-Q1 -K1 -F2 -M1 หรือ DISC M OL MTR)
+
+- ชื่อมาตรฐานที่ใช้ (IEC 60617/81346 หรือ ANSI/IEEE 315/NEMA) ระบุไว้ในตารางสัญลักษณ์ของแบบ
 
 ## สัญลักษณ์ IEC 60617 พื้นฐาน
 
@@ -29223,6 +29471,10 @@ THภาษาไทยENEnglish
 - สัญลักษณ์ครึ่งวงกลมบนหน้าสัมผัสไทเมอร์บอกทิศของการหน่วงเวลา (เหมือนร่มชูชีพ)
 
 - จุดทึบ (●) คือจุดต่อสาย เส้นที่ตัดกันโดยไม่มีจุด ไม่ได้ต่อกัน
+
+- ฟิวส์ = สี่เหลี่ยมที่มีเส้นตัวนำพาดผ่านตลอด · ขั้วคอนแทกเตอร์มีเสี้ยววงกลมที่จุดสัมผัส · เบรกเกอร์มีกากบาทที่ปลายใบมีด · สวิตช์ตัดต่อ (isolator) มีขีดขวางที่ปลายใบมีด
+
+- เส้นประคือการเชื่อมทางกลระหว่างขั้วหรือระหว่างอุปกรณ์ เช่น ขั้วทั้งสามของคอนแทกเตอร์ ตัวปลดทริปของเบรกเกอร์ หรืออินเตอร์ล็อกทางกลระหว่างคอยล์ -K1 กับ -K2
 
 ## รหัสอุปกรณ์และเลขขั้ว กลาง
 
@@ -29288,21 +29540,91 @@ $$K1 = \overline{S0}\cdot\overline{F2}\cdot(S1 + K1)$$
 
 - ตรวจ: กด S1 → K1 = 1 · ปล่อย S1 → เทอม K1 ค้างไว้ · กด S0 หรือ F2 ทริป → K1 = 0 และไม่กลับมาเองเมื่อปล่อย
 
-## แบบอเมริกา (NEMA/ANSI) และญี่ปุ่น กลาง
+## แบบอเมริกา (NEMA/JIC) และญี่ปุ่น กลาง
+
+ในอเมริกาเหนือ แบบวงจรมอเตอร์ยึด NEMA ICS 19 (รหัสและสัญลักษณ์), NEMA ICS 2 (คอนแทกเตอร์ สตาร์ทเตอร์ และขนาด NEMA), NFPA 79 / JIC (ไฟฟ้าในเครื่องจักรอุตสาหกรรม) และ NEC (การติดตั้ง) สัญลักษณ์อ้างอิง ANSI Y32.2 / IEEE 315 ภาพนี้เป็นชุดสัญลักษณ์ที่ใช้ในแลดเดอร์ของชุดบทเรียนนี้
+
+รูป 4 · สัญลักษณ์ NEMA/JIC: หน้าสัมผัสเป็นเส้นคู่ขนาน NO ┤ ├ และ NC ┤/├ · คอยล์และไฟแสดงเป็นวงกลมมีตัวอักษร · ฮีตเตอร์โอเวอร์โหลดเป็นเส้นซิกแซก · ขั้วกำลังเป็นขีดคู่ขวางเส้น
 
 | เรื่อง | IEC (ยุโรป · ไทย · อาเซียน) | NEMA / JIC (อเมริกาเหนือ) |
 
-| ทิศการวาด | รางบน-ล่าง วงจรแนวตั้ง | รางซ้าย-ขวา วงจรแนวนอนเป็นขั้นบันได (ladder) |
+| ทิศการวาด | รางบน-ล่าง วงจรแนวตั้ง · คอลัมน์ 1 2 3 | รางซ้าย-ขวา (X1 · X2) แถวนอนเป็นขั้นบันได (ladder) · เลขแลดเดอร์ 1 2 3 |
 
-| หน้าสัมผัส NO | ใบมีดเอียง | เส้นขนานสองเส้น ─┤ ├─ |
+| หน้าสัมผัส NO / NC | ใบมีดเอียง / ใบมีดพาดขีด | เส้นขนานสองเส้น ─┤ ├─ / มีเส้นทแยง ─┤/├─ |
 
-| หน้าสัมผัส NC | ใบมีดเอียงพาดขีด | เส้นขนานมีเส้นทแยง ─┤/├─ |
+| คอยล์ | สี่เหลี่ยม A1–A2 | วงกลมมีตัวอักษร M, CR, TR (ไม่มีเลขขั้ว) |
 
-| คอยล์ | สี่เหลี่ยม | วงกลม มีตัวอักษร M, CR, TR |
+| รหัสอุปกรณ์ | -K1 -S1 -F2 -P1 -M1 | M · CR · TR · OL · PB · FU · PL · MTR |
 
-| รหัสอุปกรณ์ | -K1 -S1 -F2 | M (มอเตอร์สตาร์ทเตอร์) CR (รีเลย์) OL PB LS |
+| ขั้วหน้าสัมผัสหลัก | 1/L1 2/T1 3/L2 4/T2 5/L3 6/T3 | L1 L2 L3 → T1 T2 T3 |
 
-| แรงดันควบคุม | 230 VAC / 24 VDC | 120 VAC จากหม้อแปลงควบคุม / 24 VDC |
+| ขั้วมอเตอร์ 6 ขั้ว | U1 V1 W1 U2 V2 W2 | T1 T2 T3 T4 T5 T6 (ตรงกัน: U1=T1 V1=T2 W1=T3 U2=T4 V2=T5 W2=T6) |
+
+| โอเวอร์โหลด | รีเลย์ -F2 95-96 อยู่หัวสายอนุกรมกับคอยล์ | ฮีตเตอร์ OL ในวงจรกำลัง · หน้าสัมผัส OL (NC) อยู่ติดคอยล์ ใกล้ราง X2 |
+
+| แรงดันควบคุม | 230 VAC / 24 VDC | 120 VAC จากหม้อแปลงควบคุม (X2 ต่อดิน) / 24 VDC |
+
+| การอ้างอิงข้าม | กล่องใต้คอยล์ บอกคอลัมน์ของ NO/NC | เลขแลดเดอร์ใต้คอยล์ · ขีดเส้นใต้ = NC |
+
+| เลขสาย / สีสาย | ตามหน้า-คอลัมน์ · เขียว-เหลือง = PE | เลขสายต่อจุดต่อ · NFPA 79: ดำ = กำลัง แดง = ควบคุม AC ขาว = กราวด์ (X2) เขียว = ดิน |
+
+| ขนาดอุปกรณ์สตาร์ท | พิกัดตามประเภทการใช้งาน AC-3 (kW, A) | ขนาด NEMA 00–9 ตาม hp ที่แรงดันนั้น (ตารางด้านล่าง) |
+
+### อ่านแลดเดอร์ NEMA
+
+- อ่านซ้ายไปขวา: ปุ่ม/หน้าสัมผัสทางซ้าย โหลดทางขวา — คอยล์ M อยู่ขวาสุดต่อกับ OL และราง X2 ที่ต่อดิน (แนวคิดเดียวกับ “คอยล์ติด N” ของ IEC)
+
+- เลขแลดเดอร์ นอกราง X1 · เลขสาย บนเส้น: จุดต่อทางไฟฟ้าเดียวกันใช้เลขเดียวกัน
+
+- ตัวเลขใต้คอยล์บอกว่าหน้าสัมผัสของคอยล์นั้นอยู่แลดเดอร์ใด — ขีดเส้นใต้ = NC เช่น “1 2 3” = NO ที่แลดเดอร์ 1 และ 2, NC ที่แลดเดอร์ 3
+
+- หน้าสัมผัสไม่มีเลขขั้ว 13-14: ระบุด้วยชื่ออุปกรณ์ (M, CR1, TR) · หน้าสัมผัสหน่วงเวลาระบุชนิด NOTC / NCTO (on-delay) หรือ NOTO / NCTC (off-delay)
+
+- ตัวอย่างเต็มพร้อมวงจรกำลัง: สตาร์ทตรง · กลับทางหมุน · สตาร์-เดลต้า (wye-delta)
+
+### เทียบรหัสอุปกรณ์ IEC ↔ NEMA
+
+| อุปกรณ์ | IEC | NEMA / JIC |
+
+| เบรกเกอร์ / MPCB | -Q1 | CB · MCP · DISC |
+
+| คอนแทกเตอร์ / สตาร์ทเตอร์ | -K1 (-QA1) | M · F · R · 1M 2M 1S |
+
+| รีเลย์ควบคุม · ไทเมอร์ | -K2 · -K4T | CR · TR |
+
+| โอเวอร์โหลด | -F2 (95-96) | OL |
+
+| ฟิวส์ | -F1 -F3 | FU |
+
+| ปุ่ม START / STOP | -S1 / -S0 | START / STOP (PB) |
+
+| ลิมิต · ความดัน · ลูกลอย | -B1 -B2 -B3 | LS · PS · FS |
+
+| ไฟแสดงสถานะ | -P1 (GN, RD) | PL (G, R, A, W) |
+
+| หม้อแปลงควบคุม | -T1 | CT / CPT (H1–H4, X1–X2) |
+
+| มอเตอร์ | -M1 (U1 V1 W1) | MTR (T1 T2 T3) |
+
+### ขนาดสตาร์ทเตอร์ NEMA (ICS 2)
+
+| ขนาด NEMA | กระแสต่อเนื่อง (A) | สูงสุด hp ที่ 230 V | สูงสุด hp ที่ 460 V |
+
+| 00 | 9 | 1.5 | 2 |
+
+| 0 | 18 | 3 | 5 |
+
+| 1 | 27 | 7.5 | 10 |
+
+| 2 | 45 | 15 | 25 |
+
+| 3 | 90 | 30 | 50 |
+
+| 4 | 135 | 50 | 100 |
+
+| 5 | 270 | 100 | 200 |
+
+ค่า hp เป็นพิกัดสูงสุดสำหรับสตาร์ทตรงแบบไม่กลับทางหมุน ตรวจกับแค็ตตาล็อกผู้ผลิตและ NEMA ICS 2 ก่อนเลือกใช้ ขนาด NEMA เลือกจาก hp ไม่ใช่จากกระแสจริง ส่วนขนาด IEC เลือกจากกระแสและประเภทการใช้งาน AC-3
 
 แบบญี่ปุ่นปัจจุบันใช้ JIS C 0617 ซึ่งตรงกับ IEC 60617 แต่เครื่องจักรรุ่นเก่ายังพบสัญลักษณ์แบบเดิม แลดเดอร์ใน PLC ทุกยี่ห้อวาดแบบแนวนอนคล้าย NEMA
 
@@ -29324,6 +29646,12 @@ $$K1 = \overline{S0}\cdot\overline{F2}\cdot(S1 + K1)$$
 ทำไมบางแบบใช้ K สำหรับคอนแทกเตอร์ บางแบบใช้ Q?
 ธรรมเนียมเดิมของ IEC/DIN ใช้ K กับคอนแทกเตอร์และรีเลย์ ส่วน IEC 81346-2 ฉบับใหม่จัดคอนแทกเตอร์กำลังไว้กลุ่ม Q (สวิตช์ตัด-ต่อพลังงาน) เช่น -QA1 และรีเลย์ควบคุมไว้กลุ่ม K เช่น -KF1 ทั้งสองแบบพบได้ในแบบจริง ให้ดูหน้าคำอธิบายรหัสของแบบชุดนั้น
 
+ไดอะแกรมเส้นเดียว (single-line) ต่างจากวงจรกำลังอย่างไร?
+ไดอะแกรมเส้นเดียวใช้เส้นเดียวแทนสามเฟสและแสดงทั้งระบบ (แหล่งจ่าย หม้อแปลง บัส ฟีดเดอร์ อุปกรณ์ป้องกัน มอเตอร์) พร้อมพิกัด ส่วนวงจรกำลังแสดงตัวนำทุกเส้นและเลขขั้วของฟีดเดอร์เดียว ใช้เดินสายในตู้
+
+ทำไมแบบ NEMA ไม่มีเลขขั้ว 13-14 หรือ 95-96?
+NEMA/JIC ระบุหน้าสัมผัสด้วยชื่ออุปกรณ์ (M, CR, TR, OL) และเลขสายบนเส้น ไม่ใช้เลขหน้าสัมผัสช่วยแบบ IEC 60947 ขั้วกำลังใช้ L1 L2 L3 → T1 T2 T3 และอ่านตำแหน่งหน้าสัมผัสจากเลขแลดเดอร์ใต้คอยล์ (ขีดเส้นใต้ = NC)
+
 มด
 
 อาจารย์มด · ธีรวุฒิ แสวงบุญ
@@ -29336,6 +29664,12 @@ $$K1 = \overline{S0}\cdot\overline{F2}\cdot(S1 + K1)$$
 
 **ทำไมบางแบบใช้ K สำหรับคอนแทกเตอร์ บางแบบใช้ Q?**
 ธรรมเนียมเดิมของ IEC/DIN ใช้ K กับคอนแทกเตอร์และรีเลย์ ส่วน IEC 81346-2 ฉบับใหม่จัดคอนแทกเตอร์กำลังไว้กลุ่ม Q (สวิตช์ตัด-ต่อพลังงาน) เช่น -QA1 และรีเลย์ควบคุมไว้กลุ่ม K เช่น -KF1 ทั้งสองแบบพบได้ในแบบจริง ให้ดูหน้าคำอธิบายรหัสของแบบชุดนั้น
+
+**ไดอะแกรมเส้นเดียว (single-line) ต่างจากวงจรกำลังอย่างไร?**
+ไดอะแกรมเส้นเดียวใช้เส้นเดียวแทนสามเฟสและแสดงทั้งระบบ (แหล่งจ่าย หม้อแปลง บัส ฟีดเดอร์ อุปกรณ์ป้องกัน มอเตอร์) พร้อมพิกัด ส่วนวงจรกำลังแสดงตัวนำทุกเส้นและเลขขั้วของฟีดเดอร์เดียว ใช้เดินสายในตู้
+
+**ทำไมแบบ NEMA ไม่มีเลขขั้ว 13-14 หรือ 95-96?**
+NEMA/JIC ระบุหน้าสัมผัสด้วยชื่ออุปกรณ์ (M, CR, TR, OL) และเลขสายบนเส้น ไม่ใช้เลขหน้าสัมผัสช่วยแบบ IEC 60947 ขั้วกำลังใช้ L1 L2 L3 → T1 T2 T3 และอ่านตำแหน่งหน้าสัมผัสจากเลขแลดเดอร์ใต้คอยล์ (ขีดเส้นใต้ = NC)
 
 ---
 
@@ -29383,7 +29717,7 @@ $$\Delta V = \sqrt3\, I\, L\,(R\cos\varphi + X\sin\varphi) \qquad \cos\varphi_{s
 
 ## วงจรควบคุมแบบล็อกตัวเอง พื้นฐาน
 
-รูป 2 · เส้นทางที่ 1 สั่งคอยล์ · เส้นทางที่ 2 ไฟเดิน (K1 43-44) · เส้นทางที่ 3 ไฟทริป (F2 97-98)
+รูป 2 · คอลัมน์ 1 สั่งคอยล์ (STOP · START · K1) · คอลัมน์ 2 หน้าสัมผัสล็อกตัวเอง · คอลัมน์ 3 ไฟเดิน (K1 43-44) · คอลัมน์ 4 ไฟทริป (F2 97-98) · กล่องใต้คอยล์ K1 = ตำแหน่งหน้าสัมผัสของ K1
 
 ### ลำดับการทำงาน
 
@@ -29406,6 +29740,24 @@ $$K1_{\text{ใหม่}} = \overline{F2}\cdot\overline{S0}\cdot(S1 + K1_{\text
 ทำไม STOP ต้องเป็น NC: ถ้าใช้ปุ่ม NO แล้วออกแบบให้ “กดเพื่อตัด” สายหลุดหรือหน้าสัมผัสสกปรกจะทำให้กด STOP แล้วไม่มีผล ปุ่ม NC ที่ต่ออนุกรม ถ้าสายขาดเครื่องจะหยุดเอง — ล้มเหลวแบบปลอดภัย (fail-safe) เหตุผลเดียวกันใช้กับโอเวอร์โหลด 95-96 และหยุดฉุกเฉิน
 
 ต้องเปิด JavaScript
+
+## แบบ NEMA/JIC: วงจรเดียวกัน วาดแบบอเมริกา กลาง
+
+เครื่องจักรจากอเมริกาเหนือและโรงงานที่ออกแบบตาม NFPA 79 / NEC วาดวงจรสตาร์ทตรงเป็น “วงจรกำลัง + แลดเดอร์ควบคุม” บนหน้าเดียวกัน รูปนี้คือวงจรเดียวกับรูป 1–2 ที่ 480 V 3Φ 60 Hz ควบคุม 120 V จากหม้อแปลงควบคุม
+
+รูป 2ก · สตาร์ทตรงแบบ NEMA/JIC: ดิสคอนเนกต์+ฟิวส์ → สตาร์ตเตอร์ M (L1 L2 L3 → T1 T2 T3) → ฮีตเตอร์ OL → มอเตอร์ · หม้อแปลงควบคุม 480/120 V (X2 ต่อดิน) → แลดเดอร์ STOP – START ∥ M – คอยล์ M – OL
+
+### เทียบกับแบบ IEC ในรูป 1–2
+
+- แลดเดอร์ 3 สาย (three-wire): STOP (NC) – START (NO) ขนานกับหน้าสัมผัสช่วย M (NO) – คอยล์ M – OL (NC) — ตรรกะเดียวกับ IEC แต่อ่านซ้ายไปขวา
+
+- OL อยู่ติดคอยล์ ใกล้ราง X2 ที่ต่อดิน (IEC วางหน้าสัมผัสโอเวอร์โหลดไว้หัวสาย) ส่วนฮีตเตอร์ OL อยู่ในวงจรกำลัง
+
+- เลขใต้คอยล์ “1 2 3”: M มีหน้าสัมผัส NO ที่แลดเดอร์ 1 (ล็อกตัวเอง) และ 2 (ไฟ RUN) และ NC ที่แลดเดอร์ 3 (ไฟ OFF)
+
+- หม้อแปลงควบคุม: ฟิวส์ปฐมภูมิ FU1 FU2 ที่ H1 H4, ฟิวส์ทุติยภูมิ FU3 ที่ X1 และ X2 ต่อดิน — เหตุผลเดียวกับ “คอยล์ติด N” ของ IEC: เสียดินที่สายควบคุมต้องไม่ทำให้คอยล์ดูดเอง
+
+- ไม่มีเลขขั้ว 1-2 หรือ 13-14 และ 95-96 — ใช้ชื่ออุปกรณ์ (M, OL) กับเลขสาย 1–6 แทน · สตาร์ตเตอร์ NEMA เลือกจาก hp: มอเตอร์ 10 hp 460 V (FLA 14 A) ใช้ขนาด 1 — ดูตารางที่ หน้าสัญลักษณ์
 
 ## ควบคุมหลายจุดและจ็อก กลาง
 
@@ -29523,6 +29875,18 @@ $$K1 = \overline{S0}\,\overline{F2}\,(S1 + K1)\,\overline{S2}\,\overline{K2} \qq
 ต้องเปิด JavaScript
 
 ในซิมูเลเตอร์ลองกดเดินหน้าแล้วกดถอยหลังทันที อินเตอร์ล็อกจะไม่ยอม จากนั้นติ๊ก “ไม่มีอินเตอร์ล็อกผ่าน STOP” แล้วกลับทางขณะหมุน ดูกระแสที่พุ่งสูงกว่าตอนสตาร์ทและความเร็วที่ผ่านศูนย์
+
+## แบบ NEMA/JIC: สตาร์ตเตอร์กลับทางหมุน กลาง
+
+สตาร์ตเตอร์กลับทางหมุนของ NEMA คือคอนแทกเตอร์สองตัว F (forward) และ R (reverse) บนแผ่นฐานเดียวกัน มีอินเตอร์ล็อกทางกล (M.I.) ติดมาจากโรงงาน R สลับ L1 กับ L3 เหมือน K2 ของแบบ IEC
+
+รูป 1ก · กลับทางหมุนแบบ NEMA/JIC: วงจรกำลัง (F ตรง · R สลับ L1↔L3 · OL · มอเตอร์ T1 T2 T3) และแลดเดอร์ STOP / FWD / REV พร้อมอินเตอร์ล็อก
+
+- อินเตอร์ล็อกสามชั้นเหมือน IEC: หน้าสัมผัส NC ของ F และ R ในแลดเดอร์ตรงข้าม · ปุ่ม FWD/REV ที่มีครึ่ง NC ต่ออนุกรมอีกฝั่ง · M.I. ทางกลที่ตัวสตาร์ตเตอร์
+
+- เลขใต้คอยล์: F แสดง “1 2” คือ NO อยู่แลดเดอร์ 1 (ล็อกตัวเอง) และ NC อยู่แลดเดอร์ 2 (อินเตอร์ล็อกของ R) · R แสดง “1 2” ในทางกลับกัน
+
+- ปุ่ม STOP ใช้ร่วมกันทั้งสองแลดเดอร์ · OL เดียวอยู่ติดราง X2 · ระยะหยุดสนิทก่อนกลับทาง (plugging) ต้องมีรีเลย์ความเร็วศูนย์ หรือไทเมอร์หน่วง
 
 ## กลับทางขณะหมุน (plugging) ขั้นสูง
 
@@ -30257,6 +30621,26 @@ $$I_r = \frac{I_n}{\sqrt3} \approx 0.58\,I_n$$
 Y6 Changeover dead time ช่วงตายระหว่าง Y กับ Δ
 
 $$t_{dead} \approx 40\text{–}100\ \text{ms} \;>\; t_{arc,KM2} + t_{close,KM3}\ \text{margin}$$
+
+## แบบ NEMA/JIC: สตาร์ตเตอร์ wye-delta และขั้วมอเตอร์ T1–T6 กลาง
+
+ในอเมริกาเหนือเรียกสตาร์-เดลต้าว่า wye-delta (open transition = เปิดวงจรขณะเปลี่ยน) ใช้คอนแทกเตอร์ 3 ตัวเหมือนกัน แต่ขั้วมอเตอร์ใช้ T1–T6 และหน้าสัมผัสเป็นแบบแลดเดอร์
+
+รูป 3ก · wye-delta แบบ NEMA: 1M (ไลน์) จ่าย T1 T2 T3 ผ่านฮีตเตอร์ OL · 2M (เดลต้า) ต่อ L1→T6 L2→T4 L3→T5 · 1S (wye) ลัด T4 T5 T6 · ไทเมอร์ TR เปลี่ยนจังหวะ
+
+| IEC | NEMA | หน้าที่ |
+
+| -K1 | 1M | คอนแทกเตอร์ไลน์ (หลัก) |
+
+| -K2 | 1S | สตาร์ (wye) ลัด T4 T5 T6 |
+
+| -K3 | 2M | เดลต้า (run) |
+
+| -K4T | TR | ไทเมอร์หน่วงเวลา: หน้าสัมผัส NCTO (15-16) และ NOTC (17-18) |
+
+| U1 V1 W1 / U2 V2 W2 | T1 T2 T3 / T4 T5 T6 | เดลต้า: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2) |
+
+ชื่อ 1M / 2M / 1S ต่างกันตามผู้ผลิต (บางรายสลับบทบาทของ 1M กับ 2M) ให้ยึดแบบประจำเครื่อง · ตรวจลำดับเฟสด้านเดลต้าให้ถูก ถ้าสลับ T4/T5/T6 จะเกิดกระแสกระชากตอนเปลี่ยนจังหวะสูงกว่าสตาร์ทตรง · แบบ closed transition ใช้ตัวต้านทานคร่อมเพื่อไม่ให้ไฟขาด
 
 ## ตั้งไทเมอร์และกระแสตอนเปลี่ยนจังหวะ ขั้นสูง
 
