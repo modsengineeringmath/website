@@ -49,7 +49,7 @@ $$\Delta V = \sqrt3\, I\, L\,(R\cos\varphi + X\sin\varphi) \qquad \cos\varphi_{s
 
 ## The self-holding control circuit Basic
 
-Figure 2 · Path 1 drives the coil · path 2 is the run lamp (K1 43-44) · path 3 is the trip lamp (F2 97-98)
+Figure 2 · Column 1 drives the coil (STOP · START · K1) · column 2 is the hold-in contact · column 3 the run lamp (K1 43-44) · column 4 the trip lamp (F2 97-98) · the box under coil K1 gives the columns of its contacts
 
 ### Sequence of operation
 
@@ -72,6 +72,24 @@ $$K1_{\text{new}} = \overline{F2}\cdot\overline{S0}\cdot(S1 + K1_{\text{old}})$$
 Why STOP must be NC: if you used an NO button wired as “press to break”, a loose wire or a dirty contact would mean pressing STOP does nothing. With an NC button wired in series, a broken wire stops the machine by itself — it fails safe. The same reasoning applies to overload contact 95-96 and to the emergency stop.
 
 JavaScript is needed for the simulator
+
+## NEMA/JIC version: the same circuit drawn the American way Intermediate
+
+Machines from North America and plants designed to NFPA 79 / the NEC draw a DOL starter as a power circuit plus a control ladder on one sheet. This is the same circuit as figures 1–2 at 480 V 3Φ 60 Hz with 120 V control from a control transformer.
+
+Figure 2a · NEMA/JIC direct-on-line starter: disconnect + fuses → starter M (L1 L2 L3 → T1 T2 T3) → OL heaters → motor · 480/120 V control transformer (X2 grounded) → ladder STOP – START ∥ M – coil M – OL
+
+### Compared with the IEC figures 1–2
+
+- Three-wire ladder: STOP (NC) – START (NO) in parallel with auxiliary contact M (NO) – coil M – OL (NC) — the same logic as IEC, read left to right
+
+- OL sits next to the coil near grounded rail X2 (IEC puts the overload contact at the head of the circuit); the OL heaters are in the power circuit
+
+- Numbers under the coil “1 2 3”: M has NO contacts on rung 1 (hold-in) and rung 2 (RUN lamp) and an NC contact on rung 3 (OFF lamp)
+
+- Control transformer: primary fuses FU1 FU2 on H1 H4, secondary fuse FU3 on X1 and X2 grounded — the same reason as IEC’s “coil on N”: an earth fault in the control wiring must not pick up the coil
+
+- No terminal numbers 1-2, 13-14 or 95-96 — device names (M, OL) and wire numbers 1–6 take their place · NEMA starters are chosen by hp: a 10 hp 460 V motor (FLA 14 A) takes size 1 — see the table on the symbols page
 
 ## Multi-location control and jogging Intermediate
 

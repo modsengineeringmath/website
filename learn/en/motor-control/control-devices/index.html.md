@@ -33,9 +33,9 @@ In 30 seconds
 
 A contactor is an electromagnetically operated switch. When the coil (A1–A2) is energised, the iron core pulls in the armature, which is fixed to the contact bridge. The main contacts (NO) close the power circuit, while the auxiliary NO contacts close and the NC contacts open. When the coil is de-energised, a spring pushes everything back. The advantages: the 400 V power circuit is separated from the control circuit, it can switch millions of times, and it can be commanded remotely or from a PLC.
 
-Figure 1 · An AC coil needs a shading ring because the flux passes through zero 100 times a second. If the ring cracks, the contactor chatters and hums loudly.
+Figure 1 · The coil is wound on the centre leg of the E-shaped core; the shading rings sit on the outer legs because AC flux passes through zero 100 times a second — if a ring cracks the contactor buzzes and chatters.
 
-Figure 2 · Standard terminal numbers: main contacts have odd numbers on the line side and even numbers on the load side. Auxiliary contacts use two digits — the tens digit is the sequence number and the units digit gives the contact type.
+Figure 2 · Standard IEC 60947 terminal numbers: main contacts odd on the line side, even on the load side, coil A1 (top) A2 (bottom); auxiliary contacts use two digits — the tens digit is the position, the units digit the function (1-2 NC · 3-4 NO · 5-6 / 7-8 special function, e.g. timed) — NEMA uses L1 L2 L3 → T1 T2 T3 instead.
 
 ### The coil: AC or DC
 
@@ -183,7 +183,7 @@ Example D-1
 
 ## Symbols for all these devices
 
-Figure 4 · The IEC 60617 symbols used in every diagram in this series. How to read drawings in detail is covered in Symbols · Reading diagrams.
+Figure 4 · The IEC 60617 symbols used in every diagram in this series. How to read drawings in detail is covered in Symbols · Reading diagrams. · NEMA symbols are on the symbols and diagram-reading page
 
 ## Frequently asked questions
 

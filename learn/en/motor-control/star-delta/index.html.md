@@ -97,6 +97,26 @@ Y6 Changeover dead time
 
 $$t_{dead} \approx 40\text{–}100\ \text{ms} \;>\; t_{arc,KM2} + t_{close,KM3}\ \text{margin}$$
 
+## NEMA/JIC version: the wye–delta starter and motor leads T1–T6 Intermediate
+
+North America calls star–delta “wye–delta” (open transition = the motor is briefly disconnected at the change-over). The same three contactors are used, but motor leads are T1–T6 and the control is a ladder.
+
+Figure 3a · NEMA wye–delta: 1M (line) feeds T1 T2 T3 through the OL heaters · 2M (delta) connects L1→T6, L2→T4, L3→T5 · 1S (wye) shorts T4 T5 T6 · timer TR changes over
+
+| IEC | NEMA | Role |
+
+| -K1 | 1M | Line (main) contactor |
+
+| -K2 | 1S | Star (wye), shorts T4 T5 T6 |
+
+| -K3 | 2M | Delta (run) |
+
+| -K4T | TR | Timer: contacts NCTO (15-16) and NOTC (17-18) |
+
+| U1 V1 W1 / U2 V2 W2 | T1 T2 T3 / T4 T5 T6 | Delta: T1–T6 · T2–T4 · T3–T5 (IEC: U1–W2 · V1–U2 · W1–V2) |
+
+The names 1M / 2M / 1S vary by manufacturer (some swap the roles of 1M and 2M) — follow the machine’s own drawing · get the delta-side phasing right: wrong T4/T5/T6 order gives a change-over surge worse than a direct start · closed-transition starters add resistors so the supply is never interrupted.
+
 ## Setting the timer and the current at changeover Advanced
 
 The run-up time depends on the inertia and the accelerating torque (motor torque minus load torque), from Newton's second law for rotation.
