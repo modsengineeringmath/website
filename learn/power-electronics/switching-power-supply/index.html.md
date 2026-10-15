@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flyback Forward Bridge LLC PFC และมาตรฐานความปลอดภัย
 
-// บทที่ 15.14 · อิเล็กทรอนิกส์กำลัง · Switching Power Supply (SMPS)
+// บทที่ 15.19 · อิเล็กทรอนิกส์กำลัง · Switching Power Supply (SMPS)
 
 
 โครงสร้างแหล่งจ่ายต่อไฟบ้าน EMI filter PFC ตระกูลวงจรแยกฉนวน ขั้นตอนออกแบบ flyback 7 ขั้น มาตรฐาน IEC 62368-1 และ CISPR 32

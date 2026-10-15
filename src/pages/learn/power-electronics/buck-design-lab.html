@@ -1,0 +1,272 @@
+<!--meta
+{
+  "title": "ออกแบบบั๊กคอนเวอร์เตอร์: เลือกไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุ พร้อมโปรแกรมโหลด | อาจารย์มด",
+  "h1": "ออกแบบและทดสอบบั๊กคอนเวอร์เตอร์ครบวงจร: เลือกแรงดันอินพุต ไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุ และโปรแกรมโหลดหลายสภาวะ",
+  "description": "แล็บออกแบบบั๊กฟรี: ตั้ง Vin Vo Io เลือกไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุ MOSFET กำหนดโปรแกรมโหลดกี่โอห์มหลายช่วง ดูแรงดัน กระแส การอิ่มตัวของตัวเหนี่ยวนำ และศักยภาพการจ่ายกระแส",
+  "ogTitle": "แล็บออกแบบบั๊ก: เลือกชิ้นส่วน + โปรแกรมโหลด · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "buck-design-lab",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-15",
+  "updated": "2026-10-15",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Buck converter design", "Inductor selection", "Schottky diode", "Output capacitor ESR", "Load transient", "Current limit", "Inductor saturation", "Virtual laboratory"],
+  "scripts": ["/assets/lesson.js", "/assets/buck-core.js", "/assets/buck-parts.js", "/assets/buck-ui.js", "/assets/buck-design.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://modsengineeringmath.com/learn/power-electronics/buck-design-lab/#lab",
+      "name": "แล็บออกแบบบั๊กคอนเวอร์เตอร์ พร้อมโปรแกรมโหลดหลายสภาวะ",
+      "alternateName": "Buck converter design lab with load program and capability sweep",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "isAccessibleForFree": true,
+      "inLanguage": "th",
+      "url": "https://modsengineeringmath.com/learn/power-electronics/buck-design-lab/#lab-design",
+      "description": "เลือกแรงดันอินพุต ไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุและ MOSFET กำหนดโหลดเป็นช่วงเวลา แล้วจำลองสวิตชิ่งเพื่อดูแรงดัน กระแส ประสิทธิภาพ การอิ่มตัวของตัวเหนี่ยวนำ และศักยภาพการจ่ายกระแส",
+      "featureList": ["10 diode models", "22 inductor models with saturation", "10 capacitor models with ESR", "6 MOSFET models", "Programmable load (ohms or amperes per time slot)", "Open loop and peak current mode control", "Load-line capability sweep"],
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {
+      "q": "ควรเลือกกระแสอิ่มตัว (Isat) ของตัวเหนี่ยวนำเท่าไร?",
+      "a": "ให้ Isat อย่างน้อย 1.2 เท่าของกระแสพีก Io,max + ΔiL/2 ที่ Vin สูงสุด และสูงกว่าขีดจำกัดกระแสของชิปควบคุม ตัวเหนี่ยวนำแกนฟอร์ไรต์อิ่มตัวฉับพลัน (กระแสพุ่ง) แกนผงเหล็กอิ่มตัวค่อยเป็นค่อยไป จึงให้อภัยมากกว่าเมื่อเกิดโอเวอร์โหลดชั่วขณะ"
+    },
+    {
+      "q": "ทำไมบั๊กแบบ open loop แรงดันขาออกเปลี่ยนตาม Vin?",
+      "a": "ใน CCM Vo = D·Vin ถ้าดิวตี้คงที่ Vo แปรผันตาม Vin โดยตรง (อัตราขยาย Gvg = D) และเมื่อโหลดเบาเข้า DCM แรงดันจะสูงขึ้นอีก วงป้อนกลับจึงจำเป็นเพื่อปรับดิวตี้ตามโหลดและ Vin"
+    },
+    {
+      "q": "กราฟศักยภาพการจ่ายกระแสแสดงอะไร?",
+      "a": "ไล่โหลดจากเบาไปหนักแล้ววัดแรงดันและกระแสสภาวะคงตัว เห็นว่าวงจรจ่ายกระแสได้ถึงเท่าไรก่อนแรงดันตก และตกเพราะเหตุใด เช่น ชนขีดจำกัดกระแสของตัวควบคุม ดิวตี้เต็ม Dmax หรือตัวเหนี่ยวนำอิ่มตัว"
+    },
+    {
+      "q": "ทำไมต้องเลือกตัวเก็บประจุแบบ ESR ต่ำ?",
+      "a": "ริปเปิลแรงดันขาออกประกอบด้วยส่วนจากความจุ ΔiL/(8·C·fs) และส่วนจาก ESR ΔiL·ESR ตัวเก็บประจุอิเล็กโทรไลต์ทั่วไป 100–470 µF มี ESR 0.2–0.5 Ω ทำให้ส่วน ESR ใหญ่กว่าส่วนความจุหลายสิบเท่า ตัวเก็บประจุโพลิเมอร์หรือ low-ESR ให้ริปเปิลต่ำกว่ามาก"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li><a href="/learn/power-electronics/buck-converter/">บั๊ก</a></li><li>ออกแบบ · โปรแกรมโหลด</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.6 · อิเล็กทรอนิกส์กำลัง · Buck Design Lab — Parts Selection & Load Program</p>
+      <h1>ออกแบบและทดสอบบั๊กคอนเวอร์เตอร์ครบวงจร: เลือกแรงดันอินพุต ไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุ และโปรแกรมโหลดหลายสภาวะ</h1>
+      <p class="lede">นำสิ่งที่เรียนมา (CCM/DCM ริปเปิล ฟังก์ชันถ่ายโอน) มาออกแบบวงจรจริง เลือกชิ้นส่วนจากไลบรารี 48 แบบ กำหนดว่าช่วงนี้โหลดกี่โอห์ม ช่วงนั้นกี่โอห์ม แล้วดูแรงดัน กระแส ความเค้น การอิ่มตัว และศักยภาพการจ่ายกระแสของวงจรแบบจำลองสวิตชิ่งทุกจังหวะ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab-design">เปิดแล็บ</a>
+        <a class="btn btn-ghost btn-sm" href="#steps">ขั้นตอนออกแบบ 8 ขั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#parts">เลือกชิ้นส่วน</a>
+        <a class="btn btn-ghost btn-sm" href="#program">โปรแกรมโหลด</a>
+        <a class="btn btn-ghost btn-sm" href="#capability">ศักยภาพการจ่ายกระแส</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>กำหนด \(V_{g,\min/\max}\), \(V_o\), \(I_o\), \(f_s\), ripple → ได้ \(L,\ C,\ \text{ESR}\) ขั้นต่ำ แล้วเลือกชิ้นส่วนจริงที่ผ่านทุกเกณฑ์</li>
+          <li>\(I_{sat} \ge 1.2\,I_{pk}\), \(V_{rrm} \ge 1.4\,V_{g,\max}\), \(V_{ds} \ge 1.5\,V_{g,\max}\), ESR ≤ \(\Delta V/(2\Delta i_L)\)</li>
+          <li>โปรแกรมโหลด: ใส่ช่วงเวลา · โอห์ม (หรือแอมป์) · Vin ของแต่ละช่วง แล้วดูผลทั้งชุด</li>
+          <li>กราฟ load line บอกว่าจ่ายได้ถึงกี่แอมป์และเพราะเหตุใดจึงล้ม</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น isat, esr, ripple, ilim, ตัวเหนี่ยวนำ, ไดโอด, ประสิทธิภาพ" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="overview">
+    <h2 id="overview">แล็บนี้ทำอะไรได้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ข้อกำหนด:</b> แรงดันอินพุตต่ำ/ปกติ/สูง · \(V_o\) · กระแสโหลดสูงสุดและต่ำสุด · \(f_s\) · เป้าริปเปิลกระแสและแรงดัน</li>
+      <li><b>เลือกชิ้นส่วน:</b> MOSFET 6 แบบ · ไดโอด 10 แบบ (Schottky, ultrafast, SiC, ซิลิคอนทั่วไป, synchronous) · ตัวเหนี่ยวนำ 22 แบบ (ฟอร์ไรต์ drum, ผงเหล็ก, โทรอยด์, E-core, แกนอากาศ) · ตัวเก็บประจุ 10 แบบ (อลูมิเนียม, low-ESR, โพลิเมอร์, แทนทาลัม, MLCC) หรือกดปุ่ม &quot;แนะนำชิ้นส่วนให้อัตโนมัติ&quot;</li>
+      <li><b>ตรวจความเค้น:</b> ตารางผ่าน/เตือน/ไม่ผ่านของทุกชิ้นพร้อมตัวเลขการสูญเสียและประสิทธิภาพที่ Vin ต่ำ/ปกติ/สูง</li>
+      <li><b>โปรแกรมโหลด:</b> ตารางช่วงเวลา แต่ละช่วงเลือกโหลดเป็นตัวต้านทาน (กี่โอห์ม) หรือกระแสคงที่ (กี่แอมป์) และ Vin ของช่วงนั้น เพิ่ม ลบ แก้ได้เหมือนเขียนสคริปต์ทดสอบ</li>
+      <li><b>จำลองสวิตชิ่ง</b> ทุกจังหวะ ด้วยตัวควบคุมแบบ open loop หรือ peak current mode พร้อม cycle-by-cycle current limit และการอิ่มตัวของตัวเหนี่ยวนำ</li>
+      <li><b>ศักยภาพการจ่ายกระแส:</b> ไล่โหลดจาก 4 % ถึง 220 % ของพิกัด แล้วพล็อตแรงดัน กระแสพีก และประสิทธิภาพ</li>
+    </ol>
+    <p class="bk-note">ขอบเขตของแบบจำลอง: รวมค่าความต้านทานแฝงทั้งหมด (Rds(on), Vf+Rd, DCR, ESR) และการอิ่มตัวของแกน การสูญเสียจากการสวิตช์คำนวณด้วยสูตรปิด ไม่รวมสูญเสียแกน วงจรขับ ringing หรือค่าความจุแฝง ค่าชิ้นส่วนเป็นค่าโดยประมาณระดับดาต้าชีตทั่วไป (&quot;คลาส&quot; หมายถึงตระกูลที่พิกัดใกล้เคียง) ต้องอ่านดาต้าชีตจริงก่อนสร้างวงจร</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="steps">
+    <h2 id="steps">ขั้นตอนออกแบบ 8 ขั้น <span class="lv lv-i">กลาง</span></h2>
+    <p>ทุกสูตรมาจากหน้า <a href="/learn/power-electronics/buck-ccm-analysis/">CCM</a> และ <a href="/learn/power-electronics/buck-dcm-analysis/">DCM</a> ลำดับนี้คือลำดับที่แล็บคำนวณให้</p>
+    <h3>ขั้นที่ 1: ช่วงดิวตี้</h3>
+    <div class="tf" id="D1" data-k="duty range vin min vin max ช่วงดิวตี้"><p class="tf-n"><b><span class="fid">D1</span> Duty-cycle range</b> ช่วงดิวตี้</p>
+      \[ D_{\min} = \frac{V_o}{V_{g,\max}},\qquad D_{\max} = \frac{V_o}{V_{g,\min}} \quad(\text{บวกการชดเชยค่าแฝงด้วย H9 ในหน้า CCM}) \]</div>
+    <p>ตรวจว่า \(D_{\max}\) ต่ำกว่าดิวตี้สูงสุดของชิป (เช่น 0.9–0.95) เสมอ ถ้าไม่ ต้องลดอัตราส่วน \(V_{g,\min}/V_o\) หรือเปลี่ยนโทโพโลยี</p>
+    <h3>ขั้นที่ 2–3: ตัวเหนี่ยวนำ</h3>
+    <div class="tf" id="D2" data-k="inductance minimum ripple current l min ความเหนี่ยวนำขั้นต่ำ"><p class="tf-n"><b><span class="fid">D2</span> Minimum L from ripple</b> ค่า L ขั้นต่ำจากริปเปิล</p>
+      \[ L \ge \frac{V_o(1-D_{\min})}{f_s\,\Delta I_L},\qquad \Delta I_L = r\,I_{o,\max}\quad(r = 0.2\text{–}0.4) \]</div>
+    <div class="tf" id="D3" data-k="inductance for ccm at light load critical load ccm ถึงโหลดต่ำสุด"><p class="tf-n"><b><span class="fid">D3</span> L to stay in CCM down to I<sub>o,min</sub></b> L ที่ทำให้ยังเป็น CCM ถึงโหลดต่ำสุด</p>
+      \[ L \ge \frac{V_o(1-D_{\min})}{2\,f_s\,I_{o,\min}} \]</div>
+    <p>สองเกณฑ์ใช้ค่าที่ใหญ่กว่า หรือยอมรับ DCM ที่โหลดเบาถ้าตัวควบคุมรองรับ ทั้งคู่คิดที่ \(V_{g,\max}\) เพราะริปเปิลสูงสุดที่นั่น</p>
+    <div class="tf" id="D4" data-k="inductor peak rms current saturation rating isat กระแสพีก rms ตัวเหนี่ยวนำ"><p class="tf-n"><b><span class="fid">D4</span> Inductor current ratings</b> พิกัดกระแสของตัวเหนี่ยวนำ</p>
+      \[ I_{pk} = I_{o,\max} + \frac{\Delta I_L}{2},\qquad I_{L,rms} = \sqrt{I_{o,\max}^2 + \frac{\Delta I_L^2}{12}},\qquad I_{sat} \ge 1.2\,I_{pk} \;(\text{และ} \ge I_{lim}) \]</div>
+    <h3>ขั้นที่ 4: ตัวเก็บประจุขาออก</h3>
+    <div class="tf" id="D5" data-k="output capacitor esr ripple requirement ตัวเก็บประจุขาออก esr ripple"><p class="tf-n"><b><span class="fid">D5</span> Output capacitor: C and ESR</b> ตัวเก็บประจุขาออก: ค่า C และ ESR</p>
+      \[ \Delta V_o \approx \frac{\Delta I_L}{8Cf_s} + \Delta I_L\,r_C \le \Delta V_{spec} \]
+      \[ C \ge \frac{\Delta I_L}{4f_s\,\Delta V_{spec}},\qquad r_C \le \frac{\Delta V_{spec}}{2\Delta I_L},\qquad I_{C,rms} = \frac{\Delta I_L}{\sqrt{12}} \]</div>
+    <p>แบ่งงบริปเปิลครึ่งต่อครึ่งให้ความจุและ ESR (เป็นขอบบน ค่าจริงต่ำกว่า) นอกจากนี้ต้องดูพิกัดแรงดัน (เผื่อ ≥ 1.25×) ค่ากระแสริปเปิลที่ชิ้นทนได้ และผลของการไบแอส DC ในเซรามิก (ค่าความจุจริงของ MLCC ที่แรงดันใช้งานอาจเหลือครึ่งเดียว)</p>
+    <h3>ขั้นที่ 5: ตัวเก็บประจุขาเข้า</h3>
+    <div class="tf" id="D6" data-k="input capacitor rms current cin ตัวเก็บประจุขาเข้า กระแส rms"><p class="tf-n"><b><span class="fid">D6</span> Input capacitor</b> ตัวเก็บประจุขาเข้า</p>
+      \[ I_{Cin,rms} = I_o\sqrt{D(1-D)} \le \frac{I_o}{2},\qquad C_{in} \ge \frac{I_o\,D(1-D)}{f_s\,\Delta V_{in}} \]</div>
+    <p>กระแสขาเข้าของบั๊กเป็นพัลส์ (ไหลเฉพาะช่วง ON) ตัวเก็บประจุขาเข้าจึงเหนื่อยกว่าขาออกมาก ใช้แบบ low-ESR พิกัดริปเปิลสูง และวางเซรามิกชิดขา Q กับกราวด์</p>
+    <h3>ขั้นที่ 6: ความเค้นของสวิตช์และไดโอด</h3>
+    <div class="tf" id="D7" data-k="switch diode stress voltage current rating ความเค้น สวิตช์ ไดโอด"><p class="tf-n"><b><span class="fid">D7</span> Device stresses</b> ความเค้นของอุปกรณ์</p>
+      \[ V_{ds} \ge 1.5\,V_{g,\max},\qquad V_{rrm} \ge 1.4\,V_{g,\max} \]
+      \[ I_{Q,rms} = \sqrt{D}\,I_{L,rms},\qquad I_{D,avg} = (1-D)\,I_o,\qquad I_{D,rms} = \sqrt{1-D}\,I_{L,rms} \]</div>
+    <h3>ขั้นที่ 7: งบความสูญเสียและประสิทธิภาพ</h3>
+    <div class="tf" id="D8" data-k="loss budget efficiency conduction switching losses งบความสูญเสีย ประสิทธิภาพ"><p class="tf-n"><b><span class="fid">D8</span> Loss budget and efficiency</b> งบความสูญเสียและประสิทธิภาพ</p>
+      \[ P_{loss} = I_{Q,rms}^2R_{on} + \big(V_FI_{D,avg} + R_dI_{D,rms}^2\big) + I_{L,rms}^2r_L + I_{C,rms}^2r_C + P_{sw} \]
+      \[ \eta = \frac{P_o}{P_o + P_{loss}} \]
+      \[ P_{sw} = \tfrac12V_gI_o(t_r+t_f)f_s + Q_gV_{drv}f_s + Q_{rr}V_gf_s + \tfrac12C_{oss}V_g^2f_s \]</div>
+    <h3>ขั้นที่ 8: ขีดจำกัดกระแสและศักยภาพการจ่าย</h3>
+    <div class="tf" id="D9" data-k="current limit peak current mode slope compensation deliverable current ขีดจำกัดกระแส ศักยภาพการจ่าย"><p class="tf-n"><b><span class="fid">D9</span> Current limit and deliverable current</b> ขีดจำกัดกระแสและกระแสที่จ่ายได้</p>
+      \[ I_{lim} \ge 1.15\,\big(I_{o,\max} + \tfrac{\Delta I_L}{2}\big) + m_aD_{\max}T_s,\qquad m_a = 0.6\,\frac{V_o}{L} \]
+      \[ I_{o,deliver} \approx I_{lim} - \frac{\Delta I_L}{2} - m_aDT_s \qquad(\text{และ } I_{lim} < I_{sat}) \]</div>
+    <p>ใน peak current mode สวิตช์ปิดเมื่อกระแสแตะค่าสั่งงาน \(i_c\) ลบเส้นเอียง slope compensation \(m_a\) (ป้องกัน sub-harmonic เมื่อ D &gt; 0.5 ดูหน้า<a href="/learn/power-electronics/compensator-design/">ตัวชดเชย</a>) ค่า \(i_c\) ถูกจำกัดที่ \(I_{lim}\) จึงจำกัดกระแสพีกทุกคาบ กระแสเฉลี่ยที่จ่ายได้จึงต่ำกว่า \(I_{lim}\) เท่ากับครึ่งริปเปิลและส่วนที่เส้นเอียงลดไป — สูตรนี้ตรวจกับ load line ในแล็บ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="parts">
+    <h2 id="parts">เลือกชิ้นส่วนอย่างไร (ตัวเลขจากไลบรารีในแล็บ) <span class="lv lv-i">กลาง</span></h2>
+    <p>ตารางต่อไปนี้ใช้ข้อกำหนด 18–30 V → 12 V, 3 A, 100 kHz และเป็นผลที่แล็บคำนวณจริง ลองเลือกชิ้นเดียวกันแล้วเทียบ</p>
+    <h3>ไดโอด (ที่ V<sub>g</sub> = 30 V, I<sub>o</sub> = 3 A, I<sub>D,avg</sub> = 1.8 A)</h3>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ชนิด</th><th>V<sub>f</sub> + R<sub>d</sub>·i</th><th>Q<sub>rr</sub></th><th>สูญเสียนำกระแส (W)</th><th>ข้อสังเกต</th></tr></thead>
+      <tbody>
+        <tr><td>Schottky 10 A / 45 V</td><td>0.35 V + 25 mΩ</td><td>≈ 0</td><td><b>0.77</b></td><td>ดีที่สุดในกลุ่ม Schottky · ประสิทธิภาพรวม 96.3 %</td></tr>
+        <tr><td>Schottky 5 A / 60 V</td><td>0.35 V + 50 mΩ</td><td>≈ 0</td><td>0.90</td><td>เผื่อแรงดันมากขึ้น</td></tr>
+        <tr><td>Schottky 3 A / 40 V</td><td>0.30 V + 70 mΩ</td><td>≈ 0</td><td>0.92</td><td>กระแส 3 A เกือบเต็มพิกัด เผื่อแรงดัน 1.33× (&lt; 1.4×)</td></tr>
+        <tr><td>Schottky 10 A / 100 V</td><td>0.50 V + 30 mΩ</td><td>≈ 0</td><td>1.06</td><td>ทนแรงดันสูงต้องแลกกับ V<sub>f</sub> สูงขึ้น</td></tr>
+        <tr><td>Schottky 1 A / 40 V</td><td>0.28 V + 220 mΩ</td><td>≈ 0</td><td>1.70</td><td><span class="bk-fail">เกินพิกัด 1 A</span> (กระแสเฉลี่ย 1.8 A)</td></tr>
+        <tr><td>Ultrafast 4 A / 600 V</td><td>0.70 V + 140 mΩ</td><td>40 nC</td><td>2.02 (+0.12 W Q<sub>rr</sub>)</td><td>เหมาะกับแรงดันสูง ไม่เหมาะ 30 V</td></tr>
+        <tr><td>SiC Schottky 4 A / 650 V</td><td>0.95 V + 180 mΩ</td><td>8 nC</td><td>2.69</td><td>V<sub>f</sub> สูงที่แรงดันต่ำ ใช้ในงาน PFC 400 V</td></tr>
+        <tr><td>ซิลิคอนทั่วไป 1N4007</td><td>0.70 V + 100 mΩ</td><td>1.5 µC</td><td>1.80 (+<b>4.5 W</b> Q<sub>rr</sub>)</td><td><span class="bk-fail">ห้ามใช้ที่ความถี่สวิตช์</span> ช้ามาก ร้อนจัด</td></tr>
+        <tr><td>MOSFET ตัวล่าง (synchronous)</td><td>35 mΩ · i (ไม่มี V<sub>f</sub>)</td><td>—</td><td><b>0.19</b></td><td>ประสิทธิภาพรวม 97.8 % · ต้องมี dead-time และตัวขับ 2 ตัว</td></tr>
+      </tbody>
+    </table></div>
+    <h3>ตัวเหนี่ยวนำ (ที่ V<sub>g</sub> = 30 V)</h3>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ตัวเลือก</th><th>ΔI<sub>L</sub></th><th>I<sub>pk</sub></th><th>I<sub>sat</sub> / I<sub>pk</sub></th><th>P ทองแดง (W)</th><th>ผล</th></tr></thead>
+      <tbody>
+        <tr><td>E-core ช่องอากาศ 100 µH · 8 A (ฟอร์ไรต์)</td><td>0.72 A</td><td>3.36 A</td><td>2.38×</td><td>0.18</td><td><span class="bk-pass">ผ่านสบาย</span> แต่อิ่มตัวฉับพลัน</td></tr>
+        <tr><td>โทรอยด์ผงเหล็ก 100 µH · 8 A</td><td>0.72 A</td><td>3.36 A</td><td>2.38×</td><td>0.23</td><td><span class="bk-pass">ผ่าน</span> อิ่มตัวนุ่มนวล</td></tr>
+        <tr><td>โทรอยด์ผงเหล็ก 150 µH · 4 A</td><td>0.48 A</td><td>3.24 A</td><td>1.23×</td><td>0.32</td><td><span class="bk-warnc">ผ่านเฉียด</span> แต่เป็น CCM ถึง 0.24 A</td></tr>
+        <tr><td>Molded powder 100 µH · 2.9 A</td><td>0.72 A</td><td>3.36 A</td><td>0.86×</td><td>0.77</td><td><span class="bk-fail">Isat ต่ำกว่าพีก</span> L ตกที่ยอดคลื่น</td></tr>
+        <tr><td>ฟอร์ไรต์ drum 47 µH · 2.2 A</td><td>1.53 A</td><td>3.77 A</td><td>0.58×</td><td>0.87</td><td><span class="bk-fail">อิ่มตัว</span> ริปเปิลสูงและ Isat ต่ำ</td></tr>
+        <tr><td>ฟอร์ไรต์ drum 220 µH · 1.0 A</td><td>0.33 A</td><td>3.16 A</td><td>0.32×</td><td><b>3.78</b></td><td><span class="bk-fail">DCR ทำให้ร้อน</span> (ขนาดเล็กเกินกับกระแส 3 A)</td></tr>
+        <tr><td>ชอกสัญญาณ 100 µH · 0.3 A</td><td>0.72 A</td><td>3.36 A</td><td>0.09×</td><td><b>13.6</b></td><td><span class="bk-fail">เลือกผิดประเภท</span></td></tr>
+      </tbody>
+    </table></div>
+    <p>ข้อคิด: ตัวเหนี่ยวนำที่ค่า L เท่ากัน พิกัดกระแสต่างกันมาก เพราะขนาดแกนและสายต่างกัน — ดูหน้า <a href="/learn/power-electronics/inductor-design/">ออกแบบและพันตัวเหนี่ยวนำ</a> ว่า L, Isat, DCR มาจากแกนและจำนวนรอบอย่างไร</p>
+    <h3>ตัวเก็บประจุขาออก (ที่ ΔI<sub>L</sub> = 0.72 A, ΔV<sub>o</sub> ต้อง ≤ 120 mV)</h3>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ตัวเลือก (1 ตัว)</th><th>C</th><th>ESR</th><th>ส่วน C (mV)</th><th>ส่วน ESR (mV)</th><th>รวม (mV)</th></tr></thead>
+      <tbody>
+        <tr><td>อลูมิเนียมทั่วไป 100 µF / 35 V</td><td>100 µF</td><td>0.55 Ω</td><td>9.0</td><td><b>396</b></td><td><span class="bk-fail">405</span></td></tr>
+        <tr><td>อลูมิเนียมทั่วไป 470 µF / 25 V</td><td>470 µF</td><td>0.22 Ω</td><td>1.9</td><td><b>158</b></td><td><span class="bk-fail">160</span></td></tr>
+        <tr><td>Low-ESR 220 µF / 25 V</td><td>220 µF</td><td>80 mΩ</td><td>4.1</td><td>57.6</td><td>61.7</td></tr>
+        <tr><td>Low-ESR 470 µF / 25 V</td><td>470 µF</td><td>45 mΩ</td><td>1.9</td><td>32.4</td><td>34.3</td></tr>
+        <tr><td>โพลิเมอร์ 100 µF / 25 V</td><td>100 µF</td><td>20 mΩ</td><td>9.0</td><td>14.4</td><td>23.4</td></tr>
+        <tr><td>โพลิเมอร์ 330 µF / 16 V</td><td>330 µF</td><td>15 mΩ</td><td>2.7</td><td>10.8</td><td><b>13.5</b></td></tr>
+        <tr><td>MLCC X7R 22 µF (ค่าจริง ≈ 12 µF)</td><td>12 µF</td><td>4 mΩ</td><td><b>75</b></td><td>2.9</td><td>77.9</td></tr>
+      </tbody>
+    </table></div>
+    <p>สังเกตความแตกต่างของ &quot;ตัวการ&quot; ในริปเปิล: ตัวเก็บประจุอิเล็กโทรไลต์ถูกกำหนดโดย <b>ESR</b> (ต้องใช้ตัวที่ ESR ต่ำ) ส่วน MLCC ถูกกำหนดโดย <b>ความจุ</b> (ต้องใช้หลายตัวขนานและระวังค่าลดลงตามแรงดัน)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="program">
+    <h2 id="program">โปรแกรมโหลด: ทดสอบกี่โอห์มกี่สภาวะ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตาราง &quot;โปรแกรมโหลด&quot; ในแล็บคือสคริปต์ทดสอบ แต่ละแถวคือหนึ่งสภาวะ:</p>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ช่อง</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr></thead>
+      <tbody>
+        <tr><td>นาน (ms)</td><td>ระยะเวลาของช่วง ควรยาวพอให้แรงดันนิ่ง (หลายเท่าของ \(R\cdot C\) ถ้าเปิดวง; แล็บจะเตือน &quot;ยังไม่นิ่ง&quot;)</td><td>8 ms</td></tr>
+        <tr><td>ชนิดโหลด</td><td>ตัวต้านทาน (Ω) หรือกระแสคงที่ (A) แบบอีโหลด</td><td>4 Ω หรือ 3 A</td></tr>
+        <tr><td>ค่า</td><td>จำนวนโอห์มหรือแอมป์</td><td>48 Ω = โหลดเบา 0.25 A</td></tr>
+        <tr><td>Vin</td><td>แรงดันอินพุตของช่วงนี้ ว่าง = ใช้ค่าปกติ ใช้จำลองแรงดันตก/พุ่ง</td><td>18 V</td></tr>
+      </tbody>
+    </table></div>
+    <p>ปุ่มชุดสำเร็จรูป: <b>ชุดมาตรฐาน</b> (ครึ่งโหลด → เต็มโหลด → โหลดเบา → Vin ต่ำ → Vin สูง) · <b>โหลดเบา ↔ หนัก</b> (ข้ามระหว่าง DCM กับ CCM) · <b>ทดสอบโอเวอร์โหลด</b> (150 % → 250 % → 500 %) · <b>Vin ตก/ขึ้น</b> (ที่โหลดคงที่) จากนั้นแก้ตัวเลขเองได้ทุกช่อง</p>
+    <p>วิธีอ่านผลในตาราง &quot;ผลตรวจ&quot; ต่อช่วง: แดง = ไม่ผ่าน (แรงดันตกเกิน 3 %, ชนขีดจำกัดกระแส, L อิ่มตัว, เกินพิกัดไดโอด) เหลือง = เตือน (แรงดันเบี่ยงในโหมด open loop, พีกชั่วขณะเกิน Isat, ยังไม่นิ่ง) นอกจากนี้ยังบอกว่าช่วงนั้นเป็น CCM หรือ DCM (เปอร์เซ็นต์เวลาว่าง) ประสิทธิภาพ และกำลังสูญเสียรวม</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab-design">
+    <h2 id="lab-design">แล็บออกแบบและทดสอบ <span class="lv lv-i">กลาง</span></h2>
+    <p>เริ่มจากชุดตัวอย่างด้านบน (24 V → 12 V · 3 A) กด &quot;แนะนำชิ้นส่วนให้อัตโนมัติ&quot; เพื่อกลับไปค่าเริ่มต้น เปลี่ยนชิ้นส่วนทีละอย่างแล้วดูตารางตรวจและผลจำลองเปลี่ยนตามทันที</p>
+    <div class="bk-design" id="bkDesign" data-preset="24-12"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่างวิธีทำ (ตรงกับค่าเริ่มต้นของแล็บ)</h2>
+    <div class="wx" id="ex-d-1"><div class="wx-head"><span class="mono">ตัวอย่าง D-1</span><h3>ออกแบบ 18–30 V → 12 V, 3 A, 100 kHz ด้วยมือแล้วเทียบกับแล็บ</h3></div>
+    <ol class="steps">
+      <li><p>D1: \(D_{\min} = 12/30 = 0.4\), \(D_{\max} = 12/18 = 0.667\) (ต่ำกว่า \(D_{max}\) ของชิป 0.92 ✓)</p></li>
+      <li><p>D2: \(\Delta I_L = 0.3\times3 = 0.9\) A → \(L \ge \dfrac{12(1-0.4)}{100k\times0.9} = 80\ \mu\)H · D3: ถ้าต้องการ CCM ถึง 0.3 A: \(L \ge \dfrac{12(0.6)}{2(100k)(0.3)} = 120\ \mu\)H</p></li>
+      <li><p>เลือกตัวเหนี่ยวนำ 100 µH (E-core ช่องอากาศ 8 A, DCR 20 mΩ): \(\Delta I_L = \dfrac{12(0.6)}{100\mu\times100k} = 0.72\) A (24 %) · \(I_{pk} = 3 + 0.36 = 3.36\) A · \(I_{L,rms} = \sqrt{9 + 0.72^2/12} = 3.01\) A · \(I_{sat}/I_{pk} = 8/3.36 = 2.38\times\) ✓ · ขอบ CCM \(I_{o,crit} = \Delta I_L/2 = 0.36\) A (สูงกว่า 0.3 A ที่ต้องการ → เตือน DCM ที่โหลดเบา; ใช้ 150 µH จะได้ 0.24 A)</p></li>
+      <li><p>D5: \(C \ge \dfrac{0.9}{4(100k)(0.12)} = 18.75\ \mu\)F และ \(r_C \le \dfrac{0.12}{2(0.9)} = 66.7\) mΩ → เลือกโพลิเมอร์ 330 µF / 16 V (ESR 15 mΩ): \(\Delta V_o \approx \dfrac{0.72}{8(330\mu)(100k)} + 0.72(0.015) = 2.7 + 10.8 = 13.5\) mV ✓ (เป้า 120 mV)</p></li>
+      <li><p>D6: \(I_{Cin,rms} \le I_o\sqrt{0.4\times0.6} = 1.47\) A (สูงสุด 1.5 A ที่ D = 0.5) · \(C_{in} \ge \dfrac{0.25(3)}{100k(0.02)(18)} = 20.8\ \mu\)F</p></li>
+      <li><p>D7: ไดโอด Schottky 10 A / 45 V: \(V_{rrm}/V_{g,max} = 1.5\times\) ✓ · \(I_{D,avg} = (1-0.4)(3) = 1.8\) A ✓ · MOSFET 55 V (\(1.83\times\)), \(I_{Q,rms} = \sqrt{0.4}(3.01) = 1.9\) A ✓</p></li>
+      <li><p>D8 ที่ 30 V: \(P_{R_{on}} = 0.035(1.9^2) = 0.127\) W · \(P_{diode} = 0.35(1.8) + 0.025(2.33^2) = 0.63 + 0.136 = 0.766\) W · \(P_{Cu} = 0.02(3.01^2) = 0.181\) W · \(P_{sw} = 0.312\) W รวม 1.39 W → \(\eta = \dfrac{36}{36 + 1.39} = 96.3\%\) · ที่ 18 V: 97.3 % ตรงกับตารางในแล็บ (97.3 / 96.7 / 96.3 % ที่ 18 / 24 / 30 V)</p></li>
+      <li><p>D9: \(I_{lim} = 1.15(3 + 0.36) + 0.6\dfrac{12}{100\mu}\cdot\dfrac{0.667}{100k} = 3.86 + 0.48 = 4.34\) A ซึ่งต่ำกว่า \(I_{sat} = 8\) A ✓ — ตรงกับค่า \(I_{lim}\) ที่แล็บตั้งให้</p></li>
+    </ol></div>
+    <div class="wx" id="ex-d-2"><div class="wx-head"><span class="mono">ตัวอย่าง D-2</span><h3>อ่านผลของโปรแกรมโหลดมาตรฐาน (peak current mode)</h3></div>
+    <ol class="steps">
+      <li><p>ช่วง 1–2 (ครึ่งโหลด 1.5 A → เต็มโหลด 3 A): \(V_o = 12.00\) V ทุกช่วงด้วยริปเปิล 9.1 mV p-p · iL สูงสุด 3.3 A ที่ 3 A (ตรงกับ \(I_{pk}\) ที่ 24 V: \(3 + 0.3 = 3.3\) A ✓)</p></li>
+      <li><p>ช่วง 3 (R = 48 Ω, 0.25 A): เข้า <b>DCM</b> ใช้เวลาว่าง 9.4 % (กระแสเฉลี่ย 0.25 A < \(I_{o,crit}\) = 0.30 A ที่ 24 V) แรงดันยังคง 12 V เพราะวงป้อนกลับลดดิวตี้เอง (ตามหน้า DCM) ประสิทธิภาพ 96.7 %</p></li>
+      <li><p>ช่วง 4–5 (Vin = 18 V และ 30 V ที่ 3 A): \(V_o\) ยังเป็น 12.00 V ริปเปิล 6.0 mV และ 11 mV (ΔiL เปลี่ยนตาม \(1-D\)) ประสิทธิภาพ 97.3 % และ 96.3 %</p></li>
+      <li><p>เปลี่ยนไปใช้ <b>Open loop</b> (D = 0.5134 ที่ Vin 24 V, 3 A): ช่วง 1: 12.07 V · ช่วง 2: 12.00 V · ช่วง 3 (โหลดเบา, DCM): <b>≈ 12.9 V</b> เมื่อนิ่งจริง (+7 %) — ในช่วงสั้น 8 ms แล็บอ่านได้ 13.1 V และเตือน &quot;ยังไม่นิ่ง&quot; เพราะ \(RC = 48\times330\mu = 16\) ms จึงควรยืดช่วงเป็น 60–80 ms · ช่วง 4 (Vin 18 V): <b>8.96 V</b> (−25 %) · ช่วง 5 (Vin 30 V): <b>15.05 V</b> (+25 %) — \(V_o \propto V_g\) ตาม \(G_{vg} = D\) และ DCM ทำให้สูงขึ้น (หน้า<a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอน</a>)</p></li>
+    </ol></div>
+    <div class="wx" id="ex-d-3"><div class="wx-head"><span class="mono">ตัวอย่าง D-3</span><h3>กระแสสูงสุดที่จ่ายได้ (capability)</h3></div>
+    <ol class="steps">
+      <li><p>กดปุ่ม &quot;วัดศักยภาพการจ่ายกระแส&quot; ที่ Vin 24 V แบบ peak current mode: แรงดันเริ่มตกต่ำกว่า 98 % หลังกระแส ≈ 3.5 A (1.17× ของ \(I_{o,max}\))</p></li>
+      <li><p>สาเหตุ: ชนขีดจำกัดกระแส \(I_{lim} = 4.34\) A ตรวจด้วย D9: \(I_{o,deliver} \approx 4.34 - 0.30 - m_aDT_s\) โดย \(m_aDT_s = 0.6\cdot\dfrac{12}{100\mu}\cdot\dfrac{0.5}{100k} = 0.36\) → \(4.34 - 0.30 - 0.36 = 3.68\) A สอดคล้องกับที่วัด (ระหว่าง 3.5–3.7 A ตามความละเอียดของจุดวัด)</p></li>
+      <li><p>ถ้าอยากจ่ายได้มากกว่านี้: เพิ่ม \(I_{lim}\) (ต้องไม่เกิน \(I_{sat}\) = 8 A และไม่เกินพิกัดไดโอด 10 A) หรือเปลี่ยนเป็นตัวเหนี่ยวนำที่ L ใหญ่ขึ้นเพื่อลดริปเปิล</p></li>
+    </ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="capability">
+    <h2 id="capability">วิธีอ่านกราฟศักยภาพการจ่ายกระแส (load line) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ส่วน ⑤ ในแล็บไล่กระแสโหลดตั้งแต่ 4 % ถึง 220 % ของ \(I_{o,max}\) แล้ววัดสภาวะคงตัวของแต่ละจุด (ใช้ Vin ตามที่เลือก) กราฟมีสามภาพ:</p>
+    <ul>
+      <li><b>Vo เทียบ Io:</b> เส้นราบที่ 12 V คือช่วงควบคุมได้ พื้นเขียว/แดงบอกจุดที่แรงดันตกต่ำกว่า 98 % (สาเหตุถูกวิเคราะห์ให้ในกล่องสรุปด้านบนกราฟ)</li>
+      <li><b>iL,pk เทียบ Io:</b> เทียบกับเส้น \(I_{sat}\) (ตัวเหนี่ยวนำ) และ \(I_{lim}\) (ชิป) เห็นว่าใครชนก่อน</li>
+      <li><b>ประสิทธิภาพ:</b> โดยรวมสูงสุดที่โหลดปานกลาง ตกที่โหลดเบา (สูญเสียคงที่จากสวิตช์) และตกที่โหลดหนัก (สูญเสีย \(I^2R\)) · เส้นประคือสัดส่วนเวลาว่างของ DCM</li>
+    </ul>
+    <p><b>Open loop vs peak current mode:</b> open loop ไม่มีการจำกัดกระแส จ่ายได้เกินพิกัดจนส่วนประกอบพังแต่แรงดันตกเล็กน้อยตามความต้านทานแฝง (load regulation) ส่วน peak current mode จำกัดกระแสเด็ดขาด แรงดันจึงตกลงเป็นเส้นตรง (ลักษณะแหล่งจ่ายกระแสคงที่) เมื่อเกินขีดจำกัด — ซึ่งเป็นพฤติกรรมที่ต้องการเมื่อลัดวงจร</p>
+
+    <h3 id="worksheets">ใบงานทดลอง</h3>
+    <div class="bk-ws" id="wsd1"><p><b>ใบงาน D1 — ออกแบบตามข้อกำหนด:</b> เริ่มจากชุด 24 V → 12 V · 3 A ตรวจตารางว่าทุกข้อผ่าน บันทึกประสิทธิภาพที่ 3 Vin เทียบตัวอย่าง D-1 แล้วสลับเป็น 12 V → 5 V และ 48 V → 12 V กด &quot;แนะนำชิ้นส่วน&quot; ดูว่าเลือกต่างกันอย่างไร</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign">โหลด 24 V → 12 V ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="12-5" data-bk-target="bkDesign">12 V → 5 V ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="48-12" data-bk-target="bkDesign">48 V → 12 V ↑</button></div>
+    <div class="bk-ws" id="wsd2"><p><b>ใบงาน D2 — เลือกตัวเหนี่ยวนำผิด:</b> เปลี่ยนเป็นชอกสัญญาณ 100 µH 0.3 A ดูทุกข้อที่เปลี่ยนเป็นแดง จากนั้นลอง Molded powder 100 µH 2.9 A (Isat ต่ำกว่าพีก 3.36 A) ว่าผลจำลองต่างจากชอกสัญญาณอย่างไร</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-ind="bad100">ชอกสัญญาณ 0.3 A ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-ind="mp100">Molded powder 2.9 A ↑</button></div>
+    <div class="bk-ws" id="wsd3"><p><b>ใบงาน D3 — อิ่มตัวฉับพลัน vs นุ่มนวล:</b> ฟอร์ไรต์ drum 47 µH 2.2 A (อิ่มตัวฉับพลัน) กับ Molded powder 47 µH 4 A (นุ่มนวล) ใช้ข้อกำหนด 24 V → 12 V เทียบ iL สูงสุดในตารางและรูปร่างกราฟ iL</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-ind="fd47">ฟอร์ไรต์ drum ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-ind="mp47">Molded powder ↑</button></div>
+    <div class="bk-ws" id="wsd4"><p><b>ใบงาน D4 — เลือกไดโอด:</b> เปลี่ยนเป็น Schottky 3 A, 10 A/100 V, ultrafast 4 A, 1N4007 บันทึกกำลังสูญเสียของไดโอดและประสิทธิภาพ เทียบตารางในส่วน &quot;เลือกชิ้นส่วน&quot; แล้วลอง synchronous (ประสิทธิภาพควรสูงขึ้น ~1.5 จุด)</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-dio="uf4a600">Ultrafast ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-dio="si1n4007">1N4007 ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-dio="sync">Synchronous ↑</button></div>
+    <div class="bk-ws" id="wsd5"><p><b>ใบงาน D5 — ตัวเก็บประจุ:</b> เปลี่ยนเป็นอลูมิเนียมทั่วไป 470 µF แล้วดูริปเปิลขาออก (≈ 160 mV เกินเป้า) เปลี่ยนเป็น MLCC 22 µF และเพิ่มจำนวนขนานจาก 1 → 4 ดูว่าริปเปิลลดลงเท่าไร (ส่วนความจุลดลงเป็น 1/4)</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-cap="al470" data-bk-n="1">Al 470 µF ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-cap="mlcc22" data-bk-n="4">MLCC 22 µF × 4 ↑</button></div>
+    <div class="bk-ws" id="wsd6"><p><b>ใบงาน D6 — โหลดเบา ↔ หนัก:</b> โปรแกรมโหลดเบา ↔ หนัก ที่ peak current mode แล้วเปลี่ยนเป็น open loop เทียบ Vo ทุกช่วง ช่วงโหลดเบาที่ใดเข้า DCM และแรงดัน open loop สูงขึ้นเท่าไร</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-prog="light">โหลดเบา ↔ หนัก (PCMC) ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-prog="light" data-bk-ctrl="open">เปิดวง ↑</button></div>
+    <div class="bk-ws" id="wsd7"><p><b>ใบงาน D7 — โอเวอร์โหลดและลัดวงจร:</b> โปรแกรมโอเวอร์โหลด (150 → 250 → 500 %) ดูว่า Vo เป็นเท่าไรเมื่อเกิน \(I_{lim}\) แล้วกดวัดศักยภาพ เปลี่ยน \(I_{lim}\) เป็น 3.5, 4.34, 6 A เทียบกับ D9 แล้วดูว่า Isat ชนก่อนหรือไม่</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-prog="over">โหลดโอเวอร์โหลด ↑</button></div>
+    <div class="bk-ws" id="wsd8"><p><b>ใบงาน D8 — แรงดันอินพุตตก/พุ่ง:</b> โปรแกรม Vin ตก/ขึ้น (18 → 30 V) เทียบ PCMC กับ open loop · open loop ควรได้ 8.96 V และ 15.05 V ตามตัวอย่าง D-2</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-prog="line">Vin ตก/ขึ้น (PCMC) ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="24-12" data-bk-target="bkDesign" data-bk-prog="line" data-bk-ctrl="open">เปิดวง ↑</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดสู่ของจริง</h2>
+    <p>เมื่อค่าจากแล็บผ่านแล้ว: ออกแบบและพันตัวเหนี่ยวนำจริงตาม<a href="/learn/power-electronics/inductor-design/">หน้าออกแบบตัวเหนี่ยวนำ</a> → ตรวจเลย์เอาต์และการวัดตาม<a href="/learn/power-electronics/engineering-techniques/">เทคนิคเชิงช่าง</a> → ออกแบบตัวชดเชยด้วย \(G_{vd}\) จาก<a href="/learn/power-electronics/buck-transfer-functions/">หน้าฟังก์ชันถ่ายโอน</a> และ<a href="/learn/power-electronics/compensator-design/">ตัวชดเชย Type II/III</a> → ทดสอบด้วยแหล่งจ่ายจริงตาม<a href="/learn/power-electronics/test-power-sources/">แหล่งจ่ายทดสอบ</a> → ถ้ามีอาการเสีย ดู<a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a> · ซิมูเลเตอร์เต็มที่มีสโคปและฟังก์ชันเจนเนอเรเตอร์อยู่ที่<a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

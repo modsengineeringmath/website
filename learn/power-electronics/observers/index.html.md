@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # ตัวสังเกตกระแสและสถานะ (Observer) ในคอนเวอร์เตอร์ และการเฝ้าสังเกตสภาวะแวดล้อม
 
-// บทที่ 15.9 · อิเล็กทรอนิกส์กำลัง · Observers & Condition Monitoring
+// บทที่ 15.14 · อิเล็กทรอนิกส์กำลัง · Observers & Condition Monitoring
 
 
 Luenberger observer ประมาณ iL disturbance observer ประมาณกระแสโหลดเพื่อ feedforward Kalman filter ข้อควรระวัง และการเฝ้าสังเกต Vin อุณหภูมิ ESR และการอิ่มตัว

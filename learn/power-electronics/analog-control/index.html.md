@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # ควบคุมคอนเวอร์เตอร์แบบอนาล็อกด้วยออปแอมป์: PWM, Error Amplifier, วัดกระแส, TL494, UC3843
 
-// บทที่ 15.7 · อิเล็กทรอนิกส์กำลัง · Analog Control with Op-Amps
+// บทที่ 15.12 · อิเล็กทรอนิกส์กำลัง · Analog Control with Op-Amps
 
 
 สร้าง PWM ด้วยออปแอมป์ล้วน error amplifier การเลือกออปแอมป์ วิธีวัดกระแส 4 แบบ ชิปคลาสสิก TL494 UC384x TL431 + optocoupler และเช็กลิสต์

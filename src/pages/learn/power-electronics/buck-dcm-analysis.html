@@ -1,0 +1,261 @@
+<!--meta
+{
+  "title": "บั๊กโหมด DCM: หาดิวตี้ไซเคิลจากโหลด M = 2/(1+√(1+4K/D²)) พร้อมแล็บ | อาจารย์มด",
+  "h1": "บั๊กคอนเวอร์เตอร์โหมด DCM: ไล่วงจรสามช่วงเวลาเพื่อหาดิวตี้ไซเคิลจากโหลด M = 2/(1+√(1+4K/D²))",
+  "description": "ไล่วงจรบั๊กโหมด DCM สามช่วง D1 D2 D3 หา M = 2/(1+√(1+4K/D²)) และดิวตี้ที่ต้องใช้ D = M√(K/(1−M)) พร้อมกราฟดิวตี้เทียบโหลด กระแส RMS และแล็บเทียบกับซิมูเลชันสวิตชิ่ง",
+  "ogTitle": "บั๊ก DCM: ไล่วงจรหา D จากโหลด · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "buck-dcm-analysis",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-15",
+  "updated": "2026-10-15",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Buck converter", "Discontinuous conduction mode", "Duty cycle", "Critical load", "Light-load operation", "Conversion ratio"],
+  "scripts": ["/assets/lesson.js", "/assets/buck-core.js", "/assets/buck-ui.js", "/assets/buck-lab.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://modsengineeringmath.com/learn/power-electronics/buck-dcm-analysis/#lab",
+      "name": "แล็บดิวตี้ที่ต้องใช้เทียบโหลดของบั๊ก (CCM/DCM)",
+      "alternateName": "Buck converter duty cycle versus load (CCM/DCM) lab",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "isAccessibleForFree": true,
+      "inLanguage": "th",
+      "url": "https://modsengineeringmath.com/learn/power-electronics/buck-dcm-analysis/#lab-duty",
+      "description": "กราฟดิวตี้ที่ต้องใช้ให้ได้แรงดันเป้าหมายเมื่อโหลดเปลี่ยน แสดงจุดแบ่ง CCM/DCM และกราฟอัตราส่วนแปลงผัน M(D,K) แบบโต้ตอบ พร้อมรูปคลื่นจากการจำลองสวิตชิ่ง",
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {
+      "q": "ทำไมบั๊กโหมด DCM ถึงมีแรงดันขาออกสูงขึ้นเมื่อโหลดเบาและดิวตี้คงที่?",
+      "a": "ใน DCM กระแสตัวเหนี่ยวนำหยุดที่ศูนย์ พลังงานต่อคาบที่ส่งให้โหลดคือ ½·L·ipk² เมื่อโหลดเบา พลังงานนี้เกินความต้องการ แรงดันตัวเก็บประจุจึงสูงขึ้นจนกว่า Vo จะสูงพอให้ช่วง OFF สั้นลงและสมดุล ที่ไม่มีโหลดเลย M = 2/(1+√(1+4K/D²)) → 1 คือ Vo → Vin จึงต้องใช้วงป้อนกลับลดดิวตี้"
+    },
+    {
+      "q": "ดิวตี้ที่ต้องใช้ใน DCM คำนวณอย่างไร?",
+      "a": "ใช้ D = M·√(K/(1−M)) เมื่อ M = Vo/Vin และ K = 2L/(R·Ts) หรือเขียนด้วยกระแสโหลดได้เป็น D = √(2·L·Io·Vo / (Ts·Vin·(Vin − Vo))) ค่านี้ต่ำกว่า Vo/Vin ใน CCM และลดลงเมื่อโหลดเบาลง"
+    },
+    {
+      "q": "ค่า K = 2L/(R·Ts) บอกอะไร?",
+      "a": "เป็นพารามิเตอร์ไร้หน่วยที่รวม L โหลด และความถี่สวิตช์ ถ้า K มากกว่า 1−D วงจรเป็น CCM ถ้าน้อยกว่าเป็น DCM ยิ่ง K เล็กยิ่งลึกเข้า DCM"
+    },
+    {
+      "q": "บั๊กแบบ synchronous มี DCM ไหม?",
+      "a": "ไม่มีถ้าให้ MOSFET ตัวล่างนำต่อเนื่อง (forced CCM) เพราะกระแสติดลบได้ แต่ชิปส่วนใหญ่มีโหมดจำลองไดโอด (diode emulation) ที่ปิด MOSFET ตัวล่างเมื่อกระแสถึงศูนย์ เพื่อประสิทธิภาพที่โหลดเบา ซึ่งทำให้เข้า DCM เหมือนใช้ไดโอด"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li><a href="/learn/power-electronics/buck-converter/">บั๊ก</a></li><li>DCM · หาดิวตี้</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.3 · อิเล็กทรอนิกส์กำลัง · Buck in DCM — Three-Interval Analysis & Duty Cycle</p>
+      <h1>บั๊กคอนเวอร์เตอร์โหมด DCM: ไล่วงจรสามช่วงเวลาเพื่อหาดิวตี้ไซเคิลจากโหลด M = 2/(1+√(1+4K/D²))</h1>
+      <p class="lede">เมื่อโหลดเบาจนกระแสตัวเหนี่ยวนำลงถึงศูนย์ ดิวตี้ไม่ใช่ V<sub>o</sub>/V<sub>g</sub> อีกต่อไป แต่ขึ้นกับโหลด หน้านี้ไล่วงจรทีละช่วง D₁ D₂ D₃ จนได้สูตรอัตราส่วนแปลงผัน สูตรดิวตี้ที่ต้องใช้ กระแสพีกและ RMS พร้อมกราฟแล็บเทียบกับการจำลองสวิตชิ่ง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#intervals">สามช่วงเวลา</a>
+        <a class="btn btn-ghost btn-sm" href="#ratio">สูตร M(D,K)</a>
+        <a class="btn btn-ghost btn-sm" href="#duty">ดิวตี้ที่ต้องใช้</a>
+        <a class="btn btn-ghost btn-sm" href="#stress">กระแส RMS</a>
+        <a class="btn btn-ghost btn-sm" href="#lab-duty">แล็บ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ช่วง \(D_1\): iL ขึ้นถึง \(i_{pk}\) · \(D_2\): iL ลงถึง 0 · \(D_3\): iL = 0 (ว่าง) เป็นเงื่อนไขของ DCM</li>
+          <li>volt-second: \(D_2 = D_1(1-M)/M\) · กระแสเฉลี่ย: \(I_o = \tfrac12 i_{pk}(D_1 + D_2)\)</li>
+          <li>ได้ \(M = \dfrac{2}{1+\sqrt{1+4K/D^2}}\) เมื่อ \(K = \dfrac{2L}{RT_s}\) และดิวตี้ที่ต้องใช้ \(D = M\sqrt{\dfrac{K}{1-M}}\)</li>
+          <li>ที่ดิวตี้คงที่ \(V_o\) เพิ่มเมื่อโหลดเบา สูงสุดที่ \(V_g\) ที่ไม่มีโหลด → ต้องใช้วงป้อนกลับ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น dcm, duty, ipk, K, ดิวตี้, โหลดเบา" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมถึงเกิด DCM <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>จากหน้า <a href="/learn/power-electronics/buck-ccm-analysis/">CCM</a> กระแสตัวเหนี่ยวนำเป็นสามเหลี่ยมที่มีค่าเฉลี่ยเท่ากับกระแสโหลด \(I_o\) ถ้า \(I_o\) น้อยกว่าครึ่งหนึ่งของริปเปิล \(\Delta i_L/2\) ปลายสามเหลี่ยมจะต่ำกว่าศูนย์ แต่ไดโอดกันกระแสย้อน \(i_L\) จึงหยุดที่ศูนย์แล้วค้างไว้จนกว่าสวิตช์จะปิดวงจรรอบใหม่ เรียกว่า <b>โหมดกระแสไม่ต่อเนื่อง (DCM)</b></p>
+    <ul>
+      <li><b>โหลดเบา</b> (R ใหญ่) เช่นอุปกรณ์ที่อยู่ในโหมดรอ (standby)</li>
+      <li><b>L เล็ก</b> หรือ <b>f<sub>s</sub> ต่ำ</b> ทำให้ริปเปิลใหญ่เมื่อเทียบกับกระแสโหลด</li>
+      <li><b>V<sub>g</sub> สูง</b> (D ต่ำ) ริปเปิลมาก ขอบเขต CCM แย่ลง</li>
+    </ul>
+    <p>บางงานเลือก DCM โดยตั้งใจ: ใช้ L เล็ก ไดโอดไม่มี reverse recovery (กระแสเป็นศูนย์ก่อนไดโอดปิด) และประสิทธิภาพตอนเบาดี แลกกับกระแสพีกและ RMS ที่สูงกว่า</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="intervals">
+    <h2 id="intervals">ขั้นที่ 1: สามช่วงเวลาในหนึ่งคาบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>แยกเป็นสามช่วง เขียนดิวตี้ของแต่ละช่วงเป็น \(D_1, D_2, D_3\) โดย \(D_1 + D_2 + D_3 = 1\) เฉพาะ \(D_1\) เท่านั้นที่ตัวควบคุมกำหนด (\(D_1 = D\)) ส่วน \(D_2\) ขึ้นกับวงจรและ \(D_3\) คือเวลาที่เหลือ</p>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ช่วง</th><th>สถานะ</th><th>\(v_L\)</th><th>\(i_L\)</th></tr></thead>
+      <tbody>
+        <tr><td>\(D_1T_s\)</td><td>Q นำ ไดโอดไม่นำ</td><td>\(V_g - V_o\)</td><td>เพิ่มจาก 0 ถึง \(i_{pk}\)</td></tr>
+        <tr><td>\(D_2T_s\)</td><td>Q ไม่นำ ไดโอดนำ</td><td>\(-V_o\)</td><td>ลดจาก \(i_{pk}\) ถึง 0</td></tr>
+        <tr><td>\(D_3T_s\)</td><td>ทั้งคู่ไม่นำ (ช่วงว่าง)</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table></div>
+    <!--FIG:bk-circuit-idle--><figure class="bk-fig-static"><svg class="bk-sch" viewBox="0 0 540 226" role="img" aria-label="ช่วงว่าง (เฉพาะ DCM): Q และไดโอดไม่นำ iL = 0 มีแต่ C จ่ายโหลด"><path class="dim" d="M40 45 V95"/><circle class="dim" cx="40" cy="115" r="20"/><text class="dim" x="33" y="111">+</text><text class="dim" x="35" y="128">−</text><path class="dim" d="M40 135 V185"/><path class="dim" d="M40 45 H95"/><circle cx="95" cy="45" r="3" style="fill:currentColor" class="dim"/><circle cx="145" cy="45" r="3" style="fill:currentColor" class="dim"/><path class="dim" d="M95 45 L136 23"/><text class="" x="120" y="20">Q</text><text class="lbl2" x="120" y="70" text-anchor="middle">OFF</text><path class="dim" d="M145 45 H200"/><circle cx="200" cy="45" r="3" style="fill:currentColor"/><path class="dim" d="M200 45 V92"/><path class="dim" d="M188 128 H212 L200 100 Z"/><path class="dim" d="M188 98 H212"/><path class="dim" d="M200 128 V185"/><text class="" x="168" y="118">D</text><path class="dim" d="M200 45 H215"/><path class="dim" d="M215 45 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0"/><path class="dim" d="M295 45 H330"/><text class="" x="255" y="20">L</text><circle cx="330" cy="45" r="3" style="fill:currentColor"/><path class="hot" d="M330 45 H370"/><path class="hot" d="M370 45 H470"/><path class="hot" d="M370 45 V105"/><path class="hot" d="M356 105 H384 M356 115 H384"/><path class="hot" d="M370 115 V185"/><text class="" x="392" y="116">C</text><path class="hot" d="M470 45 V80"/><path class="hot" d="M470 80 l-9 6 l18 12 l-18 12 l18 12 l-18 12 l9 6"/><path class="hot" d="M470 140 V185"/><text class="" x="490" y="116">R</text><path class="hot" d="M470 185 H370"/><path class="dim" d="M370 185 H40"/><text class="" x="24" y="118" text-anchor="end">Vin</text><text class="lbl" x="335" y="36">+</text><text class="lbl" x="338" y="168">Vo</text><path class="lbl" style="fill:none;stroke:var(--accent);stroke-width:1.4" d="M345 55 V165"/><path class="hot" style="fill:currentColor" d="M465 114 L470 126 L475 114z"/><path class="hot" style="fill:currentColor" d="M426 180 L414 185 L426 190z"/><text class="lbl" x="255" y="80" text-anchor="middle">iL = 0 · vL = 0</text><text class="lbl" x="255" y="98" text-anchor="middle">C จ่ายโหลดเอง</text><text class="" x="280" y="214" text-anchor="middle">ช่วงว่าง (เฉพาะ DCM): Q และไดโอดไม่นำ iL = 0 มีแต่ C จ่ายโหลด</text></svg></figure><!--/FIG-->
+    <p>ช่วงว่าง (\(D_3\)) ไม่มีกระแสผ่านตัวเหนี่ยวนำ จึงไม่มีแรงดันคร่อม \(v_L = 0\) โหนด SW ลอยอยู่ที่แรงดันขาออก (ในวงจรจริงมันสั่นด้วย L กับ \(C_{oss}\) ของสวิตช์ที่ความถี่ \(\approx 1/(2\pi\sqrt{LC_{oss}})\) ซึ่งไม่ได้อยู่ในแบบจำลองอุดมคตินี้) ส่วนโหลดได้รับพลังงานจากตัวเก็บประจุ C เพียงอย่างเดียว</p>
+    <!--FIG:bk-vl-dcm--><figure class="bk-fig-static"><svg class="bk-svg bk-staticsvg" viewBox="0 0 700 330" role="img" aria-label="รูปคลื่น vL และ iL ในโหมด DCM มีช่วงว่าง D3"><rect class="bk-frame" x="70" y="28" width="540" height="110"/><rect class="bk-frame" x="70" y="190" width="540" height="100"/><line class="bk-ref" x1="70" x2="610" y1="85.1" y2="85.1"/><rect class="bk-band on" x="70" y="42.8" width="108" height="42.3" style="opacity:2.2"/><rect class="bk-band off" x="178" y="85.1" width="108" height="42.3" style="opacity:2.2"/><rect class="bk-band on" x="340" y="42.8" width="108" height="42.3" style="opacity:2.2"/><rect class="bk-band off" x="448" y="85.1" width="108" height="42.3" style="opacity:2.2"/><path class="bk-line s1" d="M70 42.8 L178 42.8 L178 127.4 L286 127.4 L286 85.1 L340 85.1 L340 42.8 L448 42.8 L448 127.4 L556 127.4 L556 85.1 L610 85.1"/><path class="bk-line s2" d="M70 290 L178 200 L286 290 L340 290 L340 290 L448 200 L556 290 L610 290"/><text class="bk-tk" x="62" y="46.8" text-anchor="end">Vin − Vo</text><text class="bk-tk" x="62" y="131.4" text-anchor="end">−Vo</text><text class="bk-tk" x="62" y="89.1" text-anchor="end">0</text><text class="bk-title" x="70" y="18">แรงดันคร่อมตัวเหนี่ยวนำ vL(t)</text><text class="bk-title" x="70" y="182">กระแสตัวเหนี่ยวนำ iL(t)</text><text class="bk-tk" x="124" y="308" text-anchor="middle">D₁·Ts</text><line class="bk-ref" x1="70" x2="70" y1="28" y2="290"/><text class="bk-tk" x="232" y="308" text-anchor="middle">D₂·Ts</text><line class="bk-ref" x1="178" x2="178" y1="28" y2="290"/><text class="bk-tk" x="313" y="308" text-anchor="middle">D₃·Ts</text><line class="bk-ref" x1="286" x2="286" y1="28" y2="290"/><line class="bk-ref" x1="340" x2="340" y1="28" y2="290"/><line class="bk-ref" x1="610" x2="610" y1="28" y2="290"/><text class="bk-bl" x="124" y="68" text-anchor="middle">พื้นที่ A₁</text><text class="bk-bl" x="232" y="110.3" text-anchor="middle">พื้นที่ A₂</text><text class="bk-tk" x="616" y="204">ipk</text><text class="bk-tk" x="616" y="294">0</text></svg></figure><!--/FIG-->
+    <div class="tf" id="J1" data-k="three intervals dcm conditions ช่วงเวลาสามช่วง dcm เงื่อนไข"><p class="tf-n"><b><span class="fid">J1</span> Three intervals of DCM</b> สามช่วงเวลาของ DCM</p>
+      \[ D_1 + D_2 + D_3 = 1,\qquad D_1 = D,\qquad D_3 > 0 \;\Leftrightarrow\; \text{DCM} \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ratio">
+    <h2 id="ratio">ขั้นที่ 2–4: หาอัตราส่วนแปลงผัน M = V<sub>o</sub>/V<sub>g</sub> <span class="lv lv-i">กลาง</span></h2>
+    <h3>ขั้นที่ 2: กระแสพีกจากช่วง D₁</h3>
+    <p>ในช่วง \(D_1\) กระแสเริ่มที่ศูนย์ เพิ่มด้วยความชัน \((V_g - V_o)/L\) นาน \(D_1T_s\):</p>
+    <div class="tf" id="J2" data-k="peak inductor current dcm ipk กระแสพีก"><p class="tf-n"><b><span class="fid">J2</span> Peak inductor current</b> กระแสพีกตัวเหนี่ยวนำ</p>
+      \[ i_{pk} = \frac{(V_g - V_o)\,D_1T_s}{L} = \frac{V_g(1-M)\,D_1}{Lf_s} \]</div>
+    <h3>ขั้นที่ 3: volt-second balance หา D₂</h3>
+    <p>กระแสเริ่มและจบที่ศูนย์ ดังนั้นพื้นที่ \(v_L\cdot t\) ของช่วง \(D_1\) ต้องหักล้างช่วง \(D_2\) (ช่วง \(D_3\) ไม่มีส่วนร่วมเพราะ \(v_L = 0\)):</p>
+    <p>\[ (V_g - V_o)D_1 - V_oD_2 = 0 \;\Rightarrow\; D_2 = D_1\,\frac{V_g - V_o}{V_o} = D_1\,\frac{1-M}{M} \]</p>
+    <div class="tf" id="J3" data-k="d2 d3 volt-second dcm idle interval ช่วงว่าง"><p class="tf-n"><b><span class="fid">J3</span> Interval lengths D₂ and D₃</b> ความยาวช่วง D₂ และ D₃</p>
+      \[ D_2 = D_1\,\frac{1-M}{M},\qquad D_3 = 1 - D_1 - D_2 = 1 - \frac{D_1}{M} \]
+      \[ \text{DCM } (D_3>0) \Leftrightarrow M > D_1 \]</div>
+    <p>ข้อสังเกต: เงื่อนไขของ DCM คือ \(M > D\) นั่นคือ <b>ใน DCM แรงดันขาออกสูงกว่าที่ \(D\) บอกไว้เสมอ</b> (ในอุดมคติ CCM เท่ากับ \(M = D\) พอดี)</p>
+    <h3>ขั้นที่ 4: charge balance — กระแสเฉลี่ยของสามเหลี่ยม</h3>
+    <p>กระแสเฉลี่ยของ \(i_L\) ต้องเท่ากับกระแสโหลด \(I_o = V_o/R\) พื้นที่สามเหลี่ยมฐาน \((D_1 + D_2)T_s\) สูง \(i_{pk}\) หารด้วย \(T_s\):</p>
+    <div class="tf" id="J4" data-k="average inductor current io dcm กระแสเฉลี่ย charge balance"><p class="tf-n"><b><span class="fid">J4</span> Average current in DCM</b> กระแสเฉลี่ยใน DCM</p>
+      \[ I_o = \frac{V_o}{R} = \frac{1}{2}\,i_{pk}\,(D_1 + D_2) = \frac{1}{2}\,i_{pk}\,\frac{D_1}{M} \]</div>
+    <p>แทน \(i_{pk}\) จาก J2 และ \(V_o = MV_g\):</p>
+    <p>\[ \frac{MV_g}{R} = \frac{1}{2}\cdot\frac{V_g(1-M)D_1T_s}{L}\cdot\frac{D_1}{M} \;\Rightarrow\; M^2 = (1-M)\,\frac{D_1^2RT_s}{2L} = \frac{(1-M)D^2}{K} \]</p>
+    <p>โดยนิยาม \(K \equiv \dfrac{2L}{RT_s}\) (พารามิเตอร์ไร้หน่วยที่รวม L โหลด และความถี่สวิตช์)</p>
+    <p>จัดเป็นสมการกำลังสองของ \(M\): \(K M^2 + D^2 M - D^2 = 0\) ได้รากที่เป็นบวก</p>
+    <p>\[ M = \frac{-D^2 + \sqrt{D^4 + 4KD^2}}{2K} = \frac{D^2\left(\sqrt{1+4K/D^2}-1\right)}{2K} \]</p>
+    <p>คูณบนและล่างด้วย \(\sqrt{1+4K/D^2}+1\) ส่วนบนกลายเป็น \(D^2\cdot 4K/D^2 = 4K\) จึงตัด \(K\) ได้:</p>
+    <div class="tf" id="J5" data-k="dcm conversion ratio M(D,K) อัตราส่วนแปลงผัน dcm"><p class="tf-n"><b><span class="fid">J5</span> DCM conversion ratio</b> อัตราส่วนแปลงผันใน DCM</p>
+      \[ \boxed{M = \frac{V_o}{V_g} = \frac{2}{1+\sqrt{1+4K/D^2}}},\qquad K = \frac{2L}{RT_s} \]</div>
+    <p>ตรวจที่ขอบเขต \(D_3 = 0\) (\(M = D\)): แทน \(M = D\) ได้ \(\sqrt{1+4K/D^2} = 2/D - 1\) ยกกำลังสองและจัดรูปได้ \(K = 1-D\) ตรงกับขอบเขต CCM ในหน้าก่อน ✓ นี่คือ <b>ความต่อเนื่อง</b> ของสองโหมด: สูตร DCM ลู่เข้าสู่ \(M = D\) ที่ขอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="duty">
+    <h2 id="duty">ขั้นที่ 5: ดิวตี้ที่ต้องใช้ใน DCM <span class="lv lv-i">กลาง</span></h2>
+    <p>ในทางปฏิบัติเรารู้ \(V_o\) ที่ต้องการและโหลด จึงต้องการ \(D\) ย้อนจาก \(M\) ใช้สมการก่อนแก้กำลังสอง \(KM^2 = (1-M)D^2\):</p>
+    <div class="tf" id="J6" data-k="required duty cycle dcm ดิวตี้ที่ต้องใช้ ใน dcm inverse"><p class="tf-n"><b><span class="fid">J6</span> Required duty in DCM</b> ดิวตี้ที่ต้องใช้ใน DCM</p>
+      \[ \boxed{D = M\sqrt{\frac{K}{1-M}}} = \sqrt{\frac{2L\,I_o\,V_o}{T_s\,V_g\,(V_g - V_o)}} \]</div>
+    <p>รูปที่สองได้โดยแทน \(K = 2L/(RT_s)\) และ \(R = V_o/I_o\) ผลที่ได้สำคัญมาก: <b>ดิวตี้ที่ต้องใช้ใน DCM แปรตาม \(\sqrt{I_o}\)</b> (โหลดเบาลง 4 เท่า ดิวตี้ลดเหลือครึ่งเดียว) ต่างจาก CCM ที่ดิวตี้คงที่ไม่ขึ้นกับโหลด นี่คือเหตุผลที่คอนเวอร์เตอร์ที่ตั้งดิวตี้คงที่มีแรงดันขาออกลอยเมื่อโหลดเบา และเป็นเหตุผลที่ตัวชดเชยต้องรองรับสองโหมด (ดูหน้า<a href="/learn/power-electronics/buck-transfer-functions/#dcm">ฟังก์ชันถ่ายโอนใน DCM</a>)</p>
+    <div class="tf" id="J7" data-k="boundary dcm ccm critical load iocrit ขอบเขต โหลดวิกฤต"><p class="tf-n"><b><span class="fid">J7</span> Boundary between CCM and DCM</b> ขอบเขตระหว่าง CCM และ DCM</p>
+      \[ K = 1-D \;\Leftrightarrow\; I_{o,crit} = \frac{V_o(1-V_o/V_g)}{2Lf_s} \qquad \text{DCM เมื่อ } I_o < I_{o,crit} \]</div>
+    <p>กราฟในแล็บด้านล่างแสดงเส้นนี้: ดิวตี้ที่ต้องใช้เป็นเส้นราบ (CCM) แล้วโค้งลงตามรากที่สองเมื่อ \(I_o < I_{o,crit}\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="noload">
+    <h2 id="noload">แรงดันขาออกลอยเมื่อไร้โหลด (open loop) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตั้ง \(D\) คงที่แล้วให้โหลดเบาลง (\(R \to \infty\), \(K \to 0\)): ในสูตร J5 \(4K/D^2 \to 0\) จึงได้ \(M \to \dfrac{2}{1+1} = 1\) คือ \(V_o \to V_g\) ไม่ว่าดิวตี้เล็กแค่ไหน (ตัวเก็บประจุถูกชาร์จทีละพัลส์โดยไม่มีอะไรดึงพลังงานออก จนแรงดันสูงถึงระดับอินพุต) ตัวอย่าง J-4 ใช้ตัวเลขจริง ตรงนี้เป็นสาเหตุที่แหล่งจ่ายแบบ open-loop ที่ไม่มีโหลดขั้นต่ำ (dummy load) อาจทำให้แรงดันสูงเกินพิกัดวงจรที่ต่อกับมัน</p>
+    <div class="tf" id="J8" data-k="no load limit open loop voltage rise ไร้โหลด แรงดันสูงขึ้น"><p class="tf-n"><b><span class="fid">J8</span> No-load limit</b> ขีดจำกัดเมื่อไร้โหลด</p>
+      \[ R\to\infty \;\Rightarrow\; K\to 0 \;\Rightarrow\; M \to 1 \qquad \left(\text{ประมาณ } M \approx 1 - \frac{K}{2D^2}\ \text{เมื่อ } K \ll D^2\right) \]</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="stress">
+    <h2 id="stress">กระแส RMS ริปเปิลแรงดัน และความเค้นใน DCM <span class="lv lv-i">กลาง</span></h2>
+    <p>รูปคลื่นเป็นสามเหลี่ยมที่รู้ทั้งความสูง \(i_{pk}\) และความกว้าง จึงคำนวณค่า RMS ได้จาก \(\langle i^2\rangle\) ของสามเหลี่ยม: ความชันเชิงเส้นจาก 0 ถึง \(i_{pk}\) ตลอดช่วงกว้าง \(D\) มีค่า \(\langle i^2\rangle = i_{pk}^2 D/3\)</p>
+    <div class="tf" id="J9" data-k="rms currents dcm switch diode inductor กระแส rms ความเค้น"><p class="tf-n"><b><span class="fid">J9</span> Currents in DCM</b> กระแสต่างๆ ใน DCM</p>
+      \[ I_{Q,rms} = i_{pk}\sqrt{\frac{D_1}{3}},\qquad I_{D,rms} = i_{pk}\sqrt{\frac{D_2}{3}},\qquad I_{L,rms} = i_{pk}\sqrt{\frac{D_1+D_2}{3}} \]
+      \[ I_{g} = \frac{1}{2}i_{pk}D_1,\qquad I_{D,avg} = \frac{1}{2}i_{pk}D_2 \]</div>
+    <p>ริปเปิลแรงดัน (ESR = 0): กระแสเข้า C คือ \(i_L - I_o\) เฉพาะส่วนที่ \(i_L > I_o\) ทำให้ประจุเพิ่ม พื้นที่สามเหลี่ยมเล็กที่อยู่เหนือระดับ \(I_o\) ฐานกว้าง \((i_{pk}-I_o)(D_1+D_2)T_s/i_{pk}\):</p>
+    <div class="tf" id="J10" data-k="output ripple dcm capacitor ripple ริปเปิลแรงดัน dcm"><p class="tf-n"><b><span class="fid">J10</span> Output ripple in DCM (ESR = 0)</b> ริปเปิลแรงดันใน DCM</p>
+      \[ \Delta v_o = \frac{\Delta Q}{C} = \frac{(i_{pk} - I_o)^2\,(D_1+D_2)\,T_s}{2\,C\,i_{pk}} \]</div>
+    <p>เมื่อเทียบกับ CCM ที่โหลดเท่ากัน DCM มี \(i_{pk}\) สูงกว่า \(I_o\) หลายเท่า จึงมีกระแส RMS ในสวิตช์และตัวเหนี่ยวนำสูงกว่าสัดส่วนกับกระแสโหลด สูญเสียการนำ \(I^2R\) จึงเพิ่มขึ้นที่โหลดเบา แต่สูญเสียสวิตช์ลดเพราะ turn-on ที่กระแสศูนย์ ไม่มี reverse recovery ของไดโอด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ในทางปฏิบัติ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <ul>
+      <li><b>ควบคุมแบบป้อนกลับ</b> ปรับ D ตาม J6 เองเมื่อโหลดเปลี่ยน แต่ตัวชดเชยที่ออกแบบสำหรับ CCM (ขั้วคู่) จะผิดทันทีที่เข้า DCM (ขั้วเดียว) ดูหน้า <a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอน</a> และ <a href="/learn/power-electronics/compensator-design/">การออกแบบตัวชดเชย</a></li>
+      <li><b>Synchronous rectifier</b> ถ้าไม่ปิด MOSFET ตัวล่างเมื่อกระแสถึงศูนย์ → forced CCM ไม่เกิด DCM แต่มีกระแสวน ชิปสมัยใหม่จึงมี <i>diode emulation</i> (ปิดที่กระแสศูนย์) หรือ <i>pulse-skipping / burst mode</i> ที่โหลดเบามาก เพื่อรักษาประสิทธิภาพ</li>
+      <li><b>เสียงรบกวน:</b> ช่วงว่างทำให้โหนด SW สั่นด้วย L–C<sub>oss</sub> ซึ่งแผ่ EMI และบางครั้งเกิดเสียงหอนเมื่อความถี่สวิตช์ลดลงเข้าย่านเสียง (burst) — ดู <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a></li>
+      <li><b>ค่าแฝงใน DCM:</b> ตัวแบบที่เสนอเป็นแบบอุดมคติ ค่าแฝงขยับ \(M\) เล็กน้อย การจำลองสวิตชิ่งในแล็บรวมค่าแฝงให้ดูผลได้</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่างวิธีทำ (ตรวจตัวเลขด้วยซิมูเลเตอร์แล้ว)</h2>
+    <p>โจทย์ฐาน: \(V_g = 24\) V, \(L = 300\ \mu\)H, \(C = 100\ \mu\)F, \(f_s = 50\) kHz (\(T_s = 20\ \mu\)s) ไม่มีค่าแฝง (เหมือนหน้า CCM แต่เปลี่ยนโหลด)</p>
+    <div class="wx" id="ex-j-1"><div class="wx-head"><span class="mono">ตัวอย่าง J-1</span><h3>ตั้ง D = 0.5 คงที่ แล้วโหลดเบาลงเป็น R = 100 Ω: V<sub>o</sub> เป็นเท่าไร</h3></div>
+    <ol class="steps">
+      <li><p>\(K = \dfrac{2L}{RT_s} = \dfrac{2(300\mu)}{100(20\mu)} = 0.3\) เทียบ \(1-D = 0.5\): \(K < 1-D\) → <b>DCM</b></p></li>
+      <li><p>J5: \(M = \dfrac{2}{1+\sqrt{1+4(0.3)/0.25}} = \dfrac{2}{1+\sqrt{5.8}} = \dfrac{2}{3.4083} = 0.5868\) → \(V_o = 24\times0.5868 = \mathbf{14.08}\) V (สูงกว่า 12 V ของ CCM!)</p></li>
+      <li><p>J3: \(D_2 = 0.5\times\dfrac{1-0.5868}{0.5868} = 0.3521\) และ \(D_3 = 1 - 0.5 - 0.3521 = 0.1479\) (ช่วงว่าง 14.8 %)</p></li>
+      <li><p>J2: \(i_{pk} = \dfrac{(24 - 14.08)(0.5)(20\mu)}{300\mu} = 0.3306\) A · J4: \(I_o = \tfrac12(0.3306)(0.5 + 0.3521) = 0.1408\) A \(= V_o/R = 14.08/100\) ✓</p></li>
+      <li><p>ตรวจด้วยซิมูเลเตอร์สวิตชิ่ง: \(V_o = 14.08\) V, \(i_{pk} = 0.331\) A ✓</p></li>
+    </ol></div>
+    <div class="wx" id="ex-j-2"><div class="wx-head"><span class="mono">ตัวอย่าง J-2</span><h3>ต้องการ 12 V ที่โหลด R = 100 Ω (0.12 A) ตั้ง D เท่าไร</h3></div>
+    <ol class="steps">
+      <li><p>\(M = 12/24 = 0.5\), \(K = 0.3\) (ข้างต้น) ตรวจโหมด: ขอบเขต \(1-D\) ที่ดิวตี้ CCM คือ 0.5 > 0.3 → DCM</p></li>
+      <li><p>J6: \(D = M\sqrt{\dfrac{K}{1-M}} = 0.5\sqrt{\dfrac{0.3}{0.5}} = 0.5\times0.7746 = \mathbf{0.3873}\) (ไม่ใช่ 0.5!)</p></li>
+      <li><p>ตรวจอีกรูป: \(D = \sqrt{\dfrac{2(300\mu)(0.12)(12)}{(20\mu)(24)(12)}} = \sqrt{0.15} = 0.3873\) ✓</p></li>
+      <li><p>รายละเอียดรูปคลื่น: \(D_2 = D_1(1-M)/M = 0.3873\) และ \(D_3 = 1 - 0.7746 = 0.2254\) · \(i_{pk} = \dfrac{12(0.3873)(20\mu)}{300\mu} = 0.3098\) A · \(I_{Q,rms} = 0.3098\sqrt{0.3873/3} = 0.1113\) A · \(I_{L,rms} = 0.3098\sqrt{0.7746/3} = 0.1574\) A · \(I_g = \tfrac12(0.3098)(0.3873) = 0.0600\) A → \(P_{in} = 24\times0.06 = 1.44\) W \(= 12\times0.12\) ✓</p></li>
+      <li><p>ริปเปิลแรงดัน (J10): \(\Delta v_o = \dfrac{(0.3098-0.12)^2(0.7746)(20\mu)}{2(100\mu)(0.3098)} = 9.0\) mV ซิมูเลเตอร์ให้ 9.02 mV ✓ และซิมที่ \(D = 0.3873\) ให้ \(V_o = 12.001\) V</p></li>
+    </ol></div>
+    <div class="wx" id="ex-j-3"><div class="wx-head"><span class="mono">ตัวอย่าง J-3</span><h3>เลือก L ให้ยังเป็น CCM ถึง 10 % ของโหลดเต็ม</h3></div>
+    <ol class="steps">
+      <li><p>โหลดเต็ม 1.2 A → 10 % คือ \(I_{o,\min} = 0.12\) A</p></li>
+      <li><p>ขอบเขต: \(I_{o,crit} = \dfrac{V_o(1-D)}{2Lf_s} \le I_{o,\min}\) → \(L \ge \dfrac{V_o(1-D)}{2f_sI_{o,\min}}\)</p></li>
+      <li><p>ที่ \(V_g = 24\) V (D = 0.5): \(L \ge \dfrac{12(0.5)}{2(50k)(0.12)} = 500\ \mu\)H</p></li>
+      <li><p>ที่ \(V_g = 30\) V (D = 0.4) แย่กว่า: \(L \ge \dfrac{12(0.6)}{2(50k)(0.12)} = \mathbf{600}\ \mu\)H → เลือก 680 µH (ใหญ่กว่าเดิมที่ใช้ 300 µH สองเท่าเศษ) หรือเพิ่ม \(f_s\) เป็น 100 kHz ใช้ 300–330 µH ได้</p></li>
+    </ol></div>
+    <div class="wx" id="ex-j-4"><div class="wx-head"><span class="mono">ตัวอย่าง J-4</span><h3>ตั้ง D = 0.5 แล้วถอดโหลดเกือบหมด (open loop)</h3></div>
+    <ol class="steps">
+      <li><p>R = 1 kΩ: \(K = 0.03\), \(4K/D^2 = 0.48\) → \(M = \dfrac{2}{1+\sqrt{1.48}} = 0.9023\) → \(V_o = 21.7\) V</p></li>
+      <li><p>R = 10 kΩ: \(K = 0.003\), \(4K/D^2 = 0.048\) → \(M = 0.9883\) → \(V_o = 23.7\) V (ใกล้ 24 V ของอินพุต)</p></li>
+      <li><p>บทเรียน: ตัวเก็บประจุและวงจรปลายทางต้องทนแรงดันอินพุตทั้งหมดแม้ตั้ง D ไว้ที่แรงดันครึ่งหนึ่ง เมื่อไม่มีวงป้อนกลับ</p></li>
+    </ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab-duty">
+    <h2 id="lab-duty">แล็บ: ดิวตี้ที่ต้องใช้เทียบโหลด และ M(D,K) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <h3>กราฟที่ 1: ดิวตี้ที่ต้องใช้ให้ได้ V<sub>o</sub> เมื่อโหลดเปลี่ยน</h3>
+    <p>เลื่อนแถบ I<sub>o</sub> ดูจุดบนเส้น แล้วเปลี่ยน L หรือ f<sub>s</sub> เพื่อดูว่าจุดแบ่ง CCM/DCM ขยับไปที่ไหน ติ๊ก &quot;รวมค่าแฝง&quot; เพื่อดูเส้น CCM ยกสูงขึ้นเล็กน้อยตามกระแส (H9)</p>
+    <div class="bk-duty" id="bkDutyA" data-view="duty-load"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <h3>กราฟที่ 2: อัตราส่วนแปลงผัน M เทียบกับ D สำหรับค่า K ต่างๆ</h3>
+    <p>เส้นเฉียงคือ CCM (\(M = D\)) เส้นโค้งสูงกว่าคือ DCM แต่ละ K จะแตกออกจากเส้นเฉียงที่ \(D = 1-K\) ตามสูตร J5 ยิ่ง K เล็ก (โหลดเบา) เส้นยิ่งสูง</p>
+    <div class="bk-duty" id="bkDutyB" data-view="m-vs-d"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <h3>รูปคลื่นจริงจากการจำลองสวิตชิ่ง</h3>
+    <p>กดตัวอย่าง &quot;DCM โหลดเบา&quot; (D = 0.5, R = 100 Ω → 14.08 V) และ &quot;DCM: หา D ให้ได้ 12 V&quot; (D = 0.3873) แล้วเทียบตารางทฤษฎี–จำลอง</p>
+    <div class="bk-wave" id="bkWaveB" data-preset="dcm" data-presets="dcm,dcmvo,boundary,sync,lowfs,ccm"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+
+    <h3 id="worksheets">ใบงานทดลอง</h3>
+    <div class="bk-ws" id="wsb1"><p><b>ใบงาน B1 — ปีนขึ้นของแรงดันตอนโหลดเบา:</b> ตั้ง D = 0.5 คงที่ เพิ่ม R จาก 60 → 100 → 300 → 1000 Ω บันทึก \(V_o\) เทียบ J5 (12.0 ที่ขอบเขต, 14.08, 18.37, 21.66 V ตามลำดับ) ดูรูปคลื่น iL ที่ช่วงราบ D₃ ยาวขึ้น</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="dcm" data-bk-target="bkWaveB">โหลด R = 100 Ω ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="dcm" data-bk-target="bkWaveB" data-bk-set="R=1000">โหลด R = 1 kΩ ↑</button></div>
+    <div class="bk-ws" id="wsb2"><p><b>ใบงาน B2 — หา D สำหรับ 12 V:</b> เลือกโหมดคำนวณ D จาก Vo เป้าหมาย 12 V ที่ R = 100 Ω ได้ D = 0.3873 เปลี่ยน R เป็น 80, 70, 60 Ω จะได้ D = 0.433, 0.463, 0.500 ตามลำดับ และคงที่ 0.5 เมื่อ R ≤ 60 Ω (เข้า CCM)</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="dcmvo" data-bk-target="bkWaveB">โหลด 12 V ที่ R = 100 Ω ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="dcmvo" data-bk-target="bkWaveB" data-bk-set="R=30">R = 30 Ω ↑</button></div>
+    <div class="bk-ws" id="wsb3"><p><b>ใบงาน B3 — ผลของ L:</b> ที่ R = 100 Ω ตั้ง D = 0.5 เพิ่ม L จาก 300 → 450 → 600 µH ดูว่า \(V_o\) ลดลงเข้าใกล้ 12 V เมื่อ K โตขึ้น ที่ 600 µH ได้ K = 0.6 > 0.5 กลับเป็น CCM และ \(V_o = 12\) V แล้วลองใช้ L = 100 µH ดูว่า \(V_o\) สูงขึ้นเท่าไร</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="dcm" data-bk-target="bkWaveB" data-bk-set="L=0.0006">โหลด L = 600 µH ↑</button></div>
+    <div class="bk-ws" id="wsb4"><p><b>ใบงาน B4 — Synchronous:</b> เปิด Synchronous ที่ R = 100 Ω, D = 0.5 แล้วดู \(V_o\) (12 V แม้โหลดเบา) และ iL ที่ติดลบ (กระแสวนกลับ) สังเกตว่า \(V_o = DV_g\) กลับมาเป็นจริงทุกโหลด</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="sync" data-bk-target="bkWaveB">โหลด Synchronous ↑</button></div>
+    <div class="bk-ws" id="wsb5"><p><b>ใบงาน B5 — เส้นดิวตี้เทียบโหลด:</b> ที่กราฟที่ 1 เลื่อน \(I_o\) แล้วจดค่า D ที่ 0.05, 0.1, 0.2, 0.5, 1 A ควรได้ 0.250, 0.354, 0.500, 0.500, 0.500 เพราะต่ำกว่า \(I_{o,crit}\) = 0.2 A ใช้ \(D = \sqrt{1.25\,I_o}\) (J6) แล้วคงที่ที่ 0.5 ใน CCM</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">สรุปและก้าวต่อไป</h2>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th></th><th>CCM</th><th>DCM</th></tr></thead>
+      <tbody>
+        <tr><td>เงื่อนไข</td><td>\(K > 1-D\)</td><td>\(K < 1-D\) (\(M > D\))</td></tr>
+        <tr><td>\(V_o/V_g\)</td><td>\(D\)</td><td>\(\dfrac{2}{1+\sqrt{1+4K/D^2}}\)</td></tr>
+        <tr><td>ดิวตี้ที่ต้องใช้</td><td>\(V_o/V_g\) ไม่ขึ้นกับโหลด</td><td>\(M\sqrt{K/(1-M)}\) ขึ้นกับ \(\sqrt{I_o}\)</td></tr>
+        <tr><td>กระแสสูงสุด</td><td>\(I_o + \Delta i_L/2\)</td><td>\(i_{pk} = V_g(1-M)D/(Lf_s)\)</td></tr>
+        <tr><td>แรงดันเมื่อไร้โหลด (D คงที่)</td><td>—</td><td>\(\to V_g\)</td></tr>
+        <tr><td>ไดนามิก</td><td>ขั้วคู่ LC</td><td>ขั้วเดียว \(f_p\) (ดูหน้าฟังก์ชันถ่ายโอน)</td></tr>
+      </tbody>
+    </table></div>
+    <p>ต่อไป: <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ยด้วยสเตตสเปซ</a> ซึ่งทำให้ได้ฟังก์ชันถ่ายโอน (รวมกรณี DCM แบบอันดับหนึ่ง) · ย้อนกลับ: <a href="/learn/power-electronics/buck-ccm-analysis/">CCM</a> · นำไปใช้ออกแบบ: <a href="/learn/power-electronics/buck-design-lab/">ออกแบบและทดสอบโหลดหลายสภาวะ</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

@@ -2,14 +2,14 @@
 {
   "title": "บั๊กคอนเวอร์เตอร์ (Buck Converter): หลักการ สูตร ริปเปิล CCM/DCM การออกแบบ และฟังก์ชันถ่ายโอน | อาจารย์มด",
   "h1": "บั๊กคอนเวอร์เตอร์ (Buck Converter): หลักการ สูตร ริปเปิล CCM/DCM การออกแบบ และฟังก์ชันถ่ายโอน",
-  "description": "บั๊กคอนเวอร์เตอร์ละเอียดถึงระดับปริญญาโท: หลักการทำงาน volt-second balance Vo = D·Vin ผลของ Rds(on) DCR และ Vf ริปเปิลกระแสตัวเหนี่ยวนำและแรงดันขาออกรวม ESR ขอบเขต CCM/DCM ความเค้นของสวิตช์ ไดโอด ตัวเก็บประจุ การสูญเสียการนำและการสวิตช์ ฟังก์ชันถ่ายโอน Gvd(s) ตัวอย่างออกแบบ 24 V → 12 V 1.2 A 50 kHz และซิมูเลชันวงจรออนไลน์",
+  "description": "บั๊กคอนเวอร์เตอร์ละเอียดถึงระดับปริญญาโท: หลักการทำงาน volt-second balance Vo = D·Vin ผลของ Rds(on) DCR และ Vf ริปเปิลกระแสตัวเหนี่ยวนำและแรงดันขาออกรวม ESR ขอบเขต CCM/DCM ความเค้นของสวิตช์ ไดโอด ตัวเก็บประจุ การสูญเสียการนำและการสวิตช์ ฟังก์ชันถ่ายโอน Gvd(s) ตัวอย่างออกแบบ 24 V → 12 V 1.2 A 50 kHz และซิมูเลชันวงจรออนไลน์ พร้อมหัวข้อย่อยเชิงลึก 5 หน้า: ไล่วงจร CCM และ DCM หาดิวตี้ไซเคิล แบบจำลองเฉลี่ยด้วยสเตตสเปซ ฟังก์ชันถ่ายโอนทุกคู่อินพุต–เอาต์พุต และแล็บออกแบบพร้อมโปรแกรมโหลด",
   "ogTitle": "บั๊ก · อิเล็กทรอนิกส์กำลัง",
   "lesson": "power-electronics",
   "sub": "buck-converter",
   "nav": "pe",
   "katex": true,
   "published": "2026-10-13",
-  "updated": "2026-10-13",
+  "updated": "2026-10-15",
   "level": [
     "Undergraduate",
     "Graduate"
@@ -20,7 +20,9 @@
     "Volt-second balance",
     "Output voltage ripple",
     "Continuous conduction mode",
-    "Synchronous rectification"
+    "Synchronous rectification",
+    "State-space averaging",
+    "Control-to-output transfer function"
   ],
   "scripts": [
     "/assets/lesson.js",
@@ -31,6 +33,14 @@
     {
       "q": "ทำไมแรงดันขาออกของบั๊กเท่ากับ D คูณแรงดันขาเข้า?",
       "a": "ในสถานะคงตัวแรงดันเฉลี่ยบนตัวเหนี่ยวนำต้องเป็นศูนย์ ช่วงสวิตช์นำ L รับ Vin − Vo นาน DTs ช่วงไดโอดนำรับ −Vo นาน (1−D)Ts รวมกันเป็นศูนย์จะได้ Vo = D·Vin"
+    },
+    {
+      "q": "จะหาดิวตี้ไซเคิลของบั๊กโหมด CCM และ DCM ได้อย่างไร?",
+      "a": "ใน CCM ใช้ volt-second balance ได้ D = Vo/Vin ถ้ามีความต้านทานแฝงใช้ D = (Vo + Vf + IL(rL + Rd)) / (Vin + Vf − IL(Ron − Rd)) ใน DCM ใช้ M = 2/(1+√(1+4K/D²)) เมื่อ K = 2L/(R·Ts) หรือดิวตี้ที่ต้องใช้ D = M√(K/(1−M)) ซึ่งขึ้นกับโหลด ที่มาทีละขั้นอยู่ในหน้าย่อย CCM และ DCM"
+    },
+    {
+      "q": "แบบจำลองสัญญาณเล็กและฟังก์ชันถ่ายโอนของบั๊กหาอย่างไร?",
+      "a": "เขียนสมการสถานะช่วง ON และ OFF เฉลี่ยด้วยดิวตี้ รบกวนรอบจุดทำงานด้วยสัญญาณเล็กแล้วตัดพจน์อันดับสอง ได้เมทริกซ์ A Bd Bg C จากนั้นฟังก์ชันถ่ายโอนทุกคู่อินพุต–เอาต์พุตคือ C(sI−A)^-1 B + E เช่น Gvd = Vin/(LC·s² + (L/R)·s + 1) มีหน้าย่อยพร้อมแล็บสร้างสเตตสเปซและเครื่องวัดสัญญาณเล็กเสมือน"
     },
     {
       "q": "ควรออกแบบริปเปิลกระแสตัวเหนี่ยวนำเท่าไร?",
@@ -50,7 +60,8 @@
       <p class="lede">วงจรลดแรงดัน: volt-second balance V<sub>o</sub> = DV<sub>in</sub> ริปเปิลกระแสและแรงดัน ขอบ CCM/DCM ความเค้นของอุปกรณ์ การสูญเสีย G<sub>vd</sub>(s) และตัวอย่างออกแบบ 24 V → 12 V</p>
       <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
       <div class="trig-quick">
-        <a class="btn btn-primary btn-sm" href="#operation">โครงสร้างและการทำงาน</a>
+        <a class="btn btn-primary btn-sm" href="#subtopics">หัวข้อย่อยเชิงลึก (5 หน้า)</a>
+        <a class="btn btn-ghost btn-sm" href="#operation">โครงสร้างและการทำงาน</a>
         <a class="btn btn-ghost btn-sm" href="#conversion-ratio">อัตราส่วนแปลงผัน</a>
         <a class="btn btn-ghost btn-sm" href="#ripple">Ripple ของกระแสและแรงดัน</a>
         <a class="btn btn-ghost btn-sm" href="#ccm-dcm">ขอบเขต CCM/DCM</a>
@@ -76,9 +87,21 @@
     </div>
 
 
+    <section class="tsec" aria-labelledby="subtopics">
+    <h2 id="subtopics">หัวข้อย่อยของบั๊ก: ไล่วงจร → แบบจำลอง → ออกแบบ</h2>
+    <p>หน้านี้สรุปภาพรวมของบั๊กในหน้าเดียว ส่วนการ <b>ไล่วงจรทีละขั้นเพื่อหาดิวตี้ไซเคิล</b> <b>การสร้างแบบจำลองทางคณิตศาสตร์ด้วยการเฉลี่ยกระแสและแรงดันแล้วทดสอบด้วยสัญญาณเล็ก</b> <b>ฟังก์ชันถ่ายโอนทุกคู่อินพุต–เอาต์พุต</b> และ <b>การออกแบบพร้อมทดสอบโหลดหลายสภาวะ</b> แยกเป็นหัวข้อย่อยเชิงลึก แต่ละหน้ามีแล็บโต้ตอบ ตัวอย่างที่ตรวจตัวเลขแล้ว และใบงาน</p>
+    <ul class="bk-path">
+      <li><a href="/learn/power-electronics/buck-ccm-analysis/"><b>1 · บั๊กโหมด CCM</b><span>ไล่วงจรช่วง ON/OFF ด้วย KVL/KCL → volt-second balance → \(D = V_o/V_g\) · ดิวตี้ที่ต้องใช้เมื่อมี Rds(on) DCR Vf · แล็บรูปคลื่น</span></a></li>
+      <li><a href="/learn/power-electronics/buck-dcm-analysis/"><b>2 · บั๊กโหมด DCM</b><span>สามช่วงเวลา D₁ D₂ D₃ → \(M = 2/(1+\sqrt{1+4K/D^2})\) → ดิวตี้ตามโหลด · ทำไมแรงดันลอยเมื่อไร้โหลด · กราฟดิวตี้เทียบโหลด</span></a></li>
+      <li><a href="/learn/power-electronics/buck-averaged-model/"><b>3 · แบบจำลองเฉลี่ย (state-space averaging)</b><span>เฉลี่ยกระแสตัวเหนี่ยวนำและแรงดันตัวเก็บประจุ → รบกวนสัญญาณเล็ก → เมทริกซ์ A B C E · แล็บสร้างสเตตสเปซและแล็บเทียบกับสวิตชิ่งจริง</span></a></li>
+      <li><a href="/learn/power-electronics/buck-transfer-functions/"><b>4 · ฟังก์ชันถ่ายโอนทุกแบบ</b><span>\(G_{vd}, G_{vg}, Z_{out}, Z_{in}, G_{iLd}\) ที่มาทีละขั้นจาก \(C(sI-A)^{-1}B+E\) · ผลของ ESR DCR · DCM · เครื่องวัดสัญญาณเล็กเสมือน</span></a></li>
+      <li><a href="/learn/power-electronics/buck-design-lab/"><b>5 · ออกแบบ + โปรแกรมโหลด</b><span>เลือก Vin ไดโอด ตัวเหนี่ยวนำ ตัวเก็บประจุ MOSFET · กำหนดโหลดกี่โอห์มในแต่ละช่วงเวลา · ดูกระแสและศักยภาพการจ่าย</span></a></li>
+    </ul>
+    </section>
+
     <section class="tsec" aria-labelledby="operation">
     <h2 id="operation">โครงสร้างและการทำงาน</h2>
-<p>ประกอบด้วยสวิตช์ \(Q\) ไดโอด \(D\) (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ \(L\) และตัวเก็บประจุ \(C\) สวิตช์ทำงานด้วยคาบ \(T_s = 1/f_s\) และ duty ratio \(D\)</p>
+<p>ประกอบด้วยสวิตช์ \(Q\) ไดโอด \(D\) (หรือสวิตช์ตัวล่างในแบบ synchronous) ตัวเหนี่ยวนำ \(L\) และตัวเก็บประจุ \(C\) สวิตช์ทำงานด้วยคาบ \(T_s = 1/f_s\) และ duty ratio \(D\) (ไล่วงจรทีละขั้นอยู่ในหน้า <a href="/learn/power-electronics/buck-ccm-analysis/#states">CCM</a>)</p>
 <ul>
 <li><strong>ช่วง ON</strong> (\(0 \le t \le DT_s\)): \(v_L = V_{in} - V_o\) กระแส \(i_L\) เพิ่มขึ้นเชิงเส้น</li>
 <li><strong>ช่วง OFF</strong> (\(DT_s \le t \le T_s\)): ไดโอดนำ \(v_L = -V_o\) กระแสลดลง</li>
@@ -89,7 +112,7 @@
     <h2 id="conversion-ratio">อัตราส่วนแปลงผัน (Volt-second balance)</h2>
 <div class="tf" id="B1" data-k="volt-second balance (buck) อัตราส่วนแปลงผัน"><p class="tf-n"><b><span class="fid">B1</span> Volt-second balance (buck)</b> อัตราส่วนแปลงผัน</p>
         \[ (V_{in}-V_o)\,DT_s + (-V_o)(1-D)T_s = 0 \;\Rightarrow\; \boxed{V_o = D\,V_{in}} \]</div>
-<p>รวมผลของ \(R_{ds(on)}\), DCR ของขด \(r_L\) และ \(V_F\) ของไดโอด (ใช้ประเมินค่าจริง):</p>
+<p>รวมผลของ \(R_{ds(on)}\), DCR ของขด \(r_L\) และ \(V_F\) ของไดโอด (ใช้ประเมินค่าจริง ที่มาและสูตรดิวตี้ที่ต้องใช้อยู่ใน<a href="/learn/power-electronics/buck-ccm-analysis/#losses">หน้า CCM</a>):</p>
 <div class="tf" id="B2" data-k="conversion ratio with parasitics อัตราส่วนเมื่อมีค่าแฝง"><p class="tf-n"><b><span class="fid">B2</span> Conversion ratio with parasitics</b> อัตราส่วนเมื่อมีค่าแฝง</p>
         \[ V_o \approx \frac{D V_{in} - (1-D)V_F}{1 + (r_L + D R_{ds(on)})/R} \]</div>
     </section>
@@ -105,7 +128,7 @@
 
     <section class="tsec" aria-labelledby="ccm-dcm">
     <h2 id="ccm-dcm">ขอบเขต CCM/DCM</h2>
-<p>นิยาม \(K = 2L/(R T_s)\) วงจรอยู่ใน CCM เมื่อ \(K > K_{crit}(D) = 1-D\) หรือเทียบเท่า \(I_o > \Delta i_L/2\) ใน DCM:</p>
+<p>นิยาม \(K = 2L/(R T_s)\) วงจรอยู่ใน CCM เมื่อ \(K > K_{crit}(D) = 1-D\) หรือเทียบเท่า \(I_o > \Delta i_L/2\) ใน DCM (ที่มาเต็มและดิวตี้ที่ต้องใช้อยู่ใน<a href="/learn/power-electronics/buck-dcm-analysis/">หน้า DCM</a>):</p>
 <div class="tf" id="B4" data-k="dcm conversion ratio อัตราส่วนใน dcm"><p class="tf-n"><b><span class="fid">B4</span> DCM conversion ratio</b> อัตราส่วนใน DCM</p>
         \[ M = \frac{V_o}{V_{in}} = \frac{2}{1+\sqrt{1+4K/D^2}} \]</div>
 <p>DCM ทำให้แรงดันขาออกขึ้นกับโหลด, ฟังก์ชันถ่ายโอนลดเหลือขั้วเด่นเดียว — ตัวชดเชยที่ออกแบบสำหรับ CCM อาจช้าเกินไปใน DCM</p>
@@ -155,7 +178,7 @@ P_{sw}\approx \tfrac12 V_{in} I_o (t_r+t_f) f_s + Q_{rr}V_{in}f_s + Q_g V_{GS} f
 
     <section class="tsec" aria-labelledby="transfer-function">
     <h2 id="transfer-function">แบบจำลองสัญญาณเล็ก</h2>
-<p>จาก state-space averaging (ดู <a href="/learn/power-electronics/small-signal-model/">บทแบบจำลอง</a>):</p>
+<p>จาก state-space averaging (ที่มาทีละขั้นอยู่ใน<a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ยของบั๊ก</a> และฟังก์ชันถ่ายโอนทุกคู่ใน<a href="/learn/power-electronics/buck-transfer-functions/">หน้าฟังก์ชันถ่ายโอน</a> ภาพรวมของบูสต์และบั๊ก-บูสต์ดู <a href="/learn/power-electronics/small-signal-model/">บทแบบจำลอง</a>):</p>
 <div class="tf" id="B6" data-k="control-to-output transfer function ฟังก์ชันถ่ายโอน gvd"><p class="tf-n"><b><span class="fid">B6</span> Control-to-output transfer function</b> ฟังก์ชันถ่ายโอน Gvd</p>
         \[ G_{vd}(s)=\frac{\hat v_o}{\hat d}= V_{in}\,\frac{1+s\,ESR\cdot C}{LC\,s^2 + \left(\frac{L}{R}+ESR\cdot C\right)s + 1},
 \quad \omega_0=\frac{1}{\sqrt{LC}},\; Q = R\sqrt{C/L} \]</div>
@@ -180,6 +203,7 @@ P_{sw}\approx \tfrac12 V_{in} I_o (t_r+t_f) f_s + Q_{rr}V_{in}f_s + Q_g V_{GS} f
 <ul>
 <li>ตั้ง Open loop, D = 0.5 → สังเกต iL เป็นสามเหลี่ยม, Vout ≈ 12 V</li>
 <li>เพิ่ม R เป็น 100 Ω → เข้า DCM (iL แตะศูนย์, switch node ringing ไม่มีในซิมแต่มีในของจริง)</li>
+<li>ลองแล็บเชิงลึกต่อ: <a href="/learn/power-electronics/buck-ccm-analysis/#lab-wave">รูปคลื่น CCM/DCM เทียบสูตร</a> · <a href="/learn/power-electronics/buck-design-lab/#lab-design">ออกแบบ + โปรแกรมโหลด</a></li>
 <li>เปลี่ยนเป็น Peak current mode + Step load → ดู transient</li>
 </ul>
 <div class="pe-lab" data-topo="buck" data-preset="buck-basic" data-compact data-full-link><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>

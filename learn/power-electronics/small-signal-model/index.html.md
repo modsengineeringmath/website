@@ -3,7 +3,7 @@ title: "แบบจำลองสัญญาณเล็กของคอน
 url: https://modsengineeringmath.com/learn/power-electronics/small-signal-model/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > หาฟังก์ชันถ่ายโอนของคอนเวอร์เตอร์ DC-DC ด้วย state-space averaging และ linearization: Gvd Gvg Zout Zin ตารางของบั๊ก บูสต์ บั๊ก-บูสต์ PWM modulator gain ลูปเกน T(s) ดีเลย์ของการควบคุมดิจิทัล เกณฑ์ตัวกรองขาเข้า Middlebrook averaged switch model และสคริปต์ Python วาด Bode
@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # แบบจำลองสัญญาณเล็กของคอนเวอร์เตอร์ DC-DC: State-Space Averaging และฟังก์ชันถ่ายโอน
 
-// บทที่ 15.5 · อิเล็กทรอนิกส์กำลัง · Small-Signal Modeling
+// บทที่ 15.10 · อิเล็กทรอนิกส์กำลัง · Small-Signal Modeling
 
 
 เฉลี่ยสถานะตลอดคาบแล้ว linearize ได้ Gvd G_vg Z_out ตารางฟังก์ชันถ่ายโอนของบั๊ก บูสต์ บั๊ก-บูสต์ PWM gain ลูปเกน และเกณฑ์ฟิลเตอร์ขาเข้าของ Middlebrook
@@ -28,6 +28,8 @@ updated: 2026-10-13
 - ขาเข้าเป็นความต้านทานลบ $-V_{in}^2/P$ → ระวังฟิลเตอร์ขาเข้า
 
 คอนเวอร์เตอร์เป็นระบบ ไม่เชิงเส้นและแปรตามเวลา (สวิตช์เปิด/ปิด) แต่ถ้าสนใจความถี่ต่ำกว่า $f_s/2$ มาก เราเฉลี่ยตลอดคาบแล้ว linearize รอบจุดทำงานได้
+
+อยากเห็นที่มาของบั๊กทีละขั้น? หน้านี้ให้ภาพรวมของบั๊ก บูสต์ บั๊ก-บูสต์ ส่วนที่มาแบบละเอียดของบั๊กอยู่ในชุดเชิงลึก: แบบจำลองเฉลี่ยและสเตตสเปซ (เขียน A₁ B₁ A₂ B₂ → เฉลี่ย → สัญญาณเล็ก พร้อมแล็บ) และ ฟังก์ชันถ่ายโอนทุกคู่อินพุต–เอาต์พุต (Gvd Gvg Zout Zin GiLd และ DCM)
 
 ## State-space averaging (Middlebrook & Ćuk, 1976)
 

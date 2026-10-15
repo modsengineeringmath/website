@@ -12,7 +12,7 @@ updated: 2026-10-13
 
 # ควบคุมคอนเวอร์เตอร์ DC-DC แบบดิจิทัล: ADC, DPWM, Limit Cycle, Tustin และโค้ด PI
 
-// บทที่ 15.8 · อิเล็กทรอนิกส์กำลัง · Digital Control
+// บทที่ 15.13 · อิเล็กทรอนิกส์กำลัง · Digital Control
 
 
 จังหวะสุ่มสัญญาณ ดีเลย์ ความละเอียด DPWM กับ limit cycle แปลงตัวชดเชยด้วย Tustin โค้ด PI พร้อม anti-windup การป้องกันในฮาร์ดแวร์ และขั้นตอน bring-up
