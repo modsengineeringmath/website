@@ -119,7 +119,7 @@ the formula (`<div class="wtfig"><!--FIG:fs-wt-…--><!--/FIG--></div>`) and the
   `/spwm`, `/fft` …) are in `_redirects`.
 
 ## Power electronics (added 2026-10-13)
-Series `power-electronics` in `TOPICS` (build.mjs), topic 13, 4 parts × 17 sub-pages: DC-DC (buck-converter B, boost-converter U,
+Series `power-electronics` in `TOPICS` (build.mjs), topic 13 (chapter 15 on the site), 4 parts × 22 sub-pages (17 original + the 5-page buck deep-dive below): DC-DC (buck-converter B, boost-converter U,
 buck-boost-converter W, cuk-converter K), control (small-signal-model S, compensator-design C, analog-control A, digital-control Z,
 observers O, ai-control), hardware (inductor-design L, test-power-sources V, controller-selection, switching-power-supply),
 practice (engineering-techniques, troubleshooting, converter-lab). Formula cards use the same markup as the other series and appear
@@ -136,6 +136,29 @@ in the hub's formula index; the series is in `MD_SERIES` (Markdown copies for AI
   `/learn/power-electronics/converter-lab/#preset=<name>` opens the full lab with it. Styles: "POWER ELECTRONICS CONVERTER LAB" in site.css.
 - Short URLs (`/power-electronics`, `/pe`, `/buck`, `/boost`, `/cuk`, `/compensator`, `/type-iii`, `/smps`, `/converter-lab` …) are in `_redirects`.
 - Next topics planned on the hub: SEPIC/Zeta, synchronous & interleaved, rectifiers & PFC, LLC & soft switching, DAB, inverters, SiC/GaN, EV charger.
+
+### Buck converter deep-dive (added 2026-10-15)
+Five sub-pages inserted right after `buck-converter` in the `power-electronics` series (so the chapter numbers 15.2–15.6 follow it and every later page moved
+up by five — the `// บทที่ 15.N` eyebrows of the older pages were renumbered; OG images regenerated with `python3 scripts/og.py --prefix learn-power-electronics`):
+`buck-ccm-analysis` (formula prefix H), `buck-dcm-analysis` (J), `buck-averaged-model` (X), `buck-transfer-functions` (T), `buck-design-lab` (D).
+- Engine `assets/buck-core.js` (`window.BuckCore`; copy to `.cjs` for Node because package.json is `"type": "module"`): closed-form CCM/DCM steady state and the
+  required duty cycle (`dutyForVo`, with Rds(on)/DCR/Vf/Rd/synchronous), ideal waveforms, switched → averaged → small-signal state space (`ssModel`), the transfer function of
+  any input (d, vg, ix) → output (vo, iL, iC, ig) pair via `C(sI−A)⁻¹B+E` (`tf`), first-order DCM model, Bode/step helpers, and a switching-level simulator (`simulate`:
+  RK4 per switch interval with exact PWM edges, DCM/current-limit event detection, ESR/DCR/Ron/Vf+Rd, synchronous FET, inductor saturation, load/line program,
+  open loop / PI / peak current mode, per-period loss accounting) plus a virtual network analyzer (`freqPoint`, `freqSweep`) and `designCalc`.
+  **Verification done before publishing:** all 15 transfer functions at 3 operating points agree with an independent numpy Jacobian linearisation to 3·10⁻⁶; the six
+  closed forms on the TF page (Gvd, Gvg, GiLd, GiLg, Zout, Zin with parasitics) match the matrices to 10⁻¹⁵; switching-sim steady state matches the formulas
+  (CCM with parasitics, ideal DCM) to < 0.1 %; Pin − Pout = Σ losses to 10⁻⁵; the virtual network analyzer reproduces the theory to 0.00 dB at low frequency (CCM and DCM).
+  Every number printed in the worked examples was computed by these tools.
+- `assets/buck-parts.js` (`window.BuckParts`): 6 MOSFETs, 10 diodes, 22 inductors (hard/soft/no saturation), 10 capacitors — rounded datasheet-class values for teaching.
+- `assets/buck-ui.js` (SVG charts with hover read-out that follow the theme, slider+number fields, matrix tables, worksheet-button API), `assets/buck-lab.js`
+  (widgets `.bk-wave`, `.bk-duty`, `.bk-ss`, `.bk-avg`, `.bk-tf`), `assets/buck-design.js` (`.bk-design`). Styles: "BUCK CONVERTER DEEP-DIVE LABS" in site.css.
+  Page scripts: `["/assets/lesson.js","/assets/buck-core.js","/assets/buck-ui.js","/assets/buck-lab.js"]`; the design page also loads `buck-parts.js` and `buck-design.js`.
+- Worksheet buttons: `<button data-bk-preset="dcm" data-bk-target="<widget id>" data-bk-set="R=1000;L=0.0006">` loads a preset into a widget (state keys in SI units);
+  `.bk-tf` also takes `data-bk-in`/`data-bk-out`; `.bk-design` takes `data-bk-prog` (std|light|over|line), `data-bk-ctrl` (pcmc|open), `data-bk-ind|dio|cap|fet`, `data-bk-n`.
+- Figures: `python3 scripts/bk_figs.py` fills empty `<!--FIG:bk-…--><!--/FIG-->` blocks (circuits with the active current path, vL/iL waveforms, averaging concept,
+  canonical small-signal circuit, annotated Gvd Bode); `--all` redraws.
+- Short URLs: `/buck-ccm`, `/buck-duty-cycle`, `/buck-dcm`, `/state-space-averaging`, `/buck-averaged-model`, `/buck-transfer-function(s)`, `/gvd`, `/zout`, `/buck-design`, `/buck-load-test` (in `_redirects`).
 
 ## Solar PV system design (added 2026-10-13)
 Series `solar-pv` in `TOPICS` (build.mjs), topic 14, 5 parts × 19 sub-pages: basics (pv-cell P, solar-resource R, panel-selection M),

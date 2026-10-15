@@ -1,0 +1,264 @@
+<!--meta
+{
+  "title": "บั๊กโหมด CCM: ไล่วงจรหาดิวตี้ไซเคิล D = Vo/Vin ทีละขั้น พร้อมแล็บรูปคลื่น | อาจารย์มด",
+  "h1": "บั๊กคอนเวอร์เตอร์โหมด CCM: ไล่วงจรทีละขั้นเพื่อหาดิวตี้ไซเคิล D = Vo/Vin พร้อมค่าแฝงและแล็บรูปคลื่น",
+  "description": "ไล่วงจรบั๊กโหมด CCM ทีละขั้นด้วย KVL/KCL หา volt-second balance, D = Vo/Vin, ริปเปิล, ขอบเขต CCM/DCM และดิวตี้ที่ต้องใช้เมื่อมี Rds(on) DCR Vf พร้อมแล็บรูปคลื่นและตัวอย่างที่ตรวจตัวเลขแล้ว",
+  "ogTitle": "บั๊ก CCM: ไล่วงจรหา D = Vo/Vin · อิเล็กทรอนิกส์กำลัง",
+  "lesson": "power-electronics",
+  "sub": "buck-ccm-analysis",
+  "nav": "pe",
+  "katex": true,
+  "published": "2026-10-15",
+  "updated": "2026-10-15",
+  "level": ["Undergraduate", "Graduate"],
+  "about": ["Buck converter", "Continuous conduction mode", "Duty cycle", "Volt-second balance", "Charge balance", "Inductor current ripple", "Synchronous rectification"],
+  "scripts": ["/assets/lesson.js", "/assets/buck-core.js", "/assets/buck-ui.js", "/assets/buck-lab.js"],
+  "jsonld": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://modsengineeringmath.com/learn/power-electronics/buck-ccm-analysis/#lab",
+      "name": "แล็บรูปคลื่นบั๊กคอนเวอร์เตอร์ CCM/DCM (หาดิวตี้ไซเคิล)",
+      "alternateName": "Buck converter CCM/DCM waveform and duty-cycle lab",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any (web browser)",
+      "isAccessibleForFree": true,
+      "inLanguage": "th",
+      "url": "https://modsengineeringmath.com/learn/power-electronics/buck-ccm-analysis/#lab-wave",
+      "description": "เลือก Vin D หรือ Vo เป้าหมาย โหลด L C fs และค่าความต้านทานแฝง แล้วดูรูปคลื่น iL vsw vL และ ripple ของ Vo เทียบทฤษฎีกับซิมูเลชันสวิตชิ่ง",
+      "author": {"@id": "https://modsengineeringmath.com/#mod"}
+    }
+  ],
+  "faq": [
+    {
+      "q": "ทำไมบั๊กโหมด CCM จึงได้ Vo = D·Vin?",
+      "a": "ในสถานะคงตัวกระแสตัวเหนี่ยวนำต้องกลับมาค่าเดิมเมื่อสิ้นคาบ ช่วง ON ตัวเหนี่ยวนำรับแรงดัน Vin − Vo นาน D·Ts ช่วง OFF รับ −Vo นาน (1−D)·Ts พื้นที่แรงดัน-เวลา (volt-second) ทั้งสองต้องหักล้างกัน (Vin − Vo)·D = Vo·(1−D) จึงได้ Vo = D·Vin"
+    },
+    {
+      "q": "ถ้ามีความต้านทานแฝง ต้องตั้งดิวตี้เท่าไรจึงได้ Vo ที่ต้องการ?",
+      "a": "D = (Vo + Vf + IL(rL + Rd)) / (Vin + Vf − IL(Ron − Rd)) เมื่อ IL = Vo/R คือกระแสโหลด Ron คือ Rds(on) ของสวิตช์ rL คือ DCR ของตัวเหนี่ยวนำ Vf และ Rd คือแรงดันตกและความต้านทานของไดโอด ค่านี้มากกว่า Vo/Vin เล็กน้อยเสมอ และเพิ่มขึ้นตามกระแสโหลด"
+    },
+    {
+      "q": "วงจรบั๊กอยู่ในโหมด CCM เมื่อใด?",
+      "a": "เมื่อกระแสตัวเหนี่ยวนำไม่ลงถึงศูนย์ คือกระแสโหลด Io มากกว่าครึ่งหนึ่งของริปเปิล ΔiL/2 เทียบเท่า K = 2L/(R·Ts) มากกว่า 1 − D ถ้าใช้ synchronous rectifier กระแสติดลบได้จึงเป็น CCM เสมอ"
+    },
+    {
+      "q": "ควรคำนวณริปเปิลกระแสที่ Vin ค่าไหน?",
+      "a": "ที่ Vin สูงสุด เพราะ ΔiL = Vo(1−D)/(L·fs) และ D = Vo/Vin ต่ำสุดเมื่อ Vin สูงสุด ทำให้ริปเปิลมากสุดและเป็นกรณีที่ใกล้หลุด CCM ที่สุดด้วย"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page cs-page" id="peArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a></li><li><a href="/learn/power-electronics/buck-converter/">บั๊ก</a></li><li>CCM · หาดิวตี้</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 15.2 · อิเล็กทรอนิกส์กำลัง · Buck in CCM — Circuit Analysis & Duty Cycle</p>
+      <h1>บั๊กคอนเวอร์เตอร์โหมด CCM: ไล่วงจรทีละขั้นเพื่อหาดิวตี้ไซเคิล D = Vo/Vin พร้อมค่าแฝงและแล็บรูปคลื่น</h1>
+      <p class="lede">หน้านี้พาไล่วงจรบั๊กด้วยกฎของเคอร์ชอฟฟ์ทีละช่วงสวิตช์ แล้วสรุปเป็น volt-second balance และ charge balance จนได้ดิวตี้ที่ต้องตั้ง ทั้งแบบอุดมคติและแบบมี R<sub>ds(on)</sub> DCR V<sub>F</sub> พร้อมแล็บที่เทียบสูตรกับการจำลองสวิตชิ่งจริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#states">วงจรแต่ละช่วง</a>
+        <a class="btn btn-ghost btn-sm" href="#volt-second">หา D = Vo/Vin</a>
+        <a class="btn btn-ghost btn-sm" href="#boundary">ขอบเขต CCM</a>
+        <a class="btn btn-ghost btn-sm" href="#losses">ดิวตี้เมื่อมีค่าแฝง</a>
+        <a class="btn btn-ghost btn-sm" href="#lab-wave">แล็บรูปคลื่น</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ช่วง ON: \(v_L = V_g - V_o\) กระแสชันขึ้น · ช่วง OFF: \(v_L = -V_o\) กระแสชันลง</li>
+          <li>กระแสต้องกลับที่เดิมเมื่อสิ้นคาบ → พื้นที่ \(v_L\cdot t\) สองช่วงเท่ากัน → \(V_o = DV_g\)</li>
+          <li>\(\langle i_C\rangle = 0\) → \(I_L = I_o\) และ \(I_g = D\,I_o\) · ripple \(\Delta i_L = V_o(1-D)/(Lf_s)\)</li>
+          <li>เป็น CCM เมื่อ \(K = 2L/(RT_s) > 1-D\) · มีค่าแฝงต้องใช้ \(D = \dfrac{V_o + V_F + I_L(r_L+R_d)}{V_g + V_F - I_L(R_{on}-R_d)}\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปวส. · ป.ตรี ปี 2–3</span><span><span class="lv lv-i">กลาง</span> ป.ตรี ปี 3–4</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานวิจัย</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น duty, ripple, volt-second, ccm, ดิวตี้, ริปเปิล" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="goal">
+    <h2 id="goal">เป้าหมาย: ตั้งดิวตี้เท่าไรจึงได้แรงดันที่ต้องการ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>หน้า <a href="/learn/power-electronics/buck-converter/">บั๊กคอนเวอร์เตอร์</a> สรุปผลไว้แล้วว่า \(V_o = DV_g\) หน้านี้ตอบคำถามที่ลึกกว่า: <b>สูตรนี้มาจากไหน ใช้ได้เมื่อไร และเมื่อวงจรมีความสูญเสียจริงต้องตั้ง \(D\) เป็นเท่าไร</b> ทุกขั้นเขียนจากวงจรจริงด้วย KVL/KCL ไม่ใช่การท่องสูตร และทุกตัวเลขในตัวอย่างตรวจกับซิมูเลเตอร์ระดับการสวิตช์ในแล็บด้านล่าง</p>
+    <p>ข้อตกลงที่ใช้ทั้งชุด: แรงดันอินพุตเขียนเป็น \(V_g\) (เหมือน \(V_{in}\)) · ตัวพิมพ์ใหญ่ = ค่าคงตัวของสถานะคงตัว ตัวพิมพ์เล็ก = ค่าขณะใดขณะหนึ่ง · \(D' = 1-D\) · คาบสวิตช์ \(T_s = 1/f_s\)</p>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ข้อสมมติ</th><th>ความหมาย</th><th>เมื่อไรไม่จริง</th></tr></thead>
+      <tbody>
+        <tr><td>สถานะคงตัวเป็นคาบ</td><td>ปริมาณทุกตัวกลับมาเท่าเดิมเมื่อครบคาบ</td><td>ช่วงสตาร์ท เปลี่ยนโหลด (ดูหน้า<a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ย</a>)</td></tr>
+        <tr><td>ริปเปิลแรงดันขาออกเล็ก</td><td>\(v_o(t)\approx V_o\) คงที่ภายในหนึ่งคาบ</td><td>C เล็กเกินไป ESR สูง</td></tr>
+        <tr><td>สวิตช์และไดโอดอุดมคติ</td><td>ไม่มีแรงดันตกขณะนำ ไม่มีเวลาสวิตช์</td><td>หัวข้อ<a href="#losses">ค่าแฝง</a>แก้ข้อนี้</td></tr>
+        <tr><td>กระแส \(i_L\) ไม่ลงถึงศูนย์</td><td>โหมดกระแสต่อเนื่อง (CCM)</td><td>โหลดเบา → <a href="/learn/power-electronics/buck-dcm-analysis/">DCM</a></td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="states">
+    <h2 id="states">ขั้นที่ 1–2: วงจรในแต่ละช่วงของสวิตช์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สวิตช์ Q เปิด–ปิดสลับกันด้วยคาบ \(T_s\) ช่วงแรก (\(0 \le t < DT_s\)) ปิดวงจร ช่วงที่สอง (\(DT_s \le t < T_s\)) เปิดวงจร เกิดวงจรเชิงเส้นสองแบบสลับกัน เราจึงเขียนสมการทีละแบบ แล้วค่อยต่อกันตามเวลา</p>
+    <h3>ช่วง ON (สวิตช์ Q นำ)</h3>
+    <!--FIG:bk-circuit-on--><figure class="bk-fig-static"><svg class="bk-sch" viewBox="0 0 540 226" role="img" aria-label="ช่วง ON: สวิตช์ Q ปิดวงจร กระแสไหลจาก Vin ผ่าน L ไปยัง C ∥ R"><path class="hot" d="M40 45 V95"/><circle class="hot" cx="40" cy="115" r="20"/><text class="" x="33" y="111">+</text><text class="" x="35" y="128">−</text><path class="hot" d="M40 135 V185"/><path class="hot" d="M40 45 H95"/><circle cx="95" cy="45" r="3" style="fill:currentColor" class=""/><circle cx="145" cy="45" r="3" style="fill:currentColor" class=""/><path class="hot" d="M95 45 H145"/><text class="" x="120" y="20">Q</text><text class="lbl" x="120" y="70" text-anchor="middle">ON</text><path class="hot" d="M145 45 H200"/><circle cx="200" cy="45" r="3" style="fill:currentColor"/><path class="dim" d="M200 45 V92"/><path class="dim" d="M188 128 H212 L200 100 Z"/><path class="dim" d="M188 98 H212"/><path class="dim" d="M200 128 V185"/><text class="" x="168" y="118">D</text><path class="hot" d="M200 45 H215"/><path class="hot" d="M215 45 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0"/><path class="hot" d="M295 45 H330"/><text class="" x="255" y="20">L</text><circle cx="330" cy="45" r="3" style="fill:currentColor"/><path class="hot" d="M330 45 H370"/><path class="hot" d="M370 45 H470"/><path class="hot" d="M370 45 V105"/><path class="hot" d="M356 105 H384 M356 115 H384"/><path class="hot" d="M370 115 V185"/><text class="" x="392" y="116">C</text><path class="hot" d="M470 45 V80"/><path class="hot" d="M470 80 l-9 6 l18 12 l-18 12 l18 12 l-18 12 l9 6"/><path class="hot" d="M470 140 V185"/><text class="" x="490" y="116">R</text><path class="hot" d="M470 185 H40"/><text class="" x="24" y="118" text-anchor="end">Vin</text><text class="lbl" x="335" y="36">+</text><text class="lbl" x="338" y="168">Vo</text><path class="lbl" style="fill:none;stroke:var(--accent);stroke-width:1.4" d="M345 55 V165"/><path class="hot" style="fill:currentColor" d="M164 40 L176 45 L164 50z"/><path class="hot" style="fill:currentColor" d="M299 40 L311 45 L299 50z"/><path class="hot" style="fill:currentColor" d="M465 114 L470 126 L475 114z"/><path class="hot" style="fill:currentColor" d="M256 180 L244 185 L256 190z"/><text class="lbl" x="255" y="80" text-anchor="middle">vL = Vin − Vo (บวก)</text><text class="lbl" x="255" y="98" text-anchor="middle">iL เพิ่มขึ้น</text><text class="dim" x="150" y="150" text-anchor="middle">ไดโอดถูกไบแอสย้อน</text><text class="" x="280" y="214" text-anchor="middle">ช่วง ON: สวิตช์ Q ปิดวงจร กระแสไหลจาก Vin ผ่าน L ไปยัง C ∥ R</text></svg></figure><!--/FIG-->
+    <p>แรงดันที่โหนด SW เท่ากับ \(V_g\) ไดโอดมีแคโทดสูงกว่าแอโนดจึงถูกไบแอสย้อนและไม่นำ วงจรเหลือวงเดียว: \(V_g\) → L → (C ∥ R) → กลับ KVL รอบวงให้ \(V_g - v_L - v_o = 0\) และเมื่อ \(v_L = L\,\dfrac{di_L}{dt}\) จะได้</p>
+    <div class="tf" id="H1" data-k="inductor equations in each interval สมการตัวเหนี่ยวนำแต่ละช่วง slope ความชัน"><p class="tf-n"><b><span class="fid">H1</span> Inductor equation in each interval</b> สมการตัวเหนี่ยวนำแต่ละช่วง</p>
+      \[ \text{ON: } L\frac{di_L}{dt} = V_g - v_o \approx V_g - V_o \qquad\qquad \text{OFF: } L\frac{di_L}{dt} = -v_o \approx -V_o \]</div>
+    <p>ที่โหนดเอาต์พุต KCL ให้กระแสตัวเก็บประจุ \(i_C = i_L - v_o/R\) เสมอทั้งสองช่วง (กระแสที่เหลือจาก \(i_L\) หลังโหลดใช้ไปคือกระแสที่ชาร์จ C)</p>
+    <h3>ช่วง OFF (สวิตช์ Q เปิดวงจร)</h3>
+    <!--FIG:bk-circuit-off--><figure class="bk-fig-static"><svg class="bk-sch" viewBox="0 0 540 226" role="img" aria-label="ช่วง OFF: Q เปิดวงจร ไดโอดนำกระแสต่อให้ L (freewheeling)"><path class="dim" d="M40 45 V95"/><circle class="dim" cx="40" cy="115" r="20"/><text class="dim" x="33" y="111">+</text><text class="dim" x="35" y="128">−</text><path class="dim" d="M40 135 V185"/><path class="dim" d="M40 45 H95"/><circle cx="95" cy="45" r="3" style="fill:currentColor" class="dim"/><circle cx="145" cy="45" r="3" style="fill:currentColor" class="dim"/><path class="dim" d="M95 45 L136 23"/><text class="" x="120" y="20">Q</text><text class="lbl2" x="120" y="70" text-anchor="middle">OFF</text><path class="dim" d="M145 45 H200"/><circle cx="200" cy="45" r="3" style="fill:currentColor"/><path class="hot" d="M200 45 V92"/><path class="hot" d="M188 128 H212 L200 100 Z"/><path class="hot" d="M188 98 H212"/><path class="hot" d="M200 128 V185"/><text class="" x="168" y="118">D</text><path class="hot" d="M200 45 H215"/><path class="hot" d="M215 45 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0 q10 -17 20 0"/><path class="hot" d="M295 45 H330"/><text class="" x="255" y="20">L</text><circle cx="330" cy="45" r="3" style="fill:currentColor"/><path class="hot" d="M330 45 H370"/><path class="hot" d="M370 45 H470"/><path class="hot" d="M370 45 V105"/><path class="hot" d="M356 105 H384 M356 115 H384"/><path class="hot" d="M370 115 V185"/><text class="" x="392" y="116">C</text><path class="hot" d="M470 45 V80"/><path class="hot" d="M470 80 l-9 6 l18 12 l-18 12 l18 12 l-18 12 l9 6"/><path class="hot" d="M470 140 V185"/><text class="" x="490" y="116">R</text><path class="hot" d="M470 185 H200"/><path class="dim" d="M200 185 H40"/><text class="" x="24" y="118" text-anchor="end">Vin</text><text class="lbl" x="335" y="36">+</text><text class="lbl" x="338" y="168">Vo</text><path class="lbl" style="fill:none;stroke:var(--accent);stroke-width:1.4" d="M345 55 V165"/><path class="hot" style="fill:currentColor" d="M195 76 L200 64 L205 76z"/><path class="hot" style="fill:currentColor" d="M299 40 L311 45 L299 50z"/><path class="hot" style="fill:currentColor" d="M465 114 L470 126 L475 114z"/><path class="hot" style="fill:currentColor" d="M306 180 L294 185 L306 190z"/><text class="lbl" x="255" y="80" text-anchor="middle">vL = −Vo (ติดลบ)</text><text class="lbl" x="255" y="98" text-anchor="middle">iL ลดลง</text><text class="" x="280" y="214" text-anchor="middle">ช่วง OFF: Q เปิดวงจร ไดโอดนำกระแสต่อให้ L (freewheeling)</text></svg></figure><!--/FIG-->
+    <p>กระแสในตัวเหนี่ยวนำเปลี่ยนทันทีไม่ได้ (ถ้าเปลี่ยนทันที \(v_L = L\,di/dt\) จะเป็นอนันต์) เมื่อ Q เปิด ตัวเหนี่ยวนำจึงกลับขั้วแรงดันเองจนโหนด SW ต่ำกว่าศูนย์ ไดโอดถูกไบแอสตรงและนำกระแสเดิมต่อไป โหนด SW ≈ 0 (ในอุดมคติ) ดังนั้น \(v_L = -v_o\) กระแสเริ่ม <b>ลดลง</b> ผ่านไดโอดไปยัง C ∥ R</p>
+    <div class="note"><b>จุดที่นักศึกษามักสับสน:</b> ในช่วง OFF พลังงานไม่ได้มาจากแหล่งจ่ายอีกต่อไป แต่มาจากพลังงานแม่เหล็ก \(\tfrac12 Li_L^2\) ที่เก็บไว้ในช่วง ON ตัวเหนี่ยวนำจึงเป็น &quot;แหล่งกระแส&quot; ที่ไดโอดคอยส่งต่อให้โหลด</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ripple-i">
+    <h2 id="ripple-i">ขั้นที่ 3: กระแสตัวเหนี่ยวนำในหนึ่งคาบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เมื่อ \(v_o \approx V_o\) คงที่ ความชันของ \(i_L\) ในแต่ละช่วงคงที่ → กระแสเป็นเส้นตรงสองท่อนต่อกัน (สามเหลี่ยม) กระแสเพิ่มในช่วง ON และลดในช่วง OFF</p>
+    <div class="tf" id="H2" data-k="inductor current ripple delta iL ริปเปิลกระแส"><p class="tf-n"><b><span class="fid">H2</span> Inductor current ripple</b> ริปเปิลกระแสตัวเหนี่ยวนำ</p>
+      \[ \Delta i_L^{\text{(ON)}} = \frac{V_g - V_o}{L}\,DT_s \qquad \Delta i_L^{\text{(OFF)}} = -\frac{V_o}{L}\,D'T_s \]</div>
+    <p>กระแสเฉลี่ยของสามเหลี่ยมคือค่ากลางระหว่างจุดสูงสุดและต่ำสุด \(I_L = \dfrac{I_{L,\min} + I_{L,\max}}{2}\) และผลต่างคือริปเปิล \(\Delta i_L = I_{L,\max} - I_{L,\min}\) ถ้าสิ้นคาบกระแสไม่กลับมาที่ \(I_{L,\min}\) แสดงว่ายังไม่ถึงสถานะคงตัว (กระแสจะไล่ขึ้นหรือลงต่อไปทุกคาบ)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="volt-second">
+    <h2 id="volt-second">ขั้นที่ 4: หาอัตราส่วนแปลงผัน V<sub>o</sub>/V<sub>g</sub> และดิวตี้ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เงื่อนไขสถานะคงตัวคือ <b>กระแสสิ้นคาบ = กระแสต้นคาบ</b> ดังนั้นการเพิ่มของกระแสในช่วง ON ต้องถูกลดลงเท่ากันในช่วง OFF พอดี แสดงได้สามวิธีที่ได้ผลเดียวกัน</p>
+    <h3>วิธี ก: ให้ผลรวมการเปลี่ยนกระแสเป็นศูนย์</h3>
+    <p>\(\Delta i_L^{(ON)} + \Delta i_L^{(OFF)} = 0\) จาก H2:</p>
+    <p>\[ \begin{aligned} \frac{(V_g - V_o)DT_s}{L} - \frac{V_o D'T_s}{L} &= 0 \\ (V_g - V_o)D &= V_o(1-D) \\ V_gD - V_oD &= V_o - V_oD \\ V_o &= DV_g \end{aligned} \]</p>
+    <h3>วิธี ข: volt-second balance (พื้นที่ใต้กราฟ \(v_L\))</h3>
+    <p>คูณทั้งสองข้างด้วย \(L\): การเปลี่ยนกระแสทุกช่วงคือ \(\int v_L\,dt\) ผลรวมต้องเป็นศูนย์ เรียกว่า <b>volt-second balance</b> ในรูปคือพื้นที่สี่เหลี่ยมสองก้อนต้องเท่ากัน \(A_1 = A_2\):</p>
+    <!--FIG:bk-vl-ccm--><figure class="bk-fig-static"><svg class="bk-svg bk-staticsvg" viewBox="0 0 700 330" role="img" aria-label="รูปคลื่น vL และ iL ในโหมด CCM: พื้นที่ vL ช่วง ON เท่ากับช่วง OFF"><rect class="bk-frame" x="70" y="28" width="540" height="110"/><rect class="bk-frame" x="70" y="190" width="540" height="100"/><line class="bk-ref" x1="70" x2="610" y1="96" y2="96"/><rect class="bk-band on" x="70" y="45.6" width="108" height="50.4" style="opacity:2.2"/><rect class="bk-band off" x="178" y="96" width="162" height="33.6" style="opacity:2.2"/><rect class="bk-band on" x="340" y="45.6" width="108" height="50.4" style="opacity:2.2"/><rect class="bk-band off" x="448" y="96" width="162" height="33.6" style="opacity:2.2"/><path class="bk-line s1" d="M70 45.6 L178 45.6 L178 129.6 L340 129.6 L340 45.6 L448 45.6 L448 129.6 L610 129.6"/><path class="bk-line s2" d="M70 245 L178 200 L340 245 L340 245 L448 200 L610 245"/><text class="bk-tk" x="62" y="49.6" text-anchor="end">Vin − Vo</text><text class="bk-tk" x="62" y="133.6" text-anchor="end">−Vo</text><text class="bk-tk" x="62" y="100" text-anchor="end">0</text><text class="bk-title" x="70" y="18">แรงดันคร่อมตัวเหนี่ยวนำ vL(t)</text><text class="bk-title" x="70" y="182">กระแสตัวเหนี่ยวนำ iL(t)</text><text class="bk-tk" x="124" y="308" text-anchor="middle">D·Ts</text><line class="bk-ref" x1="70" x2="70" y1="28" y2="290"/><text class="bk-tk" x="259" y="308" text-anchor="middle">D′·Ts</text><line class="bk-ref" x1="178" x2="178" y1="28" y2="290"/><line class="bk-ref" x1="340" x2="340" y1="28" y2="290"/><line class="bk-ref" x1="610" x2="610" y1="28" y2="290"/><text class="bk-bl" x="124" y="74.8" text-anchor="middle">พื้นที่ A₁</text><text class="bk-bl" x="259" y="116.8" text-anchor="middle">พื้นที่ A₂</text><text class="bk-tk" x="616" y="204">ILmax</text><text class="bk-tk" x="616" y="249">ILmin</text><line class="bk-ref" x1="70" x2="610" y1="222.5" y2="222.5"/><text class="bk-tk" x="616" y="226.5">IL = Io</text></svg></figure><!--/FIG-->
+    <div class="tf" id="H3" data-k="volt-second balance duty cycle conversion ratio vo = d vin อัตราส่วนแปลงผัน ดิวตี้"><p class="tf-n"><b><span class="fid">H3</span> Volt-second balance → conversion ratio (CCM)</b> อัตราส่วนแปลงผันและดิวตี้</p>
+      \[ \underbrace{(V_g - V_o)\,DT_s}_{A_1} + \underbrace{(-V_o)\,D'T_s}_{-A_2} = 0 \;\Rightarrow\; \boxed{\frac{V_o}{V_g} = D} \qquad \boxed{D = \frac{V_o}{V_g}} \]</div>
+    <h3>วิธี ค: เฉลี่ยแรงดันที่โหนด SW (เห็นภาพที่สุด)</h3>
+    <p>แรงดันที่โหนด SW เป็นคลื่นสี่เหลี่ยมสูง \(V_g\) นาน \(D\) ของคาบ ค่าเฉลี่ยคือ \(\langle v_{sw}\rangle = DV_g\) ตัวกรอง LC ปล่อยผ่านเฉพาะค่าเฉลี่ยนี้ และที่ DC ตัวเหนี่ยวนำเป็นสายลัด (แรงดันเฉลี่ยคร่อม L เป็นศูนย์) จึงได้ \(V_o = \langle v_{sw}\rangle = DV_g\) บั๊กจึงเป็น &quot;ตัวเฉลี่ยแรงดันที่ควบคุมด้วยความกว้างพัลส์&quot;</p>
+    <div class="note"><b>ผลที่ควรจำ:</b> \(V_o\) ขึ้นกับ \(D\) และ \(V_g\) เท่านั้น <b>ไม่ขึ้นกับ L, C, f<sub>s</sub> หรือโหลด</b> (ตราบใดที่ยังเป็น CCM และไม่มีค่าแฝง) นั่นคือแหล่งจ่ายแรงดันในอุดมคติ ต่างจาก DCM ที่ \(V_o\) ขึ้นกับโหลดอย่างแรง ดูหน้า <a href="/learn/power-electronics/buck-dcm-analysis/">DCM</a></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="charge">
+    <h2 id="charge">ขั้นที่ 5: charge balance กระแสเฉลี่ย และกำลัง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ในสถานะคงตัวแรงดันตัวเก็บประจุกลับมาเท่าเดิมทุกคาบ ประจุสุทธิที่เข้า C ต้องเป็นศูนย์: \(\langle i_C\rangle = 0\) จาก KCL \(i_C = i_L - v_o/R\) ได้ค่าเฉลี่ยของ \(i_L\) เท่ากับกระแสโหลดทันที ส่วนกระแสอินพุต \(i_g\) ไหลเฉพาะช่วง ON (เท่ากับ \(i_L\)) จึงมีค่าเฉลี่ย \(D\,I_L\)</p>
+    <div class="tf" id="H4" data-k="charge balance average inductor current input current power balance กระแสเฉลี่ย สมดุลกำลัง"><p class="tf-n"><b><span class="fid">H4</span> Charge balance and currents</b> สมดุลประจุและกระแสเฉลี่ย</p>
+      \[ \langle i_C\rangle = 0 \;\Rightarrow\; I_L = I_o = \frac{V_o}{R},\qquad I_g = D\,I_L \]
+      \[ P_{in} = V_gI_g = V_g\,D\,I_o = V_oI_o = P_{out} \]</div>
+    <p>บรรทัดสุดท้ายแสดงว่าแบบจำลองอุดมคติไม่มีการสูญเสีย (\(\eta = 100\%\)) และเทียบเท่าหม้อแปลง DC อัตราส่วน \(1:D\) ที่ลดแรงดันได้ \(D\) เท่าและเพิ่มกระแสได้ \(1/D\) เท่า — มุมมองนี้ใช้ต่อในหน้า<a href="/learn/power-electronics/buck-averaged-model/#circuit-averaging">แบบจำลองวงจรเฉลี่ย</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ripple-v">
+    <h2 id="ripple-v">ขั้นที่ 6: ค่าสูงสุด–ต่ำสุดของกระแส และริปเปิลแรงดันขาออก <span class="lv lv-i">กลาง</span></h2>
+    <p>รวมค่าเฉลี่ย (ขั้นที่ 5) กับความชัน (ขั้นที่ 3) จะได้ขอบของสามเหลี่ยม แทน \(V_o = DV_g\) ใน H2 ได้ริปเปิลที่นิยมใช้ออกแบบ</p>
+    <div class="tf" id="H5" data-k="peak current minimum current ripple inductor design กระแสพีก ripple ออกแบบ L"><p class="tf-n"><b><span class="fid">H5</span> Current extremes and ripple</b> ค่าสูงสุด–ต่ำสุดของกระแสและริปเปิล</p>
+      \[ \Delta i_L = \frac{V_o(1-D)}{L f_s} = \frac{(V_g - V_o)D}{Lf_s},\qquad I_{L,\max/\min} = I_o \pm \frac{\Delta i_L}{2} \]</div>
+    <p>ริปเปิลกระแสไหลเข้าตัวเก็บประจุ (ส่วนที่เกิน \(I_o\)) ประจุสะสมคือพื้นที่สามเหลี่ยมเล็กที่ระดับเหนือ \(I_o\): \(\Delta Q = \tfrac12\cdot\dfrac{T_s}{2}\cdot\dfrac{\Delta i_L}{2} = \dfrac{\Delta i_LT_s}{8}\) จึงเกิดแรงดันขึ้นลง \(\Delta Q/C\) ส่วน ESR ทำให้เกิดแรงดัน \(\Delta i_L\cdot r_C\) ซ้อนทับ</p>
+    <div class="tf" id="H6" data-k="output voltage ripple esr capacitor ripple ริปเปิลแรงดันขาออก"><p class="tf-n"><b><span class="fid">H6</span> Output voltage ripple</b> ริปเปิลแรงดันขาออก</p>
+      \[ \Delta v_{o}^{(C)} = \frac{\Delta i_L}{8\,C f_s}, \qquad \Delta v_o^{(ESR)} = \Delta i_L\, r_C, \qquad \Delta v_{o,pp} \le \Delta v_o^{(C)} + \Delta v_o^{(ESR)} \]</div>
+    <p>การบวกตรงๆ เป็น <b>ขอบบน</b> เพราะจุดสูงสุดของสองส่วนไม่เกิดพร้อมกัน ค่าจริงจากรูปคลื่นมักต่ำกว่า (ดูตัวอย่าง H-1 และเทียบในแล็บ) ถ้า ESR ใหญ่กว่า \(\dfrac{1}{8Cf_s}\) ริปเปิลแรงดันถูกกำหนดโดย ESR เป็นหลัก ซึ่งเป็นเหตุผลที่ตัวเก็บประจุอิเล็กโทรไลต์ธรรมดาให้ริปเปิลสูงกว่าโพลิเมอร์หรือเซรามิกมาก</p>
+    <div class="note"><b>ออกแบบที่ V<sub>g</sub> สูงสุด:</b> \(\Delta i_L = V_o(1-D)/(Lf_s)\) มากที่สุดเมื่อ \(D\) ต่ำสุด คือเมื่อ \(V_g\) สูงสุด ดังนั้นคำนวณ L ที่ \(V_{g,\max}\) เสมอ (ตัวอย่าง H-3)</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="boundary">
+    <h2 id="boundary">ขั้นที่ 7: ขอบเขตของ CCM — สูตรข้างบนใช้ได้เมื่อใด <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทุกสูตรข้างต้นสมมติว่า \(i_L\) ไม่ลงถึงศูนย์ ถ้า \(I_{L,\min} = I_o - \Delta i_L/2 \le 0\) ไดโอดจะหยุดนำกลางคาบ (วงจรเข้า DCM) เงื่อนไขขอบเขตคือ \(I_o = \Delta i_L/2\):</p>
+    <p>\[ \frac{V_o}{R} > \frac{V_o(1-D)}{2Lf_s} \;\Longleftrightarrow\; \frac{2L}{RT_s} > 1-D \]</p>
+    <div class="tf" id="H7" data-k="ccm dcm boundary critical load critical inductance K ขอบเขต โหลดวิกฤต"><p class="tf-n"><b><span class="fid">H7</span> CCM/DCM boundary</b> ขอบเขตโหมดกระแสต่อเนื่อง</p>
+      \[ K \equiv \frac{2L}{RT_s} > K_{crit}(D) = 1-D \]
+      \[ I_{o,crit} = \frac{V_o(1-D)}{2Lf_s},\qquad R_{crit} = \frac{2L}{(1-D)T_s},\qquad L_{crit} = \frac{(1-D)RT_s}{2} \]</div>
+    <p>ตีความ: <b>โหลดเบาลง (R ใหญ่ขึ้น) หรือ L เล็กลง หรือ f<sub>s</sub> ต่ำลง</b> ทำให้ K ลดลงและเข้าใกล้ DCM ขอบเขตแย่ที่สุดเมื่อ \(D\) ต่ำสุด (\(V_g\) สูงสุด) เพราะ \(1-D\) ใหญ่สุด ถ้าต้องการ CCM ถึงกระแสโหลดต่ำสุด \(I_{o,\min}\) ให้เลือก \(L \ge \dfrac{V_o(1-D_{\min})}{2f_sI_{o,\min}}\)</p>
+    <p>บั๊กแบบ <b>synchronous</b> (ใช้ MOSFET ตัวล่างแทนไดโอด) ไม่มีขอบเขตนี้ เพราะ MOSFET นำกระแสย้อนกลับได้ \(i_L\) จึงติดลบและเป็น CCM เสมอ (เรียก forced CCM) แลกกับกระแสหมุนวนที่เพิ่มการสูญเสียตอนเบา — ลองในแล็บด้วยปุ่ม Synchronous</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="losses">
+    <h2 id="losses">ขั้นที่ 8: ดิวตี้ที่ต้องใช้จริงเมื่อมี R<sub>ds(on)</sub> DCR และ V<sub>F</sub> <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจรจริงมีความต้านทานแฝงสี่ตัวที่ทำให้แรงดันขาออกต่ำกว่า \(DV_g\): \(R_{on}\) ของสวิตช์ (ช่วง ON) \(V_F\) และ \(R_d\) ของไดโอด (ช่วง OFF) และ DCR \(r_L\) ของตัวเหนี่ยวนำ (ทั้งสองช่วง) ทำ volt-second balance ใหม่โดยใส่ตัวแฝงลงในสมการช่วงละบรรทัด (ใช้ \(I_L = V_o/R\) เป็นกระแสเฉลี่ย):</p>
+    <p>\[ \text{ON: } v_L = V_g - R_{on}I_L - r_LI_L - V_o,\qquad \text{OFF: } v_L = -V_F - R_dI_L - r_LI_L - V_o \]</p>
+    <p>เฉลี่ยตลอดคาบให้เป็นศูนย์ \(D\,v_L^{(ON)} + D'\,v_L^{(OFF)} = 0\):</p>
+    <p>\[ D(V_g - R_{on}I_L) - D'(V_F + R_dI_L) - r_LI_L - V_o = 0 \]</p>
+    <div class="tf" id="H8" data-k="conversion ratio with parasitics rds on dcr vf losses อัตราส่วนแปลงผันเมื่อมีค่าแฝง"><p class="tf-n"><b><span class="fid">H8</span> Output voltage with parasitics</b> แรงดันขาออกเมื่อมีความต้านทานแฝง</p>
+      \[ V_o = \frac{D V_g - D' V_F}{1 + R_s/R},\qquad R_s = r_L + D\,R_{on} + D'\,R_d \]</div>
+    <p>แก้สมการข้างต้นหา \(D\) ตรงๆ ได้เพราะ \(D\) ปรากฏเป็นเชิงเส้น (\(R_s\) มี \(D\) แต่คูณกับ \(I_L\) ที่ทราบ):</p>
+    <div class="tf" id="H9" data-k="required duty cycle with losses synchronous ดิวตี้ที่ต้องใช้ เมื่อมีค่าแฝง design duty"><p class="tf-n"><b><span class="fid">H9</span> Required duty cycle with parasitics</b> ดิวตี้ที่ต้องใช้เมื่อมีค่าแฝง</p>
+      \[ \boxed{D = \frac{V_o + V_F + I_L\,(r_L + R_d)}{V_g + V_F - I_L\,(R_{on} - R_d)}},\qquad I_L = \frac{V_o}{R} \]</div>
+    <p>กรณี synchronous แทน \(V_F = 0\) และ \(R_d = R_{on,\text{ตัวล่าง}}\) ผลคือค่าแฝงเหลือเพียง \(r_L\) และ \(R_{on}\) ของ FET ทั้งสอง ทำให้ \(D\) ใกล้ \(V_o/V_g\) มากกว่าแบบไดโอด สังเกตว่า <b>\(D\) ที่ต้องใช้ขึ้นกับกระแสโหลด</b> (ผ่าน \(I_L\)) ต่างจากอุดมคติ ตัวควบคุมแบบป้อนกลับจึงจำเป็นเพื่อรักษา \(V_o\) เมื่อโหลดเปลี่ยน</p>
+    <div class="note warn"><b>ข้อควรระวัง:</b> H8 และ H9 ใช้ได้เฉพาะ CCM และไม่รวมการสูญเสียจากการสวิตช์ (ซึ่งกินพลังงานแต่แทบไม่เปลี่ยน \(D\)) ถ้าวงจรเข้า DCM ให้ใช้สูตรในหน้า <a href="/learn/power-electronics/buck-dcm-analysis/">DCM</a></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่างวิธีทำ (ตรวจตัวเลขด้วยซิมูเลเตอร์แล้ว)</h2>
+    <p>โจทย์ฐาน: \(V_g = 24\) V, \(V_o = 12\) V, \(R = 10\ \Omega\) (\(I_o = 1.2\) A), \(L = 300\ \mu\)H, \(C = 100\ \mu\)F, \(f_s = 50\) kHz (\(T_s = 20\ \mu\)s)</p>
+    <div class="wx" id="ex-h-1"><div class="wx-head"><span class="mono">ตัวอย่าง H-1</span><h3>วงจรอุดมคติ: หา D ริปเปิล และตรวจว่าเป็น CCM</h3></div>
+    <ol class="steps">
+      <li><p>ดิวตี้: \(D = V_o/V_g = 12/24 = 0.5\)</p></li>
+      <li><p>กระแสเฉลี่ย (H4): \(I_L = V_o/R = 12/10 = 1.2\) A และ \(I_g = D\,I_L = 0.6\) A ตรวจกำลัง \(P_{in} = 24\times0.6 = 14.4\) W \(= P_{out} = 12\times1.2\) ✓</p></li>
+      <li><p>ริปเปิลกระแส (H5): \(\Delta i_L = \dfrac{12(1-0.5)}{300\mu\cdot 50k} = \dfrac{6}{15} = 0.4\) A → \(I_{L,\max} = 1.4\) A, \(I_{L,\min} = 1.0\) A</p></li>
+      <li><p>ตรวจ CCM (H7): \(K = \dfrac{2(300\mu)}{10\,(20\mu)} = 3 > 1-D = 0.5\) ✓ เป็น CCM (\(I_{L,\min} = 1.0 > 0\)) ขอบเขตคือ \(R_{crit} = \dfrac{2(300\mu)}{0.5\,(20\mu)} = 60\ \Omega\) ตรงกับ \(I_{o,crit} = \Delta i_L/2 = 0.2\) A</p></li>
+      <li><p>ริปเปิลแรงดัน (H6) ถ้า ESR = 0: \(\Delta v_o = \dfrac{0.4}{8(100\mu)(50k)} = 10\) mV · ถ้า ESR = 50 mΩ: ขอบบน \(10 + 0.4\times0.05\times 1000 = 30\) mV แต่รูปคลื่นจริงที่ซิมูเลเตอร์วัดได้ \(\approx 20\) mV (สองส่วนไม่พีคพร้อมกัน)</p></li>
+    </ol></div>
+    <div class="wx" id="ex-h-2"><div class="wx-head"><span class="mono">ตัวอย่าง H-2</span><h3>มีค่าแฝงจริง: ตั้ง D เท่าไรจึงได้ 12 V ที่ 1.2 A</h3></div>
+    <ol class="steps">
+      <li><p>ค่าแฝง: \(R_{on} = 0.05\ \Omega\), \(r_L = 0.1\ \Omega\), \(V_F = 0.4\) V, \(R_d = 0\), ESR \(= 0.05\ \Omega\)</p></li>
+      <li><p>ถ้ายังตั้ง \(D = 0.5\): \(R_s = 0.1 + 0.5(0.05) = 0.125\ \Omega\) → \(V_o = \dfrac{0.5(24) - 0.5(0.4)}{1 + 0.125/10} = \dfrac{11.8}{1.0125} = 11.654\) V (ต่ำกว่าเป้าไป 0.35 V และกระแสโหลดลดเป็น 1.165 A)</p></li>
+      <li><p>ใช้ H9 หา D ที่ถูกต้อง: \(D = \dfrac{12 + 0.4 + 1.2(0.1+0)}{24 + 0.4 - 1.2(0.05 - 0)} = \dfrac{12.52}{24.34} = \mathbf{0.5144}\)</p></li>
+      <li><p>ตรวจด้วยการจำลองสวิตชิ่งที่ \(D = 0.5144\): \(V_o = 12.000\) V, \(I_L = 1.200\) A, \(\Delta i_L = 0.405\) A ✓ (สูตร H5 แบบอุดมคติให้ 0.389 A เพราะไม่รวม \(V_F\) และ DCR ในช่วง OFF · ใช้ความชันช่วง OFF จริง \((V_o + V_F + r_LI_L)/L\) จะได้ \(12.52\times0.4856\times20\mu/300\mu = 0.405\) A)</p></li>
+      <li><p>ความสูญเสียที่ \(D = 0.5144\): \(P_{R_{on}} = R_{on}\,D(I_L^2 + \Delta i_L^2/12) = 0.05(0.5144)(1.4537) = 0.0374\) W · \(P_{diode} = V_F(1-D)I_L = 0.4(0.4856)(1.2) = 0.2331\) W · \(P_{Cu} = r_L(I_L^2 + \Delta i_L^2/12) = 0.1454\) W รวม \(0.416\) W → \(\eta = \dfrac{14.4}{14.4 + 0.416} = 97.2\%\) (ซิมูเลเตอร์ให้ 97.19%; ยังไม่รวมการสูญเสียจากการสวิตช์)</p></li>
+      <li><p>บทเรียน: ไดโอดกินมากที่สุด (56 % ของความสูญเสีย) เพราะ \(V_F\) คงที่คูณกระแส — นี่คือเหตุผลที่แหล่งจ่าย 5 V หรือ 3.3 V ใช้ synchronous (แทน \(V_F = 0.4\) V ด้วย MOSFET \(R_{on}\) ไม่กี่ mΩ)</p></li>
+    </ol></div>
+    <div class="wx" id="ex-h-3"><div class="wx-head"><span class="mono">ตัวอย่าง H-3</span><h3>แหล่งจ่ายอินพุตเปลี่ยนค่า: 18–30 V → 12 V</h3></div>
+    <ol class="steps">
+      <li><p>ช่วงดิวตี้ (อุดมคติ): \(D = 12/18 = 0.667\) (Vin ต่ำสุด) ถึง \(D = 12/30 = 0.4\) (Vin สูงสุด)</p></li>
+      <li><p>ริปเปิลที่ \(V_g = 18, 24, 30\) V (H5): \(\Delta i_L = 0.267,\ 0.40,\ 0.48\) A ตามลำดับ — ริปเปิลสูงสุดที่ 30 V ใช้ที่นี่ออกแบบ L และกระแสพีก \(I_{L,\max} = 1.2 + 0.24 = 1.44\) A</p></li>
+      <li><p>ตรวจ CCM ที่โหลด 0.2 A: ขอบ \(I_{o,crit} = \Delta i_L/2 = 0.133,\ 0.2,\ 0.24\) A — ที่ 30 V ต้องมีโหลด ≥ 0.24 A จึงยังเป็น CCM ถ้าต้องการ CCM ถึง 0.12 A (10 % ของโหลด) ต้องใช้ \(L \ge \dfrac{12(1-0.4)}{2(50k)(0.12)} = 600\ \mu\)H</p></li>
+      <li><p>ตัวควบคุมต้องเปลี่ยน D เองเมื่อ Vin เปลี่ยน — แบบ open-loop จะได้ \(V_o\) แปรตาม \(V_g\) ตรงๆ (\(V_o = DV_g\)) ซึ่งเป็นเหตุผลของวงป้อนกลับและ <a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอน \(G_{vg}\)</a></p></li>
+    </ol></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab-wave">
+    <h2 id="lab-wave">แล็บ: รูปคลื่นบั๊ก CCM/DCM เทียบสูตรกับซิมูเลชันสวิตชิ่ง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือก <b>ตั้งดิวตี้ D เอง</b> เพื่อดูว่า \(V_o\) เป็นเท่าไร หรือเลือก <b>ให้คำนวณ D จาก Vo เป้าหมาย</b> เพื่อดูว่าสูตรให้ \(D\) เท่าไร แล้วดูว่า \(V_o\) จากการจำลองตรงเป้าหรือไม่ กราฟใช้สีพื้นหลังแยกช่วง ON (ฟ้า) และ OFF (ส้ม) ตารางด้านล่างเทียบสูตรกับการจำลองทีละตัวเลข</p>
+    <div class="bk-wave" id="bkWaveA" data-preset="ccm" data-presets="ccm,boundary,dcm,real,sync,lowfs,highvin"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+
+    <h3 id="worksheets">ใบงานทดลอง</h3>
+    <div class="bk-ws" id="wsa1"><p><b>ใบงาน A1 — ตรวจ \(V_o = DV_g\):</b> เริ่มจาก CCM ตั้ง D = 0.3, 0.5, 0.7 บันทึก \(V_o\) เทียบ \(D\cdot24\) ความต่างเท่ากับ 0 ใช่ไหม ทำไม \(V_o\) ไม่ขึ้นกับ R, L, C</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="ccm" data-bk-target="bkWaveA" data-bk-set="D=0.3">โหลด D = 0.3 ↑</button></div>
+    <div class="bk-ws" id="wsa2"><p><b>ใบงาน A2 — ริปเปิลกับ L:</b> ลด L เหลือครึ่งหนึ่ง (150 µH) ΔiL ต้องเพิ่มเป็น 2 เท่า (0.8 A) ตรวจ \(I_{L,\min}\) ว่ายังบวกอยู่ไหม แล้วลอง L = 47 µH ที่ fs = 20 kHz</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="ccm" data-bk-target="bkWaveA" data-bk-set="L=0.00015">โหลด L = 150 µH ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="lowfs" data-bk-target="bkWaveA">โหลด L = 47 µH, 20 kHz ↑</button></div>
+    <div class="bk-ws" id="wsa3"><p><b>ใบงาน A3 — หาขอบเขต CCM:</b> เริ่มที่ R = 60 Ω (ขอบพอดี \(I_{L,\min}\) ≈ 0) เพิ่ม R ทีละน้อยแล้วดูว่ารูปคลื่น iL เริ่มมีช่วงราบเมื่อใด เปลี่ยนมาเป็น Synchronous แล้วเปรียบเทียบ</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="boundary" data-bk-target="bkWaveA">โหลด R = 60 Ω ↑</button> <button type="button" class="btn btn-ghost btn-sm" data-bk-preset="sync" data-bk-target="bkWaveA">โหลด Synchronous ↑</button></div>
+    <div class="bk-ws" id="wsa4"><p><b>ใบงาน A4 — ค่าแฝงกับดิวตี้:</b> โหลดตัวอย่าง &quot;ค่าแฝงจริง&quot; ซึ่งตั้งโหมดคำนวณ D จาก Vo เป้าหมาย 12 V บันทึก D (ต้องได้ 0.5144 ตามตัวอย่าง H-2) แล้วสลับไปโหมดตั้ง D เอง ใส่ D = 0.5 ดูว่า \(V_o\) ตกเท่าไร (11.65 V)</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="real" data-bk-target="bkWaveA">โหลดค่าแฝงจริง ↑</button></div>
+    <div class="bk-ws" id="wsa5"><p><b>ใบงาน A5 — Vin เปลี่ยน:</b> โหลด Vin = 48 V ในโหมดคำนวณ D (ต้องได้ 0.25) เปรียบเทียบ ΔiL กับกรณี 24 V ที่ L เท่าเดิม ว่าเพิ่มขึ้นกี่เท่า (สูตร H5: \(\propto (1-D)\))</p><button type="button" class="btn btn-ghost btn-sm" data-bk-preset="highvin" data-bk-target="bkWaveA">โหลด Vin = 48 V ↑</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <ul>
+      <li><b>ใช้ \(D\) แทน \(D'\) ตอนคิดไดโอด:</b> กระแสไดโอดเฉลี่ยคือ \((1-D)I_o\) ไม่ใช่ \(D I_o\) · กระแสสวิตช์เฉลี่ยคือ \(D I_o\)</li>
+      <li><b>ออกแบบ L ที่ \(V_{g,nom}\):</b> ริปเปิลสูงสุดและขอบ CCM แย่สุดที่ \(V_{g,\max}\)</li>
+      <li><b>ลืมว่า H9 ขึ้นกับกระแสโหลด:</b> ตั้ง D คงที่ตามสูตรอุดมคติแล้วแรงดันตกเมื่อโหลดหนัก → ต้องมีวงป้อนกลับ</li>
+      <li><b>ใช้สูตร CCM กับวงจรที่เข้า DCM:</b> \(V_o\) จริงจะสูงกว่า \(DV_g\) มาก ตรวจ \(K > 1-D\) ก่อนทุกครั้ง</li>
+      <li><b>บวกริปเปิลแรงดันสองส่วนตรงๆ แล้วถือเป็นค่าจริง:</b> เป็นขอบบน ใช้เป็นเกณฑ์ออกแบบปลอดภัยได้ แต่ค่าวัดจริงต่ำกว่า</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">สรุปผลและก้าวต่อไป</h2>
+    <div class="table-wrap"><table class="tbl-sm">
+      <thead><tr><th>ปริมาณ</th><th>CCM อุดมคติ</th><th>มีค่าแฝง</th></tr></thead>
+      <tbody>
+        <tr><td>ดิวตี้ที่ต้องใช้</td><td>\(D = V_o/V_g\)</td><td>\(D = \dfrac{V_o + V_F + I_L(r_L+R_d)}{V_g + V_F - I_L(R_{on}-R_d)}\)</td></tr>
+        <tr><td>กระแสตัวเหนี่ยวนำเฉลี่ย</td><td>\(I_L = V_o/R\)</td><td>เท่ากัน (charge balance)</td></tr>
+        <tr><td>ริปเปิลกระแส</td><td>\(\Delta i_L = V_o(1-D)/(Lf_s)\)</td><td>ใกล้เคียง (ผิดไม่กี่ %)</td></tr>
+        <tr><td>เงื่อนไข CCM</td><td>\(2L/(RT_s) > 1-D\)</td><td>ตรวจ \(I_{L,\min} > 0\)</td></tr>
+        <tr><td>กระแสอินพุตเฉลี่ย</td><td>\(I_g = D\,I_L\)</td><td>\(I_g = D\,I_L\) (รวมความสูญเสียแล้ว \(P_{in} = P_{out} + P_{loss}\))</td></tr>
+      </tbody>
+    </table></div>
+    <p>ต่อไป: โหลดเบาจนกระแสลงถึงศูนย์ → <a href="/learn/power-electronics/buck-dcm-analysis/">บั๊กโหมด DCM</a> · เมื่อต้องการให้เครื่องตอบสนองต่อการเปลี่ยนค่า → <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ย</a> → <a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอน</a> → <a href="/learn/power-electronics/buck-design-lab/">ออกแบบและทดสอบโหลดหลายสภาวะ</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
