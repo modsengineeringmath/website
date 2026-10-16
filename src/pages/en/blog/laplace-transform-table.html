@@ -1,0 +1,112 @@
+<!--meta
+{
+  "title": "Laplace Transform Table: Common Transform Pairs and Properties, with Memory Tips | Ajarn Mod",
+  "h1": "Laplace Transform Table: The Most Commonly Used Pairs",
+  "description": "The 15 most common Laplace transform pairs and a table of properties (time shift, frequency shift, derivative, integral, convolution, initial and final value), with tips for remembering them.",
+  "ogTitle": "Common Laplace Transform Table with Properties",
+  "lang": "en",
+  "blog": true,
+  "tag": "Laplace",
+  "series": ["laplace-transform"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["Laplace transform table", "Laplace transform pairs", "Laplace transform properties", "final value theorem", "initial value theorem", "time shift", "convolution"],
+  "about": ["Laplace transform table", "Laplace transform properties"],
+  "og": {"title": "Common Laplace Transform Table", "sub": "15 transform pairs + key properties + memory tips", "eyebrow": "Article · Laplace", "sym": "ℒ"},
+  "faq": [
+    {"q": "When can the final value theorem be used?", "a": "\\(f(\\infty)=\\lim_{s\\to0}sF(s)\\) is valid only when all poles of \\(sF(s)\\) lie in the left half of the \\(s\\) plane. If there are poles on the imaginary axis or in the right half plane (for example a sine that oscillates forever) the formula gives a wrong answer."},
+    {"q": "Does this table apply for t less than 0?", "a": "No. This table is for the unilateral Laplace transform, which treats the function as zero for negative time. Every function in the table therefore has an implied factor of \\(u(t)\\)."},
+    {"q": "How do I remember the whole table?", "a": "Remember three main pairs first: \\(1/s\\), \\(1/(s+a)\\) and \\(\\omega/(s^2+\\omega^2)\\). The rest follow from properties: multiplying by \\(e^{-at}\\) replaces \\(s\\) with \\(s+a\\), and multiplying by \\(t\\) means differentiating with respect to \\(s\\) and changing the sign."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Laplace table</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Laplace Transform Table</p>
+      <h1>Laplace Transform Table: The Most Commonly Used Pairs</h1>
+      <p class="lede">A summary of the transform pairs and properties used in almost every circuit and control problem. Every pair is the unilateral Laplace transform (\(t \ge 0\)), with tips so you do not have to memorise the whole table.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="pairs">
+    <h2 id="pairs">Table of basic transform pairs</h2>
+    <p>In the table, \(a\) and \(\omega\) are real constants, \(n\) is a positive integer, and every time function is understood to be multiplied by \(u(t)\).</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>#</th><th>\(f(t)\), \(t \ge 0\)</th><th>\(F(s)\)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(\delta(t)\) (unit impulse)</td><td>\(1\)</td></tr>
+        <tr><td>2</td><td>\(1\) or \(u(t)\)</td><td>\(\dfrac{1}{s}\)</td></tr>
+        <tr><td>3</td><td>\(t\)</td><td>\(\dfrac{1}{s^2}\)</td></tr>
+        <tr><td>4</td><td>\(t^n\)</td><td>\(\dfrac{n!}{s^{n+1}}\)</td></tr>
+        <tr><td>5</td><td>\(e^{-at}\)</td><td>\(\dfrac{1}{s+a}\)</td></tr>
+        <tr><td>6</td><td>\(t\,e^{-at}\)</td><td>\(\dfrac{1}{(s+a)^2}\)</td></tr>
+        <tr><td>7</td><td>\(t^n e^{-at}\)</td><td>\(\dfrac{n!}{(s+a)^{n+1}}\)</td></tr>
+        <tr><td>8</td><td>\(\sin\omega t\)</td><td>\(\dfrac{\omega}{s^2+\omega^2}\)</td></tr>
+        <tr><td>9</td><td>\(\cos\omega t\)</td><td>\(\dfrac{s}{s^2+\omega^2}\)</td></tr>
+        <tr><td>10</td><td>\(e^{-at}\sin\omega t\)</td><td>\(\dfrac{\omega}{(s+a)^2+\omega^2}\)</td></tr>
+        <tr><td>11</td><td>\(e^{-at}\cos\omega t\)</td><td>\(\dfrac{s+a}{(s+a)^2+\omega^2}\)</td></tr>
+        <tr><td>12</td><td>\(\sinh at\)</td><td>\(\dfrac{a}{s^2-a^2}\)</td></tr>
+        <tr><td>13</td><td>\(\cosh at\)</td><td>\(\dfrac{s}{s^2-a^2}\)</td></tr>
+        <tr><td>14</td><td>\(t\sin\omega t\)</td><td>\(\dfrac{2\omega s}{(s^2+\omega^2)^2}\)</td></tr>
+        <tr><td>15</td><td>\(t\cos\omega t\)</td><td>\(\dfrac{s^2-\omega^2}{(s^2+\omega^2)^2}\)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">Table of commonly used properties</h2>
+    <p>Let \(\mathcal{L}\{f(t)\}=F(s)\) and \(\mathcal{L}\{g(t)\}=G(s)\).</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>Property</th><th>Time domain</th><th>\(s\) domain</th></tr></thead>
+      <tbody>
+        <tr><td>Linearity</td><td>\(af(t)+bg(t)\)</td><td>\(aF(s)+bG(s)\)</td></tr>
+        <tr><td>Frequency shift (multiplying by an exponential)</td><td>\(e^{-at}f(t)\)</td><td>\(F(s+a)\)</td></tr>
+        <tr><td>Time shift (delay)</td><td>\(f(t-T)\,u(t-T)\), \(T&gt;0\)</td><td>\(e^{-sT}F(s)\)</td></tr>
+        <tr><td>First derivative</td><td>\(f'(t)\)</td><td>\(sF(s)-f(0)\)</td></tr>
+        <tr><td>Second derivative</td><td>\(f''(t)\)</td><td>\(s^2F(s)-sf(0)-f'(0)\)</td></tr>
+        <tr><td>Integral</td><td>\(\displaystyle\int_0^t f(\tau)\,d\tau\)</td><td>\(\dfrac{F(s)}{s}\)</td></tr>
+        <tr><td>Multiplication by \(t\)</td><td>\(t\,f(t)\)</td><td>\(-\dfrac{dF}{ds}\)</td></tr>
+        <tr><td>Convolution</td><td>\((f*g)(t)\)</td><td>\(F(s)\,G(s)\)</td></tr>
+        <tr><td>Initial value</td><td>\(f(0^+)\)</td><td>\(\displaystyle\lim_{s\to\infty}sF(s)\)</td></tr>
+        <tr><td>Final value</td><td>\(f(\infty)\)</td><td>\(\displaystyle\lim_{s\to0}sF(s)\) (when all poles of \(sF\) are in the left half plane)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="memory">
+    <h2 id="memory">Tips for remembering the table without rote learning</h2>
+    <ul>
+      <li><b>Three pairs are enough:</b> \(1/s\), \(1/(s+a)\), \(\omega/(s^2+\omega^2)\). The rest can be built from them.</li>
+      <li><b>Seeing \((s+a)\) in place of \(s\)</b> means multiplying by \(e^{-at}\) in the time domain. For example, replacing \(s \to s+a\) in \(\omega/(s^2+\omega^2)\) gives pair 10.</li>
+      <li><b>Sine versus cosine:</b> sine has \(\omega\) in the numerator (since \(\sin 0 = 0\) there is no \(s\) term), while cosine has \(s\) in the numerator (since \(\cos 0 = 1\)).</li>
+      <li><b>Multiplying by \(t\)</b> means differentiating with respect to \(s\) and changing the sign, for example \(-\dfrac{d}{ds}\dfrac{1}{s+a}=\dfrac{1}{(s+a)^2}\) gives pair 6.</li>
+    </ul>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Using the tip</span><h3>Find \(\mathcal{L}\{t\cos\omega t\}\) from pair 9</h3></div>
+      <ol class="steps">
+        <li><p>Multiplying by \(t\) means \(-\dfrac{d}{ds}\)</p>\[ -\frac{d}{ds}\frac{s}{s^2+\omega^2} = -\frac{(s^2+\omega^2) - s(2s)}{(s^2+\omega^2)^2} = \frac{s^2-\omega^2}{(s^2+\omega^2)^2} \]</li>
+      </ol>
+      <p class="answer">This matches pair 15 in the table ✓</p>
+    </div>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/laplace-transform/">The table of 22 transform pairs with regions of convergence (ROC) and a searchable formula index (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/properties/">Proofs of every property, with an experiment lab (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/differential-equations/">Use the table to solve differential equations for RC, RL and RLC circuits, with an interactive solver (in Thai)</a></li>
+        <li><a href="/en/blog/inverse-laplace-transform-partial-fractions/">Use this table to invert with partial fractions</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

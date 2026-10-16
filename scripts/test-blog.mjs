@@ -18,16 +18,23 @@ const exists = (href) => {
 // redirects count as valid targets
 const redirects = new Set(fs.readFileSync(path.join(ROOT, "_redirects"), "utf8").split("\n").map((l) => l.trim().split(/\s+/)[0]).filter((x) => x && !x.startsWith("#")));
 
-const dirs = fs.readdirSync(path.join(ROOT, "blog"), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-console.log(`${dirs.length} posts`);
+const postDirs = (base) => fs.readdirSync(path.join(ROOT, base), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+const thDirs = postDirs("blog"), enDirs = postDirs("en/blog");
+// every Thai post has an English twin of the same slug and vice versa
+for (const slug of thDirs) if (!enDirs.includes(slug)) bad(`${slug}: no English edition`);
+for (const slug of enDirs) if (!thDirs.includes(slug)) bad(`${slug}: English edition without a Thai original`);
+const thai = /[\u0E00-\u0E7F]/;
 const sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 const llms = fs.readFileSync(path.join(ROOT, "llms.txt"), "utf8");
+for (const [lang, base, dirs] of [["th", "blog", thDirs], ["en", "en/blog", enDirs]]) {
+console.log(`\n== ${lang}: ${dirs.length} posts`);
 const titles = new Set(), descs = new Set();
 
 for (const slug of dirs) {
-  const file = path.join(ROOT, "blog", slug, "index.html");
+  const file = path.join(ROOT, base, slug, "index.html");
   const html = fs.readFileSync(file, "utf8");
-  const url = `${SITE}/blog/${slug}/`;
+  const url = `${SITE}/${base}/${slug}/`;
+  const twinUrl = `${SITE}/${lang === "th" ? "en/blog" : "blog"}/${slug}/`;
   console.log(slug);
   const title = (html.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || "";
   const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
@@ -40,6 +47,22 @@ for (const slug of dirs) {
   if (!html.includes(`<link rel="canonical" href="${url}">`)) bad("canonical");
   if (!sitemap.includes(`<loc>${url}</loc>`)) bad("not in sitemap");
   if (!llms.includes(url)) bad("not in llms.txt");
+  // language pair: html lang, og:locale, canonical, reciprocal hreflang, visible TH/EN switch
+  if (!html.includes(`<html lang="${lang}">`)) bad("html lang");
+  if (!html.includes(`<meta property="og:locale" content="${lang === "en" ? "en_US" : "th_TH"}">`)) bad("og:locale");
+  if (!html.includes(`<meta property="og:url" content="${url}">`)) bad("og:url");
+  for (const [h, u] of [[lang, url], [lang === "th" ? "en" : "th", twinUrl], ["x-default", `${SITE}/blog/${slug}/`]])
+    if (!html.includes(`<link rel="alternate" hreflang="${h}" href="${u}">`)) bad(`hreflang ${h}`);
+  if (!html.includes(`class="lang-sw"`) || !html.includes(`href="${twinUrl.replace(SITE, "")}" hreflang="${lang === "th" ? "en" : "th"}"`)) bad("language switch");
+  if (!sitemap.includes(`<loc>${twinUrl}</loc>`)) bad("twin not in sitemap");
+  if (lang === "en") {
+    const head = html.slice(0, html.indexOf("</head>"));
+    if (thai.test(head.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/, "").replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, ""))) bad("Thai text in <head> of an English page");
+    const art = html.slice(html.indexOf("<article"), html.indexOf("</article>")).replace(/<small>ภาษาไทย<\/small>/, "");
+    if (thai.test(art)) bad("Thai text in the article body");
+    if (!html.includes(`<meta property="og:image" content="${SITE}/images/og/en-blog-${slug}.jpg">`)) bad("own og:image");
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) if (thai.test(m[1])) bad("Thai text in JSON-LD");
+  } else if (!html.includes(`/images/og/blog-${slug}.jpg`)) bad("own og:image");
   if (/katex-error/.test(html)) bad("KaTeX error");
   const body = html.slice(html.indexOf('<main'), html.indexOf("</main>"));
   if (/\\\(|\\\[|\\\)|\\\]/.test(body.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<annotation[\s\S]*?<\/annotation>/g, ""))) bad("unrendered math delimiters");
@@ -53,17 +76,27 @@ for (const slug of dirs) {
     } catch (e) { bad("JSON-LD parse: " + e.message); }
   }
   const main = html.slice(html.indexOf('<article'), html.indexOf("</article>"));
-  const hrefs = [...main.matchAll(/href="(\/[^"]*)"/g)].map((m) => m[1]);
+  const hrefs = [...main.replace(/<nav class="lang-sw"[\s\S]*?<\/nav>/, "").matchAll(/href="(\/[^"]*)"/g)].map((m) => m[1]);
   const lessonLinks = hrefs.filter((h) => h.startsWith("/learn/")).length;
+  const twinCheck = lang === "en" ? hrefs.filter((h) => h.startsWith("/blog/")) : [];
+  if (twinCheck.length) bad("English post links to a Thai article: " + twinCheck[0]);
   if (lessonLinks < 3) bad(`only ${lessonLinks} links into /learn/`);
   for (const h of new Set(hrefs)) if (!exists(h) && !redirects.has(h.split("#")[0])) bad("broken link " + h);
   const words = body.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").length;
   console.log(`  ok · ${lessonLinks} lesson links · ${words} chars of text`);
 }
 
-// hub + reverse links
-const hub = fs.readFileSync(path.join(ROOT, "blog/index.html"), "utf8");
-for (const slug of dirs) if (!hub.includes(`href="/blog/${slug}/"`)) bad(`hub missing ${slug}`);
+}
+
+// hubs + reverse links
+for (const [lang, base, dirs] of [["th", "blog", thDirs], ["en", "en/blog", enDirs]]) {
+  const hub = fs.readFileSync(path.join(ROOT, base, "index.html"), "utf8");
+  for (const slug of dirs) if (!hub.includes(`href="/${base}/${slug}/"`)) bad(`${lang} hub missing ${slug}`);
+  const twinHub = `${SITE}/${lang === "th" ? "en/blog" : "blog"}/`;
+  if (!hub.includes(`<link rel="alternate" hreflang="${lang === "th" ? "en" : "th"}" href="${twinHub}">`)) bad(`${lang} hub hreflang`);
+  if (!hub.includes(`<link rel="canonical" href="${SITE}/${base}/">`)) bad(`${lang} hub canonical`);
+  if (!sitemap.includes(`<loc>${SITE}/${base}/</loc>`)) bad(`${lang} hub not in sitemap`);
+}
 for (const [page, slug] of [["learn/laplace-transform/index.html", "what-is-laplace-transform"], ["learn/power-factor/pf-basics/index.html", "power-factor-explained"], ["learn/vector-algebra/dot-product/index.html", "dot-product-cross-product"], ["learn/control-systems/pid/index.html", "what-is-pid-controller"], ["learn/linear-algebra/inverse/index.html", "determinant-and-inverse-matrix"]]) {
   if (!fs.readFileSync(path.join(ROOT, page), "utf8").includes(`href="/blog/${slug}/"`)) bad(`${page} has no link back to ${slug}`);
 }

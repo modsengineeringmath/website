@@ -57,7 +57,7 @@ h1{{margin-top:14px;font:700 {size}px/1.22 Trirong,serif;color:#fff}}
   <div class="eyebrow">{eyebrow}</div>
   <h1>{title}</h1>
   <div class="sub">{sub}</div>
-  <div class="foot"><b>modsengineeringmath.com</b><span>สอนโดยอาจารย์มด · ภาษาไทย · ฟรี</span></div>
+  <div class="foot"><b>modsengineeringmath.com</b><span>{foot}</span></div>
 </div>
 </body></html>"""
 
@@ -93,7 +93,8 @@ def main():
                 t = e["title"]
                 size = 66 if len(t) <= 22 else 56 if len(t) <= 40 else 48
                 doc = TEMPLATE.format(fonts=fonts, sym=html.escape(e["sym"]), eyebrow=html.escape(e["eyebrow"]),
-                                      title=html.escape(t), sub=html.escape(e["sub"]), size=size)
+                                      title=html.escape(t), sub=html.escape(e["sub"]), size=size,
+                                      foot="Ajarn Mod · English edition" if e["key"].startswith("en-") else "สอนโดยอาจารย์มด · ภาษาไทย · ฟรี")
                 if e["key"].startswith("learn-vector-algebra"):
                     slug = e["key"].removeprefix("learn-vector-algebra").lstrip("-") or "overview"
                     artwork = ROOT / "images/vector-algebra" / f"{slug}.svg"
