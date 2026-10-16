@@ -1,0 +1,117 @@
+<!--meta
+{
+  "title": "How to Find the Determinant and Inverse of a 2×2 and 3×3 Matrix, with Examples | Ajarn Mod",
+  "h1": "How to Find the Determinant and Inverse Matrix (2×2 and 3×3) with Examples",
+  "description": "Learn to find 2×2 and 3×3 determinants by cofactors and the inverse matrix with the adjugate formula, with numeric examples checked by multiplying back, and the condition for a singular matrix.",
+  "ogTitle": "How to Find the Determinant and Inverse of a 2×2 and 3×3 Matrix",
+  "lang": "en",
+  "blog": true,
+  "tag": "Linear algebra",
+  "series": ["linear-algebra"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["determinant", "inverse matrix", "matrix inverse", "cofactor expansion", "adjugate", "2x2 matrix", "3x3 matrix", "singular matrix"],
+  "about": ["Determinant", "Inverse matrix", "Linear algebra"],
+  "og": {"title": "Finding the Determinant and Inverse Matrix", "sub": "2×2 and 3×3 by cofactors, with checked examples", "eyebrow": "Article · Linear algebra", "sym": "det"},
+  "faq": [
+    {"q": "What does a zero determinant mean?", "a": "The matrix is singular and has no inverse, and the system \\(A\\mathbf{x}=\\mathbf{b}\\) does not have a unique solution: it has either no solution or infinitely many. The rows or columns of the matrix are linearly dependent."},
+    {"q": "Can the Sarrus rule be used for a 4×4 matrix?", "a": "No. The Sarrus rule (drawing diagonals) works only for 3×3. Larger matrices use cofactor expansion or row operations down to a triangular matrix."},
+    {"q": "Why do we divide by the determinant when finding the inverse?", "a": "Because \\(A\\,\\operatorname{adj}(A)=\\det(A)\\,I\\), so we must divide by \\(\\det(A)\\) to get the identity matrix. That is impossible when \\(\\det(A)=0\\)."},
+    {"q": "Which method is preferred for finding an inverse in practice?", "a": "By hand, use the shortcut formula for 2×2, and the adjugate or row operations (Gauss–Jordan) for 3×3. In computer programs one usually solves \\(A\\mathbf{x}=\\mathbf{b}\\) by factorisation without forming the inverse explicitly, for better accuracy."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Determinant and inverse</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Linear algebra</p>
+      <h1>How to Find the Determinant and Inverse Matrix (2×2 and 3×3) with Examples</h1>
+      <p class="lede">The determinant tells you whether a matrix is invertible, and the inverse is used to solve systems of equations such as the currents in a multi-loop circuit. This article walks through the hand calculations with examples checked by multiplying back.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>30-second summary</b>
+        <ul>
+          <li>2×2: \(\det\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}=ad-bc\)</li>
+          <li>3×3: expand along the first row with cofactors (alternating signs \(+\,-\,+\))</li>
+          <li>Inverse: \(A^{-1}=\dfrac{1}{\det A}\operatorname{adj}(A)\), which exists only when \(\det A\ne0\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="det2">
+    <h2 id="det2">The 2×2 determinant</h2>
+    \[ \det\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}=ad-bc \]
+    <p>Example: \(\det\begin{pmatrix}4&amp;7\\2&amp;6\end{pmatrix}=4\cdot6-7\cdot2=24-14=10\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="det3">
+    <h2 id="det3">The 3×3 determinant by cofactors</h2>
+    <p>Expand along the first row: multiply each entry by the 2×2 determinant that remains when its row and column are removed, with alternating signs \(+,-,+\).</p>
+    \[ \det A=a_{11}M_{11}-a_{12}M_{12}+a_{13}M_{13} \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>\(A=\begin{pmatrix}2&amp;1&amp;3\\0&amp;-1&amp;4\\1&amp;2&amp;5\end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li>\[ \det A=2\begin{vmatrix}-1&amp;4\\2&amp;5\end{vmatrix}-1\begin{vmatrix}0&amp;4\\1&amp;5\end{vmatrix}+3\begin{vmatrix}0&amp;-1\\1&amp;2\end{vmatrix} \]</li>
+        <li>\[ =2(-5-8)-1(0-4)+3(0+1)=-26+4+3 \]</li>
+      </ol>
+      <p class="answer">\(\det A=-19\) (not zero, so the inverse exists)</p>
+    </div>
+    <p>For 3×3 you can also use the Sarrus rule: copy the first two columns to the right, add the products along the three downward diagonals and subtract the products along the three upward diagonals. The result is the same.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inv2">
+    <h2 id="inv2">The 2×2 inverse (shortcut formula)</h2>
+    \[ \begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&amp;-b\\-c&amp;a\end{pmatrix} \]
+    <p>Swap \(a\) and \(d\), change the signs of \(b\) and \(c\), then divide by the determinant.</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>\(N=\begin{pmatrix}4&amp;7\\2&amp;6\end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li>\[ N^{-1}=\frac{1}{10}\begin{pmatrix}6&amp;-7\\-2&amp;4\end{pmatrix}=\begin{pmatrix}0.6&amp;-0.7\\-0.2&amp;0.4\end{pmatrix} \]</li>
+        <li><p>Check: the first row of \(N\) times the first column of \(N^{-1}\)</p>\[ 4(0.6)+7(-0.2)=2.4-1.4=1 \]</li>
+      </ol>
+      <p class="answer">And \(4(-0.7)+7(0.4)=0\), \(2(0.6)+6(-0.2)=0\), \(2(-0.7)+6(0.4)=1\), so \(NN^{-1}=I\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inv3">
+    <h2 id="inv3">The 3×3 inverse with the adjugate</h2>
+    <p>Steps: (1) find the cofactor matrix \(C\); (2) swap rows and columns (transpose) to get \(\operatorname{adj}(A)=C^{T}\); (3) divide by \(\det A\).</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Continuing the example \(A\) above</span><h3>Find \(A^{-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>Cofactors \(C_{ij}=(-1)^{i+j}M_{ij}\)</p>\[ C=\begin{pmatrix}-13&amp;4&amp;1\\1&amp;7&amp;-3\\7&amp;-8&amp;-2\end{pmatrix} \]</li>
+        <li><p>Transpose</p>\[ \operatorname{adj}(A)=C^{T}=\begin{pmatrix}-13&amp;1&amp;7\\4&amp;7&amp;-8\\1&amp;-3&amp;-2\end{pmatrix} \]</li>
+        <li><p>Divide by \(\det A=-19\)</p>\[ A^{-1}=\frac{1}{19}\begin{pmatrix}13&amp;-1&amp;-7\\-4&amp;-7&amp;8\\-1&amp;3&amp;2\end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">Check: the first row of \(A\) times the first column of \(A^{-1}\): \(\dfrac{1}{19}\big(2(13)+1(-4)+3(-1)\big)=\dfrac{19}{19}=1\) ✓ and the first row times the second column: \(\dfrac{1}{19}\big(2(-1)+1(-7)+3(3)\big)=0\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="use">
+    <h2 id="use">What it is used for</h2>
+    <ul>
+      <li><b>Solving systems of equations:</b> \(A\mathbf{x}=\mathbf{b}\Rightarrow\mathbf{x}=A^{-1}\mathbf{b}\), for example the loop currents in a multi-loop electric circuit.</li>
+      <li><b>Checking for a unique solution:</b> if \(\det A\ne0\) the system has exactly one solution.</li>
+      <li><b>Eigenvalues:</b> found from \(\det(A-\lambda I)=0\), used in the stability analysis of state-space systems.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/linear-algebra/determinants/">Determinants: properties, cofactors and row operations (in Thai)</a></li>
+        <li><a href="/learn/linear-algebra/inverse/">The inverse matrix, by both the adjugate and Gauss–Jordan (in Thai)</a></li>
+        <li><a href="/learn/linear-algebra/matrix-lab/">Matrix lab: a calculator that shows the working step by step (in Thai)</a></li>
+        <li><a href="/learn/linear-algebra/ee-applications/">Applications in electric circuits and power systems (in Thai)</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

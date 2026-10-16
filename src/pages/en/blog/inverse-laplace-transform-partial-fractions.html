@@ -1,0 +1,131 @@
+<!--meta
+{
+  "title": "Inverse Laplace Transform by Partial Fractions: 3 Cases with Examples | Ajarn Mod",
+  "h1": "How to Find the Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples",
+  "description": "Invert the Laplace transform with partial fractions for distinct, repeated and complex poles, with checked examples and what to do when the numerator degree is too high.",
+  "ogTitle": "Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples",
+  "lang": "en",
+  "blog": true,
+  "tag": "Laplace",
+  "series": ["laplace-transform"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["inverse Laplace transform", "partial fractions", "repeated poles", "complex poles", "cover-up method", "completing the square", "Laplace transform"],
+  "about": ["Inverse Laplace transform", "Partial fractions"],
+  "og": {"title": "How to Find the Inverse Laplace Transform", "sub": "Partial fractions in 3 cases: distinct, repeated, complex poles", "eyebrow": "Article · Laplace", "sym": "ℒ⁻¹"},
+  "faq": [
+    {"q": "What if the numerator degree is greater than or equal to the denominator degree?", "a": "Do polynomial long division first so that a proper fraction remains (numerator degree less than denominator degree). For example, \\(\\dfrac{s^2+1}{s(s+1)} = 1 + \\dfrac{-s+1}{s(s+1)}\\). The constant 1 becomes an impulse \\(\\delta(t)\\) in the time domain."},
+    {"q": "When does the cover-up method work?", "a": "It is the fastest way to find the coefficient of a distinct pole: multiply both sides by \\((s+p)\\) and substitute \\(s=-p\\). For a repeated pole it works only for the coefficient of the highest-power term; the remaining terms need differentiation or equating coefficients."},
+    {"q": "Do complex poles always have to be split into partial fractions containing j?", "a": "No. For a quadratic with complex roots, complete the square so the denominator has the form \\((s+a)^2+\\omega^2\\), then use the pairs for \\(e^{-at}\\cos\\omega t\\) and \\(e^{-at}\\sin\\omega t\\). The result is real from the start."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Inverse Laplace</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Inverse Laplace Transform</p>
+      <h1>How to Find the Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples</h1>
+      <p class="lede">After solving an equation in the \(s\) domain you get \(Y(s)\) as a ratio of polynomials, and the final step is to convert back to \(y(t)\). The standard method that works for almost every problem is to split into partial fractions and then use the table. This article divides the work into 3 cases according to the type of pole.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>30-second summary</b>
+        <ul>
+          <li>Factor the denominator → identify the pole type → write the partial fractions → find the coefficients → use the table</li>
+          <li>Distinct poles: use cover-up · repeated poles: include every power of \((s+p)^k\) · complex poles: complete the square</li>
+          <li>If the numerator degree ≥ the denominator degree, do long division first</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="pairs">
+    <h2 id="pairs">The transform pairs you need</h2>
+    <p>All three cases use this small set of pairs (the full set is in the <a href="/en/blog/laplace-transform-table/">Laplace transform table</a>).</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>\(F(s)\)</th><th>\(f(t)\), \(t \ge 0\)</th></tr></thead>
+      <tbody>
+        <tr><td>\(\dfrac{1}{s}\)</td><td>\(1\)</td></tr>
+        <tr><td>\(\dfrac{1}{s+a}\)</td><td>\(e^{-at}\)</td></tr>
+        <tr><td>\(\dfrac{1}{(s+a)^2}\)</td><td>\(t\,e^{-at}\)</td></tr>
+        <tr><td>\(\dfrac{\omega}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\sin\omega t\)</td></tr>
+        <tr><td>\(\dfrac{s+a}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\cos\omega t\)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case1">
+    <h2 id="case1">Case 1: distinct poles (non-repeated real roots)</h2>
+    <p>If \(F(s)=\dfrac{N(s)}{(s+p_1)(s+p_2)}\), it can be written as \(\dfrac{A}{s+p_1}+\dfrac{B}{s+p_2}\) where \(A = \left[(s+p_1)F(s)\right]_{s=-p_1}\). This is the cover-up method: cover the factor you are interested in, then substitute the value of \(s\) into what remains.</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 1</span><h3>Find \(\mathcal{L}^{-1}\left\{\dfrac{3s+5}{(s+1)(s+2)}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>Find \(A\) at the pole \(s=-1\): cover \((s+1)\) and substitute \(s=-1\)</p>\[ A = \frac{3(-1)+5}{(-1)+2} = \frac{2}{1} = 2 \]</li>
+        <li><p>Find \(B\) at the pole \(s=-2\)</p>\[ B = \frac{3(-2)+5}{(-2)+1} = \frac{-1}{-1} = 1 \]</li>
+        <li><p>Use the table</p>\[ F(s)=\frac{2}{s+1}+\frac{1}{s+2} \;\Rightarrow\; f(t) = 2e^{-t} + e^{-2t} \]</li>
+      </ol>
+      <p class="answer">Check: \(\dfrac{2}{s+1}+\dfrac{1}{s+2} = \dfrac{2(s+2)+(s+1)}{(s+1)(s+2)} = \dfrac{3s+5}{(s+1)(s+2)}\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case2">
+    <h2 id="case2">Case 2: repeated poles</h2>
+    <p>A pole repeated \(k\) times needs a term for every power from 1 to \(k\). For example \((s+1)^2\) must be written as \(\dfrac{B}{s+1}+\dfrac{C}{(s+1)^2}\). If you write only the squared term, the coefficients cannot be matched. The coefficient of the highest power can be found by cover-up, and the remaining terms from derivatives.</p>
+    \[ \text{If } F(s)=\frac{G(s)}{(s+p)^2}: \quad C = G(-p), \quad B = \left.\frac{dG}{ds}\right|_{s=-p} \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 2</span><h3>Find \(\mathcal{L}^{-1}\left\{\dfrac{1}{s(s+1)^2}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>Write the partial-fraction form</p>\[ \frac{1}{s(s+1)^2} = \frac{A}{s}+\frac{B}{s+1}+\frac{C}{(s+1)^2} \]</li>
+        <li><p>Distinct pole at \(s=0\): \(A = \dfrac{1}{(0+1)^2}=1\)</p></li>
+        <li><p>Repeated pole at \(s=-1\): let \(G(s)=1/s\), so \(C=G(-1)=-1\) and \(B=G'(-1)=-\dfrac{1}{s^2}\Big|_{s=-1}=-1\)</p></li>
+        <li><p>Use the table</p>\[ F(s)=\frac{1}{s}-\frac{1}{s+1}-\frac{1}{(s+1)^2} \;\Rightarrow\; f(t)=1-e^{-t}-t\,e^{-t} \]</li>
+      </ol>
+      <p class="answer">Check the initial value: \(f(0)=1-1-0=0\), which matches the initial value theorem \(\lim_{s\to\infty} sF(s)=\lim \dfrac{1}{(s+1)^2}=0\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="case3">
+    <h2 id="case3">Case 3: complex poles (complete the square)</h2>
+    <p>If the denominator is a quadratic that does not factor into real roots, do not split it into complex numbers. Complete the square to get \((s+a)^2+\omega^2\), then arrange the numerator as \((s+a)\) plus a constant. This matches the cosine and sine pairs with the factor \(e^{-at}\).</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 3</span><h3>Find \(\mathcal{L}^{-1}\left\{\dfrac{s+3}{s^2+2s+5}\right\}\)</h3></div>
+      <ol class="steps">
+        <li><p>Complete the square in the denominator: \(s^2+2s+5=(s+1)^2+2^2\)</p></li>
+        <li><p>Arrange the numerator: \(s+3=(s+1)+2\), then split</p>\[ F(s)=\frac{s+1}{(s+1)^2+2^2}+\frac{2}{(s+1)^2+2^2} \]</li>
+        <li><p>Use the table with \(a=1\), \(\omega=2\)</p>\[ f(t)=e^{-t}\cos 2t + e^{-t}\sin 2t = e^{-t}(\cos 2t+\sin 2t) \]</li>
+      </ol>
+      <p class="answer">The poles are at \(s=-1\pm j2\), so the response is an oscillation at 2 rad/s whose amplitude decays as \(e^{-t}\). Because the poles are in the left half plane, the system is stable.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="improper">
+    <h2 id="improper">When the numerator degree is too high</h2>
+    <p>Partial fractions work only for proper fractions. If the numerator degree ≥ the denominator degree, do long division first. A constant quotient is an impulse \(\delta(t)\), while a quotient that is a polynomial in \(s\) corresponds to derivatives of the impulse, which usually indicates a model that differentiates its input in a physically unrealistic way. Check the problem again.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="checklist">
+    <h2 id="checklist">Checklist before you hand in the answer</h2>
+    <ul>
+      <li>Substitute \(t=0\) and compare with the initial value theorem: \(f(0^+)=\lim_{s\to\infty}sF(s)\).</li>
+      <li>If all poles of \(sF(s)\) are in the left half plane (a distinct pole at \(s=0\) in \(F(s)\) is fine), compare \(f(\infty)\) with \(\lim_{s\to0}sF(s)\).</li>
+      <li>Add the partial fractions back together; you must recover the original numerator.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/laplace-transform/inverse-laplace-transform/">The inverse Laplace transform in every case, with a calculator that shows the working (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/pole-zero-roc/">Pole-zero diagrams and the ROC (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/properties/">Properties of the Laplace transform: time shift, convolution and more (in Thai)</a></li>
+        <li><a href="/en/blog/what-is-laplace-transform/">Read first: what is the Laplace transform?</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

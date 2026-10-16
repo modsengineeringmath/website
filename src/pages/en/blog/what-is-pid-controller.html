@@ -1,0 +1,117 @@
+<!--meta
+{
+  "title": "What Is a PID Controller? Kp Ki Kd, Their Effects and Ziegler–Nichols Tuning | Ajarn Mod",
+  "h1": "What Is a PID Controller? How Kp, Ki and Kd Work and How to Tune Them",
+  "description": "A PID controller adds proportional, integral and derivative action on the error. See what Kp, Ki and Kd do, the step-response table, a Ziegler–Nichols example and field problems.",
+  "ogTitle": "What Is a PID Controller? Kp, Ki, Kd and Tuning",
+  "lang": "en",
+  "blog": true,
+  "tag": "Control systems",
+  "series": ["control-systems"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["PID controller", "what is a PID controller", "Kp Ki Kd", "PID formula", "Ziegler-Nichols tuning", "PID tuning", "control systems", "anti-windup"],
+  "about": ["PID controller", "Control systems", "Ziegler-Nichols tuning"],
+  "og": {"title": "What Is PID Control?", "sub": "What Kp, Ki and Kd do, and how to tune with Ziegler–Nichols", "eyebrow": "Article · Control systems", "sym": "PID"},
+  "faq": [
+    {"q": "What do Kp, Ki and Kd each do?", "a": "Kp reacts to the present error: raising it speeds up the response but risks overshoot. Ki accumulates past error and removes steady-state error. Kd looks at the trend of the error: it reduces overshoot but is sensitive to noise."},
+    {"q": "Why do some systems use only PI instead of PID?", "a": "Because the derivative term amplifies sensor noise. Loops with noisy measurements, such as flow and liquid level, usually use PI, which is simple and good enough. Slow processes with clean measurements may benefit from the D term."},
+    {"q": "What is integral windup?", "a": "When the actuator (valve, motor, heater) saturates but the error is still not zero, the integral term keeps accumulating. When the error finally changes sign it takes a long time to unwind, causing large overshoot. Anti-windup, such as stopping integration while saturated, fixes it."},
+    {"q": "Does Ziegler–Nichols work for every kind of system?", "a": "No. The closed-loop method requires letting the system oscillate continuously at \\(K_u\\), which can be dangerous on a real process, and the result is usually an aggressive, oscillatory response. Use it as a starting point and then fine-tune."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>What is a PID controller</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Control systems</p>
+      <h1>What Is a PID Controller? How Kp, Ki and Kd Work and How to Tune Them</h1>
+      <p class="lede">PID is the most widely used controller in industry because the idea is simple: look at the error between the desired value and the measured value, then adjust the control signal from three viewpoints: the present, the past and the future of the error.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>30-second summary</b>
+        <ul>
+          <li>\(u(t)=K_pe(t)+K_i\int e\,dt+K_d\dfrac{de}{dt}\) where \(e=r-y\)</li>
+          <li>P = present · I = past (removes steady-state error) · D = trend (reduces overshoot)</li>
+          <li>Start with Ziegler–Nichols, then fine-tune from the real response</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="formula">
+    <h2 id="formula">The PID formula and transfer function</h2>
+    <p>Let \(r(t)\) be the desired value, \(y(t)\) the measured value, and the error \(e(t)=r(t)-y(t)\).</p>
+    \[ u(t)=K_p\,e(t)+K_i\int_0^t e(\tau)\,d\tau+K_d\,\frac{de(t)}{dt} \]
+    <p>In the \(s\) domain the controller can be written in two equivalent forms.</p>
+    \[ C(s)=K_p+\frac{K_i}{s}+K_d s \;=\; K_p\left(1+\frac{1}{T_i s}+T_d s\right),\qquad K_i=\frac{K_p}{T_i},\; K_d=K_pT_d \]
+    <p>The first form is used in many software manuals; the second appears in textbooks and industrial controllers. Check which form your device uses before entering values.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="roles">
+    <h2 id="roles">What each term does</h2>
+    <ul>
+      <li><b>P (proportional):</b> a large error gives a strong command, a small error a gentle one. Raising \(K_p\) makes the response faster, but too much causes oscillation or instability, and most systems still keep a steady-state error with P alone.</li>
+      <li><b>I (integral):</b> as long as some error remains, it keeps accumulating until the command is strong enough to remove it. This drives the steady-state error to a constant reference to zero, but it slows the response and can cause overshoot.</li>
+      <li><b>D (derivative):</b> looks at the rate of change of the error and brakes in advance, reducing overshoot, but it amplifies high-frequency noise.</li>
+    </ul>
+    <h3>Effect of increasing each gain on the step response</h3>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>Increase</th><th>Rise time</th><th>Overshoot</th><th>Settling time</th><th>Steady-state error</th></tr></thead>
+      <tbody>
+        <tr><td>\(K_p\)</td><td>Decreases</td><td>Increases</td><td>Small change</td><td>Decreases</td></tr>
+        <tr><td>\(K_i\)</td><td>Decreases</td><td>Increases</td><td>Increases</td><td>Eliminated</td></tr>
+        <tr><td>\(K_d\)</td><td>Small change</td><td>Decreases</td><td>Decreases</td><td>No change</td></tr>
+      </tbody>
+    </table></div>
+    <p>This table shows general trends for low-order systems. The three gains interact, so tune them together rather than finishing one at a time.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="zn">
+    <h2 id="zn">Starting values with Ziegler–Nichols (closed-loop method)</h2>
+    <p>Set \(K_i=K_d=0\) and raise \(K_p\) a little at a time until the system oscillates steadily. Record that \(K_p\) as \(K_u\) (the ultimate gain) and the oscillation period as \(P_u\), then read the values from the table.</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>Type</th><th>\(K_p\)</th><th>\(T_i\)</th><th>\(T_d\)</th></tr></thead>
+      <tbody>
+        <tr><td>P</td><td>\(0.5K_u\)</td><td>–</td><td>–</td></tr>
+        <tr><td>PI</td><td>\(0.45K_u\)</td><td>\(P_u/1.2\)</td><td>–</td></tr>
+        <tr><td>PID</td><td>\(0.6K_u\)</td><td>\(P_u/2\)</td><td>\(P_u/8\)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>You find \(K_u=8\) and \(P_u=2\) seconds</h3></div>
+      <ol class="steps">
+        <li>\[ K_p=0.6\times8=4.8,\qquad T_i=\frac{2}{2}=1\ \text{s},\qquad T_d=\frac{2}{8}=0.25\ \text{s} \]</li>
+        <li>\[ K_i=\frac{K_p}{T_i}=4.8,\qquad K_d=K_pT_d=4.8\times0.25=1.2 \]</li>
+      </ol>
+      <p class="answer">Starting values: \(K_p=4.8\), \(K_i=4.8\ \text{s}^{-1}\), \(K_d=1.2\ \text{s}\). This method often gives high overshoot, so use it as a starting point and then reduce \(K_p\) or \(K_i\) according to the real response.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Problems you meet in practice</h2>
+    <ul>
+      <li><b>Integral windup:</b> the actuator saturates but the I term keeps accumulating, causing large overshoot when the error changes sign. Fix it with anti-windup, for example stop integrating while saturated.</li>
+      <li><b>Noise in the D term:</b> add a low-pass filter on the derivative, and take the derivative of the measurement \(y\) instead of the error \(e\) so a sudden setpoint change does not cause a kick.</li>
+      <li><b>Dead time:</b> the larger it is, the more you must reduce \(K_p\), and the D term helps little.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/control-systems/pid/">The PID controller: structure, effects and a browser simulation lab (in Thai)</a></li>
+        <li><a href="/learn/control-systems/pid-tuning/">PID tuning: Ziegler–Nichols, Cohen–Coon and other methods (in Thai)</a></li>
+        <li><a href="/learn/control-systems/stability/">Stability of control systems (in Thai)</a></li>
+        <li><a href="/learn/control-systems/">The whole control systems series: feedback, root locus, Bode (in Thai)</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

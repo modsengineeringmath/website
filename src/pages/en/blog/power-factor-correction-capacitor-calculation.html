@@ -1,0 +1,105 @@
+<!--meta
+{
+  "title": "How to Size a Power Factor Correction Capacitor (kvar), with Example and Table | Ajarn Mod",
+  "h1": "How to Calculate the Size of a Power Factor Correction Capacitor (kvar) with an Example",
+  "description": "The formula Qc = P(tan φ1 − tan φ2) with a 100 kW, 400 V load corrected from PF 0.75 to 0.95 giving 55.3 kvar, microfarads per phase, a multiplier table and cautions about harmonics.",
+  "ogTitle": "How to Calculate a Power Factor Correction Capacitor (kvar)",
+  "lang": "en",
+  "blog": true,
+  "tag": "Power factor",
+  "series": ["power-factor"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["power factor correction", "capacitor sizing", "kvar calculation", "capacitor bank", "improve power factor", "reactive power compensation", "detuned reactor"],
+  "about": ["Power factor correction", "Capacitor bank", "Reactive power"],
+  "og": {"title": "Calculating a Power Factor Correction Capacitor", "sub": "Qc = P (tan φ1 − tan φ2) with a 100 kW example", "eyebrow": "Article · Power factor", "sym": "C"},
+  "faq": [
+    {"q": "What power factor should I correct to?", "a": "A common target is 0.95 or above, because it allows for light-load periods when a motor's PF drops, and it stops short of 1.0, which needs a lot more capacitance for only a small further reduction in current. An automatic installation that switches steps with the load prevents over-compensation into a leading PF."},
+    {"q": "Should capacitors be connected in delta or wye?", "a": "For the same kvar, a delta connection needs one third of the capacitance per phase of a wye connection (because the voltage across each unit is \\(\\sqrt{3}\\) times higher). Low-voltage capacitor banks are usually connected in delta."},
+    {"q": "What should I watch for after installing capacitors?", "a": "If the system has a lot of harmonics, the capacitors may resonate with the transformer inductance and amplify harmonic currents. Measure THD before installing, and use a capacitor bank in series with reactors (detuned) when necessary."},
+    {"q": "Which part of the electricity bill do capacitors reduce?", "a": "They reduce the PF penalty on the bill under the utility's criteria, and they reduce current in cables and transformers, which lowers losses. They do not reduce the kWh the load actually uses."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Sizing a PF capacitor</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Power Factor Correction</p>
+      <h1>How to Calculate the Size of a Power Factor Correction Capacitor (kvar) with an Example</h1>
+      <p class="lede">Correcting the PF means installing capacitors that supply the reactive power (kvar) to inductive loads, instead of drawing it from the grid. The size you need follows from a single formula and can be checked with the power triangle.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>30-second summary</b>
+        <ul>
+          <li>\(Q_c=P\,(\tan\varphi_1-\tan\varphi_2)\), where \(\varphi_1\) is the angle before correction and \(\varphi_2\) the target angle</li>
+          <li>Real power P does not change; what falls is Q and S, so the current falls</li>
+          <li>Choose the nearest standard size, and check harmonics before installing</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="formula">
+    <h2 id="formula">Where the formula comes from</h2>
+    <p>From the power triangle, \(Q=P\tan\varphi\). Before correction the load has \(Q_1=P\tan\varphi_1\); after correction we want \(Q_2=P\tan\varphi_2\). The capacitor must supply the difference.</p>
+    \[ Q_c=Q_1-Q_2=P\,(\tan\varphi_1-\tan\varphi_2),\qquad \varphi=\cos^{-1}(\text{PF}) \]
+    <p>Then find the capacitance per phase from \(Q_c=3\,\omega C V^2\) for a delta connection, where \(V\) is the line voltage and \(\omega=2\pi f\).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="example">
+    <h2 id="example">Example: a 100 kW, 400 V three-phase load, PF 0.75 → 0.95</h2>
+    <div class="wx">
+      <ol class="steps">
+        <li><p>Find the angles and tangents before and after</p>\[ \tan\varphi_1=\tan\!\big(\cos^{-1}0.75\big)=0.8819,\qquad \tan\varphi_2=\tan\!\big(\cos^{-1}0.95\big)=0.3287 \]</li>
+        <li><p>The reactive power to compensate</p>\[ Q_c=100\times(0.8819-0.3287)\approx55.3\ \text{kvar} \]</li>
+        <li><p>Line current before and after correction (\(I=\dfrac{P}{\sqrt{3}\,V\,\text{PF}}\))</p>\[ I_1=\frac{100000}{\sqrt{3}\,(400)(0.75)}\approx192.5\ \text{A},\qquad I_2=\frac{100000}{\sqrt{3}\,(400)(0.95)}\approx151.9\ \text{A} \]</li>
+        <li><p>Capacitance per phase for a delta connection at 50 Hz</p>\[ C=\frac{Q_c}{3\,\omega V^2}=\frac{55323}{3\,(2\pi\cdot50)(400)^2}\approx367\ \mu\text{F} \]</li>
+      </ol>
+      <p class="answer">About 55.3 kvar of capacitors is needed. Choose the next standard size up, for example 60 kvar in several switched steps. The line current falls from 192.5 A to 151.9 A (about 21 % lower). If connected in wye, the capacitance per phase would be three times larger, about 1,101 µF.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">Multiplier table: Qc = P × k for a target PF of 0.95</h2>
+    <p>Multiply the real power in kW by \(k=\tan\varphi_1-\tan\varphi_2\) to get kvar directly.</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>Original PF</th><th>\(k\)</th><th>Example P = 100 kW</th></tr></thead>
+      <tbody>
+        <tr><td>0.70</td><td>0.692</td><td>69.2 kvar</td></tr>
+        <tr><td>0.75</td><td>0.553</td><td>55.3 kvar</td></tr>
+        <tr><td>0.80</td><td>0.421</td><td>42.1 kvar</td></tr>
+        <tr><td>0.85</td><td>0.291</td><td>29.1 kvar</td></tr>
+        <tr><td>0.90</td><td>0.156</td><td>15.6 kvar</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="cautions">
+    <h2 id="cautions">Cautions before installing</h2>
+    <ul>
+      <li><b>Use the measured P</b>, not the motor nameplate power, because at light load the PF is lower and P is below the rating.</li>
+      <li><b>Do not over-correct.</b> If the capacitor is larger than the load's Q at light load, you get a leading PF and a higher voltage. Use an automatic bank that switches in steps.</li>
+      <li><b>Harmonics:</b> resonance between the capacitors and the system inductance can amplify harmonic currents. Measure THD, and choose a detuned type with reactors when there are many electronic loads.</li>
+      <li><b>Voltage rating:</b> choose capacitors with a voltage rating comfortably above the system voltage, as the manufacturer recommends.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/power-factor/pf-correction/">Power factor correction: the complete capacitor calculation (in Thai)</a></li>
+        <li><a href="/learn/power-factor/capacitor-bank/">Automatic capacitor banks and detuned reactors (in Thai)</a></li>
+        <li><a href="/learn/power-factor/pf-billing/">kvar penalties on the electricity bill and whether it pays off (in Thai)</a></li>
+        <li><a href="/learn/power-factor/pf-lab/">Simulator: add a capacitor bank and watch the current fall (in Thai)</a></li>
+        <li><a href="/en/blog/power-factor-explained/">Read first: what is power factor?</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

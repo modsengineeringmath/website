@@ -689,8 +689,9 @@ const EN_CHROME = [
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
   ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
-  ['data-nav="blog">บทความ<', 'data-nav="blog">Articles (Thai)<'],
+  ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
+  ['<a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: Laplace, vectors, power factor &amp; more</a>'],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
   ['aria-label="เปิดเมนู"', 'aria-label="Open menu"'],
   ["<p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>", "<p>Engineering mathematics you truly understand, not formulas you memorise.</p>"],
@@ -1124,29 +1125,48 @@ const fullText = []; // for llms-full.txt
 // A post is src/pages/blog/<slug>.html with "blog": true in its meta block (plus "tag", "series", "published").
 // "draft": true keeps a post out of the lists, sitemap and llms.txt (the page itself is still built with noindex).
 // ---------------------------------------------------------------------------
-const blogPosts = (() => {
-  const dir = path.join(pagesDir, "blog");
+// English editions live in src/pages/en/blog/<same slug>.html (route /en/blog/<slug>/) and pair with the Thai post of the same slug.
+const loadBlog = (dir, lang, base) => {
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".html") && f !== "index.html")
     .map((f) => {
       const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
-      if (!m) throw new Error(`Missing <!--meta--> in blog/${f}`);
+      if (!m) throw new Error(`Missing <!--meta--> in ${base}/${f}`);
       const meta = JSON.parse(m[1]);
       const slug = f.replace(/\.html$/, "");
-      return { ...meta, slug, route: `/blog/${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
+      return { ...meta, lang, slug, route: `${base}${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
     })
     .filter((p) => !p.draft)
     .sort((a, b) => (b.published || "").localeCompare(a.published || "") || a.slug.localeCompare(b.slug));
-})();
-const blogCard = (p) => `
+};
+const blogByLang = {
+  th: loadBlog(path.join(pagesDir, "blog"), "th", "/blog/"),
+  en: loadBlog(path.join(pagesDir, "en", "blog"), "en", "/en/blog/"),
+};
+const blogPosts = blogByLang.th;
+const blogEn = blogByLang.en;
+const BLOG_HUB = { th: "/blog/", en: "/en/blog/" };
+// the same post (or hub) in the other language, if it is published
+const blogTwin = (lang, slug) => {
+  const other = blogByLang[lang === "th" ? "en" : "th"];
+  return slug ? other.find((p) => p.slug === slug)?.route || null : other.length ? BLOG_HUB[lang === "th" ? "en" : "th"] : null;
+};
+const BLOG_UI = {
+  th: { tag: "บทความ", read: "อ่านบทความ →", date: (d) => thaiDate(d), more: "บทความอื่นที่น่าอ่าน" },
+  en: { tag: "Article", read: "Read the article →", date: (d) => enDate(d), more: "More articles worth reading" },
+};
+const blogCard = (p) => {
+  const B = BLOG_UI[p.lang || "th"];
+  return `
   <a class="blog-card" href="${p.route}">
-    <span class="bc-tag mono">${esc(p.tag || "บทความ")}</span>
+    <span class="bc-tag mono">${esc(p.tag || B.tag)}</span>
     <b>${esc(p.h1 || p.title)}</b>
     <span class="bc-sum">${esc(p.description.length > 150 ? p.description.slice(0, 148).replace(/\s+\S*$/, "") + "…" : p.description)}</span>
-    <span class="bc-foot"><time datetime="${p.published}">${thaiDate(p.published)}</time><span class="bc-go">อ่านบทความ →</span></span>
+    <span class="bc-foot"><time datetime="${p.published}">${B.date(p.published)}</time><span class="bc-go">${B.read}</span></span>
   </a>`;
+};
 const blogGrid = (list) => `<div class="blog-grid">${list.map(blogCard).join("")}\n</div>`;
 // posts that belong to a lesson series, shown at the bottom of every page of that series
 const blogForTopic = (t) => {
@@ -1155,19 +1175,20 @@ const blogForTopic = (t) => {
   return `<aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul>${list.map((p) => `<li><a href="${p.route}">${esc(p.h1 || p.title)}</a></li>`).join("")}</ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>`;
 };
 // more posts at the bottom of a post: same series or tag first, then the newest
-const blogMore = (cur) => {
+const blogMore = (cur, lang = "th") => {
   const score = (p) => p.series.filter((s) => cur.series.includes(s)).length * 2 + (p.tag && p.tag === cur.tag ? 1 : 0);
-  const list = blogPosts.filter((p) => p.slug !== cur.slug).sort((a, b) => score(b) - score(a)).slice(0, 3);
-  return list.length ? `<section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">บทความอื่นที่น่าอ่าน</h2>${blogGrid(list)}</section>` : "";
+  const list = blogByLang[lang].filter((p) => p.slug !== cur.slug).sort((a, b) => score(b) - score(a)).slice(0, 3);
+  return list.length ? `<section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">${BLOG_UI[lang].more}</h2>${blogGrid(list)}</section>` : "";
 };
-function postSchema(meta, url, ogImageUrl) {
+function postSchema(meta, url, ogImageUrl, lang = "th") {
+  const en = lang === "en";
   const graph = [
     {
       "@type": "BlogPosting",
       "@id": url + "#article",
       headline: meta.h1 || meta.title,
       description: meta.description,
-      inLanguage: "th",
+      inLanguage: lang,
       url,
       mainEntityOfPage: url,
       datePublished: meta.published || TODAY,
@@ -1175,15 +1196,15 @@ function postSchema(meta, url, ogImageUrl) {
       author: { "@id": PERSON_ID },
       publisher: { "@id": PERSON_ID },
       about: meta.about || [meta.tag],
-      isPartOf: { "@id": SITE + "/blog/#blog" },
+      isPartOf: { "@id": SITE + BLOG_HUB[lang] + "#blog" },
       image: [ogImageUrl],
       ...(meta.keywords ? { keywords: meta.keywords.join(", ") } : {}),
     },
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
-        { "@type": "ListItem", position: 2, name: "บทความ", item: SITE + "/blog/" },
+        { "@type": "ListItem", position: 1, name: en ? "Home" : "หน้าแรก", item: SITE + "/" },
+        { "@type": "ListItem", position: 2, name: en ? "Articles" : "บทความ", item: SITE + BLOG_HUB[lang] },
         { "@type": "ListItem", position: 3, name: meta.h1 || meta.title, item: url },
       ],
     },
@@ -1238,6 +1259,11 @@ for (const file of walk(pagesDir)) {
     const ts = sub ? tw.sub.find((x) => x.slug === sub.slug) : null;
     if (sub ? ts && fs.existsSync(subFile(tw, ts)) : fs.existsSync(path.join(ROOT, "src/pages/learn", tw.slug, "index.html"))) twRoute = seriesUrl(tw, ts);
   }
+  // blog posts and the blog hub pair up by slug: /blog/<slug>/ <-> /en/blog/<slug>/
+  if (!twRoute && (isPost || /^(en\/)?blog\/index\.html$/.test(rel.replace(/\\/g, "/")))) {
+    const slug = isPost ? path.basename(rel, ".html") : "";
+    twRoute = blogTwin(lang, slug);
+  }
   const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   const ogFile = `/images/og/${key}.jpg`;
   const ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
@@ -1264,11 +1290,11 @@ for (const file of walk(pagesDir)) {
       topic
         ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + blogForTopic(topic)
         : isPost
-          ? shareHtml(url, meta.h1 || meta.title, lang) + blogMore(blogPosts.find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" })
+          ? shareHtml(url, meta.h1 || meta.title, lang) + blogMore(blogByLang[lang].find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" }, lang)
           : "",
-    "<!--blog-list-->": () => blogGrid(blogPosts),
-    "<!--blog-latest-->": () => blogGrid(blogPosts.slice(0, 3)),
-    "<!--blog-count-->": () => String(blogPosts.length),
+    "<!--blog-list-->": () => blogGrid(blogByLang[lang]),
+    "<!--blog-latest-->": () => blogGrid(blogByLang[lang].slice(0, 3)),
+    "<!--blog-count-->": () => String(blogByLang[lang].length),
     "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
@@ -1307,16 +1333,16 @@ for (const file of walk(pagesDir)) {
 
   let graph = [...(meta.jsonld || [])];
   if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
-  else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage));
-  if (route === "/blog/")
+  else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage, lang));
+  if (route === "/blog/" || route === "/en/blog/")
     graph.push({
       "@type": "Blog",
-      "@id": SITE + "/blog/#blog",
+      "@id": SITE + route + "#blog",
       url,
-      name: "บทความ — Mod's Engineering Mathematics",
-      inLanguage: "th",
+      name: lang === "en" ? "Articles — Mod's Engineering Mathematics" : "บทความ — Mod's Engineering Mathematics",
+      inLanguage: lang,
       publisher: { "@id": PERSON_ID },
-      blogPost: blogPosts.map((p) => ({ "@type": "BlogPosting", "@id": SITE + p.route + "#article", headline: p.h1 || p.title, url: SITE + p.route, datePublished: p.published })),
+      blogPost: blogByLang[lang].map((p) => ({ "@type": "BlogPosting", "@id": SITE + p.route + "#article", headline: p.h1 || p.title, url: SITE + p.route, datePublished: p.published })),
     });
   const jsonld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`
@@ -1453,6 +1479,10 @@ ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${
 ## Articles (short answers to common search questions, each linking into the lessons)
 - [All articles](${SITE}/blog/)
 ${blogPosts.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
+
+## Articles in English (full translations of the Thai articles above, same formulas and worked examples)
+- [All English articles](${SITE}/en/blog/)
+${blogEn.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}

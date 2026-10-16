@@ -1,0 +1,136 @@
+<!--meta
+{
+  "title": "What Is the Laplace Transform and What Is It Used For? With an RC Circuit Example | Ajarn Mod",
+  "h1": "What Is the Laplace Transform and What Is It Used For?",
+  "description": "The Laplace transform turns differential equations into algebraic equations. See the definition, the 3-step method, a worked y′ + 3y = 6 example and an RC circuit calculated line by line.",
+  "ogTitle": "What Is the Laplace Transform and What Is It Used For?",
+  "lang": "en",
+  "blog": true,
+  "tag": "Laplace",
+  "series": ["laplace-transform"],
+  "published": "2026-10-16",
+  "updated": "2026-10-16",
+  "keywords": ["Laplace transform", "what is the Laplace transform", "solving differential equations with Laplace", "RC circuit step response", "transfer function", "s-domain"],
+  "about": ["Laplace transform", "Differential equations", "RC circuit"],
+  "og": {"title": "What Is the Laplace Transform?", "sub": "Turning calculus into algebra, with an RC circuit example", "eyebrow": "Article · Laplace", "sym": "ℒ"},
+  "faq": [
+    {"q": "How does the Laplace transform differ from the Fourier transform?", "a": "Laplace uses the complex variable \\(s = \\sigma + j\\omega\\), so it can handle signals that grow or decay exponentially, and initial conditions. Fourier uses only \\(j\\omega\\). If the region of convergence (ROC) includes the \\(j\\omega\\) axis, the Fourier transform is the Laplace transform with \\(s = j\\omega\\)."},
+    {"q": "What is the unilateral Laplace transform, and why integrate from 0?", "a": "In circuits and control we usually care about events from \\(t = 0\\) onward, and the effect of earlier conditions is captured in the initial conditions. The unilateral transform therefore integrates from 0 to infinity. The bilateral transform integrates from \\(-\\infty\\) and is used in signals and systems when the ROC must be analysed in full."},
+    {"q": "Do I always have to transform back to a function of time?", "a": "Not always. If you only want stability or the shape of the response, the pole locations of \\(F(s)\\) tell you directly. But to get \\(y(t)\\) at a specific time you must invert the transform, usually with partial fractions and a table."},
+    {"q": "What are the units and meaning of the variable s?", "a": "\\(s\\) has units of frequency (1/second). The real part \\(\\sigma\\) gives the exponential growth or decay rate, and the imaginary part \\(\\omega\\) is the oscillation frequency. For example, a pole at \\(s = -10\\) means a signal decaying as \\(e^{-10t}\\)."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>What is Laplace</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Laplace Transform</p>
+      <h1>What Is the Laplace Transform and What Is It Used For?</h1>
+      <p class="lede">The Laplace transform is a tool that turns a hard differential equation into an easy algebraic equation, then converts the answer back into a function of time. This article explains the idea, the definition and an RC circuit example you can follow line by line.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>30-second summary</b>
+        <ul>
+          <li>Definition: \(F(s)=\mathcal{L}\{f(t)\}=\int_0^{\infty} f(t)e^{-st}\,dt\)</li>
+          <li>Differentiation in the time domain becomes multiplication by \(s\) in the \(s\) domain</li>
+          <li>Method: transform → solve the algebraic equation → inverse transform</li>
+          <li>The pole locations of \(F(s)\) tell you the stability of the system without solving the equation</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">The idea: why transform at all</h2>
+    <p>Suppose a circuit or mechanical system is described by a differential equation such as \(y' + 3y = 6\). Solving it directly needs an integrating factor or a guessed solution. But if we move the equation into the \(s\) domain, the derivatives disappear and only multiplication and addition remain. Solve there, then move back.</p>
+    <p>Compare this with using logarithms to multiply large numbers in the old days: turn multiplication into addition, finish the calculation, then convert back. Laplace does the same for derivatives and integrals.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">Definition of the Laplace transform</h2>
+    <p>For a function \(f(t)\) defined for \(t \ge 0\), the unilateral Laplace transform is</p>
+    \[ F(s) = \mathcal{L}\{f(t)\} = \int_0^{\infty} f(t)\,e^{-st}\,dt, \qquad s = \sigma + j\omega \]
+    <p>The factor \(e^{-st}\) acts like a filter: an \(f(t)\) that grows more slowly than an exponential makes the integral converge. The most basic example is</p>
+    \[ \mathcal{L}\{e^{-at}\} = \int_0^{\infty} e^{-(s+a)t}\,dt = \frac{1}{s+a}, \qquad \operatorname{Re}(s) &gt; -a \]
+    <p>From this, \(a=0\) gives \(\mathcal{L}\{u(t)\}=1/s\). Other commonly used formulas are collected in the <a href="/en/blog/laplace-transform-table/">Laplace transform table</a>.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="derivative">
+    <h2 id="derivative">The key: derivatives become multiplication</h2>
+    <p>Integrating by parts gives the property that makes Laplace most useful.</p>
+    \[ \mathcal{L}\{y'(t)\} = sY(s) - y(0), \qquad \mathcal{L}\{y''(t)\} = s^2Y(s) - s\,y(0) - y'(0) \]
+    <p>Notice that the initial conditions \(y(0)\), \(y'(0)\) go into the equation from the start. You do not have to find constants afterwards, as in the traditional method for differential equations.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="steps">
+    <h2 id="steps">Solving an equation with Laplace in 3 steps</h2>
+    <ol>
+      <li><b>Transform</b> both sides of the differential equation into the \(s\) domain, including the initial conditions.</li>
+      <li><b>Solve</b> for \(Y(s)\) with algebra.</li>
+      <li><b>Invert</b> to \(y(t)\) using partial fractions and a table (see <a href="/en/blog/inverse-laplace-transform-partial-fractions/">Inverse Laplace by partial fractions</a>).</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="ex1">
+    <h2 id="ex1">Example 1: solve y′ + 3y = 6 with y(0) = 0</h2>
+    <div class="wx">
+      <ol class="steps">
+        <li><p>Transform the equation</p>\[ sY(s) - 0 + 3Y(s) = \frac{6}{s} \]</li>
+        <li><p>Solve for \(Y(s)\)</p>\[ Y(s)\,(s+3) = \frac{6}{s} \;\Rightarrow\; Y(s) = \frac{6}{s(s+3)} \]</li>
+        <li><p>Split into partial fractions</p>\[ \frac{6}{s(s+3)} = \frac{2}{s} - \frac{2}{s+3} \]</li>
+        <li><p>Invert using \(\mathcal{L}^{-1}\{1/s\}=1\) and \(\mathcal{L}^{-1}\{1/(s+3)\}=e^{-3t}\)</p>\[ y(t) = 2 - 2e^{-3t}, \quad t \ge 0 \]</li>
+      </ol>
+      <p class="answer">Check: \(y' = 6e^{-3t}\), so \(y' + 3y = 6e^{-3t} + 6 - 6e^{-3t} = 6\) ✓ and \(y(0)=2-2=0\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ex2">
+    <h2 id="ex2">Example 2: an RC circuit with a 5 V step input</h2>
+    <p>A resistor \(R = 1\,\text{k}\Omega\) in series with a capacitor \(C = 100\,\mu\text{F}\) is driven by \(v_{in}(t) = 5\,u(t)\) volts. The capacitor starts empty. The time constant is \(\tau = RC = 1000 \times 100\times10^{-6} = 0.1\) seconds.</p>
+    <div class="wx">
+      <ol class="steps">
+        <li><p>The circuit equation \(RC\,\dfrac{dv_c}{dt} + v_c = v_{in}\) transforms to the \(s\) domain with \(v_c(0)=0\)</p>\[ (RCs + 1)V_c(s) = \frac{5}{s} \;\Rightarrow\; V_c(s) = \frac{5}{s(0.1s+1)} = \frac{50}{s(s+10)} \]</li>
+        <li><p>Partial fractions</p>\[ \frac{50}{s(s+10)} = \frac{5}{s} - \frac{5}{s+10} \]</li>
+        <li><p>Invert</p>\[ v_c(t) = 5\left(1 - e^{-10t}\right)\ \text{V} \]</li>
+      </ol>
+      <p class="answer">At \(t = \tau = 0.1\) s the capacitor voltage is \(5(1 - e^{-1}) \approx 3.16\) V (about 63.2 % of 5 V), matching the definition of the time constant. The pole is at \(s=-10 = -1/\tau\).</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="uses">
+    <h2 id="uses">What Laplace is used for in engineering</h2>
+    <ul>
+      <li><b>Electric circuit analysis:</b> RC, RL and RLC circuits with switches or step sources, giving both the transient response and the steady state.</li>
+      <li><b>Transfer functions:</b> \(G(s)=Y(s)/U(s)\) describes every linear time-invariant system, from motors to filters.</li>
+      <li><b>Stability:</b> if all poles lie in the left half of the \(s\) plane, the system is stable (continued in the Routh–Hurwitz criterion and root locus).</li>
+      <li><b>Control systems:</b> designing PID controllers and compensators, and analysing the frequency response.</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">Common mistakes</h2>
+    <ul>
+      <li>Forgetting the initial conditions when transforming a derivative, which makes the whole answer wrong.</li>
+      <li>Forgetting that the unilateral transform only covers \(t \ge 0\), so the answer must be written with \(t \ge 0\) or multiplied by \(u(t)\).</li>
+      <li>Confusing \(s\) with \(\omega\): in the time domain there is no \(j\), but in the \(s\) domain the oscillation frequency is the imaginary part of the pole.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Keep learning in the library</h2>
+      <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
+      <ul>
+        <li><a href="/learn/laplace-transform/">The Laplace transform: definition and transform-pair table with ROC (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/properties/">All the properties of the Laplace transform (in Thai)</a></li>
+        <li><a href="/learn/laplace-transform/differential-equations/">Solving first- and second-order differential equations with Laplace, with an interactive solver (in Thai)</a></li>
+        <li><a href="/learn/first-order-system/">First-order system lab: the time constant of RC and RL circuits (in Thai)</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
