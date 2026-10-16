@@ -1123,6 +1123,7 @@ const fullText = []; // for llms-full.txt
 // ---------------------------------------------------------------------------
 // Blog (/blog/): short search-oriented articles that answer one question each and link into the lesson series.
 // A post is src/pages/blog/<slug>.html with "blog": true in its meta block (plus "tag", "series", "published").
+// "featured": true pins a post to the top of the hub and the home-page strip.
 // "draft": true keeps a post out of the lists, sitemap and llms.txt (the page itself is still built with noindex).
 // ---------------------------------------------------------------------------
 // English editions live in src/pages/en/blog/<same slug>.html (route /en/blog/<slug>/) and pair with the Thai post of the same slug.
@@ -1139,7 +1140,7 @@ const loadBlog = (dir, lang, base) => {
       return { ...meta, lang, slug, route: `${base}${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
     })
     .filter((p) => !p.draft)
-    .sort((a, b) => (b.published || "").localeCompare(a.published || "") || a.slug.localeCompare(b.slug));
+    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.published || "").localeCompare(a.published || "") || a.slug.localeCompare(b.slug));
 };
 const blogByLang = {
   th: loadBlog(path.join(pagesDir, "blog"), "th", "/blog/"),
@@ -1374,6 +1375,10 @@ for (const file of walk(pagesDir)) {
     v: ASSET_V,
     lang,
     ogLocale: U.locale,
+    // <meta name="keywords"> only for pages that declare "keywords" in their meta block (Google ignores it; Bing and some others still read it)
+    keywords: meta.keywords?.length ? `<meta name="keywords" content="${esc(meta.keywords.join(", "))}">\n` : "",
+    // pages that have a twin in the other language advertise it to Open Graph consumers
+    ogLocaleAlt: twRoute ? `<meta property="og:locale:alternate" content="${lang === "th" ? UI.en.locale : UI.th.locale}">\n` : "",
     hreflang: twRoute
       ? [[lang, url], [lang === "th" ? "en" : "th", SITE + twRoute], ["x-default", lang === "th" ? url : SITE + twRoute]].map(([h, u]) => `<link rel="alternate" hreflang="${h}" href="${u}">`).join("\n")
       : `<link rel="alternate" hreflang="${lang}" href="${url}">\n<link rel="alternate" hreflang="x-default" href="${url}">`,

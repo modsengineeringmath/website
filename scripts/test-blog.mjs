@@ -55,6 +55,10 @@ for (const slug of dirs) {
     if (!html.includes(`<link rel="alternate" hreflang="${h}" href="${u}">`)) bad(`hreflang ${h}`);
   if (!html.includes(`class="lang-sw"`) || !html.includes(`href="${twinUrl.replace(SITE, "")}" hreflang="${lang === "th" ? "en" : "th"}"`)) bad("language switch");
   if (!sitemap.includes(`<loc>${twinUrl}</loc>`)) bad("twin not in sitemap");
+  // meta keywords + Open Graph twin locale + twitter card
+  if (!/<meta name="keywords" content="[^"]{10,}">/.test(html)) bad("meta keywords");
+  if (!html.includes(`<meta property="og:locale:alternate" content="${lang === "en" ? "th_TH" : "en_US"}">`)) bad("og:locale:alternate");
+  for (const t of ["twitter:card", "twitter:title", "twitter:description", "twitter:image"]) if (!html.includes(`<meta name="${t}"`)) bad(t);
   if (lang === "en") {
     const head = html.slice(0, html.indexOf("</head>"));
     if (thai.test(head.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/, "").replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, ""))) bad("Thai text in <head> of an English page");
@@ -97,7 +101,7 @@ for (const [lang, base, dirs] of [["th", "blog", thDirs], ["en", "en/blog", enDi
   if (!hub.includes(`<link rel="canonical" href="${SITE}/${base}/">`)) bad(`${lang} hub canonical`);
   if (!sitemap.includes(`<loc>${SITE}/${base}/</loc>`)) bad(`${lang} hub not in sitemap`);
 }
-for (const [page, slug] of [["learn/laplace-transform/index.html", "what-is-laplace-transform"], ["learn/power-factor/pf-basics/index.html", "power-factor-explained"], ["learn/vector-algebra/dot-product/index.html", "dot-product-cross-product"], ["learn/control-systems/pid/index.html", "what-is-pid-controller"], ["learn/linear-algebra/inverse/index.html", "determinant-and-inverse-matrix"]]) {
+for (const [page, slug] of [["learn/laplace-transform/index.html", "what-is-laplace-transform"], ["learn/power-factor/pf-basics/index.html", "power-factor-explained"], ["learn/vector-algebra/dot-product/index.html", "dot-product-cross-product"], ["learn/control-systems/pid/index.html", "what-is-pid-controller"], ["learn/control-systems/pid-tuning/index.html", "pid-tuning-guide"], ["learn/control-systems/pid/index.html", "pid-tuning-guide"], ["learn/linear-algebra/inverse/index.html", "determinant-and-inverse-matrix"]]) {
   if (!fs.readFileSync(path.join(ROOT, page), "utf8").includes(`href="/blog/${slug}/"`)) bad(`${page} has no link back to ${slug}`);
 }
 if (!fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes('href="/blog/"')) bad("home has no link to /blog/");
