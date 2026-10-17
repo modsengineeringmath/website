@@ -317,3 +317,22 @@ S1–S28) and `mathematical-induction` (3.2, prefix I, I1–I14). Chosen over a 
 - Every worked-example number was checked with sympy (and the engine with Node) before publishing.
 - Short URLs: `/sequences` `/series` `/geometric-series` `/convergence-tests` `/ratio-test` `/power-series` `/taylor-series` `/maclaurin`
   `/induction` `/mathematical-induction` `/proof-by-induction` `/strong-induction` (in `_redirects`).
+
+## AC induction motors — complete guide (added 2026-10-17)
+Stand-alone topic `ac-induction-motor` (chapter 23, appended after the PLC topic in `TOPICS` so no chapter number moved), one long page
+`src/pages/learn/ac-induction-motor.html` → `/learn/ac-induction-motor/`. Sections: Thai grid (EGAT/MEA/PEA voltage levels), factory vs house supply,
+principle (formula prefix P), single-phase motors (S), rotor types incl. deep bar, double cage, wound rotor and new tech (R), connections,
+torque–speed curves against load curves (L: loads, operating point, stability, acceleration, voltage), transients (T), star–delta in depth (Y),
+starting methods (M), cable and breaker design (D, Thai EIT 125 % / 250 % rules), control overview, checklist. Menu: first link of group `navg9` (`data-nav="acm"`).
+- Models: `scripts/acm_model.py` — the 7.5 kW double-cage motor of the motor-control series plus rotor variants (single cage low/high R, wound rotor +
+  R_ext), loads, operating point, quasi-static run-up, an αβ dynamic model (checked against the equivalent circuit to 1e-6) used for the DOL and
+  star–delta changeover transients, a two-winding single-phase capacitor-motor model and the deep-bar skin-effect formulas.
+  `python3 scripts/acm_model.py` prints every number quoted in the worked examples.
+- Figures: `python3 scripts/acm_figs.py` fills empty `<!--FIG:acm-…--><!--/FIG-->` blocks (`--all` redraws, `--preview out.html`); curves are
+  simplified in pixel space (RDP) so the dynamic traces stay small. The page also reuses `mc-` figures (rotating field, equivalent circuit, terminal box,
+  voltage choice, supply phasor, star–delta control/timing, DOL control) — fill those with `python3 scripts/mc_figs.py src/pages/learn/ac-induction-motor.html`.
+- `assets/acm-lab.js` (needs ee-kit.js; `module.exports` for Node): `.acm-lab` torque–speed lab (rotor, start method DOL/Y-Δ/soft/autotransformer/VFD,
+  voltage, load type, load level, inertia → operating point, accelerating area, run-up in time, verdict); `<button data-acm-set='{…}'>` loads a scenario.
+  Calculators `<div class="fg-calc acm-calc" data-acm="branch|feeder|accel">`. Styles: "AC INDUCTION MOTOR GUIDE" in site.css.
+- Star–delta phase order: the simulation and manufacturer guidance favour KM3 pairing U1–V2 · V1–W2 · W1–U2 (L3→U2) for a lower changeover transient.
+- Short URLs `/ac-motor`, `/torque-speed`, `/speed-torque-curve`, `/single-phase-motor`, `/double-cage`, `/wound-rotor`, `/motor-cable-size`, `/motor-breaker` … in `_redirects`.

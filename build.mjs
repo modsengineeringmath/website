@@ -670,6 +670,16 @@ export const TOPICS = [
   },
   // Topics 21–22 (motor control, PLC) and their English editions live in src/topics-mc-plc.mjs
   ...MC_PLC_TOPICS,
+  {
+    // Topic 23 (added 2026-10-17): one long reference page on AC induction motors — Thai grid to shaft, 1-phase and 3-phase
+    // rotors, torque–speed curves against load curves, transients, star–delta in depth, cable and breaker design.
+    // Figures: scripts/acm_figs.py (models in scripts/acm_model.py) · lab + calculators: assets/acm-lab.js
+    slug: "ac-induction-motor",
+    title: "มอเตอร์ไฟฟ้ากระแสสลับ ฉบับสมบูรณ์",
+    en: "AC Induction Motors · Complete Guide",
+    sym: "T–n",
+    summary: "มอเตอร์เหนี่ยวนำตั้งแต่ระบบไฟฟ้าไทยถึงเพลา: มอเตอร์ 1 เฟสและ 3 เฟส กรงกระรอก กรงคู่ โรเตอร์พันขดลวด กราฟแรงบิด-ความเร็วกับเส้นโหลด ทรานเซียนต์ สตาร์-เดลต้าเชิงลึก และการออกแบบสาย-เบรกเกอร์ พร้อมแล็บจำลอง",
+  },
 ];
 
 // ---------------------------------------------------------------------------
