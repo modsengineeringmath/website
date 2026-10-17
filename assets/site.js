@@ -1,4 +1,4 @@
-/* Shared behaviour: theme toggle, mobile menu, YouTube facades, copy & print buttons */
+/* Shared behaviour: theme toggle, mobile menu, site search, YouTube facades, copy & print buttons */
 (function () {
   var root = document.documentElement, KEY = "mem-theme";
 
@@ -57,6 +57,122 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && wide.matches) closeOthers(null); });
     wide.addEventListener("change", function (m) {
       Array.prototype.forEach.call(grps, function (g) { setGrp(g, !m.matches && g.classList.contains("nav-cur")); });
+    });
+  }
+
+  // site search: header button, "/" or Ctrl/⌘+K opens a dialog over /search-index.json (written by build.mjs, loaded on first open)
+  var dlg = document.getElementById("searchDlg"), sBtn = document.getElementById("searchBtn");
+  if (dlg && sBtn && dlg.showModal) {
+    var sIn = document.getElementById("searchInput"), sList = document.getElementById("searchResults"), sStat = document.getElementById("searchStatus");
+    var EN = root.lang === "en", pages = null, loading = null, hits = [], act = -1, timer;
+    var T = EN
+      ? { hint: sStat.textContent, load: "Loading the index…", fail: "Could not load the search index. Please try again.", none: function (q) { return "No results for “" + q + "”"; }, n: function (n) { return n + " results"; }, th: "Thai", en: "English" }
+      : { hint: sStat.textContent, load: "กำลังโหลดดัชนี…", fail: "โหลดดัชนีค้นหาไม่สำเร็จ ลองใหม่อีกครั้ง", none: function (q) { return "ไม่พบผลลัพธ์สำหรับ “" + q + "”"; }, n: function (n) { return "พบ " + n + " หน้า"; }, th: "ไทย", en: "English" };
+    var norm = function (x) { return (x || "").normalize("NFKC").toLowerCase().replace(/[​-‍﻿]/g, ""); };
+    var escH = function (x) { return x.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    var load = function () {
+      if (!loading) {
+        sStat.textContent = T.load;
+        loading = fetch("/search-index.json").then(function (r) { if (!r.ok) throw r.status; return r.json(); }).then(function (list) {
+          pages = list.map(function (p) {
+            return { p: p, t: norm(p.t), d: norm(p.d), k: norm(p.k), c: norm(p.c), w: p.w || "", h: p.h.map(function (h) { return norm(h[1]); }) };
+          });
+          run();
+        }, function () { loading = null; sStat.textContent = T.fail; });
+      }
+      return loading;
+    };
+    var score = function (x, toks, phrase) {
+      var s = 0;
+      for (var i = 0; i < toks.length; i++) {
+        var w = toks[i], v = 0;
+        if (x.t.indexOf(w) >= 0) v += x.t.indexOf(w) === 0 ? 14 : 10;
+        var nh = x.h.filter(function (h) { return h.indexOf(w) >= 0; }).length;
+        if (nh) v += 2 + Math.min(nh, 4);
+        if (x.k.indexOf(w) >= 0) v += 3;
+        if (x.d.indexOf(w) >= 0) v += 2;
+        if (!v && x.w.indexOf(w) >= 0) v = 1;
+        if (!v && x.c.indexOf(w) >= 0) v = 1; // series name only counts when nothing on the page itself matches
+        if (!v) return 0;
+        s += v;
+      }
+      if (toks.length > 1 && x.t.indexOf(phrase) >= 0) s += 10;
+      else if (toks.length > 1 && (x.k.indexOf(phrase) >= 0 || x.d.indexOf(phrase) >= 0 || x.h.some(function (h) { return h.indexOf(phrase) >= 0; }))) s += 8;
+      return s + (x.p.l === (root.lang || "th") ? 3 : 0) - x.p.u.split("/").length * 0.1;
+    };
+    var mark = function (text, re) {
+      var out = "", last = 0;
+      text.replace(re, function (m, at) { out += escH(text.slice(last, at)) + "<mark>" + escH(m) + "</mark>"; last = at + m.length; return m; });
+      return out + escH(text.slice(last));
+    };
+    var snip = function (text, toks) {
+      if (text.length <= 170) return text;
+      var n = norm(text), at = -1;
+      toks.forEach(function (w) { var i = n.indexOf(w); if (i >= 0 && (at < 0 || i < at)) at = i; });
+      var from = at < 90 ? 0 : at - 60;
+      return (from ? "…" : "") + text.slice(from, from + 170).trim() + "…";
+    };
+    var setAct = function (i) {
+      var links = sList.querySelectorAll("a");
+      if (!links.length) { act = -1; sIn.removeAttribute("aria-activedescendant"); return; }
+      act = (i + links.length) % links.length;
+      Array.prototype.forEach.call(links, function (a, k) { a.setAttribute("aria-selected", k === act ? "true" : "false"); });
+      links[act].scrollIntoView({ block: "nearest" });
+      sIn.setAttribute("aria-activedescendant", links[act].id);
+    };
+    var run = function () {
+      var q = sIn.value.trim();
+      if (!q) { sList.innerHTML = ""; sStat.textContent = T.hint; act = -1; return; }
+      if (!pages) { load(); return; }
+      var phrase = norm(q), toks = phrase.split(/\s+/).filter(Boolean);
+      var re = new RegExp(toks.map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).sort(function (a, b) { return b.length - a.length; }).join("|"), "gi");
+      hits = pages.map(function (x) { return { x: x, s: score(x, toks, phrase) }; }).filter(function (r) { return r.s > 0; })
+        .sort(function (a, b) { return b.s - a.s; });
+      var n = 0, total = hits.length;
+      hits = hits.slice(0, 25);
+      sList.innerHTML = hits.map(function (r) {
+        var p = r.x.p, subs = r.x.h.map(function (h, i) { return { i: i, m: toks.filter(function (w) { return h.indexOf(w) >= 0; }).length }; })
+          .filter(function (h) { return h.m; }).sort(function (a, b) { return b.m - a.m || a.i - b.i; }).slice(0, 3);
+        var meta = [p.c ? escH(p.c) : "", p.l !== (root.lang || "th") ? (p.l === "en" ? T.en : T.th) : ""].filter(Boolean).join(" · ");
+        return '<li><a id="sr' + n++ + '" role="option" href="' + escH(p.u) + '"><b>' + mark(p.t, re) + "</b>" +
+          (meta ? "<small>" + meta + "</small>" : "") + "<span>" + mark(snip(p.d, toks), re) + "</span></a>" +
+          (subs.length ? '<ul class="search-subs">' + subs.map(function (h) {
+            var hh = p.h[h.i];
+            return '<li><a id="sr' + n++ + '" role="option" href="' + escH(p.u + "#" + hh[0]) + '">' + mark(hh[1], re) + "</a></li>";
+          }).join("") + "</ul>" : "") + "</li>";
+      }).join("");
+      sStat.textContent = total ? T.n(total) : T.none(q);
+      setAct(0);
+    };
+    var openS = function () {
+      if (dlg.open) return;
+      if (header && header.hasAttribute("data-open")) setMenu(false);
+      dlg.showModal();
+      sIn.focus();
+      sIn.select();
+      load();
+    };
+    sBtn.addEventListener("click", openS);
+    sIn.addEventListener("input", function () { clearTimeout(timer); timer = setTimeout(run, 90); });
+    sIn.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); setAct(act + (e.key === "ArrowDown" ? 1 : -1)); }
+      else if (e.key === "Enter") {
+        e.preventDefault();
+        clearTimeout(timer);
+        if (act < 0) run();
+        var a = sList.querySelectorAll("a")[act];
+        if (a) a.click();
+      }
+    });
+    sList.addEventListener("click", function (e) { if (e.target.closest("a")) dlg.close(); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", function () { sBtn.focus(); });
+    document.addEventListener("keydown", function (e) {
+      var el = e.target, typing = el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+      if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") || (e.key === "/" && !typing && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        openS();
+      }
     });
   }
 
