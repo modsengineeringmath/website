@@ -1,0 +1,455 @@
+<!--meta
+{
+  "title": "ลำดับและอนุกรม (Sequences and Series) คืออะไร: สูตร ตัวอย่าง การลู่เข้า อนุกรมเทย์เลอร์ | อาจารย์มด",
+  "h1": "ลำดับและอนุกรม (Sequences and Series): สูตร ตัวอย่าง และการลู่เข้า",
+  "description": "ลำดับและอนุกรมคืออะไร สรุปสูตรครบ: ลำดับเลขคณิต (arithmetic sequence) ลำดับเรขาคณิต (geometric sequence) ซิกมา ลิมิตของลำดับ ε–N อนุกรมอนันต์ (infinite series) การทดสอบการลู่เข้า ratio test, comparison test, integral test อนุกรมกำลัง (power series) และอนุกรมเทย์เลอร์ (Taylor series) พร้อมตัวอย่างและแล็บโต้ตอบ",
+  "ogTitle": "ลำดับและอนุกรม: สูตร ตัวอย่าง การลู่เข้า และ Taylor series",
+  "lesson": "limits",
+  "sub": "sequences-series",
+  "nav": "lim",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["ลำดับและอนุกรม", "ลำดับเลขคณิต", "ลำดับเรขาคณิต", "อนุกรมเรขาคณิต", "อนุกรมอนันต์", "ลิมิตของลำดับ", "การทดสอบการลู่เข้า", "อนุกรมเทย์เลอร์", "sequences and series", "arithmetic sequence", "geometric series", "convergence test", "ratio test", "power series", "Taylor series", "Maclaurin series"],
+  "about": ["Sequence", "Series", "Arithmetic sequence", "Geometric series", "Sigma notation", "Limit of a sequence", "Convergence tests", "Ratio test", "Integral test", "Alternating series", "Power series", "Radius of convergence", "Taylor series", "Maclaurin series"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js"],
+  "og": {"title": "ลำดับและอนุกรม", "sub": "เลขคณิต เรขาคณิต การทดสอบการลู่เข้า และอนุกรมเทย์เลอร์ พร้อมแล็บ", "eyebrow": "บทที่ 3.1 · Sequences & Series", "sym": "Σ"},
+  "faq": [
+    {"q": "ลำดับกับอนุกรมต่างกันอย่างไร?", "a": "ลำดับ (sequence) คือรายการตัวเลขเรียงกัน \\(a_1, a_2, a_3, \\dots\\) ส่วนอนุกรม (series) คือผลบวกของพจน์ในลำดับ \\(a_1 + a_2 + a_3 + \\cdots\\) เช่น ลำดับ 1, 1/2, 1/4, … ลู่เข้าสู่ 0 แต่อนุกรม 1 + 1/2 + 1/4 + ⋯ ลู่เข้าสู่ 2 อนุกรมอนันต์คือลิมิตของลำดับผลบวกย่อย \\(S_n\\)"},
+    {"q": "อนุกรมเรขาคณิตอนันต์ลู่เข้าเมื่อไร และผลบวกเท่าไร?", "a": "อนุกรม \\(a + ar + ar^2 + \\cdots\\) ลู่เข้าก็ต่อเมื่อ \\(|r| < 1\\) และผลบวกคือ \\(\\dfrac{a}{1 - r}\\) ถ้า \\(|r| \\ge 1\\) จะลู่ออก เช่น 0.999… = 0.9/(1 − 0.1) = 1"},
+    {"q": "ถ้า lim aₙ = 0 แล้วอนุกรม Σaₙ ลู่เข้าเสมอไหม?", "a": "ไม่เสมอ เงื่อนไข \\(a_n \\to 0\\) จำเป็นแต่ไม่พอ ตัวอย่างคืออนุกรมฮาร์มอนิก \\(\\sum 1/n\\) ซึ่งพจน์เข้าใกล้ 0 แต่ผลบวกโตแบบ \\(\\ln n\\) ไม่มีขอบเขต ในทางกลับกัน ถ้า \\(a_n\\) ไม่เข้าใกล้ 0 อนุกรมลู่ออกแน่นอน (nth-term test)"},
+    {"q": "ควรเลือกใช้ ratio test หรือการทดสอบแบบไหนก่อน?", "a": "เริ่มจาก nth-term test (พจน์ไม่เข้าใกล้ 0 = ลู่ออก) แล้วดูรูป: อนุกรมเรขาคณิตหรืออนุกรม p ตอบได้ทันที มีแฟกทอเรียลหรือ \\(c^n\\) ใช้ ratio test ยกกำลัง n ทั้งก้อนใช้ root test เป็นเศษส่วนของพหุนามใช้ limit comparison กับ \\(1/n^p\\) เครื่องหมายสลับใช้ alternating series test ถ้า ratio test ได้ 1 แปลว่าสรุปไม่ได้ต้องใช้วิธีอื่น"},
+    {"q": "วิศวกรใช้อนุกรมเทย์เลอร์ทำอะไร?", "a": "ใช้ประมาณฟังก์ชันซับซ้อนด้วยพหุนาม เช่น \\(\\sin\\theta \\approx \\theta\\) เมื่อมุมเล็ก \\(e^x \\approx 1 + x\\) \\((1 + x)^n \\approx 1 + nx\\) การทำให้เป็นเชิงเส้นรอบจุดทำงาน (linearization) ในแบบจำลองสัญญาณเล็กของไดโอดและทรานซิสเตอร์ การควบคุมระบบไม่เชิงเส้น และการคำนวณ sin, eˣ ในไมโครคอนโทรลเลอร์"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/limits/">ลิมิต</a></li><li>ลำดับและอนุกรม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 3.1 · ลิมิต · Sequences &amp; Series</p>
+      <h1>ลำดับและอนุกรม (Sequences and Series): สูตร ตัวอย่าง และการลู่เข้า</h1>
+      <p class="lede">ลำดับคือตัวเลขที่เรียงกันเป็นแถว อนุกรมคือการบวกตัวเลขเหล่านั้นต่อกันไปเรื่อย ๆ คำถามใหญ่ของบทนี้มีข้อเดียว: <b>บวกไปไม่สิ้นสุดแล้วได้ค่าจำกัดหรือไม่</b> คำตอบอยู่บนลิมิตจากหน้าก่อน และนำไปสู่อนุกรมเทย์เลอร์ เครื่องมือที่วิศวกรใช้ประมาณ sin, eˣ และทำวงจรไม่เชิงเส้นให้เป็นเชิงเส้น หน้านี้มีแล็บให้ลองทุกหัวข้อ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บลำดับ</a>
+        <a class="btn btn-ghost btn-sm" href="#geometric">อนุกรมเรขาคณิต</a>
+        <a class="btn btn-ghost btn-sm" href="#tests">ทดสอบการลู่เข้า</a>
+        <a class="btn btn-ghost btn-sm" href="#taylor">อนุกรมเทย์เลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#engineering">งานวิศวกรรม</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>เลขคณิต: \(a_n = a_1 + (n-1)d,\ S_n = \tfrac{n}{2}(a_1 + a_n)\) · เรขาคณิต: \(a_n = a_1 r^{n-1},\ S_n = a_1\tfrac{1 - r^n}{1 - r}\)</li>
+          <li>อนุกรมเรขาคณิตอนันต์ลู่เข้า ⇔ \(|r| &lt; 1\) และ \(S = \tfrac{a_1}{1 - r}\)</li>
+          <li>\(\sum a_n\) ลู่เข้า ⇔ ลำดับผลบวกย่อย \(S_n\) ลู่เข้า · \(a_n \not\to 0\) ⇒ ลู่ออก แต่ \(a_n \to 0\) ยังไม่พอ (\(\sum 1/n\) ลู่ออก)</li>
+          <li>\(f(x) = \sum \frac{f^{(k)}(a)}{k!}(x - a)^k\) ภายในรัศมีการลู่เข้า: ฐานของการประมาณเชิงวิศวกรรมทั้งหมด</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น geometric, sigma, ratio, alternating, taylor, radius" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">ลำดับและอนุกรมคืออะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p><b>ลำดับ (sequence)</b> คือฟังก์ชันที่มีโดเมนเป็นจำนวนนับ ใส่ \(n = 1, 2, 3, \dots\) แล้วได้ค่า \(a_1, a_2, a_3, \dots\) เขียนย่อว่า \(\{a_n\}\) ส่วน <b>อนุกรม (series)</b> คือผลบวกของพจน์ในลำดับ ถ้าบวกจำกัดจำนวนเรียกว่าอนุกรมจำกัด ถ้าบวกไม่สิ้นสุดเรียกว่า<b>อนุกรมอนันต์ (infinite series)</b> ซึ่งต้องนิยามผ่านลิมิต เพราะเราบวกจำนวนอนันต์ตัวจริง ๆ ไม่ได้</p>
+    <p>ลำดับกำหนดได้สองแบบ: <b>สูตรพจน์ทั่วไป (explicit formula)</b> เช่น \(a_n = 3n - 1\) คำนวณพจน์ไหนก็ได้ทันที และ<b>ความสัมพันธ์เวียนเกิด (recurrence relation)</b> เช่น \(a_1 = 2,\ a_{n+1} = a_n + 3\) ต้องรู้พจน์ก่อนหน้าจึงหาพจน์ถัดไปได้ แบบหลังพบบ่อยในงานวิศวกรรม เช่นตัวกรองดิจิทัล วิธีนิวตัน และวงจรบันได</p>
+    <figure class="lt-wide"><!--FIG:sq-terms--><svg class="mf" viewBox="0 0 720 250" role="img" aria-label="Sequence examples: arithmetic sequence a_n = 3n − 1, geometric sequence a_n = 5(1/2)^(n−1), and alternating sequence (−1)^n/n converging to 0 (ลำดับเลขคณิต เรขาคณิต และลำดับที่ลู่เข้า)"><rect class="mf-bg" x="12" y="30" width="220" height="180" rx="6"/><path class="mf-dash" d="M26 195.6L53.4 174L80.9 152.4L108.3 130.8L135.7 109.2L163.1 87.6L190.6 66L218 44.4"/><line class="mf-g" x1="26" y1="210" x2="26" y2="195.6"/><circle class="mf-dot" cx="26" cy="195.6" r="3.6"/><text class="mf-k" x="26" y="223" text-anchor="middle">1</text><line class="mf-g" x1="53.4" y1="210" x2="53.4" y2="174"/><circle class="mf-dot" cx="53.4" cy="174" r="3.6"/><text class="mf-k" x="53.4" y="223" text-anchor="middle">2</text><line class="mf-g" x1="80.9" y1="210" x2="80.9" y2="152.4"/><circle class="mf-dot" cx="80.9" cy="152.4" r="3.6"/><text class="mf-k" x="80.9" y="223" text-anchor="middle">3</text><line class="mf-g" x1="108.3" y1="210" x2="108.3" y2="130.8"/><circle class="mf-dot" cx="108.3" cy="130.8" r="3.6"/><text class="mf-k" x="108.3" y="223" text-anchor="middle">4</text><line class="mf-g" x1="135.7" y1="210" x2="135.7" y2="109.2"/><circle class="mf-dot" cx="135.7" cy="109.2" r="3.6"/><text class="mf-k" x="135.7" y="223" text-anchor="middle">5</text><line class="mf-g" x1="163.1" y1="210" x2="163.1" y2="87.6"/><circle class="mf-dot" cx="163.1" cy="87.6" r="3.6"/><text class="mf-k" x="163.1" y="223" text-anchor="middle">6</text><line class="mf-g" x1="190.6" y1="210" x2="190.6" y2="66"/><circle class="mf-dot" cx="190.6" cy="66" r="3.6"/><text class="mf-k" x="190.6" y="223" text-anchor="middle">7</text><line class="mf-g" x1="218" y1="210" x2="218" y2="44.4"/><circle class="mf-dot" cx="218" cy="44.4" r="3.6"/><text class="mf-k" x="218" y="223" text-anchor="middle">8</text><text class="mf-h" x="14" y="23" text-anchor="start">เลขคณิต aₙ = 3n − 1 (d = 3)</text><rect class="mf-bg" x="250" y="30" width="220" height="180" rx="6"/><line class="mf-g" x1="264" y1="210" x2="264" y2="49.3"/><circle class="mf-dot" cx="264" cy="49.3" r="3.6"/><text class="mf-k" x="264" y="223" text-anchor="middle">1</text><line class="mf-g" x1="291.4" y1="210" x2="291.4" y2="129.6"/><circle class="mf-dot" cx="291.4" cy="129.6" r="3.6"/><text class="mf-k" x="291.4" y="223" text-anchor="middle">2</text><line class="mf-g" x1="318.9" y1="210" x2="318.9" y2="169.8"/><circle class="mf-dot" cx="318.9" cy="169.8" r="3.6"/><text class="mf-k" x="318.9" y="223" text-anchor="middle">3</text><line class="mf-g" x1="346.3" y1="210" x2="346.3" y2="189.9"/><circle class="mf-dot" cx="346.3" cy="189.9" r="3.6"/><text class="mf-k" x="346.3" y="223" text-anchor="middle">4</text><line class="mf-g" x1="373.7" y1="210" x2="373.7" y2="200"/><circle class="mf-dot" cx="373.7" cy="200" r="3.6"/><text class="mf-k" x="373.7" y="223" text-anchor="middle">5</text><line class="mf-g" x1="401.1" y1="210" x2="401.1" y2="205"/><circle class="mf-dot" cx="401.1" cy="205" r="3.6"/><text class="mf-k" x="401.1" y="223" text-anchor="middle">6</text><line class="mf-g" x1="428.6" y1="210" x2="428.6" y2="207.5"/><circle class="mf-dot" cx="428.6" cy="207.5" r="3.6"/><text class="mf-k" x="428.6" y="223" text-anchor="middle">7</text><line class="mf-g" x1="456" y1="210" x2="456" y2="208.7"/><circle class="mf-dot" cx="456" cy="208.7" r="3.6"/><text class="mf-k" x="456" y="223" text-anchor="middle">8</text><text class="mf-h" x="252" y="23" text-anchor="start">เรขาคณิต aₙ = 5(½)ⁿ⁻¹ (r = ½)</text><rect class="mf-bg" x="488" y="30" width="220" height="180" rx="6"/><line class="mf-ax" x1="488" y1="100" x2="708" y2="100"/><rect class="mf-fill2" x="488" y="85" width="220" height="30" rx="0"/><line class="mf-dash" x1="488" y1="100" x2="708" y2="100"/><line class="mf-g" x1="502" y1="100" x2="502" y2="200"/><circle class="mf-dot" cx="502" cy="200" r="3.6"/><text class="mf-k" x="502" y="223" text-anchor="middle">1</text><line class="mf-g" x1="523.3" y1="100" x2="523.3" y2="50"/><circle class="mf-dot" cx="523.3" cy="50" r="3.6"/><text class="mf-k" x="523.3" y="223" text-anchor="middle">2</text><line class="mf-g" x1="544.7" y1="100" x2="544.7" y2="133.3"/><circle class="mf-dot" cx="544.7" cy="133.3" r="3.6"/><text class="mf-k" x="544.7" y="223" text-anchor="middle">3</text><line class="mf-g" x1="566" y1="100" x2="566" y2="75"/><circle class="mf-dot" cx="566" cy="75" r="3.6"/><text class="mf-k" x="566" y="223" text-anchor="middle">4</text><line class="mf-g" x1="587.3" y1="100" x2="587.3" y2="120"/><circle class="mf-dot" cx="587.3" cy="120" r="3.6"/><text class="mf-k" x="587.3" y="223" text-anchor="middle">5</text><line class="mf-g" x1="608.7" y1="100" x2="608.7" y2="83.3"/><circle class="mf-dot" cx="608.7" cy="83.3" r="3.6"/><text class="mf-k" x="608.7" y="223" text-anchor="middle">6</text><line class="mf-g" x1="630" y1="100" x2="630" y2="114.3"/><circle class="mf-dot" cx="630" cy="114.3" r="3.6"/><text class="mf-k" x="630" y="223" text-anchor="middle">7</text><line class="mf-g" x1="651.3" y1="100" x2="651.3" y2="87.5"/><circle class="mf-dot" cx="651.3" cy="87.5" r="3.6"/><text class="mf-k" x="651.3" y="223" text-anchor="middle">8</text><line class="mf-g" x1="672.7" y1="100" x2="672.7" y2="111.1"/><circle class="mf-dot" cx="672.7" cy="111.1" r="3.6"/><text class="mf-k" x="672.7" y="223" text-anchor="middle">9</text><line class="mf-g" x1="694" y1="100" x2="694" y2="90"/><circle class="mf-dot" cx="694" cy="90" r="3.6"/><text class="mf-k" x="694" y="223" text-anchor="middle">10</text><text class="mf-h" x="490" y="23" text-anchor="start">(−1)ⁿ/n → 0 · แถบ ε = 0.15</text><text class="mf-k" x="366" y="244" text-anchor="middle">แกนนอน: n = 1, 2, 3, …  · เส้นประ = ลิมิต L · แถบ = L ± ε</text></svg><!--/FIG--><figcaption>สามพฤติกรรมพื้นฐาน: ลำดับเลขคณิตโตเป็นเส้นตรง (ลู่ออก) ลำดับเรขาคณิตที่ \(|r| &lt; 1\) ลดลงสู่ 0 และลำดับสลับเครื่องหมาย \((-1)^n/n\) แกว่งเข้าหา 0 จนอยู่ในแถบ ε ตลอดไป</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf" id="S1" data-k="sequence definition explicit recursive recurrence ลำดับ พจน์ทั่วไป เวียนเกิด">
+        <p class="tf-n"><b><span class="fid">S1</span> Sequence</b> ลำดับ</p>
+        \[ \{a_n\}_{n=1}^{\infty}:\ a_1, a_2, a_3, \dots \qquad a_{n+1} = g(a_n) \]
+        <p class="tf-x">ฟังก์ชัน \(\mathbb{N} \to \mathbb{R}\) · กำหนดด้วยสูตรพจน์ทั่วไปหรือความสัมพันธ์เวียนเกิด</p>
+      </div>
+      <div class="tf" id="S2" data-k="series partial sum infinite series definition อนุกรม ผลบวกย่อย">
+        <p class="tf-n"><b><span class="fid">S2</span> Series &amp; partial sums</b> อนุกรมและผลบวกย่อย</p>
+        \[ S_N = \sum_{n=1}^{N} a_n,\qquad \sum_{n=1}^{\infty} a_n = \lim_{N\to\infty} S_N \]
+        <p class="tf-x">อนุกรมลู่เข้า (convergent) ถ้าลิมิตนี้มีค่าจำกัด มิฉะนั้นลู่ออก (divergent)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-1 · สองวิธีเขียนลำดับเดียวกัน</span><h3>เขียน \(2, 5, 8, 11, \dots\) เป็นสูตรพจน์ทั่วไปและแบบเวียนเกิด แล้วหา \(a_{50}\) และ \(S_4\)</h3><button type="button" class="wx-btn calc-go" data-sq-set='{"mode":"explicit","f":"3n-1","N":20}'>ดูในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ผลต่างระหว่างพจน์คงที่เท่ากับ 3: เวียนเกิด \(a_1 = 2,\ a_{n+1} = a_n + 3\)</p></li>
+        <li><p>พจน์ทั่วไป: \(a_n = 2 + 3(n - 1) = 3n - 1\) ตรวจ: \(a_1 = 2,\ a_4 = 11\) ✓</p></li>
+        <li><p>\(a_{50} = 3(50) - 1 = 149\) (แบบเวียนเกิดต้องคำนวณ 49 ครั้ง สูตรพจน์ทั่วไปทำครั้งเดียว)</p></li>
+        <li><p>\(S_4 = 2 + 5 + 8 + 11 = 26\) คือ<b>อนุกรม</b>ของลำดับนี้ถึงพจน์ที่ 4</p></li>
+      </ol>
+      <p class="answer">\(a_n = 3n - 1,\ a_{50} = 149,\ S_4 = 26\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บลำดับ: พจน์ ลิมิต ผลบวกย่อย และใยแมงมุม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>พิมพ์สูตรเองหรือกดตัวอย่าง แล็บจะบอกว่าเป็นเลขคณิตหรือเรขาคณิต เพิ่มหรือลด มีขอบเขตหรือไม่ และลู่เข้าสู่อะไร ลองเลื่อน ε แล้วดูว่า N ที่ทำให้ “ทุกพจน์หลังจากนี้อยู่ในแถบ” เปลี่ยนไปอย่างไร ในโหมดเวียนเกิด กด “ใยแมงมุม” เพื่อดูว่าทำไมบางลำดับวิ่งเข้าจุดตรึงและบางลำดับแกว่งเป็นวัฏจักร</p>
+    <div class="sq-lab" id="seqLab" data-f="(3n^2+1)/(2n^2-n)" data-n="30" data-eps="0.05"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arithmetic">
+    <h2 id="arithmetic">ลำดับเลขคณิตและอนุกรมเลขคณิต (Arithmetic) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ลำดับเลขคณิตเพิ่มขึ้นทีละเท่ากันเสมอ ค่าคงที่นี้เรียกว่า<b>ผลต่างร่วม (common difference)</b> \(d\) กราฟของพจน์จึงเรียงเป็นเส้นตรง สูตรผลบวกมาจากเทคนิคของเกาส์: เขียนผลบวกไปข้างหน้าและย้อนกลับ บวกกันได้ \(n\) คู่ที่แต่ละคู่เท่ากับ \(a_1 + a_n\)</p>
+    <div class="tf-grid">
+      <div class="tf" id="S3" data-k="arithmetic sequence common difference nth term ลำดับเลขคณิต ผลต่างร่วม">
+        <p class="tf-n"><b><span class="fid">S3</span> Arithmetic sequence</b> ลำดับเลขคณิต</p>
+        \[ a_n = a_1 + (n - 1)d,\qquad d = a_{n+1} - a_n \]
+      </div>
+      <div class="tf" id="S4" data-k="arithmetic series sum gauss อนุกรมเลขคณิต ผลบวก">
+        <p class="tf-n"><b><span class="fid">S4</span> Arithmetic series</b> อนุกรมเลขคณิต</p>
+        \[ S_n = \frac{n}{2}(a_1 + a_n) = \frac{n}{2}\left[2a_1 + (n - 1)d\right] \]
+        <p class="tf-x">อนุกรมเลขคณิตอนันต์ลู่ออกเสมอ (ยกเว้นทุกพจน์เป็น 0)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-2</span><h3>(ก) ลำดับเลขคณิตมี \(a_5 = 17,\ a_{12} = 45\) หา \(S_{20}\) (ข) กองท่อร้อยสายไฟเรียงเป็นชั้น ชั้นล่าง 20 ท่อ ชั้นถัดขึ้นไปน้อยลงชั้นละ 1 จนชั้นบนสุดมี 1 ท่อ มีท่อกี่ท่อ</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(a_{12} - a_5 = 7d = 28 \Rightarrow d = 4\) และ \(a_1 = a_5 - 4d = 17 - 16 = 1\)</p></li>
+        <li><p>\(S_{20} = \tfrac{20}{2}\left[2(1) + 19(4)\right] = 10(78) = 780\)</p></li>
+        <li><p>(ข) จำนวนท่อคือ \(1 + 2 + \cdots + 20 = \tfrac{20}{2}(1 + 20) = 210\) ท่อ</p></li>
+      </ol>
+      <p class="answer">(ก) \(780\) (ข) \(210\) ท่อ · สูตร \(1 + 2 + \cdots + n = \tfrac{n(n+1)}{2}\) พิสูจน์ด้วย<a href="/learn/limits/mathematical-induction/#sums">อุปนัยเชิงคณิตศาสตร์</a>ได้</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="geometric">
+    <h2 id="geometric">ลำดับเรขาคณิตและอนุกรมเรขาคณิต (Geometric) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ลำดับเรขาคณิตคูณด้วยค่าคงที่เท่ากันทุกครั้ง เรียกว่า<b>อัตราส่วนร่วม (common ratio)</b> \(r\) นี่คือลำดับที่สำคัญที่สุดในวิศวกรรม เพราะการเติบโตหรือการลดลงแบบ “เป็นสัดส่วนกับค่าปัจจุบัน” มีอยู่ทุกที่ ตั้งแต่ดอกเบี้ยทบต้น การคายประจุของตัวเก็บประจุที่สุ่มวัดเป็นช่วง ๆ ไปจนถึงผลตอบสนองของระบบดิจิทัล</p>
+    <p>ที่มาของสูตรผลบวก: ให้ \(S_n = a + ar + \cdots + ar^{n-1}\) คูณด้วย \(r\) ได้ \(rS_n = ar + \cdots + ar^{n}\) ลบกันพจน์กลางหายหมด เหลือ \(S_n - rS_n = a - ar^n\) จึงได้ \(S_n = a\frac{1 - r^n}{1 - r}\) เมื่อ \(n \to \infty\) และ \(|r| &lt; 1\) พจน์ \(r^n \to 0\)</p>
+    <div class="tf-grid">
+      <div class="tf" id="S5" data-k="geometric sequence common ratio ลำดับเรขาคณิต อัตราส่วนร่วม">
+        <p class="tf-n"><b><span class="fid">S5</span> Geometric sequence</b> ลำดับเรขาคณิต</p>
+        \[ a_n = a_1 r^{\,n-1},\qquad r = \frac{a_{n+1}}{a_n} \]
+        <p class="tf-x">\(|r| &lt; 1\) ลู่เข้าสู่ 0 · \(r = 1\) คงที่ · \(r = -1\) แกว่ง · \(|r| > 1\) ลู่ออก</p>
+      </div>
+      <div class="tf" id="S6" data-k="geometric series finite sum อนุกรมเรขาคณิต ผลบวก n พจน์">
+        <p class="tf-n"><b><span class="fid">S6</span> Finite geometric series</b> อนุกรมเรขาคณิต n พจน์</p>
+        \[ S_n = a_1\,\frac{1 - r^n}{1 - r}\quad (r \ne 1) \]
+      </div>
+      <div class="tf wide" id="S7" data-k="infinite geometric series sum converges |r|<1 อนุกรมเรขาคณิตอนันต์ ลู่เข้า">
+        <p class="tf-n"><b><span class="fid">S7</span> Infinite geometric series</b> อนุกรมเรขาคณิตอนันต์</p>
+        \[ \sum_{n=1}^{\infty} a_1 r^{\,n-1} = a_1 + a_1 r + a_1 r^2 + \cdots = \frac{a_1}{1 - r}\quad \text{เมื่อ } |r| &lt; 1 \]
+        <p class="tf-x">\(|r| \ge 1\) ลู่ออก · สูตรเดียวกันนี้คือ \(\frac{1}{1 - x} = \sum x^n\) ที่เป็นแม่ของอนุกรมกำลังทั้งหมด</p>
+      </div>
+    </div>
+    <figure class="lt-wide"><!--FIG:sq-geo-square--><svg class="mf" viewBox="0 0 720 260" role="img" aria-label="Geometric series visual proof: 1/2 + 1/4 + 1/8 + 1/16 + … = 1 shown by halving a unit square; partial sums S_n approach 1 (อนุกรมเรขาคณิตอนันต์)"><rect class="mf-box" x="20" y="20" width="220" height="220" rx="0"/><rect class="mf-fill" x="20" y="20" width="110" height="220" rx="0"/><line class="mf-line" x1="130" y1="20" x2="130" y2="240"/><text class="mf-h" x="75" y="135" text-anchor="middle">½</text><rect class="mf-fill2" x="130" y="20" width="110" height="110" rx="0"/><line class="mf-line" x1="130" y1="130" x2="240" y2="130"/><text class="mf-h" x="185" y="80" text-anchor="middle">¼</text><rect class="mf-fill2" x="130" y="130" width="55" height="110" rx="0"/><line class="mf-line" x1="185" y1="130" x2="185" y2="240"/><text class="mf-h" x="157.5" y="190" text-anchor="middle">⅛</text><rect class="mf-fill" x="185" y="130" width="55" height="55" rx="0"/><line class="mf-line" x1="185" y1="185" x2="240" y2="185"/><text class="mf-h" x="212.5" y="162.5" text-anchor="middle">1/16</text><rect class="mf-fill" x="185" y="185" width="27.5" height="55" rx="0"/><line class="mf-line" x1="212.5" y1="185" x2="212.5" y2="240"/><rect class="mf-fill2" x="212.5" y="185" width="27.5" height="27.5" rx="0"/><line class="mf-line" x1="212.5" y1="212.5" x2="240" y2="212.5"/><text class="mf-k" x="130" y="256" text-anchor="middle">พื้นที่รวม = 1 (สี่เหลี่ยมจัตุรัสหนึ่งหน่วย)</text><line class="mf-ax" x1="300" y1="150" x2="700" y2="150"/><line class="mf-ax" x1="300" y1="146" x2="300" y2="154"/><text class="mf-k" x="300" y="168" text-anchor="middle">0</text><line class="mf-ax" x1="400" y1="146" x2="400" y2="154"/><text class="mf-k" x="400" y="168" text-anchor="middle">0.25</text><line class="mf-ax" x1="500" y1="146" x2="500" y2="154"/><text class="mf-k" x="500" y="168" text-anchor="middle">0.5</text><line class="mf-ax" x1="600" y1="146" x2="600" y2="154"/><text class="mf-k" x="600" y="168" text-anchor="middle">0.75</text><line class="mf-ax" x1="700" y1="146" x2="700" y2="154"/><text class="mf-k" x="700" y="168" text-anchor="middle">1</text><circle class="mf-dot" cx="500" cy="120" r="3.6"/><text class="mf-k" x="492" y="124" text-anchor="end">S1 = 0.5</text><line class="mf-g" x1="500" y1="120" x2="500" y2="150"/><circle class="mf-dot" cx="600" cy="104" r="3.6"/><text class="mf-k" x="592" y="108" text-anchor="end">S2 = 0.75</text><line class="mf-g" x1="600" y1="104" x2="600" y2="150"/><circle class="mf-dot" cx="650" cy="88" r="3.6"/><text class="mf-k" x="642" y="92" text-anchor="end">S3 = 0.875</text><line class="mf-g" x1="650" y1="88" x2="650" y2="150"/><circle class="mf-dot" cx="675" cy="72" r="3.6"/><text class="mf-k" x="667" y="76" text-anchor="end">S4 = 0.9375</text><line class="mf-g" x1="675" y1="72" x2="675" y2="150"/><circle class="mf-dot" cx="687.5" cy="56" r="3.6"/><text class="mf-k" x="679.5" y="60" text-anchor="end">S5 = 0.9688</text><line class="mf-g" x1="687.5" y1="56" x2="687.5" y2="150"/><circle class="mf-dot" cx="693.8" cy="40" r="3.6"/><text class="mf-k" x="685.8" y="44" text-anchor="end">S6 = 0.9844</text><line class="mf-g" x1="693.8" y1="40" x2="693.8" y2="150"/><line class="mf-dash" x1="700" y1="22" x2="700" y2="150"/><text class="mf-l" x="696" y="24" text-anchor="end">ลิมิต = 1</text><text class="mf-t" x="300" y="206" text-anchor="start">Sₙ = 1 − (½)ⁿ → 1 เมื่อ n → ∞</text><text class="mf-l" x="300" y="230" text-anchor="start">a/(1 − r) = (½)/(1 − ½) = 1</text></svg><!--/FIG--><figcaption>บทพิสูจน์ด้วยภาพ: แบ่งครึ่งพื้นที่ไปเรื่อย ๆ ชิ้นทั้งหมดเติมเต็มสี่เหลี่ยมหนึ่งหน่วยพอดี ผลบวกย่อย \(S_n = 1 - (\tfrac12)^n\) เข้าใกล้ 1 แต่ไม่เคยเกิน</figcaption></figure>
+    <div class="wx" id="ex-s3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-3</span><h3>ลำดับเรขาคณิตมี \(a_2 = 6\) และ \(a_5 = 162\) หา \(r,\ a_1\) และ \(S_6\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\dfrac{a_5}{a_2} = r^3 = \dfrac{162}{6} = 27 \Rightarrow r = 3\)</p></li>
+        <li><p>\(a_1 = a_2/r = 2\)</p></li>
+        <li><p>\(S_6 = 2\cdot\dfrac{1 - 3^6}{1 - 3} = 2\cdot\dfrac{-728}{-2} = 728\)</p></li>
+      </ol>
+      <p class="answer">\(r = 3,\ a_1 = 2,\ S_6 = 728\)</p>
+    </div>
+    <div class="wx" id="ex-s4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-4 · อนุกรมเรขาคณิตอนันต์</span><h3>(ก) แสดงว่า \(0.999\ldots = 1\) (ข) เขียน \(0.\overline{36}\) เป็นเศษส่วน (ค) ปล่อยลูกบอลจากความสูง 10 m ทุกครั้งที่กระทบพื้นจะเด้งขึ้น 60% ของความสูงเดิม ลูกบอลเคลื่อนที่ได้ระยะทางรวมเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(0.999\ldots = 0.9 + 0.09 + 0.009 + \cdots\) มี \(a_1 = 0.9,\ r = 0.1\) จึงได้ \(\dfrac{0.9}{1 - 0.1} = 1\) ทั้งสองเป็นจำนวนเดียวกัน ไม่ใช่ “เกือบ 1”</p></li>
+        <li><p>(ข) \(0.3636\ldots = 0.36 + 0.0036 + \cdots = \dfrac{0.36}{1 - 0.01} = \dfrac{36}{99} = \dfrac{4}{11}\)</p></li>
+        <li><p>(ค) ขาลงครั้งแรก 10 m จากนั้นแต่ละการเด้งมีขาขึ้นและขาลงเท่ากัน: \(6 + 3.6 + 2.16 + \cdots\) เป็นอนุกรมเรขาคณิต \(a_1 = 6,\ r = 0.6\)</p></li>
+        <li><p>ระยะรวม \(= 10 + 2\cdot\dfrac{6}{1 - 0.6} = 10 + 2(15) = 40\ \text{m}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(1\) (ข) \(\tfrac{4}{11}\) (ค) \(40\ \text{m}\): เด้งนับครั้งไม่ถ้วนแต่ระยะทางมีขอบเขต</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sigma">
+    <h2 id="sigma">สัญลักษณ์ซิกมาและสูตรผลบวก (Sigma Notation) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สัญลักษณ์ \(\sum\) (ซิกมา) ย่อการบวกยาว ๆ ให้สั้น ตัวแปร \(k\) ใต้ซิกมาเป็นแค่ตัวนับ เปลี่ยนชื่อเป็น \(i\) หรือ \(j\) ก็ได้ค่าเดิม สูตรผลบวกกำลังของจำนวนนับด้านล่างใช้บ่อยมากในการหา<a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>ด้วยผลบวกรีมันน์ และทุกสูตรพิสูจน์ได้ด้วย<a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a></p>
+    <div class="tf-grid">
+      <div class="tf" id="S8" data-k="sigma notation properties linearity constant ซิกมา สมบัติ">
+        <p class="tf-n"><b><span class="fid">S8</span> Sigma properties</b> สมบัติของซิกมา</p>
+        \[ \sum_{k=1}^{n}(c\,a_k \pm b_k) = c\sum_{k=1}^{n}a_k \pm \sum_{k=1}^{n}b_k,\qquad \sum_{k=1}^{n} c = nc \]
+        <p class="tf-x">ระวัง: \(\sum a_k b_k \ne \left(\sum a_k\right)\left(\sum b_k\right)\)</p>
+      </div>
+      <div class="tf wide" id="S9" data-k="sum of integers squares cubes formula power sums สูตรผลบวก กำลังสอง กำลังสาม">
+        <p class="tf-n"><b><span class="fid">S9</span> Power sums</b> สูตรผลบวกกำลังของจำนวนนับ</p>
+        \[ \sum_{k=1}^{n} k = \frac{n(n+1)}{2},\qquad \sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6},\qquad \sum_{k=1}^{n} k^3 = \left[\frac{n(n+1)}{2}\right]^2 \]
+      </div>
+      <div class="tf" id="S10" data-k="telescoping series sum partial fractions cancel อนุกรมกล้องส่องทางไกล หักล้าง">
+        <p class="tf-n"><b><span class="fid">S10</span> Telescoping sum</b> ผลบวกแบบหักล้าง</p>
+        \[ \sum_{k=1}^{n}\left(b_k - b_{k+1}\right) = b_1 - b_{n+1} \]
+        <p class="tf-x">เทคนิค: แยก<a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>ก่อน พจน์กลางจะหักล้างกันหมด</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-5 · กล้องส่องทางไกล</span><h3>หา \(\displaystyle\sum_{k=1}^{n}\frac{1}{k(k+1)}\) และ \(\displaystyle\sum_{k=1}^{\infty}\frac{1}{k(k+1)}\)</h3><button type="button" class="wx-btn calc-go" data-sqt="tele">ดูผลบวกย่อย</button></div>
+      <ol class="steps">
+        <li><p>แยกเศษส่วนย่อย: \(\dfrac{1}{k(k+1)} = \dfrac{1}{k} - \dfrac{1}{k+1}\)</p></li>
+        <li><p>\(S_n = \left(1 - \tfrac12\right) + \left(\tfrac12 - \tfrac13\right) + \cdots + \left(\tfrac1n - \tfrac{1}{n+1}\right) = 1 - \dfrac{1}{n+1} = \dfrac{n}{n+1}\)</p></li>
+        <li><p>\(\lim_{n\to\infty} \dfrac{n}{n+1} = 1\)</p></li>
+      </ol>
+      <p class="answer">\(S_n = \dfrac{n}{n+1}\) และอนุกรมอนันต์ \(= 1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limit-sequence">
+    <h2 id="limit-sequence">ลิมิตของลำดับ: ลู่เข้าและลู่ออก (Convergence) <span class="lv lv-i">กลาง</span></h2>
+    <p>ลำดับ<b>ลู่เข้า (converges)</b> สู่ \(L\) ถ้าพจน์เข้าใกล้ \(L\) และ<b>อยู่ใกล้ตลอดไป</b> นิยามแบบเป๊ะเหมือน ε–δ ใน<a href="/learn/limits/#epsilon-delta">หน้าลิมิต</a> แต่ใช้ N แทน δ เพราะ n เป็นจำนวนนับที่วิ่งไปอนันต์: ไม่ว่าจะให้แถบ ε แคบแค่ไหน ต้องหา N ที่ทำให้ทุกพจน์หลังจาก N อยู่ในแถบนั้นได้ ลองทำในแล็บด้านบนได้เลย</p>
+    <p>ข่าวดีคือ ถ้า \(a_n = f(n)\) และ \(\lim_{x\to\infty} f(x) = L\) แล้ว \(\lim_{n\to\infty} a_n = L\) ด้วย เทคนิคทั้งหมดจากหน้าลิมิต (หารด้วยกำลังสูงสุด <a href="/learn/limits/#lhopital">โลปิตาล</a> ค่า e) จึงใช้กับลำดับได้ทันที (บทกลับไม่จริง เช่น \(\sin(\pi n) = 0\) ทุก n แต่ \(\sin(\pi x)\) ไม่มีลิมิต)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S11" data-k="epsilon N definition limit of sequence convergent นิยาม ลิมิตของลำดับ ลู่เข้า">
+        <p class="tf-n"><b><span class="fid">S11</span> ε–N definition</b> นิยามลิมิตของลำดับ</p>
+        \[ \lim_{n\to\infty} a_n = L \iff \forall\varepsilon > 0\ \exists N:\ n \ge N \Rightarrow |a_n - L| &lt; \varepsilon \]
+        <p class="tf-x">ลำดับที่ไม่ลู่เข้าเรียกว่าลู่ออก: โตไม่มีขอบเขต (\(\to \pm\infty\)) หรือแกว่งไม่นิ่ง เช่น \((-1)^n\)</p>
+      </div>
+      <div class="tf wide" id="S12" data-k="standard limits r^n n^(1/n) (1+1/n)^n ln n / n factorial growth ลิมิตมาตรฐาน">
+        <p class="tf-n"><b><span class="fid">S12</span> Standard sequence limits</b> ลิมิตมาตรฐานที่ต้องจำ</p>
+        \[ r^n \to 0\ (|r| &lt; 1),\quad \sqrt[n]{n} \to 1,\quad \left(1 + \tfrac{x}{n}\right)^n \to e^x,\quad \frac{\ln n}{n} \to 0,\quad \frac{n^p}{b^n} \to 0\ (b > 1),\quad \frac{b^n}{n!} \to 0 \]
+        <p class="tf-x">ลำดับความเร็วการโต: \(\ln n \ll n^p \ll b^n \ll n! \ll n^n\)</p>
+      </div>
+      <div class="tf" id="S13" data-k="monotone convergence theorem bounded increasing ทฤษฎีบทลำดับทางเดียว มีขอบเขต">
+        <p class="tf-n"><b><span class="fid">S13</span> Monotone convergence</b> ทฤษฎีบทลำดับทางเดียว</p>
+        \[ a_n \nearrow\ \text{และ}\ a_n \le M\ \ \Rightarrow\ \ \{a_n\}\ \text{ลู่เข้า} \]
+        <p class="tf-x">เพิ่มขึ้นและมีขอบเขตบน (หรือลดลงและมีขอบเขตล่าง) ต้องลู่เข้า ใช้กับลำดับเวียนเกิดเสมอ</p>
+      </div>
+      <div class="tf" id="S14" data-k="squeeze theorem sequence sandwich bounded times zero แซนด์วิช ลำดับ">
+        <p class="tf-n"><b><span class="fid">S14</span> Squeeze for sequences</b> แซนด์วิช</p>
+        \[ b_n \le a_n \le c_n,\ b_n, c_n \to L \Rightarrow a_n \to L \]
+        <p class="tf-x">เช่น \(\left|\frac{\sin n}{n}\right| \le \frac1n \to 0\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-6 · ลิมิตของลำดับ</span><h3>(ก) \(\lim \dfrac{3n^2 + 1}{2n^2 - n}\) (ข) \(\lim \dfrac{n}{2^n}\) (ค) \(\lim\left(1 + \dfrac{2}{n}\right)^n\)</h3><button type="button" class="wx-btn calc-go" data-sq-set='{"mode":"explicit","f":"n/2^n","N":30}'>ดู n/2ⁿ ในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>(ก) หารด้วย \(n^2\): \(\dfrac{3 + 1/n^2}{2 - 1/n} \to \dfrac{3}{2}\)</p></li>
+        <li><p>(ข) รูป ∞/∞ ใช้โลปิตาลกับ \(f(x) = x/2^x\): \(\lim \dfrac{1}{2^x\ln 2} = 0\) จึงได้ \(\lim n/2^n = 0\) (เลขชี้กำลังโตเร็วกว่าพหุนามเสมอ)</p></li>
+        <li><p>(ค) จาก S12 ที่ \(x = 2\): \(\left(1 + \tfrac{2}{n}\right)^n \to e^2 \approx 7.389\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac32\) (ข) \(0\) (ค) \(e^2\)</p>
+    </div>
+    <div class="wx" id="ex-s7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-7 · ลำดับเวียนเกิดกับทฤษฎีบทลำดับทางเดียว</span><h3>\(a_1 = \sqrt2,\ a_{n+1} = \sqrt{2 + a_n}\) ลู่เข้าหรือไม่ ถ้าลู่เข้า ลิมิตเท่าไร</h3><button type="button" class="wx-btn calc-go" data-sq-set='{"mode":"recursive","g":"sqrt(2+a)","a1":"sqrt(2)","N":12,"view":"cobweb"}'>ดูใยแมงมุม</button></div>
+      <ol class="steps">
+        <li><p>พจน์แรก ๆ: 1.4142, 1.8478, 1.9616, 1.9904, 1.9976, … ดูเหมือนเพิ่มขึ้นเข้าหา 2</p></li>
+        <li><p>มีขอบเขต \(a_n &lt; 2\) ทุก n และเพิ่มขึ้น \(a_{n+1} > a_n\) ทุก n: ทั้งสองข้อพิสูจน์ด้วย<a href="/learn/limits/mathematical-induction/#strong">อุปนัยเชิงคณิตศาสตร์</a> (ถ้า \(a_k &lt; 2\) แล้ว \(a_{k+1} = \sqrt{2 + a_k} &lt; \sqrt4 = 2\))</p></li>
+        <li><p>เพิ่มขึ้นและมีขอบเขต จึงลู่เข้าตาม S13 ให้ลิมิตเป็น \(L\)</p></li>
+        <li><p>ใส่ลิมิตทั้งสองข้างของความสัมพันธ์: \(L = \sqrt{2 + L} \Rightarrow L^2 - L - 2 = 0 \Rightarrow (L - 2)(L + 1) = 0\) ตัด \(L = -1\) เพราะทุกพจน์เป็นบวก</p></li>
+      </ol>
+      <p class="answer">ลู่เข้าสู่ \(L = 2\) · ข้อควรระวัง: ต้องพิสูจน์ว่าลู่เข้าก่อน แล้วค่อยแก้ \(L = g(L)\) (ถ้าข้ามขั้นแรก อาจได้ “ลิมิต” ของลำดับที่ลู่ออก)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tests">
+    <h2 id="tests">อนุกรมอนันต์ลู่เข้าเมื่อไร: การทดสอบการลู่เข้า (Convergence Tests) <span class="lv lv-i">กลาง</span></h2>
+    <p>อนุกรมส่วนใหญ่หาผลบวกจริงไม่ได้ แต่บอกได้ว่าลู่เข้าหรือลู่ออก ซึ่งในงานวิศวกรรมสำคัญกว่า เพราะถ้าลู่เข้า เราตัดอนุกรมที่จำนวนพจน์จำกัดแล้วประมาณค่าได้ ถ้าลู่ออก การคำนวณจะพังไม่ว่าจะบวกกี่พจน์ ด่านแรกของทุกอนุกรมคือ nth-term test</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S15" data-k="nth term test divergence test limit not zero การทดสอบพจน์ที่ n">
+        <p class="tf-n"><b><span class="fid">S15</span> nth-term (divergence) test</b> ทดสอบพจน์ที่ n</p>
+        \[ \lim_{n\to\infty} a_n \ne 0\ \text{(หรือไม่มีค่า)} \ \Rightarrow\ \sum a_n\ \text{ลู่ออก} \]
+        <p class="tf-x">ถ้า \(a_n \to 0\) <b>สรุปไม่ได้</b> ต้องใช้การทดสอบอื่นต่อ</p>
+      </div>
+      <div class="tf" id="S16" data-k="p-series harmonic series 1/n^p converges p>1 อนุกรม p ฮาร์มอนิก">
+        <p class="tf-n"><b><span class="fid">S16</span> p-series</b> อนุกรม p</p>
+        \[ \sum_{n=1}^{\infty} \frac{1}{n^p}\ \text{ลู่เข้า} \iff p > 1 \]
+        <p class="tf-x">\(p = 1\) คือฮาร์มอนิก ลู่ออก · \(\sum 1/n^2 = \pi^2/6\)</p>
+      </div>
+      <div class="tf" id="S17" data-k="integral test positive decreasing improper integral การทดสอบด้วยปริพันธ์">
+        <p class="tf-n"><b><span class="fid">S17</span> Integral test</b> ทดสอบด้วยปริพันธ์</p>
+        \[ a_n = f(n),\ f \searrow,\ f > 0:\ \sum a_n \sim \int_1^{\infty} f(x)\,dx \]
+        <p class="tf-x">อนุกรมกับอินทิกรัลไม่ตรงกัน ลู่เข้าหรือลู่ออกเหมือนกันเท่านั้น</p>
+      </div>
+      <div class="tf" id="S18" data-k="comparison test limit comparison positive terms เปรียบเทียบ">
+        <p class="tf-n"><b><span class="fid">S18</span> Comparison tests</b> การเปรียบเทียบ</p>
+        \[ 0 \le a_n \le b_n:\ \textstyle\sum b_n\ \text{ลู่เข้า} \Rightarrow \sum a_n\ \text{ลู่เข้า};\qquad \lim\frac{a_n}{b_n} = c > 0 \Rightarrow \text{เหมือนกัน} \]
+        <p class="tf-x">เปรียบเทียบกับอนุกรม p หรือเรขาคณิตที่รู้คำตอบแล้ว</p>
+      </div>
+      <div class="tf" id="S19" data-k="ratio test d'alembert factorial exponential rho การทดสอบอัตราส่วน">
+        <p class="tf-n"><b><span class="fid">S19</span> Ratio test</b> ทดสอบอัตราส่วน</p>
+        \[ \rho = \lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|:\ \rho &lt; 1\ \text{ลู่เข้า},\ \rho > 1\ \text{ลู่ออก},\ \rho = 1\ \text{สรุปไม่ได้} \]
+        <p class="tf-x">เหมาะกับ \(n!\) และ \(c^n\)</p>
+      </div>
+      <div class="tf" id="S20" data-k="root test cauchy nth root การทดสอบราก">
+        <p class="tf-n"><b><span class="fid">S20</span> Root test</b> ทดสอบราก</p>
+        \[ \rho = \lim_{n\to\infty}\sqrt[n]{|a_n|}:\ \text{เกณฑ์เดียวกับ ratio test} \]
+        <p class="tf-x">เหมาะกับพจน์รูป \((\cdots)^n\)</p>
+      </div>
+      <div class="tf" id="S21" data-k="alternating series test leibniz error bound อนุกรมสลับ ไลบ์นิซ">
+        <p class="tf-n"><b><span class="fid">S21</span> Alternating series test</b> อนุกรมสลับ (ไลบ์นิซ)</p>
+        \[ \sum (-1)^{n+1} b_n,\ b_n \searrow 0 \Rightarrow \text{ลู่เข้า},\quad |S - S_N| \le b_{N+1} \]
+        <p class="tf-x">ความคลาดเคลื่อนไม่เกินพจน์แรกที่ตัดทิ้ง</p>
+      </div>
+      <div class="tf" id="S22" data-k="absolute convergence conditional convergence ลู่เข้าแบบสัมบูรณ์ มีเงื่อนไข">
+        <p class="tf-n"><b><span class="fid">S22</span> Absolute vs conditional</b> สัมบูรณ์กับมีเงื่อนไข</p>
+        \[ \textstyle\sum |a_n|\ \text{ลู่เข้า} \Rightarrow \sum a_n\ \text{ลู่เข้า (absolutely)} \]
+        <p class="tf-x">ลู่เข้าแต่ \(\sum|a_n|\) ลู่ออก = มีเงื่อนไข (สลับลำดับพจน์แล้วผลบวกเปลี่ยนได้)</p>
+      </div>
+    </div>
+    <figure class="lt-wide"><!--FIG:sq-integral-test--><svg class="mf" viewBox="0 0 720 260" role="img" aria-label="Integral test: harmonic series 1/n compared with area under 1/x (diverges) and p-series 1/n² bounded by 1 + ∫ 1/x² dx = 2 (converges) (การทดสอบด้วยปริพันธ์)"><rect class="mf-bg" x="12" y="30" width="330" height="190" rx="6"/><line class="mf-ax" x1="12" y1="220" x2="342" y2="220"/><rect class="mf-fill" x="27" y="54.8" width="37.5" height="165.2" rx="0"/><rect class="mf-dash" x="27" y="54.8" width="37.5" height="165.2"/><text class="mf-k" x="45.8" y="233" text-anchor="middle">1</text><rect class="mf-fill2" x="64.5" y="137.4" width="37.5" height="82.6" rx="0"/><rect class="mf-dash" x="64.5" y="137.4" width="37.5" height="82.6"/><text class="mf-k" x="83.2" y="233" text-anchor="middle">2</text><rect class="mf-fill" x="102" y="164.9" width="37.5" height="55.1" rx="0"/><rect class="mf-dash" x="102" y="164.9" width="37.5" height="55.1"/><text class="mf-k" x="120.8" y="233" text-anchor="middle">3</text><rect class="mf-fill2" x="139.5" y="178.7" width="37.5" height="41.3" rx="0"/><rect class="mf-dash" x="139.5" y="178.7" width="37.5" height="41.3"/><text class="mf-k" x="158.2" y="233" text-anchor="middle">4</text><rect class="mf-fill" x="177" y="187" width="37.5" height="33" rx="0"/><rect class="mf-dash" x="177" y="187" width="37.5" height="33"/><text class="mf-k" x="195.7" y="233" text-anchor="middle">5</text><rect class="mf-fill2" x="214.5" y="192.5" width="37.5" height="27.5" rx="0"/><rect class="mf-dash" x="214.5" y="192.5" width="37.5" height="27.5"/><text class="mf-k" x="233.2" y="233" text-anchor="middle">6</text><rect class="mf-fill" x="252" y="196.4" width="37.5" height="23.6" rx="0"/><rect class="mf-dash" x="252" y="196.4" width="37.5" height="23.6"/><text class="mf-k" x="270.8" y="233" text-anchor="middle">7</text><rect class="mf-fill2" x="289.5" y="199.3" width="37.5" height="20.7" rx="0"/><rect class="mf-dash" x="289.5" y="199.3" width="37.5" height="20.7"/><text class="mf-k" x="308.2" y="233" text-anchor="middle">8</text><path class="mf-sig" d="M20.9 22.5L22.5 32.2L24.1 41L25.7 49L27.4 56.3L29 63.1L30.6 69.3L32.2 75L33.8 80.3L35.5 85.2L37.1 89.8L38.7 94.1L40.3 98.1L42 101.9L43.6 105.4L45.2 108.8L46.8 111.9L48.4 114.9L50.1 117.7L51.7 120.4L53.3 122.9L54.9 125.3L56.6 127.6L58.2 129.8L59.8 131.9L61.4 133.8L63 135.7L64.7 137.6L66.3 139.3L67.9 141L69.5 142.6L71.1 144.1L72.8 145.6L74.4 147L76 148.4L77.6 149.7L79.3 151L80.9 152.2L82.5 153.4L84.1 154.5L85.7 155.6L87.4 156.7L89 157.7L90.6 158.7L92.2 159.7L93.9 160.6L95.5 161.5L97.1 162.4L98.7 163.3L100.3 164.1L102 164.9L103.6 165.7L105.2 166.5L106.8 167.2L108.4 167.9L110.1 168.6L111.7 169.3L113.3 170L114.9 170.6L116.6 171.2L118.2 171.9L119.8 172.5L121.4 173L123 173.6L124.7 174.2L126.3 174.7L127.9 175.2L129.5 175.8L131.2 176.3L132.8 176.8L134.4 177.2L136 177.7L137.6 178.2L139.3 178.6L140.9 179.1L142.5 179.5L144.1 179.9L145.8 180.3L147.4 180.8L149 181.2L150.6 181.5L152.2 181.9L153.9 182.3L155.5 182.7L157.1 183L158.7 183.4L160.3 183.7L162 184.1L163.6 184.4L165.2 184.7L166.8 185.1L168.5 185.4L170.1 185.7L171.7 186L173.3 186.3L174.9 186.6L176.6 186.9L178.2 187.2L179.8 187.4L181.4 187.7L183.1 188L184.7 188.3L186.3 188.5L187.9 188.8L189.5 189L191.2 189.3L192.8 189.5L194.4 189.8L196 190L197.7 190.2L199.3 190.5L200.9 190.7L202.5 190.9L204.1 191.1L205.8 191.4L207.4 191.6L209 191.8L210.6 192L212.2 192.2L213.9 192.4L215.5 192.6L217.1 192.8L218.7 193L220.4 193.2L222 193.3L223.6 193.5L225.2 193.7L226.8 193.9L228.5 194.1L230.1 194.2L231.7 194.4L233.3 194.6L235 194.8L236.6 194.9L238.2 195.1L239.8 195.2L241.4 195.4L243.1 195.6L244.7 195.7L246.3 195.9L247.9 196L249.6 196.2L251.2 196.3L252.8 196.5L254.4 196.6L256 196.8L257.7 196.9L259.3 197L260.9 197.2L262.5 197.3L264.1 197.4L265.8 197.6L267.4 197.7L269 197.8L270.6 198L272.3 198.1L273.9 198.2L275.5 198.3L277.1 198.5L278.7 198.6L280.4 198.7L282 198.8L283.6 198.9L285.2 199L286.9 199.2L288.5 199.3L290.1 199.4L291.7 199.5L293.3 199.6L295 199.7L296.6 199.8L298.2 199.9L299.8 200L301.5 200.1L303.1 200.2L304.7 200.3L306.3 200.4L307.9 200.5L309.6 200.6L311.2 200.7L312.8 200.8L314.4 200.9L316.1 201L317.7 201.1L319.3 201.2L320.9 201.3L322.5 201.4L324.2 201.5L325.8 201.6L327.4 201.7L329 201.8L330.6 201.8L332.3 201.9L333.9 202L335.5 202.1L337.1 202.2L338.8 202.3L340.4 202.3L342 202.4"/><text class="mf-h" x="14" y="22" text-anchor="start">Σ 1/n: แท่งอยู่เหนือเส้นโค้ง y = 1/x</text><text class="mf-l" x="336" y="48" text-anchor="end">Sₙ ≥ ∫₁ⁿ⁺¹ dx/x = ln(n+1) → ∞</text><rect class="mf-bg" x="376" y="30" width="330" height="190" rx="6"/><line class="mf-ax" x1="376" y1="220" x2="706" y2="220"/><rect class="mf-fill2" x="391" y="178.7" width="37.5" height="41.3" rx="0"/><rect class="mf-dash" x="391" y="178.7" width="37.5" height="41.3"/><text class="mf-k" x="409.8" y="233" text-anchor="middle">2</text><rect class="mf-fill" x="428.5" y="201.6" width="37.5" height="18.4" rx="0"/><rect class="mf-dash" x="428.5" y="201.6" width="37.5" height="18.4"/><text class="mf-k" x="447.2" y="233" text-anchor="middle">3</text><rect class="mf-fill2" x="466" y="209.7" width="37.5" height="10.3" rx="0"/><rect class="mf-dash" x="466" y="209.7" width="37.5" height="10.3"/><text class="mf-k" x="484.8" y="233" text-anchor="middle">4</text><rect class="mf-fill" x="503.5" y="213.4" width="37.5" height="6.6" rx="0"/><rect class="mf-dash" x="503.5" y="213.4" width="37.5" height="6.6"/><text class="mf-k" x="522.2" y="233" text-anchor="middle">5</text><rect class="mf-fill2" x="541" y="215.4" width="37.5" height="4.6" rx="0"/><rect class="mf-dash" x="541" y="215.4" width="37.5" height="4.6"/><text class="mf-k" x="559.8" y="233" text-anchor="middle">6</text><rect class="mf-fill" x="578.5" y="216.6" width="37.5" height="3.4" rx="0"/><rect class="mf-dash" x="578.5" y="216.6" width="37.5" height="3.4"/><text class="mf-k" x="597.2" y="233" text-anchor="middle">7</text><rect class="mf-fill2" x="616" y="217.4" width="37.5" height="2.6" rx="0"/><rect class="mf-dash" x="616" y="217.4" width="37.5" height="2.6"/><text class="mf-k" x="634.8" y="233" text-anchor="middle">8</text><path class="mf-sig" d="M388.1 26.1L389.7 43L391.4 57.9L393 70.9L394.6 82.5L396.2 92.7L397.8 101.8L399.5 110L401.1 117.4L402.7 124.1L404.3 130.1L406 135.6L407.6 140.5L409.2 145.1L410.8 149.3L412.4 153.1L414.1 156.7L415.7 159.9L417.3 162.9L418.9 165.7L420.6 168.3L422.2 170.7L423.8 173L425.4 175.1L427 177L428.7 178.9L430.3 180.6L431.9 182.2L433.5 183.7L435.1 185.1L436.8 186.5L438.4 187.8L440 189L441.6 190.1L443.3 191.2L444.9 192.2L446.5 193.1L448.1 194.1L449.7 194.9L451.4 195.7L453 196.5L454.6 197.3L456.2 198L457.9 198.7L459.5 199.3L461.1 199.9L462.7 200.5L464.3 201.1L466 201.6L467.6 202.1L469.2 202.6L470.8 203.1L472.4 203.6L474.1 204L475.7 204.4L477.3 204.8L478.9 205.2L480.6 205.6L482.2 206L483.8 206.3L485.4 206.7L487 207L488.7 207.3L490.3 207.6L491.9 207.9L493.5 208.2L495.2 208.4L496.8 208.7L498.4 208.9L500 209.2L501.6 209.4L503.3 209.6L504.9 209.9L506.5 210.1L508.1 210.3L509.8 210.5L511.4 210.7L513 210.9L514.6 211L516.2 211.2L517.9 211.4L519.5 211.6L521.1 211.7L522.7 211.9L524.4 212L526 212.2L527.6 212.3L529.2 212.5L530.8 212.6L532.5 212.7L534.1 212.9L535.7 213L537.3 213.1L538.9 213.2L540.6 213.4L542.2 213.5L543.8 213.6L545.4 213.7L547.1 213.8L548.7 213.9L550.3 214L551.9 214.1L553.5 214.2L555.2 214.3L556.8 214.4L558.4 214.5L560 214.6L561.7 214.6L563.3 214.7L564.9 214.8L566.5 214.9L568.1 215L569.8 215L571.4 215.1L573 215.2L574.6 215.2L576.2 215.3L577.9 215.4L579.5 215.5L581.1 215.5L582.7 215.6L584.4 215.6L586 215.7L587.6 215.8L589.2 215.8L590.8 215.9L592.5 215.9L594.1 216L595.7 216L597.3 216.1L599 216.1L600.6 216.2L602.2 216.2L603.8 216.3L605.4 216.3L607.1 216.4L608.7 216.4L610.3 216.5L611.9 216.5L613.6 216.6L615.2 216.6L616.8 216.6L618.4 216.7L620 216.7L621.7 216.8L623.3 216.8L624.9 216.8L626.5 216.9L628.1 216.9L629.8 217L631.4 217L633 217L634.6 217.1L636.3 217.1L637.9 217.1L639.5 217.2L641.1 217.2L642.7 217.2L644.4 217.3L646 217.3L647.6 217.3L649.2 217.3L650.9 217.4L652.5 217.4L654.1 217.4L655.7 217.5L657.3 217.5L659 217.5L660.6 217.5L662.2 217.6L663.8 217.6L665.5 217.6L667.1 217.6L668.7 217.7L670.3 217.7L671.9 217.7L673.6 217.7L675.2 217.8L676.8 217.8L678.4 217.8L680.1 217.8L681.7 217.8L683.3 217.9L684.9 217.9L686.5 217.9L688.2 217.9L689.8 217.9L691.4 218L693 218L694.6 218L696.3 218L697.9 218L699.5 218.1L701.1 218.1L702.8 218.1L704.4 218.1L706 218.1"/><text class="mf-h" x="378" y="22" text-anchor="start">Σ 1/n²: แท่ง (n ≥ 2) อยู่ใต้เส้นโค้ง y = 1/x²</text><text class="mf-l" x="700" y="48" text-anchor="end">Sₙ ≤ 1 + ∫₁^∞ dx/x² = 2</text></svg><!--/FIG--><figcaption>ทำไมการทดสอบด้วยปริพันธ์ใช้ได้: ผลบวกคือพื้นที่แท่งกว้าง 1 หน่วย ซ้าย: แท่งของ \(\sum 1/n\) อยู่เหนือ \(y = 1/x\) และพื้นที่ใต้กราฟโตแบบ ln ไม่มีขอบเขต ขวา: แท่งของ \(\sum 1/n^2\) (ตั้งแต่ n = 2) อยู่ใต้ \(y = 1/x^2\) ซึ่งมีพื้นที่จำกัด</figcaption></figure>
+    <h3>ผังเลือกการทดสอบ (เรียงตามลำดับที่ควรลอง)</h3>
+    <div class="test-flow">
+      <div><b>① พจน์เข้าใกล้ 0 ไหม</b>ไม่ → ลู่ออกทันที (S15) · ใช่ → ไปต่อ</div>
+      <div><b>② รูปที่รู้คำตอบ</b>เรขาคณิต \(ar^n\) (S7) · อนุกรม p \(1/n^p\) (S16) · กล้องส่องทางไกล (S10)</div>
+      <div><b>③ มี \(n!\) หรือ \(c^n\)</b>ใช้ ratio test (S19) · ทั้งก้อนยกกำลัง n ใช้ root test (S20)</div>
+      <div><b>④ เศษส่วนพหุนาม รากที่สอง</b>limit comparison กับ \(1/n^p\) โดย p = ดีกรีส่วน − ดีกรีเศษ (S18)</div>
+      <div><b>⑤ เครื่องหมายสลับ</b>ทดสอบ \(\sum|a_n|\) ก่อน ถ้าลู่ออกใช้อนุกรมสลับ (S21, S22)</div>
+      <div><b>⑥ f(n) อินทิเกรตได้</b>ทดสอบด้วยปริพันธ์ (S17) เช่น \(1/(n\ln n)\)</div>
+    </div>
+    <p>ตัวทดสอบด้านล่างมีตัวอย่าง 14 อนุกรมพร้อมเหตุผลแบบเต็ม และพิมพ์อนุกรมของตัวเองได้ เส้นสีฟ้าคือผลบวกย่อย \(S_n\) จุดสีส้มคือพจน์ \(a_n\) สังเกตว่าอนุกรมที่ลู่ออกช้า ๆ อย่างฮาร์มอนิกและ \(\sum 1/(n\ln n)\) ดูเหมือนนิ่งบนหน้าจอ นี่คือเหตุผลที่ต้องมีการทดสอบทางคณิตศาสตร์ ไม่ใช่แค่บวกด้วยคอมพิวเตอร์</p>
+    <div class="sq-test" id="seriesTest" data-preset="harmonic"></div>
+    <div class="wx" id="ex-s8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-8 · เลือกการทดสอบให้ถูก</span><h3>ทดสอบการลู่เข้า: (ก) \(\sum \dfrac{n}{2^n}\) (ข) \(\sum \dfrac{1}{n^2 + 1}\) (ค) \(\sum \dfrac{n}{n + 1}\) (ง) \(\sum \dfrac{n!}{n^n}\) (จ) \(\sum \dfrac{3n + 5}{n^3 - 2}\ (n \ge 2)\)</h3><button type="button" class="wx-btn calc-go" data-sqt="n2n">เปิดในตัวทดสอบ</button></div>
+      <ol class="steps">
+        <li><p>(ก) มี \(2^n\) ใช้ ratio test: \(\dfrac{a_{n+1}}{a_n} = \dfrac{n + 1}{2n} \to \tfrac12 &lt; 1\) ลู่เข้า (ผลบวก = 2)</p></li>
+        <li><p>(ข) \(\dfrac{1}{n^2 + 1} &lt; \dfrac{1}{n^2}\) และ \(\sum 1/n^2\) ลู่เข้า จึงลู่เข้าโดยการเปรียบเทียบ</p></li>
+        <li><p>(ค) \(\dfrac{n}{n + 1} \to 1 \ne 0\) ลู่ออกด้วย nth-term test ไม่ต้องทำอย่างอื่น</p></li>
+        <li><p>(ง) ratio test: \(\dfrac{(n+1)!}{(n+1)^{n+1}}\cdot\dfrac{n^n}{n!} = \left(\dfrac{n}{n+1}\right)^n = \dfrac{1}{(1 + 1/n)^n} \to \dfrac1e &lt; 1\) ลู่เข้า</p></li>
+        <li><p>(จ) ดีกรีส่วน − ดีกรีเศษ = 3 − 1 = 2 เทียบกับ \(1/n^2\): \(\lim \dfrac{(3n + 5)/(n^3 - 2)}{1/n^2} = \lim\dfrac{3n^3 + 5n^2}{n^3 - 2} = 3 > 0\) และ \(\sum 1/n^2\) ลู่เข้า จึงลู่เข้า</p></li>
+      </ol>
+      <p class="answer">(ก) ลู่เข้า (ข) ลู่เข้า (ค) ลู่ออก (ง) ลู่เข้า (จ) ลู่เข้า</p>
+    </div>
+    <div class="wx" id="ex-s9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-9 · อนุกรมสลับและขอบเขตความคลาดเคลื่อน</span><h3>อนุกรม \(1 - \tfrac12 + \tfrac13 - \tfrac14 + \cdots\) ลู่เข้าแบบใด ถ้าบวก 10 พจน์ ความคลาดเคลื่อนไม่เกินเท่าไร</h3><button type="button" class="wx-btn calc-go" data-sqt="alt">เปิดในตัวทดสอบ</button></div>
+      <ol class="steps">
+        <li><p>\(b_n = 1/n\) ลดลงและเข้าใกล้ 0 จึงลู่เข้า (S21)</p></li>
+        <li><p>\(\sum |a_n| = \sum 1/n\) ลู่ออก จึงลู่เข้าแบบมีเงื่อนไข (S22)</p></li>
+        <li><p>ผลบวกจริงคือ \(\ln 2 \approx 0.693147\) (จากอนุกรมของ \(\ln(1 + x)\) ที่ \(x = 1\)) และ \(S_{10} \approx 0.645635\)</p></li>
+        <li><p>ขอบเขต: \(|S - S_{10}| \le b_{11} = \tfrac{1}{11} \approx 0.0909\) ค่าจริงคลาด \(0.0475\) อยู่ในขอบเขต ✓</p></li>
+      </ol>
+      <p class="answer">ลู่เข้าแบบมีเงื่อนไข ความคลาดเคลื่อนหลัง 10 พจน์ไม่เกิน \(1/11\) (ลู่เข้าช้ามาก: ต้องใช้ราวครึ่งล้านพจน์จึงได้ทศนิยม 6 ตำแหน่ง)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="power-series">
+    <h2 id="power-series">อนุกรมกำลังและรัศมีการลู่เข้า (Power Series) <span class="lv lv-i">กลาง</span></h2>
+    <p>อนุกรมกำลังคือ “พหุนามที่ยาวไม่สิ้นสุด” \(\sum c_n (x - a)^n\) มันลู่เข้าเสมอในช่วงที่สมมาตรรอบ \(a\) ความกว้างครึ่งหนึ่งของช่วงนี้คือ<b>รัศมีการลู่เข้า (radius of convergence)</b> \(R\) หาได้ด้วย ratio test ส่วนที่ปลายช่วง \(x = a \pm R\) ต้องทดสอบแยกเสมอ ภายในช่วงเราหาอนุพันธ์และอินทิเกรตทีละพจน์ได้ จึงสร้างอนุกรมใหม่จากอนุกรมเรขาคณิตได้มากมาย</p>
+    <div class="tf-grid">
+      <div class="tf" id="S23" data-k="power series centered at a definition อนุกรมกำลัง">
+        <p class="tf-n"><b><span class="fid">S23</span> Power series</b> อนุกรมกำลัง</p>
+        \[ \sum_{n=0}^{\infty} c_n (x - a)^n = c_0 + c_1(x - a) + c_2(x - a)^2 + \cdots \]
+      </div>
+      <div class="tf" id="S24" data-k="radius of convergence ratio interval endpoints รัศมีการลู่เข้า ช่วงลู่เข้า">
+        <p class="tf-n"><b><span class="fid">S24</span> Radius of convergence</b> รัศมีการลู่เข้า</p>
+        \[ R = \lim_{n\to\infty}\left|\frac{c_n}{c_{n+1}}\right|,\qquad |x - a| &lt; R\ \text{ลู่เข้า},\ |x - a| > R\ \text{ลู่ออก} \]
+        <p class="tf-x">\(R = \infty\): ลู่เข้าทุก x · ปลายช่วงทดสอบแยก</p>
+      </div>
+      <div class="tf wide" id="S25" data-k="term by term differentiation integration power series derivative integral หาอนุพันธ์ทีละพจน์">
+        <p class="tf-n"><b><span class="fid">S25</span> Term-by-term calculus</b> หาอนุพันธ์และอินทิเกรตทีละพจน์</p>
+        \[ \frac{d}{dx}\sum c_n x^n = \sum n c_n x^{n-1},\qquad \int \sum c_n x^n\,dx = C + \sum \frac{c_n}{n+1}x^{n+1}\quad (R\ \text{เท่าเดิม}) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-s10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-10 · ช่วงลู่เข้าและอนุกรมใหม่จากเรขาคณิต</span><h3>(ก) หาช่วงลู่เข้าของ \(\sum_{n=1}^{\infty} \dfrac{x^n}{n}\) (ข) หาอนุกรมของ \(\ln(1 + x)\) และ \(\arctan x\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(R = \lim \dfrac{1/n}{1/(n+1)} = 1\) ลู่เข้าเมื่อ \(|x| &lt; 1\)</p></li>
+        <li><p>ปลายช่วง: \(x = 1\) ได้ \(\sum 1/n\) ลู่ออก · \(x = -1\) ได้ \(\sum (-1)^n/n\) ลู่เข้า (อนุกรมสลับ) ช่วงลู่เข้าคือ \([-1, 1)\)</p></li>
+        <li><p>(ข) เริ่มจาก \(\dfrac{1}{1 + t} = 1 - t + t^2 - \cdots\) (เรขาคณิต \(r = -t\)) อินทิเกรตจาก 0 ถึง x: \(\ln(1 + x) = x - \dfrac{x^2}{2} + \dfrac{x^3}{3} - \cdots\)</p></li>
+        <li><p>แทน \(t\) ด้วย \(t^2\): \(\dfrac{1}{1 + t^2} = 1 - t^2 + t^4 - \cdots\) อินทิเกรต: \(\arctan x = x - \dfrac{x^3}{3} + \dfrac{x^5}{5} - \cdots\) ที่ \(x = 1\) ได้สูตรของไลบ์นิซ \(\tfrac{\pi}{4} = 1 - \tfrac13 + \tfrac15 - \cdots\)</p></li>
+      </ol>
+      <p class="answer">(ก) \([-1, 1)\) และอนุกรมนี้คือ \(-\ln(1 - x)\) (ข) ทั้งสองมี \(R = 1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="taylor">
+    <h2 id="taylor">อนุกรมเทย์เลอร์และแมคลอริน (Taylor &amp; Maclaurin Series) <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าอยากได้พหุนามที่ “เหมือน” \(f(x)\) ที่สุดรอบจุด \(a\) ให้บังคับค่าฟังก์ชันและอนุพันธ์ทุกอันดับที่ \(a\) ให้ตรงกัน ผลคือสัมประสิทธิ์ \(c_k = f^{(k)}(a)/k!\) อนุกรมที่ได้เรียกว่า<b>อนุกรมเทย์เลอร์</b> และเมื่อ \(a = 0\) เรียกว่า<b>อนุกรมแมคลอริน</b> พหุนามที่ตัดไว้ \(n\) พจน์ \(P_n(x)\) คือสิ่งที่วิศวกรใช้จริง พร้อม<b>เศษเหลือ (remainder)</b> ที่บอกว่าคลาดเคลื่อนไม่เกินเท่าไร ต้องใช้<a href="/learn/differential-calculus/">อนุพันธ์</a>จากบทที่ 4 (ย้อนมาอ่านส่วนนี้หลังเรียนอนุพันธ์ได้)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S26" data-k="taylor series formula coefficients maclaurin อนุกรมเทย์เลอร์ แมคลอริน สูตร">
+        <p class="tf-n"><b><span class="fid">S26</span> Taylor series</b> อนุกรมเทย์เลอร์</p>
+        \[ f(x) = \sum_{k=0}^{\infty} \frac{f^{(k)}(a)}{k!}(x - a)^k = f(a) + f'(a)(x - a) + \frac{f''(a)}{2!}(x - a)^2 + \cdots \]
+        <p class="tf-x">\(a = 0\): อนุกรมแมคลอริน · \(P_1(x) = f(a) + f'(a)(x - a)\) คือเส้นสัมผัส (linearization)</p>
+      </div>
+      <div class="tf wide" id="S27" data-k="maclaurin series table e^x sin cos ln(1+x) binomial 1/(1-x) arctan ตารางอนุกรมแมคลอริน">
+        <p class="tf-n"><b><span class="fid">S27</span> Maclaurin series table</b> ตารางอนุกรมแมคลอรินที่ใช้บ่อย</p>
+        \[ \begin{aligned} e^x &= 1 + x + \tfrac{x^2}{2!} + \tfrac{x^3}{3!} + \cdots & (R = \infty) \\ \sin x &= x - \tfrac{x^3}{3!} + \tfrac{x^5}{5!} - \cdots & (R = \infty) \\ \cos x &= 1 - \tfrac{x^2}{2!} + \tfrac{x^4}{4!} - \cdots & (R = \infty) \\ \ln(1 + x) &= x - \tfrac{x^2}{2} + \tfrac{x^3}{3} - \cdots & (-1 &lt; x \le 1) \\ (1 + x)^{\alpha} &= 1 + \alpha x + \tfrac{\alpha(\alpha - 1)}{2!}x^2 + \cdots & (|x| &lt; 1) \\ \tfrac{1}{1 - x} &= 1 + x + x^2 + x^3 + \cdots & (|x| &lt; 1) \end{aligned} \]
+      </div>
+      <div class="tf wide" id="S28" data-k="taylor remainder lagrange error bound เศษเหลือ ลากรองจ์ ขอบเขตความคลาดเคลื่อน">
+        <p class="tf-n"><b><span class="fid">S28</span> Lagrange remainder</b> เศษเหลือแบบลากรองจ์</p>
+        \[ R_n(x) = f(x) - P_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}(x - a)^{n+1},\quad |R_n(x)| \le \frac{M\,|x - a|^{n+1}}{(n+1)!} \]
+        <p class="tf-x">\(c\) อยู่ระหว่าง \(a\) กับ \(x\) · \(M = \max|f^{(n+1)}|\) บนช่วงนั้น</p>
+      </div>
+    </div>
+    <figure class="lt-wide"><!--FIG:sq-taylor-sin--><svg class="mf" viewBox="0 0 720 280" role="img" aria-label="Maclaurin polynomials of sin x: P1 = x, P3, P5, P7 approaching sin x near x = 0 (อนุกรมเทย์เลอร์ของ sin x)"><rect class="mf-bg" x="14" y="26" width="692" height="230" rx="6"/><line class="mf-ax" x1="14" y1="141" x2="706" y2="141"/><line class="mf-ax" x1="360" y1="26" x2="360" y2="256"/><clipPath id="g3"><rect x="14" y="26" width="692" height="230"/></clipPath><g clip-path="url(#g3)"><path class="mf-ink" d="M14 175.3L16.3 173.5L18.6 171.5L20.9 169.5L23.2 167.4L25.5 165.3L27.8 163.1L30.1 160.9L32.5 158.6L34.8 156.3L37.1 153.9L39.4 151.6L41.7 149.2L44 146.7L46.3 144.3L48.6 141.9L50.9 139.4L53.2 137L55.5 134.6L57.8 132.2L60.1 129.8L62.4 127.4L64.7 125.1L67.1 122.8L69.4 120.5L71.7 118.3L74 116.1L76.3 114L78.6 111.9L80.9 109.9L83.2 108L85.5 106.1L87.8 104.4L90.1 102.7L92.4 101.1L94.7 99.5L97 98.1L99.3 96.7L101.7 95.5L104 94.3L106.3 93.3L108.6 92.3L110.9 91.5L113.2 90.8L115.5 90.2L117.8 89.6L120.1 89.2L122.4 89L124.7 88.8L127 88.7L129.3 88.8L131.6 89L133.9 89.2L136.3 89.6L138.6 90.1L140.9 90.7L143.2 91.5L145.5 92.3L147.8 93.3L150.1 94.3L152.4 95.4L154.7 96.7L157 98L159.3 99.5L161.6 101L163.9 102.6L166.2 104.3L168.5 106.1L170.9 107.9L173.2 109.8L175.5 111.8L177.8 113.9L180.1 116L182.4 118.2L184.7 120.4L187 122.7L189.3 125L191.6 127.3L193.9 129.7L196.2 132.1L198.5 134.5L200.8 136.9L203.1 139.3L205.5 141.8L207.8 144.2L210.1 146.6L212.4 149.1L214.7 151.5L217 153.8L219.3 156.2L221.6 158.5L223.9 160.8L226.2 163L228.5 165.2L230.8 167.3L233.1 169.4L235.4 171.4L237.7 173.4L240.1 175.3L242.4 177.1L244.7 178.8L247 180.4L249.3 182L251.6 183.5L253.9 184.8L256.2 186.1L258.5 187.3L260.8 188.4L263.1 189.4L265.4 190.2L267.7 191L270 191.7L272.3 192.2L274.7 192.6L277 193L279.3 193.2L281.6 193.3L283.9 193.2L286.2 193.1L288.5 192.9L290.8 192.5L293.1 192L295.4 191.5L297.7 190.8L300 190L302.3 189.1L304.6 188.1L306.9 186.9L309.3 185.7L311.6 184.4L313.9 183L316.2 181.5L318.5 179.9L320.8 178.3L323.1 176.5L325.4 174.7L327.7 172.8L330 170.8L332.3 168.8L334.6 166.7L336.9 164.5L339.2 162.3L341.5 160.1L343.9 157.8L346.2 155.4L348.5 153.1L350.8 150.7L353.1 148.3L355.4 145.9L357.7 143.4L360 141L362.3 138.6L364.6 136.1L366.9 133.7L369.2 131.3L371.5 128.9L373.8 126.6L376.1 124.2L378.5 121.9L380.8 119.7L383.1 117.5L385.4 115.3L387.7 113.2L390 111.2L392.3 109.2L394.6 107.3L396.9 105.5L399.2 103.7L401.5 102.1L403.8 100.5L406.1 99L408.4 97.6L410.7 96.3L413.1 95.1L415.4 93.9L417.7 92.9L420 92L422.3 91.2L424.6 90.5L426.9 90L429.2 89.5L431.5 89.1L433.8 88.9L436.1 88.8L438.4 88.7L440.7 88.8L443 89L445.3 89.4L447.7 89.8L450 90.3L452.3 91L454.6 91.8L456.9 92.6L459.2 93.6L461.5 94.7L463.8 95.9L466.1 97.2L468.4 98.5L470.7 100L473 101.6L475.3 103.2L477.6 104.9L479.9 106.7L482.3 108.6L484.6 110.6L486.9 112.6L489.2 114.7L491.5 116.8L493.8 119L496.1 121.2L498.4 123.5L500.7 125.8L503 128.2L505.3 130.5L507.6 132.9L509.9 135.4L512.2 137.8L514.5 140.2L516.9 142.7L519.2 145.1L521.5 147.5L523.8 149.9L526.1 152.3L528.4 154.7L530.7 157L533 159.3L535.3 161.6L537.6 163.8L539.9 166L542.2 168.1L544.5 170.2L546.8 172.2L549.1 174.1L551.5 175.9L553.8 177.7L556.1 179.4L558.4 181L560.7 182.5L563 184L565.3 185.3L567.6 186.6L569.9 187.7L572.2 188.7L574.5 189.7L576.8 190.5L579.1 191.3L581.4 191.9L583.7 192.4L586.1 192.8L588.4 193L590.7 193.2L593 193.3L595.3 193.2L597.6 193L599.9 192.8L602.2 192.4L604.5 191.8L606.8 191.2L609.1 190.5L611.4 189.7L613.7 188.7L616 187.7L618.3 186.5L620.7 185.3L623 183.9L625.3 182.5L627.6 180.9L629.9 179.3L632.2 177.6L634.5 175.9L636.8 174L639.1 172.1L641.4 170.1L643.7 168L646 165.9L648.3 163.7L650.6 161.5L652.9 159.2L655.3 156.9L657.6 154.6L659.9 152.2L662.2 149.8L664.5 147.4L666.8 145L669.1 142.6L671.4 140.1L673.7 137.7L676 135.3L678.3 132.8L680.6 130.4L682.9 128.1L685.2 125.7L687.5 123.4L689.9 121.1L692.2 118.9L694.5 116.7L696.8 114.6L699.1 112.5L701.4 110.5L703.7 108.5L706 106.7"/><path class="mf-s1" d="M14 486L16.3 486L18.6 486L20.9 486L23.2 486L25.5 486L27.8 486L30.1 486L32.5 486L34.8 485L37.1 482.5L39.4 480.1L41.7 477.6L44 475.2L46.3 472.8L48.6 470.3L50.9 467.9L53.2 465.4L55.5 463L57.8 460.6L60.1 458.1L62.4 455.7L64.7 453.2L67.1 450.8L69.4 448.4L71.7 445.9L74 443.5L76.3 441L78.6 438.6L80.9 436.2L83.2 433.7L85.5 431.3L87.8 428.8L90.1 426.4L92.4 424L94.7 421.5L97 419.1L99.3 416.7L101.7 414.2L104 411.8L106.3 409.3L108.6 406.9L110.9 404.5L113.2 402L115.5 399.6L117.8 397.1L120.1 394.7L122.4 392.3L124.7 389.8L127 387.4L129.3 384.9L131.6 382.5L133.9 380.1L136.3 377.6L138.6 375.2L140.9 372.7L143.2 370.3L145.5 367.9L147.8 365.4L150.1 363L152.4 360.5L154.7 358.1L157 355.7L159.3 353.2L161.6 350.8L163.9 348.3L166.2 345.9L168.5 343.5L170.9 341L173.2 338.6L175.5 336.2L177.8 333.7L180.1 331.3L182.4 328.8L184.7 326.4L187 324L189.3 321.5L191.6 319.1L193.9 316.6L196.2 314.2L198.5 311.8L200.8 309.3L203.1 306.9L205.5 304.4L207.8 302L210.1 299.6L212.4 297.1L214.7 294.7L217 292.2L219.3 289.8L221.6 287.4L223.9 284.9L226.2 282.5L228.5 280L230.8 277.6L233.1 275.2L235.4 272.7L237.7 270.3L240.1 267.8L242.4 265.4L244.7 263L247 260.5L249.3 258.1L251.6 255.7L253.9 253.2L256.2 250.8L258.5 248.3L260.8 245.9L263.1 243.5L265.4 241L267.7 238.6L270 236.1L272.3 233.7L274.7 231.3L277 228.8L279.3 226.4L281.6 223.9L283.9 221.5L286.2 219.1L288.5 216.6L290.8 214.2L293.1 211.7L295.4 209.3L297.7 206.9L300 204.4L302.3 202L304.6 199.5L306.9 197.1L309.3 194.7L311.6 192.2L313.9 189.8L316.2 187.3L318.5 184.9L320.8 182.5L323.1 180L325.4 177.6L327.7 175.2L330 172.7L332.3 170.3L334.6 167.8L336.9 165.4L339.2 163L341.5 160.5L343.9 158.1L346.2 155.6L348.5 153.2L350.8 150.8L353.1 148.3L355.4 145.9L357.7 143.4L360 141L362.3 138.6L364.6 136.1L366.9 133.7L369.2 131.2L371.5 128.8L373.8 126.4L376.1 123.9L378.5 121.5L380.8 119L383.1 116.6L385.4 114.2L387.7 111.7L390 109.3L392.3 106.8L394.6 104.4L396.9 102L399.2 99.5L401.5 97.1L403.8 94.7L406.1 92.2L408.4 89.8L410.7 87.3L413.1 84.9L415.4 82.5L417.7 80L420 77.6L422.3 75.1L424.6 72.7L426.9 70.3L429.2 67.8L431.5 65.4L433.8 62.9L436.1 60.5L438.4 58.1L440.7 55.6L443 53.2L445.3 50.7L447.7 48.3L450 45.9L452.3 43.4L454.6 41L456.9 38.5L459.2 36.1L461.5 33.7L463.8 31.2L466.1 28.8L468.4 26.3L470.7 23.9L473 21.5L475.3 19L477.6 16.6L479.9 14.2L482.3 11.7L484.6 9.3L486.9 6.8L489.2 4.4L491.5 2L493.8 -0.5L496.1 -2.9L498.4 -5.4L500.7 -7.8L503 -10.2L505.3 -12.7L507.6 -15.1L509.9 -17.6L512.2 -20L514.5 -22.4L516.9 -24.9L519.2 -27.3L521.5 -29.8L523.8 -32.2L526.1 -34.6L528.4 -37.1L530.7 -39.5L533 -42L535.3 -44.4L537.6 -46.8L539.9 -49.3L542.2 -51.7L544.5 -54.2L546.8 -56.6L549.1 -59L551.5 -61.5L553.8 -63.9L556.1 -66.3L558.4 -68.8L560.7 -71.2L563 -73.7L565.3 -76.1L567.6 -78.5L569.9 -81L572.2 -83.4L574.5 -85.9L576.8 -88.3L579.1 -90.7L581.4 -93.2L583.7 -95.6L586.1 -98.1L588.4 -100.5L590.7 -102.9L593 -105.4L595.3 -107.8L597.6 -110.3L599.9 -112.7L602.2 -115.1L604.5 -117.6L606.8 -120L609.1 -122.5L611.4 -124.9L613.7 -127.3L616 -129.8L618.3 -132.2L620.7 -134.7L623 -137.1L625.3 -139.5L627.6 -142L629.9 -144.4L632.2 -146.8L634.5 -149.3L636.8 -151.7L639.1 -154.2L641.4 -156.6L643.7 -159L646 -161.5L648.3 -163.9L650.6 -166.4L652.9 -168.8L655.3 -171.2L657.6 -173.7L659.9 -176.1L662.2 -178.6L664.5 -181L666.8 -183.4L669.1 -185.9L671.4 -188.3L673.7 -190.8L676 -193.2L678.3 -195.6L680.6 -198.1L682.9 -200.5L685.2 -203L687.5 -204L689.9 -204L692.2 -204L694.5 -204L696.8 -204L699.1 -204L701.4 -204L703.7 -204L706 -204"/><path class="mf-s2" d="M14 -204L16.3 -204L18.6 -204L20.9 -204L23.2 -204L25.5 -204L27.8 -204L30.1 -204L32.5 -204L34.8 -204L37.1 -204L39.4 -204L41.7 -204L44 -204L46.3 -204L48.6 -204L50.9 -204L53.2 -204L55.5 -204L57.8 -204L60.1 -204L62.4 -204L64.7 -204L67.1 -204L69.4 -204L71.7 -204L74 -204L76.3 -204L78.6 -204L80.9 -204L83.2 -204L85.5 -204L87.8 -204L90.1 -204L92.4 -204L94.7 -204L97 -204L99.3 -204L101.7 -204L104 -204L106.3 -204L108.6 -204L110.9 -204L113.2 -204L115.5 -204L117.8 -204L120.1 -204L122.4 -204L124.7 -204L127 -204L129.3 -204L131.6 -204L133.9 -204L136.3 -204L138.6 -204L140.9 -204L143.2 -204L145.5 -204L147.8 -204L150.1 -204L152.4 -204L154.7 -204L157 -204L159.3 -204L161.6 -204L163.9 -195.4L166.2 -178.9L168.5 -162.8L170.9 -147.2L173.2 -132L175.5 -117.2L177.8 -102.8L180.1 -88.9L182.4 -75.4L184.7 -62.3L187 -49.6L189.3 -37.3L191.6 -25.4L193.9 -13.8L196.2 -2.7L198.5 8.1L200.8 18.5L203.1 28.5L205.5 38.1L207.8 47.4L210.1 56.4L212.4 65L214.7 73.3L217 81.2L219.3 88.8L221.6 96.1L223.9 103.1L226.2 109.7L228.5 116.1L230.8 122.1L233.1 127.9L235.4 133.3L237.7 138.5L240.1 143.4L242.4 148L244.7 152.3L247 156.4L249.3 160.2L251.6 163.7L253.9 167L256.2 170.1L258.5 172.9L260.8 175.5L263.1 177.9L265.4 180L267.7 181.9L270 183.6L272.3 185.1L274.7 186.4L277 187.5L279.3 188.4L281.6 189.1L283.9 189.7L286.2 190L288.5 190.2L290.8 190.3L293.1 190.1L295.4 189.9L297.7 189.4L300 188.9L302.3 188.2L304.6 187.3L306.9 186.3L309.3 185.2L311.6 184L313.9 182.7L316.2 181.3L318.5 179.7L320.8 178.1L323.1 176.4L325.4 174.6L327.7 172.7L330 170.8L332.3 168.7L334.6 166.7L336.9 164.5L339.2 162.3L341.5 160.1L343.9 157.8L346.2 155.4L348.5 153.1L350.8 150.7L353.1 148.3L355.4 145.9L357.7 143.4L360 141L362.3 138.6L364.6 136.1L366.9 133.7L369.2 131.3L371.5 128.9L373.8 126.6L376.1 124.2L378.5 121.9L380.8 119.7L383.1 117.5L385.4 115.3L387.7 113.3L390 111.2L392.3 109.3L394.6 107.4L396.9 105.6L399.2 103.9L401.5 102.3L403.8 100.7L406.1 99.3L408.4 98L410.7 96.8L413.1 95.7L415.4 94.7L417.7 93.8L420 93.1L422.3 92.6L424.6 92.1L426.9 91.9L429.2 91.7L431.5 91.8L433.8 92L436.1 92.3L438.4 92.9L440.7 93.6L443 94.5L445.3 95.6L447.7 96.9L450 98.4L452.3 100.1L454.6 102L456.9 104.1L459.2 106.5L461.5 109.1L463.8 111.9L466.1 115L468.4 118.3L470.7 121.8L473 125.6L475.3 129.7L477.6 134L479.9 138.6L482.3 143.5L484.6 148.7L486.9 154.1L489.2 159.9L491.5 165.9L493.8 172.3L496.1 178.9L498.4 185.9L500.7 193.2L503 200.8L505.3 208.7L507.6 217L509.9 225.6L512.2 234.6L514.5 243.9L516.9 253.5L519.2 263.5L521.5 273.9L523.8 284.7L526.1 295.8L528.4 307.4L530.7 319.3L533 331.6L535.3 344.3L537.6 357.4L539.9 370.9L542.2 384.8L544.5 399.2L546.8 414L549.1 429.2L551.5 444.8L553.8 460.9L556.1 477.4L558.4 486L560.7 486L563 486L565.3 486L567.6 486L569.9 486L572.2 486L574.5 486L576.8 486L579.1 486L581.4 486L583.7 486L586.1 486L588.4 486L590.7 486L593 486L595.3 486L597.6 486L599.9 486L602.2 486L604.5 486L606.8 486L609.1 486L611.4 486L613.7 486L616 486L618.3 486L620.7 486L623 486L625.3 486L627.6 486L629.9 486L632.2 486L634.5 486L636.8 486L639.1 486L641.4 486L643.7 486L646 486L648.3 486L650.6 486L652.9 486L655.3 486L657.6 486L659.9 486L662.2 486L664.5 486L666.8 486L669.1 486L671.4 486L673.7 486L676 486L678.3 486L680.6 486L682.9 486L685.2 486L687.5 486L689.9 486L692.2 486L694.5 486L696.8 486L699.1 486L701.4 486L703.7 486L706 486"/><path class="mf-s3" d="M14 486L16.3 486L18.6 486L20.9 486L23.2 486L25.5 486L27.8 486L30.1 486L32.5 486L34.8 486L37.1 486L39.4 486L41.7 486L44 486L46.3 486L48.6 486L50.9 486L53.2 486L55.5 486L57.8 486L60.1 486L62.4 486L64.7 486L67.1 486L69.4 486L71.7 486L74 486L76.3 486L78.6 486L80.9 486L83.2 486L85.5 486L87.8 486L90.1 486L92.4 486L94.7 486L97 486L99.3 486L101.7 486L104 486L106.3 486L108.6 486L110.9 486L113.2 486L115.5 486L117.8 486L120.1 486L122.4 486L124.7 486L127 486L129.3 463.6L131.6 440.2L133.9 418.2L136.3 397.4L138.6 377.9L140.9 359.6L143.2 342.5L145.5 326.4L147.8 311.4L150.1 297.4L152.4 284.4L154.7 272.3L157 261.1L159.3 250.7L161.6 241.2L163.9 232.4L166.2 224.3L168.5 217L170.9 210.3L173.2 204.2L175.5 198.7L177.8 193.8L180.1 189.5L182.4 185.6L184.7 182.2L187 179.2L189.3 176.7L191.6 174.5L193.9 172.7L196.2 171.2L198.5 170.1L200.8 169.2L203.1 168.7L205.5 168.3L207.8 168.2L210.1 168.3L212.4 168.5L214.7 169L217 169.6L219.3 170.3L221.6 171.1L223.9 172L226.2 173L228.5 174.1L230.8 175.2L233.1 176.4L235.4 177.6L237.7 178.8L240.1 180L242.4 181.2L244.7 182.4L247 183.6L249.3 184.7L251.6 185.8L253.9 186.9L256.2 187.9L258.5 188.8L260.8 189.7L263.1 190.5L265.4 191.2L267.7 191.8L270 192.3L272.3 192.8L274.7 193.1L277 193.3L279.3 193.5L281.6 193.5L283.9 193.5L286.2 193.3L288.5 193L290.8 192.6L293.1 192.1L295.4 191.5L297.7 190.8L300 190L302.3 189.1L304.6 188.1L306.9 187L309.3 185.7L311.6 184.4L313.9 183L316.2 181.5L318.5 179.9L320.8 178.3L323.1 176.5L325.4 174.7L327.7 172.8L330 170.8L332.3 168.8L334.6 166.7L336.9 164.5L339.2 162.3L341.5 160.1L343.9 157.8L346.2 155.4L348.5 153.1L350.8 150.7L353.1 148.3L355.4 145.9L357.7 143.4L360 141L362.3 138.6L364.6 136.1L366.9 133.7L369.2 131.3L371.5 128.9L373.8 126.6L376.1 124.2L378.5 121.9L380.8 119.7L383.1 117.5L385.4 115.3L387.7 113.2L390 111.2L392.3 109.2L394.6 107.3L396.9 105.5L399.2 103.7L401.5 102.1L403.8 100.5L406.1 99L408.4 97.6L410.7 96.3L413.1 95L415.4 93.9L417.7 92.9L420 92L422.3 91.2L424.6 90.5L426.9 89.9L429.2 89.4L431.5 89L433.8 88.7L436.1 88.5L438.4 88.5L440.7 88.5L443 88.7L445.3 88.9L447.7 89.2L450 89.7L452.3 90.2L454.6 90.8L456.9 91.5L459.2 92.3L461.5 93.2L463.8 94.1L466.1 95.1L468.4 96.2L470.7 97.3L473 98.4L475.3 99.6L477.6 100.8L479.9 102L482.3 103.2L484.6 104.4L486.9 105.6L489.2 106.8L491.5 107.9L493.8 109L496.1 110L498.4 110.9L500.7 111.7L503 112.4L505.3 113L507.6 113.5L509.9 113.7L512.2 113.8L514.5 113.7L516.9 113.3L519.2 112.8L521.5 111.9L523.8 110.8L526.1 109.3L528.4 107.5L530.7 105.3L533 102.8L535.3 99.8L537.6 96.4L539.9 92.5L542.2 88.2L544.5 83.3L546.8 77.8L549.1 71.7L551.5 65L553.8 57.7L556.1 49.6L558.4 40.8L560.7 31.3L563 20.9L565.3 9.7L567.6 -2.4L569.9 -15.4L572.2 -29.4L574.5 -44.4L576.8 -60.5L579.1 -77.6L581.4 -95.9L583.7 -115.4L586.1 -136.2L588.4 -158.2L590.7 -181.6L593 -204L595.3 -204L597.6 -204L599.9 -204L602.2 -204L604.5 -204L606.8 -204L609.1 -204L611.4 -204L613.7 -204L616 -204L618.3 -204L620.7 -204L623 -204L625.3 -204L627.6 -204L629.9 -204L632.2 -204L634.5 -204L636.8 -204L639.1 -204L641.4 -204L643.7 -204L646 -204L648.3 -204L650.6 -204L652.9 -204L655.3 -204L657.6 -204L659.9 -204L662.2 -204L664.5 -204L666.8 -204L669.1 -204L671.4 -204L673.7 -204L676 -204L678.3 -204L680.6 -204L682.9 -204L685.2 -204L687.5 -204L689.9 -204L692.2 -204L694.5 -204L696.8 -204L699.1 -204L701.4 -204L703.7 -204L706 -204"/><path class="mf-s4" d="M14 -204L16.3 -204L18.6 -204L20.9 -204L23.2 -204L25.5 -204L27.8 -204L30.1 -204L32.5 -204L34.8 -204L37.1 -204L39.4 -204L41.7 -204L44 -204L46.3 -204L48.6 -204L50.9 -204L53.2 -204L55.5 -204L57.8 -204L60.1 -204L62.4 -204L64.7 -204L67.1 -204L69.4 -204L71.7 -204L74 -204L76.3 -204L78.6 -204L80.9 -204L83.2 -204L85.5 -204L87.8 -204L90.1 -204L92.4 -204L94.7 -204L97 -204L99.3 -204L101.7 -204L104 -204L106.3 -190.6L108.6 -170.2L110.9 -151.1L113.2 -133.2L115.5 -116.4L117.8 -100.8L120.1 -86.1L122.4 -72.4L124.7 -59.6L127 -47.5L129.3 -36.3L131.6 -25.7L133.9 -15.8L136.3 -6.5L138.6 2.3L140.9 10.5L143.2 18.3L145.5 25.6L147.8 32.5L150.1 39.1L152.4 45.3L154.7 51.2L157 56.8L159.3 62.1L161.6 67.2L163.9 72.1L166.2 76.8L168.5 81.3L170.9 85.7L173.2 89.8L175.5 93.9L177.8 97.8L180.1 101.6L182.4 105.4L184.7 109L187 112.5L189.3 115.9L191.6 119.3L193.9 122.6L196.2 125.8L198.5 128.9L200.8 132L203.1 135L205.5 138L207.8 140.9L210.1 143.8L212.4 146.6L214.7 149.3L217 151.9L219.3 154.5L221.6 157.1L223.9 159.6L226.2 162L228.5 164.3L230.8 166.6L233.1 168.8L235.4 170.9L237.7 172.9L240.1 174.9L242.4 176.7L244.7 178.5L247 180.2L249.3 181.8L251.6 183.3L253.9 184.7L256.2 186L258.5 187.2L260.8 188.3L263.1 189.3L265.4 190.2L267.7 191L270 191.6L272.3 192.2L274.7 192.6L277 192.9L279.3 193.2L281.6 193.3L283.9 193.2L286.2 193.1L288.5 192.9L290.8 192.5L293.1 192L295.4 191.5L297.7 190.8L300 190L302.3 189.1L304.6 188.1L306.9 186.9L309.3 185.7L311.6 184.4L313.9 183L316.2 181.5L318.5 179.9L320.8 178.3L323.1 176.5L325.4 174.7L327.7 172.8L330 170.8L332.3 168.8L334.6 166.7L336.9 164.5L339.2 162.3L341.5 160.1L343.9 157.8L346.2 155.4L348.5 153.1L350.8 150.7L353.1 148.3L355.4 145.9L357.7 143.4L360 141L362.3 138.6L364.6 136.1L366.9 133.7L369.2 131.3L371.5 128.9L373.8 126.6L376.1 124.2L378.5 121.9L380.8 119.7L383.1 117.5L385.4 115.3L387.7 113.2L390 111.2L392.3 109.2L394.6 107.3L396.9 105.5L399.2 103.7L401.5 102.1L403.8 100.5L406.1 99L408.4 97.6L410.7 96.3L413.1 95.1L415.4 93.9L417.7 92.9L420 92L422.3 91.2L424.6 90.5L426.9 90L429.2 89.5L431.5 89.1L433.8 88.9L436.1 88.8L438.4 88.7L440.7 88.8L443 89.1L445.3 89.4L447.7 89.8L450 90.4L452.3 91L454.6 91.8L456.9 92.7L459.2 93.7L461.5 94.8L463.8 96L466.1 97.3L468.4 98.7L470.7 100.2L473 101.8L475.3 103.5L477.6 105.3L479.9 107.1L482.3 109.1L484.6 111.1L486.9 113.2L489.2 115.4L491.5 117.7L493.8 120L496.1 122.4L498.4 124.9L500.7 127.5L503 130.1L505.3 132.7L507.6 135.4L509.9 138.2L512.2 141.1L514.5 144L516.9 147L519.2 150L521.5 153.1L523.8 156.2L526.1 159.4L528.4 162.7L530.7 166.1L533 169.5L535.3 173L537.6 176.6L539.9 180.4L542.2 184.2L544.5 188.1L546.8 192.2L549.1 196.3L551.5 200.7L553.8 205.2L556.1 209.9L558.4 214.8L560.7 219.9L563 225.2L565.3 230.8L567.6 236.7L569.9 242.9L572.2 249.5L574.5 256.4L576.8 263.7L579.1 271.5L581.4 279.7L583.7 288.5L586.1 297.8L588.4 307.7L590.7 318.3L593 329.5L595.3 341.6L597.6 354.4L599.9 368.1L602.2 382.8L604.5 398.4L606.8 415.2L609.1 433.1L611.4 452.2L613.7 472.6L616 486L618.3 486L620.7 486L623 486L625.3 486L627.6 486L629.9 486L632.2 486L634.5 486L636.8 486L639.1 486L641.4 486L643.7 486L646 486L648.3 486L650.6 486L652.9 486L655.3 486L657.6 486L659.9 486L662.2 486L664.5 486L666.8 486L669.1 486L671.4 486L673.7 486L676 486L678.3 486L680.6 486L682.9 486L685.2 486L687.5 486L689.9 486L692.2 486L694.5 486L696.8 486L699.1 486L701.4 486L703.7 486L706 486"/></g><text class="mf-lab" x="16" y="20" text-anchor="start">sin x (เส้นดำ) กับ P₁ = x (ม่วง), P₃ (ส้ม), P₅ (เหลือง), P₇ (เขียว)</text><text class="mf-k" x="360" y="274" text-anchor="middle">ยิ่งดีกรีสูง ยิ่งแนบ sin x ได้ไกลจาก 0 · ใกล้ x = 0 แค่ P₁ = x ก็พอ (การประมาณมุมเล็ก)</text></svg><!--/FIG--><figcaption>พหุนามแมคลอรินของ \(\sin x\): \(P_1 = x\) ใช้ได้เฉพาะใกล้ 0 ยิ่งเพิ่มดีกรี ช่วงที่แนบสนิทยิ่งกว้าง เพราะ \(R = \infty\)</figcaption></figure>
+    <p>แล็บด้านล่างคำนวณสัมประสิทธิ์เทย์เลอร์แบบแม่นตรงด้วยการหาอนุพันธ์อัตโนมัติ พิมพ์ฟังก์ชันอะไรก็ได้ เลือกจุดกระจาย a และดีกรี n แล้วดูทั้งความคลาดเคลื่อนจริงและขอบเขตลากรองจ์ ลอง \(\ln(1 + x)\) ที่ \(x = 1.5\): อยู่นอกรัศมี R = 1 เพิ่มดีกรีเท่าไรก็ไม่เข้าใกล้ ส่วน \(1/(1 + x^2)\) ซึ่งเรียบทุกจุดบนเส้นจำนวนจริงก็มี R = 1 เพราะมีโพลที่ \(x = \pm j\) บนระนาบเชิงซ้อน (ดู<a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์</a>)</p>
+    <div class="sq-taylor" id="taylorLab" data-f="sin(x)" data-a="0" data-n="5" data-x="2"></div>
+    <div class="wx" id="ex-s11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-11 · ประมาณค่าพร้อมขอบเขตความคลาดเคลื่อน</span><h3>(ก) ประมาณ \(e^{0.1}\) ด้วย \(P_3\) และหาขอบเขตความคลาดเคลื่อน (ข) ประมาณ \(\sqrt{1.02}\) และ \(\ln 1.05\)</h3><button type="button" class="wx-btn calc-go" data-ty-set='{"f":"exp(x)","a":0,"n":3,"x":0.1}'>เปิดในแล็บเทย์เลอร์</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(P_3(0.1) = 1 + 0.1 + \dfrac{0.01}{2} + \dfrac{0.001}{6} = 1.1051667\)</p></li>
+        <li><p>ขอบเขต: \(f^{(4)}(c) = e^c \le e^{0.1} &lt; 1.11\) จึงได้ \(|R_3| \le \dfrac{1.11\,(0.1)^4}{4!} \approx 4.6\times10^{-6}\)</p></li>
+        <li><p>ค่าจริง \(e^{0.1} = 1.1051709\) คลาด \(4.25\times10^{-6}\) อยู่ในขอบเขต ✓ (ทศนิยมถูก 5 ตำแหน่งด้วยการบวก 4 พจน์)</p></li>
+        <li><p>(ข) \(\sqrt{1 + x} \approx 1 + \tfrac{x}{2} - \tfrac{x^2}{8}\): \(\sqrt{1.02} \approx 1 + 0.01 - 0.00005 = 1.00995\) (จริง 1.0099505)</p></li>
+        <li><p>\(\ln(1 + x) \approx x - \tfrac{x^2}{2} + \tfrac{x^3}{3}\): \(\ln 1.05 \approx 0.05 - 0.00125 + 0.0000417 = 0.0487917\) (จริง 0.0487902)</p></li>
+      </ol>
+      <p class="answer">\(e^{0.1} \approx 1.1051667\) คลาดไม่เกิน \(4.6\times10^{-6}\) · \(\sqrt{1.02} \approx 1.00995\) · \(\ln 1.05 \approx 0.04879\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">การประยุกต์: แคลคูลัสและคณิตศาสตร์วิศวกรรม <span class="lv lv-i">กลาง</span></h2>
+    <p>ลำดับและอนุกรมไม่ได้อยู่แค่ในข้อสอบ วงจร สัญญาณ ระบบควบคุม และเศรษฐศาสตร์วิศวกรรมใช้สามแนวคิดนี้ตลอด: <b>ลำดับเวียนเกิดที่ลู่เข้าสู่จุดตรึง</b> <b>อนุกรมเรขาคณิต</b> และ<b>การประมาณด้วยเทย์เลอร์</b></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>งานวิศวกรรม</th><th>ลำดับ / อนุกรมที่อยู่เบื้องหลัง</th></tr></thead>
+        <tbody>
+          <tr><td>วงจรบันไดตัวต้านทาน สายส่ง</td><td>ลำดับเวียนเกิด \(R_{n+1} = R + (R \parallel R_n)\) ลู่เข้าสู่จุดตรึง</td></tr>
+          <tr><td>ตัวกรองดิจิทัล EMA ใน PLC และไมโครคอนโทรลเลอร์</td><td>\(y[n] = \alpha y[n-1] + (1 - \alpha)x[n]\) ผลตอบสนองคืออนุกรมเรขาคณิต เสถียร ⇔ \(|\alpha| &lt; 1\)</td></tr>
+          <tr><td>มูลค่าปัจจุบันของโครงการ เช่นโซลาร์รูฟท็อป</td><td>อนุกรมเรขาคณิตของเงินที่ประหยัดได้แต่ละปีหักลดด้วยอัตราคิดลด</td></tr>
+          <tr><td>มุมเล็ก ลูกตุ้ม แบบจำลองสัญญาณเล็กของไดโอด</td><td>เทย์เลอร์อันดับหนึ่ง \(\sin\theta \approx \theta\), \(e^{x} \approx 1 + x\) (linearization)</td></tr>
+          <tr><td>ความไวของกำลังไฟฟ้าต่อแรงดัน</td><td>\((1 + x)^n \approx 1 + nx\): แรงดันเพิ่ม 3% กำลัง \(V^2/R\) เพิ่มราว 6%</td></tr>
+          <tr><td>รูปคลื่นสี่เหลี่ยม ฮาร์มอนิก THD</td><td><a href="/learn/fourier-series/">อนุกรมฟูริเยร์</a>: อนุกรมของฟังก์ชัน sin และ cos</td></tr>
+          <tr><td>หารากของสมการในวงจรไม่เชิงเส้น</td><td><a href="/learn/differential-calculus/#newton">วิธีนิวตัน-ราฟสัน</a> \(x_{n+1} = x_n - f(x_n)/f'(x_n)\) คือลำดับเวียนเกิด</td></tr>
+          <tr><td>อินทิกรัลจำกัดเขต การหาพื้นที่ด้วยคอมพิวเตอร์</td><td>ผลบวกรีมันน์ \(\sum f(x_k)\Delta x\) และสูตร \(\sum k^2\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure class="lt-wide"><!--FIG:sq-ladder--><svg class="mf" viewBox="0 0 720 190" role="img" aria-label="Infinite resistor ladder network: each stage has a series resistor R and a shunt resistor R; equivalent resistance R_eq converges to (1+√5)/2 · R ≈ 1.618R (วงจรบันไดตัวต้านทานอนันต์)"><circle class="mf-zero" cx="40" cy="50" r="4"/><circle class="mf-zero" cx="40" cy="150" r="4"/><line class="mf-line" x1="44" y1="50" x2="70" y2="50"/><line class="mf-line" x1="44" y1="150" x2="70" y2="150"/><text class="mf-h" x="22" y="104" text-anchor="middle">R<tspan dy="4" font-size="9">eq</tspan></text><line class="mf-line" x1="70" y1="50" x2="100" y2="50"/><line class="mf-line" x1="130" y1="50" x2="160" y2="50"/><rect class="mf-box" x="100" y="44" width="30" height="12" rx="1"/><text class="mf-l" x="115" y="39" text-anchor="middle">R</text><line class="mf-line" x1="160" y1="50" x2="160" y2="85"/><line class="mf-line" x1="160" y1="115" x2="160" y2="150"/><rect class="mf-box" x="154" y="85" width="12" height="30" rx="1"/><text class="mf-l" x="170" y="104" text-anchor="start">R</text><line class="mf-line" x1="70" y1="150" x2="160" y2="150"/><circle class="mf-dot" cx="160" cy="50" r="2.6"/><circle class="mf-dot" cx="160" cy="150" r="2.6"/><line class="mf-line" x1="160" y1="50" x2="190" y2="50"/><line class="mf-line" x1="220" y1="50" x2="250" y2="50"/><rect class="mf-box" x="190" y="44" width="30" height="12" rx="1"/><text class="mf-l" x="205" y="39" text-anchor="middle">R</text><line class="mf-line" x1="250" y1="50" x2="250" y2="85"/><line class="mf-line" x1="250" y1="115" x2="250" y2="150"/><rect class="mf-box" x="244" y="85" width="12" height="30" rx="1"/><text class="mf-l" x="260" y="104" text-anchor="start">R</text><line class="mf-line" x1="160" y1="150" x2="250" y2="150"/><circle class="mf-dot" cx="250" cy="50" r="2.6"/><circle class="mf-dot" cx="250" cy="150" r="2.6"/><line class="mf-line" x1="250" y1="50" x2="280" y2="50"/><line class="mf-line" x1="310" y1="50" x2="340" y2="50"/><rect class="mf-box" x="280" y="44" width="30" height="12" rx="1"/><text class="mf-l" x="295" y="39" text-anchor="middle">R</text><line class="mf-line" x1="340" y1="50" x2="340" y2="85"/><line class="mf-line" x1="340" y1="115" x2="340" y2="150"/><rect class="mf-box" x="334" y="85" width="12" height="30" rx="1"/><text class="mf-l" x="350" y="104" text-anchor="start">R</text><line class="mf-line" x1="250" y1="150" x2="340" y2="150"/><circle class="mf-dot" cx="340" cy="50" r="2.6"/><circle class="mf-dot" cx="340" cy="150" r="2.6"/><line class="mf-line" x1="340" y1="50" x2="370" y2="50"/><line class="mf-line" x1="400" y1="50" x2="430" y2="50"/><rect class="mf-box" x="370" y="44" width="30" height="12" rx="1"/><text class="mf-l" x="385" y="39" text-anchor="middle">R</text><line class="mf-line" x1="430" y1="50" x2="430" y2="85"/><line class="mf-line" x1="430" y1="115" x2="430" y2="150"/><rect class="mf-box" x="424" y="85" width="12" height="30" rx="1"/><text class="mf-l" x="440" y="104" text-anchor="start">R</text><line class="mf-line" x1="340" y1="150" x2="430" y2="150"/><circle class="mf-dot" cx="430" cy="50" r="2.6"/><circle class="mf-dot" cx="430" cy="150" r="2.6"/><line class="mf-dash" x1="430" y1="50" x2="470" y2="50"/><line class="mf-dash" x1="430" y1="150" x2="470" y2="150"/><text class="mf-t" x="482" y="104" text-anchor="start">… ไม่สิ้นสุด</text><text class="mf-k" x="470" y="178" text-anchor="middle">Rₙ₊₁ = R + (R ∥ Rₙ) · R₁ = 2R → 1.667R → 1.625R → 1.619R → … → φR ≈ 1.618R</text><text class="mf-k" x="470" y="26" text-anchor="middle">ถ้าตัดส่วนแรกออก ที่เหลือยังเป็นบันไดอนันต์เหมือนเดิม: x = R + Rx/(R + x)</text></svg><!--/FIG--><figcaption>วงจรบันไดตัวต้านทาน: ความต้านทานรวมของบันได n ขั้นเป็นลำดับเวียนเกิดที่ลู่เข้าสู่อัตราส่วนทองคำ \(\varphi R\) ใช้เป็นแบบจำลองสายส่งและสายเคเบิลยาว</figcaption></figure>
+    <div class="wx" id="ex-s12">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-12 · วงจรบันไดตัวต้านทาน</span><h3>บันไดแต่ละขั้นมีตัวต้านทานอนุกรม \(R = 10\ \Omega\) และตัวต้านทานขนานลงกราวด์ \(R = 10\ \Omega\) หาความต้านทานรวมของบันไดอนันต์ และบันได 5 ขั้นคลาดจากค่าอนันต์กี่เปอร์เซ็นต์</h3><button type="button" class="wx-btn calc-go" data-sq-set='{"mode":"recursive","g":"1+a/(1+a)","a1":"2","N":10,"view":"cobweb"}'>ดูในแล็บ (หน่วย R)</button></div>
+      <ol class="steps">
+        <li><p>ขั้นสุดท้ายขั้นเดียว: \(R_1 = R + R = 2R\) · เพิ่มอีกขั้นด้านหน้า: \(R_{n+1} = R + \dfrac{R\,R_n}{R + R_n}\) (ตัวต้านทานอนุกรมบวกกับตัวขนานที่ขนานกับบันไดที่เหลือ)</p></li>
+        <li><p>ในหน่วย R: \(2 \to \tfrac53 \to \tfrac{13}{8} \to \tfrac{34}{21} \to \tfrac{89}{55} \to \cdots\) ลดลงและมีขอบเขตล่าง จึงลู่เข้า (เศษและส่วนคือเลขฟีโบนัชชี ดู<a href="/learn/limits/mathematical-induction/#engineering">บทพิสูจน์ด้วยอุปนัย</a>)</p></li>
+        <li><p>จุดตรึง: \(x = R + \dfrac{Rx}{R + x} \Rightarrow x^2 - Rx - R^2 = 0 \Rightarrow x = \dfrac{1 + \sqrt5}{2}R \approx 1.618R\)</p></li>
+        <li><p>\(R_\infty = 16.180\ \Omega\) และ \(R_5 = \tfrac{89}{55}(10) = 16.182\ \Omega\) คลาด \(\dfrac{16.1818 - 16.1803}{16.1803} \approx 0.009\%\)</p></li>
+      </ol>
+      <p class="answer">\(R_{eq} = \tfrac{1 + \sqrt5}{2}(10) \approx 16.18\ \Omega\) · บันไดแค่ 5 ขั้นก็คลาดไม่ถึง 0.01% (ลู่เข้าแบบเรขาคณิต)</p>
+    </div>
+    <div class="wx" id="ex-s13">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-13 · ตัวกรองดิจิทัล (EMA) ของสัญญาณเซนเซอร์</span><h3>ตัวกรอง \(y[n] = 0.8\,y[n-1] + 0.2\,x[n]\) เริ่มจาก \(y[-1] = 0\) ป้อนขั้นบันได \(x[n] = 1\) หา \(y[n]\) ค่าสุดท้าย และต้องใช้กี่ตัวอย่างจึงถึง 95%</h3><button type="button" class="wx-btn calc-go" data-sq-set='{"mode":"recursive","g":"0.8a+0.2","a1":"0.2","N":25,"view":"terms","eps":0.05}'>ดูในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>คลี่ความสัมพันธ์: \(y[n] = 0.2\left(1 + 0.8 + 0.8^2 + \cdots + 0.8^n\right)\) เป็นอนุกรมเรขาคณิต \(n + 1\) พจน์</p></li>
+        <li><p>\(y[n] = 0.2\cdot\dfrac{1 - 0.8^{n+1}}{1 - 0.8} = 1 - 0.8^{n+1}\) ค่าสุดท้าย \(y[\infty] = 1\) (อัตราขยาย DC = 1)</p></li>
+        <li><p>ถึง 95%: \(0.8^{n+1} \le 0.05 \Rightarrow n + 1 \ge \dfrac{\ln 0.05}{\ln 0.8} = 13.4\) จึงต้อง \(n + 1 = 14\) ตัวอย่าง (\(y[13] = 0.956\))</p></li>
+        <li><p>เสถียรภาพ: ถ้าสัมประสิทธิ์ \(|\alpha| \ge 1\) อนุกรมลู่ออก ตัวกรองจะแกว่งหรือโตไม่หยุด เป็นเงื่อนไขเดียวกับโพลอยู่ในวงกลมหนึ่งหน่วยของการแปลง z</p></li>
+      </ol>
+      <p class="answer">\(y[n] = 1 - 0.8^{n+1} \to 1\) · ถึง 95% ที่ตัวอย่างที่ 14 · ใช้ใน<a href="/learn/sensors-transducers/signal-conditioning-adc/">การปรับสภาพสัญญาณและ ADC</a></p>
+    </div>
+    <div class="wx" id="ex-s14">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-14 · เศรษฐศาสตร์วิศวกรรมและการประมาณเชิงเส้น</span><h3>(ก) โซลาร์รูฟท็อปประหยัดค่าไฟปีละ 12,000 บาท นาน 20 ปี อัตราคิดลด 5% ต่อปี มูลค่าปัจจุบันรวมเท่าไร (ข) แรงดันจ่ายตัวต้านทานเพิ่มขึ้น 3% กำลังเพิ่มขึ้นกี่เปอร์เซ็นต์</h3></div>
+      <ol class="steps">
+        <li><p>(ก) เงินปีที่ k มีมูลค่าปัจจุบัน \(\dfrac{12000}{1.05^k}\) รวม \(k = 1\) ถึง 20 เป็นอนุกรมเรขาคณิต \(a_1 = \tfrac{12000}{1.05},\ r = \tfrac{1}{1.05}\)</p></li>
+        <li><p>\(PV = 12000\cdot\dfrac{1 - 1.05^{-20}}{0.05} = 12000 \times 12.4622 \approx 149{,}547\) บาท (เทียบกับเงินสด 240,000 บาทที่ไม่คิดลด)</p></li>
+        <li><p>(ข) \(P = V^2/R\) เมื่อ \(V \to 1.03V\): \(P \to (1.03)^2 P\) ใช้ \((1 + x)^2 \approx 1 + 2x\) ได้ \(+6\%\) (ค่าจริง \(1.0609\) คือ \(+6.09\%\))</p></li>
+      </ol>
+      <p class="answer">(ก) ≈ 149,547 บาท (ดูการคิดคุ้มทุนใน<a href="/learn/solar-pv/economics/">เศรษฐศาสตร์ระบบโซลาร์</a>) (ข) ≈ 6% · กฎหัวแม่มือ: ความคลาดเคลื่อนสัมพัทธ์คูณด้วยเลขชี้กำลัง</p>
+    </div>
+    <div class="wx" id="ex-s15">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-15 · จากผลบวกสู่อินทิกรัล</span><h3>ใช้ผลบวกรีมันน์ด้านขวา \(n\) ช่วงประมาณ \(\displaystyle\int_0^1 x^2\,dx\) หาค่าเมื่อ \(n = 10\) และลิมิตเมื่อ \(n \to \infty\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\Delta x = \tfrac1n,\ x_k = \tfrac{k}{n}\): \(S_n = \displaystyle\sum_{k=1}^{n}\left(\frac{k}{n}\right)^2\frac1n = \frac{1}{n^3}\sum_{k=1}^{n}k^2\)</p></li>
+        <li><p>ใช้ S9: \(S_n = \dfrac{1}{n^3}\cdot\dfrac{n(n+1)(2n+1)}{6} = \dfrac{(n+1)(2n+1)}{6n^2}\)</p></li>
+        <li><p>\(n = 10\): \(S_{10} = \dfrac{11\cdot 21}{600} = 0.385\) · \(\lim_{n\to\infty} S_n = \dfrac{2}{6} = \dfrac13\)</p></li>
+      </ol>
+      <p class="answer">\(S_{10} = 0.385\) และอินทิกรัล \(= \tfrac13\): นิยามของอินทิกรัลจำกัดเขตคือลิมิตของอนุกรม</p>
+    </div>
+    <p class="hint">หน้าถัดไป: <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a> พิสูจน์สูตร S9 ขอบเขตของลำดับใน S-7 และสูตรฟีโบนัชชีของวงจรบันไดใน S-12 อย่างเป็นระบบ</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

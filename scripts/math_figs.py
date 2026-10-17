@@ -457,6 +457,205 @@ def home_lap():
     return c.svg()
 
 
+# ---------------------------------------------------------------- sequences, series, induction (limits series 3.1–3.2)
+def dots_panel(c, x, y, w, h, vals, y0, y1, title, band=None, cls="mf-dot", line=None):
+    n = len(vals)
+    sx = lambda t: x + 14 + (t - 1) / (n - 1) * (w - 28)
+    sy = lambda v: y + (y1 - v) / (y1 - y0) * h
+    c.rect(x, y, w, h, "mf-bg", 6)
+    if y0 < 0 < y1:
+        c.line(x, sy(0), x + w, sy(0), "mf-ax")
+    if band:
+        L, e = band
+        c.rect(x, sy(L + e), w, sy(L - e) - sy(L + e), "mf-fill2")
+        c.line(x, sy(L), x + w, sy(L), "mf-dash")
+    if line:
+        c.add(f'<path class="mf-dash" d="M{f1(sx(1))} {f1(sy(line(1)))}' + "".join(f"L{f1(sx(t))} {f1(sy(line(t)))}" for t in range(2, n + 1)) + '"/>')
+    for i, v in enumerate(vals, 1):
+        c.line(sx(i), sy(0 if y0 < 0 < y1 else y0), sx(i), sy(v), "mf-g")
+        c.circle(sx(i), sy(v), 3.6, cls)
+        c.text(sx(i), y + h + 13, str(i), "mf-k", "middle")
+    c.text(x + 2, y - 7, title, "mf-h")
+    return sx, sy
+
+
+@fig("sq-terms")
+def sq_terms():
+    c = S(720, 250, "Sequence examples: arithmetic sequence a_n = 3n − 1, geometric sequence a_n = 5(1/2)^(n−1), and alternating sequence (−1)^n/n converging to 0 (ลำดับเลขคณิต เรขาคณิต และลำดับที่ลู่เข้า)")
+    dots_panel(c, 12, 30, 220, 180, [3 * n - 1 for n in range(1, 9)], 0, 25, "เลขคณิต aₙ = 3n − 1 (d = 3)", line=lambda t: 3 * t - 1)
+    dots_panel(c, 250, 30, 220, 180, [5 * 0.5 ** (n - 1) for n in range(1, 9)], 0, 5.6, "เรขาคณิต aₙ = 5(½)ⁿ⁻¹ (r = ½)")
+    dots_panel(c, 488, 30, 220, 180, [(-1) ** n / n for n in range(1, 11)], -1.1, 0.7, "(−1)ⁿ/n → 0 · แถบ ε = 0.15", band=(0, 0.15), cls="mf-dot")
+    c.text(366, 244, "แกนนอน: n = 1, 2, 3, …  · เส้นประ = ลิมิต L · แถบ = L ± ε", "mf-k", "middle")
+    return c.svg()
+
+
+@fig("sq-geo-square")
+def sq_geo_square():
+    c = S(720, 260, "Geometric series visual proof: 1/2 + 1/4 + 1/8 + 1/16 + … = 1 shown by halving a unit square; partial sums S_n approach 1 (อนุกรมเรขาคณิตอนันต์)")
+    x, y, L = 20, 20, 220
+    c.rect(x, y, L, L, "mf-box")
+    # alternate vertical / horizontal halving
+    cx, cy, w, h = x, y, L, L
+    labels = ["½", "¼", "⅛", "1/16", "1/32", "1/64"]
+    for i in range(6):
+        if i % 2 == 0:
+            c.rect(cx, cy, w / 2, h, "mf-fill" if i % 4 == 0 else "mf-fill2")
+            c.line(cx + w / 2, cy, cx + w / 2, cy + h, "mf-line")
+            if i < 4:
+                c.text(cx + w / 4, cy + h / 2 + 5, labels[i], "mf-h", "middle")
+            cx, w = cx + w / 2, w / 2
+        else:
+            c.rect(cx, cy, w, h / 2, "mf-fill2" if i % 4 == 1 else "mf-fill")
+            c.line(cx, cy + h / 2, cx + w, cy + h / 2, "mf-line")
+            if i < 4:
+                c.text(cx + w / 2, cy + h / 4 + 5, labels[i], "mf-h", "middle")
+            cy, h = cy + h / 2, h / 2
+    c.text(x + L / 2, y + L + 16, "พื้นที่รวม = 1 (สี่เหลี่ยมจัตุรัสหนึ่งหน่วย)", "mf-k", "middle")
+    # partial sums on a number line
+    X0, X1, Y = 300, 700, 150
+    sx = lambda v: X0 + v * (X1 - X0)
+    c.line(X0, Y, X1, Y, "mf-ax")
+    for t in [0, 0.25, 0.5, 0.75, 1]:
+        c.line(sx(t), Y - 4, sx(t), Y + 4, "mf-ax")
+        c.text(sx(t), Y + 18, f1(t) if t not in (0.25, 0.75) else ("0.25" if t == 0.25 else "0.75"), "mf-k", "middle")
+    s = 0
+    for n in range(1, 7):
+        s += 0.5 ** n
+        c.circle(sx(s), Y - 14 - n * 16, 3.6, "mf-dot")
+        c.text(sx(s) - 8, Y - 10 - n * 16, f"S{n} = {s:.4g}", "mf-k", "end")
+        c.line(sx(s), Y - 14 - n * 16, sx(s), Y, "mf-g")
+    c.line(sx(1), 22, sx(1), Y, "mf-dash")
+    c.text(sx(1) - 4, 24, "ลิมิต = 1", "mf-l", "end")
+    c.text(X0, 206, "Sₙ = 1 − (½)ⁿ → 1 เมื่อ n → ∞", "mf-t")
+    c.text(X0, 230, "a/(1 − r) = (½)/(1 − ½) = 1", "mf-l")
+    return c.svg()
+
+
+@fig("sq-integral-test")
+def sq_integral_test():
+    c = S(720, 260, "Integral test: harmonic series 1/n compared with area under 1/x (diverges) and p-series 1/n² bounded by 1 + ∫ 1/x² dx = 2 (converges) (การทดสอบด้วยปริพันธ์)")
+    def panel(x0, f, title, above, ymax, note):
+        x, y, w, h = x0, 30, 330, 190
+        a, b = 0.6, 9.4
+        sx = lambda t: x + (t - a) / (b - a) * w
+        sy = lambda v: y + (ymax - v) / ymax * h
+        c.rect(x, y, w, h, "mf-bg", 6)
+        c.line(x, sy(0), x + w, sy(0), "mf-ax")
+        for n in range(1, 9):
+            left = n if above else n - 1
+            if left < a:
+                continue
+            c.rect(sx(left), sy(f(n)), sx(left + 1) - sx(left), sy(0) - sy(f(n)), "mf-fill" if n % 2 else "mf-fill2")
+            c.add(f'<rect class="mf-dash" x="{f1(sx(left))}" y="{f1(sy(f(n)))}" width="{f1(sx(left + 1) - sx(left))}" height="{f1(sy(0) - sy(f(n)))}"/>')
+            c.text(sx(left + 0.5), sy(0) + 13, str(n), "mf-k", "middle")
+        d = ""
+        for i in range(201):
+            t = 0.75 + (b - 0.75) * i / 200
+            v = f(t)
+            if v > ymax * 1.05:
+                continue
+            d += ("L" if d else "M") + f"{f1(sx(t))} {f1(sy(v))}"
+        c.path(d, "mf-sig")
+        c.text(x + 2, y - 8, title, "mf-h")
+        c.text(x + w - 6, y + 18, note, "mf-l", "end")
+    panel(12, lambda t: 1 / t, "Σ 1/n: แท่งอยู่เหนือเส้นโค้ง y = 1/x", True, 1.15, "Sₙ ≥ ∫₁ⁿ⁺¹ dx/x = ln(n+1) → ∞")
+    panel(376, lambda t: 1 / t ** 2, "Σ 1/n²: แท่ง (n ≥ 2) อยู่ใต้เส้นโค้ง y = 1/x²", False, 1.15, "Sₙ ≤ 1 + ∫₁^∞ dx/x² = 2")
+    return c.svg()
+
+
+@fig("sq-taylor-sin")
+def sq_taylor_sin():
+    c = S(720, 280, "Maclaurin polynomials of sin x: P1 = x, P3, P5, P7 approaching sin x near x = 0 (อนุกรมเทย์เลอร์ของ sin x)")
+    def P(n):
+        def f(x):
+            s, term, k = 0.0, x, 1
+            while k <= n:
+                s += term
+                term *= -x * x / ((k + 1) * (k + 2))
+                k += 2
+            return s
+        return f
+    graph(c, 14, 26, 692, 230, [(math.sin, "mf-ink"), (P(1), "mf-s1"), (P(3), "mf-s2"), (P(5), "mf-s3"), (P(7), "mf-s4")], -7, 7, -2.2, 2.2, title="sin x (เส้นดำ) กับ P₁ = x (ม่วง), P₃ (ส้ม), P₅ (เหลือง), P₇ (เขียว)")
+    c.text(360, 274, "ยิ่งดีกรีสูง ยิ่งแนบ sin x ได้ไกลจาก 0 · ใกล้ x = 0 แค่ P₁ = x ก็พอ (การประมาณมุมเล็ก)", "mf-k", "middle")
+    return c.svg()
+
+
+def resistor(c, x1, y1, x2, y2, label=None):
+    # IEC resistor (box) between two points on a horizontal or vertical line
+    if abs(y1 - y2) < 1e-6:
+        mx, L = (x1 + x2) / 2, 30
+        c.line(x1, y1, mx - L / 2, y1, "mf-line"); c.line(mx + L / 2, y1, x2, y2, "mf-line")
+        c.rect(mx - L / 2, y1 - 6, L, 12, "mf-box", 1)
+        if label: c.text(mx, y1 - 11, label, "mf-l", "middle")
+    else:
+        my, L = (y1 + y2) / 2, 30
+        c.line(x1, y1, x1, my - L / 2, "mf-line"); c.line(x1, my + L / 2, x2, y2, "mf-line")
+        c.rect(x1 - 6, my - L / 2, 12, L, "mf-box", 1)
+        if label: c.text(x1 + 10, my + 4, label, "mf-l")
+
+
+@fig("sq-ladder")
+def sq_ladder():
+    c = S(720, 190, "Infinite resistor ladder network: each stage has a series resistor R and a shunt resistor R; equivalent resistance R_eq converges to (1+√5)/2 · R ≈ 1.618R (วงจรบันไดตัวต้านทานอนันต์)")
+    top, bot, x = 50, 150, 70
+    c.circle(40, top, 4, "mf-zero"); c.circle(40, bot, 4, "mf-zero")
+    c.line(44, top, x, top, "mf-line"); c.line(44, bot, x, bot, "mf-line")
+    c.text(22, (top + bot) / 2 + 4, "R<tspan dy=\"4\" font-size=\"9\">eq</tspan>", "mf-h", "middle")
+    for k in range(4):
+        resistor(c, x, top, x + 90, top, "R")
+        resistor(c, x + 90, top, x + 90, bot, "R")
+        c.line(x, bot, x + 90, bot, "mf-line")
+        c.circle(x + 90, top, 2.6, "mf-dot"); c.circle(x + 90, bot, 2.6, "mf-dot")
+        x += 90
+    c.line(x, top, x + 40, top, "mf-dash"); c.line(x, bot, x + 40, bot, "mf-dash")
+    c.text(x + 52, (top + bot) / 2 + 4, "… ไม่สิ้นสุด", "mf-t")
+    c.text(470, 178, "Rₙ₊₁ = R + (R ∥ Rₙ) · R₁ = 2R → 1.667R → 1.625R → 1.619R → … → φR ≈ 1.618R", "mf-k", "middle")
+    c.text(470, 26, "ถ้าตัดส่วนแรกออก ที่เหลือยังเป็นบันไดอนันต์เหมือนเดิม: x = R + Rx/(R + x)", "mf-k", "middle")
+    return c.svg()
+
+
+@fig("in-staircase")
+def in_staircase():
+    c = S(720, 250, "Visual proof of the sum 1 + 2 + … + n = n(n+1)/2: two staircases of n = 5 fit into a 5 × 6 rectangle (บทพิสูจน์ด้วยภาพของสูตรผลบวก)")
+    n, u, x0, y0 = 5, 30, 40, 30
+    for i in range(1, n + 1):          # staircase A: column i has i squares
+        for j in range(i):
+            c.rect(x0 + (i - 1) * u, y0 + (n - 1 - j) * u + u, u - 2, u - 2, "mf-fill")
+    for i in range(1, n + 1):          # staircase B (rotated) fills the rest of the n × (n+1) rectangle
+        for j in range(n + 1 - i):
+            c.rect(x0 + (i - 1) * u, y0 + j * u, u - 2, u - 2, "mf-fill2")
+    c.add(f'<rect class="mf-dash" x="{x0 - 2}" y="{y0 - 2}" width="{n * u + 2}" height="{(n + 1) * u + 2}"/>')
+    c.text(x0 + n * u / 2, y0 + (n + 1) * u + 18, "กว้าง n = 5", "mf-k", "middle")
+    c.text(x0 + n * u + 10, y0 + (n + 1) * u / 2, "สูง n + 1 = 6", "mf-k")
+    X = 330
+    c.text(X, 56, "บันไดสีส้ม: 1 + 2 + 3 + 4 + 5", "mf-t")
+    c.text(X, 80, "บันไดสีฟ้า (หมุนกลับหัว): อีกชุดหนึ่งเท่ากัน", "mf-t")
+    c.text(X, 104, "สองชุดรวมกันเป็นสี่เหลี่ยม 5 × 6 = 30 ช่อง", "mf-t")
+    c.text(X, 136, "2(1 + 2 + ⋯ + n) = n(n + 1)", "mf-h")
+    c.text(X, 160, "1 + 2 + ⋯ + n = n(n + 1)/2", "mf-h")
+    c.text(X, 196, "ภาพนี้ “เห็น” สูตร แต่การพิสูจน์ที่ใช้ได้ทุก n", "mf-k")
+    c.text(X, 214, "อย่างเป็นระบบคืออุปนัยเชิงคณิตศาสตร์", "mf-k")
+    return c.svg()
+
+
+@fig("in-chain")
+def in_chain():
+    c = S(720, 170, "Structure of mathematical induction: base case P(n0) is true and the inductive step P(k) ⇒ P(k+1) carries truth to every n ≥ n0 (โครงสร้างของอุปนัยเชิงคณิตศาสตร์)")
+    xs = [20, 150, 280, 410, 540]
+    names = ["P(1)", "P(2)", "P(3)", "P(4)", "P(5)"]
+    for i, x in enumerate(xs):
+        c.rect(x, 50, 100, 46, "mf-box", 8)
+        c.text(x + 50, 79, names[i], "mf-h", "middle")
+        if i < len(xs) - 1:
+            c.add(f'<path class="mf-sig" d="M{x + 104} 73 L{x + 126} 73"/><path class="mf-arrow" d="M{x + 126} 67 L{x + 134} 73 L{x + 126} 79 Z" style="fill:var(--accent)"/>')
+            c.text(x + 117, 110, "⇒", "mf-k", "middle")
+    c.text(668, 79, "⋯ ทุก n", "mf-h")
+    c.text(70, 36, "กรณีฐาน (base case)", "mf-l", "middle")
+    c.text(410, 36, "ขั้นอุปนัย P(k) ⇒ P(k+1) ใช้ซ้ำได้ไม่สิ้นสุด", "mf-l", "middle")
+    c.text(360, 148, "สองชิ้นนี้รวมกัน (ไม่ใช่การตรวจทีละค่า) ทำให้สรุปได้ว่า P(n) จริงสำหรับจำนวนนับทุกตัว", "mf-k", "middle")
+    return c.svg()
+
+
 # ---------------------------------------------------------------- run
 def main():
     force = "--all" in sys.argv

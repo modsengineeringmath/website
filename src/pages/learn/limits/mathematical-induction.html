@@ -1,0 +1,393 @@
+<!--meta
+{
+  "title": "อุปนัยเชิงคณิตศาสตร์ (Mathematical Induction) คืออะไร: หลักการ ขั้นตอนพิสูจน์ ตัวอย่าง | อาจารย์มด",
+  "h1": "อุปนัยเชิงคณิตศาสตร์ (Mathematical Induction): หลักการ วิธีพิสูจน์ และตัวอย่าง",
+  "description": "อุปนัยเชิงคณิตศาสตร์คืออะไร หลักการโดมิโน กรณีฐาน (base case) ขั้นอุปนัย (inductive step) แม่แบบเขียนพิสูจน์ทีละขั้น ตัวอย่างพิสูจน์สูตรผลบวก การหารลงตัว อสมการ อุปนัยแบบเข้ม (strong induction) การประยุกต์ในแคลคูลัส ลาปลาซ และวิศวกรรม พร้อมตัวตรวจแบบโต้ตอบและบทพิสูจน์ผิดที่พบบ่อย",
+  "ogTitle": "อุปนัยเชิงคณิตศาสตร์: หลักการ ขั้นตอนพิสูจน์ และตัวอย่าง",
+  "lesson": "limits",
+  "sub": "mathematical-induction",
+  "nav": "lim",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["อุปนัยเชิงคณิตศาสตร์", "หลักอุปนัยเชิงคณิตศาสตร์", "การพิสูจน์โดยอุปนัย", "กรณีฐาน", "ขั้นอุปนัย", "อุปนัยแบบเข้ม", "พิสูจน์สูตรผลบวก", "พิสูจน์การหารลงตัว", "mathematical induction", "proof by induction", "base case", "inductive step", "strong induction", "induction examples"],
+  "about": ["Mathematical induction", "Proof by induction", "Base case", "Inductive step", "Inductive hypothesis", "Strong induction", "Well-ordering principle", "Summation formulas", "Divisibility", "Bernoulli's inequality", "De Moivre's theorem", "Loop invariant"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js"],
+  "og": {"title": "อุปนัยเชิงคณิตศาสตร์", "sub": "กรณีฐาน ขั้นอุปนัย แม่แบบเขียนพิสูจน์ ตัวอย่าง และบทพิสูจน์ผิดที่พบบ่อย", "eyebrow": "บทที่ 3.2 · Mathematical Induction", "sym": "⇒"},
+  "faq": [
+    {"q": "อุปนัยเชิงคณิตศาสตร์มีกี่ขั้นตอน?", "a": "สองขั้นหลัก: (1) กรณีฐาน (base case) แสดงว่าข้อความ \\(P(n_0)\\) จริง (2) ขั้นอุปนัย (inductive step) สมมติว่า \\(P(k)\\) จริงสำหรับ \\(k \\ge n_0\\) ใด ๆ แล้วแสดงว่า \\(P(k+1)\\) จริง เมื่อทำครบสองขั้นจึงสรุปว่า \\(P(n)\\) จริงทุก \\(n \\ge n_0\\) เวลาเขียนตอบในข้อสอบนิยมแบ่งเป็น 4 ส่วน: นิยาม P(n), กรณีฐาน, สมมติฐานการอุปนัย และขั้นอุปนัยพร้อมข้อสรุป"},
+    {"q": "ทำไมต้องตรวจกรณีฐาน ถ้าขั้นอุปนัยพิสูจน์ได้แล้ว?", "a": "เพราะขั้นอุปนัยบอกแค่ว่า “ถ้า P(k) จริง แล้ว P(k+1) จริง” ไม่ได้บอกว่ามีตัวไหนจริงตั้งแต่แรก ตัวอย่าง: สูตรผิด \\(1 + \\cdots + n = (n^2 + n + 2)/2\\) ผ่านขั้นอุปนัยได้ แต่ที่ n = 1 ได้ 2 ≠ 1 เหมือนแถวโดมิโนที่ตั้งชิดกันดีแต่ไม่มีใครผลักตัวแรก"},
+    {"q": "อุปนัยแบบเข้ม (strong induction) ต่างจากแบบธรรมดาอย่างไร?", "a": "แบบธรรมดาสมมติแค่ P(k) แบบเข้มสมมติว่า P(n₀), P(n₀+1), …, P(k) จริงทั้งหมด แล้วพิสูจน์ P(k+1) ใช้เมื่อขั้นถัดไปต้องอาศัยค่าก่อนหน้าหลายค่า เช่นลำดับฟีโบนัชชี \\(F_{k+1} = F_k + F_{k-1}\\) หรือการแยกตัวประกอบเฉพาะ ถ้าย้อนไปสองขั้นต้องตรวจกรณีฐานสองค่า"},
+    {"q": "พิสูจน์อสมการด้วยอุปนัยทำอย่างไร?", "a": "เริ่มจากด้านซ้ายของ P(k+1) แยกส่วนที่เป็นด้านซ้ายของ P(k) ออกมา ใช้สมมติฐานแทนด้วยด้านขวา (เครื่องหมาย > หรือ ≥ ปรากฏตรงนี้) แล้วแสดงต่อว่าค่าที่ได้มากกว่าหรือเท่ากับด้านขวาของ P(k+1) ขั้นสุดท้ายมักต้องใช้เงื่อนไขของ k เช่น \\(k \\ge 3\\) ซึ่งเป็นตัวกำหนดว่ากรณีฐานต้องเริ่มที่ค่าใด"},
+    {"q": "อุปนัยเชิงคณิตศาสตร์ใช้ทำอะไรในแคลคูลัสและวิศวกรรม?", "a": "ใช้พิสูจน์สูตรที่ต้องจริงทุก n เช่น สูตรผลบวก Σk² ที่ใช้หาอินทิกรัลด้วยผลบวกรีมันน์ กฎอนุพันธ์ \\(d(x^n)/dx = nx^{n-1}\\) การแปลงลาปลาซ \\(\\mathcal{L}\\{t^n\\} = n!/s^{n+1}\\) ทฤษฎีบทเดอมัวฟร์ของเฟสเซอร์ กำลังของเมทริกซ์ในระบบเวลาไม่ต่อเนื่อง ขอบเขตของลำดับเวียนเกิด และความถูกต้องของโปรแกรมที่มีลูป (loop invariant)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/limits/">ลิมิต</a></li><li>อุปนัยเชิงคณิตศาสตร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 3.2 · ลิมิต · Mathematical Induction</p>
+      <h1>อุปนัยเชิงคณิตศาสตร์ (Mathematical Induction): หลักการ วิธีพิสูจน์ และตัวอย่าง</h1>
+      <p class="lede">ตรวจสูตรด้วยตัวเลขร้อยค่าก็ยังไม่ใช่บทพิสูจน์ เพราะจำนวนนับมีไม่สิ้นสุด อุปนัยเชิงคณิตศาสตร์แก้ปัญหานี้ด้วยสองขั้น: พิสูจน์ว่าตัวแรกจริง และพิสูจน์ว่า “ถ้าตัวหนึ่งจริง ตัวถัดไปก็จริง” เหมือนผลักโดมิโนตัวแรกในแถวที่ไม่มีที่สิ้นสุด หน้านี้สอนตั้งแต่หลักการ แม่แบบการเขียน ไปจนถึงการใช้จริงในแคลคูลัส ลาปลาซ และระบบดิจิทัล พร้อมเครื่องมือตรวจบทพิสูจน์และเกมหาจุดผิด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#template">แม่แบบเขียนพิสูจน์</a>
+        <a class="btn btn-ghost btn-sm" href="#checker">ตัวตรวจอุปนัย</a>
+        <a class="btn btn-ghost btn-sm" href="#strong">อุปนัยแบบเข้ม</a>
+        <a class="btn btn-ghost btn-sm" href="#calculus">ในแคลคูลัส</a>
+        <a class="btn btn-ghost btn-sm" href="#mistakes">หาจุดผิด</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ต้องการพิสูจน์ \(P(n)\) ทุก \(n \ge n_0\): <b>กรณีฐาน</b> \(P(n_0)\) จริง + <b>ขั้นอุปนัย</b> \(P(k) \Rightarrow P(k+1)\) ทุก \(k \ge n_0\)</li>
+          <li>ในขั้นอุปนัย “สมมติ” \(P(k)\) ได้เลย (สมมติฐานการอุปนัย) แล้วต้อง<b>ใช้</b>มันให้เห็นชัดตอนแสดง \(P(k+1)\)</li>
+          <li>สูตรผลบวก: ขั้นอุปนัยคือแสดงว่า \(g(k+1) - g(k) = f(k+1)\) · การหารลงตัว: แยก \(f(k+1)\) ให้เห็นก้อน \(f(k)\) · อสมการ: ใช้สมมติฐานแล้วต่อด้วยโซ่อสมการ</li>
+          <li>ต้องย้อนหลายขั้น (ฟีโบนัชชี) ใช้อุปนัยแบบเข้มพร้อมกรณีฐานหลายค่า</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · ปี 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น base case, strong, bernoulli, laplace, de moivre, matrix" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">อุปนัยเชิงคณิตศาสตร์คืออะไร: หลักโดมิโน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ลองดูสูตร \(n^2 + n + 41\) ที่ \(n = 0, 1, 2, \dots\) ได้ 41, 43, 47, 53, 61, … เป็นจำนวนเฉพาะทั้งหมด ตรวจต่อไปจนถึง \(n = 39\) ก็ยังเป็นจำนวนเฉพาะครบ 40 ค่า แต่ที่ \(n = 40\) ได้ \(1681 = 41^2\) การ “เห็นรูปแบบ” จากตัวอย่างจึงไม่ใช่บทพิสูจน์ ในภาษาทั่วไปเรียกการสรุปจากตัวอย่างว่าการให้เหตุผลแบบอุปนัย (inductive reasoning) แต่<b>อุปนัยเชิงคณิตศาสตร์ (mathematical induction)</b> เป็นการให้เหตุผลแบบนิรนัยที่รัดกุม 100% ชื่อคล้ายกันแต่คนละเรื่อง</p>
+    <p>นึกถึงโดมิโนเรียงเป็นแถวยาวไม่สิ้นสุด จะมั่นใจว่าล้มหมดทุกตัวได้ด้วยสองเงื่อนไข: <b>ตัวแรกล้ม</b> และ<b>ทุกตัวที่ล้มจะชนตัวถัดไปให้ล้มด้วย</b> ขาดข้อใดข้อหนึ่งไม่ได้ ลองปิดกรณีฐานหรือทำให้ขั้นอุปนัยพังที่ k = 4 ในแล็บด้านล่าง</p>
+    <figure class="lt-wide"><!--FIG:in-chain--><svg class="mf" viewBox="0 0 720 170" role="img" aria-label="Structure of mathematical induction: base case P(n0) is true and the inductive step P(k) ⇒ P(k+1) carries truth to every n ≥ n0 (โครงสร้างของอุปนัยเชิงคณิตศาสตร์)"><rect class="mf-box" x="20" y="50" width="100" height="46" rx="8"/><text class="mf-h" x="70" y="79" text-anchor="middle">P(1)</text><path class="mf-sig" d="M124 73 L146 73"/><path class="mf-arrow" d="M146 67 L154 73 L146 79 Z" style="fill:var(--accent)"/><text class="mf-k" x="137" y="110" text-anchor="middle">⇒</text><rect class="mf-box" x="150" y="50" width="100" height="46" rx="8"/><text class="mf-h" x="200" y="79" text-anchor="middle">P(2)</text><path class="mf-sig" d="M254 73 L276 73"/><path class="mf-arrow" d="M276 67 L284 73 L276 79 Z" style="fill:var(--accent)"/><text class="mf-k" x="267" y="110" text-anchor="middle">⇒</text><rect class="mf-box" x="280" y="50" width="100" height="46" rx="8"/><text class="mf-h" x="330" y="79" text-anchor="middle">P(3)</text><path class="mf-sig" d="M384 73 L406 73"/><path class="mf-arrow" d="M406 67 L414 73 L406 79 Z" style="fill:var(--accent)"/><text class="mf-k" x="397" y="110" text-anchor="middle">⇒</text><rect class="mf-box" x="410" y="50" width="100" height="46" rx="8"/><text class="mf-h" x="460" y="79" text-anchor="middle">P(4)</text><path class="mf-sig" d="M514 73 L536 73"/><path class="mf-arrow" d="M536 67 L544 73 L536 79 Z" style="fill:var(--accent)"/><text class="mf-k" x="527" y="110" text-anchor="middle">⇒</text><rect class="mf-box" x="540" y="50" width="100" height="46" rx="8"/><text class="mf-h" x="590" y="79" text-anchor="middle">P(5)</text><text class="mf-h" x="668" y="79" text-anchor="start">⋯ ทุก n</text><text class="mf-l" x="70" y="36" text-anchor="middle">กรณีฐาน (base case)</text><text class="mf-l" x="410" y="36" text-anchor="middle">ขั้นอุปนัย P(k) ⇒ P(k+1) ใช้ซ้ำได้ไม่สิ้นสุด</text><text class="mf-k" x="360" y="148" text-anchor="middle">สองชิ้นนี้รวมกัน (ไม่ใช่การตรวจทีละค่า) ทำให้สรุปได้ว่า P(n) จริงสำหรับจำนวนนับทุกตัว</text></svg><!--/FIG--><figcaption>โครงสร้างของอุปนัย: กรณีฐานจุดชนวน ขั้นอุปนัยส่งต่อความจริงจากตัวหนึ่งไปตัวถัดไปซ้ำได้ไม่สิ้นสุด</figcaption></figure>
+    <div class="in-domino"></div>
+    <div class="tf-grid">
+      <div class="tf wide" id="I1" data-k="principle of mathematical induction pmi base case inductive step หลักอุปนัยเชิงคณิตศาสตร์ กรณีฐาน ขั้นอุปนัย">
+        <p class="tf-n"><b><span class="fid">I1</span> Principle of mathematical induction</b> หลักอุปนัยเชิงคณิตศาสตร์</p>
+        \[ \Big[\,P(n_0)\ \wedge\ \forall k \ge n_0:\ \big(P(k) \Rightarrow P(k+1)\big)\Big] \ \Longrightarrow\ \forall n \ge n_0:\ P(n) \]
+        <p class="tf-x">\(P(n_0)\) = กรณีฐาน (base case) · \(P(k)\) ที่สมมติ = สมมติฐานการอุปนัย (inductive hypothesis) · \(P(k) \Rightarrow P(k+1)\) = ขั้นอุปนัย (inductive step)</p>
+      </div>
+      <div class="tf" id="I2" data-k="well ordering principle smallest counterexample หลักการจัดอันดับดี">
+        <p class="tf-n"><b><span class="fid">I2</span> Well-ordering principle</b> หลักการจัดอันดับดี</p>
+        \[ \varnothing \ne S \subseteq \mathbb{N} \ \Rightarrow\ S\ \text{มีสมาชิกน้อยที่สุด} \]
+        <p class="tf-x">สมมูลกับอุปนัย: ถ้ามี n ที่ P(n) เท็จ จะมี “ตัวผิดตัวแรก” m แต่ P(m − 1) จริง ขั้นอุปนัยจึงบังคับให้ P(m) จริง ขัดแย้ง</p>
+      </div>
+      <div class="tf" id="I3" data-k="strong induction complete induction all previous cases อุปนัยแบบเข้ม">
+        <p class="tf-n"><b><span class="fid">I3</span> Strong induction</b> อุปนัยแบบเข้ม</p>
+        \[ \big[P(n_0) \wedge \cdots \wedge P(k)\big] \Rightarrow P(k+1) \]
+        <p class="tf-x">สมมติทุกค่าก่อนหน้า · ถ้าขั้นอุปนัยย้อนไป m ขั้น ต้องมีกรณีฐาน m ค่า</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="template">
+    <h2 id="template">แม่แบบเขียนพิสูจน์ 4 ขั้น (ใช้ได้ทุกข้อ) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นักศึกษาส่วนใหญ่ไม่ได้เสียคะแนนเพราะพีชคณิตผิด แต่เพราะเขียนโครงสร้างไม่ครบ เช่นไม่บอกว่า P(n) คืออะไร หรือเขียน P(k+1) แล้ว “ทำสองข้างให้เท่ากัน” ซึ่งเป็นการสมมติสิ่งที่จะพิสูจน์ ใช้แม่แบบนี้ทุกครั้ง:</p>
+    <div class="proof-tpl">
+      <b>แม่แบบ: พิสูจน์ว่า P(n) จริงทุก \(n \ge n_0\)</b>
+      <ol>
+        <li><b class="k">นิยาม</b> ให้ \(P(n)\) แทนข้อความ “…” (เขียนให้ชัดว่าแทนค่า n แล้วได้ประโยคอะไร)</li>
+        <li><b class="k">กรณีฐาน</b> เมื่อ \(n = n_0\): คำนวณ<b>ทั้งสองข้างแยกกัน</b> แล้วแสดงว่าเท่ากัน (หรือเป็นจริงตามความสัมพันธ์) ดังนั้น \(P(n_0)\) จริง</li>
+        <li><b class="k">สมมติฐานการอุปนัย</b> สมมติว่า \(P(k)\) จริงสำหรับจำนวนเต็ม \(k \ge n_0\) บางค่า นั่นคือ … (เขียน P(k) ออกมาเต็ม ๆ)</li>
+        <li><b class="k">ขั้นอุปนัย</b> จะแสดงว่า \(P(k+1)\) จริง คือ … (เขียนเป้าหมาย) เริ่มจาก<b>ด้านซ้าย</b>ของ P(k+1) จัดรูปให้เห็นก้อนที่อยู่ใน P(k) ใช้สมมติฐาน (เขียนกำกับว่า “โดยสมมติฐานการอุปนัย”) แล้วจัดรูปจนได้ด้านขวาของ P(k+1)</li>
+      </ol>
+      <p class="hint" style="margin-top:8px">สรุป: โดยหลักอุปนัยเชิงคณิตศาสตร์ \(P(n)\) จริงสำหรับทุกจำนวนเต็ม \(n \ge n_0\) ∎</p>
+    </div>
+    <figure class="lt-wide"><!--FIG:in-staircase--><svg class="mf" viewBox="0 0 720 250" role="img" aria-label="Visual proof of the sum 1 + 2 + … + n = n(n+1)/2: two staircases of n = 5 fit into a 5 × 6 rectangle (บทพิสูจน์ด้วยภาพของสูตรผลบวก)"><rect class="mf-fill" x="40" y="180" width="28" height="28" rx="0"/><rect class="mf-fill" x="70" y="180" width="28" height="28" rx="0"/><rect class="mf-fill" x="70" y="150" width="28" height="28" rx="0"/><rect class="mf-fill" x="100" y="180" width="28" height="28" rx="0"/><rect class="mf-fill" x="100" y="150" width="28" height="28" rx="0"/><rect class="mf-fill" x="100" y="120" width="28" height="28" rx="0"/><rect class="mf-fill" x="130" y="180" width="28" height="28" rx="0"/><rect class="mf-fill" x="130" y="150" width="28" height="28" rx="0"/><rect class="mf-fill" x="130" y="120" width="28" height="28" rx="0"/><rect class="mf-fill" x="130" y="90" width="28" height="28" rx="0"/><rect class="mf-fill" x="160" y="180" width="28" height="28" rx="0"/><rect class="mf-fill" x="160" y="150" width="28" height="28" rx="0"/><rect class="mf-fill" x="160" y="120" width="28" height="28" rx="0"/><rect class="mf-fill" x="160" y="90" width="28" height="28" rx="0"/><rect class="mf-fill" x="160" y="60" width="28" height="28" rx="0"/><rect class="mf-fill2" x="40" y="30" width="28" height="28" rx="0"/><rect class="mf-fill2" x="40" y="60" width="28" height="28" rx="0"/><rect class="mf-fill2" x="40" y="90" width="28" height="28" rx="0"/><rect class="mf-fill2" x="40" y="120" width="28" height="28" rx="0"/><rect class="mf-fill2" x="40" y="150" width="28" height="28" rx="0"/><rect class="mf-fill2" x="70" y="30" width="28" height="28" rx="0"/><rect class="mf-fill2" x="70" y="60" width="28" height="28" rx="0"/><rect class="mf-fill2" x="70" y="90" width="28" height="28" rx="0"/><rect class="mf-fill2" x="70" y="120" width="28" height="28" rx="0"/><rect class="mf-fill2" x="100" y="30" width="28" height="28" rx="0"/><rect class="mf-fill2" x="100" y="60" width="28" height="28" rx="0"/><rect class="mf-fill2" x="100" y="90" width="28" height="28" rx="0"/><rect class="mf-fill2" x="130" y="30" width="28" height="28" rx="0"/><rect class="mf-fill2" x="130" y="60" width="28" height="28" rx="0"/><rect class="mf-fill2" x="160" y="30" width="28" height="28" rx="0"/><rect class="mf-dash" x="38" y="28" width="152" height="182"/><text class="mf-k" x="115" y="228" text-anchor="middle">กว้าง n = 5</text><text class="mf-k" x="200" y="120" text-anchor="start">สูง n + 1 = 6</text><text class="mf-t" x="330" y="56" text-anchor="start">บันไดสีส้ม: 1 + 2 + 3 + 4 + 5</text><text class="mf-t" x="330" y="80" text-anchor="start">บันไดสีฟ้า (หมุนกลับหัว): อีกชุดหนึ่งเท่ากัน</text><text class="mf-t" x="330" y="104" text-anchor="start">สองชุดรวมกันเป็นสี่เหลี่ยม 5 × 6 = 30 ช่อง</text><text class="mf-h" x="330" y="136" text-anchor="start">2(1 + 2 + ⋯ + n) = n(n + 1)</text><text class="mf-h" x="330" y="160" text-anchor="start">1 + 2 + ⋯ + n = n(n + 1)/2</text><text class="mf-k" x="330" y="196" text-anchor="start">ภาพนี้ “เห็น” สูตร แต่การพิสูจน์ที่ใช้ได้ทุก n</text><text class="mf-k" x="330" y="214" text-anchor="start">อย่างเป็นระบบคืออุปนัยเชิงคณิตศาสตร์</text></svg><!--/FIG--><figcaption>ภาพช่วยให้ “เห็น” สูตร \(1 + 2 + \cdots + n = \tfrac{n(n+1)}{2}\) แต่อุปนัยคือสิ่งที่พิสูจน์ได้ทุก n โดยไม่ต้องวาดรูป และใช้ได้กับสูตรที่วาดรูปไม่ได้</figcaption></figure>
+    <div class="wx" id="ex-i1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-1 · ใช้แม่แบบเต็มรูป</span><h3>พิสูจน์ว่า \(1 + 2 + 3 + \cdots + n = \dfrac{n(n+1)}{2}\) สำหรับทุกจำนวนนับ \(n\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="sum-k">เปิดในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p><b>นิยาม</b> ให้ \(P(n)\) แทน \(1 + 2 + \cdots + n = \dfrac{n(n+1)}{2}\)</p></li>
+        <li><p><b>กรณีฐาน</b> \(n = 1\): ซ้าย \(= 1\) ขวา \(= \dfrac{1\cdot 2}{2} = 1\) เท่ากัน \(P(1)\) จริง</p></li>
+        <li><p><b>สมมติฐาน</b> สมมติว่า \(P(k)\) จริงสำหรับ \(k \ge 1\) บางค่า: \(1 + 2 + \cdots + k = \dfrac{k(k+1)}{2}\)</p></li>
+        <li><p><b>เป้าหมาย</b> ต้องแสดงว่า \(1 + 2 + \cdots + k + (k+1) = \dfrac{(k+1)(k+2)}{2}\)</p></li>
+        <li><p><b>ขั้นอุปนัย</b> \(\underbrace{1 + 2 + \cdots + k}_{\text{ก้อนของ } P(k)} + (k+1) = \hlP{\dfrac{k(k+1)}{2}} + (k+1)\) (โดยสมมติฐานการอุปนัย)</p></li>
+        <li><p>\(= \dfrac{k(k+1) + 2(k+1)}{2} = \dfrac{(k+1)(k+2)}{2}\) ตรงกับเป้าหมาย \(P(k+1)\) จริง</p></li>
+        <li><p><b>สรุป</b> โดยหลักอุปนัยเชิงคณิตศาสตร์ \(P(n)\) จริงทุก \(n \ge 1\) ∎</p></li>
+      </ol>
+      <p class="answer">สังเกตเทคนิคหลัก: “ดึงพจน์สุดท้ายออก” แล้วส่วนที่เหลือคือด้านซ้ายของ P(k) พอดี <span class="hl-p">สีน้ำเงิน</span> = บรรทัดที่ใช้สมมติฐาน ต้องมีอย่างน้อยหนึ่งจุดเสมอ</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="checker">
+    <h2 id="checker">ตัวตรวจอุปนัย: ทดลองกรณีฐานและขั้นอุปนัยด้วยตัวเลข <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกข้อความ ตารางจะตรวจ P(n) ทีละค่า (ซึ่ง<b>ยังไม่ใช่</b>บทพิสูจน์) ส่วนล่างแสดงขั้นอุปนัยแบบตัวแปร k ที่เป็นบทพิสูจน์จริง เลื่อนแถบเพื่อแทน k เป็นตัวเลขแล้วดูว่าแต่ละบรรทัดทำอะไร ในโหมด “สูตรผลบวกของฉัน” พิมพ์พจน์ f(k) และสูตรที่อ้าง g(n) ระบบจะตรวจกรณีฐานและขั้นอุปนัย \(g(k+1) - g(k) = f(k+1)\) ถ้าเป็นพหุนามจะออกใบรับรองว่าพิสูจน์แล้วจริง</p>
+    <div class="in-check" id="inCheck" data-preset="sum-k2"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sums">
+    <h2 id="sums">พิสูจน์สูตรผลบวก (Summation Formulas) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="I4" data-k="sum formula inductive step telescoping g(k+1)-g(k)=f(k+1) สูตรผลบวก ขั้นอุปนัย">
+        <p class="tf-n"><b><span class="fid">I4</span> Inductive step for sums</b> ขั้นอุปนัยของสูตรผลบวก</p>
+        \[ \sum_{i=n_0}^{k+1} f(i) = \sum_{i=n_0}^{k} f(i) + f(k+1) \quad\Rightarrow\quad P(k) \Rightarrow P(k+1) \iff g(k+1) = g(k) + f(k+1) \]
+        <p class="tf-x">ใช้ได้กับ \(\sum k,\ \sum k^2,\ \sum k^3\) (<a href="/learn/limits/sequences-series/#sigma">S9</a>) อนุกรมเรขาคณิต และผลบวกแบบหักล้าง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-2</span><h3>พิสูจน์ \(\displaystyle\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="sum-k2">เปิดในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1\): ซ้าย \(= 1\) ขวา \(= \dfrac{1\cdot2\cdot3}{6} = 1\) จริง</p></li>
+        <li><p>สมมติ \(\sum_{i=1}^{k} i^2 = \dfrac{k(k+1)(2k+1)}{6}\) ต้องแสดง \(\sum_{i=1}^{k+1} i^2 = \dfrac{(k+1)(k+2)(2k+3)}{6}\)</p></li>
+        <li><p>\(\sum_{i=1}^{k+1} i^2 = \hlP{\dfrac{k(k+1)(2k+1)}{6}} + (k+1)^2 = \dfrac{(k+1)\left[k(2k+1) + 6(k+1)\right]}{6}\) (ดึง \(k + 1\) เป็นตัวร่วม อย่ากระจายทั้งหมด)</p></li>
+        <li><p>\(= \dfrac{(k+1)(2k^2 + 7k + 6)}{6} = \dfrac{(k+1)(k+2)(2k+3)}{6}\) ✓ ตรงกับเป้าหมาย</p></li>
+      </ol>
+      <p class="answer">จริงทุก \(n \ge 1\) · เคล็ดลับ: เขียนเป้าหมายไว้ก่อน แล้วรู้ว่าต้องแยกตัวประกอบให้ได้ \((k+2)(2k+3)\)</p>
+    </div>
+    <div class="wx" id="ex-i3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-3 · อนุกรมเรขาคณิต</span><h3>พิสูจน์ว่า \(1 + r + r^2 + \cdots + r^{n-1} = \dfrac{r^n - 1}{r - 1}\) เมื่อ \(r \ne 1\) แล้วตีความเมื่อ \(r = 2\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="geo2">เปิดกรณี r = 2</button></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1\): ซ้าย \(= 1\) ขวา \(= \dfrac{r - 1}{r - 1} = 1\) จริง</p></li>
+        <li><p>สมมติจริงที่ \(n = k\): \(1 + r + \cdots + r^{k} = \hlP{\dfrac{r^k - 1}{r - 1}} + r^k = \dfrac{r^k - 1 + r^{k+1} - r^k}{r - 1} = \dfrac{r^{k+1} - 1}{r - 1}\) ✓</p></li>
+        <li><p>เมื่อ \(r = 2\): \(1 + 2 + 4 + \cdots + 2^{n-1} = 2^n - 1\) คือค่าสูงสุดของเลขฐานสอง n บิต เช่น ADC 12 บิตมีรหัส 0 ถึง \(2^{12} - 1 = 4095\)</p></li>
+      </ol>
+      <p class="answer">จริงทุก \(n \ge 1\) (เทียบกับที่มาด้วยการคูณ r แล้วลบใน<a href="/learn/limits/sequences-series/#geometric">หน้าลำดับและอนุกรม</a>)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="divisibility">
+    <h2 id="divisibility">พิสูจน์การหารลงตัว (Divisibility) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เป้าหมายคือเขียน \(f(k+1)\) ให้อยู่ในรูป “ค่าคงที่ × \(f(k)\) + ส่วนที่หารลงตัวชัดเจน” แล้วใช้สมมติฐานว่า \(f(k)\) หารลงตัว อย่าลืมว่า “a หาร b ลงตัว” เขียนเป็นสมการได้ว่า \(b = am\) สำหรับจำนวนเต็ม m บางตัว ซึ่งจัดการด้วยพีชคณิตได้ง่ายกว่า</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="I5" data-k="divisibility induction template m divides f(k) การหารลงตัว อุปนัย">
+        <p class="tf-n"><b><span class="fid">I5</span> Divisibility step</b> แม่แบบขั้นอุปนัยของการหารลงตัว</p>
+        \[ m \mid f(k)\ \ (f(k) = mq) \quad\text{และ}\quad f(k+1) = c\,f(k) + m\,t \ \Rightarrow\ m \mid f(k+1) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-i4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-4</span><h3>พิสูจน์ว่า (ก) \(3 \mid 4^n - 1\) (ข) \(6 \mid n^3 - n\) สำหรับทุกจำนวนนับ \(n\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="div6">เปิดข้อ (ข) ในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p>(ก) กรณีฐาน: \(4^1 - 1 = 3\) หารด้วย 3 ลงตัว · สมมติ \(4^k - 1 = 3m\)</p></li>
+        <li><p>\(4^{k+1} - 1 = 4\cdot 4^k - 1 = 4(4^k - 1) + 3 = 4\hlP{(3m)} + 3 = 3(4m + 1)\) หารด้วย 3 ลงตัว ✓</p></li>
+        <li><p>(ข) กรณีฐาน: \(1^3 - 1 = 0 = 6\cdot 0\) ✓ · สมมติ \(k^3 - k = 6m\)</p></li>
+        <li><p>\((k+1)^3 - (k+1) = k^3 + 3k^2 + 3k + 1 - k - 1 = \hlP{(k^3 - k)} + 3k(k+1)\)</p></li>
+        <li><p>\(k(k+1)\) เป็นผลคูณของจำนวนเต็มสองตัวติดกัน จึงเป็นจำนวนคู่ \(= 2t\) ดังนั้น \(3k(k+1) = 6t\) และ \((k+1)^3 - (k+1) = 6m + 6t = 6(m + t)\) ✓</p></li>
+      </ol>
+      <p class="answer">ทั้งสองจริงทุก \(n \ge 1\) · (ข) ใช้ข้อเท็จจริงเสริมว่าจำนวนเต็มติดกันสองตัวมีตัวหนึ่งเป็นคู่ บทพิสูจน์อุปนัยหลายข้อต้องใช้ความรู้อื่นประกอบแบบนี้</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inequalities">
+    <h2 id="inequalities">พิสูจน์อสมการ (Inequalities) <span class="lv lv-i">กลาง</span></h2>
+    <p>อสมการต่างจากสมการตรงที่ปลายทางไม่ต้องได้ด้านขวาของ P(k+1) พอดี แค่ต้อง “มากกว่าหรือเท่ากับ” ก็พอ โครงสร้างจึงเป็นโซ่: ซ้ายของ P(k+1) → แยกก้อน P(k) → ใช้สมมติฐาน (เกิด > ตรงนี้) → อสมการช่วยที่ใช้เงื่อนไขของ k → ขวาของ P(k+1) เงื่อนไขของ k ในขั้นสุดท้ายคือสิ่งที่บอกว่ากรณีฐานต้องเริ่มที่เท่าไร</p>
+    <div class="tf-grid">
+      <div class="tf" id="I6" data-k="inequality induction chain technique อสมการ อุปนัย โซ่อสมการ">
+        <p class="tf-n"><b><span class="fid">I6</span> Inequality chain</b> โซ่อสมการ</p>
+        \[ L(k+1) = \cdots\, L(k) \cdots\ \overset{\text{IH}}{>}\ \cdots\, R(k) \cdots\ \ge\ R(k+1) \]
+        <p class="tf-x">IH = inductive hypothesis · ขั้น ≥ สุดท้ายมักต้องใช้ \(k \ge\) ค่าหนึ่ง</p>
+      </div>
+      <div class="tf" id="I7" data-k="bernoulli inequality (1+x)^n >= 1+nx linear lower bound อสมการเบอร์นูลลี">
+        <p class="tf-n"><b><span class="fid">I7</span> Bernoulli's inequality</b> อสมการเบอร์นูลลี</p>
+        \[ (1 + x)^n \ge 1 + nx\qquad (x \ge -1,\ n \in \mathbb{N}) \]
+        <p class="tf-x">ขอบเขตล่างเชิงเส้นของการเติบโตแบบทบต้น = เทย์เลอร์อันดับหนึ่ง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-5 · กรณีฐานไม่ได้เริ่มที่ 1</span><h3>พิสูจน์ว่า \(2^n > n^2\) สำหรับทุก \(n \ge 5\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="pow2">เปิดในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p>ทำไมเริ่มที่ 5: \(n = 2, 3, 4\) ได้ \(4 = 4,\ 8 &lt; 9,\ 16 = 16\) ไม่จริง (\(n = 1\) จริงแต่ห่วงโซ่ขาดตอน)</p></li>
+        <li><p>กรณีฐาน \(n = 5\): \(2^5 = 32 > 25 = 5^2\) จริง</p></li>
+        <li><p>สมมติ \(2^k > k^2\) สำหรับ \(k \ge 5\) จะแสดง \(2^{k+1} > (k+1)^2\)</p></li>
+        <li><p>\(2^{k+1} = 2\cdot 2^k > 2\hlP{k^2}\) (สมมติฐาน)</p></li>
+        <li><p>เหลือแสดง \(2k^2 \ge (k+1)^2 \iff k^2 - 2k - 1 \ge 0 \iff (k-1)^2 \ge 2\) จริงเมื่อ \(k \ge 3\) (โดยเฉพาะ \(k \ge 5\)) จึงได้ \(2^{k+1} > 2k^2 \ge (k+1)^2\) ✓</p></li>
+      </ol>
+      <p class="answer">จริงทุก \(n \ge 5\) · ขั้นอุปนัยใช้ได้ตั้งแต่ k = 3 แต่ P(3) และ P(4) เป็นเท็จ กรณีฐานจึงต้องเป็นตัวแรกที่จริงแล้วโซ่ไม่ขาด คือ 5</p>
+    </div>
+    <div class="wx" id="ex-i6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-6 · อสมการเบอร์นูลลีกับการเติบโตทบต้น</span><h3>พิสูจน์ \((1 + x)^n \ge 1 + nx\) เมื่อ \(x \ge -1\) แล้วใช้แสดงว่าระบบที่โต 5% ต่อรอบ หลัง 10 รอบโตอย่างน้อย 50%</h3><button type="button" class="wx-btn calc-go" data-in-preset="bern">เปิดในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1\): \(1 + x \ge 1 + x\) จริง (เท่ากัน)</p></li>
+        <li><p>สมมติ \((1 + x)^k \ge 1 + kx\) เนื่องจาก \(1 + x \ge 0\) คูณทั้งสองข้างแล้วเครื่องหมายไม่กลับ: \((1 + x)^{k+1} \ge \hlP{(1 + kx)}(1 + x)\)</p></li>
+        <li><p>\(= 1 + (k+1)x + kx^2 \ge 1 + (k+1)x\) เพราะ \(kx^2 \ge 0\) ✓</p></li>
+        <li><p>ที่ \(x = 0.05,\ n = 10\): \(1.05^{10} \ge 1 + 10(0.05) = 1.5\) (ค่าจริง \(1.629\)) จุดที่ต้องระวังคือเงื่อนไข \(x \ge -1\) ใช้ตอนคูณอสมการ</p></li>
+      </ol>
+      <p class="answer">\((1 + x)^n \ge 1 + nx\) · ด้านขวาคือเทย์เลอร์อันดับหนึ่งของด้านซ้าย อสมการบอกว่าการประมาณเชิงเส้นไม่เคยเกินค่าจริงเมื่อ \(x \ge -1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="strong">
+    <h2 id="strong">อุปนัยแบบเข้มและลำดับเวียนเกิด (Strong Induction) <span class="lv lv-i">กลาง</span></h2>
+    <p>ลำดับเวียนเกิดเป็นคู่หูโดยธรรมชาติของอุปนัย: นิยามพจน์ถัดไปจากพจน์ก่อนหน้า ก็พิสูจน์สมบัติของพจน์ถัดไปจากพจน์ก่อนหน้า ถ้าความสัมพันธ์ย้อนไปมากกว่าหนึ่งขั้น เช่น \(F_{k+1} = F_k + F_{k-1}\) ต้องใช้อุปนัยแบบเข้ม (I3) และตรวจกรณีฐานให้ครบจำนวนขั้นที่ย้อน</p>
+    <div class="wx" id="ex-i7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-7 · แบบเข้ม</span><h3>(ก) แสตมป์ราคา 4 และ 5 บาท แสดงว่ารวมได้ทุกราคา \(n \ge 12\) บาท (ข) ฟีโบนัชชี \(F_1 = F_2 = 1,\ F_{n+1} = F_n + F_{n-1}\) แสดงว่า \(F_n &lt; 2^n\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) กรณีฐานสี่ค่า: \(12 = 4 + 4 + 4,\ 13 = 4 + 4 + 5,\ 14 = 4 + 5 + 5,\ 15 = 5 + 5 + 5\)</p></li>
+        <li><p>ขั้นอุปนัย: ให้ \(k \ge 15\) และสมมติว่าทุกราคา 12 ถึง k รวมได้ ราคา \(k + 1 = (k - 3) + 4\) และ \(12 \le k - 3 \le k\) จึงรวมได้ตามสมมติฐาน เติมแสตมป์ 4 บาทอีกดวง ✓ (ต้องย้อน 4 ขั้น จึงต้องมีกรณีฐาน 4 ค่า)</p></li>
+        <li><p>(ข) กรณีฐานสองค่า: \(F_1 = 1 &lt; 2\) และ \(F_2 = 1 &lt; 4\)</p></li>
+        <li><p>สมมติ \(F_j &lt; 2^j\) ทุก \(j \le k\) (\(k \ge 2\)): \(F_{k+1} = \hlP{F_k} + \hlP{F_{k-1}} &lt; 2^k + 2^{k-1} &lt; 2^k + 2^k = 2^{k+1}\) ✓</p></li>
+      </ol>
+      <p class="answer">(ก) ทุกราคา ≥ 12 บาท (11 บาทรวมไม่ได้) (ข) \(F_n &lt; 2^n\) ทุก n</p>
+    </div>
+    <div class="wx" id="ex-i8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-8 · ขอบเขตของลำดับเวียนเกิด (ใช้คู่กับทฤษฎีบทลำดับทางเดียว)</span><h3>\(a_1 = \sqrt2,\ a_{n+1} = \sqrt{2 + a_n}\) พิสูจน์ว่า \(0 &lt; a_n &lt; 2\) และ \(a_{n+1} > a_n\) ทุก n</h3><a class="wx-btn calc-go" href="/learn/limits/sequences-series/#ex-s7">ดูตัวอย่างคู่กันในหน้าลำดับ</a></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน: \(0 &lt; a_1 = \sqrt2 \approx 1.414 &lt; 2\)</p></li>
+        <li><p>สมมติ \(0 &lt; a_k &lt; 2\): \(a_{k+1} = \sqrt{2 + \hlP{a_k}} &lt; \sqrt{2 + 2} = 2\) และ \(a_{k+1} > \sqrt2 > 0\) ✓ จึงได้ \(0 &lt; a_n &lt; 2\) ทุก n</p></li>
+        <li><p>เพิ่มขึ้น: \(a_{n+1} > a_n \iff 2 + a_n > a_n^2 \iff (a_n - 2)(a_n + 1) &lt; 0\) ซึ่งจริงเพราะ \(0 &lt; a_n &lt; 2\) จากข้อก่อน (ไม่ต้องอุปนัยซ้ำ)</p></li>
+      </ol>
+      <p class="answer">เพิ่มขึ้นและมีขอบเขต จึงลู่เข้า และลิมิตคือ 2 (ดู<a href="/learn/limits/sequences-series/#limit-sequence">ทฤษฎีบทลำดับทางเดียว S13</a>)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculus">
+    <h2 id="calculus">อุปนัยในแคลคูลัส: อนุพันธ์ ลาปลาซ และอินทิกรัล <span class="lv lv-i">กลาง</span></h2>
+    <p>สูตรแคลคูลัสหลายสูตรที่เขียนด้วย “n” ถูกพิสูจน์ด้วยอุปนัยทั้งสิ้น รูปแบบที่พบบ่อยคือขั้นอุปนัยใช้กฎผลคูณ (product rule) หรือการอินทิเกรตทีละส่วน (integration by parts) เพื่อลดกรณี \(k + 1\) ลงเหลือกรณี \(k\)</p>
+    <div class="tf-grid">
+      <div class="tf" id="I8" data-k="power rule derivative x^n induction product rule กฎอนุพันธ์ ยกกำลัง">
+        <p class="tf-n"><b><span class="fid">I8</span> Power rule (n ∈ ℕ)</b> อนุพันธ์ของ xⁿ</p>
+        \[ \frac{d}{dx}x^n = n\,x^{n-1} \]
+        <p class="tf-x">ขั้นอุปนัย: \(x^{k+1} = x\cdot x^k\) แล้วใช้กฎผลคูณ</p>
+      </div>
+      <div class="tf" id="I9" data-k="nth derivative 1/x factorial formula อนุพันธ์อันดับ n">
+        <p class="tf-n"><b><span class="fid">I9</span> nth derivative of 1/x</b> อนุพันธ์อันดับ n ของ 1/x</p>
+        \[ \frac{d^n}{dx^n}\,\frac1x = \frac{(-1)^n\, n!}{x^{n+1}} \]
+      </div>
+      <div class="tf" id="I10" data-k="laplace transform t^n factorial integration by parts ลาปลาซ t ยกกำลัง n">
+        <p class="tf-n"><b><span class="fid">I10</span> Laplace of tⁿ</b> การแปลงลาปลาซของ tⁿ</p>
+        \[ \mathcal{L}\{t^n\} = \int_0^{\infty} t^n e^{-st}\,dt = \frac{n!}{s^{n+1}} \]
+        <p class="tf-x">ขั้นอุปนัย: อินทิเกรตทีละส่วนได้ \(\mathcal{L}\{t^{k+1}\} = \tfrac{k+1}{s}\mathcal{L}\{t^k\}\)</p>
+      </div>
+      <div class="tf" id="I11" data-k="leibniz rule nth derivative product binomial ไลบ์นิซ อนุพันธ์ผลคูณ">
+        <p class="tf-n"><b><span class="fid">I11</span> Leibniz rule</b> อนุพันธ์อันดับ n ของผลคูณ</p>
+        \[ (fg)^{(n)} = \sum_{k=0}^{n}\binom{n}{k} f^{(k)} g^{(n-k)} \]
+        <p class="tf-x">โครงสร้างเดียวกับทฤษฎีบททวินาม พิสูจน์ด้วยอุปนัยและ \(\binom{n}{k} + \binom{n}{k-1} = \binom{n+1}{k}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-9 · กฎยกกำลังของอนุพันธ์</span><h3>ใช้กฎผลคูณพิสูจน์ \(\dfrac{d}{dx}x^n = nx^{n-1}\) ทุก \(n \ge 1\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1\): \(\dfrac{d}{dx}x = 1 = 1\cdot x^0\) จริง (ได้จากนิยามอนุพันธ์โดยตรง)</p></li>
+        <li><p>สมมติ \(\dfrac{d}{dx}x^k = kx^{k-1}\) แล้ว \(\dfrac{d}{dx}x^{k+1} = \dfrac{d}{dx}\left(x\cdot x^k\right) = 1\cdot x^k + x\cdot\hlP{kx^{k-1}}\) (กฎผลคูณ + สมมติฐาน)</p></li>
+        <li><p>\(= x^k + kx^k = (k+1)x^k\) ✓</p></li>
+      </ol>
+      <p class="answer">จริงทุก n ∈ ℕ · กฎนี้คือฐานของ<a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์</a>ทั้งหมดของพหุนาม และของการหาอนุพันธ์อนุกรมกำลังทีละพจน์</p>
+    </div>
+    <div class="wx" id="ex-i10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-10 · อนุพันธ์อันดับ n</span><h3>พิสูจน์ \(\dfrac{d^n}{dx^n}\dfrac1x = \dfrac{(-1)^n n!}{x^{n+1}}\) แล้วหาสัมประสิทธิ์เทย์เลอร์ของ \(1/x\) รอบ \(x = 1\)</h3><a class="wx-btn calc-go" href="/learn/limits/sequences-series/#taylor">ไปที่แล็บเทย์เลอร์</a></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1\): \(\dfrac{d}{dx}x^{-1} = -x^{-2} = \dfrac{(-1)^1 1!}{x^2}\) จริง</p></li>
+        <li><p>สมมติจริงที่ k: \(\dfrac{d^{k+1}}{dx^{k+1}}\dfrac1x = \dfrac{d}{dx}\hlP{\left[(-1)^k k!\,x^{-(k+1)}\right]} = (-1)^k k!\cdot(-(k+1))x^{-(k+2)} = \dfrac{(-1)^{k+1}(k+1)!}{x^{k+2}}\) ✓</p></li>
+        <li><p>สัมประสิทธิ์เทย์เลอร์ที่ \(a = 1\): \(c_n = \dfrac{f^{(n)}(1)}{n!} = (-1)^n\) จึงได้ \(\dfrac1x = 1 - (x - 1) + (x - 1)^2 - \cdots\) (อนุกรมเรขาคณิตที่ \(r = -(x - 1)\), \(R = 1\))</p></li>
+      </ol>
+      <p class="answer">\(f^{(n)}(x) = (-1)^n n!\,x^{-(n+1)}\) · อุปนัยทำให้เราได้ “สูตรของอนุพันธ์ทุกอันดับ” ซึ่งเป็นสิ่งที่อนุกรมเทย์เลอร์ต้องการ</p>
+    </div>
+    <div class="wx" id="ex-i11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-11 · ตารางลาปลาซมาจากไหน</span><h3>พิสูจน์ \(\mathcal{L}\{t^n\} = \dfrac{n!}{s^{n+1}}\) สำหรับ \(n \ge 0\) และ \(s > 0\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 0\): \(\mathcal{L}\{1\} = \int_0^{\infty} e^{-st}dt = \dfrac1s = \dfrac{0!}{s^1}\) จริง</p></li>
+        <li><p>สมมติ \(\mathcal{L}\{t^k\} = \dfrac{k!}{s^{k+1}}\) อินทิเกรตทีละส่วนด้วย \(u = t^{k+1},\ dv = e^{-st}dt\):</p></li>
+        <li><p>\(\mathcal{L}\{t^{k+1}\} = \Big[-\dfrac{t^{k+1}e^{-st}}{s}\Big]_0^{\infty} + \dfrac{k+1}{s}\int_0^{\infty}t^k e^{-st}dt = 0 + \dfrac{k+1}{s}\cdot\hlP{\dfrac{k!}{s^{k+1}}}\) (พจน์ขอบเป็นศูนย์เพราะ \(e^{-st}\) ชนะพหุนาม)</p></li>
+        <li><p>\(= \dfrac{(k+1)!}{s^{k+2}}\) ✓</p></li>
+      </ol>
+      <p class="answer">จริงทุก \(n \ge 0\) ดู<a href="/learn/laplace-transform/">ตารางการแปลงลาปลาซ</a> · ที่ \(s = 1\) ได้ \(\int_0^\infty t^n e^{-t}dt = n!\) (ฟังก์ชันแกมมา)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">อุปนัยในคณิตศาสตร์วิศวกรรมและงานวิศวกรรม <span class="lv lv-i">กลาง</span></h2>
+    <p>ทุกครั้งที่ระบบ “ทำซ้ำ” ไม่ว่าจะเป็นตัวอย่างสัญญาณในระบบดิจิทัล รอบของลูปโปรแกรม ขั้นของวงจรบันได หรือการคูณเฟสเซอร์ซ้ำ อุปนัยคือเครื่องมือที่บอกว่าสูตรสำหรับรอบที่ n ถูกต้องเสมอ</p>
+    <div class="tf-grid">
+      <div class="tf" id="I12" data-k="de moivre theorem phasor power complex number cos sin เดอมัวฟร์ เฟสเซอร์">
+        <p class="tf-n"><b><span class="fid">I12</span> De Moivre's theorem</b> ทฤษฎีบทเดอมัวฟร์</p>
+        \[ (\cos\theta + j\sin\theta)^n = \cos n\theta + j\sin n\theta \]
+        <p class="tf-x">ขั้นอุปนัยใช้<a href="/learn/trigonometry/#sum-difference">สูตรผลบวกมุม</a> · กำลังของ<a href="/learn/vector-algebra/phasors/">เฟสเซอร์</a>หมุนมุมทีละ θ</p>
+      </div>
+      <div class="tf" id="I13" data-k="matrix power discrete time state space x[n]=A^n x[0] เมทริกซ์ยกกำลัง ระบบเวลาไม่ต่อเนื่อง">
+        <p class="tf-n"><b><span class="fid">I13</span> Discrete-time state</b> สถานะของระบบเวลาไม่ต่อเนื่อง</p>
+        \[ \mathbf{x}[n+1] = A\,\mathbf{x}[n] \ \Rightarrow\ \mathbf{x}[n] = A^n\,\mathbf{x}[0] \]
+        <p class="tf-x">พื้นฐานของ<a href="/learn/control-systems/digital-control/">การควบคุมดิจิทัล</a>และปริภูมิสถานะ</p>
+      </div>
+      <div class="tf" id="I14" data-k="loop invariant program correctness plc counter ความถูกต้องของโปรแกรม ลูป">
+        <p class="tf-n"><b><span class="fid">I14</span> Loop invariant</b> ข้อความคงที่ของลูป</p>
+        \[ \text{Inv}(0)\ \wedge\ \big(\text{Inv}(k) \Rightarrow \text{Inv}(k+1)\big) \Rightarrow \text{Inv}(n)\ \text{เมื่อจบลูป} \]
+        <p class="tf-x">อุปนัยในรูปของโปรแกรม: พิสูจน์ว่าโค้ด PLC หรือเฟิร์มแวร์ให้ผลถูกทุกจำนวนรอบ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-i12">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-12 · วงจรบันไดกับเลขฟีโบนัชชี</span><h3>บันไดตัวต้านทาน (R = 1 Ω) มี \(R_1 = 2,\ R_{n+1} = 1 + \dfrac{R_n}{1 + R_n}\) พิสูจน์ว่า \(R_n = \dfrac{F_{2n+1}}{F_{2n}}\)</h3><button type="button" class="wx-btn calc-go" data-in-preset="ladder">เปิดในตัวตรวจ</button></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน: \(\dfrac{F_3}{F_2} = \dfrac21 = 2 = R_1\) จริง</p></li>
+        <li><p>สมมติ \(R_k = \dfrac{F_{2k+1}}{F_{2k}}\) แทนลงในความสัมพันธ์แล้วคูณเศษและส่วนด้วย \(F_{2k}\): \(R_{k+1} = \dfrac{1 + 2R_k}{1 + R_k} = \dfrac{F_{2k} + 2\hlP{F_{2k+1}}}{F_{2k} + \hlP{F_{2k+1}}}\)</p></li>
+        <li><p>ใช้ \(F_{m+1} = F_m + F_{m-1}\): ส่วน \(= F_{2k+2}\) และเศษ \(= F_{2k+2} + F_{2k+1} = F_{2k+3}\) จึงได้ \(R_{k+1} = \dfrac{F_{2k+3}}{F_{2k+2}}\) ✓</p></li>
+      </ol>
+      <p class="answer">\(R_n = F_{2n+1}/F_{2n}\) ทุก n · อัตราส่วนเลขฟีโบนัชชีลู่เข้าสู่ \(\varphi = \tfrac{1 + \sqrt5}{2}\) จึงได้ \(R_\infty = \varphi R\) ตรงกับ<a href="/learn/limits/sequences-series/#ex-s12">ตัวอย่าง S-12</a></p>
+    </div>
+    <div class="wx" id="ex-i13">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-13 · เฟสเซอร์และระบบดิจิทัล</span><h3>(ก) พิสูจน์ทฤษฎีบทเดอมัวฟร์ (ข) ระบบเคลื่อนที่ความเร็วคงที่สุ่มตัวอย่างทุก T วินาที \(\begin{bmatrix}p\\v\end{bmatrix}_{n+1} = \begin{bmatrix}1 &amp; T\\0 &amp; 1\end{bmatrix}\begin{bmatrix}p\\v\end{bmatrix}_n\) หาสถานะหลัง n ตัวอย่าง</h3></div>
+      <ol class="steps">
+        <li><p>(ก) กรณีฐาน \(n = 1\) ชัดเจน · สมมติจริงที่ k: \((\cos\theta + j\sin\theta)^{k+1} = \hlP{(\cos k\theta + j\sin k\theta)}(\cos\theta + j\sin\theta)\)</p></li>
+        <li><p>\(= (\cos k\theta\cos\theta - \sin k\theta\sin\theta) + j(\sin k\theta\cos\theta + \cos k\theta\sin\theta) = \cos(k+1)\theta + j\sin(k+1)\theta\) ✓</p></li>
+        <li><p>(ข) เดาจาก \(A^2 = \begin{bmatrix}1 &amp; 2T\\0 &amp; 1\end{bmatrix}\): ข้อความ \(A^n = \begin{bmatrix}1 &amp; nT\\0 &amp; 1\end{bmatrix}\) กรณีฐาน n = 1 จริง</p></li>
+        <li><p>\(A^{k+1} = \hlP{A^k}A = \begin{bmatrix}1 &amp; kT\\0 &amp; 1\end{bmatrix}\begin{bmatrix}1 &amp; T\\0 &amp; 1\end{bmatrix} = \begin{bmatrix}1 &amp; (k+1)T\\0 &amp; 1\end{bmatrix}\) ✓ ดังนั้น \(p_n = p_0 + nT\,v_0,\ v_n = v_0\)</p></li>
+      </ol>
+      <p class="answer">(ก) \((\cos\theta + j\sin\theta)^n = \cos n\theta + j\sin n\theta\) (ข) \(p_n = p_0 + nTv_0\): เดาสูตรจากกรณีเล็ก แล้วยืนยันด้วยอุปนัย เป็นวิธีทำงานจริงของวิศวกร (ดู<a href="/learn/linear-algebra/matrices/">เมทริกซ์ยกกำลัง</a>)</p>
+    </div>
+    <div class="wx" id="ex-i14">
+      <div class="wx-head"><span class="mono">ตัวอย่าง I-14 · ความถูกต้องของโปรแกรม (loop invariant)</span><h3>โค้ดสะสมผลรวม <code>s := 0; FOR k := 1 TO n DO s := s + k; END_FOR</code> (Structured Text บน PLC) พิสูจน์ว่าจบลูปแล้ว \(s = n(n+1)/2\) และนับจำนวนสายเชื่อมแบบจุดต่อจุดระหว่าง n สถานี</h3></div>
+      <ol class="steps">
+        <li><p>ข้อความคงที่ของลูป: “หลังจบรอบที่ k ค่า \(s = k(k+1)/2\)” · ก่อนเข้าลูป (k = 0): \(s = 0 = 0\cdot1/2\) จริง</p></li>
+        <li><p>สมมติจริงหลังรอบที่ k รอบถัดไปทำ \(s := s + (k+1)\) จึงได้ \(\hlP{\tfrac{k(k+1)}{2}} + (k+1) = \tfrac{(k+1)(k+2)}{2}\) จริงหลังรอบที่ k + 1 · ลูปจบที่ k = n จึงได้ \(s = n(n+1)/2\)</p></li>
+        <li><p>สายเชื่อม: เครือข่าย k สถานีที่ต่อถึงกันทุกคู่มี \(L_k\) เส้น เพิ่มสถานีใหม่ต้องลากสายไปหาทุกสถานีเดิมอีก k เส้น: \(L_{k+1} = L_k + k\) และ \(L_1 = 0\) อุปนัยให้ \(L_n = \tfrac{n(n-1)}{2}\) เช่น 10 สถานีต้องใช้ 45 เส้น เหตุผลที่ระบบใหญ่เปลี่ยนไปใช้บัสหรือ<a href="/learn/sensors-transducers/fieldbus/">ฟิลด์บัส</a></p></li>
+      </ol>
+      <p class="answer">\(s = n(n+1)/2\) · \(L_n = n(n-1)/2\) · การพิสูจน์ loop invariant คืออุปนัยเชิงคณิตศาสตร์ที่ใช้ตรวจโค้ด<a href="/learn/plc/">PLC</a>และเฟิร์มแวร์ที่ต้องปลอดภัย</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">บทพิสูจน์ผิดที่พบบ่อย: เกมหาจุดผิด <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>วิธีฝึกที่ได้ผลที่สุดคือหาจุดผิดในบทพิสูจน์ที่ดูถูกต้อง แต่ละข้อด้านล่างมีบรรทัดที่ผิดหนึ่งบรรทัด คลิกบรรทัดที่คิดว่าผิดแล้วอ่านเหตุผล ทั้งห้าข้อครอบคลุมความผิดพลาดหลักทั้งหมด: ขั้นอุปนัยไม่ครอบคลุม k เล็ก ลืมกรณีฐาน กรณีฐานไม่พอสำหรับอุปนัยแบบเข้ม สรุปจากตัวอย่าง และอสมการช่วยที่ใช้ไม่ได้ทุก k</p>
+    <div class="in-flaw" data-preset="horses"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ข้อผิดพลาด</th><th>ตัวอย่างที่เห็นบ่อย</th><th>วิธีแก้</th></tr></thead>
+        <tbody>
+          <tr><td>ไม่นิยาม P(n)</td><td>เขียน “สมมติจริงที่ k” โดยไม่บอกว่าอะไรจริง</td><td>เขียน P(k) ออกมาเต็ม ๆ ทุกครั้ง</td></tr>
+          <tr><td>สมมติสิ่งที่จะพิสูจน์</td><td>เขียนสมการ P(k+1) แล้วจัดรูปสองข้างจนได้ 0 = 0</td><td>เริ่มจากด้านซ้ายเพียงด้านเดียว แล้วไปให้ถึงด้านขวา</td></tr>
+          <tr><td>ไม่ได้ใช้สมมติฐาน</td><td>พิสูจน์ P(k+1) ได้โดยไม่แตะ P(k) เลย</td><td>ถ้าไม่ได้ใช้ แปลว่าพิสูจน์ตรงได้หรือมีอะไรผิด ทำเครื่องหมายบรรทัดที่ใช้</td></tr>
+          <tr><td>ตรวจกรณีฐานแบบแทนค่าทั้งสมการ</td><td>“แทน n = 1: 1 = 1 จริง” โดยไม่แสดงสองข้าง</td><td>คำนวณซ้ายและขวาแยกกัน แล้วเปรียบเทียบ</td></tr>
+          <tr><td>กรณีฐานผิดค่า</td><td>เริ่มที่ n = 1 ทั้งที่ข้อความจริงตั้งแต่ n = 5</td><td>ดูว่าขั้นอุปนัยต้องการ k ≥ เท่าไร แล้วหาค่าแรกที่จริงและต่อเนื่อง</td></tr>
+          <tr><td>ย้อนสองขั้นแต่มีกรณีฐานค่าเดียว</td><td>ฟีโบนัชชี การแยกตัวประกอบ</td><td>อุปนัยแบบเข้ม: กรณีฐานเท่าจำนวนขั้นที่ย้อน</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="teaching">
+    <h2 id="teaching">ฝึกเขียนพิสูจน์ให้ได้คะแนนเต็ม (สำหรับนักศึกษาและครู) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>การพิสูจน์เป็นทักษะ ไม่ใช่พรสวรรค์ ฝึกตามลำดับนี้แล้วจะเห็นว่าโจทย์ส่วนใหญ่ใช้แม่แบบเดียวกัน ต่างกันแค่ “ลูกเล่นพีชคณิต” ในขั้นอุปนัย</p>
+    <ol>
+      <li><b>เริ่มจากสูตรผลบวก</b> (I-1 ถึง I-3) เพราะขั้นอุปนัยตายตัว: ดึงพจน์สุดท้ายออก ใช้สมมติฐาน แยกตัวประกอบ</li>
+      <li><b>ต่อด้วยการหารลงตัว</b> (I-4) ฝึกเขียน “หารลงตัว” เป็นสมการ \(b = am\) และแยก \(f(k+1)\) ให้เห็น \(f(k)\)</li>
+      <li><b>อสมการ</b> (I-5, I-6) ฝึกเขียนโซ่อสมการ และตอบให้ได้ว่าทำไมกรณีฐานต้องเริ่มที่ค่านั้น</li>
+      <li><b>แบบเข้มและลำดับเวียนเกิด</b> (I-7, I-8) ฝึกนับว่าต้องย้อนกี่ขั้นและต้องมีกรณีฐานกี่ค่า</li>
+      <li><b>ประยุกต์</b> (I-9 ถึง I-14) ฝึก “เดาสูตรจากกรณีเล็ก แล้วพิสูจน์” ซึ่งเป็นวิธีที่วิศวกรใช้จริง</li>
+    </ol>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>เกณฑ์ให้คะแนน (ตัวอย่าง 4 คะแนน)</th><th>ได้คะแนนเมื่อ</th></tr></thead>
+        <tbody>
+          <tr><td>1 · นิยามและกรณีฐาน</td><td>เขียน P(n) ชัดเจน คำนวณสองข้างของ \(P(n_0)\) แยกกันถูกต้อง</td></tr>
+          <tr><td>1 · สมมติฐานการอุปนัย</td><td>เขียน “สมมติ P(k) จริงสำหรับ \(k \ge n_0\) บางค่า” พร้อมข้อความเต็ม และเขียนเป้าหมาย P(k+1)</td></tr>
+          <tr><td>1 · ใช้สมมติฐาน</td><td>มีบรรทัดที่แทนก้อนของ P(k) ด้วยสมมติฐานอย่างชัดเจน</td></tr>
+          <tr><td>1 · พีชคณิตและข้อสรุป</td><td>จัดรูปถูกจนได้ด้านขวาของ P(k+1) และสรุปด้วยหลักอุปนัย</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>สำนวนภาษาไทยที่ใช้ในข้อสอบได้เลย: “ให้ \(P(n)\) แทนข้อความ …” · “เมื่อ \(n = 1\) จะได้ว่า … ดังนั้น \(P(1)\) เป็นจริง” · “สมมติว่า \(P(k)\) เป็นจริง สำหรับจำนวนนับ \(k\) บางจำนวน นั่นคือ …” · “จะแสดงว่า \(P(k+1)\) เป็นจริง” · “โดยหลักอุปนัยเชิงคณิตศาสตร์ \(P(n)\) เป็นจริงสำหรับทุกจำนวนนับ \(n\)”</p>
+    <p class="hint">กลับไปที่ <a href="/learn/limits/sequences-series/">ลำดับและอนุกรม</a> เพื่อใช้สูตรที่พิสูจน์แล้วกับการทดสอบการลู่เข้าและอนุกรมเทย์เลอร์ หรือไปต่อที่<a href="/learn/differential-calculus/">อนุพันธ์</a> ซึ่งใช้กฎยกกำลัง I8 ที่พิสูจน์ในหน้านี้</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
