@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=3a916745">
+<link rel="stylesheet" href="/assets/site.css?v=c6f789e3">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/#article","headline":"วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง","description":"สอนหาดีเทอร์มิแนนต์ 2×2 และ 3×3 ด้วยโคแฟกเตอร์ และหาอินเวอร์สเมทริกซ์ด้วยสูตร adjugate พร้อมตัวอย่างตัวเลขที่ตรวจคำตอบด้วยการคูณกลับ และเงื่อนไขเมทริกซ์เอกฐาน","inLanguage":"th","url":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/","mainEntityOfPage":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Determinant","Inverse matrix","Linear algebra"],"isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-determinant-and-inverse-matrix.jpg"],"keywords":"determinant, ดีเทอร์มิแนนต์, inverse matrix, อินเวอร์สเมทริกซ์, เมทริกซ์ผกผัน, โคแฟกเตอร์, adjugate"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง","item":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Determinant เป็นศูนย์หมายความว่าอะไร?","acceptedAnswer":{"@type":"Answer","text":"เมทริกซ์เป็นเมทริกซ์เอกฐาน (singular) ไม่มีอินเวอร์ส และระบบสมการ Amathbf{x}=mathbf{b} ไม่มีคำตอบเดียว คือไม่มีคำตอบหรือมีคำตอบมากมาย แถวหรือหลักของเมทริกซ์ขึ้นต่อกันเชิงเส้น"}},{"@type":"Question","name":"ใช้วิธี Sarrus กับเมทริกซ์ 4×4 ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ได้ วิธี Sarrus (ลากเส้นทแยง) ใช้ได้กับ 3×3 เท่านั้น เมทริกซ์ขนาดใหญ่กว่านั้นใช้การกระจายโคแฟกเตอร์ หรือการดำเนินการแถวจนเป็นเมทริกซ์สามเหลี่ยม"}},{"@type":"Question","name":"ทำไมหารด้วย determinant ตอนหาอินเวอร์ส?","acceptedAnswer":{"@type":"Answer","text":"เพราะ A operatorname{adj}(A)=det(A) I จึงต้องหารด้วย det(A) เพื่อให้ได้เมทริกซ์เอกลักษณ์ ซึ่งทำไม่ได้เมื่อ det(A)=0"}},{"@type":"Question","name":"นิยมหาอินเวอร์สด้วยวิธีไหนในทางปฏิบัติ?","acceptedAnswer":{"@type":"Answer","text":"ในมือเขียนสำหรับ 2×2 ใช้สูตรลัด สำหรับ 3×3 ใช้ adjugate หรือการดำเนินการแถว (เกาส์–จอร์แดน) ในโปรแกรมคอมพิวเตอร์มักแก้ Amathbf{x}=mathbf{b} ด้วยการแยกตัวประกอบโดยไม่คำนวณอินเวอร์สตรง ๆ เพื่อความแม่นยำ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -380,6 +380,9 @@
       <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
     </nav>
     <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="ค้นหาในเว็บไซต์" aria-haspopup="dialog" aria-controls="searchDlg" title="ค้นหา (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
     <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
     </button>
@@ -388,6 +391,16 @@
     </button>
   </div>
 </header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="ค้นหาในเว็บไซต์">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="ค้นหาบทเรียน สูตร บทความ เช่น ลาปลาซ, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="คำค้นหา" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="ปิดการค้นหา">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="ผลการค้นหา"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">พิมพ์คำที่ต้องการค้นหา ทั้งภาษาไทยและอังกฤษ</p>
+</dialog>
 
 <main id="main">
 <div class="wrap lesson-wrap lesson-layout">
@@ -664,7 +677,7 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=3a916745" defer></script>
+<script src="/assets/site.js?v=c6f789e3" defer></script>
 
 </body>
 </html>

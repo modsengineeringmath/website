@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=3a916745">
+<link rel="stylesheet" href="/assets/site.css?v=c6f789e3">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/en/motor-control/star-delta/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/en/motor-control/star-delta/#article","headline":"Star–Delta Starter in Detail: Power Circuit, Control Circuit, 0.58 In Contactor Sizing, Overload Setting, Timer and Changeover Timing","description":"Design and wire a star–delta (Y-Δ) starter for 400/690 V motors on a 400 V 50 Hz supply, step by step: why current and torque fall to 1/3, the KM1 KM2 KM3 power circuit, overload position and the 0.58 In setting, contactor sizing, the control circuit with interlocks, timer and dead time, the current surge at changeover, the delta-side phase sequence, six-lead cabling, closed-transition star–delta and a troubleshooting table.","inLanguage":"en","url":"https://modsengineeringmath.com/learn/en/motor-control/star-delta/","mainEntityOfPage":"https://modsengineeringmath.com/learn/en/motor-control/star-delta/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Wye-delta starter","Contactor","Overload relay","Motor starting"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/en/motor-control/#article"},"image":["https://modsengineeringmath.com/images/og/learn-en-motor-control-star-delta.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Library","item":"https://modsengineeringmath.com/learn/en/"},{"@type":"ListItem","position":3,"name":"AC Motor Control with Magnetic Contactors & VFDs","item":"https://modsengineeringmath.com/learn/en/motor-control/"},{"@type":"ListItem","position":4,"name":"The star–delta starter in detail: power and control circuits, 0.58·In contactor sizing, overload setting, timer and changeover time","item":"https://modsengineeringmath.com/learn/en/motor-control/star-delta/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why are the contactors in a star–delta starter smaller than the motor rating?","acceptedAnswer":{"@type":"Answer","text":"Because the main contactor (KM1) and the delta contactor (KM3) each carry the winding phase current, which is In/√3 = 0.58 In. The star contactor (KM2) carries current only during starting, 1/3 of the direct-on-line starting current, and breaks a low current, so ≥ 0.33 In is enough. Example: a 66 A motor uses 40 A + 40 A + 25 A."}},{"@type":"Question","name":"How many seconds should the star–delta timer be set to?","acceptedAnswer":{"@type":"Answer","text":"Set it to change to delta when the motor reaches about 85–90 % of speed, which you can see as the current falling and settling during the star stage. Small pumps and fans often use 3–8 s; high-inertia loads may need 10–20 s. The best method is to clamp a meter on the line and watch the current in star, then set the timer slightly longer than the point where the current settles. Too short and the surge is almost as large as a direct-on-line start; too long and the motor runs in star for no reason."}},{"@type":"Question","name":"The motor runs in star, then the breaker trips when it changes to delta. Why?","acceptedAnswer":{"@type":"Answer","text":"Common causes: no dead time or too short a dead time, so KM2 and KM3 overlap through the arc; a wrong delta-side wiring sequence that connects the windings in the wrong pattern; a timer so short that the motor has not accelerated; or the copper links in the terminal box were not removed."}}]}]}</script>
@@ -380,6 +380,9 @@
       <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
     </nav>
     <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="Search the site" aria-haspopup="dialog" aria-controls="searchDlg" title="Search (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
     <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
     </button>
@@ -388,6 +391,16 @@
     </button>
   </div>
 </header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="Search the site">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="Search lessons, formulas, articles e.g. Laplace, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="Search terms" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="Close search">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="Search results"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">Type to search, in English or Thai</p>
+</dialog>
 
 <main id="main">
 <div class="wrap lesson-wrap lesson-layout">
@@ -702,10 +715,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=3a916745" defer></script>
-<script src="/assets/lesson.js?v=3a916745" defer></script>
-<script src="/assets/ee-kit.js?v=3a916745" defer></script>
-<script src="/assets/mc-calc.js?v=3a916745" defer></script>
-<script src="/assets/mc-lab.js?v=3a916745" defer></script>
+<script src="/assets/site.js?v=c6f789e3" defer></script>
+<script src="/assets/lesson.js?v=c6f789e3" defer></script>
+<script src="/assets/ee-kit.js?v=c6f789e3" defer></script>
+<script src="/assets/mc-calc.js?v=c6f789e3" defer></script>
+<script src="/assets/mc-lab.js?v=c6f789e3" defer></script>
 </body>
 </html>
