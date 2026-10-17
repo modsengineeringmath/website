@@ -1,0 +1,261 @@
+<!--meta
+{
+  "title": "แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า: สนามไฟฟ้า ศักย์ กฎของเกาส์ ตัวเก็บประจุ สมการแมกซ์เวลล์ | อาจารย์มด",
+  "h1": "แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า: สนามไฟฟ้า ศักย์ กฎของเกาส์ ตัวเก็บประจุ และสมการแมกซ์เวลล์",
+  "description": "การประยุกต์แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า (electrical engineering): สนามไฟฟ้า E = −∇V ศักย์ไฟฟ้า (electric potential) ประจุจุดและสนามซ้อนทับ กฎของเกาส์ (Gauss's law) ความจุของตัวเก็บประจุและสายโคแอกเชียล หลักดินและแรงดันก้าว สมการลาปลาซ-พัวซอง สมการแมกซ์เวลล์ เวกเตอร์พอยน์ติง พร้อมแล็บลากประจุและตรวจกฎของเกาส์",
+  "ogTitle": "แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า: E = −∇V, กฎของเกาส์, ความจุ, แมกซ์เวลล์",
+  "lesson": "multivariable-calculus",
+  "sub": "electrical-engineering",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["แคลคูลัสในวิศวกรรมไฟฟ้า", "สนามไฟฟ้า", "electric field", "ศักย์ไฟฟ้า", "E = -grad V", "กฎของเกาส์", "Gauss's law", "ความจุไฟฟ้า", "capacitance", "สมการแมกซ์เวลล์", "Maxwell's equations", "ลาปลาซ พัวซอง", "Poisson equation", "เวกเตอร์พอยน์ติง", "Poynting vector", "หลักดิน", "earthing resistance", "electromagnetics"],
+  "about": ["Electric field and potential", "Superposition", "Gauss's law", "Capacitance", "Coaxial cable", "Grounding electrode resistance", "Step voltage", "Laplace and Poisson equations", "Maxwell's equations", "Electromagnetic wave equation", "Poynting vector", "Joule heating"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-eng.js"],
+  "og": {"title": "แคลคูลัสหลายตัวแปรในงานไฟฟ้า", "sub": "E = −∇V กฎของเกาส์ ความจุ หลักดิน แมกซ์เวลล์ พอยน์ติง พร้อมแล็บลากประจุ", "eyebrow": "บทที่ 24.10 · Electrical Engineering Applications", "sym": "E=−∇V"},
+  "faq": [
+    {"q": "สนามไฟฟ้า E ได้จากศักย์ไฟฟ้า V ได้อย่างไร?", "a": "ใช้ \\(\\mathbf E = -\\nabla V = -\\left\\langle\\dfrac{\\partial V}{\\partial x}, \\dfrac{\\partial V}{\\partial y}, \\dfrac{\\partial V}{\\partial z}\\right\\rangle\\) คือสนามไฟฟ้าเท่ากับลบเกรเดียนต์ของศักย์ ชี้ไปทางที่ศักย์ลดลงเร็วสุด และตั้งฉากกับผิวศักย์เท่ากัน ข้อดีคือหา \\(V\\) ซึ่งเป็นสเกลาร์ (บวกกันได้ง่าย \\(V = k\\sum q_i/r_i\\)) แล้วหาอนุพันธ์ย่อยจะได้ \\(\\mathbf E\\) ทั้งสามองค์ประกอบ ตัวอย่าง \\(V = kq/r\\) ได้ \\(\\mathbf E = kq\\,\\hat{\\mathbf r}/r^2\\) ซึ่งคือกฎของคูลอมบ์"},
+    {"q": "กฎของเกาส์ (Gauss's law) ใช้หาสนามไฟฟ้าอย่างไร?", "a": "กฎบอกว่า \\(\\oiint\\mathbf E\\cdot d\\mathbf S = Q_{enc}/\\varepsilon_0\\) เมื่อมีความสมมาตร (ทรงกลม ทรงกระบอก ระนาบ) เลือกผิวเกาส์ให้ \\(\\mathbf E\\) ตั้งฉากกับผิวและมีขนาดคงที่ แล้วอินทิกรัลลดเหลือ \\(E\\times\\)พื้นที่ ตัวอย่าง เส้นประจุยาวอนันต์: \\(E = \\lambda/(2\\pi\\varepsilon_0r)\\) · แผ่นระนาบอนันต์: \\(E = \\sigma/(2\\varepsilon_0)\\) · ทรงกลม: \\(E = kQ/r^2\\) นอกทรงกลม ถ้าไม่มีความสมมาตรต้องใช้สนามซ้อนทับหรือแก้สมการลาปลาซ-พัวซอง"},
+    {"q": "สมการลาปลาซกับสมการพัวซองต่างกันอย่างไร ใช้เมื่อไร?", "a": "สมการพัวซอง \\(\\nabla^2V = -\\rho_v/\\varepsilon_0\\) ใช้ในบริเวณที่มีประจุ ส่วนสมการลาปลาซ \\(\\nabla^2V = 0\\) เป็นกรณีที่ไม่มีประจุในบริเวณนั้น (ประจุอยู่เฉพาะที่ขอบเขต เช่นขั้วอิเล็กโทรด) ใช้หาศักย์ระหว่างอิเล็กโทรดเมื่อรู้แรงดันที่ขอบ เช่นในสายโคแอกเชียล \\(V(r) = V_0\\ln(b/r)/\\ln(b/a)\\) และในตัวเก็บประจุแผ่นขนาน \\(V\\) เปลี่ยนเป็นเส้นตรงตามระยะ สมการนี้ยังใช้กับการนำความร้อนสภาวะคงตัวและการซึมของน้ำใต้ดินด้วย"},
+    {"q": "คำนวณความจุ (capacitance) ด้วยแคลคูลัสหลายตัวแปรอย่างไร?", "a": "ขั้นตอนมาตรฐาน: สมมติประจุ \\(Q\\) บนอิเล็กโทรด หาสนาม \\(\\mathbf E\\) ด้วยกฎของเกาส์ หาแรงดัน \\(V = -\\int\\mathbf E\\cdot d\\mathbf l\\) ระหว่างอิเล็กโทรดทั้งสอง แล้ว \\(C = Q/V\\) ตัวอย่างแผ่นขนาน \\(C = \\varepsilon_0A/d\\) สายโคแอกเชียล \\(C' = 2\\pi\\varepsilon_0\\varepsilon_r/\\ln(b/a)\\) ต่อเมตร (สาย RG-58 ได้ราว 108 pF/m) พลังงานที่สะสมคือ \\(W = \\tfrac12\\varepsilon_0\\iiint E^2\\,dV = \\tfrac12CV^2\\)"},
+    {"q": "เวกเตอร์พอยน์ติง (Poynting vector) คืออะไร?", "a": "เวกเตอร์พอยน์ติง \\(\\mathbf S = \\mathbf E\\times\\mathbf H\\) (W/m²) บอกทิศและขนาดของกำลังที่ไหลผ่านพื้นที่หนึ่งหน่วยของสนามแม่เหล็กไฟฟ้า อินทิกรัลบนผิวปิด \\(\\oiint\\mathbf S\\cdot d\\mathbf A\\) คือกำลังที่ไหลออกจากปริมาตร เช่นลวดนำกระแส 10 A ที่ร้อนขึ้น 0.549 W เป็นพลังงานที่ไหล “เข้า” ผ่านผิวลวดจากสนามรอบ ๆ ตรงกับ \\(I^2R\\) และสำหรับคลื่นระนาบ \\(S = E_0^2/(2\\eta_0)\\) เมื่อ \\(\\eta_0 = 376.7\\ \\Omega\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>วิศวกรรมไฟฟ้า</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.10 · การประยุกต์ · Electrical Engineering</p>
+      <h1>แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า: สนามไฟฟ้า ศักย์ กฎของเกาส์ ตัวเก็บประจุ และสมการแมกซ์เวลล์</h1>
+      <p class="lede">แม่เหล็กไฟฟ้า (electromagnetics) คือวิชาที่แคลคูลัสหลายตัวแปรทั้งหมดมารวมกัน: gradient เปลี่ยนศักย์เป็นสนาม อินทิกรัลผิวหาฟลักซ์ อินทิกรัลเส้นหาแรงดัน divergence และ curl แปลงกฎทั้งสี่ให้เป็นสมการที่แก้ได้ หน้านี้ใช้เครื่องมือจากบทก่อนหน้าแก้โจทย์ไฟฟ้าจริง ตั้งแต่สนามของประจุจุดและแล็บลากประจุ กฎของเกาส์ ความจุของแผ่นขนานและสายโคแอกเชียล ค่าความต้านทานดินของหลักดินและแรงดันก้าว (step voltage) ไปจนถึงสมการแมกซ์เวลล์ คลื่นแม่เหล็กไฟฟ้า และพลังงานที่ไหลเข้าสู่ลวดนำกระแสผ่านเวกเตอร์พอยน์ติง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#charge-lab">แล็บลากประจุ</a>
+        <a class="btn btn-ghost btn-sm" href="#potential">E = −∇V</a>
+        <a class="btn btn-ghost btn-sm" href="#gauss">กฎของเกาส์</a>
+        <a class="btn btn-ghost btn-sm" href="#capacitance">ความจุ</a>
+        <a class="btn btn-ghost btn-sm" href="#ground">หลักดิน</a>
+        <a class="btn btn-ghost btn-sm" href="#E10">Poynting</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\mathbf E = -\nabla V\) · \(V = \dfrac{1}{4\pi\varepsilon_0}\sum\dfrac{q_i}{r_i}\) · \(V_{AB} = -\int_A^B\mathbf E\cdot d\mathbf l\) (ไม่ขึ้นกับเส้นทางเพราะ \(\nabla\times\mathbf E = \mathbf 0\))</li>
+          <li><b>เกาส์:</b> \(\oiint\mathbf E\cdot d\mathbf S = Q_{enc}/\varepsilon_0\) · \(\nabla\cdot\mathbf E = \rho_v/\varepsilon_0\) · เส้นประจุ \(E = \lambda/2\pi\varepsilon_0r\) · ระนาบ \(E = \sigma/2\varepsilon_0\)</li>
+          <li><b>ความจุ:</b> \(C = Q/V\) · แผ่นขนาน \(\varepsilon_0A/d\) · โคแอกเชียล \(2\pi\varepsilon_0\varepsilon_r/\ln(b/a)\) · พลังงาน \(\tfrac12\varepsilon_0\iiint E^2dV = \tfrac12CV^2\)</li>
+          <li><b>ลาปลาซ/พัวซอง:</b> \(\nabla^2V = -\rho_v/\varepsilon_0\) · <b>พอยน์ติง:</b> \(\mathbf S = \mathbf E\times\mathbf H\), \(P = \oiint\mathbf S\cdot d\mathbf A\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น potential, gauss, capacitance, coax, grounding, step voltage, poynting, laplace" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="potential">
+    <h2 id="potential">สนามไฟฟ้าจากศักย์: E = −∇V <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ศักย์ไฟฟ้า \(V(x, y, z)\) เป็นสเกลาร์ (ตัวเลขเดียวต่อจุด) ซึ่งคำนวณง่ายกว่าสนามเวกเตอร์ เพราะรวมจากหลายประจุได้โดยบวกตัวเลข แล้วใช้ \(\mathbf E = -\nabla V\) หาสนามทั้งสามองค์ประกอบในครั้งเดียว (บท<a href="/learn/multivariable-calculus/gradient-directional-derivative/">เกรเดียนต์</a>) ผลคือเส้นศักย์เท่ากัน (equipotential) ตั้งฉากกับเส้นแรงเสมอ และ \(\mathbf E\) ชี้ไปทางที่ศักย์ลดลง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E1" data-k="point charge potential field Coulomb V = kq/r E = kq r/r^3 ศักย์ประจุจุด สนาม คูลอมบ์">
+        <p class="tf-n"><b><span class="fid">E1</span> Point charge and superposition</b> ประจุจุดและการซ้อนทับ</p>
+        \[ V(\mathbf r) = \frac{1}{4\pi\varepsilon_0}\sum_i\frac{q_i}{|\mathbf r - \mathbf r_i|},\qquad \mathbf E(\mathbf r) = \frac{1}{4\pi\varepsilon_0}\sum_i q_i\frac{\mathbf r - \mathbf r_i}{|\mathbf r - \mathbf r_i|^3},\qquad k = \frac{1}{4\pi\varepsilon_0} = 8.988\times10^9\ \mathrm{N\,m^2/C^2} \]
+        <p class="tf-x">\(\varepsilon_0 = 8.854\times10^{-12}\) F/m · ศักย์บวกกันได้เป็นตัวเลข สนามบวกกันเป็นเวกเตอร์ · \(V\) อ้างอิง \(V(\infty) = 0\)</p>
+      </div>
+      <div class="tf wide" id="E2" data-k="E = -grad V electric field from potential voltage line integral V_AB = -integral E dl E = -∇V แรงดัน">
+        <p class="tf-n"><b><span class="fid">E2</span> Field from potential and voltage</b> สนามจากศักย์และแรงดัน</p>
+        \[ \mathbf E = -\nabla V = -\left\langle\frac{\partial V}{\partial x},\ \frac{\partial V}{\partial y},\ \frac{\partial V}{\partial z}\right\rangle,\qquad V_A - V_B = \int_A^B\mathbf E\cdot d\mathbf l,\qquad \nabla\times\mathbf E = \mathbf 0\ \text{(สถิต)} \]
+        <p class="tf-x">สนามอนุรักษ์: แรงดันระหว่างสองจุดไม่ขึ้นกับเส้นทาง (ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น) · \(\mathbf E \perp\) ผิวศักย์เท่ากัน · ผิวตัวนำเป็นผิวศักย์เท่ากัน \(\Rightarrow\) \(\mathbf E\) ตั้งฉากผิวตัวนำ</p>
+      </div>
+    </div>
+    <h3 id="charge-lab-h">แล็บประจุจุด: ลากประจุ ดู V และ E</h3>
+    <p>แล็บอยู่ในระนาบ \(z = 0\) (หน่วย nC, เมตร) สีพื้นแสดงศักย์ (ส้ม = บวก ฟ้า = ลบ) เส้นสีแสดงเส้นศักย์เท่ากัน และเส้นดำคือเส้นแรง ลากประจุได้ ลากจุด P เพื่ออ่าน \(V\) และ \(\mathbf E\) ตารางเทียบ \(\mathbf E\) จากสูตรคูลอมบ์กับ \(-\nabla V\) ที่คำนวณด้วยผลต่างของ \(V\) (ตรงกันเสมอ) เลือกเครื่องมือเพื่อเพิ่ม/ลบประจุ และเปิด “ทรงกลมเกาส์” เพื่อตรวจฟลักซ์</p>
+    <div class="mv-charge" id="charge-lab" data-preset="dipole"></div>
+    <div class="wx" id="ex-e1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-1 · ไดโพล (dipole)</span><h3>ประจุ \(+2\) nC ที่ \((-1, 0)\) และ \(-2\) nC ที่ \((1, 0)\) (เมตร) หา \(V\) และ \(\mathbf E\) ที่จุดกำเนิดและที่ \((0, 1)\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="charge-lab" data-mv-set='{"preset":"dipole","px":0,"py":1}'>เปิดในแล็บ (P = (0,1))</button></div>
+      <ol class="steps">
+        <li><p>\(V = kq\left(\dfrac{1}{r_1} - \dfrac{1}{r_2}\right)\) ที่จุดกำเนิด \(r_1 = r_2 = 1\) → \(V = 0\) · ที่ \((0, 1)\) ก็ \(r_1 = r_2 = \sqrt2\) → \(V = 0\) (ทั้งแกน \(y\) คือเส้นศักย์เท่ากันที่ 0 V — ระนาบแบ่งครึ่งระหว่างประจุคู่)</p></li>
+        <li><p>ที่จุดกำเนิด: ประจุบวกผลักไปทาง \(+x\) ประจุลบดึงไปทาง \(+x\) → \(E_x = 2\cdot\dfrac{kq}{1^2} = 2(8.988\times10^9)(2\times10^{-9}) = 35.95\) V/m, \(E_y = 0\)</p></li>
+        <li><p>ที่ \((0, 1)\): แต่ละประจุห่าง \(\sqrt2\) ได้ขนาด \(kq/2 = 8.988\) V/m · จากประจุบวก ทิศ \((1, 1)/\sqrt2\) → \((6.355, 6.355)\) · จากประจุลบ ทิศ \((1, -1)/\sqrt2\) → \((6.355, -6.355)\)</p></li>
+        <li><p>รวม: \(\mathbf E = (12.71,\ 0)\) V/m — ชี้ขนานแกน \(x\) ตั้งฉากกับเส้นศักย์เท่ากัน (แกน \(y\)) ✓ สังเกต: ตามแกน \(y\) สนามชี้ \(+x\) เสมอ จึง \(V\) ไม่เปลี่ยนตามแกน \(y\)</p></li>
+        <li><p>ตรวจ \(\mathbf E = -\nabla V\): ในแล็บ ตั้ง P ที่ \((0, 1)\) แล้วเทียบแถว “E จากสูตรคูลอมบ์” กับ “E = −∇V” ได้ \((12.71, 0)\) V/m ทั้งสองแถว</p></li>
+      </ol>
+      <p class="answer">\(V(0,0) = V(0,1) = 0\) · \(\mathbf E(0,0) = (35.95, 0)\) V/m · \(\mathbf E(0,1) = (12.71, 0)\) V/m</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="gauss">
+    <h2 id="gauss">กฎของเกาส์ในงานไฟฟ้า <span class="lv lv-i">กลาง</span></h2>
+    <p>กฎของเกาส์ \(\oiint\mathbf E\cdot d\mathbf S = Q_{enc}/\varepsilon_0\) เป็นทฤษฎีบทดีเวอร์เจนซ์ของไฟฟ้า (บท<a href="/learn/multivariable-calculus/surface-integrals/#gauss">อินทิกรัลบนผิว</a>) ใช้ได้เสมอ แต่ใช้หาสนามได้สะดวกเฉพาะเมื่อมีความสมมาตรสูง เพราะต้องเลือกผิวเกาส์ให้ \(\mathbf E\cdot\mathbf n\) คงที่ ในแล็บด้านบนเปิดสวิตช์ “ทรงกลมเกาส์” แล้วลากวงเขียว: ฟลักซ์ผ่านทรงกลมมีค่าเท่ากับ \(Q_{ใน}/\varepsilon_0\) เสมอ ประจุนอกวงให้ฟลักซ์สุทธิเป็นศูนย์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E3" data-k="Gauss law symmetric cases line charge plane sphere cylinder E fields กฎของเกาส์ ความสมมาตร เส้นประจุ ระนาบ ทรงกลม">
+        <p class="tf-n"><b><span class="fid">E3</span> Fields from Gauss's law (symmetric charges)</b> สนามจากกฎของเกาส์ (ประจุสมมาตร)</p>
+        \[ \text{ทรงกลม: } E = \frac{Q_{enc}}{4\pi\varepsilon_0r^2}\quad\text{เส้นประจุ: } E = \frac{\lambda}{2\pi\varepsilon_0r}\quad\text{ระนาบ: } E = \frac{\sigma}{2\varepsilon_0}\quad\text{ผิวตัวนำ: } E = \frac{\sigma}{\varepsilon_0} \]
+        <p class="tf-x">ผิวเกาส์: ทรงกลมรัศมี \(r\) · ทรงกระบอกรัศมี \(r\) ยาว \(L\) (ฟลักซ์ผ่านผนังข้าง) · กล่องกระดุม (pillbox) คร่อมระนาบ · ผิวตัวนำ: สนามภายใน = 0 จึงฟลักซ์ออกด้านเดียว</p>
+      </div>
+      <div class="tf wide" id="E4" data-k="Gauss differential form divergence of E charge density Poisson equation Laplace equation สมการพัวซอง ลาปลาซ">
+        <p class="tf-n"><b><span class="fid">E4</span> Poisson and Laplace equations</b> สมการพัวซองและลาปลาซ</p>
+        \[ \nabla\cdot\mathbf E = \frac{\rho_v}{\varepsilon_0},\ \ \mathbf E = -\nabla V\ \Longrightarrow\ \nabla^2V = -\frac{\rho_v}{\varepsilon_0}\quad(\text{พัวซอง}),\qquad \nabla^2V = 0\quad(\rho_v = 0:\ \text{ลาปลาซ}) \]
+        <p class="tf-x">ใช้หา \(V\) เมื่อรู้แรงดันที่ขอบ (ขั้วอิเล็กโทรด) · คำตอบของลาปลาซไม่มีค่าสูงสุด/ต่ำสุดภายใน (สูงสุดอยู่ที่ขอบ) · สมการรูปเดียวกันใช้กับอุณหภูมิคงตัวและระดับน้ำใต้ดิน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-2 · สนามของเส้นประจุและแผ่นระนาบ</span><h3>(ก) เส้นประจุยาวมาก \(\lambda = 10\) nC/m หา \(E\) ที่ 0.5 m (ข) แผ่นประจุระนาบ \(\sigma = 20\) nC/m² หา \(E\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ผิวเกาส์ทรงกระบอกรัศมี \(r\) ยาว \(L\): \(E(2\pi rL) = \lambda L/\varepsilon_0\) → \(E = \dfrac{\lambda}{2\pi\varepsilon_0r} = \dfrac{10\times10^{-9}}{2\pi(8.854\times10^{-12})(0.5)} = 359.5\) V/m</p></li>
+        <li><p>(ข) กล่องกระดุมคร่อมแผ่น พื้นที่หน้า \(A\) สองด้าน: \(2EA = \sigma A/\varepsilon_0\) → \(E = \dfrac{\sigma}{2\varepsilon_0} = \dfrac{20\times10^{-9}}{2(8.854\times10^{-12})} = 1129\) V/m (คงที่ ไม่ขึ้นกับระยะ)</p></li>
+        <li><p>ตรวจด้วยศักย์: \(V(r) = -\dfrac{\lambda}{2\pi\varepsilon_0}\ln r + C\) → \(E = -\dfrac{dV}{dr} = \dfrac{\lambda}{2\pi\varepsilon_0r}\) ✓ สอดคล้องกับ (ก) และ \(\nabla^2V = \dfrac1r\dfrac{d}{dr}\left(r\dfrac{dV}{dr}\right) = 0\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(E = 359.5\) V/m · (ข) \(E = 1129\) V/m</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="capacitance">
+    <h2 id="capacitance">ความจุ พลังงานในสนาม และสายโคแอกเชียล <span class="lv lv-i">กลาง</span></h2>
+    <p>ความจุ (capacitance) \(C = Q/V\) คืออัตราส่วนประจุที่เก็บต่อแรงดัน ขั้นตอนมาตรฐานคือ: (1) สมมติประจุ \(Q\) บนอิเล็กโทรด (2) หา \(\mathbf E\) ด้วยกฎของเกาส์ (3) หา \(V = -\int\mathbf E\cdot d\mathbf l\) ระหว่างสองอิเล็กโทรด (4) \(C = Q/V\) พลังงานที่สะสมคืออินทิกรัลสามชั้นของความหนาแน่นพลังงานสนาม \(\tfrac12\varepsilon_0E^2\) ทั่วปริมาตร</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E5" data-k="capacitance parallel plate C = epsilon A/d energy density 1/2 epsilon E^2 stored energy ความจุ แผ่นขนาน พลังงาน">
+        <p class="tf-n"><b><span class="fid">E5</span> Capacitance and stored energy</b> ความจุและพลังงานที่สะสม</p>
+        \[ C = \frac{Q}{V},\qquad C_{\text{plates}} = \frac{\varepsilon_0\varepsilon_rA}{d},\qquad w_E = \tfrac12\varepsilon E^2,\qquad W = \iiint\tfrac12\varepsilon E^2\,dV = \tfrac12CV^2 \]
+        <p class="tf-x">\(W\) จากอินทิกรัลสามชั้นของ \(w_E\) เท่ากับ \(\tfrac12CV^2\) เสมอ (ตรวจสอบได้) · ละเลยผลที่ขอบ (fringe) สำหรับแผ่นขนานที่ระยะห่างน้อยกว่าขนาดแผ่นมาก</p>
+      </div>
+      <div class="tf wide" id="E6" data-k="coaxial cable capacitance per unit length C' = 2 pi epsilon / ln(b/a) V(r) logarithm ความจุสายโคแอกเชียล">
+        <p class="tf-n"><b><span class="fid">E6</span> Coaxial cable</b> สายโคแอกเชียล</p>
+        \[ E(r) = \frac{V_0}{r\ln(b/a)},\quad V(r) = V_0\frac{\ln(b/r)}{\ln(b/a)},\quad C' = \frac{2\pi\varepsilon_0\varepsilon_r}{\ln(b/a)}\ \text{F/m},\quad L' = \frac{\mu_0}{2\pi}\ln\frac ba\ \text{H/m} \]
+        <p class="tf-x">\(a\) = รัศมีแกนใน · \(b\) = รัศมีด้านในของชีลด์ · \(\varepsilon_r\) = ค่าไดอิเล็กทริก (โพลีเอทิลีน ≈ 2.3) · \(V(r)\) เป็นคำตอบของสมการลาปลาซในพิกัดทรงกระบอก \(\tfrac1r(rV')' = 0\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-3 · ตัวเก็บประจุแผ่นขนาน</span><h3>แผ่น 10 cm × 10 cm ห่าง 1 mm ในอากาศ ต่อกับ 100 V หา \(E\), \(C\), \(Q\), \(W\) และตรวจ \(W\) ด้วยอินทิกรัลความหนาแน่นพลังงาน</h3></div>
+      <ol class="steps">
+        <li><p>\(E = V/d = 100/0.001 = 1.00\times10^{5}\) V/m (สม่ำเสมอระหว่างแผ่น)</p></li>
+        <li><p>\(C = \dfrac{\varepsilon_0A}{d} = \dfrac{8.854\times10^{-12}\times0.01}{0.001} = 88.54\) pF · \(Q = CV = 8.854\) nC</p></li>
+        <li><p>\(W = \tfrac12CV^2 = \tfrac12(88.54\times10^{-12})(100)^2 = 4.427\times10^{-7}\) J = 0.443 µJ</p></li>
+        <li><p>ตรวจด้วยสนาม: \(w_E = \tfrac12\varepsilon_0E^2 = \tfrac12(8.854\times10^{-12})(10^{5})^2 = 0.04427\) J/m³ คูณปริมาตร \(Ad = 10^{-5}\) m³ → \(W = 4.427\times10^{-7}\) J ✓ (ตรงกัน)</p></li>
+      </ol>
+      <p class="answer">\(E = 10^5\) V/m · \(C = 88.54\) pF · \(Q = 8.85\) nC · \(W = 0.443\) µJ</p>
+    </div>
+    <div class="wx" id="ex-e4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-4 · ความจุสายโคแอกเชียลต่อเมตร</span><h3>สายโคแอก \(a = 0.45\) mm, \(b = 1.47\) mm ไดอิเล็กทริกโพลีเอทิลีน \(\varepsilon_r = 2.3\) หา \(C'\) และสนามสูงสุดที่แกนในเมื่อใส่ 100 V</h3></div>
+      <ol class="steps">
+        <li><p>สมมติประจุเส้น \(\lambda\) บนแกนใน · เกาส์: \(E(r) = \dfrac{\lambda}{2\pi\varepsilon_0\varepsilon_rr}\)</p></li>
+        <li><p>แรงดัน \(V_0 = \displaystyle\int_a^bE\,dr = \dfrac{\lambda}{2\pi\varepsilon_0\varepsilon_r}\ln\dfrac ba\) · \(C' = \dfrac{\lambda}{V_0} = \dfrac{2\pi\varepsilon_0\varepsilon_r}{\ln(b/a)}\)</p></li>
+        <li><p>\(\ln(1.47/0.45) = \ln3.267 = 1.1838\) → \(C' = \dfrac{2\pi(8.854\times10^{-12})(2.3)}{1.1838} = 108.1\) pF/m (สาย RG-58 ในแค็ตตาล็อกอยู่ราว 101 pF/m — ใกล้เคียง)</p></li>
+        <li><p>สนามที่แกนใน \(r = a\): \(E = \dfrac{V_0}{a\ln(b/a)} = \dfrac{100}{(0.45\times10^{-3})(1.1838)} = 1.877\times10^{5}\) V/m = 187.7 kV/m (สนามสูงสุดอยู่ติดแกนใน จึงกำหนดแรงดันที่สายทนได้)</p></li>
+      </ol>
+      <p class="answer">\(C' = 108.1\) pF/m · \(E_{\max} = 187.7\) kV/m ที่ 100 V</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ground">
+    <h2 id="ground">หลักดิน ความต้านทานจากสนาม และแรงดันก้าว <span class="lv lv-i">กลาง</span></h2>
+    <p>ความหนาแน่นกระแส \(\mathbf J\) กับสนาม \(\mathbf E\) สัมพันธ์ด้วยกฎของโอห์มในรูปจุด \(\mathbf J = \sigma\mathbf E\) กระแสรวมคือฟลักซ์ของ \(\mathbf J\) ผ่านหน้าตัด \(I = \iint\mathbf J\cdot d\mathbf S\) และแรงดันคืออินทิกรัลเส้นของ \(\mathbf E\) ความต้านทาน \(R = V/I\) จึงคำนวณได้จากสองอินทิกรัลนี้ ตัวอย่างสำคัญคือการต่อลงดิน (earthing) ซึ่งความปลอดภัยของคนขึ้นกับสนามที่ผิวดินรอบหลักดิน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E7" data-k="resistance from field R = V/I = integral E dl / integral J dS Ohm's law point form J = sigma E ความต้านทานจากสนาม">
+        <p class="tf-n"><b><span class="fid">E7</span> Resistance from the fields</b> ความต้านทานจากสนาม</p>
+        \[ \mathbf J = \sigma\mathbf E,\qquad I = \iint_S\mathbf J\cdot d\mathbf S,\qquad V = \int_A^B\mathbf E\cdot d\mathbf l,\qquad R = \frac VI = \frac{\int\mathbf E\cdot d\mathbf l}{\sigma\iint\mathbf E\cdot d\mathbf S} \]
+        <p class="tf-x">\(\nabla\cdot\mathbf J = 0\) ในสภาวะคงตัว (กระแสไม่สะสม) จึง \(\nabla\cdot(\sigma\nabla V) = 0\) หรือ \(\nabla^2V = 0\) เมื่อ \(\sigma\) สม่ำเสมอ · \(\rho = 1/\sigma\) ความต้านทานจำเพาะ (Ω·m)</p>
+      </div>
+      <div class="tf wide" id="E8" data-k="grounding electrode hemisphere resistance R = rho/(2 pi a) step voltage potential V(r) = rho I /(2 pi r) หลักดิน ความต้านทานดิน แรงดันก้าว">
+        <p class="tf-n"><b><span class="fid">E8</span> Hemispherical earth electrode</b> หลักดินครึ่งทรงกลม</p>
+        \[ J(r) = \frac{I}{2\pi r^2},\quad V(r) = \frac{\rho I}{2\pi r},\quad R_g = \frac{\rho}{2\pi a},\quad V_{\text{step}} = \frac{\rho I}{2\pi}\left(\frac1{r_1} - \frac1{r_2}\right) \]
+        <p class="tf-x">กระแสกระจายออกครึ่งทรงกลม (ผิวพื้นที่ \(2\pi r^2\)) · แรงดันเมื่อห่าง \(r\) ลดเป็น \(1/r\) · แรงดันก้าวคือความต่างศักย์ระหว่างสองเท้าที่ห่างกันก้าวหนึ่ง (~1 m)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-5 · หลักดินและแรงดันก้าว</span><h3>หลักดินครึ่งทรงกลมรัศมี \(a = 0.10\) m ในดินความต้านทานจำเพาะ \(\rho = 100\ \Omega\!\cdot\!\text{m}\) เมื่อเกิดกระแสลัดวงจร \(I = 1000\) A ลงดิน หา \(R_g\), \(V\) ที่ผิวดินห่าง 1 m และแรงดันก้าวระหว่าง \(r = 1.0\) กับ \(1.8\) m</h3></div>
+      <ol class="steps">
+        <li><p>กระแสไหลออกทุกทิศบนครึ่งทรงกลมรัศมี \(r\): \(I = J(2\pi r^2)\) → \(J = \dfrac{I}{2\pi r^2}\) · \(E = \rho J = \dfrac{\rho I}{2\pi r^2}\)</p></li>
+        <li><p>\(V(r) = \displaystyle\int_r^\infty E\,dr' = \dfrac{\rho I}{2\pi r}\) · ที่ผิวหลักดิน \(V(a) = \dfrac{\rho I}{2\pi a}\) → \(R_g = \dfrac{V(a)}{I} = \dfrac{\rho}{2\pi a} = \dfrac{100}{2\pi(0.1)} = 159.2\ \Omega\)</p></li>
+        <li><p>\(V(r = 1\text{ m}) = \dfrac{100\times1000}{2\pi(1)} = 15\,915\) V (เทียบกับดินไกล) และ \(V(1.8) = 8842\) V</p></li>
+        <li><p>แรงดันก้าว \(= 15\,915 - 8842 = 7073\) V อันตรายถึงชีวิต (เกณฑ์ปลอดภัยโดยทั่วไปอยู่ระดับร้อยโวลต์) จึงต้องลดโดยทำหลักดินหลายแท่ง ตาข่ายต่อลงดิน และปูผิวหินกรวดความต้านทานสูงในสถานีไฟฟ้าย่อย</p></li>
+      </ol>
+      <p class="answer">\(R_g = 159.2\ \Omega\) · \(V(1\text{ m}) = 15.9\) kV · แรงดันก้าว (1.0→1.8 m) = 7.07 kV</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="maxwell">
+    <h2 id="maxwell">สมการแมกซ์เวลล์ คลื่น และเวกเตอร์พอยน์ติง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สมการแมกซ์เวลล์สี่ข้อ (ดูตารางในบท<a href="/learn/multivariable-calculus/surface-integrals/#maxwell">ผิวและสโตกส์</a>) มีรูปอนุพันธ์ที่ใช้ div และ curl ถ้าแทนกันและใช้เอกลักษณ์ \(\nabla\times(\nabla\times\mathbf E) = \nabla(\nabla\cdot\mathbf E) - \nabla^2\mathbf E\) (D9) ในที่ว่าง (\(\rho = 0,\ \mathbf J = \mathbf 0\)) จะได้สมการคลื่น ซึ่งทำนองค์ประกอบสำคัญคือ ความเร็วคลื่นเท่ากับ \(c = 1/\sqrt{\mu_0\varepsilon_0}\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E9" data-k="wave equation electromagnetic derived from Maxwell curl curl speed of light c = 1/sqrt(mu0 epsilon0) สมการคลื่น ความเร็วแสง">
+        <p class="tf-n"><b><span class="fid">E9</span> Electromagnetic wave equation</b> สมการคลื่นแม่เหล็กไฟฟ้า</p>
+        \[ \nabla\times(\nabla\times\mathbf E) = -\frac{\partial}{\partial t}\nabla\times\mathbf B = -\mu_0\varepsilon_0\frac{\partial^2\mathbf E}{\partial t^2}\ \ \Longrightarrow\ \ \nabla^2\mathbf E = \mu_0\varepsilon_0\frac{\partial^2\mathbf E}{\partial t^2},\qquad c = \frac{1}{\sqrt{\mu_0\varepsilon_0}} \]
+        <p class="tf-x">ใช้ \(\nabla\cdot\mathbf E = 0\) ในที่ว่าง · คลื่นระนาบ \(E_x = E_0\cos(kz - \omega t)\) เป็นคำตอบเมื่อ \(\omega = ck\) · \(\lambda = c/f\) · ความไม่แปรผันนี้คือแกนของสายอากาศ สายส่งความถี่สูง และท่อนำคลื่น</p>
+      </div>
+      <div class="tf wide" id="E10" data-k="Poynting vector S = E x H power flow surface integral Joule heating J dot E poynting theorem เวกเตอร์พอยน์ติง กำลัง">
+        <p class="tf-n"><b><span class="fid">E10</span> Poynting vector and power</b> เวกเตอร์พอยน์ติงและกำลัง</p>
+        \[ \mathbf S = \mathbf E\times\mathbf H,\qquad P_{\text{out}} = \oiint_S\mathbf S\cdot d\mathbf A,\qquad \text{ความร้อนจูล: } P = \iiint\mathbf J\cdot\mathbf E\,dV = \iiint\sigma E^2\,dV \]
+        <p class="tf-x">ทฤษฎีบทพอยน์ติง: กำลังที่ไหลเข้าผ่านผิว = กำลังที่สูญเสียในตัวนำ + อัตราเปลี่ยนของพลังงานสนาม · คลื่นระนาบ \(S = E_0^2/(2\eta_0)\) ค่าเฉลี่ย, \(\eta_0 = \sqrt{\mu_0/\varepsilon_0} = 376.7\ \Omega\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-6 · พลังงานไหลเข้าสู่ลวดนำกระแส</span><h3>ลวดทองแดงรัศมี 1 mm ยาว 1 m นำกระแสตรง 10 A (\(\sigma = 5.8\times10^7\) S/m) หา \(\mathbf J, \mathbf E, \mathbf H\) ที่ผิวลวด และแสดงว่ากำลังที่ไหลเข้าผ่านผิวลวดตามเวกเตอร์พอยน์ติงเท่ากับ \(I^2R\)</h3></div>
+      <ol class="steps">
+        <li><p>\(J = I/A = 10/(\pi\times10^{-6}) = 3.183\times10^{6}\) A/m² · \(E = J/\sigma = 0.05488\) V/m (ตามแนวลวด)</p></li>
+        <li><p>กฎของแอมแปร์รอบผิวลวด: \(H(2\pi a) = I\) → \(H = \dfrac{10}{2\pi(10^{-3})} = 1591.5\) A/m (ล้อมรอบลวด)</p></li>
+        <li><p>\(\mathbf S = \mathbf E\times\mathbf H\) ตั้งฉากกับทั้งคู่ ชี้ <b>เข้า</b>ผิวลวด (ตามรัศมีเข้า) ขนาด \(S = EH = 0.05488\times1591.5 = 87.35\) W/m²</p></li>
+        <li><p>กำลังที่ไหลเข้าทั้งผิวข้าง (พื้นที่ \(2\pi aL = 6.283\times10^{-3}\) m²): \(P = 87.35\times6.283\times10^{-3} = 0.5488\) W</p></li>
+        <li><p>เทียบกับความร้อนจูล: \(R = \dfrac{L}{\sigma A} = \dfrac{1}{(5.8\times10^7)(3.1416\times10^{-6})} = 5.488\) mΩ → \(I^2R = 100\times5.488\times10^{-3} = 0.5488\) W ตรงกับกำลังที่ไหลเข้าตามพอยน์ติงทุกหลัก ✓ (ใช้ \(\sigma\) ค่าเดียวกัน)</p></li>
+      </ol>
+      <p class="answer">\(P = \oiint\mathbf S\cdot d\mathbf A = 0.549\) W = \(I^2R\) — พลังงานไหลเข้ามาจากสนามรอบ ๆ ไม่ได้ “ไหลตามเนื้อลวด”</p>
+    </div>
+    <div class="wx" id="ex-e7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-7 · คลื่นระนาบ 100 MHz</span><h3>คลื่นแม่เหล็กไฟฟ้าระนาบในอากาศที่ 100 MHz มีแอมพลิจูด \(E_0 = 10\) V/m หา \(c\), \(\lambda\), \(k\) และความหนาแน่นกำลังเฉลี่ย</h3></div>
+      <ol class="steps">
+        <li><p>\(c = \dfrac{1}{\sqrt{\mu_0\varepsilon_0}} = \dfrac{1}{\sqrt{(4\pi\times10^{-7})(8.854\times10^{-12})}} = 2.998\times10^8\) m/s</p></li>
+        <li><p>\(\lambda = c/f = 2.998\times10^8/10^8 = 3.00\) m · \(k = 2\pi/\lambda = 2.096\) rad/m · \(\omega = 2\pi f = 6.283\times10^8\) rad/s (\(\omega/k = c\) ✓)</p></li>
+        <li><p>\(\eta_0 = \sqrt{\mu_0/\varepsilon_0} = 376.7\ \Omega\) · \(H_0 = E_0/\eta_0 = 0.02654\) A/m</p></li>
+        <li><p>\(\langle S\rangle = \dfrac{E_0^2}{2\eta_0} = \dfrac{100}{753.5} = 0.1327\) W/m² (ตัวเลขนี้คือกำลังที่สายอากาศรับ 1 m² จะได้ ถ้ารับได้หมด)</p></li>
+      </ol>
+      <p class="answer">\(c = 3.00\times10^8\) m/s · \(\lambda = 3.00\) m · \(\langle S\rangle = 0.133\) W/m²</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">สรุป: เครื่องมือแคลคูลัสกับโจทย์ไฟฟ้า <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ปัญหาไฟฟ้า</th><th>เครื่องมือ</th><th>ผลลัพธ์</th></tr></thead>
+      <tbody>
+        <tr><td>สนามจากประจุหลายตัว</td><td>รวมศักย์ แล้ว gradient</td><td>\(\mathbf E = -\nabla V\) (E1, E2 · แล็บลากประจุ)</td></tr>
+        <tr><td>สนามของรูปทรงสมมาตร</td><td>ผิวเกาส์ + อินทิกรัลผิว</td><td>เส้น ระนาบ ทรงกลม (E3)</td></tr>
+        <tr><td>ศักย์ระหว่างอิเล็กโทรด</td><td>สมการลาปลาซ</td><td>\(V(r)\) ของโคแอกเชียล (E4, E6)</td></tr>
+        <tr><td>ความจุ \(C\) และพลังงาน</td><td>เกาส์ + อินทิกรัลเส้น + อินทิกรัลสามชั้น</td><td>แผ่นขนาน โคแอก (E5, E6)</td></tr>
+        <tr><td>ความต้านทานของรูปทรง</td><td>\(\mathbf J\), \(\mathbf E\), ฟลักซ์</td><td>หลักดิน แรงดันก้าว (E7, E8)</td></tr>
+        <tr><td>EMF เหนี่ยวนำ</td><td>สโตกส์ + อินทิกรัลผิว</td><td>\(-d\Phi/dt\) (บทผิว ตัวอย่าง S-10)</td></tr>
+        <tr><td>คลื่นและกำลังที่แผ่</td><td>curl curl และ Poynting</td><td>\(c\), \(\lambda\), \(\langle S\rangle\) (E9, E10)</td></tr>
+        <tr><td>ฮาร์โมนิกรูปคลื่นหลายตัวแปร</td><td>ฟูเรียร์ซีรีส์ + Laplace</td><td>ดู <a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a> และ <a href="/learn/laplace-transform/">การแปลงลาปลาซ</a></td></tr>
+      </tbody>
+    </table></div>
+    <p>เส้นทางต่อ: <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็กและแรงลอเรนซ์ด้วยเวกเตอร์</a> · <a href="/learn/vector-algebra/field-lab/">แล็บสนามในชุดเวกเตอร์</a> · <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง</a> · <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและการป้องกัน</a> (การต่อลงดินและการทำงานของรีเลย์ใช้สนามและศักย์ในหน้านี้)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ลืมเครื่องหมายลบใน \(\mathbf E = -\nabla V\)</b> · สนามชี้ไปทางที่ศักย์ลด</li>
+      <li><b>ใช้กฎของเกาส์กับรูปที่ไม่สมมาตร</b> · กฎใช้ได้เสมอแต่ \(E\) ออกจากอินทิกรัลไม่ได้ (ต้องซ้อนทับหรือแก้เชิงตัวเลข)</li>
+      <li><b>ลืมว่าระบบหน่วย</b> · \(k = 8.988\times10^9\) ใช้กับ C, m · ถ้าใช้ nC ต้องคูณ \(10^{-9}\) (ในแล็บทำให้แล้ว)</li>
+      <li><b>ใช้ \(\varepsilon_0\) แทน \(\varepsilon_0\varepsilon_r\)</b> ในไดอิเล็กทริก · ความจุเพิ่มขึ้น \(\varepsilon_r\) เท่า</li>
+      <li><b>เข้าใจผิดว่าพลังงานไหลตามเนื้อลวด</b> · เวกเตอร์พอยน์ติงชี้เข้าผิวลวดจากสนามรอบ ๆ (E-6)</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/mechanical-engineering/">วิศวกรรมเครื่องกล</a> ซึ่งใช้สมการรูปเดียวกัน (ลาปลาซ, ดีเวอร์เจนซ์, เกรเดียนต์) กับความร้อนและของไหล</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

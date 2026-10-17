@@ -336,3 +336,30 @@ starting methods (M), cable and breaker design (D, Thai EIT 125 % / 250 % rules)
   Calculators `<div class="fg-calc acm-calc" data-acm="branch|feeder|accel">`. Styles: "AC INDUCTION MOTOR GUIDE" in site.css.
 - Star–delta phase order: the simulation and manufacturer guidance favour KM3 pairing U1–V2 · V1–W2 · W1–U2 (L3→U2) for a lower changeover transient.
 - Short URLs `/ac-motor`, `/torque-speed`, `/speed-torque-curve`, `/single-phase-motor`, `/double-cage`, `/wound-rotor`, `/motor-cable-size`, `/motor-breaker` … in `_redirects`.
+
+## Multivariable & vector calculus (added 2026-10-17)
+Chapter 24 `multivariable-calculus` (appended to `TOPICS`, no chapter renumbered): hub `/learn/multivariable-calculus/` + 12 content pages and the lab
+bench, 13 sub-pages in 6 parts. Menu group "หลายตัวแปร" (`data-nav="mvc"`, list `navmvc`) in `src/layout.html`. Formula prefixes: F functions, P partial
+derivatives, G gradient, O optimisation, M multiple integrals, R vector functions, D vector fields, L line integrals, S surface integrals,
+E electrical, K mechanical, C civil. Pages: `functions-of-several-variables`, `partial-derivatives`, `gradient-directional-derivative`, `optimization`,
+`multiple-integrals`, `vector-functions`, `vector-fields`, `line-integrals`, `surface-integrals`, `electrical-engineering`, `mechanical-engineering`,
+`civil-engineering`, `multivariable-lab`. SEO pattern on every page: Thai-first title/H1 + (English term) + search words, meta description with Thai and
+English main terms, first technical term as "ไทย (English)", FAQ ×4–5, English URLs, English terms in figure `aria-label`s.
+- `assets/mvc-core.js` — dependency-free engine (`window.MVC`, Node-importable): expression parser (implicit products, `^`, `ln`, no `eval`),
+  symbolic ∂ with simplification and TeX output, vector operators (grad, div, curl, curl2, lap, hessian, jacobian), Gauss–Legendre quadrature with a
+  cosine map (`quad`, `quad2`, `quad3`), marching-squares contours, critical points (Newton + second-derivative test), gradient descent,
+  space curves (T N B κ τ, arc length), line integrals and parametric surfaces (area, flux). Checked by `node scripts/test-mvc.mjs`
+  (sympy/closed-form references: helix κ = τ = ½, sphere flux 4π, Stokes π, ball volume, polar Gaussian disc, …).
+- Labs (all take their state from `data-*` attributes; a page button with `data-mv-target="<id>" data-mv-set='{…}'` reloads a widget through `box._set`):
+  `assets/mvc-lab.js` (Scene3D canvas orbit viewer, Map2D SVG plan view; `.mv-surf` `.mv-grad` `.mv-limit` `.mv-err`), `assets/mvc-opt.js`
+  (`.mv-opt` data-mode crit | lagrange | lsq, `.mv-int` rect | typeI | polar with mass/centroid/inertia, `.mv-tri` rect | cyl | sph, `.mv-jac`),
+  `assets/mvc-vec.js` (`.mv-curve` `.mv-field` `.mv-flux` data-mode gauss | stokes, `.mv-work`), `assets/mvc-eng.js` (`.mv-charge` `.mv-heat`
+  `.mv-terrain` `.mv-sect`). Each file calls `MVL.boot()` at its end (idempotent), so any subset can be loaded; list the files in the page meta
+  `scripts` after `/assets/mathkit.js` and `/assets/mvc-core.js`. Styles: "MULTIVARIABLE CALCULUS LABS" block in `assets/site.css`.
+- Figures: `python3 scripts/mv_figs.py` fills empty `<!--FIG:mv-…--><!--/FIG-->` blocks (`--all` redraws, `--preview out.html`); surfaces and curves are
+  computed from their equations with a small oblique projection; classes `.mf-*`.
+- Social cards: `python3 scripts/og.py --prefix learn-multivariable-calculus --chromium /opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+- `src/md/multivariable-calculus.md` publishes `/learn/multivariable-calculus/guide.md`; the series is in `MD_SERIES`.
+- Short URLs (`/multivariable`, `/calculus-3`, `/vector-calculus`, `/partial-derivatives`, `/gradient`, `/lagrange-multiplier`, `/double-integral`,
+  `/greens-theorem`, `/stokes-theorem`, `/divergence-theorem`, `/cut-and-fill`, …) are in `_redirects`.
+- Every worked-example number was checked with sympy/numpy before publishing.

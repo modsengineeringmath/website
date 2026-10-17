@@ -1,0 +1,353 @@
+<!--meta
+{
+  "title": "อินทิกรัลสองชั้นและสามชั้น (Double & Triple Integrals): พิกัดขั้ว ทรงกระบอก ทรงกลม Jacobian | อาจารย์มด",
+  "h1": "อินทิกรัลสองชั้นและสามชั้น (Double & Triple Integrals): พิกัดขั้ว ทรงกระบอก ทรงกลม และ Jacobian",
+  "description": "อินทิกรัลสองชั้น (double integral) และสามชั้น (triple integral) คืออะไร ผลรวมรีมันน์ ทฤษฎีบทฟูบินี บริเวณ type I type II สลับลำดับ พิกัดขั้ว (polar) ทรงกระบอก (cylindrical) ทรงกลม (spherical) จาโคเบียน (Jacobian) มวล จุดศูนย์กลางมวล โมเมนต์ความเฉื่อย พร้อมตัวอย่างวิศวกรรมและแล็บคำนวณพร้อมภาพ",
+  "ogTitle": "Double & Triple Integrals: พิกัดขั้ว ทรงกระบอก ทรงกลม Jacobian และตัวอย่าง",
+  "lesson": "multivariable-calculus",
+  "sub": "multiple-integrals",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["อินทิกรัลสองชั้น", "อินทิกรัลสามชั้น", "double integral", "triple integral", "พิกัดขั้ว", "polar coordinates", "พิกัดทรงกระบอก", "cylindrical coordinates", "พิกัดทรงกลม", "spherical coordinates", "Jacobian", "ทฤษฎีบทฟูบินี", "สลับลำดับการอินทิเกรต", "จุดศูนย์กลางมวล", "โมเมนต์ความเฉื่อย", "moment of inertia"],
+  "about": ["Double integral", "Triple integral", "Fubini's theorem", "Type I and type II regions", "Polar coordinates", "Cylindrical coordinates", "Spherical coordinates", "Jacobian determinant", "Change of variables", "Center of mass", "Moment of inertia", "Average value"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-opt.js"],
+  "og": {"title": "อินทิกรัลสองชั้นและสามชั้น", "sub": "ฟูบินี type I/II พิกัดขั้ว ทรงกระบอก ทรงกลม Jacobian มวล และโมเมนต์ความเฉื่อย", "eyebrow": "บทที่ 24.5 · Double & Triple Integrals", "sym": "∬"},
+  "faq": [
+    {"q": "อินทิกรัลสองชั้น (double integral) คืออะไร คำนวณอย่างไร?", "a": "คือผลรวมของค่า \\(f(x,y)\\) คูณพื้นที่ช่องเล็ก \\(\\Delta A\\) ทั่วบริเวณ \\(R\\) เมื่อ \\(f \\ge 0\\) จะเป็นปริมาตรใต้ผิว \\(z = f(x, y)\\) เหนือ \\(R\\) คำนวณด้วยทฤษฎีบทฟูบินี (Fubini) โดยทำทีละชั้น: อินทิเกรตตัวแปรในสุดก่อนโดยถือตัวแปรนอกเป็นค่าคงที่ แล้วอินทิเกรตผลลัพธ์ตามตัวแปรนอก เช่น \\(\\int_0^1\\!\\int_0^2 (x^2+y^2)\\,dy\\,dx = \\int_0^1 (2x^2 + \\tfrac83)\\,dx = \\tfrac{10}{3}\\)"},
+    {"q": "เมื่อไรควรเปลี่ยนเป็นพิกัดขั้ว (polar) ในอินทิกรัลสองชั้น?", "a": "เมื่อบริเวณเป็นวงกลม ครึ่งวงกลม วงแหวน หรือเซกเตอร์ หรือเมื่อ integrand มีกลุ่ม \\(x^2 + y^2\\) แทน \\(x = r\\cos\\theta,\\ y = r\\sin\\theta\\) และเปลี่ยน \\(dA\\) เป็น \\(r\\,dr\\,d\\theta\\) อย่าลืมตัวคูณ \\(r\\) เด็ดขาด เพราะช่องเล็กในพิกัดขั้วกว้าง \\(dr\\) และยาว \\(r\\,d\\theta\\) ตัวอย่าง \\(\\iint e^{-(x^2+y^2)}\\,dA\\) ทั่วระนาบ = \\(\\pi\\) คำนวณได้ง่ายในพิกัดขั้ว แต่แทบทำไม่ได้ในพิกัดฉาก"},
+    {"q": "พิกัดทรงกระบอกกับพิกัดทรงกลมเลือกใช้อย่างไร?", "a": "พิกัดทรงกระบอก \\((r, \\theta, z)\\) เหมาะกับรูปที่มีแกนสมมาตร เช่นทรงกระบอก กรวย พาราโบลอยด์ และมี \\(dV = r\\,dz\\,dr\\,d\\theta\\) ส่วนพิกัดทรงกลม \\((\\rho, \\varphi, \\theta)\\) เหมาะกับรูปที่สมมาตรรอบจุด เช่นทรงกลม ซีกทรงกลม เปลือกทรงกลม และมี \\(dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta\\) ข้อสังเกต: ถ้าสมการขอบเขตมี \\(x^2 + y^2 + z^2\\) ให้นึกถึงทรงกลมก่อน ถ้ามี \\(x^2 + y^2\\) อย่างเดียวให้นึกถึงทรงกระบอก"},
+    {"q": "สลับลำดับการอินทิเกรต (change order of integration) ทำอย่างไร?", "a": "วาดบริเวณก่อน แล้วอธิบายบริเวณเดิมด้วยลำดับใหม่ เช่น \\(\\int_0^1\\!\\int_x^1 e^{y^2}\\,dy\\,dx\\) อินทิเกรต \\(e^{y^2}\\) ตาม \\(y\\) ไม่ได้ แต่บริเวณคือสามเหลี่ยม \\(0 \\le x \\le y \\le 1\\) สลับเป็น \\(\\int_0^1\\!\\int_0^y e^{y^2}\\,dx\\,dy = \\int_0^1 y e^{y^2}\\,dy = \\tfrac{e-1}{2}\\) ใช้สลับเมื่อลำดับเดิมอินทิเกรตไม่ได้หรือขอบเขตซับซ้อน"},
+    {"q": "จาโคเบียน (Jacobian) คืออะไร ทำไมต้องคูณเวลาเปลี่ยนตัวแปร?", "a": "จาโคเบียนคือดีเทอร์มิแนนต์ของเมทริกซ์อนุพันธ์ย่อยของการแปลง \\(\\partial(x,y)/\\partial(u,v)\\) มันบอกว่าช่องเล็กบนระนาบ \\(uv\\) ถูกขยายหรือหดเป็นกี่เท่าเมื่อแปลงไปเป็นระนาบ \\(xy\\) จึงต้องคูณ \\(|J|\\) เพื่อรักษาพื้นที่ที่ถูกต้อง ในพิกัดขั้ว \\(J = r\\) ในพิกัดทรงกระบอก \\(J = r\\) ในพิกัดทรงกลม \\(J = \\rho^2\\sin\\varphi\\) สำหรับวงรี \\(x = au,\\ y = bv\\) ได้ \\(J = ab\\) จึงได้พื้นที่ \\(\\pi ab\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>อินทิกรัลหลายชั้น</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.5 · แคลคูลัสหลายตัวแปร · Double &amp; Triple Integrals</p>
+      <h1>อินทิกรัลสองชั้นและสามชั้น (Double &amp; Triple Integrals): พิกัดขั้ว ทรงกระบอก ทรงกลม และ Jacobian</h1>
+      <p class="lede">อินทิกรัลตัวแปรเดียวรวม “พื้นที่ใต้เส้นโค้ง” ส่วนอินทิกรัลสองชั้น (double integral) รวม “ปริมาตรใต้ผิว” และอินทิกรัลสามชั้น (triple integral) รวมปริมาณใด ๆ ทั่วเนื้อของวัตถุ ไม่ว่าจะเป็นมวล ประจุ พลังงาน หรือโมเมนต์ความเฉื่อยของชิ้นส่วนเครื่องจักร หน้านี้สอนทั้งวิธีคำนวณทีละชั้น การเลือกบริเวณ การสลับลำดับ การเปลี่ยนไปใช้พิกัดขั้ว ทรงกระบอก ทรงกลมพร้อมตัวคูณ Jacobian และการประยุกต์หามวลกับจุดศูนย์กลางมวล พร้อมแล็บที่เห็นทั้งผลรวมรีมันน์และค่าที่แท้จริง</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#int-lab">แล็บอินทิกรัลสองชั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#regions">type I · II</a>
+        <a class="btn btn-ghost btn-sm" href="#polar">พิกัดขั้ว</a>
+        <a class="btn btn-ghost btn-sm" href="#triple">สามชั้น</a>
+        <a class="btn btn-ghost btn-sm" href="#jacobian">Jacobian</a>
+        <a class="btn btn-ghost btn-sm" href="#mass">มวล · โมเมนต์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\iint_R f\,dA = \) ปริมาตรใต้ผิว (เมื่อ \(f \ge 0\)) · คำนวณทีละชั้น (Fubini): <b>ในสุดก่อน</b> ถือตัวนอกเป็นค่าคงที่</li>
+          <li>บริเวณ <b>type I</b> \(a \le x \le b,\ g_1(x) \le y \le g_2(x)\) · <b>type II</b> \(c \le y \le d,\ h_1(y) \le x \le h_2(y)\) · อินทิเกรตไม่ออกให้สลับลำดับ</li>
+          <li><b>พิกัดขั้ว:</b> \(dA = r\,dr\,d\theta\) · <b>ทรงกระบอก:</b> \(dV = r\,dz\,dr\,d\theta\) · <b>ทรงกลม:</b> \(dV = \rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta\) · ตัวคูณคือ \(|J|\)</li>
+          <li>ประยุกต์: มวล \(M = \iint\rho\,dA\) · \(\bar x = \tfrac1M\iint x\rho\,dA\) · \(I_x = \iint y^2\rho\,dA\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น fubini, polar, cylindrical, spherical, jacobian, centroid, moment of inertia" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">อินทิกรัลสองชั้นคืออะไร: ผลรวมรีมันน์ในสองมิติ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตัวแปรเดียว: แบ่งช่วงเป็นชิ้นแคบ \(\Delta x\) คูณความสูง \(f\) แล้วบวก สองตัวแปร: แบ่งบริเวณ \(R\) เป็นช่องเล็กพื้นที่ \(\Delta A\) แต่ละช่องมี “แท่ง” สูง \(f(x_i^*, y_j^*)\) ปริมาตรรวมของแท่งทั้งหมดคือ<b>ผลรวมรีมันน์ (Riemann sum)</b> เมื่อช่องเล็กลงจนไม่สิ้นสุด ผลรวมเข้าใกล้อินทิกรัลสองชั้น ในแล็บด้านล่างเลื่อน \(n\) จาก 1 ถึง 40 แล้วดูแท่งปริมาตรกับค่า “ที่แท้จริง” วิ่งเข้าหากัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M1" data-k="double integral definition riemann sum volume under surface อินทิกรัลสองชั้น นิยาม ผลรวมรีมันน์">
+        <p class="tf-n"><b><span class="fid">M1</span> Double integral (Riemann sum)</b> อินทิกรัลสองชั้น (ผลรวมรีมันน์)</p>
+        \[ \iint_R f(x, y)\,dA = \lim_{m,n\to\infty}\sum_{i=1}^{m}\sum_{j=1}^{n} f(x_i^{*}, y_j^{*})\,\Delta A,\qquad \Delta A = \Delta x\,\Delta y \]
+        <p class="tf-x">\(f \ge 0\): ปริมาตรใต้ผิว \(z = f(x, y)\) เหนือ \(R\) · จุด \((x_i^*, y_j^*)\) เลือกกึ่งกลางช่อง = midpoint rule · \(f = 1\) ให้พื้นที่ \(A(R)\)</p>
+      </div>
+      <div class="tf wide" id="M2" data-k="fubini theorem iterated integral rectangle ทฤษฎีบทฟูบินี อินทิกรัลซ้ำ สี่เหลี่ยม">
+        <p class="tf-n"><b><span class="fid">M2</span> Fubini's theorem (rectangle)</b> ทฤษฎีบทฟูบินี (สี่เหลี่ยมผืนผ้า)</p>
+        \[ \iint_{[a,b]\times[c,d]} f\,dA = \int_a^b\!\left(\int_c^d f(x, y)\,dy\right)dx = \int_c^d\!\left(\int_a^b f(x, y)\,dx\right)dy \]
+        <p class="tf-x">เมื่อ \(f\) ต่อเนื่อง สองลำดับให้ค่าเท่ากัน · ชั้นในอินทิเกรตก่อน โดยถือตัวแปรนอกเป็นค่าคงที่ · ถ้า \(f = g(x)h(y)\) แยกเป็นผลคูณ \(\int g\,dx\cdot\int h\,dy\)</p>
+      </div>
+      <div class="tf" id="M3" data-k="properties linearity additivity average value mean value ค่าเฉลี่ย สมบัติ">
+        <p class="tf-n"><b><span class="fid">M3</span> Average value</b> ค่าเฉลี่ยของฟังก์ชัน</p>
+        \[ f_{\text{avg}} = \frac{1}{A(R)}\iint_R f\,dA,\qquad A(R) = \iint_R dA \]
+        <p class="tf-x">เชิงเส้นและบวกกันได้ตามบริเวณ · ค่าเฉลี่ยทางวิศวกรรม เช่น อุณหภูมิเฉลี่ยของแผ่น ความสูงเฉลี่ยของพื้นที่ (ใช้หาระดับสมดุลในบท<a href="/learn/multivariable-calculus/civil-engineering/">โยธา</a>)</p>
+      </div>
+    </div>
+    <div class="mv-int" id="int-lab" data-f="x^2+y^2" data-type="rect" data-a="0" data-b="1" data-c="0" data-d="2" data-n="6"></div>
+    <div class="wx" id="ex-m1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-1 · Riemann sum กับค่าที่แท้จริง</span><h3>หา \(\displaystyle\iint_R (x^2 + y^2)\,dA\) เมื่อ \(R = [0, 1]\times[0, 2]\) และเทียบกับผลรวมรีมันน์แบบ 2×2 ช่อง (กึ่งกลาง)</h3><button type="button" class="wx-btn calc-go" data-mv-target="int-lab" data-mv-set='{"type":"rect","f":"x^2+y^2","a":"0","b":"1","c":"0","d":"2","n":2}'>เปิดในแล็บ (n = 2)</button></div>
+      <ol class="steps">
+        <li><p>ชั้นใน (ตาม \(y\), ถือ \(x\) คงที่): \(\displaystyle\int_0^2 (x^2 + y^2)\,dy = \left[x^2 y + \dfrac{y^3}{3}\right]_0^2 = 2x^2 + \dfrac83\)</p></li>
+        <li><p>ชั้นนอก: \(\displaystyle\int_0^1\left(2x^2 + \dfrac83\right)dx = \dfrac{2}{3} + \dfrac83 = \dfrac{10}{3} \approx 3.3333\)</p></li>
+        <li><p>Riemann sum 2×2: \(\Delta x = 0.5,\ \Delta y = 1,\ \Delta A = 0.5\) · จุดกึ่งกลาง \(x \in \{0.25, 0.75\}\), \(y \in \{0.5, 1.5\}\)</p></li>
+        <li><p>ค่า \(f\): \(0.3125,\ 0.8125,\ 2.3125,\ 2.8125\) · ผลรวม \(= 6.25\) · \(\times\,0.5 = 3.125\) (ต่ำกว่าจริง 6.25%) · เพิ่ม \(n\) เป็น 6 ได้ \(3.3102\) (ต่ำกว่า 0.7%)</p></li>
+      </ol>
+      <p class="answer">\(\iint_R (x^2 + y^2)\,dA = \dfrac{10}{3}\) · midpoint 2×2 ได้ 3.125</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="regions">
+    <h2 id="regions">บริเวณที่ไม่ใช่สี่เหลี่ยม: type I, type II และการสลับลำดับ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>บริเวณในงานจริงแทบไม่เป็นสี่เหลี่ยมผืนผ้า ให้วาดบริเวณก่อน แล้วเลือกว่าจะ “กวาด” ด้วยแถบแนวตั้งหรือแนวนอน: <b>type I</b> ขอบบนและล่างเป็นฟังก์ชันของ \(x\) (แถบตั้ง) · <b>type II</b> ขอบซ้ายและขวาเป็นฟังก์ชันของ \(y\) (แถบนอน) ขอบเขตของชั้นใน<b>ได้เป็นฟังก์ชันของตัวแปรนอก</b>ได้ แต่ขอบเขตของชั้นนอกต้องเป็นค่าคงที่เสมอ</p>
+    <figure class="lt-wide"><!--FIG:mv-region-types--><svg class="mf" viewBox="0 0 720 330" role="img" aria-label="บริเวณ type I (vertical strips) และ type II (horizontal strips) ของบริเวณเดียวกันระหว่าง y = x² กับ y = x ใช้สลับลำดับการอินทิเกรต (change order of integration)"><defs><marker id="mvrt-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvrt-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvrt-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvrt-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><rect class="mf-bg" x="20" y="40" width="320" height="260" rx="8"/><line class="mf-g" x1="45.6" y1="40" x2="45.6" y2="300"/><line class="mf-g" x1="109.6" y1="40" x2="109.6" y2="300"/><line class="mf-g" x1="173.6" y1="40" x2="173.6" y2="300"/><line class="mf-g" x1="237.6" y1="40" x2="237.6" y2="300"/><line class="mf-g" x1="301.6" y1="40" x2="301.6" y2="300"/><line class="mf-g" x1="20" y1="279.2" x2="340" y2="279.2"/><line class="mf-g" x1="20" y1="227.2" x2="340" y2="227.2"/><line class="mf-g" x1="20" y1="175.2" x2="340" y2="175.2"/><line class="mf-g" x1="20" y1="123.2" x2="340" y2="123.2"/><line class="mf-g" x1="20" y1="71.2" x2="340" y2="71.2"/><line class="mf-ax" x1="20" y1="279.2" x2="340" y2="279.2" marker-end="url(#mvrt-ink)"/><line class="mf-ax" x1="45.6" y1="300" x2="45.6" y2="40" marker-end="url(#mvrt-ink)"/><text class="mf-l" x="336" y="274.2" text-anchor="end">x</text><text class="mf-l" x="50.6" y="52" text-anchor="start">y</text><text class="mf-h" x="180" y="28" text-anchor="middle">type I: แถบแนวตั้ง  g₁(x) ≤ y ≤ g₂(x)</text><path class="mf-fill" d="M45.6 279.2 L52 279.1 L58.4 278.7 L64.8 278 L71.2 277.1 L77.6 275.9 L84 274.5 L90.4 272.8 L96.8 270.9 L103.2 268.7 L109.6 266.2 L116 263.5 L122.4 260.5 L128.8 257.2 L135.2 253.7 L141.6 249.9 L148 245.9 L154.4 241.6 L160.8 237.1 L167.2 232.3 L173.6 227.2 L180 221.9 L186.4 216.3 L192.8 210.4 L199.2 204.3 L205.6 197.9 L212 191.3 L218.4 184.4 L224.8 177.3 L231.2 169.9 L237.6 162.2 L244 154.3 L250.4 146.1 L256.8 137.6 L263.2 128.9 L269.6 119.9 L276 110.7 L282.4 101.2 L288.8 91.5 L295.2 81.5 L301.6 71.2 L301.6 71.2 L295.2 76.4 L288.8 81.6 L282.4 86.8 L276 92 L269.6 97.2 L263.2 102.4 L256.8 107.6 L250.4 112.8 L244 118 L237.6 123.2 L231.2 128.4 L224.8 133.6 L218.4 138.8 L212 144 L205.6 149.2 L199.2 154.4 L192.8 159.6 L186.4 164.8 L180 170 L173.6 175.2 L167.2 180.4 L160.8 185.6 L154.4 190.8 L148 196 L141.6 201.2 L135.2 206.4 L128.8 211.6 L122.4 216.8 L116 222 L109.6 227.2 L103.2 232.4 L96.8 237.6 L90.4 242.8 L84 248 L77.6 253.2 L71.2 258.4 L64.8 263.6 L58.4 268.8 L52 274 L45.6 279.2 Z"/><line class="mf-sig2" x1="71.2" y1="277.1" x2="71.2" y2="258.4"/><line class="mf-sig2" x1="96.8" y1="270.9" x2="96.8" y2="237.6"/><line class="mf-sig2" x1="122.4" y1="260.5" x2="122.4" y2="216.8"/><line class="mf-sig2" x1="148" y1="245.9" x2="148" y2="196"/><line class="mf-sig2" x1="173.6" y1="227.2" x2="173.6" y2="175.2"/><line class="mf-sig2" x1="199.2" y1="204.3" x2="199.2" y2="154.4"/><line class="mf-sig2" x1="224.8" y1="177.3" x2="224.8" y2="133.6"/><line class="mf-sig2" x1="250.4" y1="146.1" x2="250.4" y2="112.8"/><line class="mf-sig2" x1="276" y1="110.7" x2="276" y2="92"/><path class="mf-sig" d="M45.6 279.2 L52 279.1 L58.4 278.7 L64.8 278 L71.2 277.1 L77.6 275.9 L84 274.5 L90.4 272.8 L96.8 270.9 L103.2 268.7 L109.6 266.2 L116 263.5 L122.4 260.5 L128.8 257.2 L135.2 253.7 L141.6 249.9 L148 245.9 L154.4 241.6 L160.8 237.1 L167.2 232.3 L173.6 227.2 L180 221.9 L186.4 216.3 L192.8 210.4 L199.2 204.3 L205.6 197.9 L212 191.3 L218.4 184.4 L224.8 177.3 L231.2 169.9 L237.6 162.2 L244 154.3 L250.4 146.1 L256.8 137.6 L263.2 128.9 L269.6 119.9 L276 110.7 L282.4 101.2 L288.8 91.5 L295.2 81.5 L301.6 71.2" fill="none"/><path class="mf-sig" d="M45.6 279.2 L52 274 L58.4 268.8 L64.8 263.6 L71.2 258.4 L77.6 253.2 L84 248 L90.4 242.8 L96.8 237.6 L103.2 232.4 L109.6 227.2 L116 222 L122.4 216.8 L128.8 211.6 L135.2 206.4 L141.6 201.2 L148 196 L154.4 190.8 L160.8 185.6 L167.2 180.4 L173.6 175.2 L180 170 L186.4 164.8 L192.8 159.6 L199.2 154.4 L205.6 149.2 L212 144 L218.4 138.8 L224.8 133.6 L231.2 128.4 L237.6 123.2 L244 118 L250.4 112.8 L256.8 107.6 L263.2 102.4 L269.6 97.2 L276 92 L282.4 86.8 L288.8 81.6 L295.2 76.4 L301.6 71.2" fill="none"/><text class="mf-l" x="204.3" y="216.8" text-anchor="start">y = x²</text><text class="mf-l" x="117.3" y="175.2" text-anchor="start">y = x</text><rect class="mf-bg" x="380" y="40" width="320" height="260" rx="8"/><line class="mf-g" x1="405.6" y1="40" x2="405.6" y2="300"/><line class="mf-g" x1="469.6" y1="40" x2="469.6" y2="300"/><line class="mf-g" x1="533.6" y1="40" x2="533.6" y2="300"/><line class="mf-g" x1="597.6" y1="40" x2="597.6" y2="300"/><line class="mf-g" x1="661.6" y1="40" x2="661.6" y2="300"/><line class="mf-g" x1="380" y1="279.2" x2="700" y2="279.2"/><line class="mf-g" x1="380" y1="227.2" x2="700" y2="227.2"/><line class="mf-g" x1="380" y1="175.2" x2="700" y2="175.2"/><line class="mf-g" x1="380" y1="123.2" x2="700" y2="123.2"/><line class="mf-g" x1="380" y1="71.2" x2="700" y2="71.2"/><line class="mf-ax" x1="380" y1="279.2" x2="700" y2="279.2" marker-end="url(#mvrt-ink)"/><line class="mf-ax" x1="405.6" y1="300" x2="405.6" y2="40" marker-end="url(#mvrt-ink)"/><text class="mf-l" x="696" y="274.2" text-anchor="end">x</text><text class="mf-l" x="410.6" y="52" text-anchor="start">y</text><text class="mf-h" x="540" y="28" text-anchor="middle">type II: แถบแนวนอน  h₁(y) ≤ x ≤ h₂(y)</text><path class="mf-fill" d="M405.6 279.2 L412 279.1 L418.4 278.7 L424.8 278 L431.2 277.1 L437.6 275.9 L444 274.5 L450.4 272.8 L456.8 270.9 L463.2 268.7 L469.6 266.2 L476 263.5 L482.4 260.5 L488.8 257.2 L495.2 253.7 L501.6 249.9 L508 245.9 L514.4 241.6 L520.8 237.1 L527.2 232.3 L533.6 227.2 L540 221.9 L546.4 216.3 L552.8 210.4 L559.2 204.3 L565.6 197.9 L572 191.3 L578.4 184.4 L584.8 177.3 L591.2 169.9 L597.6 162.2 L604 154.3 L610.4 146.1 L616.8 137.6 L623.2 128.9 L629.6 119.9 L636 110.7 L642.4 101.2 L648.8 91.5 L655.2 81.5 L661.6 71.2 L661.6 71.2 L655.2 76.4 L648.8 81.6 L642.4 86.8 L636 92 L629.6 97.2 L623.2 102.4 L616.8 107.6 L610.4 112.8 L604 118 L597.6 123.2 L591.2 128.4 L584.8 133.6 L578.4 138.8 L572 144 L565.6 149.2 L559.2 154.4 L552.8 159.6 L546.4 164.8 L540 170 L533.6 175.2 L527.2 180.4 L520.8 185.6 L514.4 190.8 L508 196 L501.6 201.2 L495.2 206.4 L488.8 211.6 L482.4 216.8 L476 222 L469.6 227.2 L463.2 232.4 L456.8 237.6 L450.4 242.8 L444 248 L437.6 253.2 L431.2 258.4 L424.8 263.6 L418.4 268.8 L412 274 L405.6 279.2 Z"/><line class="mf-sig2" x1="431.2" y1="258.4" x2="486.6" y2="258.4"/><line class="mf-sig2" x1="456.8" y1="237.6" x2="520.1" y2="237.6"/><line class="mf-sig2" x1="482.4" y1="216.8" x2="545.8" y2="216.8"/><line class="mf-sig2" x1="508" y1="196" x2="567.5" y2="196"/><line class="mf-sig2" x1="533.6" y1="175.2" x2="586.6" y2="175.2"/><line class="mf-sig2" x1="559.2" y1="154.4" x2="603.9" y2="154.4"/><line class="mf-sig2" x1="584.8" y1="133.6" x2="619.8" y2="133.6"/><line class="mf-sig2" x1="610.4" y1="112.8" x2="634.6" y2="112.8"/><line class="mf-sig2" x1="636" y1="92" x2="648.5" y2="92"/><path class="mf-sig" d="M405.6 279.2 L412 279.1 L418.4 278.7 L424.8 278 L431.2 277.1 L437.6 275.9 L444 274.5 L450.4 272.8 L456.8 270.9 L463.2 268.7 L469.6 266.2 L476 263.5 L482.4 260.5 L488.8 257.2 L495.2 253.7 L501.6 249.9 L508 245.9 L514.4 241.6 L520.8 237.1 L527.2 232.3 L533.6 227.2 L540 221.9 L546.4 216.3 L552.8 210.4 L559.2 204.3 L565.6 197.9 L572 191.3 L578.4 184.4 L584.8 177.3 L591.2 169.9 L597.6 162.2 L604 154.3 L610.4 146.1 L616.8 137.6 L623.2 128.9 L629.6 119.9 L636 110.7 L642.4 101.2 L648.8 91.5 L655.2 81.5 L661.6 71.2" fill="none"/><path class="mf-sig" d="M405.6 279.2 L412 274 L418.4 268.8 L424.8 263.6 L431.2 258.4 L437.6 253.2 L444 248 L450.4 242.8 L456.8 237.6 L463.2 232.4 L469.6 227.2 L476 222 L482.4 216.8 L488.8 211.6 L495.2 206.4 L501.6 201.2 L508 196 L514.4 190.8 L520.8 185.6 L527.2 180.4 L533.6 175.2 L540 170 L546.4 164.8 L552.8 159.6 L559.2 154.4 L565.6 149.2 L572 144 L578.4 138.8 L584.8 133.6 L591.2 128.4 L597.6 123.2 L604 118 L610.4 112.8 L616.8 107.6 L623.2 102.4 L629.6 97.2 L636 92 L642.4 86.8 L648.8 81.6 L655.2 76.4 L661.6 71.2" fill="none"/><text class="mf-l" x="584.8" y="208.5" text-anchor="start">x = √y</text><text class="mf-l" x="477.3" y="175.2" text-anchor="start">x = y</text><text class="mf-l" x="30" y="322" text-anchor="start">∫₀¹ ∫ f dy dx   (y: x² → x)</text><text class="mf-l" x="390" y="322" text-anchor="start">∫₀¹ ∫ f dx dy   (x: y → √y)</text></svg><!--/FIG--><figcaption>บริเวณ type I (แถบแนวตั้ง: \(y\) ระหว่าง \(g_1(x)\) กับ \(g_2(x)\)) และ type II (แถบแนวนอน: \(x\) ระหว่าง \(h_1(y)\) กับ \(h_2(y)\)) ของบริเวณเดียวกัน — การสลับลำดับการอินทิเกรตคือการเปลี่ยนวิธีแบ่ง</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="M4" data-k="type I region iterated integral g1(x) g2(x) บริเวณ type I">
+        <p class="tf-n"><b><span class="fid">M4</span> Type I region</b> บริเวณ type I</p>
+        \[ R = \{a \le x \le b,\ g_1(x) \le y \le g_2(x)\}:\qquad \iint_R f\,dA = \int_a^b\!\int_{g_1(x)}^{g_2(x)} f(x, y)\,dy\,dx \]
+        <p class="tf-x">แถบตั้ง: ลากเส้นตั้งผ่านบริเวณ เส้นเข้าที่ \(g_1\) ออกที่ \(g_2\) · ขอบชั้นนอก \(a, b\) เป็นค่าคงที่</p>
+      </div>
+      <div class="tf wide" id="M5" data-k="type II region iterated integral h1(y) h2(y) บริเวณ type II">
+        <p class="tf-n"><b><span class="fid">M5</span> Type II region</b> บริเวณ type II</p>
+        \[ R = \{c \le y \le d,\ h_1(y) \le x \le h_2(y)\}:\qquad \iint_R f\,dA = \int_c^d\!\int_{h_1(y)}^{h_2(y)} f(x, y)\,dx\,dy \]
+        <p class="tf-x">แถบนอน: ลากเส้นนอนผ่านบริเวณ เส้นเข้าที่ \(h_1\) ออกที่ \(h_2\) · เปลี่ยนลำดับ = เปลี่ยนจาก type I เป็น type II (วาดรูปแล้วอ่านขอบใหม่)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-m2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-2 · บริเวณสามเหลี่ยม</span><h3>หา \(\iint_R xy\,dA\) เมื่อ \(R\) เป็นสามเหลี่ยมที่มีจุดยอด \((0,0),\ (2,0),\ (0,2)\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="int-lab" data-mv-set='{"type":"typeI","f":"x*y","a":"0","b":"2","g1":"0","g2":"2-x","n":12}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>วาดบริเวณ: เส้นตรงจาก \((2,0)\) ถึง \((0,2)\) คือ \(y = 2 - x\) · type I: \(0 \le x \le 2,\ 0 \le y \le 2 - x\)</p></li>
+        <li><p>ชั้นใน: \(\displaystyle\int_0^{2-x} xy\,dy = x\cdot\dfrac{(2-x)^2}{2}\)</p></li>
+        <li><p>ชั้นนอก: \(\displaystyle\dfrac12\int_0^2 x(4 - 4x + x^2)\,dx = \dfrac12\left[2x^2 - \dfrac{4x^3}{3} + \dfrac{x^4}{4}\right]_0^2 = \dfrac12\left(8 - \dfrac{32}{3} + 4\right) = \dfrac12\cdot\dfrac43 = \dfrac23\)</p></li>
+        <li><p>ตรวจด้วยอีกลำดับ (type II: \(0 \le y \le 2,\ 0 \le x \le 2 - y\)): โดยสมมาตรของ \(xy\) ได้ \(\tfrac23\) เท่ากัน ✓</p></li>
+      </ol>
+      <p class="answer">\(\iint_R xy\,dA = \dfrac23\)</p>
+    </div>
+    <div class="wx" id="ex-m3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-3 · สลับลำดับเมื่อชั้นในอินทิเกรตไม่ได้</span><h3>คำนวณ \(\displaystyle\int_0^1\!\int_x^1 e^{y^2}\,dy\,dx\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\int e^{y^2}\,dy\) ไม่มีรูปปิดจากฟังก์ชันพื้นฐาน จึงอินทิเกรตตาม \(y\) ก่อนไม่ได้</p></li>
+        <li><p>อ่านบริเวณ: \(0 \le x \le 1\) และ \(x \le y \le 1\) คือสามเหลี่ยมใต้เส้น \(y = 1\) เหนือเส้น \(y = x\) (จุดยอด \((0,0),(0,1),(1,1)\))</p></li>
+        <li><p>เปลี่ยนเป็น type II: \(0 \le y \le 1\) และ \(0 \le x \le y\) · \(\displaystyle\int_0^1\!\int_0^y e^{y^2}\,dx\,dy\)</p></li>
+        <li><p>ชั้นใน (ตาม \(x\), \(e^{y^2}\) คงที่): \(y\,e^{y^2}\) · ชั้นนอก: \(\displaystyle\int_0^1 y\,e^{y^2}\,dy = \left[\tfrac12 e^{y^2}\right]_0^1 = \dfrac{e - 1}{2} \approx 0.8591\)</p></li>
+      </ol>
+      <p class="answer">\(\dfrac{e - 1}{2} \approx 0.8591\)</p>
+    </div>
+    <div class="wx" id="ex-m4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-4 · พื้นที่ระหว่างเส้นโค้ง</span><h3>หาพื้นที่ที่ล้อมด้วย \(y = x^2\) และ \(y = x\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="int-lab" data-mv-set='{"type":"typeI","f":"1","a":"0","b":"1","g1":"x^2","g2":"x","n":12}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>จุดตัด: \(x^2 = x\) → \(x = 0, 1\) · บน \(0 &lt; x &lt; 1\) เส้นตรง \(y = x\) อยู่เหนือพาราโบลา</p></li>
+        <li><p>\(A = \displaystyle\int_0^1\!\int_{x^2}^{x} dy\,dx = \int_0^1 (x - x^2)\,dx = \dfrac12 - \dfrac13 = \dfrac16\)</p></li>
+      </ol>
+      <p class="answer">\(A = \dfrac16\) (นี่คืออินทิกรัลสองชั้นของ \(f = 1\) · ตรงกับอินทิกรัลตัวแปรเดียว \(\int (\text{บน} - \text{ล่าง})\,dx\))</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="polar">
+    <h2 id="polar">พิกัดขั้ว (Polar Coordinates) ในอินทิกรัลสองชั้น <span class="lv lv-i">กลาง</span></h2>
+    <p>บริเวณวงกลม ครึ่งวงกลม เซกเตอร์ และวงแหวนเขียนในพิกัดฉากยากมาก แต่ในพิกัดขั้วเรียบง่าย: \(0 \le r \le R,\ 0 \le \theta \le 2\pi\) กฎคือแทน \(x = r\cos\theta,\ y = r\sin\theta\) แล้วเปลี่ยน \(dA = r\,dr\,d\theta\) ตัวคูณ \(r\) มาจากการที่ “ช่องขั้ว” กว้าง \(\Delta r\) และยาวเป็นส่วนโค้ง \(r\,\Delta\theta\) ยิ่งไกลจุดกำเนิด ช่องเดียวกันใน \((r,\theta)\) ยิ่งใหญ่</p>
+    <figure class="lt-wide"><!--FIG:mv-polar-element--><svg class="mf" viewBox="0 0 700 330" role="img" aria-label="ช่องเล็กในพิกัดขั้ว (polar rectangle): พื้นที่ ΔA ≈ r Δr Δθ ที่มาของตัวคูณ r ใน dA = r dr dθ (polar coordinates area element)"><defs><marker id="mvpe-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvpe-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvpe-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvpe-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><line class="mf-ax" x1="50" y1="290" x2="400" y2="290" marker-end="url(#mvpe-ink)"/><line class="mf-ax" x1="70" y1="310" x2="70" y2="20" marker-end="url(#mvpe-ink)"/><text class="mf-l" x="396" y="306" text-anchor="start">x</text><text class="mf-l" x="78" y="28" text-anchor="start">y</text><path class="mf-sig" d="M202.4 219.6 L201.2 217.3 L199.9 215 L198.6 212.7 L197.2 210.5 L195.8 208.3 L194.4 206.1 L192.9 204 L191.4 201.8 L189.8 199.7 L188.2 197.7 L186.6 195.6 L184.9 193.6 L183.2 191.6 L181.5 189.6 L179.7 187.7 L177.9 185.8 L176.1 183.9 L174.2 182.1 L172.3 180.3 L170.4 178.5 L168.4 176.8 L166.4 175.1 L164.4 173.4 L162.3 171.8 L160.3 170.2 L158.2 168.6 L156 167.1 L153.9 165.6 L151.7 164.2 L149.5 162.8" fill="none"/><path class="mf-sig" d="M259.8 189.1 L258 185.8 L256.2 182.5 L254.3 179.3 L252.3 176.1 L250.3 172.9 L248.2 169.8 L246.1 166.7 L243.9 163.6 L241.7 160.6 L239.4 157.6 L237.1 154.7 L234.7 151.8 L232.3 148.9 L229.8 146.1 L227.2 143.4 L224.7 140.6 L222 138 L219.4 135.3 L216.6 132.8 L213.9 130.2 L211.1 127.7 L208.2 125.3 L205.3 122.9 L202.4 120.6 L199.4 118.3 L196.4 116.1 L193.3 113.9 L190.2 111.8 L187.1 109.7 L183.9 107.7" fill="none"/><path class="mf-fill" d="M202.4 219.6 L201.2 217.3 L199.9 215 L198.6 212.7 L197.2 210.5 L195.8 208.3 L194.4 206.1 L192.9 204 L191.4 201.8 L189.8 199.7 L188.2 197.7 L186.6 195.6 L184.9 193.6 L183.2 191.6 L181.5 189.6 L179.7 187.7 L177.9 185.8 L176.1 183.9 L174.2 182.1 L172.3 180.3 L170.4 178.5 L168.4 176.8 L166.4 175.1 L164.4 173.4 L162.3 171.8 L160.3 170.2 L158.2 168.6 L156 167.1 L153.9 165.6 L151.7 164.2 L149.5 162.8 L183.9 107.7 L187.1 109.7 L190.2 111.8 L193.3 113.9 L196.4 116.1 L199.4 118.3 L202.4 120.6 L205.3 122.9 L208.2 125.3 L211.1 127.7 L213.9 130.2 L216.6 132.8 L219.4 135.3 L222 138 L224.7 140.6 L227.2 143.4 L229.8 146.1 L232.3 148.9 L234.7 151.8 L237.1 154.7 L239.4 157.6 L241.7 160.6 L243.9 163.6 L246.1 166.7 L248.2 169.8 L250.3 172.9 L252.3 176.1 L254.3 179.3 L256.2 182.5 L258 185.8 L259.8 189.1 Z"/><line class="mf-dash" x1="70" y1="290" x2="281.9" y2="177.3"/><line class="mf-dash" x1="70" y1="290" x2="197.2" y2="86.5"/><path class="mf-ax" fill="none" d="M 125 290 A 55 55 0 0 0 118.6 264.2"/><text class="mf-l" x="132" y="282" text-anchor="start">θ</text><line class="mf-sig2" x1="179.7" y1="187.7" x2="227.2" y2="143.4" marker-end="url(#mvpe-s)"/><text class="mf-l" x="217.5" y="187.5" text-anchor="start">Δr</text><text class="mf-l" x="235.2" y="121.4" text-anchor="start">r Δθ</text><text class="mf-k" x="203.2" y="82.5" text-anchor="start">θ + Δθ</text><text class="mf-k" x="287.9" y="177.3" text-anchor="start">θ</text><rect class="mf-box" x="400" y="60" width="270" height="150" rx="8"/><text class="mf-t" x="415" y="86" text-anchor="start">ความกว้าง  Δr</text><text class="mf-t" x="415" y="110" text-anchor="start">ความยาวของส่วนโค้ง  r Δθ</text><text class="mf-h" x="415" y="140" text-anchor="start">ΔA ≈ r Δr Δθ</text><text class="mf-h" x="415" y="168" text-anchor="start">⇒ dA = r dr dθ</text><text class="mf-k" x="415" y="192" text-anchor="start">ตัวคูณ r = จาโคเบียนของ (r, θ)</text></svg><!--/FIG--><figcaption>ช่องในพิกัดขั้ว (polar rectangle): กว้าง \(\Delta r\) ยาว \(r\,\Delta\theta\) จึงมีพื้นที่ \(\Delta A \approx r\,\Delta r\,\Delta\theta\) ซึ่งเป็นที่มาของตัวคูณ \(r\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="M6" data-k="polar coordinates double integral dA = r dr dtheta พิกัดขั้ว อินทิกรัลสองชั้น">
+        <p class="tf-n"><b><span class="fid">M6</span> Double integral in polar coordinates</b> อินทิกรัลสองชั้นในพิกัดขั้ว</p>
+        \[ \iint_R f(x, y)\,dA = \int_{\alpha}^{\beta}\!\int_{r_1(\theta)}^{r_2(\theta)} f(r\cos\theta,\ r\sin\theta)\;\underbrace{r}_{\text{Jacobian}}\;dr\,d\theta \]
+        <p class="tf-x">ใช้เมื่อบริเวณหรือ \(f\) มี \(x^2 + y^2\) · \(r^2 = x^2 + y^2\) · พื้นที่ \(A = \tfrac12\int (r_2^2 - r_1^2)\,d\theta\) · ระวังขอบเขต \(\theta\) ของบริเวณ (ครึ่งบน \(0 \le \theta \le \pi\), ควอดแรนต์แรก \(0 \le \theta \le \pi/2\))</p>
+      </div>
+    </div>
+    <p>ลองในแล็บ: โหมดขั้วใช้ \(r\) ระหว่าง \(r_1(\theta)\) ถึง \(r_2(\theta)\) และ \(\theta\) ระหว่างสองค่า เลือกพรีเซ็ต “พื้นที่วงกลม” “ปริมาตรพาราโบลอยด์” หรือ “ใบกลีบ \(r = 2\sin 2\theta\)” แล้วดูแผนผังช่องที่เป็นรูปพัด</p>
+    <div class="mv-int" id="polar-lab" data-type="polar" data-f="4-x^2-y^2" data-a="0" data-b="2*pi" data-r1="0" data-r2="2" data-n="10"></div>
+    <div class="wx" id="ex-m5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-5 · ปริมาตรพาราโบลอยด์</span><h3>หาปริมาตรใต้ผิว \(z = 4 - x^2 - y^2\) เหนือระนาบ \(xy\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="polar-lab" data-mv-set='{"type":"polar","f":"4-x^2-y^2","a":"0","b":"2*pi","r1":"0","r2":"2","n":10}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ผิวตัดระนาบ \(z = 0\) ที่ \(x^2 + y^2 = 4\) · บริเวณคือแผ่นวงกลมรัศมี 2: \(0 \le r \le 2,\ 0 \le \theta \le 2\pi\)</p></li>
+        <li><p>แทน \(x^2 + y^2 = r^2\): \(V = \displaystyle\int_0^{2\pi}\!\int_0^2 (4 - r^2)\,r\,dr\,d\theta\)</p></li>
+        <li><p>ชั้นใน: \(\displaystyle\int_0^2 (4r - r^3)\,dr = \left[2r^2 - \dfrac{r^4}{4}\right]_0^2 = 8 - 4 = 4\)</p></li>
+        <li><p>ชั้นนอก: \(\displaystyle\int_0^{2\pi} 4\,d\theta = 8\pi \approx 25.13\)</p></li>
+      </ol>
+      <p class="answer">\(V = 8\pi \approx 25.13\) หน่วยปริมาตร (ตรงกับค่าที่แล็บคำนวณ)</p>
+    </div>
+    <div class="wx" id="ex-m6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-6 · อินทิกรัลเกาส์เซียน (ไฟฟ้า)</span><h3>แสดงว่า \(\displaystyle\int_{-\infty}^{\infty} e^{-x^2}dx = \sqrt{\pi}\) ด้วยอินทิกรัลสองชั้น</h3></div>
+      <ol class="steps">
+        <li><p>ให้ \(I = \int_{-\infty}^{\infty} e^{-x^2}dx\) · \(I^2 = \int e^{-x^2}dx\int e^{-y^2}dy = \iint_{\mathbb R^2} e^{-(x^2+y^2)}\,dA\)</p></li>
+        <li><p>พิกัดขั้ว: ทั่วระนาบคือ \(0 \le r &lt; \infty,\ 0 \le \theta \le 2\pi\) · \(I^2 = \displaystyle\int_0^{2\pi}\!\int_0^{\infty} e^{-r^2}\,r\,dr\,d\theta\)</p></li>
+        <li><p>\(\displaystyle\int_0^\infty r e^{-r^2}dr = \left[-\tfrac12 e^{-r^2}\right]_0^\infty = \tfrac12\) · \(I^2 = 2\pi\cdot\tfrac12 = \pi\) → \(I = \sqrt{\pi}\)</p></li>
+        <li><p>ผลนี้คือตัวทำให้เป็นปกติ (normalizing constant) ของการแจกแจงเกาส์เซียน \(\dfrac{1}{\sigma\sqrt{2\pi}}e^{-x^2/2\sigma^2}\) ที่ใช้อธิบายสัญญาณรบกวนในระบบสื่อสารและการวัด</p></li>
+      </ol>
+      <p class="answer">\(\int_{-\infty}^{\infty} e^{-x^2}dx = \sqrt{\pi}\) (ใช้ตัวคูณ \(r\) จึงอินทิเกรตได้ — ในพิกัดฉากไม่มีรูปปิด)</p>
+    </div>
+    <div class="wx" id="ex-m7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-7 · พื้นที่กลีบกุหลาบ</span><h3>หาพื้นที่หนึ่งกลีบของ \(r = 2\sin 2\theta\) (\(0 \le \theta \le \pi/2\))</h3><button type="button" class="wx-btn calc-go" data-mv-target="polar-lab" data-mv-set='{"type":"polar","f":"1","a":"0","b":"pi/2","r1":"0","r2":"2*sin(2*th)","n":10}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(A = \displaystyle\int_0^{\pi/2}\!\int_0^{2\sin 2\theta} r\,dr\,d\theta = \int_0^{\pi/2}\dfrac{(2\sin2\theta)^2}{2}\,d\theta = 2\int_0^{\pi/2}\sin^2 2\theta\,d\theta\)</p></li>
+        <li><p>\(\sin^2 2\theta = \tfrac12(1 - \cos 4\theta)\) → \(2\cdot\tfrac12\left[\theta - \tfrac{\sin4\theta}{4}\right]_0^{\pi/2} = \dfrac{\pi}{2}\)</p></li>
+      </ol>
+      <p class="answer">\(A = \dfrac{\pi}{2} \approx 1.571\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="triple">
+    <h2 id="triple">อินทิกรัลสามชั้น: พิกัดฉาก ทรงกระบอก และทรงกลม <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อเพิ่มมิติ \(z\) ได้ \(\iiint_E f\,dV\) ที่รวม \(f\) ทั่วบริเวณตัน \(E\) ถ้า \(f = 1\) ได้ปริมาตร ถ้า \(f = \rho\) (ความหนาแน่น) ได้มวล เลือกพิกัดตามรูปทรง: <b>ฉาก</b> (กล่อง ปริซึม เตตระฮีดรอน) · <b>ทรงกระบอก</b> (ท่อ ถัง กรวย พาราโบลอยด์) · <b>ทรงกลม</b> (ลูกบอล เปลือก ซีกทรงกลม)</p>
+    <figure class="lt-wide"><!--FIG:mv-coord-systems--><svg class="mf" viewBox="0 0 760 340" role="img" aria-label="พิกัดทรงกระบอก (cylindrical coordinates r, θ, z) และพิกัดทรงกลม (spherical coordinates ρ, φ, θ) เทียบกับพิกัดฉาก (x, y, z)"><defs><marker id="mvcs-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvcs-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvcs-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvcs-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><text class="mf-h" x="190" y="24" text-anchor="middle">ทรงกระบอก (cylindrical)</text><line class="mf-ax" x1="190" y1="270" x2="332.5" y2="236.4" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="336.5" y="240.4" text-anchor="start">x</text><line class="mf-ax" x1="190" y1="270" x2="90.2" y2="221.9" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="94.2" y="225.9" text-anchor="start">y</text><line class="mf-ax" x1="190" y1="270" x2="190" y2="108.7" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="194" y="112.7" text-anchor="start">z</text><line class="mf-dash" x1="200.5" y1="229.7" x2="200.5" y2="124"/><line class="mf-sig2" x1="190" y1="270" x2="200.5" y2="229.7" marker-end="url(#mvcs-s)"/><line class="mf-thin" x1="190" y1="270" x2="200.5" y2="124"/><path class="mf-sig" d="M229.3 260.7 L228.1 260.1 L226.8 259.6 L225.4 259.1 L223.9 258.6 L222.4 258.1 L220.9 257.6 L219.2 257.2 L217.5 256.7 L215.8 256.4 L214 256 L212.2 255.6 L210.3 255.3 L208.4 255 L206.4 254.8 L204.4 254.6 L202.4 254.4 L200.4 254.2 L198.3 254.1 L196.3 254 L194.2 253.9" fill="none"/><circle class="mf-dot" cx="200.5" cy="124" r="4.5"/><text class="mf-l" x="208.5" y="120" text-anchor="start">P (r, θ, z)</text><text class="mf-l" x="206.5" y="245.7" text-anchor="start">r</text><text class="mf-l" x="233.7" y="266.3" text-anchor="start">θ</text><text class="mf-l" x="208.5" y="176.8" text-anchor="start">z</text><text class="mf-k" x="190" y="330" text-anchor="middle">x = r cos θ,  y = r sin θ,  dV = r dr dθ dz</text><text class="mf-h" x="570" y="24" text-anchor="middle">ทรงกลม (spherical)</text><line class="mf-ax" x1="570" y1="270" x2="712.5" y2="236.4" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="716.5" y="240.4" text-anchor="start">x</text><line class="mf-ax" x1="570" y1="270" x2="470.2" y2="221.9" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="474.2" y="225.9" text-anchor="start">y</text><line class="mf-ax" x1="570" y1="270" x2="570" y2="108.7" marker-end="url(#mvcs-ink)"/><text class="mf-l" x="574" y="112.7" text-anchor="start">z</text><line class="mf-dash" x1="577.7" y1="240.2" x2="577.7" y2="142.2"/><line class="mf-dash" x1="570" y1="270" x2="577.7" y2="240.2"/><line class="mf-sig2" x1="570" y1="270" x2="577.7" y2="142.2" marker-end="url(#mvcs-s)"/><path class="mf-sig" d="M570 219.9 L570.2 219.3 L570.3 218.8 L570.5 218.3 L570.7 217.9 L570.8 217.5 L571 217.3 L571.1 217 L571.3 216.9 L571.5 216.8 L571.6 216.7 L571.8 216.8 L571.9 216.9 L572.1 217 L572.2 217.3 L572.4 217.6 L572.5 217.9 L572.6 218.3 L572.8 218.8 L572.9 219.4 L573 220" fill="none"/><path class="mf-sig" d="M609.3 260.7 L608.1 260.1 L606.8 259.6 L605.4 259.1 L603.9 258.6 L602.4 258.1 L600.9 257.6 L599.2 257.2 L597.5 256.7 L595.8 256.4 L594 256 L592.2 255.6 L590.3 255.3 L588.4 255 L586.4 254.8 L584.4 254.6 L582.4 254.4 L580.4 254.2 L578.3 254.1 L576.3 254 L574.2 253.9" fill="none"/><circle class="mf-dot" cx="577.7" cy="142.2" r="4.5"/><text class="mf-l" x="585.7" y="138.2" text-anchor="start">P (ρ, φ, θ)</text><text class="mf-l" x="551.9" y="208.1" text-anchor="start">ρ</text><text class="mf-l" x="578.9" y="203.2" text-anchor="start">φ</text><text class="mf-l" x="613.7" y="266.3" text-anchor="start">θ</text><text class="mf-k" x="570" y="330" text-anchor="middle">x = ρ sin φ cos θ,  dV = ρ² sin φ dρ dφ dθ</text></svg><!--/FIG--><figcaption>พิกัดทรงกระบอก (cylindrical coordinates) \((r, \theta, z)\) และพิกัดทรงกลม (spherical coordinates) \((\rho, \varphi, \theta)\) พร้อมความสัมพันธ์กับ \((x, y, z)\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="M7" data-k="triple integral definition volume mass iterated อินทิกรัลสามชั้น ปริมาตร มวล">
+        <p class="tf-n"><b><span class="fid">M7</span> Triple integral (rectangular)</b> อินทิกรัลสามชั้น (พิกัดฉาก)</p>
+        \[ \iiint_E f\,dV = \int_a^b\!\int_{g_1(x)}^{g_2(x)}\!\int_{u_1(x,y)}^{u_2(x,y)} f(x, y, z)\,dz\,dy\,dx,\qquad V = \iiint_E dV,\quad M = \iiint_E \rho\,dV \]
+        <p class="tf-x">ขอบชั้นในเป็นฟังก์ชันของตัวแปรนอกได้ · วาดเงาของ \(E\) บนระนาบ \(xy\) เพื่อหาขอบ \(x\) และ \(y\) แล้วระบุผิวบน-ล่างของ \(z\)</p>
+      </div>
+      <div class="tf wide" id="M8" data-k="cylindrical coordinates r theta z dV = r dz dr dtheta พิกัดทรงกระบอก">
+        <p class="tf-n"><b><span class="fid">M8</span> Cylindrical coordinates</b> พิกัดทรงกระบอก</p>
+        \[ x = r\cos\theta,\ \ y = r\sin\theta,\ \ z = z;\qquad r^2 = x^2 + y^2;\qquad dV = r\,dz\,dr\,d\theta \]
+        <p class="tf-x">เหมาะกับรูปที่สมมาตรรอบแกน \(z\) · \(\iiint f\,dV = \iiint f(r\cos\theta, r\sin\theta, z)\,r\,dz\,dr\,d\theta\)</p>
+      </div>
+      <div class="tf wide" id="M9" data-k="spherical coordinates rho phi theta dV = rho^2 sin phi พิกัดทรงกลม">
+        <p class="tf-n"><b><span class="fid">M9</span> Spherical coordinates</b> พิกัดทรงกลม</p>
+        \[ x = \rho\sin\varphi\cos\theta,\ \ y = \rho\sin\varphi\sin\theta,\ \ z = \rho\cos\varphi;\quad \rho^2 = x^2 + y^2 + z^2;\quad dV = \rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta \]
+        <p class="tf-x">\(\rho \ge 0\) ระยะจากจุดกำเนิด · \(0 \le \varphi \le \pi\) มุมจากแกน \(+z\) · \(0 \le \theta \le 2\pi\) มุมราบ · <b>ระวังตำราบางเล่นสลับ \(\theta\) กับ \(\varphi\)</b> (ฟิสิกส์ใช้แบบนี้ ตำราคณิตศาสตร์บางเล่มสลับ)</p>
+      </div>
+    </div>
+    <p>แล็บสามชั้นรับ \(f(x, y, z)\) เสมอในพิกัดฉาก โปรแกรมแทนพิกัดใหม่และคูณจาโคเบียนให้ จุดสีในภาพแสดงตัวอย่างจุดภายในรูปทรง เลือกพรีเซ็ต แล้วลองแก้ขอบเขตเอง</p>
+    <div class="mv-tri" id="tri-lab" data-sys="sph" data-f="1" data-a="0" data-b="2*pi" data-c1="0" data-c2="pi" data-d1="0" data-d2="2"></div>
+    <div class="wx" id="ex-m8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-8 · เตตระฮีดรอน (พิกัดฉาก)</span><h3>หาปริมาตรของรูปตันที่ล้อมด้วยระนาบพิกัดสามระนาบกับ \(x + y + z = 1\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="tri-lab" data-mv-set='{"sys":"rect","f":"1","a":"0","b":"1","c1":"0","c2":"1-x","d1":"0","d2":"1-x-y"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>เงาบนระนาบ \(xy\): สามเหลี่ยม \(0 \le x \le 1,\ 0 \le y \le 1 - x\) · \(z\) จาก 0 ถึง \(1 - x - y\)</p></li>
+        <li><p>\(V = \displaystyle\int_0^1\!\int_0^{1-x}\!\int_0^{1-x-y} dz\,dy\,dx = \int_0^1\!\int_0^{1-x}(1 - x - y)\,dy\,dx = \int_0^1 \dfrac{(1-x)^2}{2}\,dx = \dfrac16\)</p></li>
+      </ol>
+      <p class="answer">\(V = \dfrac16\) (ตรงกับสูตรปริมาตรพีระมิด \(\tfrac13 \cdot \text{ฐาน}\tfrac12 \cdot \text{สูง}1\))</p>
+    </div>
+    <div class="wx" id="ex-m9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-9 · กรวย (พิกัดทรงกระบอก)</span><h3>หาปริมาตรรูปตันที่อยู่เหนือกรวย \(z = r\) และใต้ระนาบ \(z = 2\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="tri-lab" data-mv-set='{"sys":"cyl","f":"1","a":"0","b":"2*pi","c1":"0","c2":"2","d1":"r","d2":"2"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>กรวยตัดระนาบ \(z = 2\) ที่ \(r = 2\) · ขอบเขต: \(0 \le \theta \le 2\pi,\ 0 \le r \le 2,\ r \le z \le 2\)</p></li>
+        <li><p>\(V = \displaystyle\int_0^{2\pi}\!\int_0^2\!\int_r^2 r\,dz\,dr\,d\theta = \int_0^{2\pi}\!\int_0^2 r(2 - r)\,dr\,d\theta\)</p></li>
+        <li><p>ชั้นใน: \(\left[r^2 - \dfrac{r^3}{3}\right]_0^2 = 4 - \dfrac83 = \dfrac43\) · ชั้นนอก: \(2\pi\cdot\dfrac43 = \dfrac{8\pi}{3}\)</p></li>
+        <li><p>ตรวจด้วยสูตร: ทรงกระบอกรัศมี 2 สูง 2 มีปริมาตร \(8\pi\) และกรวยมี \(\tfrac13\) ของ \(8\pi\) = \(\tfrac{8\pi}{3}\) → รูปตันที่ถามคือ “กรวยกลับหัว” ปริมาตร \(\tfrac{8\pi}{3}\) ✓</p></li>
+      </ol>
+      <p class="answer">\(V = \dfrac{8\pi}{3} \approx 8.378\)</p>
+    </div>
+    <div class="wx" id="ex-m10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-10 · ทรงกลมและซีกทรงกลม (พิกัดทรงกลม)</span><h3>(ก) ปริมาตรทรงกลมรัศมี \(R\) (ข) จุดศูนย์กลางมวลของซีกทรงกลมตันรัศมี 1 ความหนาแน่นสม่ำเสมอ</h3><button type="button" class="wx-btn calc-go" data-mv-target="tri-lab" data-mv-set='{"sys":"sph","f":"z","a":"0","b":"2*pi","c1":"0","c2":"pi/2","d1":"0","d2":"1","cm":true}'>เปิดในแล็บ (ซีกทรงกลม)</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(V = \displaystyle\int_0^{2\pi}\!\int_0^{\pi}\!\int_0^{R}\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta = 2\pi\cdot 2\cdot\dfrac{R^3}{3} = \dfrac{4\pi R^3}{3}\) (R = 2 ได้ \(\tfrac{32\pi}{3} = 33.51\))</p></li>
+        <li><p>(ข) ซีกบน: \(0 \le \varphi \le \pi/2\) · ปริมาตร \(= \tfrac{2\pi}{3}\)</p></li>
+        <li><p>\[ \iiint z\,dV = \int_0^{2\pi}\!\int_0^{\pi/2}\!\int_0^1 (\rho\cos\varphi)\,\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta = 2\pi\cdot\dfrac14\cdot\dfrac12 = \dfrac{\pi}{4} \]</p></li>
+        <li><p>\(\bar z = \dfrac{\pi/4}{2\pi/3} = \dfrac38\) และโดยสมมาตร \(\bar x = \bar y = 0\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(V = \tfrac43\pi R^3\) · (ข) \((\bar x, \bar y, \bar z) = (0, 0, \tfrac38 R)\) สำหรับซีกทรงกลมรัศมี \(R\) (ตรงกับตารางในหนังสือกลศาสตร์วิศวกรรม)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="jacobian">
+    <h2 id="jacobian">การเปลี่ยนตัวแปรและ Jacobian <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>พิกัดขั้วเป็นกรณีเฉพาะของการเปลี่ยนตัวแปรทั่วไป \(x = x(u, v),\ y = y(u, v)\) ซึ่งแปลงช่องสี่เหลี่ยมเล็กบนระนาบ \(uv\) ให้เป็นสี่เหลี่ยมด้านขนานโค้งบนระนาบ \(xy\) ขนาดพื้นที่ใหม่เท่ากับ \(|J|\) คูณพื้นที่เดิม โดย \(J\) คือดีเทอร์มิแนนต์ของเมทริกซ์จาโคเบียน (<a href="/learn/multivariable-calculus/partial-derivatives/#jacobian-matrix">จากบทอนุพันธ์ย่อย</a>) ใช้แล็บด้านล่างลากแถบ \((u_0, v_0)\) และขนาดช่อง แล้วเทียบ “พื้นที่ภาพจริง” กับ \(|\det J|\Delta u\Delta v\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M10" data-k="change of variables jacobian determinant double integral dx dy = |J| du dv จาโคเบียน เปลี่ยนตัวแปร">
+        <p class="tf-n"><b><span class="fid">M10</span> Change of variables (2D)</b> เปลี่ยนตัวแปร (สองมิติ)</p>
+        \[ \iint_R f(x, y)\,dx\,dy = \iint_S f\big(x(u,v),\,y(u,v)\big)\left|\frac{\partial(x, y)}{\partial(u, v)}\right|du\,dv,\qquad \frac{\partial(x,y)}{\partial(u,v)} = \begin{vmatrix} x_u & x_v\\ y_u & y_v\end{vmatrix} \]
+        <p class="tf-x">การแปลงต้องหนึ่งต่อหนึ่ง (อาจยกเว้นขอบ) · พิกัดขั้ว \(J = r\) · \(|J|\) ใช้ค่าสัมบูรณ์เสมอ (พื้นที่ไม่ติดลบ) · เลือกตัวแปรใหม่ให้บริเวณ \(S\) กลายเป็นสี่เหลี่ยมผืนผ้า</p>
+      </div>
+      <div class="tf wide" id="M11" data-k="jacobian cylindrical spherical dV change of variables three variables จาโคเบียน สามมิติ">
+        <p class="tf-n"><b><span class="fid">M11</span> Jacobians of standard coordinates</b> จาโคเบียนของพิกัดมาตรฐาน</p>
+        \[ \text{ขั้ว: } \left|\tfrac{\partial(x,y)}{\partial(r,\theta)}\right| = r\qquad \text{ทรงกระบอก: } r\qquad \text{ทรงกลม: } \left|\tfrac{\partial(x,y,z)}{\partial(\rho,\varphi,\theta)}\right| = \rho^2\sin\varphi \]
+        <p class="tf-x">ตัวคูณทั้งสามคือที่มาของ \(r\,dr\,d\theta,\ r\,dz\,dr\,d\theta,\ \rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta\) · สามตัวแปร \(J\) เป็นดีเทอร์มิแนนต์ 3×3</p>
+      </div>
+    </div>
+    <div class="mv-jac" id="jac-lab" data-preset="polar"></div>
+    <figure class="lt-wide"><!--FIG:mv-jacobian-cell--><svg class="mf" viewBox="0 0 760 330" role="img" aria-label="จาโคเบียน (Jacobian): ช่องเล็ก Δu×Δv ถูกแปลงเป็นสี่เหลี่ยมด้านขนาน พื้นที่คูณด้วย |det J| (change of variables)"><defs><marker id="mvjc-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvjc-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvjc-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvjc-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><rect class="mf-bg" x="20" y="40" width="300" height="250" rx="8"/><line class="mf-g" x1="20" y1="40" x2="20" y2="290"/><line class="mf-g" x1="70" y1="40" x2="70" y2="290"/><line class="mf-g" x1="120" y1="40" x2="120" y2="290"/><line class="mf-g" x1="170" y1="40" x2="170" y2="290"/><line class="mf-g" x1="220" y1="40" x2="220" y2="290"/><line class="mf-g" x1="270" y1="40" x2="270" y2="290"/><line class="mf-g" x1="320" y1="40" x2="320" y2="290"/><line class="mf-g" x1="20" y1="290" x2="320" y2="290"/><line class="mf-g" x1="20" y1="240" x2="320" y2="240"/><line class="mf-g" x1="20" y1="190" x2="320" y2="190"/><line class="mf-g" x1="20" y1="140" x2="320" y2="140"/><line class="mf-g" x1="20" y1="90" x2="320" y2="90"/><line class="mf-g" x1="20" y1="40" x2="320" y2="40"/><line class="mf-ax" x1="20" y1="290" x2="320" y2="290" marker-end="url(#mvjc-ink)"/><line class="mf-ax" x1="20" y1="290" x2="20" y2="40" marker-end="url(#mvjc-ink)"/><text class="mf-l" x="316" y="285" text-anchor="end">u</text><text class="mf-l" x="25" y="52" text-anchor="start">v</text><text class="mf-h" x="170" y="28" text-anchor="middle">ระนาบ (u, v)</text><path class="mf-fill" d="M110 230 L240 230 L240 130 L110 130 Z"/><path class="mf-sig" d="M110 230 L240 230 L240 130 L110 130 Z" fill="none"/><text class="mf-l" x="169" y="246" text-anchor="start">Δu</text><text class="mf-l" x="86" y="184" text-anchor="start">Δv</text><text class="mf-k" x="153" y="184" text-anchor="start">ΔA′</text><rect class="mf-bg" x="400" y="40" width="340" height="250" rx="8"/><line class="mf-g" x1="400" y1="40" x2="400" y2="290"/><line class="mf-g" x1="448.6" y1="40" x2="448.6" y2="290"/><line class="mf-g" x1="497.1" y1="40" x2="497.1" y2="290"/><line class="mf-g" x1="545.7" y1="40" x2="545.7" y2="290"/><line class="mf-g" x1="594.3" y1="40" x2="594.3" y2="290"/><line class="mf-g" x1="642.9" y1="40" x2="642.9" y2="290"/><line class="mf-g" x1="691.4" y1="40" x2="691.4" y2="290"/><line class="mf-g" x1="740" y1="40" x2="740" y2="290"/><line class="mf-g" x1="400" y1="262.2" x2="740" y2="262.2"/><line class="mf-g" x1="400" y1="215.9" x2="740" y2="215.9"/><line class="mf-g" x1="400" y1="169.6" x2="740" y2="169.6"/><line class="mf-g" x1="400" y1="123.3" x2="740" y2="123.3"/><line class="mf-g" x1="400" y1="77" x2="740" y2="77"/><line class="mf-ax" x1="400" y1="262.2" x2="740" y2="262.2" marker-end="url(#mvjc-ink)"/><line class="mf-ax" x1="448.6" y1="290" x2="448.6" y2="40" marker-end="url(#mvjc-ink)"/><text class="mf-l" x="736" y="257.2" text-anchor="end">x</text><text class="mf-l" x="453.6" y="52" text-anchor="start">y</text><text class="mf-h" x="570" y="28" text-anchor="middle">ระนาบ (x, y)  x = x(u, v),  y = y(u, v)</text><path class="mf-fill2" d="M530.6 212.4 L539.4 208.8 L548.2 205.1 L556.9 201.2 L565.7 197.2 L574.5 193 L583.2 188.8 L592 184.4 L600.8 179.9 L609.5 175.2 L618.3 170.4 L627.1 165.5 L635.9 160.5 L644.6 155.4 L653.4 150.1 L653.4 150.1 L658.3 143.5 L663.3 137 L668.3 130.4 L673.2 123.9 L678.2 117.3 L683.1 110.8 L688.1 104.2 L693 97.7 L698 91.1 L702.9 84.6 L707.9 78.1 L712.8 71.5 L717.8 65 L722.7 58.4 L722.7 58.4 L712.9 65.4 L703 72.3 L693.2 79 L683.3 85.7 L673.5 92.1 L663.6 98.5 L653.8 104.8 L643.9 110.9 L634.1 116.8 L624.2 122.7 L614.4 128.4 L604.5 134 L594.7 139.5 L584.8 144.8 L584.8 144.8 L581 149.7 L577.1 154.5 L573.2 159.3 L569.4 164.1 L565.5 169 L561.6 173.8 L557.7 178.6 L553.9 183.5 L550 188.3 L546.1 193.1 L542.3 197.9 L538.4 202.8 L534.5 207.6 L530.6 212.4 Z"/><path class="mf-sig2" d="M530.6 212.4 L539.4 208.8 L548.2 205.1 L556.9 201.2 L565.7 197.2 L574.5 193 L583.2 188.8 L592 184.4 L600.8 179.9 L609.5 175.2 L618.3 170.4 L627.1 165.5 L635.9 160.5 L644.6 155.4 L653.4 150.1 L653.4 150.1 L658.3 143.5 L663.3 137 L668.3 130.4 L673.2 123.9 L678.2 117.3 L683.1 110.8 L688.1 104.2 L693 97.7 L698 91.1 L702.9 84.6 L707.9 78.1 L712.8 71.5 L717.8 65 L722.7 58.4 L722.7 58.4 L712.9 65.4 L703 72.3 L693.2 79 L683.3 85.7 L673.5 92.1 L663.6 98.5 L653.8 104.8 L643.9 110.9 L634.1 116.8 L624.2 122.7 L614.4 128.4 L604.5 134 L594.7 139.5 L584.8 144.8 L584.8 144.8 L581 149.7 L577.1 154.5 L573.2 159.3 L569.4 164.1 L565.5 169 L561.6 173.8 L557.7 178.6 L553.9 183.5 L550 188.3 L546.1 193.1 L542.3 197.9 L538.4 202.8 L534.5 207.6 L530.6 212.4 Z" fill="none"/><path class="mf-dash" d="M530.6 212.4 L653.4 162.6 L707.6 95 L584.8 144.8 Z" fill="none"/><line class="mf-sig" x1="530.6" y1="212.4" x2="653.4" y2="162.6" marker-end="url(#mvjc-a)"/><line class="mf-sig3" x1="530.6" y1="212.4" x2="584.8" y2="144.8" marker-end="url(#mvjc-g)"/><text class="mf-l" x="623.4" y="180.6" text-anchor="start">r_u Δu</text><text class="mf-l" x="540.8" y="150.8" text-anchor="start">r_v Δv</text><text class="mf-h" x="570" y="315" text-anchor="middle">ΔA ≈ |det J| Δu Δv,   J = ∂(x, y)/∂(u, v)</text></svg><!--/FIG--><figcaption>จาโคเบียน (Jacobian): ช่องเล็ก \(\Delta u\times\Delta v\) ถูกแปลงเป็นสี่เหลี่ยมด้านขนานที่ขึงด้วย \((x_u, y_u)\Delta u\) และ \((x_v, y_v)\Delta v\) พื้นที่ใหม่คือ \(|\det J|\,\Delta u\,\Delta v\)</figcaption></figure>
+    <div class="wx" id="ex-m11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-11 · พื้นที่วงรี</span><h3>หาพื้นที่ภายในวงรี \(\dfrac{x^2}{a^2} + \dfrac{y^2}{b^2} \le 1\)</h3></div>
+      <ol class="steps">
+        <li><p>เปลี่ยนตัวแปร \(x = au,\ y = bv\) · วงรีกลายเป็นแผ่นวงกลมหนึ่งหน่วย \(u^2 + v^2 \le 1\)</p></li>
+        <li><p>\(J = \begin{vmatrix} a & 0\\ 0 & b\end{vmatrix} = ab\)</p></li>
+        <li><p>\(A = \iint dx\,dy = \iint_{u^2+v^2\le1} ab\,du\,dv = ab\cdot\pi\cdot1^2 = \pi ab\)</p></li>
+        <li><p>ตัวอย่างเชิงตัวเลข: \(a = 2,\ b = 1\) ได้ \(A = 2\pi = 6.283\) (แล็บ Jacobian โหมด “วงรี” ให้ \(\det J = 2u\) เมื่อรวม \(x = 2u\cos v\) ในพิกัดขั้ววงรี)</p></li>
+      </ol>
+      <p class="answer">\(A = \pi ab\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mass">
+    <h2 id="mass">มวล จุดศูนย์กลางมวล และโมเมนต์ความเฉื่อย <span class="lv lv-i">กลาง</span></h2>
+    <p>แผ่นบางที่ความหนาแน่นผิว \(\rho(x, y)\) (มวลต่อพื้นที่) มีมวล \(M = \iint\rho\,dA\) จุดศูนย์กลางมวลคือค่าเฉลี่ยถ่วงน้ำหนักของพิกัด และโมเมนต์ความเฉื่อยวัดความ “ต้านการหมุน” ซึ่งใช้ในสมการ \(\tau = I\alpha\) ของเครื่องกล และ \(I\) ของหน้าตัดคาน (ใส่ \(\rho = 1\)) ในงานโยธา เปิดสวิตช์ “ถือว่า \(f\) = ความหนาแน่น” ในแล็บเพื่อให้โปรแกรมคำนวณทั้งหมดพร้อมกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="M12" data-k="mass center of mass centroid moments first moment แผ่นบาง มวล จุดศูนย์กลางมวล">
+        <p class="tf-n"><b><span class="fid">M12</span> Mass and center of mass</b> มวลและจุดศูนย์กลางมวล</p>
+        \[ M = \iint_R \rho\,dA,\qquad \bar x = \frac{1}{M}\iint_R x\,\rho\,dA,\qquad \bar y = \frac{1}{M}\iint_R y\,\rho\,dA \]
+        <p class="tf-x">\(\rho = 1\): จุดศูนย์ถ่วงทางเรขาคณิต (centroid) · สามมิติ \(\bar z = \tfrac1M\iiint z\rho\,dV\) · บริเวณสมมาตรให้ \(\bar x\) หรือ \(\bar y\) อยู่ที่แกนสมมาตร</p>
+      </div>
+      <div class="tf wide" id="M13" data-k="moment of inertia I_x I_y I_0 polar moment second moment โมเมนต์ความเฉื่อย">
+        <p class="tf-n"><b><span class="fid">M13</span> Moments of inertia</b> โมเมนต์ความเฉื่อย</p>
+        \[ I_x = \iint y^2\rho\,dA,\qquad I_y = \iint x^2\rho\,dA,\qquad I_0 = I_x + I_y = \iint (x^2 + y^2)\rho\,dA,\qquad I_z = \iiint (x^2 + y^2)\rho\,dV \]
+        <p class="tf-x">\(I_x\) ถ่วงด้วยระยะจากแกน \(x\) (จึงเป็น \(y^2\)) · \(I_0\) = โมเมนต์เชิงขั้ว · ทฤษฎีบทแกนขนาน \(I = I_c + Md^2\) · รัศมีไจเรชัน \(k = \sqrt{I/M}\)</p>
+      </div>
+    </div>
+    <div class="mv-int" id="mass-lab" data-type="polar" data-f="1+y" data-a="0" data-b="pi" data-r1="0" data-r2="1" data-n="8" data-mass></div>
+    <div class="wx" id="ex-m12">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-12 · แผ่นครึ่งวงกลม</span><h3>แผ่นครึ่งวงกลมรัศมี 1 (\(y \ge 0\)) ความหนาแน่นสม่ำเสมอ \(\rho = 1\) หา \(M,\ \bar y,\ I_x,\ I_y\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="mass-lab" data-mv-set='{"type":"polar","f":"1","a":"0","b":"pi","r1":"0","r2":"1","n":8,"mass":true}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ขอบเขตขั้ว: \(0 \le r \le 1,\ 0 \le \theta \le \pi\) · \(M = \displaystyle\int_0^\pi\!\int_0^1 r\,dr\,d\theta = \dfrac{\pi}{2}\)</p></li>
+        <li><p>\(\iint y\,dA = \displaystyle\int_0^\pi\sin\theta\,d\theta\int_0^1 r^2\,dr = 2\cdot\dfrac13 = \dfrac23\) → \(\bar y = \dfrac{2/3}{\pi/2} = \dfrac{4}{3\pi} \approx 0.4244\) · \(\bar x = 0\) (สมมาตร)</p></li>
+        <li><p>\(I_x = \iint y^2\,dA = \displaystyle\int_0^\pi\sin^2\theta\,d\theta\int_0^1 r^3\,dr = \dfrac{\pi}{2}\cdot\dfrac14 = \dfrac{\pi}{8}\) · \(I_y = \iint x^2\,dA = \dfrac{\pi}{8}\)</p></li>
+        <li><p>\(I_0 = \dfrac{\pi}{4}\) และเมื่อ \(\rho\) เป็นมวลต่อพื้นที่ \(M = \dfrac{\pi}{2}\) ได้ \(I_0 = \tfrac12 M R^2\) เหมือนจานกลมเต็มดวง (ซีกก็มี \(I_0\) อัตราส่วนเดียวกัน)</p></li>
+      </ol>
+      <p class="answer">\(M = \dfrac{\pi}{2}\) · \(\bar y = \dfrac{4}{3\pi}\) · \(I_x = I_y = \dfrac{\pi}{8}\) · \(I_0 = \dfrac{\pi}{4}\)</p>
+    </div>
+    <div class="wx" id="ex-m13">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-13 · โมเมนต์ความเฉื่อยของกระบอกและทรงกลม (เครื่องกล)</span><h3>แสดงว่าทรงกระบอกตันรัศมี \(R\) สูง \(h\) มี \(I_z = \tfrac12 MR^2\) และทรงกลมตันมี \(I = \tfrac25 MR^2\) (ความหนาแน่น \(\rho_0\) สม่ำเสมอ)</h3></div>
+      <ol class="steps">
+        <li><p>ทรงกระบอก (พิกัดทรงกระบอก): \(I_z = \displaystyle\int_0^{2\pi}\!\int_0^R\!\int_0^h \rho_0\,r^2\cdot r\,dz\,dr\,d\theta = \rho_0\cdot2\pi\cdot\dfrac{R^4}{4}\cdot h = \dfrac{\pi\rho_0 hR^4}{2}\)</p></li>
+        <li><p>มวล \(M = \rho_0\pi R^2h\) ดังนั้น \(I_z = \dfrac{1}{2}MR^2\) ✓</p></li>
+        <li><p>ทรงกลม (พิกัดทรงกลม): \((x^2 + y^2) = \rho^2\sin^2\varphi\) · \(I = \rho_0\displaystyle\int_0^{2\pi}\!\int_0^\pi\!\int_0^R \rho^2\sin^2\varphi\cdot\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta = \rho_0\cdot\dfrac{R^5}{5}\cdot\dfrac43\cdot2\pi = \dfrac{8\pi\rho_0R^5}{15}\)</p></li>
+        <li><p>มวล \(M = \dfrac{4\pi\rho_0R^3}{3}\) → \(I = \dfrac{8\pi/15}{4\pi/3}MR^2 = \dfrac25MR^2\) ✓</p></li>
+      </ol>
+      <p class="answer">กระบอกตัน \(I_z = \tfrac12MR^2\) · ทรงกลมตัน \(I = \tfrac25MR^2\) (ใช้ \(\int_0^\pi\sin^3\varphi\,d\varphi = \tfrac43\))</p>
+    </div>
+    <div class="wx" id="ex-m14">
+      <div class="wx-head"><span class="mono">ตัวอย่าง M-14 · ประจุรวมบนแผ่นกลม (ไฟฟ้า)</span><h3>แผ่นตัวนำกลมรัศมี \(a = 5\) cm มีความหนาแน่นประจุผิว \(\sigma(r) = \sigma_0 e^{-r/b}\) เมื่อ \(\sigma_0 = 20\) nC/m² และ \(b = 2\) cm จงหาประจุรวม</h3></div>
+      <ol class="steps">
+        <li><p>\(Q = \displaystyle\iint\sigma\,dA = \int_0^{2\pi}\!\int_0^{a}\sigma_0 e^{-r/b}\,r\,dr\,d\theta = 2\pi\sigma_0\int_0^a r e^{-r/b}dr\)</p></li>
+        <li><p>อินทิเกรตทีละส่วน: \(\displaystyle\int_0^a r e^{-r/b}dr = b^2\left[1 - \left(1 + \dfrac{a}{b}\right)e^{-a/b}\right]\)</p></li>
+        <li><p>แทน \(a/b = 2.5\): \(e^{-2.5} = 0.08208\) · วงเล็บ \(= 1 - 3.5(0.08208) = 0.7127\)</p></li>
+        <li><p>\(Q = 2\pi(20\times10^{-9})(0.02)^2(0.7127) = 3.58\times10^{-11}\) C</p></li>
+      </ol>
+      <p class="answer">\(Q \approx 35.8\) pC (ถ้าประจุสม่ำเสมอที่ \(\sigma_0\) ทั้งแผ่นจะได้ 157 pC ซึ่งมากกว่า 4.4 เท่า เพราะประจุจริงกระจุกใกล้ศูนย์กลาง)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">นำไปใช้ในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สาขา</th><th>อินทิกรัลหลายชั้นที่ใช้</th><th>ผลลัพธ์</th></tr></thead>
+      <tbody>
+        <tr><td>ไฟฟ้า</td><td>\(Q = \iint\sigma\,dA\), \(Q = \iiint\rho_v\,dV\)</td><td>ประจุรวมบนแผ่น/ในปริมาตร (ตัวอย่าง M-14)</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(W = \tfrac12\varepsilon_0\iiint E^2\,dV\)</td><td>พลังงานที่สะสมในสนามไฟฟ้า (<a href="/learn/multivariable-calculus/electrical-engineering/">บทไฟฟ้า</a>)</td></tr>
+        <tr><td>เครื่องกล</td><td>\(I = \iiint r_\perp^2\rho\,dV\)</td><td>โมเมนต์ความเฉื่อยของล้อ เพลา ใบพัด (ตัวอย่าง M-13)</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\bar{\mathbf r} = \tfrac1M\iiint\mathbf r\rho\,dV\)</td><td>จุดศูนย์กลางมวลของชิ้นส่วน (<a href="/learn/multivariable-calculus/mechanical-engineering/">บทเครื่องกล</a>)</td></tr>
+        <tr><td>โยธา</td><td>\(V = \iint (h - z_0)\,dA\)</td><td>ปริมาตรดินขุด-ถม (<a href="/learn/multivariable-calculus/civil-engineering/">บทโยธา</a>)</td></tr>
+        <tr><td>โยธา</td><td>\(A = \iint dA,\ I_x = \iint y^2\,dA\)</td><td>พื้นที่และโมเมนต์ความเฉื่อยของหน้าตัดคาน (<a href="/learn/integral-calculus/engineering-applications/">แล็บคาน</a>)</td></tr>
+        <tr><td>ทุกสาขา</td><td>\(\iint f\,dA / A\)</td><td>ค่าเฉลี่ยบนพื้นที่ เช่นอุณหภูมิหรือความเข้มรังสีเฉลี่ย</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ไม่วาดบริเวณ</b> ก่อนเขียนขอบเขต · ส่วนใหญ่ที่ผิดเพราะอ่านขอบจากสมการโดยไม่เห็นรูป</li>
+      <li><b>ขอบชั้นนอกเป็นตัวแปร</b> · ขอบชั้นนอกต้องเป็นค่าคงที่ (ผลลัพธ์สุดท้ายต้องเป็นตัวเลข)</li>
+      <li><b>ลืมตัวคูณ \(r\)</b> ในพิกัดขั้วและทรงกระบอก และ \(\rho^2\sin\varphi\) ในพิกัดทรงกลม</li>
+      <li><b>สลับลำดับโดยไม่เปลี่ยนขอบ</b> · เปลี่ยนลำดับ \(dy\,dx\) เป็น \(dx\,dy\) ต้องอ่านขอบจากรูปใหม่ทุกตัว</li>
+      <li><b>ใช้ \(\varphi\) กับ \(\theta\) สลับกัน</b> ระหว่างตำราต่างเล่ม · ตรวจนิยามก่อน (ในเว็บนี้ \(\varphi\) = มุมจากแกน \(z\), \(\theta\) = มุมราบ)</li>
+      <li><b>ได้ปริมาตรติดลบ</b> · ตรวจว่า “บน − ล่าง” ถูกด้าน; พื้นที่และปริมาตรไม่เป็นลบ</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/vector-functions/">ฟังก์ชันเวกเตอร์</a> ซึ่งอธิบายการเคลื่อนที่ของวัตถุในอวกาศด้วย \(\mathbf r(t)\) และเตรียมไปสู่อินทิกรัลตามเส้นและบนผิว</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

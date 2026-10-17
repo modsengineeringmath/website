@@ -1,0 +1,272 @@
+<!--meta
+{
+  "title": "สนามเวกเตอร์ (Vector Fields): Divergence, Curl, Gradient และสนามอนุรักษ์ คืออะไร | อาจารย์มด",
+  "h1": "สนามเวกเตอร์ (Vector Fields): Gradient, Divergence, Curl และสนามอนุรักษ์ (Conservative Field)",
+  "description": "สนามเวกเตอร์ (vector field) คืออะไร ตัวดำเนินการ ∇ (del) ดีเวอร์เจนซ์ (divergence) แสดงการแผ่ออก เคิร์ล (curl) แสดงการหมุน ลาปลาเซียน เอกลักษณ์ curl(grad f) = 0 และ div(curl F) = 0 สนามอนุรักษ์และฟังก์ชันศักย์ (potential function) เส้นกระแส พร้อมตัวอย่างไฟฟ้า ของไหล ความร้อน และแล็บสนามเวกเตอร์ที่วัด div curl บนวงกลม",
+  "ogTitle": "สนามเวกเตอร์: Divergence, Curl, Gradient และสนามอนุรักษ์ พร้อมแล็บ",
+  "lesson": "multivariable-calculus",
+  "sub": "vector-fields",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["สนามเวกเตอร์", "vector field", "divergence", "curl", "ดีเวอร์เจนซ์", "เคิร์ล", "สนามอนุรักษ์", "conservative field", "potential function", "ฟังก์ชันศักย์", "curl grad = 0", "div curl = 0", "ลาปลาเซียน", "Laplacian", "del operator", "nabla"],
+  "about": ["Vector field", "Del operator", "Divergence", "Curl", "Laplacian", "Conservative vector field", "Potential function", "Flow lines", "Irrotational field", "Solenoidal field", "Vector identities"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-vec.js"],
+  "og": {"title": "สนามเวกเตอร์: div · curl", "sub": "ดีเวอร์เจนซ์ เคิร์ล ลาปลาเซียน สนามอนุรักษ์ ฟังก์ชันศักย์ และแล็บวัด div curl บนวงกลม", "eyebrow": "บทที่ 24.7 · Vector Fields", "sym": "∇·F"},
+  "faq": [
+    {"q": "สนามเวกเตอร์ (vector field) คืออะไร ยกตัวอย่าง?", "a": "คือฟังก์ชันที่ผูกเวกเตอร์หนึ่งตัวกับทุกจุดในระนาบหรืออวกาศ \\(\\mathbf F(x, y, z) = \\langle P, Q, R\\rangle\\) เช่นสนามไฟฟ้ารอบประจุ \\(\\mathbf E\\) สนามความเร็วของน้ำในท่อ \\(\\mathbf v\\) ฟลักซ์ความร้อน \\(\\mathbf q\\) สนามแรงโน้มถ่วง และสนามแม่เหล็ก \\(\\mathbf B\\) ต่างจากฟังก์ชันสเกลาร์ที่ให้ตัวเลขตัวเดียวต่อจุด (อุณหภูมิ ศักย์) วาดสนามเป็นลูกศรที่ตำแหน่งต่าง ๆ หรือเป็นเส้นกระแสที่สัมผัสลูกศรทุกจุด"},
+    {"q": "ดีเวอร์เจนซ์ (divergence) กับเคิร์ล (curl) ต่างกันอย่างไร?", "a": "ดีเวอร์เจนซ์ \\(\\nabla\\cdot\\mathbf F = P_x + Q_y + R_z\\) เป็นสเกลาร์ วัดการ “แผ่ออก” ของสนามจากจุดหนึ่ง (แหล่งกำเนิดเป็นบวก ท่อรับเป็นลบ) ส่วนเคิร์ล \\(\\nabla\\times\\mathbf F\\) เป็นเวกเตอร์ วัดการ “หมุนวน” รอบจุด (ทิศคือแกนหมุนตามกฎมือขวา ขนาดคือสองเท่าของความเร็วเชิงมุมของใบพัดเล็กที่วางในสนาม) สนามที่ \\(\\nabla\\cdot\\mathbf F = 0\\) เรียกว่า solenoidal (ไม่บีบอัด) สนามที่ \\(\\nabla\\times\\mathbf F = \\mathbf 0\\) เรียกว่า irrotational"},
+    {"q": "สนามอนุรักษ์ (conservative field) ตรวจอย่างไร?", "a": "ในสองมิติตรวจ \\(\\partial P/\\partial y = \\partial Q/\\partial x\\) ในสามมิติตรวจ \\(\\nabla\\times\\mathbf F = \\mathbf 0\\) บนบริเวณที่เชื่อมต่อแบบง่าย (ไม่มีรู) ถ้าผ่านการตรวจจะมีฟังก์ชันศักย์ \\(f\\) ที่ \\(\\mathbf F = \\nabla f\\) และงาน \\(\\int\\mathbf F\\cdot d\\mathbf r\\) ไม่ขึ้นกับเส้นทาง ตัวอย่างคือสนามไฟฟ้าสถิตและแรงโน้มถ่วง ส่วนแรงเสียดทานไม่อนุรักษ์ ระวังกรณีมีรู เช่น \\(\\langle -y, x\\rangle/(x^2+y^2)\\) มี curl เป็นศูนย์แต่ไม่อนุรักษ์เพราะวนรอบจุดกำเนิด"},
+    {"q": "หาฟังก์ชันศักย์ (potential function) จากสนามอนุรักษ์อย่างไร?", "a": "อินทิเกรต \\(f_x = P\\) ตาม \\(x\\) ได้ \\(f = \\int P\\,dx + g(y, z)\\) แล้วหาอนุพันธ์ตาม \\(y\\) เทียบกับ \\(Q\\) เพื่อหา \\(g_y\\) อินทิเกรตหา \\(g\\) แล้วทำซ้ำกับ \\(z\\) ตัวอย่าง \\(\\mathbf F = \\langle 2xy + z^3,\\ x^2,\\ 3xz^2\\rangle\\) ได้ \\(f = x^2y + xz^3 + C\\) ตรวจโดย \\(\\nabla f = \\mathbf F\\) ในงานไฟฟ้า ศักย์ \\(V\\) ในนิยาม \\(\\mathbf E = -\\nabla V\\) ต่างจาก \\(f\\) แค่เครื่องหมายลบ"},
+    {"q": "เอกลักษณ์ curl(grad f) = 0 และ div(curl F) = 0 บอกอะไร?", "a": "\\(\\nabla\\times(\\nabla f) = \\mathbf 0\\) บอกว่าสนามที่มาจาก gradient (เช่นสนามไฟฟ้าสถิต \\(\\mathbf E = -\\nabla V\\)) ไม่มีการหมุนวน ส่วน \\(\\nabla\\cdot(\\nabla\\times\\mathbf F) = 0\\) บอกว่าสนามที่มาจาก curl (เช่นสนามแม่เหล็ก \\(\\mathbf B = \\nabla\\times\\mathbf A\\)) ไม่มีแหล่งกำเนิดหรือท่อรับ นั่นคือ \\(\\nabla\\cdot\\mathbf B = 0\\) ไม่มีประจุแม่เหล็กเดี่ยว ทั้งสองมาจากการที่อนุพันธ์ย่อยผสมสลับลำดับได้ (ทฤษฎีบทของแคลโร)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>สนามเวกเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.7 · แคลคูลัสเวกเตอร์ · Vector Fields</p>
+      <h1>สนามเวกเตอร์ (Vector Fields): Gradient, Divergence, Curl และสนามอนุรักษ์ (Conservative Field)</h1>
+      <p class="lede">สนามไฟฟ้ารอบประจุ ความเร็วของน้ำในท่อ ฟลักซ์ความร้อนในแผ่นโลหะ และแรงโน้มถ่วง ล้วนเป็นสนามเวกเตอร์ (vector field) คือการผูกลูกศรหนึ่งตัวไว้กับทุกจุดในอวกาศ คำถามพื้นฐานสองข้อที่วิศวกรถามกับสนามใดก็ตามคือ “สนามนี้แผ่ออกหรือไหลเข้าที่จุดนี้หรือไม่” และ “สนามนี้หมุนวนรอบจุดนี้หรือไม่” คำตอบคือดีเวอร์เจนซ์ (divergence) และเคิร์ล (curl) ซึ่งเป็นหัวใจของสมการแมกซ์เวลล์และกลศาสตร์ของไหล หน้านี้มีแล็บที่ให้ลากจุดแล้ววัด div กับ curl จากอินทิกรัลบนวงกลมเล็กเพื่อเห็นความหมายจริงของสองตัวนี้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#field-lab-h">แล็บสนามเวกเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#del">∇ · div · curl</a>
+        <a class="btn btn-ghost btn-sm" href="#identities">เอกลักษณ์</a>
+        <a class="btn btn-ghost btn-sm" href="#conservative">สนามอนุรักษ์</a>
+        <a class="btn btn-ghost btn-sm" href="#flow">เส้นกระแส</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><b>ดีเวอร์เจนซ์</b> \(\nabla\cdot\mathbf F = P_x + Q_y + R_z\) (สเกลาร์) = การแผ่ออกต่อปริมาตร · <b>เคิร์ล</b> \(\nabla\times\mathbf F\) (เวกเตอร์) = การหมุนวนต่อพื้นที่ (ใน 2D: \(Q_x - P_y\))</li>
+          <li>\(\nabla\times(\nabla f) = \mathbf 0\) และ \(\nabla\cdot(\nabla\times\mathbf F) = 0\) เสมอ · \(\nabla\cdot\nabla f = \nabla^2 f\) (ลาปลาเซียน)</li>
+          <li><b>อนุรักษ์</b> ⇔ \(\nabla\times\mathbf F = \mathbf 0\) (บริเวณไม่มีรู) ⇔ \(\mathbf F = \nabla f\) ⇔ งานไม่ขึ้นกับเส้นทาง</li>
+          <li>ไฟฟ้าสถิต: \(\nabla\cdot\mathbf E = \rho/\varepsilon_0,\ \nabla\times\mathbf E = \mathbf 0\) · ของไหลไม่บีบอัด: \(\nabla\cdot\mathbf v = 0\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น divergence, curl, laplacian, conservative, potential, identity, flow line" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">สนามเวกเตอร์คืออะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p><b>สนามเวกเตอร์ (vector field)</b> คือฟังก์ชันที่รับจุด \((x, y)\) หรือ \((x, y, z)\) แล้วให้เวกเตอร์ออกมา: \(\mathbf F(x, y) = \langle P(x, y),\ Q(x, y)\rangle\) หรือ \(\mathbf F = \langle P, Q, R\rangle\) ต่างจากฟังก์ชันสเกลาร์ที่ให้ตัวเลขตัวเดียวต่อจุด (อุณหภูมิ ศักย์ไฟฟ้า ความสูง) สนามเวกเตอร์ให้ทั้งขนาดและทิศ (สนามไฟฟ้า ความเร็วของไหล ฟลักซ์ความร้อน)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D1" data-k="vector field definition F(x,y,z) = P i + Q j + R k สนามเวกเตอร์ นิยาม">
+        <p class="tf-n"><b><span class="fid">D1</span> Vector field</b> สนามเวกเตอร์</p>
+        \[ \mathbf F(x, y, z) = P(x, y, z)\,\mathbf i + Q(x, y, z)\,\mathbf j + R(x, y, z)\,\mathbf k,\qquad \mathbf F: \mathbb R^3 \to \mathbb R^3 \]
+        <p class="tf-x">ตัวอย่าง: \(\mathbf F = \langle -y, x\rangle\) (หมุนรอบจุดกำเนิด) · \(\mathbf F = \langle x, y\rangle\) (พุ่งออก) · \(\mathbf E = kq\,\mathbf r/r^3\) (ประจุจุด) · \(\mathbf v = \langle x, -y\rangle\) (ไหลเข้ามุม)</p>
+      </div>
+      <div class="tf wide" id="D2" data-k="gradient field conservative F = grad f nabla f สนามเกรเดียนต์ สนามอนุรักษ์ f potential">
+        <p class="tf-n"><b><span class="fid">D2</span> Gradient field</b> สนามเกรเดียนต์</p>
+        \[ f(x, y, z) \ \longmapsto\ \nabla f = \langle f_x, f_y, f_z\rangle,\qquad \mathbf E = -\nabla V,\quad \mathbf q = -k\nabla T,\quad \mathbf v = -K\nabla h \]
+        <p class="tf-x">ฟังก์ชันสเกลาร์ → สนามเวกเตอร์ (บท<a href="/learn/multivariable-calculus/gradient-directional-derivative/">เกรเดียนต์</a>) · สนามที่มาจากเกรเดียนต์เรียกสนามอนุรักษ์ มีฟังก์ชันศักย์ \(f\)</p>
+      </div>
+    </div>
+    <p>วาดสนามด้วยลูกศร ณ จุดตัวอย่างบนตาราง (ความยาวหรือสีบอกขนาด) หรือด้วย<b>เส้นกระแส (flow lines / field lines)</b> ที่สัมผัสทิศของสนามทุกจุด เช่นเส้นแรงไฟฟ้า เส้นลมในอุโมงค์ลม เส้นไหลของน้ำรอบเสา ทั้งสองแบบมีอยู่ในแล็บด้านล่าง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="del">
+    <h2 id="del">ตัวดำเนินการ ∇ ดีเวอร์เจนซ์ เคิร์ล และลาปลาเซียน <span class="lv lv-i">กลาง</span></h2>
+    <p>ตัวดำเนินการ \(\nabla = \left\langle\dfrac{\partial}{\partial x}, \dfrac{\partial}{\partial y}, \dfrac{\partial}{\partial z}\right\rangle\) (เดล) ทำหน้าที่เหมือนเวกเตอร์ที่ใส่อนุพันธ์ย่อยเป็นองค์ประกอบ ใช้ได้สามแบบ: คูณสเกลาร์ (\(\nabla f\) = gradient) ดอตกับเวกเตอร์ (\(\nabla\cdot\mathbf F\) = divergence) และครอสกับเวกเตอร์ (\(\nabla\times\mathbf F\) = curl)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D3" data-k="divergence div F = Px + Qy + Rz source sink outflow ดีเวอร์เจนซ์ แหล่งกำเนิด การแผ่ออก">
+        <p class="tf-n"><b><span class="fid">D3</span> Divergence</b> ดีเวอร์เจนซ์</p>
+        \[ \nabla\cdot\mathbf F = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z} = \lim_{V\to0}\frac{1}{V}\oint\!\!\oint_{S}\mathbf F\cdot\mathbf n\,dS \]
+        <p class="tf-x">ความหมาย: การไหลออกสุทธิต่อหน่วยปริมาตร · \(&gt; 0\) แหล่งกำเนิด (source) · \(&lt; 0\) ท่อรับ (sink) · \(= 0\) ไม่บีบอัด (solenoidal) · ผลเป็นสเกลาร์</p>
+      </div>
+      <div class="tf wide" id="D4" data-k="curl nabla cross F determinant rotation vorticity เคิร์ล การหมุน">
+        <p class="tf-n"><b><span class="fid">D4</span> Curl</b> เคิร์ล</p>
+        \[ \nabla\times\mathbf F = \begin{vmatrix}\mathbf i & \mathbf j & \mathbf k\\ \partial_x & \partial_y & \partial_z\\ P & Q & R\end{vmatrix} = \langle R_y - Q_z,\ P_z - R_x,\ Q_x - P_y\rangle \]
+        <p class="tf-x">ความหมาย: การหมุนวนต่อหน่วยพื้นที่ · ทิศ = แกนหมุนตามกฎมือขวา · ขนาด = 2 × ความเร็วเชิงมุมของใบพัดเล็ก (paddle wheel) · \(= \mathbf 0\) เรียก irrotational · ผลเป็นเวกเตอร์ · ในสองมิติ \(\mathbf F = \langle P, Q, 0\rangle\) ให้ \(\operatorname{curl} = Q_x - P_y\) (องค์ประกอบ \(z\))</p>
+      </div>
+      <div class="tf" id="D5" data-k="laplacian laplace operator nabla squared div grad ลาปลาเซียน">
+        <p class="tf-n"><b><span class="fid">D5</span> Laplacian</b> ลาปลาเซียน</p>
+        \[ \nabla^2 f = \nabla\cdot(\nabla f) = f_{xx} + f_{yy} + f_{zz} \]
+        <p class="tf-x">ผลเป็นสเกลาร์ · \(\nabla^2 f = 0\) คือสมการลาปลาซ (สภาวะคงตัว) · \(\nabla^2 V = -\rho/\varepsilon_0\) พัวซอง</p>
+      </div>
+      <div class="tf wide" id="D6" data-k="curl rigid rotation omega cross r curl v = 2 omega การหมุนแบบแข็ง ความเร็วเชิงมุม">
+        <p class="tf-n"><b><span class="fid">D6</span> Rigid rotation</b> การหมุนแบบวัตถุแข็ง</p>
+        \[ \mathbf v = \boldsymbol\omega\times\mathbf r\ \Rightarrow\ \nabla\times\mathbf v = 2\boldsymbol\omega,\qquad \nabla\cdot\mathbf v = 0 \]
+        <p class="tf-x">เคิร์ลของความเร็วคือสองเท่าของความเร็วเชิงมุม (นี่คือที่มาของ “ความหมุนวน” \(\boldsymbol\zeta = \nabla\times\mathbf v\) ในกลศาสตร์ของไหล)</p>
+      </div>
+    </div>
+    <h3 id="field-lab-h">แล็บสนามเวกเตอร์: วัด div และ curl จากวงกลมเล็ก</h3>
+    <p>เลือกสนามหรือพิมพ์ \(P(x, y)\) และ \(Q(x, y)\) เองแล้วเปิดสีพื้น “ดีเวอร์เจนซ์” หรือ “เคิร์ล” (สีส้ม = บวก สีฟ้า = ลบ) ลากจุดสีส้ม วงกลมดำคือวงทดสอบรัศมี \(\rho\) โปรแกรมคำนวณ<b>การไหลออกสุทธิ</b> \(\oint\mathbf F\cdot\mathbf n\,ds\) และ<b>การหมุนวน</b> \(\oint\mathbf F\cdot d\mathbf r\) ตามวงกลมด้วยอินทิกรัลเชิงตัวเลข แล้วหารด้วยพื้นที่ \(\pi\rho^2\) เทียบกับค่า div และ curl ที่ได้จากสูตร ยิ่งลดรัศมีวงกลม ตัวเลขยิ่งตรงกัน (นี่คือคำจำกัดความ “ต่อหน่วยพื้นที่” ของ div และ curl) เปิดอนุภาคไหลเพื่อดูการเคลื่อนที่</p>
+    <div class="mv-field" id="field-lab" data-p="x" data-q="y" data-bg="div" data-rho="0.8" data-px="1" data-py="0.5" data-r="3"></div>
+    <figure class="lt-wide"><!--FIG:mv-div-curl--><svg class="mf" viewBox="0 0 780 330" role="img" aria-label="ดีเวอร์เจนซ์และเคิร์ลของสนามเวกเตอร์ 2 มิติ (divergence and curl): สนามแผ่ออก F = (x, y) สนามหมุนวน F = (−y, x) สนามเฉือน F = (y, 0)"><defs><marker id="mvdc-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvdc-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvdc-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvdc-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><rect class="mf-bg" x="12" y="40" width="240" height="220" rx="8"/><text class="mf-h" x="132" y="28" text-anchor="middle">แผ่ออก (source)</text><line class="mf-sig" x1="36" y1="238" x2="18.2" y2="254.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="36" y1="194" x2="13.5" y2="204.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="36" y1="150" x2="10.8" y2="150" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="36" y1="106" x2="13.5" y2="95.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="36" y1="62" x2="18.2" y2="45.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="84" y1="238" x2="72.7" y2="258.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="84" y1="194" x2="70.2" y2="206.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="84" y1="150" x2="68.4" y2="150" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="84" y1="106" x2="70.2" y2="93.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="84" y1="62" x2="72.7" y2="41.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="132" y1="238" x2="132" y2="261.1" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="132" y1="194" x2="132" y2="208.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="132" y1="106" x2="132" y2="91.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="132" y1="62" x2="132" y2="38.9" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="180" y1="238" x2="191.3" y2="258.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="180" y1="194" x2="193.8" y2="206.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="180" y1="150" x2="195.6" y2="150" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="180" y1="106" x2="193.8" y2="93.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="180" y1="62" x2="191.3" y2="41.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="228" y1="238" x2="245.8" y2="254.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="228" y1="194" x2="250.5" y2="204.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="228" y1="150" x2="253.2" y2="150" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="228" y1="106" x2="250.5" y2="95.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="228" y1="62" x2="245.8" y2="45.7" marker-end="url(#mvdc-a)"/><circle class="mf-box" cx="132" cy="150" r="7"/><text class="mf-l" x="132" y="284" text-anchor="middle">div F = 2,  curl F = 0</text><rect class="mf-bg" x="267" y="40" width="240" height="220" rx="8"/><text class="mf-h" x="387" y="28" text-anchor="middle">หมุนวน (rotation)</text><line class="mf-sig" x1="291" y1="238" x2="308.8" y2="254.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="291" y1="194" x2="302.3" y2="214.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="291" y1="150" x2="291" y2="173.1" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="291" y1="106" x2="279.7" y2="126.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="291" y1="62" x2="273.2" y2="78.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="339" y1="238" x2="361.5" y2="248.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="339" y1="194" x2="352.8" y2="206.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="339" y1="150" x2="339" y2="164.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="339" y1="106" x2="325.2" y2="118.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="339" y1="62" x2="316.5" y2="72.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="387" y1="238" x2="412.2" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="387" y1="194" x2="402.6" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="387" y1="106" x2="371.4" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="387" y1="62" x2="361.8" y2="62" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="435" y1="238" x2="457.5" y2="227.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="435" y1="194" x2="448.8" y2="181.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="435" y1="150" x2="435" y2="135.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="435" y1="106" x2="421.2" y2="93.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="435" y1="62" x2="412.5" y2="51.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="483" y1="238" x2="500.8" y2="221.7" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="483" y1="194" x2="494.3" y2="173.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="483" y1="150" x2="483" y2="126.9" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="483" y1="106" x2="471.7" y2="85.3" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="483" y1="62" x2="465.2" y2="45.7" marker-end="url(#mvdc-a)"/><circle class="mf-box" cx="387" cy="150" r="7"/><path class="mf-sig2" fill="none" d="M 405 150 A 18 18 0 1 0 387 132" marker-end="url(#mvdc-a)"/><text class="mf-l" x="387" y="284" text-anchor="middle">div F = 0,  curl F = 2</text><rect class="mf-bg" x="522" y="40" width="240" height="220" rx="8"/><text class="mf-h" x="642" y="28" text-anchor="middle">เฉือน (shear)</text><line class="mf-sig" x1="546" y1="238" x2="520.8" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="546" y1="194" x2="530.4" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="546" y1="106" x2="561.6" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="546" y1="62" x2="571.2" y2="62" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="594" y1="238" x2="568.8" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="594" y1="194" x2="578.4" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="594" y1="106" x2="609.6" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="594" y1="62" x2="619.2" y2="62" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="642" y1="238" x2="616.8" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="642" y1="194" x2="626.4" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="642" y1="106" x2="657.6" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="642" y1="62" x2="667.2" y2="62" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="690" y1="238" x2="664.8" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="690" y1="194" x2="674.4" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="690" y1="106" x2="705.6" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="690" y1="62" x2="715.2" y2="62" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="738" y1="238" x2="712.8" y2="238" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="738" y1="194" x2="722.4" y2="194" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="738" y1="106" x2="753.6" y2="106" marker-end="url(#mvdc-a)"/><line class="mf-sig" x1="738" y1="62" x2="763.2" y2="62" marker-end="url(#mvdc-a)"/><circle class="mf-box" cx="642" cy="150" r="7"/><path class="mf-sig2" fill="none" d="M 626 146 A 18 18 0 0 1 658 146" marker-end="url(#mvdc-a)"/><text class="mf-l" x="642" y="284" text-anchor="middle">div F = 0,  curl F = −1</text><text class="mf-k" x="390" y="318" text-anchor="middle">ใบพัดเล็ก (paddle wheel) หมุนเมื่อ curl ≠ 0 · ฟองสบู่พองเมื่อ div &gt; 0</text></svg><!--/FIG--><figcaption>ดีเวอร์เจนซ์และเคิร์ลของสนามเวกเตอร์ 2 มิติ: สนามแผ่ออก (\(\nabla\cdot\mathbf F &gt; 0\)) สนามหมุนวน (\(\nabla\times\mathbf F \ne \mathbf 0\)) และสนามเฉือน (ทั้ง div และ curl ได้จากตัวเลขเดียวกัน) · ใบพัดเล็กหมุนเมื่อ curl ≠ 0</figcaption></figure>
+    <div class="wx" id="ex-d1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-1 · คำนวณ div และ curl</span><h3>\(\mathbf F = \langle x^2 y,\ y^2 z,\ z^2 x\rangle\) หา \(\nabla\cdot\mathbf F\) และ \(\nabla\times\mathbf F\) แล้วคำนวณที่ \((1, 2, 3)\)</h3></div>
+      <ol class="steps">
+        <li><p>\(P = x^2y,\ Q = y^2z,\ R = z^2x\) · \(\nabla\cdot\mathbf F = P_x + Q_y + R_z = 2xy + 2yz + 2zx\)</p></li>
+        <li><p>\(R_y - Q_z = 0 - y^2 = -y^2\) · \(P_z - R_x = 0 - z^2 = -z^2\) · \(Q_x - P_y = 0 - x^2 = -x^2\)</p></li>
+        <li><p>\(\nabla\times\mathbf F = \langle -y^2,\ -z^2,\ -x^2\rangle\)</p></li>
+        <li><p>ที่ \((1, 2, 3)\): div \(= 2(2) + 2(6) + 2(3) = 4 + 12 + 6 = 22\) · curl \(= \langle -4,\ -9,\ -1\rangle\)</p></li>
+      </ol>
+      <p class="answer">\(\nabla\cdot\mathbf F = 2(xy + yz + zx)\) → 22 · \(\nabla\times\mathbf F = \langle-y^2, -z^2, -x^2\rangle\) → \(\langle-4,-9,-1\rangle\)</p>
+    </div>
+    <div class="wx" id="ex-d2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-2 · โรเตอร์หมุน (เครื่องกล)</span><h3>ความเร็วของจุดบนโรเตอร์ที่หมุนรอบแกน \(z\) ด้วย \(\omega = 314\) rad/s คือ \(\mathbf v = \langle -\omega y,\ \omega x,\ 0\rangle\) หา div และ curl</h3><button type="button" class="wx-btn calc-go" data-mv-target="field-lab" data-mv-set='{"p":"-y","q":"x","bg":"curl"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(P = -\omega y,\ Q = \omega x,\ R = 0\)</p></li>
+        <li><p>\(\nabla\cdot\mathbf v = \partial_x(-\omega y) + \partial_y(\omega x) + 0 = 0\) → วัสดุไม่ถูกบีบอัดหรือขยาย (เป็นการหมุนแบบแข็ง)</p></li>
+        <li><p>\(\nabla\times\mathbf v = \langle 0,\ 0,\ Q_x - P_y\rangle = \langle0, 0, \omega - (-\omega)\rangle = \langle 0, 0, 2\omega\rangle\) = \(2\omega\,\mathbf k\)</p></li>
+        <li><p>เคิร์ลคือ \(2\times314 = 628\) rad/s ชี้ตามแกน \(z\) (กฎมือขวา) ตรงกับสูตร D6 ที่ \(\nabla\times\mathbf v = 2\boldsymbol\omega\)</p></li>
+      </ol>
+      <p class="answer">div = 0 · curl = \(2\omega\,\mathbf k = 628\,\mathbf k\) rad/s (ในแล็บ: ทุกจุด curl เป็นค่าคงที่ = 2)</p>
+    </div>
+    <div class="wx" id="ex-d3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-3 · สนามกำลังสองผกผัน (ไฟฟ้า)</span><h3>\(\mathbf E = kq\,\dfrac{\mathbf r}{r^3}\) (ประจุจุด) แสดงว่า \(\nabla\cdot\mathbf E = 0\) และ \(\nabla\times\mathbf E = \mathbf 0\) ที่ \(r \ne 0\)</h3></div>
+      <ol class="steps">
+        <li><p>องค์ประกอบ \(E_x = kq\,x\,(x^2 + y^2 + z^2)^{-3/2}\) · \(\partial_x E_x = kq\left[r^{-3} - 3x^2 r^{-5}\right]\)</p></li>
+        <li><p>บวกกับ \(\partial_y E_y\) และ \(\partial_z E_z\) (รูปเดียวกัน): \(\nabla\cdot\mathbf E = kq\left[3r^{-3} - 3(x^2 + y^2 + z^2)r^{-5}\right] = kq\left[3r^{-3} - 3r^{-3}\right] = 0\)</p></li>
+        <li><p>เคิร์ล: เช่น \(\partial_y E_z - \partial_z E_y = kq\left[-3yzr^{-5} + 3zyr^{-5}\right] = 0\) (ทุกองค์ประกอบเป็นศูนย์) เพราะ \(\mathbf E = -\nabla(kq/r)\) เป็นเกรเดียนต์</p></li>
+        <li><p>แต่ฟลักซ์ผ่านทรงกลมรอบประจุเท่ากับ \(4\pi kq = q/\varepsilon_0\) ไม่ใช่ศูนย์ — ที่จุดกำเนิดสนามไม่นิยามและ div เป็น “ฟังก์ชันเดลต้า” (แหล่งกำเนิดจุด) ซึ่งคือเนื้อหาของกฎของเกาส์ (ลองในแล็บ <a href="/learn/multivariable-calculus/surface-integrals/#gauss-lab">Gauss</a> ด้วย \(\mathbf F = \mathbf r/\rho^3\))</p></li>
+      </ol>
+      <p class="answer">นอกจุดกำเนิด \(\nabla\cdot\mathbf E = 0\) และ \(\nabla\times\mathbf E = \mathbf 0\) · ที่จุดกำเนิดมีแหล่งกำเนิดจุด</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="identities">
+    <h2 id="identities">เอกลักษณ์เวกเตอร์ที่ต้องรู้ <span class="lv lv-i">กลาง</span></h2>
+    <p>เอกลักษณ์สองข้อแรกมาจากข้อเท็จจริงเดียว: อนุพันธ์ย่อยผสมสลับลำดับได้ (ทฤษฎีบทของแคลโร บท<a href="/learn/multivariable-calculus/partial-derivatives/#higher">อนุพันธ์ย่อย</a>) สองข้อนี้อธิบายว่าทำไมสนามไฟฟ้าสถิตไม่หมุนวน และสนามแม่เหล็กไม่มีแหล่งกำเนิด</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D7" data-k="curl of gradient is zero curl grad f = 0 identity เคิร์ลของเกรเดียนต์">
+        <p class="tf-n"><b><span class="fid">D7</span> Curl of a gradient</b> เคิร์ลของเกรเดียนต์</p>
+        \[ \nabla\times(\nabla f) = \mathbf 0 \qquad\left(\text{เช่น } (f_z)_y - (f_y)_z = 0 \text{ เพราะ } f_{zy} = f_{yz}\right) \]
+        <p class="tf-x">ทุกสนามที่เป็น gradient ไม่หมุนวน · ใช้ตรวจว่า \(\mathbf F\) ไม่ใช่ gradient: ถ้า curl ≠ 0 แล้ว \(\mathbf F \ne \nabla f\) ทุก \(f\)</p>
+      </div>
+      <div class="tf wide" id="D8" data-k="divergence of curl is zero div curl F = 0 identity ดีเวอร์เจนซ์ของเคิร์ล">
+        <p class="tf-n"><b><span class="fid">D8</span> Divergence of a curl</b> ดีเวอร์เจนซ์ของเคิร์ล</p>
+        \[ \nabla\cdot(\nabla\times\mathbf F) = 0 \]
+        <p class="tf-x">สนามที่เป็น curl ของสนามอื่น ไม่มีแหล่งกำเนิด · \(\mathbf B = \nabla\times\mathbf A\) จึง \(\nabla\cdot\mathbf B = 0\) (ไม่มีประจุแม่เหล็กเดี่ยว)</p>
+      </div>
+      <div class="tf wide" id="D9" data-k="product rules divergence of f F curl of f F vector identities กฎผลคูณ เอกลักษณ์">
+        <p class="tf-n"><b><span class="fid">D9</span> Product rules</b> กฎผลคูณ</p>
+        \[ \nabla\cdot(f\mathbf F) = f\,\nabla\cdot\mathbf F + \nabla f\cdot\mathbf F,\qquad \nabla\times(f\mathbf F) = f\,\nabla\times\mathbf F + \nabla f\times\mathbf F,\qquad \nabla\times(\nabla\times\mathbf F) = \nabla(\nabla\cdot\mathbf F) - \nabla^2\mathbf F \]
+        <p class="tf-x">ข้อสุดท้ายใช้ในการหาสมการคลื่นแม่เหล็กไฟฟ้าจากสมการแมกซ์เวลล์ (<a href="/learn/multivariable-calculus/electrical-engineering/">บทไฟฟ้า</a>)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-4 · ตรวจเอกลักษณ์</span><h3>ให้ \(f = x^2y + xz^3\) หา \(\nabla f\), ตรวจ \(\nabla\times\nabla f = \mathbf 0\) และคำนวณ \(\nabla^2 f\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\nabla f = \langle 2xy + z^3,\ x^2,\ 3xz^2\rangle\)</p></li>
+        <li><p>curl: \(\langle (3xz^2)_y - (x^2)_z,\ (2xy + z^3)_z - (3xz^2)_x,\ (x^2)_x - (2xy + z^3)_y\rangle = \langle 0 - 0,\ 3z^2 - 3z^2,\ 2x - 2x\rangle = \mathbf 0\) ✓</p></li>
+        <li><p>\(\nabla^2 f = \nabla\cdot\nabla f = (2xy + z^3)_x + (x^2)_y + (3xz^2)_z = 2y + 0 + 6xz = 2y + 6xz\)</p></li>
+      </ol>
+      <p class="answer">curl(grad f) = \(\mathbf 0\) ✓ · \(\nabla^2 f = 2y + 6xz\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="conservative">
+    <h2 id="conservative">สนามอนุรักษ์และฟังก์ชันศักย์ <span class="lv lv-i">กลาง</span></h2>
+    <p>สนามเวกเตอร์ \(\mathbf F\) เป็น<b>สนามอนุรักษ์ (conservative)</b> ถ้ามีฟังก์ชันสเกลาร์ \(f\) ที่ \(\mathbf F = \nabla f\) (เรียก \(f\) ว่าฟังก์ชันศักย์) ผลคือ<u>งานของสนามไม่ขึ้นกับเส้นทาง</u> (บท<a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้น</a>) สนามไฟฟ้าสถิตและแรงโน้มถ่วงเป็นแบบนี้ ส่วนแรงเสียดทานและสนามไฟฟ้าเหนี่ยวนำไม่ใช่</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D10" data-k="conservative field test curl F = 0 P_y = Q_x simply connected สนามอนุรักษ์ ทดสอบ">
+        <p class="tf-n"><b><span class="fid">D10</span> Test for a conservative field</b> การทดสอบสนามอนุรักษ์</p>
+        \[ \mathbb R^2:\ \frac{\partial P}{\partial y} = \frac{\partial Q}{\partial x},\qquad \mathbb R^3:\ \nabla\times\mathbf F = \mathbf 0\qquad(\text{บนบริเวณเปิดที่เชื่อมต่อแบบง่าย}) \]
+        <p class="tf-x">ต้อง “เชื่อมต่อแบบง่าย” (simply connected: ไม่มีรู) · ตัวอย่างค้านที่มีรู: \(\mathbf F = \dfrac{\langle -y, x\rangle}{x^2 + y^2}\) มี \(Q_x = P_y\) ทุกจุดยกเว้นจุดกำเนิดแต่ \(\oint\mathbf F\cdot d\mathbf r = 2\pi \ne 0\) รอบจุดกำเนิด → ไม่อนุรักษ์</p>
+      </div>
+      <div class="tf wide" id="D11" data-k="potential function find f from F integrate P dx partial derivatives หาฟังก์ชันศักย์ อินทิเกรต">
+        <p class="tf-n"><b><span class="fid">D11</span> Finding the potential function</b> วิธีหาฟังก์ชันศักย์</p>
+        \[ f_x = P \Rightarrow f = \int P\,dx + g(y,z);\ \ f_y = Q \Rightarrow g_y = Q - \partial_y\!\!\int P\,dx;\ \ \text{อินทิเกรต } g_y\text{ แล้วทำซ้ำกับ } f_z = R \]
+        <p class="tf-x">ได้ \(f\) ถึงค่าคงที่ \(C\) · ตรวจทุกครั้งโดย \(\nabla f = \mathbf F\) · ในไฟฟ้ามักนิยาม \(\mathbf E = -\nabla V\) ดังนั้น \(V = -f\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-5 · หาฟังก์ชันศักย์สามมิติ</span><h3>แสดงว่า \(\mathbf F = \langle 2xy + z^3,\ x^2,\ 3xz^2\rangle\) เป็นสนามอนุรักษ์ และหา \(f\)</h3></div>
+      <ol class="steps">
+        <li><p>เคิร์ล: \(R_y - Q_z = 0 - 0 = 0\) · \(P_z - R_x = 3z^2 - 3z^2 = 0\) · \(Q_x - P_y = 2x - 2x = 0\) → \(\nabla\times\mathbf F = \mathbf 0\) บน \(\mathbb R^3\) (ไม่มีรู) → อนุรักษ์</p></li>
+        <li><p>\(f_x = 2xy + z^3\) → \(f = x^2y + xz^3 + g(y, z)\)</p></li>
+        <li><p>\(f_y = x^2 + g_y = Q = x^2\) → \(g_y = 0\) → \(g = h(z)\)</p></li>
+        <li><p>\(f_z = 3xz^2 + h'(z) = R = 3xz^2\) → \(h' = 0\) → \(h = C\)</p></li>
+        <li><p>\(f(x, y, z) = x^2y + xz^3 + C\) · ตรวจ: \(\nabla f = \langle 2xy + z^3,\ x^2,\ 3xz^2\rangle = \mathbf F\) ✓ (นี่คือ \(f\) ของตัวอย่าง D-4)</p></li>
+      </ol>
+      <p class="answer">\(f = x^2 y + x z^3 + C\)</p>
+    </div>
+    <div class="wx" id="ex-d6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-6 · สนามสองมิติที่ไม่อนุรักษ์</span><h3>ตรวจ \(\mathbf F_1 = \langle 2xy,\ x^2 - 3y^2\rangle\) และ \(\mathbf F_2 = \langle y^2,\ x\rangle\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="field-lab" data-mv-set='{"p":"y^2","q":"x","bg":"curl"}'>เปิด F₂ ในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(\mathbf F_1\): \(P_y = 2x\) · \(Q_x = 2x\) → เท่ากัน → อนุรักษ์ · ศักย์ \(f = x^2y - y^3\) (ตรวจ \(f_x = 2xy,\ f_y = x^2 - 3y^2\) ✓)</p></li>
+        <li><p>\(\mathbf F_2\): \(P_y = 2y\) แต่ \(Q_x = 1\) → ไม่เท่ากัน (curl \(= 1 - 2y \ne 0\)) → <b>ไม่อนุรักษ์</b></p></li>
+        <li><p>ในแล็บ เปิดสีพื้นเคิร์ลของ \(\mathbf F_2\): ค่าเป็นบวกใต้เส้น \(y = 0.5\) และลบเหนือเส้นนั้น ที่ \(y = 0.5\) curl หายไป · งานตามวงปิดที่ผ่านบริเวณ curl ≠ 0 จึงไม่เป็นศูนย์</p></li>
+      </ol>
+      <p class="answer">\(\mathbf F_1\) อนุรักษ์ (\(f = x^2y - y^3\)) · \(\mathbf F_2\) ไม่อนุรักษ์ (curl = \(1 - 2y\))</p>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สนาม</th><th>อนุรักษ์?</th><th>เหตุผล / ความหมายทางฟิสิกส์</th></tr></thead>
+      <tbody>
+        <tr><td>สนามไฟฟ้าสถิต \(\mathbf E\)</td><td>ใช่</td><td>\(\nabla\times\mathbf E = \mathbf 0\) · มีศักย์ไฟฟ้า \(V\) · แรงดันระหว่างสองจุดไม่ขึ้นกับสายที่ใช้วัด</td></tr>
+        <tr><td>แรงโน้มถ่วง</td><td>ใช่</td><td>มีพลังงานศักย์ \(mgh\) · งานของแรงโน้มถ่วงขึ้นกับความสูงต้น-ปลาย เท่านั้น</td></tr>
+        <tr><td>แรงสปริง \(\mathbf F = -k\mathbf r\)</td><td>ใช่</td><td>ศักย์ \(\tfrac12 kr^2\)</td></tr>
+        <tr><td>แรงเสียดทาน</td><td>ไม่</td><td>ทำงานมากขึ้นถ้าเส้นทางยาวขึ้น · พลังงานสูญเป็นความร้อน</td></tr>
+        <tr><td>สนามไฟฟ้าเหนี่ยวนำ (ฟาราเดย์)</td><td>ไม่</td><td>\(\nabla\times\mathbf E = -\partial\mathbf B/\partial t \ne \mathbf 0\) · ใช้ในหม้อแปลงและมอเตอร์</td></tr>
+        <tr><td>สนามแม่เหล็กรอบเส้นลวด \(\mathbf B\)</td><td>ไม่ (ในบริเวณรอบลวด)</td><td>\(\oint\mathbf B\cdot d\mathbf l = \mu_0 I\) (Ampère) ≠ 0</td></tr>
+        <tr><td>ความเร็วของของไหลอุดมคติ (ไม่หมุนวน)</td><td>ใช่ (irrotational)</td><td>มีศักย์ความเร็ว \(\phi\) และ \(\nabla^2\phi = 0\) เมื่อไม่บีบอัด</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="flow">
+    <h2 id="flow">เส้นกระแส (Flow Lines) <span class="lv lv-i">กลาง</span></h2>
+    <p>เส้นกระแสคือเส้นทาง \(\mathbf r(t)\) ที่ความเร็วเท่ากับสนาม ณ ตำแหน่งนั้นเสมอ: \(\mathbf r'(t) = \mathbf F(\mathbf r(t))\) เป็นระบบสมการเชิงอนุพันธ์ (เป็นเส้นทางของอนุภาคเล็กที่ลอยไปกับของไหลเมื่อการไหลคงที่) ในสนามไฟฟ้า เส้นแรงออกจากประจุบวกเข้าประจุลบ และไม่ตัดกัน</p>
+    <div class="wx" id="ex-d7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-7 · หาเส้นกระแสด้วยการแก้ ODE</span><h3>หาเส้นกระแสของ \(\mathbf F = \langle x,\ -y\rangle\) ที่ผ่านจุด \((2, 1)\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="field-lab" data-mv-set='{"p":"x","q":"-y","bg":"none","lines":true}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ตั้ง \(\dfrac{dx}{dt} = x\) และ \(\dfrac{dy}{dt} = -y\) → \(x = 2e^{t}\) และ \(y = e^{-t}\) (เริ่มที่ \(t = 0\))</p></li>
+        <li><p>กำจัด \(t\): \(xy = 2e^{t}e^{-t} = 2\) เป็นค่าคงที่ตลอดเส้นทาง</p></li>
+        <li><p>เส้นกระแสคือไฮเพอร์โบลา \(xy = 2\) เคลื่อนเข้าหาแกน \(x\) และออกห่างแกน \(y\) · นี่คือการไหลเข้ามุมฉาก (stagnation flow) ที่จุดกำเนิดความเร็วเป็นศูนย์</p></li>
+        <li><p>ตรวจ: \(\nabla\cdot\mathbf F = 1 + (-1) = 0\) (ไม่บีบอัด) และ \(\nabla\times\mathbf F = 0\) → เป็นการไหลศักย์ของของไหลอุดมคติ</p></li>
+      </ol>
+      <p class="answer">เส้นกระแส: \(xy = 2\) (ไฮเพอร์โบลา) · div = 0 และ curl = 0</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">นำไปใช้ในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สาขา</th><th>สมการ</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>ไฟฟ้า</td><td>\(\nabla\cdot\mathbf D = \rho_v,\ \ \nabla\times\mathbf E = -\partial_t\mathbf B\)</td><td>กฎของเกาส์และฟาราเดย์ในรูปอนุพันธ์ (<a href="/learn/multivariable-calculus/electrical-engineering/">บทไฟฟ้า</a>)</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\nabla\cdot\mathbf B = 0,\ \ \nabla\times\mathbf H = \mathbf J + \partial_t\mathbf D\)</td><td>ไม่มีประจุแม่เหล็ก · กฎของแอมแปร์-แมกซ์เวลล์</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\nabla\cdot\mathbf v = 0\) (ไม่บีบอัด) · \(\boldsymbol\zeta = \nabla\times\mathbf v\)</td><td>สมการความต่อเนื่องและความหมุนวนของของไหล (<a href="/learn/multivariable-calculus/mechanical-engineering/">บทเครื่องกล</a>)</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\nabla\cdot\mathbf q = \dot q_{gen}\)</td><td>สมดุลพลังงานความร้อนที่จุดหนึ่ง</td></tr>
+        <tr><td>โยธา</td><td>\(\mathbf v = -K\nabla h,\ \ \nabla\cdot\mathbf v = 0\)</td><td>ดาร์ซีและความต่อเนื่อง → \(\nabla^2h = 0\) การซึมผ่านดิน (<a href="/learn/multivariable-calculus/civil-engineering/">บทโยธา</a>)</td></tr>
+        <tr><td>โยธา</td><td>\(\nabla\cdot\boldsymbol\sigma + \mathbf f = \mathbf 0\)</td><td>สมดุลความเค้นภายในวัสดุ (ดีเวอร์เจนซ์ของเทนเซอร์)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>สลับผลลัพธ์ของ div กับ curl</b> · div ได้สเกลาร์ curl (สามมิติ) ได้เวกเตอร์ · เขียน \(\nabla\cdot\mathbf F\) ผลเป็นเวกเตอร์ผิดแน่นอน</li>
+      <li><b>ใช้ curl = 0 ตัดสินสนามอนุรักษ์ในบริเวณที่มีรู</b> · ตัวอย่าง \(\langle -y, x\rangle/(x^2 + y^2)\)</li>
+      <li><b>เคิร์ลของสนามสองมิติ</b> · ใช้ \(Q_x - P_y\) (ไม่ใช่ \(P_y - Q_x\)) ลำดับสำคัญต่อเครื่องหมาย</li>
+      <li><b>ลืมตัวห้อยของ \(P_y\)</b> · \(P_y = \partial P/\partial y\) ไม่ใช่ \(P\) คูณ \(y\)</li>
+      <li><b>เชื่อว่า div = 0 แปลว่าสนามเป็นศูนย์</b> · สนามที่มีลูกศรใหญ่ได้ แต่ไหลเข้า-ออกสมดุล (เช่นการไหลเข้ามุม)</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้นและทฤษฎีบทของกรีน</a> ที่เชื่อมการหมุนวน (curl) กับการหมุนวนบนวงปิด และสนามอนุรักษ์กับงานที่ไม่ขึ้นกับเส้นทาง</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

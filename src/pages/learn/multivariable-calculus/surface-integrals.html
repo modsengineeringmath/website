@@ -1,0 +1,305 @@
+<!--meta
+{
+  "title": "อินทิกรัลบนผิว (Surface Integrals) ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ (Gauss) และทฤษฎีบทสโตกส์ (Stokes) | อาจารย์มด",
+  "h1": "อินทิกรัลบนผิว (Surface Integrals) ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ (Gauss) และทฤษฎีบทสโตกส์ (Stokes)",
+  "description": "อินทิกรัลบนผิว (surface integral) ผิวพารามิเตอร์ พื้นที่ผิว dS = |r_u × r_v| du dv ฟลักซ์ (flux) ∬F·n dS ทฤษฎีบทดีเวอร์เจนซ์ของเกาส์ (divergence theorem / Gauss) ทฤษฎีบทสโตกส์ (Stokes' theorem) กฎของเกาส์ กฎของฟาราเดย์ กฎของแอมแปร์และสมการแมกซ์เวลล์ พร้อมตัวอย่างจานรับสัญญาณ ท่อน้ำ และตัวตรวจ Gauss–Stokes ที่คำนวณทั้งสองฝั่ง",
+  "ogTitle": "Surface Integrals, Flux, Gauss และ Stokes: ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ และสโตกส์",
+  "lesson": "multivariable-calculus",
+  "sub": "surface-integrals",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["อินทิกรัลบนผิว", "surface integral", "ฟลักซ์", "flux", "ทฤษฎีบทดีเวอร์เจนซ์", "divergence theorem", "Gauss's theorem", "ทฤษฎีบทสโตกส์", "Stokes' theorem", "กฎของเกาส์", "Gauss's law", "กฎของฟาราเดย์", "สมการแมกซ์เวลล์", "พื้นที่ผิว", "ผิวพารามิเตอร์"],
+  "about": ["Surface integral", "Parametric surface", "Surface area", "Flux", "Oriented surface", "Divergence theorem", "Stokes' theorem", "Gauss's law", "Faraday's law", "Ampère's law", "Maxwell's equations"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-vec.js"],
+  "og": {"title": "ผิว · ฟลักซ์ · Gauss · Stokes", "sub": "พื้นที่ผิว ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ สโตกส์ และสมการแมกซ์เวลล์ พร้อมตัวตรวจสองฝั่ง", "eyebrow": "บทที่ 24.9 · Surface Integrals, Gauss & Stokes", "sym": "∯"},
+  "faq": [
+    {"q": "ฟลักซ์ (flux) ของสนามเวกเตอร์ผ่านผิวคืออะไร?", "a": "ฟลักซ์ \\(\\Phi = \\iint_S \\mathbf F\\cdot\\mathbf n\\,dS\\) คืออัตราที่สนามไหลผ่านผิว S เมื่อ \\(\\mathbf n\\) เป็นเวกเตอร์ปกติหนึ่งหน่วย เมื่อ \\(\\mathbf F\\) เป็นความเร็วของน้ำ ฟลักซ์คืออัตราการไหลเชิงปริมาตร (m³/s) เมื่อ \\(\\mathbf F\\) เป็นสนามไฟฟ้า ฟลักซ์คือ \\(\\Phi_E\\) ในกฎของเกาส์ เฉพาะองค์ประกอบของสนามที่ตั้งฉากกับผิวเท่านั้นที่ส่งผ่าน องค์ประกอบที่ขนานผิวไหลเฉียดไม่ผ่าน ฟลักซ์เป็นบวกเมื่อไหลไปทางเดียวกับ \\(\\mathbf n\\)"},
+    {"q": "ทฤษฎีบทดีเวอร์เจนซ์ (divergence theorem) ของเกาส์บอกอะไร?", "a": "ฟลักซ์ออกสุทธิผ่านผิวปิด S เท่ากับผลรวมของดีเวอร์เจนซ์ภายในปริมาตรที่ล้อม \\(\\oiint_S \\mathbf F\\cdot\\mathbf n\\,dS = \\iiint_E \\nabla\\cdot\\mathbf F\\,dV\\) \\(\\mathbf n\\) ชี้ออกนอก ความหมายคือ “สิ่งที่ไหลออกทางผิว = สิ่งที่ถูกสร้างขึ้นภายใน” ใช้เปลี่ยนอินทิกรัลบนผิวหกหน้าให้เป็นอินทิกรัลสามชั้นเดียว เช่น \\(\\mathbf F = \\langle x, y, z\\rangle\\) ผ่านทรงกลมรัศมี \\(a\\) ได้ \\(\\iiint 3\\,dV = 4\\pi a^3\\) และเป็นที่มาของกฎของเกาส์ในไฟฟ้าสถิต"},
+    {"q": "ทฤษฎีบทสโตกส์ (Stokes' theorem) ใช้ทำอะไร?", "a": "เชื่อมการหมุนวนรอบเส้นปิด C กับ curl ที่ผ่านผิวใดก็ได้ S ที่มี C เป็นขอบ: \\(\\oint_C \\mathbf F\\cdot d\\mathbf r = \\iint_S (\\nabla\\times\\mathbf F)\\cdot\\mathbf n\\,dS\\) โดยทิศ \\(\\mathbf n\\) สัมพันธ์กับทิศวน C ตามกฎมือขวา ผลคือเลือกผิวที่คำนวณง่ายที่สุดได้ (เช่นแผ่นเรียบแทนผิวโค้ง) และเป็นที่มาของกฎของแอมแปร์และกฎของฟาราเดย์ในรูปอนุพันธ์ ถ้า \\(\\nabla\\times\\mathbf F = \\mathbf 0\\) ทั้งสองฝั่งเป็นศูนย์ ตรงกับสนามอนุรักษ์"},
+    {"q": "ทฤษฎีบทของกรีน เกาส์ และสโตกส์ต่างกันอย่างไร?", "a": "ทั้งสามเป็นรูปแบบของทฤษฎีบทมูลฐานแบบเดียวกัน (อินทิกรัลของอนุพันธ์บนบริเวณ = อินทิกรัลของฟังก์ชันบนขอบ) กรีนใช้กับบริเวณในระนาบและขอบเป็นเส้นปิด (curl หรือ div ในสองมิติ) สโตกส์ยกกรีนขึ้นสามมิติ: ผิวในอวกาศและขอบเป็นเส้นปิด (curl) ส่วนเกาส์ (ดีเวอร์เจนซ์) ใช้กับปริมาตรสามมิติและขอบเป็นผิวปิด (div) ตัวแปรเดียวก็คือทฤษฎีบทมูลฐานของแคลคูลัส \\(\\int_a^b F'\\,dx = F(b) - F(a)\\)"},
+    {"q": "สมการแมกซ์เวลล์ (Maxwell's equations) เกี่ยวกับ Gauss และ Stokes อย่างไร?", "a": "สมการทั้งสี่เขียนได้สองรูปที่เชื่อมกันด้วยสองทฤษฎีบทนี้ รูปปริพันธ์ (ผิว/เส้น) กับรูปอนุพันธ์ (จุด) ทฤษฎีบทดีเวอร์เจนซ์แปลงกฎของเกาส์ \\(\\oiint\\mathbf D\\cdot d\\mathbf S = Q\\) เป็น \\(\\nabla\\cdot\\mathbf D = \\rho_v\\) และ \\(\\oiint\\mathbf B\\cdot d\\mathbf S = 0\\) เป็น \\(\\nabla\\cdot\\mathbf B = 0\\) ส่วนทฤษฎีบทสโตกส์แปลงกฎของฟาราเดย์ \\(\\oint\\mathbf E\\cdot d\\mathbf l = -d\\Phi_B/dt\\) เป็น \\(\\nabla\\times\\mathbf E = -\\partial\\mathbf B/\\partial t\\) และกฎของแอมแปร์ในทำนองเดียวกัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>อินทิกรัลบนผิว</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.9 · แคลคูลัสเวกเตอร์ · Surface Integrals, Gauss &amp; Stokes</p>
+      <h1>อินทิกรัลบนผิว (Surface Integrals) ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ (Gauss) และทฤษฎีบทสโตกส์ (Stokes)</h1>
+      <p class="lede">อัตราการไหลของน้ำผ่านหน้าตัดท่อ พลังงานรังสีที่ตกบนจานรับสัญญาณ ฟลักซ์ไฟฟ้าที่ออกจากประจุ และแรงเคลื่อนไฟฟ้าที่เหนี่ยวนำรอบขดลวด ล้วนคืออินทิกรัลบนผิว (surface integral) หน้านี้สร้างเครื่องมือทีละชั้น: อธิบายผิวด้วยพารามิเตอร์ หาพื้นที่ผิว คำนวณฟลักซ์ แล้วจึงถึงสองทฤษฎีบทใหญ่ คือทฤษฎีบทดีเวอร์เจนซ์ของเกาส์ (ผิวปิด ↔ ปริมาตร) และทฤษฎีบทสโตกส์ (ขอบ ↔ ผิว) ซึ่งเป็นรากฐานของสมการแมกซ์เวลล์ มีตัวตรวจที่คำนวณทั้งสองฝั่งของทั้งสองทฤษฎีบทให้เห็นว่าเท่ากัน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#gauss-lab">ตัวตรวจ Gauss</a>
+        <a class="btn btn-ghost btn-sm" href="#param">ผิวพารามิเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#flux">ฟลักซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#gauss">ดีเวอร์เจนซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#stokes">สโตกส์</a>
+        <a class="btn btn-ghost btn-sm" href="#maxwell">แมกซ์เวลล์</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><b>พื้นที่ผิว</b> \(dS = |\mathbf r_u\times\mathbf r_v|\,du\,dv\) · กราฟ \(z = g(x,y)\): \(dS = \sqrt{1 + g_x^2 + g_y^2}\,dA\)</li>
+          <li><b>ฟลักซ์</b> \(\Phi = \iint_S\mathbf F\cdot\mathbf n\,dS = \iint\mathbf F\cdot(\mathbf r_u\times\mathbf r_v)\,du\,dv\) · ทิศ \(\mathbf n\) ต้องกำหนด (ผิวปิดชี้ออก)</li>
+          <li><b>Gauss:</b> \(\oiint_S\mathbf F\cdot\mathbf n\,dS = \iiint_E\nabla\cdot\mathbf F\,dV\) · <b>Stokes:</b> \(\oint_C\mathbf F\cdot d\mathbf r = \iint_S(\nabla\times\mathbf F)\cdot\mathbf n\,dS\)</li>
+          <li>ไฟฟ้า: Gauss → \(\nabla\cdot\mathbf D = \rho_v\) · Stokes → \(\nabla\times\mathbf E = -\partial_t\mathbf B\) (ฟาราเดย์) · แอมแปร์ \(\oint\mathbf B\cdot d\mathbf l = \mu_0I\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น surface area, flux, divergence theorem, stokes, gauss law, faraday, maxwell" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="param">
+    <h2 id="param">ผิวพารามิเตอร์และพื้นที่ผิว <span class="lv lv-i">กลาง</span></h2>
+    <p>เส้นโค้งใช้พารามิเตอร์ตัวเดียว \(t\) ผิวต้องใช้สองตัว \((u, v)\): \(\mathbf r(u, v) = \langle x(u,v),\ y(u,v),\ z(u,v)\rangle\) กริดของเส้น \(u\) คงที่และ \(v\) คงที่ปูผิวนั้น เวกเตอร์ \(\mathbf r_u = \partial\mathbf r/\partial u\) และ \(\mathbf r_v\) สัมผัสผิวทั้งคู่ และผลคูณไขว้ \(\mathbf r_u\times\mathbf r_v\) ตั้งฉากกับผิว ขนาดของมันคือพื้นที่ของสี่เหลี่ยมด้านขนานเล็กบนผิว (เหมือนจาโคเบียนของช่องเล็กบนระนาบ \(uv\) ที่ถูกแปลงขึ้นสู่ผิวในบท<a href="/learn/multivariable-calculus/multiple-integrals/#jacobian">อินทิกรัลหลายชั้น</a>)</p>
+    <figure class="lt-wide"><!--FIG:mv-surface-param--><svg class="mf" viewBox="0 0 700 340" role="img" aria-label="ผิวพารามิเตอร์ (parametric surface) r(u, v): เวกเตอร์สัมผัส r_u, r_v และเวกเตอร์ปกติ r_u × r_v ขนาดเท่าพื้นที่ dS"><defs><marker id="mvsp-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvsp-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvsp-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvsp-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><path class="mf-thin" d="M210.2 309.9 L205.7 304.7 L201.2 299.6 L196.6 294.4 L192.1 289.3 L187.6 284.3 L183 279.4 L178.5 274.6 L174 270 L169.4 265.5 L164.9 261.3 L160.4 257.3 L155.8 253.5 L151.3 250 L146.8 246.7 L142.2 243.7 L137.7 240.9 L133.2 238.5 L128.6 236.2 L124.1 234.3 L119.6 232.6 L115 231 L110.5 229.7 L106 228.6 L101.4 227.7 L96.9 226.8 L92.4 226.1 L87.8 225.5 L83.3 224.8 L78.8 224.2 L74.2 223.6" fill="none"/><path class="mf-thin" d="M233.8 308.2 L229.2 303.1 L224.7 297.9 L220.2 292.8 L215.6 287.7 L211.1 282.7 L206.6 277.8 L202 273 L197.5 268.3 L193 263.9 L188.4 259.6 L183.9 255.6 L179.4 251.8 L174.8 248.3 L170.3 245 L165.8 242 L161.2 239.3 L156.7 236.8 L152.2 234.6 L147.6 232.6 L143.1 230.9 L138.6 229.4 L134 228.1 L129.5 227 L125 226 L120.4 225.2 L115.9 224.5 L111.4 223.8 L106.8 223.2 L102.3 222.6 L97.8 222" fill="none"/><path class="mf-thin" d="M257.3 301.9 L252.8 296.8 L248.3 291.7 L243.7 286.5 L239.2 281.4 L234.7 276.4 L230.1 271.5 L225.6 266.7 L221.1 262.1 L216.5 257.6 L212 253.4 L207.5 249.4 L202.9 245.6 L198.4 242 L193.9 238.8 L189.3 235.8 L184.8 233 L180.3 230.5 L175.7 228.3 L171.2 226.4 L166.7 224.6 L162.1 223.1 L157.6 221.8 L153.1 220.7 L148.5 219.8 L144 218.9 L139.5 218.2 L134.9 217.5 L130.4 216.9 L125.9 216.3 L121.3 215.7" fill="none"/><path class="mf-thin" d="M280.9 291.3 L276.4 286.2 L271.8 281 L267.3 275.9 L262.8 270.8 L258.2 265.7 L253.7 260.8 L249.2 256 L244.6 251.4 L240.1 247 L235.6 242.7 L231 238.7 L226.5 234.9 L222 231.4 L217.4 228.1 L212.9 225.1 L208.4 222.4 L203.8 219.9 L199.3 217.7 L194.8 215.7 L190.2 214 L185.7 212.5 L181.2 211.2 L176.6 210.1 L172.1 209.1 L167.6 208.3 L163 207.5 L158.5 206.9 L154 206.3 L149.4 205.7 L144.9 205.1" fill="none"/><path class="mf-thin" d="M304.4 277.2 L299.9 272.1 L295.4 266.9 L290.8 261.8 L286.3 256.7 L281.8 251.7 L277.2 246.7 L272.7 242 L268.2 237.3 L263.6 232.9 L259.1 228.6 L254.6 224.6 L250 220.8 L245.5 217.3 L241 214 L236.4 211 L231.9 208.3 L227.4 205.8 L222.8 203.6 L218.3 201.6 L213.8 199.9 L209.2 198.4 L204.7 197.1 L200.2 196 L195.6 195 L191.1 194.2 L186.6 193.4 L182 192.8 L177.5 192.2 L173 191.6 L168.4 191" fill="none"/><path class="mf-thin" d="M328 261.2 L323.5 256.1 L318.9 251 L314.4 245.8 L309.9 240.7 L305.3 235.7 L300.8 230.8 L296.3 226 L291.7 221.4 L287.2 216.9 L282.7 212.7 L278.1 208.7 L273.6 204.9 L269.1 201.3 L264.5 198.1 L260 195.1 L255.5 192.3 L250.9 189.8 L246.4 187.6 L241.9 185.7 L237.3 183.9 L232.8 182.4 L228.3 181.1 L223.7 180 L219.2 179 L214.7 178.2 L210.1 177.5 L205.6 176.8 L201.1 176.2 L196.5 175.6 L192 175" fill="none"/><path class="mf-thin" d="M351.6 245.3 L347 240.1 L342.5 235 L338 229.9 L333.4 224.8 L328.9 219.7 L324.4 214.8 L319.8 210 L315.3 205.4 L310.8 201 L306.2 196.7 L301.7 192.7 L297.2 188.9 L292.6 185.4 L288.1 182.1 L283.6 179.1 L279 176.4 L274.5 173.9 L270 171.7 L265.4 169.7 L260.9 168 L256.4 166.5 L251.8 165.2 L247.3 164 L242.8 163.1 L238.2 162.3 L233.7 161.5 L229.2 160.9 L224.6 160.3 L220.1 159.7 L215.6 159" fill="none"/><path class="mf-thin" d="M375.1 231.2 L370.6 226.1 L366 220.9 L361.5 215.8 L357 210.7 L352.4 205.6 L347.9 200.7 L343.4 195.9 L338.8 191.3 L334.3 186.9 L329.8 182.6 L325.2 178.6 L320.7 174.8 L316.2 171.3 L311.6 168 L307.1 165 L302.6 162.3 L298 159.8 L293.5 157.6 L289 155.6 L284.4 153.9 L279.9 152.4 L275.4 151.1 L270.8 150 L266.3 149 L261.8 148.2 L257.2 147.4 L252.7 146.8 L248.2 146.2 L243.6 145.6 L239.1 145" fill="none"/><path class="mf-thin" d="M398.7 220.5 L394.1 215.4 L389.6 210.2 L385.1 205.1 L380.5 200 L376 195 L371.5 190.1 L366.9 185.3 L362.4 180.7 L357.9 176.2 L353.3 172 L348.8 167.9 L344.3 164.2 L339.7 160.6 L335.2 157.4 L330.7 154.3 L326.1 151.6 L321.6 149.1 L317.1 146.9 L312.5 144.9 L308 143.2 L303.5 141.7 L298.9 140.4 L294.4 139.3 L289.9 138.3 L285.3 137.5 L280.8 136.8 L276.3 136.1 L271.7 135.5 L267.2 134.9 L262.7 134.3" fill="none"/><path class="mf-thin" d="M422.2 214.3 L417.7 209.1 L413.2 204 L408.6 198.8 L404.1 193.7 L399.6 188.7 L395 183.8 L390.5 179 L386 174.4 L381.4 169.9 L376.9 165.7 L372.4 161.7 L367.8 157.9 L363.3 154.4 L358.8 151.1 L354.2 148.1 L349.7 145.3 L345.2 142.9 L340.6 140.7 L336.1 138.7 L331.6 137 L327 135.5 L322.5 134.2 L318 133 L313.4 132.1 L308.9 131.2 L304.4 130.5 L299.8 129.9 L295.3 129.2 L290.8 128.6 L286.2 128" fill="none"/><path class="mf-thin" d="M445.8 212.6 L441.2 207.5 L436.7 202.3 L432.2 197.2 L427.6 192.1 L423.1 187.1 L418.6 182.2 L414 177.4 L409.5 172.7 L405 168.3 L400.4 164.1 L395.9 160 L391.4 156.2 L386.8 152.7 L382.3 149.4 L377.8 146.4 L373.2 143.7 L368.7 141.2 L364.2 139 L359.6 137 L355.1 135.3 L350.6 133.8 L346 132.5 L341.5 131.4 L337 130.4 L332.4 129.6 L327.9 128.9 L323.4 128.2 L318.8 127.6 L314.3 127 L309.8 126.4" fill="none"/><path class="mf-thin" d="M210.2 309.9 L218.1 309.8 L225.9 309.3 L233.8 308.2 L241.6 306.6 L249.5 304.5 L257.3 301.9 L265.2 298.8 L273 295.3 L280.9 291.3 L288.7 286.9 L296.6 282.2 L304.4 277.2 L312.3 272 L320.1 266.7 L328 261.2 L335.9 255.8 L343.7 250.5 L351.6 245.3 L359.4 240.3 L367.3 235.6 L375.1 231.2 L383 227.2 L390.8 223.6 L398.7 220.5 L406.5 217.9 L414.4 215.8 L422.2 214.3 L430.1 213.2 L437.9 212.7 L445.8 212.6" fill="none"/><path class="mf-thin" d="M196.6 294.4 L204.5 294.4 L212.3 293.8 L220.2 292.8 L228 291.2 L235.9 289.1 L243.7 286.5 L251.6 283.4 L259.4 279.9 L267.3 275.9 L275.1 271.5 L283 266.8 L290.8 261.8 L298.7 256.6 L306.5 251.2 L314.4 245.8 L322.3 240.4 L330.1 235.1 L338 229.9 L345.8 224.9 L353.7 220.1 L361.5 215.8 L369.4 211.8 L377.2 208.2 L385.1 205.1 L392.9 202.5 L400.8 200.4 L408.6 198.8 L416.5 197.8 L424.3 197.2 L432.2 197.2" fill="none"/><path class="mf-thin" d="M183 279.4 L190.9 279.3 L198.7 278.8 L206.6 277.8 L214.4 276.2 L222.3 274.1 L230.1 271.5 L238 268.4 L245.8 264.8 L253.7 260.8 L261.5 256.4 L269.4 251.7 L277.2 246.7 L285.1 241.5 L292.9 236.2 L300.8 230.8 L308.7 225.4 L316.5 220 L324.4 214.8 L332.2 209.8 L340.1 205.1 L347.9 200.7 L355.8 196.7 L363.6 193.2 L371.5 190.1 L379.3 187.5 L387.2 185.4 L395 183.8 L402.9 182.8 L410.7 182.2 L418.6 182.2" fill="none"/><path class="mf-thin" d="M169.4 265.5 L177.3 265.5 L185.1 264.9 L193 263.9 L200.8 262.3 L208.7 260.2 L216.5 257.6 L224.4 254.5 L232.2 251 L240.1 247 L247.9 242.6 L255.8 237.9 L263.6 232.9 L271.5 227.7 L279.3 222.3 L287.2 216.9 L295.1 211.5 L302.9 206.2 L310.8 201 L318.6 196 L326.5 191.3 L334.3 186.9 L342.2 182.9 L350 179.3 L357.9 176.2 L365.7 173.6 L373.6 171.5 L381.4 169.9 L389.3 168.9 L397.1 168.4 L405 168.3" fill="none"/><path class="mf-thin" d="M155.8 253.5 L163.7 253.4 L171.5 252.9 L179.4 251.8 L187.2 250.3 L195.1 248.2 L202.9 245.6 L210.8 242.5 L218.6 238.9 L226.5 234.9 L234.3 230.5 L242.2 225.8 L250 220.8 L257.9 215.6 L265.7 210.3 L273.6 204.9 L281.5 199.5 L289.3 194.1 L297.2 188.9 L305 183.9 L312.9 179.2 L320.7 174.8 L328.6 170.8 L336.4 167.3 L344.3 164.2 L352.1 161.6 L360 159.5 L367.8 157.9 L375.7 156.8 L383.5 156.3 L391.4 156.2" fill="none"/><path class="mf-thin" d="M142.2 243.7 L150.1 243.6 L157.9 243.1 L165.8 242 L173.6 240.5 L181.5 238.4 L189.3 235.8 L197.2 232.7 L205 229.1 L212.9 225.1 L220.7 220.7 L228.6 216 L236.4 211 L244.3 205.8 L252.1 200.5 L260 195.1 L267.9 189.6 L275.7 184.3 L283.6 179.1 L291.4 174.1 L299.3 169.4 L307.1 165 L315 161 L322.8 157.4 L330.7 154.3 L338.5 151.7 L346.4 149.7 L354.2 148.1 L362.1 147 L369.9 146.5 L377.8 146.4" fill="none"/><path class="mf-thin" d="M128.6 236.2 L136.5 236.2 L144.3 235.6 L152.2 234.6 L160 233 L167.9 230.9 L175.7 228.3 L183.6 225.2 L191.4 221.7 L199.3 217.7 L207.1 213.3 L215 208.6 L222.8 203.6 L230.7 198.4 L238.5 193 L246.4 187.6 L254.3 182.2 L262.1 176.9 L270 171.7 L277.8 166.7 L285.7 162 L293.5 157.6 L301.4 153.6 L309.2 150 L317.1 146.9 L324.9 144.3 L332.8 142.2 L340.6 140.7 L348.5 139.6 L356.3 139.1 L364.2 139" fill="none"/><path class="mf-thin" d="M115 231 L122.9 231 L130.7 230.5 L138.6 229.4 L146.4 227.8 L154.3 225.7 L162.1 223.1 L170 220 L177.8 216.5 L185.7 212.5 L193.5 208.1 L201.4 203.4 L209.2 198.4 L217.1 193.2 L224.9 187.8 L232.8 182.4 L240.7 177 L248.5 171.7 L256.4 166.5 L264.2 161.5 L272.1 156.8 L279.9 152.4 L287.8 148.4 L295.6 144.8 L303.5 141.7 L311.3 139.1 L319.2 137 L327 135.5 L334.9 134.4 L342.7 133.9 L350.6 133.8" fill="none"/><path class="mf-thin" d="M101.4 227.7 L109.3 227.6 L117.1 227.1 L125 226 L132.8 224.4 L140.7 222.4 L148.5 219.8 L156.4 216.7 L164.2 213.1 L172.1 209.1 L179.9 204.7 L187.8 200 L195.6 195 L203.5 189.8 L211.3 184.5 L219.2 179 L227.1 173.6 L234.9 168.3 L242.8 163.1 L250.6 158.1 L258.5 153.4 L266.3 149 L274.2 145 L282 141.4 L289.9 138.3 L297.7 135.7 L305.6 133.6 L313.4 132.1 L321.3 131 L329.1 130.5 L337 130.4" fill="none"/><path class="mf-thin" d="M87.8 225.5 L95.7 225.4 L103.5 224.9 L111.4 223.8 L119.2 222.2 L127.1 220.1 L134.9 217.5 L142.8 214.4 L150.6 210.9 L158.5 206.9 L166.3 202.5 L174.2 197.8 L182 192.8 L189.9 187.6 L197.7 182.2 L205.6 176.8 L213.5 171.4 L221.3 166.1 L229.2 160.9 L237 155.9 L244.9 151.2 L252.7 146.8 L260.6 142.8 L268.4 139.2 L276.3 136.1 L284.1 133.5 L292 131.4 L299.8 129.9 L307.7 128.8 L315.5 128.3 L323.4 128.2" fill="none"/><path class="mf-thin" d="M74.2 223.6 L82.1 223.6 L89.9 223 L97.8 222 L105.6 220.4 L113.5 218.3 L121.3 215.7 L129.2 212.6 L137 209.1 L144.9 205.1 L152.7 200.7 L160.6 196 L168.4 191 L176.3 185.8 L184.1 180.4 L192 175 L199.9 169.6 L207.7 164.2 L215.6 159 L223.4 154.1 L231.3 149.3 L239.1 145 L247 141 L254.8 137.4 L262.7 134.3 L270.5 131.7 L278.4 129.6 L286.2 128 L294.1 127 L301.9 126.4 L309.8 126.4" fill="none"/><path class="mf-fill" d="M274.7 185 L279.1 182 L283.6 179.1 L288 176.3 L292.4 173.5 L296.8 170.8 L301.2 168.3 L305.6 165.8 L310.1 163.5 L314.5 161.2 L318.9 159.2 L318.9 159.2 L316.3 157.6 L313.8 156.1 L311.2 154.7 L308.7 153.4 L306.1 152.1 L303.6 151 L301 149.9 L298.5 148.9 L295.9 147.9 L293.4 147.1 L293.4 147.1 L289 149.2 L284.6 151.4 L280.1 153.7 L275.7 156.2 L271.3 158.7 L266.9 161.4 L262.5 164.2 L258.1 167 L253.6 169.9 L249.2 172.9 L249.2 172.9 L251.8 173.7 L254.3 174.7 L256.9 175.7 L259.4 176.8 L262 177.9 L264.5 179.2 L267.1 180.5 L269.6 181.9 L272.2 183.4 L274.7 185 Z"/><path class="mf-sig" d="M274.7 185 L279.1 182 L283.6 179.1 L288 176.3 L292.4 173.5 L296.8 170.8 L301.2 168.3 L305.6 165.8 L310.1 163.5 L314.5 161.2 L318.9 159.2 L318.9 159.2 L316.3 157.6 L313.8 156.1 L311.2 154.7 L308.7 153.4 L306.1 152.1 L303.6 151 L301 149.9 L298.5 148.9 L295.9 147.9 L293.4 147.1 L293.4 147.1 L289 149.2 L284.6 151.4 L280.1 153.7 L275.7 156.2 L271.3 158.7 L266.9 161.4 L262.5 164.2 L258.1 167 L253.6 169.9 L249.2 172.9 L249.2 172.9 L251.8 173.7 L254.3 174.7 L256.9 175.7 L259.4 176.8 L262 177.9 L264.5 179.2 L267.1 180.5 L269.6 181.9 L272.2 183.4 L274.7 185 Z" fill="none"/><line class="mf-sig2" x1="274.7" y1="185" x2="341" y2="140.2" marker-end="url(#mvsp-s)"/><line class="mf-sig3" x1="274.7" y1="185" x2="236.5" y2="160.7" marker-end="url(#mvsp-g)"/><line class="mf-sig" x1="274.7" y1="185" x2="248.1" y2="126.6" marker-end="url(#mvsp-a)"/><circle class="mf-dot" cx="274.7" cy="185" r="4"/><text class="mf-l" x="347" y="154.2" text-anchor="start">r_u</text><text class="mf-l" x="214.5" y="158.7" text-anchor="start">r_v</text><text class="mf-l" x="256.1" y="124.6" text-anchor="start">n = r_u × r_v</text><rect class="mf-box" x="455" y="40" width="235" height="230" rx="8"/><text class="mf-h" x="470" y="66" text-anchor="start">พื้นที่ผิว</text><text class="mf-l" x="470" y="94" text-anchor="start">dS = |r_u × r_v| du dv</text><text class="mf-h" x="470" y="128" text-anchor="start">ฟลักซ์ผ่านผิว</text><text class="mf-l" x="470" y="156" text-anchor="start">∬ F·n dS</text><text class="mf-l" x="470" y="178" text-anchor="start">= ∬ F·(r_u × r_v) du dv</text><text class="mf-k" x="470" y="214" text-anchor="start">ผิวกราฟ z = f(x, y):</text><text class="mf-k" x="470" y="234" text-anchor="start">r_u × r_v = ⟨−f_x, −f_y, 1⟩</text></svg><!--/FIG--><figcaption>ผิวพารามิเตอร์ (parametric surface) \(\mathbf r(u, v)\): เวกเตอร์ \(\mathbf r_u\) และ \(\mathbf r_v\) สัมผัสผิว และ \(\mathbf r_u\times\mathbf r_v\) เป็นเวกเตอร์ปกติที่มีขนาดเท่าพื้นที่ของสี่เหลี่ยมด้านขนานเล็ก \(dS\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="S1" data-k="parametric surface r(u,v) r_u cross r_v normal vector surface area dS ผิวพารามิเตอร์ พื้นที่ผิว เวกเตอร์ปกติ">
+        <p class="tf-n"><b><span class="fid">S1</span> Surface area (parametric)</b> พื้นที่ผิว (พารามิเตอร์)</p>
+        \[ \mathbf r(u,v) = \langle x, y, z\rangle,\quad \mathbf N = \mathbf r_u\times\mathbf r_v,\quad dS = |\mathbf r_u\times\mathbf r_v|\,du\,dv,\quad A(S) = \iint_D|\mathbf r_u\times\mathbf r_v|\,du\,dv \]
+        <p class="tf-x">\(D\) = บริเวณของ \((u, v)\) · \(\mathbf n = \mathbf N/|\mathbf N|\) · ทรงกลมรัศมี \(a\): \(\mathbf r = a\langle\sin u\cos v,\ \sin u\sin v,\ \cos u\rangle\) ได้ \(dS = a^2\sin u\,du\,dv\) และ \(A = 4\pi a^2\)</p>
+      </div>
+      <div class="tf wide" id="S2" data-k="surface area graph z = g(x,y) sqrt(1 + gx^2 + gy^2) พื้นที่ผิวของกราฟ">
+        <p class="tf-n"><b><span class="fid">S2</span> Surface area of a graph</b> พื้นที่ผิวของกราฟ</p>
+        \[ z = g(x, y):\quad dS = \sqrt{1 + g_x^2 + g_y^2}\,dA,\qquad A(S) = \iint_D\sqrt{1 + g_x^2 + g_y^2}\,dA \]
+        <p class="tf-x">มาจาก \(\mathbf r(x, y) = \langle x, y, g\rangle\) → \(\mathbf r_x\times\mathbf r_y = \langle -g_x, -g_y, 1\rangle\) · ตัวคูณ \(\sqrt{1 + |\nabla g|^2} = 1/\cos\gamma\) (\(\gamma\) = มุมระหว่างผิวกับระนาบ \(xy\)) ≥ 1 เสมอ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-1 · พื้นที่ผิวพาราโบลอยด์</span><h3>หาพื้นที่ผิวของ \(z = x^2 + y^2\) ที่ \(z \le 4\)</h3></div>
+      <ol class="steps">
+        <li><p>\(g_x = 2x,\ g_y = 2y\) → \(\sqrt{1 + 4x^2 + 4y^2} = \sqrt{1 + 4r^2}\) · บริเวณเงา: \(r \le 2\)</p></li>
+        <li><p>\(A = \displaystyle\int_0^{2\pi}\!\int_0^2\sqrt{1 + 4r^2}\,r\,dr\,d\theta = 2\pi\left[\dfrac{(1 + 4r^2)^{3/2}}{12}\right]_0^2\)</p></li>
+        <li><p>\(= \dfrac{2\pi}{12}\left(17^{3/2} - 1\right) = \dfrac{\pi}{6}(70.093 - 1) = \dfrac{\pi}{6}(69.093) = 36.18\) (ผิวใหญ่กว่าแผ่นวงกลมเงา \(\pi\cdot4 = 12.57\) เพราะชัน)</p></li>
+      </ol>
+      <p class="answer">\(A = \dfrac{\pi}{6}\left(17\sqrt{17} - 1\right) \approx 36.18\) หน่วยพื้นที่</p>
+    </div>
+    <div class="wx" id="ex-s2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-2 · พื้นที่ผิวจานรับสัญญาณดาวเทียม (ไฟฟ้า / เครื่องกล)</span><h3>จานพาราโบลาเส้นผ่านศูนย์กลาง 1.2 m ระยะโฟกัส \(f = 0.45\) m รูปผิว \(z = \dfrac{x^2 + y^2}{4f}\) หาความลึกและพื้นที่ผิว (วัสดุเคลือบสะท้อน)</h3></div>
+      <ol class="steps">
+        <li><p>ความลึกที่ขอบ \(r = R = 0.6\): \(z = \dfrac{R^2}{4f} = \dfrac{0.36}{1.8} = 0.20\) m</p></li>
+        <li><p>\(g_x = \dfrac{x}{2f},\ g_y = \dfrac{y}{2f}\) → \(\sqrt{1 + g_x^2 + g_y^2} = \sqrt{1 + \dfrac{r^2}{4f^2}}\)</p></li>
+        <li><p>\(A = 2\pi\displaystyle\int_0^R\sqrt{1 + \dfrac{r^2}{4f^2}}\,r\,dr = 2\pi\cdot\dfrac{4f^2}{3}\left[\left(1 + \dfrac{R^2}{4f^2}\right)^{3/2} - 1\right]\)</p></li>
+        <li><p>\(4f^2 = 0.81\) · \(R^2/4f^2 = 0.4444\) · \((1.4444)^{3/2} = 1.7359\) → \(A = 2\pi(0.27)(0.7359) = 1.2486\) m² เทียบกับแผ่นเรียบ \(\pi R^2 = 1.131\) m² (ใหญ่กว่า 10%)</p></li>
+      </ol>
+      <p class="answer">ความลึก \(0.20\) m · พื้นที่ผิว \(A \approx 1.249\) m²</p>
+    </div>
+    <div class="wx" id="ex-s3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-3 · ทรงกลมด้วยพารามิเตอร์ และอินทิกรัลสเกลาร์</span><h3>(ก) แสดงว่าพื้นที่ผิวทรงกลมรัศมี \(a\) คือ \(4\pi a^2\) (ข) หา \(\iint_S z\,dS\) บนซีกบนของทรงกลม และความสูงเฉลี่ยของเปลือกซีก</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\mathbf r_u = a\langle\cos u\cos v,\ \cos u\sin v,\ -\sin u\rangle\) · \(\mathbf r_v = a\langle-\sin u\sin v,\ \sin u\cos v,\ 0\rangle\)</p></li>
+        <li><p>\(\mathbf r_u\times\mathbf r_v = a^2\sin u\,\langle\sin u\cos v,\ \sin u\sin v,\ \cos u\rangle\) (ชี้ออกนอก) · \(|\,\cdot\,| = a^2\sin u\) · \(A = \int_0^{2\pi}\!\int_0^\pi a^2\sin u\,du\,dv = 4\pi a^2\)</p></li>
+        <li><p>(ข) บนทรงกลม \(z = a\cos u\) ซีกบน \(0 \le u \le \pi/2\): \(\displaystyle\iint z\,dS = \int_0^{2\pi}\!\int_0^{\pi/2}(a\cos u)\,a^2\sin u\,du\,dv = a^3\cdot2\pi\cdot\dfrac12 = \pi a^3\)</p></li>
+        <li><p>พื้นที่ซีก \(= 2\pi a^2\) → ความสูงเฉลี่ย \(\bar z = \dfrac{\pi a^3}{2\pi a^2} = \dfrac{a}{2}\) (จุดศูนย์กลางมวลของ<u>เปลือก</u>ซีกอยู่ที่ครึ่งรัศมี ต่างจากซีกตัน \(3a/8\))</p></li>
+      </ol>
+      <p class="answer">(ก) \(A = 4\pi a^2\) · (ข) \(\iint z\,dS = \pi a^3\), \(\bar z = a/2\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="flux">
+    <h2 id="flux">ฟลักซ์ผ่านผิว (Flux) <span class="lv lv-i">กลาง</span></h2>
+    <p>ฟลักซ์ของ \(\mathbf F\) ผ่านผิว \(S\) วัดว่าสนามไหลผ่านผิวเท่าไรต่อหน่วยเวลา ถ้า \(\mathbf F = \mathbf v\) (ความเร็วของน้ำ) ฟลักซ์คืออัตราการไหลเชิงปริมาตร (m³/s) เฉพาะองค์ประกอบที่ตั้งฉากกับผิว \(\mathbf F\cdot\mathbf n\) ส่งผ่านจริง องค์ประกอบขนานผิวเฉียดผ่านโดยไม่เข้า ดังนั้นต้อง<b>เลือกทิศของ \(\mathbf n\)</b> (ผิวปิดมักเลือกชี้ออกนอก ผิวกราฟมักเลือกชี้ขึ้น) กลับทิศ \(\mathbf n\) ฟลักซ์เปลี่ยนเครื่องหมาย</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S3" data-k="surface integral of scalar function f dS mass of shell อินทิกรัลบนผิวสเกลาร์ มวลเปลือก">
+        <p class="tf-n"><b><span class="fid">S3</span> Scalar surface integral</b> อินทิกรัลบนผิวของฟังก์ชันสเกลาร์</p>
+        \[ \iint_S f\,dS = \iint_D f\big(\mathbf r(u,v)\big)\,|\mathbf r_u\times\mathbf r_v|\,du\,dv,\qquad m = \iint_S\sigma\,dS \]
+        <p class="tf-x">เช่นมวลของเปลือกบางที่ความหนาแน่นผิว \(\sigma\) หรือประจุรวมบนผิว · ไม่ขึ้นกับทิศของ \(\mathbf n\)</p>
+      </div>
+      <div class="tf wide" id="S4" data-k="flux integral F dot n dS oriented surface parametric F dot (r_u x r_v) ฟลักซ์ ผิวมีทิศ">
+        <p class="tf-n"><b><span class="fid">S4</span> Flux through a surface</b> ฟลักซ์ผ่านผิว</p>
+        \[ \Phi = \iint_S\mathbf F\cdot\mathbf n\,dS = \iint_D\mathbf F\big(\mathbf r(u,v)\big)\cdot\big(\mathbf r_u\times\mathbf r_v\big)\,du\,dv \]
+        <p class="tf-x">ใช้ \(\mathbf r_u\times\mathbf r_v\) ทั้งก้อน (ไม่ต้องทำเป็นหนึ่งหน่วย เพราะขนาดของมันคือ \(dS\) อยู่แล้ว) · ถ้า \(\mathbf r_u\times\mathbf r_v\) ชี้ผิดทิศที่ต้องการ ให้เติมเครื่องหมายลบ · ผิวปิด \(\oiint\)</p>
+      </div>
+      <div class="tf wide" id="S5" data-k="flux through graph z = g(x,y) upward normal -P g_x - Q g_y + R ฟลักซ์ผ่านกราฟ ทิศขึ้น">
+        <p class="tf-n"><b><span class="fid">S5</span> Flux through a graph (upward)</b> ฟลักซ์ผ่านกราฟ (ทิศขึ้น)</p>
+        \[ z = g(x, y),\ \mathbf n\ \text{ขึ้น}:\quad \Phi = \iint_D\big(-P\,g_x - Q\,g_y + R\big)\,dA,\qquad \mathbf F = \langle P, Q, R\rangle \text{ ประเมินที่ } (x, y, g(x,y)) \]
+        <p class="tf-x">มาจาก \(\mathbf r_x\times\mathbf r_y = \langle -g_x, -g_y, 1\rangle\) ซึ่งชี้ขึ้น · ผิวทรงกระบอก/ผนังตั้งให้ใช้พารามิเตอร์ (\(\theta, z\)) แทน</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-4 · ฟลักซ์ผ่านทรงกลม</span><h3>\(\mathbf F = \langle x, y, z\rangle\) หาฟลักซ์ออกผ่านทรงกลมรัศมี \(a\)</h3></div>
+      <ol class="steps">
+        <li><p>บนทรงกลม \(\mathbf F = \mathbf r = a\hat{\mathbf r}\) และ \(\mathbf n = \hat{\mathbf r}\) จึง \(\mathbf F\cdot\mathbf n = a\) คงที่ทั้งผิว</p></li>
+        <li><p>\(\Phi = a\iint dS = a\cdot4\pi a^2 = 4\pi a^3\)</p></li>
+        <li><p>ตรวจด้วยพารามิเตอร์: บนผิว \(\mathbf F = a\,\hat{\mathbf r}\) และ \(\mathbf r_u\times\mathbf r_v = a^2\sin u\,\hat{\mathbf r}\) (\(\hat{\mathbf r} = \langle\sin u\cos v,\ \sin u\sin v,\ \cos u\rangle\)) ดอตกันได้ \(a\cdot a^2\sin u\) → \(\int_0^{2\pi}\!\int_0^\pi a^3\sin u\,du\,dv = 4\pi a^3\) ✓</p></li>
+      </ol>
+      <p class="answer">\(\Phi = 4\pi a^3\) (และจะได้ค่าเดียวกันจากทฤษฎีบทดีเวอร์เจนซ์ใน S-7)</p>
+    </div>
+    <div class="wx" id="ex-s5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-5 · ฟลักซ์ผ่านระนาบเอียง</span><h3>\(\mathbf F = \langle x, y, z\rangle\) หาฟลักซ์ขึ้นผ่านส่วนของระนาบ \(x + y + z = 1\) ในอ็อกแทนต์แรก</h3></div>
+      <ol class="steps">
+        <li><p>เป็นกราฟ \(z = g(x, y) = 1 - x - y\) · \(g_x = g_y = -1\) · บริเวณเงา: สามเหลี่ยม \(x, y \ge 0,\ x + y \le 1\)</p></li>
+        <li><p>\(-Pg_x - Qg_y + R = -x(-1) - y(-1) + z = x + y + (1 - x - y) = 1\)</p></li>
+        <li><p>\(\Phi = \iint_D1\,dA = \text{พื้นที่สามเหลี่ยม} = \dfrac12\)</p></li>
+        <li><p>เหตุผลเรขาคณิต: \(\mathbf F\cdot\mathbf n\) บนระนาบเท่ากับระยะจากจุดกำเนิดถึงระนาบ \(= 1/\sqrt3\) คงที่ และพื้นที่ผิวของสามเหลี่ยมเอียง \(= \sqrt3/2\) → \(\Phi = \dfrac{1}{\sqrt3}\cdot\dfrac{\sqrt3}{2} = \dfrac12\) ✓</p></li>
+      </ol>
+      <p class="answer">\(\Phi = \dfrac12\)</p>
+    </div>
+    <div class="wx" id="ex-s6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-6 · อัตราการไหลในท่อ (เครื่องกล / โยธา)</span><h3>น้ำไหลแบบราบเรียบในท่อกลมรัศมี \(R = 50\) mm มีโปรไฟล์ความเร็ว \(v(r) = v_{\max}\left(1 - \dfrac{r^2}{R^2}\right)\) เมื่อ \(v_{\max} = 1.2\) m/s หาอัตราการไหลเชิงปริมาตรและความเร็วเฉลี่ย</h3></div>
+      <ol class="steps">
+        <li><p>หน้าตัดเป็นแผ่นวงกลมตั้งฉากกับการไหล \(\mathbf n = \hat{\mathbf z}\) ฟลักซ์ = \(\iint v\,dA\)</p></li>
+        <li><p>พิกัดขั้ว: \(Q = \displaystyle\int_0^{2\pi}\!\int_0^R v_{\max}\left(1 - \dfrac{r^2}{R^2}\right)r\,dr\,d\theta = 2\pi v_{\max}\left[\dfrac{R^2}{2} - \dfrac{R^2}{4}\right] = \dfrac{\pi R^2v_{\max}}{2}\)</p></li>
+        <li><p>ตัวเลข: \(Q = \dfrac{\pi(0.05)^2(1.2)}{2} = 4.712\times10^{-3}\) m³/s = <b>4.71 L/s</b></p></li>
+        <li><p>ความเร็วเฉลี่ย \(\bar v = Q/(\pi R^2) = v_{\max}/2 = 0.6\) m/s (ค่าที่มิเตอร์วัดการไหลอ่านจากอัตราไหลหารพื้นที่)</p></li>
+      </ol>
+      <p class="answer">\(Q = 4.71\) L/s · \(\bar v = 0.6\) m/s = ครึ่งหนึ่งของ \(v_{\max}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="gauss">
+    <h2 id="gauss">ทฤษฎีบทดีเวอร์เจนซ์ของเกาส์ (Divergence Theorem) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ลองนึกถึงห้องที่มีเครื่องทำอากาศไหลออกจากเครื่อง ลมที่ไหลออกทางประตูและหน้าต่างทั้งหมดเท่ากับลมที่เครื่องปล่อยออกมาภายในห้อง นี่คือสาระของทฤษฎีบท: ฟลักซ์ออกสุทธิผ่าน<b>ผิวปิด</b> = ผลรวมของดีเวอร์เจนซ์ (แหล่งกำเนิด) ภายในปริมาตร ความจริงนี้ใช้แปลงอินทิกรัลบนผิวที่ยาก (หลายหน้า) เป็นอินทิกรัลสามชั้นเดียว หรือกลับกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S6" data-k="divergence theorem Gauss theorem closed surface triple integral div F ทฤษฎีบทดีเวอร์เจนซ์ เกาส์ ผิวปิด">
+        <p class="tf-n"><b><span class="fid">S6</span> Divergence theorem (Gauss)</b> ทฤษฎีบทดีเวอร์เจนซ์ (เกาส์)</p>
+        \[ \oiint_S\mathbf F\cdot\mathbf n\,dS = \iiint_E\nabla\cdot\mathbf F\,dV \qquad(\mathbf n\ \text{ชี้ออกนอก } E,\ \ \partial E = S) \]
+        <p class="tf-x">ต้องการ \(\mathbf F\) เรียบ (มีอนุพันธ์ย่อยต่อเนื่อง) ทั่วทั้ง \(E\) รวมภายใน — ถ้ามีจุดที่ \(\mathbf F\) ไม่นิยามข้างใน (เช่นประจุจุดที่ \(r = 0\)) ทฤษฎีบทใช้ตรง ๆ ไม่ได้ · เป็นรูป 3 มิติของทฤษฎีบทกรีนฟลักซ์ (L7)</p>
+      </div>
+      <div class="tf wide" id="S7" data-k="Gauss's law electrostatics flux of E = Q/epsilon0 integral form differential form กฎของเกาส์ ไฟฟ้าสถิต">
+        <p class="tf-n"><b><span class="fid">S7</span> Gauss's law (electrostatics)</b> กฎของเกาส์ (ไฟฟ้าสถิต)</p>
+        \[ \oiint_S\mathbf E\cdot\mathbf n\,dS = \frac{Q_{\text{enc}}}{\varepsilon_0}\ \ \Longleftrightarrow\ \ \nabla\cdot\mathbf E = \frac{\rho_v}{\varepsilon_0} \]
+        <p class="tf-x">สองรูปเชื่อมกันด้วยทฤษฎีบทดีเวอร์เจนซ์ (ใช้ \(Q = \iiint\rho_v\,dV\)) · ใช้หาสนามโดยตรงเมื่อมีความสมมาตร (ทรงกลม ทรงกระบอก ระนาบ) เลือกผิวเกาส์ให้ \(\mathbf E\cdot\mathbf n\) คงที่</p>
+      </div>
+    </div>
+    <h3 id="verify-lab">ตัวตรวจ Gauss และ Stokes: คำนวณสองฝั่งให้ดู</h3>
+    <p>โหมด Gauss คำนวณฟลักซ์ผ่านทุกหน้าของผิวปิด (ทรงกลม ลูกบาศก์ ทรงกระบอก) แล้วเทียบกับ \(\iiint\nabla\cdot\mathbf F\,dV\) ตัวอย่างสุดท้าย \(\mathbf F = \mathbf r/\rho^3\) (ประจุจุด) แสดงกรณีที่ทฤษฎีบท “ล้มเหลว” เพราะ \(\mathbf F\) ไม่นิยามที่จุดกำเนิด ให้ฟลักซ์ \(4\pi\) ทั้งที่ \(\nabla\cdot\mathbf F = 0\) ทุกที่ที่นิยาม · แท็บ Stokes อยู่ในหัวข้อถัดไป</p>
+    <div class="mv-flux" id="gauss-lab" data-mode="gauss" data-p="x" data-q="y" data-r="z" data-solid="sphere" data-a="1"></div>
+    <figure class="lt-wide"><!--FIG:mv-gauss-stokes--><svg class="mf" viewBox="0 0 760 330" role="img" aria-label="ทฤษฎีบทดีเวอร์เจนซ์ของเกาส์ (divergence theorem: ผิวปิด S ล้อมปริมาตร E) เทียบกับทฤษฎีบทสโตกส์ (Stokes' theorem: ผิวเปิด S ที่มีขอบ C)"><defs><marker id="mvgs-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvgs-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvgs-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvgs-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><text class="mf-h" x="190" y="26" text-anchor="middle">Gauss: ผิวปิด S = ∂E</text><path class="mf-fill" d="M305.5 175 L304.9 181.4 L302.9 187.9 L299.9 194.5 L295.7 201.2 L290.7 207.8 L285 214.3 L278.8 220.5 L272.3 226.5 L265.7 232.1 L259 237.2 L252.4 241.8 L245.8 245.9 L239.4 249.3 L233 252 L226.5 254.1 L219.8 255.6 L212.9 256.3 L205.7 256.5 L198 256 L190 255 L181.6 253.5 L172.8 251.6 L163.9 249.3 L154.9 246.6 L146.1 243.7 L137.6 240.5 L129.7 237.1 L122.4 233.6 L116 229.8 L110.5 225.9 L106 221.8 L102.4 217.6 L99.8 213.1 L97.9 208.4 L96.7 203.4 L96 198.3 L95.7 192.8 L95.5 187.1 L95.5 181.2 L95.5 175 L95.5 168.6 L95.5 162.1 L95.7 155.5 L96 148.8 L96.7 142.2 L97.9 135.7 L99.8 129.5 L102.4 123.5 L106 117.9 L110.5 112.8 L116 108.2 L122.4 104.1 L129.7 100.7 L137.6 98 L146.1 95.9 L154.9 94.4 L163.9 93.7 L172.8 93.5 L181.6 94 L190 95 L198 96.5 L205.7 98.4 L212.9 100.7 L219.8 103.4 L226.5 106.3 L233 109.5 L239.4 112.9 L245.8 116.4 L252.4 120.2 L259 124.1 L265.7 128.2 L272.3 132.4 L278.8 136.9 L285 141.6 L290.7 146.6 L295.7 151.7 L299.9 157.2 L302.9 162.9 L304.9 168.8 L305.5 175 Z"/><path class="mf-sig" d="M305.5 175 L304.9 181.4 L302.9 187.9 L299.9 194.5 L295.7 201.2 L290.7 207.8 L285 214.3 L278.8 220.5 L272.3 226.5 L265.7 232.1 L259 237.2 L252.4 241.8 L245.8 245.9 L239.4 249.3 L233 252 L226.5 254.1 L219.8 255.6 L212.9 256.3 L205.7 256.5 L198 256 L190 255 L181.6 253.5 L172.8 251.6 L163.9 249.3 L154.9 246.6 L146.1 243.7 L137.6 240.5 L129.7 237.1 L122.4 233.6 L116 229.8 L110.5 225.9 L106 221.8 L102.4 217.6 L99.8 213.1 L97.9 208.4 L96.7 203.4 L96 198.3 L95.7 192.8 L95.5 187.1 L95.5 181.2 L95.5 175 L95.5 168.6 L95.5 162.1 L95.7 155.5 L96 148.8 L96.7 142.2 L97.9 135.7 L99.8 129.5 L102.4 123.5 L106 117.9 L110.5 112.8 L116 108.2 L122.4 104.1 L129.7 100.7 L137.6 98 L146.1 95.9 L154.9 94.4 L163.9 93.7 L172.8 93.5 L181.6 94 L190 95 L198 96.5 L205.7 98.4 L212.9 100.7 L219.8 103.4 L226.5 106.3 L233 109.5 L239.4 112.9 L245.8 116.4 L252.4 120.2 L259 124.1 L265.7 128.2 L272.3 132.4 L278.8 136.9 L285 141.6 L290.7 146.6 L295.7 151.7 L299.9 157.2 L302.9 162.9 L304.9 168.8 L305.5 175 Z" fill="none"/><line class="mf-sig2" x1="296.5" y1="200" x2="325.2" y2="208.8" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="247" y1="245.2" x2="265" y2="269.2" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="191.5" y1="255.2" x2="191.9" y2="285.2" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="123.7" y1="234.2" x2="106.4" y2="258.7" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="96.1" y1="199.2" x2="67.7" y2="208.9" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="95.9" y1="150" x2="67.3" y2="141.2" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="121.2" y1="104.8" x2="103.2" y2="80.8" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="188.5" y1="94.8" x2="188.1" y2="64.8" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="244.7" y1="115.8" x2="262" y2="91.3" marker-end="url(#mvgs-s)"/><line class="mf-sig2" x1="294.9" y1="150.8" x2="323.3" y2="141.1" marker-end="url(#mvgs-s)"/><text class="mf-h" x="190" y="179" text-anchor="middle">E</text><text class="mf-k" x="318" y="95" text-anchor="start">n ชี้ออก</text><text class="mf-h" x="190" y="308" text-anchor="middle">∯_S F·n dS = ∭_E ∇·F dV</text><text class="mf-h" x="570" y="26" text-anchor="middle">Stokes: ผิวเปิด S ขอบ C</text><path class="mf-fill2" d="M680 120 L679.7 127.8 L678.6 135.6 L677 143.3 L674.6 150.9 L671.6 158.3 L668 165.4 L663.8 172.2 L659 178.8 L653.6 184.9 L647.8 190.7 L641.4 196 L634.7 200.9 L627.5 205.3 L619.9 209.1 L612.1 212.4 L604 215.1 L595.7 217.2 L587.2 218.8 L578.6 219.7 L570 220 L561.4 219.7 L552.8 218.8 L544.3 217.2 L536 215.1 L527.9 212.4 L520.1 209.1 L512.5 205.3 L505.3 200.9 L498.6 196 L492.2 190.7 L486.4 184.9 L481 178.8 L476.2 172.2 L472 165.4 L468.4 158.3 L465.4 150.9 L463 143.3 L461.4 135.6 L460.3 127.8 L460 120 L460 120 L460.3 122.4 L461.4 124.7 L463 127 L465.4 129.3 L468.4 131.5 L472 133.6 L476.2 135.7 L481 137.6 L486.4 139.5 L492.2 141.2 L498.6 142.8 L505.3 144.3 L512.5 145.6 L520.1 146.7 L527.9 147.7 L536 148.5 L544.3 149.2 L552.8 149.6 L561.4 149.9 L570 150 L578.6 149.9 L587.2 149.6 L595.7 149.2 L604 148.5 L612.1 147.7 L619.9 146.7 L627.5 145.6 L634.7 144.3 L641.4 142.8 L647.8 141.2 L653.6 139.5 L659 137.6 L663.8 135.7 L668 133.6 L671.6 131.5 L674.6 129.3 L677 127 L678.6 124.7 L679.7 122.4 L680 120 Z"/><path class="mf-sig" d="M680 120 L679.7 127.8 L678.6 135.6 L677 143.3 L674.6 150.9 L671.6 158.3 L668 165.4 L663.8 172.2 L659 178.8 L653.6 184.9 L647.8 190.7 L641.4 196 L634.7 200.9 L627.5 205.3 L619.9 209.1 L612.1 212.4 L604 215.1 L595.7 217.2 L587.2 218.8 L578.6 219.7 L570 220 L561.4 219.7 L552.8 218.8 L544.3 217.2 L536 215.1 L527.9 212.4 L520.1 209.1 L512.5 205.3 L505.3 200.9 L498.6 196 L492.2 190.7 L486.4 184.9 L481 178.8 L476.2 172.2 L472 165.4 L468.4 158.3 L465.4 150.9 L463 143.3 L461.4 135.6 L460.3 127.8 L460 120" fill="none"/><path class="mf-sig2" d="M680 120 L679.7 117.6 L678.6 115.3 L677 113 L674.6 110.7 L671.6 108.5 L668 106.4 L663.8 104.3 L659 102.4 L653.6 100.5 L647.8 98.8 L641.4 97.2 L634.7 95.7 L627.5 94.4 L619.9 93.3 L612.1 92.3 L604 91.5 L595.7 90.8 L587.2 90.4 L578.6 90.1 L570 90 L561.4 90.1 L552.8 90.4 L544.3 90.8 L536 91.5 L527.9 92.3 L520.1 93.3 L512.5 94.4 L505.3 95.7 L498.6 97.2 L492.2 98.8 L486.4 100.5 L481 102.4 L476.2 104.3 L472 106.4 L468.4 108.5 L465.4 110.7 L463 113 L461.4 115.3 L460.3 117.6 L460 120 L460.3 122.4 L461.4 124.7 L463 127 L465.4 129.3 L468.4 131.5 L472 133.6 L476.2 135.7 L481 137.6 L486.4 139.5 L492.2 141.2 L498.6 142.8 L505.3 144.3 L512.5 145.6 L520.1 146.7 L527.9 147.7 L536 148.5 L544.3 149.2 L552.8 149.6 L561.4 149.9 L570 150 L578.6 149.9 L587.2 149.6 L595.7 149.2 L604 148.5 L612.1 147.7 L619.9 146.7 L627.5 145.6 L634.7 144.3 L641.4 142.8 L647.8 141.2 L653.6 139.5 L659 137.6 L663.8 135.7 L668 133.6 L671.6 131.5 L674.6 129.3 L677 127 L678.6 124.7 L679.7 122.4 L680 120 Z" fill="none"/><line class="mf-sig2" x1="600" y1="91" x2="578" y2="90.2" marker-end="url(#mvgs-s)"/><text class="mf-h" x="690" y="100" text-anchor="start">C</text><text class="mf-h" x="564" y="220" text-anchor="middle">S</text><line class="mf-sig3" x1="520" y1="200" x2="520" y2="150" marker-end="url(#mvgs-g)"/><text class="mf-l" x="526" y="176" text-anchor="start">n</text><text class="mf-k" x="570" y="290" text-anchor="middle">ทิศวน C สัมพันธ์กับ n ตามกฎมือขวา</text><text class="mf-h" x="570" y="312" text-anchor="middle">∮_C F·dr = ∬_S (∇×F)·n dS</text></svg><!--/FIG--><figcaption>ทฤษฎีบทเกาส์ (ผิวปิด S ล้อมปริมาตร E · \(\mathbf n\) ชี้ออก) เทียบกับทฤษฎีบทสโตกส์ (ผิวเปิด S ที่มีขอบ C · ทิศ \(\mathbf n\) สัมพันธ์กับทิศวนของ C ตามกฎมือขวา)</figcaption></figure>
+    <div class="wx" id="ex-s7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-7 · ใช้ทฤษฎีบทแทนอินทิกรัลผิวหกหน้า</span><h3>(ก) ทรงกลม: \(\mathbf F = \langle x, y, z\rangle\) (ข) ลูกบาศก์หนึ่งหน่วย \([0,1]^3\): \(\mathbf F = \langle x^2, y^2, z^2\rangle\) หาฟลักซ์ออกรวม</h3><button type="button" class="wx-btn calc-go" data-mv-target="gauss-lab" data-mv-set='{"mode":"gauss","p":"x^2","q":"y^2","r":"z^2","solid":"cube","a":1}'>เปิดในแล็บ (ลูกบาศก์ −1…1)</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(\nabla\cdot\mathbf F = 3\) · \(\iiint3\,dV = 3\cdot\dfrac{4\pi a^3}{3} = 4\pi a^3\) ตรงกับ S-4 ที่คำนวณฟลักซ์บนผิวโดยตรง ✓</p></li>
+        <li><p>(ข) \(\nabla\cdot\mathbf F = 2x + 2y + 2z\) · \(\iiint_{[0,1]^3}2(x + y + z)\,dV = 2\left(\tfrac12 + \tfrac12 + \tfrac12\right) = 3\)</p></li>
+        <li><p>ตรวจโดยตรง (ข): หน้า \(x = 1\) ให้ \(\iint x^2\,dy\,dz = 1\), หน้า \(x = 0\) ให้ 0 · ทำนองเดียวกันสำหรับ \(y\) และ \(z\) → \(1 + 1 + 1 = 3\) ✓ (หกหน้าต้องบวกกัน แต่ทฤษฎีบทลดเหลืออินทิกรัลเดียว)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\Phi = 4\pi a^3\) · (ข) \(\Phi = 3\)</p>
+    </div>
+    <div class="wx" id="ex-s8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-8 · ใช้กฎของเกาส์หาสนามไฟฟ้า (ไฟฟ้า)</span><h3>(ก) ประจุเส้นยาวอนันต์ \(\lambda = 10\) nC/m หา \(E\) ที่ระยะ 0.5 m (ข) ทรงกลมตันรัศมี \(a = 0.1\) m มีประจุสม่ำเสมอ \(\rho = 1\ \mu\text{C/m}^3\) หา \(E\) ที่ \(r = 0.05\) m และที่ผิว</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ผิวเกาส์: ทรงกระบอกรัศมี \(r\) ยาว \(L\) · ฟลักซ์ทะลุผนังข้างเท่านั้น \(E\cdot2\pi rL = \dfrac{\lambda L}{\varepsilon_0}\) → \(E = \dfrac{\lambda}{2\pi\varepsilon_0r}\)</p></li>
+        <li><p>แทนค่า: \(E = \dfrac{10\times10^{-9}}{2\pi(8.854\times10^{-12})(0.5)} = 359.5\) V/m (ชี้ออกตามรัศมี)</p></li>
+        <li><p>(ข) ผิวเกาส์ทรงกลมรัศมี \(r &lt; a\): \(E\cdot4\pi r^2 = \dfrac{\rho\cdot\frac43\pi r^3}{\varepsilon_0}\) → \(E = \dfrac{\rho r}{3\varepsilon_0}\) (เพิ่มเป็นเส้นตรงตาม \(r\))</p></li>
+        <li><p>\(r = 0.05\): \(E = \dfrac{10^{-6}(0.05)}{3(8.854\times10^{-12})} = 1882\) V/m · ที่ผิว \(r = a = 0.1\): \(E = 3765\) V/m</p></li>
+        <li><p>ตรวจที่ผิวด้วยกฎของคูลอมบ์: \(Q = \rho\cdot\frac43\pi a^3 = 4.189\times10^{-9}\) C → \(\dfrac{kQ}{a^2} = \dfrac{8.988\times10^{9}\times4.189\times10^{-9}}{0.01} = 3765\) V/m ✓ ต่อเนื่องที่ผิว</p></li>
+      </ol>
+      <p class="answer">(ก) \(E = 359.5\) V/m · (ข) \(E(0.05) = 1882\) V/m, \(E(a) = 3765\) V/m</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="stokes">
+    <h2 id="stokes">ทฤษฎีบทสโตกส์ (Stokes' Theorem) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ทฤษฎีบทกรีนเกี่ยวกับการหมุนวนรอบวงปิดในระนาบ สโตกส์ยกขึ้นเป็นสามมิติ: การหมุนวน (\(\oint\mathbf F\cdot d\mathbf r\)) รอบ<b>ขอบ</b> \(C\) ของผิวเปิด \(S\) เท่ากับฟลักซ์ของ curl ผ่านผิว \(S\) <b>ผิวใดก็ได้</b>ที่มีขอบเป็น \(C\) (ผิวโค้งตะกร้า แผ่นเรียบ หรืออื่นใดให้ค่าเท่ากันทั้งหมด) นี่คือประโยชน์ใหญ่: เลือกผิวที่อินทิเกรตง่ายที่สุด ทิศ \(\mathbf n\) ต้องสอดคล้องกับทิศวนของ \(C\) ตาม<b>กฎมือขวา</b>: ให้นิ้วทั้งสี่โค้งตามทิศวน \(C\) นิ้วหัวแม่มือชี้ทางของ \(\mathbf n\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S8" data-k="Stokes theorem boundary curve surface curl F dot n dS right hand rule ทฤษฎีบทสโตกส์ ขอบ ผิว กฎมือขวา">
+        <p class="tf-n"><b><span class="fid">S8</span> Stokes' theorem</b> ทฤษฎีบทสโตกส์</p>
+        \[ \oint_C\mathbf F\cdot d\mathbf r = \iint_S(\nabla\times\mathbf F)\cdot\mathbf n\,dS \qquad(\partial S = C,\ \text{ทิศตามกฎมือขวา}) \]
+        <p class="tf-x">ถ้า \(S\) แบนอยู่ในระนาบ \(xy\) จะลดเหลือทฤษฎีบทกรีน (L6) · \(\nabla\times\mathbf F = \mathbf 0\) ⇒ งานรอบวงปิดเป็น 0 (สนามอนุรักษ์) · เป็นที่มาของกฎของแอมแปร์และฟาราเดย์</p>
+      </div>
+      <div class="tf wide" id="S9" data-k="Ampere's law Faraday's law integral form Stokes กฎของแอมแปร์ กฎของฟาราเดย์ รูปปริพันธ์">
+        <p class="tf-n"><b><span class="fid">S9</span> Ampère's and Faraday's laws</b> กฎของแอมแปร์และฟาราเดย์</p>
+        \[ \oint_C\mathbf B\cdot d\mathbf l = \mu_0 I_{\text{enc}}\ \Leftrightarrow\ \nabla\times\mathbf B = \mu_0\mathbf J,\qquad \oint_C\mathbf E\cdot d\mathbf l = -\frac{d\Phi_B}{dt}\ \Leftrightarrow\ \nabla\times\mathbf E = -\frac{\partial\mathbf B}{\partial t} \]
+        <p class="tf-x">\(I_{enc} = \iint\mathbf J\cdot\mathbf n\,dS\) · \(\Phi_B = \iint\mathbf B\cdot\mathbf n\,dS\) · ข้อแรกเป็นกรณีสถิต (เพิ่ม \(\mu_0\varepsilon_0\partial_t\mathbf E\) ในกรณีไดนามิก)</p>
+      </div>
+    </div>
+    <p>ลองในตัวตรวจ ข้างล่างเลือกแท็บ Stokes แล้วดูว่า “ครึ่งทรงกลม” “แผ่นวงกลม” และ “พาราโบลอยด์” ซึ่งมีขอบเป็นวงกลมเดียวกันที่ \(z = 0\) ให้ \(\iint(\nabla\times\mathbf F)\cdot\mathbf n\,dS\) เท่ากันหมด และเท่ากับ \(\oint\mathbf F\cdot d\mathbf r\) รอบวงกลม</p>
+    <div class="mv-flux" id="stokes-lab" data-mode="stokes" data-p="z" data-q="x" data-r="y" data-surf="hemi" data-a="1"></div>
+    <div class="wx" id="ex-s9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-9 · เลือกผิวง่ายแทนผิวโค้ง</span><h3>\(\mathbf F = \langle -y^2,\ x,\ z^2\rangle\) และ \(C\) คือเส้นโค้งตัดกันของระนาบ \(y + z = 2\) กับทรงกระบอก \(x^2 + y^2 = 1\) (วนทวนเข็มเมื่อมองจากข้างบน) หา \(\oint_C\mathbf F\cdot d\mathbf r\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\nabla\times\mathbf F = \langle 0 - 0,\ 0 - 0,\ 1 - (-2y)\rangle = \langle 0, 0, 1 + 2y\rangle\)</p></li>
+        <li><p>เลือกผิว \(S\) = ส่วนของระนาบ \(z = 2 - y\) ภายในทรงกระบอก (เป็นวงรี) · \(g_x = 0,\ g_y = -1\) · \(\mathbf n\,dS = \langle -g_x, -g_y, 1\rangle\,dA = \langle 0, 1, 1\rangle\,dA\) (ชี้ขึ้น)</p></li>
+        <li><p>\((\nabla\times\mathbf F)\cdot\mathbf n\,dS = (1 + 2y)\cdot1\,dA\) · บริเวณเงา: แผ่นวงกลมรัศมี 1</p></li>
+        <li><p>\(\displaystyle\oint_C = \iint_{x^2+y^2\le1}(1 + 2y)\,dA = \pi + 2\iint y\,dA = \pi + 0 = \pi\) (\(\iint y\,dA = 0\) โดยสมมาตร)</p></li>
+        <li><p>ถ้าอินทิเกรตเส้นตรง ๆ ต้องพารามิเตอร์ \(\langle\cos t, \sin t, 2 - \sin t\rangle\) แล้วคำนวณ \(\int(-\sin^2t)(-\sin t) + \cos t\cos t + (2-\sin t)^2(-\cos t)\,dt\) ซึ่งยาวกว่าอย่างเห็นได้ชัด — และได้ \(\pi\) เช่นกัน</p></li>
+      </ol>
+      <p class="answer">\(\oint_C\mathbf F\cdot d\mathbf r = \pi\)</p>
+    </div>
+    <div class="wx" id="ex-s10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-10 · แรงเคลื่อนไฟฟ้าเหนี่ยวนำ (ไฟฟ้า)</span><h3>ห่วงลวดวงกลมรัศมี 5 cm วางตั้งฉากกับสนามแม่เหล็กสม่ำเสมอ \(B(t) = B_0\sin\omega t\) เมื่อ \(B_0 = 0.2\) T ความถี่ 50 Hz หาค่าแรงเคลื่อนไฟฟ้าเหนี่ยวนำสูงสุด</h3></div>
+      <ol class="steps">
+        <li><p>ฟลักซ์แม่เหล็ก \(\Phi_B = \iint\mathbf B\cdot\mathbf n\,dS = B(t)\cdot\pi r^2 = \pi(0.05)^2B_0\sin\omega t = 7.854\times10^{-3}\times0.2\sin\omega t = 1.571\times10^{-3}\sin\omega t\) Wb</p></li>
+        <li><p>กฎของฟาราเดย์ (จากสโตกส์): \(\mathcal E = \oint\mathbf E\cdot d\mathbf l = -\dfrac{d\Phi_B}{dt} = -\omega\Phi_{\max}\cos\omega t\)</p></li>
+        <li><p>\(\omega = 2\pi\times50 = 314.16\) rad/s · \(\mathcal E_{\max} = 314.16\times1.571\times10^{-3} = 0.4935\) V</p></li>
+        <li><p>ตีความ: สนามไฟฟ้า \(\mathbf E\) ที่เกิดขึ้นรอบห่วงมี \(\nabla\times\mathbf E \ne \mathbf 0\) จึงไม่อนุรักษ์ — นี่คือกลไกของหม้อแปลงและเครื่องกำเนิดไฟฟ้า (ค่าสูงสุด 0.49 V ต่อหนึ่งรอบ ขดลวด \(N\) รอบได้ \(N\) เท่า)</p></li>
+      </ol>
+      <p class="answer">\(\Phi_{\max} = 1.571\) mWb · \(\mathcal E_{\max} \approx 0.494\) V ต่อรอบ</p>
+    </div>
+    <div class="wx" id="ex-s11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-11 · สนามแม่เหล็กรอบสายไฟ (ไฟฟ้า)</span><h3>สายไฟตรงยาวมากนำกระแส 100 A หา \(B\) ที่ระยะ 2 m ด้วยกฎของแอมแปร์</h3></div>
+      <ol class="steps">
+        <li><p>วงแอมแปร์: วงกลมรัศมี \(r\) รอบสายไฟ · โดยสมมาตร \(\mathbf B\) สัมผัสวงและขนาดคงที่ → \(\oint\mathbf B\cdot d\mathbf l = B(2\pi r)\)</p></li>
+        <li><p>\(B(2\pi r) = \mu_0I\) → \(B = \dfrac{\mu_0I}{2\pi r}\)</p></li>
+        <li><p>\(B = \dfrac{(4\pi\times10^{-7})(100)}{2\pi(2)} = 1.0\times10^{-5}\) T = <b>10 µT</b> (ประมาณ 1/5 ของสนามแม่เหล็กโลกที่ ~50 µT)</p></li>
+        <li><p>ข้อสังเกต: ในแบบอนุพันธ์ \(\nabla\times\mathbf B = \mu_0\mathbf J\) ตรวจได้ว่า \(\nabla\times\mathbf B = \mathbf 0\) นอกสายไฟ แต่ \(\oint\mathbf B\cdot d\mathbf l \ne 0\) รอบสาย — ตัวอย่างของบริเวณที่มีรู (สนามนี้มีรูปแบบเดียวกับ \(\langle -y, x\rangle/(x^2+y^2)\) ในบทสนามเวกเตอร์)</p></li>
+      </ol>
+      <p class="answer">\(B = \mu_0I/(2\pi r) = 10\ \mu\text{T}\) ที่ 2 m จากสาย 100 A</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="maxwell">
+    <h2 id="maxwell">สรุปสมการแมกซ์เวลล์: Gauss และ Stokes ในรูปที่ใช้จริง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สมการแมกซ์เวลล์สี่ข้อเขียนได้สองรูป รูปปริพันธ์ (บนผิวและเส้น) และรูปอนุพันธ์ (ที่จุด) ทั้งสองรูปเชื่อมกันด้วยทฤษฎีบทเกาส์ (ข้อ 1–2) และสโตกส์ (ข้อ 3–4) ซึ่งเป็นเหตุผลที่แคลคูลัสเวกเตอร์เป็นภาษาของแม่เหล็กไฟฟ้า</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>กฎ</th><th>รูปปริพันธ์ (integral)</th><th>รูปอนุพันธ์ (differential)</th><th>ทฤษฎีบทที่ใช้</th></tr></thead>
+      <tbody>
+        <tr><td>เกาส์ (ไฟฟ้า)</td><td>\(\oiint\mathbf D\cdot d\mathbf S = Q_{enc}\)</td><td>\(\nabla\cdot\mathbf D = \rho_v\)</td><td>ดีเวอร์เจนซ์</td></tr>
+        <tr><td>เกาส์ (แม่เหล็ก)</td><td>\(\oiint\mathbf B\cdot d\mathbf S = 0\)</td><td>\(\nabla\cdot\mathbf B = 0\)</td><td>ดีเวอร์เจนซ์</td></tr>
+        <tr><td>ฟาราเดย์</td><td>\(\oint\mathbf E\cdot d\mathbf l = -\dfrac{d}{dt}\iint\mathbf B\cdot d\mathbf S\)</td><td>\(\nabla\times\mathbf E = -\dfrac{\partial\mathbf B}{\partial t}\)</td><td>สโตกส์</td></tr>
+        <tr><td>แอมแปร์–แมกซ์เวลล์</td><td>\(\oint\mathbf H\cdot d\mathbf l = I_{enc} + \dfrac{d}{dt}\iint\mathbf D\cdot d\mathbf S\)</td><td>\(\nabla\times\mathbf H = \mathbf J + \dfrac{\partial\mathbf D}{\partial t}\)</td><td>สโตกส์</td></tr>
+      </tbody>
+    </table></div>
+    <p>เพิ่มเติมที่ <a href="/learn/multivariable-calculus/electrical-engineering/">บทแคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า</a> มีแล็บประจุจุดที่ตรวจกฎของเกาส์ด้วยทรงกลมเกาส์ที่ลากได้ และการหาสมการคลื่นจากสมการข้างบน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">นำไปใช้ในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สาขา</th><th>อินทิกรัลบนผิว</th><th>ผลลัพธ์</th></tr></thead>
+      <tbody>
+        <tr><td>ไฟฟ้า</td><td>\(\Phi_E = \oiint\mathbf E\cdot d\mathbf S\)</td><td>ประจุภายในผิวปิด (กฎของเกาส์) · สนามของเส้น/ระนาบ/ทรงกลมประจุ</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\Phi_B = \iint\mathbf B\cdot d\mathbf S\)</td><td>ฟลักซ์แม่เหล็กในแกนเหล็ก · \(\mathcal E = -N\,d\Phi_B/dt\) ของหม้อแปลง</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\mathbf S = \mathbf E\times\mathbf H,\ P = \oiint\mathbf S\cdot d\mathbf A\)</td><td>กำลังที่ไหลผ่านผิว (เวกเตอร์พอยน์ติง) เช่นกำลังที่แผ่ออกจากเสาอากาศ</td></tr>
+        <tr><td>เครื่องกล</td><td>\(Q = \iint\mathbf v\cdot\mathbf n\,dA\)</td><td>อัตราการไหลเชิงปริมาตรผ่านท่อ/หน้าตัด (ตัวอย่าง S-6)</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\dot Q = \iint\mathbf q\cdot\mathbf n\,dA\)</td><td>อัตราการถ่ายเทความร้อนผ่านผิว (\(\mathbf q = -k\nabla T\)) · ทั้งผิวปิดรอบวัตถุ = พลังงานความร้อนที่ผลิต</td></tr>
+        <tr><td>เครื่องกล</td><td>\(A = \iint dS\)</td><td>พื้นที่ผิวเคลือบ/ทาสี/แลกเปลี่ยนความร้อน (ตัวอย่าง S-1, S-2)</td></tr>
+        <tr><td>โยธา</td><td>\(F = \iint p\,\mathbf n\,dS\)</td><td>แรงดันน้ำสุทธิบนผิวโค้งของเขื่อนหรือประตูน้ำ (<a href="/learn/multivariable-calculus/civil-engineering/">บทโยธา</a>)</td></tr>
+        <tr><td>โยธา</td><td>\(Q = \iint\mathbf v\cdot\mathbf n\,dS\)</td><td>ปริมาณน้ำซึมผ่านดิน \(\mathbf v = -K\nabla h\) · ปริมาณน้ำท่าผ่านหน้าตัดลำน้ำ</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ทิศ \(\mathbf n\) ผิด</b> · ผิวปิดต้องชี้ออกนอก · ผิวเปิดต้องสัมพันธ์กับทิศวนของขอบด้วยกฎมือขวา (เครื่องหมายผิดทั้งคำตอบ)</li>
+      <li><b>ทำ \(\mathbf r_u\times\mathbf r_v\) เป็นหนึ่งหน่วยก่อนคำนวณฟลักซ์</b> · ไม่ต้อง: ขนาดของมันคือ \(dS\) อยู่แล้ว (ต่างจากอนุพันธ์ตามทิศที่ต้องทำเป็นหนึ่งหน่วย)</li>
+      <li><b>ลืมปิดผิว</b> เมื่อใช้ทฤษฎีบทดีเวอร์เจนซ์ · ผิวทรงกระบอกต้องรวมฝาบนและล่าง (ถ้าผิวไม่ปิด ต้องเพิ่มผิวปิดแล้วลบออก)</li>
+      <li><b>ใช้ทฤษฎีบทเกาส์เมื่อ \(\mathbf F\) ไม่นิยามภายใน</b> · ตัวอย่างประจุจุด \(\mathbf r/\rho^3\) ให้ \(\nabla\cdot\mathbf F = 0\) แต่ฟลักซ์ \(= 4\pi\)</li>
+      <li><b>สับสนเกาส์ กรีน สโตกส์</b> · เกาส์: ผิวปิด↔ปริมาตร (div) · กรีน: เส้นปิดในระนาบ↔บริเวณ · สโตกส์: เส้นปิดในอวกาศ↔ผิวเปิด (curl)</li>
+    </ol>
+    <p class="hint">ไปต่อที่หน้าการประยุกต์: <a href="/learn/multivariable-calculus/electrical-engineering/">วิศวกรรมไฟฟ้า</a> · <a href="/learn/multivariable-calculus/mechanical-engineering/">วิศวกรรมเครื่องกล</a> · <a href="/learn/multivariable-calculus/civil-engineering/">วิศวกรรมโยธา</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

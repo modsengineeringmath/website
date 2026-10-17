@@ -1,0 +1,272 @@
+<!--meta
+{
+  "title": "แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล: การนำความร้อน กฎของฟูริเยร์ การไหลของของไหล โมเมนต์ความเฉื่อย Jacobian หุ่นยนต์ | อาจารย์มด",
+  "h1": "แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล: การนำความร้อน การไหลของของไหล จุดศูนย์กลางมวล และจาโคเบียนหุ่นยนต์",
+  "description": "การประยุกต์แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล (mechanical engineering): กฎของฟูริเยร์ q = −k∇T สมการความร้อนและลาปลาซ การนำความร้อนในผนังและท่อกลม ความต่อเนื่อง ∇·v = 0 ความหมุนวน (vorticity) ของของไหล การไหลรอบทรงกระบอกและ Bernoulli จุดศูนย์กลางมวลและโมเมนต์ความเฉื่อยของล้อช่วยแรง การขยายตัวทางความร้อนและจาโคเบียนแขนกล พร้อมแล็บความร้อนและสนามการไหล",
+  "ogTitle": "แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล: ความร้อน ของไหล โมเมนต์ความเฉื่อย Jacobian",
+  "lesson": "multivariable-calculus",
+  "sub": "mechanical-engineering",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["แคลคูลัสในวิศวกรรมเครื่องกล", "กฎของฟูริเยร์", "Fourier's law", "การนำความร้อน", "heat conduction", "heat flux", "สมการความร้อน", "ความต่อเนื่องของของไหล", "continuity equation", "vorticity", "potential flow", "Bernoulli", "โมเมนต์ความเฉื่อย", "moment of inertia", "flywheel", "robot Jacobian"],
+  "about": ["Fourier's law", "Heat equation", "Radial conduction", "Continuity equation", "Vorticity", "Potential flow around a cylinder", "Bernoulli equation", "Moment of inertia", "Flywheel energy", "Thermal expansion", "Robot Jacobian", "Joint torque"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-opt.js", "/assets/mvc-vec.js", "/assets/mvc-eng.js"],
+  "og": {"title": "แคลคูลัสหลายตัวแปรในงานเครื่องกล", "sub": "q = −k∇T ความต่อเนื่องและความหมุนวนของของไหล โมเมนต์ความเฉื่อย และ Jacobian แขนกล", "eyebrow": "บทที่ 24.11 · Mechanical Engineering Applications", "sym": "q=−k∇T"},
+  "faq": [
+    {"q": "กฎของฟูริเยร์ (Fourier's law) คืออะไร เกี่ยวกับ gradient อย่างไร?", "a": "กฎของฟูริเยร์บอกว่าความร้อนไหลจากร้อนไปเย็น ด้วยฟลักซ์ความร้อน \\(\\mathbf q = -k\\nabla T\\) เมื่อ \\(k\\) คือสภาพนำความร้อน (W/m·K) และ \\(\\nabla T\\) คือเกรเดียนต์อุณหภูมิ เครื่องหมายลบแสดงว่าความร้อนไหลสวนทาง gradient (ลงจากร้อนไปเย็น) ฟลักซ์ตั้งฉากกับ isotherm เสมอ และมีขนาด \\(|\\mathbf q| = k|\\nabla T|\\) ตัวอย่าง ผนังอิฐหนา 0.2 m ต่างอุณหภูมิ 10 K (k = 0.72) มี \\(q = 36\\) W/m²"},
+    {"q": "สมการความร้อน (heat equation) กับสมการลาปลาซต่างกันอย่างไร?", "a": "สมการความร้อน \\(\\rho c\\,\\partial T/\\partial t = k\\nabla^2T + \\dot q_{gen}\\) บอกอุณหภูมิที่เปลี่ยนตามเวลา เมื่อเข้าสู่สภาวะคงตัว (\\(\\partial T/\\partial t = 0\\)) และไม่มีแหล่งกำเนิดความร้อน (\\(\\dot q_{gen} = 0\\)) จะเหลือสมการลาปลาซ \\(\\nabla^2T = 0\\) ซึ่งหมายความว่า \\(\\nabla\\cdot\\mathbf q = 0\\) ความร้อนที่ไหลเข้าบริเวณใดเท่ากับที่ไหลออก ผลคือไม่มีจุดร้อนสุดหรือเย็นสุดภายในแผ่น (อยู่ที่ขอบเสมอ) และอุณหภูมิที่จุดศูนย์กลางเท่ากับค่าเฉลี่ยรอบวงกลมที่ล้อมมัน"},
+    {"q": "สมการความต่อเนื่อง (continuity equation) ของของไหลคืออะไร?", "a": "เป็นการอนุรักษ์มวลในรูปอนุพันธ์ \\(\\partial\\rho/\\partial t + \\nabla\\cdot(\\rho\\mathbf v) = 0\\) สำหรับของไหลที่ไม่บีบอัด (\\(\\rho\\) คงที่) เหลือ \\(\\nabla\\cdot\\mathbf v = 0\\) นั่นคือฟลักซ์ที่ไหลเข้าปริมาตรใด ๆ เท่ากับฟลักซ์ที่ไหลออก ใช้ตรวจว่าสนามความเร็วที่เสนอเป็นไปได้ และใช้หาองค์ประกอบความเร็วที่ขาดไป เช่นถ้า \\(v_x = x\\) และ \\(v_y = -y\\) แล้ว \\(\\nabla\\cdot\\mathbf v = 0\\) ถูกต้อง แต่ถ้า \\(v_y = y\\) จะมีดีเวอร์เจนซ์ 2 (ของไหลถูกสร้างขึ้น)"},
+    {"q": "ความหมุนวน (vorticity) ของของไหลคืออะไร คำนวณอย่างไร?", "a": "ความหมุนวน \\(\\boldsymbol\\zeta = \\nabla\\times\\mathbf v\\) วัดการหมุนเฉพาะที่ของอนุภาคของไหล ขนาดเท่ากับสองเท่าของความเร็วเชิงมุมของอนุภาค การไหลที่ \\(\\nabla\\times\\mathbf v = \\mathbf 0\\) เรียกว่า irrotational (มีศักย์ความเร็ว) เช่นการไหลอุดมคติรอบทรงกระบอก และกระแสน้ำวนอิสระ ส่วนการหมุนแบบวัตถุแข็ง \\(\\mathbf v = \\boldsymbol\\omega\\times\\mathbf r\\) มี \\(\\nabla\\times\\mathbf v = 2\\boldsymbol\\omega\\) ตัวอย่างพายุหมุนแบบ Rankine ภายในแกนมีความหมุนวนคงที่ ภายนอกเป็นศูนย์แต่ยังมีการหมุนเวียน Γ ≠ 0"},
+    {"q": "จาโคเบียนของแขนกลหาอย่างไร และใช้ทำอะไร?", "a": "จาโคเบียน \\(\\mathbf J\\) คือเมทริกซ์ของอนุพันธ์ย่อยของตำแหน่งปลายแขนต่อมุมข้อต่อ \\(J_{ij} = \\partial x_i/\\partial\\theta_j\\) ใช้แปลงความเร็วข้อต่อเป็นความเร็วปลายแขน \\(\\mathbf v = \\mathbf J\\dot{\\boldsymbol\\theta}\\) และแปลงแรงที่ปลายแขนเป็นแรงบิดข้อต่อ \\(\\boldsymbol\\tau = \\mathbf J^{\\top}\\mathbf F\\) แขน 2 ข้อต่อระนาบมี \\(\\det\\mathbf J = L_1L_2\\sin\\theta_2\\) ซึ่งเป็นศูนย์เมื่อแขนเหยียดตรงหรือพับสนิท (จุดเอกฐาน singularity) ที่ปลายแขนไม่สามารถเคลื่อนที่ในบางทิศได้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>วิศวกรรมเครื่องกล</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.11 · การประยุกต์ · Mechanical Engineering</p>
+      <h1>แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล: การนำความร้อน การไหลของของไหล จุดศูนย์กลางมวล และจาโคเบียนหุ่นยนต์</h1>
+      <p class="lede">เครื่องกลคือวิชาที่ปริมาณทุกอย่างกระจายอยู่ในอวกาศ: อุณหภูมิในครีบระบายความร้อน ความเร็วของลมรอบใบพัด มวลที่กระจายในล้อช่วยแรง และมุมข้อต่อที่กำหนดตำแหน่งปลายแขนกล หน้านี้ใช้ gradient divergence curl และอินทิกรัลหลายชั้นกับโจทย์ของวิศวกรเครื่องกลโดยตรง: กฎของฟูริเยร์ q = −k∇T และการนำความร้อนในผนังและท่อ ความต่อเนื่องและความหมุนวนของของไหล การไหลศักย์รอบทรงกระบอกกับ Bernoulli โมเมนต์ความเฉื่อยและพลังงานของล้อช่วยแรง การขยายตัวทางความร้อนด้วยผลต่างรวม และจาโคเบียนที่เปลี่ยนความเร็วข้อต่อเป็นความเร็วปลายแขน พร้อมแล็บความร้อนที่ลาก isotherm และวัดฟลักซ์ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#heat-lab">แล็บความร้อน</a>
+        <a class="btn btn-ghost btn-sm" href="#fourier">กฎของฟูริเยร์</a>
+        <a class="btn btn-ghost btn-sm" href="#fluid">ของไหล</a>
+        <a class="btn btn-ghost btn-sm" href="#inertia">โมเมนต์ความเฉื่อย</a>
+        <a class="btn btn-ghost btn-sm" href="#thermo">ขยายตัวความร้อน</a>
+        <a class="btn btn-ghost btn-sm" href="#robot">จาโคเบียนแขนกล</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><b>ความร้อน:</b> \(\mathbf q = -k\nabla T\) · คงตัวไม่มีแหล่งกำเนิด: \(\nabla^2T = 0\) · \(\oint\mathbf q\cdot\mathbf n\,dS = 0\) (เข้า = ออก) · ท่อกลม \(\dot Q' = 2\pi k(T_i - T_o)/\ln(r_o/r_i)\)</li>
+          <li><b>ของไหล:</b> ไม่บีบอัด \(\nabla\cdot\mathbf v = 0\) · ความหมุนวน \(\boldsymbol\zeta = \nabla\times\mathbf v\) · ศักย์ \(\mathbf v = \nabla\phi\), \(\nabla^2\phi = 0\) · Bernoulli \(p + \tfrac12\rho v^2 = \text{ค่าคงที่}\)</li>
+          <li><b>มวล:</b> \(I = \iiint r_\perp^2\rho\,dV\) · จานตัน \(\tfrac12mR^2\) · พลังงานจลน์หมุน \(\tfrac12I\omega^2\) · แกนขนาน \(I = I_c + md^2\)</li>
+          <li><b>แขนกล:</b> \(\mathbf v = \mathbf J\dot{\boldsymbol\theta}\), \(\boldsymbol\tau = \mathbf J^{\top}\mathbf F\), \(\det\mathbf J = L_1L_2\sin\theta_2\) · ขยายตัวความร้อน \(\Delta A/A \approx 2\alpha\Delta T\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น fourier, heat equation, continuity, vorticity, bernoulli, inertia, jacobian, torque" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="fourier">
+    <h2 id="fourier">การนำความร้อนและกฎของฟูริเยร์: q = −k∇T <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ความร้อนไหลจากร้อนไปเย็นตามทิศที่อุณหภูมิลดเร็วที่สุด ซึ่งคือ \(-\nabla T\) (บท<a href="/learn/multivariable-calculus/gradient-directional-derivative/">เกรเดียนต์</a>) กฎของฟูริเยร์เขียนข้อเท็จจริงนี้เป็นสมการ: <b>ฟลักซ์ความร้อน (heat flux)</b> \(\mathbf q = -k\nabla T\) หน่วย W/m² ตั้งฉากกับเส้นอุณหภูมิเท่ากัน (isotherm) เสมอ เมื่อรวมกับการอนุรักษ์พลังงาน (ทฤษฎีบทดีเวอร์เจนซ์) จะได้สมการความร้อน และในสภาวะคงตัวเหลือสมการลาปลาซ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K1" data-k="Fourier's law heat flux q = -k grad T isotherm thermal conductivity กฎของฟูริเยร์ ฟลักซ์ความร้อน สภาพนำความร้อน">
+        <p class="tf-n"><b><span class="fid">K1</span> Fourier's law</b> กฎของฟูริเยร์</p>
+        \[ \mathbf q = -k\,\nabla T,\qquad |\mathbf q| = k\,|\nabla T|,\qquad \dot Q = \iint_S\mathbf q\cdot\mathbf n\,dS \]
+        <p class="tf-x">\(k\) (W/m·K): ทองแดง 400 · อะลูมิเนียม 237 · เหล็กกล้า 50 · คอนกรีต 1.4 · อิฐ 0.7 · ไม้ 0.15 · ฉนวนโฟม 0.04 · \(\dot Q\) = อัตราความร้อนผ่านผิว S (W) · 1 มิติ: \(q = -k\,dT/dx\)</p>
+      </div>
+      <div class="tf wide" id="K2" data-k="heat equation conservation of energy divergence theorem rho c dT/dt = k laplacian T + q_gen สมการความร้อน อนุรักษ์พลังงาน">
+        <p class="tf-n"><b><span class="fid">K2</span> Heat equation</b> สมการความร้อน</p>
+        \[ \rho c\,\frac{\partial T}{\partial t} = -\nabla\cdot\mathbf q + \dot q_{gen} = k\,\nabla^2T + \dot q_{gen},\qquad \text{คงตัว ไม่มีแหล่งกำเนิด: }\ \nabla^2T = 0 \]
+        <p class="tf-x">ที่มา: ความร้อนสุทธิที่ไหลออกจากปริมาตรเล็กคือ \(\oiint\mathbf q\cdot\mathbf n\,dS = \iiint\nabla\cdot\mathbf q\,dV\) (เกาส์) · \(\alpha = k/\rho c\) การแพร่ความร้อน (m²/s) · \(\rho c\) = ความจุความร้อนต่อปริมาตร</p>
+      </div>
+      <div class="tf wide" id="K3" data-k="mean value property harmonic function center temperature average boundary maximum principle ค่าเฉลี่ย ฮาร์มอนิก หลักการค่าสูงสุด">
+        <p class="tf-n"><b><span class="fid">K3</span> Mean value property and maximum principle</b> สมบัติค่าเฉลี่ยและหลักการค่าสูงสุด</p>
+        \[ \nabla^2T = 0\ \Rightarrow\ T(\mathbf x_0) = \frac{1}{2\pi R}\oint_{|\mathbf x - \mathbf x_0| = R}T\,ds,\qquad T_{\max},\ T_{\min}\ \text{อยู่บนขอบเสมอ} \]
+        <p class="tf-x">อุณหภูมิที่จุดหนึ่งเท่ากับค่าเฉลี่ยบนวงกลมรอบมัน (ภายใต้เงื่อนไขอยู่ในบริเวณ) จึงไม่มีจุดร้อนสุดหรือเย็นสุดภายในแผ่น ตรวจคำตอบเชิงตัวเลขได้ง่าย</p>
+      </div>
+    </div>
+    <h3 id="heat-lab-h">แล็บการนำความร้อนในแผ่น</h3>
+    <p>เลือกสถานการณ์แล้วลากจุด P: สีแสดงอุณหภูมิ เส้นบางคือ isotherm ลูกศรดำคือฟลักซ์ความร้อน \(\mathbf q = -k\nabla T\) (ตั้งฉากกับ isotherm และชี้จากร้อนไปเย็น) กรอบเขียวคือ “กล่องตรวจ” รอบ P: ความร้อนสุทธิที่ไหลออก \(\oint\mathbf q\cdot\mathbf n\,ds\) ต้องเท่ากับ \(\iint\nabla\cdot\mathbf q\,dA = \iint -k\nabla^2T\,dA\) ในสภาวะคงตัวที่ \(\nabla^2T = 0\) ได้ศูนย์ (สถานการณ์ “จุดร้อนแบบเกาส์” ไม่ใช่ steady จึงได้ค่าไม่เป็นศูนย์) ลองเปลี่ยนวัสดุเพื่อดูว่า \(k\) มีผลกับ \(\mathbf q\) แต่ไม่มีผลกับรูปร่าง isotherm</p>
+    <div class="mv-heat" id="heat-lab" data-preset="plate"></div>
+    <figure class="lt-wide"><!--FIG:mv-heat-flux--><svg class="mf" viewBox="0 0 700 330" role="img" aria-label="ฟลักซ์ความร้อน (heat flux) q = −k∇T ตั้งฉากกับเส้นอุณหภูมิเท่ากัน (isotherm) ไหลจากร้อนไปเย็น ท่อกลมร้อนรัศมี r₁"><defs><marker id="mvhf-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvhf-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvhf-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvhf-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><circle class="mf-sig2" fill="none" cx="230" cy="165" r="55"/><text class="mf-k" x="230" y="123" text-anchor="middle">120°C</text><circle class="mf-sig2" fill="none" cx="230" cy="165" r="85"/><text class="mf-k" x="230" y="93" text-anchor="middle">90°C</text><circle class="mf-sig2" fill="none" cx="230" cy="165" r="115"/><text class="mf-k" x="230" y="63" text-anchor="middle">70°C</text><circle class="mf-sig2" fill="none" cx="230" cy="165" r="145"/><text class="mf-k" x="230" y="33" text-anchor="middle">55°C</text><circle class="mf-fill" cx="230" cy="165" r="30"/><circle class="mf-sig" fill="none" cx="230" cy="165" r="30"/><text class="mf-t" x="230" y="169" text-anchor="middle">ท่อร้อน</text><line class="mf-sig3" x1="264.8" y1="155.7" x2="373" y2="127" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="255.5" y1="139.6" x2="334.8" y2="60.5" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="239.4" y1="130.2" x2="268.6" y2="22.1" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="220.7" y1="130.2" x2="192" y2="22" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="204.6" y1="139.5" x2="125.5" y2="60.2" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="195.2" y1="155.6" x2="87.1" y2="126.4" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="195.2" y1="174.3" x2="87" y2="203" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="204.5" y1="190.4" x2="125.2" y2="269.5" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="220.6" y1="199.8" x2="191.4" y2="307.9" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="239.3" y1="199.8" x2="268" y2="308" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="255.4" y1="190.5" x2="334.5" y2="269.8" marker-end="url(#mvhf-g)"/><line class="mf-sig3" x1="264.8" y1="174.4" x2="372.9" y2="203.6" marker-end="url(#mvhf-g)"/><rect class="mf-box" x="450" y="50" width="235" height="210" rx="8"/><text class="mf-h" x="465" y="76" text-anchor="start">กฎการนำความร้อนของฟูริเยร์</text><text class="mf-k" x="465" y="98" text-anchor="start">Fourier's law</text><text class="mf-l" x="465" y="130" text-anchor="start">q = −k ∇T   [W/m²]</text><text class="mf-t" x="465" y="160" text-anchor="start">เส้นเขียว = ทิศ q (ร้อน → เย็น)</text><text class="mf-t" x="465" y="182" text-anchor="start">วงกลมน้ำเงิน = isotherm T คงที่</text><text class="mf-h" x="465" y="214" text-anchor="start">q ตั้งฉากกับ isotherm เสมอ</text><text class="mf-k" x="465" y="236" text-anchor="start">เพราะ ∇T ตั้งฉากกับเส้นชั้น</text></svg><!--/FIG--><figcaption>ฟลักซ์ความร้อน \(\mathbf q = -k\nabla T\) ตั้งฉากกับ isotherm เสมอ: ความร้อนไหลจากร้อนไปเย็น ตามทิศที่อุณหภูมิลดเร็วที่สุด (heat flux perpendicular to isotherms)</figcaption></figure>
+    <div class="wx" id="ex-k1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-1 · ผนังอิฐ (ภาระความเย็น)</span><h3>ผนังอิฐหนา 0.20 m (\(k = 0.72\) W/m·K) ผิวนอก 35 °C ผิวในห้อง 25 °C พื้นที่ผนัง 12 m² หาฟลักซ์และความร้อนที่เข้าห้อง</h3><button type="button" class="wx-btn calc-go" data-mv-target="heat-lab" data-mv-set='{"key":"wall"}'>เปิดสถานการณ์ผนังในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ผนังใหญ่เทียบกับความหนา อุณหภูมิเปลี่ยนแค่แนวความหนา (1 มิติ): \(T(x) = 35 - 50x\) (องศา, \(x\) เมตรจากผิวนอก) · \(\dfrac{dT}{dx} = -50\) K/m</p></li>
+        <li><p>\(q = -k\dfrac{dT}{dx} = -0.72(-50) = 36\) W/m² (ชี้เข้าห้อง ทิศ \(+x\))</p></li>
+        <li><p>\(\dot Q = qA = 36\times12 = 432\) W (ภาระความเย็นจากผนัง) · ฟลักซ์เท่ากันทุกหน้าตัดตามความหนา เพราะ \(\nabla^2T = 0\)</p></li>
+        <li><p>ถ้าเปลี่ยนเป็นฉนวนโฟม \(k = 0.04\) ความหนาเท่ากัน: \(q = 2.0\) W/m² (ลดลง 18 เท่า) จึงเห็นว่าวัสดุมีผลกับขนาดของฟลักซ์ ไม่ใช่รูปร่างสนามอุณหภูมิ</p></li>
+      </ol>
+      <p class="answer">\(q = 36\) W/m² · \(\dot Q = 432\) W</p>
+    </div>
+    <div class="wx" id="ex-k2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-2 · ท่อไอน้ำ (การนำความร้อนในแนวรัศมี)</span><h3>ท่อเหล็กกล้าผนังหนา \(r_i = 0.10\) m ถึง \(r_o = 0.50\) m (\(k = 50\)) ผิวใน 150 °C ผิวนอก 25 °C หา \(T(r)\) และอัตราความร้อนต่อความยาวท่อ</h3><button type="button" class="wx-btn calc-go" data-mv-target="heat-lab" data-mv-set='{"key":"pipe"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>สมมาตรรอบแกน: \(T = T(r)\) · สมการลาปลาซในพิกัดทรงกระบอก \(\dfrac1r\dfrac{d}{dr}\left(r\dfrac{dT}{dr}\right) = 0\) → \(r\,T' = C_1\) → \(T = C_1\ln r + C_2\)</p></li>
+        <li><p>เงื่อนไขขอบ: \(T(r_i) = 150,\ T(r_o) = 25\) → \(T(r) = 150 - 125\dfrac{\ln(r/r_i)}{\ln(r_o/r_i)}\) = \(150 - 77.67\ln(10r)\)</p></li>
+        <li><p>ฟลักซ์ \(q_r = -k\dfrac{dT}{dr} = \dfrac{k\cdot125}{r\ln(r_o/r_i)} = \dfrac{3883}{r}\) W/m² (\(\ln5 = 1.6094\))</p></li>
+        <li><p>อัตราความร้อนต่อเมตรความยาว: \(\dot Q' = q_r\cdot2\pi r = \dfrac{2\pi k(T_i - T_o)}{\ln(r_o/r_i)} = \dfrac{2\pi(50)(125)}{1.6094} = 24\,400\) W/m — <b>คงที่ทุกรัศมี</b> เพราะความร้อนที่ผ่านผิวทรงกระบอกแต่ละชั้นเท่ากัน (ทฤษฎีบทดีเวอร์เจนซ์: \(\nabla\cdot\mathbf q = 0\))</p></li>
+      </ol>
+      <p class="answer">\(T(r) = 150 - 125\ln(10r)/\ln5\) · \(\dot Q' \approx 24.4\) kW/m (ทุกรัศมี)</p>
+    </div>
+    <div class="wx" id="ex-k3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-3 · อุณหภูมิกลางแผ่นจากสมบัติค่าเฉลี่ย</span><h3>แผ่นสี่เหลี่ยมจัตุรัส ขอบบน 100 °C ขอบอื่นสามด้าน 20 °C ในสภาวะคงตัว หาอุณหภูมิที่จุดกลางแผ่น</h3><button type="button" class="wx-btn calc-go" data-mv-target="heat-lab" data-mv-set='{"key":"plate","px":0.5,"py":0.5}'>ตรวจในแล็บ (P = กลางแผ่น)</button></div>
+      <ol class="steps">
+        <li><p>\(\nabla^2T = 0\) และเป็นเชิงเส้น: ตั้ง \(\theta = T - 20\) จะได้ขอบบน \(\theta = 80\) K ที่เหลือ 0 K</p></li>
+        <li><p>วางสำเนาของปัญหานี้สี่ชุด หมุนไปทีละ 90° แล้วรวมกัน จะได้ปัญหาที่ <u>ทุกขอบ</u> เป็น 80 K ซึ่งมีคำตอบ \(\theta = 80\) ทั่วแผ่น · โดยสมมาตรทั้งสี่ชุดให้ค่าที่จุดกลางเท่ากัน จึง \(\theta(\text{center}) = 80/4 = 20\) K</p></li>
+        <li><p>อุณหภูมิกลางแผ่น \(T = 20 + 20 = 40\) °C (ค่าเฉลี่ยของอุณหภูมิขอบทั้งสี่: \(\tfrac14(100 + 20 + 20 + 20) = 40\))</p></li>
+        <li><p>ตรวจในแล็บ: ตั้ง P ที่ \((0.5, 0.5)\) ได้ \(T = 40.0\) °C และ \(\nabla^2T \approx 0\) · ใกล้ขอบบน (ที่มุมบน) สนามชันมาก ฟลักซ์สูงมาก ตรงข้ามที่ก้นแผ่นแทบไม่มีความร้อนไหลถึง</p></li>
+      </ol>
+      <p class="answer">\(T_{\text{center}} = 40\) °C</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="fluid">
+    <h2 id="fluid">ของไหล: ความต่อเนื่อง ความหมุนวน และการไหลรอบทรงกระบอก <span class="lv lv-i">กลาง</span></h2>
+    <p>สนามความเร็ว \(\mathbf v(x, y, z, t)\) คือสนามเวกเตอร์ (บท<a href="/learn/multivariable-calculus/vector-fields/">สนามเวกเตอร์</a>) divergence บอกว่าของไหลถูกบีบอัดหรือไม่ curl บอกว่ามีการหมุนวนหรือไม่ ของไหลอุดมคติ (ไม่หนืด ไม่บีบอัด ไม่หมุนวน) เป็นกรณีที่คำตอบทั้งหมดมาจากสมการลาปลาซ: \(\mathbf v = \nabla\phi\) และ \(\nabla^2\phi = 0\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K4" data-k="continuity equation incompressible div v = 0 mass conservation สมการความต่อเนื่อง ไม่บีบอัด อนุรักษ์มวล">
+        <p class="tf-n"><b><span class="fid">K4</span> Continuity equation</b> สมการความต่อเนื่อง</p>
+        \[ \frac{\partial\rho}{\partial t} + \nabla\cdot(\rho\mathbf v) = 0\ \ \xrightarrow{\ \rho\text{ คงที่}\ }\ \ \nabla\cdot\mathbf v = 0 \]
+        <p class="tf-x">การอนุรักษ์มวล · ฟลักซ์เข้า = ฟลักซ์ออกของปริมาตรใด ๆ · ท่อหน้าตัดเปลี่ยน: \(A_1v_1 = A_2v_2\) (เป็นรูปปริพันธ์ที่อินทิเกรตเหนือหน้าตัด)</p>
+      </div>
+      <div class="tf wide" id="K5" data-k="vorticity irrotational flow velocity potential Laplace circulation Gamma = closed line integral ความหมุนวน การไหลศักย์ การหมุนเวียน">
+        <p class="tf-n"><b><span class="fid">K5</span> Vorticity, circulation, potential flow</b> ความหมุนวน การหมุนเวียน การไหลศักย์</p>
+        \[ \boldsymbol\zeta = \nabla\times\mathbf v,\qquad \Gamma = \oint_C\mathbf v\cdot d\mathbf l = \iint_S\boldsymbol\zeta\cdot\mathbf n\,dS,\qquad \boldsymbol\zeta = \mathbf 0\ \Rightarrow\ \mathbf v = \nabla\phi,\ \nabla^2\phi = 0 \]
+        <p class="tf-x">ความหมุนวนคือสองเท่าของความเร็วเชิงมุมของอนุภาค · \(\Gamma\) = การหมุนเวียน (circulation) ตามทฤษฎีบทสโตกส์ · ปีกเครื่องบิน: แรงยก \(L' = \rho U\Gamma\) (Kutta–Joukowski)</p>
+      </div>
+      <div class="tf wide" id="K6" data-k="Bernoulli equation steady inviscid p + 1/2 rho v^2 + rho g z = constant pressure coefficient สมการเบอร์นูลลี">
+        <p class="tf-n"><b><span class="fid">K6</span> Bernoulli equation</b> สมการเบอร์นูลลี</p>
+        \[ p + \tfrac12\rho|\mathbf v|^2 + \rho gz = \text{ค่าคงที่ตามเส้นกระแส (หรือทั่วสนามถ้า irrotational)},\qquad C_p = \frac{p - p_\infty}{\tfrac12\rho U^2} = 1 - \frac{|\mathbf v|^2}{U^2} \]
+        <p class="tf-x">ใช้กับการไหลคงตัว ไม่หนืด ไม่บีบอัด · ความดันลดเมื่อความเร็วเพิ่ม (ท่อเวนทูรี ปีก) · สัมประสิทธิ์ความดัน \(C_p\) ใช้เทียบกับการทดลองอุโมงค์ลม</p>
+      </div>
+    </div>
+    <p>แล็บด้านล่างใช้สนามความเร็วอุดมคติรอบทรงกระบอก (ปรับให้รัศมี 1 และความเร็วไกล 1) เปิดสีพื้นตามขนาด \(|\mathbf v|\) แล้วดูว่าความเร็วสูงสุดที่ยอดและก้นทรงกระบอก ลองเปิดเส้นกระแสและอนุภาค</p>
+    <div class="mv-field" id="flow-lab" data-p="1-(x^2-y^2)/(x^2+y^2)^2" data-q="-2*x*y/(x^2+y^2)^2" data-bg="mag" data-lines data-rho="0.3" data-px="1.5" data-py="1.2" data-r="3"></div>
+    <div class="wx" id="ex-k4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-4 · การไหลรอบทรงกระบอก</span><h3>ลมความเร็ว \(U = 2\) m/s พัดผ่านเสาทรงกระบอกรัศมี \(a = 0.05\) m (ใช้แบบจำลองอุดมคติ \(\rho = 1.2\) kg/m³) หาความเร็วบนผิวที่ยอดเสา และความดันที่จุดหยุดนิ่งกับที่ยอด</h3><button type="button" class="wx-btn calc-go" data-mv-target="flow-lab" data-mv-set='{"p":"1-(x^2-y^2)/(x^2+y^2)^2","q":"-2*x*y/(x^2+y^2)^2","bg":"mag","px":0,"py":1,"lines":true}'>เปิดที่ยอดทรงกระบอก</button></div>
+      <ol class="steps">
+        <li><p>สนามความเร็ว (พิกัดไร้มิติ \(a = 1,\ U = 1\)): \(v_x = 1 - \dfrac{x^2 - y^2}{(x^2 + y^2)^2},\ v_y = -\dfrac{2xy}{(x^2 + y^2)^2}\) · ตรวจ \(\nabla\cdot\mathbf v = 0\) และ \(\nabla\times\mathbf v = 0\) ได้ทั้งคู่ (ลองเปิดสีพื้น div/curl ในแล็บ)</p></li>
+        <li><p>ที่ยอด \((0, a)\): \(v_x = U(1 + 1) = 2U = 4\) m/s และ \(v_y = 0\) → ความเร็วที่ผิวมากสุด = \(2U\) (เร็วเป็นสองเท่าของลมที่ไกล)</p></li>
+        <li><p>จุดหยุดนิ่งหน้าเสา \((-a, 0)\): \(\mathbf v = \mathbf 0\) · เบอร์นูลลี: \(p - p_\infty = \tfrac12\rho U^2 = \tfrac12(1.2)(4) = 2.4\) Pa</p></li>
+        <li><p>ที่ยอด: \(p - p_\infty = \tfrac12\rho(U^2 - (2U)^2) = -\tfrac32\rho U^2 = -1.5(1.2)(4) = -7.2\) Pa (\(C_p = -3\)) ความดันต่ำที่ข้างเสาทำให้เกิดแรงดูด</p></li>
+      </ol>
+      <p class="answer">\(v_{\text{top}} = 4\) m/s · \(p_{\text{stag}} - p_\infty = +2.4\) Pa · \(p_{\text{top}} - p_\infty = -7.2\) Pa (การไหลอุดมคติให้แรงต้านเป็นศูนย์ — ความต้านจริงมาจากความหนืดและการแยกตัวของชั้นขอบ)</p>
+    </div>
+    <div class="wx" id="ex-k5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-5 · พายุหมุน (Rankine vortex)</span><h3>แบบจำลองพายุหมุน: ภายในแกนรัศมี \(R = 50\) m หมุนเหมือนวัตถุแข็ง \(v = \omega r\) ภายนอก \(v = \Gamma/(2\pi r)\) ความเร็วสูงสุดที่ \(r = R\) คือ 60 m/s หาความหมุนวนภายในแกน การหมุนเวียน \(\Gamma\) และความเร็วที่ \(r = 100\) m</h3></div>
+      <ol class="steps">
+        <li><p>ภายใน: \(\omega = v_{\max}/R = 60/50 = 1.2\) rad/s · \(\nabla\times\mathbf v = 2\omega = 2.4\) s⁻¹ (คงที่ ตามสูตร D6 ในบทสนามเวกเตอร์)</p></li>
+        <li><p>ที่ขอบแกน: \(\Gamma = \oint\mathbf v\cdot d\mathbf l = v_{\max}\cdot2\pi R = 60\times2\pi\times50 = 18\,850\) m²/s (ตรงกับ \(\iint\zeta\,dA = 2.4\times\pi R^2 = 18\,850\) ตามทฤษฎีบทสโตกส์/กรีน ✓)</p></li>
+        <li><p>ภายนอก: \(\Gamma\) คงที่ (curl เป็นศูนย์นอกแกนแต่ยังมีการหมุนเวียน เพราะวงนั้นล้อมรูของแกน) → \(v(100) = \dfrac{\Gamma}{2\pi r} = \dfrac{18\,850}{2\pi(100)} = 30\) m/s (ลดลงครึ่งหนึ่งเมื่อรัศมีเป็นสองเท่า)</p></li>
+        <li><p>ความดัน: ภายนอกเป็นการไหลศักย์ใช้ Bernoulli ได้ เมื่อเทียบกับไกล: \(p_\infty - p(100) = \tfrac12\rho(30)^2 = 540\) Pa ที่ \(\rho = 1.2\) ความดันต่ำที่ตาพายุที่เกิดจากการหมุน</p></li>
+      </ol>
+      <p class="answer">\(\zeta = 2.4\) s⁻¹ ในแกน · \(\Gamma = 1.885\times10^4\) m²/s · \(v(100\text{ m}) = 30\) m/s</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inertia">
+    <h2 id="inertia">จุดศูนย์กลางมวล โมเมนต์ความเฉื่อย และพลังงานของล้อช่วยแรง <span class="lv lv-i">กลาง</span></h2>
+    <p>อินทิกรัลสองชั้นและสามชั้นของบทก่อน (<a href="/learn/multivariable-calculus/multiple-integrals/#mass">M12, M13</a>) เป็นเครื่องมือประจำของวิศวกรเครื่องกลสำหรับชิ้นส่วนหมุน สมการการหมุน \(\tau = I\alpha\) และพลังงานจลน์ \(\tfrac12I\omega^2\) ต้องการ \(I\) ที่คำนวณจาก \(\iiint r_\perp^2\rho\,dV\) ทฤษฎีบทแกนขนาน \(I = I_c + md^2\) ใช้ย้ายแกนจากจุดศูนย์กลางมวลไปแกนอื่น</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K7" data-k="moment of inertia rectangle plate solid disk cylinder sphere parallel axis theorem flywheel rotational kinetic energy โมเมนต์ความเฉื่อย ล้อช่วยแรง พลังงานจลน์หมุน">
+        <p class="tf-n"><b><span class="fid">K7</span> Moments of inertia (standard shapes)</b> โมเมนต์ความเฉื่อยของรูปทรงมาตรฐาน</p>
+        \[ I_{\text{แผ่นสี่เหลี่ยม}} = \frac{m(a^2 + b^2)}{12},\quad I_{\text{จานตัน}} = \tfrac12mR^2,\quad I_{\text{ทรงกลมตัน}} = \tfrac25mR^2,\quad I = I_c + md^2,\quad E_k = \tfrac12I\omega^2 \]
+        <p class="tf-x">ที่มา: ตัวอย่าง M-12, M-13 ในบทอินทิกรัลหลายชั้น และ K-6 ข้างล่าง · แกนผ่านจุดศูนย์กลางมวลตั้งฉากกับแผ่น · วงแหวนบางรัศมี \(R\): \(mR^2\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-k6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-6 · แผ่นเหล็กและล้อช่วยแรง</span><h3>(ก) แผ่นเหล็กกล้า \(0.40\times0.30\) m หนา 10 mm (\(\rho = 7850\) kg/m³) หา \(I\) รอบแกนตั้งฉากแผ่นที่ผ่านกึ่งกลาง (ข) ล้อช่วยแรงจานเหล็กรัศมี 0.25 m หนา 50 mm หมุน 3000 rpm หา \(I\) และพลังงานที่สะสม</h3><button type="button" class="wx-btn calc-go" data-mv-target="mass-lab-me" data-mv-set='{"type":"rect","f":"1","a":"-0.2","b":"0.2","c":"-0.15","d":"0.15","n":8,"mass":true}'>ตรวจ (ก) ด้วยแล็บ ρ = 1</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(I_z = \rho_s\iint(x^2 + y^2)\,dA\) เมื่อ \(\rho_s\) = มวลต่อพื้นที่ · \(= \rho_s\left(\dfrac{a^3b}{12} + \dfrac{ab^3}{12}\right) = \dfrac{m(a^2 + b^2)}{12}\)</p></li>
+        <li><p>\(m = 7850\times0.40\times0.30\times0.010 = 9.42\) kg · \(I_z = \dfrac{9.42(0.40^2 + 0.30^2)}{12} = \dfrac{9.42\times0.25}{12} = 0.1963\) kg·m²</p></li>
+        <li><p>(ข) \(m = \rho\pi R^2h = 7850\pi(0.25)^2(0.05) = 77.07\) kg · \(I = \tfrac12mR^2 = \tfrac12(77.07)(0.0625) = 2.408\) kg·m²</p></li>
+        <li><p>\(\omega = 3000\times2\pi/60 = 314.16\) rad/s · \(E_k = \tfrac12I\omega^2 = \tfrac12(2.408)(314.16)^2 = 1.188\times10^{5}\) J ≈ 119 kJ (เทียบเท่าพลังงานของรถ 1000 kg ที่วิ่งราว 54 km/h)</p></li>
+      </ol>
+      <p class="answer">(ก) \(I_z = 0.196\) kg·m² · (ข) \(I = 2.41\) kg·m², \(E_k = 119\) kJ</p>
+    </div>
+    <div class="mv-int" id="mass-lab-me" data-type="rect" data-f="1" data-a="-0.2" data-b="0.2" data-c="-0.15" data-d="0.15" data-n="8" data-mass></div>
+    <p>ในแล็บ ตั้ง \(f = 1\) (ความหนาแน่นผิว 1 kg/m²) ของสี่เหลี่ยม \(0.4\times0.3\) m จะได้มวล \(M = 0.12\) และ \(J = I_x + I_y = 0.12\times0.25/12 = 0.0025\) เป็นตัวเลขเดียวกับ \(m(a^2+b^2)/12\) ของสูตรเมื่อมวลเท่ากับ 0.12 หน่วย (ลองเทียบ)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="thermo">
+    <h2 id="thermo">อนุพันธ์ย่อยในเทอร์โมไดนามิกส์และการขยายตัวทางความร้อน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สมบัติของสารแสดงด้วยอนุพันธ์ย่อยของสมการสถานะ เช่นสัมประสิทธิ์การขยายตัวเชิงปริมาตร \(\beta = \tfrac1V\left(\tfrac{\partial V}{\partial T}\right)_P\) และสัมประสิทธิ์การบีบอัด \(\kappa_T = -\tfrac1V\left(\tfrac{\partial V}{\partial P}\right)_T\) ซึ่งหาได้ด้วยวิธีเดียวกับบท<a href="/learn/multivariable-calculus/partial-derivatives/">อนุพันธ์ย่อย</a> และการขยายตัวของชิ้นส่วนด้วยอุณหภูมิใช้ผลต่างรวม</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K8" data-k="thermal expansion linear coefficient alpha area expansion 2 alpha delta T total differential volume expansion ideal gas beta kappa การขยายตัวทางความร้อน">
+        <p class="tf-n"><b><span class="fid">K8</span> Thermal expansion (total differential)</b> การขยายตัวทางความร้อน (ผลต่างรวม)</p>
+        \[ \Delta L = \alpha L\,\Delta T,\qquad A = LW \Rightarrow \frac{\Delta A}{A} \approx 2\alpha\Delta T,\qquad \frac{\Delta V}{V} \approx 3\alpha\Delta T;\qquad \text{แก๊สอุดมคติ: } \beta = \frac1T,\ \ \kappa_T = \frac1P \]
+        <p class="tf-x">\(dA = W\,dL + L\,dW\) → ความคลาดเคลื่อนสัมพัทธ์รวมกัน (บท P12) · เหล็กกล้า \(\alpha \approx 12\times10^{-6}\) K⁻¹ · อะลูมิเนียม \(23\times10^{-6}\) · คอนกรีต \(10\times10^{-6}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-k7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-7 · รางเหล็กและแผ่นเหล็ก</span><h3>(ก) รางเหล็กยาว 10 m เมื่อร้อนขึ้น 80 K ยาวขึ้นเท่าไร (ข) แผ่นเหล็ก 1 × 1 m ขยายพื้นที่กี่ % (ค) \(\beta\) และ \(\kappa_T\) ของอากาศ 300 K, 1 atm</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\Delta L = \alpha L\Delta T = 12\times10^{-6}\times10\times80 = 9.6\times10^{-3}\) m = 9.6 mm (จึงต้องเว้นรอยต่อขยายตัว)</p></li>
+        <li><p>(ข) \(dA = W\,dL + L\,dW = 2L\cdot\alpha L\,dT\) → \(\Delta A/A = 2\alpha\Delta T = 2(12\times10^{-6})(80) = 1.92\times10^{-3}\) = 0.192% (= \(1920\) mm² บนแผ่น 1 m²)</p></li>
+        <li><p>(ค) จาก \(PV = nRT\): \(\left(\dfrac{\partial V}{\partial T}\right)_P = \dfrac{nR}{P} = \dfrac VT\) → \(\beta = \dfrac1T = 3.33\times10^{-3}\) K⁻¹ · \(\left(\dfrac{\partial V}{\partial P}\right)_T = -\dfrac{V}{P}\) → \(\kappa_T = \dfrac1P = 9.87\times10^{-6}\) Pa⁻¹</p></li>
+      </ol>
+      <p class="answer">(ก) 9.6 mm · (ข) 0.192% · (ค) \(\beta = 3.33\times10^{-3}\) K⁻¹, \(\kappa_T = 9.87\times10^{-6}\) Pa⁻¹</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="robot">
+    <h2 id="robot">จาโคเบียนของแขนกล: ความเร็วและแรงบิดข้อต่อ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ตำแหน่งปลายแขนกลเป็นฟังก์ชันหลายตัวแปรของมุมข้อต่อ \(\mathbf x = \mathbf f(\boldsymbol\theta)\) ดังนั้นความเร็วปลายแขนตามกฎลูกโซ่ \(\dot{\mathbf x} = \mathbf J\dot{\boldsymbol\theta}\) เมื่อ \(\mathbf J = \partial\mathbf f/\partial\boldsymbol\theta\) คือเมทริกซ์จาโคเบียน (<a href="/learn/multivariable-calculus/partial-derivatives/#jacobian-matrix">P19</a>) และจากหลักงานเสมือน แรงที่ปลายแขน \(\mathbf F\) ต้องการแรงบิดข้อต่อ \(\boldsymbol\tau = \mathbf J^{\top}\mathbf F\) รายละเอียดจลนศาสตร์ไปข้างหน้า-ย้อนกลับอยู่ในบท<a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="K9" data-k="robot arm Jacobian two link planar forward kinematics velocity joint torque tau = J^T F singularity det J = L1 L2 sin theta2 จาโคเบียน แขนกล จุดเอกฐาน">
+        <p class="tf-n"><b><span class="fid">K9</span> Two-link planar arm</b> แขนกลสองข้อต่อบนระนาบ</p>
+        \[ x = L_1c_1 + L_2c_{12},\ \ y = L_1s_1 + L_2s_{12};\quad \mathbf J = \begin{pmatrix} -L_1s_1 - L_2s_{12} & -L_2s_{12}\\ L_1c_1 + L_2c_{12} & L_2c_{12}\end{pmatrix},\quad \det\mathbf J = L_1L_2\sin\theta_2 \]
+        <p class="tf-x">\(c_1 = \cos\theta_1,\ s_{12} = \sin(\theta_1 + \theta_2)\) · \(\dot{\mathbf x} = \mathbf J\dot{\boldsymbol\theta}\) · \(\boldsymbol\tau = \mathbf J^{\top}\mathbf F\) · \(\det\mathbf J = 0\) ที่ \(\theta_2 = 0,\pi\) (แขนเหยียดหรือพับสนิท): <b>จุดเอกฐาน (singularity)</b> ปลายแขนเคลื่อนไปตามแนวแขนไม่ได้ · ระวังหน่วย rad</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-k8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง K-8 · จาโคเบียนแขนกล 2 ข้อต่อ</span><h3>แขนกล \(L_1 = 0.5\) m, \(L_2 = 0.4\) m ที่ \(\theta_1 = 30^\circ,\ \theta_2 = 60^\circ\) ข้อต่อหมุน \(\dot\theta_1 = 1\), \(\dot\theta_2 = 0.5\) rad/s และปลายแขนรับแรง \(\mathbf F = (0, -10)\) N หาตำแหน่ง ความเร็วปลาย \(\det\mathbf J\) และแรงบิดข้อต่อ</h3><button type="button" class="wx-btn calc-go" data-mv-target="jac-lab" data-mv-set='{"x":"0.5*cos(u)+0.4*cos(u+v)","y":"0.5*sin(u)+0.4*sin(u+v)","u0":0.5236,"v0":1.0472,"h":0.15}'>ดูแผนที่ (θ₁,θ₂) → (x,y) ในแล็บ Jacobian</button></div>
+      <ol class="steps">
+        <li><p>ตำแหน่ง: \(x = 0.5\cos30^\circ + 0.4\cos90^\circ = 0.4330\) · \(y = 0.5\sin30^\circ + 0.4\sin90^\circ = 0.25 + 0.4 = 0.650\) m</p></li>
+        <li><p>\(\mathbf J = \begin{pmatrix}-0.5(0.5) - 0.4(1) & -0.4(1)\\ 0.5(0.866) + 0.4(0) & 0.4(0)\end{pmatrix} = \begin{pmatrix}-0.650 & -0.400\\ 0.433 & 0\end{pmatrix}\)</p></li>
+        <li><p>\(\det\mathbf J = (-0.650)(0) - (-0.400)(0.433) = 0.1732\) = \(L_1L_2\sin60^\circ = 0.2\times0.866\) ✓ (ไม่เป็นศูนย์ → ไม่อยู่ที่จุดเอกฐาน)</p></li>
+        <li><p>ความเร็วปลาย: \(\dot{\mathbf x} = \mathbf J\begin{pmatrix}1\\0.5\end{pmatrix} = \begin{pmatrix}-0.650 - 0.200\\ 0.433\end{pmatrix} = (-0.850,\ 0.433)\) m/s · อัตราเร็ว \(0.954\) m/s</p></li>
+        <li><p>แรงบิด: \(\boldsymbol\tau = \mathbf J^{\top}\mathbf F = \begin{pmatrix}-0.650 & 0.433\\ -0.400 & 0\end{pmatrix}\begin{pmatrix}0\\-10\end{pmatrix} = (-4.33,\ 0)\) N·m · ตรวจด้วยกลศาสตร์: ข้อต่อที่ 2 ที่ \(\theta_1 + \theta_2 = 90^\circ\) ทำให้แขนท่อนที่ 2 ตั้งฉากพอดี แรงลงแนวดิ่งขนานแขน จึงไม่มีโมเมนต์ที่ข้อศอก (\(\tau_2 = 0\)) ส่วนที่ไหล่ \(\tau_1 = 10\times0.433 = 4.33\) N·m (แขนยื่นไปทางขวา 0.433 m) ✓</p></li>
+      </ol>
+      <p class="answer">ปลายแขน \((0.433, 0.650)\) m · \(\dot{\mathbf x} = (-0.850, 0.433)\) m/s · \(\det\mathbf J = 0.1732\) · \(\boldsymbol\tau = (-4.33, 0)\) N·m</p>
+    </div>
+    <div class="mv-jac" id="jac-lab" data-x="0.5*cos(u)+0.4*cos(u+v)" data-y="0.5*sin(u)+0.4*sin(u+v)" data-preset="polar" data-u0="0.5236" data-v0="1.0472" data-h="0.15"></div>
+    <p>แล็บจาโคเบียนด้านบนถูกตั้งเป็นแผนที่ \((u, v) = (\theta_1, \theta_2) \mapsto (x, y)\) ของแขนกลนี้ (ใช้ \(u\) แทน \(\theta_1\) และ \(v\) แทน \(\theta_2\)) ค่า \(\det J\) ในแล็บเท่ากับ \(L_1L_2\sin v\) เมื่อลาก \(v\) เข้าใกล้ 0 พื้นที่ของภาพของช่องเล็กจะหายไปทั้งหมด — นั่นคือแขนที่ “แบน” เข้าหาจุดเอกฐาน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">สรุปเครื่องมือแคลคูลัสกับโจทย์เครื่องกล <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ปัญหาเครื่องกล</th><th>เครื่องมือ</th><th>ผลลัพธ์</th></tr></thead>
+      <tbody>
+        <tr><td>การนำความร้อนในผนัง ท่อ ครีบ</td><td>\(\nabla T\), \(\nabla^2T = 0\), ฟลักซ์ผ่านผิว</td><td>\(\mathbf q = -k\nabla T\), \(\dot Q'\) ท่อ (K1–K3)</td></tr>
+        <tr><td>การไหลรอบวัตถุ</td><td>div, curl, potential, Bernoulli</td><td>\(\mathbf v\), \(p\), \(C_p\) (K4–K6)</td></tr>
+        <tr><td>กระแสน้ำวนและแรงยก</td><td>การหมุนเวียน \(\Gamma = \oint\mathbf v\cdot d\mathbf l\)</td><td>ความหมุนวน แรงยก \(\rho U\Gamma\) (K5)</td></tr>
+        <tr><td>ชิ้นส่วนหมุน ล้อช่วยแรง</td><td>อินทิกรัลสามชั้น \(\iiint r^2\rho\,dV\)</td><td>\(I\), \(E_k = \tfrac12I\omega^2\) (K7)</td></tr>
+        <tr><td>ขยายตัวทางความร้อน ความเค้นความร้อน</td><td>ผลต่างรวม</td><td>\(\Delta L\), \(\Delta A/A\) (K8)</td></tr>
+        <tr><td>หุ่นยนต์ แขนกล</td><td>เมทริกซ์จาโคเบียน</td><td>\(\mathbf v = \mathbf J\dot{\boldsymbol\theta}\), \(\boldsymbol\tau = \mathbf J^{\top}\mathbf F\), จุดเอกฐาน (K9)</td></tr>
+        <tr><td>ปรับพารามิเตอร์ตัวควบคุม / หาเส้นโค้งสอบเทียบ</td><td>gradient descent, กำลังสองน้อยสุด</td><td>บท<a href="/learn/multivariable-calculus/optimization/">ค่าสุดขีด</a> · <a href="/learn/control-systems/">ระบบควบคุม</a></td></tr>
+        <tr><td>ความเค้นและความเครียดในวัสดุ</td><td>ดีเวอร์เจนซ์ของเทนเซอร์ \(\nabla\cdot\boldsymbol\sigma + \mathbf f = \mathbf 0\)</td><td>สมดุลภายใน (วิชากลศาสตร์วัสดุ)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ลืมเครื่องหมายลบใน \(\mathbf q = -k\nabla T\)</b> · ความร้อนไหลสวนทาง gradient (ลงจากร้อนไปเย็น)</li>
+      <li><b>ใช้ \(\nabla^2T = 0\) กับกรณีไม่คงตัวหรือมีแหล่งกำเนิด</b> · ตรวจเงื่อนไขก่อนเสมอ</li>
+      <li><b>ใช้ Bernoulli ข้ามเส้นกระแสโดยการไหลมีความหมุนวน</b> · ค่าคงที่เปลี่ยนตามเส้นกระแส เว้นแต่การไหลเป็น irrotational ทั้งสนาม</li>
+      <li><b>ใช้รอบต่อนาที (rpm) แทน rad/s ใน \(\tfrac12I\omega^2\)</b> · ต้องแปลง \(\omega = 2\pi n/60\)</li>
+      <li><b>ใช้องศากับจาโคเบียน</b> · \(\partial/\partial\theta\) ต้องเป็น rad จึงเป็นความเร็ว (องศาจะผิดไป \(\pi/180\) เท่า)</li>
+      <li><b>ลืมจุดเอกฐาน</b> · เมื่อ \(\det\mathbf J \approx 0\) \(\mathbf J^{-1}\) ใหญ่มาก ความเร็วข้อต่อที่ต้องใช้พุ่งสูง</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/civil-engineering/">วิศวกรรมโยธา</a> ที่ใช้อินทิกรัลสองชั้นกับปริมาตรดิน คุณสมบัติหน้าตัด และสมการลาปลาซกับการซึมของน้ำ</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

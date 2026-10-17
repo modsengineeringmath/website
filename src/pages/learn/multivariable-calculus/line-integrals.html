@@ -1,0 +1,259 @@
+<!--meta
+{
+  "title": "อินทิกรัลตามเส้น (Line Integrals) งานของแรง และทฤษฎีบทกรีน (Green's Theorem) ตัวอย่างและสูตร | อาจารย์มด",
+  "h1": "อินทิกรัลตามเส้น (Line Integrals) งานของแรง และทฤษฎีบทกรีน (Green's Theorem)",
+  "description": "อินทิกรัลตามเส้น (line integral) ของสนามสเกลาร์ ∫f ds และสนามเวกเตอร์ ∫F·dr คืองานของแรง ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น ความไม่ขึ้นกับเส้นทาง (path independence) ทฤษฎีบทกรีน (Green's theorem) ทั้งรูปการหมุนและฟลักซ์ การหาพื้นที่ด้วยอินทิกรัลเส้น สูตร shoelace พร้อมตัวอย่างไฟฟ้า เครื่องกล โยธา และแล็บเปรียบเทียบเส้นทาง",
+  "ogTitle": "อินทิกรัลตามเส้น (Line Integrals) งานของแรง และทฤษฎีบทกรีน (Green's Theorem)",
+  "lesson": "multivariable-calculus",
+  "sub": "line-integrals",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["อินทิกรัลตามเส้น", "line integral", "งานของแรง", "work done by a force", "ทฤษฎีบทกรีน", "Green's theorem", "path independence", "fundamental theorem of line integrals", "circulation", "flux", "shoelace formula", "พื้นที่ด้วยอินทิกรัลเส้น", "conservative field", "∮F·dr"],
+  "about": ["Line integral of a scalar function", "Line integral of a vector field", "Work", "Fundamental theorem for line integrals", "Path independence", "Green's theorem", "Circulation and flux forms", "Area by line integral", "Shoelace formula", "Planimeter"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-vec.js"],
+  "og": {"title": "อินทิกรัลตามเส้น · Green", "sub": "∫f ds ∫F·dr งานของแรง ความไม่ขึ้นกับเส้นทาง และทฤษฎีบทกรีน พร้อมแล็บเปรียบเทียบเส้นทาง", "eyebrow": "บทที่ 24.8 · Line Integrals & Green's Theorem", "sym": "∮"},
+  "faq": [
+    {"q": "อินทิกรัลตามเส้น (line integral) คืออะไร มีกี่แบบ?", "a": "มีสองแบบหลัก แบบสเกลาร์ \\(\\int_C f\\,ds\\) รวมค่า \\(f\\) ตามความยาวเส้น เช่นหามวลของลวดที่ความหนาแน่นไม่สม่ำเสมอ ส่วนแบบเวกเตอร์ \\(\\int_C \\mathbf F\\cdot d\\mathbf r\\) รวมองค์ประกอบของสนามตามแนวสัมผัสเส้นทาง คือ “งาน” ที่สนามทำกับวัตถุที่เคลื่อนไปตามเส้น C ทั้งสองคำนวณโดยกำหนดพารามิเตอร์ \\(\\mathbf r(t)\\): \\(\\int f(\\mathbf r(t))|\\mathbf r'(t)|\\,dt\\) และ \\(\\int \\mathbf F(\\mathbf r(t))\\cdot\\mathbf r'(t)\\,dt\\)"},
+    {"q": "งานของแรง (work) หาจากอินทิกรัลตามเส้นอย่างไร?", "a": "งานเมื่อวัตถุเคลื่อนไปตามเส้นทาง C ในสนามแรง \\(\\mathbf F\\) คือ \\(W = \\int_C \\mathbf F\\cdot d\\mathbf r = \\int_a^b \\mathbf F(\\mathbf r(t))\\cdot\\mathbf r'(t)\\,dt\\) ตัวอย่าง \\(\\mathbf F = \\langle x^2, xy\\rangle\\) ตามพาราโบลา \\(y = x^2\\) จาก (0,0) ถึง (1,1) ได้ \\(11/15\\) แต่ตามเส้นตรง \\(y = x\\) ได้ \\(2/3\\) งานขึ้นกับเส้นทางเพราะสนามไม่อนุรักษ์ ถ้าสนามอนุรักษ์ งานเท่ากับผลต่างของฟังก์ชันศักย์ที่ปลายทั้งสอง"},
+    {"q": "ทฤษฎีบทกรีน (Green's theorem) บอกอะไร ใช้เมื่อไร?", "a": "เชื่อมอินทิกรัลตามเส้นปิดกับอินทิกรัลสองชั้นของบริเวณที่ล้อมอยู่: \\(\\oint_C P\\,dx + Q\\,dy = \\iint_R\\left(\\dfrac{\\partial Q}{\\partial x} - \\dfrac{\\partial P}{\\partial y}\\right)dA\\) เมื่อ C ปิด เรียบเป็นช่วง ๆ และวนทวนเข็มนาฬิกา ใช้เมื่ออินทิกรัลหนึ่งง่ายกว่าอีกอัน เช่นคำนวณการหมุนวนรอบวงโดยอินทิกรัลของ curl ทั้งบริเวณ หรือหาพื้นที่โดยเลือก \\(P, Q\\) ให้ \\(Q_x - P_y = 1\\) เช่น \\(A = \\tfrac12\\oint x\\,dy - y\\,dx\\) ซึ่งเป็นที่มาของสูตรพื้นที่รูปหลายเหลี่ยมจากพิกัดจุด (shoelace)"},
+    {"q": "เมื่อไรอินทิกรัลตามเส้นไม่ขึ้นกับเส้นทาง (path independent)?", "a": "เมื่อสนามเป็นสนามอนุรักษ์ \\(\\mathbf F = \\nabla f\\) บนบริเวณเชื่อมต่อ ซึ่งสมมูลกับ (ก) งานรอบวงปิดทุกวงเป็นศูนย์ (ข) \\(\\partial P/\\partial y = \\partial Q/\\partial x\\) บนบริเวณที่ไม่มีรู (2 มิติ) หรือ \\(\\nabla\\times\\mathbf F = \\mathbf 0\\) (3 มิติ) ผลคือทฤษฎีบทมูลฐาน \\(\\int_C\\nabla f\\cdot d\\mathbf r = f(B) - f(A)\\) ไม่ต้องหาเส้นทาง เพียงหาค่าศักย์ที่ปลายทั้งสอง เช่นแรงดันไฟฟ้าระหว่างสองจุดในสนามไฟฟ้าสถิตไม่ขึ้นกับสายที่ใช้วัด"},
+    {"q": "สูตร shoelace คำนวณพื้นที่จากพิกัดคืออะไร?", "a": "พื้นที่ของรูปหลายเหลี่ยมที่มีจุดยอด \\((x_1,y_1),\\dots,(x_n,y_n)\\) เรียงต่อเนื่องทวนเข็ม คือ \\(A = \\tfrac12\\left|\\sum_{i=1}^n (x_iy_{i+1} - x_{i+1}y_i)\\right|\\) โดย \\((x_{n+1}, y_{n+1}) = (x_1, y_1)\\) มาจากทฤษฎีบทกรีน \\(A = \\tfrac12\\oint x\\,dy - y\\,dx\\) คำนวณทีละด้านเป็นเส้นตรง ใช้ในงานสำรวจที่ดินหาพื้นที่แปลงจากพิกัด GPS ตัวอย่างแปลง (0,0),(40,0),(55,30),(20,45),(−5,25) ได้ 1,900 ตร.ม."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>อินทิกรัลตามเส้น</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.8 · แคลคูลัสเวกเตอร์ · Line Integrals &amp; Green's Theorem</p>
+      <h1>อินทิกรัลตามเส้น (Line Integrals) งานของแรง และทฤษฎีบทกรีน (Green's Theorem)</h1>
+      <p class="lede">งานที่แรงทำกับวัตถุที่เคลื่อนไปตามเส้นทางโค้ง มวลของลวดที่ความหนาแน่นไม่คงที่ แรงเคลื่อนไฟฟ้าเหนี่ยวนำรอบขดลวด และพื้นที่แปลงที่ดินจากพิกัดจุดยอด ทั้งหมดคืออินทิกรัลตามเส้น (line integral) หน้านี้สอนทั้งสองแบบ คือแบบสเกลาร์ที่รวมตามความยาว และแบบเวกเตอร์ที่รวมองค์ประกอบสัมผัส (งาน) แล้วเชื่อมกับสนามอนุรักษ์ด้วยทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น ปิดท้ายด้วยทฤษฎีบทกรีน (Green's theorem) ที่แปลงอินทิกรัลรอบวงปิดเป็นอินทิกรัลสองชั้นของ curl และ div พร้อมแล็บเปรียบเทียบงานตามสองเส้นทางและแล็บวัดการหมุนวนบนวงกลม</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#work-lab-h">แล็บเปรียบเทียบเส้นทาง</a>
+        <a class="btn btn-ghost btn-sm" href="#scalar">∫ f ds</a>
+        <a class="btn btn-ghost btn-sm" href="#vector">∫ F·dr งาน</a>
+        <a class="btn btn-ghost btn-sm" href="#ftli">มูลฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#green">ทฤษฎีบทกรีน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><b>สเกลาร์:</b> \(\int_C f\,ds = \int f(\mathbf r(t))\,|\mathbf r'(t)|\,dt\) · <b>เวกเตอร์ (งาน):</b> \(\int_C \mathbf F\cdot d\mathbf r = \int \mathbf F(\mathbf r(t))\cdot\mathbf r'(t)\,dt\)</li>
+          <li><b>อนุรักษ์:</b> \(\int_C\nabla f\cdot d\mathbf r = f(B) - f(A)\) ไม่ขึ้นกับเส้นทาง · \(\oint\mathbf F\cdot d\mathbf r = 0\)</li>
+          <li><b>กรีน (ทวนเข็ม):</b> \(\oint_C P\,dx + Q\,dy = \iint_R (Q_x - P_y)\,dA\) · รูปฟลักซ์ \(\oint\mathbf F\cdot\mathbf n\,ds = \iint_R\nabla\cdot\mathbf F\,dA\)</li>
+          <li><b>พื้นที่:</b> \(A = \tfrac12\oint x\,dy - y\,dx\) → สูตร shoelace \(A = \tfrac12\left|\sum(x_iy_{i+1} - x_{i+1}y_i)\right|\)</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น work, line integral, green, circulation, path independence, shoelace" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="scalar">
+    <h2 id="scalar">อินทิกรัลตามเส้นของฟังก์ชันสเกลาร์ ∫ f ds <span class="lv lv-i">กลาง</span></h2>
+    <p>ลวดโค้ง \(C\) มีความหนาแน่นเชิงเส้น (มวลต่อความยาว) \(\rho(x, y, z)\) แบ่งลวดเป็นชิ้นสั้น \(ds\) มวลแต่ละชิ้น \(\rho\,ds\) รวมกันได้ \(M = \int_C\rho\,ds\) นั่นคืออินทิกรัลตามเส้นของฟังก์ชันสเกลาร์ ซึ่งรวมตามความยาวส่วนโค้ง และไม่ขึ้นกับทิศที่เดิน เมื่อ \(f = 1\) ได้ความยาวเส้นโค้ง (บท<a href="/learn/multivariable-calculus/vector-functions/#arc">ฟังก์ชันเวกเตอร์</a>)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="scalar line integral f ds arc length mass of wire parametrization อินทิกรัลตามเส้นสเกลาร์ มวลลวด">
+        <p class="tf-n"><b><span class="fid">L1</span> Line integral of a scalar function</b> อินทิกรัลตามเส้นของฟังก์ชันสเกลาร์</p>
+        \[ \int_C f\,ds = \int_a^b f\big(\mathbf r(t)\big)\,|\mathbf r'(t)|\,dt,\qquad M = \int_C\rho\,ds,\qquad \bar x = \frac1M\int_C x\rho\,ds \]
+        <p class="tf-x">\(ds = |\mathbf r'(t)|\,dt\) · ผลไม่ขึ้นกับทิศการเดินและไม่ขึ้นกับพารามิเตอร์ (ต่างจากแบบเวกเตอร์ซึ่งเปลี่ยนเครื่องหมายเมื่อกลับทิศ) · ในระนาบ \(y = g(x)\): \(ds = \sqrt{1 + g'^2}\,dx\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · มวลของลวดเกลียว (เครื่องกล)</span><h3>ลวดเกลียว \(\mathbf r(t) = \langle\cos t,\ \sin t,\ t\rangle\) \(0 \le t \le 2\pi\) (หน่วย cm) มีความหนาแน่นเชิงเส้น \(\rho = x^2 + y^2 + z^2\) g/cm จงหามวล</h3></div>
+      <ol class="steps">
+        <li><p>บนเส้นโค้ง \(x^2 + y^2 + z^2 = \cos^2t + \sin^2t + t^2 = 1 + t^2\) · \(|\mathbf r'| = \sqrt2\)</p></li>
+        <li><p>\(M = \displaystyle\int_0^{2\pi}(1 + t^2)\sqrt2\,dt = \sqrt2\left[t + \dfrac{t^3}{3}\right]_0^{2\pi} = \sqrt2\left(2\pi + \dfrac{8\pi^3}{3}\right)\)</p></li>
+        <li><p>ตัวเลข: \(2\pi = 6.283,\ \dfrac{8\pi^3}{3} = 82.68\) → \(M = 1.4142\times88.96 = 125.8\) g</p></li>
+      </ol>
+      <p class="answer">\(M = \sqrt2\left(2\pi + \tfrac{8\pi^3}{3}\right) \approx 125.8\) g</p>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2 · ความยาวลวดโซลินอยด์ (ไฟฟ้า)</span><h3>ขดลวดทองแดงเส้นผ่านศูนย์กลาง 0.5 mm พัน 200 รอบรอบแกนรัศมี 2 cm ระยะพิตช์ 0.5 mm ต่อรอบ หาความยาวลวดและความต้านทาน (\(\rho_{Cu} = 1.72\times10^{-8}\) Ω·m)</h3></div>
+      <ol class="steps">
+        <li><p>หนึ่งรอบ: \(\mathbf r(t) = \langle R\cos t, R\sin t, ct\rangle\) โดย \(c = p/2\pi\) · \(|\mathbf r'| = \sqrt{R^2 + c^2}\) ความยาวต่อรอบ \(= \sqrt{(2\pi R)^2 + p^2}\)</p></li>
+        <li><p>\(2\pi R = 0.12566\) m · \(p = 0.0005\) m → \(\sqrt{0.12566^2 + 0.0005^2} = 0.125664\) m (พิตช์แทบไม่มีผล)</p></li>
+        <li><p>ความยาวรวม \(= 200\times0.125664 = 25.13\) m</p></li>
+        <li><p>พื้นที่หน้าตัด \(A = \pi(0.25\times10^{-3})^2 = 1.9635\times10^{-7}\) m² · \(R_{wire} = \dfrac{\rho L}{A} = \dfrac{1.72\times10^{-8}\times25.13}{1.9635\times10^{-7}} = 2.20\) Ω</p></li>
+      </ol>
+      <p class="answer">\(L = 25.13\) m · \(R_{wire} \approx 2.20\) Ω</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="vector">
+    <h2 id="vector">อินทิกรัลตามเส้นของสนามเวกเตอร์ ∫ F·dr (งาน) <span class="lv lv-i">กลาง</span></h2>
+    <p>วัตถุเคลื่อนไปตามเส้นทาง \(C\) ในสนามแรง \(\mathbf F\) งานในช่วงเล็ก \(d\mathbf r\) คือ \(\mathbf F\cdot d\mathbf r\) (เฉพาะองค์ประกอบของแรงตามแนวเคลื่อนที่ทำงาน) รวมตลอดเส้นทางได้ \(W = \int_C\mathbf F\cdot d\mathbf r\) ต่างจากแบบสเกลาร์ตรงที่ <b>ทิศการเดินมีผล</b>: กลับทิศแล้วงานเปลี่ยนเครื่องหมาย \(\int_{-C}\mathbf F\cdot d\mathbf r = -\int_C\mathbf F\cdot d\mathbf r\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L2" data-k="line integral of vector field work F dot dr parametrization P dx + Q dy งาน อินทิกรัลตามเส้นเวกเตอร์">
+        <p class="tf-n"><b><span class="fid">L2</span> Line integral of a vector field (work)</b> อินทิกรัลตามเส้นของสนามเวกเตอร์ (งาน)</p>
+        \[ W = \int_C\mathbf F\cdot d\mathbf r = \int_a^b\mathbf F\big(\mathbf r(t)\big)\cdot\mathbf r'(t)\,dt = \int_C P\,dx + Q\,dy + R\,dz \]
+        <p class="tf-x">ขั้นตอน: (1) กำหนดพารามิเตอร์เส้นทาง \(x(t), y(t), z(t)\) (2) หา \(\mathbf r'(t)\) (3) แทน \(\mathbf F\) ด้วยพิกัดของ \(\mathbf r(t)\) (4) ดอต แล้วอินทิเกรต \(t\) จาก \(a\) ถึง \(b\) · กลับทิศ = เครื่องหมายสลับ · วงปิด เขียน \(\oint\)</p>
+      </div>
+      <div class="tf" id="L3" data-k="work-energy kinetic energy theorem W = delta KE งาน พลังงานจลน์">
+        <p class="tf-n"><b><span class="fid">L3</span> Work–energy theorem</b> ทฤษฎีบทงาน–พลังงาน</p>
+        \[ \int_C\mathbf F\cdot d\mathbf r = \tfrac12 m\,|\mathbf v_B|^2 - \tfrac12 m\,|\mathbf v_A|^2 \]
+        <p class="tf-x">จากกฎของนิวตัน \(\mathbf F = m\mathbf r''\) แล้วอินทิเกรต \(m\mathbf r''\cdot\mathbf r'\) · งานรวมคือการเปลี่ยนพลังงานจลน์</p>
+      </div>
+    </div>
+    <h3 id="work-lab-h">แล็บเปรียบเทียบงานตามสองเส้นทาง</h3>
+    <p>เลือกพรีเซ็ตหรือพิมพ์สนามและเส้นทางเอง (พารามิเตอร์ \(t\) จาก 0 ถึง 1) โปรแกรมคำนวณงานตามเส้นทาง A (ส้ม) และเส้นทาง B (ฟ้า) แล้วตรวจ \(Q_x - P_y\) สำหรับสนามอนุรักษ์ ค่าตามสองเส้นทางต้องเท่ากัน ลองพรีเซ็ตสุดท้าย \(\langle -y, x\rangle/(x^2 + y^2)\) ที่ curl เป็นศูนย์แต่ค่าต่างกัน เพราะบริเวณมีรู</p>
+    <div class="mv-work" id="work-lab" data-pre="0"></div>
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · งานตามสองเส้นทางที่ต่างกัน</span><h3>\(\mathbf F = \langle x^2,\ xy\rangle\) หางานจาก \((0, 0)\) ถึง \((1, 1)\) ตาม (ก) พาราโบลา \(y = x^2\) (ข) เส้นตรง \(y = x\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="work-lab" data-mv-set='{"p":"x^2","q":"x*y","ax":"t","ay":"t","bx":"t","by":"t^2"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(\mathbf r(t) = \langle t, t^2\rangle,\ 0 \le t \le 1\) · \(\mathbf r' = \langle 1, 2t\rangle\) · \(\mathbf F(\mathbf r(t)) = \langle t^2,\ t\cdot t^2\rangle = \langle t^2, t^3\rangle\)</p></li>
+        <li><p>\(\mathbf F\cdot\mathbf r' = t^2 + 2t^4\) → \(W_{ก} = \displaystyle\int_0^1(t^2 + 2t^4)\,dt = \dfrac13 + \dfrac25 = \dfrac{11}{15}\)</p></li>
+        <li><p>(ข) \(\mathbf r(t) = \langle t, t\rangle\) · \(\mathbf r' = \langle1, 1\rangle\) · \(\mathbf F = \langle t^2, t^2\rangle\) → \(\mathbf F\cdot\mathbf r' = 2t^2\) → \(W_{ข} = \displaystyle\int_0^1 2t^2\,dt = \dfrac23\)</p></li>
+        <li><p>\(11/15 = 0.7333 \ne 2/3 = 0.6667\) → งานขึ้นกับเส้นทาง · ตรวจ \(Q_x - P_y = y - 0 = y \ne 0\) สนามไม่อนุรักษ์ ✓</p></li>
+      </ol>
+      <p class="answer">\(W_{ก} = \tfrac{11}{15}\) · \(W_{ข} = \tfrac{2}{3}\) · ต่างกัน เพราะ \(\nabla\times\mathbf F \ne 0\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ftli">
+    <h2 id="ftli">ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น และความไม่ขึ้นกับเส้นทาง <span class="lv lv-i">กลาง</span></h2>
+    <p>ตัวแปรเดียว: \(\int_a^b F'(x)\,dx = F(b) - F(a)\) ใช้เพียงค่าที่ปลาย ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้นเป็นรูปทั่วไป: ถ้า \(\mathbf F = \nabla f\) งานตามเส้นทางใดก็ได้เท่ากับผลต่างของ \(f\) ที่ปลายทั้งสอง ผลคือ “ไม่ต้องหาเส้นทาง” — นี่คือเหตุผลที่แรงดันระหว่างสองจุดในวงจร DC ไม่ขึ้นกับว่าวัดตามสายไหน และที่พลังงานศักย์โน้มถ่วงขึ้นกับความสูงอย่างเดียว</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L4" data-k="fundamental theorem of line integrals potential function grad f path independent ทฤษฎีบทมูลฐานอินทิกรัลตามเส้น ฟังก์ชันศักย์">
+        <p class="tf-n"><b><span class="fid">L4</span> Fundamental theorem for line integrals</b> ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น</p>
+        \[ \mathbf F = \nabla f \ \Rightarrow\ \int_C\mathbf F\cdot d\mathbf r = f\big(\mathbf r(b)\big) - f\big(\mathbf r(a)\big) \]
+        <p class="tf-x">ใช้เมื่อพบว่า \(\mathbf F\) อนุรักษ์ (curl = 0) แล้วหา \(f\) (<a href="/learn/multivariable-calculus/vector-fields/#conservative">วิธีหาศักย์</a>) · ไฟฟ้า: \(\int_A^B\mathbf E\cdot d\mathbf r = V(A) - V(B)\) เมื่อ \(\mathbf E = -\nabla V\)</p>
+      </div>
+      <div class="tf wide" id="L5" data-k="path independence equivalent conditions closed loop zero conservative การไม่ขึ้นกับเส้นทาง เงื่อนไขสมมูล">
+        <p class="tf-n"><b><span class="fid">L5</span> Equivalent conditions</b> เงื่อนไขที่สมมูลกัน</p>
+        \[ \mathbf F = \nabla f \iff \int_C\mathbf F\cdot d\mathbf r \text{ ไม่ขึ้นกับเส้นทาง} \iff \oint\mathbf F\cdot d\mathbf r = 0\ \text{ทุกวงปิด} \iff \nabla\times\mathbf F = \mathbf 0\ \ (\text{บริเวณไม่มีรู}) \]
+        <p class="tf-x">เหตุผลที่สองข้อแรกสมมูล: วงปิด = เส้นทาง A ตามด้วยเส้นทาง B ย้อนกลับ \(\oint = \int_A - \int_B\) · ข้อสุดท้ายต้องการ “เชื่อมต่อแบบง่าย”</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-4 · ใช้ศักย์แทนการอินทิเกรตตามเส้น</span><h3>\(\mathbf F = \langle 2xy + z^3,\ x^2,\ 3xz^2\rangle\) หางานจาก \((0,0,0)\) ถึง \((1,2,1)\)</h3></div>
+      <ol class="steps">
+        <li><p>จากบทสนามเวกเตอร์ (ตัวอย่าง D-5) \(\mathbf F\) อนุรักษ์ และ \(f = x^2y + xz^3\)</p></li>
+        <li><p>\(W = f(1, 2, 1) - f(0, 0, 0) = (1\cdot2 + 1\cdot1) - 0 = 3\)</p></li>
+        <li><p>ตรวจด้วยเส้นตรง \(\mathbf r(t) = \langle t, 2t, t\rangle\): \(\mathbf F = \langle 4t^2 + t^3,\ t^2,\ 3t^3\rangle\) และ \(\mathbf r' = \langle 1, 2, 1\rangle\) → \(\mathbf F\cdot\mathbf r' = 4t^2 + t^3 + 2t^2 + 3t^3 = 6t^2 + 4t^3\)</p></li>
+        <li><p>\(\displaystyle\int_0^1(6t^2 + 4t^3)\,dt = 2 + 1 = 3\) ✓ ตรงกัน และเส้นทางอื่นใดก็ให้ 3</p></li>
+      </ol>
+      <p class="answer">\(W = 3\) (ไม่ขึ้นกับเส้นทาง)</p>
+    </div>
+    <div class="wx" id="ex-l5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-5 · สนามอนุรักษ์ 2 มิติ</span><h3>\(\mathbf F = \langle y, x\rangle\) หางานจาก \((0,0)\) ถึง \((2,3)\) ตามเส้นตรง และตาม \(\mathbf r(t) = \langle 2t^2, 3t\rangle\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="work-lab" data-mv-set='{"p":"y","q":"x","ax":"2*t","ay":"3*t","bx":"2*t^2","by":"3*t"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(P_y = 1 = Q_x\) → อนุรักษ์ · ศักย์ \(f = xy\) (\(f_x = y,\ f_y = x\) ✓)</p></li>
+        <li><p>ตามเส้นตรง \(\langle 2t, 3t\rangle\): \(\mathbf F = \langle 3t, 2t\rangle\), \(\mathbf r' = \langle 2, 3\rangle\) → \(\mathbf F\cdot\mathbf r' = 6t + 6t = 12t\) → \(\int_0^1 12t\,dt = 6\)</p></li>
+        <li><p>ตาม \(\langle 2t^2, 3t\rangle\): \(\mathbf F = \langle 3t, 2t^2\rangle\), \(\mathbf r' = \langle 4t, 3\rangle\) → \(\mathbf F\cdot\mathbf r' = 12t^2 + 6t^2 = 18t^2\) → \(\int_0^1 18t^2\,dt = 6\)</p></li>
+        <li><p>ตรวจด้วยศักย์ \(f(2, 3) - f(0, 0) = 6 - 0 = 6\) ✓ ทั้งสามวิธีเท่ากัน</p></li>
+      </ol>
+      <p class="answer">\(W = 6\) ทุกเส้นทาง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="green">
+    <h2 id="green">ทฤษฎีบทของกรีน (Green's Theorem) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ทฤษฎีบทของกรีนเชื่อมอินทิกรัลตามเส้น<b>ปิด</b>รอบบริเวณ \(R\) ในระนาบกับอินทิกรัลสองชั้นของบริเวณนั้น แนวคิด: แบ่ง \(R\) เป็นช่องเล็ก ๆ ที่แต่ละช่องมีการหมุนวนเล็ก ๆ เท่ากับ \((Q_x - P_y)\,dA\) ตอนรวมช่องทั้งหมด ขอบที่ใช้ร่วมกันของช่องข้างเคียงถูกเดินสองครั้งในทิศตรงข้ามจึงหักล้างกัน เหลือเฉพาะขอบนอกสุด นี่คือ “การหมุนวนทั้งหมดรอบวง = ผลรวมการหมุนวนเล็ก ๆ ข้างใน”</p>
+    <figure class="lt-wide"><!--FIG:mv-green--><svg class="mf" viewBox="0 0 700 320" role="img" aria-label="ทฤษฎีบทกรีน (Green's theorem): ผลรวมการหมุนวนของช่องเล็ก (circulation) หักล้างกันที่ขอบร่วม เหลือเฉพาะขอบนอก C วนทวนเข็มนาฬิกา"><defs><marker id="mvgr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvgr-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvgr-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvgr-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><rect class="mf-bg" x="66" y="26" width="358" height="256" rx="10"/><path class="mf-sig3" d="M 119 61 A 14 14 0 1 0 105 75" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 119 123 A 14 14 0 1 0 105 137" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 119 185 A 14 14 0 1 0 105 199" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 119 247 A 14 14 0 1 0 105 261" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 189 61 A 14 14 0 1 0 175 75" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 189 123 A 14 14 0 1 0 175 137" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 189 185 A 14 14 0 1 0 175 199" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 189 247 A 14 14 0 1 0 175 261" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 259 61 A 14 14 0 1 0 245 75" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 259 123 A 14 14 0 1 0 245 137" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 259 185 A 14 14 0 1 0 245 199" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 259 247 A 14 14 0 1 0 245 261" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 329 61 A 14 14 0 1 0 315 75" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 329 123 A 14 14 0 1 0 315 137" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 329 185 A 14 14 0 1 0 315 199" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 329 247 A 14 14 0 1 0 315 261" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 399 61 A 14 14 0 1 0 385 75" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 399 123 A 14 14 0 1 0 385 137" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 399 185 A 14 14 0 1 0 385 199" marker-end="url(#mvgr-g)"/><path class="mf-sig3" d="M 399 247 A 14 14 0 1 0 385 261" marker-end="url(#mvgr-g)"/><line class="mf-dash" x1="70" y1="30" x2="70" y2="278"/><line class="mf-dash" x1="140" y1="30" x2="140" y2="278"/><line class="mf-dash" x1="210" y1="30" x2="210" y2="278"/><line class="mf-dash" x1="280" y1="30" x2="280" y2="278"/><line class="mf-dash" x1="350" y1="30" x2="350" y2="278"/><line class="mf-dash" x1="420" y1="30" x2="420" y2="278"/><line class="mf-dash" x1="70" y1="30" x2="420" y2="30"/><line class="mf-dash" x1="70" y1="92" x2="420" y2="92"/><line class="mf-dash" x1="70" y1="154" x2="420" y2="154"/><line class="mf-dash" x1="70" y1="216" x2="420" y2="216"/><line class="mf-dash" x1="70" y1="278" x2="420" y2="278"/><path class="mf-sig2" d="M70 278 L420 278 L420 30 L70 30 L70 248" fill="none" marker-end="url(#mvgr-s)"/><text class="mf-h" x="442" y="80" text-anchor="start">C (ขอบนอก)</text><text class="mf-k" x="442" y="100" text-anchor="start">วนทวนเข็มนาฬิกา</text><text class="mf-l" x="442" y="140" text-anchor="start">∮_C P dx + Q dy</text><text class="mf-l" x="442" y="162" text-anchor="start">= ∬_D (∂Q/∂x − ∂P/∂y) dA</text><text class="mf-t" x="442" y="196" text-anchor="start">ขอบร่วมของช่องข้างเคียง</text><text class="mf-t" x="442" y="214" text-anchor="start">มีลูกศรสวนทางกัน → หักล้าง</text></svg><!--/FIG--><figcaption>ทฤษฎีบทกรีน (Green's theorem): แบ่งบริเวณเป็นช่องเล็ก การหมุนวนของช่องข้างเคียงหักล้างกันที่ขอบร่วม เหลือเฉพาะขอบนอกที่วนทวนเข็มนาฬิกา</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="L6" data-k="Green's theorem circulation form oint P dx + Q dy = iint Qx - Py dA ทฤษฎีบทกรีน รูปการหมุนวน">
+        <p class="tf-n"><b><span class="fid">L6</span> Green's theorem (circulation form)</b> ทฤษฎีบทกรีน (รูปการหมุนวน)</p>
+        \[ \oint_C P\,dx + Q\,dy = \oint_C\mathbf F\cdot d\mathbf r = \iint_R\left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA \]
+        <p class="tf-x">\(C\) = ขอบเขตปิดเรียบเป็นช่วง ๆ วน<b>ทวนเข็มนาฬิกา</b> (บริเวณอยู่ทางซ้ายมือเสมอ) · \(P, Q\) มีอนุพันธ์ย่อยต่อเนื่องบน \(R\) · ถ้าวนตามเข็มนาฬิกา เพิ่มเครื่องหมายลบ · บริเวณมีรู: ขอบในวนตามเข็ม</p>
+      </div>
+      <div class="tf wide" id="L7" data-k="Green's theorem flux form normal form oint F dot n ds = iint div F dA รูปฟลักซ์">
+        <p class="tf-n"><b><span class="fid">L7</span> Green's theorem (flux form)</b> ทฤษฎีบทกรีน (รูปฟลักซ์)</p>
+        \[ \oint_C\mathbf F\cdot\mathbf n\,ds = \oint_C P\,dy - Q\,dx = \iint_R\left(\frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y}\right)dA = \iint_R\nabla\cdot\mathbf F\,dA \]
+        <p class="tf-x">\(\mathbf n\) = เวกเตอร์ปกติชี้ออกนอกบริเวณ · เป็นทฤษฎีบทดีเวอร์เจนซ์ในสองมิติ (<a href="/learn/multivariable-calculus/surface-integrals/">บทผิว</a>)</p>
+      </div>
+      <div class="tf wide" id="L8" data-k="area by line integral A = 1/2 oint x dy - y dx shoelace formula polygon area พื้นที่ สูตรเชือกผูกรองเท้า">
+        <p class="tf-n"><b><span class="fid">L8</span> Area by a line integral · shoelace</b> พื้นที่ด้วยอินทิกรัลเส้นและสูตร shoelace</p>
+        \[ A = \oint_C x\,dy = -\oint_C y\,dx = \tfrac12\oint_C x\,dy - y\,dx,\qquad A_{\text{polygon}} = \tfrac12\Big|\sum_{i=1}^{n}\big(x_iy_{i+1} - x_{i+1}y_i\big)\Big| \]
+        <p class="tf-x">เลือก \(P, Q\) ให้ \(Q_x - P_y = 1\) (เช่น \(Q = x, P = 0\) หรือ \(Q = x/2, P = -y/2\)) · รูปหลายเหลี่ยมคำนวณทีละด้าน (เส้นตรง) จึงได้ผลรวม · \((x_{n+1}, y_{n+1}) = (x_1, y_1)\) · วนทวนเข็มได้พื้นที่บวก</p>
+      </div>
+    </div>
+    <p>ในแล็บสนามเวกเตอร์ (บท<a href="/learn/multivariable-calculus/vector-fields/#field-lab">สนามเวกเตอร์</a>) วงกลมทดสอบวัด \(\oint\mathbf F\cdot d\mathbf r\) และ \(\oint\mathbf F\cdot\mathbf n\,ds\) เทียบกับ \(\iint\) ของ curl และ div ซึ่งคือทฤษฎีบทกรีนในรูปเชิงตัวเลข ลองอีกครั้งที่นี่กับสนามที่ curl ไม่คงที่ แล้วดูว่า \(\oint\) ตรงกับ \(\iint(Q_x - P_y)\,dA\) โดยประมาณ (ตรงเมื่อ \(\rho\) เล็ก) ค่าสองบรรทัดสุดท้ายในกล่องคำตอบเป็นการเทียบโดยตรงกับค่าที่ทฤษฎีบทกรีนทำนาย</p>
+    <div class="mv-field" id="green-lab" data-p="y^2" data-q="x" data-bg="curl" data-rho="1" data-px="0" data-py="0.5" data-r="3"></div>
+    <div class="wx" id="ex-l6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-6 · ใช้กรีนแทนการอินทิเกรตเส้นที่ยาก</span><h3>คำนวณ \(\displaystyle\oint_C\big(3y - e^{\sin x}\big)dx + \big(7x + \sqrt{y^4 + 1}\big)dy\) เมื่อ \(C\) คือวงกลม \(x^2 + y^2 = 9\) วนทวนเข็ม</h3></div>
+      <ol class="steps">
+        <li><p>อินทิกรัลเส้นตรง ๆ ทำยาก (มี \(e^{\sin x}\) และ \(\sqrt{y^4 + 1}\) ที่ไม่มีปฏิยานุพันธ์แบบปิด) ใช้ทฤษฎีบทกรีน</p></li>
+        <li><p>\(P = 3y - e^{\sin x}\) → \(P_y = 3\) · \(Q = 7x + \sqrt{y^4 + 1}\) → \(Q_x = 7\) · \(Q_x - P_y = 4\) (ค่าคงที่!)</p></li>
+        <li><p>\(\displaystyle\oint_C = \iint_R 4\,dA = 4\times\text{พื้นที่วงกลมรัศมี }3 = 4\times9\pi = 36\pi\)</p></li>
+      </ol>
+      <p class="answer">\(36\pi \approx 113.1\) (พจน์ที่ซับซ้อนหายไปหมดเมื่ออนุพันธ์ย่อยหักล้างกัน)</p>
+    </div>
+    <div class="wx" id="ex-l7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-7 · พื้นที่วงรีด้วยกรีน</span><h3>หาพื้นที่ภายในวงรี \(x = a\cos t,\ y = b\sin t\) ด้วย \(A = \tfrac12\oint x\,dy - y\,dx\)</h3></div>
+      <ol class="steps">
+        <li><p>\(dx = -a\sin t\,dt\) และ \(dy = b\cos t\,dt\) · \(x\,dy - y\,dx = ab\cos^2t\,dt + ab\sin^2t\,dt = ab\,dt\)</p></li>
+        <li><p>\(A = \dfrac12\displaystyle\int_0^{2\pi}ab\,dt = \dfrac12\cdot ab\cdot2\pi = \pi ab\)</p></li>
+        <li><p>ตรงกับผลของบทอินทิกรัลหลายชั้น (เปลี่ยนตัวแปรด้วย Jacobian \(ab\)) ✓</p></li>
+      </ol>
+      <p class="answer">\(A = \pi ab\)</p>
+    </div>
+    <div class="wx" id="ex-l8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-8 · พื้นที่แปลงที่ดินจากพิกัดจุดยอด (โยธา / สำรวจ)</span><h3>แปลงที่ดินห้าเหลี่ยมมีพิกัด (เมตร): \((0, 0),\ (40, 0),\ (55, 30),\ (20, 45),\ (-5, 25)\) เรียงทวนเข็ม หาพื้นที่</h3></div>
+      <ol class="steps">
+        <li><p>คำนวณ \(x_iy_{i+1} - x_{i+1}y_i\) ทีละด้าน: \(0\cdot0 - 40\cdot0 = 0\) · \(40\cdot30 - 55\cdot0 = 1200\) · \(55\cdot45 - 20\cdot30 = 2475 - 600 = 1875\) · \(20\cdot25 - (-5)\cdot45 = 500 + 225 = 725\) · \((-5)\cdot0 - 0\cdot25 = 0\)</p></li>
+        <li><p>ผลรวม \(= 0 + 1200 + 1875 + 725 + 0 = 3800\)</p></li>
+        <li><p>\(A = \tfrac12\times3800 = 1900\) ตารางเมตร · หน่วยไทย: 1 ตารางวา = 4 ตร.ม. ดังนั้น \(1900/4 = 475\) ตารางวา = 1 ไร่ 75 ตารางวา (1 ไร่ = 400 ตร.ว. = 1600 ตร.ม.)</p></li>
+        <li><p>ถ้าเรียงจุดตามเข็มนาฬิกาจะได้ผลรวมเป็น \(-3800\) จึงต้องใส่ค่าสัมบูรณ์ · วิธีนี้ใช้ในโปรแกรมสำรวจและ GIS ทุกชนิด</p></li>
+      </ol>
+      <p class="answer">\(A = 1900\) m² \(\approx 1.19\) ไร่ (ใช้ทฤษฎีบทกรีนกับเส้นขอบที่เป็นเส้นตรงทีละด้าน)</p>
+    </div>
+    <div class="wx" id="ex-l9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-9 · รูปฟลักซ์ของกรีน</span><h3>\(\mathbf F = \langle x, y\rangle\) หาฟลักซ์ออกจากวงกลมรัศมี \(R\) ด้วยสองวิธี</h3><button type="button" class="wx-btn calc-go" data-mv-target="green-lab" data-mv-set='{"p":"x","q":"y","bg":"div","px":0,"py":0,"rho":1}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>วิธีตรง: บนวงกลม \(\mathbf n = \langle x, y\rangle/R\) → \(\mathbf F\cdot\mathbf n = (x^2 + y^2)/R = R\) คงที่ · \(\oint\mathbf F\cdot\mathbf n\,ds = R\times2\pi R = 2\pi R^2\)</p></li>
+        <li><p>วิธีกรีน: \(\nabla\cdot\mathbf F = 1 + 1 = 2\) → \(\iint 2\,dA = 2\times\pi R^2 = 2\pi R^2\) ✓</p></li>
+        <li><p>ในแล็บ: วงกลมรัศมี 1 ที่จุดกำเนิดให้ flux \(= 2\pi = 6.2832\) และ flux ÷ พื้นที่ \(= 2\) ตรงกับ \(\nabla\cdot\mathbf F\)</p></li>
+      </ol>
+      <p class="answer">\(\oint\mathbf F\cdot\mathbf n\,ds = 2\pi R^2\) ทั้งสองวิธี</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">นำไปใช้ในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สาขา</th><th>อินทิกรัลตามเส้น</th><th>ความหมาย</th></tr></thead>
+      <tbody>
+        <tr><td>ไฟฟ้า</td><td>\(V_{AB} = -\int_A^B\mathbf E\cdot d\mathbf r\)</td><td>แรงดันระหว่างสองจุด ไม่ขึ้นกับเส้นทางในสนามสถิต (L4)</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\oint\mathbf B\cdot d\mathbf l = \mu_0 I_{enc}\)</td><td>กฎของแอมแปร์ · สนามรอบลวดเส้นตรง \(B = \mu_0I/2\pi r\) (<a href="/learn/multivariable-calculus/surface-integrals/#stokes">บทผิว</a>)</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\mathcal E = \oint\mathbf E\cdot d\mathbf l = -d\Phi_B/dt\)</td><td>แรงเคลื่อนไฟฟ้าเหนี่ยวนำ (กฎฟาราเดย์) — สนามไม่อนุรักษ์</td></tr>
+        <tr><td>เครื่องกล</td><td>\(W = \int\mathbf F\cdot d\mathbf r\)</td><td>งานของแรงตามเส้นทางโค้ง งานของแรงเสียดทานขึ้นกับเส้นทาง</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\Gamma = \oint\mathbf v\cdot d\mathbf l\)</td><td>ไหลเวียน (circulation) ของของไหล · ทฤษฎีบท Kutta–Joukowski \(L' = \rho U\Gamma\) ของแรงยกปีก</td></tr>
+        <tr><td>โยธา</td><td>\(A = \tfrac12\oint x\,dy - y\,dx\)</td><td>พื้นที่แปลงที่ดินจากพิกัด (shoelace) · เครื่องมือ planimeter วัดพื้นที่บนแผนที่ (ตัวอย่าง L-8)</td></tr>
+        <tr><td>โยธา</td><td>\(\int_C\rho\,ds\)</td><td>น้ำหนักของสายเคเบิลที่น้ำหนักต่อความยาวไม่คงที่</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>ลืมคูณ \(|\mathbf r'|\) ในแบบสเกลาร์</b> · \(\int f\,ds\) ใช้ \(|\mathbf r'(t)|\,dt\) (ต่างจาก \(\int\mathbf F\cdot d\mathbf r\) ที่ใช้ \(\mathbf r'\,dt\) ในผลดอต)</li>
+      <li><b>ลืมกลับเครื่องหมายเมื่อเดินย้อนทิศ</b> ในแบบเวกเตอร์ · แบบสเกลาร์ไม่เปลี่ยนเครื่องหมาย</li>
+      <li><b>ใช้กรีนกับขอบที่ไม่วนทวนเข็ม</b> · วนตามเข็มได้ผลลบ · และต้องเป็นเส้นปิดที่ไม่ตัดตัวเอง</li>
+      <li><b>ใช้ทฤษฎีบทกรีนเมื่อ \(\mathbf F\) ไม่นิยามภายในวง</b> · เช่น \(\langle -y, x\rangle/(x^2 + y^2)\) รอบจุดกำเนิดให้ \(2\pi\) แม้ curl เป็นศูนย์ (มีรูที่จุดกำเนิด)</li>
+      <li><b>เข้าใจว่า curl = 0 แล้วอนุรักษ์เสมอ</b> · ต้องบริเวณเชื่อมต่อแบบง่าย</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/surface-integrals/">อินทิกรัลบนผิว ฟลักซ์ และทฤษฎีบทของเกาส์–สโตกส์</a> ซึ่งเป็นรูปทั่วไปของกรีนในสามมิติ</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

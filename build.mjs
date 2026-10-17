@@ -680,6 +680,52 @@ export const TOPICS = [
     sym: "T–n",
     summary: "มอเตอร์เหนี่ยวนำตั้งแต่ระบบไฟฟ้าไทยถึงเพลา: มอเตอร์ 1 เฟสและ 3 เฟส กรงกระรอก กรงคู่ โรเตอร์พันขดลวด กราฟแรงบิด-ความเร็วกับเส้นโหลด ทรานเซียนต์ สตาร์-เดลต้าเชิงลึก และการออกแบบสาย-เบรกเกอร์ พร้อมแล็บจำลอง",
   },
+  {
+    // Topic 24 (added 2026-10-17): multivariable & vector calculus — appended so no chapter number moved (menu: math tabs, group "หลายตัวแปร").
+    // Engine + labs: assets/mvc-core.js (parser, symbolic ∂, quadrature, curves, fields), mvc-lab.js, mvc-opt.js, mvc-vec.js, mvc-eng.js · figures: scripts/mv_figs.py · tests: scripts/test-mvc.mjs
+    slug: "multivariable-calculus",
+    title: "แคลคูลัสหลายตัวแปรและแคลคูลัสเวกเตอร์",
+    en: "Multivariable & Vector Calculus",
+    sym: "∇",
+    summary: "ฟังก์ชันหลายตัวแปร อนุพันธ์ย่อย gradient ค่าสุดขีดและ Lagrange อินทิกรัลสองชั้น-สามชั้น ฟังก์ชันเวกเตอร์ divergence curl อินทิกรัลตามเส้น Green Gauss Stokes พร้อมงานไฟฟ้า เครื่องกล โยธา และแล็บโต้ตอบ 15 ชุด",
+    fxHint: "พิมพ์ เช่น gradient, hessian, lagrange, jacobian, polar, spherical, curvature, divergence, curl, green, stokes, flux, laplace",
+    parts: [
+      { id: "functions", n: 1, title: "ฟังก์ชันหลายตัวแปร", en: "Functions of Several Variables", blurb: "โดเมน กราฟผิว เส้นชั้นความสูง (contour) ลิมิตและความต่อเนื่องในสองตัวแปร" },
+      { id: "derivatives", n: 2, title: "อนุพันธ์หลายตัวแปร", en: "Multivariable Differentiation", blurb: "อนุพันธ์ย่อย ระนาบสัมผัส กฎลูกโซ่ gradient อนุพันธ์ตามทิศ จุดวิกฤต Hessian ตัวคูณลากรองจ์ และกำลังสองน้อยสุด" },
+      { id: "integrals", n: 3, title: "อินทิกรัลหลายชั้น", en: "Multiple Integrals", blurb: "อินทิกรัลสองชั้นและสามชั้น พิกัดขั้ว ทรงกระบอก ทรงกลม จาโคเบียน จุดศูนย์กลางมวล และโมเมนต์ความเฉื่อย" },
+      { id: "vector", n: 4, title: "ฟังก์ชันเวกเตอร์และแคลคูลัสเวกเตอร์", en: "Vector Functions & Vector Calculus", blurb: "เส้นโค้งในอวกาศ ความโค้ง สนามเวกเตอร์ divergence curl อินทิกรัลตามเส้น ทฤษฎีบท Green Gauss และ Stokes" },
+      { id: "engineering", n: 5, title: "การประยุกต์ทางวิศวกรรม", en: "Engineering Applications", blurb: "ไฟฟ้า: สนามและศักย์ แมกซ์เวลล์ · เครื่องกล: ความร้อน ของไหล มวล · โยธา: ภูมิประเทศ ดินขุด-ถม หน้าตัด ซึมผ่าน" },
+      { id: "labs", n: 6, title: "ห้องแล็บ", en: "Labs", blurb: "เครื่องมือโต้ตอบรวมทุกบท: พื้นผิว gradient จุดวิกฤต อินทิกรัล เส้นโค้ง สนามเวกเตอร์ Gauss–Stokes" },
+    ],
+    sub: [
+      { slug: "functions-of-several-variables", part: "functions", short: "ฟังก์ชันหลายตัวแปร", title: "ฟังก์ชันหลายตัวแปร (Functions of Several Variables) คืออะไร: โดเมน กราฟผิว เส้นชั้นความสูง และลิมิต", en: "Functions of Several Variables", sym: "f(x,y)", prefix: "F",
+        summary: "z = f(x, y) กราฟเป็นผิว โดเมนและเรนจ์ เส้นชั้นความสูง (level curves) ผิวระดับ (level surfaces) ผิวกำลังสอง ลิมิตตามหลายเส้นทางและความต่อเนื่อง พร้อมแล็บพื้นผิว 3 มิติกับแผนที่ contour" },
+      { slug: "partial-derivatives", part: "derivatives", short: "อนุพันธ์ย่อย", title: "อนุพันธ์ย่อย (Partial Derivatives): สูตร ตัวอย่าง ระนาบสัมผัส กฎลูกโซ่ และการประมาณความคลาดเคลื่อน", en: "Partial Derivatives", sym: "∂f/∂x", prefix: "P",
+        summary: "อนุพันธ์ย่อยคืออะไร ความหมายเชิงเรขาคณิต อนุพันธ์อันดับสูงและทฤษฎีบทของแคลโร ระนาบสัมผัสและการประมาณเชิงเส้น ผลต่างรวม กฎลูกโซ่ อนุพันธ์โดยปริยาย และการแพร่ความคลาดเคลื่อน" },
+      { slug: "gradient-directional-derivative", part: "derivatives", short: "Gradient · ทิศทาง", title: "เกรเดียนต์ (Gradient) และอนุพันธ์ตามทิศ (Directional Derivative): ความหมาย สูตร และตัวอย่าง", en: "Gradient & Directional Derivative", sym: "∇f", prefix: "G",
+        summary: "∇f ชี้ทางขึ้นชันที่สุด D_u f = ∇f·u ตั้งฉากกับเส้นชั้นความสูง เวกเตอร์ปกติของผิวระดับ ระนาบสัมผัสของ F(x,y,z)=c และ gradient descent พร้อมแล็บกราฟขั้ว" },
+      { slug: "optimization", part: "derivatives", short: "ค่าสุดขีด · Lagrange", title: "ค่าสูงสุด-ต่ำสุดของฟังก์ชันหลายตัวแปร: จุดวิกฤต Hessian ตัวคูณลากรองจ์ (Lagrange Multiplier) และกำลังสองน้อยสุด", en: "Optimization, Lagrange Multipliers & Least Squares", sym: "∇f=0", prefix: "O",
+        summary: "∇f = 0 การทดสอบอนุพันธ์อันดับสอง (D = fxx fyy − fxy²) ค่าสุดขีดสัมบูรณ์บนบริเวณปิด ตัวคูณลากรองจ์ λ ความหมายของ λ การถดถอยเชิงเส้นด้วยกำลังสองน้อยสุด และโจทย์ออกแบบวิศวกรรม" },
+      { slug: "multiple-integrals", part: "integrals", short: "อินทิกรัลหลายชั้น", title: "อินทิกรัลสองชั้นและสามชั้น (Double & Triple Integrals): พิกัดขั้ว ทรงกระบอก ทรงกลม และ Jacobian", en: "Double & Triple Integrals", sym: "∬", prefix: "M",
+        summary: "ผลรวมรีมันน์ในสองมิติ ทฤษฎีบทฟูบินี บริเวณ type I/II สลับลำดับ พิกัดขั้ว อินทิกรัลสามชั้น พิกัดทรงกระบอกและทรงกลม จาโคเบียนเปลี่ยนตัวแปร มวล จุดศูนย์กลางมวล และโมเมนต์ความเฉื่อย" },
+      { slug: "vector-functions", part: "vector", short: "ฟังก์ชันเวกเตอร์", title: "ฟังก์ชันเวกเตอร์ (Vector-Valued Functions): เส้นโค้งในอวกาศ ความเร็ว ความเร่ง ความยาวส่วนโค้ง และความโค้ง", en: "Vector-Valued Functions & Space Curves", sym: "r(t)", prefix: "R",
+        summary: "r(t) = ⟨x(t), y(t), z(t)⟩ ลิมิต อนุพันธ์ อินทิกรัล เส้นสัมผัส ความเร็ว-ความเร่ง ลูกกระสุน ความยาวส่วนโค้ง ความโค้ง κ กรอบ Frenet–Serret (T, N, B) torsion และ a_T a_N พร้อมแล็บเส้นโค้ง 3 มิติ" },
+      { slug: "vector-fields", part: "vector", short: "สนามเวกเตอร์ · div · curl", title: "สนามเวกเตอร์ (Vector Fields): Gradient, Divergence, Curl และสนามอนุรักษ์", en: "Vector Fields: Divergence & Curl", sym: "∇·F", prefix: "D",
+        summary: "F(x,y,z) ตัวดำเนินการ ∇ ดีเวอร์เจนซ์ เคิร์ล ลาปลาเซียน เอกลักษณ์ curl(grad)=0 และ div(curl)=0 สนามอนุรักษ์และฟังก์ชันศักย์ เส้นกระแส พร้อมแล็บสนามเวกเตอร์ที่วัด div curl บนวงกลม" },
+      { slug: "line-integrals", part: "vector", short: "อินทิกรัลตามเส้น · Green", title: "อินทิกรัลตามเส้น (Line Integrals) งานของแรง และทฤษฎีบทกรีน (Green's Theorem)", en: "Line Integrals & Green's Theorem", sym: "∮", prefix: "L",
+        summary: "∫ f ds และ ∫ F·dr งานของแรงตามเส้นทาง ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น ความไม่ขึ้นกับเส้นทาง ทฤษฎีบทกรีนทั้งรูปการหมุนและฟลักซ์ พื้นที่ด้วยอินทิกรัลเส้น และตัวอย่างวิศวกรรม" },
+      { slug: "surface-integrals", part: "vector", short: "ผิว · Gauss · Stokes", title: "อินทิกรัลบนผิว (Surface Integrals) ฟลักซ์ ทฤษฎีบทดีเวอร์เจนซ์ (Gauss) และทฤษฎีบทสโตกส์ (Stokes)", en: "Surface Integrals, Divergence Theorem & Stokes' Theorem", sym: "∯", prefix: "S",
+        summary: "ผิวพารามิเตอร์ พื้นที่ผิว ฟลักซ์ ∬F·n dS ทฤษฎีบทดีเวอร์เจนซ์ ทฤษฎีบทสโตกส์ กฎของเกาส์ กฎของฟาราเดย์ และสมการแมกซ์เวลล์ พร้อมตัวตรวจ Gauss–Stokes ที่คำนวณทั้งสองฝั่ง" },
+      { slug: "electrical-engineering", part: "engineering", short: "ไฟฟ้า", title: "แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า: สนามไฟฟ้า ศักย์ กฎของเกาส์ ตัวเก็บประจุ และสมการแมกซ์เวลล์", en: "Multivariable Calculus in Electrical Engineering", sym: "E=−∇V", prefix: "E",
+        summary: "E = −∇V ประจุจุดและแล็บลากประจุ กฎของเกาส์ในรูปปริพันธ์และอนุพันธ์ สมการลาปลาซ-พัวซอง ความจุของตัวเก็บประจุ ฟลักซ์แม่เหล็กและกฎของฟาราเดย์ เวกเตอร์พอยน์ติง และความต้านทานจากสนาม" },
+      { slug: "mechanical-engineering", part: "engineering", short: "เครื่องกล", title: "แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล: การนำความร้อน การไหลของของไหล จุดศูนย์กลางมวล และจาโคเบียนหุ่นยนต์", en: "Multivariable Calculus in Mechanical Engineering", sym: "q=−k∇T", prefix: "K",
+        summary: "กฎของฟูริเยร์ q = −k∇T สมการความร้อนและลาปลาซ ท่อกลมและผนัง ความต่อเนื่อง ∇·v = 0 ความหมุนวน (vorticity) ของไหล จุดศูนย์กลางมวลและโมเมนต์ความเฉื่อย อนุพันธ์ย่อยทางเทอร์โมไดนามิกส์ และจาโคเบียนแขนกล" },
+      { slug: "civil-engineering", part: "engineering", short: "โยธา", title: "แคลคูลัสหลายตัวแปรในวิศวกรรมโยธา: ภูมิประเทศ ดินขุด-ถม คุณสมบัติหน้าตัด แรงดันน้ำ และการไหลซึมของน้ำ", en: "Multivariable Calculus in Civil Engineering", sym: "cut/fill", prefix: "C",
+        summary: "แผนที่เส้นชั้นความสูง ความชันและทิศน้ำไหล ปริมาตรดินขุด-ถมด้วยอินทิกรัลสองชั้น ระดับสมดุล A ȳ I ของหน้าตัดด้วยทฤษฎีบทกรีน น้ำหนักแผ่นพื้นที่กระจายไม่สม่ำเสมอ แรงดันน้ำบนผิวโค้ง และฟลักซ์ซึมผ่านดิน" },
+      { slug: "multivariable-lab", part: "labs", short: "แล็บรวม", title: "แล็บแคลคูลัสหลายตัวแปร: พื้นผิว gradient จุดวิกฤต อินทิกรัล เส้นโค้ง สนามเวกเตอร์ Gauss–Stokes ในหน้าเดียว", en: "Multivariable Calculus Lab Bench", sym: "⚗", tag: "แล็บรวม",
+        summary: "ห้องแล็บ 19 ชุดในหน้าเดียว: พื้นผิวและระนาบสัมผัส gradient และ gradient descent จุดวิกฤต Lagrange กำลังสองน้อยสุด อินทิกรัลสองชั้น-สามชั้น Jacobian เส้นโค้งในอวกาศ สนามเวกเตอร์ และตัวตรวจ Gauss–Stokes" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -1242,8 +1288,9 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
 }
 
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
+const MD_SERIES = ["multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
+  { src: "src/md/multivariable-calculus.md", out: "learn/multivariable-calculus/guide.md", page: "/learn/multivariable-calculus/", title: "Multivariable & vector calculus — learning guide & formula summary (Thai, Markdown)", desc: "functions of several variables, partial derivatives, gradient and directional derivative, critical points and Lagrange multipliers, double and triple integrals with Jacobian, vector-valued functions, vector fields, line and surface integrals, Green's, divergence (Gauss) and Stokes' theorems, and applications in electrical, mechanical and civil engineering" },
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
     desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
