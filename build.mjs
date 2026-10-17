@@ -758,6 +758,13 @@ const EN_CHROME = [
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
   ['<a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: Laplace, vectors, power factor &amp; more</a>'],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
+  ['aria-label="ค้นหาในเว็บไซต์"', 'aria-label="Search the site"'],
+  ['title="ค้นหา (/)"', 'title="Search (/)"'],
+  ['placeholder="ค้นหาบทเรียน สูตร บทความ เช่น ลาปลาซ, PID, ratio test"', 'placeholder="Search lessons, formulas, articles e.g. Laplace, PID, ratio test"'],
+  ['aria-label="คำค้นหา"', 'aria-label="Search terms"'],
+  ['aria-label="ปิดการค้นหา"', 'aria-label="Close search"'],
+  ['aria-label="ผลการค้นหา"', 'aria-label="Search results"'],
+  [">พิมพ์คำที่ต้องการค้นหา ทั้งภาษาไทยและอังกฤษ<", ">Type to search, in English or Thai<"],
   ['aria-label="เปิดเมนู"', 'aria-label="Open menu"'],
   ["<p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>", "<p>Engineering mathematics you truly understand, not formulas you memorise.</p>"],
   ['aria-label="ลิงก์ในเว็บ"', 'aria-label="Site links"'],
@@ -1154,6 +1161,24 @@ function removeBlock(html, open) {
   return html;
 }
 
+// Search index entry: plain text only (math as its LaTeX source without delimiters), headings keep their id for deep links
+const plain = (s) => decode(stripTags(s.replace(LV_RE, "").replace(/\\[()[\]]/g, " ")).replace(/\\(?:mathrm|text|operatorname)\{([^{}]*)\}/g, "$1")).replace(/\s+/g, " ").trim();
+const SEARCH_STOP = new Set("the and for with from that this are was were has have had not but its into than then them they their there these those which while what when where who why how can will would should could may might also any all each other such only more most some very our your you use used using one two three per via http https www com html".split(" "));
+function searchEntry(meta, route, lang, body, topic, sub, isPost) {
+  const h = [...body.matchAll(/<h([23]) id="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
+    .map(([, , id, t]) => [id, plain(t).replace(/^\d+(\.\d+)*\.?\s+/, "")])
+    .filter(([, t]) => t);
+  const k = [...(meta.keywords || []), ...(meta.faq || []).map((f) => plain(f.q))];
+  const c = sub ? topic.title : isPost ? BLOG_UI[lang].tag : "";
+  const e = { u: route, l: lang, t: plain(meta.h1 || meta.title), d: plain(meta.description || ""), ...(c ? { c } : {}), ...(k.length ? { k: k.join(" · ") } : {}), h };
+  // w: the other Latin-script terms in the body text (Thai lessons write technical terms in English), so "gain margin" finds the page
+  const seen = JSON.stringify(e).toLowerCase();
+  const w = [...new Set(htmlToText(body).replace(/\$\$?[\s\S]*?\$\$?/g, " ").toLowerCase().match(/[a-z][a-z0-9-]*[a-z0-9]/g) || [])]
+    .filter((x) => x.length > 2 && !SEARCH_STOP.has(x) && !seen.includes(x));
+  if (w.length) e.w = w.join(" ");
+  return e;
+}
+
 function htmlToText(html) {
   let h = html;
   const theory = h.indexOf('id="theory"');
@@ -1184,6 +1209,7 @@ const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
+const searchIndex = []; // for search-index.json (header search dialog in assets/site.js)
 
 // ---------------------------------------------------------------------------
 // Blog (/blog/): short search-oriented articles that answer one question each and link into the lesson series.
@@ -1394,6 +1420,7 @@ for (const file of walk(pagesDir)) {
       mdFiles.push({ path: "/" + mdRel, canonical: url });
     }
   }
+  if (!meta.noindex) searchIndex.push(searchEntry(meta, route, lang, body, topic, sub, isPost));
   const tocHtml = toc(body, lang);
   body = body.split("<!--toc-->").join(tocHtml);
   body = renderMath(body, rel);
@@ -1623,6 +1650,11 @@ fs.writeFileSync(
       })
       .join("\n")
 );
+
+// search-index.json — titles, descriptions, keywords and h2/h3 headings of every indexable page, fetched by the header search
+searchIndex.sort((a, b) => order(SITE + a.u) - order(SITE + b.u) || a.u.localeCompare(b.u));
+fs.writeFileSync(path.join(ROOT, "search-index.json"), JSON.stringify(searchIndex) + "\n");
+console.log(`built search-index.json (${searchIndex.length} pages)`);
 
 // feed.xml (RSS 2.0) from data/updates.json
 const rfc822 = (d) => new Date(d + "T09:00:00+07:00").toUTCString();

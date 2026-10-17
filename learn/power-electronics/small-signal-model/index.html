@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=65791c5f">
+<link rel="stylesheet" href="/assets/site.css?v=e3004387">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-electronics/small-signal-model/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-electronics/small-signal-model/#article","headline":"แบบจำลองสัญญาณเล็กของคอนเวอร์เตอร์ DC-DC: State-Space Averaging และฟังก์ชันถ่ายโอน","description":"หาฟังก์ชันถ่ายโอนของคอนเวอร์เตอร์ DC-DC ด้วย state-space averaging และ linearization: Gvd Gvg Zout Zin ตารางของบั๊ก บูสต์ บั๊ก-บูสต์ PWM modulator gain ลูปเกน T(s) ดีเลย์ของการควบคุมดิจิทัล เกณฑ์ตัวกรองขาเข้า Middlebrook averaged switch model และสคริปต์ Python วาด Bode","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-electronics/small-signal-model/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-electronics/small-signal-model/","datePublished":"2026-10-13","dateModified":"2026-10-15","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["State-space averaging","Small-signal model","Transfer function","Middlebrook criterion"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-electronics/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-electronics-small-signal-model.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อิเล็กทรอนิกส์กำลัง","item":"https://modsengineeringmath.com/learn/power-electronics/"},{"@type":"ListItem","position":4,"name":"แบบจำลองสัญญาณเล็กของคอนเวอร์เตอร์ DC-DC: State-Space Averaging และฟังก์ชันถ่ายโอน","item":"https://modsengineeringmath.com/learn/power-electronics/small-signal-model/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมคอนเวอร์เตอร์ที่ปกติดีถึงแกว่งเมื่อใส่ฟิลเตอร์ LC ขาเข้า?","acceptedAnswer":{"@type":"Answer","text":"คอนเวอร์เตอร์ที่คุมแรงดันมีอิมพีแดนซ์ขาเข้าเป็นความต้านทานลบที่ความถี่ต่ำ ถ้าอิมพีแดนซ์ขาออกของฟิลเตอร์ไม่น้อยกว่ามากที่ทุกความถี่ ระบบรวมจะไม่เสถียร ต้องหน่วงฟิลเตอร์ตามเกณฑ์ Middlebrook"}}]}]}</script>
@@ -401,6 +401,9 @@
       <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
     </nav>
     <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="ค้นหาในเว็บไซต์" aria-haspopup="dialog" aria-controls="searchDlg" title="ค้นหา (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
     <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
     </button>
@@ -409,6 +412,16 @@
     </button>
   </div>
 </header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="ค้นหาในเว็บไซต์">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="ค้นหาบทเรียน สูตร บทความ เช่น ลาปลาซ, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="คำค้นหา" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="ปิดการค้นหา">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="ผลการค้นหา"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">พิมพ์คำที่ต้องการค้นหา ทั้งภาษาไทยและอังกฤษ</p>
+</dialog>
 
 <main id="main">
 <div class="wrap lesson-wrap lesson-layout">
@@ -704,9 +717,9 @@ ct.bode_plot(Gvd, omega_limits=(2*np.pi*10, 2*np.pi*1e5), Hz=True)</pre>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=65791c5f" defer></script>
-<script src="/assets/lesson.js?v=65791c5f" defer></script>
-<script src="/assets/pe-sim.js?v=65791c5f" defer></script>
-<script src="/assets/pe-lab.js?v=65791c5f" defer></script>
+<script src="/assets/site.js?v=e3004387" defer></script>
+<script src="/assets/lesson.js?v=e3004387" defer></script>
+<script src="/assets/pe-sim.js?v=e3004387" defer></script>
+<script src="/assets/pe-lab.js?v=e3004387" defer></script>
 </body>
 </html>

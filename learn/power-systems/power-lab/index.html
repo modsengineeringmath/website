@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=65791c5f">
+<link rel="stylesheet" href="/assets/site.css?v=e3004387">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-systems/power-lab/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-systems/power-lab/#article","headline":"แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน","description":"รวมเครื่องคำนวณระบบไฟฟ้ากำลังฟรีในหน้าเดียว: ค่าฐานและ per-unit เปลี่ยนฐาน regulation หม้อแปลง กราฟ P-δ กระแสลัดวงจรระบบแรงต่ำแบบ IEC 60909 ฟอลต์ SLG LL DLG แยกองค์ประกอบสมมาตรพร้อมแผนภาพเฟสเซอร์ รีเลย์ IDMT แล็บประสานรีเลย์ 3 ระดับบนกราฟ TCC log-log การตัดวงจรอัตโนมัติ TN TT และรีเลย์ผลต่าง พร้อมใบงาน 10 ชุด","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-systems/power-lab/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-systems/power-lab/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Electric power system","Power system protection","Calculator"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-systems-power-lab.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบไฟฟ้ากำลังและระบบป้องกัน","item":"https://modsengineeringmath.com/learn/power-systems/"},{"@type":"ListItem","position":4,"name":"แล็บคำนวณระบบไฟฟ้ากำลังและการป้องกัน: Per-unit กระแสลัดวงจร TCC ประสานรีเลย์ P-δ และองค์ประกอบสมมาตร","item":"https://modsengineeringmath.com/learn/power-systems/power-lab/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ใช้แล็บนี้ออกแบบงานจริงได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ใช้ตรวจคำตอบ เรียนรู้ และประมาณค่าเบื้องต้นได้ดี สูตรเป็นสูตรมาตรฐาน (IEC 60909 IEC 60255) แต่ใช้สมมติฐานที่ง่ายกว่าโปรแกรมวิเคราะห์ระบบไฟฟ้าเชิงพาณิชย์ เช่น ไม่รวมมอเตอร์ที่ช่วยป้อนกระแสลัดวงจร งานออกแบบจริงต้องใช้ข้อมูลจากผู้ผลิตและการไฟฟ้า และให้วิศวกรที่มีใบอนุญาตตรวจรับรอง"}}]}]}</script>
@@ -401,6 +401,9 @@
       <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
     </nav>
     <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="ค้นหาในเว็บไซต์" aria-haspopup="dialog" aria-controls="searchDlg" title="ค้นหา (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
     <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
     </button>
@@ -409,6 +412,16 @@
     </button>
   </div>
 </header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="ค้นหาในเว็บไซต์">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="ค้นหาบทเรียน สูตร บทความ เช่น ลาปลาซ, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="คำค้นหา" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="ปิดการค้นหา">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="ผลการค้นหา"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">พิมพ์คำที่ต้องการค้นหา ทั้งภาษาไทยและอังกฤษ</p>
+</dialog>
 
 <main id="main">
 <div class="wrap lesson-wrap lesson-layout">
@@ -574,9 +587,9 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=65791c5f" defer></script>
-<script src="/assets/lesson.js?v=65791c5f" defer></script>
-<script src="/assets/ee-kit.js?v=65791c5f" defer></script>
-<script src="/assets/ps-calc.js?v=65791c5f" defer></script>
+<script src="/assets/site.js?v=e3004387" defer></script>
+<script src="/assets/lesson.js?v=e3004387" defer></script>
+<script src="/assets/ee-kit.js?v=e3004387" defer></script>
+<script src="/assets/ps-calc.js?v=e3004387" defer></script>
 </body>
 </html>

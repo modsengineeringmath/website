@@ -23,6 +23,7 @@ The new page appears in the library, on the home page, in the prev/next links, s
 
 ## SEO and AI visibility (added 2026-10-09)
 - `node build.mjs` also writes `llms.txt`, `llms-full.txt` (plain text of every page for AI assistants), `feed.xml` (RSS from `data/updates.json`), `sitemap.xml` and `404.html`.
+- It also writes `search-index.json` for the search button in the header (`assets/site.js`, opens with the magnifier, `/` or Ctrl/⌘+K): title, description, keywords, FAQ questions and `h2`/`h3` headings with their `id` (results deep-link to the section) of every indexable page, plus the other English terms in the body. Give headings an `id` so they show up as section results. Pages with `noindex` are left out.
 - Social share images: `python3 scripts/og.py && node build.mjs` renders `images/og/<page>.jpg` (1200×630) from `src/og-manifest.json`. Run it after adding a page or changing a title. A page can set `"og": {"title","sub","eyebrow","sym"}` in its meta block.
 - `robots.txt` explicitly allows AI crawlers; `_headers` sets UTF-8 for text files and `noindex` on source files.
 - Lesson pages get a share bar (LINE, Facebook, X, copy link) automatically.
