@@ -1,0 +1,295 @@
+<!--meta
+{
+  "title": "ฟังก์ชันเวกเตอร์ (Vector-Valued Functions): เส้นโค้งในอวกาศ ความเร็ว ความเร่ง ความยาวส่วนโค้ง ความโค้ง | อาจารย์มด",
+  "h1": "ฟังก์ชันเวกเตอร์ (Vector-Valued Functions): เส้นโค้งในอวกาศ ความเร็ว ความเร่ง ความยาวส่วนโค้ง และความโค้ง",
+  "description": "ฟังก์ชันเวกเตอร์ r(t) (vector function) คืออะไร เส้นโค้งในอวกาศ (space curve) อนุพันธ์และอินทิกรัลของ r(t) เวกเตอร์สัมผัส ความเร็ว ความเร่ง ความยาวส่วนโค้ง (arc length) ความโค้ง κ (curvature) กรอบ Frenet–Serret T N B torsion และ a_T a_N พร้อมตัวอย่างลูกกระสุน ทางโค้งถนน ทางลาดเกลียว อนุภาคในสนามแม่เหล็ก และแล็บเส้นโค้ง 3 มิติ",
+  "ogTitle": "ฟังก์ชันเวกเตอร์ r(t): ความเร็ว ความเร่ง ความยาวส่วนโค้ง ความโค้ง (Frenet–Serret)",
+  "lesson": "multivariable-calculus",
+  "sub": "vector-functions",
+  "nav": "mvc",
+  "katex": true,
+  "published": "2026-10-17",
+  "updated": "2026-10-17",
+  "level": ["Undergraduate"],
+  "keywords": ["ฟังก์ชันเวกเตอร์", "vector-valued function", "r(t)", "เส้นโค้งในอวกาศ", "space curve", "ความโค้ง", "curvature", "ความยาวส่วนโค้ง", "arc length", "Frenet-Serret", "TNB frame", "torsion", "ความเร็วและความเร่งเวกเตอร์", "projectile motion", "tangent vector"],
+  "about": ["Vector-valued function", "Space curve", "Velocity and acceleration vectors", "Unit tangent vector", "Arc length", "Curvature", "Radius of curvature", "Frenet–Serret frame", "Torsion", "Tangential and normal acceleration", "Projectile motion", "Helix"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/mvc-core.js", "/assets/mvc-lab.js", "/assets/mvc-vec.js"],
+  "og": {"title": "ฟังก์ชันเวกเตอร์ r(t)", "sub": "เส้นโค้งในอวกาศ ความเร็ว ความเร่ง ความยาวส่วนโค้ง ความโค้ง และกรอบ Frenet", "eyebrow": "บทที่ 24.6 · Vector-Valued Functions", "sym": "r(t)"},
+  "faq": [
+    {"q": "ฟังก์ชันเวกเตอร์ (vector-valued function) คืออะไร?", "a": "คือฟังก์ชันที่รับตัวเลขหนึ่งตัว (มักเป็นเวลา \\(t\\)) แล้วให้ผลลัพธ์เป็นเวกเตอร์ เช่น \\(\\mathbf r(t) = \\langle x(t), y(t), z(t)\\rangle\\) ซึ่งแทนตำแหน่งของวัตถุที่เคลื่อนที่ในอวกาศ ปลายเวกเตอร์ตำแหน่งวาดเป็นเส้นโค้งเมื่อ \\(t\\) เปลี่ยน ลิมิต อนุพันธ์ และอินทิกรัลทำทีละองค์ประกอบ เช่น \\(\\mathbf r'(t) = \\langle x'(t), y'(t), z'(t)\\rangle\\) คือเวกเตอร์ความเร็ว"},
+    {"q": "ความเร็วกับอัตราเร็ว (velocity vs speed) ต่างกันอย่างไร?", "a": "ความเร็ว (velocity) \\(\\mathbf v = \\mathbf r'(t)\\) เป็นเวกเตอร์ มีทั้งขนาดและทิศ (สัมผัสเส้นทาง) ส่วนอัตราเร็ว (speed) \\(|\\mathbf v| = |\\mathbf r'(t)|\\) เป็นสเกลาร์ คือขนาดของความเร็ว ความเร่ง \\(\\mathbf a = \\mathbf r''(t)\\) เป็นเวกเตอร์เช่นกัน ถ้าเคลื่อนที่ด้วยอัตราเร็วคงที่แต่เส้นทางโค้ง ความเร็วยังเปลี่ยนทิศจึงยังมีความเร่ง (ความเร่งสู่ศูนย์กลาง)"},
+    {"q": "คำนวณความยาวส่วนโค้ง (arc length) ของเส้นโค้งอย่างไร?", "a": "ใช้ \\(L = \\int_a^b |\\mathbf r'(t)|\\,dt = \\int_a^b \\sqrt{x'^2 + y'^2 + z'^2}\\,dt\\) คืออินทิกรัลของอัตราเร็วตามเวลา ตัวอย่างเกลียว \\(\\langle\\cos t, \\sin t, t\\rangle\\) มี \\(|\\mathbf r'| = \\sqrt2\\) หนึ่งรอบ (\\(0 \\le t \\le 2\\pi\\)) ยาว \\(2\\pi\\sqrt2 \\approx 8.886\\) ทางลาดเกลียวรัศมี 15 ม. ขึ้น 4 ม. ต่อรอบยาว 94.33 ม. สูตรนี้ไม่ขึ้นกับวิธีเลือกพารามิเตอร์"},
+    {"q": "ความโค้ง (curvature) κ หาอย่างไร มีความหมายอย่างไร?", "a": "ความโค้งคืออัตราที่ทิศทางสัมผัสหมุนต่อความยาวส่วนโค้ง \\(\\kappa = |d\\mathbf T/ds|\\) คำนวณได้จาก \\(\\kappa = \\dfrac{|\\mathbf r' \\times \\mathbf r''|}{|\\mathbf r'|^3}\\) สำหรับเส้นโค้ง \\(y = f(x)\\) ในระนาบใช้ \\(\\kappa = \\dfrac{|f''|}{(1 + f'^2)^{3/2}}\\) รัศมีความโค้ง \\(R = 1/\\kappa\\) คือรัศมีวงกลมที่แนบกับเส้นโค้งที่สุด ในงานถนนความโค้งกำหนดความเร่งด้านข้าง \\(a_N = v^2/R\\) ที่ผู้โดยสารรู้สึก"},
+    {"q": "กรอบ Frenet–Serret (T, N, B) คืออะไร?", "a": "เป็นระบบแกนที่เคลื่อนไปกับเส้นโค้ง ประกอบด้วยเวกเตอร์หนึ่งหน่วยสามตัวตั้งฉากกัน: \\(\\mathbf T\\) สัมผัสเส้นโค้ง (ทิศเคลื่อนที่) \\(\\mathbf N = \\mathbf T'/|\\mathbf T'|\\) ชี้เข้าหาจุดศูนย์กลางความโค้ง และ \\(\\mathbf B = \\mathbf T \\times \\mathbf N\\) ตั้งฉากกับระนาบออสคิวเลติง ความเร่งแตกเป็น \\(\\mathbf a = a_T\\mathbf T + a_N\\mathbf N\\) โดย \\(a_T = \\tfrac{d|\\mathbf v|}{dt}\\) (เปลี่ยนอัตราเร็ว) และ \\(a_N = \\kappa|\\mathbf v|^2\\) (เปลี่ยนทิศ) ส่วน torsion \\(\\tau\\) วัดการบิดออกจากระนาบ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/multivariable-calculus/">แคลคูลัสหลายตัวแปร</a></li><li>ฟังก์ชันเวกเตอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 24.6 · แคลคูลัสเวกเตอร์ · Vector-Valued Functions</p>
+      <h1>ฟังก์ชันเวกเตอร์ (Vector-Valued Functions): เส้นโค้งในอวกาศ ความเร็ว ความเร่ง ความยาวส่วนโค้ง และความโค้ง</h1>
+      <p class="lede">ลูกบอลที่ถูกโยน อนุภาคที่ลอยในสนามแม่เหล็ก หัวจับของแขนกลที่ลากเส้นทางหนึ่ง ทางลาดเกลียวของลานจอดรถ ทั้งหมดเคลื่อนที่ในอวกาศ ตำแหน่งของมันคือเวกเตอร์ที่เปลี่ยนตามเวลา เรียกว่าฟังก์ชันเวกเตอร์ (vector-valued function) \(\mathbf r(t)\) เมื่อหาอนุพันธ์ได้ความเร็วและความเร่ง เมื่ออินทิเกรตได้ระยะทาง และเมื่อวิเคราะห์รูปร่างของเส้นทางได้ความโค้งและกรอบ Frenet–Serret ที่บอกว่า “เลี้ยวแรงแค่ไหน” หน้านี้มีแล็บที่วาดเส้นโค้ง 3 มิติ พร้อมเวกเตอร์ T N B วงกลมออสคิวเลติง และค่า κ τ แบบเรียลไทม์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#curve-lab-h">แล็บเส้นโค้ง 3 มิติ</a>
+        <a class="btn btn-ghost btn-sm" href="#derivative">อนุพันธ์ r′(t)</a>
+        <a class="btn btn-ghost btn-sm" href="#motion">ความเร็ว · ความเร่ง</a>
+        <a class="btn btn-ghost btn-sm" href="#arc">ความยาวส่วนโค้ง</a>
+        <a class="btn btn-ghost btn-sm" href="#curvature">ความโค้ง · Frenet</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\mathbf r(t) = \langle x(t), y(t), z(t)\rangle\) · ลิมิต อนุพันธ์ อินทิกรัล <b>ทำทีละองค์ประกอบ</b> · \(\mathbf v = \mathbf r'\) (สัมผัสเส้นโค้ง) · \(\mathbf a = \mathbf r''\)</li>
+          <li><b>ความยาวส่วนโค้ง</b> \(L = \int_a^b |\mathbf r'(t)|\,dt\) · <b>ความโค้ง</b> \(\kappa = \dfrac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|^3}\) · รัศมี \(R = 1/\kappa\)</li>
+          <li><b>กรอบ Frenet:</b> \(\mathbf T = \mathbf r'/|\mathbf r'|\) · \(\mathbf N = \mathbf T'/|\mathbf T'|\) · \(\mathbf B = \mathbf T\times\mathbf N\) · \(\mathbf a = a_T\mathbf T + a_N\mathbf N\), \(a_N = \kappa|\mathbf v|^2\)</li>
+          <li>ความเร่งทิศ \(\mathbf N\) เกิดจากการเลี้ยว แม้อัตราเร็วคงที่ · ตัวอย่าง: โรเตอร์ 3000 rpm รัศมี 15 cm มี \(a_N = 14\,800\) m/s² ≈ 1510 g</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · แคลคูลัส 1</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 3 · คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> พิสูจน์ · ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น velocity, arc length, curvature, torsion, frenet, centripetal, helix" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">ฟังก์ชันเวกเตอร์และเส้นโค้งในอวกาศ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ฟังก์ชันเวกเตอร์รับตัวเลขหนึ่งตัวและให้เวกเตอร์ออกมา ถ้า \(t\) คือเวลา \(\mathbf r(t)\) คือเวกเตอร์ตำแหน่ง ปลายของมันลากเป็น<b>เส้นโค้งในอวกาศ (space curve)</b> สมการ \(x(t),\ y(t),\ z(t)\) เรียกว่า<b>สมการพารามิเตอร์ (parametric equations)</b> เส้นโค้งเดียวกันเขียนด้วยพารามิเตอร์ได้หลายแบบ แต่ทิศการเคลื่อนที่และความเร็วที่ผ่านแต่ละจุดต่างกัน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R1" data-k="vector valued function r(t) parametric equations space curve ฟังก์ชันเวกเตอร์ สมการพารามิเตอร์ เส้นโค้งในอวกาศ">
+        <p class="tf-n"><b><span class="fid">R1</span> Vector-valued function</b> ฟังก์ชันเวกเตอร์</p>
+        \[ \mathbf r(t) = x(t)\,\mathbf i + y(t)\,\mathbf j + z(t)\,\mathbf k = \langle x(t),\, y(t),\, z(t)\rangle,\qquad t \in [a, b] \]
+        <p class="tf-x">ตัวอย่าง: เส้นตรง \(\mathbf r_0 + t\mathbf d\) · วงกลม \(\langle R\cos t, R\sin t, 0\rangle\) · เกลียว \(\langle R\cos t, R\sin t, ct\rangle\) · ลูกกระสุน \(\langle v_x t,\ 0,\ v_z t - \tfrac12 gt^2\rangle\)</p>
+      </div>
+      <div class="tf wide" id="R2" data-k="limit derivative integral componentwise vector function ลิมิต อนุพันธ์ อินทิกรัล ทีละองค์ประกอบ">
+        <p class="tf-n"><b><span class="fid">R2</span> Calculus componentwise</b> แคลคูลัสทำทีละองค์ประกอบ</p>
+        \[ \lim_{t\to a}\mathbf r(t) = \langle \lim x, \lim y, \lim z\rangle,\quad \mathbf r'(t) = \langle x', y', z'\rangle,\quad \int_a^b \mathbf r(t)\,dt = \left\langle \int_a^b x\,dt,\ \int_a^b y\,dt,\ \int_a^b z\,dt\right\rangle \]
+        <p class="tf-x">ใช้ได้เพราะเวกเตอร์ประกอบด้วยสามองค์ประกอบอิสระ · \(\mathbf r\) ต่อเนื่องก็ต่อเมื่อทุกองค์ประกอบต่อเนื่อง · ทฤษฎีบทมูลฐาน: \(\int_a^b \mathbf r'\,dt = \mathbf r(b) - \mathbf r(a)\)</p>
+      </div>
+    </div>
+    <h3 id="curve-lab-h">แล็บเส้นโค้งในอวกาศ</h3>
+    <p>เลือกเส้นโค้งหรือพิมพ์ \(x(t),\ y(t),\ z(t)\) เอง เลื่อนแถบเพื่อเดินไปตามเส้นโค้ง ลูกศรสีส้ม \(\mathbf T\) ชี้ทิศเคลื่อนที่ สีฟ้า \(\mathbf N\) ชี้เข้าหาศูนย์กลางความโค้ง สีเขียว \(\mathbf B\) ตั้งฉากทั้งคู่ วงกลมประสีฟ้าคือวงกลมออสคิวเลติงที่ “แนบ” เส้นโค้งที่สุด ตารางด้านข้างแสดง \(\mathbf v\), \(\mathbf a\), \(\kappa\), \(\tau\), \(a_T\), \(a_N\) และความยาวส่วนโค้ง ส่วนต่าง ๆ ของบทนี้ใช้แล็บเดียวกันนี้อ้างอิง</p>
+    <div class="mv-curve" id="curve-lab" data-x="cos(t)" data-y="sin(t)" data-z="t" data-t0="0" data-t1="4*pi" data-s="0.3" data-show="T,N,B,osc"></div>
+    <figure class="lt-wide"><!--FIG:mv-frenet--><svg class="mf" viewBox="0 0 700 360" role="img" aria-label="กรอบ Frenet–Serret (Frenet frame) บนเส้นโค้งเกลียว: เวกเตอร์สัมผัส T, normal N, binormal B และวงกลมออสคิวเลติง (osculating circle) รัศมี 1/κ"><defs><marker id="mvfr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-2)"/></marker><marker id="mvfr-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker><marker id="mvfr-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--signal)"/></marker><marker id="mvfr-g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ok)"/></marker></defs><path class="mf-sig" d="M342.9 332.2 L345.9 329.1 L348.5 326 L350.7 322.8 L352.5 319.6 L353.8 316.3 L354.6 313 L355 309.7 L354.9 306.4 L354.3 303.1 L353.3 299.9 L351.8 296.6 L349.9 293.4 L347.5 290.3 L344.8 287.1 L341.5 284.1 L337.9 281.1 L333.9 278.2 L329.6 275.5 L324.9 272.8 L319.9 270.2 L314.6 267.7 L309 265.3 L303.2 263.1 L297.2 260.9 L291 259 L284.6 257.1 L278.1 255.4 L271.6 253.8 L264.9 252.4 L258.3 251.1 L251.7 250 L245.1 249 L238.5 248.1 L232.1 247.4 L225.8 246.8 L219.7 246.4 L213.8 246.1 L208.1 245.9 L202.7 245.8 L197.5 245.8 L192.7 246 L188.1 246.2 L184 246.6 L180.2 247 L176.8 247.5 L173.8 248.1 L171.2 248.7 L169 249.4 L167.4 250.2 L166.1 250.9 L165.3 251.7 L165 252.5 L165.2 253.3 L165.8 254.1 L166.8 254.8 L168.4 255.6 L170.3 256.3 L172.8 256.9 L175.6 257.5 L178.9 258.1 L182.5 258.5 L186.6 258.9 L191 259.2 L195.7 259.4 L200.7 259.5 L206.1 259.4 L211.7 259.3 L217.5 259 L223.6 258.6 L229.8 258.1 L236.2 257.4 L242.6 256.6 L249.2 255.7 L255.9 254.6 L262.5 253.4 L269.1 252 L275.7 250.5 L282.2 248.8 L288.6 247 L294.9 245.1 L301 243 L306.9 240.8 L312.6 238.5 L318 236 L323.1 233.5 L327.9 230.8 L332.4 228.1 L336.5 225.2 L340.3 222.3 L343.6 219.3 L346.6 216.2 L349.1 213 L351.2 209.8 L352.8 206.6 L354 203.3 L354.7 200.1 L355 196.8 L354.8 193.5 L354.1 190.2 L353 186.9 L351.4 183.7 L349.4 180.5 L346.9 177.3 L344 174.2 L340.7 171.2 L337 168.3 L332.9 165.4 L328.5 162.6 L323.7 159.9 L318.6 157.4 L313.3 154.9 L307.6 152.6 L301.8 150.4 L295.7 148.3 L289.5 146.3 L283.1 144.5 L276.6 142.8 L270 141.3 L263.4 139.9 L256.7 138.7 L250.1 137.5 L243.5 136.6 L237 135.8 L230.6 135.1 L224.3 134.5 L218.3 134.1 L212.4 133.8 L206.8 133.7 L201.4 133.6 L196.3 133.7 L191.5 133.9 L187.1 134.1 L183 134.5 L179.3 134.9 L176 135.5 L173.1 136.1 L170.6 136.7 L168.6 137.4 L167 138.1 L165.9 138.9 L165.2 139.7 L165 140.5 L165.3 141.3 L166 142.1 L167.2 142.8 L168.8 143.6 L170.9 144.3 L173.4 144.9 L176.4 145.5 L179.7 146 L183.5 146.5 L187.6 146.8 L192.1 147.1 L196.9 147.2 L202 147.3 L207.4 147.2 L213.1 147.1 L218.9 146.8 L225 146.3 L231.3 145.8 L237.7 145.1 L244.2 144.2 L250.8 143.2 L257.4 142.1 L264.1 140.9 L270.7 139.4 L277.3 137.9 L283.8 136.2 L290.2 134.4 L296.4 132.4 L302.4 130.3 L308.3 128.1 L313.9 125.7 L319.2 123.3 L324.3 120.7 L329 118 L333.4 115.2 L337.4 112.3 L341.1 109.4 L344.4 106.3 L347.2 103.2 L349.6 100.1 L351.6 96.9 L353.1 93.6 L354.2 90.4 L354.8 87.1 L355 83.8 L354.7 80.5 L353.9 77.2 L352.7 73.9 L351 70.7 L348.8 67.5 L346.3 64.4 L343.3 61.3 L339.9 58.3 L336.1 55.4 L331.9 52.5 L327.4 49.8 L322.5 47.1 L317.4 44.6" fill="none"/><circle class="mf-dot" cx="204.5" cy="259.5" r="4.5"/><line class="mf-sig2" x1="204.5" y1="259.5" x2="265" y2="258.9" marker-end="url(#mvfr-s)"/><text class="mf-h" x="271" y="262.9" text-anchor="start">T</text><line class="mf-sig3" x1="204.5" y1="259.5" x2="248.9" y2="240.5" marker-end="url(#mvfr-g)"/><text class="mf-h" x="254.9" y="244.5" text-anchor="start">N</text><line class="mf-sig" x1="204.5" y1="259.5" x2="192.4" y2="186.8" marker-end="url(#mvfr-a)"/><text class="mf-h" x="198.4" y="190.8" text-anchor="start">B</text><path class="mf-dash" d="M204.5 259.5 L213.1 259.2 L222.1 258.8 L231.6 258 L241.5 257 L251.6 255.8 L261.8 254.3 L272 252.6 L282.1 250.7 L291.9 248.6 L301.5 246.4 L310.6 244.1 L319.2 241.7 L327.1 239.1 L334.4 236.6 L340.9 234 L346.5 231.4 L351.1 228.9 L354.8 226.4 L357.5 224 L359.2 221.7 L359.8 219.6 L359.3 217.7 L357.7 215.9 L355.1 214.3 L351.5 213 L346.9 211.9 L341.4 211.1 L335 210.5 L327.8 210.1 L319.9 210.1 L311.4 210.3 L302.3 210.8 L292.8 211.5 L282.9 212.5 L272.9 213.8 L262.7 215.3 L252.5 217 L242.4 218.8 L232.5 220.9 L223 223.1 L213.8 225.5 L205.3 227.9 L197.3 230.4 L190 233 L183.6 235.6 L178 238.1 L173.3 240.7 L169.6 243.2 L166.9 245.5 L165.3 247.8 L164.7 249.9 L165.2 251.9 L166.7 253.7 L169.3 255.2 L172.9 256.6 L177.5 257.6 L183 258.5 L189.4 259.1 L196.6 259.4 L204.5 259.5 Z" fill="none"/><rect class="mf-box" x="455" y="60" width="235" height="200" rx="8"/><text class="mf-l" x="470" y="86" text-anchor="start">r(t) = ⟨cos t, sin t, 0.2t⟩</text><text class="mf-t" x="470" y="114" text-anchor="start">T = r′/|r′|  (สัมผัส)</text><text class="mf-t" x="470" y="136" text-anchor="start">N = T′/|T′|  (ชี้เข้าหาโค้ง)</text><text class="mf-t" x="470" y="158" text-anchor="start">B = T × N  (ตั้งฉากระนาบ)</text><text class="mf-t" x="470" y="188" text-anchor="start">κ = |T′|/|r′|  ความโค้ง</text><text class="mf-t" x="470" y="210" text-anchor="start">R = 1/κ  รัศมีออสคิวเลติง</text><text class="mf-k" x="470" y="236" text-anchor="start">วงกลมประ = osculating circle</text></svg><!--/FIG--><figcaption>กรอบ Frenet–Serret (Frenet frame) บนเส้นโค้งในอวกาศ: \(\mathbf T\) สัมผัส \(\mathbf N\) ชี้เข้าหาจุดศูนย์กลางความโค้ง \(\mathbf B\) ตั้งฉากกับระนาบออสคิวเลติง (osculating plane) และวงกลมออสคิวเลติงรัศมี \(R = 1/\kappa\)</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="derivative">
+    <h2 id="derivative">อนุพันธ์ของ r(t): เวกเตอร์สัมผัส <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>อนุพันธ์ \(\mathbf r'(t) = \lim_{h\to0}\dfrac{\mathbf r(t + h) - \mathbf r(t)}{h}\) คืออัตราเปลี่ยนของตำแหน่ง ทางเรขาคณิต \(\mathbf r(t + h) - \mathbf r(t)\) คือเวกเตอร์ที่ลากจากจุดหนึ่งไปจุดถัดไปบนเส้นโค้ง เมื่อ \(h \to 0\) เวกเตอร์นี้เข้าหาทิศสัมผัส จึงได้ว่า \(\mathbf r'(t)\) <b>สัมผัสเส้นโค้งเสมอ</b> และชี้ไปทางที่ \(t\) เพิ่ม</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R3" data-k="tangent vector unit tangent T = r'/|r'| tangent line เวกเตอร์สัมผัส เส้นสัมผัส">
+        <p class="tf-n"><b><span class="fid">R3</span> Tangent vector and tangent line</b> เวกเตอร์สัมผัสและเส้นสัมผัส</p>
+        \[ \mathbf T(t) = \frac{\mathbf r'(t)}{|\mathbf r'(t)|},\qquad \text{เส้นสัมผัสที่ } t_0:\ \mathbf L(s) = \mathbf r(t_0) + s\,\mathbf r'(t_0) \]
+        <p class="tf-x">ต้องมี \(\mathbf r'(t_0) \ne \mathbf 0\) (เส้นโค้งเรียบ ณ จุดนั้น) · \(\mathbf T\) ไม่ขึ้นกับว่าใช้พารามิเตอร์ใด (แต่ทิศอาจกลับ)</p>
+      </div>
+      <div class="tf wide" id="R4" data-k="differentiation rules dot product cross product product rule d/dt (u.v) (u x v) กฎอนุพันธ์ เวกเตอร์">
+        <p class="tf-n"><b><span class="fid">R4</span> Differentiation rules</b> กฎอนุพันธ์ของเวกเตอร์</p>
+        \[ (\mathbf u\cdot\mathbf v)' = \mathbf u'\cdot\mathbf v + \mathbf u\cdot\mathbf v',\qquad (\mathbf u\times\mathbf v)' = \mathbf u'\times\mathbf v + \mathbf u\times\mathbf v',\qquad (f\mathbf u)' = f'\mathbf u + f\mathbf u' \]
+        <p class="tf-x">ลำดับในผลคูณไขว้ต้องคงเดิม (\(\mathbf u'\times\mathbf v\) ไม่ใช่ \(\mathbf v\times\mathbf u'\)) · ผลสำคัญ: ถ้า \(|\mathbf r(t)|\) คงที่ แล้ว \(\mathbf r\cdot\mathbf r' = 0\) (เวกเตอร์ขนาดคงที่ตั้งฉากกับอนุพันธ์ของมัน) ซึ่งทำให้ \(\mathbf T \perp \mathbf T'\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-1 · เส้นสัมผัสของ twisted cubic</span><h3>\(\mathbf r(t) = \langle t,\ t^2,\ t^3\rangle\) หา \(\mathbf r'(t)\), \(\mathbf T(1)\) และเส้นสัมผัสที่ \(t = 1\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"t","y":"t^2","z":"t^3","t0":"-1.2","t1":"1.2","s":0.9167}'>เปิดในแล็บ (t = 1)</button></div>
+      <ol class="steps">
+        <li><p>\(\mathbf r'(t) = \langle 1,\ 2t,\ 3t^2\rangle\) · ที่ \(t = 1\): \(\mathbf r(1) = \langle 1,1,1\rangle\) และ \(\mathbf r'(1) = \langle 1, 2, 3\rangle\)</p></li>
+        <li><p>\(|\mathbf r'(1)| = \sqrt{1 + 4 + 9} = \sqrt{14} \approx 3.742\) · \(\mathbf T(1) = \dfrac{1}{\sqrt{14}}\langle 1, 2, 3\rangle \approx \langle 0.267, 0.535, 0.802\rangle\)</p></li>
+        <li><p>เส้นสัมผัส: \(\mathbf L(s) = \langle 1, 1, 1\rangle + s\langle 1, 2, 3\rangle\) หรือ \(x = 1 + s,\ y = 1 + 2s,\ z = 1 + 3s\)</p></li>
+      </ol>
+      <p class="answer">\(\mathbf r'(t) = \langle 1, 2t, 3t^2\rangle\) · \(\mathbf T(1) = \langle 1,2,3\rangle/\sqrt{14}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="motion">
+    <h2 id="motion">ความเร็ว ความเร่ง และการเคลื่อนที่ในอวกาศ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้า \(\mathbf r(t)\) คือตำแหน่ง ความเร็วคืออนุพันธ์ตำแหน่ง และความเร่งคืออนุพันธ์ความเร็ว ตรงกับฟิสิกส์ แต่ในรูปเวกเตอร์ทั้งหมด การเคลื่อนที่ในอวกาศจึงเป็นการวิเคราะห์สามแกนพร้อมกัน และถ้ารู้ความเร่ง (จากแรง \(\mathbf F = m\mathbf a\)) ก็อินทิเกรตย้อนกลับเพื่อหาความเร็วและตำแหน่งได้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R5" data-k="velocity speed acceleration r' r'' |v| ความเร็ว อัตราเร็ว ความเร่ง">
+        <p class="tf-n"><b><span class="fid">R5</span> Velocity, speed, acceleration</b> ความเร็ว อัตราเร็ว ความเร่ง</p>
+        \[ \mathbf v(t) = \mathbf r'(t),\qquad v = |\mathbf v(t)| = \sqrt{x'^2 + y'^2 + z'^2},\qquad \mathbf a(t) = \mathbf v'(t) = \mathbf r''(t) \]
+        <p class="tf-x">ความเร็ว = เวกเตอร์ (สัมผัสเส้นทาง) · อัตราเร็ว = สเกลาร์ ≥ 0 · ย้อนกลับ: \(\mathbf v(t) = \mathbf v_0 + \int\mathbf a\,dt\) และ \(\mathbf r(t) = \mathbf r_0 + \int\mathbf v\,dt\)</p>
+      </div>
+      <div class="tf wide" id="R6" data-k="projectile motion r(t) = r0 + v0 t - 1/2 g t^2 range max height time of flight ลูกกระสุน พิสัย ความสูงสูงสุด">
+        <p class="tf-n"><b><span class="fid">R6</span> Projectile motion (no drag)</b> การเคลื่อนที่แบบกระสุน (ไม่คิดแรงต้าน)</p>
+        \[ \mathbf r(t) = \big\langle v_0\cos\alpha\ t,\ \ 0,\ \ v_0\sin\alpha\ t - \tfrac12 gt^2\big\rangle,\quad t_f = \frac{2v_0\sin\alpha}{g},\quad R = \frac{v_0^2\sin2\alpha}{g},\quad H = \frac{v_0^2\sin^2\alpha}{2g} \]
+        <p class="tf-x">\(\mathbf a = \langle 0, 0, -g\rangle\) คงที่ · พิสัยสูงสุดที่ \(\alpha = 45^\circ\) · ถ้ามีแรงต้านอากาศต้องแก้เชิงตัวเลข</p>
+      </div>
+      <div class="tf wide" id="R7" data-k="uniform circular motion centripetal acceleration omega r v = R omega a = R omega^2 = v^2/R การเคลื่อนที่เป็นวงกลม ความเร่งสู่ศูนย์กลาง">
+        <p class="tf-n"><b><span class="fid">R7</span> Uniform circular motion</b> การเคลื่อนที่เป็นวงกลมสม่ำเสมอ</p>
+        \[ \mathbf r = \langle R\cos\omega t,\ R\sin\omega t\rangle,\quad \mathbf v = R\omega\langle-\sin\omega t,\ \cos\omega t\rangle,\quad \mathbf a = -\omega^2\mathbf r,\quad |\mathbf a| = R\omega^2 = \frac{v^2}{R} \]
+        <p class="tf-x">\(\mathbf a\) ชี้เข้าศูนย์กลาง (\(-\mathbf r\)) แม้อัตราเร็ว \(|\mathbf v| = R\omega\) คงที่ · \(\omega\) (rad/s) = \(2\pi n/60\) เมื่อ \(n\) = rpm</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-2 · ลูกกระสุน (เครื่องกล)</span><h3>ขว้างวัตถุด้วยอัตราเร็ว \(v_0 = 20\) m/s ทำมุม \(60^\circ\) กับแนวราบ (\(g = 9.8\) m/s²) หาเวลาตกพื้น พิสัย และความสูงสูงสุด</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"10*t","y":"0","z":"17.32*t-4.9*t^2","t0":"0","t1":"3.535","s":0.5}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(v_x = 20\cos60^\circ = 10\) m/s · \(v_z = 20\sin60^\circ = 17.32\) m/s · \(\mathbf r(t) = \langle 10t,\ 0,\ 17.32t - 4.9t^2\rangle\)</p></li>
+        <li><p>ตกพื้นเมื่อ \(z = 0\): \(t(17.32 - 4.9t) = 0\) → \(t_f = 17.32/4.9 = 3.535\) s</p></li>
+        <li><p>พิสัย \(R = x(t_f) = 10(3.535) = 35.35\) m (ตรงกับ \(v_0^2\sin120^\circ/g = 400(0.866)/9.8\))</p></li>
+        <li><p>สูงสุดเมื่อ \(v_z = 0\): \(t = 17.32/9.8 = 1.767\) s · \(H = 17.32(1.767) - 4.9(1.767)^2 = 15.31\) m</p></li>
+        <li><p>ตรวจ: ความเร็วตอนตกพื้น \(\mathbf v(t_f) = \langle 10,\ 0,\ -17.32\rangle\) อัตราเร็ว \(= 20\) m/s เท่าตอนปล่อย (พลังงานคงตัว) ✓</p></li>
+      </ol>
+      <p class="answer">\(t_f = 3.535\) s · พิสัย \(35.35\) m · \(H = 15.31\) m</p>
+    </div>
+    <div class="wx" id="ex-r3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-3 · โรเตอร์หมุน (ไฟฟ้า/เครื่องกล)</span><h3>โรเตอร์มอเตอร์รัศมี 15 cm หมุน 3000 rpm หาอัตราเร็วที่ผิวและความเร่งสู่ศูนย์กลาง</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"cos(t)","y":"sin(t)","z":"0","t0":"0","t1":"2*pi","s":0.2}'>เปิดในแล็บ (วงกลม)</button></div>
+      <ol class="steps">
+        <li><p>\(\omega = 3000\times 2\pi/60 = 314.16\) rad/s</p></li>
+        <li><p>อัตราเร็วที่ผิว \(v = R\omega = 0.15\times314.16 = 47.12\) m/s (≈ 170 km/h)</p></li>
+        <li><p>ความเร่งสู่ศูนย์กลาง \(a = R\omega^2 = 0.15\times314.16^2 = 14\,804\) m/s² หรือเทียบกับแรงโน้มถ่วง \(14\,804/9.81 = 1509\,g\)</p></li>
+        <li><p>แรงสู่ศูนย์กลางต่อมวล 1 กรัมของลวดทองแดงที่ปลายโรเตอร์ \(= 0.001\times14\,804 = 14.8\) N จึงต้องมีลิ่มและแถบรัดยึดขดลวดกับโรเตอร์ (ความเค้นแปรผันตาม \(\omega^2\) ทำให้ความเร็วรอบสูงสุดถูกจำกัดโดยวัสดุ)</p></li>
+      </ol>
+      <p class="answer">\(v = 47.1\) m/s · \(a = 1.48\times10^4\) m/s² ≈ 1509 g</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arc">
+    <h2 id="arc">ความยาวส่วนโค้ง (Arc Length) <span class="lv lv-i">กลาง</span></h2>
+    <p>ระยะทางที่เดินตามเส้นโค้ง คืออินทิกรัลของอัตราเร็วตามเวลา เพราะในช่วงเวลา \(dt\) วัตถุเดินได้ \(|\mathbf r'|\,dt\) ผลนี้ไม่ขึ้นกับพารามิเตอร์ที่เลือก ถ้าใช้ความยาวส่วนโค้ง \(s\) เป็นพารามิเตอร์เอง (arc-length parametrization) จะได้ \(|d\mathbf r/ds| = 1\) พอดี ซึ่งเป็นรากฐานของนิยามความโค้ง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R8" data-k="arc length integral |r'| dt ความยาวส่วนโค้ง s(t) arc length parametrization">
+        <p class="tf-n"><b><span class="fid">R8</span> Arc length</b> ความยาวส่วนโค้ง</p>
+        \[ L = \int_a^b |\mathbf r'(t)|\,dt = \int_a^b\sqrt{x'(t)^2 + y'(t)^2 + z'(t)^2}\,dt,\qquad s(t) = \int_a^t|\mathbf r'(u)|\,du,\ \ \frac{ds}{dt} = |\mathbf r'(t)| \]
+        <p class="tf-x">เส้นโค้ง \(y = f(x)\): \(L = \int_a^b\sqrt{1 + f'(x)^2}\,dx\) · อินทิกรัลมักไม่มีรูปปิด ใช้วิธีเชิงตัวเลข (แล็บใช้ Gauss–Legendre) · พารามิเตอร์ด้วย \(s\): \(\mathbf r(s)\) มีอัตราเร็ว 1 เสมอ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-4 · ความยาวเกลียว</span><h3>หาความยาวของ \(\mathbf r(t) = \langle\cos t,\ \sin t,\ t\rangle\) สำหรับ \(0 \le t \le 2\pi\) (หนึ่งรอบ)</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"cos(t)","y":"sin(t)","z":"t","t0":"0","t1":"2*pi","s":1}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(\mathbf r' = \langle-\sin t,\ \cos t,\ 1\rangle\) · \(|\mathbf r'| = \sqrt{\sin^2t + \cos^2t + 1} = \sqrt2\) (คงที่ทั้งเส้น)</p></li>
+        <li><p>\(L = \displaystyle\int_0^{2\pi}\sqrt2\,dt = 2\pi\sqrt2 \approx 8.886\)</p></li>
+        <li><p>ตรวจด้วยเรขาคณิต: คลี่ผิวทรงกระบอกออกเป็นแผ่นราบ เกลียวเป็นเส้นทแยงมุมของสี่เหลี่ยมกว้าง \(2\pi\) (เส้นรอบวง) สูง \(2\pi\) (ระยะยก) → \(\sqrt{(2\pi)^2 + (2\pi)^2} = 2\pi\sqrt2\) ✓</p></li>
+      </ol>
+      <p class="answer">\(L = 2\pi\sqrt2 \approx 8.886\)</p>
+    </div>
+    <div class="wx" id="ex-r5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-5 · ทางลาดเกลียวของลานจอดรถ (โยธา)</span><h3>ทางลาดวนรัศมี 15 m ขึ้นสูง 4 m ต่อหนึ่งรอบ หาความยาวทางลาดต่อรอบและความชัน</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"15*cos(t)","y":"15*sin(t)","z":"0.6366*t","t0":"0","t1":"2*pi","s":0.4}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(\mathbf r(t) = \langle 15\cos t,\ 15\sin t,\ ct\rangle\) โดยยก 4 m ใน \(2\pi\): \(c = 4/(2\pi) = 0.6366\) m/rad</p></li>
+        <li><p>\(|\mathbf r'| = \sqrt{15^2 + c^2} = \sqrt{225.405} = 15.0135\) m/rad</p></li>
+        <li><p>\(L = 2\pi\times15.0135 = 94.33\) m ต่อรอบ</p></li>
+        <li><p>ความชัน (grade) = ระยะยกต่อระยะทางราบ = \(4/(2\pi\cdot15) = 4/94.25 = 4.24\%\) (ตามแนวรัศมี 15 m) · ที่ขอบในรัศมีเล็กกว่า ความชันจะมากกว่า (รัศมี 6 m ได้ 10.6%) จึงต้องตรวจเกณฑ์ความชันสูงสุดของทางลาด (มักไม่เกิน 12–15%)</p></li>
+      </ol>
+      <p class="answer">\(L = 94.33\) m ต่อรอบ · ความชัน \(4.24\%\) ที่รัศมี 15 m</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="curvature">
+    <h2 id="curvature">ความโค้งและกรอบ Frenet–Serret <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เส้นตรงไม่โค้ง วงกลมรัศมีเล็กโค้งมากกว่าวงกลมรัศมีใหญ่ ความโค้ง (curvature) \(\kappa\) วัดว่าทิศสัมผัส \(\mathbf T\) หมุนเร็วเท่าไรต่อระยะทางที่เดิน: \(\kappa = |d\mathbf T/ds|\) รัศมีความโค้ง \(R = 1/\kappa\) คือรัศมีของวงกลมที่แนบกับเส้นโค้งที่สุดที่จุดนั้น (วงกลมออสคิวเลติง) ดังนั้นโค้งแหลม = \(\kappa\) มาก = \(R\) เล็ก</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="R9" data-k="curvature kappa |dT/ds| |r' x r''|/|r'|^3 radius of curvature ความโค้ง รัศมีความโค้ง">
+        <p class="tf-n"><b><span class="fid">R9</span> Curvature</b> ความโค้ง</p>
+        \[ \kappa = \left|\frac{d\mathbf T}{ds}\right| = \frac{|\mathbf T'(t)|}{|\mathbf r'(t)|} = \frac{|\mathbf r'(t)\times\mathbf r''(t)|}{|\mathbf r'(t)|^3},\qquad R = \frac1\kappa \]
+        <p class="tf-x">สูตรขวาสุดใช้ง่ายที่สุดในทางปฏิบัติ · วงกลมรัศมี \(R\): \(\kappa = 1/R\) · เส้นตรง: \(\kappa = 0\) · เกลียว \(\langle a\cos t, a\sin t, bt\rangle\): \(\kappa = \dfrac{a}{a^2 + b^2}\)</p>
+      </div>
+      <div class="tf wide" id="R10" data-k="curvature plane curve y = f(x) kappa = |f''|/(1+f'^2)^{3/2} ความโค้ง เส้นโค้งในระนาบ">
+        <p class="tf-n"><b><span class="fid">R10</span> Curvature of a plane curve</b> ความโค้งของเส้นโค้งในระนาบ</p>
+        \[ y = f(x):\quad \kappa = \frac{|f''(x)|}{\big(1 + f'(x)^2\big)^{3/2}};\qquad \mathbf r = \langle x(t), y(t)\rangle:\quad \kappa = \frac{|x'y'' - y'x''|}{(x'^2 + y'^2)^{3/2}} \]
+        <p class="tf-x">ใช้กับการโก่งตัวของคาน (\(\kappa \approx f''\) เมื่อลาดน้อย) และทางโค้งแนวดิ่งของถนน</p>
+      </div>
+      <div class="tf wide" id="R11" data-k="Frenet Serret frame T N B binormal normal vector torsion tau กรอบเฟรเนต์ ไบนอร์มอล">
+        <p class="tf-n"><b><span class="fid">R11</span> Frenet–Serret frame</b> กรอบ Frenet–Serret</p>
+        \[ \mathbf T = \frac{\mathbf r'}{|\mathbf r'|},\quad \mathbf N = \frac{\mathbf T'}{|\mathbf T'|},\quad \mathbf B = \mathbf T\times\mathbf N;\qquad \frac{d\mathbf T}{ds} = \kappa\mathbf N,\quad \frac{d\mathbf N}{ds} = -\kappa\mathbf T + \tau\mathbf B,\quad \frac{d\mathbf B}{ds} = -\tau\mathbf N \]
+        <p class="tf-x">\(\mathbf T, \mathbf N, \mathbf B\) เป็นหนึ่งหน่วยและตั้งฉากกันเป็นระบบมือขวา · ระนาบที่ขึงด้วย \(\mathbf T, \mathbf N\) คือระนาบออสคิวเลติง · ในเส้นโค้งระนาบ \(\mathbf B\) คงที่ และ \(\tau = 0\)</p>
+      </div>
+      <div class="tf wide" id="R12" data-k="torsion tau (r' x r'') . r''' / |r' x r''|^2 ทอร์ชัน การบิด">
+        <p class="tf-n"><b><span class="fid">R12</span> Torsion</b> ทอร์ชัน (การบิดของเส้นโค้ง)</p>
+        \[ \tau = \frac{(\mathbf r'\times\mathbf r'')\cdot\mathbf r'''}{|\mathbf r'\times\mathbf r''|^2} \]
+        <p class="tf-x">\(\tau = 0\) ทุกจุด ↔ เส้นโค้งอยู่ในระนาบเดียว · \(\tau\) เป็นบวกเมื่อบิดแบบมือขวา (เหมือนสกรูมาตรฐาน) · เกลียวมือขวา \(\langle a\cos t, a\sin t, bt\rangle\): \(\tau = \dfrac{b}{a^2 + b^2}\)</p>
+      </div>
+      <div class="tf wide" id="R13" data-k="tangential normal acceleration a_T a_N decomposition a = a_T T + a_N N a_N = kappa v^2 ความเร่งสัมผัส ความเร่งตั้งฉาก">
+        <p class="tf-n"><b><span class="fid">R13</span> Tangential and normal acceleration</b> ความเร่งสัมผัสและความเร่งตั้งฉาก</p>
+        \[ \mathbf a = a_T\,\mathbf T + a_N\,\mathbf N,\quad a_T = \frac{d|\mathbf v|}{dt} = \frac{\mathbf r'\cdot\mathbf r''}{|\mathbf r'|},\quad a_N = \kappa|\mathbf v|^2 = \frac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|},\quad |\mathbf a|^2 = a_T^2 + a_N^2 \]
+        <p class="tf-x">\(a_T\) เปลี่ยน<u>อัตราเร็ว</u> · \(a_N\) เปลี่ยน<u>ทิศ</u> (มี \(v^2/R\) เสมอ) · ความเร่งไม่มีองค์ประกอบตามแนว \(\mathbf B\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-6 · κ และ τ ของเกลียว</span><h3>หา \(\kappa\) และ \(\tau\) ของ \(\mathbf r(t) = \langle\cos t,\ \sin t,\ t\rangle\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"cos(t)","y":"sin(t)","z":"t","t0":"0","t1":"4*pi","s":0.3}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(\mathbf r' = \langle-\sin t,\ \cos t,\ 1\rangle\) · \(\mathbf r'' = \langle-\cos t,\ -\sin t,\ 0\rangle\) · \(\mathbf r''' = \langle\sin t,\ -\cos t,\ 0\rangle\)</p></li>
+        <li><p>\(\mathbf r'\times\mathbf r'' = \langle\sin t,\ -\cos t,\ 1\rangle\) · \(|\mathbf r'\times\mathbf r''| = \sqrt2\) · \(|\mathbf r'| = \sqrt2\)</p></li>
+        <li><p>\(\kappa = \dfrac{\sqrt2}{(\sqrt2)^3} = \dfrac{\sqrt2}{2\sqrt2} = \dfrac12\) → รัศมีความโค้ง \(R = 2\) (ใหญ่กว่ารัศมีของกระบอก 1 เพราะเกลียวเอียงขึ้น)</p></li>
+        <li><p>\(\tau = \dfrac{(\mathbf r'\times\mathbf r'')\cdot\mathbf r'''}{2} = \dfrac{\sin^2t + \cos^2t + 0}{2} = \dfrac12\) (บวก = เกลียวมือขวา)</p></li>
+        <li><p>ตรวจด้วยสูตรทั่วไป \(a = 1,\ b = 1\): \(\kappa = \dfrac{a}{a^2+b^2} = \dfrac12\) และ \(\tau = \dfrac{b}{a^2 + b^2} = \dfrac12\) ✓ (ทั้งคู่คงที่ทุกจุด)</p></li>
+      </ol>
+      <p class="answer">\(\kappa = \tfrac12\) · \(R = 2\) · \(\tau = \tfrac12\) (ค่าคงที่ตลอดเส้นโค้ง)</p>
+    </div>
+    <div class="wx" id="ex-r7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-7 · ความเร่งสัมผัสและตั้งฉาก</span><h3>\(\mathbf r(t) = \langle t, t^2, t^3\rangle\) ที่ \(t = 1\) หา \(a_T,\ a_N,\ \kappa,\ \tau\)</h3><button type="button" class="wx-btn calc-go" data-mv-target="curve-lab" data-mv-set='{"x":"t","y":"t^2","z":"t^3","t0":"-1.2","t1":"1.2","s":0.9167,"show":"T,N,B,va"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>จาก R-1: \(\mathbf r'(1) = \langle1, 2, 3\rangle\) · \(\mathbf r''(t) = \langle0, 2, 6t\rangle\) → \(\mathbf r''(1) = \langle0, 2, 6\rangle\) · \(\mathbf r'''= \langle0, 0, 6\rangle\)</p></li>
+        <li><p>\(\mathbf r'\cdot\mathbf r'' = 0 + 4 + 18 = 22\) · \(|\mathbf r'| = \sqrt{14}\) → \(a_T = 22/\sqrt{14} = 5.880\)</p></li>
+        <li><p>\(\mathbf r'\times\mathbf r'' = \langle 2\cdot6 - 3\cdot2,\ 3\cdot0 - 1\cdot6,\ 1\cdot2 - 0\rangle = \langle6, -6, 2\rangle\) · \(|\,\cdot\,| = \sqrt{76} = 8.718\) → \(a_N = 8.718/3.742 = 2.330\)</p></li>
+        <li><p>ตรวจ: \(a_T^2 + a_N^2 = 34.57 + 5.43 = 40.0 = |\mathbf r''|^2 = 4 + 36\) ✓</p></li>
+        <li><p>\(\kappa = \dfrac{8.718}{14^{3/2}} = \dfrac{8.718}{52.38} = 0.1664\) (\(R = 6.01\)) · \(\tau = \dfrac{(6, -6, 2)\cdot(0, 0, 6)}{76} = \dfrac{12}{76} = 0.1579\)</p></li>
+      </ol>
+      <p class="answer">\(a_T = 5.880,\ a_N = 2.330,\ \kappa = 0.1664,\ \tau = 0.1579\) (ผลของแล็บตรงกันทุกค่า)</p>
+    </div>
+    <div class="wx" id="ex-r8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-8 · ทางโค้งถนน (โยธา)</span><h3>รถวิ่ง 100 km/h ผ่านทางโค้งราบรัศมี 300 m ความเร่งด้านข้างเท่าไร และต้องการแรงเสียดทานข้างเท่าไรถ้าไม่มี superelevation</h3></div>
+      <ol class="steps">
+        <li><p>อัตราเร็ว \(v = 100/3.6 = 27.78\) m/s · วิ่งคงที่ จึง \(a_T = 0\) และ \(\mathbf a = a_N\mathbf N\)</p></li>
+        <li><p>\(\kappa = 1/300 = 0.00333\) m⁻¹ · \(a_N = \kappa v^2 = v^2/R = \dfrac{27.78^2}{300} = 2.572\) m/s² (\(= 0.262\,g\))</p></li>
+        <li><p>ถ้าถนนราบ แรงเสียดทานข้างต่อน้ำหนักต้อง \(f = a_N/g = 0.262\) (ใกล้ขีดจำกัดของผิวถนนเปียก 0.3–0.4) ในการออกแบบจริงจึงยกขอบนอกทางโค้ง (superelevation \(e\)) ให้ \(e + f = v^2/(gR)\)</p></li>
+        <li><p>ความโค้งของถนน \(\kappa\) คือสิ่งที่ผู้ออกแบบกำหนดจากรัศมีต่ำสุดที่ยอมรับได้สำหรับความเร็วออกแบบ (\(R_{\min} = v^2/(g(e + f))\))</p></li>
+      </ol>
+      <p class="answer">\(a_N = 2.57\) m/s² \(\approx 0.26\,g\) · ถ้าไม่ยกขอบ ต้องมีสัมประสิทธิ์เสียดทานข้าง \(\ge 0.26\)</p>
+    </div>
+    <div class="wx" id="ex-r9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง R-9 · อิเล็กตรอนในสนามแม่เหล็ก (ไฟฟ้า)</span><h3>อิเล็กตรอนมี \(v_\perp = 2\times10^6\) m/s (ตั้งฉากสนาม) และ \(v_\parallel = 10^6\) m/s (ขนานสนาม) ในสนามแม่เหล็กสม่ำเสมอ \(B = 1\) mT จงหาวิถี รัศมี คาบ และพิตช์</h3></div>
+      <ol class="steps">
+        <li><p>แรงลอเรนซ์ \(\mathbf F = q\mathbf v\times\mathbf B\) ตั้งฉากกับ \(\mathbf v\) จึงไม่ทำงาน อัตราเร็วคงที่ · ในระนาบตั้งฉากสนามเคลื่อนที่เป็นวงกลม ส่วนตามสนามเคลื่อนที่สม่ำเสมอ → วิถีเป็น<b>เกลียว</b> \(\mathbf r(t) = \langle R\cos\omega t,\ R\sin\omega t,\ v_\parallel t\rangle\)</p></li>
+        <li><p>จาก \(m\dfrac{v_\perp^2}{R} = ev_\perp B\): \(R = \dfrac{mv_\perp}{eB} = \dfrac{9.109\times10^{-31}\times2\times10^6}{1.602\times10^{-19}\times10^{-3}} = 1.137\times10^{-2}\) m = 11.4 mm</p></li>
+        <li><p>ความถี่ไซโคลตรอน \(\omega = \dfrac{eB}{m} = 1.759\times10^{8}\) rad/s · คาบ \(T = \dfrac{2\pi m}{eB} = 3.572\times10^{-8}\) s (\(f \approx 28.0\) MHz) ไม่ขึ้นกับ \(v_\perp\)</p></li>
+        <li><p>พิตช์ (ระยะตามสนามต่อหนึ่งรอบ) \(p = v_\parallel T = 10^6\times3.572\times10^{-8} = 0.0357\) m = 35.7 mm</p></li>
+        <li><p>ความโค้งของเกลียวนี้ \(\kappa = \dfrac{R}{R^2 + (p/2\pi)^2}\) ซึ่งเป็นเรื่องเดียวกับเกลียวใน R-6 ที่ \(a = R,\ b = v_\parallel/\omega\)</p></li>
+      </ol>
+      <p class="answer">เกลียวรัศมี \(R = 11.4\) mm · คาบ \(35.7\) ns (28.0 MHz) · พิตช์ \(35.7\) mm</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="eng">
+    <h2 id="eng">นำไปใช้ในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>สาขา</th><th>ฟังก์ชันเวกเตอร์ / ปริมาณ</th><th>ใช้ทำอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>ไฟฟ้า</td><td>\(\mathbf r(t)\) ของอนุภาคมีประจุ · \(\mathbf F = q\mathbf v\times\mathbf B\)</td><td>วิถีเกลียวในสนามแม่เหล็ก มวลสเปกโตรมิเตอร์ ไซโคลตรอน (ตัวอย่าง R-9)</td></tr>
+        <tr><td>ไฟฟ้า</td><td>\(\mathbf r(t)\) ของลวดขดโซลินอยด์</td><td>ความยาวลวดทั้งหมดจากเกลียว (R8) สำหรับคำนวณความต้านทาน</td></tr>
+        <tr><td>เครื่องกล</td><td>\(\mathbf r(t)\) ของปลายแขนกล / หัวเลเซอร์</td><td>ความเร็ว \(\mathbf v\) และความเร่ง \(\mathbf a\) ที่ต้องการจากมอเตอร์ (<a href="/learn/vector-algebra/robot-arm/">แขนกล</a>)</td></tr>
+        <tr><td>เครื่องกล</td><td>\(a_N = \kappa v^2\)</td><td>แรงสู่ศูนย์กลางของโรเตอร์ (ตัวอย่าง R-3) และรางลูกเบี้ยว</td></tr>
+        <tr><td>เครื่องกล</td><td>เส้นทาง CNC \(\mathbf r(s)\)</td><td>ความเร็วป้อนต้องลดที่ความโค้งสูงเพื่อจำกัด \(a_N\)</td></tr>
+        <tr><td>โยธา</td><td>แนวเส้นทางถนน/ทางรถไฟ \(\mathbf r(s)\)</td><td>รัศมีโค้งต่ำสุด superelevation ความยาวทางลาด (ตัวอย่าง R-5, R-8)</td></tr>
+        <tr><td>โยธา</td><td>เส้นโค้งสายเคเบิล/ซุ้มประตู</td><td>ความยาวส่วนโค้ง ความโค้งของคานที่โก่ง \(\kappa \approx M/EI\) (<a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน</a>)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <ol>
+      <li><b>สับสนความเร็วกับอัตราเร็ว</b> · \(\mathbf v\) เป็นเวกเตอร์ ส่วน \(|\mathbf v|\) เป็นสเกลาร์ และอัตราเร็วคงที่ไม่ได้แปลว่าความเร่งเป็นศูนย์</li>
+      <li><b>ลืมหารด้วย \(|\mathbf r'|^3\)</b> ในสูตร \(\kappa\) · ผิดบ่อยกว่าที่คิด ตรวจกับวงกลมรัศมี \(R\) ต้องได้ \(1/R\)</li>
+      <li><b>ลืมว่า \(\mathbf N\) ไม่ใช่ \(\mathbf r''/|\mathbf r''|\)</b> · \(\mathbf r''\) มีองค์ประกอบตาม \(\mathbf T\) ด้วย (\(a_T\)) ต้องทำ \(\mathbf T'\) หรือ \(\mathbf B\times\mathbf T\)</li>
+      <li><b>หา \(\mathbf T\) ที่จุดที่ \(\mathbf r' = \mathbf 0\)</b> · เส้นโค้งไม่เรียบที่จุดนั้น (เช่นยอดแหลม) ทิศสัมผัสไม่นิยาม</li>
+      <li><b>พารามิเตอร์ต่างกัน เข้าใจว่าเส้นโค้งต่างกัน</b> · \(\langle t, t^2\rangle\) กับ \(\langle 2t, 4t^2\rangle\) เป็นพาราโบลาเดียวกัน ต่างที่ความเร็ว (ความยาวส่วนโค้งและ \(\kappa\) เป็นสมบัติของเส้นทาง ไม่ใช่ของพารามิเตอร์)</li>
+    </ol>
+    <p class="hint">ไปต่อที่<a href="/learn/multivariable-calculus/vector-fields/">สนามเวกเตอร์ (Divergence และ Curl)</a> ซึ่งแต่ละจุดในอวกาศมีเวกเตอร์ผูกอยู่ แล้วค่อยรวมสนามตามเส้นทางในบท<a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้น</a></p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

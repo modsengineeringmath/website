@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=c6f789e3">
+<link rel="stylesheet" href="/assets/site.css?v=e3004387">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/state-feedback/#article","headline":"ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR","description":"ออกแบบตัวควบคุมป้อนกลับสถานะ u = −Kx + N̄r วางขั้ววงปิดด้วยการเทียบสัมประสิทธิ์และสูตร Ackermann เกนอ้างอิง N̄ เพิ่มอินทิเกรเตอร์เพื่อกำจัดความผิดพลาดค้าง ตัวสังเกตสถานะแบบ Luenberger หลักการแยกส่วน ตัวควบคุมที่เหมาะสมที่สุดแบบ LQR สมการริคคาติ และแนวคิดตัวกรองคาลมาน พร้อมตัวอย่างเซอร์โวมอเตอร์ที่ตรวจด้วย python-control","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/state-feedback/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/state-feedback/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Full state feedback","Pole placement","Ackermann's formula","State observer","Luenberger observer","Separation principle","Linear–quadratic regulator","Riccati equation","Kalman filter"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-state-feedback.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ป้อนกลับสถานะ: วางขั้ว ตัวสังเกต และ LQR","item":"https://modsengineeringmath.com/learn/control-systems/state-feedback/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ป้อนกลับสถานะต่างจาก PID อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"PID ใช้ความผิดพลาดของเอาต์พุตเดียว ส่วนป้อนกลับสถานะใช้ทุกสถานะ (ตำแหน่ง ความเร็ว กระแส ฯลฯ) จึงวางขั้ววงปิดได้ทุกตัวตามต้องการ ระบบอันดับสองที่ป้อนกลับตำแหน่งและความเร็วคือ PD ในอีกรูปหนึ่ง แต่สำหรับระบบอันดับสูงและหลายอินพุต ป้อนกลับสถานะทรงพลังกว่ามาก"}},{"@type":"Question","name":"ไม่ได้วัดทุกสถานะ จะใช้ป้อนกลับสถานะได้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้ตัวสังเกต (observer) ซึ่งเป็นแบบจำลองที่วิ่งขนานกับระบบจริงในไมโครคอนโทรลเลอร์ แก้ด้วยความต่างระหว่างเอาต์พุตที่วัดกับที่ประมาณ แล้วป้อนกลับสถานะที่ประมาณได้ หลักการแยกส่วนรับประกันว่าออกแบบตัวควบคุมและตัวสังเกตแยกกันได้"}},{"@type":"Question","name":"LQR เลือก Q และ R อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เริ่มจากกฎของไบรสัน (Bryson): Q เป็นทแยงมุม 1/(ค่าสูงสุดที่ยอมรับได้ของสถานะ)² และ R = 1/(ค่าสูงสุดของอินพุต)² แล้วปรับ เพิ่ม Q ทำให้สถานะเข้าเร็วขึ้นแต่ใช้อินพุตมาก เพิ่ม R ประหยัดอินพุตแต่ช้าลง"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -160,6 +160,29 @@
             <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
           </div>
         </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navmvc">หลายตัวแปร</button>
+        <div class="nav-list nav-list-wide" id="navmvc">
+          <a href="/learn/multivariable-calculus/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/multivariable-calculus/multivariable-lab/">แล็บรวม 19 ชุด</a>
+          <span class="nav-h">ฟังก์ชันและอนุพันธ์</span>
+          <a href="/learn/multivariable-calculus/functions-of-several-variables/">ฟังก์ชันหลายตัวแปร · contour</a>
+          <a href="/learn/multivariable-calculus/partial-derivatives/">อนุพันธ์ย่อย · ระนาบสัมผัส</a>
+          <a href="/learn/multivariable-calculus/gradient-directional-derivative/">Gradient · อนุพันธ์ตามทิศ</a>
+          <a href="/learn/multivariable-calculus/optimization/">ค่าสุดขีด · Lagrange · LSQ</a>
+          <span class="nav-h">อินทิกรัลหลายชั้น</span>
+          <a href="/learn/multivariable-calculus/multiple-integrals/">สองชั้น · สามชั้น · Jacobian</a>
+          <span class="nav-h">ฟังก์ชันเวกเตอร์ · แคลคูลัสเวกเตอร์</span>
+          <a href="/learn/multivariable-calculus/vector-functions/">เส้นโค้งในอวกาศ · ความโค้ง</a>
+          <a href="/learn/multivariable-calculus/vector-fields/">Divergence · Curl</a>
+          <a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้น · Green</a>
+          <a href="/learn/multivariable-calculus/surface-integrals/">ฟลักซ์ · Gauss · Stokes</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/multivariable-calculus/electrical-engineering/">วิศวกรรมไฟฟ้า</a>
+          <a href="/learn/multivariable-calculus/mechanical-engineering/">วิศวกรรมเครื่องกล</a>
+          <a href="/learn/multivariable-calculus/civil-engineering/">วิศวกรรมโยธา</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
         <div class="nav-list nav-list-r" id="navla">
@@ -636,7 +659,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=c6f789e3" defer></script>
+<script src="/assets/site.js?v=e3004387" defer></script>
 
 </body>
 </html>
