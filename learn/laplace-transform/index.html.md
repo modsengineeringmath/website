@@ -144,7 +144,7 @@ Inverse Laplace Transform
 
 | 5 | $t$ | $\dfrac{1}{s^2}$ | $\sigma > 0$ | $0$ (ซ้ำ 2) |
 
-| 6 | $t^n,\ n = 1, 2, \dots$ | $\dfrac{n!}{s^{n+1}}$ | $\sigma > 0$ | $0$ (ซ้ำ $n+1$) |
+| 6 | $t^n,\ n = 1, 2, \dots$ (พิสูจน์) | $\dfrac{n!}{s^{n+1}}$ | $\sigma > 0$ | $0$ (ซ้ำ $n+1$) |
 
 | 7 | $e^{-at}$ | $\dfrac{1}{s+a}$ | $\sigma > -a$ | $-a$ |
 

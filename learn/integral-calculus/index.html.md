@@ -830,6 +830,8 @@ $\displaystyle\int \sin^3 x\,dx = -\cos x + \frac{\cos^3 x}{3} + C$
 
 อินทิกรัลจำกัดเขตให้ตัวเลข ไม่ใช่ฟังก์ชัน มีความหมายเป็นพื้นที่ใต้กราฟแบบคิดเครื่องหมาย (ส่วนที่อยู่ใต้แกน x นับเป็นลบ) ในงานไฟฟ้าคือ ประจุสะสม $q = \int i\,dt$ พลังงาน $W = \int p\,dt$ และค่าเฉลี่ย
 
+ผลบวกรีมันน์ใช้สูตร $\sum k,\ \sum k^2$ ดูตัวอย่างหา $\int_0^1 x^2dx$ จากลิมิตของอนุกรมใน ลำดับและอนุกรม และการพิสูจน์สูตรผลบวกด้วยอุปนัยเชิงคณิตศาสตร์
+
 Q0 Riemann-sum definition นิยามด้วยผลบวกรีมันน์
 
 $$\begin{gathered} \begin{aligned} &\int_a^b f(x)\,dx \\ &= \lim_{n\to\infty}\sum_{k=1}^{n} f(x_k^*)\,\Delta x \end{aligned} \\ \Delta x = \frac{b-a}{n} \\ x_k = a + k\,\Delta x \end{gathered}$$

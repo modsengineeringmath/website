@@ -75,6 +75,7 @@ $$\frac{d}{dx}c = 0$$
 D5 Power rule กฎยกกำลัง
 
 $$\frac{d}{dx}x^n = nx^{n-1},\quad n \in \mathbb{R}$$
+กรณี n เป็นจำนวนนับ พิสูจน์ด้วยอุปนัยเชิงคณิตศาสตร์
 
 D6 Linearity ผลบวกและตัวคูณ
 

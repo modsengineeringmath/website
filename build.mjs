@@ -57,11 +57,20 @@ export const TOPICS = [
     summary: "วงกลมหนึ่งหน่วยแบบโต้ตอบ สูตรครบทุกหมวดพร้อมชื่ออังกฤษ และตาราง sin cos tan ทุก 0.05° ตั้งแต่ 0° ถึง 90° ทั้งองศาและเรเดียน",
   },
   {
+    // A series since 2026-10-17: hub = limits & continuity; 3.1 sequences & series, 3.2 mathematical induction (assets/seq-lab.js)
     slug: "limits",
+    hubFx: true, hubShort: "ลิมิต · ความต่อเนื่อง", hubPrefix: "L",
     title: "ลิมิตและความต่อเนื่อง",
     en: "Limits & Continuity",
     sym: "lim",
-    summary: "ลิมิตจากกราฟและตาราง นิยาม ε–δ แบบโต้ตอบ ลิมิตทางเดียว สมบัติของลิมิต รูปแบบ 0/0 ลิมิตที่อนันต์ ลิมิตตรีโกณ e ทฤษฎีบทแซนด์วิช ความต่อเนื่อง IVT และกฎของโลปิตาล",
+    summary: "ลิมิตจากกราฟและตาราง นิยาม ε–δ แบบโต้ตอบ ลิมิตทางเดียว สมบัติของลิมิต รูปแบบ 0/0 ลิมิตที่อนันต์ ลิมิตตรีโกณ e ทฤษฎีบทแซนด์วิช ความต่อเนื่อง IVT และกฎของโลปิตาล · หน้าย่อย: ลำดับและอนุกรม อุปนัยเชิงคณิตศาสตร์",
+    fxHint: "พิมพ์ เช่น epsilon, sequence, geometric, ratio test, taylor, induction, sigma, telescoping, lhopital",
+    sub: [
+      { slug: "sequences-series", short: "ลำดับและอนุกรม", title: "ลำดับและอนุกรม (Sequences and Series): สูตร ตัวอย่าง การลู่เข้า และอนุกรมเทย์เลอร์", en: "Sequences and Series", sym: "Σ", prefix: "S",
+        summary: "ลำดับเลขคณิต เรขาคณิต เวียนเกิด ลิมิตของลำดับ ε–N ซิกมาและสูตรผลบวก อนุกรมเรขาคณิตอนันต์ การทดสอบการลู่เข้าครบทุกแบบ อนุกรมกำลัง เทย์เลอร์-แมคลอริน พร้อมแล็บและงานวิศวกรรม" },
+      { slug: "mathematical-induction", short: "อุปนัยเชิงคณิตศาสตร์", title: "อุปนัยเชิงคณิตศาสตร์ (Mathematical Induction): หลักการ วิธีพิสูจน์ และตัวอย่าง", en: "Mathematical Induction", sym: "P(k)⇒", prefix: "I",
+        summary: "หลักโดมิโน กรณีฐาน ขั้นอุปนัย แม่แบบเขียนพิสูจน์ สูตรผลบวก การหารลงตัว อสมการ อุปนัยแบบเข้ม อุปนัยในแคลคูลัสและลาปลาซ บทพิสูจน์ผิดที่พบบ่อย พร้อมตัวตรวจแบบโต้ตอบ" },
+    ],
   },
   {
     // A series: hub = the derivative lesson, plus the engineering-applications page
