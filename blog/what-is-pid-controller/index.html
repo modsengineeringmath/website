@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=652263c5">
+<link rel="stylesheet" href="/assets/site.css?v=c17fdd65">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/what-is-pid-controller/#article","headline":"PID Controller คืออะไร: Kp Ki Kd ทำงานอย่างไร และจูนอย่างไร","description":"ตัวควบคุม PID รวมสามเทอมคือสัดส่วน ปริพันธ์ และอนุพันธ์ของค่าผิดพลาด อธิบายผลของ Kp Ki Kd ตารางผลต่อการตอบสนอง ตัวอย่างจูนด้วย Ziegler–Nichols และปัญหาที่พบจริง","inLanguage":"th","url":"https://modsengineeringmath.com/blog/what-is-pid-controller/","mainEntityOfPage":"https://modsengineeringmath.com/blog/what-is-pid-controller/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID controller","Control systems","Ziegler-Nichols tuning"],"isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-what-is-pid-controller.jpg"],"keywords":"PID controller, PID คืออะไร, Kp Ki Kd, Ziegler-Nichols, จูน PID, ระบบควบคุม, anti-windup"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"PID Controller คืออะไร: Kp Ki Kd ทำงานอย่างไร และจูนอย่างไร","item":"https://modsengineeringmath.com/blog/what-is-pid-controller/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kp Ki Kd แต่ละค่าทำหน้าที่อะไร?","acceptedAnswer":{"@type":"Answer","text":"Kp ตอบสนองต่อค่าผิดพลาดปัจจุบัน เพิ่มแล้วเร็วขึ้นแต่เสี่ยงเกินเป้า Ki สะสมค่าผิดพลาดในอดีต ช่วยกำจัดค่าผิดพลาดคงตัว Kd ดูแนวโน้มของค่าผิดพลาด ช่วยลดการเกินเป้าแต่ไวต่อสัญญาณรบกวน"}},{"@type":"Question","name":"ทำไมบางระบบใช้แค่ PI ไม่ใช้ PID?","acceptedAnswer":{"@type":"Answer","text":"เพราะเทอมอนุพันธ์ขยายสัญญาณรบกวนจากเซนเซอร์ วงควบคุมที่สัญญาณวัดมีสัญญาณรบกวนมาก เช่น อัตราการไหลและระดับของเหลว จึงมักใช้ PI ซึ่งเรียบง่ายและเพียงพอ ส่วนระบบที่ตอบสนองช้าและสัญญาณวัดสะอาดอาจได้ประโยชน์จากเทอม D"}},{"@type":"Question","name":"Integral windup คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อตัวขับ (วาล์ว มอเตอร์ ฮีตเตอร์) อิ่มตัวแล้ว แต่ค่าผิดพลาดยังไม่เป็นศูนย์ เทอมปริพันธ์จะสะสมค่าต่อไปเรื่อย ๆ พอค่าผิดพลาดกลับเครื่องหมายจึงใช้เวลานานกว่าจะคลาย ทำให้เกินเป้ามาก แก้ด้วย anti-windup เช่น หยุดสะสมเมื่ออิ่มตัว"}},{"@type":"Question","name":"Ziegler–Nichols ใช้ได้กับระบบทุกชนิดไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ทุกชนิด วิธีวงปิดต้องปล่อยให้ระบบแกว่งต่อเนื่องที่ K_u ซึ่งอาจอันตรายกับกระบวนการจริง และให้ผลเริ่มต้นที่มักแกว่งแรง ควรใช้เป็นจุดเริ่มต้นแล้วจูนละเอียดต่อ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -492,16 +492,16 @@
     <span class="bc-sum">คอร์สจูน PID ครบในบทความเดียว: หาแบบจำลองด้วย step test จูนด้วย Ziegler–Nichols, Cohen–Coon, SIMC และ relay เทียบผลด้วยการจำลอง แล้วแก้ปัญหา windup…</span>
     <span class="bc-foot"><time datetime="2026-10-16">16 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
   </a>
+  <a class="blog-card" href="/blog/3-phase-motor-delta-connection/">
+    <span class="bc-tag mono">มอเตอร์ 3 เฟส</span>
+    <b>การต่อมอเตอร์ 3 เฟสแบบเดลต้า (Δ): จำ U1–W2, V1–U2, W1–V2 และเลือกจากเนมเพลต</b>
+    <span class="bc-sum">วิธีต่อมอเตอร์เหนี่ยวนำ 3 เฟสแบบเดลต้า (delta connection) ในกล่องขั้ว U1-W2, V1-U2, W1-V2 แรงดันและกระแสสายกับเฟส การเลือกจากเนมเพลต 230/400 V กับ…</span>
+    <span class="bc-foot"><time datetime="2026-10-17">17 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
+  </a>
   <a class="blog-card" href="/blog/geometric-series-formula/">
     <span class="bc-tag mono">ลำดับและอนุกรม</span>
     <b>อนุกรมเรขาคณิต (Geometric Series): สูตร ตัวอย่าง และวิธีหาผลบวก</b>
     <span class="bc-sum">อนุกรมเรขาคณิตคืออะไร สูตรผลบวก n พจน์ และอนุกรมเรขาคณิตอนันต์ (infinite geometric series) a₁/(1 − r) เมื่อ |r| &lt; 1 พร้อมที่มาของสูตร…</span>
-    <span class="bc-foot"><time datetime="2026-10-17">17 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
-  </a>
-  <a class="blog-card" href="/blog/mathematical-induction-examples/">
-    <span class="bc-tag mono">ลำดับและอนุกรม</span>
-    <b>อุปนัยเชิงคณิตศาสตร์ (Mathematical Induction) ตัวอย่างพร้อมวิธีทำทีละขั้น</b>
-    <span class="bc-sum">ตัวอย่างพิสูจน์ด้วยอุปนัยเชิงคณิตศาสตร์ (proof by induction) พร้อมวิธีทำ: สูตรผลบวก การหารลงตัว และอสมการ ใช้แม่แบบ 4 ขั้น กรณีฐาน ขั้นอุปนัย…</span>
     <span class="bc-foot"><time datetime="2026-10-17">17 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
   </a>
 </div></section>
@@ -591,7 +591,7 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=652263c5" defer></script>
+<script src="/assets/site.js?v=c17fdd65" defer></script>
 
 </body>
 </html>

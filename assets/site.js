@@ -79,6 +79,22 @@
     });
   });
 
+  // Single video / Shorts facade: <div class="screen short" data-yt-id="ID" data-yt-title="...">
+  document.querySelectorAll("[data-yt-id]").forEach(function (box) {
+    var btn = box.querySelector(".play");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(box.dataset.ytId) + "?autoplay=1&rel=0&playsinline=1";
+      f.title = box.dataset.ytTitle || "YouTube";
+      f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      f.referrerPolicy = "strict-origin-when-cross-origin";
+      f.allowFullscreen = true;
+      box.innerHTML = "";
+      box.appendChild(f);
+    });
+  });
+
   // copy buttons: <button data-copy="#targetId">
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-copy]");
