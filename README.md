@@ -373,3 +373,18 @@ JSON-LD of the about and home pages. The About page's share card is the hand-mad
 (set with `"ogImage"` in its meta block), so `scripts/og.py` no longer decides that page's preview.
 Credentials (education, position, ORCID, Scopus, Google Scholar) are the `#credentials` section of `src/pages/about.html`;
 the same facts are in the Person JSON-LD (`alumniOf`, `hasCredential`, `identifier`, `sameAs`) on the about and home pages — update both together.
+
+## DC circuit analysis (added 2026-10-18)
+Topic 25 `dc-circuits` in `TOPICS` (build.mjs): one long lesson page `src/pages/learn/dc-circuits.html` with 8 sections
+(formula cards B basics, E elements, K Kirchhoff, S series/parallel/Δ–Y, N nodal/mesh/MNA, T theorems, R transients, H technology),
+a full-width virtual lab between the two lesson columns, and a problem bank (26 problems, 4 levels) with unlimited random practice.
+- `assets/dc-core.js` — MNA engine (`DCE`: R L C V I, ammeter/voltmeter, E/G/H/F dependent sources, DC operating point and
+  trapezoidal transient with consistent t = 0⁺ start), circuit builders and presets (`CK`), canvas schematic renderer (`RND`).
+- `assets/dc-lab.js` — the grid editor (place, wire, drag, rotate, undo, presets, JSON share), results table with power balance,
+  MNA matrix view, transient plots with a time scrubber. The board is kept in `localStorage` (`dc-lab-v1`).
+- `assets/dc-lesson.js` — lesson widgets (colour code, loaded divider, max power, RC/RL, ζ shape, HV loss table), schematic figures
+  (`<canvas data-fig="key">`), `data-open="key"` buttons that load a circuit into the lab, the problem bank (`PB.LIST`) and practice
+  generators (answers computed by the same solver). Progress is kept in `localStorage` (`dc-prog-v1`).
+- Styles are in `site.css` under `.dcx` (all class names prefixed `dc-` where they could collide).
+- Every worked-example and problem answer was checked against the solver in Node before publishing.
+- Short URLs: `/dc`, `/dc-circuits`, `/circuit-lab`, `/circuit-simulator`, `/kcl`, `/kvl`, `/nodal-analysis`, `/mesh-analysis`, `/thevenin`, `/circuit-problems`.
