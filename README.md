@@ -388,3 +388,22 @@ a full-width virtual lab between the two lesson columns, and a problem bank (26 
 - Styles are in `site.css` under `.dcx` (all class names prefixed `dc-` where they could collide).
 - Every worked-example and problem answer was checked against the solver in Node before publishing.
 - Short URLs: `/dc`, `/dc-circuits`, `/circuit-lab`, `/circuit-simulator`, `/kcl`, `/kvl`, `/nodal-analysis`, `/mesh-analysis`, `/thevenin`, `/circuit-problems`.
+
+## Op-amp circuits, continuous-time signal processing & analog computing (added 2026-10-18)
+Topic 26 `op-amp-circuits` in `TOPICS` (build.mjs): one long lesson `src/pages/learn/op-amp-circuits.html` (7 sections, formula cards O op-amp, A amplifiers,
+T transfer functions, F filters, N non-idealities, S signal processing, C analog computer), a full-width virtual lab between the lesson and the problem bank
+(13 problems, 4 levels, unlimited random practice). Menu entries sit in the "วงจรไฟฟ้า" group of `src/layout.html` (`data-nav="oa"`).
+- `assets/oa-core.js` — pure engine, loads in the browser (`OAE`, `OK`) and in Node (`import '../assets/oa-core.js'` then `globalThis.OAE`). MNA with a
+  three-pin op-amp (ideal nullor, or A₀ + single pole GBW + slew rate + Rin + Rout + rails), diodes, sources with waveforms (dc/sin/sq/pulse/tri/step),
+  DC operating point, transient (backward-Euler start then BDF2, piecewise-linear saturation/slew/diode states iterated per step, ic on C and L),
+  AC sweep, and `transferFunctions()` = exact H(s) = N/D for every source: det(G + sC) is sampled on a circle and recovered by an inverse DFT,
+  roots by Durand–Kerner, common roots cancelled, roots beyond 100×GBW folded into the gain; `analyzeTF()` classifies (LP/HP/BP/notch/integrator/PI…) and
+  measures f₋₃dB, f₀, Q, ζ; `tfTeX()`/`pzTeX()` print it. `OK.P` holds the circuit builders, `OK.PRESETS` the lab menu (22 circuits).
+- `assets/oa-draw.js` — schematic renderer (op-amp symbol, probes, waveform glyphs, diode). Reads the `.dcx` tokens.
+- `assets/oa-lab.js` — grid editor, DC / transient (scope with rails, current plot, XY phase portrait) / frequency (Bode, actual vs ideal op-amp, pole-zero marks)
+  analysis and the H(s) tab. Board kept in `localStorage` (`oa-lab-v1`).
+- `assets/oa-lesson.js` — widgets (open-loop VTC, gain calculator, GBW/slew, Sallen–Key designer, analog-computer scaling, H(s) explorer with Bode + step),
+  figures (`<canvas data-fig="key">`), `data-open="key"` buttons (preset key or figure key), problem bank and practice generators. Progress `oa-prog-v1`.
+- Styles reuse `.dcx` / `dc-` classes; additions are in the "OP-AMP CIRCUITS" block at the end of `site.css`.
+- Tests: `node scripts/test-oa.mjs` (gain formulas, exact H(s), AC vs analytic, RC/RLC/integrator transients, slew, GBW, Schmitt thresholds, problem answers).
+- Short URLs: `/op-amp-circuits`, `/operational-amplifier`, `/op-amp-lab`, `/active-filter`, `/sallen-key`, `/analog-computer`, `/slew-rate`, `/gain-bandwidth-product`, `/schmitt-trigger` (`/opamp` and `/op-amp` still go to the function-generator lesson).

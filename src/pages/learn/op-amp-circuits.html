@@ -1,0 +1,670 @@
+<!--meta
+{
+  "title": "วงจรออปแอมป์ (Op-Amp) และการประมวลผลสัญญาณแบบต่อเนื่อง: ฟังก์ชันถ่ายโอน H(s) ตัวกรองแอคทีฟ อนาล็อกคอมพิวเตอร์ พร้อมแล็บ | อาจารย์มด",
+  "h1": "วงจรออปแอมป์ (Op-Amp Circuits) และการประมวลผลสัญญาณแบบต่อเนื่อง: ฟังก์ชันถ่ายโอน H(s) ตัวกรองแอคทีฟ และอนาล็อกคอมพิวเตอร์",
+  "description": "วงจรออปแอมป์ครบในหน้าเดียว: กฎทอง วงจรกลับเฟสและไม่กลับเฟส วงจรบวก ขยายผลต่าง In-amp อินทิเกรเตอร์ ดิฟเฟอเรนเชียเตอร์ ฟังก์ชันถ่ายโอน H(s) ตัวกรอง Sallen–Key MFB GBW slew rate Schmitt trigger และอนาล็อกคอมพิวเตอร์ พร้อมแล็บต่อวงจรที่มีสโคป กราฟ Bode และตัวสกัด H(s) อัตโนมัติ (op-amp circuits, active filters, analog computer)",
+  "ogDescription": "เรียนวงจรออปแอมป์ตั้งแต่กฎทองถึงอนาล็อกคอมพิวเตอร์: แล็บต่อวงจรแบบบอร์ดทดลองที่แสดงสโคป Bode และสรุปเป็นฟังก์ชันถ่ายโอน H(s) ขั้ว ศูนย์ พร้อมโจทย์ 13 ข้อและโจทย์สุ่มไม่จำกัด",
+  "keywords": [
+    "วงจรออปแอมป์",
+    "ออปแอมป์",
+    "op-amp circuits",
+    "operational amplifier",
+    "inverting amplifier",
+    "non-inverting amplifier",
+    "วงจรขยายกลับเฟส",
+    "วงจรขยายไม่กลับเฟส",
+    "summing amplifier",
+    "difference amplifier",
+    "instrumentation amplifier",
+    "integrator",
+    "differentiator",
+    "ฟังก์ชันถ่ายโอน",
+    "transfer function",
+    "H(s)",
+    "ตัวกรองแอคทีฟ",
+    "active filter",
+    "Sallen-Key",
+    "multiple feedback",
+    "Butterworth",
+    "Tow-Thomas",
+    "GBW",
+    "gain bandwidth product",
+    "slew rate",
+    "Schmitt trigger",
+    "precision rectifier",
+    "อนาล็อกคอมพิวเตอร์",
+    "analog computer",
+    "การประมวลผลสัญญาณแบบต่อเนื่อง",
+    "continuous-time signal processing",
+    "แล็บวงจรออปแอมป์",
+    "op-amp simulator",
+    "Bode plot"
+  ],
+  "lesson": "op-amp-circuits",
+  "nav": "oa",
+  "katex": true,
+  "published": "2026-10-18",
+  "updated": "2026-10-18",
+  "level": [
+    "Vocational",
+    "Undergraduate"
+  ],
+  "about": [
+    "Operational amplifier",
+    "Negative feedback",
+    "Transfer function",
+    "Active filter",
+    "Sallen–Key topology",
+    "Analog computer",
+    "Integrator",
+    "Differentiator",
+    "Instrumentation amplifier",
+    "Schmitt trigger",
+    "Slew rate",
+    "Gain–bandwidth product",
+    "Modified nodal analysis",
+    "Bode plot"
+  ],
+  "scripts": [
+    "/assets/lesson.js",
+    "/assets/vendor/katex.min.js",
+    "/assets/vendor/katex-auto-render.min.js",
+    "/assets/oa-core.js",
+    "/assets/oa-draw.js",
+    "/assets/oa-lab.js",
+    "/assets/oa-lesson.js"
+  ],
+  "og": {
+    "title": "วงจรออปแอมป์",
+    "sub": "กฎทอง · H(s) · ตัวกรองแอคทีฟ · อนาล็อกคอมพิวเตอร์ · แล็บสโคป + Bode + สกัด H(s) อัตโนมัติ",
+    "eyebrow": "บทที่ 26 · Op-Amp Circuits",
+    "sym": "▷"
+  },
+  "jsonld": [
+    {
+      "@type": "LearningResource",
+      "name": "วงจรออปแอมป์และการประมวลผลสัญญาณแบบต่อเนื่อง: บทเรียน แล็บจำลอง และคลังโจทย์",
+      "url": "https://modsengineeringmath.com/learn/op-amp-circuits/",
+      "learningResourceType": [
+        "Lesson",
+        "Interactive simulation",
+        "Problem set"
+      ],
+      "interactivityType": "mixed",
+      "educationalLevel": "Undergraduate",
+      "inLanguage": "th",
+      "isAccessibleForFree": true,
+      "teaches": [
+        "Ideal op-amp golden rules",
+        "Inverting and non-inverting amplifiers",
+        "Summing and difference amplifiers",
+        "Instrumentation amplifier",
+        "Integrator and differentiator",
+        "Transfer function H(s), poles and zeros",
+        "Sallen–Key and multiple-feedback active filters",
+        "Gain–bandwidth product and slew rate",
+        "Schmitt trigger and precision rectifier",
+        "Analog computer: solving ordinary differential equations",
+        "Time and magnitude scaling"
+      ],
+      "author": {
+        "@id": "https://modsengineeringmath.com/#mod"
+      }
+    }
+  ],
+  "faq": [
+    {
+      "q": "กฎทองของออปแอมป์สองข้อคืออะไร ใช้ได้เมื่อไร?",
+      "a": "ข้อแรก \\(v_+ = v_-\\) (ลัดเสมือน) ข้อสอง \\(i_+ = i_- = 0\\) ใช้ได้เมื่อมีการป้อนกลับลบจากเอาต์พุตมาที่ขา − และออปแอมป์ยังไม่อิ่มตัว เหตุผลคือเอาต์พุตจำกัดที่แรงดันแหล่งจ่ายแต่อัตราขยายวงเปิด \\(A_0\\) มหาศาล จึงต้องได้ \\(v_+ - v_- = v_o/A_0 \\approx 0\\) ส่วนกระแสอินพุตเป็นศูนย์เพราะความต้านทานอินพุตสูงมาก ถ้าป้อนกลับเข้าขา + หรือไม่มีป้อนกลับ (คอมพาเรเตอร์ Schmitt trigger) ใช้กฎทองไม่ได้"
+    },
+    {
+      "q": "อัตราขยายของวงจรกลับเฟสและไม่กลับเฟสคำนวณอย่างไร?",
+      "a": "วงจรกลับเฟส \\(v_o = -(R_f/R_{in})v_{in}\\) และความต้านทานอินพุตเท่ากับ \\(R_{in}\\) วงจรไม่กลับเฟส \\(v_o = (1 + R_f/R_g)v_{in}\\) และความต้านทานอินพุตสูงมาก บัฟเฟอร์คือกรณี \\(R_f = 0\\) ที่ให้อัตราขยาย 1 ถ้าผลคำนวณเกินแรงดันแหล่งจ่าย เอาต์พุตจะถูกตัด (อิ่มตัว) ที่ขอบแหล่งจ่าย"
+    },
+    {
+      "q": "หา transfer function ของวงจรออปแอมป์อย่างไร?",
+      "a": "แทนตัวต้านทานด้วยอิมพีแดนซ์ \\(Z_R = R\\), \\(Z_C = 1/(sC)\\), \\(Z_L = sL\\) แล้วใช้ \\(H(s) = -Z_f/Z_{in}\\) สำหรับแบบกลับเฟส หรือ \\(1 + Z_f/Z_g\\) สำหรับแบบไม่กลับเฟส เช่น อินทิเกรเตอร์ \\(-1/(sRC)\\) ดิฟเฟอเรนเชียเตอร์ \\(-sRC\\) ผ่านต่ำ \\(-(R_f/R_{in})/(1 + sR_fC_f)\\) สำหรับวงจรอื่นที่ซับซ้อน แล็บในหน้านี้สร้างเมทริกซ์ \\(\\mathbf{G} + s\\mathbf{C}\\) แล้วหา \\(H(s) = N(s)/D(s)\\) ขั้ว และศูนย์ให้อัตโนมัติ"
+    },
+    {
+      "q": "GBW และ slew rate จำกัดวงจรอย่างไร?",
+      "a": "GBW (ผลคูณอัตราขยายกับแบนด์วิดท์) ทำให้แบนด์วิดท์วงปิดประมาณ \\(\\text{GBW}/(1 + R_f/R_g)\\) เช่น µA741 (1 MHz) ที่อัตราขยาย 100 ได้ประมาณ 10 kHz ส่วน slew rate จำกัดอัตราการเปลี่ยนแรงดันเอาต์พุต ไซน์แอมพลิจูด \\(V_p\\) ต้องมี \\(2\\pi f V_p \\le SR\\) จึงได้ความถี่สูงสุด \\(f = SR/(2\\pi V_p)\\) เกินจากนี้คลื่นกลายเป็นสามเหลี่ยม"
+    },
+    {
+      "q": "อนาล็อกคอมพิวเตอร์แก้สมการเชิงอนุพันธ์อย่างไร?",
+      "a": "ใช้วิธีอนุพันธ์สูงสุด: เขียนสมการให้ \\(\\ddot{x} = \\ldots\\) ป้อนเข้าอินทิเกรเตอร์เพื่อได้ \\(\\dot{x}\\) แล้วอินทิเกรตอีกชั้นได้ \\(x\\) แล้วป้อนตัวแปรกลับเข้าตัวรวมผ่านตัวต้านทานที่แทนสัมประสิทธิ์ ตัวเก็บประจุของอินทิเกรเตอร์ตั้งเงื่อนไขเริ่มต้น ต้องคุมเครื่องหมายเพราะออปแอมป์กลับเฟสทุกครั้ง และสเกลเวลาด้วย \\(RC = 1/(\\beta\\omega_0)\\) กับสเกลขนาดให้ไม่ชนแหล่งจ่าย วงจร Tow–Thomas คือการต่อแบบนี้สำหรับสมการอันดับสอง"
+    }
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson dcx" id="oaArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>วงจรออปแอมป์</li></ol>
+      <p class="eyebrow">// บทที่ 26 · วงจรออปแอมป์ · Op-Amp Circuits</p>
+      <h1>วงจรออปแอมป์ (Op-Amp Circuits) และการประมวลผลสัญญาณแบบต่อเนื่อง: ฟังก์ชันถ่ายโอน H(s) ตัวกรองแอคทีฟ และอนาล็อกคอมพิวเตอร์</h1>
+      <p class="lede">ตั้งแต่กฎทองสองข้อของออปแอมป์ ไปถึงการบวก ลบ อินทิเกรต ดิฟเฟอเรนเชียต และกรองสัญญาณด้วย H(s) จนถึงอนาล็อกคอมพิวเตอร์ที่แก้สมการเชิงอนุพันธ์ แล้วลงมือต่อวงจรบนกระดานเหมือนบอร์ดทดลอง แล็บจะแก้สมการ แสดงรูปคลื่นแบบสโคป วาดกราฟ Bode และ<b>สรุปเป็นฟังก์ชันถ่ายโอน H(s)</b> พร้อมขั้วและศูนย์ให้ทันที</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ป้อนกลับลบทำให้ \(v_+ = v_-\) และ \(i_\pm = 0\) อัตราขยายวงปิดจึงขึ้นกับตัวต้านทานเท่านั้น: กลับเฟส \(-R_f/R_{in}\) ไม่กลับเฟส \(1 + R_f/R_g\)</li>
+          <li>แทน R ด้วยอิมพีแดนซ์ \(Z(s)\) ได้ \(H(s) = -Z_f/Z_{in}\): C ในเส้นป้อนกลับคืออินทิเกรเตอร์ \(-1/(sRC)\) C ที่อินพุตคือดิฟเฟอเรนเชียเตอร์ \(-sRC\)</li>
+          <li>ตัวกรองแอคทีฟคือการวางขั้วเชิงซ้อนที่ \(\omega_0\) และ \(Q\) ที่ต้องการ Butterworth อันดับสูงต่อภาคอันดับสองหลายภาค (Sallen–Key, MFB, Tow–Thomas)</li>
+          <li>ข้อจำกัดจริง: แบนด์วิดท์วงปิดประมาณ \(\text{GBW}/(1 + R_f/R_g)\) สัญญาณใหญ่ต้องไม่เกิน \(SR/(2\pi V_p)\) และเอาต์พุตตัดที่แหล่งจ่าย</li>
+          <li>อนาล็อกคอมพิวเตอร์แก้ \(\ddot{x} + 2\zeta\omega_0\dot{x} + \omega_0^2x = \omega_0^2u\) ด้วยตัวรวมกับอินทิเกรเตอร์ และสเกลเวลาด้วย \(RC = 1/(\beta\omega_0)\)</li>
+          <li>แล็บในหน้านี้หาฟังก์ชันถ่ายโอนแบบแน่นอนจาก \(\det(\mathbf{G}+s\mathbf{C})\) ของวงจรที่คุณวาง ไม่ใช่การเดาจากกราฟ</li>
+        </ul>
+      </div>
+      <ol class="dc-route" aria-label="ลำดับการเรียนในหน้านี้">
+        <li><a href="#opamp-basics"><span>1</span>ออปแอมป์และกฎทอง</a></li>
+        <li><a href="#amplifiers"><span>2</span>วงจรขยายพื้นฐาน</a></li>
+        <li><a href="#transfer-function"><span>3</span>ฟังก์ชันถ่ายโอน H(s)</a></li>
+        <li><a href="#active-filters"><span>4</span>ตัวกรองแอคทีฟ</a></li>
+        <li><a href="#non-ideal"><span>5</span>ข้อจำกัดของออปแอมป์จริง</a></li>
+        <li><a href="#signal-processing"><span>6</span>ประมวลผลสัญญาณ</a></li>
+        <li><a href="#analog-computer"><span>7</span>อนาล็อกคอมพิวเตอร์</a></li>
+        <li class="hot"><a href="#lab"><span>8</span>แล็บจำลอง</a></li>
+        <li class="hot"><a href="#problems"><span>9</span>คลังโจทย์</a></li>
+      </ol>
+      <p class="dc-facts"><span>7 บทเรียน</span><span>6 เครื่องมือในบทเรียน</span><span>แล็บออปแอมป์ + สโคป + Bode + H(s)</span><a href="#problems" id="prog-pill">ทำได้ <b>0</b> / 13 ข้อ</a></p>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น inverting, integrator, sallen, slew, gbw, schmitt, tow" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ================= 1 ================= -->
+    <section class="tsec" aria-labelledby="opamp-basics">
+    <h2 id="opamp-basics">1. ออปแอมป์คืออะไร และกฎทองของการป้อนกลับลบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ออปแอมป์ (operational amplifier, op-amp) คือวงจรรวมขยายความต่างศักย์ระหว่างสองขาอินพุตด้วยอัตราขยายมหาศาล มี 5 ขาที่ใช้งาน คือ ขาอินพุตกลับเฟส (−) ขาอินพุตไม่กลับเฟส (+) ขาเอาต์พุต และขาแหล่งจ่าย \(V_+\) กับ \(V_-\) ในรูปวงจรมักไม่วาดขาแหล่งจ่าย แต่เอาต์พุตของมันจะไม่มีทางเกินแรงดันแหล่งจ่ายเลย ชื่อ “operational” มาจากการใช้ออปแอมป์ทำ<b>การดำเนินการทางคณิตศาสตร์</b> เช่น บวก ลบ คูณด้วยค่าคงที่ อินทิเกรต และดิฟเฟอเรนเชียต ในเครื่องคำนวณแบบอนาล็อก</p>
+<div class="tf" id="O1" data-k="open loop gain saturation rail ออปแอมป์ อัตราขยายวงเปิด อิ่มตัว แหล่งจ่าย"><p class="tf-n"><b><span class="fid">O1</span> Open-loop model</b> แบบจำลองวงเปิดของออปแอมป์: อัตราขยายมหาศาลแต่ถูกตัดที่แหล่งจ่าย</p>
+    \[ v_o = \operatorname{clip}\!\big(A_0\,(v_+ - v_-),\ V_{o,min},\ V_{o,max}\big) \qquad A_0 \approx 10^{5}\text{–}10^{6},\quad V_{o,max} \approx V_+ - V_{\text{headroom}} \]</div>
+    <p>ด้วย \(A_0 = 10^5\) และแหล่งจ่าย ±15 V ย่านเชิงเส้นของความต่างอินพุตกว้างเพียง \(\pm 15/10^{5} = \pm 150\ \mu\text{V}\) เท่านั้น เกินจากนี้เอาต์พุตก็ชนแหล่งจ่าย ลองเลื่อนค่าในเครื่องมือด้านล่างเพื่อดูว่าทำไมออปแอมป์เปล่า ๆ จึงใช้เป็นเครื่องขยายไม่ได้ ต้องใช้การป้อนกลับ</p>
+    <div class="dc-inst" id="w-vtc">
+      <div class="dc-inst-h"><b>เครื่องมือ · คุณลักษณะการถ่ายโอนวงเปิด</b><span>v<sub>o</sub> เทียบกับ v₊ − v₋</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-ctl"><label for="vt-a">A₀</label><input id="vt-a" type="range" min="3" max="6.5" step="0.01" value="5"><output id="vt-ao"></output></div>
+        <div class="dc-ctl"><label for="vt-v">แหล่งจ่าย ±</label><input id="vt-v" type="range" min="3" max="18" step="1" value="15"><output id="vt-vo"></output></div>
+        <div class="dc-ctl"><label for="vt-h">headroom</label><input id="vt-h" type="range" min="0" max="3" step="0.5" value="1.5"><output id="vt-ho"></output></div>
+        <div class="dc-readout"><div><small>ช่วงเชิงเส้นของ v₊ − v₋</small><b class="hl" id="vt-w">—</b></div><div><small>เอาต์พุตสูงสุดที่ได้</small><b id="vt-sat">—</b></div></div>
+        <div class="dc-wplot-box"><canvas id="vt-plot" class="dc-wplot" data-h="230" role="img" aria-label="กราฟ vo เทียบ v+ − v− ของออปแอมป์ เป็นเส้นตรงชันมากแล้วอิ่มตัว"></canvas><div class="dc-wtip" id="vt-tip" hidden></div></div>
+      </div>
+    </div>
+    <h3 id="feedback">การป้อนกลับลบ และกฎทองสองข้อ</h3>
+    <p>ถ้านำเอาต์พุตส่งกลับมาที่ขา − ผ่านเครือข่ายตัวต้านทาน (ป้อนกลับลบ) ออปแอมป์จะปรับเอาต์พุตจนความต่างอินพุตเกือบเป็นศูนย์ ส่วนเอาต์พุตที่ต้องการถูกกำหนดโดยเครือข่ายป้อนกลับ ไม่ขึ้นกับ \(A_0\) ที่เปลี่ยนตามอุณหภูมิและตัวชิป</p>
+<div class="tf" id="O2" data-k="negative feedback closed loop gain loop gain การป้อนกลับลบ อัตราขยายวงปิด"><p class="tf-n"><b><span class="fid">O2</span> Closed-loop gain</b> อัตราขยายวงปิดเมื่อมีป้อนกลับลบ (β = สัดส่วนที่ป้อนกลับ)</p>
+    \[ A_{CL} = \frac{A_0}{1 + A_0\beta} = \frac{1}{\beta}\cdot\frac{1}{1 + \dfrac{1}{A_0\beta}} \;\xrightarrow{A_0\beta \gg 1}\; \frac{1}{\beta} \]</div>
+<div class="tf" id="O3" data-k="golden rules virtual short virtual ground กฎทอง ลัดเสมือน กราวด์เสมือน"><p class="tf-n"><b><span class="fid">O3</span> The two golden rules</b> กฎทองสองข้อ (ใช้ได้เมื่อมีป้อนกลับลบและออปแอมป์ไม่อิ่มตัว)</p>
+    \[ v_+ = v_- \quad(\text{ลัดเสมือน, virtual short}) \qquad i_+ = i_- = 0 \quad(\text{ไม่มีกระแสเข้าขาอินพุต}) \]</div>
+    <p>เหตุผลของข้อแรก: เอาต์พุตจำกัดอยู่ที่ ±15 V แต่ \(A_0\) ใหญ่มาก จึงต้องได้ \(v_+ - v_- = v_o/A_0 \approx 0\) ส่วนข้อสองมาจากความต้านทานอินพุตสูงมาก (2 MΩ สำหรับ µA741 และมากกว่า 10¹² Ω สำหรับชนิด JFET) ใช้สองข้อนี้ แล้วเขียน KCL ที่ขา − ก็วิเคราะห์ได้เกือบทุกวงจร</p>
+    <div class="note"><b>ลำดับวิเคราะห์ 4 ขั้น:</b> ① ตรวจว่ามีป้อนกลับลบจากเอาต์พุตมาที่ขา − (ถ้าป้อนกลับเข้าขา + แปลว่าเป็นวงจรแบบเปรียบเทียบ ใช้กฎทองไม่ได้) ② ตั้ง \(v_- = v_+\) ③ เขียน KCL ที่โหนดขา − โดยกระแสเข้าขาออปแอมป์เป็นศูนย์ ④ ตรวจว่าเอาต์พุตที่ได้ไม่เกินแหล่งจ่าย ถ้าเกินให้ตอบว่าอิ่มตัว</div>
+    <h3 id="real-opamps">ออปแอมป์จริงที่พบบ่อย</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>รุ่น (ชนิด)</th><th>A₀ ทั่วไป</th><th>GBW</th><th>Slew rate</th><th>เอาต์พุตห่างแหล่งจ่าย</th><th>ใช้ทำอะไร</th></tr></thead>
+      <tbody>
+        <tr><td>µA741 (BJT, รุ่นเก่า)</td><td>2×10⁵</td><td>1 MHz</td><td>0.5 V/µs</td><td>ประมาณ 2 V</td><td>ตัวอย่างการสอนคลาสสิก</td></tr>
+        <tr><td>TL072 (JFET อินพุต)</td><td>2×10⁵</td><td>3 MHz</td><td>13 V/µs</td><td>ประมาณ 1.5 V</td><td>เสียง งานทั่วไป อินพุตความต้านทานสูง</td></tr>
+        <tr><td>LM358 (แหล่งจ่ายเดี่ยว)</td><td>10⁵</td><td>1 MHz</td><td>0.3 V/µs</td><td>ประมาณ 1.5 V (บน)</td><td>เซนเซอร์ งานใช้แบตเตอรี่</td></tr>
+        <tr><td>OP07 (แม่นยำ)</td><td>4×10⁵</td><td>0.6 MHz</td><td>0.3 V/µs</td><td>ประมาณ 2 V</td><td>ออฟเซ็ตต่ำ วัดสัญญาณเล็ก</td></tr>
+        <tr><td>Rail-to-rail (เช่น MCP6002)</td><td>10⁵</td><td>1 MHz</td><td>0.6 V/µs</td><td>น้อยกว่า 0.1 V</td><td>ระบบ 3.3 V / 5 V</td></tr>
+      </tbody></table></div>
+    <p class="small">ตัวเลขข้างต้นเป็นค่าทั่วไปโดยประมาณที่ใช้เป็นแบบจำลองในแล็บ ค่าจริงขึ้นกับผู้ผลิตและเงื่อนไขการวัด ตรวจดาตาชีตก่อนออกแบบจริงเสมอ</p>
+    </section>
+
+    <!-- ================= 2 ================= -->
+    <section class="tsec" aria-labelledby="amplifiers">
+    <h2 id="amplifiers">2. วงจรขยายและวงจรคำนวณพื้นฐาน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <h3 id="inverting">วงจรขยายแบบกลับเฟส (Inverting amplifier)</h3>
+    <p>สัญญาณเข้าผ่าน \(R_{in}\) ไปที่ขา − ขา + ต่อกราวด์ เมื่อ \(v_- = v_+ = 0\) (กราวด์เสมือน) กระแส \(v_{in}/R_{in}\) ต้องไหลผ่าน \(R_f\) ทั้งหมด เพราะไม่มีกระแสเข้าขาออปแอมป์ ความต้านทานอินพุตของวงจรจึงเท่ากับ \(R_{in}\) พอดี</p>
+<div class="tf" id="A1" data-k="inverting amplifier gain วงจรขยายกลับเฟส อัตราขยาย"><p class="tf-n"><b><span class="fid">A1</span> Inverting amplifier</b> เครื่องขยายแบบกลับเฟส</p>
+    \[ v_o = -\frac{R_f}{R_{in}}\,v_{in} \qquad R_{i} = R_{in} \qquad \text{noise gain} = 1 + \frac{R_f}{R_{in}} \]</div>
+    <figure class="dc-fig"><canvas data-fig="inverting"></canvas><figcaption>ภาพที่ 2.1 วงจรกลับเฟส \(A_v = -10\) <button type="button" class="wx-btn" data-open="inverting">เปิดในแล็บ ↓</button></figcaption></figure>
+    <h3 id="noninverting">แบบไม่กลับเฟส (Non-inverting) และบัฟเฟอร์</h3>
+    <p>สัญญาณเข้าที่ขา + เครือข่าย \(R_f, R_g\) แบ่งแรงดันเอาต์พุตมาที่ขา − ให้ \(v_- = v_o R_g/(R_g + R_f)\) บังคับให้เท่ากับ \(v_{in}\) ความต้านทานอินพุตสูงมาก จึงไม่ดึงกระแสจากแหล่งสัญญาณ ถ้า \(R_f = 0\) และ \(R_g = \infty\) ได้บัฟเฟอร์ (voltage follower) อัตราขยาย 1 ใช้แยกภาคที่ความต้านทานเอาต์พุตสูงออกจากโหลด</p>
+<div class="tf" id="A2" data-k="non-inverting amplifier gain วงจรขยายไม่กลับเฟส อัตราขยาย"><p class="tf-n"><b><span class="fid">A2</span> Non-inverting amplifier</b> เครื่องขยายแบบไม่กลับเฟส</p>
+    \[ v_o = \left(1 + \frac{R_f}{R_g}\right)v_{in} \qquad R_i \approx \infty \]</div>
+<div class="tf" id="A3" data-k="voltage follower buffer บัฟเฟอร์ ตัวตามแรงดัน"><p class="tf-n"><b><span class="fid">A3</span> Voltage follower</b> ตัวตามแรงดัน (บัฟเฟอร์)</p>
+    \[ v_o = v_{in} \qquad R_i \to \infty,\ R_o \to 0 \]</div>
+    <figure class="dc-fig"><canvas data-fig="noninverting"></canvas><figcaption>ภาพที่ 2.2 วงจรไม่กลับเฟส \(A_v = 1 + 10 = 11\) <button type="button" class="wx-btn" data-open="noninverting">เปิดในแล็บ ↓</button></figcaption></figure>
+    <div class="dc-inst" id="w-amp">
+      <div class="dc-inst-h"><b>เครื่องมือ · เครื่องคิดเลขอัตราขยายวงปิด</b><span>ตรวจการอิ่มตัวให้อัตโนมัติ</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-seg" id="am-kind" role="group" aria-label="ชนิดวงจร"><button type="button" data-k="inv" class="on">กลับเฟส</button><button type="button" data-k="non">ไม่กลับเฟส</button><button type="button" data-k="follower">บัฟเฟอร์</button></div>
+        <div id="am-sw">
+          <div class="dc-ctl"><label for="am-r1" id="am-l1">R<sub>in</sub></label><input id="am-r1" type="range" min="2" max="6" step="0.01" value="3"><output id="am-r1o"></output></div>
+          <div class="dc-ctl"><label for="am-rf">R<sub>f</sub></label><input id="am-rf" type="range" min="2" max="6.5" step="0.01" value="4"><output id="am-rfo"></output></div>
+        </div>
+        <div class="dc-ctl"><label for="am-vin">V<sub>in</sub></label><input id="am-vin" type="range" min="-3" max="3" step="0.01" value="0.5"><output id="am-vino"></output></div>
+        <div class="dc-ctl"><label for="am-v">แหล่งจ่าย ±</label><input id="am-v" type="range" min="5" max="18" step="1" value="15"><output id="am-vo2"></output></div>
+        <div class="dc-readout"><div><small>อัตราขยาย</small><b class="hl" id="am-g">—</b></div><div><small>V<sub>o</sub> ที่ได้จริง</small><b id="am-vo">—</b></div><div><small>noise gain 1/β</small><b id="am-ng">—</b></div><div><small>ความต้านทานอินพุต</small><b id="am-rin">—</b></div></div>
+        <p class="dc-small" id="am-sat"></p>
+      </div>
+    </div>
+    <h3 id="summing">วงจรบวก (Summing amplifier) และวงจรลบ</h3>
+    <p>ถ้ามีหลายอินพุตเข้าโหนดกราวด์เสมือนเดียวกัน กระแสจะบวกกันเอง ตัวต้านทานแต่ละตัวจึงเป็น “ตัวคูณน้ำหนัก” ของอินพุตนั้น วงจรบวกที่มีน้ำหนักต่างกันคือพื้นฐานของ DAC แบบตัวต้านทานถ่วงน้ำหนัก และของเครื่องผสมสัญญาณเสียง ส่วนการลบ ใช้วงจรขยายผลต่างที่ต่อทั้งสองขาอินพุต</p>
+<div class="tf" id="A4" data-k="summing amplifier weighted sum mixer dac วงจรบวก ผลรวมถ่วงน้ำหนัก"><p class="tf-n"><b><span class="fid">A4</span> Summing amplifier</b> วงจรบวกกลับเฟส (ผลรวมถ่วงน้ำหนัก)</p>
+    \[ v_o = -R_f\left(\frac{v_1}{R_1} + \frac{v_2}{R_2} + \cdots + \frac{v_n}{R_n}\right) \]</div>
+<div class="tf" id="A5" data-k="difference amplifier differential cmrr วงจรขยายผลต่าง ตัดสัญญาณร่วม"><p class="tf-n"><b><span class="fid">A5</span> Difference amplifier</b> วงจรขยายผลต่าง (ตัวต้านทานต้องตรงกัน)</p>
+    \[ v_o = \frac{R_4}{R_3 + R_4}\left(1 + \frac{R_f}{R_1}\right)v_2 - \frac{R_f}{R_1}\,v_1 \;\overset{R_4/R_3 = R_f/R_1}{=}\; \frac{R_f}{R_1}\,(v_2 - v_1) \qquad \text{CMRR}_{\text{worst}} \approx \frac{1 + R_f/R_1}{4\delta} \]</div>
+    <p>สูตรสุดท้ายคือ CMRR เลวร้ายสุดโดยประมาณเมื่อตัวต้านทานทั้งสี่คลาดเคลื่อน ±δ (เช่น δ = 0.01 สำหรับ 1%) ตัวต้านทาน 1% กับอัตราขยาย 1 จึงได้ CMRR เพียงประมาณ 50 เท่า (34 dB) ซึ่งเป็นเหตุผลที่งานวัดจริงใช้วงจรขยายเครื่องมือวัดแทน</p>
+    <h3 id="inamp">วงจรขยายเครื่องมือวัด (Instrumentation amplifier)</h3>
+    <p>สองออปแอมป์ภาคแรกแบบไม่กลับเฟสให้ความต้านทานอินพุตสูงทั้งสองขา และให้อัตราขยายของสัญญาณผลต่าง \(1 + 2R_1/R_g\) แต่อัตราขยายของสัญญาณร่วมเป็น 1 เสมอ ภาคที่สามเป็นวงจรขยายผลต่างปกติ จึงปรับอัตราขยายทั้งตัวได้ด้วย \(R_g\) ตัวเดียว (ตัวอย่างเช่น AD620, INA128)</p>
+<div class="tf" id="A6" data-k="instrumentation amplifier in-amp bridge sensor วงจรขยายเครื่องมือวัด"><p class="tf-n"><b><span class="fid">A6</span> Instrumentation amplifier</b> วงจรขยายเครื่องมือวัด 3 ออปแอมป์</p>
+    \[ v_o = \left(1 + \frac{2R_1}{R_g}\right)\frac{R_3}{R_2}\,(v_2 - v_1) \]</div>
+<div class="tf" id="A7" data-k="transimpedance amplifier photodiode tia current to voltage ตัวขยายทรานส์อิมพีแดนซ์ กระแสเป็นแรงดัน"><p class="tf-n"><b><span class="fid">A7</span> Transimpedance amplifier</b> ตัวแปลงกระแสเป็นแรงดัน (โฟโตไดโอด เซนเซอร์กระแส)</p>
+    \[ v_o = -R_f\,i_{in} \qquad H(s) = -\frac{R_f}{1 + sR_fC_f} \]</div>
+    <div class="wx" id="ex-2-1"><div class="wx-head"><span class="mono">ตัวอย่าง 2.1</span><h3>ผสมสัญญาณ DC กับสัญญาณไซน์ด้วยวงจรบวก</h3></div>
+      <figure class="dc-fig"><canvas data-fig="summer"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="summer">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>วงจรบวกกลับเฟสที่ \(R_f = 10\ \text{k}\Omega\) รับ \(V_1 = 1\ \text{V (DC)}\) ผ่าน \(R_1 = 10\ \text{k}\Omega\) และ \(v_2 = 0.5\sin(2\pi\,1000t)\) ผ่าน \(R_2 = 20\ \text{k}\Omega\)</p></li>
+        <li><p>น้ำหนักของ \(V_1\) คือ \(-R_f/R_1 = -1\) และของ \(v_2\) คือ \(-R_f/R_2 = -0.5\) ได้ \(v_o = -1 - 0.25\sin(2\pi\,1000t)\) V</p></li>
+        <li><p>ในแล็บ โหมดทรานเซียนต์ แสดงคลื่น 1 kHz แอมพลิจูด 0.25 V ซ้อนบนระดับ −1 V และแท็บ H(s) ให้ \(H_{V_1} = -1\) กับ \(H_{V_2} = -0.5\) ตรงกับที่คำนวณ</p></li>
+      </ol></div>
+    <div class="wx" id="ex-2-2"><div class="wx-head"><span class="mono">ตัวอย่าง 2.2</span><h3>ขยายสัญญาณจากบริดจ์ด้วย In-amp ที่ปล่อยแรงดันร่วมไว้ 1 V</h3></div>
+      <figure class="dc-fig"><canvas data-fig="inamp"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="inamp">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>ภาคแรก \(R_1 = 12\ \text{k}\Omega\) สองตัว \(R_g = 1\ \text{k}\Omega\) ได้ \(1 + 2(12)/1 = 25\) ภาคสอง \(R_3/R_2 = 1\) รวม \(G = 25\)</p></li>
+        <li><p>ให้ \(V_1\) เป็น DC 1 V และ \(V_2 = 1 + 0.01\sin\omega t\) (แรงดันร่วม 1 V ผลต่างยอด 10 mV) ได้ \(v_o = 25(V_2 - V_1) = 0.25\sin\omega t\) V</p></li>
+        <li><p>ถ้าตัวต้านทานในภาคผลต่างคลาดเคลื่อน แรงดันร่วม 1 V จะรั่วออกไปที่เอาต์พุต ลองเปลี่ยน \(R_3\) ในแล็บเป็น 10.1 kΩ แล้วดู H(s) ของ \(V_1\) และ \(V_2\) ที่ไม่ตรงกันพอดี</p></li>
+      </ol></div>
+    </section>
+
+    <!-- ================= 3 ================= -->
+    <section class="tsec" aria-labelledby="transfer-function">
+    <h2 id="transfer-function">3. ฟังก์ชันถ่ายโอน H(s): วิธีอิมพีแดนซ์กับวงจรออปแอมป์ <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจรที่ประกอบด้วย R, L, C และออปแอมป์ที่ทำงานในช่วงเชิงเส้นเป็นระบบเชิงเส้นไม่แปรตามเวลา (LTI) จึงสรุปทั้งวงจรได้ด้วยฟังก์ชันเดียว \(H(s) = V_o(s)/V_{in}(s)\) เมื่อสถานะเริ่มต้นเป็นศูนย์ ตัวต้านทานมีอิมพีแดนซ์ \(R\) ตัวเก็บประจุ \(1/(sC)\) และตัวเหนี่ยวนำ \(sL\) แล้วใช้สูตรเดียวกับหัวข้อที่ 2 โดยแทน \(R\) ด้วย \(Z(s)\) ได้เลย</p>
+<div class="tf" id="T1" data-k="transfer function impedance method inverting non-inverting ฟังก์ชันถ่ายโอน วิธีอิมพีแดนซ์"><p class="tf-n"><b><span class="fid">T1</span> Impedance method</b> วิธีอิมพีแดนซ์ของวงจรออปแอมป์ (ออปแอมป์อุดมคติ)</p>
+    \[ H_{\text{inv}}(s) = -\frac{Z_f(s)}{Z_{in}(s)} \qquad H_{\text{non}}(s) = 1 + \frac{Z_f(s)}{Z_g(s)} \qquad Z_R = R,\ Z_C = \frac{1}{sC},\ Z_L = sL \]</div>
+    <p>ผลตอบสนองความถี่ได้จากการแทน \(s = j\omega\) และผลตอบสนองเวลาได้จากการแปลงลาปลาซผกผัน (ดู<a href="/learn/laplace-transform/">บทการแปลงลาปลาซ</a>) ขั้ว (poles) คือรากของตัวส่วน ศูนย์ (zeros) คือรากของตัวเศษ ระบบเสถียรเมื่อขั้วทุกตัวอยู่ซีกซ้ายของระนาบ s</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วงจร (กลับเฟส)</th><th>\(Z_{in}\)</th><th>\(Z_f\)</th><th>\(H(s)\)</th><th>ชื่อ</th></tr></thead>
+      <tbody>
+        <tr><td>ตัวต้านทานล้วน</td><td>\(R_{in}\)</td><td>\(R_f\)</td><td>\(-R_f/R_{in}\)</td><td>ขยายคงที่</td></tr>
+        <tr><td>C ในเส้นป้อนกลับ</td><td>\(R\)</td><td>\(\dfrac{1}{sC}\)</td><td>\(-\dfrac{1}{sRC}\)</td><td>อินทิเกรเตอร์</td></tr>
+        <tr><td>C ที่อินพุต</td><td>\(\dfrac{1}{sC}\)</td><td>\(R\)</td><td>\(-sRC\)</td><td>ดิฟเฟอเรนเชียเตอร์</td></tr>
+        <tr><td>\(R_f \parallel C_f\) ป้อนกลับ</td><td>\(R_{in}\)</td><td>\(\dfrac{R_f}{1+sR_fC_f}\)</td><td>\(-\dfrac{R_f/R_{in}}{1+sR_fC_f}\)</td><td>ผ่านต่ำอันดับ 1</td></tr>
+        <tr><td>\(C_{in}\) อนุกรม \(R_{in}\)</td><td>\(R_{in} + \dfrac{1}{sC_{in}}\)</td><td>\(R_f\)</td><td>\(-\dfrac{R_f}{R_{in}}\dfrac{s}{s + 1/(R_{in}C_{in})}\)</td><td>ผ่านสูงอันดับ 1</td></tr>
+        <tr><td>\(R_f + C_f\) อนุกรมป้อนกลับ</td><td>\(R_{in}\)</td><td>\(R_f + \dfrac{1}{sC_f}\)</td><td>\(-\dfrac{R_f}{R_{in}}\left(1 + \dfrac{1}{sR_fC_f}\right)\)</td><td>ตัวควบคุม PI</td></tr>
+      </tbody></table></div>
+<div class="tf" id="T2" data-k="integrator differentiator time domain อินทิเกรเตอร์ ดิฟเฟอเรนเชียเตอร์ โดเมนเวลา"><p class="tf-n"><b><span class="fid">T2</span> Integrator & differentiator</b> อินทิเกรเตอร์และดิฟเฟอเรนเชียเตอร์ในโดเมนเวลา</p>
+    \[ v_o(t) = v_o(0) - \frac{1}{RC}\int_0^{t} v_{in}\,d\tau \qquad v_o(t) = -RC\,\frac{dv_{in}}{dt} \qquad \qquad |H_{int}| = \frac{1}{\omega RC},\ \ |H_{diff}| = \omega RC \]</div>
+<div class="tf" id="T3" data-k="active low-pass high-pass first order cutoff ตัวกรองผ่านต่ำ ผ่านสูง ความถี่ตัด"><p class="tf-n"><b><span class="fid">T3</span> First-order active filters</b> ตัวกรองแอคทีฟอันดับ 1</p>
+    \[ H_{LP}(s) = -\frac{K}{1 + s/\omega_c},\ \ \omega_c = \frac{1}{R_fC_f},\ K = \frac{R_f}{R_{in}} \qquad H_{HP}(s) = -K\frac{s}{s + \omega_c},\ \ \omega_c = \frac{1}{R_{in}C_{in}} \]</div>
+<div class="tf" id="T4" data-k="pi controller pid compensator lead lag ตัวควบคุม พีไอ"><p class="tf-n"><b><span class="fid">T4</span> PI controller</b> ตัวควบคุม PI ด้วยออปแอมป์ (เชื่อมกับวิชาระบบควบคุม)</p>
+    \[ H(s) = -\left(K_p + \frac{K_i}{s}\right) \quad K_p = \frac{R_f}{R_{in}},\ \ K_i = \frac{1}{R_{in}C_f},\ \ T_i = R_fC_f \]</div>
+    <p>ทั้งหมดนี้ตรวจได้ในแล็บ ต่อวงจรแล้วเปิดแท็บ <b>H(s)</b> ระบบจะสร้างเมทริกซ์ \(\mathbf{G} + s\mathbf{C}\) ของวงจรที่คุณวาง คำนวณ \(\det(\mathbf{G}+s\mathbf{C})\) ที่จุดต่าง ๆ บนวงกลมในระนาบ s แล้วกู้สัมประสิทธิ์ของตัวเศษและตัวส่วนด้วย DFT ผกผัน จากนั้นหารากทุกตัว ตัดรากที่ซ้ำกัน และสรุปเป็นรูปสูตร ชนิดของวงจร ความถี่ตัด และเสถียรภาพ ไม่ใช่การประมาณจากกราฟ</p>
+    <div class="wx" id="ex-3-1"><div class="wx-head"><span class="mono">ตัวอย่าง 3.1</span><h3>อินทิเกรเตอร์ป้อนคลื่นสี่เหลี่ยม ได้คลื่นสามเหลี่ยม</h3></div>
+      <figure class="dc-fig"><canvas data-fig="integrator"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="integrator">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>\(R = 10\ \text{k}\Omega\), \(C = 100\ \text{nF}\) ได้ \(RC = 1\ \text{ms}\) และ \(H(s) = -1000/s\) (แล็บแสดงรูปเดียวกัน พร้อมชนิด “อินทิเกรเตอร์” และอัตราขยายเท่ากับ 1 ที่ \(1000/2\pi = 159\ \text{Hz}\))</p></li>
+        <li><p>อินพุตคลื่นสี่เหลี่ยม ±1 V ความถี่ 100 Hz แต่ละครึ่งคาบยาว 5 ms ความชัน \(-V/RC = -1000\ \text{V/s}\) ใน 5 ms เอาต์พุตลดลง 5 V แล้วกลับขึ้น 5 V ได้คลื่นสามเหลี่ยมยอดถึงยอด 5 V</p></li>
+        <li><p>เพราะ \(H(s)\) มีขั้วที่ \(s = 0\) อัตราขยาย DC เป็นอนันต์ ออปแอมป์จริงที่มีออฟเซ็ตเล็กน้อยจะลอยไปชนแหล่งจ่าย จึงมักต่อ \(R_p\) ขนาน \(C\) (วางตัวต้านทานเพิ่มในแล็บได้) ทำให้กลายเป็นตัวกรองผ่านต่ำที่ความถี่ตัดต่ำมาก</p></li>
+      </ol></div>
+    <div class="wx" id="ex-3-2"><div class="wx-head"><span class="mono">ตัวอย่าง 3.2</span><h3>ตัวควบคุม PI: อ่าน K<sub>p</sub> และ T<sub>i</sub> จาก H(s)</h3></div>
+      <figure class="dc-fig"><canvas data-fig="pi"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="pi">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>\(R_{in} = 10\ \text{k}\Omega\), \(R_f = 20\ \text{k}\Omega\), \(C_f = 100\ \text{nF}\) ได้ \(K_p = 2\), \(T_i = R_fC_f = 2\ \text{ms}\)</p></li>
+        <li><p>\(H(s) = -2\left(1 + \dfrac{1}{0.002\,s}\right) = -\dfrac{2s + 1000}{s}\) มีขั้วที่ 0 และศูนย์ที่ \(s = -500\ \text{rad/s}\) หรือ 79.6 Hz</p></li>
+        <li><p>แท็บ H(s) แสดง \(-(2s + 1000)/s\) และระบุว่าเป็นตัวควบคุม PI ที่ศูนย์ 79.6 Hz ตรงกับการคำนวณ ป้อนสเต็ปแล้วดูสโคป: เอาต์พุตกระโดด \(-K_p\) ทันที แล้วไหลต่อเป็นแรมป์</p></li>
+      </ol></div>
+    <div class="wx" id="ex-3-3"><div class="wx-head"><span class="mono">ตัวอย่าง 3.3</span><h3>ดิฟเฟอเรนเชียเตอร์ที่ใช้งานได้จริง</h3></div>
+      <figure class="dc-fig"><canvas data-fig="differentiator"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="differentiator">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>ดิฟเฟอเรนเชียเตอร์ในอุดมคติ \(H = -sRC\) ขยายสัญญาณความถี่สูงไม่จำกัด ทำให้เสียงรบกวนล้น และมักไม่เสถียร จึงต่อ \(R_s\) อนุกรม \(C_{in}\) และ \(C_f\) ขนาน \(R_f\) ได้</p></li>
+        <li><p>\(H(s) = -\dfrac{sR_fC_{in}}{(1 + sR_sC_{in})(1 + sR_fC_f)}\) ด้วยค่า \(C_{in} = 10\ \text{nF}\), \(R_s = 1\ \text{k}\Omega\), \(R_f = 10\ \text{k}\Omega\), \(C_f = 1\ \text{nF}\) ได้ \(H(s) = -10^{6}s/(s + 10^{5})^2\) ศูนย์ที่ 0 และขั้วซ้อนที่ 15.9 kHz</p></li>
+        <li><p>ป้อนคลื่นสามเหลี่ยม 1 kHz ยอด ±0.5 V ความชัน 2000 V/s จะได้คลื่นสี่เหลี่ยมประมาณ \(-R_fC_{in}\cdot2000 = \mp0.2\ \text{V}\) ลองสังเกตขอบที่มน เพราะขั้วจำกัดย่านความถี่ไว้</p></li>
+      </ol></div>
+    <div class="dc-inst" id="w-tfx">
+      <div class="dc-inst-h"><b>เครื่องมือ · เครื่องวิเคราะห์ H(s) ของคุณเอง</b><span>พิมพ์สัมประสิทธิ์เรียงจากกำลังสูงไปต่ำ</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-filters" id="tx-pre" role="group" aria-label="ตัวอย่าง H(s)"><button type="button" data-k="lp1">ผ่านต่ำ 1</button><button type="button" data-k="lp2" class="on">ผ่านต่ำ 2 (Butterworth)</button><button type="button" data-k="hp2">ผ่านสูง 2</button><button type="button" data-k="bp">ผ่านแถบ</button><button type="button" data-k="notch">notch</button><button type="button" data-k="int">อินทิเกรเตอร์</button><button type="button" data-k="pi">PI</button><button type="button" data-k="unst">ไม่เสถียร</button></div>
+        <div class="oa-two"><label class="fld"><span>ตัวเศษ N(s)</span><input id="tx-n" type="text" autocomplete="off" spellcheck="false"></label><label class="fld"><span>ตัวส่วน D(s)</span><input id="tx-d" type="text" autocomplete="off" spellcheck="false"></label></div>
+        <p class="dc-small" id="tx-msg" aria-live="polite"></p>
+        <div class="dc-wplot-box"><canvas id="tx-mag" class="dc-wplot" data-h="210" role="img" aria-label="กราฟขนาดของ H ในหน่วย dB"></canvas><div class="dc-wtip" id="tx-tip1" hidden></div></div>
+        <div class="dc-wplot-box"><canvas id="tx-ph" class="dc-wplot" data-h="170" role="img" aria-label="กราฟเฟสของ H"></canvas><div class="dc-wtip" id="tx-tip2" hidden></div></div>
+        <div class="dc-wplot-box"><canvas id="tx-step" class="dc-wplot" data-h="200" role="img" aria-label="ผลตอบสนองต่อสเต็ปหน่วย"></canvas><div class="dc-wtip" id="tx-tip3" hidden></div></div>
+        <div id="tx-pz"></div>
+        <div class="dc-btnrow"><button type="button" class="dc-btn pri" id="tx-real">สร้างวงจรออปแอมป์ให้ H(s) นี้ ↓</button></div>
+      </div>
+    </div>
+    </section>
+
+    <!-- ================= 4 ================= -->
+    <section class="tsec" aria-labelledby="active-filters">
+    <h2 id="active-filters">4. ตัวกรองแอคทีฟ: Sallen–Key, MFB และไบควอด <span class="lv lv-i">กลาง</span></h2>
+    <p>ตัวกรองแบบพาสซีฟ RC อันดับสองถูกจำกัดที่ Q ไม่เกิน 0.5 เพราะไม่มีขั้วเชิงซ้อน ออปแอมป์ช่วยให้ได้ขั้วเชิงซ้อนที่ Q สูงโดยไม่ต้องใช้ตัวเหนี่ยวนำ และยังแยกภาคด้วยความต้านทานเอาต์พุตต่ำ ทำให้ต่อภาคกันแล้ว H(s) คูณกันได้ตรง ๆ</p>
+<div class="tf" id="T5" data-k="second order standard form natural frequency quality factor damping ratio ความถี่ธรรมชาติ ตัวประกอบคุณภาพ อัตราส่วนการหน่วง อันดับสอง"><p class="tf-n"><b><span class="fid">T5</span> Second-order standard forms</b> รูปมาตรฐานของระบบอันดับสอง (ω₀ = ความถี่ธรรมชาติ, Q = 1/(2ζ))</p>
+    \[ H_{LP} = \frac{K\omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \quad H_{BP} = \frac{K\frac{\omega_0}{Q}s}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \quad H_{HP} = \frac{Ks^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \quad H_{N} = \frac{K(s^2 + \omega_z^2)}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \]</div>
+<div class="tf" id="T6" data-k="poles zeros stability q factor peak bandwidth ขั้ว ศูนย์ เสถียรภาพ"><p class="tf-n"><b><span class="fid">T6</span> Poles, Q and bandwidth</b> ขั้ว ตัวประกอบคุณภาพ และแบนด์วิดท์</p>
+    \[ p_{1,2} = -\frac{\omega_0}{2Q} \pm j\,\omega_0\sqrt{1 - \frac{1}{4Q^2}} \qquad \zeta = \frac{1}{2Q} \qquad \text{BP: } Q = \frac{f_0}{f_2 - f_1} \qquad \text{ยอด LP} = \frac{Q}{\sqrt{1 - 1/(4Q^2)}}\ (Q > \tfrac{1}{\sqrt2}) \]</div>
+<div class="tf" id="F1" data-k="sallen key low pass unity gain design ซาเลน คีย์ ตัวกรองผ่านต่ำ"><p class="tf-n"><b><span class="fid">F1</span> Sallen–Key low-pass (unity gain)</b> ตัวกรอง Sallen–Key ผ่านต่ำ (C₁ = ตัวป้อนกลับ, C₂ = ตัวลงกราวด์)</p>
+    \[ H(s) = \frac{1}{R_1R_2C_1C_2\,s^2 + C_2(R_1 + R_2)\,s + 1} \qquad \omega_0 = \frac{1}{\sqrt{R_1R_2C_1C_2}} \quad Q = \frac{\sqrt{R_1R_2C_1C_2}}{C_2(R_1 + R_2)} \;\overset{R_1=R_2=R}{=}\; \tfrac12\sqrt{\tfrac{C_1}{C_2}} \]</div>
+<div class="tf" id="F2" data-k="multiple feedback band-pass mfb rauch ตัวกรองผ่านแถบ ป้อนกลับหลายทาง"><p class="tf-n"><b><span class="fid">F2</span> Multiple-feedback band-pass</b> ตัวกรองผ่านแถบแบบป้อนกลับหลายทาง (C₁ = C₂ = C)</p>
+    \[ H(s) = -\frac{s/(R_1C)}{s^2 + \frac{2}{R_3C}s + \frac{R_1 + R_2}{R_1R_2R_3C^2}} \qquad \omega_0^2 = \frac{R_1 + R_2}{R_1R_2R_3C^2} \quad Q = \frac{\omega_0 R_3 C}{2} \quad |H(j\omega_0)| = \frac{R_3}{2R_1} \]</div>
+<div class="tf" id="F3" data-k="butterworth chebyshev bessel q values cascade biquad บัตเตอร์เวิร์ธ ภาคต่อกัน"><p class="tf-n"><b><span class="fid">F3</span> Butterworth by cascading biquads</b> Butterworth อันดับ n แยกเป็นภาคอันดับสองที่มี Q ต่างกัน</p>
+    \[ Q_k = \frac{1}{2\cos\theta_k},\ \ \theta_k = \frac{(2k-1)\pi}{2n},\ k = 1,\dots,\tfrac n2 \qquad \begin{array}{c|ccc} n & Q_1 & Q_2 & Q_3 \\ \hline 2 & 0.7071 & & \\ 4 & 0.5412 & 1.3066 & \\ 6 & 0.5176 & 0.7071 & 1.9319 \end{array} \]</div>
+<div class="tf" id="F4" data-k="tow thomas biquad state variable analog computer ไบควอด สามออปแอมป์"><p class="tf-n"><b><span class="fid">F4</span> Tow–Thomas biquad</b> ไบควอด Tow–Thomas (ตัวรวมสูญเสีย → อินทิเกรเตอร์ → ตัวกลับเฟส)</p>
+    \[ \frac{V_b}{V_u} = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \quad V_c = -V_b \quad \frac{V_a}{V_u} = \frac{-\omega_0 s}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \qquad \omega_0 = \frac{1}{RC} \quad Q = \frac{R_q}{R} \]</div>
+    <p>ข้อควรระวัง: ตัวกรอง Q สูงไวต่อความคลาดเคลื่อนของ R, C และต้องใช้ออปแอมป์ที่ GBW สูงกว่า \(f_0\) มาก กฎประมาณคือ \(\text{GBW} \gtrsim 100\,Q\,f_0\) เพื่อไม่ให้ขั้วของออปแอมป์ทำให้ Q จริงเปลี่ยน ลองเปลี่ยนรุ่นเป็น µA741 ในแล็บสำหรับ MFB ที่ Q = 5 แล้วดูการเพี้ยนของยอด</p>
+    <figure class="dc-fig"><canvas data-fig="sallen"></canvas><figcaption>ภาพที่ 4.1 Sallen–Key ผ่านต่ำ Butterworth 1 kHz <button type="button" class="wx-btn" data-open="sallen">เปิดในแล็บ ↓</button></figcaption></figure>
+    <figure class="dc-fig"><canvas data-fig="mfb"></canvas><figcaption>ภาพที่ 4.2 MFB ผ่านแถบ 1 kHz, Q = 5, อัตราขยายยอด −2 <button type="button" class="wx-btn" data-open="mfb">เปิดในแล็บ ↓</button></figcaption></figure>
+    <div class="dc-inst" id="w-flt">
+      <div class="dc-inst-h"><b>เครื่องมือ · ออกแบบ Sallen–Key ผ่านต่ำ</b><span>เทียบค่าตามสูตรกับค่าตัวเก็บประจุ E12 จริง</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-ctl"><label for="fl-f">f₀</label><input id="fl-f" type="range" min="1.5" max="5" step="0.01" value="3"><output id="fl-fo"></output></div>
+        <div class="dc-ctl"><label for="fl-q">Q</label><input id="fl-q" type="range" min="-0.3" max="0.7" step="0.005" value="-0.15"><output id="fl-qo"></output></div>
+        <div class="dc-ctl"><label for="fl-r">R<sub>1</sub> = R<sub>2</sub></label><input id="fl-r" type="range" min="3" max="5" step="0.01" value="4"><output id="fl-ro"></output></div>
+        <div class="dc-readout"><div><small>C₁ ตามสูตร (ป้อนกลับ)</small><b class="hl" id="fl-c1">—</b></div><div><small>C₂ ตามสูตร (ลงกราวด์)</small><b class="hl" id="fl-c2">—</b></div><div><small>C₁ E12 ที่ใกล้สุด</small><b id="fl-c1e">—</b></div><div><small>C₂ E12 ที่ใกล้สุด</small><b id="fl-c2e">—</b></div><div><small>f₀ และ Q จริง</small><b id="fl-fn">—</b></div><div><small>ลักษณะ</small><b id="fl-kind" style="font-size:.9rem">—</b></div></div>
+        <div class="dc-wplot-box"><canvas id="fl-plot" class="dc-wplot" data-h="230" role="img" aria-label="กราฟขนาดของตัวกรอง Sallen-Key"></canvas><div class="dc-wtip" id="fl-tip" hidden></div></div>
+        <div class="dc-legend"><span><i style="background:var(--s3)"></i>ค่าออกแบบ</span><span><i style="background:var(--s1)"></i>ค่า E12 จริง</span></div>
+        <div class="dc-btnrow"><button type="button" class="dc-btn pri" id="fl-open">เปิดวงจรนี้ในแล็บ (โหมดความถี่) ↓</button></div>
+      </div>
+    </div>
+    </section>
+
+    <!-- ================= 5 ================= -->
+    <section class="tsec" aria-labelledby="non-ideal">
+    <h2 id="non-ideal">5. ข้อจำกัดของออปแอมป์จริง: GBW, slew rate และแหล่งจ่าย <span class="lv lv-i">กลาง</span></h2>
+    <p>ออปแอมป์อุดมคติใช้หาวงจรได้ตรงไปตรงมา แต่ในงานจริงสามข้อแรกที่ทำให้วงจรไม่เป็นไปตามสูตรคือ อัตราขยายลดลงตามความถี่ (GBW) เอาต์พุตเปลี่ยนเร็วเกินไม่ได้ (slew rate) และเอาต์พุตถูกตัดที่แหล่งจ่าย</p>
+<div class="tf" id="N1" data-k="gain bandwidth product closed loop bandwidth rise time ผลคูณอัตราขยายกับแบนด์วิดท์ แบนด์วิดท์วงปิด เวลาขึ้น"><p class="tf-n"><b><span class="fid">N1</span> Gain–bandwidth product</b> ผลคูณอัตราขยาย–แบนด์วิดท์ (แบบจำลองขั้วเดียว)</p>
+    \[ A(s) = \frac{A_0}{1 + s/\omega_p},\ \ \text{GBW} = A_0 f_p \qquad f_{-3dB} \approx \frac{\text{GBW}}{1/\beta} = \beta\,\text{GBW} \qquad t_r \approx \frac{0.35}{f_{-3dB}} \]</div>
+<div class="tf" id="N2" data-k="slew rate full power bandwidth distortion อัตราการเปลี่ยนแรงดัน แบนด์วิดท์กำลังเต็ม"><p class="tf-n"><b><span class="fid">N2</span> Slew rate & full-power bandwidth</b> อัตราสลูว์และแบนด์วิดท์กำลังเต็ม</p>
+    \[ \left|\frac{dv_o}{dt}\right|_{max} \le SR \quad\Rightarrow\quad v_o = V_p\sin 2\pi ft:\ \ 2\pi f V_p \le SR \quad f_{FP} = \frac{SR}{2\pi V_p} \]</div>
+<div class="tf" id="N3" data-k="finite gain error loop gain ความผิดพลาดจากอัตราขยายจำกัด"><p class="tf-n"><b><span class="fid">N3</span> Finite-gain error</b> ความผิดพลาดจากอัตราขยายวงเปิดจำกัด</p>
+    \[ \frac{A_{CL}}{1/\beta} = \frac{1}{1 + \frac{1}{A_0\beta}} \approx 1 - \frac{1}{A_0\beta} \qquad \text{เช่น } A_0 = 10^5,\ 1/\beta = 100:\ \text{ผิด } 0.1\% \]</div>
+    <p>หลักสำคัญ: แบนด์วิดท์ขึ้นกับ <b>noise gain \(1/\beta\)</b> ไม่ใช่อัตราขยายที่เห็นที่สัญญาณ วงจรกลับเฟสที่ \(R_f/R_{in} = 99\) มี \(1/\beta = 100\) เท่ากับวงจรไม่กลับเฟส 100 เท่า ทั้งสองแบบจึงมีแบนด์วิดท์ใกล้ GBW/100 เท่ากัน ส่วนตัวตามแรงดัน \(1/\beta = 1\) ใช้แบนด์วิดท์ได้ถึง GBW</p>
+    <div class="dc-inst" id="w-gbw">
+      <div class="dc-inst-h"><b>เครื่องมือ · GBW, แบนด์วิดท์วงปิด และ slew rate</b><span>เส้นประ = A(jω) · เส้นทึบ = วงปิดแบบไม่กลับเฟส</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-ctl"><label for="gb-gbw">GBW</label><input id="gb-gbw" type="range" min="5" max="9" step="0.01" value="6"><output id="gb-gbwo"></output></div>
+        <div class="dc-ctl"><label for="gb-g">อัตราขยาย</label><input id="gb-g" type="range" min="0" max="3" step="0.01" value="2"><output id="gb-go"></output></div>
+        <div class="dc-ctl"><label for="gb-sr">Slew rate</label><input id="gb-sr" type="range" min="-1" max="3" step="0.01" value="-0.3"><output id="gb-sro"></output></div>
+        <div class="dc-ctl"><label for="gb-vp">แอมพลิจูด V<sub>p</sub></label><input id="gb-vp" type="range" min="0.1" max="14" step="0.1" value="10"><output id="gb-vpo"></output></div>
+        <div class="dc-readout"><div><small>แบนด์วิดท์ −3 dB</small><b class="hl" id="gb-bw">—</b></div><div><small>เวลาขึ้น 10–90%</small><b id="gb-tr">—</b></div><div><small>f<sub>FP</sub> = SR / 2πV<sub>p</sub></small><b id="gb-fp">—</b></div></div>
+        <p class="dc-small" id="gb-lim"></p>
+        <div class="dc-wplot-box"><canvas id="gb-plot" class="dc-wplot" data-h="250" role="img" aria-label="อัตราขยายวงเปิดและวงปิดเทียบความถี่"></canvas><div class="dc-wtip" id="gb-tip" hidden></div></div>
+        <div class="dc-legend" id="gb-leg"></div>
+      </div>
+    </div>
+    <p>ข้อจำกัดที่แบบจำลองในแล็บยังไม่รวม ได้แก่ แรงดันออฟเซ็ตอินพุต \(V_{os}\) กระแสไบแอสอินพุต \(I_B\) นอยส์ ความไม่เป็นเชิงเส้นของวงเอาต์พุต CMRR จำกัด และเสถียรภาพกับโหลดเก็บประจุ ซึ่งสำคัญมากในการออกแบบจริง และเป็นหัวข้อต่อยอดตามตำราที่แนะนำท้ายหน้า ส่วนที่แล็บรวมไว้แล้วคือ \(A_0\), GBW (ขั้วโดมิแนนต์), slew rate, \(R_{in}\), \(R_{out}\) และการตัดที่แหล่งจ่าย</p>
+    <div class="note"><b>ทดลองเลย:</b> เปิดพรีเซต “GBW จำกัดแบนด์วิดท์” (โหมดความถี่) จะเห็นเส้นทึบ (µA741) ตกลงที่ประมาณ 10 kHz ขณะที่เส้นประของออปแอมป์อุดมคติแบนเรียบ จากนั้นเปิดพรีเซต “Slew rate” แล้วดูสโคป ไซน์ 10 V ที่ 50 kHz จะกลายเป็นสามเหลี่ยมยอดประมาณ 4.3 V เพราะความชันถูกจำกัดที่ 0.5 V/µs ป้ายบนออปแอมป์จะขึ้นคำว่า SLEW</div>
+    </section>
+
+    <!-- ================= 6 ================= -->
+    <section class="tsec" aria-labelledby="signal-processing">
+    <h2 id="signal-processing">6. การประมวลผลสัญญาณแบบต่อเนื่อง (Continuous-Time Signal Processing) <span class="lv lv-i">กลาง</span></h2>
+    <p>สัญญาณแบบต่อเนื่องคือฟังก์ชัน \(x(t)\) ที่นิยามทุกเวลา เช่น แรงดันจากไมโครโฟน เซนเซอร์ หรือโหลดเซลล์ การประมวลผลคือการแปลง \(x(t)\) เป็น \(y(t)\) ด้วยระบบ ถ้าระบบเป็น LTI ความสัมพันธ์ทั้งหมดอยู่ในฟังก์ชันเดียว ในโดเมนเวลาคือ<b>คอนโวลูชัน</b> \(y = h * x\) และในโดเมนความถี่คือ<b>การคูณ</b></p>
+<div class="tf" id="S1" data-k="lti system convolution transfer function frequency response impulse response ระบบ lti คอนโวลูชัน ผลตอบสนองความถี่"><p class="tf-n"><b><span class="fid">S1</span> LTI processing</b> การประมวลผลสัญญาณด้วยระบบ LTI</p>
+    \[ y(t) = (h * x)(t) = \int_{-\infty}^{\infty} h(\tau)\,x(t-\tau)\,d\tau \quad\Longleftrightarrow\quad Y(s) = H(s)\,X(s) \qquad H(j\omega) = |H|e^{j\angle H} \]</div>
+    <p>ไซน์ที่ความถี่ \(\omega\) ผ่านระบบ LTI แล้วยังเป็นไซน์ความถี่เดิม เปลี่ยนแค่แอมพลิจูดคูณ \(|H(j\omega)|\) และเฟสบวก \(\angle H(j\omega)\) จึงออกแบบด้วยการ “ปั้นรูปทรง” ของ \(|H|\) ได้โดยตรง ตัวอย่างเช่นตัดสัญญาณรบกวนความถี่สูง ตัดค่า DC ตัดเสียงฮัม 50 Hz หรือเลือกเฉพาะแถบของสัญญาณ (สัญญาณมองเป็นผลรวมของไซน์ได้ตาม<a href="/learn/fourier-series/">อนุกรมฟูเรียร์</a>)</p>
+    <h3 id="blocks">หน่วยพื้นฐานที่ออปแอมป์ทำได้</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>การดำเนินการ</th><th>สมการ</th><th>วงจร</th><th>ที่ใช้</th></tr></thead>
+      <tbody>
+        <tr><td>คูณค่าคงที่ / กลับเครื่องหมาย</td><td>\(y = -Kx\)</td><td>กลับเฟส</td><td>ปรับระดับสัญญาณ</td></tr>
+        <tr><td>บวก / ลบ</td><td>\(y = a x_1 \pm b x_2\)</td><td>วงจรบวก ขยายผลต่าง</td><td>ผสมเสียง วนลูปควบคุม</td></tr>
+        <tr><td>อินทิเกรต</td><td>\(y = -\frac{1}{RC}\int x\,dt\)</td><td>อินทิเกรเตอร์</td><td>PI, ตัววัดพลังงาน, คอมพิวเตอร์อนาล็อก</td></tr>
+        <tr><td>ดิฟเฟอเรนเชียต</td><td>\(y = -RC\,\dot{x}\)</td><td>ดิฟเฟอเรนเชียเตอร์</td><td>วัดอัตราการเปลี่ยน, PD</td></tr>
+        <tr><td>กรองความถี่</td><td>\(Y = H(s)X\)</td><td>Sallen–Key, MFB, ไบควอด</td><td>ตัดสัญญาณรบกวน, anti-aliasing ก่อน ADC</td></tr>
+        <tr><td>ปรับสภาพ</td><td>\(y = G(x_+ - x_-)\)</td><td>In-amp, TIA</td><td>เซนเซอร์ บริดจ์ โฟโตไดโอด</td></tr>
+      </tbody></table></div>
+    <h3 id="cascade">สร้าง H(s) อันดับสูงด้วยการต่อภาคกัน</h3>
+    <p>เมื่อภาคหนึ่งมีออปแอมป์ขับด้วยความต้านทานเอาต์พุตต่ำ ภาคถัดไปไม่โหลดภาคก่อน ทำให้ \(H_{total} = H_1H_2\cdots H_k\) ตัวกรองอันดับ 4 ที่ Butterworth จึงเป็น Sallen–Key สองภาคที่ \(Q = 0.5412\) และ \(1.3066\) (F3) ซึ่งแก้ปัญหาที่ตัวกรองอันดับสูงเดี่ยว ๆ ไวต่อความคลาดเคลื่อน</p>
+    <div class="wx" id="ex-6-1"><div class="wx-head"><span class="mono">ตัวอย่าง 6.1</span><h3>ตัวกรอง Butterworth อันดับ 4 ที่ f<sub>c</sub> = 1 kHz</h3></div>
+      <figure class="dc-fig"><canvas data-fig="butter4" data-big="1"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="butter4">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>เลือก \(R = 10\ \text{k}\Omega\) และ \(\omega_0 = 2\pi(1000) = 6283\ \text{rad/s}\) จากสูตร F1 ที่ \(R_1 = R_2\): \(C_1 = 2Q/(\omega_0R)\), \(C_2 = 1/(2Q\omega_0R)\)</p></li>
+        <li><p>ภาค 1 (\(Q = 0.5412\)): \(C_1 = 17.23\ \text{nF}\), \(C_2 = 14.70\ \text{nF}\) ภาค 2 (\(Q = 1.3066\)): \(C_1 = 41.59\ \text{nF}\), \(C_2 = 6.09\ \text{nF}\)</p></li>
+        <li><p>แท็บ H(s) ให้ตัวส่วนอันดับ 4 \(s^4 + 16420s^3 + 1.348\times10^{8}s^2 + 6.482\times10^{11}s + 1.559\times10^{15}\) ซึ่งเป็นพหุนามบัตเตอร์เวิร์ธ ความถี่ −3 dB = 1000.0 Hz และที่ 2 kHz อัตราขยายลดเหลือ 0.0624 (−24 dB) ตรงกับ \(1/\sqrt{1 + 2^{8}}\)</p></li>
+      </ol></div>
+    <h3 id="nonlinear">การประมวลผลแบบไม่เชิงเส้น</h3>
+    <p>เมื่อทำให้ออปแอมป์ทำงานนอกช่วงเชิงเส้นหรือใส่ไดโอดในวงจร จะได้การดำเนินการที่ H(s) ใช้อธิบายไม่ได้ แต่สำคัญไม่แพ้กัน ได้แก่ คอมพาเรเตอร์ (ตัดสินใจว่าสัญญาณสูงหรือต่ำกว่าเกณฑ์) Schmitt trigger (เพิ่มฮิสเทอรีซิสเพื่อตัดสัญญาณสั่นที่เกณฑ์) และวงจรเรียงกระแสแม่นยำ (ได้ค่าสัมบูรณ์ของสัญญาณเล็กที่ต่ำกว่า 0.6 V)</p>
+<div class="tf" id="S2" data-k="schmitt trigger hysteresis threshold comparator ฮิสเทอรีซิส เกณฑ์ ชมิตต์"><p class="tf-n"><b><span class="fid">S2</span> Inverting Schmitt trigger</b> ชมิตต์ทริกเกอร์แบบกลับเฟส (R₁ = จากเอาต์พุต, R₂ = ลงกราวด์)</p>
+    \[ V_{UTP} = +V_{sat}\frac{R_2}{R_1 + R_2} \qquad V_{LTP} = -V_{sat}\frac{R_2}{R_1 + R_2} \qquad V_H = \frac{2R_2}{R_1 + R_2}V_{sat} \]</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>วงจร</th><th>สิ่งที่เห็นในสโคป</th><th>ข้อสังเกต</th></tr></thead>
+      <tbody>
+        <tr><td>คอมพาเรเตอร์วงเปิด</td><td>เอาต์พุตสลับระหว่าง ±V<sub>sat</sub> เมื่อ \(v_{in}\) ข้ามเกณฑ์</td><td>ขอบเปลี่ยนช้าเพราะ slew rate; สัญญาณมีสัญญาณรบกวนจะสั่น</td></tr>
+        <tr><td>Schmitt trigger</td><td>สลับที่ ±V<sub>sat</sub>·β ไม่ใช่ที่ 0 V</td><td>เกณฑ์สองค่า จึงทนสัญญาณรบกวนไม่เกิน V<sub>H</sub></td></tr>
+        <tr><td>เรียงกระแสแม่นยำ</td><td>\(v_o = \max(v_{in}, 0)\) แม้ \(v_{in}\) เล็กมาก</td><td>ไดโอดอยู่ในวงป้อนกลับ จึงตัด V<sub>f</sub> ของไดโอดออก ช่วงที่ไดโอดปิดออปแอมป์ต้องวิ่งจากขอบแหล่งจ่ายกลับมา เกิดสไปก์ที่จุดข้ามศูนย์</td></tr>
+      </tbody></table></div>
+    <p>วงจรเหล่านี้อยู่ในรายการพรีเซต กลุ่ม “ไม่เชิงเส้น” ของแล็บ <button type="button" class="wx-btn" data-open="schmitt">เปิด Schmitt ↓</button> <button type="button" class="wx-btn" data-open="rectifier">เปิดเรียงกระแสแม่นยำ ↓</button> ซึ่งแล็บจำลองสถานะอิ่มตัวและสถานะไดโอดแบบชิ้นส่วนเชิงเส้น (piecewise-linear) จนทุกสถานะสอดคล้องกันในทุกขั้นเวลา</p>
+    <h3 id="adc-link">ต่อกับโลกดิจิทัล</h3>
+    <p>ก่อนแปลงสัญญาณด้วย ADC ต้องกรองความถี่ที่สูงกว่าครึ่งหนึ่งของอัตราสุ่มตัวอย่างออกก่อน (anti-aliasing) ตัวกรอง Butterworth หรือ Bessel จากหัวข้อนี้เป็นตัวเลือกปกติ ดูรายละเอียดการปรับสภาพสัญญาณและ ADC ใน<a href="/learn/sensors-transducers/signal-conditioning-adc/">บทปรับสภาพสัญญาณ · ADC</a> และดูสัญญาณกับสเปกตรัมจริงใน<a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a></p>
+    </section>
+
+    <!-- ================= 7 ================= -->
+    <section class="tsec" aria-labelledby="analog-computer">
+    <h2 id="analog-computer">7. อนาล็อกคอมพิวเตอร์: แก้สมการเชิงอนุพันธ์ด้วยออปแอมป์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ก่อนยุคคอมพิวเตอร์ดิจิทัล วิศวกรจำลองระบบพลวัตด้วย<b>เครื่องวิเคราะห์เชิงอนุพันธ์</b> (differential analyzer) แบบกลไกของ Vannevar Bush (ค.ศ. 1931) แล้วต่อมาด้วยอนาล็อกคอมพิวเตอร์อิเล็กทรอนิกส์ที่ใช้ออปแอมป์ ซึ่งเป็นที่มาของคำว่า “operational amplifier” ในงานคำนวณของ John Ragazzini และคณะ (ค.ศ. 1947) แต่ละเครื่องประกอบจากโมดูลไม่กี่ชนิด ต่อสายเป็นแผนภาพเดียวกับแผนภาพบล็อกของสมการ แรงดันในวงจรเป็น “ตัวแปร” ของระบบจริง และเวลาในวงจรเดินเทียบเวลาจริงตามสเกลที่เลือก</p>
+    <p>แนวคิดนี้ยังมีความหมายวันนี้ เพราะมันคือการเรียนรู้ว่าสมการ \(\ddot{x} + 2\zeta\omega_0\dot{x} + \omega_0^2x = \omega_0^2u\) ของระบบมวล–สปริง–ตัวหน่วง วงจร RLC และระบบควบคุมอันดับสอง ล้วนมีโครงสร้างเดียวกัน (ระบบในดูได้ที่<a href="/learn/second-order-system/">แล็บระบบอันดับ 2</a>) เปลี่ยนแค่ความหมายของตัวแปร</p>
+    <table class="dc-tbl" style="width:100%"><thead><tr><th>โมดูล</th><th>ทำอะไร</th><th>สร้างด้วย</th></tr></thead><tbody>
+      <tr><td>ตัวคูณสัมประสิทธิ์ (coefficient pot)</td><td>คูณด้วยค่าคงที่ 0 – 1</td><td>ตัวต้านทานปรับค่าได้ หรืออัตราส่วน \(R_f/R_{in}\)</td></tr>
+      <tr><td>ตัวรวม (summer)</td><td>\(-\sum k_i x_i\)</td><td>วงจรบวกกลับเฟส (A4)</td></tr>
+      <tr><td>อินทิเกรเตอร์ (มีเงื่อนไขเริ่มต้น IC)</td><td>\(-\frac{1}{RC}\int x\,dt + x_0\)</td><td>วงจร T2 พร้อมแรงดันเริ่มต้นของ C</td></tr>
+      <tr><td>ตัวกลับเครื่องหมาย (inverter)</td><td>\(-x\)</td><td>กลับเฟส \(R_f = R_{in}\)</td></tr>
+      <tr><td>ตัวคูณ ตัวสร้างฟังก์ชัน ตัวเปรียบเทียบ</td><td>\(xy\), \(f(x)\), ตรรกะ</td><td>วงจรไม่เชิงเส้น (นอกขอบเขตหน้านี้)</td></tr>
+    </tbody></table>
+    <h3 id="highest-derivative">วิธีอนุพันธ์สูงสุด (highest-derivative method)</h3>
+<div class="tf" id="C1" data-k="analog computer highest derivative method ode differential equation integrators อนาล็อกคอมพิวเตอร์ วิธีอนุพันธ์สูงสุด สมการเชิงอนุพันธ์"><p class="tf-n"><b><span class="fid">C1</span> Highest-derivative method</b> วิธีอนุพันธ์สูงสุด: แก้หาอนุพันธ์สูงสุด แล้วอินทิเกรตลงมาทีละชั้น</p>
+    \[ m\ddot{x} + c\dot{x} + kx = F(t) \;\Rightarrow\; \ddot{x} = \frac{1}{m}\big(F - c\dot{x} - kx\big) \;\Rightarrow\; \ddot{x}\xrightarrow{\ \int\ }\dot{x}\xrightarrow{\ \int\ }x \ \text{แล้วป้อน } \dot{x}, x \text{ กลับเข้าตัวรวม} \]</div>
+    <p>เนื่องจากอินทิเกรเตอร์ออปแอมป์กลับเครื่องหมายทุกครั้ง ต้องคุมเครื่องหมายตลอดสาย ตัวอย่างเช่นวงจร Tow–Thomas ด้านล่างใช้ตัวรวมที่อินทิเกรตด้วย (U1) อินทิเกรเตอร์ (U2) และตัวกลับเครื่องหมาย (U3) แล้วป้อนเอาต์พุตของ U3 กลับเข้า U1 ทำให้ผลรวมของเครื่องหมายเป็นลบ (ป้อนกลับลบ) ทั้งวง</p>
+<div class="tf" id="C2" data-k="magnitude scaling time scaling analog computer rc scaling สเกลขนาด สเกลเวลา"><p class="tf-n"><b><span class="fid">C2</span> Time and magnitude scaling</b> การสเกลเวลาและขนาด</p>
+    \[ \tau = \beta t:\ \ \omega_m = \beta\omega_0 \qquad RC = \frac{1}{\omega_m} = \frac{1}{\beta\,\omega_0} \qquad Q = \frac{R_q}{R} = \frac{1}{2\zeta} \qquad \text{ขนาด: } |v_{max}| \lesssim 0.7\,V_{sat}\ \text{(เช่น 10 V)} \]</div>
+    <p>การสเกลเวลา \(\beta\) ทำให้ระบบที่ช้า (หลายวินาที) แสดงผลในเสี้ยววินาที หรือระบบที่เร็วมากถูกชะลอให้ดูด้วยตาได้ เลือกให้ \(R\) อยู่ระหว่าง 1 kΩ ถึง 1 MΩ (ต่ำกว่านี้โหลดออปแอมป์ สูงกว่านี้ไวต่อกระแสไบแอสและสัญญาณรบกวน) การสเกลขนาดคือเลือกให้ทุกตัวแปรไม่เกินประมาณ 70% ของแรงดันอิ่มตัว มิฉะนั้นตัวรวมหรืออินทิเกรเตอร์ตัวใดตัวหนึ่งจะตัดสัญญาณ แล้วผลลัพธ์ผิดโดยที่ไม่มีใครรู้ตัว</p>
+    <div class="dc-inst" id="w-acomp">
+      <div class="dc-inst-h"><b>เครื่องมือ · คำนวณสเกลของ Tow–Thomas</b><span>ẍ + 2ζω₀ẋ + ω₀²x = ω₀²u</span></div>
+      <div class="dc-inst-b">
+        <div class="dc-ctl"><label for="ac-w">ω₀ (ระบบจริง)</label><input id="ac-w" type="range" min="-1" max="4" step="0.01" value="1"><output id="ac-wo"></output></div>
+        <div class="dc-ctl"><label for="ac-z">ζ</label><input id="ac-z" type="range" min="0.05" max="2" step="0.01" value="0.3"><output id="ac-zo"></output></div>
+        <div class="dc-ctl"><label for="ac-b">เร่งเวลา β</label><input id="ac-b" type="range" min="0" max="4" step="0.01" value="2"><output id="ac-bo"></output></div>
+        <div class="dc-ctl"><label for="ac-c">C ทั้งสองตัว</label><input id="ac-c" type="range" min="10" max="1000" step="10" value="100"><output id="ac-co"></output></div>
+        <div class="dc-readout"><div><small>ω เครื่อง = βω₀</small><b id="ac-wm">—</b></div><div><small>R = 1/(ω<sub>m</sub>C)</small><b class="hl" id="ac-r">—</b></div><div><small>R<sub>q</sub> = R/(2ζ)</small><b class="hl" id="ac-rq">—</b></div><div><small>overshoot ของสเต็ป</small><b id="ac-os">—</b></div><div><small>เวลายอดแรก</small><b id="ac-tp" style="font-size:.9rem">—</b></div></div>
+        <p class="dc-small" id="ac-warn"></p>
+        <div class="dc-btnrow"><button type="button" class="dc-btn pri" id="ac-open">เปิดวงจรนี้ในแล็บ (ป้อนสเต็ป 1 V) ↓</button></div>
+      </div>
+    </div>
+    <div class="wx" id="ex-7-1"><div class="wx-head"><span class="mono">ตัวอย่าง 7.1</span><h3>แก้ ẍ + 4ẋ + 100x = 100u เร็วขึ้น 100 เท่าบน Tow–Thomas</h3></div>
+      <figure class="dc-fig"><canvas data-fig="tow" data-big="1"></canvas></figure>
+      <p><button type="button" class="wx-btn" data-open="tow">เปิดในแล็บ ↓</button></p>
+      <ol class="steps">
+        <li><p>จากสมการ \(\omega_0^2 = 100\) ได้ \(\omega_0 = 10\ \text{rad/s}\) และ \(2\zeta\omega_0 = 4\) ได้ \(\zeta = 0.2\) \(Q = 1/(2\zeta) = 2.5\)</p></li>
+        <li><p>เร่งเวลา \(\beta = 100\): \(\omega_m = 1000\ \text{rad/s}\) เลือก \(C = 100\ \text{nF}\) ได้ \(R = 1/(\omega_mC) = 10\ \text{k}\Omega\) และ \(R_q = QR = 25\ \text{k}\Omega\)</p></li>
+        <li><p>แท็บ H(s) ที่เอาต์พุต \(V_b\) (ตัวอินทิเกรเตอร์ตัวที่สอง) แสดง \(H(s) = +10^{6}/(s^2 + 400s + 10^{6})\) ซึ่งก็คือสมการต้นฉบับเมื่อเปลี่ยนเวลาเป็น \(\tau = 100t\) ส่วน \(V_c\) (ตัวกลับเครื่องหมาย) ได้ค่าลบของมัน และ \(V_a\) เป็นสัญญาณแบบผ่านแถบที่แปรผันตามอนุพันธ์ \(\dot{x}\) ของ \(V_b\)</p></li>
+        <li><p>ป้อนสเต็ป 1 V ได้ overshoot \(e^{-\pi\zeta/\sqrt{1-\zeta^2}} = 52.7\%\) ที่ \(t_p = \pi/(\omega_m\sqrt{1-\zeta^2}) = 3.2\ \text{ms}\) สโคปในแล็บอ่าน \(V_b\) ได้ +1.527 V ที่ 3.2 ms ตรงกัน บนระบบจริงนั่นคือ 0.32 s</p></li>
+      </ol></div>
+    <div class="wx" id="ex-7-2"><div class="wx-head"><span class="mono">ตัวอย่าง 7.2</span><h3>ออสซิลเลเตอร์ไซน์จากเงื่อนไขเริ่มต้น และกราฟวงโคจรเฟส</h3></div>
+      <p>ถ้าตัดตัวหน่วง \(R_q\) ออก (ζ = 0) สมการเหลือ \(\ddot{x} = -\omega_0^2x\) คำตอบคือไซน์ที่แอมพลิจูดเท่ากับเงื่อนไขเริ่มต้น \(x(0)\) ซึ่งตั้งด้วยแรงดันเริ่มต้นของตัวเก็บประจุ \(C_2\) (ic ในแล็บ) เปิดพรีเซต แล้วติ๊ก “แสดงกราฟ XY” (ตั้งแกน X = \(V_a\) และแกน Y = \(V_b\) ไว้ให้แล้ว) จะได้วงกลมเพราะ \(V_a\) คืออนุพันธ์ของ \(V_b\) ที่สเกลเดียวกัน (คลื่นเฟสต่างกัน 90°) นี่คือ<b>วงโคจรเฟส</b> (phase portrait) ของออสซิลเลเตอร์ฮาร์มอนิก และจะกลายเป็นก้นหอยเข้าหาศูนย์เมื่อใส่ตัวหน่วง</p>
+      <p><button type="button" class="wx-btn" data-open="osc">เปิดออสซิลเลเตอร์ ↓</button></p>
+      <p class="small">ความคลาดเคลื่อนจริงของตัวต้านทานและตัวเก็บประจุทำให้ ζ ไม่เป็นศูนย์พอดี ออสซิลเลเตอร์จริงจึงค่อย ๆ ตายหรือค่อย ๆ โตจนชนแหล่งจ่าย ปัญหานี้คือเหตุที่อนาล็อกคอมพิวเตอร์ต้องมีวงจร “reset / hold” และจำกัดเวลาการรันต่อครั้ง</p></div>
+    <h3 id="why-analog">ทำไมยังสนใจ</h3>
+    <p>อนาล็อกคอมพิวเตอร์คำนวณแบบขนานและต่อเนื่อง ไม่มีขั้นเวลาและไม่มีการปัดเศษเป็นบิต จึงให้ความเร็วสูงและกินพลังงานน้อยสำหรับสมการพลวัตขนาดเล็ก ข้อเสียคือความแม่นยำจำกัดที่ประมาณ 0.1–1% จากความคลาดเคลื่อนของชิ้นส่วนและการลอยของค่า วันนี้แนวคิดนี้ปรากฏในอุปกรณ์วัดเฉพาะทาง วงจรควบคุมแบบอนาล็อก และงานวิจัยด้านฮาร์ดแวร์อนาล็อกเพื่อเร่งการคำนวณบางประเภท และเป็นกรอบคิดที่ดีที่สุดสำหรับเข้าใจ H(s) ว่าเป็นวงจรจริง</p>
+    </section>
+  </article>
+</div>
+
+<!-- ================= LAB (full width) ================= -->
+<section class="dcx dc-band oa-band" id="lab" aria-labelledby="virtual-lab">
+  <div class="wrap">
+    <div class="dc-band-head">
+      <div><p class="eyebrow">// แล็บวงจรออปแอมป์ · MNA solver + สโคป + Bode + H(s)</p><h2 id="virtual-lab">8. แล็บออปแอมป์จำลอง</h2><p>ต่อวงจรออปแอมป์บนกระดานกริดเหมือนบนบอร์ดทดลอง แล้วแล็บจะสร้างและแก้สมการ MNA ทันที สีของสายไฟบอกแรงดันโหนด (ส้ม = บวก ม่วง = ลบ เทา = 0 V) เลือกโหมด <b>DC</b> เพื่ออ่านจุดทำงาน <b>ทรานเซียนต์</b> เพื่อดูรูปคลื่นแบบสโคป (ออปแอมป์อิ่มตัวที่แรงดันแหล่งจ่าย มี slew rate และ GBW จริง) หรือ <b>ความถี่</b> เพื่อดูกราฟ Bode แล้วเปิดแท็บ <b>H(s)</b> เพื่อให้แล็บสรุปฟังก์ชันถ่ายโอน ขั้ว และศูนย์ของวงจรที่คุณต่อ</p></div>
+      <div class="dc-seg" id="lab-mode" role="group" aria-label="โหมดการวิเคราะห์"><button type="button" data-mode="dc">จุดทำงาน DC</button><button type="button" data-mode="tran" class="on">ทรานเซียนต์ (สโคป)</button><button type="button" data-mode="ac">ความถี่ (Bode)</button></div>
+    </div>
+    <div class="dc-tools" id="lab-tools" role="toolbar" aria-label="เครื่องมือแล็บ">
+      <div class="dc-tg">
+        <button type="button" class="dc-tool" data-tool="select" title="เลือกและย้าย (Esc)"><svg viewBox="0 0 22 16"><path d="M6 2l9 6-4 1 2 5-2 1-2-5-3 3z"/></svg>เลือก</button>
+        <button type="button" class="dc-tool" data-tool="W" title="เดินสายไฟ"><svg viewBox="0 0 22 16"><path d="M2 12h8V4h10"/></svg>สายไฟ</button>
+        <button type="button" class="dc-tool" data-tool="delete" title="ลบ"><svg viewBox="0 0 22 16"><path d="M6 3l10 10M16 3L6 13"/></svg>ลบ</button>
+      </div>
+      <div class="dc-tg">
+        <button type="button" class="dc-tool oa-hot" data-tool="OP" title="ออปแอมป์ (แตะที่กึ่งกลาง · R หมุน · F สลับ +/−)"><svg viewBox="0 0 22 16"><path d="M5 1.5v13l13-6.5z"/><path d="M7.4 5.2h2M8.4 4.2v2M7.4 10.8h2"/></svg>ออปแอมป์</button>
+        <button type="button" class="dc-tool" data-tool="R" title="ตัวต้านทาน"><svg viewBox="0 0 22 16"><path d="M0 8h4l1.5-4 3 8 3-8 3 8 3-8 1.5 4h3"/></svg>R</button>
+        <button type="button" class="dc-tool" data-tool="C" title="ตัวเก็บประจุ"><svg viewBox="0 0 22 16"><path d="M0 8h9M13 8h9M9 2v12M13 2v12"/></svg>C</button>
+        <button type="button" class="dc-tool" data-tool="L" title="ตัวเหนี่ยวนำ"><svg viewBox="0 0 22 16"><path d="M0 10h3a2 2 0 0 1 4 0 2 2 0 0 1 4 0 2 2 0 0 1 4 0 2 2 0 0 1 4 0h3"/></svg>L</button>
+        <button type="button" class="dc-tool" data-tool="D" title="ไดโอด"><svg viewBox="0 0 22 16"><path d="M0 8h7M15 8h7M7 3v10l8-5zM15 3v10"/></svg>ไดโอด</button>
+      </div>
+      <div class="dc-tg">
+        <button type="button" class="dc-tool" data-tool="VS" title="แหล่งสัญญาณไซน์ (แก้รูปคลื่นได้)"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="6.5"/><path d="M6.6 8c1.2-3.6 2.8-3.6 4.4 0s3.2 3.6 4.4 0"/></svg>แหล่งสัญญาณ</button>
+        <button type="button" class="dc-tool" data-tool="V" title="แหล่งจ่ายแรงดัน DC"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="6.5"/><path d="M7 8h2.6M8.3 6.7v2.6M12.5 8h2.6"/></svg>V DC</button>
+        <button type="button" class="dc-tool" data-tool="I" title="แหล่งจ่ายกระแส"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="6.5"/><path d="M7.5 8h6.5M12 6l2 2-2 2"/></svg>I</button>
+      </div>
+      <div class="dc-tg">
+        <button type="button" class="dc-tool oa-hot" data-tool="P" title="จุดวัดแรงดัน Vo (เป็นเอาต์พุตของสโคป, Bode และ H(s))"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="3"/><path d="M14 8h7"/></svg>จุดวัด Vo</button>
+        <button type="button" class="dc-tool" data-tool="VM" title="โวลต์มิเตอร์"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="6.5"/><path d="M8.6 5l2.4 6 2.4-6"/></svg>โวลต์มิเตอร์</button>
+        <button type="button" class="dc-tool" data-tool="A" title="แอมมิเตอร์"><svg viewBox="0 0 22 16"><circle cx="11" cy="8" r="6.5"/><path d="M8.6 11l2.4-6 2.4 6M9.5 9h3"/></svg>แอมมิเตอร์</button>
+        <button type="button" class="dc-tool" data-tool="G" title="กราวด์"><svg viewBox="0 0 22 16"><path d="M11 1v7M5 8h12M7.5 11h7M10 14h2"/></svg>กราวด์</button>
+      </div>
+      <div class="dc-tg">
+        <button type="button" class="dc-tool" id="lab-rot" title="หมุน (R)">หมุน</button>
+        <button type="button" class="dc-tool" id="lab-flip" title="สลับขา +/− ของออปแอมป์ หรือกลับขั้ว (F)">พลิก</button>
+        <button type="button" class="dc-tool" id="lab-undo" title="เลิกทำ (Ctrl+Z)">เลิกทำ</button>
+        <button type="button" class="dc-tool" id="lab-redo" title="ทำซ้ำ (Ctrl+Y)">ทำซ้ำ</button>
+        <button type="button" class="dc-tool" id="lab-clear">ล้างกระดาน</button>
+        <span class="dc-toast" id="lab-cleared" hidden>ล้างแล้ว กด เลิกทำ เพื่อเรียกคืน</span>
+      </div>
+      <div class="dc-tg"><select class="dc-tool oa-preset" id="lab-preset" aria-label="วงจรตัวอย่าง"></select></div>
+    </div>
+    <div class="dc-sub">
+      <label><input type="checkbox" id="opt-val"> แสดงค่า</label>
+      <label><input type="checkbox" id="opt-nodes"> ชื่อและแรงดันโหนด</label>
+      <label><input type="checkbox" id="opt-dots"> กระแสเคลื่อนที่</label>
+      <label><input type="checkbox" id="opt-iec"> สัญลักษณ์ IEC</label>
+      <span><button type="button" class="dc-tool" id="lab-zout" aria-label="ย่อ">−</button> <button type="button" class="dc-tool" id="lab-zin" aria-label="ขยาย">+</button> <button type="button" class="dc-tool" id="lab-zfit">พอดีจอ</button></span>
+      <span class="dc-hint" id="lab-hint"></span>
+    </div>
+    <div class="dc-main">
+      <div class="dc-wrap" id="lab-wrap"><canvas id="lab-cv" tabindex="0" aria-label="กระดานต่อวงจรออปแอมป์ ใช้เมาส์หรือนิ้ววางอุปกรณ์"></canvas><div class="dc-tip" id="lab-tip" hidden></div></div>
+      <aside class="dc-side" id="lab-props" aria-live="polite"></aside>
+    </div>
+    <div class="dc-status" id="lab-status" aria-live="polite"></div>
+
+    <div class="dc-tran" id="lab-tran">
+      <div class="dc-tran-ctl">
+        <label>เวลาจำลอง <input type="text" id="lab-tend" value="1ms" aria-label="เวลาสิ้นสุด"></label>
+        <label><input type="checkbox" id="lab-auto" checked> เลือกเวลาอัตโนมัติ</label>
+        <button type="button" class="dc-btn pri" id="lab-play">▶ เล่น</button>
+        <input type="range" id="lab-scrub" min="0" max="1" value="0" aria-label="เลื่อนเวลา">
+        <span id="lab-time"></span>
+        <label class="oa-xy"><input type="checkbox" id="lab-xy-on"> แสดงกราฟ XY (วงโคจรเฟส)</label>
+      </div>
+      <p class="dc-small" id="lab-tran-note"></p>
+      <div class="dc-plots oa-plots">
+        <div class="dc-plot-box"><canvas id="lab-plot-v"></canvas><div class="dc-tchips" id="lab-chips-v"></div></div>
+        <details class="dc-plot-box oa-idet" id="lab-i-box"><summary>กราฟกระแสขององค์ประกอบ</summary><canvas id="lab-plot-i"></canvas><div class="dc-tchips" id="lab-chips-i"></div></details>
+        <div class="dc-plot-box oa-xybox" id="lab-xy-box" hidden><div class="oa-xysel"><label>แกน X <select id="lab-xy-x"></select></label><label>แกน Y <select id="lab-xy-y"></select></label></div><canvas id="lab-plot-xy"></canvas></div>
+      </div>
+      <div class="dc-ptip" id="lab-ptip" hidden></div>
+    </div>
+
+    <div class="dc-tran oa-ac" id="lab-ac" hidden>
+      <div class="dc-tran-ctl">
+        <label>อินพุต <select id="lab-ac-src"></select></label>
+        <label>เอาต์พุต <select id="lab-ac-out"></select></label>
+        <label>ตั้งแต่ <input type="text" id="lab-ac-fmin" value="10" aria-label="ความถี่เริ่มต้น"> Hz</label>
+        <label>ถึง <input type="text" id="lab-ac-fmax" value="100k" aria-label="ความถี่สิ้นสุด"> Hz</label>
+        <label><input type="checkbox" id="lab-ac-ideal" checked> เทียบกับออปแอมป์อุดมคติ</label>
+      </div>
+      <p class="dc-small" id="lab-ac-note"></p>
+      <div class="dc-plots oa-plots">
+        <div class="dc-plot-box"><canvas id="lab-plot-mag"></canvas></div>
+        <div class="dc-plot-box"><canvas id="lab-plot-ph"></canvas></div>
+      </div>
+      <div class="dc-ptip" id="lab-ac-tip" hidden></div>
+    </div>
+
+    <div class="dc-tabs" id="lab-tabs" role="tablist">
+      <button type="button" class="on" data-pane="pane-res" role="tab" aria-selected="true">ผลลัพธ์</button>
+      <button type="button" data-pane="pane-tf" role="tab" aria-selected="false" class="oa-hot-tab">ฟังก์ชันถ่ายโอน H(s)</button>
+      <button type="button" data-pane="pane-mna" role="tab" aria-selected="false">สมการ MNA</button>
+      <button type="button" data-pane="pane-io" role="tab" aria-selected="false">บันทึก/แชร์วงจร</button>
+    </div>
+    <div class="lab-pane" id="pane-res"><div id="lab-table"></div></div>
+    <div class="lab-pane" id="pane-tf" hidden>
+      <div class="oa-tf-head"><label>หา H(s) ไปยังเอาต์พุต <select id="lab-tf-out"></select></label><span class="dc-small">ระบบสร้างเมทริกซ์ \(\mathbf{G} + s\mathbf{C}\) ของวงจรบนกระดาน แล้วหา \(H(s) = N(s)/D(s)\) แบบแน่นอนสำหรับทุกแหล่งจ่ายอินพุต (ออปแอมป์อุดมคติใช้นัลเลเตอร์ ส่วนแบบจริงใช้ A₀ ขั้ว GBW และ R<sub>out</sub>)</span></div>
+      <div id="lab-tf"></div>
+    </div>
+    <div class="lab-pane" id="pane-mna" hidden><p class="dc-small">ระบบสมการ \(\mathbf{A}\mathbf{x} = \mathbf{z}\) ของวงจรบนกระดานที่จุดทำงาน DC</p><div id="lab-mna"></div></div>
+    <div class="lab-pane" id="pane-io" hidden>
+      <p class="dc-small">วงจรบนกระดานถูกจำไว้ในเบราว์เซอร์นี้โดยอัตโนมัติ ถ้าต้องการส่งให้เพื่อนหรือเปิดบนเครื่องอื่น ให้คัดลอกเป็นข้อความ</p>
+      <div class="dc-btnrow"><button type="button" class="dc-btn" id="lab-copy">คัดลอกวงจรเป็นข้อความ</button><button type="button" class="dc-btn" id="lab-paste">วางข้อความวงจร</button></div>
+      <div class="dc-io" id="lab-io" hidden><textarea id="lab-json" aria-label="ข้อความวงจร"></textarea><div class="dc-btnrow"><button type="button" class="dc-btn pri" id="lab-load">เปิดวงจร</button><span class="dc-small" id="lab-io-msg"></span></div></div>
+    </div>
+    <h3 id="guided-experiments">การทดลองนำทาง</h3>
+    <div class="dc-exps">
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 1</span><h4>เห็นกราวด์เสมือน</h4><ol><li>เปิดวงจรกลับเฟส ติ๊ก “ชื่อและแรงดันโหนด” และเลือกโหมด DC</li><li>เปลี่ยน V<sub>in</sub> เป็น DC 0.5 V แล้วอ่านแรงดันขา − ของ U1 ควรเป็น 0 V ทั้งที่ต่อกับ R<sub>in</sub></li><li>ลองเปลี่ยน R<sub>f</sub> แล้วสังเกตว่า V<sub>o</sub> เปลี่ยนตาม −R<sub>f</sub>/R<sub>in</sub> แต่ขา − ยังเป็น 0 V</li></ol><button type="button" class="dc-btn" data-open="inverting">โหลดวงจร</button></article>
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 2</span><h4>ทำให้ออปแอมป์อิ่มตัว</h4><ol><li>เปิดวงจรกลับเฟส (อัตราขยาย −10) ในโหมดทรานเซียนต์</li><li>เพิ่มแอมพลิจูดของ V<sub>in</sub> จาก 0.1 V เป็น 2 V</li><li>เอาต์พุตควรถูกตัดที่ ±15 V ป้าย U1 ขึ้นคำว่า SAT ลองเปลี่ยนรุ่นเป็น µA741 แล้วดูว่ายอดถูกตัดต่ำลงเพราะ headroom 2 V</li></ol><button type="button" class="dc-btn" data-open="inverting">โหลดวงจร</button></article>
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 3</span><h4>วัดแบนด์วิดท์จาก GBW</h4><ol><li>เปิดพรีเซต GBW (µA741 ไม่กลับเฟสเกน 100) ในโหมดความถี่</li><li>ผ่านเมาส์ที่กราฟ หาความถี่ที่อัตราขยายลดจาก 40 dB เป็น 37 dB (ควรประมาณ 10 kHz)</li><li>เปลี่ยนรุ่นเป็น TL072 (GBW 3 MHz) แบนด์วิดท์ควรเพิ่มเป็นประมาณ 30 kHz</li></ol><button type="button" class="dc-btn" data-open="gbw">โหลดวงจร</button></article>
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 4</span><h4>เห็น slew rate</h4><ol><li>เปิดพรีเซต Slew rate (บัฟเฟอร์ µA741 ไซน์ 10 V ที่ 50 kHz)</li><li>วัดความชันของเอาต์พุตจากสโคป ควรได้ประมาณ 0.5 V/µs</li><li>ลดแอมพลิจูดเหลือ 1 V เมื่อ \(2\pi f V_p = 0.31\ \text{V}/\mu\text{s}\) &lt; SR คลื่นกลับเป็นไซน์ และเอาต์พุตตามอินพุตไม่เพี้ยน</li></ol><button type="button" class="dc-btn" data-open="slew">โหลดวงจร</button></article>
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 5</span><h4>อ่าน H(s) ของ Sallen–Key</h4><ol><li>เปิดพรีเซต Sallen–Key แล้วไปแท็บ H(s)</li><li>เทียบ \(\omega_0\) และ Q ที่แล็บอ่านได้ (1000 Hz, Q = 0.707) กับสูตร F1</li><li>เปลี่ยน C<sub>1</sub> เป็น 47 nF แล้วดู Q และยอดของกราฟ Bode เปลี่ยนไปอย่างไร</li></ol><button type="button" class="dc-btn" data-open="sallen">โหลดวงจร</button></article>
+      <article class="dc-exp"><span class="dc-ey">การทดลอง 6</span><h4>แก้สมการเชิงอนุพันธ์ด้วยคอมพิวเตอร์อนาล็อก</h4><ol><li>เปิดพรีเซต Tow–Thomas (ζ = 0.2) แล้วดูสโคป V<sub>b</sub> ที่มี overshoot ประมาณ 53%</li><li>เปลี่ยน R<sub>q</sub> เป็น 10 kΩ (ζ = 0.5) และ 50 kΩ (ζ = 0.1) แล้วเทียบ overshoot กับ \(e^{-\pi\zeta/\sqrt{1-\zeta^2}}\)</li><li>เปิดออสซิลเลเตอร์ (ไม่มี R<sub>q</sub>) แล้วเปิดกราฟ XY ดูวงกลมของวงโคจรเฟส</li></ol><button type="button" class="dc-btn" data-open="tow">โหลดวงจร</button></article>
+    </div>
+
+  </div>
+</section>
+
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson dcx" id="oaPractice">
+    <section aria-labelledby="problems">
+    <h2 id="problems">9. คลังโจทย์ 4 ระดับ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ไล่จากการใช้กฎทองไปถึงการสเกลอนาล็อกคอมพิวเตอร์ แต่ละข้อมีคำใบ้และเฉลยละเอียด และหลายข้อเปิดวงจรในแล็บเพื่อตรวจคำตอบจากสโคปและแท็บ H(s) ได้ แถบสีบนป้ายระดับใช้รหัสสีตัวต้านทาน: น้ำตาล 1 แดง 2 ส้ม 3 เหลือง 4</p>
+    <div class="dc-lvlbars" id="lvlbars"></div>
+    <div class="dc-pb-head">
+      <div class="dc-filters" id="pb-filter" role="group" aria-label="กรองตามระดับ">
+        <button type="button" class="on" data-l="0">ทั้งหมด</button><button type="button" data-l="1">ระดับ 1</button><button type="button" data-l="2">ระดับ 2</button><button type="button" data-l="3">ระดับ 3</button><button type="button" data-l="4">ระดับ 4</button>
+      </div>
+      <span class="dc-small">ตอบเป็นตัวเลขในหน่วยที่กำหนด หรือเศษส่วนเช่น 7/12 คลาดเคลื่อนได้ไม่เกิน 1% · ความคืบหน้าจำไว้ในเบราว์เซอร์นี้</span>
+    </div>
+    <div id="pb-list"></div>
+
+    <h3 id="practice">สนามฝึกไม่จำกัด</h3>
+    <p>โจทย์ชุดนี้สุ่มค่าใหม่ทุกครั้ง แล้วให้ตัวแก้สมการตัวเดียวกับแล็บยืนยันคำตอบ ฝึกจนถูกติดกันสิบข้อในทุกหมวด ก่อนขึ้นไปทำโจทย์ระดับ 3–4</p>
+    <div class="dc-inst dc-gen" id="gen">
+      <div class="dc-inst-h"><b>สนามฝึก · โจทย์สุ่ม</b><span class="dc-streak">ถูกติดกัน <b id="g-streak">0</b> · สูงสุด <b id="g-best">0</b></span></div>
+      <div class="dc-inst-b">
+        <div class="dc-filters" id="g-kind" role="group" aria-label="หมวดโจทย์"></div>
+        <div id="g-body"></div>
+      </div>
+    </div>
+    </section>
+
+    <section aria-labelledby="study-path">
+    <h2 id="study-path">10. เส้นทางฝึกและตำราแนะนำ</h2>
+    <p>ความเก่งด้านวงจรอนาล็อกมาจากการทำซ้ำอย่างมีโครงสร้าง ลองไล่ตามลำดับนี้ แต่ละขั้นมีเกณฑ์ผ่านที่วัดได้</p>
+    <div class="dc-path">
+      <div class="dc-stage"><span class="n">1</span><div><h3>รากฐาน: กฎทองและวงจรขยาย</h3><p>วิเคราะห์วงจรกลับเฟส ไม่กลับเฟส บัฟเฟอร์ และวงจรบวกด้วย KCL ที่ขา − ได้ในใจ และบอกได้ว่าเมื่อใดออปแอมป์อิ่มตัว</p><p><b>เกณฑ์ผ่าน:</b> โจทย์ระดับ 1 ครบ และสนามฝึกหมวดอัตราขยายถูกติดกัน 10 ข้อ</p></div></div>
+      <div class="dc-stage"><span class="n">2</span><div><h3>ระบบ: H(s) และตัวกรอง</h3><p>เขียน \(H(s) = -Z_f/Z_{in}\) ของวงจรใดก็ได้ อ่านขั้ว ศูนย์ และความถี่ตัด ออกแบบ Sallen–Key และ MFB จากค่า \(f_0\) และ Q</p><p><b>เกณฑ์ผ่าน:</b> โจทย์ระดับ 2 ครบ และตรวจแท็บ H(s) ของแล็บได้ตรงกับที่คำนวณเอง</p></div></div>
+      <div class="dc-stage"><span class="n">3</span><div><h3>ระดับประเทศ: ข้อจำกัดจริงและไม่เชิงเส้น</h3><p>ประเมินแบนด์วิดท์จาก GBW และ noise gain คิดข้อจำกัด slew rate ออกแบบ Schmitt trigger และตัวกรองหลายภาค</p><p><b>เกณฑ์ผ่าน:</b> โจทย์ระดับ 3 ครบ และอธิบายได้ว่าทำไมสัญญาณใหญ่เพี้ยนก่อนสัญญาณเล็ก</p></div></div>
+      <div class="dc-stage"><span class="n">4</span><div><h3>ระดับโลก: ระบบทั้งชุด</h3><p>แปลงสมการเชิงอนุพันธ์เป็นวงจรอนาล็อกพร้อมสเกลเวลาและขนาด ออกแบบสายสัญญาณวัดเซนเซอร์ (In-amp → กรอง → ADC) ตามงบสัญญาณรบกวน</p><p><b>เกณฑ์ผ่าน:</b> โจทย์ระดับ 4 ครบ และสร้างระบบอันดับสามจากสามภาคแล้วตรวจกับแล็บได้</p></div></div>
+    </div>
+    <h3 id="further-reading">ตำราและแหล่งฝึกเพิ่มเติม</h3>
+    <ul>
+      <li>A. S. Sedra และ K. C. Smith, <i>Microelectronic Circuits</i> บทออปแอมป์และตัวกรอง</li>
+      <li>S. Franco, <i>Design with Operational Amplifiers and Analog Integrated Circuits</i> ตำราระดับวิศวกรที่ครอบคลุมข้อจำกัดจริงลึกที่สุดเล่มหนึ่ง</li>
+      <li>P. Horowitz และ W. Hill, <i>The Art of Electronics</i> ภาคออปแอมป์และอนาล็อกประยุกต์</li>
+      <li>B. Carter และ R. Mancini, <i>Op Amps for Everyone</i> (Texas Instruments) และ W. Kester (บก.), <i>Op Amp Applications Handbook</i> (Analog Devices) อ่านฟรีออนไลน์</li>
+      <li>B. Ulmann, <i>Analog Computing</i> ประวัติและวิธีใช้อนาล็อกคอมพิวเตอร์สมัยใหม่</li>
+      <li>บทต่อยอดในเว็บนี้: <a href="/learn/dc-circuits/">วงจรไฟฟ้ากระแสตรง</a> (MNA และทรานเซียนต์ RLC), <a href="/learn/laplace-transform/">การแปลงลาปลาซ</a> (H(s) และขั้ว-ศูนย์), <a href="/learn/control-systems/">ระบบควบคุม</a> (PID, Bode) และ<a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณ + ออสซิลโลสโคป</a></li>
+    </ul>
+    </section>
+
+    <!--video-->
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
