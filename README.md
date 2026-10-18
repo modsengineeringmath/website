@@ -364,3 +364,10 @@ English main terms, first technical term as "ไทย (English)", FAQ ×4–5, 
 - Short URLs (`/multivariable`, `/calculus-3`, `/vector-calculus`, `/partial-derivatives`, `/gradient`, `/lagrange-multiplier`, `/double-integral`,
   `/greens-theorem`, `/stokes-theorem`, `/divergence-theorem`, `/cut-and-fill`, …) are in `_redirects`.
 - Every worked-example number was checked with sympy/numpy before publishing.
+
+## About page photos (added 2026-10-18)
+Photos live in `images/about/` as WebP in several widths (no metadata, licence plates blurred) and are used with `srcset`/`sizes`
+in `src/pages/about.html`: profile photo `teerawut-savangboon-160/320.webp`, classroom strip `teaching-*-480/800/1200.webp`,
+field trip `egat-lamtakhong-*-360/640.webp`. `teerawut-savangboon-ajarn-mod.jpg` (800×800) is the Person `image` in the
+JSON-LD of the about and home pages. The About page's share card is the hand-made `images/about/og-about.jpg`
+(set with `"ogImage"` in its meta block), so `scripts/og.py` no longer decides that page's preview.
