@@ -215,7 +215,7 @@ const LAB = (() => {
     for (const k of ['v', 'i']) drawPlot($('lab-plot-' + k), k);
   }
   function drawPlot(pc, k) {
-    const T = st.tran; const box = pc.parentElement; const W = Math.max(280, box.clientWidth), H = 190, dpr = window.devicePixelRatio || 1;
+    const T = st.tran; const box = pc.parentElement; const W = Math.max(240, box.clientWidth - 12), H = 190, dpr = window.devicePixelRatio || 1;
     pc.width = W * dpr; pc.height = H * dpr; pc.style.width = W + 'px'; pc.style.height = H + 'px';
     const g = pc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     const cs = getComputedStyle(DCROOT()); const C = (n) => cs.getPropertyValue(n).trim();

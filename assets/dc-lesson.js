@@ -20,7 +20,8 @@ const UI = (() => {
 
   /* ---------- generic line plot with crosshair ---------- */
   function linePlot(cv, tipEl, cfg) {
-    const box = cv.parentElement; const W = Math.max(260, box.clientWidth), H = +cv.getAttribute('height') || 210, dpr = window.devicePixelRatio || 1;
+    const box = cv.parentElement; if (!cv._h) cv._h = +cv.dataset.h || +cv.getAttribute('height') || 210; // keep the CSS height: cv.height below is in device pixels
+    const W = Math.max(240, box.clientWidth), H = cv._h, dpr = window.devicePixelRatio || 1;
     cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
     const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     const L = 54, R = 26, T = 12, B = 30, pw = W - L - R, ph = H - T - B;
@@ -122,7 +123,7 @@ const UI = (() => {
       const R = Math.pow(10, +r.value), X = Math.pow(10, +c.value);
       $('rc-ro').textContent = fmtSI(R, 'Ω'); $('rc-co').textContent = fmtSI(X, kind === 'rc' ? 'F' : 'H'); $('rc-cl').textContent = kind === 'rc' ? 'C' : 'L';
       const tau = kind === 'rc' ? R * X : X / R; const fin = kind === 'rc' ? 10 : 10 / R;
-      $('rc-tau').textContent = fmtSI(tau, 's', 3); $('rc-99').textContent = fmtSI(tau * Math.log(100), 's', 3); $('rc-fin').textContent = kind === 'rc' ? 'v_C = 10 V' : 'i_L = ' + fmtSI(fin, 'A', 3);
+      $('rc-tau').textContent = fmtSI(tau, 's', 3); $('rc-99').textContent = fmtSI(tau * Math.log(100), 's', 3); $('rc-fin').innerHTML = kind === 'rc' ? 'v<sub>C</sub> = 10 V' : 'i<sub>L</sub> = ' + fmtSI(fin, 'A', 3);
       const xs = []; for (let k = 0; k <= 200; k++) xs.push(5 * tau * k / 200);
       const y = xs.map((t) => 1 - Math.exp(-t / tau)), y2 = xs.map((t) => Math.exp(-t / tau));
       linePlot($('rc-plot'), $('rc-tip'), {
@@ -130,7 +131,7 @@ const UI = (() => {
         xFmt: (x) => (x === 0 ? '0' : fmt(x / tau, 2) + 'τ'), yFmt: (v) => Math.round(v * 1000) / 10 + '%',
         series: [{ xs, ys: y, color: '--s1' }, { xs, ys: y2, color: '--s2' }],
         vlines: [{ x: tau, label: 'τ = ' + fmtSI(tau, 's', 3) }], markers: [{ x: tau, y: 1 - Math.exp(-1), color: '--s1' }],
-        tip: (i) => 't = ' + fmtSI(xs[i], 's', 3) + '<br>' + (kind === 'rc' ? 'v_C = ' + fmtSI(10 * y[i], 'V', 3) + '<br>i = ' + fmtSI(10 / R * y2[i], 'A', 3) : 'i_L = ' + fmtSI(fin * y[i], 'A', 3) + '<br>v_L = ' + fmtSI(10 * y2[i], 'V', 3))
+        tip: (i) => 't = ' + fmtSI(xs[i], 's', 3) + '<br>' + (kind === 'rc' ? 'v<sub>C</sub> = ' + fmtSI(10 * y[i], 'V', 3) + '<br>i = ' + fmtSI(10 / R * y2[i], 'A', 3) : 'i<sub>L</sub> = ' + fmtSI(fin * y[i], 'A', 3) + '<br>v<sub>L</sub> = ' + fmtSI(10 * y2[i], 'V', 3))
       });
       $('rc-leg').innerHTML = kind === 'rc' ? '<span><i style="background:var(--s1)"></i>v<sub>C</sub>/V<sub>s</sub> (ชาร์จขึ้น)</span><span><i style="background:var(--s2)"></i>i/i(0⁺) (กระแสลดลง)</span>' : '<span><i style="background:var(--s1)"></i>i<sub>L</sub>/i(∞) (กระแสเพิ่มขึ้น)</span><span><i style="background:var(--s2)"></i>v<sub>L</sub>/V<sub>s</sub> (แรงดันลดลง)</span>';
     };
