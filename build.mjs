@@ -726,6 +726,16 @@ export const TOPICS = [
         summary: "ห้องแล็บ 19 ชุดในหน้าเดียว: พื้นผิวและระนาบสัมผัส gradient และ gradient descent จุดวิกฤต Lagrange กำลังสองน้อยสุด อินทิกรัลสองชั้น-สามชั้น Jacobian เส้นโค้งในอวกาศ สนามเวกเตอร์ และตัวตรวจ Gauss–Stokes" },
     ],
   },
+  {
+    // Topic 25 (added 2026-10-18): DC circuit analysis — one long lesson (8 sections, formula cards B E K S N T R H),
+    // a full-width virtual lab with an MNA solver (DC + trapezoidal transient) and a 26-problem bank with unlimited practice.
+    // Engine, circuit builders, schematic renderer: assets/dc-core.js · lab: assets/dc-lab.js · widgets + problems: assets/dc-lesson.js
+    slug: "dc-circuits",
+    title: "วงจรไฟฟ้ากระแสตรง",
+    en: "DC Circuit Analysis",
+    sym: "Ω",
+    summary: "วงจร DC ตั้งแต่ศูนย์ถึงระดับโอลิมปิก: ปริมาณพื้นฐาน R L C แหล่งจ่ายไม่อิสระ KCL KVL อนุกรม-ขนาน Δ-Y วิธีโหนด เมช MNA เทวินิน นอร์ตัน กำลังสูงสุด ทรานเซียนต์ RC RL RLC เทคโนโลยี DC ล่าสุด แล็บต่อวงจรที่แก้สมการจริง และโจทย์ 4 ระดับ",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -1314,7 +1324,7 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
 }
 
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
+const MD_SERIES = ["dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
   { src: "src/md/multivariable-calculus.md", out: "learn/multivariable-calculus/guide.md", page: "/learn/multivariable-calculus/", title: "Multivariable & vector calculus — learning guide & formula summary (Thai, Markdown)", desc: "functions of several variables, partial derivatives, gradient and directional derivative, critical points and Lagrange multipliers, double and triple integrals with Jacobian, vector-valued functions, vector fields, line and surface integrals, Green's, divergence (Gauss) and Stokes' theorems, and applications in electrical, mechanical and civil engineering" },
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
