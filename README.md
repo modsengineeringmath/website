@@ -371,3 +371,5 @@ in `src/pages/about.html`: profile photo `teerawut-savangboon-160/320.webp`, cla
 field trip `egat-lamtakhong-*-360/640.webp`. `teerawut-savangboon-ajarn-mod.jpg` (800×800) is the Person `image` in the
 JSON-LD of the about and home pages. The About page's share card is the hand-made `images/about/og-about.jpg`
 (set with `"ogImage"` in its meta block), so `scripts/og.py` no longer decides that page's preview.
+Credentials (education, position, ORCID, Scopus, Google Scholar) are the `#credentials` section of `src/pages/about.html`;
+the same facts are in the Person JSON-LD (`alumniOf`, `hasCredential`, `identifier`, `sameAs`) on the about and home pages — update both together.
