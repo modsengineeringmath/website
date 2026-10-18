@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=19e4aa2f">
+<link rel="stylesheet" href="/assets/site.css?v=0b3f834e">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/sensors-transducers/modbus/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/sensors-transducers/modbus/#article","headline":"Modbus RTU และ Modbus TCP: จากสาย RS-485 ถึงไบต์ในเฟรม","description":"Modbus ฉบับใช้งานจริง: RS-485 การต่อแบบเดซี่เชน ตัวต้านทานปลายสาย 120 Ω ไบแอส แบบจำลองข้อมูล coils discrete inputs input registers holding registers แอดเดรส 40001 กับแอดเดรสในเฟรม ฟังก์ชันโค้ด 01 03 04 05 06 15 16 exception เฟรม RTU กับ MBAP ของ Modbus TCP การคำนวณ CRC-16 เวลาอักขระ t3.5 รอบโพล การอ่าน Float32 และลำดับไบต์ ABCD CDAB พร้อมเครื่องสร้างเฟรมและเครื่องคำนวณ CRC","inLanguage":"th","url":"https://modsengineeringmath.com/learn/sensors-transducers/modbus/","mainEntityOfPage":"https://modsengineeringmath.com/learn/sensors-transducers/modbus/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Modbus RTU","Modbus TCP","RS-485","CRC-16","Holding register","IEEE 754 float"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/sensors-transducers/#article"},"image":["https://modsengineeringmath.com/images/og/learn-sensors-transducers-modbus.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เซนเซอร์และทรานส์ดิวเซอร์","item":"https://modsengineeringmath.com/learn/sensors-transducers/"},{"@type":"ListItem","position":4,"name":"Modbus RTU และ Modbus TCP: RS-485 เฟรม ฟังก์ชันโค้ด รีจิสเตอร์ CRC-16 และ Float32","item":"https://modsengineeringmath.com/learn/sensors-transducers/modbus/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"แอดเดรส 40001 ในคู่มือกับแอดเดรสในเฟรม Modbus ต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"40001 เป็นการเขียนแบบดั้งเดิมที่ตัวเลขแรก 4 บอกตาราง holding register และนับเริ่มจาก 1 ส่วนในเฟรมจริงส่งเฉพาะออฟเซ็ตที่นับจาก 0 ดังนั้น 40001 คือแอดเดรส 0x0000 และ 40010 คือ 0x0009 โปรแกรมหลายตัวให้เลือกว่าจะใช้แบบใด ความผิดพลาดที่พบบ่อยที่สุดคืออ่านเลื่อนไปหนึ่งรีจิสเตอร์"}},{"@type":"Question","name":"ทำไมอ่านค่า float จาก Modbus แล้วได้ตัวเลขแปลก ๆ?","acceptedAnswer":{"@type":"Answer","text":"Modbus กำหนดเพียงรีจิสเตอร์ 16 บิตแบบ big-endian ค่า float 32 บิตจึงต้องใช้สองรีจิสเตอร์ และผู้ผลิตแต่ละรายเรียงคำต่างกัน ลำดับที่พบบ่อยคือ ABCD (คำสูงก่อน) และ CDAB (คำต่ำก่อน) ถ้าเลือกผิด ค่าที่ได้จะเป็นเลขเล็กมากหรือใหญ่มากผิดปกติ วิธีแก้คือลองทุกลำดับกับค่าที่รู้ เช่น อุณหภูมิห้อง แล้วเลือกลำดับที่สมเหตุสมผล"}},{"@type":"Question","name":"RS-485 ต้องใส่ตัวต้านทานปลายสายที่ไหน?","acceptedAnswer":{"@type":"Answer","text":"ใส่ตัวต้านทานประมาณ 120 Ω (เท่ากับอิมพีแดนซ์ลักษณะของสาย) ที่ปลายทั้งสองของบัสเท่านั้น ไม่ใช่ทุกอุปกรณ์ และต่ออุปกรณ์แบบเดซี่เชนเรียงต่อกัน ไม่ต่อแบบดาว นอกจากนี้ควรมีไบแอส (pull-up/pull-down) ที่มาสเตอร์หนึ่งชุด เพื่อให้บัสอยู่ในสถานะที่แน่นอนเมื่อไม่มีใครส่ง"}}]}]}</script>
@@ -682,10 +682,10 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=19e4aa2f" defer></script>
-<script src="/assets/lesson.js?v=19e4aa2f" defer></script>
-<script src="/assets/ee-kit.js?v=19e4aa2f" defer></script>
-<script src="/assets/sx-calc.js?v=19e4aa2f" defer></script>
-<script src="/assets/sx-bus.js?v=19e4aa2f" defer></script>
+<script src="/assets/site.js?v=0b3f834e" defer></script>
+<script src="/assets/lesson.js?v=0b3f834e" defer></script>
+<script src="/assets/ee-kit.js?v=0b3f834e" defer></script>
+<script src="/assets/sx-calc.js?v=0b3f834e" defer></script>
+<script src="/assets/sx-bus.js?v=0b3f834e" defer></script>
 </body>
 </html>
