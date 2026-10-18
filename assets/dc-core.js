@@ -377,7 +377,7 @@ const CK = (() => {
       a.push(R(x, 4, x + 2, 4, r, 'R' + (2 * k + 1)), W(x + 2, 4, x + 4, 4), R(x + 4, 6, x + 4, 10, r, 'R' + (2 * k + 2)), W(x + 4, 4, x + 4, 6), W(x + 4, 10, x + 4, 12));
     }
     a.push(W(3, 12, 5 + 4 * (N - 1) + 4, 12));
-    return flat(a);
+    return flat(a).map((c) => { c.x1 += 5; c.x2 += 5; return c; }); // shift right so the voltmeter label stays on the board
   };
   P.kcl = () => flat(
     V(3, 7, 3, 11, 9, 'Vs'), W(3, 7, 3, 4, 5, 4), R(5, 4, 9, 4, 1e3, 'R1'), W(9, 4, 21, 4),
@@ -637,7 +637,7 @@ const RND = (() => {
     if (R) {
       if (c.t === 'A') lines.push({ t: fmtSI(R.i, 'A', 4), f: '700 ' + FS(s, 0.5) + 'px ' + FONT_MONO, col: C.copper });
       else if (c.t === 'VM') lines.push({ t: fmtSI(R.v, 'V', 4), f: '700 ' + FS(s, 0.5) + 'px ' + FONT_MONO, col: C.copper });
-      else if (o.showRes !== false) {
+      else if (o.showRes !== false && s >= 16) { // on a small (phone) board the numbers live in the tooltip, side panel and table
         const src = ['V', 'I', 'E', 'Gd', 'H', 'F'].includes(c.t);
         lines.push({ t: fmtSI(Math.abs(R.v), 'V') + ' · ' + fmtSI(Math.abs(R.i), 'A'), f: '500 ' + FS(s, 0.38) + 'px ' + FONT_MONO, col: C.flow });
         if (src && Math.abs(R.p) > 1e-15) lines.push({ t: (R.p < 0 ? 'จ่าย ' : 'รับ ') + fmtSI(Math.abs(R.p), 'W'), f: '500 ' + FS(s, 0.38) + 'px ' + FONT_UI, col: R.p < 0 ? C.copper : C.ink3 });
@@ -645,7 +645,7 @@ const RND = (() => {
     }
     if (!lines.length) return;
     const lp = c.lp || 1; const hor = Math.abs(cs) > 0.7;
-    const lh = s * 0.52;
+    const lh = Math.max(s * 0.52, 11.5);
     ctx.textBaseline = 'middle';
     if (hor) {
       ctx.textAlign = 'center';

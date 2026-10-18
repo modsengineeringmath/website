@@ -27,7 +27,7 @@ const LAB = (() => {
     for (const c of st.comps) if (c.ctrl) c.ctrl = map.get(c.ctrl) || c.ctrl;
     st.sel = null; st.slots = new Map(); st.tran = null;
     if (opt.mode) setMode(opt.mode, true);
-    afterChange(true);
+    fitCircuit(); afterChange(true);
   }
   const byId = (id) => st.comps.find((c) => c.id === id);
 
@@ -52,10 +52,19 @@ const LAB = (() => {
   const clampX = (x) => Math.max(0, Math.min(st.cols, x)), clampY = (y) => Math.max(0, Math.min(st.rows, y));
 
   /* ---------- sizing & drawing ---------- */
+  // Shrink the board on narrow screens so the whole circuit is visible without scrolling (phones).
+  function fitCircuit() {
+    const avail = wrap.clientWidth - 2; if (avail < 50) return;
+    const base = Math.max(18, Math.min(30, Math.floor(avail / st.cols)));
+    if (!st.comps.length) { st.zoom = 0; fit(); return; }
+    const bb = RND.bbox(st.comps); const need = Math.max(10, bb.x1 + 1.2);
+    const cell = Math.max(11, Math.min(base, Math.floor(avail / need)));
+    st.zoom = cell - base; fit(); wrap.scrollLeft = 0; wrap.scrollTop = 0;
+  }
   function fit() {
     const avail = wrap.clientWidth - 2;
     const base = Math.max(18, Math.min(30, Math.floor(avail / st.cols)));
-    st.cell = Math.max(14, Math.min(44, base + st.zoom));
+    st.cell = Math.max(11, Math.min(44, base + st.zoom));
     const W = st.cols * st.cell, H = st.rows * st.cell, dpr = window.devicePixelRatio || 1;
     cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
@@ -401,7 +410,7 @@ const LAB = (() => {
   $('lab-undo').onclick = undo; $('lab-redo').onclick = redo;
   $('lab-rot').onclick = () => { rotSel(); setTool(st.tool); };
   $('lab-clear').onclick = () => { if (!st.comps.length) return; load([]); $('lab-cleared').hidden = false; setTimeout(() => $('lab-cleared').hidden = true, 4000); };
-  $('lab-zin').onclick = () => { st.zoom += 4; fit(); }; $('lab-zout').onclick = () => { st.zoom -= 4; fit(); };
+  $('lab-zin').onclick = () => { st.zoom += 3; fit(); }; $('lab-zout').onclick = () => { st.zoom -= 3; fit(); }; $('lab-zfit').onclick = fitCircuit;
   const preset = $('lab-preset');
   preset.innerHTML = '<option value="">เลือกวงจรตัวอย่าง…</option>' + CK.PRESETS.map((p) => '<option value="' + p.k + '">' + p.name + '</option>').join('');
   preset.onchange = () => { const p = CK.PRESETS.find((q) => q.k === preset.value); if (p) { load(p.f(), { mode: p.tran ? 'tran' : 'dc' }); if (p.tran) runTran(); } preset.value = ''; };
@@ -433,7 +442,7 @@ const LAB = (() => {
   let init = null; try { init = JSON.parse(store.get('dc-lab-v1') || 'null'); } catch (e) { }
   st.comps = (Array.isArray(init) && init.length ? init : CK.P.twoNode()).map((c) => Object.assign({}, c));
   { const map = new Map(); for (const c of st.comps) { const id = nid(); map.set(c.id, id); c.id = id; } for (const c of st.comps) if (c.ctrl) c.ctrl = map.get(c.ctrl) || c.ctrl; }
-  setTool('select'); fit(); afterChange(); st.undo = []; $('lab-undo').disabled = true;
+  setTool('select'); fitCircuit(); afterChange(); st.undo = []; $('lab-undo').disabled = true;
   requestAnimationFrame(loop);
 
   return {
