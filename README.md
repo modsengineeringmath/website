@@ -27,6 +27,7 @@ The new page appears in the library, on the home page, in the prev/next links, s
 - Social share images: `python3 scripts/og.py && node build.mjs` renders `images/og/<page>.jpg` (1200×630) from `src/og-manifest.json`. Run it after adding a page or changing a title. A page can set `"og": {"title","sub","eyebrow","sym"}` in its meta block.
 - `robots.txt` explicitly allows AI crawlers; `_headers` sets UTF-8 for text files and `noindex` on source files.
 - Lesson pages get a share bar (LINE, Facebook, X, copy link) automatically.
+- New pages are picked up by `sitemap.xml`, `llms.txt`, `llms-full.txt`, `search-index.json`, the Markdown copies and the RSS feed on the next `node build.mjs`; nothing is edited by hand. Latest additions (2026-10-19): `/learn/motor-control/star-delta-analysis/`, `/learn/en/motor-control/star-delta-analysis/`, `/blog/star-delta-timer-setting/`, `/en/blog/star-delta-timer-setting/` (short URLs `/star-delta-timer`, `/star-delta-research`, `/closed-transition`, `/wye-delta` … in `_redirects`).
 
 ## Lecture-style math markup (integral page and future lessons)
 Inside `\( \)` / `\[ \]` you can use: `\hlF{..}` formula used (amber), `\hlP{..}` property used (blue), `\hlU{..}` u-substitution (green), `\hlC{..}` constant C (purple), `\rc{..}` red strike-through, `\carry{2}{6}` strike 6 and write 2 above in red. Worked examples use `<div class="wx">` with `<ol class="steps">`; formula cards use ids (F2, P1, Q11…) so `<a class="tag tf" href="#F2">` links back to them. Polynomial long division uses the `.ldiv` grid (see `src/pages/learn/integral-calculus.html`).
@@ -263,8 +264,8 @@ practice (pid-symbols, installation-calibration K, instrumentation-lab). Hub for
   `/io-link`, `/p-and-id`, `/calibration`, `/sil`, `/instrument-lab` …) in `_redirects`.
 
 ## Motor control & PLC series + English editions (2026-10-14)
-Topics in `src/topics-mc-plc.mjs` (`MC_PLC_TOPICS`, spread at the end of `TOPICS`): `motor-control` (topic 21, 14 pages: induction-motor M,
-supply-systems S, motor-connections C, control-devices D, diagrams-symbols G, dol-starter L, forward-reverse R, star-delta Y, soft-starters T,
+Topics in `src/topics-mc-plc.mjs` (`MC_PLC_TOPICS`, spread at the end of `TOPICS`): `motor-control` (topic 21, 15 pages: induction-motor M,
+supply-systems S, motor-connections C, control-devices D, diagrams-symbols G, dol-starter L, forward-reverse R, star-delta Y, star-delta-analysis E (added 2026-10-19, see below), soft-starters T,
 applied-circuits A, vfd V, vfd-applications P, design-installation K, motor-lab; hub H1–H4) and `plc` (topic 22, 11 pages: plc-fundamentals F,
 io-wiring W, ladder-basics B, timers-counters T, iec-languages L, plc-motor-control M, sequential-control S, analog-pid-vfd P, commissioning-safety K, plc-lab).
 All numbers are for 230/400 V 50 Hz (TH, LA, KH, VN, MM, MY, SG). Motor model: double-cage 7.5 kW 4-pole fit (In ≈ 14 A, Is/In ≈ 6.5, Ts/Tn ≈ 2.15, Tk/Tn ≈ 3).
@@ -388,3 +389,31 @@ a full-width virtual lab between the two lesson columns, and a problem bank (26 
 - Styles are in `site.css` under `.dcx` (all class names prefixed `dc-` where they could collide).
 - Every worked-example and problem answer was checked against the solver in Node before publishing.
 - Short URLs: `/dc`, `/dc-circuits`, `/circuit-lab`, `/circuit-simulator`, `/kcl`, `/kvl`, `/nodal-analysis`, `/mesh-analysis`, `/thevenin`, `/circuit-problems`.
+
+## Star–delta analysis & research (added 2026-10-19)
+Sub-page `star-delta-analysis` of the `motor-control` series (chapter 21.9, inserted right after `star-delta`, formula prefix E, E1–E24), Thai
+`src/pages/learn/motor-control/star-delta-analysis.html` and English `src/pages/learn/en/motor-control/star-delta-analysis.html`. The later
+chapters moved up by one (soft-starters 21.10 … motor-lab 21.15; eyebrows renumbered in both languages, OG images re-rendered). Sections: research
+questions and key results, choosing Y / Δ / Y-Δ from the nameplate (wye = star), star-stage mathematics, timer setting (t = c·τm, τm = J·ωs/Tn,
+c table, current/speed relays, on-site method, calculator), changeover physics (residual voltage, phase drift δ, |V_Δ − e|, peak estimate, dead time,
+KM3 standard vs lagging order, closed transition), current/energy/heat (I²t, rotor heat, overload budget, voltage dip on transformers and gensets),
+permanent star running at light load, dynamic lab + sweep + worksheet, 8 simulated case studies, past/present/future timeline, research summary
+(abstract, findings, limitations, further research, how to reproduce), checklist and references. The research write-up is the article
+`src/pages/blog/star-delta-timer-setting.html` + `src/pages/en/blog/star-delta-timer-setting.html` (IMRaD structure; `series` motor-control + ac-induction-motor).
+- Engine `assets/yd-core.js` (`window.YDCore`; copy to `.cjs` for Node): the 7.5 kW double-cage motor of `scripts/acm_model.py`; steady state
+  (`motor`, `opPoint`, `breakdown`, `runupQS` with Y/Δ/soft/VFD, `state` = running in Y or Δ at a shaft power, `breakEven`, `recommend` = timer rule),
+  and `run(o)` — αβ dynamic model in winding quantities, fixed-step RK4 (0.1 ms research, 0.2 ms lab), modes Y / open / Δ (lagging −30° or standard +30°) /
+  closed transition through Rt / DOL, triggers time / current / speed, metrics (peaks, time above 3·In, torque, residual voltage and angle, I²t, energies).
+- Labs `assets/yd-lab.js` (needs ee-kit.js + yd-core.js, bilingual): `<div class="yd-lab" data-preset="pump|fan|conv|mix" …>` (dynamic start + zoom on the
+  changeover; `<button data-yd-set='{"preset":"fan","ty":8}' data-yd-target="id">`), `<div class="yd-sweep" data-preset data-param="ty|td|rt">` (runs a
+  sweep, CSV export), `<div class="yd-run" data-x="25">` (Y vs Δ running, savings), `<div class="fg-calc yd-calc" data-yd="timer">` (timer calculator).
+  Styles: "STAR–DELTA ANALYSIS" block at the end of site.css (`.yd-*`, usable outside `.mc`).
+- Numerical experiments: `node scripts/yd_research.mjs` runs E1–E14 (+ traces T), prints every table quoted in the pages and writes `scripts/yd_results.json`;
+  `node scripts/yd_research.mjs E3 E5` runs a subset without rewriting the JSON. Verification: `python3 scripts/yd_check.py` (steady state vs the
+  equivalent circuit to 1e-16, changeover transient vs scipy LSODA within 0.3 %; exits 1 on failure).
+- Figures: `python3 scripts/yd_figs.py` fills empty `<!--FIG:yd-…-->` blocks from `yd_results.json` (`-en` keys draw English labels, `--all`, `--preview`):
+  yd-runup, yd-timer, yd-trace, yd-voltage, yd-phasor, yd-deadtime, yd-zoom, yd-closed, yd-energy, yd-dip, yd-yvd. The pages also reuse `mc-voltage-choice`.
+- Wording: KM3 "standard" order L1→W2 L2→U2 L3→V2 (as the terminal links, leads 30°) vs "lagging" order L1→V2 L2→W2 L3→U2 (recommended); case studies are
+  labelled as simulated cases, not plant data. Home page: hero "ใหม่" badge, chip + lab button in `#motor-plc`, newest-article strip; status feed entries in `data/updates.json` (rendered on /about/ and in feed.xml).
+- Short URLs: `/star-delta-analysis`, `/star-delta-timer`, `/wye-delta-timer`, `/star-delta-dead-time`, `/closed-transition`, `/star-delta-energy`,
+  `/star-delta-saving`, `/star-delta-research`, `/star-delta-lab`, `/wye-delta`, `/en/star-delta-analysis`, `/en/star-delta-timer` (in `_redirects`).

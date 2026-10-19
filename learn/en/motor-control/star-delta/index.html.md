@@ -29,7 +29,7 @@ In 30 seconds
 
 - KM1 = KM3 ≥ 0.58 In · KM2 ≥ 0.33 In · overload in the phase-current path set to 0.58 In
 
-- Change to delta at 85–90 % speed · with a 50–100 ms dead time
+- Change to delta at 85–90 % speed · with a 50–100 ms dead time · calculate the timer from τm in Star–delta analysis
 
 ## Principle: start with 1/√3 of the winding voltage Basic
 
@@ -154,6 +154,8 @@ Example Y-2
 - Y7: $\Delta\omega = 0.9 \times 155 = 140$ rad/s → $t \approx 0.9(140)/108 = 1.2$ s
 
 - Set the timer to 3 s (allowing for voltage dip and wear), then confirm with a clamp meter that the current in star has settled before the changeover
+
+📊 In depth: the right timer can be written as $t_{set} = c\,\tau_m$ with $\tau_m = J\omega_s/T_n$ and c ≈ 2–4. Dynamic simulations show that the 1–3-cycle changeover peak of pumps and fans is close to DOL for any timer setting — see the c table, dead time, KM3 phase order and the simulation lab in Star–delta analysis: timer, currents, energy and research.
 
 ## Try it in the simulator
 

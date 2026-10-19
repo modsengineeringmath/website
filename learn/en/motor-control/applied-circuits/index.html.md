@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/applied-
 
 THภาษาไทยENEnglish
 
-// Chapter 21.10 · AC Motor Control · Applied Circuits
+// Chapter 21.11 · AC Motor Control · Applied Circuits
 
 
 Once you understand self-holding, interlocking and timers, almost every circuit in buildings and factories is just these three ideas combined with sensors. This page collects the circuits electricians meet most often, with the reason behind each point in the circuit.

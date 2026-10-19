@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/soft-sta
 
 THภาษาไทยENEnglish
 
-// Chapter 21.9 · AC Motor Control · Soft Starters & Autotransformers
+// Chapter 21.10 · AC Motor Control · Soft Starters & Autotransformers
 
 
 Every method that lowers the voltage at start-up obeys the same rule: current falls in proportion to voltage, but torque falls with the square of voltage. This page uses that rule to compare starting methods with numbers, and explains the soft starter, now a favourite choice for modern pump installations.

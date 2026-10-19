@@ -174,13 +174,19 @@ The star–delta starter in detail
 Current and torque reduced to 1/3, contactors KM1 KM2 KM3, overload at 0.58·In, timer setting, Y–Δ dead time, transition current peaks, phase order on the delta side, closed-transition starters and six-wire cabling
 Open →Formulas Y1, Y2, …
 
-∠α21.9
+τm21.9
+Star–Delta Analysis: Timer Setting, Star or Delta Operation, Currents, Energy and Numerical Research
+Star–Delta Analysis
+Timer from the mechanical time constant τm = J·ωs/Tn, dead time and residual voltage, the lagging KM3 order, closed transition, I²t, rotor heat, voltage dip, running in star at light load, case studies, past, present and future, and a dynamic simulation lab
+Open →Formulas E1, E2, …
+
+∠α21.10
 Soft starters, autotransformer starters and a comparison of motor starting methods: current, torque, voltage dip and cost
 Soft starters, autotransformer starters and a comparison of motor starting methods
 Thyristor phase-angle control, voltage ramp, current limit, torque control, bypass contactor, soft stop against water hammer, autotransformer starting and a starting-method selection table
 Open →Formulas T1, T2, …
 
-⚙21.10
+⚙21.11
 Applied motor-control circuits from real plants: sequence starting, float-switch pumps, duty/standby alternation, pressure-switch compressors, two-speed motors and phase-failure relays
 Applied motor-control circuits from real plants
 Timed sequence starting, conveyor chains, float or electrode pump control, duty/standby alternation, Hand-Off-Auto, compressors, Dahlander two-speed motors and phase-loss/phase-reversal relays
@@ -191,13 +197,13 @@ Part 4
 ### Variable Frequency Drives
 V/f and PWM principles, wiring, parameters, pump and fan energy savings, and applications
 
-V/f21.11
+V/f21.12
 Variable frequency drives for motors: rectifier, DC bus, IGBT PWM, V/f and vector control, and correct wiring
 Variable frequency drives for motors
 540–565 V DC bus from 400 V, PWM, constant V/f and field weakening, sensorless vector, no contactor or capacitor on the output, shielded cable and EMC, cable length and dv/dt, RCD Type B, braking resistor, and single-phase-in three-phase-out drives
 Open →Formulas V1, V2, …
 
-n³21.12
+n³21.13
 Setting up and applying VFDs: basic parameters, multi-speed, 0–10 V / 4–20 mA, constant-pressure PID pumping and energy savings from the affinity laws
 Setting up and applying VFDs
 A 12-step commissioning procedure, accel/decel times, command source, preset speeds, analog inputs, constant-pressure pumps, conveyors, fans, P ∝ n³, energy-saving and payback calculation, temperature derating and bypass
@@ -208,13 +214,13 @@ Part 5
 ### Design, Installation & Lab
 Device selection, cable sizing, protection coordination, panels, testing, troubleshooting and the starter simulator
 
-✓21.13
+✓21.14
 Designing and installing motor circuits: breaker selection, cable size, starting voltage dip, control panels, megger testing and a troubleshooting table
 Designing and installing motor circuits
 A 10-step design procedure, cable sizing for current and voltage drop, Thai EIT wiring code and IEC 60364, IEC 61439 panels, IP rating, panel heat, insulation-resistance testing, loop checks and common faults with causes
 Open →Formulas K1, K2, …
 
-▶21.14
+▶21.15
 Motor starter simulator: DOL, reversing, star–delta, soft starter and VFD with live current, torque, speed and contacts
 Motor starter simulator
 Press START and STOP and watch power flow through the control circuit, contactors pull in, the timer run and current, torque and speed plotted in real time; inject faults such as overload and phase loss and compare starting methods

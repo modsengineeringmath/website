@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/vfd-appl
 
 THภาษาไทยENEnglish
 
-// Chapter 21.12 · AC Motor Control · VFD Setup & Applications
+// Chapter 21.13 · AC Motor Control · VFD Setup & Applications
 
 
 Every drive manufacturer names its parameters differently, but what has to be set is the same on every brand. This page gives a commissioning sequence that works in general, the most common applications, and how to prove with numbers whether a VFD is worth the money.
