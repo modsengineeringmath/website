@@ -44,6 +44,9 @@ const MC_SUB = [
   { slug: "star-delta", part: "starters", sym: "Y→Δ", prefix: "Y",
     th: ["สตาร์-เดลต้า", "วงจรสตาร์ทสตาร์-เดลต้าแบบละเอียด: วงจรกำลัง วงจรควบคุม ขนาดคอนแทกเตอร์ 0.58 In การตั้งโอเวอร์โหลด ไทเมอร์ และเวลาเปลี่ยนจังหวะ", "กระแสและแรงบิดเหลือ 1/3 คอนแทกเตอร์สามตัว KM1 KM2 KM3 ตั้งโอเวอร์โหลด 0.58 In เวลาตั้งไทเมอร์ ช่วงตายระหว่าง Y กับ Δ กระแสกระชากตอนเปลี่ยนจังหวะ ลำดับเฟสด้านเดลต้า สตาร์-เดลต้าแบบปิดวงจร และการเดินสายหกเส้น"],
     en: ["Star–delta starter", "The star–delta starter in detail: power and control circuits, 0.58·In contactor sizing, overload setting, timer and changeover time", "Current and torque reduced to 1/3, contactors KM1 KM2 KM3, overload at 0.58·In, timer setting, Y–Δ dead time, transition current peaks, phase order on the delta side, closed-transition starters and six-wire cabling"] },
+  { slug: "star-delta-analysis", part: "starters", sym: "τm", prefix: "E",
+    th: ["สตาร์-เดลต้าเชิงลึก · วิจัย", "สตาร์-เดลต้าเชิงลึก: ตั้งไทเมอร์กี่วินาที เลือกเดินสตาร์หรือเดลต้า กระแส พลังงาน และงานวิจัยเชิงตัวเลข", "ตั้งไทเมอร์จากค่าคงตัวเวลาทางกล τm = J·ωs/Tn ช่วงตายกับแรงดันค้าง ลำดับเฟส KM3 แบบตามหลัง สตาร์-เดลต้าแบบปิดวงจร I²t ความร้อนโรเตอร์ แรงดันตก เดินสตาร์ถาวรที่โหลดเบา กรณีศึกษา อดีต ปัจจุบัน อนาคต และแล็บจำลองพลวัต"],
+    en: ["Star–delta analysis · research", "Star–Delta Analysis: Timer Setting, Star or Delta Operation, Currents, Energy and Numerical Research", "Timer from the mechanical time constant τm = J·ωs/Tn, dead time and residual voltage, the lagging KM3 order, closed transition, I²t, rotor heat, voltage dip, running in star at light load, case studies, past, present and future, and a dynamic simulation lab"], tag: ["งานวิจัย + แล็บ", "Research + lab"] },
   { slug: "soft-starters", part: "starters", sym: "∠α", prefix: "T",
     th: ["ซอฟต์สตาร์ท · ออโต้ทรานส์", "ซอฟต์สตาร์ทเตอร์ ออโต้ทรานส์ฟอร์เมอร์ และการเปรียบเทียบวิธีสตาร์ทมอเตอร์: กระแส แรงบิด แรงดันตก และราคา", "ไทริสเตอร์ควบคุมมุมจุดชนวน ลดแรงดันแบบ ramp จำกัดกระแส ควบคุมแรงบิด บายพาสคอนแทกเตอร์ หยุดนุ่มสำหรับปั๊ม (water hammer) สตาร์ทด้วยออโต้ทรานส์ และตารางเลือกวิธีสตาร์ท"],
     en: ["Soft starters & autotransformers", "Soft starters, autotransformer starters and a comparison of motor starting methods: current, torque, voltage dip and cost", "Thyristor phase-angle control, voltage ramp, current limit, torque control, bypass contactor, soft stop against water hammer, autotransformer starting and a starting-method selection table"] },
@@ -120,7 +123,7 @@ const mkSub = (list, lang) => list.map((s) => {
 
 export const MC_PLC_TOPICS = [
   {
-    // Topic 21: AC motor control with magnetic contactors, star-delta, soft starters and VFDs (5 parts × 14 pages).
+    // Topic 21: AC motor control with magnetic contactors, star-delta, soft starters and VFDs (5 parts × 15 pages).
     // Tools: assets/mc-calc.js (EEKit calculators data-mc=…), assets/mc-lab.js (starter simulator .mc-lab), figures from scripts/mc_figs.py.
     slug: "motor-control",
     enSlug: "en/motor-control",

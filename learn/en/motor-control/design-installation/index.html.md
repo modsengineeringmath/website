@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/design-i
 
 THภาษาไทยENEnglish
 
-// Chapter 21.13 · AC Motor Control · Design, Installation & Troubleshooting
+// Chapter 21.14 · AC Motor Control · Design, Installation & Troubleshooting
 
 
 This page brings every previous chapter together into one design job, from the load to commissioning, with what to check on site and a troubleshooting table compiled from the most common symptoms. Every number in the examples can be calculated from the formulas on the page.

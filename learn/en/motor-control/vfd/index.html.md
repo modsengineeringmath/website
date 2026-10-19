@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/vfd/ for
 
 THภาษาไทยENEnglish
 
-// Chapter 21.11 · AC Motor Control · VFD Principles
+// Chapter 21.12 · AC Motor Control · VFD Principles
 
 
 A contactor can only switch a motor on or off. A VFD creates a new three-phase supply whose frequency and voltage are both adjustable, so the motor can run at any speed with controlled current. This page explains what is inside the box, why V/f must be held constant, and the wiring rules that let a drive run for years without disturbing other systems.

@@ -14,7 +14,7 @@ Markdown copy of https://modsengineeringmath.com/learn/en/motor-control/motor-la
 
 THภาษาไทยENEnglish
 
-// Chapter 21.14 · AC Motor Control · Starter Simulator
+// Chapter 21.15 · AC Motor Control · Starter Simulator
 
 
 A virtual lab for trying things you cannot or should not do on a real machine: starting a heavy load in star–delta, setting the timer too short, letting a phase drop out, or reversing while the motor is still turning. Every number comes from the same motor model used throughout the course.
