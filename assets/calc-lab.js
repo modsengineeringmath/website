@@ -27,6 +27,12 @@
   function setSlider(box, k, v) { var r = box.querySelector('input[data-k="' + k + '"]'); if (r) { r.value = v; r.parentNode.querySelector("output").textContent = v; } }
   // drag support on an MK plot: host keeps the inverse map from the last plot drawn into it
   function plotInto(host, o) { host.innerHTML = MK.plot(o); host.__map = MK.lastMap(); }
+  // phones: draw on a narrower viewBox so a plot keeps readable lines and labels instead of shrinking a 680-wide drawing
+  function narrow(box) { return (box.clientWidth || window.innerWidth) < 520; }
+  function redrawOnWidth(box, draw) {
+    var was = narrow(box);
+    window.addEventListener("resize", function () { if (narrow(box) !== was) { was = !was; draw(); } });
+  }
   function dragPlot(host, onMove) {
     var on = null;
     host.addEventListener("pointerdown", function (e) { var t = e.target.closest(".mk-drag"); if (!t) return; on = t.getAttribute("data-drag"); e.preventDefault(); });
@@ -340,15 +346,16 @@
       var f = st.w === "pwm" ? function (x) { return ((x / (2 * Math.PI)) % 1) < st.D ? 1 : 0; } : RW[st.w].f;
       var V = function (x) { return st.Vm * f(x); }, T1 = 2 * Math.PI, N = 4000, s1 = 0, s2 = 0;
       for (var i = 0; i < N; i++) { var x = (i + 0.5) * T1 / N, v = V(x); s1 += v; s2 += v * v; }
-      var avg = s1 / N, rms = Math.sqrt(s2 / N);
-      plotInto(p1, { w: 680, h: 200, xmin: 0, xmax: 2 * T1, series: [{ pts: MK.sample(V, 0, 2 * T1, 800), color: "var(--accent)", fill: 0.18 }], hlines: [{ y: avg, color: "var(--ok)", label: "ค่าเฉลี่ย " + fmt(avg, 4) }, { y: rms, color: "var(--signal)", label: "RMS " + fmt(rms, 4) }], xlabel: "ωt (rad)", ylabel: "v (V)", id: MK.uid("r1") });
-      plotInto(p2, { w: 680, h: 160, xmin: 0, xmax: 2 * T1, series: [{ pts: MK.sample(function (x) { return V(x) * V(x); }, 0, 2 * T1, 800), color: "var(--signal)", fill: 0.18 }], hlines: [{ y: rms * rms, color: "var(--signal)", label: "ค่าเฉลี่ยของ v² = Vrms²" }], xlabel: "ωt", ylabel: "v² (V²)", id: MK.uid("r2") });
+      var avg = s1 / N, rms = Math.sqrt(s2 / N), nw = narrow(box), W = nw ? 400 : 680;
+      plotInto(p1, { w: W, h: nw ? 250 : 200, left: nw ? 50 : 46, xmin: 0, xmax: 2 * T1, series: [{ pts: MK.sample(V, 0, 2 * T1, 800), color: "var(--accent)", fill: 0.18 }], hlines: [{ y: avg, color: "var(--ok)", label: "ค่าเฉลี่ย " + fmt(avg, 4) }, { y: rms, color: "var(--signal)", label: "RMS " + fmt(rms, 4) }], xlabel: "ωt (rad)", ylabel: "v (V)", id: MK.uid("r1") });
+      plotInto(p2, { w: W, h: nw ? 200 : 160, left: nw ? 64 : 46, xmin: 0, xmax: 2 * T1, series: [{ pts: MK.sample(function (x) { return V(x) * V(x); }, 0, 2 * T1, 800), color: "var(--signal)", fill: 0.18 }], hlines: [{ y: rms * rms, color: "var(--signal)", label: "ค่าเฉลี่ยของ v² = Vrms²" }], xlabel: "ωt", ylabel: "v² (V²)", id: MK.uid("r2") });
       info.innerHTML = '<div class="lap-eq">' + T("V_{\\text{avg}} = \\frac{1}{T}\\int_0^T v\\,dt = " + MK.sig(avg, 4) + "\\ \\text{V},\\qquad V_{\\text{rms}} = \\sqrt{\\frac{1}{T}\\int_0^T v^2\\,dt} = " + MK.sig(rms, 4) + "\\ \\text{V}", true) + '</div><p class="lap-note">อินทิกรัลคือพื้นที่แรเงา: ค่าเฉลี่ยคือความสูงของสี่เหลี่ยมที่มีพื้นที่เท่ากับพื้นที่ใต้กราฟในหนึ่งคาบ · RMS คือค่าที่ให้ความร้อนในตัวต้านทานเท่ากับไฟตรง เพราะกำลัง ∝ v² · อัตราส่วน Vrms/Vm = ' + fmt(rms / st.Vm, 4) + ", form factor = " + (Math.abs(avg) > 1e-9 ? fmt(rms / avg, 4) : "—") + "</p>";
       box.querySelector(".cl-d").hidden = st.w !== "pwm";
       $$("[data-w]", box).forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-w") === st.w); });
     }
     box.addEventListener("click", function (e) { var b = e.target.closest("[data-w]"); if (b) { st.w = b.getAttribute("data-w"); draw(); } });
     bindSliders(box, st, draw);
+    redrawOnWidth(box, draw);
     draw();
   }
 
@@ -382,15 +389,16 @@
       var maxAbs = function (arr) { var m = 0, k = 0; arr.forEach(function (v, j) { if (Math.abs(v) > Math.abs(m)) { m = v; k = j; } }); return [m, xs[k]]; };
       var Mm = maxAbs(M), Vm = maxAbs(V), ym = maxAbs(y);
       // beam drawing
-      var sx = function (x) { return 40 + x / L * 600; };
-      var g = '<svg class="mk-plot" viewBox="0 0 680 120" role="img" aria-label="คานและน้ำหนักบรรทุก"><rect x="40" y="62" width="600" height="12" rx="2" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>';
+      var nw = narrow(box), W = nw ? 400 : 680, BL = W - 80, xe = W - 40;
+      var sx = function (x) { return 40 + x / L * BL; };
+      var g = '<svg class="mk-plot" viewBox="0 0 ' + W + ' 120" role="img" aria-label="คานและน้ำหนักบรรทุก"><rect x="40" y="62" width="' + BL + '" height="12" rx="2" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>';
       if (cant) g += '<rect x="22" y="30" width="18" height="76" fill="var(--rule)" stroke="var(--ink-2)"/>';
-      else g += '<path d="M40 74 l-10 18 h20 z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><circle cx="640" cy="82" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><line x1="625" x2="655" y1="91" y2="91" stroke="var(--ink)"/>';
-      if (w > 0) { g += '<rect x="40" y="' + (60 - w * 1.6 - 8) + '" width="600" height="' + (w * 1.6 + 8) + '" fill="var(--signal)" opacity=".18"/>'; for (var k = 0; k <= 12; k++) g += '<line x1="' + (40 + k * 50) + '" x2="' + (40 + k * 50) + '" y1="' + (60 - w * 1.6 - 8) + '" y2="60" stroke="var(--signal)" stroke-width="1.3"/>'; g += '<text class="mk-ann" x="44" y="' + (52 - w * 1.6 - 8) + '">w = ' + fmt(w) + " kN/m</text>"; }
-      if (P > 0) g += '<line x1="' + sx(a) + '" x2="' + sx(a) + '" y1="10" y2="58" stroke="var(--accent)" stroke-width="3"/><path d="M' + sx(a) + ' 60 l-6 -10 h12 z" fill="var(--accent)"/><text class="mk-ann" x="' + (sx(a) + 8) + '" y="22">P = ' + fmt(P) + " kN</text>";
-      g += '<text class="mk-ann" x="40" y="114">x = 0</text><text class="mk-ann" x="610" y="114">x = L = ' + L + " m</text></svg>";
+      else g += '<path d="M40 74 l-10 18 h20 z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><circle cx="' + xe + '" cy="82" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><line x1="' + (xe - 15) + '" x2="' + (xe + 15) + '" y1="91" y2="91" stroke="var(--ink)"/>';
+      if (w > 0) { g += '<rect x="40" y="' + (60 - w * 1.6 - 8) + '" width="' + BL + '" height="' + (w * 1.6 + 8) + '" fill="var(--signal)" opacity=".18"/>'; for (var k = 0; k <= 12; k++) g += '<line x1="' + (40 + k * BL / 12) + '" x2="' + (40 + k * BL / 12) + '" y1="' + (60 - w * 1.6 - 8) + '" y2="60" stroke="var(--signal)" stroke-width="1.3"/>'; g += '<text class="mk-ann" x="44" y="' + (52 - w * 1.6 - 8) + '">w = ' + fmt(w) + " kN/m</text>"; }
+      if (P > 0) g += '<line x1="' + sx(a) + '" x2="' + sx(a) + '" y1="10" y2="58" stroke="var(--accent)" stroke-width="3"/><path d="M' + sx(a) + ' 60 l-6 -10 h12 z" fill="var(--accent)"/><text class="mk-ann" x="' + (a > L * 0.6 ? sx(a) - 8 : sx(a) + 8) + '" y="22"' + (a > L * 0.6 ? ' text-anchor="end"' : "") + ">P = " + fmt(P) + " kN</text>";
+      g += '<text class="mk-ann" x="40" y="114">x = 0</text><text class="mk-ann" x="' + xe + '" y="114" text-anchor="end">x = L = ' + L + " m</text></svg>";
       fig.innerHTML = g;
-      var pl = function (arr, lab, col) { return MK.plot({ w: 680, h: 130, xmin: 0, xmax: L, series: [{ pts: xs.map(function (x, j) { return [x, arr[j]]; }), color: col, fill: 0.15 }], ylabel: lab, id: MK.uid("bm") }); };
+      var pl = function (arr, lab, col) { return MK.plot({ w: W, h: nw ? 170 : 130, left: nw ? 50 : 46, xmin: 0, xmax: L, series: [{ pts: xs.map(function (x, j) { return [x, arr[j]]; }), color: col, fill: 0.15 }], ylabel: lab, id: MK.uid("bm") }); };
       plots.innerHTML = pl(V, "V(x) แรงเฉือน (kN)", "var(--signal)") + pl(M, "M(x) โมเมนต์ดัด (kN·m)", "var(--accent)") + pl(th.map(function (v) { return v * 1000; }), "θ(x) ความชัน (mrad)", "var(--ok)") + pl(y.map(function (v) { return v * 1000; }), "y(x) การโก่ง (mm)", "#9b59b6");
       info.innerHTML = '<div class="lap-eq">' + T("\\frac{dV}{dx} = -w(x),\\quad \\frac{dM}{dx} = V(x),\\quad EI\\frac{d^2y}{dx^2} = M(x)\\ \\Rightarrow\\ \\theta = \\frac{1}{EI}\\int M\\,dx,\\ \\ y = \\int\\theta\\,dx", true) + '</div><table class="lap-pt"><tbody>' +
         "<tr><td>แรงปฏิกิริยา</td><td>" + (cant ? "R_A = " + fmt(RA, 4) + " kN, M_A = " + fmt(MA, 4) + " kN·m" : "R_A = " + fmt(RA, 4) + " kN, R_B = " + fmt(RB, 4) + " kN") + "</td></tr>" +
@@ -402,6 +410,7 @@
     }
     box.addEventListener("click", function (e) { var b = e.target.closest("[data-t]"); if (b) { st.type = b.getAttribute("data-t"); draw(); } });
     bindSliders(box, st, draw);
+    redrawOnWidth(box, draw);
     draw();
   }
 
