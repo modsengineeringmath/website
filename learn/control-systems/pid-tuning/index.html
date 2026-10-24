@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=87eca12a">
+<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/pid-tuning/#article","headline":"การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และงานจริง","description":"วิธีจูน PID เมื่อไม่มีแบบจำลอง Ziegler–Nichols แบบเกนวิกฤต (ultimate gain) และแบบกราฟตอบสนองขั้นบันได (reaction curve) Tyreus–Luyben Cohen–Coon การจูนแบบ IMC/Lambda และ SIMC ของ Skogestad relay auto-tune ของ Åström–Hägglund ระบุแบบจำลอง FOPDT จากกราฟ เปรียบเทียบผลจำลองจริง และขั้นตอนจูนด้วยมือหน้างาน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/pid-tuning/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/pid-tuning/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID tuning","Ziegler–Nichols method","Cohen–Coon method","Internal model control","Lambda tuning","SIMC tuning","Relay feedback","First-order plus dead time"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-pid-tuning.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และเรื่องที่ใช้งานจริง","item":"https://modsengineeringmath.com/learn/control-systems/pid-tuning/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Ziegler–Nichols ยังใช้ได้ไหมในปัจจุบัน?","acceptedAnswer":{"@type":"Answer","text":"ใช้เป็นจุดเริ่มต้นได้ดีและเร็ว แต่ค่าที่ได้ดุดัน ออกแบบให้ลดทอนการแกว่งหนึ่งในสี่ต่อรอบ overshoot มักเกิน 40% และเฟสมาร์จินต่ำ ในงานจริงนิยมลดเกนลง หรือใช้กฎใหม่กว่า เช่น Tyreus–Luyben, SIMC หรือ AMIGO ที่ทนทานกว่า"}},{"@type":"Question","name":"FOPDT คืออะไร ทำไมกฎจูนส่วนใหญ่ใช้?","acceptedAnswer":{"@type":"Answer","text":"First-Order Plus Dead Time คือแบบจำลอง K e^{-Ls}/(Ts + 1) ที่มีแค่สามพารามิเตอร์ เกน K หน่วงเวลา L และค่าคงเวลา T กระบวนการส่วนใหญ่ (อุณหภูมิ ระดับ การไหล) ประมาณด้วยรูปนี้ได้ดีจากการทดลองขั้นบันไดครั้งเดียว จึงเป็นฐานของกฎจูนเกือบทั้งหมด"}},{"@type":"Question","name":"ทำการทดลองหาเกนวิกฤตกับระบบจริงอันตรายไหม?","acceptedAnswer":{"@type":"Answer","text":"อาจอันตราย เพราะต้องดันให้ระบบแกว่งค้างที่ขอบเสถียร ซึ่งเครื่องจักรหรือกระบวนการบางอย่างทนไม่ได้ วิธีที่ปลอดภัยกว่าคือ relay test ที่ควบคุมขนาดการแกว่งได้ หรือใช้การทดลองขั้นบันไดแบบวงเปิด"}},{"@type":"Question","name":"ควรจูนอะไรก่อนระหว่าง P I D?","acceptedAnswer":{"@type":"Answer","text":"เริ่มจาก P อย่างเดียวจนได้ความเร็วที่พอใจโดยยังไม่แกว่งมาก จากนั้นเพิ่ม I ช้า ๆ จนความผิดพลาดค้างหายในเวลาที่ยอมรับได้ (ลด K_P ลงเล็กน้อยถ้าเริ่มแกว่ง) สุดท้ายเพิ่ม D ถ้าต้องการลด overshoot และสัญญาณวัดสะอาดพอ"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -60,6 +60,7 @@
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
       <a href="/blog/" >บทความ</a>
+      <a href="/solutions/" >เฉลยโจทย์</a>
       <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
@@ -679,6 +680,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
       <a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>
+      <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
@@ -753,9 +755,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=87eca12a" defer></script>
-<script src="/assets/cs-core.js?v=87eca12a" defer></script>
-<script src="/assets/cs-ui.js?v=87eca12a" defer></script>
-<script src="/assets/cs-pid.js?v=87eca12a" defer></script>
+<script src="/assets/site.js?v=34c266f8" defer></script>
+<script src="/assets/cs-core.js?v=34c266f8" defer></script>
+<script src="/assets/cs-ui.js?v=34c266f8" defer></script>
+<script src="/assets/cs-pid.js?v=34c266f8" defer></script>
 </body>
 </html>

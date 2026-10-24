@@ -447,3 +447,62 @@ newest date) is pre-rendered into `src/pages/index.html` and `assets/home.js` re
 `/updates/` (`src/pages/updates.html`) lists every entry with tag filters (15 per page, `data-page` on `#feed`, handled by about.js).
 Short URLs `/whats-new` `/changelog` `/news` → `/updates/`.
 
+
+## Solutions / เฉลยโจทย์ (added 2026-10-24)
+ส่วนเฉลยโจทย์ทีละขั้น ข้อละหน้า สำหรับโพสต์โจทย์บนเพจ Facebook แล้วส่งลิงก์มาที่เว็บ
+- หน้ารวม `/solutions/` (`src/pages/solutions/index.html`) จัดกลุ่มตามหมวด (`/solutions/#integral`) มีชิปหมวดและจำนวนข้อ
+- หน้าโจทย์ `/solutions/<slug>/` (`src/pages/solutions/<slug>.html`) ลิงก์สั้น `/s/<short>` เช่น `/s/int1`
+- เมนู "เฉลยโจทย์", ลิงก์ท้ายเว็บ, กล่อง "เฉลยโจทย์ทีละขั้น" บนหน้าแรก (`<!--solutions-latest-->`) และกล่อง
+  "เฉลยโจทย์ทีละขั้นในหัวข้อนี้" ท้ายทุกหน้าของบทเรียนที่อยู่ใน `"series"` (`solutionsForTopic()`) สร้างให้อัตโนมัติ
+- ข้อแรก: `integral-euler-substitution-sqrt-x2-a2` (อินทิเกรต #001, `/s/int1`)
+
+### เพิ่มโจทย์ใหม่ (5 ขั้น)
+1. สร้างไฟล์จากแม่แบบ ได้เลขข้อถัดไป ลิงก์สั้น และวันที่ให้เอง (เริ่มเป็น draft ยังไม่แสดงบนเว็บ)
+   ```
+   node scripts/new-solution.mjs integral integral-by-parts-x-ex
+   ```
+   หมวดที่มี: `integral derivative limit series ode laplace multivariable vector matrix trig circuit`
+   (เพิ่มหมวดใหม่ที่ `SOLUTION_TOPICS` ใน build.mjs: key, th, en, sym, learn)
+2. เขียน meta และเนื้อหา (ดูตารางด้านล่าง) โครงหน้าที่แนะนำ: มองโจทย์ก่อน → ที่มาของขั้นสำคัญ → วิธีทำ (`.wx` + `ol.steps`)
+   → ตรวจคำตอบ → (ตัวอย่างตัวเลข / เทียบวิธีอื่น / งานวิศวกรรม) → จุดที่มักพลาด → FAQ
+3. ลบบรรทัด `"draft": true`
+4. สร้างเว็บ ภาพแชร์ และตรวจ
+   ```
+   node build.mjs && python3 scripts/og.py --prefix solutions- && node build.mjs && node scripts/test-solutions.mjs
+   ```
+5. commit ทุกไฟล์ (รวม `images/og/solutions-*.jpg` และ `images/solutions/*.jpg`) แล้ว push — Cloudflare deploy ประมาณ 1 นาที
+
+| ฟิลด์ | ความหมาย |
+|---|---|
+| `"solution": true` | บอกว่าเป็นหน้าเฉลย |
+| `"topic"`, `"no"` | หมวดและเลขข้อ แสดงเป็น "อินทิเกรต #001" บนการ์ดและภาพ **ห้ามเปลี่ยนหรือใช้เลขซ้ำ** (build จะหยุดถ้าซ้ำ) |
+| `"name"` | ชื่อสั้นของโจทย์ ใช้บนการ์ด เบรดครัมบ์ ปุ่มข้อก่อน/ถัดไป |
+| `"problem"`, `"answer"` | LaTeX ไม่ต้องมี `\[ \]` แสดงในกล่องโจทย์ การ์ด และภาพแชร์ |
+| `"statement"` | ข้อความโจทย์ ใส่ `\( \)` ได้ |
+| `"technique"`, `"level"` | ชื่อเทคนิค (อังกฤษ) และระดับ 1 พื้นฐาน · 2 ปานกลาง · 3 ท้าทาย |
+| `"hook"` | ประโยคชวนคิดบนภาพแชร์ ใส่ `\( \)` ได้ |
+| `"short"` | ลิงก์สั้น `/s/<short>` (a-z 0-9 -) เขียนลง `_redirects` ในบล็อก generated ให้เอง |
+| `"series"` | slug บทเรียนที่เกี่ยวข้อง → กล่องลิงก์กลับท้ายบทเรียน |
+| `"fb"` | (ถ้ามี) URL โพสต์ Facebook → ปุ่ม "คุยกันในโพสต์ Facebook" |
+| `"og": {"title"}` | หัวข้อบนภาพแนวตั้ง ใช้ `\|` เพื่อขึ้นบรรทัดใหม่ |
+| `"title"`, `"h1"`, `"description"`, `"ogTitle"`, `"ogDescription"`, `"keywords"`, `"faq"` | SEO เหมือนบทความ |
+
+build เติมให้เอง: กล่องโจทย์ + คำตอบซ่อน + โหมดฝึกทำ + ปุ่มแชร์ด้านบน (`<!--solution-head-->`), แชร์ + ข้อก่อน/ถัดไปในหมวด +
+โจทย์อื่น (`<!--pager-->`), ปุ่ม "ดูทีละขั้น" (lesson.js), JSON-LD (Article + LearningResource + BreadcrumbList + FAQPage),
+sitemap, llms.txt, search index และ manifest ของภาพแชร์ สีในสมการ: `\hlU{}` ตัวแปรใหม่ `\hlF{}` สูตร `\hlP{}` คุณสมบัติ
+`\hlC{}` ค่าคงที่ `\rc{}` ขีดฆ่าสีแดง `\carry{}{}` ทดค่า ลิงก์สูตรใช้ `<a class="tag tf" href="/learn/integral-calculus/#F3">F3</a>`
+
+### ภาพแชร์และการโพสต์ Facebook / LINE / X
+- `images/og/solutions-<slug>.jpg` 1200×630 ภาพตัวอย่างลิงก์ (โจทย์อยู่กลางภาพ ครอปเป็นสี่เหลี่ยมจัตุรัสก็ยังเห็นโจทย์)
+  URL ใน `og:image` มี `?v=<hash>` เปลี่ยนเองเมื่อภาพเปลี่ยน
+- `images/solutions/<slug>.jpg` 1080×1350 ภาพแนวตั้งสำหรับโพสต์เป็นรูปบนเพจ/กลุ่ม/LINE มีลิงก์สั้นบนภาพ
+- วิธีโพสต์ที่แนะนำ: โพสต์รูปแนวตั้ง + แคปชันชวนคิด แล้วใส่ลิงก์สั้นในแคปชันหรือคอมเมนต์แรก หรือโพสต์ลิงก์ตรงให้ Facebook แสดงการ์ด
+  ```
+  🧮 โจทย์อินทิเกรต #001  ∫dx/√(x²+a²) = ?
+  ใบ้: ลองให้ u − x = √(x²+a²) แล้วยกกำลังสอง x² จะหายไปเอง
+  เฉลยละเอียดทุกขั้น + ที่มาของการแทนค่า 👉 modsengineeringmath.com/s/int1
+  #แคลคูลัส #อินทิเกรต #คณิตศาสตร์วิศวกรรม
+  ```
+- แก้หน้าที่แชร์ไปแล้ว: Facebook ใช้ Sharing Debugger (developers.facebook.com/tools/debug) กด "Scrape Again", LINE ใช้ Page Poker
+- ลิงก์สั้นแต่ละข้อใช้ 2 บรรทัดใน `_redirects` (Cloudflare Pages รับ static redirect ได้ 2,000 บรรทัด)
+- ลบโจทย์: ลบ `src/pages/solutions/<slug>.html`, โฟลเดอร์ `solutions/<slug>/` และภาพทั้งสองไฟล์ แล้ว build
