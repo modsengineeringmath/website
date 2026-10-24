@@ -804,6 +804,8 @@ const EN_CHROME = [
   [">ดูคลิป<", ">Videos<"],
   ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
   ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
+  ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
+  ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
   ['<a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>'],
   ['<a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>', '<a href="/updates/">Latest site updates (Thai)</a>'],
@@ -1236,7 +1238,7 @@ function searchEntry(meta, route, lang, body, topic, sub, isPost) {
     .map(([, , id, t]) => [id, plain(t).replace(/^\d+(\.\d+)*\.?\s+/, "")])
     .filter(([, t]) => t);
   const k = [...(meta.keywords || []), ...(meta.faq || []).map((f) => plain(f.q))];
-  const c = sub ? topic.title : isPost ? BLOG_UI[lang].tag : "";
+  const c = sub ? topic.title : isPost ? BLOG_UI[lang].tag : meta.solution ? "เฉลยโจทย์" : "";
   const e = { u: route, l: lang, t: plain(meta.h1 || meta.title), d: plain(meta.description || ""), ...(c ? { c } : {}), ...(k.length ? { k: k.join(" · ") } : {}), h };
   // w: the other Latin-script terms in the body text (Thai lessons write technical terms in English), so "gain margin" finds the page
   const seen = JSON.stringify(e).toLowerCase();
@@ -1380,6 +1382,176 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
   return graph;
 }
 
+// ---------------------------------------------------------------------------
+// Solutions (/solutions/, "เฉลยโจทย์"): one worked problem per page, posted on the Facebook page / groups and linked here.
+// A solution is src/pages/solutions/<slug>.html with "solution": true in its meta block (copy src/templates/solution.html).
+// Required: "topic" (a key of SOLUTION_TOPICS), "no" (number within the topic, shown as #001 — never reuse or renumber),
+//           "name" (short name for cards, image and breadcrumbs), "problem" and "answer" (LaTeX, no delimiters), "published".
+// Optional: "statement" (problem text, may contain \( \)), "technique", "level" (1–3), "series" (lesson slugs → reverse
+//           links on those lessons), "short" (→ /s/<short>), "fb" (URL of the Facebook post), "hook" (one line on the
+//           share image), "draft": true.
+// The build adds: the problem box, answer reveal, practice mode and top share bar (<!--solution-head-->), prev/next within
+// the topic and more problems (<!--pager-->), hub cards grouped by topic (<!--solution-list-->), JSON-LD, sitemap, llms.txt,
+// short links in _redirects and the share images' manifest (python3 scripts/og.py --prefix solutions).
+// ---------------------------------------------------------------------------
+const SOLUTION_TOPICS = [
+  { key: "integral", th: "อินทิเกรต", en: "Integration", sym: "∫", learn: "/learn/integral-calculus/" },
+  { key: "derivative", th: "อนุพันธ์", en: "Differentiation", sym: "d/dx", learn: "/learn/differential-calculus/" },
+  { key: "limit", th: "ลิมิต", en: "Limits", sym: "lim", learn: "/learn/limits/" },
+  { key: "series", th: "ลำดับและอนุกรม", en: "Sequences & series", sym: "Σ", learn: "/learn/sequences-and-series/" },
+  { key: "ode", th: "สมการเชิงอนุพันธ์", en: "Differential equations", sym: "y′", learn: "/learn/laplace-transform/differential-equations/" },
+  { key: "laplace", th: "การแปลงลาปลาซ", en: "Laplace transform", sym: "ℒ", learn: "/learn/laplace-transform/" },
+  { key: "multivariable", th: "แคลคูลัสหลายตัวแปร", en: "Multivariable calculus", sym: "∂", learn: "/learn/multivariable-calculus/" },
+  { key: "vector", th: "เวกเตอร์", en: "Vectors", sym: "→", learn: "/learn/vector-algebra/" },
+  { key: "matrix", th: "เมทริกซ์", en: "Matrices & linear algebra", sym: "[A]", learn: "/learn/linear-algebra/" },
+  { key: "trig", th: "ตรีโกณมิติและจำนวนเชิงซ้อน", en: "Trigonometry & complex numbers", sym: "θ", learn: "/learn/trigonometry/" },
+  { key: "circuit", th: "วงจรไฟฟ้า", en: "Circuit analysis", sym: "Ω", learn: "/learn/dc-circuits/" },
+];
+const SOL_HUB = "/solutions/";
+const SOL_LEVEL = { 1: "พื้นฐาน", 2: "ปานกลาง", 3: "ท้าทาย" };
+const solTopic = (k) => SOLUTION_TOPICS.find((t) => t.key === k);
+const solNo = (s) => "#" + String(s.no).padStart(3, "0");
+const solLabel = (s) => `${solTopic(s.topic).th} ${solNo(s)}`;
+const solLevel = (s) => { const l = s.level || 2; return `<span class="lv-dots" aria-hidden="true">${"●".repeat(l)}${"○".repeat(3 - l)}</span> ${SOL_LEVEL[l]}`; };
+const allSolutions = (() => {
+  const dir = path.join(pagesDir, "solutions");
+  if (!fs.existsSync(dir)) return [];
+  const list = fs.readdirSync(dir).filter((f) => f.endsWith(".html") && f !== "index.html").map((f) => {
+    const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
+    if (!m) throw new Error(`Missing <!--meta--> in solutions/${f}`);
+    const meta = JSON.parse(m[1]);
+    if (!meta.solution) throw new Error(`solutions/${f}: add "solution": true to the meta block`);
+    if (!solTopic(meta.topic)) throw new Error(`solutions/${f}: unknown topic "${meta.topic}" — use one of ${SOLUTION_TOPICS.map((t) => t.key).join(", ")} or add it to SOLUTION_TOPICS in build.mjs`);
+    for (const k of ["no", "name", "problem", "answer", "published"]) if (meta[k] == null || meta[k] === "") throw new Error(`solutions/${f}: missing "${k}"`);
+    if (meta.short && !/^[a-z0-9-]+$/.test(meta.short)) throw new Error(`solutions/${f}: "short" may only use a-z 0-9 -`);
+    const slug = f.replace(/\.html$/, "");
+    return { ...meta, slug, route: `${SOL_HUB}${slug}/`, series: [].concat(meta.series || []) };
+  });
+  // numbers and short links stay unique (drafts included, so a draft never collides when it goes live)
+  const seen = new Map();
+  for (const s of list) for (const k of [`${s.topic} ${solNo(s)}`, s.short && `/s/${s.short}`].filter(Boolean)) {
+    if (seen.has(k)) throw new Error(`Duplicate ${k}: solutions/${seen.get(k)}.html and solutions/${s.slug}.html`);
+    seen.set(k, s.slug);
+  }
+  return list;
+})();
+const solutions = allSolutions.filter((s) => !s.draft)
+  .sort((a, b) => SOLUTION_TOPICS.indexOf(solTopic(a.topic)) - SOLUTION_TOPICS.indexOf(solTopic(b.topic)) || a.no - b.no);
+const solNewest = [...solutions].sort((a, b) => b.published.localeCompare(a.published) || b.no - a.no);
+const solCard = (s) => `
+  <a class="sol-card" href="${s.route}">
+    <span class="sc-top"><span class="sc-no mono">${esc(solLabel(s))}</span><span class="sc-lv mono">${solLevel(s)}</span></span>
+    <span class="sc-math">\\[ ${s.problem} \\]</span>
+    <b>${esc(s.name)}</b>
+    ${s.technique ? `<span class="sc-tech mono">${esc(s.technique)}</span>` : ""}
+    <span class="sc-foot"><time datetime="${s.published}">${thaiDate(s.published)}</time><span class="sc-go">ดูเฉลยทีละขั้น →</span></span>
+  </a>`;
+const solGrid = (list) => `<div class="sol-grid">${list.map(solCard).join("")}\n</div>`;
+const solTopicsLive = () => SOLUTION_TOPICS.filter((t) => solutions.some((s) => s.topic === t.key));
+const solChips = () => `<nav class="sol-chips" aria-label="หมวดโจทย์">${solTopicsLive().map((t) => `<a href="#${t.key}"><span aria-hidden="true">${esc(t.sym)}</span>${esc(t.th)} <small>${solutions.filter((s) => s.topic === t.key).length}</small></a>`).join("")}</nav>`;
+const solHub = () => solTopicsLive().map((t) => {
+  const list = solutions.filter((s) => s.topic === t.key);
+  return `<section class="sol-topic" aria-labelledby="${t.key}">
+  <div class="sol-topic-head"><h2 id="${t.key}"><span class="sol-sym" aria-hidden="true">${esc(t.sym)}</span>เฉลยโจทย์${esc(t.th)} <small>${esc(t.en)}</small></h2><span class="mono">${list.length} ข้อ · <a href="${t.learn}">ทบทวนบทเรียน →</a></span></div>
+  ${solGrid(list)}
+</section>`;
+}).join("\n");
+// problem box at the top of a solution page: everything a reader arriving from Facebook/LINE needs before scrolling
+function solHead(s, url) {
+  const t = solTopic(s.topic);
+  return `<ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="${SOL_HUB}">เฉลยโจทย์</a></li><li><a href="${SOL_HUB}#${t.key}">${esc(t.th)}</a></li><li>${solNo(s)}</li></ol>
+      <p class="eyebrow">// เฉลยโจทย์${esc(t.th)} ${solNo(s)}${s.technique ? " · " + esc(s.technique) : ""}</p>
+      <h1>${esc(s.h1 || s.name)}</h1>
+      <div class="sol-problem" id="problem">
+        <span class="sp-label mono">โจทย์ · ${esc(solLabel(s))}</span>
+        ${s.statement ? `<p class="sp-text">${s.statement}</p>` : ""}
+        <div class="sp-math">\\[ ${s.problem} \\]</div>
+        <details class="sp-ans"><summary>แตะเพื่อดูคำตอบสุดท้าย <small>(ลองคิดเองก่อนนะ)</small></summary><div>\\[ ${s.answer} \\]</div></details>
+        <div class="sp-meta"><span>ระดับ ${solLevel(s)}</span>${s.technique ? `<span>เทคนิค: ${esc(s.technique)}</span>` : ""}<span>เฉลยโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="${s.updated || s.published}">${thaiDate(s.updated || s.published)}</time></span></div>
+        <div class="sp-actions"><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button><a class="btn btn-ghost btn-sm" href="#solution">ไปที่วิธีทำ ↓</a>${s.fb ? `<a class="btn btn-ghost btn-sm" href="${esc(s.fb)}" target="_blank" rel="noopener">คุยกันในโพสต์ Facebook ↗</a>` : ""}</div>
+      </div>
+      ${shareHtml(url, `${solLabel(s)}: ${s.name}`).replace('class="share"', 'class="share share-top"')}`;
+}
+// bottom of a solution page: share, previous/next in the same topic, the lesson, more problems
+function solPager(s, url) {
+  const t = solTopic(s.topic);
+  const same = solutions.filter((x) => x.topic === s.topic);
+  const i = same.findIndex((x) => x.slug === s.slug);
+  const link = (x, dir) => x
+    ? `<a class="pager-${dir}" href="${x.route}"><span class="mono">${dir === "prev" ? "← ข้อก่อนหน้า" : "ข้อถัดไป →"} ${solNo(x)}</span><b>${esc(x.name)}</b></a>`
+    : dir === "prev"
+      ? `<a class="pager-prev" href="${SOL_HUB}#${t.key}"><span class="mono">← กลับ</span><b>โจทย์${esc(t.th)}ทั้งหมด</b></a>`
+      : `<a class="pager-next" href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener"><span class="mono">ข้อถัดไปกำลังมา</span><b>ติดตามโจทย์ใหม่บน Facebook ↗</b></a>`;
+  const more = solNewest.filter((x) => x.slug !== s.slug).sort((a, b) => (b.topic === s.topic) - (a.topic === s.topic)).slice(0, 3);
+  return shareHtml(url, `${solLabel(s)}: ${s.name}`) +
+    `<nav class="pager" aria-label="โจทย์ข้อถัดไป">${link(same[i - 1], "prev")}${link(same[i + 1], "next")}</nav>` +
+    `<aside class="post-box" aria-label="บทเรียนที่เกี่ยวข้อง"><p class="post-box-h">อยากเข้าใจพื้นฐานของโจทย์นี้</p><p>อ่านบทเรียน<a href="${t.learn}">${esc(t.th)} (${esc(t.en)})</a> ในคลังความรู้ มีสูตร ที่มา และตัวอย่างอีกหลายข้อ หรือดู<a href="${SOL_HUB}">เฉลยโจทย์ทั้งหมด</a></p></aside>` +
+    (more.length ? `<section class="post-more" aria-label="โจทย์อื่น"><h2 class="sol-more-h">ลองทำโจทย์ข้ออื่นต่อ</h2>${solGrid(more)}</section>` : "");
+}
+// solutions whose "series" lists a lesson, shown at the bottom of every page of that lesson series
+const solutionsForTopic = (t) => {
+  const list = solutions.filter((s) => s.series.includes(t.slug));
+  if (!list.length || t.lang) return "";
+  return `<aside class="post-box sol-box" aria-label="เฉลยโจทย์ที่เกี่ยวข้อง"><p class="post-box-h">เฉลยโจทย์ทีละขั้นในหัวข้อนี้</p><ul>${list.map((s) => `<li><a href="${s.route}">${esc(solLabel(s))}: ${esc(s.name)}</a></li>`).join("")}</ul><p><a href="${SOL_HUB}">ดูเฉลยโจทย์ทั้งหมด →</a></p></aside>`;
+};
+function solutionSchema(s, url, ogImageUrl) {
+  const t = solTopic(s.topic);
+  const graph = [
+    {
+      "@type": ["Article", "LearningResource"],
+      "@id": url + "#solution",
+      headline: s.h1 || s.name,
+      name: `${solLabel(s)}: ${s.name}`,
+      description: s.description,
+      inLanguage: "th",
+      url,
+      mainEntityOfPage: url,
+      datePublished: s.published,
+      dateModified: s.updated || s.published,
+      author: { "@id": PERSON_ID },
+      publisher: { "@id": PERSON_ID },
+      image: [ogImageUrl],
+      learningResourceType: "Worked example",
+      educationalLevel: SOL_LEVEL[s.level || 2],
+      ...(s.technique ? { teaches: s.technique } : {}),
+      about: s.about || [t.en],
+      isAccessibleForFree: true,
+      isPartOf: { "@id": SITE + SOL_HUB + "#collection" },
+      ...(s.keywords ? { keywords: s.keywords.join(", ") } : {}),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
+        { "@type": "ListItem", position: 2, name: "เฉลยโจทย์", item: SITE + SOL_HUB },
+        { "@type": "ListItem", position: 3, name: `เฉลยโจทย์${t.th}`, item: SITE + SOL_HUB + "#" + t.key },
+        { "@type": "ListItem", position: 4, name: `${solNo(s)} ${s.name}`, item: url },
+      ],
+    },
+  ];
+  if (s.faq?.length)
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: s.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: stripTags(f.a.replace(/\\\(|\\\)|\\\[|\\\]/g, "").replace(/\\,/g, " ").replace(/\\(\w+)/g, "$1")) },
+      })),
+    });
+  return graph;
+}
+// short links (/s/<short>) and hub aliases, kept in a generated block of _redirects
+{
+  const rp = path.join(ROOT, "_redirects");
+  const begin = "# BEGIN generated: solution short links (build.mjs)", end = "# END generated: solution short links";
+  let r = fs.readFileSync(rp, "utf8");
+  const i = r.indexOf(begin), j = r.indexOf(end);
+  if (i >= 0 && j > i) r = r.slice(0, i).replace(/\n+$/, "\n") + r.slice(j + end.length).replace(/^\n+/, "");
+  const lines = [["/solution", SOL_HUB], ["/solution/", SOL_HUB], ["/answers", SOL_HUB], ["/answers/", SOL_HUB], ["/s", SOL_HUB], ["/s/", SOL_HUB],
+    ...solutions.filter((s) => s.short).flatMap((s) => [[`/s/${s.short}`, s.route], [`/s/${s.short}/`, s.route]])];
+  fs.writeFileSync(rp, r.replace(/\n*$/, "\n\n") + [begin, ...lines.map(([a, b]) => `${a}  ${b}  301`), end].join("\n") + "\n");
+}
+
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
 const MD_SERIES = ["sequences-and-series", "dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
@@ -1405,6 +1577,8 @@ for (const file of walk(pagesDir)) {
   const meta = JSON.parse(m[1]);
   if (meta.draft) meta.noindex = true;
   const isPost = !!meta.blog;
+  const isSol = !!meta.solution;
+  const sol = isSol ? allSolutions.find((s) => s.slug === path.basename(rel, ".html")) : null;
   let body = raw.slice(m[0].length);
   const route = routeFor(rel);
   const url = SITE + route;
@@ -1428,8 +1602,31 @@ for (const file of walk(pagesDir)) {
   }
   const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   const ogFile = `/images/og/${key}.jpg`;
-  const ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
-  if (!meta.noindex) {
+  let ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
+  // solution images change when a problem is edited; a content hash in the URL makes Facebook/LINE/X fetch the new one
+  if (isSol && ogImage === ogFile) ogImage += "?v=" + crypto.createHash("sha1").update(fs.readFileSync(path.join(ROOT, ogFile))).digest("hex").slice(0, 8);
+  if (isSol && !meta.noindex) {
+    const t = solTopic(sol.topic);
+    const og = meta.og || {};
+    ogManifest.push({
+      key,
+      kind: "solution",
+      title: og.title || sol.name,
+      sub: og.sub || meta.description,
+      eyebrow: og.eyebrow || `เฉลยโจทย์${t.th} ${solNo(sol)}`,
+      sym: og.sym || t.sym,
+      label: solLabel(sol),
+      technique: sol.technique || "",
+      level: SOL_LEVEL[sol.level || 2],
+      dots: "●".repeat(sol.level || 2) + "○".repeat(3 - (sol.level || 2)),
+      // hook may contain \( \) math; the share images get it pre-rendered (KaTeX fonts, no system-font fallback)
+      hook: (sol.hook || "ลองคิดก่อน แล้วเปิดดูวิธีทำทีละขั้น").split(/(\\\([\s\S]+?\\\))/).map((p, i) => i % 2
+        ? katex.renderToString(p.slice(2, -2), { throwOnError: true, strict: "ignore", macros: KATEX_MACROS }) : esc(p)).join(""),
+      math: katex.renderToString(sol.problem, { displayMode: true, throwOnError: true, strict: "ignore", macros: KATEX_MACROS }),
+      short: sol.short ? `modsengineeringmath.com/s/${sol.short}` : "modsengineeringmath.com/solutions",
+      post: `images/solutions/${sol.slug}.jpg`,
+    });
+  } else if (!meta.noindex) {
     const og = meta.og || {};
     const n = topic ? tnum(topic) : 0;
     const k = sub ? topic.sub.indexOf(sub) + 1 : 0;
@@ -1450,10 +1647,17 @@ for (const file of walk(pagesDir)) {
     "<!--video-->": () => videoFacade(topic),
     "<!--pager-->": () =>
       topic
-        ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + blogForTopic(topic)
+        ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + blogForTopic(topic) + solutionsForTopic(topic)
         : isPost
           ? shareHtml(url, meta.h1 || meta.title, lang) + blogMore(blogByLang[lang].find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" }, lang)
-          : "",
+          : isSol
+            ? solPager(sol, url)
+            : "",
+    "<!--solution-head-->": () => (isSol ? solHead(sol, url) : ""),
+    "<!--solution-list-->": () => solHub(),
+    "<!--solution-chips-->": () => solChips(),
+    "<!--solution-count-->": () => String(solutions.length),
+    "<!--solutions-latest-->": () => solGrid(solNewest.slice(0, 3)),
     "<!--blog-list-->": () => blogGrid(blogByLang[lang]),
     "<!--blog-latest-->": () => blogGrid(blogByLang[lang].slice(0, 3)),
     "<!--blog-count-->": () => String(blogByLang[lang].length),
@@ -1499,6 +1703,21 @@ for (const file of walk(pagesDir)) {
   let graph = [...(meta.jsonld || [])];
   if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
   else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage, lang));
+  else if (isSol) graph = graph.concat(solutionSchema({ ...sol, description: meta.description }, url, SITE + ogImage));
+  if (route === SOL_HUB)
+    graph.push({
+      "@type": "CollectionPage",
+      "@id": SITE + SOL_HUB + "#collection",
+      url,
+      name: "เฉลยโจทย์คณิตศาสตร์วิศวกรรมทีละขั้น — Mod's Engineering Mathematics",
+      inLanguage: "th",
+      publisher: { "@id": PERSON_ID },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: solutions.length,
+        itemListElement: solutions.map((s, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + s.route, name: `${solLabel(s)}: ${s.name}` })),
+      },
+    });
   if (route === "/blog/" || route === "/en/blog/")
     graph.push({
       "@type": "Blog",
@@ -1520,7 +1739,8 @@ for (const file of walk(pagesDir)) {
     ...MD_GUIDES.filter((g) => g.page === route).map((g) => `<link rel="alternate" type="text/markdown" href="${SITE}/${g.out}" title="${esc(g.title)}">`),
   ].filter(Boolean).join("\n");
 
-  const scripts = (meta.scripts || []).map((s) => `<script src="${s}?v=${ASSET_V}" defer></script>`).join("\n");
+  // solution pages always get lesson.js (step-by-step buttons and practice mode)
+  const scripts = [...new Set([...(meta.scripts || []), ...(isSol ? ["/assets/lesson.js"] : [])])].map((s) => `<script src="${s}?v=${ASSET_V}" defer></script>`).join("\n");
 
   const vars = {
     title: esc(meta.title),
@@ -1528,7 +1748,7 @@ for (const file of walk(pagesDir)) {
     canonical: url,
     ogTitle: esc(meta.ogTitle || meta.title),
     ogDescription: esc(meta.ogDescription || meta.description),
-    ogType: topic || isPost ? "article" : meta.ogType || "website",
+    ogType: topic || isPost || isSol ? "article" : meta.ogType || "website",
     ogImage: SITE + ogImage,
     ogImageAlt: esc(meta.ogTitle || meta.h1 || meta.title),
     headExtra,
@@ -1556,7 +1776,7 @@ for (const file of walk(pagesDir)) {
   const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
-  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost ? "0.8" : "0.9" });
+  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost || isSol ? "0.8" : "0.9" });
   console.log("built", route);
 }
 
@@ -1655,6 +1875,10 @@ ${blogPosts.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.descripti
 ## Articles in English (full translations of the Thai articles above, same formulas and worked examples)
 - [All English articles](${SITE}/en/blog/)
 ${blogEn.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
+
+## Worked solutions (one problem per page, full step-by-step working in Thai, math in LaTeX)
+- [All worked solutions](${SITE}${SOL_HUB})
+${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SITE}${s.route}): ${s.description}`).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}
