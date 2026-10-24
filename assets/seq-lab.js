@@ -408,6 +408,12 @@
   if (!MK) return;
   var $$ = function (sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); };
   var fmt = MK.fmt, esc = MK.esc;
+  // fit a plot to the widget width so its 10–11 px labels stay readable on phones (viewBox ≈ CSS pixels)
+  function plotIn(box, o) {
+    var cw = box && box.clientWidth ? box.clientWidth - 24 : o.w, w = Math.round(Math.max(300, Math.min(o.w, cw)));
+    if (w < o.w) { o.h = Math.round(Math.max(o.h * w / o.w, Math.min(o.h, w * 0.7))); o.w = w; }
+    return MK.plot(o);
+  }
   // KaTeX with the site's lecture macro \hlP{…} (blue: where the induction hypothesis is used)
   var KM = { "\\hlP": "\\htmlClass{hl-p}{#1}" };
   var T = function (s, d) {
@@ -551,7 +557,7 @@
             segs.push({ x1: x0, y1: y, x2: y, y2: y, color: "var(--signal)", width: 1.4 });
             x0 = y;
           }
-          plot.innerHTML = MK.plot({ w: 680, h: 380, xmin: lo, xmax: hi, ymin: lo, ymax: hi, series: [{ pts: MK.sample(gfun, lo, hi, 400), color: "var(--accent)" }, { pts: [[lo, lo], [hi, hi]], color: "var(--ink-3)", dash: "4 4", width: 1.3 }], segs: segs, marks: isFinite(L) ? [{ x: L, y: L, color: "var(--ok)", label: "จุดตรึง L" }] : [], xlabel: "aₙ", ylabel: "aₙ₊₁", id: MK.uid("cw"), zero: false, label: "Cobweb diagram of a recurrence" });
+          plot.innerHTML = plotIn(box, { w: 680, h: 380, xmin: lo, xmax: hi, ymin: lo, ymax: hi, series: [{ pts: MK.sample(gfun, lo, hi, 400), color: "var(--accent)" }, { pts: [[lo, lo], [hi, hi]], color: "var(--ink-3)", dash: "4 4", width: 1.3 }], segs: segs, marks: isFinite(L) ? [{ x: L, y: L, color: "var(--ok)", label: "จุดตรึง L" }] : [], xlabel: "aₙ", ylabel: "aₙ₊₁", id: MK.uid("cw"), zero: false, label: "Cobweb diagram of a recurrence" });
         }
       } else {
         var isSum = st.view === "sums", ys = isSum ? S : shown;
@@ -572,7 +578,7 @@
           if (Ne && Ne <= N) vl.push({ x: Ne, color: "var(--ok)", label: "N = " + Ne });
         }
         ser.push({ pts: ys.map(function (v, i) { return [i + 1, v]; }), color: isSum ? "var(--signal)" : "var(--ink-3)", width: 1, dash: "2 3" });
-        plot.innerHTML = MK.plot({ w: 680, h: 340, xmin: 0, xmax: N + 1, ymin: ymin, ymax: ymax, series: ser, marks: marks, hlines: hl, vlines: vl, xlabel: "n", ylabel: isSum ? "Sₙ" : "aₙ", id: MK.uid("sq"), label: isSum ? "Partial sums S_n" : "Terms of the sequence a_n" });
+        plot.innerHTML = plotIn(box, { w: 680, h: 340, xmin: 0, xmax: N + 1, ymin: ymin, ymax: ymax, series: ser, marks: marks, hlines: hl, vlines: vl, xlabel: "n", ylabel: isSum ? "Sₙ" : "aₙ", id: MK.uid("sq"), label: isSum ? "Partial sums S_n" : "Terms of the sequence a_n" });
       }
 
       // explanation + table
@@ -701,7 +707,7 @@
       var allY = terms.map(function (p) { return p[1]; }).concat(S.map(function (p) { return p[1]; })).filter(isFinite);
       var ymin = Math.min(0, Math.min.apply(null, allY)), ymax = Math.max(0, Math.max.apply(null, allY)), pad = (ymax - ymin) * 0.08 || 1;
       var hl = []; if (P && P.sum && sr.kind === "conv") hl.push({ y: sr.L, color: "var(--ok)", label: "ผลบวก ≈ " + fmt(sr.L, 6) });
-      plot.innerHTML = MK.plot({ w: 680, h: 320, xmin: n0 - 0.5, xmax: n0 + st.N, ymin: ymin - pad, ymax: ymax + pad,
+      plot.innerHTML = plotIn(box, { w: 680, h: 320, xmin: n0 - 0.5, xmax: n0 + st.N, ymin: ymin - pad, ymax: ymax + pad,
         series: [{ pts: S, color: "var(--signal)", width: 2.2 }],
         marks: terms.map(function (p) { return { x: p[0], y: p[1], r: st.N > 80 ? 2 : 3, color: "var(--accent)" }; }).concat(S.length ? [{ x: S[S.length - 1][0], y: S[S.length - 1][1], color: "var(--signal)" }] : []),
         hlines: hl, xlabel: "n", ylabel: "จุด = aₙ · เส้น = Sₙ" + (S.length ? " · S" + S[S.length - 1][0] + " = " + fmt(S[S.length - 1][1], 6) : ""), id: MK.uid("st"), label: "Terms and partial sums of the series" });
@@ -783,7 +789,7 @@
       var series = [{ pts: MK.sample(f, st.x0, st.x1, 600), color: "var(--ink)", width: 2.4 }];
       if (Pm) series.push({ pts: MK.sample(Pm, st.x0, st.x1, 600), color: "var(--ink-3)", dash: "3 4", width: 1.3 });
       series.push({ pts: MK.sample(Pn, st.x0, st.x1, 600), color: "var(--accent)", width: 2.4 });
-      plot.innerHTML = MK.plot({ w: 680, h: 360, xmin: st.x0, xmax: st.x1, ymin: ylo - pad, ymax: yhi + pad, series: series, bands: bands,
+      plot.innerHTML = plotIn(box, { w: 680, h: 360, xmin: st.x0, xmax: st.x1, ymin: ylo - pad, ymax: yhi + pad, series: series, bands: bands,
         marks: [{ x: a, y: f(a), color: "var(--ok)", label: "a" }, { x: st.x, y: fv, color: "var(--ink)" }, { x: st.x, y: pv, color: "var(--accent)" }],
         vlines: [{ x: st.x, color: "var(--signal)" }], xlabel: "x", ylabel: "y", id: MK.uid("ty"), label: "Taylor polynomial approximation of f(x)" });
       var Rtxt = rad.R === Infinity ? "∞ (ใช้ได้ทุก x)" : isFinite(rad.R) ? (rad.label ? rad.label : "≈ " + fmt(rad.R, 3)) : "—";

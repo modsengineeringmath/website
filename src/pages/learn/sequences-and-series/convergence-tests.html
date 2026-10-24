@@ -1,0 +1,298 @@
+<!--meta
+{
+  "title": "การทดสอบการลู่เข้าของอนุกรม (Convergence Tests): ratio test, root test, integral test, comparison test และวิธีเลือกใช้ | อาจารย์มด",
+  "h1": "การทดสอบการลู่เข้าของอนุกรม (Convergence Tests): พจน์ที่ n ปริพันธ์ เปรียบเทียบ อัตราส่วน ราก และผังเลือกใช้",
+  "description": "การทดสอบการลู่เข้าของอนุกรมครบทุกแบบ: nth-term test, integral test พร้อมขอบเขตเศษเหลือ, comparison test, limit comparison test, ratio test, root test, Cauchy condensation, Raabe's test และผังตัดสินใจเลือกการทดสอบ พร้อมตัวอย่างวิธีทำ ตารางสรุป เกมฝึกเลือกการทดสอบ 40 ข้อ และแล็บโต้ตอบ",
+  "ogTitle": "การทดสอบการลู่เข้าของอนุกรม: ratio root integral comparison และผังเลือกใช้",
+  "lesson": "sequences-and-series",
+  "sub": "convergence-tests",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["Undergraduate"],
+  "keywords": ["การทดสอบการลู่เข้า", "การทดสอบอนุกรม", "ทดสอบอัตราส่วน", "ทดสอบราก", "ทดสอบด้วยปริพันธ์", "ทดสอบการเปรียบเทียบ", "convergence test", "ratio test", "root test", "integral test", "comparison test", "limit comparison test", "nth term test", "Cauchy condensation test", "Raabe test", "series convergence flowchart"],
+  "about": ["Convergence tests", "Term test", "Integral test", "Direct comparison test", "Limit comparison test", "Ratio test", "Root test", "Cauchy condensation test", "Raabe's test", "Remainder estimate", "Stirling's approximation"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "การทดสอบการลู่เข้าของอนุกรม", "sub": "พจน์ที่ n · ปริพันธ์ · เปรียบเทียบ · อัตราส่วน · ราก · ผังเลือกใช้ + เกมฝึก 40 ข้อ", "eyebrow": "บทที่ 26.3 · Convergence Tests", "sym": "ρ"},
+  "faq": [
+    {"q": "ควรเลือกใช้การทดสอบการลู่เข้าแบบไหนก่อน?", "a": "ไล่ตามลำดับนี้: (1) พจน์ไม่เข้าใกล้ 0 ⇒ ลู่ออก (2) เป็นเรขาคณิตหรืออนุกรม p ตอบได้ทันที (3) แยกเศษส่วนย่อยได้ ลองกล้องส่องทางไกล (4) เป็นเศษส่วนของพหุนามหรือราก ใช้เปรียบเทียบแบบลิมิตกับ 1/nᵖ (5) มีแฟกทอเรียลหรือ cⁿ ใช้อัตราส่วน (6) ยกกำลัง n ทั้งก้อนใช้ราก (7) มี ln หรือหาปริพันธ์ได้ง่ายใช้ปริพันธ์ (8) เครื่องหมายสลับใช้การทดสอบอนุกรมสลับ"},
+    {"q": "ratio test ได้ค่า 1 แปลว่าอะไร?", "a": "แปลว่าสรุปไม่ได้ อนุกรมอาจลู่เข้าหรือลู่ออกก็ได้ เช่น \\(\\sum 1/n\\) และ \\(\\sum 1/n^2\\) ให้อัตราส่วนเข้าใกล้ 1 ทั้งคู่ แต่ตัวแรกลู่ออก ตัวที่สองลู่เข้า ต้องใช้การทดสอบอื่น เช่น เปรียบเทียบ ปริพันธ์ หรือราบี"},
+    {"q": "comparison test กับ limit comparison test ต่างกันอย่างไร?", "a": "comparison test ต้องพิสูจน์อสมการ \\(0 \\le a_n \\le b_n\\) จริงทุกพจน์ (ใช้สรุปลู่เข้าจากตัวใหญ่ หรือลู่ออกจากตัวเล็ก) ส่วน limit comparison test ดูแค่ \\(\\lim a_n/b_n = c\\) ถ้า \\(0 < c < \\infty\\) อนุกรมทั้งสองลู่เข้าหรือลู่ออกพร้อมกัน สะดวกกว่ามากสำหรับเศษส่วนของพหุนาม"},
+    {"q": "integral test ใช้ได้เมื่อไร?", "a": "เมื่อ \\(a_n = f(n)\\) โดย f เป็นบวก ต่อเนื่อง และลดลงเมื่อ x มากพอ แล้วอนุกรมกับ \\(\\int_N^{\\infty} f(x)\\,dx\\) ลู่เข้าหรือลู่ออกพร้อมกัน ค่าปริพันธ์ไม่ใช่ผลบวกของอนุกรม แต่ให้ขอบเขตเศษเหลือ \\(\\int_{N+1}^{\\infty} f \\le R_N \\le \\int_N^{\\infty} f\\)"},
+    {"q": "root test เหมาะกับอนุกรมแบบไหน?", "a": "อนุกรมที่พจน์ยกกำลัง n ทั้งก้อน เช่น \\((\\tfrac{n}{2n+1})^n\\) หรือ \\((1 - 1/n)^{n^2}\\) เพราะ \\(\\sqrt[n]{a_n}\\) ทำให้เลขชี้กำลังหายไป root test แข็งแรงกว่า ratio test เล็กน้อย (ถ้า ratio test สรุปได้ root test สรุปได้เหมือนกัน) และใช้หารัศมีการลู่เข้าของอนุกรมกำลังได้ด้วย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>การทดสอบการลู่เข้า</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.3 · ลำดับและอนุกรม · Convergence Tests</p>
+      <h1>การทดสอบการลู่เข้าของอนุกรม (Convergence Tests): พจน์ที่ n ปริพันธ์ เปรียบเทียบ อัตราส่วน ราก และผังเลือกใช้</h1>
+      <p class="lede">อนุกรมส่วนใหญ่หาผลบวกเป็นสูตรไม่ได้ แต่วิศวกรยังต้องรู้ว่าบวกแล้ว “จำกัด” หรือไม่ ก่อนนำไปคำนวณ หน้านี้รวบรวมการทดสอบสำหรับอนุกรมพจน์บวกทุกแบบที่ใช้ในแคลคูลัส 2 และคณิตศาสตร์วิศวกรรม พร้อมผังตัดสินใจที่บอกว่าเห็นรูปแบบไหนควรใช้อะไร และเกมฝึกให้มองเป็นภายในไม่กี่วินาที ส่วนอนุกรมที่มีเครื่องหมายสลับอยู่ในหน้า<a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ</a></p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#flow">ผังเลือกการทดสอบ</a>
+        <a class="btn btn-ghost btn-sm" href="#integral">ปริพันธ์</a>
+        <a class="btn btn-ghost btn-sm" href="#comparison">เปรียบเทียบ</a>
+        <a class="btn btn-ghost btn-sm" href="#ratio">อัตราส่วน · ราก</a>
+        <a class="btn btn-ghost btn-sm" href="#quiz">เกมฝึก 40 ข้อ</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(a_n \not\to 0\) ⇒ ลู่ออก · เรขาคณิต \(|r| &lt; 1\) · อนุกรม p \(p > 1\)</li>
+          <li>เศษส่วนพหุนาม: เทียบลิมิตกับ \(1/n^{p}\) โดย \(p\) = (ดีกรีล่าง − ดีกรีบน)</li>
+          <li>อัตราส่วน \(\rho = \lim|a_{n+1}/a_n|\) · ราก \(\rho = \lim\sqrt[n]{|a_n|}\): \(\rho &lt; 1\) ลู่เข้า, \(\rho > 1\) ลู่ออก, \(\rho = 1\) สรุปไม่ได้</li>
+          <li>ปริพันธ์: f บวก ต่อเนื่อง ลดลง ⇒ \(\sum f(n)\) กับ \(\int f\) ไปทางเดียวกัน และให้ขอบเขตเศษเหลือ</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ใช้ได้ทุกคน</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 2</span><span><span class="lv lv-a">ขั้นสูง</span> กรณีที่การทดสอบปกติสรุปไม่ได้</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น ratio, root, integral, comparison, limit comparison, condensation, raabe" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="flow">
+    <h2 id="flow">ผังเลือกการทดสอบ: เห็นรูปแบบไหน ใช้อะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทักษะที่ข้อสอบวัดจริงไม่ใช่การจำทฤษฎีบท แต่คือการมองพจน์ \(a_n\) แล้วรู้ว่าควรใช้เครื่องมือไหน ผังนี้เรียงจากการทดสอบที่เร็วที่สุดไปหาที่ใช้แรงมากที่สุด ทำตามลำดับแล้วจะไม่เสียเวลาลองผิดลองถูก</p>
+    <figure class="lt-wide"><!--FIG:sr-flow--><svg class="mf sr-fig" viewBox="0 0 420 542" role="img" aria-label="ผังเลือกการทดสอบการลู่เข้า"><rect class="mf-box" x="8" y="14" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="39" text-anchor="middle">aₙ → 0 ?</text><rect class="mf-fill" x="262" y="14" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="14" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="39" text-anchor="middle">ไม่ → ลู่ออก</text><line class="mf-thin" x1="222" y1="34" x2="260" y2="34"/><path class="mf-arrowh" d="M260 34L253.6 36.7L253.6 31.3Z"/><text class="mf-k" x="241" y="28" text-anchor="middle"></text><line class="mf-thin" x1="115" y1="54" x2="115" y2="76"/><path class="mf-arrowh" d="M115 76L112.3 69.6L117.7 69.6Z"/><text class="mf-k" x="121" y="69" text-anchor="start">ใช่</text><rect class="mf-box" x="8" y="78" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="103" text-anchor="middle">เรขาคณิต / อนุกรม p ?</text><rect class="mf-fill2" x="262" y="78" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="78" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="103" text-anchor="middle">|r| < 1 · p > 1</text><line class="mf-thin" x1="222" y1="98" x2="260" y2="98"/><path class="mf-arrowh" d="M260 98L253.6 100.7L253.6 95.3Z"/><text class="mf-k" x="241" y="92" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="118" x2="115" y2="140"/><path class="mf-arrowh" d="M115 140L112.3 133.6L117.7 133.6Z"/><text class="mf-k" x="121" y="133" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="142" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="167" text-anchor="middle">แยกเศษส่วนย่อยได้ ?</text><rect class="mf-fill2" x="262" y="142" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="142" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="167" text-anchor="middle">กล้องส่องทางไกล</text><line class="mf-thin" x1="222" y1="162" x2="260" y2="162"/><path class="mf-arrowh" d="M260 162L253.6 164.7L253.6 159.3Z"/><text class="mf-k" x="241" y="156" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="182" x2="115" y2="204"/><path class="mf-arrowh" d="M115 204L112.3 197.6L117.7 197.6Z"/><text class="mf-k" x="121" y="197" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="206" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="231" text-anchor="middle">เศษส่วนพหุนาม / ราก ?</text><rect class="mf-fill2" x="262" y="206" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="206" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="231" text-anchor="middle">เปรียบเทียบลิมิต 1/nᵖ</text><line class="mf-thin" x1="222" y1="226" x2="260" y2="226"/><path class="mf-arrowh" d="M260 226L253.6 228.7L253.6 223.3Z"/><text class="mf-k" x="241" y="220" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="246" x2="115" y2="268"/><path class="mf-arrowh" d="M115 268L112.3 261.6L117.7 261.6Z"/><text class="mf-k" x="121" y="261" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="270" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="295" text-anchor="middle">มี n!, cⁿ, nⁿ ?</text><rect class="mf-fill2" x="262" y="270" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="270" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="295" text-anchor="middle">อัตราส่วน</text><line class="mf-thin" x1="222" y1="290" x2="260" y2="290"/><path class="mf-arrowh" d="M260 290L253.6 292.7L253.6 287.3Z"/><text class="mf-k" x="241" y="284" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="310" x2="115" y2="332"/><path class="mf-arrowh" d="M115 332L112.3 325.6L117.7 325.6Z"/><text class="mf-k" x="121" y="325" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="334" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="359" text-anchor="middle">ยกกำลัง n ทั้งก้อน ?</text><rect class="mf-fill2" x="262" y="334" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="334" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="359" text-anchor="middle">ราก</text><line class="mf-thin" x1="222" y1="354" x2="260" y2="354"/><path class="mf-arrowh" d="M260 354L253.6 356.7L253.6 351.3Z"/><text class="mf-k" x="241" y="348" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="374" x2="115" y2="396"/><path class="mf-arrowh" d="M115 396L112.3 389.6L117.7 389.6Z"/><text class="mf-k" x="121" y="389" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="398" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="423" text-anchor="middle">มี ln / อินทิเกรตง่าย ?</text><rect class="mf-fill2" x="262" y="398" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="398" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="423" text-anchor="middle">ปริพันธ์</text><line class="mf-thin" x1="222" y1="418" x2="260" y2="418"/><path class="mf-arrowh" d="M260 418L253.6 420.7L253.6 415.3Z"/><text class="mf-k" x="241" y="412" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="438" x2="115" y2="460"/><path class="mf-arrowh" d="M115 460L112.3 453.6L117.7 453.6Z"/><text class="mf-k" x="121" y="453" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="462" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="487" text-anchor="middle">เครื่องหมายสลับ ?</text><rect class="mf-fill2" x="262" y="462" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="462" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="487" text-anchor="middle">Σ|aₙ| ก่อน แล้วไลบ์นิซ</text><line class="mf-thin" x1="222" y1="482" x2="260" y2="482"/><path class="mf-arrowh" d="M260 482L253.6 484.7L253.6 479.3Z"/><text class="mf-k" x="241" y="476" text-anchor="middle">ใช่</text></svg><!--/FIG--><figcaption>ผังตัดสินใจเลือกการทดสอบการลู่เข้า (อ่านจากบนลงล่าง หยุดที่ข้อแรกที่ใช้ได้)</figcaption></figure>
+    <div class="table-wrap"><table><thead><tr><th>เห็นอะไรในพจน์</th><th>ใช้การทดสอบ</th><th>ตัวอย่าง</th></tr></thead><tbody>
+      <tr><td>พจน์ไม่เข้าใกล้ 0 (\(\tfrac{n}{n+1}\), \((1 + \tfrac1n)^n\), \(\cos n\))</td><td><a href="#nth">พจน์ที่ n</a> ⇒ ลู่ออก</td><td>\(\sum \tfrac{n}{n+1}\)</td></tr>
+      <tr><td>\(ar^n\), \(\tfrac{c}{n^p}\)</td><td>เรขาคณิต · อนุกรม p (จำผล)</td><td>\(\sum \tfrac{5}{4^n}\), \(\sum \tfrac{1}{\sqrt n}\)</td></tr>
+      <tr><td>แยกเศษส่วนย่อยได้ / ผลต่างของลำดับ</td><td><a href="/learn/sequences-and-series/infinite-series/#telescoping">กล้องส่องทางไกล</a></td><td>\(\sum \tfrac{1}{n(n+1)}\)</td></tr>
+      <tr><td>เศษส่วนของพหุนาม ราก (\(\tfrac{3n+5}{n^3-2}\))</td><td><a href="#limit-comparison">เปรียบเทียบแบบลิมิต</a> กับ \(1/n^p\)</td><td>\(\sum \tfrac{n+1}{n^3 - n + 2}\)</td></tr>
+      <tr><td>มี sin, cos ที่มีขอบเขต</td><td><a href="#comparison">เปรียบเทียบตรง</a></td><td>\(\sum \tfrac{2 + \sin n}{n^2}\)</td></tr>
+      <tr><td>\(n!\), \(c^n\), \(n^n\)</td><td><a href="#ratio">อัตราส่วน</a></td><td>\(\sum \tfrac{n^3}{3^n}\)</td></tr>
+      <tr><td>ยกกำลัง n ทั้งก้อน \((\cdots)^n\)</td><td><a href="#root">ราก</a></td><td>\(\sum \left(\tfrac{2n}{3n+1}\right)^n\)</td></tr>
+      <tr><td>มี \(\ln n\), หาปริพันธ์ได้ (\(\tfrac{1}{n\ln n}\), \(ne^{-n^2}\))</td><td><a href="#integral">ปริพันธ์</a></td><td>\(\sum \tfrac{1}{n(\ln n)^2}\)</td></tr>
+      <tr><td>อัตราส่วน/ราก ได้ 1 แต่มีแฟกทอเรียล</td><td><a href="#advanced">ราบี · สเตอร์ลิง</a></td><td>\(\sum \tfrac{(2n)!}{(n!)^2 4^n}\)</td></tr>
+      <tr><td>เครื่องหมายสลับ \((-1)^n\)</td><td><a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ · ค่าสัมบูรณ์</a></td><td>\(\sum \tfrac{(-1)^n}{\sqrt n}\)</td></tr>
+    </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="nth">
+    <h2 id="nth">การทดสอบพจน์ที่ n (n-th Term Test) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="T1" data-k="nth term test divergence limit not zero การทดสอบพจน์ที่ n ลู่ออก">
+        <p class="tf-n"><b><span class="fid">T1</span> n-th term test for divergence</b> การทดสอบพจน์ที่ n</p>
+        \[ \lim_{n\to\infty} a_n \ne 0 \ \text{(หรือไม่มีลิมิต)} \ \Longrightarrow\ \sum a_n \ \text{ลู่ออก} \]
+        <p class="tf-x">ใช้เป็นด่านแรกทุกข้อ ใช้เวลา 5 วินาที · ถ้าได้ \(a_n \to 0\) <b>สรุปไม่ได้</b> ต้องไปข้อถัดไปในผัง</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="integral">
+    <h2 id="integral">การทดสอบด้วยปริพันธ์ (Integral Test) และขอบเขตเศษเหลือ <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าพจน์มาจากฟังก์ชันที่ลดลง ผลบวกของพจน์คือพื้นที่สี่เหลี่ยมกว้าง 1 ซึ่งประกบพื้นที่ใต้กราฟจากทั้งบนและล่าง อนุกรมกับปริพันธ์จึงลู่เข้าหรือลู่ออกพร้อมกัน และยิ่งไปกว่านั้น ปริพันธ์บอกได้ว่าผลบวกจริงอยู่ในช่วงใด</p>
+    <figure class="lt-wide"><!--FIG:sr-integral-test--><svg class="mf sr-fig" viewBox="0 0 440 240" role="img" aria-label="การทดสอบด้วยปริพันธ์: สี่เหลี่ยมใต้และเหนือกราฟ y = 1/x²"><rect class="mf-bg" x="40" y="14" width="386" height="192" rx="8"/><line class="mf-g" x1="57.5" y1="14" x2="57.5" y2="206"/><text class="mf-k" x="57.5" y="219" text-anchor="middle">1</text><line class="mf-g" x1="116" y1="14" x2="116" y2="206"/><text class="mf-k" x="116" y="219" text-anchor="middle">2</text><line class="mf-g" x1="174.5" y1="14" x2="174.5" y2="206"/><text class="mf-k" x="174.5" y="219" text-anchor="middle">3</text><line class="mf-g" x1="233" y1="14" x2="233" y2="206"/><text class="mf-k" x="233" y="219" text-anchor="middle">4</text><line class="mf-g" x1="291.5" y1="14" x2="291.5" y2="206"/><text class="mf-k" x="291.5" y="219" text-anchor="middle">5</text><line class="mf-g" x1="350" y1="14" x2="350" y2="206"/><text class="mf-k" x="350" y="219" text-anchor="middle">6</text><line class="mf-g" x1="408.5" y1="14" x2="408.5" y2="206"/><text class="mf-k" x="408.5" y="219" text-anchor="middle">7</text><line class="mf-g" x1="40" y1="206" x2="426" y2="206"/><text class="mf-k" x="35" y="210" text-anchor="end">0</text><line class="mf-g" x1="40" y1="118.7" x2="426" y2="118.7"/><text class="mf-k" x="35" y="122.7" text-anchor="end">0.5</text><line class="mf-g" x1="40" y1="31.5" x2="426" y2="31.5"/><text class="mf-k" x="35" y="35.5" text-anchor="end">1</text><text class="mf-l" x="424" y="232" text-anchor="end">x</text><rect class="mf-fill2" x="57.5" y="31.5" width="58.5" height="174.5" rx="0"/><rect class="mf-fill" x="57.5" y="162.4" width="58.5" height="43.6" rx="0"/><rect class="mf-fill2" x="116" y="162.4" width="58.5" height="43.6" rx="0"/><rect class="mf-fill" x="116" y="186.6" width="58.5" height="19.4" rx="0"/><rect class="mf-fill2" x="174.5" y="186.6" width="58.5" height="19.4" rx="0"/><rect class="mf-fill" x="174.5" y="195.1" width="58.5" height="10.9" rx="0"/><rect class="mf-fill2" x="233" y="195.1" width="58.5" height="10.9" rx="0"/><rect class="mf-fill" x="233" y="199" width="58.5" height="7" rx="0"/><rect class="mf-fill2" x="291.5" y="199" width="58.5" height="7" rx="0"/><rect class="mf-fill" x="291.5" y="201.2" width="58.5" height="4.8" rx="0"/><rect class="mf-fill2" x="350" y="201.2" width="58.5" height="4.8" rx="0"/><rect class="mf-fill" x="350" y="202.4" width="58.5" height="3.6" rx="0"/><path class="mf-ink" d="M54.8 14L56 21.7L57.5 31.4L59.1 40.3L60.6 48.6L62.2 56.2L63.7 63.3L65.3 69.9L66.9 76.1L68.4 81.9L70 87.3L71.5 92.3L73.1 97L74.6 101.5L76.2 105.6L77.7 109.6L79.3 113.3L80.9 116.8L82.4 120.1L84 123.2L85.5 126.1L87.1 128.9L88.6 131.6L90.2 134.1L91.7 136.5L93.3 138.8L94.8 140.9L96.4 143L98 145L99.5 146.8L101.1 148.6L102.6 150.3L104.2 152L105.7 153.5L107.3 155L108.8 156.5L110.4 157.8L111.9 159.1L113.5 160.4L115.1 161.6L116.6 162.8L118.2 163.9L119.7 165L121.3 166L122.8 167L124.4 168L125.9 168.9L127.5 169.8L129 170.7L130.6 171.5L132.2 172.3L133.7 173.1L135.3 173.8L136.8 174.5L138.4 175.2L139.9 175.9L141.5 176.6L143 177.2L144.6 177.8L146.2 178.4L147.7 179L149.3 179.5L150.8 180.1L152.4 180.6L153.9 181.1L155.5 181.6L157 182.1L158.6 182.5L160.1 183L161.7 183.4L163.3 183.9L164.8 184.3L166.4 184.7L167.9 185.1L169.5 185.4L171 185.8L172.6 186.2L174.1 186.5L175.7 186.9L177.2 187.2L178.8 187.5L180.4 187.8L181.9 188.1L183.5 188.4L185 188.7L186.6 189L188.1 189.3L189.7 189.6L191.2 189.8L192.8 190.1L194.3 190.3L195.9 190.6L197.5 190.8L199 191.1L200.6 191.3L202.1 191.5L203.7 191.7L205.2 192L206.8 192.2L208.3 192.4L209.9 192.6L211.4 192.8L213 193L214.6 193.1L216.1 193.3L217.7 193.5L219.2 193.7L220.8 193.9L222.3 194L223.9 194.2L225.4 194.4L227 194.5L228.6 194.7L230.1 194.8L231.7 195L233.2 195.1L234.8 195.3L236.3 195.4L237.9 195.5L239.4 195.7L241 195.8L242.5 195.9L244.1 196.1L245.7 196.2L247.2 196.3L248.8 196.4L250.3 196.5L251.9 196.7L253.4 196.8L255 196.9L256.5 197L258.1 197.1L259.6 197.2L261.2 197.3L262.8 197.4L264.3 197.5L265.9 197.6L267.4 197.7L269 197.8L270.5 197.9L272.1 198L273.6 198.1L275.2 198.2L276.7 198.3L278.3 198.3L279.9 198.4L281.4 198.5L283 198.6L284.5 198.7L286.1 198.8L287.6 198.8L289.2 198.9L290.7 199L292.3 199.1L293.8 199.1L295.4 199.2L297 199.3L298.5 199.3L300.1 199.4L301.6 199.5L303.2 199.5L304.7 199.6L306.3 199.7L307.8 199.7L309.4 199.8L311 199.9L312.5 199.9L314.1 200L315.6 200L317.2 200.1L318.7 200.2L320.3 200.2L321.8 200.3L323.4 200.3L324.9 200.4L326.5 200.4L328.1 200.5L329.6 200.5L331.2 200.6L332.7 200.6L334.3 200.7L335.8 200.7L337.4 200.8L338.9 200.8L340.5 200.9L342 200.9L343.6 201L345.2 201L346.7 201.1L348.3 201.1L349.8 201.1L351.4 201.2L352.9 201.2L354.5 201.3L356 201.3L357.6 201.4L359.1 201.4L360.7 201.4L362.3 201.5L363.8 201.5L365.4 201.6L366.9 201.6L368.5 201.6L370 201.7L371.6 201.7L373.1 201.7L374.7 201.8L376.2 201.8L377.8 201.8L379.4 201.9L380.9 201.9L382.5 201.9L384 202L385.6 202L387.1 202L388.7 202.1L390.2 202.1L391.8 202.1L393.4 202.2L394.9 202.2L396.5 202.2L398 202.2L399.6 202.3L401.1 202.3L402.7 202.3L404.2 202.4L405.8 202.4L407.3 202.4L408.9 202.4L410.5 202.5L412 202.5L413.6 202.5L415.1 202.6L416.7 202.6L418.2 202.6L419.8 202.6L421.3 202.7L422.9 202.7L424.4 202.7L426 202.7"/><text class="mf-h" x="66.3" y="40.2" text-anchor="start">y = f(x)</text><text class="mf-l" x="186.2" y="110" text-anchor="start">ฟ้า: สูง f(n) อยู่เหนือกราฟ</text><text class="mf-l" x="186.2" y="130.9" text-anchor="start">ส้ม: สูง f(n+1) อยู่ใต้กราฟ</text></svg><!--/FIG--><figcaption>สี่เหลี่ยมสูง \(f(n+1)\) อยู่ใต้กราฟ (ส้ม) และสี่เหลี่ยมสูง \(f(n)\) อยู่เหนือกราฟ (ฟ้า) จึงได้ \(\sum_{n\ge2} a_n \le \int_1^\infty f \le \sum_{n\ge1} a_n\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="T2" data-k="integral test positive continuous decreasing improper integral การทดสอบด้วยปริพันธ์">
+        <p class="tf-n"><b><span class="fid">T2</span> Integral test</b> การทดสอบด้วยปริพันธ์</p>
+        \[ a_n = f(n),\ f \text{ บวก ต่อเนื่อง ลดลงเมื่อ } x \ge N:\qquad \sum_{n=N}^{\infty} a_n \text{ ลู่เข้า} \iff \int_{N}^{\infty} f(x)\,dx \text{ ลู่เข้า} \]
+        <p class="tf-x">ตรวจ “ลดลง” ด้วย \(f'(x) &lt; 0\) · ค่าปริพันธ์ ≠ ผลบวกของอนุกรม · ใช้พิสูจน์อนุกรม p (\(\int_1^\infty x^{-p}dx\) จำกัด ⇔ \(p > 1\))</p>
+      </div>
+      <div class="tf wide" id="T3" data-k="remainder estimate integral bounds error R_N sum estimate ขอบเขตเศษเหลือ ประมาณผลบวก">
+        <p class="tf-n"><b><span class="fid">T3</span> Remainder estimate</b> ขอบเขตเศษเหลือจากปริพันธ์</p>
+        \[ \int_{N+1}^{\infty} f(x)\,dx \ \le\ R_N = \sum_{n=N+1}^{\infty} a_n \ \le\ \int_{N}^{\infty} f(x)\,dx \quad\Rightarrow\quad S_N + \int_{N+1}^{\infty} f \le S \le S_N + \int_N^{\infty} f \]
+        <p class="tf-x">ค่ากลางของช่วงเป็นค่าประมาณที่ดีมากโดยบวกพจน์ไม่กี่ตัว</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-1 · ประมาณผลบวก</span><h3>ประมาณ \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n^3}\) โดยบวก 10 พจน์ แล้วหาช่วงที่ผลบวกจริงอยู่</h3><button type="button" class="wx-btn calc-go" data-sr-target="int-lab" data-sr-set='{"preset":"p","p":3,"n":10}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(S_{10} = 1 + \tfrac18 + \tfrac1{27} + \cdots + \tfrac{1}{1000} = 1.1975320\)</p></li>
+        <li><p>\(\displaystyle\int_N^{\infty}\frac{dx}{x^3} = \frac{1}{2N^2}\) ⇒ ขอบล่าง \(S_{10} + \tfrac{1}{2\cdot 11^2} = 1.2016642\) · ขอบบน \(S_{10} + \tfrac{1}{2\cdot10^2} = 1.2025320\)</p></li>
+        <li><p>ค่ากลาง \(1.2020981 \pm 0.0004339\) ผลบวกจริง \(\zeta(3) = 1.2020569\) อยู่ในช่วง</p></li>
+      </ol>
+      <p class="answer">\(1.20166 \le S \le 1.20253\) — แม่นถึงทศนิยม 3 ตำแหน่งด้วยพจน์เพียง 10 ตัว ขณะที่ \(S_{10}\) อย่างเดียวคลาดถึง 0.0045</p>
+    </div>
+    <div class="wx" id="ex-t2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-2 · ลู่เข้าหรือลู่ออก</span><h3>(ก) \(\displaystyle\sum_{n=1}^{\infty} n e^{-n^2}\) (ข) \(\displaystyle\sum_{n=2}^{\infty}\frac{1}{n\sqrt{\ln n}}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(f(x) = xe^{-x^2}\) บวก ต่อเนื่อง และ \(f'(x) = e^{-x^2}(1 - 2x^2) &lt; 0\) เมื่อ \(x \ge 1\) · \(\int_1^\infty xe^{-x^2}dx = \left[-\tfrac12 e^{-x^2}\right]_1^\infty = \tfrac{1}{2e}\) จำกัด ⇒ ลู่เข้า</p></li>
+        <li><p>(ข) แทน \(u = \ln x\): \(\int_2^\infty \dfrac{dx}{x\sqrt{\ln x}} = \int_{\ln2}^\infty u^{-1/2}du = \left[2\sqrt u\right]_{\ln 2}^{\infty} = \infty\) ⇒ ลู่ออก</p></li>
+      </ol>
+      <p class="answer">(ก) ลู่เข้า · (ข) ลู่ออก — ข้อ (ข) คืออนุกรม \(\sum 1/(n(\ln n)^p)\) ที่ \(p = \tfrac12 \le 1\)</p>
+    </div>
+    <div class="sr-integral" id="int-lab" data-preset="p" data-p="2" data-n="10"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="comparison">
+    <h2 id="comparison">การทดสอบโดยการเปรียบเทียบ (Direct Comparison Test) <span class="lv lv-i">กลาง</span></h2>
+    <p>หลักคิดง่ายมาก: ถ้าตัวใหญ่บวกแล้วจำกัด ตัวเล็กก็จำกัด ถ้าตัวเล็กบวกแล้วไม่จำกัด ตัวใหญ่ก็ไม่จำกัด สิ่งที่ต้องระวังคือทิศของอสมการ: เทียบกับตัวใหญ่ที่<b>ลู่ออก</b> หรือตัวเล็กที่<b>ลู่เข้า</b> สรุปอะไรไม่ได้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="T4" data-k="direct comparison test bigger smaller inequality การทดสอบการเปรียบเทียบ อสมการ">
+        <p class="tf-n"><b><span class="fid">T4</span> Direct comparison test</b> การเปรียบเทียบโดยตรง</p>
+        \[ 0 \le a_n \le b_n \ (n \ge N):\qquad \sum b_n \text{ ลู่เข้า} \Rightarrow \sum a_n \text{ ลู่เข้า};\qquad \sum a_n \text{ ลู่ออก} \Rightarrow \sum b_n \text{ ลู่ออก} \]
+        <p class="tf-x">ตัวเทียบยอดนิยม: \(\tfrac{1}{n^p}\), \(r^n\) · อสมการช่วย \(|\sin x| \le 1\), \(\ln n &lt; \sqrt n\), \(\ln n &lt; n^{\epsilon}\) (n ใหญ่พอ), \(n! \ge 2^{n-1}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-3 · เปรียบเทียบตรง</span><h3>(ก) \(\sum \dfrac{1}{2^n + 1}\) (ข) \(\sum \dfrac{2 + \sin n}{n^2}\) (ค) \(\displaystyle\sum_{n=2}^{\infty}\frac{1}{\sqrt n - 1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{1}{2^n + 1} &lt; \dfrac{1}{2^n}\) และ \(\sum (1/2)^n\) ลู่เข้า ⇒ ลู่เข้า</p></li>
+        <li><p>(ข) \(0 &lt; \dfrac{2 + \sin n}{n^2} \le \dfrac{3}{n^2}\) และ \(\sum 3/n^2\) ลู่เข้า ⇒ ลู่เข้า</p></li>
+        <li><p>(ค) \(\dfrac{1}{\sqrt n - 1} > \dfrac{1}{\sqrt n}\) และ \(\sum 1/\sqrt n\) ลู่ออก (p = ½) ⇒ ลู่ออก</p></li>
+      </ol>
+      <p class="answer">(ก) ลู่เข้า · (ข) ลู่เข้า · (ค) ลู่ออก</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limit-comparison">
+    <h2 id="limit-comparison">การเปรียบเทียบแบบลิมิต (Limit Comparison Test) <span class="lv lv-i">กลาง</span></h2>
+    <p>ในทางปฏิบัติ การทดสอบนี้ใช้บ่อยที่สุด เพราะไม่ต้องหาอสมการที่ถูกทิศ ดูแค่ว่าเมื่อ n ใหญ่ พจน์ “ประพฤติเหมือน” อะไร โดยเก็บเฉพาะตัวเด่น (dominant term) ของเศษและส่วน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="T5" data-k="limit comparison test ratio c positive finite dominant term การเปรียบเทียบแบบลิมิต ตัวเด่น">
+        <p class="tf-n"><b><span class="fid">T5</span> Limit comparison test</b> การเปรียบเทียบแบบลิมิต</p>
+        \[ a_n, b_n > 0,\quad \lim_{n\to\infty}\frac{a_n}{b_n} = c,\ \ 0 &lt; c &lt; \infty\ \Rightarrow\ \sum a_n,\ \sum b_n \text{ ลู่เข้าหรือลู่ออกพร้อมกัน} \]
+        <p class="tf-x">\(c = 0\) และ \(\sum b_n\) ลู่เข้า ⇒ \(\sum a_n\) ลู่เข้า · \(c = \infty\) และ \(\sum b_n\) ลู่ออก ⇒ \(\sum a_n\) ลู่ออก · เลือก \(b_n\) = ตัวเด่นบน/ตัวเด่นล่าง</p>
+      </div>
+      <div class="tf" id="T6" data-k="small angle sin(1/n) ~ 1/n asymptotic equivalent สมมูลเชิงเส้นกำกับ">
+        <p class="tf-n"><b><span class="fid">T6</span> Asymptotic equivalents</b> พจน์ที่สมมูลกันเมื่อ n ใหญ่</p>
+        \[ \sin\tfrac1n \sim \tfrac1n,\quad 1 - \cos\tfrac1n \sim \tfrac{1}{2n^2},\quad \ln\left(1 + \tfrac1n\right) \sim \tfrac1n,\quad e^{1/n} - 1 \sim \tfrac1n \]
+        <p class="tf-x">มาจาก<a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์</a> พจน์แรก · ใช้คู่กับ T5 ได้ทันที</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-4 · เปรียบเทียบแบบลิมิต</span><h3>(ก) \(\sum \dfrac{n+1}{n^3 - n + 2}\) (ข) \(\sum \dfrac{1}{\sqrt{n^2 + 1}}\) (ค) \(\sum \sin\dfrac{1}{n^2}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ตัวเด่น \(\tfrac{n}{n^3} = \tfrac{1}{n^2}\): \(\lim \dfrac{(n+1)/(n^3-n+2)}{1/n^2} = \lim\dfrac{n^3 + n^2}{n^3 - n + 2} = 1\) ⇒ ลู่เข้าเหมือน \(\sum 1/n^2\)</p></li>
+        <li><p>(ข) \(\sqrt{n^2+1} \sim n\): \(\lim \dfrac{1/\sqrt{n^2+1}}{1/n} = 1\) ⇒ ลู่ออกเหมือนฮาร์มอนิก</p></li>
+        <li><p>(ค) \(\lim \dfrac{\sin(1/n^2)}{1/n^2} = 1\) (เพราะ \(\tfrac{\sin u}{u} \to 1\)) ⇒ ลู่เข้าเหมือน \(\sum 1/n^2\)</p></li>
+      </ol>
+      <p class="answer">(ก) ลู่เข้า · (ข) ลู่ออก · (ค) ลู่เข้า</p>
+    </div>
+    <div class="sr-exam"><b>สูตรลัดสำหรับเศษส่วนของพหุนาม</b>ถ้า \(a_n = \dfrac{P(n)}{Q(n)}\) โดย P ดีกรี p และ Q ดีกรี q แล้ว \(a_n \sim \dfrac{C}{n^{q-p}}\) อนุกรมลู่เข้า ⇔ \(q - p > 1\) (ดีกรีล่างมากกว่าบนอย่างน้อย 2) · รากนับดีกรีครึ่ง เช่น \(\sqrt{n^3 + 1}\) มีดีกรี 3/2</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ratio">
+    <h2 id="ratio">การทดสอบอัตราส่วน (Ratio Test) <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าพจน์ถัดไปเล็กกว่าพจน์ก่อนหน้าด้วยอัตราส่วนเกือบคงที่ \(\rho\) อนุกรมก็ประพฤติเหมือนอนุกรมเรขาคณิตอัตราส่วน \(\rho\) การทดสอบนี้จึงเก่งกับพจน์ที่มีการคูณซ้ำ เช่น แฟกทอเรียลและเลขยกกำลัง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="T7" data-k="ratio test d'alembert rho limit a(n+1)/a(n) การทดสอบอัตราส่วน">
+        <p class="tf-n"><b><span class="fid">T7</span> Ratio test (d'Alembert)</b> การทดสอบอัตราส่วน</p>
+        \[ \rho = \lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|:\qquad \rho &lt; 1 \Rightarrow \text{ลู่เข้าแบบสัมบูรณ์},\quad \rho > 1 \text{ (หรือ } \infty) \Rightarrow \text{ลู่ออก},\quad \rho = 1 \Rightarrow \text{สรุปไม่ได้} \]
+        <p class="tf-x">อนุกรม p ทุกตัวให้ \(\rho = 1\) จึงใช้ ratio test กับเศษส่วนของพหุนามไม่ได้ · ตัวช่วย \(\dfrac{(n+1)!}{n!} = n+1\), \(\left(\dfrac{n}{n+1}\right)^n \to \dfrac1e\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-5 · อัตราส่วน</span><h3>(ก) \(\sum \dfrac{n^3}{3^n}\) (ข) \(\sum \dfrac{(2n)!}{(n!)^2\,5^n}\) (ค) \(\sum \dfrac{n^n}{n!}\)</h3><button type="button" class="wx-btn calc-go" data-sqt-target="test-lab" data-sqt="factn">เปิดตัวทดสอบ</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{a_{n+1}}{a_n} = \dfrac{(n+1)^3}{3^{n+1}}\cdot\dfrac{3^n}{n^3} = \dfrac13\left(1 + \dfrac1n\right)^3 \to \dfrac13 &lt; 1\) ⇒ ลู่เข้า</p></li>
+        <li><p>(ข) \(\dfrac{a_{n+1}}{a_n} = \dfrac{(2n+2)(2n+1)}{(n+1)^2\cdot5} = \dfrac{2(2n+1)}{5(n+1)} \to \dfrac45 &lt; 1\) ⇒ ลู่เข้า</p></li>
+        <li><p>(ค) \(\dfrac{a_{n+1}}{a_n} = \dfrac{(n+1)^{n+1}}{(n+1)!}\cdot\dfrac{n!}{n^n} = \left(\dfrac{n+1}{n}\right)^n \to e > 1\) ⇒ ลู่ออก</p></li>
+      </ol>
+      <p class="answer">(ก) ลู่เข้า · (ข) ลู่เข้า · (ค) ลู่ออก</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="root">
+    <h2 id="root">การทดสอบราก (Root Test) <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="T8" data-k="root test cauchy nth root limsup การทดสอบราก">
+        <p class="tf-n"><b><span class="fid">T8</span> Root test (Cauchy)</b> การทดสอบราก</p>
+        \[ \rho = \lim_{n\to\infty}\sqrt[n]{|a_n|}\ \left(\text{ทั่วไปใช้ } \limsup\right):\quad \rho &lt; 1 \Rightarrow \text{ลู่เข้าแบบสัมบูรณ์},\quad \rho > 1 \Rightarrow \text{ลู่ออก},\quad \rho = 1 \Rightarrow \text{สรุปไม่ได้} \]
+        <p class="tf-x">เหมาะกับ \((\cdots)^n\) · ตัวช่วย \(\sqrt[n]{n} \to 1\), \(\sqrt[n]{n^k} \to 1\), \(\sqrt[n]{c} \to 1\)</p>
+      </div>
+      <div class="tf" id="T9" data-k="ratio root relation stronger liminf limsup ความสัมพันธ์ อัตราส่วน ราก">
+        <p class="tf-n"><b><span class="fid">T9</span> Ratio vs root</b> อัตราส่วนกับราก</p>
+        \[ \lim\left|\frac{a_{n+1}}{a_n}\right| = L \ \Rightarrow\ \lim\sqrt[n]{|a_n|} = L \]
+        <p class="tf-x">รากแข็งแรงกว่า: บางอนุกรมอัตราส่วนแกว่ง (ไม่มีลิมิต) แต่รากยังสรุปได้ เช่น \(\sum 2^{-n + (-1)^n}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-6 · ราก</span><h3>(ก) \(\sum\left(\dfrac{2n}{3n+1}\right)^n\) (ข) \(\sum\left(1 + \dfrac1n\right)^{-n^2}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\sqrt[n]{a_n} = \dfrac{2n}{3n+1} \to \dfrac23 &lt; 1\) ⇒ ลู่เข้า</p></li>
+        <li><p>(ข) \(\sqrt[n]{a_n} = \left(1 + \dfrac1n\right)^{-n} \to \dfrac1e &lt; 1\) ⇒ ลู่เข้า (ใช้อัตราส่วนจะยุ่งกว่ามาก)</p></li>
+      </ol>
+      <p class="answer">ลู่เข้าทั้งคู่</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="advanced">
+    <h2 id="advanced">เมื่อการทดสอบปกติได้ 1: ควบแน่นของโคชี ราบี และสเตอร์ลิง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ข้อสอบไฟนอลและคณิตศาสตร์วิศวกรรมขั้นสูงชอบอนุกรมที่ ratio test ได้ 1 พอดี เครื่องมือสามชิ้นนี้ปิดช่องว่างนั้น</p>
+    <div class="tf-grid">
+      <div class="tf" id="T10" data-k="cauchy condensation test 2^k a(2^k) การควบแน่นของโคชี">
+        <p class="tf-n"><b><span class="fid">T10</span> Cauchy condensation test</b> การทดสอบควบแน่นของโคชี</p>
+        \[ a_n \downarrow 0:\quad \sum_{n=1}^{\infty} a_n \text{ ลู่เข้า} \iff \sum_{k=0}^{\infty} 2^k a_{2^k} \text{ ลู่เข้า} \]
+        <p class="tf-x">\(\sum \dfrac{1}{n(\ln n)^p} \to \sum \dfrac{2^k}{2^k (k\ln 2)^p} = \dfrac{1}{(\ln2)^p}\sum\dfrac{1}{k^p}\) ลู่เข้า ⇔ \(p > 1\)</p>
+      </div>
+      <div class="tf" id="T11" data-k="raabe test n(a_n/a_(n+1) - 1) ratio equals one การทดสอบราบี">
+        <p class="tf-n"><b><span class="fid">T11</span> Raabe's test</b> การทดสอบราบี</p>
+        \[ R = \lim_{n\to\infty} n\left(\frac{a_n}{a_{n+1}} - 1\right):\quad R > 1 \Rightarrow \text{ลู่เข้า},\quad R &lt; 1 \Rightarrow \text{ลู่ออก} \]
+        <p class="tf-x">ใช้เมื่อ ratio test ได้ \(\rho = 1\) · อนุกรม p ให้ \(R = p\) พอดี จึงเป็นการวัด “p ที่แฝงอยู่”</p>
+      </div>
+      <div class="tf" id="T12" data-k="stirling approximation factorial sqrt(2 pi n) สเตอร์ลิง แฟกทอเรียล">
+        <p class="tf-n"><b><span class="fid">T12</span> Stirling's approximation</b> สูตรประมาณของสเตอร์ลิง</p>
+        \[ n! \sim \sqrt{2\pi n}\left(\frac{n}{e}\right)^n,\qquad \binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}} \]
+        <p class="tf-x">เปลี่ยนแฟกทอเรียลเป็นกำลัง แล้วใช้ T5 หรือ T1 · \(10! = 3{,}628{,}800\) สูตรให้ 3,598,696 (คลาด 0.8 %)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-t7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง T-7 · ราบี</span><h3>\(\displaystyle\sum_{n=1}^{\infty}\frac{1\cdot3\cdot5\cdots(2n-1)}{2\cdot4\cdot6\cdots(2n)}\) ลู่เข้าหรือไม่</h3></div>
+      <ol class="steps">
+        <li><p>\(\dfrac{a_{n+1}}{a_n} = \dfrac{2n+1}{2n+2} \to 1\) ratio test สรุปไม่ได้</p></li>
+        <li><p>ราบี: \(n\left(\dfrac{a_n}{a_{n+1}} - 1\right) = n\left(\dfrac{2n+2}{2n+1} - 1\right) = \dfrac{n}{2n+1} \to \dfrac12 &lt; 1\) ⇒ ลู่ออก</p></li>
+        <li><p>ยืนยันด้วยสเตอร์ลิง: \(a_n = \dfrac{(2n)!}{4^n (n!)^2} = \dfrac{1}{4^n}\binom{2n}{n} \sim \dfrac{1}{\sqrt{\pi n}}\) เทียบลิมิตกับ \(1/\sqrt n\) ซึ่งลู่ออก</p></li>
+      </ol>
+      <p class="answer">ลู่ออก (พจน์ลดลงช้าเหมือน \(1/\sqrt{n}\))</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="tester">
+    <h2 id="tester">ตัวทดสอบอนุกรมแบบโต้ตอบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกอนุกรมมาตรฐานเพื่อดูเหตุผลเต็ม หรือพิมพ์ \(a_n\) เองเพื่อดูอัตราส่วน รากที่ n และผลบวกย่อย (หลักฐานเชิงตัวเลข ไม่ใช่บทพิสูจน์)</p>
+    <div class="sq-test" id="test-lab" data-preset="comp"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="quiz">
+    <h2 id="quiz">เกมฝึกเลือกการทดสอบ <span class="lv lv-i">กลาง</span></h2>
+    <p>40 อนุกรมจากง่ายไปยาก รวมกับดักที่เจอในข้อสอบจริง เช่น \(\sum 1/n^{1+1/n}\) และ \(\sum (1 + 1/n)^n\) เลือกการทดสอบและผลสรุปแล้วกดตรวจ</p>
+    <div class="sr-quiz" id="quiz-lab" data-level="all"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mixed">
+    <h2 id="mixed">แบบฝึกหัดผสม (ซ่อนเฉลย) <span class="lv lv-i">กลาง</span></h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{n^2+2}{n^4+1}\)</span></summary><div><p>เทียบลิมิตกับ \(1/n^2\): \(\lim\dfrac{n^4 + 2n^2}{n^4+1} = 1\) ⇒ <b>ลู่เข้า</b></p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{5^n}{n!}\)</span></summary><div><p>อัตราส่วน \(\dfrac{5}{n+1} \to 0\) ⇒ <b>ลู่เข้า</b> (ผลบวก \(e^5 - 1\))</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">\(\displaystyle\sum_{n=2}^{\infty}\frac{n}{\ln n}\)</span></summary><div><p>\(\dfrac{n}{\ln n} \to \infty \ne 0\) ⇒ <b>ลู่ออก</b> ด้วยพจน์ที่ n</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\left(\frac{n}{n+1}\right)^{n^2}\)</span></summary><div><p>ราก: \(\left(\dfrac{n}{n+1}\right)^{n} \to \dfrac1e &lt; 1\) ⇒ <b>ลู่เข้า</b></p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{\arctan n}{n^2}\)</span></summary><div><p>\(0 &lt; \arctan n &lt; \tfrac{\pi}{2}\) ⇒ \(a_n &lt; \dfrac{\pi/2}{n^2}\) ⇒ <b>ลู่เข้า</b> (เปรียบเทียบตรง)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{2^n\,n!}{n^n}\)</span></summary><div><p>อัตราส่วน \(2\left(\dfrac{n}{n+1}\right)^n \to \dfrac2e \approx 0.736 &lt; 1\) ⇒ <b>ลู่เข้า</b> (ถ้าเปลี่ยน 2 เป็น 3 จะได้ 3/e > 1 ลู่ออก)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">7</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n^{1.01}}\) เทียบกับ \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n\cdot 1.01}\)</span></summary><div><p>ตัวแรกเป็นอนุกรม p ที่ \(p = 1.01 > 1\) <b>ลู่เข้า</b> · ตัวที่สองคือ \(\tfrac{1}{1.01}\sum\tfrac1n\) <b>ลู่ออก</b> ระวังอ่านโจทย์</p></div></details>
+    <details class="sr-q"><summary><span class="mono">8</span><span class="sr-qt">\(\displaystyle\sum_{n=1}^{\infty}\frac{1}{3^n - n}\)</span></summary><div><p>เทียบลิมิตกับ \(1/3^n\): \(\lim\dfrac{3^n}{3^n - n} = 1\) ⇒ <b>ลู่เข้า</b> (เปรียบเทียบตรงใช้ไม่ได้ทันทีเพราะ \(\tfrac{1}{3^n - n} > \tfrac{1}{3^n}\))</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+    <h2 id="summary">ตารางสรุปการทดสอบ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="table-wrap"><table><thead><tr><th>การทดสอบ</th><th>เงื่อนไข</th><th>ลู่เข้าเมื่อ</th><th>ลู่ออกเมื่อ</th><th>สรุปไม่ได้</th></tr></thead><tbody>
+      <tr><td>พจน์ที่ n (T1)</td><td>ใด ๆ</td><td>—</td><td>\(a_n \not\to 0\)</td><td>\(a_n \to 0\)</td></tr>
+      <tr><td>เรขาคณิต</td><td>\(\sum ar^n\)</td><td>\(|r| &lt; 1\)</td><td>\(|r| \ge 1\)</td><td>—</td></tr>
+      <tr><td>อนุกรม p</td><td>\(\sum 1/n^p\)</td><td>\(p > 1\)</td><td>\(p \le 1\)</td><td>—</td></tr>
+      <tr><td>ปริพันธ์ (T2)</td><td>f บวก ต่อเนื่อง ลด</td><td>\(\int f\) จำกัด</td><td>\(\int f = \infty\)</td><td>—</td></tr>
+      <tr><td>เปรียบเทียบ (T4)</td><td>\(0 \le a_n \le b_n\)</td><td>\(\sum b_n\) ลู่เข้า</td><td>\(\sum a_n\) ลู่ออก</td><td>ทิศผิด</td></tr>
+      <tr><td>เปรียบเทียบลิมิต (T5)</td><td>\(a_n, b_n > 0\)</td><td colspan="2">\(0 &lt; c &lt; \infty\): ไปทางเดียวกับ \(\sum b_n\)</td><td>\(c = 0,\infty\) บางกรณี</td></tr>
+      <tr><td>อัตราส่วน (T7)</td><td>\(a_n \ne 0\)</td><td>\(\rho &lt; 1\)</td><td>\(\rho > 1\)</td><td>\(\rho = 1\)</td></tr>
+      <tr><td>ราก (T8)</td><td>ใด ๆ</td><td>\(\rho &lt; 1\)</td><td>\(\rho > 1\)</td><td>\(\rho = 1\)</td></tr>
+      <tr><td>ราบี (T11)</td><td>\(a_n > 0\)</td><td>\(R > 1\)</td><td>\(R &lt; 1\)</td><td>\(R = 1\)</td></tr>
+    </tbody></table></div>
+    </section>
+
+    <h2 id="next">ต่อไป: อนุกรมที่มีเครื่องหมายสลับ</h2>
+    <p>ทุกการทดสอบในหน้านี้ต้องการพจน์บวก (หรือใช้กับค่าสัมบูรณ์) อนุกรมอย่าง \(1 - \tfrac12 + \tfrac13 - \cdots\) ต้องใช้แนวคิดใหม่คือการลู่เข้าแบบมีเงื่อนไข ไปต่อที่ <a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับและการลู่เข้าแบบสัมบูรณ์</a> · อ่านบทความผังตัดสินใจฉบับย่อ <a href="/blog/convergence-test-flowchart/">เลือกการทดสอบการลู่เข้าอย่างไร</a> (<a href="/en/blog/convergence-test-flowchart/">English</a>) · ฝึกเพิ่มที่ <a href="/learn/sequences-and-series/exam-practice/#set-b">แนวข้อสอบชุด B</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

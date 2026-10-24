@@ -103,3 +103,29 @@
   nodes.forEach(function (n) { n.addEventListener("click", function () { select(+n.dataset.pl, true); }); });
   select(0, false);
 })();
+
+/* Home page: "อัปเดตล่าสุด" box — the build pre-renders it from data/updates.json; refresh it from the live file so an edit to
+   data/updates.json (even on GitHub web) shows up on the home page as soon as Cloudflare deploys, without rebuilding the site. */
+(function () {
+  var list = document.getElementById("homeUpdates");
+  if (!list) return;
+  var N = +(list.getAttribute("data-n") || 6);
+  var ICON = { "บทเรียน": "📘", "บทความ": "✍️", "แล็บ": "🧪", "แนวข้อสอบ": "📝", "เว็บไซต์": "🛠️", "งานสอน": "🎓", "วิดีโอ": "▶️", "งานวิจัย": "🔬" };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function thaiDate(iso) { try { return new Date(iso + "T00:00:00+07:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Bangkok" }); } catch (e) { return iso; } }
+  function render(d) {
+    var items = (d.updates || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    var count = document.getElementById("huCount"); if (count) count.textContent = items.length;
+    items = items.slice(0, N);
+    if (!items.length) return;
+    var newest = items[0].date;
+    list.innerHTML = items.map(function (u, i) {
+      return '<li class="hu-item' + (i === 0 ? " hu-top" : "") + '" data-tag="' + esc(u.tag) + '"><div class="hu-meta"><span class="hu-ic" aria-hidden="true">' + (ICON[u.tag] || "•") + "</span>" +
+        (u.tag ? '<span class="tag">' + esc(u.tag) + "</span>" : "") + '<time datetime="' + esc(u.date) + '">' + thaiDate(u.date) + "</time>" + (u.date === newest ? '<span class="hu-new">ใหม่</span>' : "") +
+        '</div><p class="hu-text">' + esc(u.text) + "</p>" + (u.link ? '<a class="hu-link" href="' + esc(u.link) + '">' + esc(u.linkText || "อ่านต่อ") + " →</a>" : "") + "</li>";
+    }).join("");
+  }
+  list.addEventListener("click", function (e) { var t = e.target.closest(".hu-text"); if (t) t.parentNode.classList.toggle("open"); });
+  var bucket = Math.floor(Date.now() / 60000);
+  if (window.fetch) fetch("/data/updates.json?t=" + bucket, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) { if (d) render(d); }).catch(function () {});
+})();

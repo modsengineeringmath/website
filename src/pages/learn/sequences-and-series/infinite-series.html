@@ -1,0 +1,275 @@
+<!--meta
+{
+  "title": "อนุกรมอนันต์ (Infinite Series) คืออะไร: ผลบวกย่อย อนุกรมเรขาคณิต กล้องส่องทางไกล ฮาร์มอนิก อนุกรม p | อาจารย์มด",
+  "h1": "อนุกรมอนันต์ (Infinite Series): ผลบวกย่อย อนุกรมเรขาคณิต กล้องส่องทางไกล ฮาร์มอนิก และอนุกรม p",
+  "description": "อนุกรมอนันต์ (infinite series) คือลิมิตของผลบวกย่อย (partial sums) เรียนสูตรผลบวก Σk Σk² Σk³ อนุกรมเลขคณิต อนุกรมเรขาคณิตอนันต์ a/(1−r) ทศนิยมซ้ำ อนุกรมกล้องส่องทางไกล (telescoping) อนุกรมฮาร์มอนิกลู่ออก อนุกรม p และอนุกรมเลขคณิต-เรขาคณิต Σ n rⁿ พร้อมตัวอย่างข้อสอบเข้ามหาวิทยาลัยและแล็บผลบวกย่อย",
+  "ogTitle": "อนุกรมอนันต์: ผลบวกย่อย เรขาคณิต กล้องส่องทางไกล ฮาร์มอนิก อนุกรม p",
+  "lesson": "sequences-and-series",
+  "sub": "infinite-series",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["อนุกรมอนันต์", "อนุกรมเรขาคณิต", "ผลบวกอนันต์", "ผลบวกย่อย", "อนุกรมกล้องส่องทางไกล", "อนุกรมฮาร์มอนิก", "อนุกรม p", "ทศนิยมซ้ำ", "สูตรซิกมา", "infinite series", "geometric series", "partial sum", "telescoping series", "harmonic series", "p-series", "nth term test", "arithmetico-geometric series"],
+  "about": ["Series", "Partial sums", "Sigma notation", "Arithmetic series", "Geometric series", "Repeating decimal", "Telescoping series", "Harmonic series", "p-series", "Term test for divergence", "Arithmetico-geometric series", "Koch snowflake"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "อนุกรมอนันต์ (Infinite Series)", "sub": "ผลบวกย่อย เรขาคณิต a/(1−r) กล้องส่องทางไกล ฮาร์มอนิกลู่ออก อนุกรม p และ Σ n rⁿ", "eyebrow": "บทที่ 26.2 · Infinite Series", "sym": "Σ"},
+  "faq": [
+    {"q": "อนุกรมอนันต์บวกกันได้อย่างไรในเมื่อมีพจน์ไม่สิ้นสุด?", "a": "ไม่ได้บวกทีละพจน์จนหมด แต่ดูลำดับผลบวกย่อย \\(S_n = a_1 + \\cdots + a_n\\) ถ้า \\(S_n\\) ลู่เข้าสู่ \\(S\\) เราให้นิยามว่าอนุกรมมีผลบวก \\(S\\) เช่น \\(\\tfrac12 + \\tfrac14 + \\tfrac18 + \\cdots\\) มี \\(S_n = 1 - (1/2)^n \\to 1\\)"},
+    {"q": "สูตรผลบวกอนุกรมเรขาคณิตอนันต์คืออะไร ใช้ได้เมื่อไร?", "a": "\\(a + ar + ar^2 + \\cdots = \\dfrac{a}{1-r}\\) ใช้ได้เฉพาะเมื่อ \\(|r| < 1\\) ถ้า \\(|r| \\ge 1\\) อนุกรมลู่ออก โดย a คือพจน์แรกของอนุกรม (ไม่จำเป็นต้องเป็น 1) และ r คืออัตราส่วนร่วม"},
+    {"q": "ทำไมอนุกรมฮาร์มอนิก 1 + 1/2 + 1/3 + ⋯ ลู่ออก ทั้งที่พจน์เข้าใกล้ 0?", "a": "จัดกลุ่ม \\(\\tfrac13 + \\tfrac14 > \\tfrac12\\), \\(\\tfrac15 + \\cdots + \\tfrac18 > \\tfrac12\\) ไปเรื่อย ๆ ได้ \\(\\tfrac12\\) เพิ่มขึ้นไม่สิ้นสุด ผลบวกย่อยจึงโตไม่มีขอบเขต แม้จะช้ามากแบบ \\(\\ln n\\) (ต้องบวก 12,367 พจน์จึงเกิน 10) การที่พจน์เข้าใกล้ 0 เป็นเงื่อนไขจำเป็นแต่ไม่พอ"},
+    {"q": "อนุกรมกล้องส่องทางไกล (telescoping) คืออะไร?", "a": "อนุกรมที่เขียนพจน์เป็นผลต่าง \\(b_n - b_{n+1}\\) ได้ เมื่อบวกกันพจน์กลางจะหักล้างกันหมด เหลือ \\(S_N = b_1 - b_{N+1}\\) เช่น \\(\\sum \\dfrac{1}{n(n+1)} = \\sum\\left(\\dfrac1n - \\dfrac{1}{n+1}\\right) = 1\\) วิธีหาคือแยกเศษส่วนย่อย"},
+    {"q": "หาผลบวก Σ n/2ⁿ หรือ 1 + 2x + 3x² + ⋯ อย่างไร?", "a": "เป็นอนุกรมเลขคณิต-เรขาคณิต ใช้วิธี S − rS: ถ้า \\(S = \\sum n r^n\\) แล้ว \\(S - rS = r + r^2 + \\cdots = \\dfrac{r}{1-r}\\) จึงได้ \\(S = \\dfrac{r}{(1-r)^2}\\) เมื่อ \\(|r| < 1\\) เช่น \\(\\sum n/2^n = 2\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อนุกรมอนันต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.2 · ลำดับและอนุกรม · Infinite Series</p>
+      <h1>อนุกรมอนันต์ (Infinite Series): ผลบวกย่อย อนุกรมเรขาคณิต กล้องส่องทางไกล ฮาร์มอนิก และอนุกรม p</h1>
+      <p class="lede">บวกจำนวนไม่สิ้นสุดแล้วได้ค่าจำกัดได้อย่างไร คำตอบคือมองผ่านลำดับผลบวกย่อย ถ้าผลบวกสะสมเข้าใกล้ค่าหนึ่ง ค่านั้นคือผลบวกของอนุกรม หน้านี้รวมอนุกรมที่หาผลบวกได้จริงทั้งหมด (เรขาคณิต กล้องส่องทางไกล เลขคณิต-เรขาคณิต) อนุกรมมาตรฐานที่ใช้เป็นตัวเทียบ (ฮาร์มอนิก อนุกรม p) และการทดสอบพจน์ที่ n ซึ่งเป็นด่านแรกของทุกโจทย์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บผลบวกย่อย</a>
+        <a class="btn btn-ghost btn-sm" href="#finite">สูตรซิกมา</a>
+        <a class="btn btn-ghost btn-sm" href="#geometric">เรขาคณิตอนันต์</a>
+        <a class="btn btn-ghost btn-sm" href="#telescoping">กล้องส่องทางไกล</a>
+        <a class="btn btn-ghost btn-sm" href="#p-series">ฮาร์มอนิก · อนุกรม p</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\sum a_n = \lim S_n\) · ถ้าลิมิตไม่มีหรือเป็นอนันต์ อนุกรมลู่ออก · \(a_n = S_n - S_{n-1}\)</li>
+          <li>เรขาคณิต: \(\sum_{n=0}^{\infty} ar^n = \dfrac{a}{1-r}\) เมื่อ \(|r| &lt; 1\) · กล้องส่องทางไกล: \(\sum (b_n - b_{n+1}) = b_1 - \lim b_n\)</li>
+          <li>อนุกรม p \(\sum 1/n^p\) ลู่เข้า ⇔ \(p > 1\) · ฮาร์มอนิก (\(p = 1\)) ลู่ออก</li>
+          <li>\(a_n \not\to 0 \Rightarrow\) ลู่ออก แต่ \(a_n \to 0\) ยังสรุปไม่ได้</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · เตรียมสอบเข้า</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 2</span><span><span class="lv lv-a">ขั้นสูง</span> ทฤษฎี</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น partial sum, sigma, geometric, decimal, telescoping, harmonic, p-series" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">อนุกรมคือลิมิตของผลบวกย่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ให้ลำดับ \(a_1, a_2, a_3, \dots\) ผลบวกย่อย (partial sum) ตัวที่ n คือ \(S_n = a_1 + a_2 + \cdots + a_n\) ซึ่งเป็นลำดับใหม่ อนุกรม \(\sum a_n\) <b>ลู่เข้า</b> เมื่อลำดับ \(S_n\) ลู่เข้า และ<b>ผลบวก</b>ของอนุกรมคือลิมิตนั้น ภาพด้านล่างคือหัวใจของทั้งบท: แท่งคือพจน์ เส้นคือผลบวกสะสม</p>
+    <figure class="lt-wide"><!--FIG:sr-partial-sums--><svg class="mf sr-fig" viewBox="0 0 440 240" role="img" aria-label="พจน์ (1/2)ⁿ เป็นแท่ง และผลบวกย่อย Sₙ เข้าใกล้ 1"><rect class="mf-bg" x="40" y="14" width="386" height="190" rx="8"/><line class="mf-g" x1="66" y1="14" x2="66" y2="204"/><text class="mf-k" x="66" y="217" text-anchor="middle">1</text><line class="mf-g" x1="103.1" y1="14" x2="103.1" y2="204"/><text class="mf-k" x="103.1" y="217" text-anchor="middle">2</text><line class="mf-g" x1="140.2" y1="14" x2="140.2" y2="204"/><text class="mf-k" x="140.2" y="217" text-anchor="middle">3</text><line class="mf-g" x1="177.3" y1="14" x2="177.3" y2="204"/><text class="mf-k" x="177.3" y="217" text-anchor="middle">4</text><line class="mf-g" x1="214.4" y1="14" x2="214.4" y2="204"/><text class="mf-k" x="214.4" y="217" text-anchor="middle">5</text><line class="mf-g" x1="251.6" y1="14" x2="251.6" y2="204"/><text class="mf-k" x="251.6" y="217" text-anchor="middle">6</text><line class="mf-g" x1="288.7" y1="14" x2="288.7" y2="204"/><text class="mf-k" x="288.7" y="217" text-anchor="middle">7</text><line class="mf-g" x1="325.8" y1="14" x2="325.8" y2="204"/><text class="mf-k" x="325.8" y="217" text-anchor="middle">8</text><line class="mf-g" x1="362.9" y1="14" x2="362.9" y2="204"/><text class="mf-k" x="362.9" y="217" text-anchor="middle">9</text><line class="mf-g" x1="400" y1="14" x2="400" y2="204"/><text class="mf-k" x="400" y="217" text-anchor="middle">10</text><line class="mf-g" x1="40" y1="204" x2="426" y2="204"/><text class="mf-k" x="35" y="208" text-anchor="end">0</text><line class="mf-g" x1="40" y1="161.6" x2="426" y2="161.6"/><text class="mf-k" x="35" y="165.6" text-anchor="end">0.25</text><line class="mf-g" x1="40" y1="119.2" x2="426" y2="119.2"/><text class="mf-k" x="35" y="123.2" text-anchor="end">0.5</text><line class="mf-g" x1="40" y1="76.8" x2="426" y2="76.8"/><text class="mf-k" x="35" y="80.8" text-anchor="end">0.75</text><line class="mf-g" x1="40" y1="34.4" x2="426" y2="34.4"/><text class="mf-k" x="35" y="38.4" text-anchor="end">1</text><text class="mf-l" x="424" y="230" text-anchor="end">n</text><line class="mf-dash" x1="40" y1="34.4" x2="426" y2="34.4"/><text class="mf-l" x="422.3" y="29.4" text-anchor="end">ผลบวก = 1</text><rect class="mf-fill2" x="57" y="119.2" width="18" height="84.8" rx="0"/><rect class="mf-fill2" x="94.1" y="161.6" width="18" height="42.4" rx="0"/><rect class="mf-fill2" x="131.2" y="182.8" width="18" height="21.2" rx="0"/><rect class="mf-fill2" x="168.3" y="193.4" width="18" height="10.6" rx="0"/><rect class="mf-fill2" x="205.4" y="198.7" width="18" height="5.3" rx="0"/><rect class="mf-fill2" x="242.6" y="201.3" width="18" height="2.7" rx="0"/><rect class="mf-fill2" x="279.7" y="202.7" width="18" height="1.3" rx="0"/><rect class="mf-fill2" x="316.8" y="203.3" width="18" height="0.7" rx="0"/><rect class="mf-fill2" x="353.9" y="203.7" width="18" height="0.3" rx="0"/><rect class="mf-fill2" x="391" y="203.8" width="18" height="0.2" rx="0"/><path class="mf-sig" d="M66 119.2L103.1 76.8L140.2 55.6L177.3 45L214.4 39.7L251.6 37L288.7 35.7L325.8 35L362.9 34.7L400 34.5"/><circle class="mf-dot" cx="66" cy="119.2" r="3.5"/><circle class="mf-dot" cx="103.1" cy="76.8" r="3.5"/><circle class="mf-dot" cx="140.2" cy="55.6" r="3.5"/><circle class="mf-dot" cx="177.3" cy="45" r="3.5"/><circle class="mf-dot" cx="214.4" cy="39.7" r="3.5"/><circle class="mf-dot" cx="251.6" cy="37" r="3.5"/><circle class="mf-dot" cx="288.7" cy="35.7" r="3.5"/><circle class="mf-dot" cx="325.8" cy="35" r="3.5"/><circle class="mf-dot" cx="362.9" cy="34.7" r="3.5"/><circle class="mf-dot" cx="400" cy="34.5" r="3.5"/><text class="mf-h" x="73.4" y="98.8" text-anchor="start">aₙ</text><text class="mf-h" x="106.8" y="58.1" text-anchor="start">Sₙ</text><line class="mf-brom" x1="189.3" y1="34.4" x2="189.3" y2="45"/><text class="mf-l" x="181.3" y="61.5" text-anchor="start">R₄ = 1/16 ↑</text></svg><!--/FIG--><figcaption>พจน์ \(a_n = (1/2)^n\) (แท่ง) และผลบวกย่อย \(S_n\) (จุด) ซึ่งเข้าใกล้ 1 แต่ไม่ถึง ส่วนที่ขาด \(1 - S_n = (1/2)^n\) คือเศษเหลือ (remainder)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="S1" data-k="series sum partial sums definition convergent divergent อนุกรม ผลบวกย่อย นิยาม ลู่เข้า">
+        <p class="tf-n"><b><span class="fid">S1</span> Sum of a series</b> ผลบวกของอนุกรม</p>
+        \[ \sum_{n=1}^{\infty} a_n = \lim_{N\to\infty} S_N,\qquad S_N = \sum_{n=1}^{N} a_n \]
+        <p class="tf-x">เศษเหลือ (remainder) \(R_N = S - S_N = \sum_{n=N+1}^{\infty} a_n\) บอกความคลาดเมื่อหยุดบวกที่ N</p>
+      </div>
+      <div class="tf" id="S2" data-k="term from partial sums a_n = S_n - S_(n-1) พจน์จากผลบวกย่อย">
+        <p class="tf-n"><b><span class="fid">S2</span> Terms from partial sums</b> หาพจน์จากผลบวกย่อย</p>
+        \[ a_1 = S_1,\qquad a_n = S_n - S_{n-1}\ (n \ge 2) \]
+        <p class="tf-x">โจทย์ให้สูตร \(S_n\) มา ให้หา \(a_n\) ด้วยวิธีนี้ และผลบวกอนันต์คือ \(\lim S_n\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-1 · ผลบวกย่อยให้มา</span><h3>อนุกรมหนึ่งมี \(S_n = \dfrac{n}{2n+1}\) จงหา \(a_n\) และผลบวกของอนุกรม</h3></div>
+      <ol class="steps">
+        <li><p>\(a_n = \dfrac{n}{2n+1} - \dfrac{n-1}{2n-1} = \dfrac{n(2n-1) - (n-1)(2n+1)}{(2n+1)(2n-1)} = \dfrac{1}{4n^2 - 1}\) (ใช้ได้ทั้ง n = 1 ด้วย เพราะ \(S_1 = \tfrac13\))</p></li>
+        <li><p>ผลบวก \(= \lim \dfrac{n}{2n+1} = \dfrac12\)</p></li>
+      </ol>
+      <p class="answer">\(a_n = \dfrac{1}{4n^2-1}\) และ \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{4n^2-1} = \frac12\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บผลบวกย่อย <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกอนุกรมแล้วเลื่อนจำนวนพจน์ N เทียบผลบวกย่อยกับผลบวกจริง และดูสูตรเศษเหลือของแต่ละแบบ ลองเลือกฮาร์มอนิกเพื่อดูผลบวกที่โตไม่หยุดแม้จะช้ามาก</p>
+    <div class="sr-sums" id="sum-lab" data-preset="geo" data-n="10"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="finite">
+    <h2 id="finite">อนุกรมจำกัดและสูตรซิกมา <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ก่อนไปอนุกรมอนันต์ ต้องคล่องผลบวกจำกัด ซึ่งออกข้อสอบเข้ามหาวิทยาลัยทุกปี สูตรสามตัวของ \(\sum k^p\) และสมบัติเชิงเส้นของซิกมาใช้แก้โจทย์ผลบวกของพหุนามได้ทุกข้อ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S3" data-k="sum of k k^2 k^3 sigma formulas power sums สูตรผลบวก ซิกมา">
+        <p class="tf-n"><b><span class="fid">S3</span> Power sums</b> สูตรผลบวกกำลัง</p>
+        \[ \sum_{k=1}^{n} k = \frac{n(n+1)}{2},\qquad \sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6},\qquad \sum_{k=1}^{n} k^3 = \left[\frac{n(n+1)}{2}\right]^2 \]
+        <p class="tf-x">พิสูจน์ได้ด้วย<a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a> · \(\sum (c\,a_k + b_k) = c\sum a_k + \sum b_k\) · \(\sum_{k=1}^n c = cn\)</p>
+      </div>
+      <div class="tf" id="S4" data-k="arithmetic series sum n/2 อนุกรมเลขคณิต ผลบวก">
+        <p class="tf-n"><b><span class="fid">S4</span> Arithmetic series</b> อนุกรมเลขคณิต</p>
+        \[ S_n = \frac{n}{2}\left(a_1 + a_n\right) = \frac{n}{2}\left[2a_1 + (n-1)d\right] \]
+        <p class="tf-x">“จำนวนพจน์ × ค่าเฉลี่ยของพจน์แรกกับพจน์สุดท้าย” แบบเกาส์ · อนุกรมเลขคณิตอนันต์ลู่ออกเสมอ (ยกเว้นทุกพจน์เป็น 0)</p>
+      </div>
+      <div class="tf" id="S5" data-k="finite geometric series sum อนุกรมเรขาคณิตจำกัด">
+        <p class="tf-n"><b><span class="fid">S5</span> Finite geometric series</b> อนุกรมเรขาคณิตจำกัด</p>
+        \[ S_n = a_1 + a_1 r + \cdots + a_1 r^{n-1} = a_1\frac{1 - r^n}{1 - r}\quad (r \ne 1) \]
+        <p class="tf-x">ได้จาก \(S_n - rS_n = a_1 - a_1 r^n\) · ถ้า \(r = 1\): \(S_n = n a_1\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-2 · ซิกมา (แนวข้อสอบเข้า)</span><h3>(ก) \(\displaystyle\sum_{k=1}^{20}(2k-1)(k+1)\) (ข) \(1\cdot2 + 2\cdot3 + 3\cdot4 + \cdots + 20\cdot21\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) กระจาย \((2k-1)(k+1) = 2k^2 + k - 1\) แล้วแยกซิกมา: \(2\sum k^2 + \sum k - \sum 1\)</p></li>
+        <li><p>n = 20: \(\sum k^2 = \dfrac{20\cdot21\cdot41}{6} = 2870\), \(\sum k = 210\), \(\sum 1 = 20\) ⇒ \(5740 + 210 - 20 = 5930\)</p></li>
+        <li><p>(ข) \(\sum_{k=1}^{20} k(k+1) = \sum k^2 + \sum k = 2870 + 210 = 3080\) · ตรวจด้วยสูตรลัด \(\dfrac{n(n+1)(n+2)}{3} = \dfrac{20\cdot21\cdot22}{3} = 3080\)</p></li>
+      </ol>
+      <p class="answer">(ก) 5930 · (ข) 3080</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="geometric">
+    <h2 id="geometric">อนุกรมเรขาคณิตอนันต์และทศนิยมซ้ำ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>อนุกรมเรขาคณิตเป็นอนุกรมอนันต์ตัวแรกที่หาผลบวกได้ และเป็นตัวเทียบสำคัญของการทดสอบทุกแบบ จาก S5 ถ้า \(|r| &lt; 1\) แล้ว \(r^n \to 0\) ผลบวกย่อยจึงเข้าใกล้ \(\dfrac{a}{1-r}\)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S6" data-k="infinite geometric series sum a/(1-r) |r|<1 convergence อนุกรมเรขาคณิตอนันต์ ผลบวกอนันต์">
+        <p class="tf-n"><b><span class="fid">S6</span> Infinite geometric series</b> อนุกรมเรขาคณิตอนันต์</p>
+        \[ \sum_{n=0}^{\infty} ar^n = a + ar + ar^2 + \cdots = \frac{a}{1-r} \iff |r| &lt; 1;\qquad |r| \ge 1 \Rightarrow \text{ลู่ออก} \]
+        <p class="tf-x">a = พจน์แรกของอนุกรม (อย่าหลงใช้ 1) · เศษเหลือ \(R_N = \dfrac{ar^N}{1-r}\)</p>
+      </div>
+      <div class="tf" id="S7" data-k="repeating decimal fraction ทศนิยมซ้ำ เศษส่วน">
+        <p class="tf-n"><b><span class="fid">S7</span> Repeating decimals</b> ทศนิยมซ้ำเป็นเศษส่วน</p>
+        \[ 0.\overline{d_1 d_2\cdots d_k} = \frac{d_1 d_2 \cdots d_k}{\underbrace{99\cdots9}_{k}} \]
+        <p class="tf-x">มาจาก \(\tfrac{D}{10^k} + \tfrac{D}{10^{2k}} + \cdots\) · \(0.\overline{9} = \tfrac{9}{9} = 1\) พอดี</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-3 · ทศนิยมซ้ำและเรขาคณิต</span><h3>(ก) เขียน \(0.2\overline{45}\) เป็นเศษส่วน (ข) \(\displaystyle\sum_{n=1}^{\infty}\frac{3^{n+1}}{5^n}\) (ค) ค่า x ใดที่ \(\sum_{n=0}^{\infty}(x-1)^n\) ลู่เข้า และผลบวกเท่าไร</h3><button type="button" class="wx-btn calc-go" data-sr-target="sum-lab" data-sr-set='{"a":"3^(n+1)/5^n","n0":1,"n":20}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(0.2\overline{45} = \dfrac{2}{10} + \dfrac{45}{1000} + \dfrac{45}{100000} + \cdots = \dfrac15 + \dfrac{45/1000}{1 - 1/100} = \dfrac15 + \dfrac{45}{990} = \dfrac15 + \dfrac{1}{22} = \dfrac{27}{110}\)</p></li>
+        <li><p>(ข) พจน์แรก (n = 1) \(= \dfrac{9}{5}\), \(r = \dfrac35\) ⇒ \(S = \dfrac{9/5}{1 - 3/5} = \dfrac{9/5}{2/5} = \dfrac92\)</p></li>
+        <li><p>(ค) \(r = x - 1\) ต้อง \(|x - 1| &lt; 1 \iff 0 &lt; x &lt; 2\) และ \(S = \dfrac{1}{1 - (x-1)} = \dfrac{1}{2-x}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac{27}{110}\) · (ข) \(\tfrac92\) · (ค) \(0 &lt; x &lt; 2,\ S = \tfrac{1}{2-x}\) — ข้อ (ค) คืออนุกรมกำลังตัวแรกของเรา (ดู<a href="/learn/sequences-and-series/power-series/">อนุกรมกำลัง</a>)</p>
+    </div>
+    <div class="wx" id="ex-s4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-4 · แนวข้อสอบเข้า + ฟิสิกส์</span><h3>(ก) อนุกรมเรขาคณิตอนันต์มีผลบวก 8 และผลบวกของกำลังสองของพจน์เท่ากับ 32 จงหา a และ r (ข) ปล่อยลูกบอลจากความสูง 12 m ทุกครั้งที่กระทบพื้นจะเด้งขึ้น 3/4 ของความสูงก่อนหน้า ระยะทางรวมเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{a}{1-r} = 8\) และกำลังสองของพจน์เป็นเรขาคณิตอัตราส่วน \(r^2\): \(\dfrac{a^2}{1-r^2} = 32\)</p></li>
+        <li><p>หารสมการที่สองด้วยกำลังสองของสมการแรก: \(\dfrac{a^2/(1-r^2)}{a^2/(1-r)^2} = \dfrac{1-r}{1+r} = \dfrac{32}{64} = \dfrac12 \Rightarrow r = \dfrac13,\ a = 8\cdot\dfrac23 = \dfrac{16}{3}\)</p></li>
+        <li><p>(ข) ความสูงที่เด้งขึ้น 9, 6.75, … รวม \(\dfrac{9}{1 - 3/4} = 36\) m ขาขึ้นและขาลงเท่ากัน ⇒ \(2\times36 = 72\) บวกระยะตกแรก 12 m</p></li>
+      </ol>
+      <p class="answer">(ก) \(a = \tfrac{16}{3},\ r = \tfrac13\) · (ข) 84 m</p>
+    </div>
+    <div class="sr-exam"><b>แนวข้อสอบเข้ามหาวิทยาลัย</b>ข้อสอบชอบให้ “ผลบวกอนันต์” และ “ผลบวกของกำลังสอง” หรือ “ผลบวกพจน์คี่” มาพร้อมกัน จำว่ากำลังสองของพจน์ยังเป็นเรขาคณิตด้วยอัตราส่วน \(r^2\) และพจน์ตำแหน่งคี่เป็นเรขาคณิตด้วยอัตราส่วน \(r^2\) เช่นกัน แล้วหารสองสมการเพื่อกำจัด a</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="telescoping">
+    <h2 id="telescoping">อนุกรมกล้องส่องทางไกล (Telescoping Series) <span class="lv lv-i">กลาง</span></h2>
+    <p>ชื่อมาจากกล้องโทรทรรศน์แบบพับเก็บได้: เมื่อเขียนพจน์เป็นผลต่างของลำดับเดียวกัน พจน์กลางจะหักล้างกันจนเหลือหัวกับท้าย ทักษะที่ต้องมีคือการ<a href="/learn/integral-calculus/#partial-fractions">แยกเศษส่วนย่อย</a> (partial fractions)</p>
+    <figure class="lt-wide"><!--FIG:sr-telescope--><svg class="mf sr-fig" viewBox="0 0 440 150" role="img" aria-label="กล้องส่องทางไกล: พจน์กลางหักล้างกันเป็นคู่"><rect class="mf-box" x="14" y="24" width="46" height="44" rx="8"/><text class="mf-h" x="37" y="52" text-anchor="middle">1</text><rect class="mf-box" x="70" y="24" width="62" height="44" rx="8"/><text class="mf-h" x="88.6" y="52" text-anchor="middle">−½</text><text class="mf-h" x="114.6" y="52" text-anchor="middle">+½</text><line class="mf-thin" x1="76" y1="62" x2="126" y2="30"/><rect class="mf-box" x="142" y="24" width="62" height="44" rx="8"/><text class="mf-h" x="160.6" y="52" text-anchor="middle">−⅓</text><text class="mf-h" x="186.6" y="52" text-anchor="middle">+⅓</text><line class="mf-thin" x1="148" y1="62" x2="198" y2="30"/><rect class="mf-box" x="214" y="24" width="62" height="44" rx="8"/><text class="mf-h" x="232.6" y="52" text-anchor="middle">−¼</text><text class="mf-h" x="258.6" y="52" text-anchor="middle">+¼</text><line class="mf-thin" x1="220" y1="62" x2="270" y2="30"/><rect class="mf-box" x="286" y="24" width="46" height="44" rx="8"/><text class="mf-h" x="309" y="52" text-anchor="middle">…</text><rect class="mf-box" x="342" y="24" width="96" height="44" rx="8"/><text class="mf-h" x="390" y="52" text-anchor="middle">−1/(N+1)</text><text class="mf-l" x="14" y="98" text-anchor="start">(1 − ½) + (½ − ⅓) + (⅓ − ¼) + ⋯ + (1/N − 1/(N+1))</text><text class="mf-h" x="14" y="124" text-anchor="start">เหลือแค่หัวกับท้าย: S_N = 1 − 1/(N+1) → 1</text></svg><!--/FIG--><figcaption>\(\left(1 - \tfrac12\right) + \left(\tfrac12 - \tfrac13\right) + \left(\tfrac13 - \tfrac14\right) + \cdots\) พจน์กลางหักล้างกันเป็นคู่ เหลือ \(1 - \tfrac{1}{N+1}\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf" id="S8" data-k="telescoping series sum b_n - b_(n+1) อนุกรมกล้องส่องทางไกล หักล้าง">
+        <p class="tf-n"><b><span class="fid">S8</span> Telescoping series</b> อนุกรมกล้องส่องทางไกล</p>
+        \[ \sum_{n=1}^{N}(b_n - b_{n+1}) = b_1 - b_{N+1}\ \Rightarrow\ \sum_{n=1}^{\infty}(b_n - b_{n+1}) = b_1 - \lim_{n\to\infty} b_n \]
+        <p class="tf-x">ถ้า \(b_n\) ไม่มีลิมิตจำกัด อนุกรมลู่ออก เช่น \(\sum\ln\frac{n+1}{n} = \lim\ln(N+1) = \infty\)</p>
+      </div>
+      <div class="tf" id="S9" data-k="partial fractions 1/(n(n+k)) telescoping แยกเศษส่วนย่อย">
+        <p class="tf-n"><b><span class="fid">S9</span> Partial fractions for telescoping</b> แยกเศษส่วนย่อย</p>
+        \[ \frac{1}{n(n+k)} = \frac1k\left(\frac1n - \frac{1}{n+k}\right),\qquad \sum_{n=1}^{\infty}\frac{1}{n(n+k)} = \frac1k\left(1 + \frac12 + \cdots + \frac1k\right) \]
+        <p class="tf-x">ช่องว่าง k ทำให้เหลือ k พจน์แรก (ไม่ใช่พจน์เดียว) — จุดที่ทำผิดบ่อยที่สุด</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-5 · กล้องส่องทางไกล</span><h3>(ก) \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n(n+2)}\) (ข) \(\displaystyle\sum_{n=2}^{\infty}\frac{1}{n^2-1}\) (ค) \(\displaystyle\sum_{n=1}^{\infty}\ln\left(1 + \frac1n\right)\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{1}{n(n+2)} = \dfrac12\left(\dfrac1n - \dfrac{1}{n+2}\right)\) เหลือสองพจน์แรกของ \(\tfrac1n\): \(\dfrac12\left(1 + \dfrac12\right) = \dfrac34\)</p></li>
+        <li><p>(ข) \(\dfrac{1}{n^2-1} = \dfrac12\left(\dfrac{1}{n-1} - \dfrac{1}{n+1}\right)\) เริ่ม n = 2 เหลือ \(\dfrac12\left(1 + \dfrac12\right) = \dfrac34\)</p></li>
+        <li><p>(ค) \(\ln\left(1 + \tfrac1n\right) = \ln(n+1) - \ln n\) ⇒ \(S_N = \ln(N+1) \to \infty\) ลู่ออก</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac34\) · (ข) \(\tfrac34\) · (ค) ลู่ออก ทั้งที่พจน์ → 0</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="p-series">
+    <h2 id="p-series">อนุกรมฮาร์มอนิกและอนุกรม p <span class="lv lv-i">กลาง</span></h2>
+    <p>อนุกรมฮาร์มอนิก \(\sum 1/n\) เป็นตัวอย่างคลาสสิกว่า “พจน์เข้าใกล้ศูนย์ ไม่ได้แปลว่าบวกแล้วจำกัด” การพิสูจน์ของนิโคล โอเรสม์ (ศตวรรษที่ 14) จัดกลุ่มพจน์ให้แต่ละกลุ่มมากกว่า ½ ส่วนอนุกรม p เป็นตัวเทียบมาตรฐานที่สุดในการทดสอบแบบเปรียบเทียบ</p>
+    <figure class="lt-wide"><!--FIG:sr-harmonic--><svg class="mf sr-fig" viewBox="0 0 440 230" role="img" aria-label="การจัดกลุ่มของโอเรสม์: ทุกกลุ่มมากกว่าครึ่ง"><rect class="mf-bg" x="36" y="14" width="392" height="170" rx="8"/><line class="mf-g" x1="50.5" y1="14" x2="50.5" y2="184"/><text class="mf-k" x="50.5" y="197" text-anchor="middle">1</text><line class="mf-g" x1="74.7" y1="14" x2="74.7" y2="184"/><text class="mf-k" x="74.7" y="197" text-anchor="middle">2</text><line class="mf-g" x1="123.1" y1="14" x2="123.1" y2="184"/><text class="mf-k" x="123.1" y="197" text-anchor="middle">4</text><line class="mf-g" x1="219.9" y1="14" x2="219.9" y2="184"/><text class="mf-k" x="219.9" y="197" text-anchor="middle">8</text><line class="mf-g" x1="413.5" y1="14" x2="413.5" y2="184"/><text class="mf-k" x="413.5" y="197" text-anchor="middle">16</text><line class="mf-g" x1="36" y1="184" x2="428" y2="184"/><text class="mf-k" x="31" y="188" text-anchor="end">0</text><line class="mf-g" x1="36" y1="105.3" x2="428" y2="105.3"/><text class="mf-k" x="31" y="109.3" text-anchor="end">0.5</text><line class="mf-g" x1="36" y1="26.6" x2="428" y2="26.6"/><text class="mf-k" x="31" y="30.6" text-anchor="end">1</text><text class="mf-l" x="426" y="210" text-anchor="end">n</text><text class="mf-l" x="42" y="28" text-anchor="start">1/n</text><rect class="mf-fill" x="41.5" y="26.6" width="18" height="157.4" rx="0"/><rect class="mf-fill2" x="65.7" y="105.3" width="18" height="78.7" rx="0"/><rect class="mf-fill" x="89.9" y="131.5" width="18" height="52.5" rx="0"/><rect class="mf-fill" x="114.1" y="144.6" width="18" height="39.4" rx="0"/><text class="mf-h" x="111" y="123.5" text-anchor="middle">> ½</text><rect class="mf-fill2" x="138.3" y="152.5" width="18" height="31.5" rx="0"/><rect class="mf-fill2" x="162.5" y="157.8" width="18" height="26.2" rx="0"/><rect class="mf-fill2" x="186.7" y="161.5" width="18" height="22.5" rx="0"/><rect class="mf-fill2" x="210.9" y="164.3" width="18" height="19.7" rx="0"/><text class="mf-h" x="183.6" y="144.5" text-anchor="middle">> ½</text><rect class="mf-fill" x="235.1" y="166.5" width="18" height="17.5" rx="0"/><rect class="mf-fill" x="259.3" y="168.3" width="18" height="15.7" rx="0"/><rect class="mf-fill" x="283.5" y="169.7" width="18" height="14.3" rx="0"/><rect class="mf-fill" x="307.7" y="170.9" width="18" height="13.1" rx="0"/><rect class="mf-fill" x="331.9" y="171.9" width="18" height="12.1" rx="0"/><rect class="mf-fill" x="356.1" y="172.8" width="18" height="11.2" rx="0"/><rect class="mf-fill" x="380.3" y="173.5" width="18" height="10.5" rx="0"/><rect class="mf-fill" x="404.5" y="174.2" width="18" height="9.8" rx="0"/><text class="mf-h" x="328.8" y="158.5" text-anchor="middle">> ½</text><text class="mf-h" x="74.7" y="97.3" text-anchor="middle">½</text><text class="mf-l" x="36" y="222" text-anchor="start">1 + ½ + (⅓ + ¼) + (⅕ + ⋯ + ⅛) + ⋯ > 1 + ½ + ½ + ½ + ⋯ = ∞</text></svg><!--/FIG--><figcaption>จัดกลุ่มพจน์ของอนุกรมฮาร์มอนิกเป็นชุดขนาด 1, 2, 4, 8, … ทุกชุดมากกว่า ½ ผลบวกจึงไม่มีขอบเขต</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf" id="S10" data-k="harmonic series diverges oresme grouping อนุกรมฮาร์มอนิก ลู่ออก">
+        <p class="tf-n"><b><span class="fid">S10</span> Harmonic series diverges</b> อนุกรมฮาร์มอนิกลู่ออก</p>
+        \[ 1 + \tfrac12 + \underbrace{\tfrac13 + \tfrac14}_{>\frac12} + \underbrace{\tfrac15 + \cdots + \tfrac18}_{>\frac12} + \cdots \ \Rightarrow\ S_{2^k} > 1 + \frac{k}{2} \to \infty \]
+        <p class="tf-x">ลู่ออกช้ามาก: ต้องใช้ 12,367 พจน์จึงเกิน 10</p>
+      </div>
+      <div class="tf" id="S11" data-k="p-series 1/n^p converges p>1 อนุกรม p">
+        <p class="tf-n"><b><span class="fid">S11</span> p-series</b> อนุกรม p</p>
+        \[ \sum_{n=1}^{\infty}\frac{1}{n^p}\ \text{ลู่เข้า} \iff p > 1 \]
+        <p class="tf-x">พิสูจน์ด้วย<a href="/learn/sequences-and-series/convergence-tests/#integral">การทดสอบด้วยปริพันธ์</a> · \(p = 2\): \(\pi^2/6\) (ปัญหาบาเซิล) · \(p = 4\): \(\pi^4/90\)</p>
+      </div>
+      <div class="tf" id="S12" data-k="harmonic number growth ln n euler gamma constant ค่าคงที่ออยเลอร์">
+        <p class="tf-n"><b><span class="fid">S12</span> Growth of harmonic numbers</b> การโตของผลบวกฮาร์มอนิก</p>
+        \[ H_n = \sum_{k=1}^{n}\frac1k = \ln n + \gamma + \frac{1}{2n} - \cdots,\quad \gamma \approx 0.5772 \]
+        <p class="tf-x">γ คือค่าคงที่ออยเลอร์-มาสเคโรนี · ใช้ประมาณ \(H_{1000} \approx 7.485\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-6 · ฮาร์มอนิก</span><h3>ต้องบวกอนุกรมฮาร์มอนิกอย่างน้อยกี่พจน์ ผลบวกจึงเกิน 10</h3><button type="button" class="wx-btn calc-go" data-sr-target="sum-lab" data-sr-set='{"preset":"harmonic","n":80}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ใช้ S12: \(\ln n + 0.5772 > 10 \Rightarrow \ln n > 9.4228 \Rightarrow n > e^{9.4228} \approx 12{,}367\) (ค่าประมาณเท่านั้น ต้องยืนยัน)</p></li>
+        <li><p>คำนวณตรงยืนยัน: \(H_{12366} \approx 9.99996\) และ \(H_{12367} \approx 10.00004\)</p></li>
+      </ol>
+      <p class="answer">12,367 พจน์ — ล้านพจน์ได้แค่ราว 14.39 แต่ก็ยังโตไม่หยุด</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">สมบัติของอนุกรมและการทดสอบพจน์ที่ n <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="S13" data-k="linearity series sum constant multiple สมบัติเชิงเส้น อนุกรม">
+        <p class="tf-n"><b><span class="fid">S13</span> Linearity</b> สมบัติเชิงเส้น</p>
+        \[ \sum(c\,a_n + b_n) = c\sum a_n + \sum b_n\quad(\text{เมื่อทั้งสองลู่เข้า}) \]
+        <p class="tf-x">ลู่เข้า + ลู่ออก = ลู่ออกเสมอ · ลู่ออก + ลู่ออก อาจลู่เข้าได้ เช่น \(\sum 1 + \sum(-1)\)</p>
+      </div>
+      <div class="tf" id="S14" data-k="nth term test divergence a_n not 0 การทดสอบพจน์ที่ n">
+        <p class="tf-n"><b><span class="fid">S14</span> n-th term test</b> การทดสอบพจน์ที่ n</p>
+        \[ \lim_{n\to\infty} a_n \ne 0 \ \ (\text{หรือไม่มี}) \ \Rightarrow\ \sum a_n \text{ ลู่ออก} \]
+        <p class="tf-x">เพราะถ้า \(\sum a_n = S\) แล้ว \(a_n = S_n - S_{n-1} \to S - S = 0\) · บทกลับไม่จริง (ฮาร์มอนิก)</p>
+      </div>
+      <div class="tf" id="S15" data-k="finitely many terms tail shift index พจน์จำนวนจำกัด หาง">
+        <p class="tf-n"><b><span class="fid">S15</span> Tails decide convergence</b> พจน์ช่วงแรกไม่มีผล</p>
+        \[ \sum_{n=1}^{\infty} a_n \text{ ลู่เข้า} \iff \sum_{n=m}^{\infty} a_n \text{ ลู่เข้า} \]
+        <p class="tf-x">ตัดหรือเพิ่มพจน์จำนวนจำกัดไม่เปลี่ยนการลู่เข้า (แต่เปลี่ยนค่าผลบวก) · เลื่อนดัชนีได้ตามสะดวก</p>
+      </div>
+    </div>
+    <div class="sr-trap"><b>กับดักที่พบบ่อย</b>เขียนว่า “\(a_n \to 0\) จึงลู่เข้า” ผิดทุกครั้ง nth-term test ใช้สรุปได้เพียงทางเดียวคือ<b>ลู่ออก</b> ถ้าพจน์เข้าใกล้ 0 ต้องไปใช้การทดสอบอื่นใน<a href="/learn/sequences-and-series/convergence-tests/">หน้าถัดไป</a></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arith-geo">
+    <h2 id="arith-geo">อนุกรมเลขคณิต-เรขาคณิต: วิธี S − rS <span class="lv lv-i">กลาง</span></h2>
+    <p>พจน์รูป (เลขคณิต) × (เรขาคณิต) เช่น \(n r^n\) พบในข้อสอบเข้ามหาวิทยาลัยและในค่าคาดหมายของความน่าจะเป็น วิธีมาตรฐานคือคูณด้วย r แล้วลบเพื่อให้เหลืออนุกรมเรขาคณิตธรรมดา</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="S16" data-k="arithmetico geometric series n r^n S - rS sum อนุกรมเลขคณิตเรขาคณิต">
+        <p class="tf-n"><b><span class="fid">S16</span> Arithmetico-geometric series</b> อนุกรมเลขคณิต-เรขาคณิต</p>
+        \[ \sum_{n=1}^{\infty} n r^n = \frac{r}{(1-r)^2},\qquad \sum_{n=1}^{\infty} n^2 r^n = \frac{r(1+r)}{(1-r)^3}\qquad (|r| &lt; 1) \]
+        <p class="tf-x">วิธี: \(S - rS = r + r^2 + r^3 + \cdots = \dfrac{r}{1-r}\) · หรือหาอนุพันธ์ของ \(\sum r^n\) ใน<a href="/learn/sequences-and-series/power-series/#calculus">อนุกรมกำลัง</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-s7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง S-7 · S − rS</span><h3>(ก) \(\displaystyle\sum_{n=1}^{\infty}\frac{n}{3^n}\) (ข) \(1 + \dfrac22 + \dfrac34 + \dfrac48 + \dfrac5{16} + \cdots\)</h3><button type="button" class="wx-btn calc-go" data-sr-target="sum-lab" data-sr-set='{"a":"n/3^n","n0":1,"n":20}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>(ก) \(S = \tfrac13 + \tfrac{2}{9} + \tfrac{3}{27} + \cdots\) · \(\tfrac13 S = \tfrac19 + \tfrac{2}{27} + \cdots\) · ลบ: \(\tfrac23 S = \tfrac13 + \tfrac19 + \tfrac1{27} + \cdots = \dfrac{1/3}{1 - 1/3} = \tfrac12 \Rightarrow S = \tfrac34\)</p></li>
+        <li><p>ตรวจด้วย S16: \(\dfrac{1/3}{(2/3)^2} = \dfrac{1/3}{4/9} = \dfrac34\) ✓</p></li>
+        <li><p>(ข) พจน์ทั่วไป \(\dfrac{n}{2^{n-1}} = 2\cdot\dfrac{n}{2^n}\) ⇒ \(2\cdot\dfrac{1/2}{(1/2)^2} = 2\cdot2 = 4\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac34\) · (ข) 4</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="applications">
+    <h2 id="applications">อนุกรมในโลกจริง: ซีโน เกล็ดหิมะค็อค และเงิน <span class="lv lv-i">กลาง</span></h2>
+    <p><b>ปฏิทรรศน์ของซีโน</b>: เดินครึ่งทาง แล้วครึ่งของที่เหลือ ไปเรื่อย ๆ ระยะทางรวม \(\tfrac12 + \tfrac14 + \cdots = 1\) และเวลารวมก็จำกัด อนุกรมอนันต์จึงไม่ได้แปลว่าใช้เวลาอนันต์ · <b>เกล็ดหิมะค็อค</b>: ทุกขั้นเพิ่มสามเหลี่ยมเล็ก \(3\cdot4^{k-1}\) รูป แต่ละรูปพื้นที่ \(A_0/9^k\) พื้นที่รวม \(A_0\left(1 + \sum_{k\ge1}\tfrac{3\cdot4^{k-1}}{9^k}\right) = \tfrac85 A_0\) จำกัด ขณะที่เส้นรอบรูปคูณด้วย \(\tfrac43\) ทุกขั้นจึงยาวอนันต์ · <b>เงินและพลังงาน</b>: มูลค่าปัจจุบันของรายรับเท่ากันทุกปีเป็นอนุกรมเรขาคณิต ดูตัวอย่างโซลาร์รูฟท็อปใน<a href="/learn/sequences-and-series/engineering-applications/#economics">อนุกรมในงานวิศวกรรม</a></p>
+    </section>
+
+    <h2 id="next">ต่อไป: ทดสอบว่าลู่เข้าหรือไม่ เมื่อหาผลบวกไม่ได้</h2>
+    <p>อนุกรมส่วนใหญ่ เช่น \(\sum \dfrac{1}{n^2+1}\) หรือ \(\sum \dfrac{n!}{n^n}\) หาผลบวกเป็นสูตรไม่ได้ แต่เรายังตัดสินได้ว่าลู่เข้าหรือไม่ด้วย<a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้า</a> เช่น ปริพันธ์ เปรียบเทียบ อัตราส่วน และราก ทบทวนลำดับได้ที่ <a href="/learn/sequences-and-series/sequences/">ลำดับและลิมิตของลำดับ</a> หรืออ่านบทความ <a href="/blog/geometric-series-formula/">สูตรอนุกรมเรขาคณิตแบบเข้าใจง่าย</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

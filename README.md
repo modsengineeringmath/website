@@ -5,7 +5,8 @@ The HTML in the repo root, `about/` and `learn/` is generated — edit `src/` an
 
 ## Update the status feed (no build needed)
 Edit `data/updates.json` (on GitHub web or the GitHub app is fine) and commit.
-The profile page reads this file live, so the change shows up after Cloudflare deploys (~1 min).
+The home page box "มีอะไรใหม่บนเว็บไซต์" (`/#updates`, newest 6 entries), the changelog page `/updates/` and the profile page
+all read this file live, so the change shows up after Cloudflare deploys (~1 min). Put the newest entry first.
 
 ```json
 { "date": "2026-10-08", "tag": "งานสอน", "text": "ข้อความสเตตัส", "link": "/learn/", "linkText": "ดูเพิ่มเติม" }
@@ -417,3 +418,32 @@ permanent star running at light load, dynamic lab + sweep + worksheet, 8 simulat
   labelled as simulated cases, not plant data. Home page: hero "ใหม่" badge, chip + lab button in `#motor-plc`, newest-article strip; status feed entries in `data/updates.json` (rendered on /about/ and in feed.xml).
 - Short URLs: `/star-delta-analysis`, `/star-delta-timer`, `/wye-delta-timer`, `/star-delta-dead-time`, `/closed-transition`, `/star-delta-energy`,
   `/star-delta-saving`, `/star-delta-research`, `/star-delta-lab`, `/wye-delta`, `/en/star-delta-analysis`, `/en/star-delta-timer` (in `_redirects`).
+
+## Sequences & series — chapter 26 (added 2026-10-24)
+`sequences-and-series` in `TOPICS` (build.mjs), 10 sub-pages under `src/pages/learn/sequences-and-series/`:
+sequences (Q1–Q22), infinite-series (S1–S16), convergence-tests (T1–T12), alternating-series (A1–A11), power-series (P1–P14),
+taylor-series (Y1–Y23), laurent-series (L1–L13), engineering-applications (E1–E11), exam-practice (60 problems, sets A/B/C) and
+series-lab (12 tools). The one-page overview `/learn/limits/sequences-series/` (3.1) stays as the short version and links here.
+Markdown guide for AI tools: `src/md/sequences-and-series.md` → `/learn/sequences-and-series/guide.md` (MD_GUIDES).
+- `assets/series-lab.js` (`window.SRLab`; also `require`-able): widgets `sr-sums`, `sr-integral`, `sr-alt` (error bound / Riemann
+  rearrangement), `sr-quiz` (40 series, 3 levels), `sr-power` (real interval + complex disc; `_set` takes preset, n, c, a), `sr-need`
+  (terms needed), `sr-laurent` (annulus regions by partial fractions, draggable z, coefficient stems, Z-transform view), `sr-drill`
+  (9 random problem types, score in localStorage `sr-drill-v1`), `sr-approx` (pendulum, MCU sine with Horner C code, diode).
+  Page buttons: `data-sr-set='{…}' data-sr-target="<id>"`. Uses `assets/mathkit.js` and `assets/seq-lab.js` (sequence explorer,
+  tester, Taylor). Both lab scripts size plots to their box (`plotIn`) so graphs stay readable on phones.
+- Figures: `scripts/sr_figs.py` (keys `sr-*`, each with an `-en` twin for English posts); run `python3 scripts/sr_figs.py` after editing
+  a `<!--FIG:sr-…-->` marker, `--all` to redraw everything. Styles: "SEQUENCES & SERIES CHAPTER" in site.css.
+- Articles (TH `/blog/<slug>/`, EN `/en/blog/<slug>/`): sequences-and-series-roadmap, convergence-test-flowchart,
+  radius-of-convergence, laurent-series-vs-taylor-series.
+- Every worked-example number was checked with sympy/mpmath (Laurent coefficients also in Node) before publishing.
+- Short URLs (`_redirects`): `/series` `/sequences` `/sequences-and-series` `/convergence-tests` `/ratio-test` `/power-series`
+  `/taylor-series` `/maclaurin` now point to chapter 26, plus `/series-lab` `/series-exam` `/integral-test` `/comparison-test`
+  `/root-test` `/alternating-series` `/radius-of-convergence` `/taylor-table` `/laurent` `/laurent-series` `/residues` `/z-transform-roc`.
+
+## Home page "what's new" box and /updates/ (added 2026-10-24)
+Before this change the home page had no list of updates — `data/updates.json` was only shown on `/about/` and in `feed.xml`, so edits
+never appeared on the home page. Now `<!--home-updates-->` (build.mjs `homeUpdatesHtml`, newest 6, icons per tag, "ใหม่" badge on the
+newest date) is pre-rendered into `src/pages/index.html` and `assets/home.js` refreshes it live from `/data/updates.json`.
+`/updates/` (`src/pages/updates.html`) lists every entry with tag filters (15 per page, `data-page` on `#feed`, handled by about.js).
+Short URLs `/whats-new` `/changelog` `/news` → `/updates/`.
+

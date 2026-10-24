@@ -1,0 +1,319 @@
+<!--meta
+{
+  "title": "อนุกรมเทย์เลอร์และแมคลอริน (Taylor & Maclaurin Series): สูตร ตารางอนุกรม เศษเหลือลากรองจ์ และการประมาณค่า | อาจารย์มด",
+  "h1": "อนุกรมเทย์เลอร์และแมคลอริน (Taylor & Maclaurin Series): สูตร ตารางอนุกรม เศษเหลือ ทวินาม และการประมาณค่า",
+  "description": "อนุกรมเทย์เลอร์ (Taylor series) และอนุกรมแมคลอริน (Maclaurin series) คืออะไร สูตร f⁽ⁿ⁾(a)/n! ตารางอนุกรมที่ต้องจำ eˣ sin cos ln(1+x) arctan (1+x)^α พหุนามเทย์เลอร์ ทฤษฎีบทเทย์เลอร์และเศษเหลือลากรองจ์ จำนวนพจน์ที่ต้องใช้ อนุกรมทวินาม เทคนิคแทนค่า คูณ หาร อินทิกรัล หาลิมิตด้วยอนุกรม หาผลบวกอนุกรม สูตรออยเลอร์ พร้อมแล็บพหุนามเทย์เลอร์",
+  "ogTitle": "อนุกรมเทย์เลอร์และแมคลอริน: สูตร ตาราง เศษเหลือ การประมาณค่า",
+  "lesson": "sequences-and-series",
+  "sub": "taylor-series",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["อนุกรมเทย์เลอร์", "อนุกรมแมคลอริน", "พหุนามเทย์เลอร์", "ทฤษฎีบทเทย์เลอร์", "เศษเหลือลากรองจ์", "อนุกรมทวินาม", "Taylor series", "Maclaurin series", "Taylor polynomial", "Taylor's theorem", "Lagrange remainder", "binomial series", "limits using Taylor series", "Euler's formula", "how many terms Taylor"],
+  "about": ["Taylor series", "Maclaurin series", "Taylor polynomial", "Taylor's theorem", "Lagrange remainder", "Integral remainder", "Binomial series", "Euler's formula", "Analytic function", "Smooth non-analytic function", "Multivariable Taylor expansion"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "อนุกรมเทย์เลอร์และแมคลอริน", "sub": "ตารางที่ต้องจำ · เศษเหลือลากรองจ์ · ใช้กี่พจน์ · ทวินาม · ลิมิตด้วยอนุกรม · ออยเลอร์", "eyebrow": "บทที่ 26.6 · Taylor & Maclaurin Series", "sym": "eˣ"},
+  "faq": [
+    {"q": "อนุกรมเทย์เลอร์กับอนุกรมแมคลอรินต่างกันอย่างไร?", "a": "อนุกรมเทย์เลอร์ของ f รอบจุด a คือ \\(\\sum \\dfrac{f^{(n)}(a)}{n!}(x-a)^n\\) ส่วนอนุกรมแมคลอรินคือกรณีพิเศษที่ a = 0 คือ \\(\\sum \\dfrac{f^{(n)}(0)}{n!}x^n\\) เช่น \\(e^x = 1 + x + \\tfrac{x^2}{2!} + \\cdots\\) เป็นอนุกรมแมคลอริน"},
+    {"q": "อนุกรมแมคลอรินที่ต้องจำมีอะไรบ้าง?", "a": "\\(e^x = \\sum\\tfrac{x^n}{n!}\\), \\(\\sin x = \\sum\\tfrac{(-1)^n x^{2n+1}}{(2n+1)!}\\), \\(\\cos x = \\sum\\tfrac{(-1)^n x^{2n}}{(2n)!}\\) (ทั้งสามลู่เข้าทุก x), \\(\\tfrac{1}{1-x} = \\sum x^n\\), \\(\\ln(1+x) = \\sum\\tfrac{(-1)^{n+1}x^n}{n}\\), \\(\\arctan x = \\sum\\tfrac{(-1)^n x^{2n+1}}{2n+1}\\) และ \\((1+x)^\\alpha = \\sum\\binom{\\alpha}{n}x^n\\) (สี่ตัวหลังมีรัศมี 1)"},
+    {"q": "จะรู้ได้อย่างไรว่าประมาณด้วยพหุนามเทย์เลอร์แล้วคลาดเท่าไร?", "a": "ใช้เศษเหลือลากรองจ์ \\(|R_n(x)| \\le \\dfrac{M}{(n+1)!}|x-a|^{n+1}\\) โดย M คือค่ามากสุดของ \\(|f^{(n+1)}|\\) ระหว่าง a กับ x หรือถ้าอนุกรมเป็นอนุกรมสลับ ความคลาดไม่เกินพจน์แรกที่ตัดทิ้ง เช่น \\(\\sin 0.2 \\approx 0.2 - 0.008/6\\) คลาดไม่เกิน \\(0.2^5/120 \\approx 2.7\\times10^{-6}\\)"},
+    {"q": "ใช้อนุกรมเทย์เลอร์หาลิมิตอย่างไร?", "a": "แทนฟังก์ชันด้วยอนุกรมแล้วตัดพจน์ต้น ๆ ที่หักล้างกัน เช่น \\(\\lim_{x\\to0}\\dfrac{x - \\sin x}{x^3}\\): ตัวเศษ \\(= x - (x - \\tfrac{x^3}{6} + \\cdots) = \\tfrac{x^3}{6} - \\cdots\\) ลิมิตจึงเป็น \\(\\tfrac16\\) เร็วกว่าใช้โลปิตาลสามครั้ง"},
+    {"q": "ฟังก์ชันที่หาอนุพันธ์ได้ทุกอันดับ มีอนุกรมเทย์เลอร์เท่ากับตัวเองเสมอไหม?", "a": "ไม่เสมอ ตัวอย่างคลาสสิก \\(f(x) = e^{-1/x^2}\\) (f(0) = 0) มีอนุพันธ์ทุกอันดับที่ 0 เป็นศูนย์ อนุกรมเทย์เลอร์จึงเป็น 0 แต่ f ไม่เป็นศูนย์เมื่อ x ≠ 0 ฟังก์ชันที่อนุกรมเทย์เลอร์ลู่เข้าสู่ตัวเองเรียกว่าฟังก์ชันวิเคราะห์ (analytic) ฟังก์ชันพื้นฐานเกือบทั้งหมดเป็นแบบนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อนุกรมเทย์เลอร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.6 · ลำดับและอนุกรม · Taylor &amp; Maclaurin Series</p>
+      <h1>อนุกรมเทย์เลอร์และแมคลอริน (Taylor &amp; Maclaurin Series): สูตร ตารางอนุกรม เศษเหลือ ทวินาม และการประมาณค่า</h1>
+      <p class="lede">เครื่องคิดเลขไม่รู้จัก sin หรือ eˣ มันรู้แค่บวก ลบ คูณ หาร อนุกรมเทย์เลอร์คือสะพานที่เปลี่ยนฟังก์ชันใด ๆ ให้เป็นพหุนาม โดยจับคู่ค่าและอนุพันธ์ทุกอันดับที่จุดหนึ่ง หน้านี้สอนการสร้างอนุกรม ตารางที่ต้องจำ วิธีบอกความแม่นยำด้วยเศษเหลือ เทคนิคลัดที่ไม่ต้องหาอนุพันธ์ และการใช้หาลิมิตกับผลบวก ซึ่งออกข้อสอบทุกระดับ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บพหุนามเทย์เลอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#table">ตารางที่ต้องจำ</a>
+        <a class="btn btn-ghost btn-sm" href="#remainder">เศษเหลือ · ใช้กี่พจน์</a>
+        <a class="btn btn-ghost btn-sm" href="#techniques">เทคนิคลัด</a>
+        <a class="btn btn-ghost btn-sm" href="#limits">ลิมิตด้วยอนุกรม</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f(x) = \sum\dfrac{f^{(n)}(a)}{n!}(x-a)^n\) · a = 0 เรียกแมคลอริน</li>
+          <li>\(e^x,\ \sin x,\ \cos x\) ลู่เข้าทุก x · \(\tfrac{1}{1-x},\ \ln(1+x),\ \arctan x,\ (1+x)^\alpha\) มีรัศมี 1</li>
+          <li>\(|R_n| \le \dfrac{M|x-a|^{n+1}}{(n+1)!}\) · อนุกรมสลับ: คลาดไม่เกินพจน์ถัดไป</li>
+          <li>หาอนุกรมด้วยการแทนค่า คูณ หาร อินทิกรัล แทนการหาอนุพันธ์ทีละอันดับ</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ตาราง · ประมาณค่า</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 2</span><span><span class="lv lv-a">ขั้นสูง</span> ทฤษฎี · หลายตัวแปร</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น maclaurin, exp, sin, ln, arctan, binomial, lagrange, remainder, euler" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">แนวคิด: พหุนามที่มีอนุพันธ์ตรงกับฟังก์ชัน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>อยากได้พหุนาม \(P(x)\) ที่ใกล้ \(f(x)\) ที่สุดรอบจุด a วิธีที่เป็นธรรมชาติคือบังคับให้ \(P(a) = f(a)\), \(P'(a) = f'(a)\), \(P''(a) = f''(a)\), … ไปเรื่อย ๆ เมื่อหาอนุพันธ์ \(c_n(x-a)^n\) n ครั้งจะได้ \(n!\,c_n\) จึงต้องเลือก \(c_n = f^{(n)}(a)/n!\) ดีกรีหนึ่งคือเส้นสัมผัส ดีกรีสองเพิ่มความโค้ง และยิ่งดีกรีสูงยิ่งเกาะได้กว้าง</p>
+    <figure class="lt-wide"><!--FIG:sr-taylor-sin--><svg class="mf sr-fig" viewBox="0 0 440 260" role="img" aria-label="พหุนามแมคลอรินของ sin x ดีกรี 1, 3, 5, 7, 9"><rect class="mf-bg" x="32" y="14" width="396" height="210" rx="8"/><line class="mf-g" x1="60.3" y1="14" x2="60.3" y2="224"/><text class="mf-k" x="60.3" y="237" text-anchor="middle">-6</text><line class="mf-g" x1="145.1" y1="14" x2="145.1" y2="224"/><text class="mf-k" x="145.1" y="237" text-anchor="middle">-3</text><line class="mf-g" x1="230" y1="14" x2="230" y2="224"/><text class="mf-k" x="230" y="237" text-anchor="middle">0</text><line class="mf-g" x1="314.9" y1="14" x2="314.9" y2="224"/><text class="mf-k" x="314.9" y="237" text-anchor="middle">3</text><line class="mf-g" x1="399.7" y1="14" x2="399.7" y2="224"/><text class="mf-k" x="399.7" y="237" text-anchor="middle">6</text><line class="mf-g" x1="32" y1="224" x2="428" y2="224"/><text class="mf-k" x="27" y="228" text-anchor="end">-2</text><line class="mf-g" x1="32" y1="171.5" x2="428" y2="171.5"/><text class="mf-k" x="27" y="175.5" text-anchor="end">-1</text><line class="mf-g" x1="32" y1="119" x2="428" y2="119"/><text class="mf-k" x="27" y="123" text-anchor="end">0</text><line class="mf-g" x1="32" y1="66.5" x2="428" y2="66.5"/><text class="mf-k" x="27" y="70.5" text-anchor="end">1</text><line class="mf-g" x1="32" y1="14" x2="428" y2="14"/><text class="mf-k" x="27" y="18" text-anchor="end">2</text><line class="mf-ax" x1="32" y1="119" x2="428" y2="119"/><line class="mf-ax" x1="230" y1="14" x2="230" y2="224"/><text class="mf-l" x="426" y="250" text-anchor="end">x</text><path class="mf-s5" d="M173.4 224L173.9 223.1L175.5 220.1L177.2 217L178.8 213.9L180.5 210.9L182.2 207.8L183.8 204.8L185.5 201.7L187.1 198.6L188.8 195.6L190.4 192.5L192.1 189.4L193.7 186.4L195.4 183.3L197 180.3L198.7 177.2L200.3 174.1L202 171.1L203.6 168L205.2 164.9L206.9 161.9L208.5 158.8L210.2 155.8L211.8 152.7L213.5 149.6L215.1 146.6L216.8 143.5L218.4 140.4L220.1 137.4L221.7 134.3L223.4 131.2L225 128.2L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.8L236.6 106.8L238.3 103.7L239.9 100.6L241.6 97.6L243.2 94.5L244.8 91.4L246.5 88.4L248.1 85.3L249.8 82.2L251.5 79.2L253.1 76.1L254.8 73.1L256.4 70L258 66.9L259.7 63.9L261.3 60.8L263 57.8L264.6 54.7L266.3 51.6L267.9 48.6L269.6 45.5L271.2 42.4L272.9 39.4L274.5 36.3L276.2 33.3L277.9 30.2L279.5 27.1L281.1 24.1L282.8 21L284.5 17.9L286.1 14.9L286.6 14"/><path class="mf-s4" d="M141.3 14L142.6 22.7L144.2 34L145.9 44.8L147.5 55L149.2 64.7L150.8 73.9L152.5 82.6L154.1 90.8L155.8 98.5L157.4 105.8L159 112.6L160.7 118.9L162.3 124.9L164 130.3L165.6 135.4L167.3 140.1L168.9 144.3L170.6 148.2L172.2 151.7L173.9 154.9L175.5 157.6L177.2 160.1L178.8 162.2L180.5 164L182.2 165.5L183.8 166.6L185.5 167.5L187.1 168.1L188.8 168.4L190.4 168.5L192.1 168.3L193.7 167.9L195.4 167.2L197 166.4L198.7 165.3L200.3 164L202 162.5L203.6 160.9L205.2 159.1L206.9 157.1L208.5 155L210.2 152.7L211.8 150.4L213.5 147.9L215.1 145.3L216.8 142.6L218.4 139.8L220.1 137L221.7 134.1L223.4 131.1L225 128.1L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.9L236.6 106.9L238.3 103.9L239.9 101L241.6 98.2L243.2 95.4L244.8 92.7L246.5 90.1L248.1 87.6L249.8 85.3L251.5 83L253.1 80.9L254.8 78.9L256.4 77.1L258 75.5L259.7 74L261.3 72.7L263 71.6L264.6 70.8L266.3 70.1L267.9 69.7L269.6 69.5L271.2 69.6L272.9 69.9L274.5 70.5L276.2 71.4L277.9 72.5L279.5 74L281.1 75.8L282.8 77.9L284.5 80.4L286.1 83.1L287.8 86.3L289.4 89.8L291.1 93.7L292.7 97.9L294.3 102.6L296 107.7L297.7 113.1L299.3 119.1L300.9 125.4L302.6 132.2L304.2 139.5L305.9 147.2L307.6 155.4L309.2 164.1L310.8 173.3L312.5 183L314.2 193.2L315.8 204L317.4 215.3L318.7 224"/><path class="mf-s3" d="M115.9 224L116.1 221.9L117.8 210.8L119.5 200.8L121.1 191.9L122.8 184L124.4 177L126.1 170.9L127.7 165.7L129.4 161.2L131 157.4L132.6 154.2L134.3 151.7L135.9 149.7L137.6 148.2L139.2 147.2L140.9 146.6L142.6 146.3L144.2 146.4L145.9 146.8L147.5 147.4L149.2 148.2L150.8 149.2L152.5 150.4L154.1 151.7L155.8 153.1L157.4 154.5L159 156L160.7 157.6L162.3 159.1L164 160.6L165.6 162.1L167.3 163.5L168.9 164.8L170.6 166.1L172.2 167.2L173.9 168.3L175.5 169.2L177.2 170L178.8 170.7L180.5 171.2L182.2 171.5L183.8 171.7L185.5 171.7L187.1 171.6L188.8 171.3L190.4 170.8L192.1 170.2L193.7 169.4L195.4 168.4L197 167.3L198.7 166L200.3 164.6L202 162.9L203.6 161.2L205.2 159.3L206.9 157.3L208.5 155.1L210.2 152.8L211.8 150.4L213.5 147.9L215.1 145.3L216.8 142.6L218.4 139.8L220.1 137L221.7 134.1L223.4 131.1L225 128.1L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.9L236.6 106.9L238.3 103.9L239.9 101L241.6 98.2L243.2 95.4L244.8 92.7L246.5 90.1L248.1 87.6L249.8 85.2L251.5 82.9L253.1 80.7L254.8 78.7L256.4 76.8L258 75.1L259.7 73.4L261.3 72L263 70.7L264.6 69.6L266.3 68.6L267.9 67.8L269.6 67.2L271.2 66.7L272.9 66.4L274.5 66.3L276.2 66.3L277.9 66.5L279.5 66.8L281.1 67.3L282.8 68L284.5 68.8L286.1 69.7L287.8 70.8L289.4 71.9L291.1 73.2L292.7 74.5L294.3 75.9L296 77.4L297.7 78.9L299.3 80.4L300.9 82L302.6 83.5L304.2 84.9L305.9 86.3L307.6 87.6L309.2 88.8L310.8 89.8L312.5 90.6L314.2 91.2L315.8 91.6L317.4 91.7L319.1 91.4L320.8 90.8L322.4 89.8L324 88.3L325.7 86.3L327.4 83.8L329 80.6L330.6 76.8L332.3 72.3L334 67.1L335.6 61L337.2 54L338.9 46.1L340.6 37.2L342.2 27.2L343.8 16.1L344.1 14"/><path class="mf-s2" d="M109.4 14L109.6 15L111.2 22.9L112.8 30.2L114.5 37.1L116.1 43.6L117.8 49.8L119.5 55.7L121.1 61.3L122.8 66.6L124.4 71.7L126.1 76.6L127.7 81.3L129.4 85.9L131 90.4L132.6 94.7L134.3 98.8L135.9 102.9L137.6 106.9L139.2 110.7L140.9 114.5L142.6 118.2L144.2 121.8L145.9 125.3L147.5 128.7L149.2 132L150.8 135.2L152.5 138.3L154.1 141.2L155.8 144.1L157.4 146.9L159 149.5L160.7 152L162.3 154.4L164 156.7L165.6 158.8L167.3 160.7L168.9 162.6L170.6 164.2L172.2 165.7L173.9 167L175.5 168.2L177.2 169.2L178.8 170L180.5 170.6L182.2 171.1L183.8 171.4L185.5 171.5L187.1 171.4L188.8 171.2L190.4 170.7L192.1 170.1L193.7 169.3L195.4 168.4L197 167.3L198.7 166L200.3 164.5L202 162.9L203.6 161.2L205.2 159.3L206.9 157.3L208.5 155.1L210.2 152.8L211.8 150.4L213.5 147.9L215.1 145.3L216.8 142.6L218.4 139.8L220.1 137L221.7 134.1L223.4 131.1L225 128.1L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.9L236.6 106.9L238.3 103.9L239.9 101L241.6 98.2L243.2 95.4L244.8 92.7L246.5 90.1L248.1 87.6L249.8 85.2L251.5 82.9L253.1 80.7L254.8 78.7L256.4 76.8L258 75.1L259.7 73.5L261.3 72L263 70.7L264.6 69.6L266.3 68.7L267.9 67.9L269.6 67.3L271.2 66.8L272.9 66.6L274.5 66.5L276.2 66.6L277.9 66.9L279.5 67.4L281.1 68L282.8 68.8L284.5 69.8L286.1 71L287.8 72.3L289.4 73.8L291.1 75.4L292.7 77.3L294.3 79.2L296 81.3L297.7 83.6L299.3 86L300.9 88.5L302.6 91.1L304.2 93.9L305.9 96.8L307.6 99.7L309.2 102.8L310.8 106L312.5 109.3L314.2 112.7L315.8 116.2L317.4 119.8L319.1 123.5L320.8 127.3L322.4 131.1L324 135.1L325.7 139.2L327.4 143.3L329 147.6L330.6 152.1L332.3 156.7L334 161.4L335.6 166.3L337.2 171.4L338.9 176.7L340.6 182.3L342.2 188.2L343.8 194.4L345.5 200.9L347.2 207.8L348.8 215.1L350.4 223L350.6 224"/><path class="mf-s1" d="M75.3 224L76.6 210.8L78.2 194.6L79.8 179.9L81.5 166.6L83.2 154.7L84.8 144L86.4 134.5L88.1 126L89.7 118.4L91.4 111.8L93 105.9L94.7 100.9L96.4 96.5L98 92.8L99.7 89.7L101.3 87.2L102.9 85.2L104.6 83.7L106.2 82.6L107.9 81.9L109.6 81.6L111.2 81.7L112.8 82.1L114.5 82.8L116.1 83.8L117.8 85L119.5 86.5L121.1 88.1L122.8 90L124.4 92.1L126.1 94.3L127.7 96.7L129.4 99.2L131 101.8L132.6 104.5L134.3 107.2L135.9 110.1L137.6 113L139.2 116L140.9 118.9L142.6 121.9L144.2 124.9L145.9 127.9L147.5 130.9L149.2 133.8L150.8 136.7L152.5 139.5L154.1 142.3L155.8 145L157.4 147.6L159 150.1L160.7 152.5L162.3 154.8L164 157L165.6 159L167.3 160.9L168.9 162.7L170.6 164.3L172.2 165.8L173.9 167.1L175.5 168.2L177.2 169.2L178.8 170L180.5 170.7L182.2 171.1L183.8 171.4L185.5 171.5L187.1 171.4L188.8 171.2L190.4 170.7L192.1 170.1L193.7 169.3L195.4 168.4L197 167.3L198.7 166L200.3 164.5L202 162.9L203.6 161.2L205.2 159.3L206.9 157.3L208.5 155.1L210.2 152.8L211.8 150.4L213.5 147.9L215.1 145.3L216.8 142.6L218.4 139.8L220.1 137L221.7 134.1L223.4 131.1L225 128.1L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.9L236.6 106.9L238.3 103.9L239.9 101L241.6 98.2L243.2 95.4L244.8 92.7L246.5 90.1L248.1 87.6L249.8 85.2L251.5 82.9L253.1 80.7L254.8 78.7L256.4 76.8L258 75.1L259.7 73.5L261.3 72L263 70.7L264.6 69.6L266.3 68.7L267.9 67.9L269.6 67.3L271.2 66.8L272.9 66.6L274.5 66.5L276.2 66.6L277.9 66.9L279.5 67.3L281.1 68L282.8 68.8L284.5 69.8L286.1 70.9L287.8 72.2L289.4 73.7L291.1 75.3L292.7 77.1L294.3 79L296 81L297.7 83.2L299.3 85.5L300.9 87.9L302.6 90.4L304.2 93L305.9 95.7L307.6 98.5L309.2 101.3L310.8 104.2L312.5 107.1L314.2 110.1L315.8 113.1L317.4 116.1L319.1 119.1L320.8 122L322.4 125L324 127.9L325.7 130.8L327.4 133.5L329 136.2L330.6 138.8L332.3 141.3L334 143.7L335.6 145.9L337.2 148L338.9 149.9L340.6 151.5L342.2 153L343.8 154.2L345.5 155.2L347.2 155.9L348.8 156.3L350.4 156.4L352.1 156.1L353.8 155.4L355.4 154.3L357.1 152.8L358.7 150.8L360.3 148.3L362 145.2L363.7 141.5L365.3 137.1L366.9 132.1L368.6 126.2L370.3 119.6L371.9 112L373.5 103.5L375.2 94L376.9 83.3L378.5 71.4L380.1 58.1L381.8 43.4L383.5 27.2L384.7 14"/><path class="mf-ink" d="M32 153.5L33.7 151.1L35.3 148.7L36.9 146.1L38.6 143.4L40.3 140.7L41.9 137.8L43.5 134.9L45.2 132L46.9 129L48.5 126L50.1 122.9L51.8 119.9L53.4 116.8L55.1 113.8L56.8 110.7L58.4 107.7L60.1 104.8L61.7 101.8L63.4 99L65 96.2L66.6 93.5L68.3 90.8L70 88.3L71.6 85.9L73.2 83.5L74.9 81.3L76.6 79.3L78.2 77.3L79.8 75.6L81.5 73.9L83.2 72.4L84.8 71.1L86.4 69.9L88.1 68.9L89.7 68.1L91.4 67.4L93 66.9L94.7 66.6L96.4 66.5L98 66.6L99.7 66.8L101.3 67.2L102.9 67.8L104.6 68.5L106.2 69.5L107.9 70.6L109.6 71.8L111.2 73.2L112.8 74.8L114.5 76.5L116.1 78.4L117.8 80.4L119.5 82.6L121.1 84.8L122.8 87.2L124.4 89.7L126.1 92.3L127.7 95L129.4 97.7L131 100.6L132.6 103.5L134.3 106.4L135.9 109.4L137.6 112.5L139.2 115.5L140.9 118.6L142.6 121.6L144.2 124.7L145.9 127.7L147.5 130.7L149.2 133.7L150.8 136.6L152.5 139.4L154.1 142.2L155.8 144.9L157.4 147.5L159 150.1L160.7 152.5L162.3 154.8L164 157L165.6 159L167.3 160.9L168.9 162.7L170.6 164.3L172.2 165.8L173.9 167.1L175.5 168.2L177.2 169.2L178.8 170L180.5 170.7L182.2 171.1L183.8 171.4L185.5 171.5L187.1 171.4L188.8 171.2L190.4 170.7L192.1 170.1L193.7 169.3L195.4 168.4L197 167.3L198.7 166L200.3 164.5L202 162.9L203.6 161.2L205.2 159.3L206.9 157.3L208.5 155.1L210.2 152.8L211.8 150.4L213.5 147.9L215.1 145.3L216.8 142.6L218.4 139.8L220.1 137L221.7 134.1L223.4 131.1L225 128.1L226.7 125.1L228.3 122.1L230 119L231.7 115.9L233.3 112.9L234.9 109.9L236.6 106.9L238.3 103.9L239.9 101L241.6 98.2L243.2 95.4L244.8 92.7L246.5 90.1L248.1 87.6L249.8 85.2L251.5 82.9L253.1 80.7L254.8 78.7L256.4 76.8L258 75.1L259.7 73.5L261.3 72L263 70.7L264.6 69.6L266.3 68.7L267.9 67.9L269.6 67.3L271.2 66.8L272.9 66.6L274.5 66.5L276.2 66.6L277.9 66.9L279.5 67.3L281.1 68L282.8 68.8L284.5 69.8L286.1 70.9L287.8 72.2L289.4 73.7L291.1 75.3L292.7 77.1L294.3 79L296 81L297.7 83.2L299.3 85.5L300.9 87.9L302.6 90.5L304.2 93.1L305.9 95.8L307.6 98.6L309.2 101.4L310.8 104.3L312.5 107.3L314.2 110.3L315.8 113.3L317.4 116.4L319.1 119.4L320.8 122.5L322.4 125.5L324 128.6L325.7 131.6L327.4 134.5L329 137.4L330.6 140.3L332.3 143L334 145.7L335.6 148.3L337.2 150.8L338.9 153.2L340.6 155.4L342.2 157.6L343.8 159.6L345.5 161.5L347.2 163.2L348.8 164.8L350.4 166.2L352.1 167.4L353.8 168.5L355.4 169.5L357.1 170.2L358.7 170.8L360.3 171.2L362 171.4L363.7 171.5L365.3 171.4L366.9 171.1L368.6 170.6L370.3 169.9L371.9 169.1L373.5 168.1L375.2 166.9L376.9 165.6L378.5 164.1L380.1 162.4L381.8 160.7L383.5 158.7L385.1 156.7L386.7 154.5L388.4 152.1L390.1 149.7L391.7 147.2L393.3 144.5L395 141.8L396.7 139L398.3 136.2L399.9 133.2L401.6 130.3L403.2 127.3L404.9 124.2L406.6 121.2L408.2 118.1L409.8 115.1L411.5 112L413.2 109L414.8 106L416.4 103.1L418.1 100.2L419.8 97.3L421.4 94.6L423 91.9L424.7 89.3L426.4 86.9L428 84.5"/><text class="mf-h" x="279.5" y="21.9" text-anchor="middle">P₁</text><text class="mf-h" x="303.5" y="216.1" text-anchor="middle">P₃</text><text class="mf-h" x="330.4" y="21.9" text-anchor="middle">P₅</text><text class="mf-h" x="351.6" y="216.1" text-anchor="middle">P₇</text><text class="mf-h" x="375.7" y="21.9" text-anchor="middle">P₉</text><text class="mf-h" x="43.3" y="35" text-anchor="start">sin x</text></svg><!--/FIG--><figcaption>พหุนามแมคลอรินของ sin x ดีกรี 1, 3, 5, 7 และ 9 ยิ่งดีกรีสูง ยิ่งเกาะกราฟจริงได้กว้างขึ้น (sin x ลู่เข้าทุก x)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="Y1" data-k="taylor series formula f^(n)(a)/n! center a อนุกรมเทย์เลอร์ สูตร">
+        <p class="tf-n"><b><span class="fid">Y1</span> Taylor series</b> อนุกรมเทย์เลอร์</p>
+        \[ f(x) = \sum_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(x-a)^n = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \cdots \]
+        <p class="tf-x">เท่ากับ f จริงเมื่อเศษเหลือ \(R_n(x) \to 0\) (f วิเคราะห์) · เป็นอนุกรมกำลังตัวเดียวที่แทน f ได้ (<a href="/learn/sequences-and-series/power-series/#complex">P10</a>)</p>
+      </div>
+      <div class="tf" id="Y2" data-k="maclaurin series a=0 อนุกรมแมคลอริน">
+        <p class="tf-n"><b><span class="fid">Y2</span> Maclaurin series</b> อนุกรมแมคลอริน</p>
+        \[ f(x) = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}x^n \]
+        <p class="tf-x">กรณี a = 0 ตั้งชื่อตามโคลิน แมคลอริน (ศตวรรษที่ 18)</p>
+      </div>
+      <div class="tf" id="Y3" data-k="taylor polynomial degree n linearization quadratic approximation พหุนามเทย์เลอร์ ดีกรี n">
+        <p class="tf-n"><b><span class="fid">Y3</span> Taylor polynomial</b> พหุนามเทย์เลอร์ดีกรี n</p>
+        \[ P_n(x) = \sum_{k=0}^{n}\frac{f^{(k)}(a)}{k!}(x-a)^k,\qquad P_1 = \text{การประมาณเชิงเส้น} \]
+        <p class="tf-x">\(P_1(x) = f(a) + f'(a)(x - a)\) คือ linearization ใน<a href="/learn/differential-calculus/">บทอนุพันธ์</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-y1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-1 · จากนิยาม</span><h3>หาอนุกรมเทย์เลอร์ของ (ก) \(\ln x\) รอบ \(a = 1\) (ข) \(e^x\) รอบ \(a = 2\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(f = \ln x,\ f' = x^{-1},\ f'' = -x^{-2},\ f''' = 2x^{-3},\ f^{(n)} = (-1)^{n+1}(n-1)!\,x^{-n}\) ⇒ ที่ x = 1: \(f^{(n)}(1) = (-1)^{n+1}(n-1)!\)</p></li>
+        <li><p>\(c_n = \dfrac{(-1)^{n+1}(n-1)!}{n!} = \dfrac{(-1)^{n+1}}{n}\) ⇒ \(\ln x = (x-1) - \dfrac{(x-1)^2}{2} + \dfrac{(x-1)^3}{3} - \cdots\), \(0 &lt; x \le 2\)</p></li>
+        <li><p>(ข) อนุพันธ์ทุกอันดับของ \(e^x\) คือ \(e^x\) ⇒ \(f^{(n)}(2) = e^2\) ⇒ \(e^x = e^2\sum\dfrac{(x-2)^n}{n!}\) ลู่เข้าทุก x</p></li>
+      </ol>
+      <p class="answer">(ก) \(\sum_{n\ge1}\dfrac{(-1)^{n+1}(x-1)^n}{n}\) · (ข) \(e^2\sum\dfrac{(x-2)^n}{n!}\) — ข้อ (ข) ตรวจได้จาก \(e^x = e^2\cdot e^{x-2}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางอนุกรมแมคลอรินที่ต้องจำ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>จำเจ็ดตัวนี้ให้ขึ้นใจ แล้วอนุกรมเกือบทั้งหมดในข้อสอบสร้างได้จากเทคนิคในหัวข้อถัดไป สังเกตรูปแบบ: ฟังก์ชันคู่ (cos) มีแต่กำลังคู่ ฟังก์ชันคี่ (sin, arctan) มีแต่กำลังคี่</p>
+    <div class="tf-grid">
+      <div class="tf" id="Y4" data-k="exp e^x maclaurin series exponential อนุกรม เอกซ์โพเนนเชียล">
+        <p class="tf-n"><b><span class="fid">Y4</span> Exponential</b> เอกซ์โพเนนเชียล</p>
+        \[ e^x = \sum_{n=0}^{\infty}\frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots,\quad R = \infty \]
+        <p class="tf-x">ที่ x = 1 ได้ \(e = \sum 1/n!\) · \(e^{-x}\) สลับเครื่องหมาย</p>
+      </div>
+      <div class="tf" id="Y5" data-k="sin x maclaurin series sine odd อนุกรมไซน์">
+        <p class="tf-n"><b><span class="fid">Y5</span> Sine</b> ไซน์</p>
+        \[ \sin x = \sum_{n=0}^{\infty}\frac{(-1)^n x^{2n+1}}{(2n+1)!} = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \cdots,\quad R = \infty \]
+        <p class="tf-x">x เป็นเรเดียนเสมอ · \(\sin x \approx x\) เมื่อมุมเล็ก</p>
+      </div>
+      <div class="tf" id="Y6" data-k="cos x maclaurin series cosine even อนุกรมโคไซน์">
+        <p class="tf-n"><b><span class="fid">Y6</span> Cosine</b> โคไซน์</p>
+        \[ \cos x = \sum_{n=0}^{\infty}\frac{(-1)^n x^{2n}}{(2n)!} = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \cdots,\quad R = \infty \]
+        <p class="tf-x">หาอนุพันธ์ของ Y5 ทีละพจน์ได้ Y6 · \(1 - \cos x \approx x^2/2\)</p>
+      </div>
+      <div class="tf" id="Y7" data-k="geometric 1/(1-x) maclaurin อนุกรมเรขาคณิต">
+        <p class="tf-n"><b><span class="fid">Y7</span> Geometric</b> เรขาคณิต</p>
+        \[ \frac{1}{1-x} = \sum_{n=0}^{\infty}x^n = 1 + x + x^2 + \cdots,\quad |x| &lt; 1 \]
+        <p class="tf-x">แม่ของอนุกรมตรรกยะทั้งหมด · \(\frac{1}{1+x} = \sum(-1)^n x^n\)</p>
+      </div>
+      <div class="tf" id="Y8" data-k="ln(1+x) natural log maclaurin series ลอการิทึม">
+        <p class="tf-n"><b><span class="fid">Y8</span> Logarithm</b> ลอการิทึม</p>
+        \[ \ln(1+x) = \sum_{n=1}^{\infty}\frac{(-1)^{n+1}x^n}{n} = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots,\quad -1 &lt; x \le 1 \]
+        <p class="tf-x">ไม่มีอนุกรมแมคลอรินของ \(\ln x\) (ไม่นิยามที่ 0) ต้องใช้รอบ a = 1</p>
+      </div>
+      <div class="tf" id="Y9" data-k="arctan inverse tangent maclaurin gregory leibniz อาร์กแทนเจนต์">
+        <p class="tf-n"><b><span class="fid">Y9</span> Arctangent</b> อาร์กแทนเจนต์</p>
+        \[ \arctan x = \sum_{n=0}^{\infty}\frac{(-1)^n x^{2n+1}}{2n+1} = x - \frac{x^3}{3} + \frac{x^5}{5} - \cdots,\quad |x| \le 1 \]
+        <p class="tf-x">ที่ x = 1 ได้อนุกรมเกรกอรี-ไลบ์นิซ \(\tfrac{\pi}{4}\)</p>
+      </div>
+      <div class="tf wide" id="Y10" data-k="binomial series (1+x)^alpha generalized binomial coefficient อนุกรมทวินาม">
+        <p class="tf-n"><b><span class="fid">Y10</span> Binomial series</b> อนุกรมทวินาม (นิวตัน)</p>
+        \[ (1+x)^{\alpha} = \sum_{n=0}^{\infty}\binom{\alpha}{n}x^n = 1 + \alpha x + \frac{\alpha(\alpha-1)}{2!}x^2 + \frac{\alpha(\alpha-1)(\alpha-2)}{3!}x^3 + \cdots,\quad |x| &lt; 1 \]
+        <p class="tf-x">α จำนวนเต็มบวกได้พหุนาม (สิ้นสุด) · \(\sqrt{1+x} = 1 + \tfrac{x}{2} - \tfrac{x^2}{8} + \tfrac{x^3}{16} - \cdots\) · \(\tfrac{1}{\sqrt{1+x}} = 1 - \tfrac{x}{2} + \tfrac{3x^2}{8} - \cdots\)</p>
+      </div>
+      <div class="tf" id="Y11" data-k="sinh cosh hyperbolic maclaurin ไฮเพอร์โบลิก">
+        <p class="tf-n"><b><span class="fid">Y11</span> Hyperbolic</b> ไฮเพอร์โบลิก</p>
+        \[ \sinh x = \sum\frac{x^{2n+1}}{(2n+1)!},\qquad \cosh x = \sum\frac{x^{2n}}{(2n)!} \]
+        <p class="tf-x">เหมือน sin, cos แต่ไม่สลับเครื่องหมาย · \(R = \infty\)</p>
+      </div>
+      <div class="tf" id="Y12" data-k="tan arcsin sec series first terms tangent แทนเจนต์ อาร์กไซน์">
+        <p class="tf-n"><b><span class="fid">Y12</span> tan, arcsin, sec</b> พจน์ต้นที่ควรรู้</p>
+        \[ \tan x = x + \tfrac{x^3}{3} + \tfrac{2x^5}{15} + \cdots,\ \ \arcsin x = x + \tfrac{x^3}{6} + \tfrac{3x^5}{40} + \cdots,\ \ \sec x = 1 + \tfrac{x^2}{2} + \tfrac{5x^4}{24} + \cdots \]
+        <p class="tf-x">tan, sec: \(R = \tfrac{\pi}{2}\) · arcsin: \(R = 1\)</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บพหุนามเทย์เลอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>พิมพ์ฟังก์ชันและจุดกระจาย เลื่อนดีกรี n และจุด x ที่ต้องการประเมิน ดูความคลาดจริงเทียบขอบเขตลากรองจ์ และสังเกตว่านอกรัศมีการลู่เข้า (เช่น \(\ln(1+x)\) ที่ x > 1) เพิ่มดีกรีเท่าไรก็ไม่ช่วย</p>
+    <div class="sq-taylor" id="ty-lab" data-f="exp(x)" data-a="0" data-n="4" data-x="1.5"></div>
+    <div class="lap-chips"><button type="button" class="lap-chip" data-ty-target="ty-lab" data-ty-set='{"f":"sqrt(x)","a":4,"n":2,"x":4.1}'>ตัวอย่าง Y-2 √x รอบ 4</button><button type="button" class="lap-chip" data-ty-target="ty-lab" data-ty-set='{"f":"ln(1+x)","a":0,"n":10,"x":1.3}'>ln(1+x) นอกรัศมี</button><button type="button" class="lap-chip" data-ty-target="ty-lab" data-ty-set='{"f":"1/(1+x^2)","a":0,"n":12,"x":0.9}'>1/(1+x²)</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="approx">
+    <h2 id="approx">ประมาณค่าด้วยพหุนามเทย์เลอร์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="wx" id="ex-y2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-2 · ประมาณรากที่สอง</span><h3>ใช้พหุนามเทย์เลอร์ดีกรีสองของ \(\sqrt x\) รอบ \(a = 4\) ประมาณ \(\sqrt{4.1}\)</h3><button type="button" class="wx-btn calc-go" data-ty-target="ty-lab" data-ty-set='{"f":"sqrt(x)","a":4,"n":2,"x":4.1}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(f(4) = 2,\ f'(x) = \tfrac{1}{2\sqrt x} \Rightarrow f'(4) = \tfrac14,\ f''(x) = -\tfrac{1}{4x^{3/2}} \Rightarrow f''(4) = -\tfrac{1}{32}\)</p></li>
+        <li><p>\(P_2(x) = 2 + \tfrac14(x-4) - \tfrac{1}{64}(x-4)^2\) (เพราะ \(\tfrac{-1/32}{2!} = -\tfrac1{64}\))</p></li>
+        <li><p>\(P_2(4.1) = 2 + 0.025 - 0.00015625 = 2.02484375\) ค่าจริง 2.02484567 คลาด \(1.9\times10^{-6}\)</p></li>
+      </ol>
+      <p class="answer">\(\sqrt{4.1} \approx 2.024844\) ถูกต้อง 5 ตำแหน่ง ด้วยการคำนวณเลขในใจ</p>
+    </div>
+    <div class="wx" id="ex-y3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-3 · ทวินาม</span><h3>ประมาณ (ก) \(\sqrt{1.1}\) ด้วย 4 พจน์ (ข) \(\sqrt[3]{1.03}\) ด้วย 3 พจน์</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\sqrt{1+x} = 1 + \tfrac{x}{2} - \tfrac{x^2}{8} + \tfrac{x^3}{16}\) ที่ x = 0.1: \(1 + 0.05 - 0.00125 + 0.0000625 = 1.0488125\) (จริง 1.0488088, คลาด \(3.7\times10^{-6}\))</p></li>
+        <li><p>(ข) \((1+x)^{1/3} = 1 + \tfrac{x}{3} - \tfrac{x^2}{9} + \cdots\) ที่ x = 0.03: \(1 + 0.01 - 0.0001 = 1.0099\) (จริง 1.0099016)</p></li>
+      </ol>
+      <p class="answer">(ก) 1.04881 · (ข) 1.0099 — ฟิสิกส์ใช้แบบเดียวกันกับ \(\tfrac{1}{\sqrt{1 - v^2/c^2}} \approx 1 + \tfrac{v^2}{2c^2}\) ได้พลังงานจลน์ \(\tfrac12mv^2\) เป็นพจน์แรก</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="remainder">
+    <h2 id="remainder">ทฤษฎีบทเทย์เลอร์และเศษเหลือ: ต้องใช้กี่พจน์ <span class="lv lv-i">กลาง</span></h2>
+    <p>การประมาณที่ไม่บอกความคลาดใช้ในงานวิศวกรรมไม่ได้ ทฤษฎีบทเทย์เลอร์บอกว่าความต่างระหว่างฟังก์ชันกับพหุนาม (เศษเหลือ) เขียนได้เป็นพจน์ถัดไปที่ประเมินที่จุดใดจุดหนึ่งระหว่าง a กับ x เราไม่รู้จุดนั้น แต่หาขอบเขตได้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Y13" data-k="taylor theorem lagrange remainder bound M (n+1)! เศษเหลือลากรองจ์ ทฤษฎีบทเทย์เลอร์">
+        <p class="tf-n"><b><span class="fid">Y13</span> Taylor's theorem (Lagrange remainder)</b> ทฤษฎีบทเทย์เลอร์ เศษเหลือแบบลากรองจ์</p>
+        \[ f(x) = P_n(x) + R_n(x),\quad R_n(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1},\ \xi \text{ ระหว่าง } a,\ x \ \Rightarrow\ |R_n(x)| \le \frac{M}{(n+1)!}|x-a|^{n+1} \]
+        <p class="tf-x">\(M = \max|f^{(n+1)}|\) บนช่วงระหว่าง a กับ x · sin, cos: M = 1 · \(e^x\) (x > 0): \(M = e^x\) ใช้ \(e &lt; 3\) ช่วยประมาณ</p>
+      </div>
+      <div class="tf" id="Y14" data-k="integral form remainder taylor เศษเหลือรูปอินทิกรัล">
+        <p class="tf-n"><b><span class="fid">Y14</span> Integral remainder</b> เศษเหลือรูปอินทิกรัล</p>
+        \[ R_n(x) = \frac{1}{n!}\int_a^x f^{(n+1)}(t)\,(x-t)^n\,dt \]
+        <p class="tf-x">แม่นตรง ไม่มี ξ · ใช้พิสูจน์ว่าอนุกรมทวินามลู่เข้าสู่ \((1+x)^\alpha\)</p>
+      </div>
+      <div class="tf" id="Y15" data-k="alternating series remainder taylor next term error bound เศษเหลืออนุกรมสลับ">
+        <p class="tf-n"><b><span class="fid">Y15</span> Alternating shortcut</b> ทางลัดอนุกรมสลับ</p>
+        \[ \text{อนุกรมสลับที่ผ่านไลบ์นิซ:}\ |R| \le |\text{พจน์แรกที่ตัดทิ้ง}| \]
+        <p class="tf-x">sin, cos, arctan, ln(1+x) ที่ \(0 &lt; x \le 1\) ใช้ได้ (<a href="/learn/sequences-and-series/alternating-series/#error">A3</a>)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-y4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-4 · ใช้กี่พจน์ (ลากรองจ์)</span><h3>ต้องใช้พหุนามแมคลอรินดีกรีเท่าใด ประมาณ \(e^{0.5}\) ให้คลาดไม่เกิน \(10^{-5}\)</h3><button type="button" class="wx-btn calc-go" data-sr-target="need-lab" data-sr-set='{"f":"exp","x":0.5,"tol":5}'>เปิดเครื่องคำนวณ</button></div>
+      <ol class="steps">
+        <li><p>\(|R_n(0.5)| \le \dfrac{e^{0.5}}{(n+1)!}(0.5)^{n+1} &lt; \dfrac{2\,(0.5)^{n+1}}{(n+1)!}\) (ใช้ \(e^{0.5} &lt; 2\))</p></li>
+        <li><p>\(n = 5\): \(\dfrac{2(0.5)^6}{720} = 4.3\times10^{-5}\) ยังไม่พอ · \(n = 6\): \(\dfrac{2(0.5)^7}{5040} = 3.1\times10^{-6}\) ✓</p></li>
+        <li><p>\(P_6(0.5) = 1 + 0.5 + 0.125 + 0.0208333 + 0.0026042 + 0.0002604 + 0.0000217 = 1.6487196\) ค่าจริง 1.6487213 คลาด \(1.7\times10^{-6}\)</p></li>
+      </ol>
+      <p class="answer">ดีกรี 6 (7 พจน์) · ขอบเขตรับประกันโดยไม่ต้องรู้ค่าจริง ซึ่งเป็นสิ่งที่โจทย์ต้องการ</p>
+    </div>
+    <div class="wx" id="ex-y5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-5 · ใช้กี่พจน์ (อนุกรมสลับ)</span><h3>ประมาณ \(\sin(0.2)\) ด้วย \(x - \tfrac{x^3}{6}\) และหาขอบเขตความคลาด</h3></div>
+      <ol class="steps">
+        <li><p>\(0.2 - \dfrac{0.008}{6} = 0.1986667\)</p></li>
+        <li><p>อนุกรมสลับ พจน์แรกที่ตัดทิ้ง \(\dfrac{0.2^5}{5!} = 2.67\times10^{-6}\) ⇒ \(|R| \le 2.67\times10^{-6}\)</p></li>
+        <li><p>ค่าจริง \(\sin 0.2 = 0.1986693\) คลาดจริง \(2.66\times10^{-6}\) (ขอบเขตแทบจะพอดี)</p></li>
+      </ol>
+      <p class="answer">\(\sin 0.2 \approx 0.19867\) คลาดไม่เกิน \(2.7\times10^{-6}\)</p>
+    </div>
+    <div class="sr-need" id="need-lab" data-f="sin" data-x="pi/6" data-tol="6"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="techniques">
+    <h2 id="techniques">เทคนิคลัด: แทนค่า คูณ หาร อินทิกรัล ประกอบ <span class="lv lv-i">กลาง</span></h2>
+    <p>การหาอนุพันธ์ทีละอันดับของ \(e^{-x^2}\) หรือ \(e^x\sin x\) ยุ่งเกินจำเป็น เพราะทฤษฎีบทความเป็นหนึ่งเดียวรับประกันว่าได้อนุกรมด้วยวิธีใดก็คืออนุกรมเทย์เลอร์ตัวเดียวกัน เทคนิคเหล่านี้จึงเป็นทักษะหลักในข้อสอบ</p>
+    <div class="tf-grid">
+      <div class="tf" id="Y16" data-k="substitution technique e^(-x^2) แทนค่า">
+        <p class="tf-n"><b><span class="fid">Y16</span> Substitution</b> แทนค่า</p>
+        \[ e^{-x^2} = \sum_{n=0}^{\infty}\frac{(-1)^n x^{2n}}{n!} = 1 - x^2 + \frac{x^4}{2} - \cdots \]
+        <p class="tf-x">แทน \(u = -x^2\) ใน Y4 · รัศมีเปลี่ยนตามตัวแปร: \(\tfrac{1}{1-2x}\) มี \(R = \tfrac12\)</p>
+      </div>
+      <div class="tf" id="Y17" data-k="multiplication division cauchy product series tan = sin/cos คูณ หาร">
+        <p class="tf-n"><b><span class="fid">Y17</span> Multiply &amp; divide</b> คูณและหาร</p>
+        \[ e^x\sin x = x + x^2 + \frac{x^3}{3} - \frac{x^5}{30} + \cdots,\qquad \tan x = \frac{\sin x}{\cos x} = x + \frac{x^3}{3} + \cdots \]
+        <p class="tf-x">คูณเหมือนพหุนาม เก็บถึงดีกรีที่ต้องการ · หารด้วยการหารยาวหรือเทียบสัมประสิทธิ์</p>
+      </div>
+      <div class="tf" id="Y18" data-k="integrate series nonelementary integral erf e^(-x^2) อินทิกรัลทีละพจน์">
+        <p class="tf-n"><b><span class="fid">Y18</span> Integrate term by term</b> อินทิกรัลทีละพจน์</p>
+        \[ \int_0^1 e^{-x^2}dx = \sum_{n=0}^{\infty}\frac{(-1)^n}{n!\,(2n+1)} = 1 - \frac13 + \frac{1}{10} - \frac{1}{42} + \cdots \]
+        <p class="tf-x">ใช้กับอินทิกรัลที่ไม่มีปฏิยานุพันธ์พื้นฐาน (ฟังก์ชันค่าคลาดเคลื่อน erf ในสถิติและการแพร่ความร้อน)</p>
+      </div>
+      <div class="tf" id="Y19" data-k="composition e^(sin x) series substitute series into series ฟังก์ชันประกอบ">
+        <p class="tf-n"><b><span class="fid">Y19</span> Composition</b> ฟังก์ชันประกอบ</p>
+        \[ e^{\sin x} = 1 + x + \frac{x^2}{2} - \frac{x^4}{8} - \frac{x^5}{15} + \cdots \]
+        <p class="tf-x">แทนอนุกรมของ \(\sin x\) ลงใน \(e^u\) แล้วเก็บพจน์ถึงดีกรีที่ต้องการ (พจน์ \(x^3\) หักล้างเป็น 0)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-y6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-6 · อินทิกรัลที่หาปฏิยานุพันธ์ไม่ได้</span><h3>ประมาณ \(\displaystyle\int_0^1 e^{-x^2}\,dx\) ด้วย 5 พจน์ และบอกความคลาด</h3></div>
+      <ol class="steps">
+        <li><p>จาก Y18: \(1 - \tfrac13 + \tfrac{1}{10} - \tfrac{1}{42} + \tfrac{1}{216} = 0.747487\)</p></li>
+        <li><p>เป็นอนุกรมสลับ ความคลาด ≤ พจน์ถัดไป \(\dfrac{1}{5!\cdot 11} = \dfrac{1}{1320} = 7.6\times10^{-4}\)</p></li>
+        <li><p>ค่าจริง \(\tfrac{\sqrt\pi}{2}\operatorname{erf}(1) = 0.746824\) คลาด \(6.6\times10^{-4}\) อยู่ในขอบเขต</p></li>
+      </ol>
+      <p class="answer">≈ 0.7475 ± 0.0008 — ใช้ 7 พจน์จะได้ถูกต้องทศนิยม 4 ตำแหน่ง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limits">
+    <h2 id="limits">หาลิมิตด้วยอนุกรมเทย์เลอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>รูป 0/0 ที่ต้องใช้โลปิตาลหลายครั้ง แก้ด้วยอนุกรมได้ในบรรทัดเดียว: แทนฟังก์ชันด้วยอนุกรม ตัดพจน์ที่หักล้างกัน แล้วดูพจน์แรกที่เหลือ วิธีนี้ยังบอก “อัตราการเข้าใกล้” ซึ่งโลปิตาลไม่บอก</p>
+    <div class="wx" id="ex-y7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-7 · ลิมิต (แนวข้อสอบ)</span><h3>(ก) \(\lim_{x\to0}\dfrac{\sin x - x + x^3/6}{x^5}\) (ข) \(\lim_{x\to0}\dfrac{\tan x - x}{x^3}\) (ค) \(\lim_{x\to0}\dfrac{x - \sin x}{x - \tan x}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\sin x - x + \tfrac{x^3}{6} = \tfrac{x^5}{120} - \tfrac{x^7}{5040} + \cdots\) ⇒ ลิมิต \(\tfrac{1}{120}\)</p></li>
+        <li><p>(ข) \(\tan x - x = \tfrac{x^3}{3} + \tfrac{2x^5}{15} + \cdots\) ⇒ ลิมิต \(\tfrac13\)</p></li>
+        <li><p>(ค) ตัวเศษ \(\tfrac{x^3}{6} - \cdots\) ตัวส่วน \(-\tfrac{x^3}{3} - \cdots\) ⇒ \(\dfrac{1/6}{-1/3} = -\tfrac12\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac{1}{120}\) · (ข) \(\tfrac13\) · (ค) \(-\tfrac12\) — ข้อ (ก) ถ้าใช้โลปิตาลต้องหาอนุพันธ์ 5 ครั้ง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sums">
+    <h2 id="sums">หาผลบวกอนุกรมจากอนุกรมเทย์เลอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ย้อนทาง: เห็นอนุกรมตัวเลขแล้วจำได้ว่าเป็นอนุกรมเทย์เลอร์ของฟังก์ชันใดที่จุดใด เช่น \(\sum\tfrac{2^n}{n!} = e^2\), \(\sum\tfrac{(-1)^n\pi^{2n}}{(2n)!} = \cos\pi = -1\)</p>
+    <div class="wx" id="ex-y8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง Y-8 · หาผลบวก</span><h3>(ก) \(\displaystyle\sum_{n=1}^{\infty}\frac{n^2}{n!}\) (ข) \(\displaystyle\sum_{n=0}^{\infty}\frac{(-1)^n}{3^n(2n+1)}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\dfrac{n^2}{n!} = \dfrac{n}{(n-1)!}\) ให้ \(m = n - 1\): \(\sum_{m\ge0}\dfrac{m+1}{m!} = \sum\dfrac{m}{m!} + \sum\dfrac{1}{m!} = e + e = 2e\)</p></li>
+        <li><p>(ข) เทียบ \(\arctan x = \sum\dfrac{(-1)^n x^{2n+1}}{2n+1}\): ต้องการ \(x^{2n} = 3^{-n}\) ⇒ \(x = \tfrac{1}{\sqrt3}\) ⇒ อนุกรม \(= \sqrt3\arctan\tfrac{1}{\sqrt3} = \sqrt3\cdot\tfrac{\pi}{6}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(2e \approx 5.4366\) · (ข) \(\tfrac{\pi\sqrt3}{6} \approx 0.9069\) (นี่คืออนุกรมที่ลู่เข้าเร็วสำหรับคำนวณ π)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="euler">
+    <h2 id="euler">สูตรออยเลอร์: จากอนุกรมสู่เฟสเซอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>แทน \(x = j\theta\) ในอนุกรมของ \(e^x\) แล้วแยกพจน์คู่-คี่ จะได้อนุกรมของ cos และ sin พอดี นี่คือรากฐานของการวิเคราะห์วงจรไฟฟ้ากระแสสลับด้วย<a href="/learn/vector-algebra/phasors/">เฟสเซอร์</a> และของ<a href="/learn/fourier-series/">อนุกรมฟูริเยร์</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="Y20" data-k="euler formula e^(j theta) cos + j sin series proof phasor สูตรออยเลอร์">
+        <p class="tf-n"><b><span class="fid">Y20</span> Euler's formula</b> สูตรออยเลอร์</p>
+        \[ e^{j\theta} = \sum\frac{(j\theta)^n}{n!} = \underbrace{\left(1 - \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \cdots\right)}_{\cos\theta} + j\underbrace{\left(\theta - \frac{\theta^3}{3!} + \cdots\right)}_{\sin\theta} \]
+        <p class="tf-x">\(j^2 = -1,\ j^3 = -j,\ j^4 = 1\) ทำให้เครื่องหมายสลับ · \(e^{j\pi} + 1 = 0\)</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="analytic">
+    <h2 id="analytic">ฟังก์ชันวิเคราะห์ และฟังก์ชันที่อนุกรมเทย์เลอร์ใช้ไม่ได้ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="Y21" data-k="analytic function taylor series converges to f real analytic ฟังก์ชันวิเคราะห์">
+        <p class="tf-n"><b><span class="fid">Y21</span> Analytic function</b> ฟังก์ชันวิเคราะห์</p>
+        \[ f \text{ วิเคราะห์ที่ } a \iff f(x) = \sum\frac{f^{(n)}(a)}{n!}(x-a)^n \text{ ในบางช่วงรอบ } a \]
+        <p class="tf-x">พหุนาม eˣ sin cos ln ราก และผลบวก ผลคูณ ผลหาร ประกอบของพวกนี้ วิเคราะห์ในโดเมนของมัน</p>
+      </div>
+      <div class="tf" id="Y22" data-k="smooth non analytic e^(-1/x^2) counterexample all derivatives zero ฟังก์ชันเรียบแต่ไม่วิเคราะห์">
+        <p class="tf-n"><b><span class="fid">Y22</span> Smooth but not analytic</b> เรียบแต่ไม่วิเคราะห์</p>
+        \[ f(x) = \begin{cases} e^{-1/x^2} & x \ne 0 \\ 0 & x = 0 \end{cases},\quad f^{(n)}(0) = 0\ \forall n \]
+        <p class="tf-x">อนุกรมเทย์เลอร์รอบ 0 เป็น 0 ทุกพจน์ ลู่เข้าทุก x แต่ไม่เท่ากับ f — ต้องตรวจ \(R_n \to 0\) เสมอ</p>
+      </div>
+      <div class="tf wide" id="Y23" data-k="multivariable taylor expansion second order hessian two variables เทย์เลอร์หลายตัวแปร">
+        <p class="tf-n"><b><span class="fid">Y23</span> Two-variable Taylor expansion</b> เทย์เลอร์สองตัวแปร</p>
+        \[ f(a+h, b+k) \approx f + f_x h + f_y k + \tfrac12\left(f_{xx}h^2 + 2f_{xy}hk + f_{yy}k^2\right) \]
+        <p class="tf-x">ทุกอนุพันธ์ประเมินที่ (a, b) · พจน์อันดับสองคือเมทริกซ์เฮสเซียน ใช้จำแนกจุดวิกฤตใน<a href="/learn/multivariable-calculus/optimization/">ค่าสุดขีดหลายตัวแปร</a></p>
+      </div>
+    </div>
+    </section>
+
+    <h2 id="next">ต่อไป: เมื่อมีจุดเอกฐานอยู่ตรงกลาง</h2>
+    <p>อนุกรมเทย์เลอร์ใช้ไม่ได้รอบจุดที่ฟังก์ชันระเบิด เช่น \(\tfrac{1}{z}\) หรือ \(e^{1/z}\) รอบ 0 ทางแก้คือยอมให้มีกำลังลบ ได้<a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์</a> ซึ่งเป็นเครื่องมือของเรซิดิว การแปลงลาปลาซผกผัน และการแปลง Z · ดูการใช้อนุกรมเทย์เลอร์ในงานจริงที่ <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a> · บทความ <a href="/blog/what-is-taylor-series/">อนุกรมเทย์เลอร์คืออะไร</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

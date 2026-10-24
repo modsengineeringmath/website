@@ -1,0 +1,126 @@
+<!--meta
+{
+  "title": "How to Find the Radius of Convergence: 3 Methods and Endpoint Checks | Ajarn Mod",
+  "h1": "How to Find the Radius of Convergence: 3 Methods, Endpoint Checks and the Complex-Plane Reason",
+  "description": "Three ways to find the radius of convergence of a power series (ratio test, root test, nearest complex singularity), plus the endpoint checks for the interval of convergence, with examples.",
+  "ogTitle": "How to Find the Radius of Convergence: 3 Methods",
+  "lang": "en",
+  "blog": true,
+  "tag": "Sequences & series",
+  "series": ["sequences-and-series"],
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "keywords": ["radius of convergence", "interval of convergence", "power series", "ratio test power series", "root test", "Cauchy-Hadamard", "nearest singularity", "how to find radius of convergence", "endpoint convergence"],
+  "about": ["Radius of convergence", "Interval of convergence", "Power series", "Ratio test", "Root test", "Analytic function"],
+  "og": {"title": "How to Find the Radius of Convergence", "sub": "Ratio · root · distance to a singularity + endpoint checks", "eyebrow": "Article · Sequences & series", "sym": "R"},
+  "faq": [
+    {"q": "What is the radius of convergence?", "a": "A power series \\(\\sum c_n(x-a)^n\\) converges when \\(|x - a| < R\\) and diverges when \\(|x - a| > R\\). That number R is the radius of convergence. It can be 0 (convergence only at x = a) or ∞ (convergence for every x)."},
+    {"q": "How is the radius different from the interval of convergence?", "a": "The radius is a single number. The interval of convergence is \\((a - R, a + R)\\) together with whichever endpoints converge, which must be checked separately at x = a − R and x = a + R, so the interval can be open, closed or half-open."},
+    {"q": "Why can't the ratio test decide the endpoints?", "a": "At \\(|x - a| = R\\) the limit of the ratio is exactly 1 every time, which is the inconclusive case. Substitute the endpoint value and use another test such as the p-series, Leibniz or n-th term test."},
+    {"q": "Can I find the radius without computing coefficients?", "a": "Yes, if you know the function the series represents: the radius about a equals the distance from a to the nearest singularity in the complex plane. For \\(1/(x^2 - 4x + 13)\\) the poles are \\(2 \\pm 3i\\), so the radius about 0 is \\(\\sqrt{13}\\)."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Radius of convergence</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Sequences &amp; series</p>
+      <h1>How to Find the Radius of Convergence: 3 Methods, Endpoint Checks and the Complex-Plane Reason</h1>
+      <p class="lede">A power series is like a polynomial that never ends; it represents a function only on an interval around its centre. Half the width of that interval is the radius of convergence R. This article teaches three ways to find R, the endpoint checks where exams award the marks, and the explanation textbooks rarely give: why R has exactly the value it has.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr"><b>In 30 seconds</b><ul>
+        <li>Method 1, ratio: \(R = \lim\left|\dfrac{c_n}{c_{n+1}}\right|\) · Method 2, root: \(\dfrac1R = \lim\sqrt[n]{|c_n|}\)</li>
+        <li>Method 3, complex plane: R = distance from a to the nearest singularity of the function</li>
+        <li>Always substitute the endpoints \(x = a \pm R\) and test them separately</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="what">
+    <h2 id="what">What the radius of convergence is</h2>
+    <figure class="post-fig"><!--FIG:sr-interval-en--><svg class="mf sr-fig" viewBox="0 0 440 120" role="img" aria-label="Interval of convergence: centre a, radius R"><line class="mf-ax" x1="14" y1="58" x2="426" y2="58"/><rect class="mf-fill2" x="90" y="48" width="260" height="20" rx="4"/><line class="mf-line" x1="90" y1="44" x2="90" y2="72"/><text class="mf-h" x="90" y="90" text-anchor="middle">a − R</text><line class="mf-line" x1="220" y1="44" x2="220" y2="72"/><text class="mf-h" x="220" y="90" text-anchor="middle">a</text><line class="mf-line" x1="350" y1="44" x2="350" y2="72"/><text class="mf-h" x="350" y="90" text-anchor="middle">a + R</text><circle class="mf-zero" cx="90" cy="58" r="6"/><circle class="mf-zero" cx="350" cy="58" r="6"/><text class="mf-h" x="220" y="38" text-anchor="middle">converges absolutely</text><text class="mf-l" x="44" y="38" text-anchor="middle">diverges</text><text class="mf-l" x="396" y="38" text-anchor="middle">diverges</text><text class="mf-k" x="90" y="110" text-anchor="middle">? test</text><text class="mf-k" x="350" y="110" text-anchor="middle">? test</text></svg><!--/FIG--><figcaption>Inside |x − a| &lt; R the series converges absolutely, outside it diverges, and the two endpoints must be checked by hand.</figcaption></figure>
+    <p>A key theorem says a power series \(\sum c_n(x-a)^n\) can behave in only one way: there is a number R (possibly 0 or ∞) such that it converges inside and diverges outside. It never converges in scattered patches, and never only to the right of a. So the job is just to find R and then check the two boundary points.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ratio">
+    <h2 id="ratio">Method 1: the ratio test (used most often)</h2>
+    <p>Apply the ratio test to the absolute value of the whole term and solve “limit &lt; 1”. You get R without having to remember whether \(c_n\) goes on top or at the bottom.</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 1</span><h3>Find the interval of convergence of \(\displaystyle\sum_{n=1}^{\infty}\frac{(x-3)^n}{n\,2^n}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\left|\dfrac{a_{n+1}}{a_n}\right| = \dfrac{|x-3|}{2}\cdot\dfrac{n}{n+1} \to \dfrac{|x-3|}{2} &lt; 1 \iff |x - 3| &lt; 2\) ⇒ \(R = 2\)</p></li>
+        <li><p>Endpoint x = 1: \(\sum\dfrac{(-1)^n}{n}\) converges (Leibniz) · endpoint x = 5: \(\sum\dfrac{1}{n}\) diverges</p></li>
+      </ol>
+      <p class="answer">\(R = 2\) · interval of convergence \([1, 5)\)</p>
+    </div>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 2 · R equals e</span><h3>Find the interval of convergence of \(\sum\dfrac{n!\,x^n}{n^n}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\left|\dfrac{a_{n+1}}{a_n}\right| = |x|\left(\dfrac{n}{n+1}\right)^n \to \dfrac{|x|}{e}\) ⇒ \(R = e\)</p></li>
+        <li><p>At \(x = \pm e\) the size of the terms is \(\dfrac{n!\,e^n}{n^n} \approx \sqrt{2\pi n} \to \infty\) (Stirling), so both endpoints diverge</p></li>
+      </ol>
+      <p class="answer">\((-e, e)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="root">
+    <h2 id="root">Method 2: the root test (for nested n-th powers)</h2>
+    <p>The Cauchy–Hadamard formula \(\dfrac{1}{R} = \limsup\sqrt[n]{|c_n|}\) always works, and it is convenient when the coefficients are raised to the n-th power or have gaps (zero coefficients in between) where the ratio method breaks down.</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 3</span><h3>Find the radius of convergence of \(\displaystyle\sum_{n=1}^{\infty}\left(\frac{n}{n+1}\right)^{n^2}x^n\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\sqrt[n]{|c_n|} = \left(\dfrac{n}{n+1}\right)^{n} \to \dfrac1e\) ⇒ \(R = e\)</p></li>
+        <li><p>At \(x = \pm e\): \(\left(\dfrac{n}{n+1}\right)^{n^2}e^n \to e^{1/2} \ne 0\), so both endpoints diverge</p></li>
+      </ol>
+      <p class="answer">\((-e, e)\) — the ratio method is much messier here</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">Method 3: look from the complex plane (understand why)</h2>
+    <p>Consider \(\dfrac{1}{1+x^2} = 1 - x^2 + x^4 - \cdots\). On the real line the function is smooth everywhere and never blows up, yet the series converges only for \(|x| &lt; 1\). Why? Because a power series converges on a disc in the complex plane, and the disc grows until it hits the first singularity, which for \(\tfrac{1}{1+z^2}\) sits at \(z = \pm i\), exactly one unit from the centre.</p>
+    <figure class="post-fig"><!--FIG:sr-disc-en--><svg class="mf sr-fig" viewBox="0 0 400 300" role="img" aria-label="Disc of convergence of 1/(1+z²) about 0 stops at the poles ±i"><rect class="mf-bg" x="10" y="10" width="380" height="280" rx="8"/><line class="mf-ax" x1="20" y1="150" x2="380" y2="150"/><line class="mf-ax" x1="200" y1="20" x2="200" y2="280"/><circle class="mf-roc" cx="200" cy="150" r="95"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="95"/><line class="mf-brom" x1="105" y1="150" x2="295" y2="150"/><path class="mf-pole" d="M193 48L207 62M207 48L193 62"/><text class="mf-h" x="214" y="69" text-anchor="start">i</text><path class="mf-pole" d="M193 238L207 252M207 238L193 252"/><text class="mf-h" x="214" y="259" text-anchor="start">−i</text><text class="mf-k" x="105" y="168" text-anchor="middle">−1</text><text class="mf-k" x="295" y="168" text-anchor="middle">1</text><line class="mf-thin" x1="200" y1="150" x2="266.5" y2="83.5"/><text class="mf-h" x="236.1" y="104.4" text-anchor="start">R = 1</text><text class="mf-l" x="372" y="142" text-anchor="end">Re</text><text class="mf-l" x="206" y="30" text-anchor="start">Im</text><text class="mf-l" x="20" y="278" text-anchor="start">green segment: (−1, 1) on the real axis</text></svg><!--/FIG--><figcaption>The disc of convergence of 1/(1+z²) about 0 hits the poles ±i at distance 1; what we see on the real axis is the slice (−1, 1).</figcaption></figure>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example 4 · no coefficients needed</span><h3>What is the radius of convergence of the Taylor series of \(f(x) = \dfrac{1}{x^2 - 4x + 13}\) about (a) 0 (b) 2?</h3></div>
+      <ol class="steps">
+        <li><p>Poles of f: \(z^2 - 4z + 13 = 0 \Rightarrow z = 2 \pm 3i\)</p></li>
+        <li><p>(a) Distance from 0: \(|2 \pm 3i| = \sqrt{13}\) · (b) distance from 2: \(|\pm 3i| = 3\)</p></li>
+      </ol>
+      <p class="answer">(a) \(R = \sqrt{13} \approx 3.61\) · (b) \(R = 3\)</p>
+    </div>
+    <p>This method is an excellent check on Methods 1–2, and it explains why \(\tan x\) has radius \(\pi/2\) (because \(\cos z = 0\) at \(z = \pm\pi/2\)), while \(e^x, \sin x, \cos x\) have no singularities at all and so \(R = \infty\).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="endpoints">
+    <h2 id="endpoints">Endpoint checklist</h2>
+    <ol>
+      <li>Substitute \(x = a + R\) and \(x = a - R\) into the series to get two numerical series.</li>
+      <li>If the terms do not tend to 0 ⇒ divergence at that endpoint.</li>
+      <li>If it has the form \(\sum\tfrac{1}{n^p}\), use the p-series result · if the signs alternate, use Leibniz (and test the absolute values if the question asks how it converges).</li>
+      <li>Write the interval with the right brackets: ( ) excludes, [ ] includes.</li>
+    </ol>
+    <p>Keep these standard examples for comparison: \(\sum x^n\) gives \((-1, 1)\) · \(\sum\tfrac{x^n}{n}\) gives \([-1, 1)\) · \(\sum\tfrac{x^n}{n^2}\) gives \([-1, 1]\) — the same radius, but all three endpoint behaviours differ.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">Try it in the lab</h2>
+    <p>The <a href="/learn/sequences-and-series/power-series/#lab">radius-of-convergence lab</a> (in Thai) plots the partial sums against the function on the real line, with the disc in the complex plane beside it. Move the degree slider: inside the interval the partial sums hug the function more tightly, outside they swing away. You can also type your own \(c_n\).</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/sequences-and-series/power-series/">Power series in full: term-by-term calculus, Abel's theorem, solving differential equations</a></li>
+        <li><a href="/learn/sequences-and-series/taylor-series/">Taylor and Maclaurin series: the table to memorise, remainders</a></li>
+        <li><a href="/learn/sequences-and-series/laurent-series/">Laurent series: when the centre is a singularity</a></li>
+        <li><a href="/learn/sequences-and-series/exam-practice/#set-b">Interval-of-convergence problems B7–B10 with solutions</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

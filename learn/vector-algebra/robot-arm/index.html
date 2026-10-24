@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=25076967">
+<link rel="stylesheet" href="/assets/site.css?v=87eca12a">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/vector-algebra/robot-arm/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/#article","headline":"เวกเตอร์ในแขนกล: จลนศาสตร์ Jacobian และแรงบิดข้อต่อ","description":"เรียนแขนกลด้วยเวกเตอร์ภาษาไทย: ตำแหน่งปลายแขนเป็นผลบวกเวกเตอร์ของข้อแขน forward kinematics และ inverse kinematics ของแขน 2 ข้อต่อ (elbow-up/down) พื้นที่ทำงาน แขน 3 มิติ 3 ข้อต่อ Jacobian จาก ω × r ความเร็วปลายแขน ภาวะเอกฐาน แรงบิดข้อต่อ τ = JᵀF จากงานเสมือน และการเลือกมอเตอร์พร้อมเกียร์ มีแล็บแขนกลลากเป้าหมายได้และฉาก 3 มิติ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/","mainEntityOfPage":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Robot arm","Forward kinematics","Inverse kinematics","Jacobian matrix","Kinematic singularity","Joint torque","Virtual work","Servo motor sizing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/vector-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-vector-algebra-robot-arm.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์: จากแรงลัพธ์ถึงเฟสเซอร์","item":"https://modsengineeringmath.com/learn/vector-algebra/"},{"@type":"ListItem","position":4,"name":"เวกเตอร์ในแขนกล: จลนศาสตร์ไปข้างหน้า-ย้อนกลับ Jacobian ความเร็ว และแรงบิดข้อต่อ","item":"https://modsengineeringmath.com/learn/vector-algebra/robot-arm/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Forward kinematics ของแขนกลสองข้อต่อคืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือการหาตำแหน่งปลายแขนจากมุมข้อต่อ โดยบวกเวกเตอร์ของข้อแขนแต่ละท่อน p = L₁(cos θ₁, sin θ₁) + L₂(cos(θ₁+θ₂), sin(θ₁+θ₂)) มุมของท่อนที่สองต้องใช้ θ₁+θ₂ เพราะวัดเทียบกับท่อนแรก"}},{"@type":"Question","name":"Inverse kinematics หามุมข้อต่ออย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้กฎของโคไซน์กับสามเหลี่ยมฐาน-ข้อศอก-ปลายแขน cos θ₂ = (x² + y² − L₁² − L₂²)/(2L₁L₂) ได้สองคำตอบ (ข้อศอกขึ้นหรือลง) แล้ว θ₁ = atan2(y, x) − atan2(L₂ sin θ₂, L₁ + L₂ cos θ₂) ถ้า cos θ₂ อยู่นอก [−1, 1] เป้าหมายอยู่นอกพื้นที่ทำงาน"}},{"@type":"Question","name":"Jacobian ของแขนกลใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"เชื่อมความเร็วข้อต่อกับความเร็วปลายแขน v = J θ̇ และเชื่อมแรงที่ปลายแขนกับแรงบิดข้อต่อ τ = Jᵀ F เมื่อ det J = 0 (ภาวะเอกฐาน) แขนขยับปลายในบางทิศไม่ได้ และต้องใช้ความเร็วข้อต่อสูงมากเมื่อเข้าใกล้"}},{"@type":"Question","name":"เลือกมอเตอร์ข้อต่ออย่างไร?","acceptedAnswer":{"@type":"Answer","text":"หาแรงบิดสูงสุดที่ข้อต่อจาก τ = JᵀF ในท่าที่แย่ที่สุด (มักเป็นแขนเหยียดแนวนอน) รวมน้ำหนักข้อแขนเอง หารด้วยอัตราทดเกียร์และประสิทธิภาพ แล้วเผื่อค่าความปลอดภัย กระแสมอเตอร์ประมาณจาก τ_motor = K_t i"}}]}]}</script>
@@ -61,6 +61,7 @@
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
       <a href="/blog/" >บทความ</a>
+      <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -88,7 +89,7 @@
         </div>
       </div>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต · อนุกรม</button>
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
         <div class="nav-list" id="navlim">
           <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
           <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
@@ -98,10 +99,29 @@
           <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
           <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
           <span class="nav-h">ลำดับ · อนุกรม · พิสูจน์</span>
-          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรม</a>
-          <a href="/learn/limits/sequences-series/#tests">ทดสอบการลู่เข้าของอนุกรม</a>
-          <a href="/learn/limits/sequences-series/#taylor">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรมฉบับสรุป (หน้าเดียว)</a>
+          <a href="/learn/sequences-and-series/#pages">ลำดับและอนุกรมครบชุด 10 หน้า →</a>
           <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navseq">ลำดับ · อนุกรม</button>
+        <div class="nav-list nav-list-wide" id="navseq">
+          <a href="/learn/sequences-and-series/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/sequences-and-series/series-lab/">แล็บรวม 12 ชุด</a>
+          <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบ · โจทย์สุ่ม</a>
+          <span class="nav-h">ลำดับ</span>
+          <a href="/learn/sequences-and-series/sequences/">ลำดับ · ลิมิตของลำดับ · เวียนเกิด</a>
+          <span class="nav-h">อนุกรมและการทดสอบ</span>
+          <a href="/learn/sequences-and-series/infinite-series/">อนุกรมอนันต์ · เรขาคณิต · อนุกรม p</a>
+          <a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้า · ผังเลือกใช้</a>
+          <a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ · ลู่เข้าสัมบูรณ์</a>
+          <span class="nav-h">อนุกรมกำลัง · เทย์เลอร์ · โลรองต์</span>
+          <a href="/learn/sequences-and-series/power-series/">อนุกรมกำลัง · รัศมีการลู่เข้า</a>
+          <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์ · เรซิดิว</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -654,11 +674,16 @@
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
-      <a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>
+      <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
+      <a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
-      <a href="/learn/limits/sequences-series/">ลำดับและอนุกรม · อุปนัย</a>
+      <a href="/learn/sequences-and-series/">ลำดับและอนุกรม (ครบชุด)</a>
+      <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์และแมคลอริน</a>
+      <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์และเรซิดิว</a>
+      <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบลำดับและอนุกรม</a>
+      <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
       <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
       <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
@@ -725,9 +750,9 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=25076967" defer></script>
-<script src="/assets/lesson.js?v=25076967" defer></script>
-<script src="/assets/vec3d.js?v=25076967" defer></script>
-<script src="/assets/vec-mech.js?v=25076967" defer></script>
+<script src="/assets/site.js?v=87eca12a" defer></script>
+<script src="/assets/lesson.js?v=87eca12a" defer></script>
+<script src="/assets/vec3d.js?v=87eca12a" defer></script>
+<script src="/assets/vec-mech.js?v=87eca12a" defer></script>
 </body>
 </html>

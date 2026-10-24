@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=25076967">
+<link rel="stylesheet" href="/assets/site.css?v=87eca12a">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/#article","headline":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","description":"A full PID tuning course in one article: identify the process with a step test, tune with Ziegler–Nichols, Cohen–Coon, SIMC or relay, compare the results by simulation, then fix windup and noise.","inLanguage":"en","url":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","mainEntityOfPage":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID tuning","Ziegler-Nichols method","Cohen-Coon method","SIMC tuning","Relay feedback","Integrator windup","First-order plus dead time"],"isPartOf":{"@id":"https://modsengineeringmath.com/en/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/en-blog-pid-tuning-guide.jpg"],"keywords":"PID tuning, PID tuning guide, how to tune a PID controller, Ziegler-Nichols method, Cohen-Coon, SIMC tuning, lambda tuning, relay auto-tuning, step test FOPDT, anti-windup, Kp Ki Kd, control systems"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://modsengineeringmath.com/en/blog/"},{"@type":"ListItem","position":3,"name":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","item":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the fastest reliable way to tune a PID loop?","acceptedAnswer":{"@type":"Answer","text":"Run one open-loop step test, read the gain K, dead time L and time constant T from the recording, then apply the SIMC rule K_p=T/(K(tau_c+L)), T_i=min(T,4(tau_c+L)) with tau_c=L. It needs one experiment, has one knob, and gives a smooth response with a gain margin near 3."}},{"@type":"Question","name":"Should I use Ziegler–Nichols?","acceptedAnswer":{"@type":"Answer","text":"Use it as a starting point when you have nothing else, and expect 40–80% overshoot and thin stability margins, because it was designed for a quarter-amplitude decay ratio. Most engineers detune it (lower K_p, larger T_i) or use SIMC or Tyreus–Luyben instead."}},{"@type":"Question","name":"Do I always need the D term?","acceptedAnswer":{"@type":"Answer","text":"No. Most industrial loops run PI. Derivative action helps lag-dominant processes with clean measurements (temperature, some position and speed loops) and is of little use when dead time dominates or the signal is noisy. If you use it, always filter it."}},{"@type":"Question","name":"How do I choose the integral time \\(T_i\\)?","acceptedAnswer":{"@type":"Answer","text":"For a self-regulating process a good first value is T_iapprox T (the process time constant), limited to 4(tau_c+L) when that is smaller. A T_i that is too short gives slow, rolling oscillation; too long leaves the error hanging around. The load-disturbance error area is about Delta d/K_i with K_i=K_p/T_i."}},{"@type":"Question","name":"What sample time should the controller use?","acceptedAnswer":{"@type":"Answer","text":"Roughly one tenth of the process time constant or smaller, and no more than about half the dead time when the dead time is small. Sampling adds about T_s/2 of extra delay, so slow sampling forces lower gains."}},{"@type":"Question","name":"Why does my loop oscillate even with small gains?","acceptedAnswer":{"@type":"Answer","text":"Suspect the hardware first: valve stiction, backlash or a dead band produces a limit cycle that no gain setting removes, and a noisy or badly filtered measurement can do the same. Look at the controller output: a sawtooth in the measurement with a square-wave output is the classic sign of stiction."}},{"@type":"Question","name":"What is integral windup and how do I stop it?","acceptedAnswer":{"@type":"Answer","text":"Windup is the integral term growing while the actuator is saturated, which causes large overshoot afterwards. Stop it with anti-windup: clamp the integrator, or use back-calculation dot I=K_ie+(u_{sat}-u)/T_t. In the simulation in this guide, back-calculation cut the overshoot from 19% to 0.5%."}},{"@type":"Question","name":"How can I tell whether a tuning is robust enough?","acceptedAnswer":{"@type":"Answer","text":"Aim for a gain margin of at least 2, a phase margin of 45–60° and a peak sensitivity M_s of 1.4–2. A quick field check is to raise K_p by 50% (or let the process gain double) and confirm that the response stays damped."}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -63,6 +63,7 @@
       <a class="nav-home" href="/" >Home</a>
       <a href="/learn/" >Library (Thai)</a>
       <a href="/en/blog/" >Articles</a>
+      <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
@@ -90,7 +91,7 @@
         </div>
       </div>
       <div class="nav-grp">
-        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต · อนุกรม</button>
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
         <div class="nav-list" id="navlim">
           <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
           <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
@@ -100,10 +101,29 @@
           <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
           <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
           <span class="nav-h">ลำดับ · อนุกรม · พิสูจน์</span>
-          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรม</a>
-          <a href="/learn/limits/sequences-series/#tests">ทดสอบการลู่เข้าของอนุกรม</a>
-          <a href="/learn/limits/sequences-series/#taylor">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรมฉบับสรุป (หน้าเดียว)</a>
+          <a href="/learn/sequences-and-series/#pages">ลำดับและอนุกรมครบชุด 10 หน้า →</a>
           <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navseq">ลำดับ · อนุกรม</button>
+        <div class="nav-list nav-list-wide" id="navseq">
+          <a href="/learn/sequences-and-series/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/sequences-and-series/series-lab/">แล็บรวม 12 ชุด</a>
+          <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบ · โจทย์สุ่ม</a>
+          <span class="nav-h">ลำดับ</span>
+          <a href="/learn/sequences-and-series/sequences/">ลำดับ · ลิมิตของลำดับ · เวียนเกิด</a>
+          <span class="nav-h">อนุกรมและการทดสอบ</span>
+          <a href="/learn/sequences-and-series/infinite-series/">อนุกรมอนันต์ · เรขาคณิต · อนุกรม p</a>
+          <a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้า · ผังเลือกใช้</a>
+          <a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ · ลู่เข้าสัมบูรณ์</a>
+          <span class="nav-h">อนุกรมกำลัง · เทย์เลอร์ · โลรองต์</span>
+          <a href="/learn/sequences-and-series/power-series/">อนุกรมกำลัง · รัศมีการลู่เข้า</a>
+          <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์ · เรซิดิว</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a>
         </div>
       </div>
       <div class="nav-grp">
@@ -907,17 +927,17 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     <span class="bc-sum">A PID controller adds proportional, integral and derivative action on the error. See what Kp, Ki and Kd do, the step-response table, a…</span>
     <span class="bc-foot"><time datetime="2026-10-16">16 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
-  <a class="blog-card" href="/en/blog/star-delta-timer-setting/">
-    <span class="bc-tag mono">Motors · research</span>
-    <b>How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy</b>
-    <span class="bc-sum">How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel-cage motor: t = c·τm, a c table by load, dead time, KM3 phase order,…</span>
-    <span class="bc-foot"><time datetime="2026-10-19">19 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  <a class="blog-card" href="/en/blog/convergence-test-flowchart/">
+    <span class="bc-tag mono">Sequences &amp; series</span>
+    <b>How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step</b>
+    <span class="bc-sum">Pick the right convergence test the first time: an 8-step flowchart (n-th term, geometric, p-series, telescoping, limit comparison, ratio, root,…</span>
+    <span class="bc-foot"><time datetime="2026-10-24">24 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
-  <a class="blog-card" href="/en/blog/3-phase-motor-delta-connection/">
-    <span class="bc-tag mono">3-phase motors</span>
-    <b>3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate</b>
-    <span class="bc-sum">How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, line vs phase voltage and current, choosing from a 230/400 V or 400/690 V…</span>
-    <span class="bc-foot"><time datetime="2026-10-17">17 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  <a class="blog-card" href="/en/blog/laurent-series-vs-taylor-series/">
+    <span class="bc-tag mono">Sequences &amp; series</span>
+    <b>What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)</b>
+    <span class="bc-sum">Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to…</span>
+    <span class="bc-foot"><time datetime="2026-10-24">24 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
 </div></section>
   </article>
@@ -935,11 +955,16 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <b class="mono">Site</b>
       <a href="/">Home</a>
       <a href="/learn/">คลังความรู้</a>
-      <a href="/en/blog/">Articles: Laplace, vectors, power factor &amp; more</a>
+      <a href="/updates/">Latest site updates (Thai)</a>
+      <a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
       <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
-      <a href="/learn/limits/sequences-series/">ลำดับและอนุกรม · อุปนัย</a>
+      <a href="/learn/sequences-and-series/">ลำดับและอนุกรม (ครบชุด)</a>
+      <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์และแมคลอริน</a>
+      <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์และเรซิดิว</a>
+      <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบลำดับและอนุกรม</a>
+      <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
       <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
       <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
       <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
@@ -1006,7 +1031,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=25076967" defer></script>
+<script src="/assets/site.js?v=87eca12a" defer></script>
 
 </body>
 </html>

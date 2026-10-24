@@ -1,0 +1,255 @@
+<!--meta
+{
+  "title": "อนุกรมกำลัง (Power Series): รัศมีการลู่เข้า ช่วงการลู่เข้า อนุพันธ์-อินทิกรัลทีละพจน์ และการแทนฟังก์ชัน | อาจารย์มด",
+  "h1": "อนุกรมกำลัง (Power Series): รัศมีและช่วงการลู่เข้า อนุพันธ์-อินทิกรัลทีละพจน์ และการแทนฟังก์ชัน",
+  "description": "อนุกรมกำลัง (power series) Σcₙ(x − a)ⁿ คืออะไร วิธีหารัศมีการลู่เข้า (radius of convergence) ด้วยการทดสอบอัตราส่วนและราก สูตรโคชี-อาดามาร์ การตรวจปลายช่วงเพื่อหาช่วงการลู่เข้า (interval of convergence) อนุพันธ์และอินทิกรัลทีละพจน์ แทนฟังก์ชันด้วยอนุกรมเรขาคณิต ทฤษฎีบทของอาเบล รัศมีจากจุดเอกฐานเชิงซ้อน และแก้สมการเชิงอนุพันธ์ด้วยอนุกรม",
+  "ogTitle": "อนุกรมกำลัง: รัศมีการลู่เข้า ช่วงการลู่เข้า และการแทนฟังก์ชัน",
+  "lesson": "sequences-and-series",
+  "sub": "power-series",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["Undergraduate"],
+  "keywords": ["อนุกรมกำลัง", "รัศมีการลู่เข้า", "ช่วงการลู่เข้า", "power series", "radius of convergence", "interval of convergence", "Cauchy-Hadamard", "term-by-term differentiation", "term-by-term integration", "Abel's theorem", "power series solution differential equation", "Bessel function", "อนุกรมกำลังแก้สมการเชิงอนุพันธ์"],
+  "about": ["Power series", "Radius of convergence", "Interval of convergence", "Cauchy–Hadamard theorem", "Term-by-term differentiation", "Term-by-term integration", "Abel's theorem", "Uniform convergence", "Analytic function", "Power series solution of ODE", "Bessel function"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "อนุกรมกำลัง (Power Series)", "sub": "รัศมีและช่วงการลู่เข้า · ปลายช่วง · อนุพันธ์-อินทิกรัลทีละพจน์ · R จากจุดเอกฐานเชิงซ้อน · แก้ ODE", "eyebrow": "บทที่ 26.5 · Power Series", "sym": "xⁿ"},
+  "faq": [
+    {"q": "รัศมีการลู่เข้าของอนุกรมกำลังหาอย่างไร?", "a": "ใช้การทดสอบอัตราส่วนกับค่าสัมบูรณ์ของพจน์: \\(\\lim\\left|\\dfrac{c_{n+1}(x-a)^{n+1}}{c_n(x-a)^n}\\right| = |x-a|\\,L < 1\\) ได้ \\(|x - a| < 1/L\\) ดังนั้น \\(R = 1/L = \\lim|c_n/c_{n+1}|\\) หรือใช้ราก \\(1/R = \\limsup\\sqrt[n]{|c_n|}\\) (โคชี-อาดามาร์) ถ้า L = 0 ได้ R = ∞ ถ้า L = ∞ ได้ R = 0"},
+    {"q": "ทำไมต้องตรวจปลายช่วงแยก?", "a": "ที่ \\(|x - a| = R\\) การทดสอบอัตราส่วนได้ค่า 1 ซึ่งสรุปไม่ได้ ต้องแทนค่า x ที่ปลายทั้งสองแล้วทดสอบอนุกรมตัวเลขที่ได้ด้วยวิธีอื่น ปลายแต่ละข้างอาจลู่เข้าแบบสัมบูรณ์ มีเงื่อนไข หรือลู่ออกก็ได้ เช่น \\(\\sum x^n/n\\) ลู่เข้าที่ x = −1 แต่ลู่ออกที่ x = 1"},
+    {"q": "หาอนุพันธ์หรืออินทิกรัลอนุกรมกำลังทีละพจน์ได้ไหม?", "a": "ได้ ภายในช่วง \\(|x - a| < R\\) และรัศมีการลู่เข้าไม่เปลี่ยน แต่พฤติกรรมที่ปลายช่วงอาจเปลี่ยน เช่น \\(\\sum x^n/n^2\\) ลู่เข้าที่ทั้งสองปลาย แต่อนุพันธ์ \\(\\sum x^{n-1}/n\\) ลู่ออกที่ x = 1 เทคนิคนี้ใช้หาอนุกรมของ ln(1+x) และ arctan x จากอนุกรมเรขาคณิต"},
+    {"q": "ทำไม 1/(1+x²) ที่เรียบทุกจุดบนเส้นจำนวนจริงจึงมีรัศมีการลู่เข้าเพียง 1?", "a": "เพราะรัศมีการลู่เข้ารอบจุด a เท่ากับระยะจาก a ไปยังจุดเอกฐานที่ใกล้ที่สุดในระนาบเชิงซ้อน ฟังก์ชัน \\(1/(1+z^2)\\) มีโพลที่ \\(z = \\pm i\\) ห่างจาก 0 หนึ่งหน่วย จึงได้ R = 1 แม้บนแกนจริงจะไม่มีปัญหาใด ๆ"},
+    {"q": "อนุกรมกำลังใช้แก้สมการเชิงอนุพันธ์อย่างไร?", "a": "สมมติ \\(y = \\sum c_n x^n\\) แทนลงในสมการ เทียบสัมประสิทธิ์ของ \\(x^n\\) ทั้งสองข้าง จะได้ความสัมพันธ์เวียนเกิดของ \\(c_n\\) เช่น \\(y'' + y = 0\\) ให้ \\(c_{n+2} = -c_n/((n+2)(n+1))\\) ซึ่งคืออนุกรมของ cos x และ sin x วิธีนี้ให้ฟังก์ชันพิเศษอย่างเบสเซล (Bessel) ที่ใช้ในการสั่นของแผ่นกลมและสเปกตรัม FM"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อนุกรมกำลัง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.5 · ลำดับและอนุกรม · Power Series</p>
+      <h1>อนุกรมกำลัง (Power Series): รัศมีและช่วงการลู่เข้า อนุพันธ์-อินทิกรัลทีละพจน์ และการแทนฟังก์ชัน</h1>
+      <p class="lede">อนุกรมกำลังคือ “พหุนามที่ยาวไม่สิ้นสุด” \(c_0 + c_1(x-a) + c_2(x-a)^2 + \cdots\) ต่างจากอนุกรมตัวเลขตรงที่การลู่เข้าขึ้นกับ x คำตอบมีรูปแบบสวยงามเสมอ: ลู่เข้าในช่วงที่สมมาตรรอบ a รัศมี R และลู่ออกนอกช่วง ในช่วงนั้นอนุกรมประพฤติเหมือนพหุนาม หาอนุพันธ์และอินทิกรัลทีละพจน์ได้ ทำให้เป็นเครื่องมือหลักในการแทนฟังก์ชัน คำนวณเชิงตัวเลข และแก้สมการเชิงอนุพันธ์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บรัศมีการลู่เข้า</a>
+        <a class="btn btn-ghost btn-sm" href="#radius">หารัศมี R</a>
+        <a class="btn btn-ghost btn-sm" href="#endpoints">ตรวจปลายช่วง</a>
+        <a class="btn btn-ghost btn-sm" href="#calculus">อนุพันธ์ · อินทิกรัล</a>
+        <a class="btn btn-ghost btn-sm" href="#complex">R จากระนาบเชิงซ้อน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\sum c_n(x-a)^n\) ลู่เข้าเมื่อ \(|x - a| &lt; R\) ลู่ออกเมื่อ \(|x - a| > R\) (R อาจเป็น 0 หรือ ∞)</li>
+          <li>\(R = \lim\left|\dfrac{c_n}{c_{n+1}}\right|\) หรือ \(\dfrac1R = \limsup\sqrt[n]{|c_n|}\) · ปลายช่วงต้องทดสอบเอง</li>
+          <li>หาอนุพันธ์/อินทิกรัลทีละพจน์ได้ใน \(|x - a| &lt; R\) โดย R ไม่เปลี่ยน</li>
+          <li>R = ระยะจาก a ถึงจุดเอกฐานที่ใกล้ที่สุดในระนาบเชิงซ้อน</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> แนวคิด</span><span><span class="lv lv-i">กลาง</span> แคลคูลัส 2</span><span><span class="lv lv-a">ขั้นสูง</span> คณิตศาสตร์วิศวกรรม</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น radius, interval, endpoint, hadamard, derivative, integral, abel, ode, bessel" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">อนุกรมกำลังคืออะไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตัวอย่างแรกเราเห็นแล้วในหน้า<a href="/learn/sequences-and-series/infinite-series/#geometric">อนุกรมเรขาคณิต</a>: \(1 + x + x^2 + \cdots = \dfrac{1}{1-x}\) เมื่อ \(|x| &lt; 1\) ด้านซ้ายคืออนุกรมกำลัง ด้านขวาคือฟังก์ชันที่มันแทน โดยแทนได้เฉพาะในช่วง \((-1, 1)\) เท่านั้น ทั้งบทนี้คือการศึกษาว่าเกิดอะไรขึ้นกับคู่นี้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P1" data-k="power series definition center coefficients อนุกรมกำลัง นิยาม จุดศูนย์กลาง สัมประสิทธิ์">
+        <p class="tf-n"><b><span class="fid">P1</span> Power series centered at a</b> อนุกรมกำลังรอบจุด a</p>
+        \[ \sum_{n=0}^{\infty} c_n (x - a)^n = c_0 + c_1(x - a) + c_2(x - a)^2 + \cdots \]
+        <p class="tf-x">\(a\) = จุดศูนย์กลาง (center) · \(c_n\) = สัมประสิทธิ์ · ที่ \(x = a\) ลู่เข้าเสมอ (เท่ากับ \(c_0\))</p>
+      </div>
+    </div>
+    <figure class="lt-wide"><!--FIG:sr-interval--><svg class="mf sr-fig" viewBox="0 0 440 120" role="img" aria-label="ช่วงการลู่เข้า: จุดศูนย์กลาง a รัศมี R"><line class="mf-ax" x1="14" y1="58" x2="426" y2="58"/><rect class="mf-fill2" x="90" y="48" width="260" height="20" rx="4"/><line class="mf-line" x1="90" y1="44" x2="90" y2="72"/><text class="mf-h" x="90" y="90" text-anchor="middle">a − R</text><line class="mf-line" x1="220" y1="44" x2="220" y2="72"/><text class="mf-h" x="220" y="90" text-anchor="middle">a</text><line class="mf-line" x1="350" y1="44" x2="350" y2="72"/><text class="mf-h" x="350" y="90" text-anchor="middle">a + R</text><circle class="mf-zero" cx="90" cy="58" r="6"/><circle class="mf-zero" cx="350" cy="58" r="6"/><text class="mf-h" x="220" y="38" text-anchor="middle">ลู่เข้าแบบสัมบูรณ์</text><text class="mf-l" x="44" y="38" text-anchor="middle">ลู่ออก</text><text class="mf-l" x="396" y="38" text-anchor="middle">ลู่ออก</text><text class="mf-k" x="90" y="110" text-anchor="middle">? ตรวจเอง</text><text class="mf-k" x="350" y="110" text-anchor="middle">? ตรวจเอง</text></svg><!--/FIG--><figcaption>ช่วงการลู่เข้ามีจุดศูนย์กลาง a รัศมี R: ข้างในลู่เข้าแบบสัมบูรณ์ ข้างนอกลู่ออก ที่ปลายทั้งสองต้องตรวจเอง</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="radius">
+    <h2 id="radius">รัศมีการลู่เข้า: สามกรณีเท่านั้น <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P2" data-k="radius of convergence theorem three cases R=0 R=infinity ทฤษฎีบท รัศมีการลู่เข้า สามกรณี">
+        <p class="tf-n"><b><span class="fid">P2</span> Radius of convergence theorem</b> ทฤษฎีบทรัศมีการลู่เข้า</p>
+        \[ \exists R \in [0, \infty]:\quad |x - a| &lt; R \Rightarrow \text{ลู่เข้าแบบสัมบูรณ์},\qquad |x - a| > R \Rightarrow \text{ลู่ออก} \]
+        <p class="tf-x">R = 0: ลู่เข้าแค่ที่ \(x = a\) · R = ∞: ลู่เข้าทุก x · ไม่มีกรณีที่ลู่เข้าเป็นช่วงไม่สมมาตร (ยกเว้นปลายช่วง)</p>
+      </div>
+      <div class="tf" id="P3" data-k="ratio test radius formula R = lim |c_n/c_(n+1)| สูตรรัศมีจากอัตราส่วน">
+        <p class="tf-n"><b><span class="fid">P3</span> Ratio formula</b> สูตรจากอัตราส่วน</p>
+        \[ R = \lim_{n\to\infty}\left|\frac{c_n}{c_{n+1}}\right| \quad(\text{ถ้าลิมิตมี}) \]
+        <p class="tf-x">ระวังลำดับ: \(c_n\) อยู่บน · ในทางปฏิบัติใช้ ratio test กับพจน์เต็ม \(|a_{n+1}/a_n|\) แล้วแก้อสมการ &lt; 1 จะไม่สับสน</p>
+      </div>
+      <div class="tf" id="P4" data-k="cauchy hadamard root formula limsup nth root สูตรโคชี อาดามาร์">
+        <p class="tf-n"><b><span class="fid">P4</span> Cauchy–Hadamard formula</b> สูตรโคชี-อาดามาร์</p>
+        \[ \frac1R = \limsup_{n\to\infty}\sqrt[n]{|c_n|} \]
+        <p class="tf-x">ใช้ได้เสมอ แม้มีช่องว่าง (สัมประสิทธิ์เป็น 0 สลับ) ที่สูตรอัตราส่วนใช้ไม่ได้</p>
+      </div>
+      <div class="tf" id="P5" data-k="interval of convergence endpoints check ช่วงการลู่เข้า ปลายช่วง">
+        <p class="tf-n"><b><span class="fid">P5</span> Interval of convergence</b> ช่วงการลู่เข้า</p>
+        \[ (a - R,\ a + R) \ \cup\ \{\text{ปลายที่ลู่เข้า}\}:\quad (\,),\ [\,),\ (\,],\ [\,] \]
+        <p class="tf-x">ที่ปลายช่วง ratio test ให้ 1 เสมอ ต้องใช้ p-series, ไลบ์นิซ, พจน์ที่ n หรือเปรียบเทียบ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-1 · ครบสูตร</span><h3>หาช่วงการลู่เข้าของ \(\displaystyle\sum_{n=1}^{\infty}\frac{(x-3)^n}{n\,2^n}\)</h3><button type="button" class="wx-btn calc-go" data-sr-target="pow-lab" data-sr-set='{"c":"1/(n*2^n)","a":3,"n":12}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>อัตราส่วน: \(\left|\dfrac{(x-3)^{n+1}}{(n+1)2^{n+1}}\cdot\dfrac{n\,2^n}{(x-3)^n}\right| = \dfrac{|x-3|}{2}\cdot\dfrac{n}{n+1} \to \dfrac{|x-3|}{2}\)</p></li>
+        <li><p>ลู่เข้าเมื่อ \(\dfrac{|x-3|}{2} &lt; 1 \iff |x - 3| &lt; 2\) ⇒ \(R = 2\), ช่วงเปิด \((1, 5)\)</p></li>
+        <li><p>ปลายซ้าย \(x = 1\): \(\sum\dfrac{(-2)^n}{n2^n} = \sum\dfrac{(-1)^n}{n}\) ลู่เข้า (ไลบ์นิซ) · ปลายขวา \(x = 5\): \(\sum\dfrac{2^n}{n2^n} = \sum\dfrac1n\) ลู่ออก</p></li>
+      </ol>
+      <p class="answer">\(R = 2\) · ช่วงการลู่เข้า \([1, 5)\) (ในแล็บพิมพ์ cₙ แล้วตั้ง a = 3)</p>
+    </div>
+    <div class="wx" id="ex-p2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-2 · R เป็นค่าพิเศษ และช่องว่าง</span><h3>หาช่วงการลู่เข้าของ (ก) \(\sum\dfrac{n!\,x^n}{n^n}\) (ข) \(\sum\dfrac{x^{2n}}{4^n}\) (ค) \(\sum\dfrac{(2x-1)^n}{n^2}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\left|\dfrac{c_{n+1}}{c_n}\right| = \left(\dfrac{n}{n+1}\right)^n \to \dfrac1e\) ⇒ \(R = e\) · ที่ \(x = \pm e\): \(|a_n| = \dfrac{n!\,e^n}{n^n} \sim \sqrt{2\pi n} \to \infty\) ลู่ออกทั้งสองปลาย ⇒ \((-e, e)\)</p></li>
+        <li><p>(ข) มีแต่กำลังคู่ (ช่องว่าง) มองเป็นเรขาคณิตของ \(u = x^2/4\): ลู่เข้า ⇔ \(x^2/4 &lt; 1 \iff |x| &lt; 2\) · ที่ \(x = \pm2\) ได้ \(\sum 1\) ลู่ออก ⇒ \((-2, 2)\)</p></li>
+        <li><p>(ค) อัตราส่วน \(|2x - 1|\cdot\dfrac{n^2}{(n+1)^2} \to |2x-1| &lt; 1 \iff 0 &lt; x &lt; 1\) (\(R = \tfrac12\) รอบ \(a = \tfrac12\)) · ปลาย: \(\sum\dfrac{(\pm1)^n}{n^2}\) ลู่เข้าแบบสัมบูรณ์ทั้งคู่ ⇒ \([0, 1]\)</p></li>
+      </ol>
+      <p class="answer">(ก) \((-e, e)\) · (ข) \((-2, 2)\) · (ค) \([0, 1]\) — ข้อ (ค) ระวัง: \((2x-1)^n = 2^n(x - \tfrac12)^n\) จึงมีจุดศูนย์กลาง ½ ไม่ใช่ 1</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บรัศมีการลู่เข้า: เส้นจำนวนจริงและระนาบเชิงซ้อน <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกอนุกรมแล้วเลื่อนดีกรี N ของผลบวกย่อย: ในแถบเขียวเส้นส้มเกาะฟังก์ชันแน่นขึ้นเรื่อย ๆ นอกแถบเส้นส้มแกว่งหนี วงกลมเขียวทึบ/แดงโปร่งบอกปลายช่วงที่ลู่เข้า/ลู่ออก ภาพระนาบเชิงซ้อนแสดงจุดเอกฐานที่กำหนดรัศมี หรือเลือก “พิมพ์ cₙ เอง”</p>
+    <div class="sr-power" id="pow-lab" data-preset="log1" data-n="10"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="endpoints">
+    <h2 id="endpoints">ตรวจปลายช่วง: ที่ที่ข้อสอบเก็บคะแนน <span class="lv lv-i">กลาง</span></h2>
+    <p>นักศึกษาส่วนใหญ่หา R ได้ แต่เสียคะแนนที่ปลายช่วง ตารางนี้สรุปอนุกรมกำลังมาตรฐานที่มีรัศมี 1 แต่ปลายช่วงต่างกันทั้งหมด จำไว้ใช้เป็นตัวเทียบ</p>
+    <div class="table-wrap"><table><thead><tr><th>อนุกรม</th><th>ฟังก์ชัน</th><th>x = −1</th><th>x = 1</th><th>ช่วง</th></tr></thead><tbody>
+      <tr><td>\(\sum x^n\)</td><td>\(\tfrac{1}{1-x}\)</td><td>ลู่ออก</td><td>ลู่ออก</td><td>\((-1, 1)\)</td></tr>
+      <tr><td>\(\sum \tfrac{x^n}{n}\)</td><td>\(-\ln(1-x)\)</td><td>มีเงื่อนไข</td><td>ลู่ออก</td><td>\([-1, 1)\)</td></tr>
+      <tr><td>\(\sum \tfrac{(-1)^{n+1}x^n}{n}\)</td><td>\(\ln(1+x)\)</td><td>ลู่ออก</td><td>มีเงื่อนไข</td><td>\((-1, 1]\)</td></tr>
+      <tr><td>\(\sum \tfrac{x^n}{n^2}\)</td><td>\(\operatorname{Li}_2(x)\)</td><td>สัมบูรณ์</td><td>สัมบูรณ์</td><td>\([-1, 1]\)</td></tr>
+      <tr><td>\(\sum \tfrac{(-1)^n x^{2n+1}}{2n+1}\)</td><td>\(\arctan x\)</td><td>มีเงื่อนไข</td><td>มีเงื่อนไข</td><td>\([-1, 1]\)</td></tr>
+    </tbody></table></div>
+    <div class="sr-exam"><b>แนวข้อสอบ</b>โจทย์ “หาช่วงการลู่เข้า” ให้คะแนนสามส่วน: หา R (ใช้อัตราส่วนหรือราก) · ตรวจปลายซ้าย · ตรวจปลายขวา เขียนการทดสอบที่ใช้ที่ปลายแต่ละข้างให้ชัด ห้ามสรุปจาก ratio test ที่ปลายช่วงเพราะได้ 1 เสมอ</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculus">
+    <h2 id="calculus">อนุพันธ์และอินทิกรัลทีละพจน์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ภายในช่วงลู่เข้า อนุกรมกำลังเป็นฟังก์ชันที่หาอนุพันธ์ได้ทุกอันดับ และทำได้ทีละพจน์เหมือนพหุนาม นี่คือ “เครื่องจักรผลิตอนุกรม”: เริ่มจากอนุกรมเรขาคณิตตัวเดียว หาอนุพันธ์ อินทิกรัล หรือแทนตัวแปร จะได้อนุกรมของฟังก์ชันอื่นอีกมาก</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P6" data-k="term by term differentiation integration same radius อนุพันธ์ทีละพจน์ อินทิกรัลทีละพจน์">
+        <p class="tf-n"><b><span class="fid">P6</span> Term-by-term calculus</b> อนุพันธ์และอินทิกรัลทีละพจน์</p>
+        \[ f(x) = \sum_{n=0}^{\infty} c_n(x-a)^n \ \Rightarrow\ f'(x) = \sum_{n=1}^{\infty} n c_n (x-a)^{n-1},\quad \int f\,dx = C + \sum_{n=0}^{\infty}\frac{c_n(x-a)^{n+1}}{n+1} \]
+        <p class="tf-x">ทั้งสองมีรัศมี R เท่าเดิม · ปลายช่วงอาจได้หรือเสียการลู่เข้า ต้องตรวจใหม่</p>
+      </div>
+      <div class="tf wide" id="P7" data-k="geometric series derived series ln(1+x) arctan 1/(1-x)^2 อนุกรมจากเรขาคณิต">
+        <p class="tf-n"><b><span class="fid">P7</span> Series built from the geometric series</b> อนุกรมที่สร้างจากอนุกรมเรขาคณิต</p>
+        \[ \frac{1}{1-x} = \sum x^n,\quad \frac{1}{(1-x)^2} = \sum (n+1)x^n,\quad \ln(1+x) = \sum_{n=1}^{\infty}\frac{(-1)^{n+1}x^n}{n},\quad \arctan x = \sum_{n=0}^{\infty}\frac{(-1)^n x^{2n+1}}{2n+1} \]
+        <p class="tf-x">ทั้งหมดมี \(R = 1\) · \(\ln(1+x) = \int_0^x \tfrac{dt}{1+t}\) · \(\arctan x = \int_0^x\tfrac{dt}{1+t^2}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-3 · หาผลบวกด้วยอนุพันธ์-อินทิกรัล</span><h3>หาผลบวก (ก) \(\displaystyle\sum_{n=1}^{\infty}\frac{n}{2^n}\) (ข) \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n\,2^n}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) จาก \(\sum x^n = \dfrac{1}{1-x}\) หาอนุพันธ์: \(\sum nx^{n-1} = \dfrac{1}{(1-x)^2}\) คูณ x: \(\sum nx^n = \dfrac{x}{(1-x)^2}\) · ที่ \(x = \tfrac12\): \(\dfrac{1/2}{1/4} = 2\)</p></li>
+        <li><p>(ข) อินทิกรัล \(\sum x^{n-1}\) ตั้งแต่ 0 ถึง x: \(\sum\dfrac{x^n}{n} = -\ln(1-x)\) · ที่ \(x = \tfrac12\): \(-\ln\tfrac12 = \ln 2\)</p></li>
+      </ol>
+      <p class="answer">(ก) 2 · (ข) \(\ln 2 \approx 0.6931\) (ลู่เข้าเร็วกว่า \(1 - \tfrac12 + \tfrac13 - \cdots\) มาก)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="represent">
+    <h2 id="represent">แทนฟังก์ชันด้วยอนุกรมกำลัง: เทคนิคเรขาคณิต <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="P8" data-k="geometric trick 1/(c - x) expansion around a partial fractions เทคนิคเรขาคณิต แยกเศษส่วนย่อย">
+        <p class="tf-n"><b><span class="fid">P8</span> The geometric trick</b> เทคนิคอนุกรมเรขาคณิต</p>
+        \[ \frac{1}{c - x} = \frac1c\cdot\frac{1}{1 - x/c} = \sum_{n=0}^{\infty}\frac{x^n}{c^{n+1}},\quad |x| &lt; |c|;\qquad \frac{1}{c - x} = \frac{1}{(c - a) - (x - a)} \text{ สำหรับรอบ } a \]
+        <p class="tf-x">ฟังก์ชันตรรกยะ: แยกเศษส่วนย่อยก่อน แล้วกระจายทีละตัว รัศมี = ระยะถึงโพลที่ใกล้ที่สุด</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-4 · ฟังก์ชันตรรกยะ</span><h3>เขียน \(f(x) = \dfrac{3}{(1-x)(1+2x)}\) เป็นอนุกรมกำลังรอบ 0 และหารัศมีการลู่เข้า</h3></div>
+      <ol class="steps">
+        <li><p>แยกเศษส่วนย่อย: \(\dfrac{3}{(1-x)(1+2x)} = \dfrac{1}{1-x} + \dfrac{2}{1+2x}\) (ตรวจที่ x = 1 และ x = −½)</p></li>
+        <li><p>\(\dfrac{1}{1-x} = \sum x^n\) (\(|x| &lt; 1\)) · \(\dfrac{2}{1+2x} = 2\sum(-2x)^n\) (\(|x| &lt; \tfrac12\))</p></li>
+        <li><p>รวม: \(f(x) = \sum_{n=0}^{\infty}\left[1 + 2(-2)^n\right]x^n = 3 - 3x + 9x^2 - 15x^3 + 33x^4 - \cdots\)</p></li>
+        <li><p>ต้องลู่เข้าทั้งสองตัว ⇒ \(R = \tfrac12\) ตรงกับระยะจาก 0 ถึงโพล \(x = -\tfrac12\)</p></li>
+      </ol>
+      <p class="answer">\(c_n = 1 + 2(-2)^n,\ R = \tfrac12\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">รัศมีการลู่เข้ามาจากระนาบเชิงซ้อน <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ทำไมอนุกรมของ \(\dfrac{1}{1+x^2}\) จึงลู่เข้าแค่ \(|x| &lt; 1\) ทั้งที่กราฟบนแกนจริงเรียบทุกจุด คำตอบอยู่นอกแกนจริง: อนุกรมกำลังลู่เข้าเป็น “ดิสก์” ในระนาบเชิงซ้อน และดิสก์ขยายได้จนชนจุดเอกฐานแรก ส่วนที่เห็นบนแกนจริงคือรอยตัดของดิสก์ ความเข้าใจนี้นำไปสู่<a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์</a> และ<a href="/learn/laplace-transform/complex-analysis/">ฟังก์ชันวิเคราะห์</a></p>
+    <figure class="lt-wide"><!--FIG:sr-disc--><svg class="mf sr-fig" viewBox="0 0 400 300" role="img" aria-label="ดิสก์การลู่เข้าของ 1/(1+z²) รอบ 0 หยุดที่โพล ±i"><rect class="mf-bg" x="10" y="10" width="380" height="280" rx="8"/><line class="mf-ax" x1="20" y1="150" x2="380" y2="150"/><line class="mf-ax" x1="200" y1="20" x2="200" y2="280"/><circle class="mf-roc" cx="200" cy="150" r="95"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="95"/><line class="mf-brom" x1="105" y1="150" x2="295" y2="150"/><path class="mf-pole" d="M193 48L207 62M207 48L193 62"/><text class="mf-h" x="214" y="69" text-anchor="start">i</text><path class="mf-pole" d="M193 238L207 252M207 238L193 252"/><text class="mf-h" x="214" y="259" text-anchor="start">−i</text><text class="mf-k" x="105" y="168" text-anchor="middle">−1</text><text class="mf-k" x="295" y="168" text-anchor="middle">1</text><line class="mf-thin" x1="200" y1="150" x2="266.5" y2="83.5"/><text class="mf-h" x="236.1" y="104.4" text-anchor="start">R = 1</text><text class="mf-l" x="372" y="142" text-anchor="end">Re</text><text class="mf-l" x="206" y="30" text-anchor="start">Im</text><text class="mf-l" x="20" y="278" text-anchor="start">เส้นเขียว: ช่วง (−1, 1) บนแกนจริง</text></svg><!--/FIG--><figcaption>ดิสก์การลู่เข้ารอบ 0 ของ \(1/(1+z^2)\) ขยายได้จนชนโพล \(\pm i\) จึงมี R = 1 รอยตัดบนแกนจริงคือช่วง (−1, 1)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="P9" data-k="radius distance nearest singularity complex plane analytic disc ระยะถึงจุดเอกฐาน ระนาบเชิงซ้อน">
+        <p class="tf-n"><b><span class="fid">P9</span> Radius = distance to the nearest singularity</b> รัศมีคือระยะถึงจุดเอกฐานที่ใกล้ที่สุด</p>
+        \[ f \text{ วิเคราะห์ใน } |z - a| &lt; \rho \text{ และมีจุดเอกฐานบน } |z - a| = \rho \ \Rightarrow\ R = \rho \]
+        <p class="tf-x">\(\dfrac{1}{x^2 - 4x + 13}\): โพล \(2 \pm 3i\) · รอบ 0 ได้ \(R = \sqrt{13} \approx 3.61\) · รอบ 2 ได้ \(R = 3\) — ไม่ต้องคำนวณสัมประสิทธิ์เลย</p>
+      </div>
+      <div class="tf" id="P10" data-k="uniqueness of power series coefficients equal identity theorem ความเป็นหนึ่งเดียว">
+        <p class="tf-n"><b><span class="fid">P10</span> Uniqueness</b> ความเป็นหนึ่งเดียว</p>
+        \[ \sum c_n (x-a)^n = \sum d_n (x-a)^n \text{ ใกล้ } a \Rightarrow c_n = d_n = \frac{f^{(n)}(a)}{n!} \]
+        <p class="tf-x">ได้อนุกรมด้วยวิธีใดก็ตาม (แทนค่า แยกเศษส่วน คูณ) ผลคือ<a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์</a>ตัวเดียวกันเสมอ</p>
+      </div>
+      <div class="tf" id="P11" data-k="abel theorem endpoint continuity limit ทฤษฎีบทอาเบล ปลายช่วง">
+        <p class="tf-n"><b><span class="fid">P11</span> Abel's theorem</b> ทฤษฎีบทของอาเบล</p>
+        \[ \sum c_n R^n \text{ ลู่เข้า} \Rightarrow \lim_{x\to R^-}\sum c_n x^n = \sum c_n R^n \]
+        <p class="tf-x">ใช้หาผลบวกที่ปลายช่วง: \(\arctan 1 = \tfrac{\pi}{4} = 1 - \tfrac13 + \tfrac15 - \cdots\) และ \(\ln 2 = 1 - \tfrac12 + \tfrac13 - \cdots\)</p>
+      </div>
+      <div class="tf" id="P12" data-k="uniform convergence compact subinterval weierstrass M test การลู่เข้าอย่างสม่ำเสมอ">
+        <p class="tf-n"><b><span class="fid">P12</span> Uniform convergence</b> ลู่เข้าอย่างสม่ำเสมอ</p>
+        \[ |x - a| \le r &lt; R:\quad |c_n(x-a)^n| \le |c_n| r^n =: M_n,\ \sum M_n &lt; \infty \]
+        <p class="tf-x">Weierstrass M-test ⇒ ลู่เข้าสม่ำเสมอบนช่วงปิดข้างใน จึงสลับลิมิต อนุพันธ์ และอินทิกรัลกับผลบวกได้</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ode">
+    <h2 id="ode">แก้สมการเชิงอนุพันธ์ด้วยอนุกรมกำลัง <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สมการเชิงอนุพันธ์จำนวนมากในฟิสิกส์และวิศวกรรมไม่มีคำตอบเป็นฟังก์ชันพื้นฐาน วิธีอนุกรมกำลังเปลี่ยนสมการเชิงอนุพันธ์เป็นความสัมพันธ์เวียนเกิดของสัมประสิทธิ์ ซึ่งคอมพิวเตอร์คำนวณได้ทันที (เทียบกับ<a href="/learn/laplace-transform/differential-equations/">การแปลงลาปลาซ</a>ที่เหมาะกับสัมประสิทธิ์คงที่)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="P13" data-k="power series method ode recurrence coefficients compare วิธีอนุกรมกำลัง สมการเชิงอนุพันธ์ ความสัมพันธ์เวียนเกิด">
+        <p class="tf-n"><b><span class="fid">P13</span> Power series method</b> วิธีอนุกรมกำลัง</p>
+        \[ y = \sum c_n x^n,\ y' = \sum (n+1)c_{n+1}x^n,\ y'' = \sum (n+2)(n+1)c_{n+2}x^n \ \Rightarrow \text{ เทียบสัมประสิทธิ์ของ } x^n \]
+        <p class="tf-x">จุดสามัญ (ordinary point) ให้คำตอบอนุกรมกำลังเสมอ · จุดเอกฐานปกติใช้วิธีโฟรเบเนียส \(y = x^r\sum c_n x^n\)</p>
+      </div>
+      <div class="tf" id="P14" data-k="bessel function J0 series vibration membrane FM ฟังก์ชันเบสเซล">
+        <p class="tf-n"><b><span class="fid">P14</span> Bessel function J₀</b> ฟังก์ชันเบสเซล</p>
+        \[ x^2y'' + xy' + x^2y = 0:\quad J_0(x) = \sum_{k=0}^{\infty}\frac{(-1)^k}{(k!)^2}\left(\frac{x}{2}\right)^{2k},\ R = \infty \]
+        <p class="tf-x">ใช้กับการสั่นของแผ่นกลม การนำความร้อนในทรงกระบอก และแอมพลิจูดของไซด์แบนด์ในสัญญาณ FM</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-p5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-5 · y″ + y = 0</span><h3>แก้ \(y'' + y = 0\) ด้วยอนุกรมกำลังรอบ 0</h3></div>
+      <ol class="steps">
+        <li><p>แทน \(y = \sum c_n x^n\): \(\sum\left[(n+2)(n+1)c_{n+2} + c_n\right]x^n = 0\) ⇒ \(c_{n+2} = -\dfrac{c_n}{(n+2)(n+1)}\)</p></li>
+        <li><p>เริ่มจาก \(c_0\): \(c_2 = -\tfrac{c_0}{2!},\ c_4 = \tfrac{c_0}{4!}, \dots\) · เริ่มจาก \(c_1\): \(c_3 = -\tfrac{c_1}{3!},\ c_5 = \tfrac{c_1}{5!}, \dots\)</p></li>
+        <li><p>\(y = c_0\left(1 - \tfrac{x^2}{2!} + \tfrac{x^4}{4!} - \cdots\right) + c_1\left(x - \tfrac{x^3}{3!} + \tfrac{x^5}{5!} - \cdots\right) = c_0\cos x + c_1\sin x\)</p></li>
+      </ol>
+      <p class="answer">\(y = c_0\cos x + c_1\sin x\) — นิยามของ sin และ cos ผ่านอนุกรมคือคำตอบของสมการการสั่นอย่างง่าย (วงจร LC, สปริง-มวล)</p>
+    </div>
+    <div class="wx" id="ex-p6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง P-6 · สมการไม่เชิงเส้น</span><h3>หา 3 พจน์แรกของคำตอบ \(y' = 1 + y^2,\ y(0) = 0\)</h3></div>
+      <ol class="steps">
+        <li><p>\(y(0) = 0\) ⇒ \(c_0 = 0\) · \(y'(0) = 1 + 0 = 1\) ⇒ \(c_1 = 1\)</p></li>
+        <li><p>หาอนุพันธ์ต่อ: \(y'' = 2yy'\) ⇒ \(y''(0) = 0\) · \(y''' = 2(y')^2 + 2yy''\) ⇒ \(y'''(0) = 2\) ⇒ \(c_3 = \tfrac{2}{3!} = \tfrac13\)</p></li>
+        <li><p>ต่อไปจะได้ \(c_5 = \tfrac{2}{15}\) ตรงกับอนุกรมของ \(\tan x\) ซึ่งคือคำตอบแม่นตรง</p></li>
+      </ol>
+      <p class="answer">\(y = x + \tfrac{x^3}{3} + \tfrac{2x^5}{15} + \cdots = \tan x\) · R = π/2 (จุดเอกฐานที่ x = ±π/2 ทำให้คำตอบระเบิด)</p>
+    </div>
+    </section>
+
+    <h2 id="next">ต่อไป: สัมประสิทธิ์มาจากไหน</h2>
+    <p>ทฤษฎีบทความเป็นหนึ่งเดียว (P10) บอกว่าสัมประสิทธิ์ต้องเป็น \(c_n = f^{(n)}(a)/n!\) เสมอ นั่นคือ<a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์</a> หน้าถัดไปจะสร้างอนุกรมของทุกฟังก์ชันพื้นฐาน พร้อมเศษเหลือที่บอกความแม่นยำ · อ่านบทความ <a href="/blog/radius-of-convergence/">รัศมีการลู่เข้าหาอย่างไร</a> (<a href="/en/blog/radius-of-convergence/">English</a>) · ทบทวน<a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ</a>สำหรับปลายช่วง</p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

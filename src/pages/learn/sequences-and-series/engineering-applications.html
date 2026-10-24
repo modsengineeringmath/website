@@ -1,0 +1,251 @@
+<!--meta
+{
+  "title": "อนุกรมในงานวิศวกรรม (Series in Engineering): ประมาณมุมเล็ก ลูกตุ้ม ไดโอดสัญญาณเล็ก ตัวกรองดิจิทัล การแปลง Z และวิธีเชิงตัวเลข | อาจารย์มด",
+  "h1": "อนุกรมในงานวิศวกรรม (Series in Engineering): การประมาณ วงจรไม่เชิงเส้น สัญญาณดิจิทัล การแปลง Z และวิธีเชิงตัวเลข",
+  "description": "การประยุกต์ลำดับและอนุกรมในงานวิศวกรรม: ประมาณมุมเล็ก sin θ ≈ θ และคาบลูกตุ้มมุมกว้าง แบบจำลองสัญญาณเล็กของไดโอด (small-signal model) การคำนวณ sin และ eˣ ในไมโครคอนโทรลเลอร์ด้วยอนุกรมเทย์เลอร์และ Horner ตัวกรองดิจิทัลกับการแปลง Z และเสถียรภาพ บันไดตัวต้านทานอนันต์ มูลค่าปัจจุบันของโครงการ และการแพร่ความคลาดเคลื่อน พร้อมแล็บโต้ตอบ",
+  "ogTitle": "อนุกรมในงานวิศวกรรม: มุมเล็ก ไดโอด ไมโครคอนโทรลเลอร์ ตัวกรองดิจิทัล",
+  "lesson": "sequences-and-series",
+  "sub": "engineering-applications",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["Undergraduate"],
+  "keywords": ["อนุกรมในงานวิศวกรรม", "ประมาณมุมเล็ก", "small angle approximation", "pendulum period series", "แบบจำลองสัญญาณเล็ก", "small-signal model diode", "Taylor series microcontroller", "Horner method", "range reduction", "digital filter geometric series", "z-transform stability", "infinite ladder network", "present value annuity", "error propagation", "linearization"],
+  "about": ["Small-angle approximation", "Pendulum", "Small-signal model", "Linearization", "Horner's method", "Range reduction", "Floating-point arithmetic", "Digital filter", "Z-transform", "BIBO stability", "Ladder network", "Present value", "Propagation of uncertainty"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "อนุกรมในงานวิศวกรรม", "sub": "มุมเล็กและลูกตุ้ม · ไดโอดสัญญาณเล็ก · sin บนชิป · ตัวกรองดิจิทัลและ Z · บันไดตัวต้านทาน · มูลค่าปัจจุบัน", "eyebrow": "บทที่ 26.8 · Series in Engineering", "sym": "≈"},
+  "faq": [
+    {"q": "ประมาณ sin θ ≈ θ ใช้ได้ถึงมุมเท่าไร?", "a": "ขึ้นกับความคลาดที่ยอมรับได้ ความคลาดสัมพัทธ์ประมาณ \\(\\theta^2/6\\) (θ เป็นเรเดียน) ถ้ายอมให้คลาด 1 % ใช้ได้ถึงราว 0.244 rad หรือ 14° ส่วน tan θ ≈ θ คลาด 1 % ที่ราว 9.9° และ cos θ ≈ 1 คลาด 1 % ที่ราว 8.1°"},
+    {"q": "แบบจำลองสัญญาณเล็กของไดโอดมาจากไหน?", "a": "มาจากพหุนามเทย์เลอร์ดีกรีหนึ่งของสมการไดโอด \\(i = I_S(e^{v/V_T} - 1)\\) รอบจุดไบแอส ได้ \\(\\Delta i \\approx (I_D/V_T)\\Delta v\\) คือความนำ \\(g_m = I_D/V_T\\) หรือความต้านทาน \\(r_d = V_T/I_D\\) ใช้ได้ดีเมื่อ \\(|\\Delta v| \\ll V_T \\approx 26\\) mV ที่ 1 mV คลาดราว 2 % ที่ 10 mV คลาดราว 18 %"},
+    {"q": "ไมโครคอนโทรลเลอร์คำนวณ sin x ด้วยอนุกรมเทย์เลอร์จริงไหม?", "a": "ใช้หลักการเดียวกัน: ลดช่วง (range reduction) ให้ x อยู่ในช่วงเล็ก แล้วประเมินพหุนามด้วยวิธีของฮอร์เนอร์ ช่วง [−π/2, π/2] ต้องใช้ 6 พจน์ (ดีกรี 11) จึงคลาดไม่เกิน \\(5.7\\times10^{-8}\\) พอสำหรับ float32 ไลบรารีจริงลดช่วงเหลือ [−π/4, π/4] และใช้สัมประสิทธิ์แบบ minimax ที่ปรับจากเทย์เลอร์"},
+    {"q": "อนุกรมเกี่ยวกับตัวกรองดิจิทัลและการแปลง Z อย่างไร?", "a": "ผลตอบสนองอิมพัลส์ของตัวกรองอันดับหนึ่ง \\(h[n] = (1-a)a^n\\) เป็นลำดับเรขาคณิต ผลตอบสนองต่อขั้นบันไดคือผลบวกย่อยของมัน และการแปลง Z \\(H(z) = \\sum h[n]z^{-n}\\) คืออนุกรมโลรองต์ ระบบเสถียรเมื่อ \\(\\sum|h[n]|\\) ลู่เข้า ซึ่งสำหรับตัวกรองนี้คือ \\(|a| < 1\\)"},
+    {"q": "มูลค่าปัจจุบันของรายรับที่ได้เท่ากันทุกปีคำนวณอย่างไร?", "a": "เป็นอนุกรมเรขาคณิตจำกัด \\(PV = \\sum_{k=1}^{n}\\dfrac{A}{(1+i)^k} = A\\dfrac{1 - (1+i)^{-n}}{i}\\) เช่น ประหยัดปีละ 12,000 บาท 25 ปี อัตราคิดลด 6 % ได้ PV ≈ 153,400 บาท ถ้าไม่สิ้นสุดได้ A/i = 200,000 บาท"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อนุกรมในงานวิศวกรรม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.8 · ลำดับและอนุกรม · Series in Engineering</p>
+      <h1>อนุกรมในงานวิศวกรรม (Series in Engineering): การประมาณ วงจรไม่เชิงเส้น สัญญาณดิจิทัล การแปลง Z และวิธีเชิงตัวเลข</h1>
+      <p class="lede">สูตรวิศวกรรมจำนวนมากที่ท่องกันมา เช่น \(T = 2\pi\sqrt{L/g}\), \(r_d = V_T/I_D\) หรือ “ค่าคงที่เวลา 5τ” แท้จริงคือพจน์แรกของอนุกรม การรู้ว่าตัดพจน์ไหนทิ้งไปบอกได้ทันทีว่าสูตรใช้ได้ถึงแค่ไหน หน้านี้รวมตัวอย่างจากกลศาสตร์ อิเล็กทรอนิกส์ ระบบฝังตัว การประมวลผลสัญญาณ วงจร และเศรษฐศาสตร์วิศวกรรม ทุกตัวเลขคำนวณซ้ำได้ในแล็บ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บการประมาณ</a>
+        <a class="btn btn-ghost btn-sm" href="#small-angle">มุมเล็ก · ลูกตุ้ม</a>
+        <a class="btn btn-ghost btn-sm" href="#small-signal">ไดโอด</a>
+        <a class="btn btn-ghost btn-sm" href="#numerics">sin บนชิป</a>
+        <a class="btn btn-ghost btn-sm" href="#digital-filter">ตัวกรองดิจิทัล</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>การทำให้เป็นเชิงเส้น = พหุนามเทย์เลอร์ดีกรี 1 · พจน์ถัดไปบอกขอบเขตความแม่นยำ</li>
+          <li>sin θ ≈ θ คลาด 1 % ที่ 14° · คาบลูกตุ้มที่ 60° ยาวกว่าสูตรมุมเล็ก 7.3 %</li>
+          <li>ลำดับเรขาคณิต = ผลตอบสนองของตัวกรองอันดับหนึ่ง · การแปลง Z = อนุกรมโลรองต์ · เสถียร ⇔ ลู่เข้าแบบสัมบูรณ์</li>
+          <li>sin บน float32: ลดช่วงเป็น [−π/2, π/2] แล้วใช้ 6 พจน์ด้วย Horner</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น small angle, pendulum, diode, gm, horner, range reduction, filter, ladder, present value" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="small-angle">
+    <h2 id="small-angle">ประมาณมุมเล็กและคาบลูกตุ้มมุมกว้าง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สมการลูกตุ้ม \(\ddot\theta + \tfrac{g}{L}\sin\theta = 0\) แก้เป็นสูตรปิดไม่ได้ แต่ถ้าแทน \(\sin\theta\) ด้วยพจน์แรก \(\theta\) จะได้สมการการสั่นอย่างง่ายที่มีคาบ \(T_0 = 2\pi\sqrt{L/g}\) คำถามทางวิศวกรรมคือ “ใช้ได้ถึงมุมเท่าไร” ซึ่งพจน์ถัดไปของอนุกรมตอบได้</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E1" data-k="small angle approximation sin tan cos theta error ประมาณมุมเล็ก">
+        <p class="tf-n"><b><span class="fid">E1</span> Small-angle approximations</b> การประมาณมุมเล็ก</p>
+        \[ \sin\theta \approx \theta - \frac{\theta^3}{6},\quad \tan\theta \approx \theta + \frac{\theta^3}{3},\quad \cos\theta \approx 1 - \frac{\theta^2}{2};\qquad \frac{\theta - \sin\theta}{\sin\theta} \approx \frac{\theta^2}{6} \]
+        <p class="tf-x">θ เป็นเรเดียน · ความคลาด 1 %: sin θ ≈ θ ถึง 14.0° · tan θ ≈ θ ถึง 9.9° · cos θ ≈ 1 ถึง 8.1°</p>
+      </div>
+      <div class="tf wide" id="E2" data-k="pendulum period large amplitude series elliptic integral คาบลูกตุ้ม มุมกว้าง">
+        <p class="tf-n"><b><span class="fid">E2</span> Pendulum period, any amplitude</b> คาบลูกตุ้มทุกมุม</p>
+        \[ \frac{T}{T_0} = \frac{2}{\pi}K\!\left(\sin\frac{\theta_0}{2}\right) = 1 + \frac{\theta_0^2}{16} + \frac{11\,\theta_0^4}{3072} + \frac{173\,\theta_0^6}{737280} + \cdots \]
+        <p class="tf-x">K คืออินทิกรัลวงรีชนิดที่หนึ่ง · คำนวณแม่นตรงได้ด้วยค่าเฉลี่ยเลขคณิต-เรขาคณิต \(T/T_0 = 1/\operatorname{AGM}(1, \cos\tfrac{\theta_0}{2})\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-1 · ลูกตุ้มนาฬิกาและเครน</span><h3>ลูกตุ้มยาว 1 m แกว่งด้วยแอมพลิจูด 60° คาบจริงยาวกว่าสูตร \(2\pi\sqrt{L/g}\) กี่เปอร์เซ็นต์ และถ้าใช้สองพจน์แรกของ E2 คลาดเท่าไร (g = 9.81 m/s²)</h3><button type="button" class="wx-btn calc-go" data-sr-target="ap-lab" data-sr-set='{"mode":"pendulum","th":60}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(T_0 = 2\pi\sqrt{1/9.81} = 2.006\) s · \(\theta_0 = \pi/3 = 1.0472\) rad</p></li>
+        <li><p>ค่าแม่นตรง \(T/T_0 = 1.07318\) ⇒ \(T = 2.153\) s ยาวกว่าสูตรมุมเล็ก 7.3 %</p></li>
+        <li><p>สองพจน์: \(1 + \tfrac{(1.0472)^2}{16} = 1.06854\) คลาด −0.43 % · สามพจน์: 1.07285 คลาด −0.03 %</p></li>
+      </ol>
+      <p class="answer">ยาวกว่า 7.3 % — นาฬิกาลูกตุ้มจึงใช้แอมพลิจูดเล็ก ส่วนเครนยกของที่แกว่งมุมกว้างต้องใช้สูตรเต็มในการคำนวณระบบป้องกันการแกว่ง</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="small-signal">
+    <h2 id="small-signal">แบบจำลองสัญญาณเล็ก: ไดโอดและทรานซิสเตอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>วงจรอิเล็กทรอนิกส์ทั้งหมดที่เรียนในวิชาอิเล็กทรอนิกส์อนาล็อกวิเคราะห์ด้วย “แบบจำลองสัญญาณเล็ก” ซึ่งคือการกระจายอนุกรมเทย์เลอร์รอบจุดทำงาน (bias point) แล้วเก็บแค่พจน์ดีกรีหนึ่ง พจน์ดีกรีสองที่ทิ้งไปคือที่มาของความเพี้ยนฮาร์มอนิก</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E3" data-k="small signal diode gm rd taylor linearization VT thermal voltage แบบจำลองสัญญาณเล็ก ไดโอด">
+        <p class="tf-n"><b><span class="fid">E3</span> Diode small-signal model</b> แบบจำลองสัญญาณเล็กของไดโอด</p>
+        \[ i_D = I_S e^{v_D/V_T} \Rightarrow \Delta i = I_D\left(e^{\Delta v/V_T} - 1\right) = I_D\left(\frac{\Delta v}{V_T} + \frac{\Delta v^2}{2V_T^2} + \cdots\right),\quad g_m = \frac{I_D}{V_T},\ r_d = \frac{V_T}{I_D} \]
+        <p class="tf-x">\(V_T = kT/q \approx 25.85\) mV ที่ 300 K · BJT ใช้สูตรเดียวกัน \(g_m = I_C/V_T\) · MOSFET (กำลังสอง): \(g_m = 2I_D/V_{ov}\)</p>
+      </div>
+      <div class="tf" id="E4" data-k="second harmonic distortion quadratic term cos^2 ความเพี้ยนฮาร์มอนิกที่สอง">
+        <p class="tf-n"><b><span class="fid">E4</span> Second-harmonic distortion</b> ความเพี้ยนฮาร์มอนิกที่สอง</p>
+        \[ \Delta v = V_p\cos\omega t \Rightarrow \frac{I_D V_p^2}{2V_T^2}\cos^2\omega t = \frac{I_D V_p^2}{4V_T^2}(1 + \cos 2\omega t) \]
+        <p class="tf-x">อัตราส่วนฮาร์มอนิกที่สองต่อพื้นฐาน \(\approx \dfrac{V_p}{4V_T}\) · 2.6 mV ให้ราว 2.5 %</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-2 · สัญญาณเล็กแค่ไหน</span><h3>ไดโอดไบแอสที่ \(I_D = 1\) mA หา \(r_d\) และความคลาดของแบบจำลองเชิงเส้นเมื่อ \(\Delta v = 1\), 5 และ 10 mV</h3><button type="button" class="wx-btn calc-go" data-sr-target="ap-lab" data-sr-set='{"mode":"diode","I":1,"dv":5}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(r_d = V_T/I_D = 25.85\ \Omega\) · \(g_m = 38.7\) mS</p></li>
+        <li><p>\(\Delta v = 1\) mV: จริง \(1\,(e^{1/25.85} - 1) = 0.03944\) mA · เชิงเส้น 0.03868 mA ⇒ คลาด −1.9 %</p></li>
+        <li><p>\(\Delta v = 5\) mV: จริง 0.2134 mA · เชิงเส้น 0.1934 mA ⇒ −9.4 % · เพิ่มพจน์ดีกรีสองเหลือ −0.6 %</p></li>
+        <li><p>\(\Delta v = 10\) mV: เชิงเส้นคลาด −18 % · ดีกรีสองคลาด −2.3 %</p></li>
+      </ol>
+      <p class="answer">\(r_d = 25.85\ \Omega\) · “สัญญาณเล็ก” สำหรับไดโอดหมายถึงไม่กี่มิลลิโวลต์ (≪ V_T)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บการประมาณในงานวิศวกรรม <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>สามโหมด: คาบลูกตุ้มเทียบสูตรอนุกรม 1–5 พจน์ · ความคลาดของ sin x จากอนุกรมบนช่วง [−π, π] เทียบ ε ของ float32 พร้อมโค้ดภาษา C · ไดโอดสัญญาณเล็กเทียบแบบเชิงเส้นและดีกรีสอง</p>
+    <div class="sr-approx" id="ap-lab" data-mode="pendulum"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="numerics">
+    <h2 id="numerics">คำนวณ sin x และ eˣ บนไมโครคอนโทรลเลอร์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ชิปที่ไม่มีหน่วยคำนวณฟังก์ชันพิเศษต้องคำนวณ sin, cos, exp เองจากการบวกและคูณ สองเทคนิคที่ทำให้อนุกรมเทย์เลอร์ใช้งานได้จริงคือ<b>การลดช่วง</b> (ทำให้ |x| เล็ก เพราะเศษเหลือแปรตาม \(|x|^{n+1}\)) และ<b>วิธีของฮอร์เนอร์</b> (ลดจำนวนการคูณและความคลาดจากการปัดเศษ)</p>
+    <div class="tf-grid">
+      <div class="tf" id="E5" data-k="horner method nested polynomial evaluation วิธีของฮอร์เนอร์">
+        <p class="tf-n"><b><span class="fid">E5</span> Horner's method</b> วิธีของฮอร์เนอร์</p>
+        \[ \sin x \approx x\left(1 + x^2\left(-\tfrac{1}{3!} + x^2\left(\tfrac{1}{5!} + x^2\left(-\tfrac{1}{7!} + \cdots\right)\right)\right)\right) \]
+        <p class="tf-x">ดีกรี n ใช้การคูณ n ครั้ง (แทนการคำนวณกำลังแยก) · ทุกขั้นเป็น multiply-add ที่ DSP ทำได้ในคำสั่งเดียว</p>
+      </div>
+      <div class="tf" id="E6" data-k="range reduction sin pi minus x exp 2^k e^r ลดช่วง">
+        <p class="tf-n"><b><span class="fid">E6</span> Range reduction</b> การลดช่วง</p>
+        \[ \sin x = \sin(\pi - x),\ \ \sin(x + 2\pi k) = \sin x;\qquad e^x = 2^k e^r,\ \ |r| \le \tfrac{\ln 2}{2} \]
+        <p class="tf-x">หลังลดช่วง |x| ≤ π/2 สำหรับ sin และ |r| ≤ 0.347 สำหรับ exp ทำให้ใช้พจน์น้อย · \(2^k\) คือการปรับเลขชี้กำลังของ float โดยตรง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-3 · ใช้กี่พจน์สำหรับ float32</span><h3>ต้องใช้อนุกรมแมคลอรินของ sin x กี่พจน์บนช่วง \(|x| \le \pi/2\) ให้คลาดไม่เกินครึ่งหน่วยหลักสุดท้ายของ float32 ใกล้ 1 (ประมาณ \(6\times10^{-8}\))</h3><button type="button" class="wx-btn calc-go" data-sr-target="ap-lab" data-sr-set='{"mode":"mcu","K":6,"red":1}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>อนุกรมสลับ ความคลาด ≤ พจน์แรกที่ตัดทิ้ง ที่ขอบช่วง \(x = \pi/2\): K พจน์ ⇒ \(\dfrac{(\pi/2)^{2K+1}}{(2K+1)!}\)</p></li>
+        <li><p>K = 5 (ดีกรี 9): \(3.6\times10^{-6}\) ไม่พอ · K = 6 (ดีกรี 11): \(5.7\times10^{-8}\) ✓</p></li>
+        <li><p>ถ้าไม่ลดช่วง (|x| ≤ π) ด้วย 6 พจน์ ความคลาดสูงสุดถึง \(4.5\times10^{-4}\) แย่กว่าเกือบหมื่นเท่า</p></li>
+      </ol>
+      <p class="answer">6 พจน์ (ดีกรี 11) หลังลดช่วง · ใช้การคูณ 7 ครั้งด้วย Horner</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="digital-filter">
+    <h2 id="digital-filter">ตัวกรองดิจิทัล ลำดับเรขาคณิต และการแปลง Z <span class="lv lv-i">กลาง</span></h2>
+    <p>ตัวกรองค่าเฉลี่ยแบบถ่วงน้ำหนักเอกซ์โพเนนเชียล (EMA) ที่ใช้กรองสัญญาณเซนเซอร์ในไมโครคอนโทรลเลอร์ คือความสัมพันธ์เวียนเกิดอันดับหนึ่ง (<a href="/learn/sequences-and-series/sequences/#recurrence">Q8</a>) ผลตอบสนองทั้งหมดอ่านได้จากอนุกรมเรขาคณิต</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="E7" data-k="first order digital filter EMA impulse response geometric step response partial sum ตัวกรองดิจิทัล อันดับหนึ่ง">
+        <p class="tf-n"><b><span class="fid">E7</span> First-order IIR filter</b> ตัวกรองดิจิทัลอันดับหนึ่ง</p>
+        \[ y[n] = a\,y[n-1] + (1-a)\,x[n]:\quad h[n] = (1-a)a^n u[n],\quad s[n] = \sum_{k=0}^{n} h[k] = 1 - a^{n+1},\quad H(z) = \frac{1-a}{1 - az^{-1}},\ |z| > |a| \]
+        <p class="tf-x">อัตราขยาย DC \(= \sum h[n] = H(1) = 1\) · ค่าคงที่เวลาประมาณ \(\tfrac{1}{1-a}\) ตัวอย่าง · เสถียร ⇔ \(\sum|h[n]| &lt; \infty\) ⇔ \(|a| &lt; 1\) (<a href="/learn/sequences-and-series/laurent-series/#z-transform">L12</a>)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-4 · ตัวกรองเซนเซอร์</span><h3>ตัวกรอง \(y[n] = 0.9\,y[n-1] + 0.1\,x[n]\) เริ่มจาก \(y[-1] = 0\) ป้อนขั้นบันได \(x[n] = 1\) ต้องใช้กี่ตัวอย่างเอาต์พุตจึงถึง 95 % ถ้าสุ่มตัวอย่างทุก 10 ms คิดเป็นเวลาเท่าไร</h3><button type="button" class="wx-btn calc-go" data-sq-target="ea-seq" data-sq-set='{"mode":"recursive","g":"0.9a+0.1","a1":"0.1","view":"terms"}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>จาก E7: \(y[n] = 1 - 0.9^{n+1}\) ต้องการ \(0.9^{n+1} \le 0.05\)</p></li>
+        <li><p>\(n + 1 \ge \dfrac{\ln 0.05}{\ln 0.9} = 28.43\) ⇒ \(n + 1 = 29\) ⇒ \(n = 28\) (ตัวอย่างที่ 29 นับจาก n = 0) · ตรวจ \(y[27] = 0.948\), \(y[28] = 0.953\)</p></li>
+        <li><p>เวลา \(\approx 29 \times 10 = 290\) ms</p></li>
+      </ol>
+      <p class="answer">29 ตัวอย่าง ≈ 0.29 s — ค่า a ใกล้ 1 กรองสัญญาณรบกวนได้มาก แต่ตอบสนองช้า (แลกเปลี่ยนแบบเดียวกับ τ ของวงจร RC)</p>
+    </div>
+    <div class="sq-lab" id="ea-seq" data-mode="recursive" data-g="0.9a+0.1" data-a1="0.1" data-n="40" data-eps="0.05"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="ladder">
+    <h2 id="ladder">บันไดตัวต้านทานอนันต์และเศษส่วนต่อเนื่อง <span class="lv lv-i">กลาง</span></h2>
+    <p>สายส่งสัญญาณยาวและแบบจำลองสายเคเบิลมักเป็นบันไดของตัวต้านทานหรืออิมพีแดนซ์ซ้ำกันหลายขั้น ความต้านทานที่มองเข้าไปเป็นลำดับเวียนเกิด และขีดจำกัดของมันคือ “อิมพีแดนซ์ลักษณะเฉพาะ” (characteristic impedance)</p>
+    <figure class="lt-wide"><!--FIG:sr-ladder--><svg class="mf sr-fig" viewBox="0 0 440 170" role="img" aria-label="บันไดตัวต้านทาน: R อนุกรมและ R ขนานซ้ำกัน"><circle class="mf-zero" cx="22" cy="46" r="4"/><circle class="mf-zero" cx="22" cy="128" r="4"/><text class="mf-h" x="10" y="92" text-anchor="start">R_in →</text><line class="mf-line" x1="26" y1="46" x2="46" y2="46"/><path class="mf-ink" d="M46 46L49.333333333333336 40L56.0 52L62.66666666666667 40L69.33333333333333 52L76.0 40L82.66666666666666 52L86 46"/><text class="mf-h" x="66" y="34" text-anchor="middle">R</text><line class="mf-line" x1="86" y1="46" x2="136" y2="46"/><line class="mf-line" x1="106" y1="46" x2="106" y2="67"/><path class="mf-ink" d="M106 67L100 70.33333333333333L112 77.0L100 83.66666666666667L112 90.33333333333333L100 97.0L112 103.66666666666666L106 107"/><line class="mf-line" x1="106" y1="107" x2="106" y2="128"/><text class="mf-h" x="118" y="92" text-anchor="start">R</text><line class="mf-line" x1="116" y1="46" x2="136" y2="46"/><path class="mf-ink" d="M136 46L139.33333333333334 40L146.0 52L152.66666666666666 40L159.33333333333334 52L166.0 40L172.66666666666666 52L176 46"/><text class="mf-h" x="156" y="34" text-anchor="middle">R</text><line class="mf-line" x1="176" y1="46" x2="226" y2="46"/><line class="mf-line" x1="196" y1="46" x2="196" y2="67"/><path class="mf-ink" d="M196 67L190 70.33333333333333L202 77.0L190 83.66666666666667L202 90.33333333333333L190 97.0L202 103.66666666666666L196 107"/><line class="mf-line" x1="196" y1="107" x2="196" y2="128"/><text class="mf-h" x="208" y="92" text-anchor="start">R</text><line class="mf-line" x1="206" y1="46" x2="226" y2="46"/><path class="mf-ink" d="M226 46L229.33333333333334 40L236.0 52L242.66666666666666 40L249.33333333333334 52L256.0 40L262.6666666666667 52L266 46"/><text class="mf-h" x="246" y="34" text-anchor="middle">R</text><line class="mf-line" x1="266" y1="46" x2="316" y2="46"/><line class="mf-line" x1="286" y1="46" x2="286" y2="67"/><path class="mf-ink" d="M286 67L280 70.33333333333333L292 77.0L280 83.66666666666667L292 90.33333333333333L280 97.0L292 103.66666666666666L286 107"/><line class="mf-line" x1="286" y1="107" x2="286" y2="128"/><text class="mf-h" x="298" y="92" text-anchor="start">R</text><line class="mf-line" x1="26" y1="128" x2="326" y2="128"/><text class="mf-h" x="340" y="92" text-anchor="middle">⋯</text><text class="mf-l" x="10" y="160" text-anchor="start">R_∞ = R(1 + √5)/2 ≈ 1.618 R</text></svg><!--/FIG--><figcaption>บันไดตัวต้านทาน แต่ละขั้นมี R อนุกรมและ R ขนานลงกราวด์ ความต้านทานที่มองเข้า \(R_{n+1} = R + R\parallel R_n\)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="E8" data-k="infinite ladder resistance golden ratio recurrence fixed point characteristic impedance บันไดตัวต้านทานอนันต์">
+        <p class="tf-n"><b><span class="fid">E8</span> Infinite resistor ladder</b> บันไดตัวต้านทานอนันต์</p>
+        \[ R_{n+1} = R + \frac{R\,R_n}{R + R_n},\quad R_\infty = R + \frac{R\,R_\infty}{R + R_\infty} \Rightarrow R_\infty = \frac{1 + \sqrt5}{2}R \approx 1.618R \]
+        <p class="tf-x">\(R_n/R = F_{2n+1}/F_{2n}\) (อัตราส่วนฟีโบนัชชี: 2, 5/3, 13/8, 34/21, …) ลู่เข้าเร็วแบบเรขาคณิต</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-5 · ขั้นจำกัด</span><h3>R = 10 Ω หาความต้านทานของบันไดอนันต์ และบันได 1–5 ขั้นคลาดจากค่าอนันต์เท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>\(R_\infty = 10 \times 1.6180 = 16.180\ \Omega\)</p></li>
+        <li><p>\(R_1 = 20,\ R_2 = 16.667,\ R_3 = 16.250,\ R_4 = 16.190,\ R_5 = 16.182\ \Omega\)</p></li>
+        <li><p>ความคลาด: 23.6 %, 3.0 %, 0.43 %, 0.063 %, 0.009 % (ลดลงประมาณ 7 เท่าต่อขั้น ≈ \(\varphi^4\))</p></li>
+      </ol>
+      <p class="answer">16.18 Ω · บันไดเพียง 4 ขั้นก็ใช้แทนสายยาวไม่สิ้นสุดได้ในทางปฏิบัติ</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="economics">
+    <h2 id="economics">เศรษฐศาสตร์วิศวกรรม: มูลค่าปัจจุบันเป็นอนุกรมเรขาคณิต <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="tf-grid">
+      <div class="tf wide" id="E9" data-k="present value annuity perpetuity discount rate geometric series มูลค่าปัจจุบัน อัตราคิดลด">
+        <p class="tf-n"><b><span class="fid">E9</span> Present value of an annuity</b> มูลค่าปัจจุบันของรายรับคงที่</p>
+        \[ PV = \sum_{k=1}^{n}\frac{A}{(1+i)^k} = A\,\frac{1 - (1+i)^{-n}}{i},\qquad n \to \infty:\ PV = \frac{A}{i} \]
+        <p class="tf-x">เป็น S5 กับ \(r = \tfrac{1}{1+i}\) · ใช้เทียบโครงการโซลาร์ ตู้คาปาซิเตอร์ หรือการเปลี่ยนมอเตอร์ประสิทธิภาพสูง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-6 · โซลาร์รูฟท็อป</span><h3>ระบบโซลาร์ช่วยประหยัดค่าไฟปีละ 12,000 บาท นาน 25 ปี อัตราคิดลด 6 % ต่อปี มูลค่าปัจจุบันรวมเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>\(PV = 12{,}000 \times \dfrac{1 - 1.06^{-25}}{0.06} = 12{,}000 \times 12.7834\)</p></li>
+        <li><p>\(= 153{,}400\) บาท (เทียบกับรวมเงินตรง ๆ 300,000 บาท และถ้าประหยัดตลอดไป \(12{,}000/0.06 = 200{,}000\) บาท)</p></li>
+      </ol>
+      <p class="answer">≈ 153,400 บาท — ถ้าติดตั้งได้ต่ำกว่านี้ (และค่าบำรุงรักษารวมแล้ว) โครงการคุ้มค่า ดูการออกแบบเต็มใน<a href="/learn/solar-pv/economics/">เศรษฐศาสตร์โซลาร์เซลล์</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="error-propagation">
+    <h2 id="error-propagation">การแพร่ความคลาดเคลื่อนจากการวัด <span class="lv lv-i">กลาง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="E10" data-k="error propagation linear taylor relative error power law การแพร่ความคลาดเคลื่อน">
+        <p class="tf-n"><b><span class="fid">E10</span> Linear error propagation</b> การแพร่ความคลาดเคลื่อนเชิงเส้น</p>
+        \[ \Delta f \approx f'(x)\,\Delta x,\qquad f = Cx^k \Rightarrow \frac{\Delta f}{f} \approx k\frac{\Delta x}{x} \]
+        <p class="tf-x">พหุนามเทย์เลอร์ดีกรีหนึ่ง · หลายตัวแปรใช้<a href="/learn/multivariable-calculus/partial-derivatives/">อนุพันธ์ย่อย</a> \(\Delta f \approx |f_x|\Delta x + |f_y|\Delta y\)</p>
+      </div>
+      <div class="tf" id="E11" data-k="rc charging initial slope linear ramp t << tau ประมาณช่วงแรก วงจร RC">
+        <p class="tf-n"><b><span class="fid">E11</span> Early-time RC response</b> ช่วงแรกของวงจร RC</p>
+        \[ v_C = V\left(1 - e^{-t/\tau}\right) = V\left(\frac{t}{\tau} - \frac{t^2}{2\tau^2} + \cdots\right) \approx \frac{V}{\tau}t \]
+        <p class="tf-x">ช่วง \(t \ll \tau\) ตัวเก็บประจุชาร์จเป็นเส้นตรงเหมือนป้อนด้วยแหล่งจ่ายกระแส \(I = V/R\) (หลักของวงจรสร้างสัญญาณฟันเลื่อย)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-e7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง E-7 · กำลังไฟฟ้า</span><h3>แรงดันจ่ายตัวต้านทานผิดพลาด +1 % กำลัง \(P = V^2/R\) ผิดพลาดเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>E10 กับ k = 2: \(\dfrac{\Delta P}{P} \approx 2\times1\% = 2\%\)</p></li>
+        <li><p>ค่าแม่นตรง \((1.01)^2 - 1 = 2.01\%\) พจน์ที่ทิ้งคือ \((\Delta V/V)^2\)</p></li>
+      </ol>
+      <p class="answer">≈ 2 % — กฎ “ความคลาดสัมพัทธ์คูณด้วยเลขชี้กำลัง” ใช้ตรวจสเปกเครื่องวัดได้รวดเร็ว</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="more">
+    <h2 id="more">อนุกรมที่อยู่เบื้องหลังวิชาอื่นในหลักสูตร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="ee-cards">
+      <a class="ee-card" href="/learn/fourier-series/"><span class="mono">สัญญาณ · ไฟฟ้ากำลัง</span><h3>อนุกรมฟูริเยร์</h3><p>อนุกรมของ sin-cos แทนรูปคลื่นคาบ ใช้วิเคราะห์ฮาร์มอนิก THD และวงจรเรียงกระแส</p></a>
+      <a class="ee-card" href="/learn/laplace-transform/inverse-laplace-transform/"><span class="mono">วงจร · ควบคุม</span><h3>Inverse Laplace ด้วยเรซิดิว</h3><p>แยกเศษส่วนย่อย = หาเรซิดิว (อนุกรมโลรองต์) ของ F(s)eˢᵗ ที่แต่ละโพล</p></a>
+      <a class="ee-card" href="/learn/control-systems/digital-control/"><span class="mono">ควบคุมดิจิทัล</span><h3>การแปลง Z และ ZOH</h3><p>ROC เป็นวงแหวนของอนุกรมโลรองต์ เสถียรเมื่อโพลอยู่ในวงกลมหนึ่งหน่วย</p></a>
+      <a class="ee-card" href="/learn/power-electronics/buck-averaged-model/"><span class="mono">อิเล็กทรอนิกส์กำลัง</span><h3>แบบจำลองเฉลี่ยและสัญญาณเล็ก</h3><p>ทำให้คอนเวอร์เตอร์ที่สวิตช์ไม่เชิงเส้นเป็นเชิงเส้นรอบจุดทำงาน แบบเดียวกับไดโอด</p></a>
+    </div>
+    </section>
+
+    <h2 id="next">ต่อไป: ฝึกโจทย์ให้พร้อมสอบ</h2>
+    <p>ทุกเครื่องมือในบทพร้อมแล้ว ไปทดสอบความเข้าใจที่ <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบลำดับและอนุกรม</a> ซึ่งมีโจทย์ 60 ข้อสามระดับพร้อมเฉลย และเครื่องสุ่มโจทย์ไม่จำกัด · ใช้เครื่องมือทั้งหมดใน <a href="/learn/sequences-and-series/series-lab/">แล็บรวม</a> · ทบทวน <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

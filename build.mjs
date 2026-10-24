@@ -736,6 +736,45 @@ export const TOPICS = [
     sym: "Ω",
     summary: "วงจร DC ตั้งแต่ศูนย์ถึงระดับโอลิมปิก: ปริมาณพื้นฐาน R L C แหล่งจ่ายไม่อิสระ KCL KVL อนุกรม-ขนาน Δ-Y วิธีโหนด เมช MNA เทวินิน นอร์ตัน กำลังสูงสุด ทรานเซียนต์ RC RL RLC เทคโนโลยี DC ล่าสุด แล็บต่อวงจรที่แก้สมการจริง และโจทย์ 4 ระดับ",
   },
+  {
+    // Topic 26 (added 2026-10-24): sequences & series as a full chapter — appended so no chapter number moved (menu: math tabs, group "ลำดับ · อนุกรม").
+    // The short overview stays at /learn/limits/sequences-series/ (3.1). Labs: assets/seq-lab.js (sq-lab, sq-test, sq-taylor) + assets/series-lab.js
+    // (sr-sums sr-integral sr-alt sr-quiz sr-power sr-need sr-laurent sr-drill sr-approx) · figures: scripts/sr_figs.py · every worked number checked with sympy.
+    slug: "sequences-and-series",
+    title: "ลำดับและอนุกรม: จากลำดับถึงอนุกรมโลรองต์",
+    en: "Sequences & Series",
+    sym: "Σ",
+    summary: "ลำดับ ลิมิตของลำดับ อนุกรมอนันต์ การทดสอบการลู่เข้าทุกแบบ อนุกรมสลับ อนุกรมกำลัง อนุกรมเทย์เลอร์-แมคลอริน และอนุกรมโลรองต์ ตั้งแต่ระดับเตรียมสอบเข้ามหาวิทยาลัยถึงคณิตศาสตร์วิศวกรรม พร้อมแล็บ 12 ชุด แนวข้อสอบ 60 ข้อ และเครื่องสุ่มโจทย์",
+    fxHint: "พิมพ์ เช่น geometric, telescoping, p-series, ratio, root, integral test, leibniz, radius, maclaurin, binomial, remainder, laurent, residue, z-transform",
+    parts: [
+      { id: "sequences", n: 1, title: "ลำดับ", en: "Sequences", blurb: "ลำดับเลขคณิต เรขาคณิต เวียนเกิด ลิมิตของลำดับ ε–N ทฤษฎีบทแซนด์วิช ลำดับทางเดียวมีขอบเขต และลำดับโคชี" },
+      { id: "series", n: 2, title: "อนุกรมและการทดสอบการลู่เข้า", en: "Series & Convergence Tests", blurb: "ผลบวกย่อย อนุกรมเรขาคณิต กล้องส่องทางไกล อนุกรม p การทดสอบทุกแบบ อนุกรมสลับ และการลู่เข้าแบบสัมบูรณ์-มีเงื่อนไข" },
+      { id: "power", n: 3, title: "อนุกรมกำลัง เทย์เลอร์ และโลรองต์", en: "Power, Taylor & Laurent Series", blurb: "รัศมีการลู่เข้า อนุพันธ์-อินทิกรัลทีละพจน์ อนุกรมเทย์เลอร์-แมคลอรินพร้อมเศษเหลือ และอนุกรมโลรองต์บนวงแหวนในระนาบเชิงซ้อน" },
+      { id: "practice", n: 4, title: "การประยุกต์ แล็บ และแนวข้อสอบ", en: "Applications, Labs & Exam Practice", blurb: "อนุกรมในวงจร สัญญาณดิจิทัล การแปลง Z วิธีเชิงตัวเลข แล็บรวม และแนวข้อสอบเข้ามหาวิทยาลัยถึงไฟนอลพร้อมเครื่องสุ่มโจทย์" },
+    ],
+    sub: [
+      { slug: "sequences", part: "sequences", short: "ลำดับ · ลิมิตของลำดับ", title: "ลำดับ (Sequences): เลขคณิต เรขาคณิต เวียนเกิด ลิมิตของลำดับ และทฤษฎีบทการลู่เข้า", en: "Sequences & Their Limits", sym: "aₙ", prefix: "Q",
+        summary: "นิยามลำดับ สูตรพจน์ทั่วไป ลำดับเลขคณิต เรขาคณิต ฮาร์มอนิก ความสัมพันธ์เวียนเกิดและสมการลักษณะเฉพาะ ลิมิต ε–N ทฤษฎีบทลิมิต แซนด์วิช ลำดับทางเดียวมีขอบเขต ลำดับย่อย ลำดับโคชี และลิมิตมาตรฐาน" },
+      { slug: "infinite-series", part: "series", short: "อนุกรมอนันต์", title: "อนุกรมอนันต์ (Infinite Series): ผลบวกย่อย อนุกรมเรขาคณิต กล้องส่องทางไกล ฮาร์มอนิก และอนุกรม p", en: "Infinite Series", sym: "Σaₙ", prefix: "S",
+        summary: "อนุกรมคือลิมิตของผลบวกย่อย อนุกรมเรขาคณิตและทศนิยมซ้ำ อนุกรมกล้องส่องทางไกล ฮาร์มอนิก อนุกรม p สมบัติเชิงเส้น nth-term test สูตรผลบวก Σk Σk² Σk³ และอนุกรมเลขคณิต-เรขาคณิต พร้อมแล็บผลบวกย่อย" },
+      { slug: "convergence-tests", part: "series", short: "การทดสอบการลู่เข้า", title: "การทดสอบการลู่เข้าของอนุกรม (Convergence Tests): พจน์ที่ n ปริพันธ์ เปรียบเทียบ อัตราส่วน ราก และผังเลือกใช้", en: "Convergence Tests for Series", sym: "ρ < 1", prefix: "T",
+        summary: "nth-term test การทดสอบด้วยปริพันธ์และขอบเขตเศษเหลือ การเปรียบเทียบโดยตรงและแบบลิมิต อัตราส่วน ราก การควบแน่นของโคชี ราบี และผังตัดสินใจเลือกการทดสอบ พร้อมเกมฝึกเลือกการทดสอบ" },
+      { slug: "alternating-series", part: "series", short: "อนุกรมสลับ · ลู่เข้าสัมบูรณ์", title: "อนุกรมสลับและการลู่เข้าแบบสัมบูรณ์ (Alternating Series & Absolute Convergence): ไลบ์นิซ ความคลาดเคลื่อน และการจัดเรียงใหม่", en: "Alternating Series & Absolute Convergence", sym: "±", prefix: "A",
+        summary: "การทดสอบอนุกรมสลับ (Leibniz) ขอบเขตความคลาดเคลื่อน ลู่เข้าแบบสัมบูรณ์และมีเงื่อนไข ทฤษฎีบทการจัดเรียงใหม่ของรีมันน์ การทดสอบดีริชเลต์-อาเบล และผลคูณโคชี พร้อมแล็บจัดเรียงอนุกรมให้ได้ผลบวกที่ต้องการ" },
+      { slug: "power-series", part: "power", short: "อนุกรมกำลัง", title: "อนุกรมกำลัง (Power Series): รัศมีและช่วงการลู่เข้า อนุพันธ์-อินทิกรัลทีละพจน์ และการแทนฟังก์ชัน", en: "Power Series", sym: "Σcₙxⁿ", prefix: "P",
+        summary: "รูปทั่วไป Σcₙ(x − a)ⁿ หารัศมีการลู่เข้าด้วยอัตราส่วน ราก และโคชี-อาดามาร์ ตรวจปลายช่วง อนุพันธ์และอินทิกรัลทีละพจน์ แทนฟังก์ชันด้วยอนุกรมเรขาคณิต ทฤษฎีบทของอาเบล และแก้สมการเชิงอนุพันธ์ด้วยอนุกรม" },
+      { slug: "taylor-series", part: "power", short: "อนุกรมเทย์เลอร์ · แมคลอริน", title: "อนุกรมเทย์เลอร์และแมคลอริน (Taylor & Maclaurin Series): สูตร ตารางอนุกรม เศษเหลือ ทวินาม และการประมาณค่า", en: "Taylor & Maclaurin Series", sym: "f⁽ⁿ⁾/n!", prefix: "Y",
+        summary: "สร้างพหุนามเทย์เลอร์ ตารางแมคลอรินที่ต้องจำ ทฤษฎีบทเทย์เลอร์และเศษเหลือลากรองจ์ จำนวนพจน์ที่ต้องใช้ อนุกรมทวินาม เทคนิคแทนค่า คูณ หาร หาลิมิตด้วยอนุกรม หาผลบวกอนุกรม สูตรออยเลอร์ และฟังก์ชันที่ไม่ใช่ฟังก์ชันวิเคราะห์" },
+      { slug: "laurent-series", part: "power", short: "อนุกรมโลรองต์", title: "อนุกรมโลรองต์ (Laurent Series): บริเวณวงแหวน ภาวะเอกฐาน เรซิดิว และการแปลง Z", en: "Laurent Series", sym: "Σaₙzⁿ", prefix: "L",
+        summary: "ทำไมอนุกรมเทย์เลอร์ใช้ไม่ได้ใกล้จุดเอกฐาน วงแหวนการลู่เข้า ส่วนหลัก กระจาย 1/((z−1)(z−2)) ทั้งสามบริเวณ จุดเอกฐานถอดได้ โพล เอกฐานแท้ เรซิดิวและทฤษฎีบทเรซิดิว และการแปลง Z ที่แท้จริงคืออนุกรมโลรองต์" },
+      { slug: "engineering-applications", part: "practice", short: "อนุกรมในงานวิศวกรรม", title: "อนุกรมในงานวิศวกรรม (Series in Engineering): การประมาณ วงจรไม่เชิงเส้น สัญญาณดิจิทัล การแปลง Z และวิธีเชิงตัวเลข", en: "Series in Engineering", sym: "≈", prefix: "E",
+        summary: "ประมาณมุมเล็กและคาบลูกตุ้ม แบบจำลองสัญญาณเล็กของไดโอด บันไดตัวต้านทานอนันต์ การคำนวณ sin และ eˣ ในไมโครคอนโทรลเลอร์ ตัวกรองดิจิทัลและการแปลง Z มูลค่าปัจจุบันของโครงการ และการแพร่ความคลาดเคลื่อน" },
+      { slug: "exam-practice", part: "practice", short: "แนวข้อสอบ · โจทย์สุ่ม", title: "แนวข้อสอบลำดับและอนุกรม (Exam Practice): เตรียมสอบเข้ามหาวิทยาลัย มิดเทอม และไฟนอล พร้อมเฉลยละเอียดและโจทย์สุ่ม", en: "Sequences & Series Exam Practice", sym: "✓", tag: "โจทย์ 60 ข้อ 3 ระดับ + เครื่องสุ่มโจทย์",
+        summary: "โจทย์แบ่งสามระดับ: เตรียมสอบเข้ามหาวิทยาลัย (A-Level · TCAS) แคลคูลัส 1-2 ในมหาวิทยาลัย และคณิตศาสตร์วิศวกรรมขั้นสูง ทุกข้อมีเฉลยทีละขั้น พร้อมเครื่องสุ่มโจทย์ไม่จำกัดที่ตรวจคำตอบให้ทันที" },
+      { slug: "series-lab", part: "practice", short: "แล็บรวม", title: "แล็บลำดับและอนุกรม (Series Lab): ผลบวกย่อย การทดสอบ อนุกรมกำลัง เทย์เลอร์ และโลรองต์ในหน้าเดียว", en: "Sequences & Series Lab Bench", sym: "▶", tag: "แล็บ 12 ชุด พิมพ์สมการเองได้",
+        summary: "รวมเครื่องมือโต้ตอบทุกบท: สำรวจลำดับและใยแมงมุม ผลบวกย่อย ทดสอบการลู่เข้า ขอบเขตปริพันธ์ จัดเรียงอนุกรมสลับ รัศมีการลู่เข้าในระนาบเชิงซ้อน พหุนามเทย์เลอร์ จำนวนพจน์ที่ต้องใช้ และวงแหวนโลรองต์" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -766,7 +805,8 @@ const EN_CHROME = [
   ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
   ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
-  ['<a href="/blog/">บทความ: Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: Laplace, vectors, power factor &amp; more</a>'],
+  ['<a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>'],
+  ['<a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>', '<a href="/updates/">Latest site updates (Thai)</a>'],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
   ['aria-label="ค้นหาในเว็บไซต์"', 'aria-label="Search the site"'],
   ['title="ค้นหา (/)"', 'title="Search (/)"'],
@@ -1085,6 +1125,23 @@ function feedHtml(data) {
     .join("");
 }
 
+// Home-page "อัปเดตล่าสุด" box (<!--home-updates-->): the newest entries of data/updates.json, pre-rendered for search engines and
+// refreshed live by assets/home.js from /data/updates.json, so editing that file alone updates the home page after Cloudflare deploys.
+const UPD_ICON = { "บทเรียน": "📘", "บทความ": "✍️", "แล็บ": "🧪", "แนวข้อสอบ": "📝", "เว็บไซต์": "🛠️", "งานสอน": "🎓", "วิดีโอ": "▶️", "งานวิจัย": "🔬" };
+function homeUpdatesHtml(data, n = 6) {
+  const items = [...(data.updates || [])].sort((a, b) => b.date.localeCompare(a.date)).slice(0, n);
+  const newest = items.length ? items[0].date : TODAY;
+  return items
+    .map((u, i) => {
+      const fresh = u.date === newest;
+      return `<li class="hu-item${i === 0 ? " hu-top" : ""}" data-tag="${esc(u.tag || "")}">
+  <div class="hu-meta"><span class="hu-ic" aria-hidden="true">${UPD_ICON[u.tag] || "•"}</span>${u.tag ? `<span class="tag">${esc(u.tag)}</span>` : ""}<time datetime="${esc(u.date)}">${thaiDate(u.date)}</time>${fresh ? '<span class="hu-new">ใหม่</span>' : ""}</div>
+  <p class="hu-text">${esc(u.text)}</p>${u.link ? `<a class="hu-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
+</li>`;
+    })
+    .join("");
+}
+
 // ---------------------------------------------------------------------------
 // Structured data
 // ---------------------------------------------------------------------------
@@ -1324,8 +1381,10 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
 }
 
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
+const MD_SERIES = ["sequences-and-series", "dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
+  { src: "src/md/sequences-and-series.md", out: "learn/sequences-and-series/guide.md", page: "/learn/sequences-and-series/", title: "Sequences & series: from sequences to Laurent series — complete guide (Thai, Markdown)",
+    desc: "11-page structure, study paths for university entrance / calculus II / engineering mathematics, 122 key formulas with IDs (sequences, infinite series, convergence tests, alternating series, power series, Taylor and Laurent series, residues, Z-transform ROC), convergence-test flowchart, verified example numbers, 12 interactive labs, Thai/English articles and FAQ" },
   { src: "src/md/multivariable-calculus.md", out: "learn/multivariable-calculus/guide.md", page: "/learn/multivariable-calculus/", title: "Multivariable & vector calculus — learning guide & formula summary (Thai, Markdown)", desc: "functions of several variables, partial derivatives, gradient and directional derivative, critical points and Lagrange multipliers, double and triple integrals with Jacobian, vector-valued functions, vector fields, line and surface integrals, Green's, divergence (Gauss) and Stokes' theorems, and applications in electrical, mechanical and civil engineering" },
   { src: "src/md/vector-algebra.md", out: "learn/vector-algebra/guide.md", page: "/learn/vector-algebra/", title: "Vectors: forces, fields & phasors — learning guide & formula summary (Thai, Markdown)", desc: "2D/3D foundations, projections, direction cosines, dot/cross products, resultant forces with the laws of sines and cosines, moments and equilibrium, rotation matrices and Euler angles, robot-arm kinematics and Jacobian, electric/magnetic field vectors and Lorentz force, sinusoids, phasors and AC circuit analysis, labs and reference sources" },
   { src: "src/md/fourier-series.md", out: "learn/fourier-series/guide.md", page: "/learn/fourier-series/", title: "Fourier series & harmonic analysis — complete guide (Thai, Markdown)",
@@ -1401,6 +1460,8 @@ for (const file of walk(pagesDir)) {
     "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
+    "<!--home-updates-->": () => homeUpdatesHtml(updates, 6),
+    "<!--updates-count-->": () => String((updates.updates || []).length),
     "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${lang === "en" ? enDate(meta.updated) : thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
@@ -1524,6 +1585,9 @@ const LABS = [
   ["Integral calculus engineering applications & beam lab", "integral-calculus/engineering-applications", "RMS/average of waveforms, capacitor charge and energy, work of a spring and pumping, centroid and second moment of area, hydrostatic force on a dam, beam lab (simply supported or cantilever, length slider) integrating w → V → M → θ → y"],
   ["Functions lab", "functions", "type f(x) and g(x): shift, stretch, reflect, compose f∘g, inverse by reflection in y = x; library of basic graphs and the unit step u(t)"],
   ["Limits lab (epsilon–delta)", "limits", "draggable ε–δ band around any typed function with a numeric approach table; 0/0 techniques, limits at infinity, continuity and L'Hôpital"],
+  ["Sequences & series lab (12 tools)", "sequences-and-series/series-lab", "free browser-based lab in Thai, works on phones: sequence explorer with ε–N band and cobweb, partial sums Sₙ of any typed series, full-reasoning convergence tester for 14 standard series, integral-test rectangles, alternating-series error bound and Riemann rearrangement to any target, 40-series test-choice game, power-series interval on the real line plus convergence disc and complex singularities, Taylor polynomial vs f(x) with Lagrange bound, how-many-terms calculator, Laurent series by annulus with draggable z, principal part, residue and Z-transform ROC view, unlimited auto-checked drill (9 problem types), engineering approximations (pendulum period, MCU sine in C with Horner, diode small-signal)"],
+  ["Sequences & series formula index", "sequences-and-series#formulas", "122 formulas with citable IDs: Q sequences (ε–N, recurrences, Binet, monotone convergence, Cauchy), S infinite series (geometric, telescoping, p-series), T convergence tests (integral, comparison, ratio, root, condensation, Raabe), A alternating series (Leibniz bound, rearrangement, Dirichlet/Abel, Cauchy product), P power series (radius, Cauchy–Hadamard, term-by-term calculus, singularities), Y Taylor/Maclaurin (standard table, Lagrange remainder, Euler), L Laurent (annulus, singularities, residues, Z-transform ROC), E engineering applications"],
+  ["Sequences & series exam practice (60 problems)", "sequences-and-series/exam-practice", "60 worked problems in three levels (university entrance, calculus II, engineering mathematics) with hidden step-by-step solutions, an unlimited random problem generator with answer checking, and a list of common mistakes"],
   ["Derivative labs: tangent, Newton–Raphson, optimization", "differential-calculus", "secant → tangent animation with f′ and f″ plots and critical points; Newton–Raphson iteration table; optimisation presets (box, power transfer, can, fence, beam)"],
   ["Derivative engineering applications labs", "differential-calculus/engineering-applications", "capacitor/inductor i = C dv/dt and v = L di/dt, maximum power transfer, slider-crank velocity and acceleration, beam deflection maximum, related rates and linearisation in electrical, mechanical and civil engineering"],
   ["Trigonometry formulas & table", "trigonometry", "interactive unit circle; 91 identities with English and Thai names; sin/cos/tan table every 0.05° from 0° to 90° in degrees and radians (1,801 rows) with angle and inverse lookup"],

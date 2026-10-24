@@ -1,0 +1,125 @@
+<!--meta
+{
+  "title": "รัศมีการลู่เข้าของอนุกรมกำลังหาอย่างไร: 3 วิธี ตรวจปลายช่วง และเหตุผลจากระนาบเชิงซ้อน | อาจารย์มด",
+  "h1": "รัศมีการลู่เข้าของอนุกรมกำลังหาอย่างไร: 3 วิธี ตรวจปลายช่วง และเหตุผลจากระนาบเชิงซ้อน",
+  "description": "วิธีหารัศมีการลู่เข้า (radius of convergence) ของอนุกรมกำลัง 3 วิธี: การทดสอบอัตราส่วน การทดสอบราก และระยะถึงจุดเอกฐานเชิงซ้อน พร้อมขั้นตอนตรวจปลายช่วงเพื่อหาช่วงการลู่เข้าและตัวอย่างทีละขั้น",
+  "ogTitle": "รัศมีการลู่เข้าของอนุกรมกำลังหาอย่างไร: 3 วิธี",
+  "blog": true,
+  "tag": "ลำดับและอนุกรม",
+  "series": ["sequences-and-series"],
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "keywords": ["รัศมีการลู่เข้า", "ช่วงการลู่เข้า", "อนุกรมกำลัง", "radius of convergence", "interval of convergence", "power series", "ratio test power series", "Cauchy-Hadamard", "หารัศมีการลู่เข้า"],
+  "about": ["Radius of convergence", "Interval of convergence", "Power series", "Ratio test", "Root test", "Analytic function"],
+  "og": {"title": "รัศมีการลู่เข้าหาอย่างไร", "sub": "อัตราส่วน · ราก · ระยะถึงจุดเอกฐาน + ตรวจปลายช่วง", "eyebrow": "บทความ · ลำดับและอนุกรม", "sym": "R"},
+  "faq": [
+    {"q": "รัศมีการลู่เข้าคืออะไร?", "a": "อนุกรมกำลัง \\(\\sum c_n(x-a)^n\\) จะลู่เข้าเมื่อ \\(|x - a| < R\\) และลู่ออกเมื่อ \\(|x - a| > R\\) ค่า R นี้คือรัศมีการลู่เข้า อาจเป็น 0 (ลู่เข้าแค่ที่ x = a) หรือ ∞ (ลู่เข้าทุก x)"},
+    {"q": "รัศมีการลู่เข้ากับช่วงการลู่เข้าต่างกันอย่างไร?", "a": "รัศมีเป็นตัวเลขตัวเดียว ส่วนช่วงการลู่เข้าคือช่วง \\((a - R, a + R)\\) รวมปลายช่วงที่ลู่เข้า ซึ่งต้องตรวจแยกที่ x = a − R และ x = a + R ช่วงจึงอาจเป็นแบบเปิด ปิด หรือครึ่งเปิด"},
+    {"q": "ทำไม ratio test ใช้ตรวจปลายช่วงไม่ได้?", "a": "เพราะที่ \\(|x - a| = R\\) ลิมิตของอัตราส่วนเท่ากับ 1 พอดีทุกครั้ง ซึ่งเป็นกรณีที่ ratio test สรุปไม่ได้ ต้องแทนค่า x แล้วใช้การทดสอบอื่น เช่น อนุกรม p ไลบ์นิซ หรือพจน์ที่ n"},
+    {"q": "หารัศมีการลู่เข้าโดยไม่คำนวณสัมประสิทธิ์ได้ไหม?", "a": "ได้ ถ้ารู้ฟังก์ชันที่อนุกรมแทน รัศมีรอบ a เท่ากับระยะจาก a ไปยังจุดเอกฐานที่ใกล้ที่สุดในระนาบเชิงซ้อน เช่น \\(1/(x^2 - 4x + 13)\\) มีโพลที่ \\(2 \\pm 3i\\) รอบ 0 จึงมีรัศมี \\(\\sqrt{13}\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>รัศมีการลู่เข้า</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// บทความ · ลำดับและอนุกรม</p>
+      <h1>รัศมีการลู่เข้าของอนุกรมกำลังหาอย่างไร: 3 วิธี ตรวจปลายช่วง และเหตุผลจากระนาบเชิงซ้อน</h1>
+      <p class="lede">อนุกรมกำลังเหมือนพหุนามที่ยาวไม่สิ้นสุด มันแทนฟังก์ชันได้เฉพาะในช่วงหนึ่งรอบจุดศูนย์กลาง ความกว้างครึ่งหนึ่งของช่วงนั้นคือรัศมีการลู่เข้า R บทความนี้สอนสามวิธีหา R ขั้นตอนตรวจปลายช่วงที่ข้อสอบเก็บคะแนน และคำอธิบายที่ตำราไม่ค่อยบอกว่าทำไม R จึงมีค่าเท่านั้น</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>วิธี 1 อัตราส่วน: \(R = \lim\left|\dfrac{c_n}{c_{n+1}}\right|\) · วิธี 2 ราก: \(\dfrac1R = \lim\sqrt[n]{|c_n|}\)</li>
+        <li>วิธี 3 ระนาบเชิงซ้อน: R = ระยะจาก a ถึงจุดเอกฐานที่ใกล้ที่สุดของฟังก์ชัน</li>
+        <li>ปลายช่วง \(x = a \pm R\) ต้องแทนค่าแล้วทดสอบแยกเสมอ</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="what">
+    <h2 id="what">รัศมีการลู่เข้าคืออะไร</h2>
+    <figure class="post-fig"><!--FIG:sr-interval--><svg class="mf sr-fig" viewBox="0 0 440 120" role="img" aria-label="ช่วงการลู่เข้า: จุดศูนย์กลาง a รัศมี R"><line class="mf-ax" x1="14" y1="58" x2="426" y2="58"/><rect class="mf-fill2" x="90" y="48" width="260" height="20" rx="4"/><line class="mf-line" x1="90" y1="44" x2="90" y2="72"/><text class="mf-h" x="90" y="90" text-anchor="middle">a − R</text><line class="mf-line" x1="220" y1="44" x2="220" y2="72"/><text class="mf-h" x="220" y="90" text-anchor="middle">a</text><line class="mf-line" x1="350" y1="44" x2="350" y2="72"/><text class="mf-h" x="350" y="90" text-anchor="middle">a + R</text><circle class="mf-zero" cx="90" cy="58" r="6"/><circle class="mf-zero" cx="350" cy="58" r="6"/><text class="mf-h" x="220" y="38" text-anchor="middle">ลู่เข้าแบบสัมบูรณ์</text><text class="mf-l" x="44" y="38" text-anchor="middle">ลู่ออก</text><text class="mf-l" x="396" y="38" text-anchor="middle">ลู่ออก</text><text class="mf-k" x="90" y="110" text-anchor="middle">? ตรวจเอง</text><text class="mf-k" x="350" y="110" text-anchor="middle">? ตรวจเอง</text></svg><!--/FIG--><figcaption>ในช่วง |x − a| &lt; R อนุกรมลู่เข้าแบบสัมบูรณ์ นอกช่วงลู่ออก ส่วนที่ปลายทั้งสองต้องตรวจเอง</figcaption></figure>
+    <p>ทฤษฎีบทสำคัญบอกว่าอนุกรมกำลัง \(\sum c_n(x-a)^n\) มีพฤติกรรมได้แบบเดียว: มีจำนวน R (อาจเป็น 0 หรือ ∞) ที่ข้างในลู่เข้า ข้างนอกลู่ออก ไม่มีทางที่จะลู่เข้าเป็นหย่อม ๆ หรือลู่เข้าเฉพาะด้านขวาของ a งานของเราจึงเหลือแค่หา R แล้วตรวจสองจุดที่ขอบ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ratio">
+    <h2 id="ratio">วิธีที่ 1: การทดสอบอัตราส่วน (ใช้บ่อยที่สุด)</h2>
+    <p>ใช้ ratio test กับค่าสัมบูรณ์ของพจน์เต็ม แล้วแก้อสมการ “ลิมิต &lt; 1” จะได้ R โดยไม่ต้องจำว่า \(c_n\) อยู่บนหรือล่าง</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>หาช่วงการลู่เข้าของ \(\displaystyle\sum_{n=1}^{\infty}\frac{(x-3)^n}{n\,2^n}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\left|\dfrac{a_{n+1}}{a_n}\right| = \dfrac{|x-3|}{2}\cdot\dfrac{n}{n+1} \to \dfrac{|x-3|}{2} &lt; 1 \iff |x - 3| &lt; 2\) ⇒ \(R = 2\)</p></li>
+        <li><p>ปลาย x = 1: \(\sum\dfrac{(-1)^n}{n}\) ลู่เข้า (ไลบ์นิซ) · ปลาย x = 5: \(\sum\dfrac{1}{n}\) ลู่ออก</p></li>
+      </ol>
+      <p class="answer">\(R = 2\) · ช่วงการลู่เข้า \([1, 5)\)</p>
+    </div>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 2 · R เป็น e</span><h3>หาช่วงการลู่เข้าของ \(\sum\dfrac{n!\,x^n}{n^n}\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\left|\dfrac{a_{n+1}}{a_n}\right| = |x|\left(\dfrac{n}{n+1}\right)^n \to \dfrac{|x|}{e}\) ⇒ \(R = e\)</p></li>
+        <li><p>ที่ \(x = \pm e\): ขนาดพจน์ \(\dfrac{n!\,e^n}{n^n} \approx \sqrt{2\pi n} \to \infty\) (สเตอร์ลิง) ลู่ออกทั้งสองปลาย</p></li>
+      </ol>
+      <p class="answer">\((-e, e)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="root">
+    <h2 id="root">วิธีที่ 2: การทดสอบราก (เมื่อมีกำลัง n ซ้อน)</h2>
+    <p>สูตรโคชี-อาดามาร์ \(\dfrac{1}{R} = \limsup\sqrt[n]{|c_n|}\) ใช้ได้เสมอ และสะดวกเมื่อสัมประสิทธิ์ยกกำลัง n หรือมีช่องว่าง (สัมประสิทธิ์เป็นศูนย์สลับ) ที่วิธีอัตราส่วนใช้ไม่ได้</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>หารัศมีการลู่เข้าของ \(\displaystyle\sum_{n=1}^{\infty}\left(\frac{n}{n+1}\right)^{n^2}x^n\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\sqrt[n]{|c_n|} = \left(\dfrac{n}{n+1}\right)^{n} \to \dfrac1e\) ⇒ \(R = e\)</p></li>
+        <li><p>ที่ \(x = \pm e\): \(\left(\dfrac{n}{n+1}\right)^{n^2}e^n \to e^{1/2} \ne 0\) ลู่ออกทั้งสองปลาย</p></li>
+      </ol>
+      <p class="answer">\((-e, e)\) — วิธีอัตราส่วนกับข้อนี้ยุ่งกว่ามาก</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">วิธีที่ 3: มองจากระนาบเชิงซ้อน (เข้าใจว่าทำไม)</h2>
+    <p>ลองดูอนุกรม \(\dfrac{1}{1+x^2} = 1 - x^2 + x^4 - \cdots\) บนเส้นจำนวนจริงฟังก์ชันนี้เรียบทุกจุด ไม่มีจุดไหนระเบิด แต่อนุกรมลู่เข้าแค่ \(|x| &lt; 1\) ทำไม? คำตอบคืออนุกรมกำลังลู่เข้าเป็นดิสก์ในระนาบเชิงซ้อน และดิสก์ขยายได้จนชนจุดเอกฐานแรก ซึ่งสำหรับ \(\tfrac{1}{1+z^2}\) อยู่ที่ \(z = \pm i\) ห่างจากศูนย์กลาง 1 หน่วยพอดี</p>
+    <figure class="post-fig"><!--FIG:sr-disc--><svg class="mf sr-fig" viewBox="0 0 400 300" role="img" aria-label="ดิสก์การลู่เข้าของ 1/(1+z²) รอบ 0 หยุดที่โพล ±i"><rect class="mf-bg" x="10" y="10" width="380" height="280" rx="8"/><line class="mf-ax" x1="20" y1="150" x2="380" y2="150"/><line class="mf-ax" x1="200" y1="20" x2="200" y2="280"/><circle class="mf-roc" cx="200" cy="150" r="95"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="95"/><line class="mf-brom" x1="105" y1="150" x2="295" y2="150"/><path class="mf-pole" d="M193 48L207 62M207 48L193 62"/><text class="mf-h" x="214" y="69" text-anchor="start">i</text><path class="mf-pole" d="M193 238L207 252M207 238L193 252"/><text class="mf-h" x="214" y="259" text-anchor="start">−i</text><text class="mf-k" x="105" y="168" text-anchor="middle">−1</text><text class="mf-k" x="295" y="168" text-anchor="middle">1</text><line class="mf-thin" x1="200" y1="150" x2="266.5" y2="83.5"/><text class="mf-h" x="236.1" y="104.4" text-anchor="start">R = 1</text><text class="mf-l" x="372" y="142" text-anchor="end">Re</text><text class="mf-l" x="206" y="30" text-anchor="start">Im</text><text class="mf-l" x="20" y="278" text-anchor="start">เส้นเขียว: ช่วง (−1, 1) บนแกนจริง</text></svg><!--/FIG--><figcaption>ดิสก์การลู่เข้ารอบ 0 ของ 1/(1+z²) ชนโพล ±i ที่ระยะ 1 สิ่งที่เห็นบนแกนจริงคือรอยตัด (−1, 1)</figcaption></figure>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง 4 · ไม่ต้องคำนวณสัมประสิทธิ์</span><h3>อนุกรมเทย์เลอร์ของ \(f(x) = \dfrac{1}{x^2 - 4x + 13}\) รอบ (ก) 0 (ข) 2 มีรัศมีการลู่เข้าเท่าไร</h3></div>
+      <ol class="steps">
+        <li><p>โพลของ f: \(z^2 - 4z + 13 = 0 \Rightarrow z = 2 \pm 3i\)</p></li>
+        <li><p>(ก) ระยะจาก 0: \(|2 \pm 3i| = \sqrt{13}\) · (ข) ระยะจาก 2: \(|\pm 3i| = 3\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(R = \sqrt{13} \approx 3.61\) · (ข) \(R = 3\)</p>
+    </div>
+    <p>วิธีนี้ใช้ตรวจคำตอบของวิธีที่ 1–2 ได้ดีมาก และอธิบายว่าทำไม \(\tan x\) มีรัศมี \(\pi/2\) (เพราะ \(\cos z = 0\) ที่ \(z = \pm\pi/2\)) ส่วน \(e^x, \sin x, \cos x\) ไม่มีจุดเอกฐานเลยจึงมี \(R = \infty\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="endpoints">
+    <h2 id="endpoints">ตรวจปลายช่วง: เช็กลิสต์</h2>
+    <ol>
+      <li>แทน \(x = a + R\) และ \(x = a - R\) ลงในอนุกรม ได้อนุกรมตัวเลขสองตัว</li>
+      <li>ถ้าพจน์ไม่เข้าใกล้ 0 ⇒ ลู่ออกที่ปลายนั้น</li>
+      <li>ถ้าเป็นรูป \(\sum\tfrac{1}{n^p}\) ใช้อนุกรม p · ถ้าสลับเครื่องหมายใช้ไลบ์นิซ (และตรวจค่าสัมบูรณ์ถ้าโจทย์ถามชนิดการลู่เข้า)</li>
+      <li>เขียนช่วงด้วยวงเล็บที่ถูก: ( ) ไม่รวม · [ ] รวม</li>
+    </ol>
+    <p>จำตัวอย่างมาตรฐานนี้ไว้เทียบ: \(\sum x^n\) ได้ \((-1, 1)\) · \(\sum\tfrac{x^n}{n}\) ได้ \([-1, 1)\) · \(\sum\tfrac{x^n}{n^2}\) ได้ \([-1, 1]\) — รัศมีเท่ากัน แต่ปลายช่วงต่างกันหมด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="try">
+    <h2 id="try">ลองเองในแล็บ</h2>
+    <p><a href="/learn/sequences-and-series/power-series/#lab">แล็บรัศมีการลู่เข้า</a> แสดงผลบวกย่อยเทียบกับฟังก์ชันบนเส้นจำนวน พร้อมดิสก์ในระนาบเชิงซ้อนข้างกัน เลื่อนดีกรีแล้วจะเห็นว่าในช่วงลู่เข้าผลบวกย่อยเกาะฟังก์ชันแน่นขึ้น นอกช่วงแกว่งหนีออกไป และพิมพ์ \(c_n\) เองได้</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/sequences-and-series/power-series/">อนุกรมกำลังฉบับเต็ม: อนุพันธ์-อินทิกรัลทีละพจน์ ทฤษฎีบทอาเบล แก้สมการเชิงอนุพันธ์</a></li>
+        <li><a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์และแมคลอริน: ตารางที่ต้องจำ เศษเหลือ</a></li>
+        <li><a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์: เมื่อจุดศูนย์กลางเป็นจุดเอกฐาน</a></li>
+        <li><a href="/learn/sequences-and-series/exam-practice/#set-b">โจทย์ช่วงการลู่เข้า B7–B10 พร้อมเฉลย</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

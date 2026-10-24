@@ -29,12 +29,12 @@
     document.addEventListener("click", function (e) {
       if (header.hasAttribute("data-open") && !header.contains(e.target)) setMenu(false);
     });
-    matchMedia("(min-width:1600px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
+    matchMedia("(min-width:1900px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
   }
 
   // menu groups: accordion in the hamburger panel, dropdown on desktop (hover, focus or click)
   if (nav) {
-    var wide = matchMedia("(min-width:1600px)"), grps = nav.querySelectorAll(".nav-grp");
+    var wide = matchMedia("(min-width:1900px)"), grps = nav.querySelectorAll(".nav-grp");
     var setGrp = function (g, open) {
       if (open) g.setAttribute("data-open", ""); else g.removeAttribute("data-open");
       g.querySelector(".nav-tg").setAttribute("aria-expanded", open ? "true" : "false");

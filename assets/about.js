@@ -1,6 +1,7 @@
 /* About page: live status feed from /data/updates.json, filters, bio tabs */
 (function () {
-  var PAGE = 5;
+  var feed0 = document.getElementById("feed");
+  var PAGE = feed0 && feed0.getAttribute("data-page") ? +feed0.getAttribute("data-page") : 5;
   var nowList = document.getElementById("nowList"), feed = document.getElementById("feed"),
       filters = document.getElementById("feedFilters"), more = document.getElementById("feedMore");
   var active = "ทั้งหมด", shown = PAGE;

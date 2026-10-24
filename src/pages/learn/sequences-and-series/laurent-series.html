@@ -1,0 +1,268 @@
+<!--meta
+{
+  "title": "อนุกรมโลรองต์ (Laurent Series) คืออะไร: วงแหวนการลู่เข้า ส่วนหลัก ชนิดจุดเอกฐาน เรซิดิว และการแปลง Z | อาจารย์มด",
+  "h1": "อนุกรมโลรองต์ (Laurent Series): บริเวณวงแหวน ภาวะเอกฐาน เรซิดิว และการแปลง Z",
+  "description": "อนุกรมโลรองต์ (Laurent series) Σaₙ(z − c)ⁿ ที่มีกำลังลบ ลู่เข้าบนวงแหวน (annulus) ทฤษฎีบทโลรองต์ ส่วนหลัก (principal part) วิธีกระจาย 1/((z−1)(z−2)) ทั้งสามบริเวณด้วยอนุกรมเรขาคณิต ชนิดของจุดเอกฐาน: ถอดได้ โพล เอกฐานแท้ เรซิดิวและทฤษฎีบทเรซิดิว อินทิกรัลจริงด้วยเรซิดิว และการแปลง Z ที่แท้จริงคืออนุกรมโลรองต์พร้อม ROC",
+  "ogTitle": "อนุกรมโลรองต์: วงแหวน ส่วนหลัก จุดเอกฐาน เรซิดิว การแปลง Z",
+  "lesson": "sequences-and-series",
+  "sub": "laurent-series",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "level": ["Undergraduate", "Graduate"],
+  "keywords": ["อนุกรมโลรองต์", "อนุกรมลอรองต์", "Laurent series", "Laurent expansion", "annulus of convergence", "principal part", "isolated singularity", "removable singularity", "pole", "essential singularity", "residue", "residue theorem", "เรซิดิว", "ทฤษฎีบทเรซิดิว", "z-transform ROC", "inverse z-transform", "การแปลง Z", "complex analysis"],
+  "about": ["Laurent series", "Annulus", "Principal part", "Laurent's theorem", "Isolated singularity", "Removable singularity", "Pole (complex analysis)", "Essential singularity", "Casorati–Weierstrass theorem", "Residue", "Residue theorem", "Contour integration", "Z-transform", "Region of convergence"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/series-lab.js"],
+  "og": {"title": "อนุกรมโลรองต์ (Laurent Series)", "sub": "วงแหวน · ส่วนหลัก · ถอดได้ โพล เอกฐานแท้ · เรซิดิว · การแปลง Z และ ROC", "eyebrow": "บทที่ 26.7 · Laurent Series", "sym": "∮"},
+  "faq": [
+    {"q": "อนุกรมโลรองต์ต่างจากอนุกรมเทย์เลอร์อย่างไร?", "a": "อนุกรมเทย์เลอร์มีเฉพาะกำลังไม่ลบ \\(\\sum_{n\\ge0} a_n (z-c)^n\\) และลู่เข้าในดิสก์ ใช้ได้เมื่อ f วิเคราะห์ที่ c อนุกรมโลรองต์ยอมให้มีกำลังลบ \\(\\sum_{n=-\\infty}^{\\infty} a_n (z-c)^n\\) และลู่เข้าในวงแหวน \\(r_1 < |z - c| < r_2\\) จึงใช้รอบจุดเอกฐานได้ ถ้า f วิเคราะห์ทั้งดิสก์ อนุกรมโลรองต์จะเป็นอนุกรมเทย์เลอร์"},
+    {"q": "ทำไมฟังก์ชันเดียวมีอนุกรมโลรองต์ได้หลายแบบ?", "a": "เพราะอนุกรมโลรองต์ขึ้นกับบริเวณวงแหวน ซึ่งถูกแบ่งด้วยวงกลมที่ผ่านโพล เช่น \\(1/((z-1)(z-2))\\) รอบ 0 มีสามบริเวณ |z| < 1, 1 < |z| < 2 และ |z| > 2 แต่ละบริเวณให้อนุกรมต่างกัน แต่ในแต่ละวงแหวนอนุกรมมีได้แบบเดียว (ทฤษฎีบทโลรองต์)"},
+    {"q": "จำแนกจุดเอกฐานด้วยอนุกรมโลรองต์อย่างไร?", "a": "ดูส่วนหลัก (กำลังลบ) ในวงแหวนเจาะ \\(0 < |z - c| < r\\): ไม่มีพจน์กำลังลบเลย = จุดเอกฐานที่ถอดได้ · มีจำนวนจำกัด กำลังลบสูงสุด m = โพลอันดับ m · มีอนันต์พจน์ = จุดเอกฐานแท้ เช่น \\(e^{1/z}\\) ที่ 0"},
+    {"q": "เรซิดิวคืออะไร และหาอย่างไร?", "a": "เรซิดิวของ f ที่จุดเอกฐานโดดเดี่ยว c คือสัมประสิทธิ์ \\(a_{-1}\\) ของ \\(1/(z-c)\\) ในอนุกรมโลรองต์บนวงแหวนเจาะรอบ c ถ้าเป็นโพลอย่างง่าย \\(\\operatorname{Res} = \\lim_{z\\to c}(z-c)f(z)\\) ถ้าเป็นโพลอันดับ m ใช้ \\(\\tfrac{1}{(m-1)!}\\lim \\tfrac{d^{m-1}}{dz^{m-1}}[(z-c)^m f(z)]\\) ทฤษฎีบทเรซิดิวให้ \\(\\oint f\\,dz = 2\\pi i\\sum \\operatorname{Res}\\)"},
+    {"q": "การแปลง Z เกี่ยวกับอนุกรมโลรองต์อย่างไร?", "a": "การแปลง Z \\(X(z) = \\sum x[n] z^{-n}\\) คืออนุกรมโลรองต์รอบ 0 โดยสัญญาณ x[n] คือสัมประสิทธิ์ของ \\(z^{-n}\\) บริเวณการลู่เข้า (ROC) จึงเป็นวงแหวนเสมอ: |z| > r ให้สัญญาณข้างขวา (causal) · |z| < r ให้สัญญาณข้างซ้าย · วงแหวนระหว่างโพลให้สัญญาณสองด้าน การหา X(z) ผกผันคือการหาอนุกรมโลรองต์ในวงแหวนที่ถูกต้อง"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อนุกรมโลรองต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.7 · ลำดับและอนุกรม · Laurent Series</p>
+      <h1>อนุกรมโลรองต์ (Laurent Series): บริเวณวงแหวน ภาวะเอกฐาน เรซิดิว และการแปลง Z</h1>
+      <p class="lede">อนุกรมเทย์เลอร์ใช้ไม่ได้รอบจุดที่ฟังก์ชันระเบิด เช่น \(\tfrac{1}{z}\) ที่ 0 ปีแยร์ อัลฟองส์ โลรองต์ (1843) แก้ด้วยการยอมให้มีกำลังลบ อนุกรมที่ได้ลู่เข้าบน “วงแหวน” ระหว่างจุดเอกฐาน และสัมประสิทธิ์ตัวเดียว \(a_{-1}\) ก็พอสำหรับคำนวณอินทิกรัลรอบเส้นปิดทั้งหมด หน้านี้ใช้แค่อนุกรมเรขาคณิตเป็นเครื่องมือหลัก แล้วต่อยอดไปถึงเรซิดิว การแปลงลาปลาซผกผัน และการแปลง Z ที่วิศวกรไฟฟ้าใช้ทุกวัน</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บวงแหวนโลรองต์</a>
+        <a class="btn btn-ghost btn-sm" href="#three-regions">สามบริเวณ</a>
+        <a class="btn btn-ghost btn-sm" href="#singularities">ชนิดจุดเอกฐาน</a>
+        <a class="btn btn-ghost btn-sm" href="#residues">เรซิดิว</a>
+        <a class="btn btn-ghost btn-sm" href="#z-transform">การแปลง Z</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f(z) = \sum_{n=-\infty}^{\infty} a_n (z-c)^n\) บนวงแหวน \(r_1 &lt; |z-c| &lt; r_2\) · กำลังลบ = ส่วนหลัก</li>
+          <li>เครื่องมือหลัก: \(\dfrac{1}{z-p}\) กระจายเป็นกำลังบวกเมื่อ \(|z| &lt; |p|\) และกำลังลบเมื่อ \(|z| > |p|\)</li>
+          <li>ส่วนหลัก: ไม่มี = ถอดได้ · จำกัด = โพล · อนันต์ = เอกฐานแท้</li>
+          <li>\(\operatorname{Res}_{z=c}f = a_{-1}\) และ \(\oint_C f\,dz = 2\pi i\sum\operatorname{Res}\) · การแปลง Z คืออนุกรมโลรองต์รอบ 0</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> แนวคิด · อนุกรมเรขาคณิต</span><span><span class="lv lv-i">กลาง</span> คณิตศาสตร์วิศวกรรม</span><span><span class="lv lv-a">ขั้นสูง</span> ตัวแปรเชิงซ้อน</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น annulus, principal part, pole, essential, residue, contour, z-transform, roc" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องมีอนุกรมโลรองต์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>จาก<a href="/learn/sequences-and-series/power-series/#complex">อนุกรมกำลัง</a> เราเห็นว่าอนุกรมเทย์เลอร์ลู่เข้าในดิสก์ที่ขยายได้จนชนจุดเอกฐานแรก ถ้าจุดศูนย์กลางเป็นจุดเอกฐานเสียเอง ดิสก์มีรัศมีศูนย์ ใช้ไม่ได้เลย แต่ฟังก์ชันอย่าง \(\tfrac{e^z}{z^2}\) ก็ยังประพฤติดีในบริเวณ “รอบ ๆ” 0 แค่ไม่ใช่ที่ 0 เอง ถ้าเราตัดจุด 0 ทิ้งเหลือเป็นวงแหวนเจาะ ก็เขียนได้ว่า</p>
+    <p>\[ \frac{e^z}{z^2} = \frac{1}{z^2}\left(1 + z + \frac{z^2}{2!} + \frac{z^3}{3!} + \cdots\right) = \underbrace{\frac{1}{z^2} + \frac{1}{z}}_{\text{ส่วนหลัก}} + \underbrace{\frac12 + \frac{z}{6} + \cdots}_{\text{ส่วนวิเคราะห์}},\quad 0 &lt; |z| &lt; \infty \]</p>
+    <p>นี่คืออนุกรมโลรองต์: มีกำลังลบได้ ส่วนกำลังลบเรียกว่า<b>ส่วนหลัก</b> (principal part) เพราะเป็นตัวกำหนดพฤติกรรมใกล้จุดเอกฐาน ต้องรู้พื้นฐานจำนวนเชิงซ้อนก่อน ทบทวนได้ที่ <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อนและฟังก์ชันวิเคราะห์</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="laurent series definition negative powers principal part analytic part อนุกรมโลรองต์ นิยาม ส่วนหลัก">
+        <p class="tf-n"><b><span class="fid">L1</span> Laurent series</b> อนุกรมโลรองต์</p>
+        \[ f(z) = \sum_{n=-\infty}^{\infty} a_n (z - c)^n = \underbrace{\sum_{n=1}^{\infty}\frac{a_{-n}}{(z-c)^n}}_{\text{ส่วนหลัก (principal part)}} + \underbrace{\sum_{n=0}^{\infty} a_n (z-c)^n}_{\text{ส่วนวิเคราะห์ (analytic part)}} \]
+        <p class="tf-x">ลู่เข้าเมื่อทั้งสองส่วนลู่เข้า: ส่วนวิเคราะห์ลู่เข้าเมื่อ \(|z - c| &lt; r_2\) ส่วนหลักลู่เข้าเมื่อ \(|z - c| > r_1\) จึงได้วงแหวน</p>
+      </div>
+      <div class="tf wide" id="L2" data-k="laurent theorem annulus unique existence analytic ทฤษฎีบทโลรองต์ วงแหวน">
+        <p class="tf-n"><b><span class="fid">L2</span> Laurent's theorem</b> ทฤษฎีบทโลรองต์</p>
+        \[ f \text{ วิเคราะห์ใน } r_1 &lt; |z - c| &lt; r_2 \ \Rightarrow\ f(z) = \sum_{n=-\infty}^{\infty} a_n (z-c)^n \text{ แบบเดียว},\quad a_n = \frac{1}{2\pi i}\oint_{|z-c|=\rho}\frac{f(z)}{(z-c)^{n+1}}\,dz \]
+        <p class="tf-x">“แบบเดียว” สำคัญที่สุด: หาด้วยวิธีใดก็ได้ (อนุกรมเรขาคณิต แทนอนุกรมที่รู้) ไม่ต้องคำนวณอินทิกรัล · \(r_1\) อาจเป็น 0, \(r_2\) อาจเป็น ∞</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="geometric-tool">
+    <h2 id="geometric-tool">เครื่องมือหลัก: อนุกรมเรขาคณิตสองทิศ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ฟังก์ชันตรรกยะเกือบทั้งหมดกระจายได้ด้วยเทคนิคเดียว: แยกเศษส่วนย่อย แล้วกระจาย \(\tfrac{1}{z - p}\) แต่ละตัว ถ้าบริเวณที่สนใจอยู่<b>ใน</b>วงกลม \(|z| = |p|\) ให้ดึง p ออก ถ้าอยู่<b>นอก</b> ให้ดึง z ออก เพื่อให้ได้อัตราส่วนที่ขนาดน้อยกว่า 1 เสมอ</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L3" data-k="geometric series inside outside 1/(z-p) expansion two ways กระจาย ใน นอก วงกลม">
+        <p class="tf-n"><b><span class="fid">L3</span> 1/(z − p) inside and outside</b> กระจาย 1/(z − p) สองแบบ</p>
+        \[ |z| &lt; |p|:\ \frac{1}{z-p} = -\frac1p\cdot\frac{1}{1 - z/p} = -\sum_{n=0}^{\infty}\frac{z^n}{p^{n+1}};\qquad |z| > |p|:\ \frac{1}{z-p} = \frac1z\cdot\frac{1}{1 - p/z} = \sum_{n=0}^{\infty}\frac{p^n}{z^{n+1}} \]
+        <p class="tf-x">รอบจุดศูนย์กลาง c แทน z ด้วย \(z - c\) และ p ด้วย \(p - c\) · โพลซ้ำ \(\tfrac{1}{(z-p)^m}\) ใช้อนุกรมทวินาม \((1-u)^{-m} = \sum\binom{m+j-1}{j}u^j\)</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="three-regions">
+    <h2 id="three-regions">ตัวอย่างคลาสสิก: 1/((z−1)(z−2)) ทั้งสามบริเวณ <span class="lv lv-i">กลาง</span></h2>
+    <p>โพลที่ \(z = 1\) และ \(z = 2\) แบ่งระนาบรอบ 0 ออกเป็นสามบริเวณ แต่ละบริเวณมีอนุกรมของตัวเอง โจทย์นี้ออกข้อสอบคณิตศาสตร์วิศวกรรมแทบทุกมหาวิทยาลัย</p>
+    <figure class="lt-wide"><!--FIG:sr-annulus--><svg class="mf sr-fig" viewBox="0 0 400 318" role="img" aria-label="สามบริเวณรอบ 0 ของ 1/((z−1)(z−2))"><rect class="mf-bg" x="10" y="10" width="380" height="280" rx="8"/><rect class="mf-roc" x="11" y="11" width="378" height="278" rx="8" style="opacity:.06"/><circle cx="200" cy="150" r="116" class="mf-roc" style="opacity:.14"/><circle cx="200" cy="150" r="58" class="mf-lhp" style="opacity:.28"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="58"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="116"/><line class="mf-ax" x1="20" y1="150" x2="380" y2="150"/><line class="mf-ax" x1="200" y1="20" x2="200" y2="280"/><path class="mf-pole" d="M251 143L265 157M265 143L251 157"/><text class="mf-h" x="258" y="170" text-anchor="middle">1</text><path class="mf-pole" d="M309 143L323 157M323 143L309 157"/><text class="mf-h" x="316" y="170" text-anchor="middle">2</text><text class="mf-h" x="174" y="130" text-anchor="middle">(ก)</text><text class="mf-h" x="174" y="68" text-anchor="middle">(ข)</text><text class="mf-h" x="58" y="44" text-anchor="start">(ค) |z| > 2</text><text class="mf-l" x="200" y="310" text-anchor="middle">(ก) |z| < 1 เทย์เลอร์ · (ข) 1 < |z| < 2 · (ค) ภายนอก</text><text class="mf-l" x="372" y="142" text-anchor="end">Re</text><text class="mf-l" x="206" y="30" text-anchor="start">Im</text></svg><!--/FIG--><figcaption>สามบริเวณรอบ 0 ของ \(f(z) = \frac{1}{(z-1)(z-2)}\): ดิสก์ |z| &lt; 1 (เทย์เลอร์), วงแหวน 1 &lt; |z| &lt; 2 และภายนอก |z| > 2 วงกลมแบ่งเขตผ่านโพลพอดี</figcaption></figure>
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · สามบริเวณ</span><h3>หาอนุกรมโลรองต์ของ \(f(z) = \dfrac{1}{(z-1)(z-2)}\) ใน (ก) \(|z| &lt; 1\) (ข) \(1 &lt; |z| &lt; 2\) (ค) \(|z| > 2\)</h3><button type="button" class="wx-btn calc-go" data-sr-target="lau-lab" data-sr-set='{"preset":"r12","center":0,"region":1}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>แยกเศษส่วนย่อย: \(f(z) = \dfrac{1}{z-2} - \dfrac{1}{z-1}\)</p></li>
+        <li><p>(ก) \(|z| &lt; 1\) อยู่ในทั้งสองวงกลม ใช้ L3 แบบ “ใน” ทั้งคู่: \(\dfrac{1}{z-2} = -\sum\dfrac{z^n}{2^{n+1}}\), \(-\dfrac{1}{z-1} = \sum z^n\) ⇒ \(f = \sum_{n=0}^{\infty}\left(1 - \dfrac{1}{2^{n+1}}\right)z^n = \dfrac12 + \dfrac34 z + \dfrac78 z^2 + \cdots\) (เป็นเทย์เลอร์)</p></li>
+        <li><p>(ข) \(1 &lt; |z| &lt; 2\): นอกวงกลมของ 1 ใน 2 · \(-\dfrac{1}{z-1} = -\sum_{n=0}^{\infty}\dfrac{1}{z^{n+1}}\) (แบบ “นอก”) ⇒ \(f = -\sum_{n=1}^{\infty}\dfrac{1}{z^n} - \sum_{n=0}^{\infty}\dfrac{z^n}{2^{n+1}} = \cdots - \dfrac{1}{z^2} - \dfrac1z - \dfrac12 - \dfrac{z}{4} - \dfrac{z^2}{8} - \cdots\)</p></li>
+        <li><p>(ค) \(|z| > 2\): “นอก” ทั้งคู่: \(\dfrac{1}{z-2} = \sum\dfrac{2^n}{z^{n+1}}\) ⇒ \(f = \sum_{n=0}^{\infty}\dfrac{2^n - 1}{z^{n+1}} = \dfrac{1}{z^2} + \dfrac{3}{z^3} + \dfrac{7}{z^4} + \cdots\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\sum(1 - 2^{-n-1})z^n\) · (ข) \(-\sum_{n\ge1}z^{-n} - \sum_{n\ge0}2^{-n-1}z^n\) · (ค) \(\sum_{n\ge2}(2^{n-1} - 1)z^{-n}\) — สามอนุกรม ฟังก์ชันเดียว</p>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2 · รอบโพล</span><h3>ฟังก์ชันเดิม กระจายรอบ \(z = 1\) ในวงแหวนเจาะ \(0 &lt; |z - 1| &lt; 1\) แล้วหาเรซิดิวที่ z = 1</h3><button type="button" class="wx-btn calc-go" data-sr-target="lau-lab" data-sr-set='{"preset":"r12","center":1,"region":0}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ให้ \(w = z - 1\): \(f = \dfrac{1}{w(w - 1)} = -\dfrac1w\cdot\dfrac{1}{1 - w}\)</p></li>
+        <li><p>\(|w| &lt; 1\): \(\dfrac{1}{1-w} = 1 + w + w^2 + \cdots\) ⇒ \(f = -\dfrac1w - 1 - w - w^2 - \cdots\)</p></li>
+      </ol>
+      <p class="answer">\(f = -\dfrac{1}{z-1} - 1 - (z-1) - (z-1)^2 - \cdots\) · โพลอย่างง่าย · \(\operatorname{Res}_{z=1} f = -1\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บวงแหวนโลรองต์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>เลือกฟังก์ชัน จุดศูนย์กลาง และบริเวณ แล็บแสดงอนุกรม สัมประสิทธิ์ (แท่งส้ม = ส่วนหลัก) และชนิดของจุดศูนย์กลาง ลากจุดเขียว z ในระนาบ: ในวงแหวนผลบวกย่อยลู่เข้าหา f(z) ออกนอกวงแหวนแล้วความคลาดพุ่งขึ้น แม้ f(z) เองจะมีค่าปกติ</p>
+    <div class="sr-laurent" id="lau-lab" data-preset="r12" data-region="1"></div>
+    <div class="lap-chips"><button type="button" class="lap-chip" data-sr-target="lau-lab" data-sr-set='{"preset":"exp1z"}'>e^(1/z) เอกฐานแท้</button><button type="button" class="lap-chip" data-sr-target="lau-lab" data-sr-set='{"preset":"sinz4"}'>sin z/z⁴ โพลอันดับ 3</button><button type="button" class="lap-chip" data-sr-target="lau-lab" data-sr-set='{"preset":"zz1","center":1,"region":0}'>z/(z²+1) รอบ i</button><button type="button" class="lap-chip" data-sr-target="lau-lab" data-sr-set='{"preset":"zt2","region":1}'>การแปลง Z สองด้าน</button></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="known-series">
+    <h2 id="known-series">กระจายจากอนุกรมที่รู้แล้ว <span class="lv lv-i">กลาง</span></h2>
+    <p>ฟังก์ชันที่ไม่ใช่ตรรกยะ ใช้<a href="/learn/sequences-and-series/taylor-series/#table">ตารางอนุกรมแมคลอริน</a>แล้วหารหรือแทนค่า ความเป็นหนึ่งเดียว (L2) รับประกันว่าคำตอบถูก</p>
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · ใช้ตารางแมคลอริน</span><h3>หาอนุกรมโลรองต์รอบ 0 และเรซิดิวของ (ก) \(e^{1/z}\) (ข) \(\dfrac{\sin z}{z^4}\) (ค) \(\dfrac{e^z - 1}{z}\) (ง) \(z^2 e^{1/z}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) แทน \(u = 1/z\) ใน \(e^u\): \(e^{1/z} = 1 + \dfrac1z + \dfrac{1}{2!\,z^2} + \dfrac{1}{3!\,z^3} + \cdots\) (\(|z| > 0\)) ส่วนหลักอนันต์พจน์ · \(\operatorname{Res} = 1\)</p></li>
+        <li><p>(ข) \(\dfrac{1}{z^4}\left(z - \dfrac{z^3}{6} + \dfrac{z^5}{120} - \cdots\right) = \dfrac{1}{z^3} - \dfrac{1}{6z} + \dfrac{z}{120} - \cdots\) · โพลอันดับ 3 · \(\operatorname{Res} = -\tfrac16\)</p></li>
+        <li><p>(ค) \(\dfrac1z\left(z + \dfrac{z^2}{2} + \cdots\right) = 1 + \dfrac{z}{2} + \dfrac{z^2}{6} + \cdots\) ไม่มีกำลังลบ · ถอดได้ (นิยาม f(0) = 1) · \(\operatorname{Res} = 0\)</p></li>
+        <li><p>(ง) \(z^2\sum\dfrac{1}{n!\,z^n} = z^2 + z + \dfrac12 + \dfrac{1}{6z} + \dfrac{1}{24z^2} + \cdots\) · \(a_{-1}\) มาจาก n = 3 · \(\operatorname{Res} = \tfrac16\)</p></li>
+      </ol>
+      <p class="answer">Res: (ก) 1 · (ข) −1/6 · (ค) 0 · (ง) 1/6 — ข้อ (ง) สูตรลิมิตใช้ไม่ได้เพราะเป็นเอกฐานแท้ ต้องใช้อนุกรมเท่านั้น</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="singularities">
+    <h2 id="singularities">ชนิดของจุดเอกฐานโดดเดี่ยว <span class="lv lv-i">กลาง</span></h2>
+    <p>จุด c เป็นจุดเอกฐานโดดเดี่ยว (isolated singularity) ถ้า f วิเคราะห์ในวงแหวนเจาะ \(0 &lt; |z - c| &lt; r\) แต่ไม่วิเคราะห์ที่ c อนุกรมโลรองต์ในวงแหวนนี้บอกชนิดได้ทันทีจากจำนวนพจน์ในส่วนหลัก</p>
+    <figure class="lt-wide"><!--FIG:sr-singular--><svg class="mf sr-fig" viewBox="0 0 440 200" role="img" aria-label="พฤติกรรมใกล้จุดเอกฐานโดดเดี่ยวสามชนิด"><rect class="mf-bg" x="16" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="16" y1="136.7" x2="144" y2="136.7"/><line class="mf-ax" x1="80" y1="30" x2="80" y2="170"/><path class="mf-sig" d="M16 106.4L16.4 106L16.8 105.6L17.2 105.3L17.6 104.9L18 104.6L18.4 104.2L18.8 103.8L19.2 103.5L19.6 103.1L20 102.8L20.4 102.4L20.8 102.1L21.1 101.7L21.5 101.4L21.9 101L22.3 100.7L22.7 100.3L23.1 100L23.5 99.6L23.9 99.3L24.3 98.9L24.7 98.6L25.1 98.2L25.5 97.9L25.9 97.5L26.3 97.2L26.7 96.8L27.1 96.5L27.5 96.1L27.9 95.8L28.3 95.5L28.7 95.1L29.1 94.8L29.5 94.5L29.9 94.1L30.3 93.8L30.7 93.5L31 93.1L31.4 92.8L31.8 92.5L32.2 92.1L32.6 91.8L33 91.5L33.4 91.2L33.8 90.8L34.2 90.5L34.6 90.2L35 89.9L35.4 89.6L35.8 89.3L36.2 89L36.6 88.6L37 88.3L37.4 88L37.8 87.7L38.2 87.4L38.6 87.1L39 86.8L39.4 86.5L39.8 86.2L40.2 85.9L40.6 85.6L40.9 85.4L41.3 85.1L41.7 84.8L42.1 84.5L42.5 84.2L42.9 83.9L43.3 83.7L43.7 83.4L44.1 83.1L44.5 82.8L44.9 82.6L45.3 82.3L45.7 82.1L46.1 81.8L46.5 81.5L46.9 81.3L47.3 81L47.7 80.8L48.1 80.5L48.5 80.3L48.9 80L49.3 79.8L49.7 79.5L50.1 79.3L50.5 79.1L50.8 78.8L51.2 78.6L51.6 78.4L52 78.2L52.4 77.9L52.8 77.7L53.2 77.5L53.6 77.3L54 77.1L54.4 76.9L54.8 76.7L55.2 76.5L55.6 76.3L56 76.1L56.4 75.9L56.8 75.7L57.2 75.5L57.6 75.3L58 75.1L58.4 75L58.8 74.8L59.2 74.6L59.6 74.4L60 74.3L60.4 74.1L60.7 73.9L61.1 73.8L61.5 73.6L61.9 73.5L62.3 73.3L62.7 73.2L63.1 73L63.5 72.9L63.9 72.8L64.3 72.6L64.7 72.5L65.1 72.4L65.5 72.3L65.9 72.1L66.3 72L66.7 71.9L67.1 71.8L67.5 71.7L67.9 71.6L68.3 71.5L68.7 71.4L69.1 71.3L69.5 71.2L69.9 71.1L70.3 71L70.6 70.9L71 70.9L71.4 70.8L71.8 70.7L72.2 70.7L72.6 70.6L73 70.5L73.4 70.5L73.8 70.4L74.2 70.4L74.6 70.3L75 70.3L75.4 70.2L75.8 70.2L76.2 70.2L76.6 70.1L77 70.1L77.4 70.1L77.8 70.1L78.2 70L78.6 70L79 70L79.4 70"/><path class="mf-sig" d="M80.6 70L81 70L81.4 70L81.8 70L82.2 70.1L82.6 70.1L83 70.1L83.4 70.1L83.8 70.2L84.2 70.2L84.6 70.2L85 70.3L85.4 70.3L85.8 70.4L86.2 70.4L86.6 70.5L87 70.5L87.4 70.6L87.8 70.7L88.2 70.7L88.6 70.8L89 70.9L89.4 70.9L89.7 71L90.1 71.1L90.5 71.2L90.9 71.3L91.3 71.4L91.7 71.5L92.1 71.6L92.5 71.7L92.9 71.8L93.3 71.9L93.7 72L94.1 72.1L94.5 72.3L94.9 72.4L95.3 72.5L95.7 72.6L96.1 72.8L96.5 72.9L96.9 73L97.3 73.2L97.7 73.3L98.1 73.5L98.5 73.6L98.9 73.8L99.3 73.9L99.6 74.1L100 74.3L100.4 74.4L100.8 74.6L101.2 74.8L101.6 75L102 75.1L102.4 75.3L102.8 75.5L103.2 75.7L103.6 75.9L104 76.1L104.4 76.3L104.8 76.5L105.2 76.7L105.6 76.9L106 77.1L106.4 77.3L106.8 77.5L107.2 77.7L107.6 77.9L108 78.2L108.4 78.4L108.8 78.6L109.2 78.8L109.5 79.1L109.9 79.3L110.3 79.5L110.7 79.8L111.1 80L111.5 80.3L111.9 80.5L112.3 80.8L112.7 81L113.1 81.3L113.5 81.5L113.9 81.8L114.3 82.1L114.7 82.3L115.1 82.6L115.5 82.8L115.9 83.1L116.3 83.4L116.7 83.7L117.1 83.9L117.5 84.2L117.9 84.5L118.3 84.8L118.7 85.1L119.1 85.4L119.4 85.6L119.8 85.9L120.2 86.2L120.6 86.5L121 86.8L121.4 87.1L121.8 87.4L122.2 87.7L122.6 88L123 88.3L123.4 88.6L123.8 89L124.2 89.3L124.6 89.6L125 89.9L125.4 90.2L125.8 90.5L126.2 90.8L126.6 91.2L127 91.5L127.4 91.8L127.8 92.1L128.2 92.5L128.6 92.8L129 93.1L129.3 93.5L129.7 93.8L130.1 94.1L130.5 94.5L130.9 94.8L131.3 95.1L131.7 95.5L132.1 95.8L132.5 96.1L132.9 96.5L133.3 96.8L133.7 97.2L134.1 97.5L134.5 97.9L134.9 98.2L135.3 98.6L135.7 98.9L136.1 99.3L136.5 99.6L136.9 100L137.3 100.3L137.7 100.7L138.1 101L138.5 101.4L138.9 101.7L139.2 102.1L139.6 102.4L140 102.8L140.4 103.1L140.8 103.5L141.2 103.8L141.6 104.2L142 104.6L142.4 104.9L142.8 105.3L143.2 105.6L143.6 106L144 106.4"/><text class="mf-h" x="80" y="20" text-anchor="middle">ถอดได้: sin x / x</text><text class="mf-k" x="80" y="190" text-anchor="middle">x → 0</text><circle class="mf-zero" cx="80" cy="70" r="4"/><rect class="mf-bg" x="160" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="160" y1="162.6" x2="288" y2="162.6"/><line class="mf-ax" x1="224" y1="30" x2="224" y2="170"/><path class="mf-sig" d="M160 158.9L160.4 158.9L160.8 158.9L161.2 158.8L161.6 158.8L162 158.7L162.4 158.7L162.8 158.6L163.2 158.6L163.6 158.5L164 158.4L164.4 158.4L164.8 158.3L165.1 158.3L165.5 158.2L165.9 158.2L166.3 158.1L166.7 158L167.1 158L167.5 157.9L167.9 157.8L168.3 157.8L168.7 157.7L169.1 157.6L169.5 157.6L169.9 157.5L170.3 157.4L170.7 157.3L171.1 157.2L171.5 157.2L171.9 157.1L172.3 157L172.7 156.9L173.1 156.8L173.5 156.7L173.9 156.6L174.3 156.5L174.7 156.4L175 156.3L175.4 156.2L175.8 156.1L176.2 156L176.6 155.9L177 155.8L177.4 155.7L177.8 155.6L178.2 155.4L178.6 155.3L179 155.2L179.4 155L179.8 154.9L180.2 154.8L180.6 154.6L181 154.5L181.4 154.3L181.8 154.2L182.2 154L182.6 153.8L183 153.7L183.4 153.5L183.8 153.3L184.2 153.1L184.6 152.9L184.9 152.7L185.3 152.5L185.7 152.3L186.1 152.1L186.5 151.9L186.9 151.7L187.3 151.4L187.7 151.2L188.1 150.9L188.5 150.6L188.9 150.4L189.3 150.1L189.7 149.8L190.1 149.5L190.5 149.2L190.9 148.9L191.3 148.5L191.7 148.2L192.1 147.8L192.5 147.5L192.9 147.1L193.3 146.7L193.7 146.2L194.1 145.8L194.5 145.3L194.8 144.9L195.2 144.4L195.6 143.9L196 143.3L196.4 142.8L196.8 142.2L197.2 141.6L197.6 140.9L198 140.3L198.4 139.6L198.8 138.9L199.2 138.1L199.6 137.3L200 136.4L200.4 135.6L200.8 134.6L201.2 133.6L201.6 132.6L202 131.5L202.4 130.4L202.8 129.2L203.2 127.9L203.6 126.5L204 125.1L204.4 123.5L204.7 121.9L205.1 120.2L205.5 118.3L205.9 116.4L206.3 114.3L206.7 112L207.1 109.6L207.5 107.1L207.9 104.3L208.3 101.3L208.7 98.1L209.1 94.6L209.5 90.9L209.9 86.8L210.3 82.3L210.7 77.5L211.1 72.2L211.5 66.4L211.9 60L212.3 52.9L212.7 45.1L213.1 36.5L213.3 30"/><path class="mf-sig" d="M234.7 30L234.9 36.5L235.3 45.1L235.7 52.9L236.1 60L236.5 66.4L236.9 72.2L237.3 77.5L237.7 82.3L238.1 86.8L238.5 90.9L238.9 94.6L239.3 98.1L239.7 101.3L240.1 104.3L240.5 107.1L240.9 109.6L241.3 112L241.7 114.3L242.1 116.4L242.5 118.3L242.9 120.2L243.3 121.9L243.6 123.5L244 125.1L244.4 126.5L244.8 127.9L245.2 129.2L245.6 130.4L246 131.5L246.4 132.6L246.8 133.6L247.2 134.6L247.6 135.6L248 136.4L248.4 137.3L248.8 138.1L249.2 138.9L249.6 139.6L250 140.3L250.4 140.9L250.8 141.6L251.2 142.2L251.6 142.8L252 143.3L252.4 143.9L252.8 144.4L253.2 144.9L253.5 145.3L253.9 145.8L254.3 146.2L254.7 146.7L255.1 147.1L255.5 147.5L255.9 147.8L256.3 148.2L256.7 148.5L257.1 148.9L257.5 149.2L257.9 149.5L258.3 149.8L258.7 150.1L259.1 150.4L259.5 150.6L259.9 150.9L260.3 151.2L260.7 151.4L261.1 151.7L261.5 151.9L261.9 152.1L262.3 152.3L262.7 152.5L263.1 152.7L263.4 152.9L263.8 153.1L264.2 153.3L264.6 153.5L265 153.7L265.4 153.8L265.8 154L266.2 154.2L266.6 154.3L267 154.5L267.4 154.6L267.8 154.8L268.2 154.9L268.6 155L269 155.2L269.4 155.3L269.8 155.4L270.2 155.6L270.6 155.7L271 155.8L271.4 155.9L271.8 156L272.2 156.1L272.6 156.2L273 156.3L273.3 156.4L273.7 156.5L274.1 156.6L274.5 156.7L274.9 156.8L275.3 156.9L275.7 157L276.1 157.1L276.5 157.2L276.9 157.2L277.3 157.3L277.7 157.4L278.1 157.5L278.5 157.6L278.9 157.6L279.3 157.7L279.7 157.8L280.1 157.8L280.5 157.9L280.9 158L281.3 158L281.7 158.1L282.1 158.2L282.5 158.2L282.9 158.3L283.2 158.3L283.6 158.4L284 158.4L284.4 158.5L284.8 158.6L285.2 158.6L285.6 158.7L286 158.7L286.4 158.8L286.8 158.8L287.2 158.9L287.6 158.9L288 158.9"/><text class="mf-h" x="224" y="20" text-anchor="middle">โพล: 1/x²</text><text class="mf-k" x="224" y="190" text-anchor="middle">x → 0</text><rect class="mf-bg" x="304" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="304" y1="162.6" x2="432" y2="162.6"/><line class="mf-ax" x1="368" y1="30" x2="368" y2="170"/><path class="mf-sig" d="M304 153.7L304.4 153.7L304.8 153.7L305.2 153.8L305.6 153.8L306 153.8L306.4 153.9L306.8 153.9L307.2 153.9L307.6 154L308 154L308.4 154L308.8 154L309.1 154.1L309.5 154.1L309.9 154.1L310.3 154.2L310.7 154.2L311.1 154.2L311.5 154.3L311.9 154.3L312.3 154.3L312.7 154.4L313.1 154.4L313.5 154.4L313.9 154.5L314.3 154.5L314.7 154.5L315.1 154.6L315.5 154.6L315.9 154.7L316.3 154.7L316.7 154.7L317.1 154.8L317.5 154.8L317.9 154.8L318.3 154.9L318.7 154.9L319 155L319.4 155L319.8 155L320.2 155.1L320.6 155.1L321 155.2L321.4 155.2L321.8 155.3L322.2 155.3L322.6 155.4L323 155.4L323.4 155.4L323.8 155.5L324.2 155.5L324.6 155.6L325 155.6L325.4 155.7L325.8 155.7L326.2 155.8L326.6 155.8L327 155.9L327.4 155.9L327.8 156L328.2 156L328.6 156.1L328.9 156.1L329.3 156.2L329.7 156.2L330.1 156.3L330.5 156.4L330.9 156.4L331.3 156.5L331.7 156.5L332.1 156.6L332.5 156.7L332.9 156.7L333.3 156.8L333.7 156.8L334.1 156.9L334.5 157L334.9 157L335.3 157.1L335.7 157.2L336.1 157.2L336.5 157.3L336.9 157.4L337.3 157.4L337.7 157.5L338.1 157.6L338.5 157.6L338.8 157.7L339.2 157.8L339.6 157.9L340 157.9L340.4 158L340.8 158.1L341.2 158.2L341.6 158.3L342 158.3L342.4 158.4L342.8 158.5L343.2 158.6L343.6 158.7L344 158.7L344.4 158.8L344.8 158.9L345.2 159L345.6 159.1L346 159.2L346.4 159.3L346.8 159.4L347.2 159.5L347.6 159.6L348 159.6L348.4 159.7L348.7 159.8L349.1 159.9L349.5 160L349.9 160.1L350.3 160.2L350.7 160.3L351.1 160.4L351.5 160.5L351.9 160.6L352.3 160.7L352.7 160.8L353.1 160.9L353.5 161L353.9 161.1L354.3 161.2L354.7 161.3L355.1 161.4L355.5 161.5L355.9 161.6L356.3 161.7L356.7 161.8L357.1 161.8L357.5 161.9L357.9 162L358.3 162.1L358.6 162.2L359 162.2L359.4 162.3L359.8 162.3L360.2 162.4L360.6 162.4L361 162.5L361.4 162.5L361.8 162.5L362.2 162.6L362.6 162.6L363 162.6L363.4 162.6L363.8 162.6L364.2 162.6L364.6 162.6L365 162.6L365.4 162.6L365.8 162.6L366.2 162.6L366.6 162.6L367 162.6L367.4 162.6"/><path class="mf-sig" d="M382.6 30L382.9 36.3L383.3 43.2L383.7 49.3L384.1 54.9L384.5 59.9L384.9 64.5L385.3 68.7L385.7 72.5L386.1 76L386.5 79.2L386.9 82.2L387.3 85L387.6 87.5L388 89.9L388.4 92.1L388.8 94.2L389.2 96.1L389.6 97.9L390 99.6L390.4 101.2L390.8 102.7L391.2 104.1L391.6 105.5L392 106.7L392.4 107.9L392.8 109.1L393.2 110.1L393.6 111.2L394 112.1L394.4 113.1L394.8 113.9L395.2 114.8L395.6 115.6L396 116.4L396.4 117.1L396.8 117.8L397.2 118.5L397.5 119.1L397.9 119.7L398.3 120.3L398.7 120.9L399.1 121.4L399.5 122L399.9 122.5L400.3 123L400.7 123.4L401.1 123.9L401.5 124.3L401.9 124.8L402.3 125.2L402.7 125.6L403.1 126L403.5 126.3L403.9 126.7L404.3 127L404.7 127.4L405.1 127.7L405.5 128L405.9 128.3L406.3 128.6L406.7 128.9L407.1 129.2L407.4 129.5L407.8 129.7L408.2 130L408.6 130.2L409 130.5L409.4 130.7L409.8 131L410.2 131.2L410.6 131.4L411 131.6L411.4 131.8L411.8 132L412.2 132.2L412.6 132.4L413 132.6L413.4 132.8L413.8 133L414.2 133.2L414.6 133.3L415 133.5L415.4 133.7L415.8 133.8L416.2 134L416.6 134.1L417 134.3L417.3 134.4L417.7 134.6L418.1 134.7L418.5 134.9L418.9 135L419.3 135.1L419.7 135.3L420.1 135.4L420.5 135.5L420.9 135.7L421.3 135.8L421.7 135.9L422.1 136L422.5 136.1L422.9 136.2L423.3 136.3L423.7 136.5L424.1 136.6L424.5 136.7L424.9 136.8L425.3 136.9L425.7 137L426.1 137.1L426.5 137.2L426.9 137.2L427.2 137.3L427.6 137.4L428 137.5L428.4 137.6L428.8 137.7L429.2 137.8L429.6 137.9L430 137.9L430.4 138L430.8 138.1L431.2 138.2L431.6 138.3L432 138.3"/><text class="mf-h" x="368" y="20" text-anchor="middle">เอกฐานแท้: e^(1/x)</text><text class="mf-k" x="368" y="190" text-anchor="middle">x → 0</text></svg><!--/FIG--><figcaption>ขนาด |f(z)| ใกล้จุดเอกฐานสามชนิด: ถอดได้ (มีขอบเขต) · โพล (โตเป็นอนันต์ทุกทิศ) · เอกฐานแท้ (พฤติกรรมขึ้นกับทิศที่เข้าใกล้)</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf" id="L4" data-k="removable singularity no negative powers bounded ถอดได้">
+        <p class="tf-n"><b><span class="fid">L4</span> Removable singularity</b> จุดเอกฐานที่ถอดได้</p>
+        \[ a_{-n} = 0\ \forall n \ge 1 \iff \lim_{z\to c} f(z) \text{ มีค่าจำกัด} \]
+        <p class="tf-x">เช่น \(\tfrac{\sin z}{z}\), \(\tfrac{e^z - 1}{z}\) ที่ 0 · “แก้” ได้ด้วยการนิยามค่าที่ c</p>
+      </div>
+      <div class="tf" id="L5" data-k="pole of order m finite principal part (z-c)^m f analytic โพลอันดับ m">
+        <p class="tf-n"><b><span class="fid">L5</span> Pole of order m</b> โพลอันดับ m</p>
+        \[ a_{-m} \ne 0,\ a_{-n} = 0\ (n > m) \iff (z-c)^m f(z) \text{ วิเคราะห์และไม่เป็นศูนย์ที่ } c \]
+        <p class="tf-x">\(|f| \to \infty\) เมื่อ \(z \to c\) · m = 1 เรียกโพลอย่างง่าย (simple pole) · ศูนย์อันดับ m ของตัวส่วน ⇒ โพลอันดับ m (ถ้าตัวเศษไม่เป็นศูนย์)</p>
+      </div>
+      <div class="tf" id="L6" data-k="essential singularity infinitely many negative powers casorati weierstrass picard เอกฐานแท้">
+        <p class="tf-n"><b><span class="fid">L6</span> Essential singularity</b> จุดเอกฐานแท้</p>
+        \[ a_{-n} \ne 0 \text{ สำหรับ } n \text{ จำนวนอนันต์} \]
+        <p class="tf-x">คาโซราตี-ไวแยร์สตราส: ใกล้ c ค่าของ f เข้าใกล้ทุกจำนวนเชิงซ้อน · \(e^{1/z}\) → ∞ ตามแกนจริงบวก → 0 ตามแกนจริงลบ</p>
+      </div>
+    </div>
+    <div class="sr-exam"><b>วิธีบอกอันดับโพลโดยไม่กระจายอนุกรม</b>ถ้า \(f = g/h\), \(g(c) \ne 0\) และ h มีศูนย์อันดับ m ที่ c แล้ว f มีโพลอันดับ m เช่น \(\dfrac{1}{\sin^2 z}\) มีโพลอันดับ 2 ที่ทุก \(z = k\pi\) · ถ้า g ก็เป็นศูนย์ที่ c ด้วย ให้หักลบอันดับ เช่น \(\dfrac{\sin z}{z^4}\): ศูนย์อันดับ 1 บน ศูนย์อันดับ 4 ล่าง ⇒ โพลอันดับ 3</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="residues">
+    <h2 id="residues">เรซิดิวและทฤษฎีบทเรซิดิว <span class="lv lv-i">กลาง</span></h2>
+    <p>อินทิกรัลรอบวงกลมของ \((z - c)^n\) เป็นศูนย์ทุก n ยกเว้น n = −1 ซึ่งได้ \(2\pi i\) เมื่ออินทิกรัลอนุกรมโลรองต์ทีละพจน์ ทุกพจน์หายไปเหลือแค่ \(2\pi i\,a_{-1}\) สัมประสิทธิ์ตัวนี้จึงได้ชื่อว่า “เรซิดิว” (residue = ส่วนที่เหลือ)</p>
+    <div class="tf-grid">
+      <div class="tf" id="L7" data-k="residue definition coefficient a_(-1) เรซิดิว นิยาม">
+        <p class="tf-n"><b><span class="fid">L7</span> Residue</b> เรซิดิว</p>
+        \[ \operatorname{Res}_{z=c} f = a_{-1} = \frac{1}{2\pi i}\oint_{|z-c|=\rho} f(z)\,dz \]
+        <p class="tf-x">มาจาก \(\oint (z-c)^n dz = 2\pi i\) ถ้า \(n = -1\) และ 0 ถ้า \(n \ne -1\)</p>
+      </div>
+      <div class="tf wide" id="L8" data-k="residue formulas simple pole g/h' order m derivative limit สูตรเรซิดิว โพลอย่างง่าย โพลอันดับ m">
+        <p class="tf-n"><b><span class="fid">L8</span> Residue formulas</b> สูตรหาเรซิดิว</p>
+        \[ \text{โพลอย่างง่าย: } \lim_{z\to c}(z-c)f(z) = \frac{g(c)}{h'(c)}\ \left(f = \tfrac{g}{h}\right);\qquad \text{อันดับ } m:\ \frac{1}{(m-1)!}\lim_{z\to c}\frac{d^{m-1}}{dz^{m-1}}\Big[(z-c)^m f(z)\Big] \]
+        <p class="tf-x">เอกฐานแท้: ต้องกระจายอนุกรม · สูตร g/h′ คือสิ่งที่ใช้ใน<a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace แบบ Heaviside</a></p>
+      </div>
+      <div class="tf wide" id="L9" data-k="residue theorem contour integral 2 pi i sum residues inside ทฤษฎีบทเรซิดิว อินทิกรัลเส้นปิด">
+        <p class="tf-n"><b><span class="fid">L9</span> Residue theorem</b> ทฤษฎีบทเรซิดิว</p>
+        \[ \oint_C f(z)\,dz = 2\pi i\sum_{k}\operatorname{Res}_{z=z_k} f \qquad (z_k \text{ อยู่ภายใน } C,\ C \text{ วนทวนเข็มนาฬิกา}) \]
+        <p class="tf-x">เปลี่ยนอินทิกรัลเป็นการหาสัมประสิทธิ์ · ใช้หาอินทิกรัลจริงที่ยาก อินเวอร์สลาปลาซ (Bromwich) และอินเวอร์ส Z</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-4 · อินทิกรัลเส้นปิด</span><h3>คำนวณ \(\displaystyle\oint_{|z|=3}\frac{e^z}{z(z-2)}\,dz\)</h3></div>
+      <ol class="steps">
+        <li><p>โพลอย่างง่ายที่ 0 และ 2 อยู่ใน \(|z| = 3\) ทั้งคู่</p></li>
+        <li><p>\(\operatorname{Res}_{0} = \lim_{z\to0} z f = \dfrac{e^0}{0 - 2} = -\dfrac12\) · \(\operatorname{Res}_{2} = \lim_{z\to2}(z-2)f = \dfrac{e^2}{2}\)</p></li>
+        <li><p>\(\oint = 2\pi i\left(\dfrac{e^2}{2} - \dfrac12\right) = \pi i\,(e^2 - 1)\)</p></li>
+      </ol>
+      <p class="answer">\(\pi i(e^2 - 1) \approx 20.07\,i\) · ถ้าใช้วงกลม \(|z| = 1\) จะได้เฉพาะเรซิดิวที่ 0: \(-\pi i\)</p>
+    </div>
+    <div class="wx" id="ex-l5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-5 · อินทิกรัลจริงด้วยเรซิดิว</span><h3>(ก) \(\displaystyle\int_{-\infty}^{\infty}\frac{dx}{(x^2+1)^2}\) (ข) \(\displaystyle\int_0^{2\pi}\frac{d\theta}{2 + \cos\theta}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ปิดเส้นทางด้วยครึ่งวงกลมบน (อินทิกรัลบนครึ่งวงกลม → 0) โพลในครึ่งบนคือ \(z = i\) อันดับ 2: \(\operatorname{Res} = \dfrac{d}{dz}\left[\dfrac{1}{(z+i)^2}\right]_{z=i} = \dfrac{-2}{(2i)^3} = \dfrac{1}{4i}\)</p></li>
+        <li><p>อินทิกรัล \(= 2\pi i\cdot\dfrac{1}{4i} = \dfrac{\pi}{2}\)</p></li>
+        <li><p>(ข) แทน \(z = e^{i\theta}\): \(\cos\theta = \tfrac12(z + z^{-1}),\ d\theta = \tfrac{dz}{iz}\) ได้ \(\oint_{|z|=1}\dfrac{2\,dz}{i(z^2 + 4z + 1)}\) โพล \(z = -2 \pm \sqrt3\) ในวงกลมหนึ่งหน่วยมีแค่ \(-2 + \sqrt3\)</p></li>
+        <li><p>\(\operatorname{Res} = \dfrac{2}{i\,(2z + 4)}\Big|_{z=-2+\sqrt3} = \dfrac{2}{2\sqrt3\,i} = \dfrac{1}{\sqrt3\,i}\) ⇒ อินทิกรัล \(= 2\pi i\cdot\dfrac{1}{\sqrt3\,i} = \dfrac{2\pi}{\sqrt3}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac{\pi}{2}\) · (ข) \(\tfrac{2\pi}{\sqrt3} \approx 3.628\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="z-transform">
+    <h2 id="z-transform">การแปลง Z คืออนุกรมโลรองต์ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สำหรับวิศวกรไฟฟ้า นี่คือเหตุผลที่สำคัญที่สุดในการเรียนอนุกรมโลรองต์ การแปลง Z ของสัญญาณไม่ต่อเนื่อง \(x[n]\) นิยามเป็นอนุกรมโลรองต์รอบ 0 โดยตรง เรื่องที่ตำราระบบสัญญาณเรียกว่า “บริเวณการลู่เข้า (ROC)” คือวงแหวนของหน้านี้ และการหาการแปลงผกผันคือการเลือกวงแหวนให้ถูกแล้วกระจายด้วยอนุกรมเรขาคณิต (เทียบกับ ROC ของลาปลาซใน<a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่และ ROC</a>)</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L10" data-k="z-transform laurent series x[n] coefficient z^(-n) roc annulus causal การแปลง Z ROC">
+        <p class="tf-n"><b><span class="fid">L10</span> Z-transform = Laurent series</b> การแปลง Z คืออนุกรมโลรองต์</p>
+        \[ X(z) = \sum_{n=-\infty}^{\infty} x[n]\,z^{-n},\qquad \text{ROC} = \{ r_1 &lt; |z| &lt; r_2 \},\qquad x[n] = \frac{1}{2\pi i}\oint X(z)\,z^{n-1}\,dz \]
+        <p class="tf-x">ROC \(|z| > r\) ⇔ สัญญาณข้างขวา (causal ถ้าไม่มีพจน์ n &lt; 0) · \(|z| &lt; r\) ⇔ ข้างซ้าย · วงแหวน ⇔ สองด้าน · ระบบเสถียร ⇔ ROC มีวงกลมหนึ่งหน่วย</p>
+      </div>
+      <div class="tf" id="L11" data-k="a^n u[n] z/(z-a) |z|>|a| basic z transform pair คู่การแปลง Z">
+        <p class="tf-n"><b><span class="fid">L11</span> The basic pair</b> คู่พื้นฐาน</p>
+        \[ a^n u[n] \longleftrightarrow \frac{z}{z-a},\ |z| > |a|;\qquad -a^n u[-n-1] \longleftrightarrow \frac{z}{z-a},\ |z| &lt; |a| \]
+        <p class="tf-x">X(z) เดียวกัน ROC ต่างกัน = สัญญาณต่างกัน · พิสูจน์ด้วย L3 ทั้งสองแบบ</p>
+      </div>
+      <div class="tf" id="L12" data-k="stability absolute convergence unit circle bibo h[n] เสถียรภาพ วงกลมหนึ่งหน่วย">
+        <p class="tf-n"><b><span class="fid">L12</span> Stability = absolute convergence</b> เสถียรภาพคือการลู่เข้าแบบสัมบูรณ์</p>
+        \[ \text{BIBO เสถียร} \iff \sum_{n}|h[n]| &lt; \infty \iff |z| = 1 \subset \text{ROC} \]
+        <p class="tf-x">แนวคิด “ลู่เข้าแบบสัมบูรณ์” จาก<a href="/learn/sequences-and-series/alternating-series/#absolute">หน้าอนุกรมสลับ</a>คือเงื่อนไขเสถียรภาพของระบบดิจิทัลโดยตรง</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-l6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-6 · อินเวอร์ส Z สาม ROC</span><h3>\(X(z) = \dfrac{z}{(z - \frac12)(z - 2)}\) หา \(x[n]\) เมื่อ ROC เป็น (ก) \(|z| > 2\) (ข) \(\tfrac12 &lt; |z| &lt; 2\) (ค) \(|z| &lt; \tfrac12\)</h3><button type="button" class="wx-btn calc-go" data-sr-target="lau-lab" data-sr-set='{"preset":"zt2","region":2}'>เปิดในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>แยก \(\dfrac{X(z)}{z} = \dfrac{1}{(z-\frac12)(z-2)} = \dfrac{-2/3}{z - \frac12} + \dfrac{2/3}{z - 2}\) ⇒ \(X(z) = -\dfrac23\cdot\dfrac{z}{z - \frac12} + \dfrac23\cdot\dfrac{z}{z-2}\)</p></li>
+        <li><p>(ก) \(|z| > 2\) อยู่นอกทั้งสองโพล ใช้ L11 แบบข้างขวาทั้งคู่: \(x[n] = \dfrac23\left(2^n - \left(\tfrac12\right)^n\right)u[n]\) (causal แต่ไม่เสถียร เพราะ ROC ไม่มี |z| = 1)</p></li>
+        <li><p>(ข) \(\tfrac12 &lt; |z| &lt; 2\): โพล ½ อยู่ข้างใน (ข้างขวา) โพล 2 อยู่ข้างนอก (ข้างซ้าย): \(x[n] = -\dfrac23\left(\tfrac12\right)^n u[n] - \dfrac23\,2^n u[-n-1]\) (สองด้าน และเสถียร)</p></li>
+        <li><p>(ค) \(|z| &lt; \tfrac12\) อยู่ในทั้งคู่ (ข้างซ้ายทั้งคู่): \(x[n] = \dfrac23\left(\left(\tfrac12\right)^n - 2^n\right)u[-n-1]\)</p></li>
+      </ol>
+      <p class="answer">X(z) เดียว สามสัญญาณ เลือกตาม ROC — ตรงกับสามบริเวณของอนุกรมโลรองต์ทุกประการ ดูการใช้ใน<a href="/learn/control-systems/digital-control/">ระบบควบคุมแบบดิจิทัล</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="laplace-link">
+    <h2 id="laplace-link">เชื่อมกับการแปลงลาปลาซผกผัน <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>สูตรผกผันของลาปลาซ (Bromwich) เป็นอินทิกรัลเส้นในระนาบ s ซึ่งปิดเส้นทางแล้วใช้ทฤษฎีบทเรซิดิวได้: \(f(t) = \sum \operatorname{Res}\left[F(s)e^{st}\right]\) ที่โพลทั้งหมดของ F(s) วิธีแยกเศษส่วนย่อยแบบ Heaviside cover-up คือสูตร L8 นั่นเอง ดูวิธีทำครบทุกกรณีที่ <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L13" data-k="inverse laplace residues bromwich sum residues F(s) e^(st) อินเวอร์สลาปลาซ เรซิดิว">
+        <p class="tf-n"><b><span class="fid">L13</span> Inverse Laplace by residues</b> อินเวอร์สลาปลาซด้วยเรซิดิว</p>
+        \[ f(t) = \frac{1}{2\pi i}\int_{\gamma - i\infty}^{\gamma + i\infty}F(s)e^{st}\,ds = \sum_{\text{โพล } s_k}\operatorname{Res}_{s=s_k}\left[F(s)\,e^{st}\right],\quad t > 0 \]
+        <p class="tf-x">ตัวอย่าง \(F(s) = \tfrac{1}{s(s+2)}\): Res ที่ 0 = ½ · Res ที่ −2 = \(-\tfrac12e^{-2t}\) ⇒ \(f(t) = \tfrac12(1 - e^{-2t})\)</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="summary">
+    <h2 id="summary">สรุปขั้นตอนทำโจทย์อนุกรมโลรองต์ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="test-flow">
+      <div><b>1. หาโพลทั้งหมด</b>วาดบนระนาบ หาระยะจากจุดศูนย์กลาง c ไปแต่ละโพล</div>
+      <div><b>2. ระบุวงแหวน</b>วงกลมผ่านโพลแบ่งเขต · โจทย์บอกบริเวณมา หรือดูว่าจุดที่สนใจอยู่วงไหน</div>
+      <div><b>3. แยกเศษส่วนย่อย</b>หรือดึงตัวประกอบที่รู้อนุกรม (eᶻ, sin z) ออกมา</div>
+      <div><b>4. กระจายแต่ละตัว</b>โพลข้างใน ⇒ กำลังลบ · โพลข้างนอก ⇒ กำลังบวก (L3)</div>
+      <div><b>5. รวมและตรวจ</b>เทียบสัมประสิทธิ์สองสามตัวแรกกับแล็บ หรือแทนค่า z หนึ่งจุด</div>
+      <div><b>6. ตอบคำถาม</b>ชนิดจุดเอกฐาน (L4–L6) · เรซิดิว \(a_{-1}\) · อินทิกรัล (L9) · สัญญาณ x[n] (L10)</div>
+    </div>
+    </section>
+
+    <h2 id="next">ต่อไป: อนุกรมในงานวิศวกรรม</h2>
+    <p>เห็นแล้วว่าอนุกรมโลรองต์คือภาษาของการแปลง Z หน้าถัดไป <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a> นำทุกเครื่องมือของบทไปใช้กับลูกตุ้ม ไดโอด ไมโครคอนโทรลเลอร์ ตัวกรองดิจิทัล และการเงินของโครงการ · อ่านบทความ <a href="/blog/laurent-series-vs-taylor-series/">อนุกรมโลรองต์ต่างจากเทย์เลอร์อย่างไร</a> (<a href="/en/blog/laurent-series-vs-taylor-series/">English</a>) · ฝึกโจทย์ <a href="/learn/sequences-and-series/exam-practice/#set-c">แนวข้อสอบชุด C</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

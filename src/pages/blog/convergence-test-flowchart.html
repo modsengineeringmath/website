@@ -1,0 +1,101 @@
+<!--meta
+{
+  "title": "เลือกการทดสอบการลู่เข้าอย่างไร: ผังตัดสินใจ 8 ขั้น พร้อมตัวอย่างทุกขั้น | อาจารย์มด",
+  "h1": "เลือกการทดสอบการลู่เข้าอย่างไร: ผังตัดสินใจ 8 ขั้น พร้อมตัวอย่างทุกขั้น",
+  "description": "วิธีเลือกการทดสอบการลู่เข้าของอนุกรมให้ถูกตั้งแต่ครั้งแรก: ผังตัดสินใจ 8 ขั้น (พจน์ที่ n เรขาคณิต อนุกรม p กล้องส่องทางไกล เปรียบเทียบลิมิต อัตราส่วน ราก ปริพันธ์ อนุกรมสลับ) พร้อมตัวอย่างและกับดัก",
+  "ogTitle": "เลือกการทดสอบการลู่เข้าอย่างไร: ผังตัดสินใจ 8 ขั้น",
+  "blog": true,
+  "tag": "ลำดับและอนุกรม",
+  "series": ["sequences-and-series"],
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "keywords": ["การทดสอบการลู่เข้า", "เลือกการทดสอบอนุกรม", "ratio test", "root test", "integral test", "comparison test", "limit comparison test", "ทดสอบอัตราส่วน", "ทดสอบราก", "อนุกรมลู่เข้าลู่ออก", "convergence test flowchart"],
+  "about": ["Convergence tests", "Ratio test", "Root test", "Integral test", "Limit comparison test", "Alternating series test"],
+  "og": {"title": "เลือกการทดสอบการลู่เข้าอย่างไร", "sub": "ผังตัดสินใจ 8 ขั้น พร้อมตัวอย่างและกับดักในข้อสอบ", "eyebrow": "บทความ · ลำดับและอนุกรม", "sym": "ρ"},
+  "faq": [
+    {"q": "ทำไมไม่ใช้ ratio test กับทุกข้อ?", "a": "เพราะอนุกรมที่เป็นเศษส่วนของพหุนามหรือราก เช่น \\(\\sum 1/n^2\\) และ \\(\\sum 1/n\\) ให้อัตราส่วนเข้าใกล้ 1 เสมอ ซึ่งสรุปไม่ได้ ratio test เหมาะกับพจน์ที่มีแฟกทอเรียลหรือเลขยกกำลังเท่านั้น"},
+    {"q": "การทดสอบพจน์ที่ n ใช้สรุปว่าลู่เข้าได้ไหม?", "a": "ไม่ได้ สรุปได้ทางเดียวคือถ้าพจน์ไม่เข้าใกล้ศูนย์แล้วอนุกรมลู่ออก ถ้าพจน์เข้าใกล้ศูนย์ต้องทดสอบต่อ"},
+    {"q": "เลือก b(n) สำหรับ limit comparison อย่างไร?", "a": "เก็บเฉพาะตัวเด่น (กำลังสูงสุด) ของเศษและส่วน เช่น \\(\\dfrac{3n+5}{n^3-2}\\) เก็บ \\(\\dfrac{3n}{n^3} = \\dfrac{3}{n^2}\\) จึงเลือก \\(b_n = 1/n^2\\)"},
+    {"q": "อนุกรมที่เครื่องหมายสลับต้องเริ่มทดสอบอะไร?", "a": "ทดสอบค่าสัมบูรณ์ \\(\\sum|a_n|\\) ก่อน ถ้าลู่เข้าก็เป็นการลู่เข้าแบบสัมบูรณ์ ถ้าลู่ออกจึงใช้การทดสอบอนุกรมสลับ (ไลบ์นิซ) ถ้าผ่านคือลู่เข้าแบบมีเงื่อนไข"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>เลือกการทดสอบการลู่เข้า</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// บทความ · ลำดับและอนุกรม</p>
+      <h1>เลือกการทดสอบการลู่เข้าอย่างไร: ผังตัดสินใจ 8 ขั้น พร้อมตัวอย่างทุกขั้น</h1>
+      <p class="lede">ในข้อสอบแคลคูลัส 2 คนที่ทำข้ออนุกรมได้เร็วไม่ใช่คนที่จำทฤษฎีบทได้มากที่สุด แต่เป็นคนที่มองพจน์แล้วรู้ทันทีว่าควรใช้เครื่องมือไหน บทความนี้รวมประสบการณ์นั้นเป็นผังตัดสินใจ 8 ขั้น เรียงจากเร็วที่สุดไปถึงที่ใช้แรงมากที่สุด พร้อมตัวอย่างหนึ่งข้อต่อขั้น</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr"><b>สรุปใน 30 วินาที</b><ul>
+        <li>เช็กพจน์ที่ n ก่อนเสมอ (5 วินาที) แล้วดูว่าเป็นเรขาคณิตหรืออนุกรม p</li>
+        <li>เศษส่วนพหุนาม → เปรียบเทียบลิมิต · แฟกทอเรียล/เลขยกกำลัง → อัตราส่วน · ยกกำลัง n ทั้งก้อน → ราก · มี ln → ปริพันธ์</li>
+        <li>เครื่องหมายสลับ: ทดสอบ Σ|aₙ| ก่อน แล้วค่อยใช้ไลบ์นิซ</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="flow">
+    <h2 id="flow">ผังตัดสินใจ</h2>
+    <figure class="post-fig"><!--FIG:sr-flow--><svg class="mf sr-fig" viewBox="0 0 420 542" role="img" aria-label="ผังเลือกการทดสอบการลู่เข้า"><rect class="mf-box" x="8" y="14" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="39" text-anchor="middle">aₙ → 0 ?</text><rect class="mf-fill" x="262" y="14" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="14" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="39" text-anchor="middle">ไม่ → ลู่ออก</text><line class="mf-thin" x1="222" y1="34" x2="260" y2="34"/><path class="mf-arrowh" d="M260 34L253.6 36.7L253.6 31.3Z"/><text class="mf-k" x="241" y="28" text-anchor="middle"></text><line class="mf-thin" x1="115" y1="54" x2="115" y2="76"/><path class="mf-arrowh" d="M115 76L112.3 69.6L117.7 69.6Z"/><text class="mf-k" x="121" y="69" text-anchor="start">ใช่</text><rect class="mf-box" x="8" y="78" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="103" text-anchor="middle">เรขาคณิต / อนุกรม p ?</text><rect class="mf-fill2" x="262" y="78" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="78" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="103" text-anchor="middle">|r| < 1 · p > 1</text><line class="mf-thin" x1="222" y1="98" x2="260" y2="98"/><path class="mf-arrowh" d="M260 98L253.6 100.7L253.6 95.3Z"/><text class="mf-k" x="241" y="92" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="118" x2="115" y2="140"/><path class="mf-arrowh" d="M115 140L112.3 133.6L117.7 133.6Z"/><text class="mf-k" x="121" y="133" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="142" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="167" text-anchor="middle">แยกเศษส่วนย่อยได้ ?</text><rect class="mf-fill2" x="262" y="142" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="142" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="167" text-anchor="middle">กล้องส่องทางไกล</text><line class="mf-thin" x1="222" y1="162" x2="260" y2="162"/><path class="mf-arrowh" d="M260 162L253.6 164.7L253.6 159.3Z"/><text class="mf-k" x="241" y="156" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="182" x2="115" y2="204"/><path class="mf-arrowh" d="M115 204L112.3 197.6L117.7 197.6Z"/><text class="mf-k" x="121" y="197" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="206" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="231" text-anchor="middle">เศษส่วนพหุนาม / ราก ?</text><rect class="mf-fill2" x="262" y="206" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="206" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="231" text-anchor="middle">เปรียบเทียบลิมิต 1/nᵖ</text><line class="mf-thin" x1="222" y1="226" x2="260" y2="226"/><path class="mf-arrowh" d="M260 226L253.6 228.7L253.6 223.3Z"/><text class="mf-k" x="241" y="220" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="246" x2="115" y2="268"/><path class="mf-arrowh" d="M115 268L112.3 261.6L117.7 261.6Z"/><text class="mf-k" x="121" y="261" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="270" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="295" text-anchor="middle">มี n!, cⁿ, nⁿ ?</text><rect class="mf-fill2" x="262" y="270" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="270" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="295" text-anchor="middle">อัตราส่วน</text><line class="mf-thin" x1="222" y1="290" x2="260" y2="290"/><path class="mf-arrowh" d="M260 290L253.6 292.7L253.6 287.3Z"/><text class="mf-k" x="241" y="284" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="310" x2="115" y2="332"/><path class="mf-arrowh" d="M115 332L112.3 325.6L117.7 325.6Z"/><text class="mf-k" x="121" y="325" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="334" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="359" text-anchor="middle">ยกกำลัง n ทั้งก้อน ?</text><rect class="mf-fill2" x="262" y="334" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="334" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="359" text-anchor="middle">ราก</text><line class="mf-thin" x1="222" y1="354" x2="260" y2="354"/><path class="mf-arrowh" d="M260 354L253.6 356.7L253.6 351.3Z"/><text class="mf-k" x="241" y="348" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="374" x2="115" y2="396"/><path class="mf-arrowh" d="M115 396L112.3 389.6L117.7 389.6Z"/><text class="mf-k" x="121" y="389" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="398" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="423" text-anchor="middle">มี ln / อินทิเกรตง่าย ?</text><rect class="mf-fill2" x="262" y="398" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="398" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="423" text-anchor="middle">ปริพันธ์</text><line class="mf-thin" x1="222" y1="418" x2="260" y2="418"/><path class="mf-arrowh" d="M260 418L253.6 420.7L253.6 415.3Z"/><text class="mf-k" x="241" y="412" text-anchor="middle">ใช่</text><line class="mf-thin" x1="115" y1="438" x2="115" y2="460"/><path class="mf-arrowh" d="M115 460L112.3 453.6L117.7 453.6Z"/><text class="mf-k" x="121" y="453" text-anchor="start">ไม่</text><rect class="mf-box" x="8" y="462" width="214" height="40" rx="18"/><text class="mf-h" x="115" y="487" text-anchor="middle">เครื่องหมายสลับ ?</text><rect class="mf-fill2" x="262" y="462" width="150" height="40" rx="8"/><rect class="mf-box" x="262" y="462" width="150" height="40" rx="8" style="fill:none"/><text class="mf-t" x="337" y="487" text-anchor="middle">Σ|aₙ| ก่อน แล้วไลบ์นิซ</text><line class="mf-thin" x1="222" y1="482" x2="260" y2="482"/><path class="mf-arrowh" d="M260 482L253.6 484.7L253.6 479.3Z"/><text class="mf-k" x="241" y="476" text-anchor="middle">ใช่</text></svg><!--/FIG--><figcaption>อ่านจากบนลงล่าง หยุดที่ข้อแรกที่ตอบ “ใช่” แล้วใช้การทดสอบทางขวา</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="steps">
+    <h2 id="steps">8 ขั้นพร้อมตัวอย่าง</h2>
+    <h3>ขั้น 1 · พจน์เข้าใกล้ศูนย์ไหม</h3>
+    <p>\(\sum\dfrac{n}{n+1}\): พจน์ → 1 ≠ 0 จึง<b>ลู่ออก</b>ทันที ข้อนี้ใช้ได้ทางเดียว ถ้าพจน์ → 0 ให้ไปขั้นถัดไป</p>
+    <h3>ขั้น 2 · เป็นเรขาคณิตหรืออนุกรม p ไหม</h3>
+    <p>\(\sum\dfrac{5}{4^n}\) เรขาคณิต \(r = \tfrac14\) <b>ลู่เข้า</b> · \(\sum\dfrac{1}{\sqrt n}\) อนุกรม p ที่ \(p = \tfrac12 \le 1\) <b>ลู่ออก</b> — จำผลได้ ไม่ต้องคำนวณ</p>
+    <h3>ขั้น 3 · แยกเศษส่วนย่อยได้ไหม</h3>
+    <p>\(\sum\dfrac{1}{n(n+1)} = \sum\left(\dfrac1n - \dfrac{1}{n+1}\right) = 1\) กล้องส่องทางไกลให้ทั้งคำตอบลู่เข้าและค่าผลบวก</p>
+    <h3>ขั้น 4 · เป็นเศษส่วนของพหุนามหรือรากไหม</h3>
+    <p>\(\sum\dfrac{3n+5}{n^3-2}\): ตัวเด่น \(\tfrac{3n}{n^3} = \tfrac{3}{n^2}\) เทียบลิมิตกับ \(\tfrac{1}{n^2}\) ได้ 3 (บวกและจำกัด) จึง<b>ลู่เข้า</b> · สูตรลัด: ลู่เข้า ⇔ ดีกรีล่าง − ดีกรีบน > 1</p>
+    <h3>ขั้น 5 · มีแฟกทอเรียลหรือเลขยกกำลังไหม</h3>
+    <p>\(\sum\dfrac{n!}{n^n}\): \(\dfrac{a_{n+1}}{a_n} = \left(\dfrac{n}{n+1}\right)^n \to \dfrac1e &lt; 1\) <b>ลู่เข้า</b> · ถ้าได้ 1 พอดี ratio test สรุปไม่ได้</p>
+    <h3>ขั้น 6 · ยกกำลัง n ทั้งก้อนไหม</h3>
+    <p>\(\sum\left(\dfrac{n}{2n+1}\right)^n\): \(\sqrt[n]{a_n} = \dfrac{n}{2n+1} \to \tfrac12\) <b>ลู่เข้า</b> รากตัดเลขชี้กำลังทิ้งให้ทันที</p>
+    <h3>ขั้น 7 · มี ln หรืออินทิเกรตได้ง่ายไหม</h3>
+    <p>\(\sum\dfrac{1}{n\ln n}\): \(\int_2^\infty\dfrac{dx}{x\ln x} = [\ln\ln x]_2^\infty = \infty\) <b>ลู่ออก</b> (แม้ตัวเลขจากคอมพิวเตอร์จะดูนิ่ง) · ส่วน \(\sum\dfrac{1}{n(\ln n)^2}\) ลู่เข้า</p>
+    <h3>ขั้น 8 · เครื่องหมายสลับไหม</h3>
+    <p>\(\sum\dfrac{(-1)^n}{\sqrt n}\): ค่าสัมบูรณ์ \(\sum\tfrac{1}{\sqrt n}\) ลู่ออก แต่ \(\tfrac{1}{\sqrt n}\) ลดลง → 0 ไลบ์นิซบอกว่าลู่เข้า จึงเป็น<b>ลู่เข้าแบบมีเงื่อนไข</b></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางสรุปสำหรับทบทวนก่อนสอบ</h2>
+    <div class="table-wrap"><table><thead><tr><th>การทดสอบ</th><th>ใช้เมื่อ</th><th>สรุปไม่ได้เมื่อ</th></tr></thead><tbody>
+      <tr><td>พจน์ที่ n</td><td>ทุกข้อ (ด่านแรก)</td><td>พจน์ → 0</td></tr>
+      <tr><td>เปรียบเทียบลิมิต</td><td>เศษส่วนพหุนาม ราก sin(1/n)</td><td>ลิมิตเป็น 0 หรือ ∞ ในทิศที่ผิด</td></tr>
+      <tr><td>อัตราส่วน</td><td>n!, cⁿ, nⁿ</td><td>ρ = 1</td></tr>
+      <tr><td>ราก</td><td>(…)ⁿ ทั้งก้อน</td><td>ρ = 1</td></tr>
+      <tr><td>ปริพันธ์</td><td>ln n, ฟังก์ชันที่อินทิเกรตได้</td><td>f ไม่ลดลง</td></tr>
+      <tr><td>อนุกรมสลับ</td><td>(−1)ⁿ bₙ</td><td>bₙ ไม่ลดลง</td></tr>
+    </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="traps">
+    <h2 id="traps">กับดักสามข้อที่ทำให้เสียคะแนน</h2>
+    <ul>
+      <li>\(\sum\dfrac{1}{n^{1 + 1/n}}\) ดูเหมือนอนุกรม p ที่ p > 1 แต่เลขชี้กำลังเข้าใกล้ 1 เทียบลิมิตกับ \(\tfrac1n\) ได้ 1 จึง<b>ลู่ออก</b></li>
+      <li>\(\sum\left(1 + \tfrac1n\right)^n\) ไม่ต้องใช้ราก พจน์ → e ≠ 0 จึงลู่ออกด้วยพจน์ที่ n</li>
+      <li>\(\sum\dfrac{1}{3^n - n}\) เปรียบเทียบตรงกับ \(\tfrac{1}{3^n}\) ใช้ไม่ได้เพราะพจน์ใหญ่กว่า ต้องใช้เปรียบเทียบลิมิต</li>
+    </ul>
+    <p>ฝึกให้มองเป็นอัตโนมัติด้วย<a href="/learn/sequences-and-series/convergence-tests/#quiz">เกมเลือกการทดสอบ 40 ข้อ</a> ที่ตรวจทั้งการทดสอบและผลสรุป</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">เรียนต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้าฉบับเต็ม: ทฤษฎีบท ตัวอย่าง ราบี และสเตอร์ลิง</a></li>
+        <li><a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ: ไลบ์นิซ ความคลาดเคลื่อน การจัดเรียงใหม่</a></li>
+        <li><a href="/learn/sequences-and-series/series-lab/#tester">ตัวทดสอบอนุกรมแบบโต้ตอบ</a></li>
+        <li><a href="/learn/sequences-and-series/exam-practice/#set-b">แนวข้อสอบแคลคูลัส 2 ชุด B</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

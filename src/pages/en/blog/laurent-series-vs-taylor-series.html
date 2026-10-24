@@ -1,0 +1,121 @@
+<!--meta
+{
+  "title": "What Is a Laurent Series and How Is It Different from a Taylor Series? | Ajarn Mod",
+  "h1": "What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)",
+  "description": "Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to the z-transform, with step-by-step examples.",
+  "ogTitle": "Laurent Series vs Taylor Series: Explained with Pictures",
+  "lang": "en",
+  "blog": true,
+  "tag": "Sequences & series",
+  "series": ["sequences-and-series", "laplace-transform"],
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "keywords": ["Laurent series", "Laurent vs Taylor series", "Laurent expansion", "principal part", "annulus of convergence", "residue", "isolated singularity", "essential singularity", "z-transform region of convergence", "complex analysis"],
+  "about": ["Laurent series", "Taylor series", "Annulus", "Principal part", "Residue", "Isolated singularity", "Z-transform"],
+  "og": {"title": "Laurent Series vs Taylor Series", "sub": "Negative powers, annuli, principal part, residues and the z-transform", "eyebrow": "Article · Sequences & series", "sym": "∮"},
+  "faq": [
+    {"q": "When should I use a Laurent series instead of a Taylor series?", "a": "When you need to expand a function around a point where it is not analytic (a singularity), or on a region that has a singularity inside it, such as the annulus \\(1 < |z| < 2\\) of \\(1/((z-1)(z-2))\\). If the function is analytic on the whole disc, the Laurent series simply becomes the Taylor series."},
+    {"q": "What is the principal part?", "a": "It is the group of negative-power terms \\(\\sum_{n\\ge1} a_{-n}(z-c)^{-n}\\) of a Laurent series. It describes how the function blows up near c: no principal part means a removable singularity, finitely many terms mean a pole, infinitely many mean an essential singularity."},
+    {"q": "Why does the residue matter?", "a": "The residue is the coefficient \\(a_{-1}\\), the only term that survives integration around a closed curve. That gives the residue theorem \\(\\oint f\\,dz = 2\\pi i\\sum\\operatorname{Res}\\), used for hard real integrals, the inverse Laplace transform and the inverse z-transform."},
+    {"q": "How is the z-transform related to Laurent series?", "a": "The z-transform is defined as \\(X(z) = \\sum x[n]z^{-n}\\), which is a Laurent series about 0. The signal x[n] is the list of coefficients and the region of convergence (ROC) is the annulus of the series. The same X(z) with a different ROC gives a different signal."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Laurent vs Taylor</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Sequences &amp; series</p>
+      <h1>What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)</h1>
+      <p class="lede">A Taylor series writes a function as an endless polynomial around a point where the function is well behaved. In engineering, though, we usually care about the points where a function blows up, such as the poles of a transfer function. A Laurent series fixes this with one idea: allow negative powers. This article compares the two series visually and ends with the reason electrical engineers use Laurent series every day, through the z-transform.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr"><b>In 30 seconds</b><ul>
+        <li>Taylor: \(\sum_{n\ge0} a_n(z-c)^n\) converges on a <b>disc</b> · Laurent: \(\sum_{n=-\infty}^{\infty} a_n(z-c)^n\) converges on an <b>annulus</b></li>
+        <li>One function can have several Laurent series, one per annulus</li>
+        <li>The coefficient \(a_{-1}\) is the residue · the z-transform is a Laurent series about 0</li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">Side by side</h2>
+    <div class="table-wrap"><table><thead><tr><th></th><th>Taylor series</th><th>Laurent series</th></tr></thead><tbody>
+      <tr><td>Form</td><td>\(\sum_{n=0}^{\infty} a_n(z-c)^n\)</td><td>\(\sum_{n=-\infty}^{\infty} a_n(z-c)^n\)</td></tr>
+      <tr><td>Region of convergence</td><td>Disc \(|z - c| &lt; R\)</td><td>Annulus \(r_1 &lt; |z - c| &lt; r_2\)</td></tr>
+      <tr><td>Requires</td><td>f analytic at c</td><td>f analytic on the annulus (anything may happen at c)</td></tr>
+      <tr><td>Coefficients</td><td>\(a_n = f^{(n)}(c)/n!\)</td><td>\(a_n = \frac{1}{2\pi i}\oint\frac{f(z)}{(z-c)^{n+1}}dz\)</td></tr>
+      <tr><td>How many per function</td><td>One per centre c</td><td>One per annulus</td></tr>
+      <tr><td>Used for</td><td>Approximation, limits, linearisation</td><td>Classifying singularities, residues, integrals, the z-transform</td></tr>
+    </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="why-negative">
+    <h2 id="why-negative">Why negative powers are needed</h2>
+    <p>Try to expand \(\dfrac{e^z}{z^2}\) about 0 as a Taylor series: you cannot, because \(f(0)\) is undefined. But divide the series \(e^z = 1 + z + \tfrac{z^2}{2} + \cdots\) by \(z^2\) and the expansion appears at once:</p>
+    <p>\[ \frac{e^z}{z^2} = \underbrace{\frac{1}{z^2} + \frac{1}{z}}_{\text{principal part}} + \underbrace{\frac12 + \frac{z}{6} + \frac{z^2}{24} + \cdots}_{\text{Taylor-like part}},\qquad 0 &lt; |z| &lt; \infty \]</p>
+    <p>The first two negative-power terms describe everything that happens near 0: the function blows up like \(1/z^2\) (a pole of order 2), and the \(1/z\) term has coefficient 1, which is the residue. The rest is an ordinary, harmless power series.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="annulus">
+    <h2 id="annulus">One function, several series: it is all about the annulus</h2>
+    <p>This is what confuses students most. \(f(z) = \dfrac{1}{(z-1)(z-2)}\) has poles at 1 and 2. The circles through the poles split the plane around 0 into three regions, and each region has its own series.</p>
+    <figure class="post-fig"><!--FIG:sr-annulus-en--><svg class="mf sr-fig" viewBox="0 0 400 318" role="img" aria-label="Three regions about 0 for 1/((z−1)(z−2))"><rect class="mf-bg" x="10" y="10" width="380" height="280" rx="8"/><rect class="mf-roc" x="11" y="11" width="378" height="278" rx="8" style="opacity:.06"/><circle cx="200" cy="150" r="116" class="mf-roc" style="opacity:.14"/><circle cx="200" cy="150" r="58" class="mf-lhp" style="opacity:.28"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="58"/><circle class="mf-rocb" fill="none" cx="200" cy="150" r="116"/><line class="mf-ax" x1="20" y1="150" x2="380" y2="150"/><line class="mf-ax" x1="200" y1="20" x2="200" y2="280"/><path class="mf-pole" d="M251 143L265 157M265 143L251 157"/><text class="mf-h" x="258" y="170" text-anchor="middle">1</text><path class="mf-pole" d="M309 143L323 157M323 143L309 157"/><text class="mf-h" x="316" y="170" text-anchor="middle">2</text><text class="mf-h" x="174" y="130" text-anchor="middle">(a)</text><text class="mf-h" x="174" y="68" text-anchor="middle">(b)</text><text class="mf-h" x="58" y="44" text-anchor="start">(c) |z| > 2</text><text class="mf-l" x="200" y="310" text-anchor="middle">(a) |z| < 1 Taylor · (b) 1 < |z| < 2 · (c) outside</text><text class="mf-l" x="372" y="142" text-anchor="end">Re</text><text class="mf-l" x="206" y="30" text-anchor="start">Im</text></svg><!--/FIG--><figcaption>Three regions about 0: (a) the disc |z| &lt; 1 gives the Taylor series, (b) the annulus 1 &lt; |z| &lt; 2, (c) the outside |z| &gt; 2.</figcaption></figure>
+    <p>There is one trick: split into partial fractions, \(f = \dfrac{1}{z-2} - \dfrac{1}{z-1}\), and expand each with the geometric series, where <b>a pole inside the region gives negative powers and a pole outside gives positive powers</b>.</p>
+    <ul>
+      <li>(a) \(|z| &lt; 1\): \(f = \tfrac12 + \tfrac34 z + \tfrac78 z^2 + \cdots\) (no negative powers = Taylor)</li>
+      <li>(b) \(1 &lt; |z| &lt; 2\): \(f = \cdots - \tfrac{1}{z^2} - \tfrac{1}{z} - \tfrac12 - \tfrac{z}{4} - \tfrac{z^2}{8} - \cdots\) (both directions)</li>
+      <li>(c) \(|z| > 2\): \(f = \tfrac{1}{z^2} + \tfrac{3}{z^3} + \tfrac{7}{z^4} + \cdots\) (negative powers only)</li>
+    </ul>
+    <p>You can check by substitution: at \(z = 1.5\) series (b) converges to \(f(1.5) = -4\), but series (a) diverges there, even though f(1.5) is perfectly ordinary. Drag the test point yourself in the <a href="/learn/sequences-and-series/laurent-series/#lab">Laurent annulus lab</a> (in Thai).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="types">
+    <h2 id="types">Reading the type of singularity from the principal part</h2>
+    <figure class="post-fig"><!--FIG:sr-singular-en--><svg class="mf sr-fig" viewBox="0 0 440 200" role="img" aria-label="Behaviour near three kinds of isolated singularity"><rect class="mf-bg" x="16" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="16" y1="136.7" x2="144" y2="136.7"/><line class="mf-ax" x1="80" y1="30" x2="80" y2="170"/><path class="mf-sig" d="M16 106.4L16.4 106L16.8 105.6L17.2 105.3L17.6 104.9L18 104.6L18.4 104.2L18.8 103.8L19.2 103.5L19.6 103.1L20 102.8L20.4 102.4L20.8 102.1L21.1 101.7L21.5 101.4L21.9 101L22.3 100.7L22.7 100.3L23.1 100L23.5 99.6L23.9 99.3L24.3 98.9L24.7 98.6L25.1 98.2L25.5 97.9L25.9 97.5L26.3 97.2L26.7 96.8L27.1 96.5L27.5 96.1L27.9 95.8L28.3 95.5L28.7 95.1L29.1 94.8L29.5 94.5L29.9 94.1L30.3 93.8L30.7 93.5L31 93.1L31.4 92.8L31.8 92.5L32.2 92.1L32.6 91.8L33 91.5L33.4 91.2L33.8 90.8L34.2 90.5L34.6 90.2L35 89.9L35.4 89.6L35.8 89.3L36.2 89L36.6 88.6L37 88.3L37.4 88L37.8 87.7L38.2 87.4L38.6 87.1L39 86.8L39.4 86.5L39.8 86.2L40.2 85.9L40.6 85.6L40.9 85.4L41.3 85.1L41.7 84.8L42.1 84.5L42.5 84.2L42.9 83.9L43.3 83.7L43.7 83.4L44.1 83.1L44.5 82.8L44.9 82.6L45.3 82.3L45.7 82.1L46.1 81.8L46.5 81.5L46.9 81.3L47.3 81L47.7 80.8L48.1 80.5L48.5 80.3L48.9 80L49.3 79.8L49.7 79.5L50.1 79.3L50.5 79.1L50.8 78.8L51.2 78.6L51.6 78.4L52 78.2L52.4 77.9L52.8 77.7L53.2 77.5L53.6 77.3L54 77.1L54.4 76.9L54.8 76.7L55.2 76.5L55.6 76.3L56 76.1L56.4 75.9L56.8 75.7L57.2 75.5L57.6 75.3L58 75.1L58.4 75L58.8 74.8L59.2 74.6L59.6 74.4L60 74.3L60.4 74.1L60.7 73.9L61.1 73.8L61.5 73.6L61.9 73.5L62.3 73.3L62.7 73.2L63.1 73L63.5 72.9L63.9 72.8L64.3 72.6L64.7 72.5L65.1 72.4L65.5 72.3L65.9 72.1L66.3 72L66.7 71.9L67.1 71.8L67.5 71.7L67.9 71.6L68.3 71.5L68.7 71.4L69.1 71.3L69.5 71.2L69.9 71.1L70.3 71L70.6 70.9L71 70.9L71.4 70.8L71.8 70.7L72.2 70.7L72.6 70.6L73 70.5L73.4 70.5L73.8 70.4L74.2 70.4L74.6 70.3L75 70.3L75.4 70.2L75.8 70.2L76.2 70.2L76.6 70.1L77 70.1L77.4 70.1L77.8 70.1L78.2 70L78.6 70L79 70L79.4 70"/><path class="mf-sig" d="M80.6 70L81 70L81.4 70L81.8 70L82.2 70.1L82.6 70.1L83 70.1L83.4 70.1L83.8 70.2L84.2 70.2L84.6 70.2L85 70.3L85.4 70.3L85.8 70.4L86.2 70.4L86.6 70.5L87 70.5L87.4 70.6L87.8 70.7L88.2 70.7L88.6 70.8L89 70.9L89.4 70.9L89.7 71L90.1 71.1L90.5 71.2L90.9 71.3L91.3 71.4L91.7 71.5L92.1 71.6L92.5 71.7L92.9 71.8L93.3 71.9L93.7 72L94.1 72.1L94.5 72.3L94.9 72.4L95.3 72.5L95.7 72.6L96.1 72.8L96.5 72.9L96.9 73L97.3 73.2L97.7 73.3L98.1 73.5L98.5 73.6L98.9 73.8L99.3 73.9L99.6 74.1L100 74.3L100.4 74.4L100.8 74.6L101.2 74.8L101.6 75L102 75.1L102.4 75.3L102.8 75.5L103.2 75.7L103.6 75.9L104 76.1L104.4 76.3L104.8 76.5L105.2 76.7L105.6 76.9L106 77.1L106.4 77.3L106.8 77.5L107.2 77.7L107.6 77.9L108 78.2L108.4 78.4L108.8 78.6L109.2 78.8L109.5 79.1L109.9 79.3L110.3 79.5L110.7 79.8L111.1 80L111.5 80.3L111.9 80.5L112.3 80.8L112.7 81L113.1 81.3L113.5 81.5L113.9 81.8L114.3 82.1L114.7 82.3L115.1 82.6L115.5 82.8L115.9 83.1L116.3 83.4L116.7 83.7L117.1 83.9L117.5 84.2L117.9 84.5L118.3 84.8L118.7 85.1L119.1 85.4L119.4 85.6L119.8 85.9L120.2 86.2L120.6 86.5L121 86.8L121.4 87.1L121.8 87.4L122.2 87.7L122.6 88L123 88.3L123.4 88.6L123.8 89L124.2 89.3L124.6 89.6L125 89.9L125.4 90.2L125.8 90.5L126.2 90.8L126.6 91.2L127 91.5L127.4 91.8L127.8 92.1L128.2 92.5L128.6 92.8L129 93.1L129.3 93.5L129.7 93.8L130.1 94.1L130.5 94.5L130.9 94.8L131.3 95.1L131.7 95.5L132.1 95.8L132.5 96.1L132.9 96.5L133.3 96.8L133.7 97.2L134.1 97.5L134.5 97.9L134.9 98.2L135.3 98.6L135.7 98.9L136.1 99.3L136.5 99.6L136.9 100L137.3 100.3L137.7 100.7L138.1 101L138.5 101.4L138.9 101.7L139.2 102.1L139.6 102.4L140 102.8L140.4 103.1L140.8 103.5L141.2 103.8L141.6 104.2L142 104.6L142.4 104.9L142.8 105.3L143.2 105.6L143.6 106L144 106.4"/><text class="mf-h" x="80" y="20" text-anchor="middle">removable: sin x / x</text><text class="mf-k" x="80" y="190" text-anchor="middle">x → 0</text><circle class="mf-zero" cx="80" cy="70" r="4"/><rect class="mf-bg" x="160" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="160" y1="162.6" x2="288" y2="162.6"/><line class="mf-ax" x1="224" y1="30" x2="224" y2="170"/><path class="mf-sig" d="M160 158.9L160.4 158.9L160.8 158.9L161.2 158.8L161.6 158.8L162 158.7L162.4 158.7L162.8 158.6L163.2 158.6L163.6 158.5L164 158.4L164.4 158.4L164.8 158.3L165.1 158.3L165.5 158.2L165.9 158.2L166.3 158.1L166.7 158L167.1 158L167.5 157.9L167.9 157.8L168.3 157.8L168.7 157.7L169.1 157.6L169.5 157.6L169.9 157.5L170.3 157.4L170.7 157.3L171.1 157.2L171.5 157.2L171.9 157.1L172.3 157L172.7 156.9L173.1 156.8L173.5 156.7L173.9 156.6L174.3 156.5L174.7 156.4L175 156.3L175.4 156.2L175.8 156.1L176.2 156L176.6 155.9L177 155.8L177.4 155.7L177.8 155.6L178.2 155.4L178.6 155.3L179 155.2L179.4 155L179.8 154.9L180.2 154.8L180.6 154.6L181 154.5L181.4 154.3L181.8 154.2L182.2 154L182.6 153.8L183 153.7L183.4 153.5L183.8 153.3L184.2 153.1L184.6 152.9L184.9 152.7L185.3 152.5L185.7 152.3L186.1 152.1L186.5 151.9L186.9 151.7L187.3 151.4L187.7 151.2L188.1 150.9L188.5 150.6L188.9 150.4L189.3 150.1L189.7 149.8L190.1 149.5L190.5 149.2L190.9 148.9L191.3 148.5L191.7 148.2L192.1 147.8L192.5 147.5L192.9 147.1L193.3 146.7L193.7 146.2L194.1 145.8L194.5 145.3L194.8 144.9L195.2 144.4L195.6 143.9L196 143.3L196.4 142.8L196.8 142.2L197.2 141.6L197.6 140.9L198 140.3L198.4 139.6L198.8 138.9L199.2 138.1L199.6 137.3L200 136.4L200.4 135.6L200.8 134.6L201.2 133.6L201.6 132.6L202 131.5L202.4 130.4L202.8 129.2L203.2 127.9L203.6 126.5L204 125.1L204.4 123.5L204.7 121.9L205.1 120.2L205.5 118.3L205.9 116.4L206.3 114.3L206.7 112L207.1 109.6L207.5 107.1L207.9 104.3L208.3 101.3L208.7 98.1L209.1 94.6L209.5 90.9L209.9 86.8L210.3 82.3L210.7 77.5L211.1 72.2L211.5 66.4L211.9 60L212.3 52.9L212.7 45.1L213.1 36.5L213.3 30"/><path class="mf-sig" d="M234.7 30L234.9 36.5L235.3 45.1L235.7 52.9L236.1 60L236.5 66.4L236.9 72.2L237.3 77.5L237.7 82.3L238.1 86.8L238.5 90.9L238.9 94.6L239.3 98.1L239.7 101.3L240.1 104.3L240.5 107.1L240.9 109.6L241.3 112L241.7 114.3L242.1 116.4L242.5 118.3L242.9 120.2L243.3 121.9L243.6 123.5L244 125.1L244.4 126.5L244.8 127.9L245.2 129.2L245.6 130.4L246 131.5L246.4 132.6L246.8 133.6L247.2 134.6L247.6 135.6L248 136.4L248.4 137.3L248.8 138.1L249.2 138.9L249.6 139.6L250 140.3L250.4 140.9L250.8 141.6L251.2 142.2L251.6 142.8L252 143.3L252.4 143.9L252.8 144.4L253.2 144.9L253.5 145.3L253.9 145.8L254.3 146.2L254.7 146.7L255.1 147.1L255.5 147.5L255.9 147.8L256.3 148.2L256.7 148.5L257.1 148.9L257.5 149.2L257.9 149.5L258.3 149.8L258.7 150.1L259.1 150.4L259.5 150.6L259.9 150.9L260.3 151.2L260.7 151.4L261.1 151.7L261.5 151.9L261.9 152.1L262.3 152.3L262.7 152.5L263.1 152.7L263.4 152.9L263.8 153.1L264.2 153.3L264.6 153.5L265 153.7L265.4 153.8L265.8 154L266.2 154.2L266.6 154.3L267 154.5L267.4 154.6L267.8 154.8L268.2 154.9L268.6 155L269 155.2L269.4 155.3L269.8 155.4L270.2 155.6L270.6 155.7L271 155.8L271.4 155.9L271.8 156L272.2 156.1L272.6 156.2L273 156.3L273.3 156.4L273.7 156.5L274.1 156.6L274.5 156.7L274.9 156.8L275.3 156.9L275.7 157L276.1 157.1L276.5 157.2L276.9 157.2L277.3 157.3L277.7 157.4L278.1 157.5L278.5 157.6L278.9 157.6L279.3 157.7L279.7 157.8L280.1 157.8L280.5 157.9L280.9 158L281.3 158L281.7 158.1L282.1 158.2L282.5 158.2L282.9 158.3L283.2 158.3L283.6 158.4L284 158.4L284.4 158.5L284.8 158.6L285.2 158.6L285.6 158.7L286 158.7L286.4 158.8L286.8 158.8L287.2 158.9L287.6 158.9L288 158.9"/><text class="mf-h" x="224" y="20" text-anchor="middle">pole: 1/x²</text><text class="mf-k" x="224" y="190" text-anchor="middle">x → 0</text><rect class="mf-bg" x="304" y="30" width="128" height="140" rx="8"/><line class="mf-ax" x1="304" y1="162.6" x2="432" y2="162.6"/><line class="mf-ax" x1="368" y1="30" x2="368" y2="170"/><path class="mf-sig" d="M304 153.7L304.4 153.7L304.8 153.7L305.2 153.8L305.6 153.8L306 153.8L306.4 153.9L306.8 153.9L307.2 153.9L307.6 154L308 154L308.4 154L308.8 154L309.1 154.1L309.5 154.1L309.9 154.1L310.3 154.2L310.7 154.2L311.1 154.2L311.5 154.3L311.9 154.3L312.3 154.3L312.7 154.4L313.1 154.4L313.5 154.4L313.9 154.5L314.3 154.5L314.7 154.5L315.1 154.6L315.5 154.6L315.9 154.7L316.3 154.7L316.7 154.7L317.1 154.8L317.5 154.8L317.9 154.8L318.3 154.9L318.7 154.9L319 155L319.4 155L319.8 155L320.2 155.1L320.6 155.1L321 155.2L321.4 155.2L321.8 155.3L322.2 155.3L322.6 155.4L323 155.4L323.4 155.4L323.8 155.5L324.2 155.5L324.6 155.6L325 155.6L325.4 155.7L325.8 155.7L326.2 155.8L326.6 155.8L327 155.9L327.4 155.9L327.8 156L328.2 156L328.6 156.1L328.9 156.1L329.3 156.2L329.7 156.2L330.1 156.3L330.5 156.4L330.9 156.4L331.3 156.5L331.7 156.5L332.1 156.6L332.5 156.7L332.9 156.7L333.3 156.8L333.7 156.8L334.1 156.9L334.5 157L334.9 157L335.3 157.1L335.7 157.2L336.1 157.2L336.5 157.3L336.9 157.4L337.3 157.4L337.7 157.5L338.1 157.6L338.5 157.6L338.8 157.7L339.2 157.8L339.6 157.9L340 157.9L340.4 158L340.8 158.1L341.2 158.2L341.6 158.3L342 158.3L342.4 158.4L342.8 158.5L343.2 158.6L343.6 158.7L344 158.7L344.4 158.8L344.8 158.9L345.2 159L345.6 159.1L346 159.2L346.4 159.3L346.8 159.4L347.2 159.5L347.6 159.6L348 159.6L348.4 159.7L348.7 159.8L349.1 159.9L349.5 160L349.9 160.1L350.3 160.2L350.7 160.3L351.1 160.4L351.5 160.5L351.9 160.6L352.3 160.7L352.7 160.8L353.1 160.9L353.5 161L353.9 161.1L354.3 161.2L354.7 161.3L355.1 161.4L355.5 161.5L355.9 161.6L356.3 161.7L356.7 161.8L357.1 161.8L357.5 161.9L357.9 162L358.3 162.1L358.6 162.2L359 162.2L359.4 162.3L359.8 162.3L360.2 162.4L360.6 162.4L361 162.5L361.4 162.5L361.8 162.5L362.2 162.6L362.6 162.6L363 162.6L363.4 162.6L363.8 162.6L364.2 162.6L364.6 162.6L365 162.6L365.4 162.6L365.8 162.6L366.2 162.6L366.6 162.6L367 162.6L367.4 162.6"/><path class="mf-sig" d="M382.6 30L382.9 36.3L383.3 43.2L383.7 49.3L384.1 54.9L384.5 59.9L384.9 64.5L385.3 68.7L385.7 72.5L386.1 76L386.5 79.2L386.9 82.2L387.3 85L387.6 87.5L388 89.9L388.4 92.1L388.8 94.2L389.2 96.1L389.6 97.9L390 99.6L390.4 101.2L390.8 102.7L391.2 104.1L391.6 105.5L392 106.7L392.4 107.9L392.8 109.1L393.2 110.1L393.6 111.2L394 112.1L394.4 113.1L394.8 113.9L395.2 114.8L395.6 115.6L396 116.4L396.4 117.1L396.8 117.8L397.2 118.5L397.5 119.1L397.9 119.7L398.3 120.3L398.7 120.9L399.1 121.4L399.5 122L399.9 122.5L400.3 123L400.7 123.4L401.1 123.9L401.5 124.3L401.9 124.8L402.3 125.2L402.7 125.6L403.1 126L403.5 126.3L403.9 126.7L404.3 127L404.7 127.4L405.1 127.7L405.5 128L405.9 128.3L406.3 128.6L406.7 128.9L407.1 129.2L407.4 129.5L407.8 129.7L408.2 130L408.6 130.2L409 130.5L409.4 130.7L409.8 131L410.2 131.2L410.6 131.4L411 131.6L411.4 131.8L411.8 132L412.2 132.2L412.6 132.4L413 132.6L413.4 132.8L413.8 133L414.2 133.2L414.6 133.3L415 133.5L415.4 133.7L415.8 133.8L416.2 134L416.6 134.1L417 134.3L417.3 134.4L417.7 134.6L418.1 134.7L418.5 134.9L418.9 135L419.3 135.1L419.7 135.3L420.1 135.4L420.5 135.5L420.9 135.7L421.3 135.8L421.7 135.9L422.1 136L422.5 136.1L422.9 136.2L423.3 136.3L423.7 136.5L424.1 136.6L424.5 136.7L424.9 136.8L425.3 136.9L425.7 137L426.1 137.1L426.5 137.2L426.9 137.2L427.2 137.3L427.6 137.4L428 137.5L428.4 137.6L428.8 137.7L429.2 137.8L429.6 137.9L430 137.9L430.4 138L430.8 138.1L431.2 138.2L431.6 138.3L432 138.3"/><text class="mf-h" x="368" y="20" text-anchor="middle">essential: e^(1/x)</text><text class="mf-k" x="368" y="190" text-anchor="middle">x → 0</text></svg><!--/FIG--><figcaption>Removable: bounded · pole: blows up from every direction · essential: the behaviour depends on the direction of approach.</figcaption></figure>
+    <ul>
+      <li><b>No negative powers</b> → removable, e.g. \(\tfrac{\sin z}{z} = 1 - \tfrac{z^2}{6} + \cdots\)</li>
+      <li><b>Finitely many negative powers, highest m</b> → pole of order m, e.g. \(\tfrac{\sin z}{z^4} = \tfrac{1}{z^3} - \tfrac{1}{6z} + \cdots\) (order 3)</li>
+      <li><b>Infinitely many negative powers</b> → essential singularity, e.g. \(e^{1/z} = 1 + \tfrac1z + \tfrac{1}{2z^2} + \cdots\)</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="residue">
+    <h2 id="residue">The residue: the one number left after integration</h2>
+    <p>When you integrate a Laurent series around a circle inside its annulus, every term \((z-c)^n\) gives zero except \(n = -1\), which gives \(2\pi i\). So \(\oint f\,dz = 2\pi i\,a_{-1}\); the number \(a_{-1}\) is called the residue (what remains). It is also where the “cover-up” trick for partial fractions in the <a href="/learn/laplace-transform/inverse-laplace-transform/">inverse Laplace transform</a> (in Thai) comes from — it is really computing the residue at each pole.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="z-transform">
+    <h2 id="z-transform">Why electrical engineers need it: the z-transform</h2>
+    <p>The z-transform of a digital signal, \(X(z) = \sum x[n]z^{-n}\), is literally a Laurent series about 0. The signal x[n] is the coefficient of \(z^{-n}\), and what signals-and-systems textbooks call the “ROC” is the annulus of convergence. Take \(X(z) = \dfrac{z}{z - 0.5}\):</p>
+    <ul>
+      <li>ROC \(|z| > 0.5\) (outside the pole): \(X = 1 + 0.5z^{-1} + 0.25z^{-2} + \cdots\) ⇒ \(x[n] = 0.5^n u[n]\), a right-sided signal</li>
+      <li>ROC \(|z| &lt; 0.5\) (inside the pole): expand in positive powers ⇒ \(x[n] = -0.5^n u[-n-1]\), a left-sided signal</li>
+    </ul>
+    <p>Same formula, two signals, different annuli. And the system is stable when the annulus contains the unit circle, which is exactly absolute convergence, \(\sum|h[n]| &lt; \infty\). A full three-region example is in the <a href="/learn/sequences-and-series/laurent-series/#z-transform">z-transform section</a> (in Thai).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="which">
+    <h2 id="which">Summary: which one to use</h2>
+    <ul>
+      <li>Approximating, linearising, finding limits → <b>Taylor</b></li>
+      <li>Behaviour near a pole, residues, contour integrals, inverse transforms → <b>Laurent</b></li>
+      <li>If the region of interest contains no singularity, the two are the same series</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/sequences-and-series/laurent-series/">Laurent series in full: annuli, singularities, residues, real integrals, the z-transform</a></li>
+        <li><a href="/learn/sequences-and-series/taylor-series/">Taylor and Maclaurin series: tables, remainders, shortcuts</a></li>
+        <li><a href="/learn/laplace-transform/complex-analysis/">Complex numbers, analytic functions and the residue theorem</a></li>
+        <li><a href="/learn/sequences-and-series/exam-practice/#set-c">Engineering mathematics practice set C</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>
