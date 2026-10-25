@@ -18,7 +18,8 @@ const exists = (href) => {
 // redirects count as valid targets
 const redirects = new Set(fs.readFileSync(path.join(ROOT, "_redirects"), "utf8").split("\n").map((l) => l.trim().split(/\s+/)[0]).filter((x) => x && !x.startsWith("#")));
 
-const postDirs = (base) => fs.readdirSync(path.join(ROOT, base), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+// "category" holds the generated category pages (/blog/category/<key>/), checked separately below
+const postDirs = (base) => fs.readdirSync(path.join(ROOT, base), { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== "category").map((d) => d.name);
 const thDirs = postDirs("blog"), enDirs = postDirs("en/blog");
 // every Thai post has an English twin of the same slug and vice versa
 for (const slug of thDirs) if (!enDirs.includes(slug)) bad(`${slug}: no English edition`);
@@ -85,6 +86,17 @@ for (const slug of dirs) {
   const twinCheck = lang === "en" ? hrefs.filter((h) => h.startsWith("/blog/")) : [];
   if (twinCheck.length) bad("English post links to a Thai article: " + twinCheck[0]);
   if (lessonLinks < 3) bad(`only ${lessonLinks} links into /learn/`);
+  // category: breadcrumb link (visible + JSON-LD), articleSection, link under "more articles", listed on the category page
+  const catHref = (main.match(/<ol class="crumbs">[\s\S]*?<\/ol>/)?.[0].match(/href="(\/(?:en\/)?blog\/category\/[a-z0-9-]+\/)"/) || [])[1];
+  if (!catHref) bad("no category in the breadcrumbs");
+  else {
+    if (!catHref.startsWith(`/${base}/category/`)) bad("category link in the other language: " + catHref);
+    if (!exists(catHref)) bad("category page missing: " + catHref);
+    else if (!fs.readFileSync(path.join(ROOT, catHref, "index.html"), "utf8").includes(`href="/${base}/${slug}/"`)) bad("not listed on its category page " + catHref);
+    if (!html.includes(`"item":"${SITE}${catHref}"`)) bad("category missing from BreadcrumbList");
+    if (!/"articleSection":"[^"]+"/.test(html)) bad("no articleSection");
+    if (!html.includes(`<p class="post-cat-link"><a href="${catHref}">`)) bad("no category link under more articles");
+  }
   for (const h of new Set(hrefs)) if (!exists(h) && !redirects.has(h.split("#")[0])) bad("broken link " + h);
   const words = body.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").length;
   console.log(`  ok · ${lessonLinks} lesson links · ${words} chars of text`);
@@ -101,7 +113,37 @@ for (const [lang, base, dirs] of [["th", "blog", thDirs], ["en", "en/blog", enDi
   if (!hub.includes(`<link rel="canonical" href="${SITE}/${base}/">`)) bad(`${lang} hub canonical`);
   if (!sitemap.includes(`<loc>${SITE}/${base}/</loc>`)) bad(`${lang} hub not in sitemap`);
 }
-for (const [page, slug] of [["learn/laplace-transform/index.html", "what-is-laplace-transform"], ["learn/power-factor/pf-basics/index.html", "power-factor-explained"], ["learn/vector-algebra/dot-product/index.html", "dot-product-cross-product"], ["learn/control-systems/pid/index.html", "what-is-pid-controller"], ["learn/control-systems/pid-tuning/index.html", "pid-tuning-guide"], ["learn/control-systems/pid/index.html", "pid-tuning-guide"], ["learn/linear-algebra/inverse/index.html", "determinant-and-inverse-matrix"]]) {
+// category pages: TH ⇄ EN pairs, canonical, sitemap, JSON-LD, chips on the hubs, every post of the category listed
+for (const [lang, base] of [["th", "blog"], ["en", "en/blog"]]) {
+  const other = lang === "th" ? "en/blog" : "blog";
+  const dir = path.join(ROOT, base, "category");
+  const cats = fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : [];
+  console.log(`\n== ${lang}: ${cats.length} category pages`);
+  if (cats.length < 2) bad(`${lang}: expected category pages under /${base}/category/`);
+  const hub = fs.readFileSync(path.join(ROOT, base, "index.html"), "utf8");
+  for (const key of cats) {
+    const route = `/${base}/category/${key}/`, url = SITE + route;
+    const html = fs.readFileSync(path.join(dir, key, "index.html"), "utf8");
+    console.log(key);
+    if (!html.includes(`<link rel="canonical" href="${url}">`)) bad(`${route} canonical`);
+    if (!html.includes(`<html lang="${lang}">`)) bad(`${route} html lang`);
+    if (!html.includes(`<link rel="alternate" hreflang="${lang === "th" ? "en" : "th"}" href="${SITE}/${other}/category/${key}/">`)) bad(`${route} hreflang twin`);
+    if (!html.includes('class="lang-sw"')) bad(`${route} language switch`);
+    if (!sitemap.includes(`<loc>${url}</loc>`)) bad(`${route} not in sitemap`);
+    if (!llms.includes(url)) bad(`${route} not in llms.txt`);
+    if ((html.match(/<h1[ >]/g) || []).length !== 1) bad(`${route} h1 count != 1`);
+    if (!/"@type":"CollectionPage"/.test(html) || !/"@type":"BreadcrumbList"/.test(html)) bad(`${route} JSON-LD`);
+    if (!hub.includes(`href="${route}"`)) bad(`${lang} hub has no link to ${route}`);
+    if (lang === "en" && thai.test(html.slice(html.indexOf("<main"), html.indexOf("</main>")).replace(/<small>ภาษาไทย<\/small>/, ""))) bad(`${route} Thai text on an English category page`);
+    const listed = [...html.matchAll(/<a class="blog-card" href="([^"]+)"/g)].map((m) => m[1]);
+    if (!listed.length) bad(`${route} lists no articles`);
+    for (const h of listed) {
+      const post = fs.readFileSync(path.join(ROOT, h, "index.html"), "utf8");
+      if (!post.includes(`<li><a href="${route}">`)) bad(`${h} listed on ${route} but its breadcrumbs point elsewhere`);
+    }
+  }
+}
+for (const [page, slug] of [["learn/dc-circuits/index.html", "learn-programming-ai-era-python"], ["learn/plc/iec-languages/index.html", "learn-programming-ai-era-python"], ["learn/laplace-transform/index.html", "what-is-laplace-transform"], ["learn/power-factor/pf-basics/index.html", "power-factor-explained"], ["learn/vector-algebra/dot-product/index.html", "dot-product-cross-product"], ["learn/control-systems/pid/index.html", "what-is-pid-controller"], ["learn/control-systems/pid-tuning/index.html", "pid-tuning-guide"], ["learn/control-systems/pid/index.html", "pid-tuning-guide"], ["learn/linear-algebra/inverse/index.html", "determinant-and-inverse-matrix"]]) {
   if (!fs.readFileSync(path.join(ROOT, page), "utf8").includes(`href="/blog/${slug}/"`)) bad(`${page} has no link back to ${slug}`);
 }
 if (!fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes('href="/blog/"')) bad("home has no link to /blog/");

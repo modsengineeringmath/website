@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=bf101792">
+<link rel="stylesheet" href="/assets/site.css?v=ea7a56a8">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/rank/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/rank/#article","headline":"ค่าลำดับขั้นของเมทริกซ์ (แรงก์, Rank of a Matrix): หาด้วยการลดแถวและไมเนอร์ โจทย์พารามิเตอร์ k และทฤษฎีบทการมีคำตอบ","description":"แรงก์หรือค่าลำดับขั้นของเมทริกซ์ครบจบ ตั้งแต่ความหมาย การหาด้วยการลดแถวเป็นขั้นบันไดและด้วยไมเนอร์ โจทย์แรงก์มีพารามิเตอร์ k ที่ออกสอบบ่อย ทฤษฎีบทรูเช-กาเปลลี (คำตอบเดียว ไม่จำกัด ไม่มี) ปริภูมิศูนย์ แรงก์-ภาวะศูนย์ และแรงก์ในวงจรไฟฟ้ากับระบบควบคุม พร้อมแล็บคำนวณทีละขั้นและแล็บสามระนาบ 3 มิติ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/rank/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/rank/","datePublished":"2026-10-25","dateModified":"2026-10-25","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Rank of a matrix","Row echelon form","Minor (linear algebra)","Rouché–Capelli theorem","Rank–nullity theorem","Null space","Column space","Controllability"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-rank.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"ค่าลำดับขั้นของเมทริกซ์ (Rank): ลดแถว ไมเนอร์ พารามิเตอร์ k และการมีคำตอบของระบบสมการ","item":"https://modsengineeringmath.com/learn/linear-algebra/rank/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"แรงก์ของเมทริกซ์คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"แรงก์ (ค่าลำดับขั้น) คือจำนวนแถวที่เป็นอิสระเชิงเส้นของเมทริกซ์ ซึ่งเท่ากับจำนวนหลักที่อิสระเสมอ หาได้ง่ายที่สุดโดยลดแถวให้เป็นรูปขั้นบันไดแล้วนับแถวที่ไม่เป็นศูนย์ (จำนวนตัวหลัก) ในภาษาระบบสมการคือจำนวนสมการที่ไม่ซ้ำซ้อนกัน"}},{"@type":"Question","name":"หาแรงก์ด้วยดีเทอร์มิแนนต์ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้ แรงก์คืออันดับของไมเนอร์ (ดีเทอร์มิแนนต์ของเมทริกซ์ย่อยจัตุรัส) ที่ใหญ่ที่สุดที่ไม่เป็นศูนย์ สำหรับเมทริกซ์ n×n ถ้า det ≠ 0 แรงก์คือ n แต่ถ้า det = 0 ต้องหาไมเนอร์ขนาดเล็กลงหรือลดแถวต่อ เพราะ det = 0 บอกแค่ว่าแรงก์ไม่เต็ม ไม่ได้บอกว่าเหลือเท่าไร"}},{"@type":"Question","name":"แรงก์บอกอะไรเกี่ยวกับระบบสมการ Ax = b?","acceptedAnswer":{"@type":"Answer","text":"ตามทฤษฎีบทรูเช-กาเปลลี ถ้า rank A \u003c rank [A|b] ระบบไม่มีคำตอบ ถ้า rank A = rank [A|b] = n (จำนวนตัวแปร) มีคำตอบเดียว และถ้า rank A = rank [A|b] = r \u003c n มีคำตอบไม่จำกัดโดยมีตัวแปรอิสระ n − r ตัว"}},{"@type":"Question","name":"โจทย์หาแรงก์ที่มีพารามิเตอร์ k ทำอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าเป็นเมทริกซ์จัตุรัส ให้หา det ในรูปของ k ก่อน ค่า k ที่ไม่ทำให้ det เป็นศูนย์ได้แรงก์เต็ม ส่วนค่า k ที่ทำให้ det = 0 ต้องแทนค่าทีละตัวแล้วลดแถวเพื่อนับแรงก์จริง เช่น [[1,1,k],[1,k,1],[k,1,1]] มี det = −(k−1)²(k+2) ได้แรงก์ 1 เมื่อ k = 1 แรงก์ 2 เมื่อ k = −2 และแรงก์ 3 เมื่อ k อื่น"}},{"@type":"Question","name":"ทฤษฎีบทแรงก์-ภาวะศูนย์ (rank–nullity) ใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"สำหรับเมทริกซ์ m×n จะได้ rank A + nullity A = n ใช้นับจำนวนตัวแปรอิสระของระบบเอกพันธ์ Ax = 0 (เท่ากับ nullity) และจำนวนเวกเตอร์ในฐานของปริภูมิศูนย์ ในวงจรไฟฟ้าใช้นับจำนวนสมการ KCL และ KVL ที่เป็นอิสระ"}}]}]}</script>
@@ -1191,7 +1191,7 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
-      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>
       <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
@@ -1271,10 +1271,10 @@ l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=bf101792" defer></script>
-<script src="/assets/linalg.js?v=bf101792" defer></script>
-<script src="/assets/vendor/katex.min.js?v=bf101792" defer></script>
-<script src="/assets/mathkit.js?v=bf101792" defer></script>
-<script src="/assets/la-num.js?v=bf101792" defer></script>
+<script src="/assets/site.js?v=ea7a56a8" defer></script>
+<script src="/assets/linalg.js?v=ea7a56a8" defer></script>
+<script src="/assets/vendor/katex.min.js?v=ea7a56a8" defer></script>
+<script src="/assets/mathkit.js?v=ea7a56a8" defer></script>
+<script src="/assets/la-num.js?v=ea7a56a8" defer></script>
 </body>
 </html>

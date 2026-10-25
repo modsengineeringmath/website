@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=bf101792">
+<link rel="stylesheet" href="/assets/site.css?v=ea7a56a8">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/plc/sequential-control/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/plc/sequential-control/#article","headline":"การควบคุมแบบลำดับขั้น: สเตตแมชชีน SFC/GRAFCET สัญญาณไฟจราจร สายพานคัดแยก และถังผสมแบบแบตช์","description":"ออกแบบโปรแกรม PLC แบบลำดับขั้นอย่างเป็นระบบ: แผนภาพสถานะ ขั้นและเงื่อนไขเปลี่ยนขั้นตาม SFC/GRAFCET (IEC 60848) วิธีเขียนเป็นแลดเดอร์ด้วย SET/RESET และเป็น Structured Text ด้วย CASE ตัวอย่างไฟจราจรสองทิศ ถังผสมแบบแบตช์ เติมถังอัตโนมัติ โหมดอัตโนมัติ-มือ หยุดฉุกเฉิน การกลับจุดเริ่ม และการวินิจฉัยว่าเครื่องค้างที่ขั้นไหน พร้อมซิมูเลเตอร์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/plc/sequential-control/","mainEntityOfPage":"https://modsengineeringmath.com/learn/plc/sequential-control/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Finite-state machine","Sequential function chart","GRAFCET","Batch processing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-plc-sequential-control.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"การควบคุมอัตโนมัติด้วย PLC","item":"https://modsengineeringmath.com/learn/plc/"},{"@type":"ListItem","position":4,"name":"การควบคุมแบบลำดับขั้น: สเตตแมชชีน SFC/GRAFCET สัญญาณไฟจราจร สายพานคัดแยก และถังผสมแบบแบตช์","item":"https://modsengineeringmath.com/learn/plc/sequential-control/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมโปรแกรมลำดับขั้นที่เขียนด้วยวงจรล็อกตัวเองหลายชั้นมักมีบั๊ก?","acceptedAnswer":{"@type":"Answer","text":"เพราะสถานะของเครื่องกระจายอยู่ในบิตหลายตัวที่ไม่มีกฎบังคับว่าต้องเป็นหนึ่งเดียว ทำให้เกิดสองขั้นทำงานพร้อมกันหรือไม่มีขั้นไหนทำงานได้ วิธีสเตตแมชชีนเก็บสถานะในตัวแปรเดียว (หรือบิตขั้นที่ SET/RESET คู่กันอย่างมีวินัย) ทำให้มีขั้นเดียวที่ทำงานเสมอ และรู้ทันทีว่าเครื่องค้างที่ไหน"}},{"@type":"Question","name":"เอาต์พุตควรเขียนในแต่ละขั้นหรือท้ายโปรแกรม?","acceptedAnswer":{"@type":"Answer","text":"แนะนำให้ส่วนลำดับคำนวณแค่ “ขั้นปัจจุบัน” แล้วมีส่วนเอาต์พุตแยกที่ท้ายโปรแกรม เขียนเอาต์พุตแต่ละตัวครั้งเดียวเป็น OR ของขั้นที่ต้องการให้ทำงาน เช่น ปั๊ม = ขั้น1 OR ขั้น4 วิธีนี้ป้องกันคอยล์ซ้ำและเพิ่มเงื่อนไขโหมดมือหรือหยุดฉุกเฉินได้จุดเดียว"}}]}]}</script>
@@ -556,7 +556,7 @@ V1 := Step = 10;  V2 := Step = 20;  M1 := Step = 30;  V3 := Step = 40;</pre>
   <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fplc%2Fsequential-control%2F" target="_blank" rel="noopener">Facebook</a>
   <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Flearn%2Fplc%2Fsequential-control%2F&amp;text=%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%A5%E0%B8%B3%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B8%82%E0%B8%B1%E0%B9%89%E0%B8%99%3A%20%E0%B8%AA%E0%B9%80%E0%B8%95%E0%B8%95%E0%B9%81%E0%B8%A1%E0%B8%8A%E0%B8%8A%E0%B8%B5%E0%B8%99%20SFC%2FGRAFCET%20%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%8D%E0%B8%B2%E0%B8%93%E0%B9%84%E0%B8%9F%E0%B8%88%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%A3%20%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B8%9E%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%B1%E0%B8%94%E0%B9%81%E0%B8%A2%E0%B8%81%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%96%E0%B8%B1%E0%B8%87%E0%B8%9C%E0%B8%AA%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B9%81%E0%B8%9A%E0%B8%95%E0%B8%8A%E0%B9%8C" target="_blank" rel="noopener">X</a>
   <button type="button" data-share-url="https://modsengineeringmath.com/learn/plc/sequential-control/" data-share-title="การควบคุมแบบลำดับขั้น: สเตตแมชชีน SFC/GRAFCET สัญญาณไฟจราจร สายพานคัดแยก และถังผสมแบบแบตช์">คัดลอกลิงก์</button>
-</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/plc/plc-motor-control/"><span class="mono">← หน้าก่อนหน้า</span><b>ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์</b></a><a class="pager-next" href="/learn/plc/analog-pid-vfd/"><span class="mono">หน้าถัดไป →</span><b>อนาล็อก PID และการสั่งงานอินเวอร์เตอร์ด้วย PLC: สเกล 4–20 mA บล็อก PID ปั๊มแรงดันคงที่ และ Modbus RTU</b></a></nav>
+</div><nav class="pager" aria-label="หน้าถัดไป"><a class="pager-prev" href="/learn/plc/plc-motor-control/"><span class="mono">← หน้าก่อนหน้า</span><b>ควบคุมมอเตอร์ด้วย PLC: DOL กลับทางหมุน สตาร์-เดลต้า รายการ I/O การต่อสาย อินเตอร์ล็อกฮาร์ดไวร์ และการตรวจสอบป้อนกลับคอนแทกเตอร์</b></a><a class="pager-next" href="/learn/plc/analog-pid-vfd/"><span class="mono">หน้าถัดไป →</span><b>อนาล็อก PID และการสั่งงานอินเวอร์เตอร์ด้วย PLC: สเกล 4–20 mA บล็อก PID ปั๊มแรงดันคงที่ และ Modbus RTU</b></a></nav><aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul><li><a href="/blog/learn-programming-ai-era-python/">เริ่มต้นเข้าใจการเขียนโปรแกรมในยุค AI: ทำไมควรเริ่มที่ Python</a></li></ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>
   </article>
 </div>
 
@@ -573,7 +573,7 @@ V1 := Step = 10;  V2 := Step = 20;  M1 := Step = 30;  V3 := Step = 40;</pre>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
-      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>
       <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
@@ -653,8 +653,8 @@ V1 := Step = 10;  V2 := Step = 20;  M1 := Step = 30;  V3 := Step = 40;</pre>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=bf101792" defer></script>
-<script src="/assets/lesson.js?v=bf101792" defer></script>
-<script src="/assets/plc-sim.js?v=bf101792" defer></script>
+<script src="/assets/site.js?v=ea7a56a8" defer></script>
+<script src="/assets/lesson.js?v=ea7a56a8" defer></script>
+<script src="/assets/plc-sim.js?v=ea7a56a8" defer></script>
 </body>
 </html>

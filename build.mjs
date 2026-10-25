@@ -814,7 +814,7 @@ const EN_CHROME = [
   ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
   ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
-  ['<a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>', '<a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>'],
+  ['<a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>', '<a href="/en/blog/">Articles by category: Python, matrices, series, Laplace &amp; more</a>'],
   ['<a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>', '<a href="/updates/">Latest site updates (Thai)</a>'],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
   ['aria-label="ค้นหาในเว็บไซต์"', 'aria-label="Search the site"'],
@@ -1257,8 +1257,10 @@ function searchEntry(meta, route, lang, body, topic, sub, isPost) {
   const h = [...body.matchAll(/<h([23]) id="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
     .map(([, , id, t]) => [id, plain(t).replace(/^\d+(\.\d+)*\.?\s+/, "")])
     .filter(([, t]) => t);
-  const k = [...(meta.keywords || []), ...(meta.faq || []).map((f) => plain(f.q))];
-  const c = sub ? topic.title : isPost ? BLOG_UI[lang].tag : meta.solution ? "เฉลยโจทย์" : "";
+  // articles show their category in the results; category names are searchable in both languages
+  const bc = blogCat(isPost ? meta.category : meta.blogCat);
+  const k = [...(meta.keywords || []), ...(meta.faq || []).map((f) => plain(f.q)), ...(bc ? [bc.th.name, bc.en.name] : [])];
+  const c = sub ? topic.title : isPost ? BLOG_UI[lang].tag + (bc ? " · " + bc[lang].name : "") : meta.blogCat ? BLOG_UI[lang].catKind : meta.solution ? "เฉลยโจทย์" : "";
   const e = { u: route, l: lang, t: plain(meta.h1 || meta.title), d: plain(meta.description || ""), ...(c ? { c } : {}), ...(k.length ? { k: k.join(" · ") } : {}), h };
   // w: the other Latin-script terms in the body text (Thai lessons write technical terms in English), so "gain margin" finds the page
   const seen = JSON.stringify(e).toLowerCase();
@@ -1320,8 +1322,10 @@ const loadBlog = (dir, lang, base) => {
       return { ...meta, lang, slug, route: `${base}${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
     })
     .filter((p) => !p.draft)
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.published || "").localeCompare(a.published || "") || a.slug.localeCompare(b.slug));
+    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || postStamp(b).localeCompare(postStamp(a)) || a.slug.localeCompare(b.slug));
 };
+// publication order: "published" (YYYY-MM-DD) plus the optional "time" (HH:MM, Bangkok) that orders posts published on the same day
+const postStamp = (p) => `${p.published || ""}T${p.time || "00:00"}`;
 const blogByLang = {
   th: loadBlog(path.join(pagesDir, "blog"), "th", "/blog/"),
   en: loadBlog(path.join(pagesDir, "en", "blog"), "en", "/en/blog/"),
@@ -1335,9 +1339,226 @@ const blogTwin = (lang, slug) => {
   return slug ? other.find((p) => p.slug === slug)?.route || null : other.length ? BLOG_HUB[lang === "th" ? "en" : "th"] : null;
 };
 const BLOG_UI = {
-  th: { tag: "บทความ", read: "อ่านบทความ →", date: (d) => thaiDate(d), more: "บทความอื่นที่น่าอ่าน" },
-  en: { tag: "Article", read: "Read the article →", date: (d) => enDate(d), more: "More articles worth reading" },
+  th: { tag: "บทความ", read: "อ่านบทความ →", date: (d) => thaiDate(d), more: "บทความอื่นที่น่าอ่าน",
+    hub: "บทความ", all: "ทั้งหมด", cats: "หมวดบทความ", catKind: "หมวดบทความ", recent: "บทความล่าสุด", byCat: "บทความแยกตามหมวด",
+    count: (n) => `${n} เรื่อง`, catPage: "เปิดหน้าหมวด →", catAll: (c, n) => `ดูบทความทั้งหมดในหมวด${c} (${n} เรื่อง) →`, allPosts: "บทความทั้งหมด" },
+  en: { tag: "Article", read: "Read the article →", date: (d) => enDate(d), more: "More articles worth reading",
+    hub: "Articles", all: "All", cats: "Article categories", catKind: "Article category", recent: "Latest articles", byCat: "Articles by category",
+    count: (n) => `${n} article${n === 1 ? "" : "s"}`, catPage: "Open the category →", catAll: (c, n) => `All ${n} article${n === 1 ? "" : "s"} in ${c} →`, allPosts: "All articles" },
 };
+// ---------------------------------------------------------------------------
+// Article categories. Every post needs "category": "<key>" in its meta block (the same key in the Thai post and its
+// English twin). The build turns this into: the chips and per-category sections on /blog/ and /en/blog/, one page per
+// category at /blog/category/<key>/ and /en/blog/category/<key>/ (TH ⇄ EN paired, CollectionPage + BreadcrumbList),
+// the category level in every post's breadcrumbs (visible and JSON-LD), BlogPosting.articleSection, "more in this
+// category" at the bottom of a post, the category label in search results and the grouped article list in llms.txt.
+// To add a category, add an entry here; the order is the order on the hub.
+// ---------------------------------------------------------------------------
+const BLOG_CATS = [
+  {
+    key: "sequences-series", sym: "Σ",
+    th: {
+      name: "ลำดับและอนุกรม", h1: "บทความลำดับและอนุกรม: การลู่เข้า อนุกรมเทย์เลอร์ และอนุกรมโลรองต์",
+      title: "บทความลำดับและอนุกรม: ทดสอบการลู่เข้า เทย์เลอร์ โลรองต์ อุปนัย | อาจารย์มด",
+      desc: "รวมบทความลำดับและอนุกรมภาษาไทย ผังเลือกวิธีทดสอบการลู่เข้า สูตรอนุกรมเรขาคณิต รัศมีการลู่เข้า อนุกรมเทย์เลอร์ อนุกรมโลรองต์ และอุปนัยเชิงคณิตศาสตร์ พร้อมตัวอย่างที่ตรวจแล้ว",
+      lede: "บทความสั้นที่ตอบคำถามเรื่องลำดับและอนุกรมทีละเรื่อง ตั้งแต่สูตรอนุกรมเรขาคณิต ผังเลือกวิธีทดสอบการลู่เข้า จนถึงอนุกรมเทย์เลอร์และโลรองต์ที่ใช้ในงานวิศวกรรม ทุกเรื่องมีตัวอย่างตัวเลขและลิงก์ไปยังบทเรียนเต็ม",
+      keywords: ["บทความลำดับและอนุกรม", "ทดสอบการลู่เข้า", "อนุกรมเรขาคณิต", "อนุกรมเทย์เลอร์", "อนุกรมโลรองต์", "รัศมีการลู่เข้า", "อุปนัยเชิงคณิตศาสตร์", "sequences and series"],
+    },
+    en: {
+      name: "Sequences & Series", h1: "Sequences & Series Articles: Convergence Tests, Taylor and Laurent Series",
+      title: "Sequences & Series Articles: Convergence Tests, Taylor, Laurent | Ajarn Mod",
+      desc: "Articles on sequences and series: a convergence-test flowchart, the geometric series formula, radius of convergence, Taylor and Laurent series and mathematical induction, with checked examples.",
+      lede: "Short articles that answer one question about sequences and series at a time, from the geometric series formula and a flowchart for choosing a convergence test to the Taylor and Laurent series used in engineering. Each has worked numbers and links to the full lessons.",
+      keywords: ["sequences and series articles", "convergence tests", "geometric series formula", "Taylor series", "Laurent series", "radius of convergence", "mathematical induction"],
+    },
+    learn: [
+      { href: "/learn/sequences-and-series/", th: "ลำดับและอนุกรม ครบชุด 10 หน้า", en: "Sequences & series, 10 pages (Thai)" },
+      { href: "/learn/sequences-and-series/series-lab/", th: "แล็บอนุกรม 12 เครื่องมือ", en: "Series lab (Thai)" },
+      { href: "/learn/limits/mathematical-induction/", th: "อุปนัยเชิงคณิตศาสตร์", en: "Mathematical induction (Thai)" },
+    ],
+  },
+  {
+    key: "linear-algebra", sym: "[A]",
+    th: {
+      name: "เวกเตอร์และพีชคณิตเชิงเส้น", h1: "บทความเวกเตอร์และพีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ แรงก์ และวิธีเชิงตัวเลข",
+      title: "บทความเวกเตอร์และเมทริกซ์: ดีเทอร์มิแนนต์ อินเวอร์ส แรงก์ คราเมอร์ | อาจารย์มด",
+      desc: "รวมบทความเวกเตอร์และพีชคณิตเชิงเส้นภาษาไทย dot product cross product ดีเทอร์มิแนนต์ เมทริกซ์ผกผัน แรงก์ กฎของคราเมอร์ และจาโคบีกับเกาส์-ไซเดล พร้อมตัวอย่างคำนวณทีละขั้น",
+      lede: "เวกเตอร์และเมทริกซ์คือภาษากลางของวงจร แรง และระบบควบคุม บทความหมวดนี้ตอบคำถามที่ค้นหาบ่อย เช่น หาดีเทอร์มิแนนต์และอินเวอร์สอย่างไร แรงก์บอกอะไร และควรแก้ระบบสมการขนาดใหญ่ด้วยวิธีไหน",
+      keywords: ["บทความเมทริกซ์", "เวกเตอร์", "ดีเทอร์มิแนนต์", "เมทริกซ์ผกผัน", "แรงก์ของเมทริกซ์", "กฎของคราเมอร์", "dot product cross product", "พีชคณิตเชิงเส้น"],
+    },
+    en: {
+      name: "Vectors & Linear Algebra", h1: "Vectors & Linear Algebra Articles: Matrices, Determinants, Rank and Numerical Methods",
+      title: "Vectors & Linear Algebra Articles: Determinant, Inverse, Rank, Cramer | Ajarn Mod",
+      desc: "Articles on vectors and linear algebra: dot and cross products, determinants, the inverse matrix, rank, Cramer's rule and Jacobi vs Gauss–Seidel, each with step-by-step worked examples.",
+      lede: "Vectors and matrices are the common language of circuits, forces and control systems. The articles in this category answer the questions people search for most: how to find a determinant and an inverse, what rank tells you, and which method to use for a large linear system.",
+      keywords: ["linear algebra articles", "vectors", "determinant", "inverse matrix", "matrix rank", "Cramer's rule", "dot product cross product", "Jacobi vs Gauss-Seidel"],
+    },
+    learn: [
+      { href: "/learn/linear-algebra/", th: "พีชคณิตเชิงเส้น 12 หน้า", en: "Linear algebra, 12 pages (Thai)" },
+      { href: "/learn/vector-algebra/", th: "เวกเตอร์: แรง สนาม และเฟเซอร์", en: "Vectors (Thai)" },
+      { href: "/learn/linear-algebra/matrix-lab/", th: "เครื่องคิดเลขเมทริกซ์ทีละขั้น", en: "Step-by-step matrix calculator" },
+    ],
+  },
+  {
+    key: "laplace-transform", sym: "ℒ",
+    th: {
+      name: "การแปลงลาปลาซ", h1: "บทความการแปลงลาปลาซ: ความหมาย ตารางสูตร และ Inverse Laplace",
+      title: "บทความการแปลงลาปลาซ: Laplace คืออะไร ตารางสูตร Inverse Laplace | อาจารย์มด",
+      desc: "รวมบทความการแปลงลาปลาซภาษาไทย Laplace transform คืออะไรและใช้ทำอะไรในวงจรไฟฟ้า ตารางสูตรที่ใช้บ่อย และการหา Inverse Laplace ด้วยเศษส่วนย่อย พร้อมตัวอย่างทีละขั้น",
+      lede: "การแปลงลาปลาซเปลี่ยนสมการเชิงอนุพันธ์ของวงจรและระบบควบคุมให้เป็นพีชคณิต บทความหมวดนี้เริ่มจากความหมายและตารางสูตร ไปจนถึงการแปลงกลับด้วยเศษส่วนย่อย",
+      keywords: ["บทความการแปลงลาปลาซ", "Laplace transform คืออะไร", "ตารางลาปลาซ", "Inverse Laplace", "เศษส่วนย่อย", "partial fractions"],
+    },
+    en: {
+      name: "Laplace Transform", h1: "Laplace Transform Articles: Meaning, Table and Inverse Laplace",
+      title: "Laplace Transform Articles: What It Is, Table, Inverse Laplace | Ajarn Mod",
+      desc: "Articles on the Laplace transform: what it is and why circuits and control use it, a table of the most used pairs, and the inverse Laplace transform by partial fractions, step by step.",
+      lede: "The Laplace transform turns the differential equations of circuits and control systems into algebra. This category starts with what the transform means and the table of pairs, and goes on to inverting it with partial fractions.",
+      keywords: ["Laplace transform articles", "what is the Laplace transform", "Laplace transform table", "inverse Laplace transform", "partial fractions"],
+    },
+    learn: [
+      { href: "/learn/laplace-transform/", th: "การแปลงลาปลาซ ครบชุด", en: "Laplace transform (Thai)" },
+      { href: "/learn/laplace-transform/inverse-laplace-transform/", th: "เครื่องคิด Inverse Laplace ทีละขั้น", en: "Inverse Laplace calculator" },
+      { href: "/learn/laplace-transform/differential-equations/", th: "แก้สมการเชิงอนุพันธ์ด้วยลาปลาซ", en: "Solving ODEs with Laplace (Thai)" },
+    ],
+  },
+  {
+    key: "control-systems", sym: "PID",
+    th: {
+      name: "ระบบควบคุมและ PID", h1: "บทความระบบควบคุมและ PID: หลักการและการจูนตัวควบคุม",
+      title: "บทความระบบควบคุมและ PID: PID คืออะไร คู่มือจูน PID | อาจารย์มด",
+      desc: "รวมบทความระบบควบคุมภาษาไทย PID controller คืออะไร ทำงานอย่างไร และคู่มือจูน PID ฉบับเต็มตั้งแต่ step test และ Ziegler–Nichols ไปจนถึง anti-windup พร้อมผลจำลองที่ตรวจแล้ว",
+      lede: "ตัวควบคุม PID อยู่ในเครื่องจักรแทบทุกเครื่อง บทความหมวดนี้อธิบายว่า P I และ D ทำหน้าที่อะไร และสอนจูนค่าจริงทีละขั้นด้วยแบบจำลองที่ตรวจสอบแล้ว",
+      keywords: ["บทความระบบควบคุม", "PID คืออะไร", "จูน PID", "PID tuning", "Ziegler-Nichols", "anti-windup"],
+    },
+    en: {
+      name: "Control Systems & PID", h1: "Control Systems & PID Articles: How PID Works and How to Tune It",
+      title: "Control Systems & PID Articles: What Is PID, PID Tuning Guide | Ajarn Mod",
+      desc: "Articles on control systems: what a PID controller is and how it works, and a complete PID tuning guide from the step test and Ziegler–Nichols to anti-windup, with checked simulations.",
+      lede: "A PID controller sits inside almost every machine. This category explains what the P, I and D terms do and teaches real tuning step by step on a checked plant model.",
+      keywords: ["control systems articles", "what is a PID controller", "PID tuning guide", "Ziegler-Nichols", "anti-windup"],
+    },
+    learn: [
+      { href: "/learn/control-systems/", th: "วิศวกรรมระบบควบคุม 26 หน้า", en: "Control systems engineering (Thai)" },
+      { href: "/learn/control-systems/pid/", th: "ตัวควบคุม PID", en: "PID controller (Thai)" },
+      { href: "/learn/control-systems/pid-tuning/", th: "การจูน PID พร้อมแล็บ", en: "PID tuning lab (Thai)" },
+    ],
+  },
+  {
+    key: "power-motors", sym: "3φ",
+    th: {
+      name: "ไฟฟ้ากำลังและมอเตอร์", h1: "บทความไฟฟ้ากำลังและมอเตอร์: Power Factor การต่อเดลต้า และสตาร์-เดลต้า",
+      title: "บทความไฟฟ้ากำลังและมอเตอร์: Power Factor คาปาซิเตอร์ สตาร์-เดลต้า | อาจารย์มด",
+      desc: "รวมบทความไฟฟ้ากำลังและมอเตอร์ภาษาไทย Power Factor คืออะไร คำนวณคาปาซิเตอร์แก้ PF การต่อมอเตอร์ 3 เฟสแบบเดลต้า และการตั้งไทเมอร์สตาร์-เดลต้าจากงานวิจัย พร้อมตัวเลขจริง",
+      lede: "งานไฟฟ้าในโรงงานและอาคาร ตั้งแต่ค่าตัวประกอบกำลัง ค่าปรับในบิลค่าไฟ การเลือกคาปาซิเตอร์ ไปจนถึงการต่อและสตาร์ตมอเตอร์สามเฟส ทุกบทความใช้ตัวเลขของระบบ 230/400 V 50 Hz",
+      keywords: ["บทความไฟฟ้ากำลัง", "Power Factor คืออะไร", "คำนวณคาปาซิเตอร์", "มอเตอร์ 3 เฟส", "ต่อเดลต้า", "สตาร์-เดลต้า", "ตั้งไทเมอร์สตาร์เดลต้า"],
+    },
+    en: {
+      name: "Power Systems & Motors", h1: "Power Systems & Motors Articles: Power Factor, Delta Connection and Star–Delta",
+      title: "Power & Motors Articles: Power Factor, Capacitor Sizing, Star–Delta | Ajarn Mod",
+      desc: "Articles on power systems and motors: what power factor is, sizing a correction capacitor, connecting a three-phase motor in delta, and setting a star–delta timer, with real 400 V 50 Hz numbers.",
+      lede: "Electrical work in factories and buildings, from power factor and the penalty on the bill to choosing a capacitor and connecting and starting three-phase motors. Every article uses the numbers of a 230/400 V 50 Hz system.",
+      keywords: ["power systems articles", "what is power factor", "power factor correction capacitor", "three-phase motor", "delta connection", "star-delta starter", "star-delta timer"],
+    },
+    learn: [
+      { href: "/learn/power-factor/", th: "เพาเวอร์แฟกเตอร์ 8 หน้า", en: "Power factor (Thai)" },
+      { href: "/learn/motor-control/", th: "การควบคุมมอเตอร์", en: "Motor control (English edition available)" },
+      { href: "/learn/ac-induction-motor/", th: "มอเตอร์เหนี่ยวนำ AC ฉบับสมบูรณ์", en: "AC induction motors (Thai)" },
+    ],
+  },
+  {
+    key: "programming-ai", sym: "</>",
+    th: {
+      name: "การเขียนโปรแกรมและ AI", h1: "บทความการเขียนโปรแกรมและ AI สำหรับนักศึกษาและวิศวกร",
+      title: "บทความการเขียนโปรแกรมและ AI: เริ่มเรียน Python ยุค AI | อาจารย์มด",
+      desc: "รวมบทความการเขียนโปรแกรมสำหรับนักศึกษาและวิศวกรในยุค AI เริ่มต้นด้วย Python เข้าใจแนวคิดแกนกลาง สั่งงาน AI ให้ชัด และตรวจโค้ดด้วยความรู้วิศวกรรม พร้อมตัวอย่างวงจรจริง",
+      lede: "ในยุคที่ AI เขียนโค้ดได้ทุกภาษา ทักษะที่ยังสำคัญคือการคิดเป็นขั้นตอน อ่านโค้ดออก และตรวจผลด้วยความรู้ทางวิศวกรรม บทความหมวดนี้เริ่มจาก Python และเชื่อมไปยังงานวงจร การคำนวณเชิงตัวเลข และ PLC",
+      keywords: ["บทความเขียนโปรแกรม", "เริ่มเรียนเขียนโปรแกรม", "Python", "เขียนโปรแกรมยุค AI", "ใช้ AI เขียนโค้ด", "programming for engineers"],
+    },
+    en: {
+      name: "Programming & AI", h1: "Programming & AI Articles for Engineering Students and Engineers",
+      title: "Programming & AI Articles: Learning Python in the AI Era | Ajarn Mod",
+      desc: "Articles on programming for engineering students and engineers in the AI era: start with Python, master the core concepts, give AI clear instructions and verify its code with engineering knowledge.",
+      lede: "Now that AI can write code in any language, the skills that still matter are thinking in steps, reading code and checking results against engineering knowledge. This category starts with Python and connects it to circuits, numerical computing and PLCs.",
+      keywords: ["programming articles", "learn programming", "Python for engineers", "programming in the AI era", "AI coding", "verify AI code"],
+    },
+    learn: [
+      { href: "/learn/linear-algebra/numerical-methods/", th: "วิธีเชิงตัวเลขพร้อมโค้ด NumPy/SciPy", en: "Numerical methods with NumPy/SciPy code (Thai)" },
+      { href: "/learn/dc-circuits/", th: "วงจรไฟฟ้ากระแสตรงและแล็บจำลอง", en: "DC circuits and circuit lab (Thai)" },
+      { href: "/learn/plc/iec-languages/", th: "ภาษา PLC มาตรฐาน IEC 61131-3", en: "PLC languages, IEC 61131-3 (Thai)" },
+    ],
+  },
+];
+const blogCat = (k) => BLOG_CATS.find((c) => c.key === k);
+for (const lang of ["th", "en"]) for (const p of blogByLang[lang]) {
+  if (!blogCat(p.category)) throw new Error(`${BLOG_HUB[lang]}${p.slug}: "category" must be one of ${BLOG_CATS.map((c) => c.key).join(", ")} (or add a category to BLOG_CATS in build.mjs)`);
+  const tw = blogByLang[lang === "th" ? "en" : "th"].find((x) => x.slug === p.slug);
+  if (tw && tw.category !== p.category) throw new Error(`${p.slug}: the Thai and English editions must have the same "category"`);
+}
+const catRoute = (c, lang) => `${BLOG_HUB[lang]}category/${c.key}/`;
+const catPosts = (c, lang) => blogByLang[lang].filter((p) => p.category === c.key);
+const liveCats = (lang) => BLOG_CATS.filter((c) => catPosts(c, lang).length);
+const blogRecent = (lang, n) => [...blogByLang[lang]].sort((a, b) => postStamp(b).localeCompare(postStamp(a)) || a.slug.localeCompare(b.slug)).slice(0, n);
+// category chips: "All" (the hub) + one chip per category, the current one marked
+const blogChips = (lang, cur) => {
+  const B = BLOG_UI[lang];
+  const chip = (href, sym, label, n, here) => `<a href="${href}"${here ? ' aria-current="page"' : ""}><span aria-hidden="true">${esc(sym)}</span>${esc(label)} <small>${n}</small></a>`;
+  return `<nav class="blog-chips" aria-label="${B.cats}">${chip(BLOG_HUB[lang], "✎", B.all, blogByLang[lang].length, !cur)}${liveCats(lang).map((c) => chip(catRoute(c, lang), c.sym, c[lang].name, catPosts(c, lang).length, c.key === cur)).join("")}</nav>`;
+};
+// the hub: one section per category with its posts
+const blogCatsHtml = (lang) => {
+  const B = BLOG_UI[lang];
+  return liveCats(lang).map((c) => {
+    const list = catPosts(c, lang), href = catRoute(c, lang);
+    return `<section class="blog-cat" aria-labelledby="cat-${c.key}">
+  <div class="blog-cat-head"><h2 id="cat-${c.key}"><span class="blog-cat-sym" aria-hidden="true">${esc(c.sym)}</span><a href="${href}">${esc(c[lang].name)}</a>${lang === "th" ? ` <small>${esc(c.en.name)}</small>` : ""}</h2><span class="mono">${B.count(list.length)} · <a href="${href}">${B.catPage}</a></span></div>
+  <p class="blog-cat-desc">${esc(c[lang].lede)}</p>
+  ${blogGrid(list)}
+</section>`;
+  }).join("\n");
+};
+// one page per category and language, generated (no source file); rendered by the page loop like any other page
+const catRel = (c, lang) => `${lang === "en" ? "en/" : ""}blog/category/${c.key}.html`;
+function blogCatPage(c, lang) {
+  const L = c[lang], B = BLOG_UI[lang], en = lang === "en", list = catPosts(c, lang), other = en ? "th" : "en";
+  const meta = {
+    title: L.title, h1: L.h1, description: L.desc, ogTitle: `${L.name} — ${en ? "Articles" : "บทความ"} | ${en ? "Ajarn Mod" : "อาจารย์มด"}`,
+    keywords: L.keywords, nav: "blog", blogCat: c.key, updated: list.map((p) => p.updated || p.published).sort().pop(),
+    ...(en ? { lang: "en" } : {}), ...(catPosts(c, other).length ? { alt: catRoute(c, other) } : {}),
+    og: { title: L.name, sub: L.keywords.slice(1, 5).join(" · "), eyebrow: B.catKind, sym: c.sym },
+  };
+  return `<!--meta\n${JSON.stringify(meta, null, 2)}\n-->
+<header class="page-head">
+  <div class="wrap">
+    <ol class="crumbs"><li><a href="/">${en ? "Home" : "หน้าแรก"}</a></li><li><a href="${BLOG_HUB[lang]}">${B.hub}</a></li><li>${esc(L.name)}</li></ol>
+    <!--lang-switch-->
+    <p class="eyebrow">// ${B.catKind} · ${B.count(list.length)}</p>
+    <h1>${esc(L.h1)}</h1>
+    <p class="lede">${esc(L.lede)}</p>
+    ${blogChips(lang, c.key)}
+  </div>
+</header>
+
+<section class="block" style="padding-top:8px" aria-labelledby="cat-list">
+  <div class="wrap">
+    <h2 id="cat-list" class="visually-hidden">${en ? `All articles in ${esc(L.name)}` : `บทความทั้งหมดในหมวด${esc(L.name)}`}</h2>
+    ${blogGrid(list)}
+  </div>
+</section>
+
+<section class="block band" aria-labelledby="cat-learn">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">// ${en ? "Keep reading" : "อ่านต่อ"}</p>
+      <h2 id="cat-learn">${en ? "Go deeper in the lessons" : "เรียนต่อให้ลึกในคลังความรู้"}</h2>
+    </div>
+    <p>
+      ${c.learn.map((l, i) => `<a class="btn ${i ? "btn-ghost" : "btn-primary"}" href="${l.href}">${esc(l[lang])}${i ? "" : " →"}</a>`).join("\n      ")}
+      <a class="btn btn-ghost" href="${BLOG_HUB[lang]}">${B.allPosts}</a>
+    </p>
+  </div>
+</section>
+`;
+}
 const blogCard = (p) => {
   const B = BLOG_UI[p.lang || "th"];
   return `
@@ -1355,14 +1576,17 @@ const blogForTopic = (t) => {
   if (!list.length || t.lang) return "";
   return `<aside class="post-box" aria-label="บทความที่เกี่ยวข้อง"><p class="post-box-h">บทความอ่านง่ายเกี่ยวกับหัวข้อนี้</p><ul>${list.map((p) => `<li><a href="${p.route}">${esc(p.h1 || p.title)}</a></li>`).join("")}</ul><p><a href="/blog/">ดูบทความทั้งหมด →</a></p></aside>`;
 };
-// more posts at the bottom of a post: same series or tag first, then the newest
+// more posts at the bottom of a post: same category, series or tag first, then the newest; then links to the category and the hub
 const blogMore = (cur, lang = "th") => {
-  const score = (p) => p.series.filter((s) => cur.series.includes(s)).length * 2 + (p.tag && p.tag === cur.tag ? 1 : 0);
+  const B = BLOG_UI[lang], c = blogCat(cur.category);
+  const score = (p) => (c && p.category === c.key ? 3 : 0) + p.series.filter((s) => cur.series.includes(s)).length * 2 + (p.tag && p.tag === cur.tag ? 1 : 0);
   const list = blogByLang[lang].filter((p) => p.slug !== cur.slug).sort((a, b) => score(b) - score(a)).slice(0, 3);
-  return list.length ? `<section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">${BLOG_UI[lang].more}</h2>${blogGrid(list)}</section>` : "";
+  const links = c ? `<p class="post-cat-link"><a href="${catRoute(c, lang)}">${esc(B.catAll(c[lang].name, catPosts(c, lang).length))}</a> · <a href="${BLOG_HUB[lang]}">${B.allPosts}</a></p>` : "";
+  return list.length || links ? `<section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">${B.more}</h2>${list.length ? blogGrid(list) : ""}${links}</section>` : "";
 };
 function postSchema(meta, url, ogImageUrl, lang = "th") {
   const en = lang === "en";
+  const cat = blogCat(meta.category);
   const graph = [
     {
       "@type": "BlogPosting",
@@ -1377,6 +1601,7 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
       author: { "@id": PERSON_ID },
       publisher: { "@id": PERSON_ID },
       about: meta.about || [meta.tag],
+      ...(cat ? { articleSection: cat[lang].name } : {}),
       isPartOf: { "@id": SITE + BLOG_HUB[lang] + "#blog" },
       image: [ogImageUrl],
       ...(meta.keywords ? { keywords: meta.keywords.join(", ") } : {}),
@@ -1384,10 +1609,11 @@ function postSchema(meta, url, ogImageUrl, lang = "th") {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: en ? "Home" : "หน้าแรก", item: SITE + "/" },
-        { "@type": "ListItem", position: 2, name: en ? "Articles" : "บทความ", item: SITE + BLOG_HUB[lang] },
-        { "@type": "ListItem", position: 3, name: meta.h1 || meta.title, item: url },
-      ],
+        { name: en ? "Home" : "หน้าแรก", item: SITE + "/" },
+        { name: en ? "Articles" : "บทความ", item: SITE + BLOG_HUB[lang] },
+        ...(cat ? [{ name: cat[lang].name, item: SITE + catRoute(cat, lang) }] : []),
+        { name: meta.h1 || meta.title, item: url },
+      ].map((x, i) => ({ "@type": "ListItem", position: i + 1, ...x })),
     },
   ];
   if (meta.faq?.length)
@@ -1591,9 +1817,12 @@ const MD_GUIDES = [
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
 
-for (const file of walk(pagesDir)) {
-  const rel = path.relative(pagesDir, file);
-  const raw = fs.readFileSync(file, "utf8");
+// source pages + the generated article-category pages (/blog/category/<key>/, /en/blog/category/<key>/)
+const pageSources = [
+  ...walk(pagesDir).map((file) => ({ rel: path.relative(pagesDir, file), raw: fs.readFileSync(file, "utf8") })),
+  ...["th", "en"].flatMap((lang) => liveCats(lang).map((c) => ({ rel: catRel(c, lang), raw: blogCatPage(c, lang) }))),
+];
+for (const { rel, raw } of pageSources) {
   const m = raw.match(/^<!--meta\s*([\s\S]*?)-->\s*/);
   if (!m) throw new Error(`Missing <!--meta {...} --> block in ${rel}`);
   const meta = JSON.parse(m[1]);
@@ -1602,6 +1831,12 @@ for (const file of walk(pagesDir)) {
   const isSol = !!meta.solution;
   const sol = isSol ? allSolutions.find((s) => s.slug === path.basename(rel, ".html")) : null;
   let body = raw.slice(m[0].length);
+  // a post's breadcrumbs gain its category: Home › Articles › <category> › post
+  const postCat = isPost ? blogCat(meta.category) : null;
+  if (postCat) {
+    const l = meta.lang === "en" ? "en" : "th";
+    body = body.replace(`<li><a href="${BLOG_HUB[l]}">${BLOG_UI[l].hub}</a></li>`, (x) => `${x}<li><a href="${catRoute(postCat, l)}">${esc(postCat[l].name)}</a></li>`);
+  }
   const route = routeFor(rel);
   const url = SITE + route;
   const topic = meta.lesson ? TOPICS.find((t) => t.slug === meta.lesson) : null;
@@ -1683,6 +1918,10 @@ for (const file of walk(pagesDir)) {
     "<!--blog-list-->": () => blogGrid(blogByLang[lang]),
     "<!--blog-latest-->": () => blogGrid(blogByLang[lang].slice(0, 3)),
     "<!--blog-count-->": () => String(blogByLang[lang].length),
+    "<!--blog-chips-->": () => blogChips(lang, meta.blogCat),
+    "<!--blog-recent-->": () => blogGrid(blogRecent(lang, 3)),
+    "<!--blog-cats-->": () => blogCatsHtml(lang),
+    "<!--blog-cat-count-->": () => String(liveCats(lang).length),
     "<!--series-nav-->": () => (topic?.sub ? seriesNav(topic, sub) : ""),
     "<!--now-->": () => nowHtml(updates),
     "<!--feed-->": () => feedHtml(updates),
@@ -1751,7 +1990,37 @@ for (const file of walk(pagesDir)) {
       inLanguage: lang,
       publisher: { "@id": PERSON_ID },
       blogPost: blogByLang[lang].map((p) => ({ "@type": "BlogPosting", "@id": SITE + p.route + "#article", headline: p.h1 || p.title, url: SITE + p.route, datePublished: p.published })),
+      hasPart: liveCats(lang).map((c) => ({ "@id": SITE + catRoute(c, lang) + "#collection" })),
     });
+  if (meta.blogCat) {
+    const c = blogCat(meta.blogCat), list = catPosts(c, lang), en = lang === "en";
+    graph.push(
+      {
+        "@type": "CollectionPage",
+        "@id": url + "#collection",
+        url,
+        name: meta.h1,
+        description: meta.description,
+        inLanguage: lang,
+        isPartOf: { "@id": SITE + BLOG_HUB[lang] + "#blog" },
+        publisher: { "@id": PERSON_ID },
+        about: c.en.name,
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: list.length,
+          itemListElement: list.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + p.route, name: p.h1 || p.title })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: en ? "Home" : "หน้าแรก", item: SITE + "/" },
+          { "@type": "ListItem", position: 2, name: en ? "Articles" : "บทความ", item: SITE + BLOG_HUB[lang] },
+          { "@type": "ListItem", position: 3, name: c[lang].name, item: url },
+        ],
+      },
+    );
+  }
   const jsonld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`
     : "";
@@ -1814,6 +2083,10 @@ fs.writeFileSync(
 );
 
 // llms.txt (https://llmstxt.org format) — a map of the site for AI assistants
+// articles grouped by category: a heading per category, its page, then its posts
+const llmsBlog = (lang) => liveCats(lang).map((c) =>
+  `### ${c.en.name}${lang === "th" ? ` (${c.th.name})` : ""}\n- [${lang === "th" ? `Category page: ${c.th.name}` : `Category page: ${c.en.name}`}](${SITE}${catRoute(c, lang)}): ${c[lang].desc}\n` +
+  catPosts(c, lang).map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")).join("\n\n");
 const LABS = [
   ["Vector Studio 2D/3D (rotatable)", "vector-algebra/vector-lab", "free browser-based 3D vector tool in Thai: up to 8 vectors, drag to orbit, xy/xz/yz views, perspective, resultant and head-to-tail polygon, component box, direction angles α β γ and direction cosines, projection, dot/cross products, triple product, rotated frame with Z-Y-X Euler angles, pairwise angle table, shareable link (#studio=…), export to GeoGebra commands, MATLAB/Octave quiver3, Python NumPy/Matplotlib and CSV; plus a step-by-step two-vector calculator"],
   ["Vector formula index (forces, fields & phasors)", "vector-algebra#formulas", "every vector formula with a citable ID: F foundations, V operations, P components/projection, K direction cosines, D dot, C cross, R resultant forces (laws of sines/cosines, oblique resolution, Lami), S force systems (moments, couples, equivalent systems, distributed loads, equilibrium), T rotation of axes (rotation matrices, Euler angles, Rodrigues, Clarke/Park), A robot arms (FK/IK, Jacobian, τ = JᵀF), E engineering applications, M electromagnetic fields (Coulomb, superposition, potential, flux, Lorentz force, F = IL×B, parallel conductors, τ = m×B), W sinusoids (phase, lead/lag, RMS), H phasors, Z AC circuits (impedance, complex power, PF correction, resonance, RC filter, three-phase)"],
@@ -1895,13 +2168,13 @@ When citing, please name "Mod's Engineering Mathematics (อาจารย์�
 ## Lessons (reading order)
 ${TOPICS.map((t, i) => `- [${t.en} — ${t.title}](${SITE}/learn/${t.slug}/): ${t.summary}` + (t.sub ? "\n" + live(t).map((s) => `  - [${s.en} — ${s.title}](${SITE}${seriesUrl(t, s)}): ${s.summary}`).join("\n") : "")).join("\n")}
 
-## Articles (short answers to common search questions, each linking into the lessons)
+## Articles (short answers to common search questions, each linking into the lessons; grouped by category)
 - [All articles](${SITE}/blog/)
-${blogPosts.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
+${llmsBlog("th")}
 
-## Articles in English (full translations of the Thai articles above, same formulas and worked examples)
+## Articles in English (full translations of the Thai articles above, same formulas and worked examples; grouped by category)
 - [All English articles](${SITE}/en/blog/)
-${blogEn.map((p) => `- [${p.h1 || p.title}](${SITE}${p.route}): ${p.description}`).join("\n")}
+${llmsBlog("en")}
 
 ## Worked solutions (one problem per page, full step-by-step working in Thai, math in LaTeX)
 - [All worked solutions](${SITE}${SOL_HUB})
