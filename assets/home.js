@@ -121,7 +121,7 @@
     var newest = items[0].date;
     list.innerHTML = items.map(function (u, i) {
       return '<li class="hu-item' + (i === 0 ? " hu-top" : "") + '" data-tag="' + esc(u.tag) + '"><div class="hu-meta"><span class="hu-ic" aria-hidden="true">' + (ICON[u.tag] || "•") + "</span>" +
-        (u.tag ? '<span class="tag">' + esc(u.tag) + "</span>" : "") + '<time datetime="' + esc(u.date) + '">' + thaiDate(u.date) + "</time>" + (u.date === newest ? '<span class="hu-new">ใหม่</span>' : "") +
+        (u.tag ? '<span class="tag">' + esc(u.tag) + "</span>" : "") + '<time datetime="' + esc(u.date) + '">' + thaiDate(u.date) + "</time>" + (i === 0 ? '<span class="hu-new">ใหม่</span>' : "") +
         '</div><p class="hu-text">' + esc(u.text) + "</p>" + chips(u) + (u.link ? '<a class="hu-link" href="' + esc(u.link) + '">' + esc(u.linkText || "อ่านต่อ") + " →</a>" : "") + "</li>";
     }).join("");
     var hd = document.getElementById("huDate"); if (hd) hd.textContent = thaiDate(newest);

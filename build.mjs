@@ -1152,10 +1152,9 @@ function feedHtml(data) {
 const UPD_ICON = { "บทเรียน": "📘", "บทความ": "✍️", "แล็บ": "🧪", "แนวข้อสอบ": "📝", "เว็บไซต์": "🛠️", "งานสอน": "🎓", "วิดีโอ": "▶️", "งานวิจัย": "🔬" };
 function homeUpdatesHtml(data, n = 6) {
   const items = [...(data.updates || [])].sort((a, b) => b.date.localeCompare(a.date)).slice(0, n);
-  const newest = items.length ? items[0].date : TODAY;
   return items
     .map((u, i) => {
-      const fresh = u.date === newest;
+      const fresh = i === 0; // only the single newest entry gets the "ใหม่" badge
       return `<li class="hu-item${i === 0 ? " hu-top" : ""}" data-tag="${esc(u.tag || "")}">
   <div class="hu-meta"><span class="hu-ic" aria-hidden="true">${UPD_ICON[u.tag] || "•"}</span>${u.tag ? `<span class="tag">${esc(u.tag)}</span>` : ""}<time datetime="${esc(u.date)}">${thaiDate(u.date)}</time>${fresh ? '<span class="hu-new">ใหม่</span>' : ""}</div>
   <p class="hu-text">${esc(u.text)}</p>${updLinksHtml(u)}${u.link ? `<a class="hu-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
