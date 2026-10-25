@@ -1798,8 +1798,8 @@ function solutionSchema(s, url, ogImageUrl) {
   fs.writeFileSync(rp, r.replace(/\n*$/, "\n\n") + [begin, ...lines.map(([a, b]) => `${a}  ${b}  301`), end].join("\n") + "\n");
 }
 
-// Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
-const MD_SERIES = ["sequences-and-series", "dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
+// Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for every indexable page, plus hand-written guides.
+// The /mcp endpoint (functions/mcp.js) serves these copies to AI assistants through its get_page tool.
 const MD_GUIDES = [
   { src: "src/md/linear-algebra.md", out: "learn/linear-algebra/guide.md", page: "/learn/linear-algebra/", title: "Linear algebra: matrices, determinants, rank, Cramer's rule & numerical solution of linear systems — complete guide (Thai, Markdown)",
     desc: "13-page structure and reading path, key formulas with IDs (determinant and adjugate shortcuts, rank and Rouché–Capelli, Cramer with a parameter, LU / Cholesky / Thomas, Jacobi / Gauss–Seidel / SOR convergence, condition number), SymPy-verified example numbers, interactive labs, Thai/English articles and FAQ" },
@@ -1936,7 +1936,7 @@ for (const { rel, raw } of pageSources) {
   body = body.replace(/<!--series-cards:([\w/-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--formula-index:([\w/-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
-  const mdExport = !meta.noindex && topic && MD_SERIES.includes(topic.slug);
+  const mdExport = !meta.noindex && !meta.noLlms;
   if (!meta.noindex && !meta.noLlms) {
     const text = htmlToText(body);
     fullText.push({ url, title: meta.h1 || meta.title, description: meta.description, updated: meta.updated, text, faq: meta.faq || [] });
@@ -2190,8 +2190,11 @@ ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug
 - Sensors & instrumentation: virtual plant presets ${SITE}/learn/sensors-transducers/instrumentation-lab/ (level PID, aggressive tuning, density change, open wire, level + temperature); Thai spelling used on this site: เซนเซอร์ (also written เซ็นเซอร์) and ทรานส์ดิวเซอร์ (also ทรานสดิวเซอร์)
 
 ## Markdown versions (for AI assistants)
+Every page listed above has a clean Markdown copy at its URL followed by \`index.html.md\` (for example ${SITE}/learn/laplace-transform/index.html.md or ${SITE}/blog/cramers-rule/index.html.md), with math as LaTeX. Each HTML page also points to its copy with \`<link rel="alternate" type="text/markdown">\`. Complete series guides:
 ${MD_GUIDES.map((g) => `- [${g.title}](${SITE}/${g.out}): ${g.desc}`).join("\n")}
-${TOPICS.filter((t) => MD_SERIES.includes(t.slug)).map((t) => [`- [${t.en} — hub (Markdown)](${SITE}/learn/${t.slug}/index.html.md)`, ...live(t).map((s) => `- [${s.en} (Markdown)](${SITE}${seriesUrl(t, s)}index.html.md)`)].join("\n")).join("\n")}
+
+## For AI agents (MCP)
+- [MCP server](${SITE}/mcp): read-only Model Context Protocol endpoint (Streamable HTTP, no sign-in). Tools: \`search_site\` (Thai or English query → pages and section links), \`get_page\` (Markdown of any page or one section of it), \`list_topics\` (the lesson map) and \`get_updates\` (what is new). In Claude, add it as a custom connector with the URL ${SITE}/mcp
 
 ## About
 - [Home](${SITE}/): overview, eight separate mathematics subjects in reading order (functions, trigonometry, limits, derivatives, integrals, vectors, linear algebra, Laplace transform) each with engineering applications, learning path from matrices to Laplace transforms, control systems (stability, root locus, Bode, PID, mechatronics, robotics), Fourier series and harmonic analysis (THD, PF, IEEE 519, rectifiers, inverters, filters), power electronics and solar PV system design (string sizing, batteries, energy yield, MPPT, inverters, solar air conditioning, solar farms, solar pumping), home EV charging (Mode 2/Mode 3, Control Pilot, meters, RCD Type B, TOU, solar + AC + EV), power systems & protection fundamentals (per-unit, short circuit, symmetrical components, relay coordination, earthing) and power factor (correction, capacitor banks, kvar penalty, harmonics) with simulators
@@ -2229,8 +2232,20 @@ for (const g of MD_GUIDES) {
   let h = fs.readFileSync(hp, "utf8");
   const i = h.indexOf(begin), j = h.indexOf(end);
   if (i >= 0 && j > i) h = h.slice(0, i).replace(/\n+$/, "\n") + h.slice(j + end.length).replace(/^\n+/, "");
-  const block = [begin, ...mdFiles.map((f) => `${f.path}\n  Content-Type: text/markdown; charset=utf-8\n  Link: <${f.canonical}>; rel="canonical"\n  Cache-Control: public, max-age=600, must-revalidate\n`), end].join("\n");
-  fs.writeFileSync(hp, h.replace(/\n*$/, "\n\n") + block + "\n");
+  // Cloudflare Pages applies at most 100 rules from _headers (the rest are ignored), so every Markdown copy shares three
+  // splat rules instead of one rule per file. :splat is the page path, so the canonical Link still points to each HTML page.
+  for (const f of mdFiles) {
+    const want = SITE + "/" + f.path.replace(/^\//, "").replace(/(index\.html|guide)\.md$/, "");
+    if (want !== f.canonical) throw new Error(`Markdown copy ${f.path} needs canonical ${f.canonical}, but the splat rule gives ${want}`);
+  }
+  const block = [begin, `# ${mdFiles.length} Markdown copies (<page URL>index.html.md and the series guide.md files)`,
+    "/*.md\n  Content-Type: text/markdown; charset=utf-8\n  Cache-Control: public, max-age=600, must-revalidate\n",
+    `/*index.html.md\n  Link: <${SITE}/:splat>; rel="canonical"\n`,
+    `/*guide.md\n  Link: <${SITE}/:splat>; rel="canonical"\n`, end].join("\n");
+  const out = h.replace(/\n*$/, "\n\n") + block + "\n";
+  const rules = out.split("\n").filter((l) => l.startsWith("/")).length;
+  if (rules > 100) throw new Error(`_headers has ${rules} rules; Cloudflare Pages applies only the first 100`);
+  fs.writeFileSync(hp, out);
 }
 
 // llms-full.txt — the readable text of every indexable page
@@ -2253,6 +2268,13 @@ fs.writeFileSync(
 searchIndex.sort((a, b) => order(SITE + a.u) - order(SITE + b.u) || a.u.localeCompare(b.u));
 fs.writeFileSync(path.join(ROOT, "search-index.json"), JSON.stringify(searchIndex) + "\n");
 console.log(`built search-index.json (${searchIndex.length} pages)`);
+// mcp-index.json — the same entries, flattened for the /mcp Pages Function (functions/mcp.js): one array per page
+// [route, lang, title, description, category, keywords (lower case), body terms, "id\u0001heading\u0002id\u0001heading…"].
+// Few objects to allocate, so a cold Worker parses it in ~1–2 ms (Workers Free allows 10 ms CPU per request).
+fs.writeFileSync(
+  path.join(ROOT, "mcp-index.json"),
+  JSON.stringify(searchIndex.map((e) => [e.u, e.l, e.t, e.d, e.c || "", (e.k || "").toLowerCase(), e.w || "", e.h.map(([id, t]) => id + "\u0001" + t).join("\u0002")])) + "\n",
+);
 
 // feed.xml (RSS 2.0) from data/updates.json
 const rfc822 = (d) => new Date(d + "T09:00:00+07:00").toUTCString();

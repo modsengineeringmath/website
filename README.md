@@ -14,6 +14,28 @@ all read this file live, so the change shows up after Cloudflare deploys (~1 min
 `link` and `linkText` are optional. `now` holds the "ตอนนี้กำลังทำ" list.
 Run the build occasionally so the pre-rendered copy (for search engines) matches.
 
+## AI assistants: Markdown copies and the MCP endpoint (added 2026-10-25)
+- **Markdown copies:** every indexable page (lessons, articles in both languages, worked solutions, hubs, about) gets
+  `<page URL>index.html.md` (front matter + description + the page text with math as LaTeX + FAQ) and a
+  `<link rel="alternate" type="text/markdown">` in its head. Pages with `noindex` or `"noLlms": true` are skipped.
+  `MD_GUIDES` in build.mjs adds the hand-written series guides (`src/md/*.md` → `/learn/<series>/guide.md`, `{{updated}}` comes from the hub's meta).
+  build.mjs writes the block between `# BEGIN generated: markdown copies` and `# END generated` in `_headers`: `/*.md` → text/markdown,
+  `/*index.html.md` and `/*guide.md` → `Link: <https://modsengineeringmath.com/:splat>; rel="canonical"` (the HTML page). It checks every copy
+  against those rules, so a guide must live at `<hub route>guide.md`.
+- **MCP server:** `functions/mcp.js` is a Cloudflare Pages Function at `https://modsengineeringmath.com/mcp` — a read-only
+  Model Context Protocol server (Streamable HTTP, stateless JSON, no sign-in) that Claude and other AI apps can add as a connector.
+  Tools: `search_site` (same weights as the header search, plus: listing pages rank lower and TH/EN twins are merged), `get_page`
+  (the Markdown copy, one section by heading text or `#anchor`, long pages in 40,000-character parts, follows `_redirects`),
+  `list_topics` (from the Lessons/Articles/Worked solutions/labs sections of llms.txt) and `get_updates` (`data/updates.json`).
+  A browser GET shows a Thai help page. It reads only static files through `env.ASSETS`, so it needs no bindings, secrets or database.
+- **`mcp-index.json`** (build output) is the search index in flat arrays for the function: a cold Worker parses it in a few ms
+  (Workers Free allows 10 ms CPU per request). `search-index.json` stays the format for the header search.
+- **`_routes.json`** limits Functions to `/mcp` and `/mcp/*`: every other request is a plain static file and never counts toward the
+  Workers Free quota (100,000 requests/day). If `/mcp` ever hits the quota, only `/mcp` stops; the site keeps working.
+- Local test: `npx wrangler pages dev .` then POST JSON-RPC to `http://localhost:8788/mcp`
+  (`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_site","arguments":{"query":"bode"}}}`).
+  Delete the `.wrangler/` folder it creates (it is in `.gitignore`).
+
 ## Add a lesson
 1. Add an entry to `TOPICS` in `build.mjs` (slug, title, en, sym, summary, optional playlist).
 2. Copy an existing file in `src/pages/learn/` to `src/pages/learn/<slug>.html` and write the content.
@@ -26,7 +48,8 @@ The new page appears in the library, on the home page, in the prev/next links, s
 - `node build.mjs` also writes `llms.txt`, `llms-full.txt` (plain text of every page for AI assistants), `feed.xml` (RSS from `data/updates.json`), `sitemap.xml` and `404.html`.
 - It also writes `search-index.json` for the search button in the header (`assets/site.js`, opens with the magnifier, `/` or Ctrl/⌘+K): title, description, keywords, FAQ questions and `h2`/`h3` headings with their `id` (results deep-link to the section) of every indexable page, plus the other English terms in the body. Give headings an `id` so they show up as section results. Pages with `noindex` are left out.
 - Social share images: `python3 scripts/og.py && node build.mjs` renders `images/og/<page>.jpg` (1200×630) from `src/og-manifest.json`. Run it after adding a page or changing a title. A page can set `"og": {"title","sub","eyebrow","sym"}` in its meta block.
-- `robots.txt` explicitly allows AI crawlers; `_headers` sets UTF-8 for text files and `noindex` on source files.
+- `robots.txt` explicitly allows AI crawlers and carries a `Content-Signal: search=yes, ai-input=yes, ai-train=yes` line (contentsignals.org); `_headers` sets UTF-8 for text files and `noindex` on source files.
+- **`_headers` limit:** Cloudflare Pages applies only the first **100** rules in `_headers` and ignores the rest. Keep per-file rules out of it; the build throws if the file goes over 100 rules. Markdown copies share three splat rules (see below).
 - Lesson pages get a share bar (LINE, Facebook, X, copy link) automatically.
 - New pages are picked up by `sitemap.xml`, `llms.txt`, `llms-full.txt`, `search-index.json`, the Markdown copies and the RSS feed on the next `node build.mjs`; nothing is edited by hand. Latest additions (2026-10-19): `/learn/motor-control/star-delta-analysis/`, `/learn/en/motor-control/star-delta-analysis/`, `/blog/star-delta-timer-setting/`, `/en/blog/star-delta-timer-setting/` (short URLs `/star-delta-timer`, `/star-delta-research`, `/closed-transition`, `/wye-delta` … in `_redirects`).
 
@@ -111,12 +134,8 @@ the formula (`<div class="wtfig"><!--FIG:fs-wt-…--><!--/FIG--></div>`) and the
 - Figures: `python3 scripts/fs_figs.py` fills empty `<!--FIG:key--><!--/FIG-->` blocks in the series pages and the two
   Fourier figures on the home page (`fs-home`, `fs-home-lab`); `--all` redraws every figure. Unknown keys owned by
   `fg_figs.py` / `cs_figs.py` are left alone, and vice versa.
-- Markdown for AI assistants (llmstxt.org convention): every page in `MD_SERIES` (build.mjs) also gets
-  `<page>/index.html.md` and a `<link rel="alternate" type="text/markdown">`; the hand-written guide
-  `src/md/fourier-series.md` is published as `/learn/fourier-series/guide.md` (`MD_GUIDES`, `{{updated}}` is filled from the
-  hub's meta). Both are listed in llms.txt, and build.mjs regenerates the block between `# BEGIN generated: markdown copies`
-  and `# END generated` in `_headers` (text/markdown + `Link: rel="canonical"` to the HTML page). Add a series to
-  `MD_SERIES` to give it Markdown copies too.
+- Markdown for AI assistants (llmstxt.org convention): see "AI assistants: Markdown copies and the MCP endpoint" below;
+  the hand-written guide `src/md/fourier-series.md` is published as `/learn/fourier-series/guide.md` (`MD_GUIDES`).
 - Worked-example numbers were checked with numpy/scipy/sympy and against the lab engine (Node) before publishing.
 - Short URLs (`/fourier`, `/harmonics`, `/thd`, `/ieee519`, `/harmonic-analyzer`, `/power-analyzer`, `/parseval`, `/gibbs`,
   `/spwm`, `/fft` …) are in `_redirects`.
@@ -126,7 +145,7 @@ Series `power-electronics` in `TOPICS` (build.mjs), topic 13 (chapter 15 on the 
 buck-boost-converter W, cuk-converter K), control (small-signal-model S, compensator-design C, analog-control A, digital-control Z,
 observers O, ai-control), hardware (inductor-design L, test-power-sources V, controller-selection, switching-power-supply),
 practice (engineering-techniques, troubleshooting, converter-lab). Formula cards use the same markup as the other series and appear
-in the hub's formula index; the series is in `MD_SERIES` (Markdown copies for AI assistants).
+in the hub's formula index; every page has a Markdown copy for AI assistants.
 - Engine `assets/pe-sim.js` (`window.PESim`; in Node copy it to `.cjs` because package.json is `"type": "module"`): switching-level
   simulator (fixed step ≈ Ts/120) of buck / boost / inverting buck-boost / Cuk with Rds(on), diode Vf, DCR, ESR, CCM/DCM; sources
   battery / 50 Hz mains through transformer + bridge + bulk C / PV single-diode model; loads R / constant current / step; control
@@ -168,7 +187,7 @@ Series `solar-pv` in `TOPICS` (build.mjs), topic 14, 5 parts × 19 sub-pages: ba
 system (system-types S, string-sizing D, wiring-protection W, battery-storage B), forecast (energy-yield E, load-sizing L, economics F,
 forecasting-monitoring A), power electronics (mppt T, pv-inverter V, controller-selection C), applications (solar-air-conditioner H,
 solar-farm G, solar-agriculture K, installation-maintenance I, design-lab). Formula cards use the same markup as the other series and
-appear in the hub's formula index; the series is in `MD_SERIES`, and `src/md/solar-pv.md` is published as `/learn/solar-pv/guide.md`
+appear in the hub's formula index, and `src/md/solar-pv.md` is published as `/learn/solar-pv/guide.md`
 (`MD_GUIDES` entries now carry their own `desc` for llms.txt). Worked-example numbers were checked with Python and against the
 calculator engine in Node.
 - Calculators `assets/pv-calc.js` (`window.PVCalc`; in Node copy it to `.cjs`): `<div class="fg-calc pv-calc" data-pv="string|yield|size|battery|ac|pump|cable|econ">`
@@ -197,13 +216,13 @@ Each formula has a citable ID; the hub builds the searchable index automatically
 - `images/vector-algebra/*.svg` are topic illustrations used by the home page and social cards.
 - Rebuild: `npm run build`; render only vector social cards: `python3 scripts/og.py --prefix learn-vector-algebra`;
   rebuild again so Open Graph tags point to the created JPGs. Python Playwright and Chromium are needed for OG generation.
-- Vector pages are in `MD_SERIES`; `src/md/vector-algebra.md` publishes the guide.
+- `src/md/vector-algebra.md` publishes the vector guide.
   The build refreshes navigation, sitemap, RSS, llms.txt/full, Markdown copies and headers.
 - Vector math regression checks: `node scripts/test-vectors.mjs` (known geometry and 1,000 deterministic identity checks).
 - Cloudflare Pages serves the committed root files directly; commit generated outputs with source changes.
 
 ## Home EV charging · Power systems & protection · Power factor (added 2026-10-13)
-Three series in `TOPICS` (build.mjs), topics 15–17, all in `MD_SERIES`; formula cards use the same markup as the other series.
+Three series in `TOPICS` (build.mjs), topics 15–17; formula cards use the same markup as the other series.
 - `ev-charging` (9 pages, prefixes C B M W H P T S): charging basics, battery & time, Mode 2 portable charger ("ชาร์จช้าด้วยไฟบ้าน"),
   wallbox & Control Pilot ("ชาร์จเร็วที่บ้าน"), home electrical (meter, load, cable), safety (RCD Type B, earthing), tariffs/TOU,
   solar + air conditioning + EV (home energy management), ev-lab.
@@ -243,7 +262,7 @@ Three series in `TOPICS` (build.mjs), topics 15–17, all in `MD_SERIES`; formul
   `/derivative` `/laplace` `/inverse-laplace` `/partial-fractions` `/matrix-lab` `/truss` `/beam-lab` in `_redirects`.
 
 ## Sensors & transducers (expanded 2026-10-14)
-Series `sensors-transducers` in `TOPICS` (build.mjs), topic 20, 4 parts × 20 sub-pages, in `MD_SERIES`; guide `src/md/sensors-transducers.md`
+Series `sensors-transducers` in `TOPICS` (build.mjs), topic 20, 4 parts × 20 sub-pages; guide `src/md/sensors-transducers.md`
 → `/learn/sensors-transducers/guide.md`. Parts: foundations (fundamentals F, history-technology H, units U, unit-lab C, measurement-standards M,
 electrical-standards E), quantities (temperature-sensors T, pressure-sensors P, flow-measurement Q, level-measurement L, force-position R,
 current-voltage-sensing V), signals (signal-conditioning-adc A, industrial-signals I, modbus D, fieldbus B, smart-sensors-iiot N),
@@ -375,7 +394,7 @@ English main terms, first technical term as "ไทย (English)", FAQ ×4–5, 
 - Figures: `python3 scripts/mv_figs.py` fills empty `<!--FIG:mv-…--><!--/FIG-->` blocks (`--all` redraws, `--preview out.html`); surfaces and curves are
   computed from their equations with a small oblique projection; classes `.mf-*`.
 - Social cards: `python3 scripts/og.py --prefix learn-multivariable-calculus --chromium /opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
-- `src/md/multivariable-calculus.md` publishes `/learn/multivariable-calculus/guide.md`; the series is in `MD_SERIES`.
+- `src/md/multivariable-calculus.md` publishes `/learn/multivariable-calculus/guide.md`.
 - Short URLs (`/multivariable`, `/calculus-3`, `/vector-calculus`, `/partial-derivatives`, `/gradient`, `/lagrange-multiplier`, `/double-integral`,
   `/greens-theorem`, `/stokes-theorem`, `/divergence-theorem`, `/cut-and-fill`, …) are in `_redirects`.
 - Every worked-example number was checked with sympy/numpy before publishing.
