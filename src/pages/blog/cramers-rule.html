@@ -1,0 +1,113 @@
+<!--meta
+{
+  "title": "กฎของคราเมอร์ (Cramer's Rule) ใช้อย่างไร ทำไมถึงได้ และเมื่อไรไม่ควรใช้ | อาจารย์มด",
+  "h1": "กฎของคราเมอร์ (Cramer's Rule) ใช้อย่างไร ทำไมถึงได้ และเมื่อไรไม่ควรใช้",
+  "description": "สอนกฎของคราเมอร์แบบเห็นภาพ แทนหลักด้วยค่าคงที่แล้วหารดีเทอร์มิแนนต์ ตัวอย่าง 2×2 และ 3×3 หาตัวแปรเดียว ที่มาของสูตร กรณี Δ = 0 โจทย์พารามิเตอร์ k และเหตุผลที่คอมพิวเตอร์ไม่ใช้กับระบบใหญ่",
+  "ogTitle": "กฎของคราเมอร์ ใช้อย่างไร และเมื่อไรไม่ควรใช้",
+  "blog": true,
+  "tag": "พีชคณิตเชิงเส้น",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["กฎของคราเมอร์", "cramer's rule", "คราเมอร์ 3x3", "วิธีใช้กฎของคราเมอร์", "ดีเทอร์มิแนนต์ แก้ระบบสมการ", "คราเมอร์ หาตัวแปรเดียว", "cramer rule delta zero", "แก้ระบบสมการด้วยดีเทอร์มิแนนต์"],
+  "about": ["Cramer's rule", "Determinant", "System of linear equations"],
+  "og": {"title": "กฎของคราเมอร์ใช้อย่างไร", "sub": "x = Δx/Δ · 2×2 · 3×3 · ทำไมถูก · เมื่อ Δ = 0 · เมื่อไรไม่ควรใช้", "eyebrow": "บทความ · พีชคณิตเชิงเส้น", "sym": "Δᵢ/Δ"},
+  "faq": [
+    {"q": "กฎของคราเมอร์ใช้กับระบบแบบไหนได้?", "a": "ใช้ได้กับระบบที่จำนวนสมการเท่ากับจำนวนตัวแปร (เมทริกซ์สัมประสิทธิ์จัตุรัส) และดีเทอร์มิแนนต์ของเมทริกซ์สัมประสิทธิ์ไม่เป็นศูนย์ ถ้า Δ = 0 ระบบอาจไม่มีคำตอบหรือมีไม่จำกัด ต้องตรวจด้วยการลดแถว"},
+    {"q": "ทำไมกฎของคราเมอร์จึงเร็วในข้อสอบ?", "a": "เพราะถ้าโจทย์ถามเพียงตัวแปรเดียว ใช้ดีเทอร์มิแนนต์แค่สองตัว คือ Δ และ Δ ของตัวแปรนั้น ไม่ต้องแก้ทุกตัวแปรหรือหาอินเวอร์สทั้งเมทริกซ์ เหมาะกับระบบ 2–3 ตัวแปรที่ทำมือ"},
+    {"q": "ทำไมโปรแกรมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์?", "a": "เพราะต้นทุนสูงมากเมื่อระบบใหญ่ ถ้าหาดีเทอร์มิแนนต์ด้วยโคแฟกเตอร์ ระบบ 20 ตัวแปรต้องคูณราว 5 × 10¹⁹ ครั้ง ส่วนการกำจัดแบบเกาส์ใช้ราว 2,700 ครั้ง และการกำจัดแบบเกาส์ที่สลับแถวยังเสถียรเชิงตัวเลขกว่า"},
+    {"q": "ใช้คราเมอร์กับวงจรไฟฟ้ากระแสสลับได้ไหม?", "a": "ได้ ขั้นตอนมีแค่บวก ลบ คูณ หาร จึงใช้กับอิมพีแดนซ์ที่เป็นจำนวนเชิงซ้อนได้ตรง ๆ และใช้กับตัวแปร s ของการแปลงลาปลาซได้ด้วย โดย Δ(s) = 0 คือสมการลักษณะเฉพาะของวงจร"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>กฎของคราเมอร์</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// บทความ · พีชคณิตเชิงเส้น</p>
+      <h1>กฎของคราเมอร์ (Cramer's Rule) ใช้อย่างไร ทำไมถึงได้ และเมื่อไรไม่ควรใช้</h1>
+      <p class="lede">กฎของคราเมอร์ให้สูตรตรงของตัวแปรแต่ละตัวในระบบสมการเชิงเส้น ไม่ต้องลดแถว ไม่ต้องหาอินเวอร์ส เหมาะมากกับข้อสอบที่ถามตัวแปรเพียงตัวเดียว แต่ก็มีข้อจำกัดที่ต้องรู้ บทความนี้สรุปทั้งวิธีใช้ ที่มา กรณีพิเศษ และขอบเขตการใช้งานในที่เดียว</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(x_i = \dfrac{\Delta_i}{\Delta}\) โดย \(\Delta = \det A\) และ \(\Delta_i\) คือ \(\det\) ของ \(A\) ที่แทนหลักที่ \(i\) ด้วยค่าคงที่ \(\mathbf b\)</li>
+          <li>ใช้ได้เมื่อ \(A\) จัตุรัสและ \(\Delta \ne 0\) · ถามตัวแปรเดียวใช้ดีเทอร์มิแนนต์แค่สองตัว</li>
+          <li>ระบบใหญ่กว่า 3×3 หรือในโปรแกรม ใช้การกำจัดแบบเกาส์หรือ LU แทน</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="rule">
+    <h2 id="rule">สูตรในประโยคเดียว</h2>
+    <p>หาดีเทอร์มิแนนต์ของเมทริกซ์สัมประสิทธิ์ \(\Delta\) จากนั้นเอาค่าคงที่ทางขวาไปแทนหลักของตัวแปรที่ต้องการ หาดีเทอร์มิแนนต์ใหม่ \(\Delta_i\) แล้วหารกัน</p>
+    <figure class="post-fig"><!--FIG:la-cramer-cols--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 190" role="img" aria-label="กฎของคราเมอร์: แทนหลักหนึ่งของ A ด้วย b"><text class="mf-h" x="76" y="22" text-anchor="middle">Δ = det A</text><path class="mf-ink" d="M34 34 h-6 v72 h6"/><path class="mf-ink" d="M118 34 h6 v72 h-6"/><text class="mf-t" x="54" y="62" text-anchor="middle">3</text><text class="mf-t" x="98" y="62" text-anchor="middle">2</text><text class="mf-t" x="54" y="96" text-anchor="middle">1</text><text class="mf-t" x="98" y="96" text-anchor="middle">−1</text><text class="mf-h" x="76" y="130" text-anchor="middle">= −5</text><text class="mf-h" x="218" y="22" text-anchor="middle">Δₓ</text><path class="mf-ink" d="M176 34 h-6 v72 h6"/><path class="mf-ink" d="M260 34 h6 v72 h-6"/><rect class="mf-fill" x="178" y="41" width="36" height="30" rx="6"/><text class="mf-t" x="196" y="62" text-anchor="middle">7</text><text class="mf-t" x="240" y="62" text-anchor="middle">2</text><rect class="mf-fill" x="178" y="75" width="36" height="30" rx="6"/><text class="mf-t" x="196" y="96" text-anchor="middle">−1</text><text class="mf-t" x="240" y="96" text-anchor="middle">−1</text><text class="mf-h" x="218" y="130" text-anchor="middle">= −5</text><text class="mf-h" x="360" y="22" text-anchor="middle">Δᵧ</text><path class="mf-ink" d="M318 34 h-6 v72 h6"/><path class="mf-ink" d="M402 34 h6 v72 h-6"/><text class="mf-t" x="338" y="62" text-anchor="middle">3</text><rect class="mf-fill" x="364" y="41" width="36" height="30" rx="6"/><text class="mf-t" x="382" y="62" text-anchor="middle">7</text><text class="mf-t" x="338" y="96" text-anchor="middle">1</text><rect class="mf-fill" x="364" y="75" width="36" height="30" rx="6"/><text class="mf-t" x="382" y="96" text-anchor="middle">−1</text><text class="mf-h" x="360" y="130" text-anchor="middle">= −10</text><text class="mf-l" x="220" y="158" text-anchor="middle">ระบบ: 3x + 2y = 7,  x − y = −1</text><text class="mf-h" x="220" y="178" text-anchor="middle">x = Δₓ/Δ = 1   ·   y = Δᵧ/Δ = 2</text></svg><!--/FIG--><figcaption>ระบบ 2×2 ตัวอย่าง: แทนหลักแรกด้วย \(\mathbf b\) ได้ \(\Delta_x\) แทนหลักที่สองได้ \(\Delta_y\)</figcaption></figure>
+    \[ \begin{aligned} 3x + 2y &= 7 \\ x - y &= -1 \end{aligned} \quad\Rightarrow\quad \Delta = \begin{vmatrix} 3 & 2 \\ 1 & -1 \end{vmatrix} = -5,\quad x = \frac{\begin{vmatrix} 7 & 2 \\ -1 & -1 \end{vmatrix}}{-5} = \frac{-5}{-5} = 1,\quad y = \frac{\begin{vmatrix} 3 & 7 \\ 1 & -1 \end{vmatrix}}{-5} = \frac{-10}{-5} = 2 \]
+    </section>
+
+    <section class="tsec" aria-labelledby="three">
+    <h2 id="three">ระบบ 3×3: หาเฉพาะตัวแปรที่โจทย์ถาม</h2>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>หา \(y\) จาก \(2x + y - z = 3,\ x + 3y + 2z = 14,\ 3x - y + z = 2\)</h3></div>
+      <ol class="steps">
+        <li>\[ \Delta = \begin{vmatrix} 2 & 1 & -1 \\ 1 & 3 & 2 \\ 3 & -1 & 1 \end{vmatrix} = 2(3 + 2) - 1(1 - 6) + (-1)(-1 - 9) = 25 \]</li>
+        <li>\[ \Delta_y = \begin{vmatrix} 2 & 3 & -1 \\ 1 & 14 & 2 \\ 3 & 2 & 1 \end{vmatrix} = 2(14 - 4) - 3(1 - 6) + (-1)(2 - 42) = 75 \]</li>
+      </ol>
+      <p class="answer">\(y = 75/25 = 3\) — ไม่ต้องหา \(x\) และ \(z\) เลย</p>
+    </div>
+    <p>ถ้าต้องการทุกตัวแปรของระบบ 3×3 ต้องใช้ดีเทอร์มิแนนต์ 4 ตัว ตรวจคำตอบด้วยการแทนกลับทุกครั้ง หรือใช้ <a href="/learn/linear-algebra/cramers-rule/#calculator">เครื่องคิดเลขคราเมอร์แสดงวิธีทำ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมสูตรนี้ถูก (พิสูจน์สองบรรทัด)</h2>
+    <p>ให้ \(X_i\) คือเมทริกซ์เอกลักษณ์ที่แทนหลักที่ \(i\) ด้วยเวกเตอร์คำตอบ \(\mathbf x\) เมื่อคูณ \(A\) เข้าไป หลักที่ \(i\) จะกลายเป็น \(A\mathbf x = \mathbf b\) ส่วนหลักอื่นยังเป็นหลักของ \(A\) นั่นคือ \(AX_i = A_i\) จากนั้นใช้สมบัติ \(\det(AB) = \det A\det B\)</p>
+    \[ \det A\cdot\det X_i = \det A_i,\qquad \det X_i = x_i \ \Rightarrow\ x_i = \frac{\det A_i}{\det A} \]
+    <p>อีกมุมหนึ่ง คราเมอร์คือการเขียน \(\mathbf x = A^{-1}\mathbf b = \dfrac{\operatorname{adj}A\,\mathbf b}{\det A}\) ทีละตัวแปร คำตอบจึงเท่ากับวิธีอินเวอร์สเสมอ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="zero">
+    <h2 id="zero">เมื่อ Δ = 0 และโจทย์พารามิเตอร์ k</h2>
+    <p>ถ้า \(\Delta = 0\) สูตรใช้ไม่ได้ ระบบอาจไม่มีคำตอบหรือมีไม่จำกัด ตัวอย่างที่ออกสอบบ่อย</p>
+    \[ \begin{aligned} kx + y &= 1 \\ x + ky &= 1 \end{aligned}\qquad \Delta = k^2 - 1,\quad \Delta_x = \Delta_y = k - 1 \]
+    <ul>
+      <li>\(k \ne \pm1\): \(x = y = \dfrac{1}{k + 1}\)</li>
+      <li>\(k = 1\): \(\Delta = \Delta_x = \Delta_y = 0\) สองสมการเป็นเส้นเดียวกัน → คำตอบไม่จำกัด</li>
+      <li>\(k = -1\): \(\Delta = 0\) แต่ \(\Delta_x = -2 \ne 0\) → เส้นขนาน → ไม่มีคำตอบ</li>
+    </ul>
+    <div class="sr-trap"><b>กับดัก</b> ห้ามตัดตัวประกอบ \((k - 1)\) ทิ้งก่อนตรวจกรณี \(k = 1\) และสำหรับระบบ 3×3 แม้ \(\Delta\) กับ \(\Delta_i\) ทุกตัวเป็นศูนย์ ระบบก็ยังอาจไม่มีคำตอบได้ ต้อง<a href="/learn/linear-algebra/rank/#systems">ใช้แรงก์ตัดสิน</a></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="when">
+    <h2 id="when">เมื่อไรควรใช้ และเมื่อไรไม่ควรใช้</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ควรใช้</th><th>ไม่ควรใช้</th></tr></thead>
+        <tbody>
+          <tr><td>ระบบ 2–3 ตัวแปร ทำมือ</td><td>ระบบตั้งแต่ 4 ตัวแปรขึ้นไป</td></tr>
+          <tr><td>ถามตัวแปรเดียว เช่น กระแสในเมชเดียว</td><td>\(\Delta = 0\) หรือใกล้ศูนย์มาก</td></tr>
+          <tr><td>สัมประสิทธิ์เป็นตัวอักษร (\(R\), \(k\), \(s\)) อยากได้สูตรทั่วไป</td><td>จำนวนสมการไม่เท่าจำนวนตัวแปร</td></tr>
+          <tr><td>วงจร AC 2×2 ที่อิมพีแดนซ์เป็นจำนวนเชิงซ้อน</td><td>งานคอมพิวเตอร์ที่ต้องการความเร็วและความแม่นเชิงตัวเลข</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>ต้นทุนคือเหตุผลหลัก ถ้าหาดีเทอร์มิแนนต์ด้วยการกระจายโคแฟกเตอร์ คราเมอร์ใช้การคูณราว \((n + 1)!\) ครั้ง ระบบ 20 ตัวแปรจึงต้องคูณราว \(5\times10^{19}\) ครั้ง (ราว 1,600 ปีที่พันล้านครั้งต่อวินาที) ขณะที่การกำจัดแบบเกาส์ใช้ราว \(n^3/3 \approx 2{,}700\) ครั้ง รายละเอียดอยู่ใน <a href="/learn/linear-algebra/numerical-methods/#why">ผลเฉลยเชิงตัวเลข</a></p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">อ่านต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์ฉบับเต็ม: วงจรสามลูป วงจร AC และฟังก์ชันถ่ายโอน</a></li>
+        <li><a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์: ซาร์รัส โคแฟกเตอร์ และสมบัติ</a></li>
+        <li><a href="/learn/linear-algebra/numerical-methods/">วิธีเชิงตัวเลขที่ใช้แทนคราเมอร์ในระบบใหญ่</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-a">แนวข้อสอบคราเมอร์และระบบสมการพร้อมเฉลย</a></li>
+        <li><a href="/blog/determinant-properties/">บทความ: สมบัติดีเทอร์มิแนนต์ที่ออกสอบบ่อย</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

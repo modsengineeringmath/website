@@ -1,0 +1,127 @@
+<!--meta
+{
+  "title": "12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) | Ajarn Mod",
+  "h1": "12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) and the Traps",
+  "description": "The 12 determinant properties used in entrance exams and engineering mathematics: row operations, det(kA) = kⁿ det A, products, inverses and the adjugate, with examples and traps.",
+  "ogTitle": "12 Determinant Properties for Exams",
+  "lang": "en",
+  "blog": true,
+  "tag": "Linear algebra",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["determinant properties", "properties of determinants", "det(kA)", "determinant of adjugate", "det(adj A)", "determinant of inverse", "determinant exam questions", "determinant rules"],
+  "about": ["Determinant", "Adjugate matrix", "Matrix inverse"],
+  "og": {"title": "12 Determinant Properties for Exams", "sub": "det(kA) = kⁿ det A · det(AB) · det(A⁻¹) · det(adj A) + common traps", "eyebrow": "Article · Linear algebra", "sym": "|A|"},
+  "faq": [
+    {"q": "Is det(2A) equal to 2 det A?", "a": "No. Multiplying a matrix by 2 multiplies every row by 2, and a factor 2 can be taken out of each row once. For an n×n matrix det(2A) = 2ⁿ det A, so a 3×3 matrix gives 8 det A."},
+    {"q": "How do you find det(adj A)?", "a": "Use det(adj A) = (det A)ⁿ⁻¹, which follows from A adj A = (det A)I: taking determinants of both sides gives det A · det(adj A) = (det A)ⁿ. For a 3×3 matrix with det A = −2, det(adj A) = 4."},
+    {"q": "Is det(A + B) equal to det A + det B?", "a": "No. Determinants are not additive over whole matrices; add the matrices first and then take the determinant. Linearity only holds one row at a time."},
+    {"q": "Which row operation leaves the determinant unchanged?", "a": "Adding a multiple of one row to another (R_i ← R_i + kR_j) leaves it unchanged. Swapping two rows changes the sign, and multiplying one row by k multiplies the determinant by k."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Determinant properties</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Linear algebra</p>
+      <h1>12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) and the Traps</h1>
+      <p class="lede">Most determinant exam questions do not ask you to compute from numbers. They give a single value of \(\det A\) and ask for the determinant of a matrix built from \(A\). Every such question is a one-liner once you know these 12 properties. Throughout, \(A\) and \(B\) are \(n\times n\) and \(k\) is a constant.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>Three formulas to know by heart</b>
+        <ul>
+          <li>\(\det(kA) = k^n\det A\) — the exponent is the size \(n\)</li>
+          <li>\(\det(AB) = \det A\det B\), hence \(\det A^{-1} = 1/\det A\) and \(\det A^m = (\det A)^m\)</li>
+          <li>\(\det(\operatorname{adj}A) = (\det A)^{n-1}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="meaning">
+    <h2 id="meaning">Why the properties hold: the determinant is an area factor</h2>
+    <p>A 2×2 matrix turns the unit square into a parallelogram, and \(|\det A|\) is its area (for 3×3, a volume). Seen this way most properties are obvious: stretch every side by 2 and the area grows by \(2^2\), the volume by \(2^3\).</p>
+    <figure class="post-fig"><!--FIG:la-det-area-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 246" role="img" aria-label="det A is the area scale factor; scaling every row by k multiplies it by kⁿ"><rect class="mf-bg" x="26" y="14" width="186" height="170" rx="8"/><line class="mf-g" x1="44.6" y1="14" x2="44.6" y2="184"/><text class="mf-k" x="44.6" y="197" text-anchor="middle">0</text><line class="mf-g" x1="81.8" y1="14" x2="81.8" y2="184"/><text class="mf-k" x="81.8" y="197" text-anchor="middle">1</text><line class="mf-g" x1="119" y1="14" x2="119" y2="184"/><text class="mf-k" x="119" y="197" text-anchor="middle">2</text><line class="mf-g" x1="156.2" y1="14" x2="156.2" y2="184"/><text class="mf-k" x="156.2" y="197" text-anchor="middle">3</text><line class="mf-g" x1="193.4" y1="14" x2="193.4" y2="184"/><text class="mf-k" x="193.4" y="197" text-anchor="middle">4</text><line class="mf-g" x1="26" y1="162.8" x2="212" y2="162.8"/><text class="mf-k" x="21" y="166.8" text-anchor="end">0</text><line class="mf-g" x1="26" y1="120.2" x2="212" y2="120.2"/><text class="mf-k" x="21" y="124.2" text-anchor="end">1</text><line class="mf-g" x1="26" y1="77.8" x2="212" y2="77.8"/><text class="mf-k" x="21" y="81.8" text-anchor="end">2</text><line class="mf-g" x1="26" y1="35.2" x2="212" y2="35.2"/><text class="mf-k" x="21" y="39.2" text-anchor="end">3</text><line class="mf-ax" x1="26" y1="162.8" x2="212" y2="162.8"/><line class="mf-ax" x1="44.6" y1="14" x2="44.6" y2="184"/><path class="mf-dash" d="M44.6 162.8L81.8 162.8L81.8 120.2L44.6 120.2L44.6 162.8"/><path class="mf-sig" d="M44.6 162.8L156.2 120.2L193.4 35.2L81.8 77.8L44.6 162.8"/><path class="mf-fill" d="M44.6 162.8L156.2 120.2L193.4 35.2L81.8 77.8Z"/><text class="mf-h" x="119" y="103" text-anchor="middle">area 5</text><text class="mf-l" x="119" y="216" text-anchor="middle">A = [3 1; 1 2] · det A = 5</text><rect class="mf-bg" x="240" y="14" width="186" height="170" rx="8"/><line class="mf-g" x1="258.6" y1="14" x2="258.6" y2="184"/><text class="mf-k" x="258.6" y="197" text-anchor="middle">0</text><line class="mf-g" x1="295.8" y1="14" x2="295.8" y2="184"/><text class="mf-k" x="295.8" y="197" text-anchor="middle">1</text><line class="mf-g" x1="333" y1="14" x2="333" y2="184"/><text class="mf-k" x="333" y="197" text-anchor="middle">2</text><line class="mf-g" x1="370.2" y1="14" x2="370.2" y2="184"/><text class="mf-k" x="370.2" y="197" text-anchor="middle">3</text><line class="mf-g" x1="407.4" y1="14" x2="407.4" y2="184"/><text class="mf-k" x="407.4" y="197" text-anchor="middle">4</text><line class="mf-g" x1="240" y1="162.8" x2="426" y2="162.8"/><text class="mf-k" x="235" y="166.8" text-anchor="end">0</text><line class="mf-g" x1="240" y1="120.2" x2="426" y2="120.2"/><text class="mf-k" x="235" y="124.2" text-anchor="end">1</text><line class="mf-g" x1="240" y1="77.8" x2="426" y2="77.8"/><text class="mf-k" x="235" y="81.8" text-anchor="end">2</text><line class="mf-g" x1="240" y1="35.2" x2="426" y2="35.2"/><text class="mf-k" x="235" y="39.2" text-anchor="end">3</text><line class="mf-ax" x1="240" y1="162.8" x2="426" y2="162.8"/><line class="mf-ax" x1="258.6" y1="14" x2="258.6" y2="184"/><path class="mf-fill2" d="M258.6 162.8L333 162.8L333 77.8L258.6 77.8Z"/><path class="mf-sig2" d="M258.6 162.8L333 162.8L333 77.8L258.6 77.8L258.6 162.8"/><path class="mf-sig" d="M258.6 162.8L295.8 162.8L295.8 120.2L258.6 120.2L258.6 162.8"/><text class="mf-h" x="314.4" y="103" text-anchor="middle">×4</text><text class="mf-l" x="333" y="216" text-anchor="middle">det(2A) = 2²·det A</text><text class="mf-h" x="220" y="238" text-anchor="middle">3×3 (volume): det(2A) = 2³ det A</text></svg><!--/FIG--><figcaption>Left: \(\det A = 5\) is the area the unit square becomes · right: scaling every row by 2 multiplies the area by \(2^2\).</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="row-rules">
+    <h2 id="row-rules">Properties 1–6: row operations and special matrices</h2>
+    <ol>
+      <li><strong>Transpose:</strong> \(\det A^T = \det A\) — so every row rule also works for columns</li>
+      <li><strong>Swap two rows:</strong> the sign changes</li>
+      <li><strong>Multiply one row by \(k\):</strong> the determinant is multiplied by \(k\) (factors come out one row at a time)</li>
+      <li><strong>Add a multiple of another row</strong> \(R_i \leftarrow R_i + kR_j\): no change — the main tool of row reduction</li>
+      <li><strong>A zero row, two equal rows or proportional rows:</strong> \(\det = 0\)</li>
+      <li><strong>Triangular or diagonal matrix:</strong> \(\det\) = product of the diagonal entries</li>
+    </ol>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>If \(\begin{vmatrix} a & b & c \\ d & e & f \\ g & h & i \end{vmatrix} = 5\), find \(\begin{vmatrix} 2a & 2b & 2c \\ g & h & i \\ d + 3a & e + 3b & f + 3c \end{vmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>Take 2 out of row 1 (property 3) · subtract a multiple of row 1 from row 3 to get \((d, e, f)\) without changing the value (property 4)</p></li>
+        <li><p>The rows are now \((a, b, c), (g, h, i), (d, e, f)\); swapping rows 2 and 3 flips the sign (property 2)</p></li>
+      </ol>
+      <p class="answer">\(2\times(-5) = -10\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="algebra">
+    <h2 id="algebra">Properties 7–10: constants, products, inverses and powers</h2>
+    <ol start="7">
+      <li>\(\det(kA) = k^n\det A\) — because \(k\) sits in all \(n\) rows</li>
+      <li>\(\det(AB) = \det A\det B = \det(BA)\), even though \(AB \ne BA\)</li>
+      <li>\(\det(A^{-1}) = \dfrac{1}{\det A}\) — and \(A\) is invertible exactly when \(\det A \ne 0\)</li>
+      <li>\(\det(A^m) = (\det A)^m\)</li>
+    </ol>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>\(A\) is \(3\times3\) with \(\det A = 4\). Find \(\det(2A^{-1}A^T)\)</h3></div>
+      <ol class="steps"><li>\[ \det(2A^{-1}A^T) = 2^3\cdot\frac14\cdot4 = 8 \]</li></ol>
+      <p class="answer">8</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="adjugate">
+    <h2 id="adjugate">Property 11: the adjugate, where students slip most</h2>
+    <p>Taking determinants of \(A\operatorname{adj}A = (\det A)I\) gives \(\det A\cdot\det(\operatorname{adj}A) = (\det A)^n\):</p>
+    \[ \det(\operatorname{adj}A) = (\det A)^{n-1},\qquad \operatorname{adj}(kA) = k^{n-1}\operatorname{adj}A,\qquad \operatorname{adj}(\operatorname{adj}A) = (\det A)^{n-2}A \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>\(A\) is \(3\times3\) with \(\det A = 3\). Find \(\det(2\operatorname{adj}A)\) and \(\det(\operatorname{adj}(\operatorname{adj}A))\)</h3></div>
+      <ol class="steps">
+        <li>\[ \det(2\operatorname{adj}A) = 2^3\cdot3^{2} = 72 \]</li>
+        <li>\[ \det(\operatorname{adj}(\operatorname{adj}A)) = \det(3A) = 3^3\cdot3 = 81 \]</li>
+      </ol>
+      <p class="answer">72 and 81</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trap">
+    <h2 id="trap">Property 12: what has no formula</h2>
+    <div class="sr-trap"><b>Traps that appear every year</b>
+      <ul>
+        <li>\(\det(A + B) \ne \det A + \det B\) — add the matrices first (only row-by-row linearity exists)</li>
+        <li>\(\det(kA) \ne k\det A\) and \(\det(\operatorname{adj}A) \ne \det A\) — the exponent depends on \(n\)</li>
+        <li>\(\det(-A) = (-1)^n\det A\) — unchanged for 2×2 but sign-flipped for 3×3</li>
+        <li>\(|A|\) is not an absolute value; determinants can be negative</li>
+      </ul>
+    </div>
+    <p>A bonus trick: if every row has the same sum, add all columns into the first column and take that sum out as a factor. For example, the matrix with \(a\) on the diagonal and \(b\) elsewhere has \(\det = (a - b)^{n-1}(a + (n - 1)b)\).</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/determinants/#exam-shortcuts">Determinants in full: exam shortcuts D22–D25 with proofs</a></li>
+        <li><a href="/learn/linear-algebra/inverse/">The inverse of a matrix and the adjugate</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-a">Exam set A: 18 determinant and matrix problems</a></li>
+        <li><a href="/en/blog/determinant-and-inverse-matrix/">Article: how to find a determinant and an inverse (2×2, 3×3)</a></li>
+        <li><a href="/en/blog/cramers-rule/">Article: how to use Cramer's rule</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

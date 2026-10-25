@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving Linear Systems Numerically: Gauss, LU, Jacobi or Gauss–Seidel? | Ajarn Mod</title>
+<meta name="description" content="Numerical methods for linear systems compared: Gaussian elimination with pivoting, LU, Cholesky, Jacobi, Gauss–Seidel, SOR, convergence and the condition number, plus a decision table.">
+<meta name="keywords" content="Jacobi vs Gauss-Seidel, numerical methods for linear systems, LU decomposition, partial pivoting, SOR method, convergence of iterative methods, diagonally dominant, condition number, Gaussian elimination">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/">
+<meta property="og:title" content="Gauss, LU, Jacobi or Gauss–Seidel: Which to Use?">
+<meta property="og:description" content="Numerical methods for linear systems compared: Gaussian elimination with pivoting, LU, Cholesky, Jacobi, Gauss–Seidel, SOR, convergence and the condition number, plus a decision table.">
+<meta property="og:image" content="https://modsengineeringmath.com/images/og/en-blog-jacobi-vs-gauss-seidel.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gauss, LU, Jacobi or Gauss–Seidel: Which to Use?">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gauss, LU, Jacobi or Gauss–Seidel: Which to Use?">
+<meta name="twitter:description" content="Numerical methods for linear systems compared: Gaussian elimination with pivoting, LU, Cholesky, Jacobi, Gauss–Seidel, SOR, convergence and the condition number, plus a decision table.">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/og/en-blog-jacobi-vs-gauss-seidel.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="en" href="https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — latest updates" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/#article","headline":"Solving Linear Systems Numerically: Gauss, LU, Jacobi or Gauss–Seidel — Which Should You Use?","description":"Numerical methods for linear systems compared: Gaussian elimination with pivoting, LU, Cholesky, Jacobi, Gauss–Seidel, SOR, convergence and the condition number, plus a decision table.","inLanguage":"en","url":"https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/","mainEntityOfPage":"https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/","datePublished":"2026-10-25","dateModified":"2026-10-25","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Jacobi method","Gauss–Seidel method","LU decomposition","Gaussian elimination","Condition number"],"isPartOf":{"@id":"https://modsengineeringmath.com/en/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/en-blog-jacobi-vs-gauss-seidel.jpg"],"keywords":"Jacobi vs Gauss-Seidel, numerical methods for linear systems, LU decomposition, partial pivoting, SOR method, convergence of iterative methods, diagonally dominant, condition number, Gaussian elimination"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://modsengineeringmath.com/en/blog/"},{"@type":"ListItem","position":3,"name":"Solving Linear Systems Numerically: Gauss, LU, Jacobi or Gauss–Seidel — Which Should You Use?","item":"https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between Jacobi and Gauss–Seidel?","acceptedAnswer":{"@type":"Answer","text":"Jacobi computes every unknown of the new sweep from the previous sweep's values, while Gauss–Seidel uses each newly computed value immediately within the same sweep. Gauss–Seidel therefore usually converges about twice as fast and needs less memory, while Jacobi is easier to parallelise."}},{"@type":"Question","name":"When should an iterative method be used instead of LU?","acceptedAnswer":{"@type":"Answer","text":"When the system is very large and the matrix is mostly zeros (sparse), as in heat, electric-field or finite-element simulations with tens of thousands to millions of unknowns. Iterative methods need no full matrix storage and cause no fill-in. For dense systems of moderate size, use LU with partial pivoting."}},{"@type":"Question","name":"Why pivot in Gaussian elimination?","acceptedAnswer":{"@type":"Answer","text":"Choosing the largest entry in the column as the pivot keeps every multiplier at most 1, so round-off errors are not amplified. With a tiny pivot such as 0.0001, a machine that keeps 3 significant digits returns a completely wrong answer."}},{"@type":"Question","name":"When does an iterative method converge?","acceptedAnswer":{"@type":"Answer","text":"If the matrix is strictly diagonally dominant, Jacobi and Gauss–Seidel are guaranteed to converge. The exact condition is that the spectral radius of the iteration matrix is less than 1, and the number of sweeps needed is roughly the number of digits wanted divided by −log₁₀ of the spectral radius."}}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">Skip to content</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>Ajarn Mod · Engineering Mathematics</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="Main menu">
+      <a class="nav-home" href="/" >Home</a>
+      <a href="/learn/" >Library (Thai)</a>
+      <a href="/en/blog/" >Articles</a>
+      <a href="/solutions/" >Solutions (Thai)</a>
+      <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
+      <a href="/learn/en/"  lang="en">English</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+          <span class="nav-h">ลำดับ · อนุกรม · พิสูจน์</span>
+          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรมฉบับสรุป (หน้าเดียว)</a>
+          <a href="/learn/sequences-and-series/#pages">ลำดับและอนุกรมครบชุด 10 หน้า →</a>
+          <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navseq">ลำดับ · อนุกรม</button>
+        <div class="nav-list nav-list-wide" id="navseq">
+          <a href="/learn/sequences-and-series/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/sequences-and-series/series-lab/">แล็บรวม 12 ชุด</a>
+          <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบ · โจทย์สุ่ม</a>
+          <span class="nav-h">ลำดับ</span>
+          <a href="/learn/sequences-and-series/sequences/">ลำดับ · ลิมิตของลำดับ · เวียนเกิด</a>
+          <span class="nav-h">อนุกรมและการทดสอบ</span>
+          <a href="/learn/sequences-and-series/infinite-series/">อนุกรมอนันต์ · เรขาคณิต · อนุกรม p</a>
+          <a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้า · ผังเลือกใช้</a>
+          <a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ · ลู่เข้าสัมบูรณ์</a>
+          <span class="nav-h">อนุกรมกำลัง · เทย์เลอร์ · โลรองต์</span>
+          <a href="/learn/sequences-and-series/power-series/">อนุกรมกำลัง · รัศมีการลู่เข้า</a>
+          <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์ · เรซิดิว</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navmvc">หลายตัวแปร</button>
+        <div class="nav-list nav-list-wide" id="navmvc">
+          <a href="/learn/multivariable-calculus/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/multivariable-calculus/multivariable-lab/">แล็บรวม 19 ชุด</a>
+          <span class="nav-h">ฟังก์ชันและอนุพันธ์</span>
+          <a href="/learn/multivariable-calculus/functions-of-several-variables/">ฟังก์ชันหลายตัวแปร · contour</a>
+          <a href="/learn/multivariable-calculus/partial-derivatives/">อนุพันธ์ย่อย · ระนาบสัมผัส</a>
+          <a href="/learn/multivariable-calculus/gradient-directional-derivative/">Gradient · อนุพันธ์ตามทิศ</a>
+          <a href="/learn/multivariable-calculus/optimization/">ค่าสุดขีด · Lagrange · LSQ</a>
+          <span class="nav-h">อินทิกรัลหลายชั้น</span>
+          <a href="/learn/multivariable-calculus/multiple-integrals/">สองชั้น · สามชั้น · Jacobian</a>
+          <span class="nav-h">ฟังก์ชันเวกเตอร์ · แคลคูลัสเวกเตอร์</span>
+          <a href="/learn/multivariable-calculus/vector-functions/">เส้นโค้งในอวกาศ · ความโค้ง</a>
+          <a href="/learn/multivariable-calculus/vector-fields/">Divergence · Curl</a>
+          <a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้น · Green</a>
+          <a href="/learn/multivariable-calculus/surface-integrals/">ฟลักซ์ · Gauss · Stokes</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/multivariable-calculus/electrical-engineering/">วิศวกรรมไฟฟ้า</a>
+          <a href="/learn/multivariable-calculus/mechanical-engineering/">วิศวกรรมเครื่องกล</a>
+          <a href="/learn/multivariable-calculus/civil-engineering/">วิศวกรรมโยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">วงจรไฟฟ้า</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/dc-circuits/" >วงจรไฟฟ้ากระแสตรง</a>
+          <a href="/learn/dc-circuits/#lab">แล็บต่อวงจรจำลอง</a>
+          <a href="/learn/dc-circuits/#problems">โจทย์วงจร 4 ระดับ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/buck-ccm-analysis/">บั๊ก CCM: ไล่วงจรหาดิวตี้ไซเคิล</a>
+          <a href="/learn/power-electronics/buck-dcm-analysis/">บั๊ก DCM: ดิวตี้ตามโหลด</a>
+          <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ย · สเตตสเปซ</a>
+          <a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอนบั๊กทุกแบบ</a>
+          <a href="/learn/power-electronics/buck-design-lab/">ออกแบบบั๊ก + โปรแกรมโหลด</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/ac-induction-motor/" >คู่มือมอเตอร์ AC ฉบับสมบูรณ์ · กราฟ T–n</a>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" >ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
+          <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+          <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
+        </div>
+      </div>
+      <a href="/#watch" >Videos</a>
+      <a href="/tools/lesson-editor/" >Tools</a>
+      <a href="/about/" >About Ajarn Mod</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="Search the site" aria-haspopup="dialog" aria-controls="searchDlg" title="Search (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="Search the site">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="Search lessons, formulas, articles e.g. Laplace, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="Search terms" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="Close search">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="Search results"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">Type to search, in English or Thai</p>
+</dialog>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="Contents"><details open><summary>Contents</summary><ol><li><a href="#map">The big picture: direct versus iterative</a></li><li><a href="#direct">Direct methods: Gauss, LU, Cholesky and Thomas</a></li><li><a href="#iterative">Iterative methods: Jacobi versus Gauss–Seidel</a></li><li><a href="#converge">When they converge, and how SOR speeds things up</a></li><li><a href="#condition">The condition number: how far can you trust the answer?</a></li><li><a href="#choose">Decision table</a></li><li><a href="#next">Continue in the library (in Thai)</a></li><li><a href="#faq">Frequently asked questions</a></li><li><a href="#more-posts">More articles worth reading</a></li></ol></details></nav></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Jacobi vs Gauss–Seidel</li></ol>
+      <nav class="lang-sw" aria-label="Language"><a href="/blog/jacobi-vs-gauss-seidel/" hreflang="th" lang="th">TH<small>ภาษาไทย</small></a><span aria-current="true" lang="en">EN<small>English</small></span></nav>
+      <p class="eyebrow">// Article · Numerical methods</p>
+      <h1>Solving Linear Systems Numerically: Gauss, LU, Jacobi or Gauss–Seidel — Which Should You Use?</h1>
+      <p class="lede">Circuit simulators, structural software and heat models must solve <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold">x</mi><mo>=</mo><mi mathvariant="bold">b</mi></mrow><annotation encoding="application/x-tex">A\mathbf x = \mathbf b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathbf">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">b</span></span></span></span> with thousands to millions of unknowns, where classroom methods are not enough. This article compares all the main methods at a glance: how each works, how fast it is, and when to choose it.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <time datetime="2026-10-25">25 Oct 2026</time></span></div>
+      <div class="tldr">
+        <b>The 30-second summary</b>
+        <ul>
+          <li><strong>Direct methods</strong> (Gauss, LU, Cholesky, Thomas) finish in a fixed number of steps; best for dense, moderate-size systems; always pivot</li>
+          <li><strong>Iterative methods</strong> (Jacobi, Gauss–Seidel, SOR) refine a guess each sweep; best for large sparse systems</li>
+          <li>Gauss–Seidel is usually about twice as fast as Jacobi; SOR with a good <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span></span></span></span> is several times faster still</li>
+          <li>Before trusting an answer, check the <strong>condition number</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\kappa(A)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">κ</span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mclose">)</span></span></span></span>: about <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mi>κ</mi></mrow><annotation encoding="application/x-tex">\log_{10}\kappa</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9386em;vertical-align:-0.2441em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">κ</span></span></span></span> digits may be lost</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><nav class="toc" aria-label="Contents"><details open><summary>Contents</summary><ol><li><a href="#map">The big picture: direct versus iterative</a></li><li><a href="#direct">Direct methods: Gauss, LU, Cholesky and Thomas</a></li><li><a href="#iterative">Iterative methods: Jacobi versus Gauss–Seidel</a></li><li><a href="#converge">When they converge, and how SOR speeds things up</a></li><li><a href="#condition">The condition number: how far can you trust the answer?</a></li><li><a href="#choose">Decision table</a></li><li><a href="#next">Continue in the library (in Thai)</a></li><li><a href="#faq">Frequently asked questions</a></li><li><a href="#more-posts">More articles worth reading</a></li></ol></details></nav></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="map">
+    <h2 id="map">The big picture: direct versus iterative</h2>
+    <figure class="post-fig"><!--FIG:la-num-map-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 318" role="img" aria-label="Map of methods for solving Ax = b"><rect class="mf-box" x="160" y="8" width="120" height="34" rx="9"/><text class="mf-h" x="220" y="29" text-anchor="middle">A x = b</text><rect class="mf-boxa" x="16" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="81" text-anchor="middle">Direct methods</text><text class="mf-s" x="111" y="96" text-anchor="middle">finite number of steps</text><rect class="mf-boxb" x="234" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="81" text-anchor="middle">Iterative methods</text><text class="mf-s" x="329" y="96" text-anchor="middle">refine a guess each sweep</text><line class="mf-thin" x1="200" y1="42" x2="111" y2="63"/><path class="mf-arrowh" d="M111 63L116.6 58.9L117.9 64.2Z"/><line class="mf-thin" x1="240" y1="42" x2="329" y2="63"/><path class="mf-arrowh" d="M329 63L322.1 64.2L323.4 58.9Z"/><rect class="mf-box" x="16" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="137" text-anchor="middle">Gauss + pivoting / LU</text><text class="mf-s" x="111" y="152" text-anchor="middle">dense, general · ⅔n³ flops</text><line class="mf-thin" x1="111" y1="104" x2="111" y2="120"/><rect class="mf-box" x="16" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="187" text-anchor="middle">Cholesky A = LLᵀ</text><text class="mf-s" x="111" y="202" text-anchor="middle">symmetric pos. definite</text><line class="mf-thin" x1="111" y1="160" x2="111" y2="170"/><rect class="mf-box" x="16" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="237" text-anchor="middle">Thomas (TDMA)</text><text class="mf-s" x="111" y="252" text-anchor="middle">tridiagonal · O(n)</text><line class="mf-thin" x1="111" y1="210" x2="111" y2="220"/><rect class="mf-box" x="234" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="137" text-anchor="middle">Jacobi</text><text class="mf-s" x="329" y="152" text-anchor="middle">old values · parallel</text><line class="mf-thin" x1="329" y1="104" x2="329" y2="120"/><rect class="mf-box" x="234" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="187" text-anchor="middle">Gauss–Seidel</text><text class="mf-s" x="329" y="202" text-anchor="middle">new values at once</text><line class="mf-thin" x1="329" y1="160" x2="329" y2="170"/><rect class="mf-box" x="234" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="237" text-anchor="middle">SOR (ω) · CG</text><text class="mf-s" x="329" y="252" text-anchor="middle">large sparse systems</text><line class="mf-thin" x1="329" y1="210" x2="329" y2="220"/><rect class="mf-fill2" x="16" y="274" width="408" height="36" rx="9"/><text class="mf-t" x="220" y="290" text-anchor="middle">Check κ(A): about log₁₀ κ digits may be lost</text><text class="mf-s" x="220" y="304" text-anchor="middle">iterations converge if diagonally dominant or ρ(T) < 1</text></svg><!--/FIG--><figcaption>Two families of methods; choose by size, sparsity and the structure of the matrix.</figcaption></figure>
+    <p>Cramer's rule is not on this map because its cost grows factorially: a 20-unknown system needs about <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>×</mo><msup><mn>10</mn><mn>19</mn></msup></mrow><annotation encoding="application/x-tex">5\times10^{19}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">19</span></span></span></span></span></span></span></span></span></span></span></span> multiplications against about 2,700 for Gaussian elimination (see the <a href="/en/blog/cramers-rule/">Cramer's rule article</a>).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="direct">
+    <h2 id="direct">Direct methods: Gauss, LU, Cholesky and Thomas</h2>
+    <p><strong>Gaussian elimination</strong> zeroes everything below the diagonal and then back-substitutes, using about <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>2</mn><mn>3</mn></mfrac><msup><mi>n</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\tfrac23n^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span> flops. The crucial detail is <strong>partial pivoting</strong>: use the largest entry in the column as the pivot. On a machine keeping 3 significant digits:</p>
+    <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mn>0.0001</mn><mi>x</mi><mo>+</mo><mi>y</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr></mtable><mspace width="2em"/><mtext>no pivoting: </mtext><mi>x</mi><mo>=</mo><mn>0</mn><mtext> </mtext><mo stretchy="false">(</mo><mtext>wrong</mtext><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mtext>pivoting: </mtext><mi>x</mi><mo>=</mo><mn>1.00</mn><mtext> </mtext><mo stretchy="false">(</mo><mtext>right</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\begin{aligned} 0.0001x + y &amp;= 1 \\ x + y &amp;= 2 \end{aligned} \qquad \text{no pivoting: } x = 0\ (\text{wrong}),\qquad \text{pivoting: } x = 1.00\ (\text{right})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.75em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.0001</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.75em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">no pivoting: </span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mspace"> </span><span class="mopen">(</span><span class="mord text"><span class="mord">wrong</span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">pivoting: </span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1.00</span><span class="mspace"> </span><span class="mopen">(</span><span class="mord text"><span class="mord">right</span></span><span class="mclose">)</span></span></span></span></span>
+    <p>The multiplier <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>0.0001</mn><mo>=</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">1/0.0001 = 10^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/0.0001</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span> makes <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">1 - 10^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span> round to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1.00</mn><mo>×</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">-1.00\times10^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1.00</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span>, wiping out the information in the first equation. Try other digit counts in the <a href="/learn/linear-algebra/numerical-methods/#pivoting">pivoting lab</a> (in Thai).</p>
+    <ul>
+      <li><strong>LU factorisation</strong> is Gaussian elimination that keeps the multipliers in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span>. Factor once, then each new <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">b</mi></mrow><annotation encoding="application/x-tex">\mathbf b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">b</span></span></span></span> costs only <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≈</mo><mn>2</mn><msup><mi>n</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\approx 2n^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4831em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> — ideal for a circuit whose sources change but whose structure does not.</li>
+      <li><strong>Cholesky</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>L</mi><msup><mi>L</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">A = LL^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord mathnormal">L</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span> is for symmetric positive definite matrices such as the conductance matrix of a resistor network: twice as fast as LU and no pivoting.</li>
+      <li><strong>Thomas</strong> handles tridiagonal matrices (heat rods, ladder networks) in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>; a rod held at 100 °C and 0 °C with 4 interior nodes gives <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mn>80</mn><mo separator="true">,</mo><mn>60</mn><mo separator="true">,</mo><mn>40</mn><mo separator="true">,</mo><mn>20</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">T = (80, 60, 40, 20)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">80</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">60</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">40</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">20</span><span class="mclose">)</span></span></span></span> °C.</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="iterative">
+    <h2 id="iterative">Iterative methods: Jacobi versus Gauss–Seidel</h2>
+    <p>Both solve equation <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> using current estimates of the other unknowns; the only difference is whether they use the “old” or the “new” values.</p>
+    <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Jacobi: </mtext><msubsup><mi>x</mi><mi>i</mi><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup><mo>=</mo><mfrac><mrow><msub><mi>b</mi><mi>i</mi></msub><mo>−</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo mathvariant="normal">≠</mo><mi>i</mi></mrow></munder><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msubsup><mi>x</mi><mi>j</mi><mrow><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow></msubsup></mrow><msub><mi>a</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub></mfrac><mo separator="true">,</mo><mspace width="2em"/><mtext>Gauss–Seidel: use </mtext><msubsup><mi>x</mi><mi>j</mi><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup><mtext> at once for </mtext><mi>j</mi><mo>&lt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">\text{Jacobi: } x_i^{(k+1)} = \frac{b_i - \sum_{j\ne i}a_{ij}x_j^{(k)}}{a_{ii}},\qquad \text{Gauss–Seidel: use } x_j^{(k+1)} \text{ at once for } j \lt i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3217em;vertical-align:-0.2769em;"></span><span class="mord text"><span class="mord">Jacobi: </span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4231em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.7066em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8706em;"><span style="top:-2.3588em;"><span class="pstrut" style="height:3.0448em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ii</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.2748em;"><span class="pstrut" style="height:3.0448em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.8706em;"><span class="pstrut" style="height:3.0448em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1864em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight"><span class="mrel mtight"><span class="mord vbox mtight"><span class="thinbox mtight"><span class="rlap mtight"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord mtight"><span class="mrel mtight"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel mtight">=</span></span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4231em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.413em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">Gauss–Seidel: use </span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4231em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.413em;"><span></span></span></span></span></span></span><span class="mord text"><span class="mord"> at once for </span></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span>
+    <p>The system <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>x</mi><mo>−</mo><mi>y</mi><mo>+</mo><mi>z</mi><mo>=</mo><mn>7</mn><mo separator="true">,</mo><mtext> </mtext><mn>4</mn><mi>x</mi><mo>−</mo><mn>8</mn><mi>y</mi><mo>+</mo><mi>z</mi><mo>=</mo><mo>−</mo><mn>21</mn><mo separator="true">,</mo><mtext> </mtext><mo>−</mo><mn>2</mn><mi>x</mi><mo>+</mo><mi>y</mi><mo>+</mo><mn>5</mn><mi>z</mi><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">4x - y + z = 7,\ 4x - 8y + z = -21,\ -2x + y + 5z = 15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">7</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">8</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord">21</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">−</span><span class="mord">2</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span> has solution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2, 4, 3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mclose">)</span></span></span></span>; start from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1, 2, 2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span>:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sweep</th><th>Jacobi</th><th>Gauss–Seidel</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>(1.750, 3.375, 3.000)</td><td>(1.750, 3.750, 2.950)</td></tr>
+          <tr><td>2</td><td>(1.844, 3.875, 3.025)</td><td>(1.950, 3.969, 2.986)</td></tr>
+          <tr><td>3</td><td>(1.963, 3.925, 2.963)</td><td>(1.996, 3.996, 2.999)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure class="post-fig"><!--FIG:la-iter-conv-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 250" role="img" aria-label="Error after each sweep: Jacobi vs Gauss–Seidel (log scale)"><rect class="mf-bg" x="46" y="14" width="380" height="196" rx="8"/><line class="mf-g" x1="46" y1="14" x2="46" y2="210"/><text class="mf-k" x="46" y="223" text-anchor="middle">0</text><line class="mf-g" x1="100.3" y1="14" x2="100.3" y2="210"/><text class="mf-k" x="100.3" y="223" text-anchor="middle">2</text><line class="mf-g" x1="154.6" y1="14" x2="154.6" y2="210"/><text class="mf-k" x="154.6" y="223" text-anchor="middle">4</text><line class="mf-g" x1="208.9" y1="14" x2="208.9" y2="210"/><text class="mf-k" x="208.9" y="223" text-anchor="middle">6</text><line class="mf-g" x1="263.1" y1="14" x2="263.1" y2="210"/><text class="mf-k" x="263.1" y="223" text-anchor="middle">8</text><line class="mf-g" x1="317.4" y1="14" x2="317.4" y2="210"/><text class="mf-k" x="317.4" y="223" text-anchor="middle">10</text><line class="mf-g" x1="371.7" y1="14" x2="371.7" y2="210"/><text class="mf-k" x="371.7" y="223" text-anchor="middle">12</text><line class="mf-g" x1="426" y1="14" x2="426" y2="210"/><text class="mf-k" x="426" y="223" text-anchor="middle">14</text><line class="mf-g" x1="46" y1="210" x2="426" y2="210"/><text class="mf-k" x="41" y="214" text-anchor="end">-8</text><line class="mf-g" x1="46" y1="168.7" x2="426" y2="168.7"/><text class="mf-k" x="41" y="172.7" text-anchor="end">-6</text><line class="mf-g" x1="46" y1="127.5" x2="426" y2="127.5"/><text class="mf-k" x="41" y="131.5" text-anchor="end">-4</text><line class="mf-g" x1="46" y1="86.2" x2="426" y2="86.2"/><text class="mf-k" x="41" y="90.2" text-anchor="end">-2</text><line class="mf-g" x1="46" y1="44.9" x2="426" y2="44.9"/><text class="mf-k" x="41" y="48.9" text-anchor="end">0</text><line class="mf-ax" x1="46" y1="44.9" x2="426" y2="44.9"/><text class="mf-l" x="424" y="236" text-anchor="end">sweep k</text><text class="mf-l" x="52" y="28" text-anchor="start">log₁₀ error</text><path class="mf-sigd" d="M46 38.7L73.1 49.2L100.3 61.6L127.4 68.2L154.6 78.6L181.7 91L208.9 97.6L236 108L263.1 120.4L290.3 127L317.4 137.4L344.6 149.8L371.7 156.4L398.9 166.8L426 179.3"/><path class="mf-sig" d="M46 38.7L73.1 57.4L100.3 71.8L127.4 93.6L154.6 109.6L181.7 130.3L208.9 147.2L236 167.2L263.1 184.8L290.3 204.2"/><circle class="mf-dot" cx="46" cy="38.7" r="2.6"/><circle class="mf-dot" cx="73.1" cy="57.4" r="2.6"/><circle class="mf-dot" cx="100.3" cy="71.8" r="2.6"/><circle class="mf-dot" cx="127.4" cy="93.6" r="2.6"/><circle class="mf-dot" cx="154.6" cy="109.6" r="2.6"/><circle class="mf-dot" cx="181.7" cy="130.3" r="2.6"/><circle class="mf-dot" cx="208.9" cy="147.2" r="2.6"/><circle class="mf-dot" cx="236" cy="167.2" r="2.6"/><circle class="mf-dot" cx="263.1" cy="184.8" r="2.6"/><circle class="mf-dot" cx="290.3" cy="204.2" r="2.6"/><line class="mf-sigd" x1="219.7" y1="30.5" x2="243.7" y2="30.5"/><text class="mf-t" x="249.7" y="34.5" text-anchor="start">Jacobi ρ ≈ 0.335</text><line class="mf-sig" x1="219.7" y1="48.5" x2="243.7" y2="48.5"/><text class="mf-t" x="249.7" y="52.5" text-anchor="start">Gauss–Seidel ρ = 0.125</text><line class="mf-dash" x1="46" y1="168.7" x2="426" y2="168.7"/><text class="mf-k" x="51.4" y="163.7" text-anchor="start">10⁻⁶</text></svg><!--/FIG--><figcaption>Gauss–Seidel's error shrinks about 8× per sweep (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>0.125</mn></mrow><annotation encoding="application/x-tex">\rho = 0.125</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.125</span></span></span></span>), Jacobi's about 3× (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>≈</mo><mn>0.335</mn></mrow><annotation encoding="application/x-tex">\rho \approx 0.335</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6776em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.335</span></span></span></span>).</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="converge">
+    <h2 id="converge">When they converge, and how SOR speeds things up</h2>
+    <ul>
+      <li><strong>Strict diagonal dominance</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><msub><mi>a</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub><mi mathvariant="normal">∣</mi><mo>&gt;</mo><msub><mo>∑</mo><mrow><mi>j</mi><mo mathvariant="normal">≠</mo><mi>i</mi></mrow></msub><mi mathvariant="normal">∣</mi><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|a_{ii}| \gt \sum_{j\ne i}|a_{ij}|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ii</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1858em;vertical-align:-0.4358em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1864em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight"><span class="mrel mtight"><span class="mord vbox mtight"><span class="thinbox mtight"><span class="rlap mtight"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord mtight"><span class="mrel mtight"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel mtight">=</span></span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">∣</span></span></span></span> in every row → guaranteed convergence. If it fails, try reordering the equations first.</li>
+      <li>The exact condition is a <strong>spectral radius</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false">(</mo><mi>T</mi><mo stretchy="false">)</mo><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\rho(T) \lt 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ρ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and about <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mo>−</mo><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mi>ρ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">d/(-\log_{10}\rho)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mopen">(</span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ρ</span><span class="mclose">)</span></span></span></span> sweeps are needed to gain <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span> digits.</li>
+      <li><strong>SOR</strong> overshoots the Gauss–Seidel value by a factor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>&lt;</mo><mi>ω</mi><mo>&lt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1 \lt \omega \lt 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6835em;vertical-align:-0.0391em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>. A 10-unknown heat rod needs about 334 sweeps (Jacobi) and 167 (Gauss–Seidel), but SOR with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>≈</mo><mn>1.56</mn></mrow><annotation encoding="application/x-tex">\omega \approx 1.56</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4831em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.56</span></span></span></span> needs only about 24.</li>
+    </ul>
+    <p>Compare all three side by side in the <a href="/learn/linear-algebra/numerical-methods/#iter-lab">Jacobi · Gauss–Seidel · SOR simulator</a> and watch heat spread through a plate sweep by sweep in the <a href="/learn/linear-algebra/numerical-methods/#heat">heat-plate lab</a> (both in Thai).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="condition">
+    <h2 id="condition">The condition number: how far can you trust the answer?</h2>
+    <p>When equations are nearly parallel, a tiny change in the data moves the answer a lot. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mn>2</mn><mo separator="true">,</mo><mtext> </mtext><mi>x</mi><mo>+</mo><mn>1.0001</mn><mi>y</mi><mo>=</mo><mn>2.0001</mn></mrow><annotation encoding="application/x-tex">x + y = 2,\ x + 1.0001y = 2.0001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1.0001</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2.0001</span></span></span></span> has solution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1, 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>, but changing the right-hand side to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.0002</mn></mrow><annotation encoding="application/x-tex">2.0002</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2.0002</span></span></span></span> gives <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0, 2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span>. Its condition number <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mi mathvariant="normal">∞</mi></msub><mo>≈</mo><mn>4</mn><mo>×</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">\kappa_\infty \approx 4\times10^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6331em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">κ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span> means 4–5 digits may be lost.</p>
+    <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mo stretchy="false">∥</mo><mi>δ</mi><mi mathvariant="bold">x</mi><mo stretchy="false">∥</mo></mrow><mrow><mo stretchy="false">∥</mo><mi mathvariant="bold">x</mi><mo stretchy="false">∥</mo></mrow></mfrac><mo>≤</mo><mi>κ</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mtext> </mtext><mfrac><mrow><mo stretchy="false">∥</mo><mi>δ</mi><mi mathvariant="bold">b</mi><mo stretchy="false">∥</mo></mrow><mrow><mo stretchy="false">∥</mo><mi mathvariant="bold">b</mi><mo stretchy="false">∥</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\lVert\delta\mathbf x\rVert}{\lVert\mathbf x\rVert} \le \kappa(A)\,\frac{\lVert\delta\mathbf b\rVert}{\lVert\mathbf b\rVert}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">∥</span><span class="mord mathbf">x</span><span class="mclose">∥</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">∥</span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span><span class="mord mathbf">x</span><span class="mclose">∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord mathnormal">κ</span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">∥</span><span class="mord mathbf">b</span><span class="mclose">∥</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">∥</span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span><span class="mord mathbf">b</span><span class="mclose">∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">Decision table</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Your system</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>2–3 unknowns by hand</td><td>Cramer's rule or row reduction</td></tr>
+          <tr><td>Dense, moderate size, several <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">b</mi></mrow><annotation encoding="application/x-tex">\mathbf b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">b</span></span></span></span></td><td>LU with pivoting (<code>numpy.linalg.solve</code>, MATLAB <code>A\b</code>)</td></tr>
+          <tr><td>Symmetric positive definite</td><td>Cholesky</td></tr>
+          <tr><td>Tridiagonal</td><td>Thomas</td></tr>
+          <tr><td>Large, sparse, diagonally dominant</td><td>Gauss–Seidel or SOR</td></tr>
+          <tr><td>Very large, symmetric positive definite</td><td>Conjugate gradient + preconditioner</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/numerical-methods/">Numerical solution of linear systems in full: formulas N1–N26, examples and five simulators</a></li>
+        <li><a href="/learn/linear-algebra/linear-systems/">Systems of linear equations and Gaussian elimination by hand</a></li>
+        <li><a href="/learn/linear-algebra/eigenvalues/">Eigenvalues: where the spectral radius comes from</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-c">Numerical-methods exam problems with solutions</a></li>
+        <li><a href="/en/blog/matrix-rank/">Article: the rank of a matrix and the existence of solutions</a></li>
+      </ul>
+    </section>
+
+    <section class="faq" aria-labelledby="faq"><h2 id="faq">Frequently asked questions</h2><details><summary>What is the difference between Jacobi and Gauss–Seidel?</summary><p>Jacobi computes every unknown of the new sweep from the previous sweep's values, while Gauss–Seidel uses each newly computed value immediately within the same sweep. Gauss–Seidel therefore usually converges about twice as fast and needs less memory, while Jacobi is easier to parallelise.</p></details><details><summary>When should an iterative method be used instead of LU?</summary><p>When the system is very large and the matrix is mostly zeros (sparse), as in heat, electric-field or finite-element simulations with tens of thousands to millions of unknowns. Iterative methods need no full matrix storage and cause no fill-in. For dense systems of moderate size, use LU with partial pivoting.</p></details><details><summary>Why pivot in Gaussian elimination?</summary><p>Choosing the largest entry in the column as the pivot keeps every multiplier at most 1, so round-off errors are not amplified. With a tiny pivot such as 0.0001, a machine that keeps 3 significant digits returns a completely wrong answer.</p></details><details><summary>When does an iterative method converge?</summary><p>If the matrix is strictly diagonally dominant, Jacobi and Gauss–Seidel are guaranteed to converge. The exact condition is that the spectral radius of the iteration matrix is less than 1, and the number of sweeps needed is roughly the number of digits wanted divided by −log₁₀ of the spectral radius.</p></details></section>
+    <div class="share" aria-label="Share this page">
+  <span class="mono">Share</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Fen%2Fblog%2Fjacobi-vs-gauss-seidel%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Fen%2Fblog%2Fjacobi-vs-gauss-seidel%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Fen%2Fblog%2Fjacobi-vs-gauss-seidel%2F&amp;text=Solving%20Linear%20Systems%20Numerically%3A%20Gauss%2C%20LU%2C%20Jacobi%20or%20Gauss%E2%80%93Seidel%20%E2%80%94%20Which%20Should%20You%20Use%3F" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/en/blog/jacobi-vs-gauss-seidel/" data-share-title="Solving Linear Systems Numerically: Gauss, LU, Jacobi or Gauss–Seidel — Which Should You Use?">Copy link</button>
+</div><section class="post-more" aria-labelledby="more-posts"><h2 id="more-posts">More articles worth reading</h2><div class="blog-grid">
+  <a class="blog-card" href="/en/blog/cramers-rule/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>Cramer's Rule: How to Use It, Why It Works, and When Not to Use It</b>
+    <span class="bc-sum">Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  </a>
+  <a class="blog-card" href="/en/blog/determinant-properties/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) and the Traps</b>
+    <span class="bc-sum">The 12 determinant properties used in entrance exams and engineering mathematics: row operations, det(kA) = kⁿ det A, products, inverses and the…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  </a>
+  <a class="blog-card" href="/en/blog/matrix-determinant-roadmap/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>Learning Matrices and Determinants: A 7-Step Roadmap from High School and Entrance Exams to Engineering Mathematics</b>
+    <span class="bc-sum">A roadmap for matrices, determinants, rank, Cramer's rule and numerical methods: what to learn first, how far entrance exams go, what university…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  </a>
+</div></section>
+  </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>Engineering mathematics you truly understand, not formulas you memorise.</p>
+    </div>
+    <nav aria-label="Site links">
+      <b class="mono">Site</b>
+      <a href="/">Home</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/updates/">Latest site updates (Thai)</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
+      <a href="/solutions/">Step-by-step worked solutions (Thai)</a>
+      <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
+      <a href="/learn/sequences-and-series/">ลำดับและอนุกรม (ครบชุด)</a>
+      <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์และแมคลอริน</a>
+      <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์และเรซิดิว</a>
+      <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบลำดับและอนุกรม</a>
+      <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+      <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
+      <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลทางวิศวกรรม</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
+      <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
+      <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
+      <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
+      <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงลาปลาซ</a>
+      <a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผัน (Inverse Laplace)</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ยและสเตตสเปซของบั๊กคอนเวอร์เตอร์</a>
+      <a href="/learn/power-electronics/buck-design-lab/">แล็บออกแบบบั๊ก: เลือกชิ้นส่วนและโปรแกรมโหลด</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
+      <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/lesson-editor/">Lesson editor</a>
+      <a href="/about/">About Ajarn Mod</a>
+    </nav>
+    <nav aria-label="Follow">
+      <b class="mono">Follow</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=bf101792" defer></script>
+
+</body>
+</html>

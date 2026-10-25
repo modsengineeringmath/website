@@ -38,6 +38,7 @@
         (u.tag ? '<span class="tag">' + esc(u.tag) + "</span>" : "") +
         '<time datetime="' + esc(u.date) + '">' + thaiDate(u.date) + "</time>" + (rel ? "<span>· " + rel + "</span>" : "") +
         "</div><p>" + esc(u.text) + "</p>" +
+        (u.links && u.links.length ? '<div class="hu-chips">' + u.links.map(function (l) { return '<a href="' + esc(l.href) + '">' + esc(l.text) + "</a>"; }).join("") + "</div>" : "") +
         (u.link ? '<a class="post-link" href="' + esc(u.link) + '">' + esc(u.linkText || "อ่านต่อ") + " →</a>" : "") + "</li>";
     }).join("");
     buildFilters(items);

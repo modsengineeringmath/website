@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/en/blog/star-delta-timer-setting/#article","headline":"How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy","description":"How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel-cage motor: t = c·τm, a c table by load, dead time, KM3 phase order, surge current, I²t, energy and case studies.","inLanguage":"en","url":"https://modsengineeringmath.com/en/blog/star-delta-timer-setting/","mainEntityOfPage":"https://modsengineeringmath.com/en/blog/star-delta-timer-setting/","datePublished":"2026-10-19","dateModified":"2026-10-19","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Wye-delta starter","Induction motor","Motor starting","Numerical simulation"],"isPartOf":{"@id":"https://modsengineeringmath.com/en/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/en-blog-star-delta-timer-setting.jpg"],"keywords":"star delta timer setting, star delta timer how many seconds, wye delta transition time, star delta dead time, star delta changeover current, squirrel cage induction motor starting, mechanical time constant, closed transition star delta, star delta research, KM3 phase order"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://modsengineeringmath.com/en/blog/"},{"@type":"ListItem","position":3,"name":"How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy","item":"https://modsengineeringmath.com/en/blog/star-delta-timer-setting/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many seconds should a star–delta timer be set to?","acceptedAnswer":{"@type":"Answer","text":"Calculate the mechanical time constant τm = J·ωs/Tn and multiply it by c ≈ 2–4 depending on the load (centrifugal pump at 80 % ≈ 2.6, fan ≈ 2.9, including a 10 % voltage-dip margin). A 37 kW pump with a total J of 0.87 kg·m² gives about 1.5 s (set 2–3 s), while a 7.5 kW fan with a total J of 2.245 kg·m² gives about 21 s. Then confirm with a clamp meter that the star current has settled before the changeover."}},{"@type":"Question","name":"Does a longer timer reduce the current surge at the changeover?","acceptedAnswer":{"@type":"Answer","text":"Only the lasting part. The simulated pump and fan give a 1–3-cycle peak of about 7.6–10.5·In whatever the setting (DOL 8.9·In), because the peak is set by the difference between the delta voltage and the residual voltage in the motor. What a correct timer reduces is the time the current stays above 3·In after the changeover, for the fan from 0.96 s (8 s timer) to 0.05 s (20 s timer)."}},{"@type":"Question","name":"Is a longer dead time between KM2 and KM3 better?","acceptedAnswer":{"@type":"Answer","text":"No. The dead time must be long enough for the arc in KM2 to go out before KM3 closes (ready-made timers typically use about 30–80 ms), but lengthening it does not reduce the surge because the angle of the residual voltage keeps rotating. The simulations favour the shortest safe value and the lagging KM3 order L1→V2 L2→W2 L3→U2."}},{"@type":"Question","name":"What is star–delta really better at than a direct-on-line start?","acceptedAnswer":{"@type":"Answer","text":"It reduces the run-up current to 1/3, the sustained voltage dip to 1/3 and the supply I²t by 25–50 %. It does not save energy, and the rotor gets 30–55 % hotter than with DOL. On a generator set the changeover peak can even dip the voltage more than DOL does."}},{"@type":"Question","name":"How can the experiments in this article be reproduced?","acceptedAnswer":{"@type":"Answer","text":"Open the dynamic simulation lab on the Star–delta analysis page of the lesson library, or run node scripts/yd_research.mjs and python3 scripts/yd_check.py in the site's code repository, which use the same model as this article."}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -212,12 +212,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -649,11 +652,11 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     <span class="bc-sum">A full PID tuning course in one article: identify the process with a step test, tune with Ziegler–Nichols, Cohen–Coon, SIMC or relay, compare the…</span>
     <span class="bc-foot"><time datetime="2026-10-16">16 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
-  <a class="blog-card" href="/en/blog/convergence-test-flowchart/">
-    <span class="bc-tag mono">Sequences &amp; series</span>
-    <b>How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step</b>
-    <span class="bc-sum">Pick the right convergence test the first time: an 8-step flowchart (n-th term, geometric, p-series, telescoping, limit comparison, ratio, root,…</span>
-    <span class="bc-foot"><time datetime="2026-10-24">24 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  <a class="blog-card" href="/en/blog/cramers-rule/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>Cramer's Rule: How to Use It, Why It Works, and When Not to Use It</b>
+    <span class="bc-sum">Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
 </div></section>
   </article>
@@ -672,7 +675,8 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/">Home</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">Latest site updates (Thai)</a>
-      <a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">Step-by-step worked solutions (Thai)</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -694,6 +698,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -748,9 +755,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
-<script src="/assets/ee-kit.js?v=34c266f8" defer></script>
-<script src="/assets/yd-core.js?v=34c266f8" defer></script>
-<script src="/assets/yd-lab.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
+<script src="/assets/ee-kit.js?v=bf101792" defer></script>
+<script src="/assets/yd-core.js?v=bf101792" defer></script>
+<script src="/assets/yd-lab.js?v=bf101792" defer></script>
 </body>
 </html>

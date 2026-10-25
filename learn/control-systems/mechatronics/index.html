@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/mechatronics/#article","headline":"ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด","description":"ระบบควบคุมในงานเมคาทรอนิกส์ องค์ประกอบ เซนเซอร์ (เอนโค้ดเดอร์ Hall IMU วัดกระแส) แอคชูเอเตอร์ (มอเตอร์ DC BLDC สเต็ปเปอร์ เซอร์โว) ไดรเวอร์ H-bridge และ PWM ออกแบบลูปคาสเคดกระแส ความเร็ว ตำแหน่งทีละขั้นพร้อมตัวเลขจริง feedforward แรงเสียดทาน backlash เรโซแนนซ์และฟิลเตอร์ notch ความละเอียดเอนโค้ดเดอร์ และไอเดียโปรเจกต์เมคาทรอนิกส์มากมาย","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/mechatronics/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/mechatronics/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Mechatronics","Servomechanism","Cascade control","DC motor","Brushless DC motor","Rotary encoder","H-bridge","Pulse-width modulation","Feedforward control","Notch filter"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-mechatronics.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมเมคาทรอนิกส์: เซนเซอร์ แอคชูเอเตอร์ เซอร์โว และคาสเคด","item":"https://modsengineeringmath.com/learn/control-systems/mechatronics/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมเซอร์โวไดรฟ์ใช้ลูปซ้อนสามชั้น?","acceptedAnswer":{"@type":"Answer","text":"เพราะแต่ละชั้นจัดการปัญหาคนละความเร็ว ลูปกระแสในสุด (kHz) คุมแรงบิดและป้องกันกระแสเกิน ลูปความเร็ว (หลักร้อย Hz) ต้านการรบกวนจากโหลด ลูปตำแหน่งนอกสุด (หลักสิบ Hz) ทำให้ถึงเป้า ลูปในที่เร็วทำให้ลูปนอกเห็นพลานต์ที่ง่ายขึ้น และจำกัดค่าแต่ละชั้นได้อย่างปลอดภัย"}},{"@type":"Question","name":"แบนด์วิดท์ของแต่ละลูปควรห่างกันเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"กฎทั่วไปคือ 5 ถึง 10 เท่า เช่น ลูปกระแส 1–2 kHz ลูปความเร็ว 100–200 Hz ลูปตำแหน่ง 10–30 Hz ถ้าห่างน้อยกว่านั้น ลูปในจะเพิ่มเฟสล่าช้าให้ลูปนอกจนมาร์จินลดลง"}},{"@type":"Question","name":"เลือกมอเตอร์สำหรับโปรเจกต์อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"สเต็ปเปอร์เหมาะกับงานตำแหน่งเบา ๆ ไม่ต้องมีเซนเซอร์ (เครื่องพิมพ์ 3 มิติ) แต่หลุดขั้นได้ถ้าโหลดเกิน มอเตอร์ DC มีแปรงถ่านควบคุมง่าย ราคาถูก เหมาะกับหุ่นยนต์ล้อ BLDC/PMSM มีประสิทธิภาพสูงและเร็ว ต้องใช้ไดรเวอร์ FOC เหมาะกับโดรนและแขนกล ส่วนเซอร์โว RC รวมมอเตอร์ เกียร์ และตัวควบคุมตำแหน่งไว้ในตัว"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -209,12 +209,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -631,7 +634,8 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
-      <a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -653,6 +657,9 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -707,9 +714,9 @@ s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,1
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
-<script src="/assets/cs-core.js?v=34c266f8" defer></script>
-<script src="/assets/cs-ui.js?v=34c266f8" defer></script>
-<script src="/assets/cs-pid.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
+<script src="/assets/cs-core.js?v=bf101792" defer></script>
+<script src="/assets/cs-ui.js?v=bf101792" defer></script>
+<script src="/assets/cs-pid.js?v=bf101792" defer></script>
 </body>
 </html>

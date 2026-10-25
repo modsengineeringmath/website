@@ -159,7 +159,7 @@ export const TOPICS = [
     title: "พีชคณิตเชิงเส้น",
     en: "Linear Algebra",
     sym: "⊞",
-    summary: "เมทริกซ์ ดีเทอร์มิแนนต์ ระบบสมการ อินเวอร์ส กฎของคราเมอร์ ค่าเฉพาะและเวกเตอร์เฉพาะ พร้อมโจทย์วงจรไฟฟ้า ตั้งแต่ ม.ปลาย ถึง ป.โท",
+    summary: "เมทริกซ์ ดีเทอร์มิแนนต์ ระบบสมการ แรงก์ (ค่าลำดับขั้น) อินเวอร์ส กฎของคราเมอร์ ผลเฉลยเชิงตัวเลข (LU จาโคบี เกาส์-ไซเดล) ค่าเฉพาะ และแนวข้อสอบ 45 ข้อ พร้อมโจทย์วงจรไฟฟ้า ตั้งแต่ ม.ปลาย ถึง ป.โท",
     playlist: "PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO",
     sub: [
       { slug: "matrices", short: "เมทริกซ์", title: "เมทริกซ์และการดำเนินการ", en: "Matrices & Matrix Operations", sym: "[ ]", prefix: "M",
@@ -180,6 +180,13 @@ export const TOPICS = [
         summary: "เมทริกซ์อุบัติการณ์กับ KCL/KVL การไหลของกำลังเชิงเส้น ระบบมวล-สปริงหลายองศาอิสระและโหมดการสั่น วิธีสติฟเนส โครงข้อหมุน (truss) การปรับแก้งานรังวัดด้วยกำลังสองน้อยสุด และสมดุลโครงข่ายจราจร พร้อมแล็บ" },
       { slug: "matrix-lab", short: "แล็บเมทริกซ์", title: "แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ ดูการคูณทีละช่อง และการแปลง 2×2", en: "Matrix Lab", sym: "⊞", tag: "แล็บโต้ตอบ + เครื่องคิดเลข",
         summary: "ดีเทอร์มิแนนต์ อินเวอร์ส แก้ Ax = b และค่าเฉพาะด้วยเศษส่วนแม่นตรงทีละขั้น ดูการคูณเมทริกซ์ทีละช่อง และลากหลักของเมทริกซ์ 2×2 ดูพื้นที่กับทิศเวกเตอร์เฉพาะ" },
+      // added 2026-10-25 (numbers 7.10–7.12 stay stable; reading order is shown on the hub)
+      { slug: "rank", short: "แรงก์ (ค่าลำดับขั้น)", title: "ค่าลำดับขั้นของเมทริกซ์ (Rank): ลดแถว ไมเนอร์ พารามิเตอร์ k และการมีคำตอบของระบบสมการ", en: "Rank of a Matrix", sym: "r(A)", prefix: "R", tag: "บทเรียน + แล็บ 3 มิติ",
+        summary: "แรงก์คือจำนวนแถวอิสระ หาด้วยการลดแถวเป็นขั้นบันไดและด้วยไมเนอร์ โจทย์แรงก์มีพารามิเตอร์ k ทฤษฎีบทรูเช-กาเปลลี (มีคำตอบเดียว ไม่จำกัด ไม่มี) ปริภูมิหลัก ปริภูมิศูนย์ แรงก์-ภาวะศูนย์ และแรงก์ในวงจรกับระบบควบคุม พร้อมแล็บสามระนาบ" },
+      { slug: "numerical-methods", short: "ผลเฉลยเชิงตัวเลข", title: "การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้น: เกาส์ การสลับแถว LU โชเลสกี โทมัส จาโคบี เกาส์-ไซเดล SOR และเลขเงื่อนไข", en: "Numerical Solution of Linear Systems", sym: "x⁽ᵏ⁾", prefix: "N", tag: "บทเรียน + ซิมูเลเตอร์ 5 ชุด",
+        summary: "ทำไมคอมพิวเตอร์ไม่ใช้คราเมอร์ จำนวนการคำนวณ การกำจัดแบบเกาส์กับการสลับแถว (partial pivoting) LU และ PA = LU โชเลสกี อัลกอริทึมโทมัส วิธีทำซ้ำจาโคบี เกาส์-ไซเดล SOR เงื่อนไขการลู่เข้า รัศมีสเปกตรัม เลขเงื่อนไข และซิมูเลเตอร์แผ่นความร้อน" },
+      { slug: "exam-practice", short: "แนวข้อสอบ 45 ข้อ", title: "แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ แรงก์ และกฎของคราเมอร์ 45 ข้อ พร้อมเฉลย: เตรียมสอบเข้ามหาวิทยาลัยถึงคณิตศาสตร์วิศวกรรม", en: "Matrices, Determinants, Rank & Cramer's Rule: Exam Practice", sym: "✎", prefix: "X", tag: "แนวข้อสอบ + โจทย์สุ่ม",
+        summary: "45 ข้อพร้อมเฉลยทีละขั้น 3 ระดับ: เตรียมสอบเข้ามหาวิทยาลัย (A-Level) ป.ตรีพีชคณิตเชิงเส้น และวิธีเชิงตัวเลขกับงานวิศวกรรม พร้อมเครื่องสุ่มโจทย์ 10 แบบที่ตรวจคำตอบและแสดงเฉลยได้ไม่จำกัด" },
     ],
   },
   {
@@ -1115,13 +1122,26 @@ function nowHtml(data) {
     .join("");
 }
 
+// optional "links": [{ "href", "text" }] on an update entry → chips under the text (home box, /updates/, about)
+function updLinksHtml(u) {
+  return Array.isArray(u.links) && u.links.length
+    ? `<div class="hu-chips">${u.links.map((l) => `<a href="${esc(l.href)}">${esc(l.text)}</a>`).join("")}</div>`
+    : "";
+}
+// newest entry with a "hero" (short) text, else the newest with a link → the "ใหม่" pill at the top of the home page
+function heroNewHtml(data) {
+  const items = [...(data.updates || [])].sort((a, b) => b.date.localeCompare(a.date));
+  const u = items.find((x) => x.hero && x.link) || items.find((x) => x.link);
+  if (!u) return "";
+  return `<a class="hero-new" id="heroNew" href="${esc(u.link)}"><b>ใหม่ ${thaiDate(u.date)}</b><span>${esc(u.hero || u.text)}</span> →</a>`;
+}
 function feedHtml(data) {
   return [...(data.updates || [])]
     .sort((a, b) => b.date.localeCompare(a.date))
     .map(
       (u) => `<li class="post" data-tag="${esc(u.tag || "")}">
   <div class="post-meta">${u.tag ? `<span class="tag">${esc(u.tag)}</span>` : ""}<time datetime="${esc(u.date)}">${thaiDate(u.date)}</time></div>
-  <p>${esc(u.text)}</p>${u.link ? `<a class="post-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
+  <p>${esc(u.text)}</p>${updLinksHtml(u)}${u.link ? `<a class="post-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
 </li>`
     )
     .join("");
@@ -1138,7 +1158,7 @@ function homeUpdatesHtml(data, n = 6) {
       const fresh = u.date === newest;
       return `<li class="hu-item${i === 0 ? " hu-top" : ""}" data-tag="${esc(u.tag || "")}">
   <div class="hu-meta"><span class="hu-ic" aria-hidden="true">${UPD_ICON[u.tag] || "•"}</span>${u.tag ? `<span class="tag">${esc(u.tag)}</span>` : ""}<time datetime="${esc(u.date)}">${thaiDate(u.date)}</time>${fresh ? '<span class="hu-new">ใหม่</span>' : ""}</div>
-  <p class="hu-text">${esc(u.text)}</p>${u.link ? `<a class="hu-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
+  <p class="hu-text">${esc(u.text)}</p>${updLinksHtml(u)}${u.link ? `<a class="hu-link" href="${esc(u.link)}">${esc(u.linkText || "อ่านต่อ")} →</a>` : ""}
 </li>`;
     })
     .join("");
@@ -1555,6 +1575,8 @@ function solutionSchema(s, url, ogImageUrl) {
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for these series, plus hand-written guides.
 const MD_SERIES = ["sequences-and-series", "dc-circuits", "multivariable-calculus", "functions", "limits", "differential-calculus", "integral-calculus", "laplace-transform", "linear-algebra", "vector-algebra", "fourier-series", "power-electronics", "solar-pv", "ev-charging", "power-systems", "power-factor", "sensors-transducers", "motor-control", "plc", "en/motor-control", "en/plc"];
 const MD_GUIDES = [
+  { src: "src/md/linear-algebra.md", out: "learn/linear-algebra/guide.md", page: "/learn/linear-algebra/", title: "Linear algebra: matrices, determinants, rank, Cramer's rule & numerical solution of linear systems — complete guide (Thai, Markdown)",
+    desc: "13-page structure and reading path, key formulas with IDs (determinant and adjugate shortcuts, rank and Rouché–Capelli, Cramer with a parameter, LU / Cholesky / Thomas, Jacobi / Gauss–Seidel / SOR convergence, condition number), SymPy-verified example numbers, interactive labs, Thai/English articles and FAQ" },
   { src: "src/md/sequences-and-series.md", out: "learn/sequences-and-series/guide.md", page: "/learn/sequences-and-series/", title: "Sequences & series: from sequences to Laurent series — complete guide (Thai, Markdown)",
     desc: "11-page structure, study paths for university entrance / calculus II / engineering mathematics, 122 key formulas with IDs (sequences, infinite series, convergence tests, alternating series, power series, Taylor and Laurent series, residues, Z-transform ROC), convergence-test flowchart, verified example numbers, 12 interactive labs, Thai/English articles and FAQ" },
   { src: "src/md/multivariable-calculus.md", out: "learn/multivariable-calculus/guide.md", page: "/learn/multivariable-calculus/", title: "Multivariable & vector calculus — learning guide & formula summary (Thai, Markdown)", desc: "functions of several variables, partial derivatives, gradient and directional derivative, critical points and Lagrange multipliers, double and triple integrals with Jacobian, vector-valued functions, vector fields, line and surface integrals, Green's, divergence (Gauss) and Stokes' theorems, and applications in electrical, mechanical and civil engineering" },
@@ -1666,6 +1688,8 @@ for (const file of walk(pagesDir)) {
     "<!--feed-->": () => feedHtml(updates),
     "<!--home-updates-->": () => homeUpdatesHtml(updates, 6),
     "<!--updates-count-->": () => String((updates.updates || []).length),
+    "<!--hero-new-->": () => heroNewHtml(updates),
+    "<!--updates-date-->": () => { const d = [...(updates.updates || [])].map((u) => u.date).sort().pop(); return d ? thaiDate(d) : ""; },
     "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${lang === "en" ? enDate(meta.updated) : thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
@@ -1797,10 +1821,13 @@ const LABS = [
   ["Virtual electric & magnetic field lab (Physics 2)", "vector-algebra/field-lab", "draggable point charges with field vectors, RK4 field lines, equipotentials and potential map, superposition breakdown at a probe point, Coulomb force on a selected charge, zero-field point, parallel plates; long straight wires with B = μ0I/(2πr), field lines as A_z contours and force per metre between wires; charged particle in uniform E and B (circle, velocity selector, cycloid, E×B drift) with a Boris integrator; 3D superposition scene"],
   ["Virtual AC circuit lab (phasors)", "vector-algebra/ac-lab", "rotating phasor with sine/cosine projections and lead/lag, adding sinusoids as vectors (law of cosines) and why different frequencies cannot be added as phasors, series/parallel RLC and RL∥C power-factor correction with phasor diagram (KVL/KCL polygons), waveforms, power triangle, frequency sweep and resonance, complex-number calculator"],
   ["World-class tools for vectors, fields and AC circuits", "vector-algebra/vector-tools", "click-to-load PhET simulations (Vector Addition, Charges and Fields, Faraday's Electromagnetic Lab, Circuit Construction Kit: AC, Trig Tour), Falstad Circuit Simulator, GeoGebra 3D command table, MATLAB/Octave and Python starter code matching the lessons, and a tool-selection table"],
-  ["Linear algebra formula index", "linear-algebra#formulas", "every matrix, determinant, linear-system, inverse, Cramer and eigenvalue formula with a citable ID (M1…, D1…, L1…, I1…, C1…, E1…, A1…) in one searchable list"],
+  ["Linear algebra formula index", "linear-algebra#formulas", "every matrix, determinant, linear-system, rank, inverse, Cramer, numerical-method and eigenvalue formula with a citable ID (M1…, D1…, L1…, R1…, I1…, C1…, N1…, E1…, A1…) in one searchable list"],
   ["Matrix lab: matrix calculator with steps", "linear-algebra/matrix-lab", "matrix product visualiser (row × column), determinant by cofactor expansion, inverse by Gauss–Jordan, Cramer's rule and eigenvalues with every step shown; shareable #calc= links"],
   ["Linear algebra engineering applications labs", "linear-algebra/engineering-applications", "nodal and mesh analysis as Ax = b, truss analysis by the method of joints (assembled matrix + Gaussian elimination), 2/3-DOF vibration modes from the eigenvalue problem with animation, balancing reactions, coordinate rotation"],
   ["2×2 transformation & eigenvector lab", "linear-algebra/eigenvalues", "drag a 2×2 matrix's columns: grid and unit circle transform, determinant as signed area, eigen-directions and Av vs v shown live"],
+  ["Rank explorer & three-planes 3D lab", "linear-algebra/rank", "type any matrix (up to 6×7, fractions allowed): exact row reduction to REF/RREF with pivots highlighted, rank, nullity, bases of the column and null spaces, Rouché–Capelli test for [A | b] with the parametric solution; rank and det(k) as a parameter k moves; three planes in 3-D (unique point, line, prism, parallel) with draggable rotation"],
+  ["Numerical linear systems simulators", "linear-algebra/numerical-methods", "round-off and partial pivoting at 2–10 significant digits, LU / PA = LU / Cholesky factoriser with forward and back substitution, Jacobi vs Gauss–Seidel vs SOR with convergence plot, spectral radius, 2×2 geometric path and optimal-ω scan, condition-number lab with exact Hilbert-matrix κ, and a heat-plate (Laplace equation) relaxation simulator"],
+  ["Matrix & determinant exam practice + random drill", "linear-algebra/exam-practice", "45 solved problems in three levels (university entrance / A-Level, undergraduate linear algebra, numerical methods and engineering) plus a random problem generator for determinants, determinant properties, Cramer's rule, rank, parameter k, inverse entries, one Jacobi/Gauss–Seidel step and condition number, with answer checking"],
   ["Integral calculus formulas & worked solutions", "integral-calculus", "every basic and standard integral with international names (power rule, linearity, u-substitution, integration by parts, partial fractions, FTC, definite-integral properties); step-by-step lecture-style solutions with highlighted formulas, red cancellations and polynomial long division; Riemann-sum visualiser"],
   ["Integral calculus engineering applications & beam lab", "integral-calculus/engineering-applications", "RMS/average of waveforms, capacitor charge and energy, work of a spring and pumping, centroid and second moment of area, hydrostatic force on a dam, beam lab (simply supported or cantilever, length slider) integrating w → V → M → θ → y"],
   ["Functions lab", "functions", "type f(x) and g(x): shift, stretch, reflect, compose f∘g, inverse by reflection in y = x; library of basic graphs and the unit step u(t)"],

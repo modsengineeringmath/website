@@ -9,7 +9,7 @@
   "nav": "la",
   "katex": true,
   "published": "2026-10-12",
-  "updated": "2026-10-12",
+  "updated": "2026-10-25",
   "level": ["High school", "Undergraduate", "Graduate"],
   "about": ["Determinant", "Rule of Sarrus", "Minor", "Cofactor", "Laplace expansion", "Row reduction", "Vandermonde determinant", "Schur complement"],
   "scripts": ["/assets/linalg.js"],
@@ -35,6 +35,7 @@
         <a class="btn btn-primary btn-sm" href="#two">2×2</a>
         <a class="btn btn-ghost btn-sm" href="#sarrus">3×3 ซาร์รัส</a>
         <a class="btn btn-ghost btn-sm" href="#cofactor">โคแฟกเตอร์</a>
+        <a class="btn btn-ghost btn-sm" href="#exam-shortcuts">สูตรลัดออกสอบ</a>
         <a class="btn btn-ghost btn-sm" href="#properties">สมบัติ</a>
         <a class="btn btn-ghost btn-sm" href="#row-reduction">ลดแถว</a>
       </div>
@@ -247,6 +248,44 @@
     </div>
     </section>
 
+    <!-- ============ 5b (2026-10-25) ============ -->
+    <section class="tsec" aria-labelledby="exam-shortcuts">
+    <h2 id="exam-shortcuts">สูตรลัดที่ออกสอบบ่อย: แอดจอยต์ ค่าคงที่ และเมทริกซ์รูปแบบพิเศษ <span class="lv lv-b">พื้นฐาน</span> → <span class="lv lv-i">กลาง</span></h2>
+    <p>ข้อสอบเข้ามหาวิทยาลัยชอบให้ \(\det A\) มาเพียงตัวเลขเดียว แล้วถามดีเทอร์มิแนนต์ของเมทริกซ์ที่สร้างจาก \(A\) ทุกข้อแก้ได้ด้วยสูตรในหัวข้อนี้โดยไม่ต้องรู้สมาชิกของ \(A\) เลย จุดเริ่มคือ \(A\operatorname{adj}A = (\det A)I\) จาก <a href="/learn/linear-algebra/inverse/#I3">สูตรอินเวอร์สแบบแอดจอยต์ I3</a></p>
+    <div class="tf-grid">
+      <div class="tf" id="D22" data-k="determinant of adjugate det adj power n-1 ดีเทอร์มิแนนต์ของแอดจอยต์ ผูกพัน">
+        <p class="tf-n"><b><span class="fid">D22</span> Determinant of the adjugate</b> \(\det\) ของ \(\operatorname{adj}A\)</p>
+        \[ \det(\operatorname{adj}A) = (\det A)^{n-1} \]
+        <p class="tf-x">ที่มา: \(\det(A\operatorname{adj}A) = \det\bigl((\det A)I\bigr) = (\det A)^n\) แล้วหารด้วย \(\det A\) (สูตรยังจริงเมื่อ \(\det A = 0\))</p>
+      </div>
+      <div class="tf" id="D23" data-k="adj kA adj adj A scalar power n-2 n-1 squared แอดจอยต์ซ้อน ค่าคงที่">
+        <p class="tf-n"><b><span class="fid">D23</span> Adjugate of kA and adj(adj A)</b> แอดจอยต์ซ้อนและคูณค่าคงที่</p>
+        \[ \operatorname{adj}(kA) = k^{n-1}\operatorname{adj}A,\qquad \operatorname{adj}(\operatorname{adj}A) = (\det A)^{n-2}A,\qquad \det\bigl(\operatorname{adj}(\operatorname{adj}A)\bigr) = (\det A)^{(n-1)^2} \]
+      </div>
+      <div class="tf" id="D24" data-k="adj AB product order transpose inverse adj properties แอดจอยต์ของผลคูณ ทรานสโพส">
+        <p class="tf-n"><b><span class="fid">D24</span> Adjugate of products</b> แอดจอยต์ของผลคูณ</p>
+        \[ \operatorname{adj}(AB) = \operatorname{adj}B\,\operatorname{adj}A,\qquad \operatorname{adj}(A^T) = (\operatorname{adj}A)^T,\qquad \operatorname{adj}(A^{-1}) = \frac{A}{\det A} \]
+        <p class="tf-x">ลำดับสลับเหมือน \((AB)^{-1} = B^{-1}A^{-1}\)</p>
+      </div>
+      <div class="tf" id="D25" data-k="all equal off diagonal a b pattern constant row sum matrix aI+bJ ทแยงเท่ากัน นอกทแยงเท่ากัน ผลบวกแถวเท่ากัน">
+        <p class="tf-n"><b><span class="fid">D25</span> Constant-diagonal pattern</b> แนวทแยงเป็น \(a\) ตัวอื่นเป็น \(b\)</p>
+        \[ \det\begin{pmatrix} a & b & \cdots & b \\ b & a & \cdots & b \\ \vdots & & \ddots & \vdots \\ b & b & \cdots & a \end{pmatrix}_{n\times n} = (a - b)^{n-1}\bigl(a + (n - 1)b\bigr) \]
+        <p class="tf-x">เทคนิค: บวกทุกหลักเข้าหลักแรก ทุกแถวได้ \(a + (n-1)b\) ดึงออกมา แล้วลบแถวแรกออกจากแถวอื่น</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง D-9 · แนวข้อสอบเข้ามหาวิทยาลัย</span><h3>\(A\) เป็นเมทริกซ์ \(3\times3\) ที่ \(\det A = 3\) จงหา \(\det(2\operatorname{adj}A)\), \(\det(\operatorname{adj}(\operatorname{adj}A))\) และ \(\det(A^{-1}\operatorname{adj}A)\)</h3></div>
+      <ol class="steps">
+        <li><p>\(\det(2\operatorname{adj}A) = 2^3\det(\operatorname{adj}A) = 8\times3^{2} = 72\) <a class="tag tp" href="#D7">D7</a> <a class="tag tf" href="#D22">D22</a></p></li>
+        <li><p>\(\det(\operatorname{adj}(\operatorname{adj}A)) = 3^{(3-1)^2} = 3^4 = 81\) <a class="tag tf" href="#D23">D23</a></p></li>
+        <li><p>\(\det(A^{-1}\operatorname{adj}A) = \dfrac{1}{\det A}\cdot(\det A)^2 = \det A = 3\) <a class="tag tp" href="#D11">D11</a></p></li>
+      </ol>
+      <p class="answer">\(72,\ 81,\ 3\)</p>
+      <p class="check">ตรวจข้อสามอีกทาง: \(A^{-1}\operatorname{adj}A = A^{-1}(\det A)A^{-1} = 3A^{-2}\) ได้ \(\det = 27\cdot\tfrac19 = 3\) ✓ · ฝึกต่อที่ <a href="/learn/linear-algebra/exam-practice/#set-a">แนวข้อสอบชุด A</a></p>
+    </div>
+    <div class="sr-trap"><b>กับดักที่เจอบ่อย</b> \(\det(\operatorname{adj}A) \ne \det A\) และ \(\det(kA) \ne k\det A\) — เลขชี้กำลังขึ้นกับขนาด \(n\) ทุกครั้ง ส่วน \(\det(A + B)\) ไม่มีสูตรลัด ต้องบวกเมทริกซ์ก่อน (<a href="#D12">D12</a>)</div>
+    </section>
+
     <!-- ============ 6 ============ -->
     <section class="tsec" aria-labelledby="row-reduction">
     <h2 id="row-reduction">หาดีเทอร์มิแนนต์ด้วยการลดแถว <span class="lv lv-i">กลาง</span></h2>
@@ -359,7 +398,7 @@
 
     <section class="tsec" aria-labelledby="next">
     <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
-    <p>ดีเทอร์มิแนนต์บอกว่า “มีคำตอบเดียวไหม” แต่ยังไม่ได้ให้คำตอบ หน้าถัดไป <a href="/learn/linear-algebra/linear-systems/">ระบบสมการเชิงเส้น</a> สอนวิธีลดแถวที่ทั้งหาคำตอบและบอกได้ด้วยว่าเมื่อ \(\det A = 0\) ระบบไม่มีคำตอบหรือมีไม่จำกัด ส่วนการใช้ดีเทอร์มิแนนต์แก้ระบบโดยตรงอยู่ที่ <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a></p>
+    <p>ดีเทอร์มิแนนต์บอกว่า “มีคำตอบเดียวไหม” แต่ยังไม่ได้ให้คำตอบ หน้าถัดไป <a href="/learn/linear-algebra/linear-systems/">ระบบสมการเชิงเส้น</a> สอนวิธีลดแถวที่ทั้งหาคำตอบและบอกได้ด้วยว่าเมื่อ \(\det A = 0\) ระบบไม่มีคำตอบหรือมีไม่จำกัด ส่วนการใช้ดีเทอร์มิแนนต์แก้ระบบโดยตรงอยู่ที่ <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a> · ถ้า \(\det A = 0\) แล้วอยากรู้ว่าแรงก์เหลือเท่าไร ดู <a href="/learn/linear-algebra/rank/#minor">แรงก์ด้วยไมเนอร์</a> · ฝึกโจทย์ดีเทอร์มิแนนต์ที่ <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ</a> และอ่านสรุปที่บทความ <a href="/blog/determinant-properties/">สมบัติดีเทอร์มิแนนต์ที่ออกสอบบ่อย</a></p>
     </section>
 
     <!--faq-->

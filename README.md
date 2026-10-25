@@ -506,3 +506,39 @@ sitemap, llms.txt, search index และ manifest ของภาพแชร�
 - แก้หน้าที่แชร์ไปแล้ว: Facebook ใช้ Sharing Debugger (developers.facebook.com/tools/debug) กด "Scrape Again", LINE ใช้ Page Poker
 - ลิงก์สั้นแต่ละข้อใช้ 2 บรรทัดใน `_redirects` (Cloudflare Pages รับ static redirect ได้ 2,000 บรรทัด)
 - ลบโจทย์: ลบ `src/pages/solutions/<slug>.html`, โฟลเดอร์ `solutions/<slug>/` และภาพทั้งสองไฟล์ แล้ว build
+
+## Linear algebra 7.10–7.12: rank · numerical methods · exam practice (added 2026-10-25)
+Three new sub-pages appended to `linear-algebra` in `TOPICS` (numbers stay stable; the reading order is shown on the hub in
+`#path-systems`: 7.1 → 7.2 → 7.3 → 7.10 → 7.4 → 7.5 → 7.11 → 7.12):
+- `rank` (R1–R18): row reduction and minors, parameter-k procedure, Rouché–Capelli, homogeneous systems, null/column space,
+  rank–nullity, Sylvester, rank of adj A, incidence matrix (KCL n − 1), Kalman controllability, numerical rank (SVD).
+- `numerical-methods` (N1–N26): operation counts, machine epsilon, Gaussian elimination algorithm, partial/scaled pivoting, LU,
+  PA = LU, det from LU, Cholesky, Thomas, Jacobi, Gauss–Seidel, SOR, convergence (diagonal dominance, ρ(T), Young's ω*),
+  norms, condition number, residual vs error, iterative refinement, heat plate, method-choice table, NumPy/SciPy/MATLAB code.
+- `exam-practice` (X1–X8 cheat sheet): 45 problems in `<details class="sr-q">` — set A entrance exam (18), set B undergraduate (15),
+  set C numerical/engineering (12) — and a random drill.
+- Also added: determinants `#exam-shortcuts` (D22–D25: det adj A, adj(kA), adj adj A, constant-diagonal pattern, example D-9),
+  Cramer `#parameter` (C10, example C-7), cross-link notes in linear-systems, hub path/notation/help entries, menu links.
+- Labs: `assets/la-num.js` (`window.LANum`, testable in Node): `ln-rank` (exact REF/RREF, bases, [A|b]), `ln-krank` (rank and
+  det(k)), `ln-planes` (three planes in 3-D, drag/slider rotation), `ln-pivot` (round-off at 2–10 digits), `ln-lu` (LU / PA = LU /
+  Cholesky with substitution steps), `ln-iter` (Jacobi · GS · SOR, log-error plot with hover readout, ρ(T), 2×2 path, ω scan),
+  `ln-cond` (nearly parallel lines + exact Hilbert κ), `ln-heat` (Laplace plate relaxation), `ln-drill` (10 problem types,
+  score in localStorage `ln-drill-v1`). Buttons: `data-ln-set='{…}' data-ln-target="<id>"` (opens a closed `<details>` first).
+  Plots use `MK.plot` sized to the box (`plotIn`) so labels stay readable on phones. Styles: "LINEAR ALGEBRA 7.10–7.12" in site.css.
+- Figures: `python3 scripts/la_figs.py` (keys `la-*`, `-en` twins; class `lnf-fig` — note `.la-fig` is an older, different class).
+- Checks: `python3 scripts/la_check.py` (every worked number, SymPy) and `node scripts/test-la-num.mjs` (lab functions).
+- Articles (TH `/blog/<slug>/`, EN `/en/blog/<slug>/`): matrix-determinant-roadmap, matrix-rank, cramers-rule,
+  determinant-properties, jacobi-vs-gauss-seidel. Markdown guide for AI tools: `src/md/linear-algebra.md` → `/learn/linear-algebra/guide.md`.
+- Short URLs: `/rank` `/matrix-rank` `/rouche-capelli` `/numerical-methods` `/lu-decomposition` `/cholesky` `/thomas-algorithm`
+  `/jacobi` `/gauss-seidel` `/sor` `/condition-number` `/matrix-exam` `/determinant-exam` `/determinant-properties`.
+
+## Home "ใหม่" pill and update chips (changed 2026-10-25)
+The hero pill at the top of the home page is no longer hand-written: `<!--hero-new-->` (build.mjs `heroNewHtml`) takes the newest
+entry of `data/updates.json` that has a short `"hero"` text and a `"link"` (else the newest with a link), and `assets/home.js`
+refreshes it live together with the box, so editing `data/updates.json` alone updates both. An entry may also carry
+`"links": [{"href": "...", "text": "..."}]`, shown as chips under the text on the home page, `/updates/` and `/about/`.
+`<!--updates-date-->` prints the newest date in the box heading.
+```json
+{ "date": "2026-10-25", "tag": "บทเรียน", "hero": "ข้อความสั้นสำหรับแถบใหม่", "text": "รายละเอียด", "link": "/learn/…", "linkText": "เปิดบทเรียน",
+  "links": [{ "href": "/learn/…", "text": "หน้าย่อย" }] }
+```
