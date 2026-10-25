@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/pid-tuning-guide/#article","headline":"การจูน PID ฉบับสมบูรณ์: จาก Step Test ถึง Ziegler–Nichols, SIMC และ Anti-Windup","description":"คอร์สจูน PID ครบในบทความเดียว: หาแบบจำลองด้วย step test จูนด้วย Ziegler–Nichols, Cohen–Coon, SIMC และ relay เทียบผลด้วยการจำลอง แล้วแก้ปัญหา windup และสัญญาณรบกวนหน้างาน","inLanguage":"th","url":"https://modsengineeringmath.com/blog/pid-tuning-guide/","mainEntityOfPage":"https://modsengineeringmath.com/blog/pid-tuning-guide/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID tuning","Ziegler-Nichols method","Cohen-Coon method","SIMC tuning","Relay feedback","Integrator windup","First-order plus dead time"],"isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-pid-tuning-guide.jpg"],"keywords":"จูน PID, การจูน PID, วิธีจูน PID, PID tuning, PID Academy, Ziegler-Nichols, Cohen-Coon, SIMC, Lambda tuning, relay auto-tune, step test FOPDT, anti-windup, Kp Ki Kd, ระบบควบคุม"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"การจูน PID ฉบับสมบูรณ์: จาก Step Test ถึง Ziegler–Nichols, SIMC และ Anti-Windup","item":"https://modsengineeringmath.com/blog/pid-tuning-guide/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"วิธีจูน PID ที่เร็วและเชื่อถือได้ที่สุดคืออะไร?","acceptedAnswer":{"@type":"Answer","text":"ทำ step test วงเปิดหนึ่งครั้ง อ่านเกน K เวลาหน่วง L และค่าคงเวลา T จากกราฟ แล้วใช้กฎ SIMC K_p=T/(K(tau_c+L)), T_i=min(T,4(tau_c+L)) โดยตั้ง tau_c=L ใช้การทดลองครั้งเดียว มีปุ่มปรับตัวเดียว ได้การตอบสนองนุ่มนวลและเกน margin ราว 3"}},{"@type":"Question","name":"ควรใช้ Ziegler–Nichols ไหม?","acceptedAnswer":{"@type":"Answer","text":"ใช้เป็นค่าเริ่มต้นเมื่อไม่มีข้อมูลอื่นได้ แต่ต้องรู้ว่า overshoot มักอยู่ที่ 40–80% และ margin บาง เพราะออกแบบให้ลดทอนหนึ่งในสี่ต่อรอบ วิศวกรส่วนใหญ่จึงลดเกน (ลด K_p เพิ่ม T_i) หรือใช้ SIMC หรือ Tyreus–Luyben แทน"}},{"@type":"Question","name":"จำเป็นต้องใช้เทอม D เสมอไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่จำเป็น วงควบคุมในโรงงานส่วนใหญ่ใช้ PI เทอม D ช่วยได้กับกระบวนการที่ตอบสนองช้าแบบ lag-dominant และสัญญาณวัดสะอาด (เช่นอุณหภูมิ บางวงตำแหน่งและความเร็ว) แต่แทบไม่ช่วยเมื่อเวลาหน่วงมากหรือสัญญาณมีสัญญาณรบกวน และถ้าใช้ต้องมีตัวกรองเสมอ"}},{"@type":"Question","name":"เลือกเวลาปริพันธ์ \\(T_i\\) อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"กระบวนการแบบ self-regulating ค่าเริ่มต้นที่ดีคือ T_iapprox T (ค่าคงเวลาของกระบวนการ) และไม่เกิน 4(tau_c+L) เมื่อค่านั้นน้อยกว่า ถ้า T_i สั้นเกินจะแกว่งช้า ๆ เป็นลูกคลื่น ถ้ายาวเกินค่าผิดพลาดจะค้างนาน พื้นที่ความผิดพลาดหลังโหลดรบกวนมีค่าประมาณ Delta d/K_i เมื่อ K_i=K_p/T_i"}},{"@type":"Question","name":"ควรตั้งเวลาสุ่มตัวอย่าง (sample time) เท่าไร?","acceptedAnswer":{"@type":"Answer","text":"ประมาณหนึ่งในสิบของค่าคงเวลาของกระบวนการหรือเล็กกว่า และไม่เกินราวครึ่งหนึ่งของเวลาหน่วงเมื่อเวลาหน่วงมีค่าน้อย การสุ่มตัวอย่างเพิ่มเวลาหน่วงเทียบเท่าอีกราว T_s/2 จึงต้องลดเกนลงถ้าสุ่มช้า"}},{"@type":"Question","name":"ทำไมวงควบคุมยังแกว่งทั้งที่ตั้งเกนต่ำแล้ว?","acceptedAnswer":{"@type":"Answer","text":"ให้สงสัยฮาร์ดแวร์ก่อน วาล์วที่ติด (stiction) เฟืองคลอน (backlash) หรือ dead band ทำให้เกิด limit cycle ที่ไม่มีค่าเกนใดแก้ได้ และสัญญาณวัดที่มีสัญญาณรบกวนหรือกรองไม่ดีก็เป็นสาเหตุได้ ดูที่เอาต์พุตของตัวควบคุม ถ้าค่าวัดเป็นฟันเลื่อยและเอาต์พุตเป็นคลื่นสี่เหลี่ยมคือสัญญาณคลาสสิกของ stiction"}},{"@type":"Question","name":"Integral windup คืออะไร และป้องกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"windup คือเทอมปริพันธ์สะสมค่าขณะที่ตัวขับอิ่มตัว ทำให้เกินเป้ามากหลังจากนั้น ป้องกันด้วย anti-windup เช่นหยุดสะสม (clamping) หรือ back-calculation dot I=K_ie+(u_{sat}-u)/T_t ในผลจำลองของบทความนี้ back-calculation ลด overshoot จาก 19% เหลือ 0.5%"}},{"@type":"Question","name":"รู้ได้อย่างไรว่าค่าจูนทนทานพอ?","acceptedAnswer":{"@type":"Answer","text":"เป้าหมายคือ gain margin อย่างน้อย 2 phase margin 45–60° และ peak sensitivity M_s 1.4–2 วิธีเช็กเร็วหน้างานคือเพิ่ม K_p อีก 50% (หรือให้เกนของกระบวนการเพิ่มเป็นสองเท่า) แล้วดูว่าการตอบสนองยังนิ่งอยู่"}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -212,12 +212,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -928,17 +931,17 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     <span class="bc-sum">ตัวควบคุม PID รวมสามเทอมคือสัดส่วน ปริพันธ์ และอนุพันธ์ของค่าผิดพลาด อธิบายผลของ Kp Ki Kd ตารางผลต่อการตอบสนอง ตัวอย่างจูนด้วย Ziegler–Nichols…</span>
     <span class="bc-foot"><time datetime="2026-10-16">16 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
   </a>
-  <a class="blog-card" href="/blog/convergence-test-flowchart/">
-    <span class="bc-tag mono">ลำดับและอนุกรม</span>
-    <b>เลือกการทดสอบการลู่เข้าอย่างไร: ผังตัดสินใจ 8 ขั้น พร้อมตัวอย่างทุกขั้น</b>
-    <span class="bc-sum">วิธีเลือกการทดสอบการลู่เข้าของอนุกรมให้ถูกตั้งแต่ครั้งแรก: ผังตัดสินใจ 8 ขั้น (พจน์ที่ n เรขาคณิต อนุกรม p กล้องส่องทางไกล เปรียบเทียบลิมิต…</span>
-    <span class="bc-foot"><time datetime="2026-10-24">24 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
+  <a class="blog-card" href="/blog/cramers-rule/">
+    <span class="bc-tag mono">พีชคณิตเชิงเส้น</span>
+    <b>กฎของคราเมอร์ (Cramer's Rule) ใช้อย่างไร ทำไมถึงได้ และเมื่อไรไม่ควรใช้</b>
+    <span class="bc-sum">สอนกฎของคราเมอร์แบบเห็นภาพ แทนหลักด้วยค่าคงที่แล้วหารดีเทอร์มิแนนต์ ตัวอย่าง 2×2 และ 3×3 หาตัวแปรเดียว ที่มาของสูตร กรณี Δ = 0 โจทย์พารามิเตอร์ k…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
   </a>
-  <a class="blog-card" href="/blog/laurent-series-vs-taylor-series/">
-    <span class="bc-tag mono">ลำดับและอนุกรม</span>
-    <b>อนุกรมโลรองต์คืออะไร ต่างจากอนุกรมเทย์เลอร์อย่างไร (อธิบายด้วยภาพ)</b>
-    <span class="bc-sum">อนุกรมโลรองต์ (Laurent series) เทียบกับอนุกรมเทย์เลอร์: กำลังลบ ส่วนหลัก วงแหวนการลู่เข้า ทำไมฟังก์ชันเดียวมีหลายอนุกรม ชนิดจุดเอกฐาน เรซิดิว…</span>
-    <span class="bc-foot"><time datetime="2026-10-24">24 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
+  <a class="blog-card" href="/blog/determinant-properties/">
+    <span class="bc-tag mono">พีชคณิตเชิงเส้น</span>
+    <b>สมบัติดีเทอร์มิแนนต์ 12 ข้อที่ออกสอบบ่อย: det(kA), det(A⁻¹), det(adj A) และกับดักที่ต้องระวัง</b>
+    <span class="bc-sum">สรุปสมบัติดีเทอร์มิแนนต์ 12 ข้อที่ใช้ในข้อสอบเข้ามหาวิทยาลัยและคณิตศาสตร์วิศวกรรม การดำเนินการแถว det(kA) = kⁿ det A ผลคูณ อินเวอร์ส แอดจอยต์…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 ต.ค. 2569</time><span class="bc-go">อ่านบทความ →</span></span>
   </a>
 </div></section>
   </article>
@@ -957,7 +960,8 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
-      <a href="/blog/">บทความ: ลำดับและอนุกรม Laplace เวกเตอร์ Power Factor ฯลฯ</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -979,6 +983,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -1033,7 +1040,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
 
 </body>
 </html>

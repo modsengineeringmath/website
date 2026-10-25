@@ -122,8 +122,17 @@
     list.innerHTML = items.map(function (u, i) {
       return '<li class="hu-item' + (i === 0 ? " hu-top" : "") + '" data-tag="' + esc(u.tag) + '"><div class="hu-meta"><span class="hu-ic" aria-hidden="true">' + (ICON[u.tag] || "•") + "</span>" +
         (u.tag ? '<span class="tag">' + esc(u.tag) + "</span>" : "") + '<time datetime="' + esc(u.date) + '">' + thaiDate(u.date) + "</time>" + (u.date === newest ? '<span class="hu-new">ใหม่</span>' : "") +
-        '</div><p class="hu-text">' + esc(u.text) + "</p>" + (u.link ? '<a class="hu-link" href="' + esc(u.link) + '">' + esc(u.linkText || "อ่านต่อ") + " →</a>" : "") + "</li>";
+        '</div><p class="hu-text">' + esc(u.text) + "</p>" + chips(u) + (u.link ? '<a class="hu-link" href="' + esc(u.link) + '">' + esc(u.linkText || "อ่านต่อ") + " →</a>" : "") + "</li>";
     }).join("");
+    var hd = document.getElementById("huDate"); if (hd) hd.textContent = thaiDate(newest);
+    // the "ใหม่" pill at the top of the page follows the newest entry that has a short "hero" text (or a link)
+    var hero = document.getElementById("heroNew"), all = (d.updates || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    var h = all.filter(function (x) { return x.hero && x.link; })[0] || all.filter(function (x) { return x.link; })[0];
+    if (hero && h) { hero.href = h.link; hero.innerHTML = "<b>ใหม่ " + thaiDate(h.date) + "</b><span>" + esc(h.hero || h.text) + "</span> →"; }
+  }
+  function chips(u) {
+    if (!u.links || !u.links.length) return "";
+    return '<div class="hu-chips">' + u.links.map(function (l) { return '<a href="' + esc(l.href) + '">' + esc(l.text) + "</a>"; }).join("") + "</div>";
   }
   list.addEventListener("click", function (e) { var t = e.target.closest(".hu-text"); if (t) t.parentNode.classList.toggle("open"); });
   var bucket = Math.floor(Date.now() / 60000);

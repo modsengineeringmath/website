@@ -1,0 +1,472 @@
+<!--meta
+{
+  "title": "การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้น: เกาส์ สลับแถว LU โชเลสกี จาโคบี เกาส์-ไซเดล SOR เลขเงื่อนไข | อาจารย์มด",
+  "h1": "การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้นด้วยเมทริกซ์: เกาส์ การสลับแถว LU โชเลสกี โทมัส จาโคบี เกาส์-ไซเดล SOR และเลขเงื่อนไข",
+  "description": "วิธีเชิงตัวเลขแก้ระบบสมการเชิงเส้น Ax = b ครบทั้งวิธีตรงและวิธีทำซ้ำ จำนวนการคำนวณ การกำจัดแบบเกาส์กับการสลับแถว (partial pivoting) การแยก LU และ PA = LU โชเลสกี อัลกอริทึมโทมัส จาโคบี เกาส์-ไซเดล SOR เงื่อนไขการลู่เข้า รัศมีสเปกตรัม เลขเงื่อนไข พร้อมตัวอย่างที่ตรวจตัวเลขแล้วและซิมูเลเตอร์ 5 ชุดที่ใช้บนมือถือได้",
+  "ogTitle": "ผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้น: LU จาโคบี เกาส์-ไซเดล SOR",
+  "lesson": "linear-algebra",
+  "sub": "numerical-methods",
+  "nav": "la",
+  "katex": true,
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "level": ["Undergraduate", "Graduate"],
+  "keywords": ["วิธีเชิงตัวเลข ระบบสมการเชิงเส้น", "numerical methods linear systems", "การกำจัดแบบเกาส์", "Gaussian elimination", "partial pivoting", "การสลับแถว", "LU decomposition", "การแยก LU", "Doolittle", "Cholesky", "Thomas algorithm", "จาโคบี", "Jacobi method", "เกาส์-ไซเดล", "Gauss-Seidel", "SOR", "successive over-relaxation", "spectral radius", "รัศมีสเปกตรัม", "เลขเงื่อนไข", "condition number", "ill-conditioned", "ทแยงเด่น", "diagonally dominant"],
+  "about": ["Numerical linear algebra", "Gaussian elimination", "Pivot element", "LU decomposition", "Cholesky decomposition", "Tridiagonal matrix algorithm", "Jacobi method", "Gauss–Seidel method", "Successive over-relaxation", "Spectral radius", "Condition number"],
+  "scripts": ["/assets/linalg.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/la-num.js"],
+  "og": {"title": "ผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้น", "sub": "เกาส์ + สลับแถว · LU · โชเลสกี · จาโคบี · เกาส์-ไซเดล · SOR · เลขเงื่อนไข + ซิมูเลเตอร์ 5 ชุด", "eyebrow": "บทที่ 7.11 · พีชคณิตเชิงเส้น", "sym": "x⁽ᵏ⁾"},
+  "faq": [
+    {"q": "ทำไมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์แก้ระบบสมการใหญ่?", "a": "เพราะต้นทุนโตแบบแฟกทอเรียล ถ้าหาดีเทอร์มิแนนต์ด้วยการกระจายโคแฟกเตอร์ ระบบ 20 ตัวแปรต้องคูณราว 21! ≈ 5 × 10¹⁹ ครั้ง เครื่องที่คูณได้พันล้านครั้งต่อวินาทีต้องใช้ราว 1,600 ปี ขณะที่การกำจัดแบบเกาส์ใช้ราว n³/3 ≈ 2,700 ครั้ง และยังแม่นยำเชิงตัวเลขกว่า"},
+    {"q": "Partial pivoting คืออะไร และทำไมต้องทำ?", "a": "คือการสลับแถวในแต่ละหลักให้ตัวหลักเป็นตัวที่มีค่าสัมบูรณ์มากที่สุดในหลักนั้น ทำให้ตัวคูณ |m| ≤ 1 ความคลาดเคลื่อนจากการปัดเศษจึงไม่ถูกขยาย ถ้าไม่สลับและตัวหลักเล็กมาก เช่น 0.0001x + y = 1, x + y = 2 กับเครื่องที่เก็บ 3 หลัก จะได้ x = 0 แทนที่จะเป็น 1"},
+    {"q": "จาโคบีกับเกาส์-ไซเดลต่างกันอย่างไร?", "a": "จาโคบีใช้ค่ารอบก่อนทั้งหมดในการคำนวณรอบใหม่ ส่วนเกาส์-ไซเดลนำค่าที่เพิ่งคำนวณได้ในรอบเดียวกันมาใช้ทันที เกาส์-ไซเดลจึงมักลู่เข้าเร็วกว่าราวสองเท่าและใช้หน่วยความจำน้อยกว่า แต่จาโคบีคำนวณแบบขนานได้ง่ายกว่า"},
+    {"q": "จะรู้ได้อย่างไรว่าวิธีทำซ้ำจะลู่เข้า?", "a": "เงื่อนไขพอเพียงที่ตรวจง่ายคือเมทริกซ์ทแยงเด่นแท้ (ค่าสัมบูรณ์บนแนวทแยงมากกว่าผลรวมค่าสัมบูรณ์ของตัวอื่นในแถวเดียวกันทุกแถว) เงื่อนไขจำเป็นและพอเพียงคือรัศมีสเปกตรัมของเมทริกซ์การทำซ้ำ ρ(T) < 1 ยิ่ง ρ เล็กยิ่งลู่เข้าเร็ว"},
+    {"q": "เลขเงื่อนไข (condition number) บอกอะไร?", "a": "บอกว่าความคลาดเคลื่อนในข้อมูลถูกขยายในคำตอบได้มากสุดกี่เท่า ‖δx‖/‖x‖ ≤ κ(A)‖δb‖/‖b‖ โดยประมาณจะเสียความแม่นยำราว log₁₀ κ หลัก ถ้า κ ≈ 10¹² บนคอมพิวเตอร์ double ที่เก็บราว 16 หลัก จะเหลือหลักที่เชื่อได้เพียงราว 4 หลัก"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page" id="laArticle">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li>ผลเฉลยเชิงตัวเลข</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 7.11 · พีชคณิตเชิงเส้น · Numerical Solution of Linear Systems</p>
+      <h1>การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้นด้วยเมทริกซ์: เกาส์ การสลับแถว LU โชเลสกี โทมัส จาโคบี เกาส์-ไซเดล SOR และเลขเงื่อนไข</h1>
+      <p class="lede">โปรแกรมจำลองวงจร ซอฟต์แวร์วิเคราะห์โครงสร้าง และเกมฟิสิกส์ล้วนแก้ \(A\mathbf x = \mathbf b\) ที่มีตัวแปรหลักพันถึงหลักล้านตัว วิธีที่ใช้ในห้องเรียนอย่างคราเมอร์จึงใช้ไม่ได้ หน้านี้อธิบายว่าคอมพิวเตอร์แก้ระบบสมการอย่างไรให้เร็วและไม่เพี้ยน ทั้ง<strong>วิธีตรง</strong> (เกาส์ LU โชเลสกี โทมัส) และ<strong>วิธีทำซ้ำ</strong> (จาโคบี เกาส์-ไซเดล SOR) พร้อมเครื่องมือวัดว่าคำตอบเชื่อได้แค่ไหน สูตรใช้รหัส N</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#iterative">จาโคบี · เกาส์-ไซเดล</a>
+        <a class="btn btn-ghost btn-sm" href="#pivoting">สลับแถว</a>
+        <a class="btn btn-ghost btn-sm" href="#lu">LU</a>
+        <a class="btn btn-ghost btn-sm" href="#conditioning">เลขเงื่อนไข</a>
+        <a class="btn btn-ghost btn-sm" href="#heat">แล็บแผ่นความร้อน</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><strong>วิธีตรง</strong> ทำจำนวนขั้นแน่นอน: เกาส์ \(\approx \tfrac23 n^3\) flops ต้อง<strong>สลับแถว</strong>ให้ตัวหลักใหญ่สุดเสมอ · LU แยกครั้งเดียวใช้ได้กับ \(\mathbf b\) หลายตัว · โชเลสกีสำหรับเมทริกซ์สมมาตรบวกแน่นอน · โทมัสสำหรับสามแนวทแยง \(O(n)\)</li>
+          <li><strong>วิธีทำซ้ำ</strong> เริ่มจากค่าเดา แล้วปรับทีละรอบ: จาโคบีใช้ค่าเก่าทั้งหมด เกาส์-ไซเดลใช้ค่าใหม่ทันที SOR เร่งด้วย \(\omega\) เหมาะกับระบบใหญ่และเบาบาง</li>
+          <li>ลู่เข้าแน่นอนถ้า<strong>ทแยงเด่น</strong> เงื่อนไขแท้คือ \(\rho(T) \lt 1\) และยิ่ง \(\rho\) เล็กยิ่งเร็ว</li>
+          <li><strong>เลขเงื่อนไข</strong> \(\kappa(A) = \lVert A\rVert\lVert A^{-1}\rVert\) บอกว่าความคลาดเคลื่อนถูกขยายกี่เท่า เสียความแม่นยำราว \(\log_{10}\kappa\) หลัก</li>
+        </ul>
+      </div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ปี 1 · เริ่มเรียนวิธีเชิงตัวเลข</span><span><span class="lv lv-i">กลาง</span> ป.ตรี วิศวกรรม (Numerical Methods)</span><span><span class="lv lv-a">ขั้นสูง</span> ป.โท · งานจำลองจริง</span></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น pivot, lu, cholesky, jacobi, sor, condition" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <!-- ============ 1 ============ -->
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">ทำไมต้องวิธีเชิงตัวเลข: ขนาดของปัญหาจริง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ในห้องเรียนเราแก้ระบบ 2–3 ตัวแปรด้วย <a href="/learn/linear-algebra/cramers-rule/">คราเมอร์</a> หรือ <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a> ได้สบาย แต่วงจรรวมหนึ่งชิปมีโนดนับหมื่น แบบจำลองไฟไนต์เอลิเมนต์ของสะพานมีตัวแปรนับล้าน คำถามจึงเปลี่ยนจาก “หาได้ไหม” เป็น “หาได้เร็วแค่ไหน และคำตอบเพี้ยนเพราะการปัดเศษหรือเปล่า”</p>
+    <figure class="post-fig"><!--FIG:la-num-map--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 318" role="img" aria-label="แผนที่วิธีแก้ระบบสมการ Ax = b"><rect class="mf-box" x="160" y="8" width="120" height="34" rx="9"/><text class="mf-h" x="220" y="29" text-anchor="middle">A x = b</text><rect class="mf-boxa" x="16" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="81" text-anchor="middle">วิธีตรง (direct)</text><text class="mf-s" x="111" y="96" text-anchor="middle">จำนวนขั้นแน่นอน</text><rect class="mf-boxb" x="234" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="81" text-anchor="middle">วิธีทำซ้ำ (iterative)</text><text class="mf-s" x="329" y="96" text-anchor="middle">ปรับค่าเดาทีละรอบ</text><line class="mf-thin" x1="200" y1="42" x2="111" y2="63"/><path class="mf-arrowh" d="M111 63L116.6 58.9L117.9 64.2Z"/><line class="mf-thin" x1="240" y1="42" x2="329" y2="63"/><path class="mf-arrowh" d="M329 63L322.1 64.2L323.4 58.9Z"/><rect class="mf-box" x="16" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="137" text-anchor="middle">เกาส์ + สลับแถว / LU</text><text class="mf-s" x="111" y="152" text-anchor="middle">หนาแน่น ทั่วไป · ⅔n³</text><line class="mf-thin" x1="111" y1="104" x2="111" y2="120"/><rect class="mf-box" x="16" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="187" text-anchor="middle">โชเลสกี A = LLᵀ</text><text class="mf-s" x="111" y="202" text-anchor="middle">สมมาตรบวกแน่นอน</text><line class="mf-thin" x1="111" y1="160" x2="111" y2="170"/><rect class="mf-box" x="16" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="237" text-anchor="middle">โทมัส (TDMA)</text><text class="mf-s" x="111" y="252" text-anchor="middle">สามแนวทแยง · O(n)</text><line class="mf-thin" x1="111" y1="210" x2="111" y2="220"/><rect class="mf-box" x="234" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="137" text-anchor="middle">จาโคบี</text><text class="mf-s" x="329" y="152" text-anchor="middle">ใช้ค่าเก่า · ขนานได้</text><line class="mf-thin" x1="329" y1="104" x2="329" y2="120"/><rect class="mf-box" x="234" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="187" text-anchor="middle">เกาส์-ไซเดล</text><text class="mf-s" x="329" y="202" text-anchor="middle">ใช้ค่าใหม่ทันที</text><line class="mf-thin" x1="329" y1="160" x2="329" y2="170"/><rect class="mf-box" x="234" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="237" text-anchor="middle">SOR (ω) · CG</text><text class="mf-s" x="329" y="252" text-anchor="middle">ระบบใหญ่และเบาบาง</text><line class="mf-thin" x1="329" y1="210" x2="329" y2="220"/><rect class="mf-fill2" x="16" y="274" width="408" height="36" rx="9"/><text class="mf-t" x="220" y="290" text-anchor="middle">ก่อนเชื่อคำตอบ: เลขเงื่อนไข κ(A) บอกหลักที่อาจเสีย</text><text class="mf-s" x="220" y="304" text-anchor="middle">วิธีทำซ้ำลู่เข้าเมื่อทแยงเด่น หรือ ρ(T) < 1</text></svg><!--/FIG--><figcaption>แผนที่วิธีแก้ \(A\mathbf x = \mathbf b\): วิธีตรงให้คำตอบในจำนวนขั้นที่แน่นอน วิธีทำซ้ำค่อย ๆ เข้าใกล้คำตอบ เลือกตามขนาด ความเบาบาง และโครงสร้างของเมทริกซ์</figcaption></figure>
+    <div class="tf-grid">
+      <div class="tf wide" id="N1" data-k="operation count flops cost gauss cramer cubic factorial complexity จำนวนการคำนวณ ต้นทุน">
+        <p class="tf-n"><b><span class="fid">N1</span> Operation counts</b> จำนวนการคำนวณ (ระบบ \(n\times n\) หนาแน่น)</p>
+        \[ \text{เกาส์ / LU} \approx \tfrac23 n^3 \text{ flops},\quad \text{แทนค่าย้อนกลับ} \approx n^2,\quad \text{เกาส์-จอร์แดน} \approx n^3,\quad \text{คราเมอร์ (โคแฟกเตอร์)} \approx (n + 1)! \]
+        <p class="tf-x">1 flop = การบวก/ลบ/คูณ/หารหนึ่งครั้งของเลขทศนิยม · การหาอินเวอร์สแล้วคูณ \(A^{-1}\mathbf b\) ใช้ราว \(2n^3\) จึงช้ากว่าและคลาดเคลื่อนมากกว่าการแก้ตรง</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>จำนวนตัวแปร \(n\)</th><th>เกาส์ \(\approx n^3/3\) การคูณ</th><th>คราเมอร์ด้วยโคแฟกเตอร์ \(\approx (n+1)!\)</th><th>เวลาที่ \(10^9\) ครั้ง/วินาที (คราเมอร์)</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td>9</td><td>24</td><td>ไม่ถึงไมโครวินาที</td></tr>
+          <tr><td>10</td><td>333</td><td>\(4.0\times10^{7}\)</td><td>0.04 วินาที</td></tr>
+          <tr><td>20</td><td>2,667</td><td>\(5.1\times10^{19}\)</td><td>ราว 1,600 ปี</td></tr>
+          <tr><td>100</td><td>\(3.3\times10^{5}\)</td><td>\(9.4\times10^{159}\)</td><td>นานกว่าอายุเอกภพมาก</td></tr>
+          <tr><td>1,000</td><td>\(3.3\times10^{8}\) (≈ 0.3 วินาที)</td><td>\(\approx 10^{2570}\)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tf-grid">
+      <div class="tf" id="N2" data-k="machine epsilon floating point double precision round off ieee 754 เลขทศนิยม ปัดเศษ">
+        <p class="tf-n"><b><span class="fid">N2</span> Machine epsilon</b> ความละเอียดของเลขทศนิยม</p>
+        \[ \epsilon_{\text{mach}} = 2^{-52} \approx 2.22\times10^{-16} \ (\text{double, IEEE 754}) \]
+        <p class="tf-x">เลข double เก็บได้ราว 15–16 หลักนัยสำคัญ ทุกการคำนวณถูกปัดเศษ ความคลาดเคลื่อนสะสมได้ถ้าอัลกอริทึมไม่ดี</p>
+      </div>
+      <div class="tf" id="N3" data-k="direct iterative methods difference วิธีตรง วิธีทำซ้ำ ต่างกัน">
+        <p class="tf-n"><b><span class="fid">N3</span> Direct vs iterative</b> วิธีตรงกับวิธีทำซ้ำ</p>
+        \[ \text{ตรง: } A = LU \to \mathbf x \ (\text{จำนวนขั้นแน่นอน}),\qquad \text{ทำซ้ำ: } \mathbf x^{(k+1)} = T\mathbf x^{(k)} + \mathbf c \]
+        <p class="tf-x">วิธีตรงแม่นถึงระดับการปัดเศษ วิธีทำซ้ำหยุดเมื่อแม่นพอ ไม่ต้องเก็บเมทริกซ์เต็มและไม่เติมศูนย์ให้กลายเป็นตัวเลข (fill-in)</p>
+      </div>
+    </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="tsec" aria-labelledby="gauss">
+    <h2 id="gauss">การกำจัดแบบเกาส์ในมุมของอัลกอริทึม <span class="lv lv-i">กลาง</span></h2>
+    <p>หลักการเหมือน <a href="/learn/linear-algebra/linear-systems/#gauss">การกำจัดแบบเกาส์ที่ทำมือ</a> ทุกประการ แต่เขียนเป็นสูตรที่โปรแกรมทำซ้ำได้ แบ่งเป็นสองช่วง: <strong>กำจัดไปข้างหน้า</strong> (forward elimination) ให้ได้เมทริกซ์สามเหลี่ยมบน แล้ว<strong>แทนค่าย้อนกลับ</strong> (back substitution) จากล่างขึ้นบน</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N4" data-k="forward elimination back substitution multiplier formula algorithm กำจัดไปข้างหน้า แทนค่าย้อนกลับ ตัวคูณ">
+        <p class="tf-n"><b><span class="fid">N4</span> Forward elimination & back substitution</b> กำจัดไปข้างหน้าและแทนค่าย้อนกลับ</p>
+        \[ m_{ik} = \frac{a_{ik}}{\hlP{a_{kk}}},\quad a_{ij} \leftarrow a_{ij} - m_{ik}a_{kj},\quad b_i \leftarrow b_i - m_{ik}b_k \qquad (i \gt k) \]
+        \[ x_n = \frac{b_n}{a_{nn}},\qquad x_i = \frac{1}{a_{ii}}\Bigl(b_i - \sum_{j=i+1}^{n} a_{ij}x_j\Bigr),\ i = n - 1, \dots, 1 \]
+      </div>
+    </div>
+    <pre class="ln-code">for k = 1 … n−1                 # หลักของตัวหลัก
+    (สลับแถว: หา p ที่ |a_pk| มากสุด แล้วสลับแถว p กับ k)
+    for i = k+1 … n
+        m = a[i][k] / a[k][k]
+        for j = k … n:  a[i][j] -= m * a[k][j]
+        b[i] -= m * b[k]
+for i = n … 1                    # แทนค่าย้อนกลับ
+    x[i] = (b[i] − Σ_{j&gt;i} a[i][j]·x[j]) / a[i][i]</pre>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="tsec" aria-labelledby="pivoting">
+    <h2 id="pivoting">การเลือกตัวหลัก (Pivoting): ทำไมต้องสลับแถวแม้ตัวหลักไม่เป็นศูนย์ <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้าตัวหลักเป็นศูนย์ การกำจัดหยุดทันที เรื่องนี้ทุกคนรู้ แต่อันตรายกว่าคือตัวหลัก<strong>เล็กมาก</strong> ตัวคูณ \(m = a_{ik}/a_{kk}\) จะใหญ่มาก แล้วกลืนตัวเลขอื่นจนหายไปตอนปัดเศษ</p>
+    <div class="tf-grid">
+      <div class="tf" id="N5" data-k="partial pivoting largest absolute value row swap multiplier bounded สลับแถว ตัวหลักใหญ่สุด">
+        <p class="tf-n"><b><span class="fid">N5</span> Partial pivoting</b> การสลับแถวบางส่วน</p>
+        \[ p = \arg\max_{i \ge k}|a_{ik}|,\quad R_k \leftrightarrow R_p \ \Rightarrow\ |m_{ik}| \le 1 \]
+        <p class="tf-x">เป็นค่าเริ่มต้นของ LAPACK (<code>numpy.linalg.solve</code>, MATLAB <code>A\b</code>) ราคาถูกเพราะแค่เทียบค่าในหลักเดียว</p>
+      </div>
+      <div class="tf" id="N6" data-k="scaled partial pivoting complete pivoting scale factor row max สลับแถวแบบปรับสเกล สลับเต็ม">
+        <p class="tf-n"><b><span class="fid">N6</span> Scaled & complete pivoting</b> ปรับสเกลและสลับเต็ม</p>
+        \[ s_i = \max_j |a_{ij}|,\quad p = \arg\max_{i \ge k}\frac{|a_{ik}|}{s_i} \]
+        <p class="tf-x">ใช้เมื่อแต่ละแถวมีหน่วยหรือขนาดต่างกันมาก · complete pivoting เลือกจากทั้งเมทริกซ์ย่อย (สลับหลักด้วย) เสถียรที่สุดแต่แพง จึงไม่ค่อยใช้</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-1 · เครื่องคิดเลข 3 หลัก</span><h3>แก้ \(\begin{aligned} 0.0001x + y &= 1 \\ x + y &= 2 \end{aligned}\) โดยปัดทุกผลลัพธ์เหลือ 3 หลักนัยสำคัญ ทั้งแบบไม่สลับและสลับแถว (ค่าจริง \(x = 1.0001\dots,\ y = 0.9998\dots\))</h3><button type="button" class="wx-btn" data-ln-set='{"p":"eps","e":4,"s":3,"piv":0}' data-ln-target="pivotLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p><strong>ไม่สลับ:</strong> \(m = 1/0.0001 = 10^4\) แล้ว</p>
+          \[ a_{22} = 1 - 10^4 = -9999 \to \hlF{-1.00\times10^4},\qquad b_2 = 2 - 10^4 = -9998 \to \hlF{-1.00\times10^4} \]</li>
+        <li><p>\(y = 1.00\) แทนกลับ: \(x = \dfrac{1 - 1.00}{0.0001} = 0\) — ผิดทั้งหมด (คลาดเคลื่อน 100%)</p></li>
+        <li><p><strong>สลับแถว</strong> ให้ \(1\) เป็นตัวหลัก <a class="tag tf" href="#N5">N5</a>: \(m = 0.0001\)</p>
+          \[ a_{22} = 1 - 0.0001 = 0.9999 \to 1.00,\qquad b_2 = 1 - 0.0002 = 0.9998 \to 1.00 \]</li>
+        <li><p>\(y = 1.00,\ x = 2 - 1.00 = 1.00\) — ถูกต้องตามจำนวนหลักที่มี</p></li>
+      </ol>
+      <p class="answer">ไม่สลับ: \((x, y) = (0, 1.00)\) ✗ · สลับแถว: \((1.00, 1.00)\) ✓</p>
+      <p class="check">ต้นเหตุ: ตัวคูณ \(10^4\) ทำให้เลข 1 ใน \(1 - 10^4\) หายไปตอนปัด ข้อมูลของสมการแรกจึงหายไปทั้งหมด · เครื่องจริงเก็บ 16 หลักก็เกิดเรื่องเดียวกันเมื่อ \(\varepsilon \approx 10^{-17}\)</p>
+    </div>
+    <p>ในแล็บด้านล่าง เลื่อนขนาดตัวหลัก \(\varepsilon\) และจำนวนหลักที่เครื่องเก็บได้ แล้วดูว่าเมื่อไรวิธีไม่สลับแถวพัง กดดูตารางเทียบทุกจำนวนหลักด้านล่างแล็บ มีชุดตัวหลักเป็นศูนย์ 3×3 ให้ลองด้วย</p>
+    <div class="ln-pivot" id="pivotLab" data-p="eps" data-e="6" data-s="4"></div>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="tsec" aria-labelledby="lu">
+    <h2 id="lu">การแยก LU: แยกครั้งเดียว ใช้ได้ทุก \(\mathbf b\) <span class="lv lv-i">กลาง</span></h2>
+    <p>การกำจัดแบบเกาส์คือการเขียน \(A = LU\) โดยไม่รู้ตัว: \(U\) คือเมทริกซ์สามเหลี่ยมบนที่ได้ และ \(L\) คือเมทริกซ์สามเหลี่ยมล่างที่เก็บ<strong>ตัวคูณ \(m_{ik}\)</strong> ไว้ใต้แนวทแยง (แนวทแยงเป็น 1) งานจริงที่ต้องแก้ระบบเดิมกับ \(\mathbf b\) หลายชุด เช่น วงจรเดียวกันที่แหล่งจ่ายเปลี่ยนตามเวลา จึงแยก LU ครั้งเดียว (\(\approx \tfrac23n^3\)) แล้วแก้แต่ละ \(\mathbf b\) ด้วยการแทนค่าสองรอบ (\(\approx 2n^2\))</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N7" data-k="doolittle lu formulas l u entries multipliers ดูลิตเติล สูตร">
+        <p class="tf-n"><b><span class="fid">N7</span> Doolittle factorisation</b> การแยกแบบดูลิตเติล (\(\ell_{ii} = 1\))</p>
+        \[ u_{ij} = a_{ij} - \sum_{k=1}^{i-1}\ell_{ik}u_{kj}\ (j \ge i),\qquad \ell_{ij} = \frac{1}{u_{jj}}\Bigl(a_{ij} - \sum_{k=1}^{j-1}\ell_{ik}u_{kj}\Bigr)\ (i \gt j) \]
+        <p class="tf-x">แบบโครต์ (Crout) ให้ \(u_{ii} = 1\) แทน ผลลัพธ์ต่างกันแค่การกระจายแนวทแยง</p>
+      </div>
+      <div class="tf" id="N8" data-k="solve lu forward substitution back substitution two triangular systems แทนค่าไปข้างหน้า สองขั้น">
+        <p class="tf-n"><b><span class="fid">N8</span> Solving with LU</b> แก้ระบบด้วย LU</p>
+        \[ A\mathbf x = \mathbf b \iff L\mathbf y = \mathbf b \ (\text{ไปข้างหน้า}),\quad U\mathbf x = \mathbf y \ (\text{ย้อนกลับ}) \]
+      </div>
+      <div class="tf" id="N9" data-k="pa=lu permutation matrix pivoting lu decomposition เมทริกซ์การเรียงสับเปลี่ยน สลับแถว">
+        <p class="tf-n"><b><span class="fid">N9</span> LU with pivoting</b> \(PA = LU\)</p>
+        \[ PA = LU,\qquad L\mathbf y = P\mathbf b,\quad U\mathbf x = \mathbf y \]
+        <p class="tf-x">\(P\) คือเมทริกซ์เอกลักษณ์ที่สลับแถวตามที่ทำจริง ทุกเมทริกซ์จัตุรัสแยกได้ในรูปนี้</p>
+      </div>
+      <div class="tf" id="N10" data-k="determinant from lu product diagonal u sign swaps ดีเทอร์มิแนนต์จาก LU">
+        <p class="tf-n"><b><span class="fid">N10</span> Determinant from LU</b> ดีเทอร์มิแนนต์ฟรีจาก LU</p>
+        \[ \det A = (-1)^{\text{จำนวนการสลับแถว}}\prod_{i=1}^{n}u_{ii} \]
+        <p class="tf-x">นี่คือวิธีที่โปรแกรมหาดีเทอร์มิแนนต์จริง ไม่ใช่การกระจายโคแฟกเตอร์</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-2 · LU แล้วแก้สอง b</span><h3>แยก \(A = \begin{pmatrix} 1 & 2 & 4 \\ 3 & 8 & 14 \\ 2 & 6 & 13 \end{pmatrix}\) เป็น LU แล้วแก้ \(A\mathbf x = (3, 13, 4)^T\) และ \(A\mathbf x = (1, 1, 1)^T\)</h3><button type="button" class="wx-btn" data-ln-set='{"a":"1,2,4;3,8,14;2,6,13","b":"3,13,4","mode":"lu"}' data-ln-target="luLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>หลักที่ 1: \(\ell_{21} = 3,\ \ell_{31} = 2\) ได้แถวใหม่ \((0, 2, 2)\) และ \((0, 2, 5)\) · หลักที่ 2: \(\ell_{32} = 2/2 = 1\) ได้ \((0, 0, 3)\)</p>
+          \[ L = \begin{pmatrix} 1 & 0 & 0 \\ \hlF{3} & 1 & 0 \\ \hlF{2} & \hlF{1} & 1 \end{pmatrix},\qquad U = \begin{pmatrix} \hlP{1} & 2 & 4 \\ 0 & \hlP{2} & 2 \\ 0 & 0 & \hlP{3} \end{pmatrix},\qquad \det A = 1\cdot2\cdot3 = 6 \]</li>
+        <li><p>\(\mathbf b = (3, 13, 4)\): ไปข้างหน้า \(y_1 = 3,\ y_2 = 13 - 3(3) = 4,\ y_3 = 4 - 2(3) - 1(4) = -6\) <a class="tag tf" href="#N8">N8</a></p></li>
+        <li><p>ย้อนกลับ \(x_3 = -6/3 = -2,\ x_2 = (4 - 2(-2))/2 = 4,\ x_1 = 3 - 2(4) - 4(-2) = 3\)</p></li>
+        <li><p>\(\mathbf b = (1, 1, 1)\) ใช้ \(L, U\) เดิม: \(\mathbf y = (1, -2, 1)\) แล้ว \(x_3 = \tfrac13,\ x_2 = \tfrac{-2 - 2/3}{2} = -\tfrac43,\ x_1 = 1 - 2(-\tfrac43) - 4(\tfrac13) = \tfrac73\)</p></li>
+      </ol>
+      <p class="answer">\(\mathbf x = (3, 4, -2)\) และ \(\mathbf x = (\tfrac73, -\tfrac43, \tfrac13)\)</p>
+      <p class="check">ตรวจแถว 2 ของคำตอบแรก: \(3(3) + 8(4) + 14(-2) = 9 + 32 - 28 = 13\) ✓ · คำตอบที่สองไม่ต้องแยก LU ใหม่ ใช้แค่แทนค่าสองรอบ</p>
+    </div>
+    <div class="wx" id="ex-n3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-3 · PA = LU</span><h3>แยก \(A = \begin{pmatrix} 2 & 1 & 1 \\ 4 & -6 & 0 \\ -2 & 7 & 2 \end{pmatrix}\) แบบสลับแถว (partial pivoting) และหา \(\det A\)</h3><button type="button" class="wx-btn" data-ln-set='{"a":"2,1,1;4,-6,0;-2,7,2","b":"5,-2,9","mode":"plu"}' data-ln-target="luLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>หลัก 1 ตัวใหญ่สุดคือ 4 (แถว 2) สลับ \(R_1 \leftrightarrow R_2\) แล้ว \(\ell_{21} = 2/4 = \tfrac12,\ \ell_{31} = -2/4 = -\tfrac12\)</p>
+          \[ \begin{pmatrix} 4 & -6 & 0 \\ 0 & 4 & 1 \\ 0 & 4 & 2 \end{pmatrix} \]</li>
+        <li><p>หลัก 2 มี 4 สองตัวเท่ากัน คงแถว 2 ไว้ \(\ell_{32} = 1\) ได้ \(u_{33} = 2 - 1 = 1\)</p></li>
+      </ol>
+      <p class="answer">\(P = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix},\ L = \begin{pmatrix} 1 & 0 & 0 \\ \tfrac12 & 1 & 0 \\ -\tfrac12 & 1 & 1 \end{pmatrix},\ U = \begin{pmatrix} 4 & -6 & 0 \\ 0 & 4 & 1 \\ 0 & 0 & 1 \end{pmatrix},\ \det A = -(4\cdot4\cdot1) = -16\)</p>
+      <p class="check">สลับแถวหนึ่งครั้ง เครื่องหมายจึงเป็นลบ <a href="#N10">N10</a> · ตรวจด้วยซาร์รัส: \(2(-12) - 1(8) + 1(28 - 12) = -16\) ✓</p>
+    </div>
+    <div class="ln-lu" id="luLab" data-a="1,2,4;3,8,14;2,6,13" data-b="3,13,4" data-mode="lu"></div>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="tsec" aria-labelledby="cholesky">
+    <h2 id="cholesky">การแยกโชเลสกี (Cholesky) สำหรับเมทริกซ์สมมาตรบวกแน่นอน <span class="lv lv-i">กลาง</span></h2>
+    <p>เมทริกซ์ความนำ \(G\) ของวงจรตัวต้านทาน เมทริกซ์สติฟเนสของโครงสร้าง และ \(A^TA\) ของ<a href="/learn/linear-algebra/linear-systems/#least-squares">กำลังสองน้อยสุด</a> ล้วน<strong>สมมาตรและบวกแน่นอน</strong> (symmetric positive definite, SPD) เขียนได้เป็น \(A = LL^T\) ใช้งานครึ่งหนึ่งของ LU และไม่ต้องสลับแถวเลย</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N11" data-k="cholesky llt symmetric positive definite square root formula โชเลสกี สมมาตร บวกแน่นอน">
+        <p class="tf-n"><b><span class="fid">N11</span> Cholesky factorisation</b> \(A = LL^T\)</p>
+        \[ \ell_{jj} = \sqrt{a_{jj} - \sum_{k=1}^{j-1}\ell_{jk}^2},\qquad \ell_{ij} = \frac{1}{\ell_{jj}}\Bigl(a_{ij} - \sum_{k=1}^{j-1}\ell_{ik}\ell_{jk}\Bigr)\ (i \gt j) \]
+        <p class="tf-x">ถ้าค่าใต้รากติดลบหรือเป็นศูนย์ แปลว่าเมทริกซ์ไม่บวกแน่นอน (ใช้เป็นวิธีทดสอบ SPD ได้) · ต้นทุน \(\approx \tfrac13n^3\) flops</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-4 · วงจรสามโนด</span><h3>สมการโนด \(G\mathbf v = \mathbf i\) มี \(G = \begin{pmatrix} 4 & 2 & 2 \\ 2 & 5 & 3 \\ 2 & 3 & 6 \end{pmatrix}\) (S) และ \(\mathbf i = (10, 13, 17)\) (A) แก้ด้วยโชเลสกี</h3><button type="button" class="wx-btn" data-ln-set='{"a":"4,2,2;2,5,3;2,3,6","b":"10,13,17","mode":"chol"}' data-ln-target="luLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>หลัก 1: \(\ell_{11} = \sqrt4 = 2,\ \ell_{21} = 2/2 = 1,\ \ell_{31} = 2/2 = 1\) <a class="tag tf" href="#N11">N11</a></p></li>
+        <li><p>หลัก 2: \(\ell_{22} = \sqrt{5 - 1^2} = 2,\ \ell_{32} = (3 - 1\cdot1)/2 = 1\) · หลัก 3: \(\ell_{33} = \sqrt{6 - 1 - 1} = 2\)</p>
+          \[ L = \begin{pmatrix} 2 & 0 & 0 \\ 1 & 2 & 0 \\ 1 & 1 & 2 \end{pmatrix} \]</li>
+        <li><p>\(L\mathbf y = \mathbf i\): \(y_1 = 5,\ y_2 = (13 - 5)/2 = 4,\ y_3 = (17 - 5 - 4)/2 = 4\) · \(L^T\mathbf v = \mathbf y\): \(v_3 = 2,\ v_2 = (4 - 2)/2 = 1,\ v_1 = (5 - 1 - 2)/2 = 1\)</p></li>
+      </ol>
+      <p class="answer">\(\mathbf v = (1, 1, 2)\) V</p>
+      <p class="check">ตรวจ: \(4 + 2 + 4 = 10\) ✓ · \(2 + 5 + 6 = 13\) ✓ · \(2 + 3 + 12 = 17\) ✓</p>
+    </div>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="tsec" aria-labelledby="thomas">
+    <h2 id="thomas">อัลกอริทึมโทมัส: ระบบสามแนวทแยงในเวลา \(O(n)\) <span class="lv lv-i">กลาง</span></h2>
+    <p>ปัญหาหนึ่งมิติ เช่น การนำความร้อนตามแท่งโลหะ แรงดันตามสายส่งแบบขั้นบันได (ladder network) และการทำเส้นโค้ง spline ให้เมทริกซ์ที่มีตัวเลขแค่บนแนวทแยงและข้าง ๆ การกำจัดแบบเกาส์จึงลดเหลือการวนลูปเดียว</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N12" data-k="thomas algorithm tridiagonal tdma forward sweep back substitution o(n) โทมัส สามแนวทแยง">
+        <p class="tf-n"><b><span class="fid">N12</span> Thomas algorithm (TDMA)</b> สำหรับ \(a_ix_{i-1} + b_ix_i + c_ix_{i+1} = d_i\)</p>
+        \[ c_1' = \frac{c_1}{b_1},\ d_1' = \frac{d_1}{b_1};\quad c_i' = \frac{c_i}{b_i - a_ic_{i-1}'},\ d_i' = \frac{d_i - a_id_{i-1}'}{b_i - a_ic_{i-1}'};\quad x_n = d_n',\ x_i = d_i' - c_i'x_{i+1} \]
+        <p class="tf-x">ราว \(8n\) flops แทน \(\tfrac23n^3\) · ปลอดภัยเมื่อเมทริกซ์ทแยงเด่น (ไม่ต้องสลับแถว)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-5 · แท่งความร้อน 4 โหนด</span><h3>แท่งโลหะปลายซ้าย 100 °C ปลายขวา 0 °C แบ่ง 4 โหนดภายใน สมการสภาวะคงตัว \(-T_{i-1} + 2T_i - T_{i+1} = 0\) หา \(T_1, \dots, T_4\)</h3><button type="button" class="wx-btn" data-ln-set='{"a":"2,-1,0,0;-1,2,-1,0;0,-1,2,-1;0,0,-1,2","b":"100,0,0,0","mode":"lu"}' data-ln-target="luLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>ย้ายอุณหภูมิขอบไปทางขวา: \(a_i = -1,\ b_i = 2,\ c_i = -1,\ \mathbf d = (100, 0, 0, 0)\)</p></li>
+        <li><p>กวาดไปข้างหน้า <a class="tag tf" href="#N12">N12</a>: \(c' = (-\tfrac12, -\tfrac23, -\tfrac34),\quad d' = (50, \tfrac{100}{3}, 25, 20)\)</p></li>
+        <li><p>ย้อนกลับ: \(T_4 = 20,\ T_3 = 25 + \tfrac34(20) = 40,\ T_2 = \tfrac{100}{3} + \tfrac23(40) = 60,\ T_1 = 50 + \tfrac12(60) = 80\)</p></li>
+      </ol>
+      <p class="answer">\((T_1, T_2, T_3, T_4) = (80, 60, 40, 20)\) °C</p>
+      <p class="check">ได้เส้นตรงพอดี ตรงกับฟิสิกส์ของการนำความร้อนสภาวะคงตัวที่ไม่มีแหล่งความร้อนภายใน</p>
+    </div>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="tsec" aria-labelledby="iterative">
+    <h2 id="iterative">วิธีทำซ้ำ: จาโคบี เกาส์-ไซเดล และ SOR <span class="lv lv-i">กลาง</span></h2>
+    <p>แนวคิดง่ายมาก: แก้สมการที่ \(i\) หา \(x_i\) โดยใช้ค่าประมาณของตัวแปรอื่น แล้ววนทำซ้ำจนค่าไม่เปลี่ยน ไม่ต้องลดแถว ไม่ต้องเก็บเมทริกซ์เต็ม จึงเหมาะกับระบบใหญ่ที่ส่วนใหญ่เป็นศูนย์</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N13" data-k="jacobi method formula iteration old values simultaneous จาโคบี สูตร ค่าเก่า">
+        <p class="tf-n"><b><span class="fid">N13</span> Jacobi method</b> วิธีจาโคบี</p>
+        \[ x_i^{(k+1)} = \frac{1}{a_{ii}}\Bigl(b_i - \sum_{j \ne i} a_{ij}\,x_j^{(k)}\Bigr) \]
+        <p class="tf-x">ทุกตัวแปรในรอบใหม่คำนวณจากค่ารอบก่อนทั้งหมด ต้องเก็บเวกเตอร์สองชุด คำนวณขนานได้</p>
+      </div>
+      <div class="tf wide" id="N14" data-k="gauss seidel method formula newest values immediately เกาส์ ไซเดล ใช้ค่าใหม่ทันที">
+        <p class="tf-n"><b><span class="fid">N14</span> Gauss–Seidel method</b> วิธีเกาส์-ไซเดล</p>
+        \[ x_i^{(k+1)} = \frac{1}{a_{ii}}\Bigl(b_i - \sum_{j \lt i} a_{ij}\,\hlU{x_j^{(k+1)}} - \sum_{j \gt i} a_{ij}\,x_j^{(k)}\Bigr) \]
+        <p class="tf-x">ใช้ค่าที่เพิ่งได้ทันที มักลู่เข้าเร็วกว่าจาโคบีราวสองเท่า เก็บเวกเตอร์ชุดเดียว</p>
+      </div>
+      <div class="tf wide" id="N15" data-k="sor successive over relaxation omega relaxation factor weighted ผ่อนปรน โอเมกา">
+        <p class="tf-n"><b><span class="fid">N15</span> Successive over-relaxation (SOR)</b> ผ่อนปรนเกินต่อเนื่อง</p>
+        \[ x_i^{(k+1)} = (1 - \omega)\,x_i^{(k)} + \omega\,\tilde x_i^{\text{GS}},\qquad 0 \lt \omega \lt 2 \]
+        <p class="tf-x">\(\omega = 1\) คือเกาส์-ไซเดล · \(\omega \gt 1\) ก้าวเลยไปทางเดิม (เร่ง) · \(\omega \lt 1\) หน่วง (ใช้เมื่อแกว่ง)</p>
+      </div>
+      <div class="tf wide" id="N16" data-k="matrix form splitting d l u iteration matrix t c รูปเมทริกซ์ การแยก เมทริกซ์การทำซ้ำ">
+        <p class="tf-n"><b><span class="fid">N16</span> Matrix form</b> รูปเมทริกซ์ \(A = D + L + U\) (ทแยง · ใต้ทแยง · เหนือทแยง)</p>
+        \[ T_J = -D^{-1}(L + U),\qquad T_{GS} = -(D + L)^{-1}U,\qquad T_\omega = (D + \omega L)^{-1}\bigl[(1 - \omega)D - \omega U\bigr] \]
+        <p class="tf-x">ทุกวิธีเขียนได้เป็น \(\mathbf x^{(k+1)} = T\mathbf x^{(k)} + \mathbf c\) ความคลาดเคลื่อนจึงเป็น \(\mathbf e^{(k)} = T^k\mathbf e^{(0)}\)</p>
+      </div>
+      <div class="tf wide" id="N17" data-k="stopping criterion tolerance relative change approximate error significant digits scarborough เกณฑ์หยุด ความคลาดเคลื่อนโดยประมาณ">
+        <p class="tf-n"><b><span class="fid">N17</span> Stopping criteria</b> เกณฑ์หยุด</p>
+        \[ \frac{\lVert\mathbf x^{(k+1)} - \mathbf x^{(k)}\rVert_\infty}{\lVert\mathbf x^{(k+1)}\rVert_\infty} \lt \varepsilon \quad\text{หรือ}\quad \lvert\varepsilon_{a,i}\rvert = \Bigl|\frac{x_i^{(k+1)} - x_i^{(k)}}{x_i^{(k+1)}}\Bigr|\times100\% \lt \varepsilon_s = (0.5\times10^{2-n})\% \]
+        <p class="tf-x">เกณฑ์ของสการ์โบโรห์รับประกันความถูกต้องอย่างน้อย \(n\) หลักนัยสำคัญ · ควรตรวจส่วนเหลือ \(\lVert\mathbf b - A\mathbf x^{(k)}\rVert\) ด้วย และกำหนดจำนวนรอบสูงสุดกันวนไม่จบ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-6 · จาโคบีเทียบเกาส์-ไซเดล</span><h3>แก้ \(\begin{aligned} 4x - y + z &= 7 \\ 4x - 8y + z &= -21 \\ -2x + y + 5z &= 15 \end{aligned}\) เริ่มที่ \(\mathbf x^{(0)} = (1, 2, 2)\) (คำตอบจริง \((2, 4, 3)\))</h3><button type="button" class="wx-btn" data-ln-set='{"p":"bf3","method":"gs"}' data-ln-target="iterLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>เมทริกซ์ทแยงเด่นแท้: \(4 \gt 1 + 1,\ 8 \gt 4 + 1,\ 5 \gt 2 + 1\) จึงลู่เข้าแน่นอน <a class="tag tf" href="#N18">N18</a> · จัดรูปสูตรทำซ้ำ</p>
+          \[ x = \frac{7 + y - z}{4},\qquad y = \frac{21 + 4x + z}{8},\qquad z = \frac{15 + 2x - y}{5} \]</li>
+        <li><p>จาโคบีรอบที่ 1 (ใช้ \((1, 2, 2)\) ทั้งหมด) <a class="tag tf" href="#N13">N13</a></p>
+          \[ x = \tfrac{7 + 2 - 2}{4} = 1.75,\quad y = \tfrac{21 + 4 + 2}{8} = 3.375,\quad z = \tfrac{15 + 2 - 2}{5} = 3.000 \]</li>
+        <li><p>เกาส์-ไซเดลรอบที่ 1 (ใช้ \(x\) ใหม่ทันที) <a class="tag tf" href="#N14">N14</a></p>
+          \[ x = 1.75,\quad y = \tfrac{21 + 4(\hlU{1.75}) + 2}{8} = 3.75,\quad z = \tfrac{15 + 2(\hlU{1.75}) - \hlU{3.75}}{5} = 2.95 \]</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>k</th><th>จาโคบี \((x, y, z)\)</th><th>เกาส์-ไซเดล \((x, y, z)\)</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>1, 2, 2</td><td>1, 2, 2</td></tr>
+            <tr><td>1</td><td>1.750, 3.375, 3.000</td><td>1.750, 3.750, 2.950</td></tr>
+            <tr><td>2</td><td>1.844, 3.875, 3.025</td><td>1.950, 3.969, 2.986</td></tr>
+            <tr><td>3</td><td>1.963, 3.925, 2.963</td><td>1.996, 3.996, 2.999</td></tr>
+            <tr><td>4</td><td>1.991, 3.977, 3.000</td><td>1.9993, 3.9995, 2.9998</td></tr>
+            <tr><td>5</td><td>1.994, 3.995, 3.001</td><td>1.99993, 3.99994, 2.99998</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="answer">ทั้งสองวิธีเข้าใกล้ \((2, 4, 3)\) · เกาส์-ไซเดลคลาดเคลื่อนไม่ถึง 0.001 ตั้งแต่รอบที่ 4 ส่วนจาโคบีต้องใช้ 7 รอบ</p>
+      <p class="check">รัศมีสเปกตรัม \(\rho(T_J) \approx 0.335\) และ \(\rho(T_{GS}) \approx 0.125\) ความคลาดเคลื่อนจึงลดลงราว 3 เท่าต่อรอบสำหรับจาโคบี และ 8 เท่าต่อรอบสำหรับเกาส์-ไซเดล <a href="#N20">N20</a></p>
+    </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="tsec" aria-labelledby="convergence">
+    <h2 id="convergence">ลู่เข้าเมื่อไร และเร็วแค่ไหน <span class="lv lv-i">กลาง</span> → <span class="lv lv-a">ขั้นสูง</span></h2>
+    <div class="tf-grid">
+      <div class="tf" id="N18" data-k="diagonally dominant sufficient condition convergence jacobi gauss seidel reorder ทแยงเด่น เงื่อนไขพอเพียง สลับสมการ">
+        <p class="tf-n"><b><span class="fid">N18</span> Diagonal dominance</b> ทแยงเด่นแท้ (เงื่อนไขพอเพียง)</p>
+        \[ |a_{ii}| \gt \sum_{j \ne i}|a_{ij}|\ \ \text{ทุกแถว} \ \Rightarrow\ \text{จาโคบีและเกาส์-ไซเดลลู่เข้าทุกค่าเริ่มต้น} \]
+        <p class="tf-x">ถ้าไม่ทแยงเด่น ลอง<strong>สลับลำดับสมการ</strong>ก่อน (แล็บด้านล่าง ชุด “สลับสมการ” ลู่ออก) · สมมาตรบวกแน่นอนก็ทำให้เกาส์-ไซเดลลู่เข้าเช่นกัน</p>
+      </div>
+      <div class="tf" id="N19" data-k="spectral radius necessary sufficient eigenvalue iteration matrix convergence รัศมีสเปกตรัม ค่าเฉพาะ จำเป็นและพอเพียง">
+        <p class="tf-n"><b><span class="fid">N19</span> Spectral radius test</b> เงื่อนไขจำเป็นและพอเพียง</p>
+        \[ \mathbf x^{(k)} \to \mathbf x \ \text{ทุก } \mathbf x^{(0)} \iff \rho(T) = \max_i|\lambda_i(T)| \lt 1 \]
+        <p class="tf-x">\(\lambda_i\) คือ <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a> ของเมทริกซ์การทำซ้ำ · SOR ลู่ออกเสมอถ้า \(\omega \notin (0, 2)\) (คาฮาน)</p>
+      </div>
+      <div class="tf" id="N20" data-k="rate of convergence iterations digits gained log spectral radius อัตราการลู่เข้า จำนวนรอบ">
+        <p class="tf-n"><b><span class="fid">N20</span> Rate of convergence</b> จำนวนรอบที่ต้องใช้</p>
+        \[ \lVert\mathbf e^{(k)}\rVert \approx \rho^k\lVert\mathbf e^{(0)}\rVert \ \Rightarrow\ k \approx \frac{d}{-\log_{10}\rho} \ \text{รอบ เพื่อเพิ่มความแม่น } d \text{ หลัก} \]
+      </div>
+      <div class="tf" id="N21" data-k="optimal omega young sor tridiagonal consistently ordered cos pi รอบน้อยสุด โอเมกาที่ดีที่สุด">
+        <p class="tf-n"><b><span class="fid">N21</span> Optimal ω (Young)</b> \(\omega\) ที่ดีที่สุด</p>
+        \[ \rho_{GS} = \rho_J^2,\qquad \omega^* = \frac{2}{1 + \sqrt{1 - \rho_J^2}},\qquad \rho(T_{\omega^*}) = \omega^* - 1 \]
+        <p class="tf-x">ใช้ได้กับเมทริกซ์ “เรียงลำดับสอดคล้อง” เช่น สามแนวทแยง · สำหรับ \(\operatorname{tridiag}(-1, 2, -1)\) ขนาด \(n\): \(\rho_J = \cos\frac{\pi}{n + 1}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-7 · ทำไมต้อง SOR</span><h3>ระบบแท่งความร้อน \(\operatorname{tridiag}(-1, 2, -1)\) ขนาด 10×10 ต้องใช้กี่รอบเพื่อลดความคลาดเคลื่อน \(10^6\) เท่า สำหรับจาโคบี เกาส์-ไซเดล และ SOR ที่ \(\omega^*\)</h3><button type="button" class="wx-btn" data-ln-set='{"p":"tri10","method":"sor","w":1.55}' data-ln-target="iterLab">ลองในแล็บ</button></div>
+      <ol class="steps">
+        <li><p>\(\rho_J = \cos\frac{\pi}{11} \approx 0.9595\) และ \(\rho_{GS} = \rho_J^2 \approx 0.9206\) <a class="tag tf" href="#N21">N21</a></p></li>
+        <li><p>\(\omega^* = \dfrac{2}{1 + \sin(\pi/11)} \approx 1.560\) ได้ \(\rho_{SOR} = \omega^* - 1 \approx 0.560\)</p></li>
+        <li><p>\(k \approx 6/(-\log_{10}\rho)\) <a class="tag tf" href="#N20">N20</a>: จาโคบี \(6/0.018 \approx 334\) · เกาส์-ไซเดล \(\approx 167\) · SOR \(6/0.252 \approx 24\)</p></li>
+      </ol>
+      <p class="answer">ราว 334, 167 และ 24 รอบ — SOR เร็วกว่าเกาส์-ไซเดลเกือบ 7 เท่าโดยแทบไม่เพิ่มงานต่อรอบ</p>
+      <p class="check">ในแล็บ กดดู “สแกนหา ω ที่ดีที่สุด” จะเห็นจำนวนรอบต่ำสุดใกล้ \(\omega \approx 1.55\)–\(1.6\) (จำนวนรอบในแล็บต่างเล็กน้อยเพราะใช้เกณฑ์หยุด N17)</p>
+    </div>
+    <h3 id="iter-lab">ซิมูเลเตอร์วิธีทำซ้ำ: จาโคบี · เกาส์-ไซเดล · SOR</h3>
+    <p>เลือกชุดระบบ วิธี และ \(\omega\) กราฟแสดงความคลาดเคลื่อนของทั้งสามวิธีเทียบกัน (แตะกราฟเพื่อดูค่าแต่ละรอบ) ชุด 2×2 แสดงเส้นทางของค่าประมาณบนภาพเส้นตรงสองเส้น ลองชุด “สลับสมการ” เพื่อดูการลู่ออก</p>
+    <div class="ln-iter" id="iterLab" data-p="bf3" data-method="gs"></div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="tsec" aria-labelledby="conditioning">
+    <h2 id="conditioning">เลขเงื่อนไข: คำตอบเชื่อได้แค่ไหน <span class="lv lv-i">กลาง</span> → <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>อัลกอริทึมดีแค่ไหนก็แก้ปัญหาที่ “ป่วยโดยกำเนิด” ไม่ได้ ระบบที่สมการเกือบขนานกัน ข้อมูลผิดนิดเดียวคำตอบเปลี่ยนมาก เราวัดความป่วยนี้ด้วย<strong>เลขเงื่อนไข</strong> (condition number) ต่อยอดจาก <a href="/learn/linear-algebra/linear-systems/#conditioning">ระบบป่วยในหน้าระบบสมการ</a></p>
+    <div class="tf-grid">
+      <div class="tf wide" id="N22" data-k="vector norm matrix norm infinity row sum one column sum two singular นอร์ม ผลรวมแถว">
+        <p class="tf-n"><b><span class="fid">N22</span> Vector & matrix norms</b> นอร์ม</p>
+        \[ \lVert\mathbf x\rVert_\infty = \max_i|x_i|,\quad \lVert\mathbf x\rVert_1 = \sum|x_i|,\quad \lVert\mathbf x\rVert_2 = \sqrt{\textstyle\sum x_i^2};\qquad \lVert A\rVert_\infty = \max_i\sum_j|a_{ij}|,\quad \lVert A\rVert_1 = \max_j\sum_i|a_{ij}|,\quad \lVert A\rVert_2 = \sigma_{\max} \]
+      </div>
+      <div class="tf" id="N23" data-k="condition number kappa definition ill conditioned well conditioned เลขเงื่อนไข ระบบป่วย">
+        <p class="tf-n"><b><span class="fid">N23</span> Condition number</b> เลขเงื่อนไข</p>
+        \[ \kappa(A) = \lVert A\rVert\,\lVert A^{-1}\rVert \ge 1,\qquad \kappa_2(A) = \frac{\sigma_{\max}}{\sigma_{\min}} \]
+        <p class="tf-x">\(\kappa \approx 1\) ดีมาก · \(\kappa \to \infty\) เมื่อ \(A\) ใกล้เอกฐาน · \(\det\) เล็กไม่ได้แปลว่าป่วย (\(0.1I_{10}\) มี \(\det = 10^{-10}\) แต่ \(\kappa = 1\))</p>
+      </div>
+      <div class="tf" id="N24" data-k="error bound perturbation relative error digits lost log kappa ขอบเขตความคลาดเคลื่อน หลักที่เสีย">
+        <p class="tf-n"><b><span class="fid">N24</span> Error amplification</b> ขยายความคลาดเคลื่อน</p>
+        \[ \frac{\lVert\delta\mathbf x\rVert}{\lVert\mathbf x\rVert} \le \kappa(A)\frac{\lVert\delta\mathbf b\rVert}{\lVert\mathbf b\rVert},\qquad \text{หลักที่เสีย} \approx \log_{10}\kappa(A) \]
+        <p class="tf-x">ถ้า \(A\) คลาดเคลื่อนด้วย: \(\dfrac{\lVert\delta\mathbf x\rVert}{\lVert\mathbf x\rVert} \le \dfrac{\kappa}{1 - \kappa\frac{\lVert\delta A\rVert}{\lVert A\rVert}}\Bigl(\dfrac{\lVert\delta A\rVert}{\lVert A\rVert} + \dfrac{\lVert\delta\mathbf b\rVert}{\lVert\mathbf b\rVert}\Bigr)\)</p>
+      </div>
+      <div class="tf" id="N25" data-k="residual small error large check verify residual vector ส่วนเหลือ ตรวจคำตอบ">
+        <p class="tf-n"><b><span class="fid">N25</span> Residual vs error</b> ส่วนเหลือไม่ใช่ความคลาดเคลื่อน</p>
+        \[ \mathbf r = \mathbf b - A\tilde{\mathbf x},\qquad \frac{\lVert\mathbf x - \tilde{\mathbf x}\rVert}{\lVert\mathbf x\rVert} \le \kappa(A)\frac{\lVert\mathbf r\rVert}{\lVert\mathbf b\rVert} \]
+        <p class="tf-x">ส่วนเหลือเล็กรับประกันคำตอบแม่นก็ต่อเมื่อ \(\kappa\) ไม่ใหญ่</p>
+      </div>
+      <div class="tf" id="N26" data-k="iterative refinement residual correction lu reuse higher precision ปรับปรุงผลเฉลย">
+        <p class="tf-n"><b><span class="fid">N26</span> Iterative refinement</b> ปรับปรุงผลเฉลยซ้ำ</p>
+        \[ \mathbf r = \mathbf b - A\tilde{\mathbf x}\ (\text{ความละเอียดสูงขึ้น}),\quad LU\,\boldsymbol\delta = \mathbf r,\quad \tilde{\mathbf x} \leftarrow \tilde{\mathbf x} + \boldsymbol\delta \]
+        <p class="tf-x">ใช้ LU เดิม ต้นทุนรอบละ \(\approx n^2\) ได้หลักคืนมาเมื่อ \(\kappa\,\epsilon_{\text{mach}} \lt 1\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-8 · ระบบป่วย</span><h3>\(\begin{aligned} x + y &= 2 \\ x + 1.0001y &= 2.0001 \end{aligned}\) มีคำตอบ \((1, 1)\) ถ้าค่าทางขวาของสมการที่ 2 คลาดเป็น \(2.0002\) คำตอบเปลี่ยนเท่าไร เทียบกับ \(\kappa_\infty(A)\)</h3></div>
+      <ol class="steps">
+        <li><p>แก้ใหม่: ลบสมการ \(0.0001y = 0.0002 \Rightarrow y = 2,\ x = 0\) — เปลี่ยนจาก \((1, 1)\) เป็น \((0, 2)\)</p></li>
+        <li><p>\(A^{-1} = \dfrac{1}{0.0001}\begin{pmatrix} 1.0001 & -1 \\ -1 & 1 \end{pmatrix}\) ได้ \(\lVert A\rVert_\infty = 2.0001,\ \lVert A^{-1}\rVert_\infty = 20001\) <a class="tag tf" href="#N22">N22</a></p>
+          \[ \kappa_\infty(A) = 2.0001 \times 20001 \approx 4.0\times10^{4} \]</li>
+        <li><p>ข้อมูลเปลี่ยน \(\dfrac{0.0001}{2.0001} \approx 5\times10^{-5}\) แต่คำตอบเปลี่ยน \(\dfrac{\lVert(-1, 1)\rVert_\infty}{\lVert(1, 1)\rVert_\infty} = 1\) (100%) ขยาย \(2\times10^4\) เท่า ไม่เกิน \(\kappa\) ตาม <a class="tag tf" href="#N24">N24</a></p></li>
+      </ol>
+      <p class="answer">คำตอบเปลี่ยน 100% จากข้อมูลที่เปลี่ยน 0.005% · \(\kappa_\infty \approx 4\times10^4\) เสียความแม่นราว 4–5 หลัก</p>
+      <p class="check">ส่วนเหลือของ \((0, 2)\) ในระบบเดิมคือ \(\mathbf r = (0, -0.0001)\) เล็กมาก แต่คำตอบผิดทั้งหมด ยืนยัน <a href="#N25">N25</a></p>
+    </div>
+    <div class="ln-cond" id="condLab"></div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="tsec" aria-labelledby="heat">
+    <h2 id="heat">งานจริง: แผ่นความร้อนและสนามศักย์ด้วยวิธีผ่อนคลาย (relaxation) <span class="lv lv-i">กลาง</span></h2>
+    <p>อุณหภูมิในแผ่นโลหะสภาวะคงตัว และศักย์ไฟฟ้าในบริเวณที่ไม่มีประจุ เป็นไปตามสมการลาปลาซ \(\nabla^2T = 0\) เมื่อแบ่งเป็นตาราง สมการของแต่ละโหนดคือ “ค่าที่โหนด = ค่าเฉลี่ยของสี่โหนดรอบตัว” ได้ระบบสมการเชิงเส้นหนึ่งสมการต่อโหนด แผ่น 100×100 โหนดมีหนึ่งหมื่นตัวแปร แต่แต่ละสมการมีตัวแปรแค่ 5 ตัว เป็นงานของวิธีทำซ้ำโดยแท้</p>
+    <div class="wx" id="ex-n9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-9 · แผ่น 2×2 โหนด</span><h3>แผ่นสี่เหลี่ยมขอบบน 100 °C ขอบอื่น 0 °C มีโหนดภายใน \(T_1, T_2\) (แถวบน) และ \(T_3, T_4\) (แถวล่าง) หาอุณหภูมิทุกโหนด</h3></div>
+      <ol class="steps">
+        <li><p>สมการค่าเฉลี่ย เช่นที่ \(T_1\): \(4T_1 = 100 + 0 + T_2 + T_3\) เขียนครบสี่โหนด</p>
+          \[ \begin{pmatrix} 4 & -1 & -1 & 0 \\ -1 & 4 & 0 & -1 \\ -1 & 0 & 4 & -1 \\ 0 & -1 & -1 & 4 \end{pmatrix}\begin{pmatrix} T_1 \\ T_2 \\ T_3 \\ T_4 \end{pmatrix} = \begin{pmatrix} 100 \\ 100 \\ 0 \\ 0 \end{pmatrix} \]</li>
+        <li><p>สมมาตรซ้าย-ขวา \(T_1 = T_2,\ T_3 = T_4\) เหลือ \(3T_1 - T_3 = 100\) และ \(3T_3 - T_1 = 0\) ได้ \(T_1 = 3T_3\)</p></li>
+      </ol>
+      <p class="answer">\(T_1 = T_2 = 37.5\) °C, \(T_3 = T_4 = 12.5\) °C</p>
+      <p class="check">เมทริกซ์ทแยงเด่น (\(4 \ge 1 + 1\) และสมมาตรบวกแน่นอน) เกาส์-ไซเดลจึงลู่เข้าแน่นอน ลองตารางที่ละเอียดขึ้นในแล็บด้านล่าง</p>
+    </div>
+    <p>ตั้งอุณหภูมิขอบ กด ▶ เริ่ม แล้วดูความร้อนค่อย ๆ แผ่เข้าไปทีละรอบ เปลี่ยนวิธีและ \(\omega\) เพื่อเทียบความเร็ว ตารางด้านข้างบอกจำนวนรอบที่แต่ละวิธีต้องใช้ วางนิ้วหรือเมาส์บนช่องเพื่ออ่านอุณหภูมิ</p>
+    <div class="ln-heat" id="heatLab"></div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกวิธีอย่างไร และใช้ในโปรแกรมจริง <span class="lv lv-i">กลาง</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ลักษณะของระบบ</th><th>วิธีที่เหมาะ</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td>2–3 ตัวแปร ทำมือ ถามตัวแปรเดียว</td><td><a href="/learn/linear-algebra/cramers-rule/">คราเมอร์</a></td><td>ดีเทอร์มิแนนต์สองตัวก็ได้คำตอบ</td></tr>
+          <tr><td>หนาแน่น \(n\) ถึงราวหมื่น</td><td>LU + partial pivoting</td><td>เสถียร ใช้ซ้ำกับหลาย \(\mathbf b\) ได้</td></tr>
+          <tr><td>สมมาตรบวกแน่นอน (วงจร R, โครงสร้าง)</td><td>โชเลสกี</td><td>เร็วกว่า LU สองเท่า ไม่ต้องสลับแถว</td></tr>
+          <tr><td>สามแนวทแยง (แท่ง สายส่ง spline)</td><td>โทมัส</td><td>\(O(n)\)</td></tr>
+          <tr><td>ใหญ่และเบาบาง ทแยงเด่น</td><td>เกาส์-ไซเดล / SOR</td><td>ไม่ต้องเก็บเมทริกซ์เต็ม</td></tr>
+          <tr><td>ใหญ่มากและ SPD (FEM, วงจรชิป)</td><td>Conjugate Gradient + preconditioner</td><td>มาตรฐานของงานจำลองสมัยใหม่</td></tr>
+          <tr><td>\(\kappa\) ใหญ่ หรือเกือบเอกฐาน</td><td>ปรับสเกล + refinement หรือ SVD / QR</td><td>ลดผลการปัดเศษ แยกส่วนที่เป็นสัญญาณรบกวน</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <pre class="ln-code"># Python (NumPy / SciPy)
+import numpy as np
+from scipy.linalg import lu_factor, lu_solve, cho_factor, cho_solve, solve_banded
+A = np.array([[1, 2, 4], [3, 8, 14], [2, 6, 13]], float)
+x = np.linalg.solve(A, [3, 13, 4])            # LAPACK: PA = LU + partial pivoting → [ 3.  4. -2.]
+lu, piv = lu_factor(A)                         # แยกครั้งเดียว
+x2 = lu_solve((lu, piv), [1, 1, 1])            # แก้ b ใหม่: [ 2.333 -1.333  0.333]
+G = np.array([[4, 2, 2], [2, 5, 3], [2, 3, 6]], float)
+v = cho_solve(cho_factor(G), [10, 13, 17])     # โชเลสกี → [1. 1. 2.]
+print(np.linalg.cond(A, np.inf), np.linalg.matrix_rank(A))
+
+% MATLAB / Octave
+x = A \ [3; 13; 4];      [L, U, P] = lu(A);      R = chol(G);      cond(A, inf)
+v = pcg(G, [10; 13; 17], 1e-10, 100);           % conjugate gradient สำหรับระบบใหญ่</pre>
+    </section>
+
+    <!-- ============ 12 ============ -->
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย</h2>
+    <div class="sr-trap"><b>กับดักในข้อสอบและในงานจริง</b>
+      <ul>
+        <li>จาโคบีรอบเดียวกันเผลอใช้ค่าใหม่ — กลายเป็นเกาส์-ไซเดลโดยไม่ตั้งใจ ข้อสอบมักถามค่ารอบที่ 2 ซึ่งต่างกันชัด</li>
+        <li>สรุปว่า “ไม่ทแยงเด่น = ลู่ออก” — ทแยงเด่นเป็นเงื่อนไขพอเพียงเท่านั้น ต้องดู \(\rho(T)\) <a href="#N19">N19</a></li>
+        <li>หยุดเมื่อค่าเปลี่ยนน้อย แต่ไม่ตรวจส่วนเหลือ — ระบบที่ลู่เข้าช้ามากอาจเปลี่ยนน้อยทั้งที่ยังห่างคำตอบ</li>
+        <li>หา \(A^{-1}\) แล้วคูณ \(\mathbf b\) ในโปรแกรม — ช้ากว่าและคลาดเคลื่อนมากกว่าใช้ <code>solve</code></li>
+        <li>เชื่อว่า \(\det\) ใกล้ศูนย์แปลว่าระบบป่วย — ให้ดู \(\kappa\) ไม่ใช่ \(\det\) <a href="#N23">N23</a></li>
+      </ul>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
+    <p>รัศมีสเปกตรัมและ \(\omega^*\) มาจาก <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ</a> ของเมทริกซ์การทำซ้ำ ส่วนการเลือกว่าระบบมีคำตอบหรือไม่มาจาก <a href="/learn/linear-algebra/rank/">แรงก์</a> ทดสอบตัวเองด้วย <a href="/learn/linear-algebra/exam-practice/#set-c">แนวข้อสอบชุด C: วิธีเชิงตัวเลข</a> และอ่านสรุปเปรียบเทียบที่บทความ <a href="/blog/jacobi-vs-gauss-seidel/">เกาส์ LU จาโคบี เกาส์-ไซเดล เลือกวิธีไหน</a> (<a href="/en/blog/jacobi-vs-gauss-seidel/">English</a>)</p>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>มด</span></div>
+      <p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

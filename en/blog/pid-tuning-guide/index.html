@@ -42,7 +42,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/#article","headline":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","description":"A full PID tuning course in one article: identify the process with a step test, tune with Ziegler–Nichols, Cohen–Coon, SIMC or relay, compare the results by simulation, then fix windup and noise.","inLanguage":"en","url":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","mainEntityOfPage":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID tuning","Ziegler-Nichols method","Cohen-Coon method","SIMC tuning","Relay feedback","Integrator windup","First-order plus dead time"],"isPartOf":{"@id":"https://modsengineeringmath.com/en/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/en-blog-pid-tuning-guide.jpg"],"keywords":"PID tuning, PID tuning guide, how to tune a PID controller, Ziegler-Nichols method, Cohen-Coon, SIMC tuning, lambda tuning, relay auto-tuning, step test FOPDT, anti-windup, Kp Ki Kd, control systems"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://modsengineeringmath.com/en/blog/"},{"@type":"ListItem","position":3,"name":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","item":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the fastest reliable way to tune a PID loop?","acceptedAnswer":{"@type":"Answer","text":"Run one open-loop step test, read the gain K, dead time L and time constant T from the recording, then apply the SIMC rule K_p=T/(K(tau_c+L)), T_i=min(T,4(tau_c+L)) with tau_c=L. It needs one experiment, has one knob, and gives a smooth response with a gain margin near 3."}},{"@type":"Question","name":"Should I use Ziegler–Nichols?","acceptedAnswer":{"@type":"Answer","text":"Use it as a starting point when you have nothing else, and expect 40–80% overshoot and thin stability margins, because it was designed for a quarter-amplitude decay ratio. Most engineers detune it (lower K_p, larger T_i) or use SIMC or Tyreus–Luyben instead."}},{"@type":"Question","name":"Do I always need the D term?","acceptedAnswer":{"@type":"Answer","text":"No. Most industrial loops run PI. Derivative action helps lag-dominant processes with clean measurements (temperature, some position and speed loops) and is of little use when dead time dominates or the signal is noisy. If you use it, always filter it."}},{"@type":"Question","name":"How do I choose the integral time \\(T_i\\)?","acceptedAnswer":{"@type":"Answer","text":"For a self-regulating process a good first value is T_iapprox T (the process time constant), limited to 4(tau_c+L) when that is smaller. A T_i that is too short gives slow, rolling oscillation; too long leaves the error hanging around. The load-disturbance error area is about Delta d/K_i with K_i=K_p/T_i."}},{"@type":"Question","name":"What sample time should the controller use?","acceptedAnswer":{"@type":"Answer","text":"Roughly one tenth of the process time constant or smaller, and no more than about half the dead time when the dead time is small. Sampling adds about T_s/2 of extra delay, so slow sampling forces lower gains."}},{"@type":"Question","name":"Why does my loop oscillate even with small gains?","acceptedAnswer":{"@type":"Answer","text":"Suspect the hardware first: valve stiction, backlash or a dead band produces a limit cycle that no gain setting removes, and a noisy or badly filtered measurement can do the same. Look at the controller output: a sawtooth in the measurement with a square-wave output is the classic sign of stiction."}},{"@type":"Question","name":"What is integral windup and how do I stop it?","acceptedAnswer":{"@type":"Answer","text":"Windup is the integral term growing while the actuator is saturated, which causes large overshoot afterwards. Stop it with anti-windup: clamp the integrator, or use back-calculation dot I=K_ie+(u_{sat}-u)/T_t. In the simulation in this guide, back-calculation cut the overshoot from 19% to 0.5%."}},{"@type":"Question","name":"How can I tell whether a tuning is robust enough?","acceptedAnswer":{"@type":"Answer","text":"Aim for a gain margin of at least 2, a phase margin of 45–60° and a peak sensitivity M_s of 1.4–2. A quick field check is to raise K_p by 50% (or let the process gain double) and confirm that the response stays damped."}}]}]}</script>
 <script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -212,12 +212,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -928,17 +931,17 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     <span class="bc-sum">A PID controller adds proportional, integral and derivative action on the error. See what Kp, Ki and Kd do, the step-response table, a…</span>
     <span class="bc-foot"><time datetime="2026-10-16">16 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
-  <a class="blog-card" href="/en/blog/convergence-test-flowchart/">
-    <span class="bc-tag mono">Sequences &amp; series</span>
-    <b>How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step</b>
-    <span class="bc-sum">Pick the right convergence test the first time: an 8-step flowchart (n-th term, geometric, p-series, telescoping, limit comparison, ratio, root,…</span>
-    <span class="bc-foot"><time datetime="2026-10-24">24 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  <a class="blog-card" href="/en/blog/cramers-rule/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>Cramer's Rule: How to Use It, Why It Works, and When Not to Use It</b>
+    <span class="bc-sum">Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
-  <a class="blog-card" href="/en/blog/laurent-series-vs-taylor-series/">
-    <span class="bc-tag mono">Sequences &amp; series</span>
-    <b>What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)</b>
-    <span class="bc-sum">Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to…</span>
-    <span class="bc-foot"><time datetime="2026-10-24">24 Oct 2026</time><span class="bc-go">Read the article →</span></span>
+  <a class="blog-card" href="/en/blog/determinant-properties/">
+    <span class="bc-tag mono">Linear algebra</span>
+    <b>12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) and the Traps</b>
+    <span class="bc-sum">The 12 determinant properties used in entrance exams and engineering mathematics: row operations, det(kA) = kⁿ det A, products, inverses and the…</span>
+    <span class="bc-foot"><time datetime="2026-10-25">25 Oct 2026</time><span class="bc-go">Read the article →</span></span>
   </a>
 </div></section>
   </article>
@@ -957,7 +960,8 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/">Home</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">Latest site updates (Thai)</a>
-      <a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">Step-by-step worked solutions (Thai)</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -979,6 +983,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -1033,7 +1040,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
 
 </body>
 </html>

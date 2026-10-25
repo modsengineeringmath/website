@@ -1,0 +1,114 @@
+<!--meta
+{
+  "title": "Cramer's Rule: How to Use It, Why It Works, and When Not to Use It | Ajarn Mod",
+  "h1": "Cramer's Rule: How to Use It, Why It Works, and When Not to Use It",
+  "description": "Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0 case and why computers avoid it.",
+  "ogTitle": "Cramer's Rule: How to Use It and When Not To",
+  "lang": "en",
+  "blog": true,
+  "tag": "Linear algebra",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["Cramer's rule", "Cramer's rule 3x3", "how to use Cramer's rule", "solve linear system with determinants", "Cramer's rule one variable", "Cramer's rule determinant zero", "Cramer's rule proof"],
+  "about": ["Cramer's rule", "Determinant", "System of linear equations"],
+  "og": {"title": "Cramer's Rule: How to Use It", "sub": "x = Δx/Δ · 2×2 · 3×3 · why it works · Δ = 0 · when not to use it", "eyebrow": "Article · Linear algebra", "sym": "Δᵢ/Δ"},
+  "faq": [
+    {"q": "When can Cramer's rule be used?", "a": "When the number of equations equals the number of unknowns (a square coefficient matrix) and the determinant of the coefficient matrix is non-zero. If Δ = 0 the system has either no solution or infinitely many, and row reduction is needed to tell which."},
+    {"q": "Why is Cramer's rule fast in exams?", "a": "If the question asks for only one unknown you need just two determinants, Δ and the determinant for that unknown, instead of solving for everything or inverting the whole matrix. It is ideal for 2–3 unknowns by hand."},
+    {"q": "Why don't computer programs use Cramer's rule?", "a": "The cost explodes. With cofactor expansion a 20-unknown system needs about 5 × 10¹⁹ multiplications, while Gaussian elimination needs about 2,700, and Gaussian elimination with partial pivoting is also more stable numerically."},
+    {"q": "Can Cramer's rule be used for AC circuits?", "a": "Yes. It uses only addition, subtraction, multiplication and division, so it works directly with complex impedances, and also with the Laplace variable s, where Δ(s) = 0 is the characteristic equation of the circuit."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Cramer's rule</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Linear algebra</p>
+      <h1>Cramer's Rule: How to Use It, Why It Works, and When Not to Use It</h1>
+      <p class="lede">Cramer's rule gives a direct formula for each unknown of a linear system — no row reduction and no inverse. It is perfect for exam questions that ask for a single unknown, but it has limits you must know. This article collects how to use it, where it comes from, the special cases and its practical range in one place.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>The 30-second summary</b>
+        <ul>
+          <li>\(x_i = \dfrac{\Delta_i}{\Delta}\), where \(\Delta = \det A\) and \(\Delta_i\) is the determinant of \(A\) with column \(i\) replaced by the constants \(\mathbf b\)</li>
+          <li>Valid when \(A\) is square and \(\Delta \ne 0\) · one unknown needs only two determinants</li>
+          <li>For systems larger than 3×3, or in software, use Gaussian elimination or LU instead</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="rule">
+    <h2 id="rule">The rule in one sentence</h2>
+    <p>Compute the determinant \(\Delta\) of the coefficient matrix, put the right-hand constants in place of the column of the unknown you want, compute the new determinant \(\Delta_i\), and divide.</p>
+    <figure class="post-fig"><!--FIG:la-cramer-cols-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 190" role="img" aria-label="Cramer's rule: replace one column of A by b"><text class="mf-h" x="76" y="22" text-anchor="middle">Δ = det A</text><path class="mf-ink" d="M34 34 h-6 v72 h6"/><path class="mf-ink" d="M118 34 h6 v72 h-6"/><text class="mf-t" x="54" y="62" text-anchor="middle">3</text><text class="mf-t" x="98" y="62" text-anchor="middle">2</text><text class="mf-t" x="54" y="96" text-anchor="middle">1</text><text class="mf-t" x="98" y="96" text-anchor="middle">−1</text><text class="mf-h" x="76" y="130" text-anchor="middle">= −5</text><text class="mf-h" x="218" y="22" text-anchor="middle">Δₓ</text><path class="mf-ink" d="M176 34 h-6 v72 h6"/><path class="mf-ink" d="M260 34 h6 v72 h-6"/><rect class="mf-fill" x="178" y="41" width="36" height="30" rx="6"/><text class="mf-t" x="196" y="62" text-anchor="middle">7</text><text class="mf-t" x="240" y="62" text-anchor="middle">2</text><rect class="mf-fill" x="178" y="75" width="36" height="30" rx="6"/><text class="mf-t" x="196" y="96" text-anchor="middle">−1</text><text class="mf-t" x="240" y="96" text-anchor="middle">−1</text><text class="mf-h" x="218" y="130" text-anchor="middle">= −5</text><text class="mf-h" x="360" y="22" text-anchor="middle">Δᵧ</text><path class="mf-ink" d="M318 34 h-6 v72 h6"/><path class="mf-ink" d="M402 34 h6 v72 h-6"/><text class="mf-t" x="338" y="62" text-anchor="middle">3</text><rect class="mf-fill" x="364" y="41" width="36" height="30" rx="6"/><text class="mf-t" x="382" y="62" text-anchor="middle">7</text><text class="mf-t" x="338" y="96" text-anchor="middle">1</text><rect class="mf-fill" x="364" y="75" width="36" height="30" rx="6"/><text class="mf-t" x="382" y="96" text-anchor="middle">−1</text><text class="mf-h" x="360" y="130" text-anchor="middle">= −10</text><text class="mf-l" x="220" y="158" text-anchor="middle">system: 3x + 2y = 7,  x − y = −1</text><text class="mf-h" x="220" y="178" text-anchor="middle">x = Δₓ/Δ = 1   ·   y = Δᵧ/Δ = 2</text></svg><!--/FIG--><figcaption>A 2×2 example: replacing the first column by \(\mathbf b\) gives \(\Delta_x\); replacing the second gives \(\Delta_y\).</figcaption></figure>
+    \[ \begin{aligned} 3x + 2y &= 7 \\ x - y &= -1 \end{aligned} \quad\Rightarrow\quad \Delta = \begin{vmatrix} 3 & 2 \\ 1 & -1 \end{vmatrix} = -5,\quad x = \frac{\begin{vmatrix} 7 & 2 \\ -1 & -1 \end{vmatrix}}{-5} = \frac{-5}{-5} = 1,\quad y = \frac{\begin{vmatrix} 3 & 7 \\ 1 & -1 \end{vmatrix}}{-5} = \frac{-10}{-5} = 2 \]
+    </section>
+
+    <section class="tsec" aria-labelledby="three">
+    <h2 id="three">3×3 systems: solve only for what is asked</h2>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>Find \(y\) from \(2x + y - z = 3,\ x + 3y + 2z = 14,\ 3x - y + z = 2\)</h3></div>
+      <ol class="steps">
+        <li>\[ \Delta = \begin{vmatrix} 2 & 1 & -1 \\ 1 & 3 & 2 \\ 3 & -1 & 1 \end{vmatrix} = 2(3 + 2) - 1(1 - 6) + (-1)(-1 - 9) = 25 \]</li>
+        <li>\[ \Delta_y = \begin{vmatrix} 2 & 3 & -1 \\ 1 & 14 & 2 \\ 3 & 2 & 1 \end{vmatrix} = 2(14 - 4) - 3(1 - 6) + (-1)(2 - 42) = 75 \]</li>
+      </ol>
+      <p class="answer">\(y = 75/25 = 3\) — no need to find \(x\) and \(z\) at all</p>
+    </div>
+    <p>All three unknowns of a 3×3 system need four determinants. Always check by substituting back, or use the <a href="/learn/linear-algebra/cramers-rule/#calculator">step-by-step Cramer calculator</a> (in Thai).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="why">
+    <h2 id="why">Why the rule works (a two-line proof)</h2>
+    <p>Let \(X_i\) be the identity matrix with column \(i\) replaced by the solution vector \(\mathbf x\). Multiplying by \(A\), column \(i\) becomes \(A\mathbf x = \mathbf b\) while the other columns stay those of \(A\), so \(AX_i = A_i\). Now use \(\det(AB) = \det A\det B\):</p>
+    \[ \det A\cdot\det X_i = \det A_i,\qquad \det X_i = x_i \ \Rightarrow\ x_i = \frac{\det A_i}{\det A} \]
+    <p>Seen another way, Cramer's rule is \(\mathbf x = A^{-1}\mathbf b = \dfrac{\operatorname{adj}A\,\mathbf b}{\det A}\) written one unknown at a time, so it always agrees with the inverse method.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="zero">
+    <h2 id="zero">When Δ = 0, and parameter-k problems</h2>
+    <p>If \(\Delta = 0\) the formula fails, and the system has either no solution or infinitely many. A favourite exam example:</p>
+    \[ \begin{aligned} kx + y &= 1 \\ x + ky &= 1 \end{aligned}\qquad \Delta = k^2 - 1,\quad \Delta_x = \Delta_y = k - 1 \]
+    <ul>
+      <li>\(k \ne \pm1\): \(x = y = \dfrac{1}{k + 1}\)</li>
+      <li>\(k = 1\): \(\Delta = \Delta_x = \Delta_y = 0\); both equations are the same line → infinitely many solutions</li>
+      <li>\(k = -1\): \(\Delta = 0\) but \(\Delta_x = -2 \ne 0\) → parallel lines → no solution</li>
+    </ul>
+    <div class="sr-trap"><b>Trap</b> Never cancel the factor \((k - 1)\) before checking \(k = 1\). And for 3×3 systems, even if \(\Delta\) and every \(\Delta_i\) are zero the system can still have no solution — <a href="/learn/linear-algebra/rank/#systems">use rank to decide</a> (in Thai).</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="when">
+    <h2 id="when">When to use it, and when not to</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Use it for</th><th>Avoid it for</th></tr></thead>
+        <tbody>
+          <tr><td>2–3 unknowns by hand</td><td>4 or more unknowns</td></tr>
+          <tr><td>A single unknown, e.g. one mesh current</td><td>\(\Delta = 0\) or very close to zero</td></tr>
+          <tr><td>Symbolic coefficients (\(R\), \(k\), \(s\)) when you want a general formula</td><td>Different numbers of equations and unknowns</td></tr>
+          <tr><td>2×2 AC circuits with complex impedances</td><td>Software that needs speed and numerical accuracy</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Cost is the main reason. With determinants by cofactor expansion, Cramer's rule needs about \((n + 1)!\) multiplications, so a 20-unknown system needs about \(5\times10^{19}\) of them (roughly 1,600 years at a billion per second), while Gaussian elimination needs about \(n^3/3 \approx 2{,}700\). Details are in <a href="/learn/linear-algebra/numerical-methods/#why">numerical solution of linear systems</a> (in Thai).</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/cramers-rule/">Cramer's rule in full: three-mesh circuits, AC circuits and transfer functions</a></li>
+        <li><a href="/learn/linear-algebra/determinants/">Determinants: Sarrus, cofactors and properties</a></li>
+        <li><a href="/learn/linear-algebra/numerical-methods/">The numerical methods used instead of Cramer for large systems</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-a">Cramer's rule and linear-system exam problems with solutions</a></li>
+        <li><a href="/en/blog/determinant-properties/">Article: 12 determinant properties for exams</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

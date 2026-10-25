@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/en/plc/io-wiring/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/en/plc/io-wiring/#article","headline":"PLC Input/Output Wiring: Sinking and Sourcing, PNP/NPN Sensors, Relay and Transistor Outputs, Inductive Loads and the 24 VDC Supply","description":"Wire PLC I/O correctly every time: 24 VDC Type 1, 2 and 3 inputs to IEC 61131-2, sinking and sourcing inputs, 3-wire PNP and NPN sensors with brown, black and blue wire colours, 2-wire sensors and leakage current, relay, transistor and triac outputs, flyback diodes, RC snubbers, interposing relays, 4–20 mA analog signals, shielding, earthing the 0 V, and sizing the power supply.","inLanguage":"en","url":"https://modsengineeringmath.com/learn/en/plc/io-wiring/","mainEntityOfPage":"https://modsengineeringmath.com/learn/en/plc/io-wiring/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Sinking and sourcing","Proximity sensor","Flyback diode","IEC 61131-2"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/en/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-en-plc-io-wiring.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Library","item":"https://modsengineeringmath.com/learn/en/"},{"@type":"ListItem","position":3,"name":"PLC Automation","item":"https://modsengineeringmath.com/learn/en/plc/"},{"@type":"ListItem","position":4,"name":"Wiring PLC inputs and outputs: sinking and sourcing, PNP/NPN sensors, relay vs transistor outputs, inductive loads and the 24 VDC supply","item":"https://modsengineeringmath.com/learn/en/plc/io-wiring/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which type of input does a PNP sensor connect to?","acceptedAnswer":{"@type":"Answer","text":"A PNP sensor puts +24 V out on its signal wire (it is a source, i.e. sourcing), so it must connect to an input that takes current in and returns it to 0 V (a sinking input). In practice, on a PLC with a common COM terminal, connect the COM of that input group to 0 V. An NPN sensor pulls the signal down to 0 V, so its group COM must go to +24 V."}},{"@type":"Question","name":"Why does a 2-wire sensor make an input stay on?","acceptedAnswer":{"@type":"Answer","text":"A 2-wire sensor needs current to power itself even in the OFF state (a leakage current of 0.5–1.5 mA). If this current exceeds the maximum OFF current the input accepts, the PLC reads the input as permanently ON. Use a Type 3 input, or fit a bleeder resistor in parallel with the input as the manual specifies."}}]}]}</script>
@@ -212,12 +212,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -592,7 +595,8 @@
       <a href="/">Home</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">Latest site updates (Thai)</a>
-      <a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">Step-by-step worked solutions (Thai)</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -614,6 +618,9 @@
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -668,7 +675,7 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
-<script src="/assets/lesson.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
+<script src="/assets/lesson.js?v=bf101792" defer></script>
 </body>
 </html>

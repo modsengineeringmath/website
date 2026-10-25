@@ -1,0 +1,126 @@
+<!--meta
+{
+  "title": "สมบัติดีเทอร์มิแนนต์ 12 ข้อที่ออกสอบบ่อย พร้อมสูตร det(kA) det(adj A) และตัวอย่าง | อาจารย์มด",
+  "h1": "สมบัติดีเทอร์มิแนนต์ 12 ข้อที่ออกสอบบ่อย: det(kA), det(A⁻¹), det(adj A) และกับดักที่ต้องระวัง",
+  "description": "สรุปสมบัติดีเทอร์มิแนนต์ 12 ข้อที่ใช้ในข้อสอบเข้ามหาวิทยาลัยและคณิตศาสตร์วิศวกรรม การดำเนินการแถว det(kA) = kⁿ det A ผลคูณ อินเวอร์ส แอดจอยต์ พร้อมตัวอย่างโจทย์และกับดักที่พบบ่อย",
+  "ogTitle": "สมบัติดีเทอร์มิแนนต์ 12 ข้อที่ออกสอบบ่อย",
+  "blog": true,
+  "tag": "พีชคณิตเชิงเส้น",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["สมบัติดีเทอร์มิแนนต์", "สมบัติ det", "det(kA)", "det(adj A)", "det A inverse", "ดีเทอร์มิแนนต์ ข้อสอบ", "determinant properties", "สูตรดีเทอร์มิแนนต์", "โจทย์ดีเทอร์มิแนนต์ A-Level"],
+  "about": ["Determinant", "Adjugate matrix", "Matrix inverse"],
+  "og": {"title": "สมบัติดีเทอร์มิแนนต์ 12 ข้อ", "sub": "det(kA) = kⁿ det A · det(AB) · det(A⁻¹) · det(adj A) + กับดักที่พบบ่อย", "eyebrow": "บทความ · พีชคณิตเชิงเส้น", "sym": "|A|"},
+  "faq": [
+    {"q": "det(2A) เท่ากับ 2 det A ใช่ไหม?", "a": "ไม่ใช่ การคูณเมทริกซ์ด้วย 2 คือคูณทุกแถวด้วย 2 และแต่ละแถวดึง 2 ออกมาได้หนึ่งครั้ง สำหรับเมทริกซ์ n×n จึงได้ det(2A) = 2ⁿ det A เช่น เมทริกซ์ 3×3 ได้ 8 det A"},
+    {"q": "det(adj A) หาอย่างไร?", "a": "ใช้สูตร det(adj A) = (det A)ⁿ⁻¹ ซึ่งมาจาก A adj A = (det A)I เมื่อหาดีเทอร์มิแนนต์ทั้งสองข้างได้ det A · det(adj A) = (det A)ⁿ เช่น เมทริกซ์ 3×3 ที่ det A = −2 จะได้ det(adj A) = 4"},
+    {"q": "det(A + B) เท่ากับ det A + det B ไหม?", "a": "ไม่เท่า ดีเทอร์มิแนนต์ไม่มีสมบัติการบวกทั้งเมทริกซ์ ต้องบวกเมทริกซ์ก่อนแล้วจึงหาดีเทอร์มิแนนต์ สมบัติเชิงเส้นมีเฉพาะการแยกทีละแถวเท่านั้น"},
+    {"q": "การดำเนินการแถวแบบไหนไม่เปลี่ยนค่าดีเทอร์มิแนนต์?", "a": "การบวกพหุคูณของแถวหนึ่งเข้ากับอีกแถว (R_i ← R_i + kR_j) ไม่เปลี่ยนค่า ส่วนการสลับสองแถวเปลี่ยนเครื่องหมาย และการคูณแถวหนึ่งด้วย k ทำให้ค่าถูกคูณด้วย k"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>สมบัติดีเทอร์มิแนนต์</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// บทความ · พีชคณิตเชิงเส้น</p>
+      <h1>สมบัติดีเทอร์มิแนนต์ 12 ข้อที่ออกสอบบ่อย: det(kA), det(A⁻¹), det(adj A) และกับดักที่ต้องระวัง</h1>
+      <p class="lede">ข้อสอบเรื่องดีเทอร์มิแนนต์ส่วนใหญ่ไม่ได้ให้คำนวณจากตัวเลขตรง ๆ แต่ให้ \(\det A\) มาเพียงค่าเดียว แล้วถามดีเทอร์มิแนนต์ของเมทริกซ์ที่สร้างจาก \(A\) ทุกข้อแก้ได้ในบรรทัดเดียวถ้ารู้สมบัติ 12 ข้อนี้ ให้ \(A, B\) เป็นเมทริกซ์ \(n\times n\) และ \(k\) เป็นค่าคงที่</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สามสูตรที่ต้องจำให้ขึ้นใจ</b>
+        <ul>
+          <li>\(\det(kA) = k^n\det A\) — เลขชี้กำลังคือขนาด \(n\)</li>
+          <li>\(\det(AB) = \det A\det B\) จึงได้ \(\det A^{-1} = 1/\det A\) และ \(\det A^m = (\det A)^m\)</li>
+          <li>\(\det(\operatorname{adj}A) = (\det A)^{n-1}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="meaning">
+    <h2 id="meaning">ทำไมสมบัติเหล่านี้จึงจริง: ดีเทอร์มิแนนต์คือตัวคูณพื้นที่</h2>
+    <p>เมทริกซ์ 2×2 เปลี่ยนสี่เหลี่ยมจัตุรัสหนึ่งหน่วยเป็นสี่เหลี่ยมด้านขนาน และ \(|\det A|\) คือพื้นที่ของมัน (3×3 คือปริมาตร) เมื่อมองแบบนี้ สมบัติส่วนใหญ่ก็ชัดเจน เช่น ขยายทุกด้าน 2 เท่า พื้นที่โต \(2^2\) เท่า ปริมาตรโต \(2^3\) เท่า</p>
+    <figure class="post-fig"><!--FIG:la-det-area--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 246" role="img" aria-label="det A คือตัวคูณพื้นที่ คูณทุกแถวด้วย k ได้ kⁿ เท่า"><rect class="mf-bg" x="26" y="14" width="186" height="170" rx="8"/><line class="mf-g" x1="44.6" y1="14" x2="44.6" y2="184"/><text class="mf-k" x="44.6" y="197" text-anchor="middle">0</text><line class="mf-g" x1="81.8" y1="14" x2="81.8" y2="184"/><text class="mf-k" x="81.8" y="197" text-anchor="middle">1</text><line class="mf-g" x1="119" y1="14" x2="119" y2="184"/><text class="mf-k" x="119" y="197" text-anchor="middle">2</text><line class="mf-g" x1="156.2" y1="14" x2="156.2" y2="184"/><text class="mf-k" x="156.2" y="197" text-anchor="middle">3</text><line class="mf-g" x1="193.4" y1="14" x2="193.4" y2="184"/><text class="mf-k" x="193.4" y="197" text-anchor="middle">4</text><line class="mf-g" x1="26" y1="162.8" x2="212" y2="162.8"/><text class="mf-k" x="21" y="166.8" text-anchor="end">0</text><line class="mf-g" x1="26" y1="120.2" x2="212" y2="120.2"/><text class="mf-k" x="21" y="124.2" text-anchor="end">1</text><line class="mf-g" x1="26" y1="77.8" x2="212" y2="77.8"/><text class="mf-k" x="21" y="81.8" text-anchor="end">2</text><line class="mf-g" x1="26" y1="35.2" x2="212" y2="35.2"/><text class="mf-k" x="21" y="39.2" text-anchor="end">3</text><line class="mf-ax" x1="26" y1="162.8" x2="212" y2="162.8"/><line class="mf-ax" x1="44.6" y1="14" x2="44.6" y2="184"/><path class="mf-dash" d="M44.6 162.8L81.8 162.8L81.8 120.2L44.6 120.2L44.6 162.8"/><path class="mf-sig" d="M44.6 162.8L156.2 120.2L193.4 35.2L81.8 77.8L44.6 162.8"/><path class="mf-fill" d="M44.6 162.8L156.2 120.2L193.4 35.2L81.8 77.8Z"/><text class="mf-h" x="119" y="103" text-anchor="middle">พื้นที่ 5</text><text class="mf-l" x="119" y="216" text-anchor="middle">A = [3 1; 1 2] · det A = 5</text><rect class="mf-bg" x="240" y="14" width="186" height="170" rx="8"/><line class="mf-g" x1="258.6" y1="14" x2="258.6" y2="184"/><text class="mf-k" x="258.6" y="197" text-anchor="middle">0</text><line class="mf-g" x1="295.8" y1="14" x2="295.8" y2="184"/><text class="mf-k" x="295.8" y="197" text-anchor="middle">1</text><line class="mf-g" x1="333" y1="14" x2="333" y2="184"/><text class="mf-k" x="333" y="197" text-anchor="middle">2</text><line class="mf-g" x1="370.2" y1="14" x2="370.2" y2="184"/><text class="mf-k" x="370.2" y="197" text-anchor="middle">3</text><line class="mf-g" x1="407.4" y1="14" x2="407.4" y2="184"/><text class="mf-k" x="407.4" y="197" text-anchor="middle">4</text><line class="mf-g" x1="240" y1="162.8" x2="426" y2="162.8"/><text class="mf-k" x="235" y="166.8" text-anchor="end">0</text><line class="mf-g" x1="240" y1="120.2" x2="426" y2="120.2"/><text class="mf-k" x="235" y="124.2" text-anchor="end">1</text><line class="mf-g" x1="240" y1="77.8" x2="426" y2="77.8"/><text class="mf-k" x="235" y="81.8" text-anchor="end">2</text><line class="mf-g" x1="240" y1="35.2" x2="426" y2="35.2"/><text class="mf-k" x="235" y="39.2" text-anchor="end">3</text><line class="mf-ax" x1="240" y1="162.8" x2="426" y2="162.8"/><line class="mf-ax" x1="258.6" y1="14" x2="258.6" y2="184"/><path class="mf-fill2" d="M258.6 162.8L333 162.8L333 77.8L258.6 77.8Z"/><path class="mf-sig2" d="M258.6 162.8L333 162.8L333 77.8L258.6 77.8L258.6 162.8"/><path class="mf-sig" d="M258.6 162.8L295.8 162.8L295.8 120.2L258.6 120.2L258.6 162.8"/><text class="mf-h" x="314.4" y="103" text-anchor="middle">×4</text><text class="mf-l" x="333" y="216" text-anchor="middle">det(2A) = 2²·det A</text><text class="mf-h" x="220" y="238" text-anchor="middle">3×3 (ปริมาตร): det(2A) = 2³ det A</text></svg><!--/FIG--><figcaption>ซ้าย: \(\det A = 5\) คือพื้นที่ที่สี่เหลี่ยมหนึ่งหน่วยกลายเป็น · ขวา: คูณทุกแถวด้วย 2 พื้นที่โต \(2^2\) เท่า</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="row-rules">
+    <h2 id="row-rules">ข้อ 1–6: การดำเนินการตามแถวและเมทริกซ์พิเศษ</h2>
+    <ol>
+      <li><strong>ทรานสโพส:</strong> \(\det A^T = \det A\) — สมบัติทุกข้อของแถวจึงใช้กับหลักได้ด้วย</li>
+      <li><strong>สลับสองแถว:</strong> ค่าเปลี่ยนเครื่องหมาย</li>
+      <li><strong>คูณแถวหนึ่งด้วย \(k\):</strong> ค่าถูกคูณด้วย \(k\) (ดึงตัวร่วมออกได้ทีละแถว)</li>
+      <li><strong>บวกพหุคูณของแถวอื่น</strong> \(R_i \leftarrow R_i + kR_j\): ค่าไม่เปลี่ยน — เครื่องมือหลักในการลดแถว</li>
+      <li><strong>แถวศูนย์ แถวซ้ำ หรือแถวเป็นสัดส่วนกัน:</strong> \(\det = 0\)</li>
+      <li><strong>เมทริกซ์สามเหลี่ยมหรือทแยงมุม:</strong> \(\det\) = ผลคูณสมาชิกแนวทแยง</li>
+    </ol>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>ถ้า \(\begin{vmatrix} a & b & c \\ d & e & f \\ g & h & i \end{vmatrix} = 5\) จงหา \(\begin{vmatrix} 2a & 2b & 2c \\ g & h & i \\ d + 3a & e + 3b & f + 3c \end{vmatrix}\)</h3></div>
+      <ol class="steps">
+        <li><p>ดึง 2 ออกจากแถว 1 (ข้อ 3) · แถว 3 ลบพหุคูณของแถว 1 ได้ \((d, e, f)\) โดยค่าไม่เปลี่ยน (ข้อ 4)</p></li>
+        <li><p>เหลือแถว \((a, b, c), (g, h, i), (d, e, f)\) สลับแถว 2 กับ 3 เครื่องหมายเปลี่ยน (ข้อ 2)</p></li>
+      </ol>
+      <p class="answer">\(2\times(-5) = -10\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="algebra">
+    <h2 id="algebra">ข้อ 7–10: ค่าคงที่ ผลคูณ อินเวอร์ส และกำลัง</h2>
+    <ol start="7">
+      <li>\(\det(kA) = k^n\det A\) — เพราะ \(k\) อยู่ในทุกแถว \(n\) แถว</li>
+      <li>\(\det(AB) = \det A\det B = \det(BA)\) แม้ \(AB \ne BA\)</li>
+      <li>\(\det(A^{-1}) = \dfrac{1}{\det A}\) — และ \(A\) มีอินเวอร์สก็ต่อเมื่อ \(\det A \ne 0\)</li>
+      <li>\(\det(A^m) = (\det A)^m\)</li>
+    </ol>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>\(A\) เป็น \(3\times3\) ที่ \(\det A = 4\) จงหา \(\det(2A^{-1}A^T)\)</h3></div>
+      <ol class="steps"><li>\[ \det(2A^{-1}A^T) = 2^3\cdot\frac14\cdot4 = 8 \]</li></ol>
+      <p class="answer">8</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="adjugate">
+    <h2 id="adjugate">ข้อ 11: แอดจอยต์ (adj A) ที่นักเรียนพลาดบ่อย</h2>
+    <p>จาก \(A\operatorname{adj}A = (\det A)I\) หาดีเทอร์มิแนนต์ทั้งสองข้าง ได้ \(\det A\cdot\det(\operatorname{adj}A) = (\det A)^n\)</p>
+    \[ \det(\operatorname{adj}A) = (\det A)^{n-1},\qquad \operatorname{adj}(kA) = k^{n-1}\operatorname{adj}A,\qquad \operatorname{adj}(\operatorname{adj}A) = (\det A)^{n-2}A \]
+    <div class="wx">
+      <div class="wx-head"><span class="mono">ตัวอย่าง</span><h3>\(A\) เป็น \(3\times3\) ที่ \(\det A = 3\) จงหา \(\det(2\operatorname{adj}A)\) และ \(\det(\operatorname{adj}(\operatorname{adj}A))\)</h3></div>
+      <ol class="steps">
+        <li>\[ \det(2\operatorname{adj}A) = 2^3\cdot3^{2} = 72 \]</li>
+        <li>\[ \det(\operatorname{adj}(\operatorname{adj}A)) = \det(3A) = 3^3\cdot3 = 81 \]</li>
+      </ol>
+      <p class="answer">72 และ 81</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trap">
+    <h2 id="trap">ข้อ 12: สิ่งที่ “ไม่มี” สูตร</h2>
+    <div class="sr-trap"><b>กับดักที่เจอทุกปี</b>
+      <ul>
+        <li>\(\det(A + B) \ne \det A + \det B\) — ต้องบวกเมทริกซ์ก่อน (มีแค่สมบัติเชิงเส้นทีละแถว)</li>
+        <li>\(\det(kA) \ne k\det A\) และ \(\det(\operatorname{adj}A) \ne \det A\) — เลขชี้กำลังขึ้นกับ \(n\)</li>
+        <li>\(\det(-A) = (-1)^n\det A\) — เมทริกซ์ 2×2 ได้ค่าเดิม แต่ 3×3 ได้เครื่องหมายตรงข้าม</li>
+        <li>\(|A|\) ไม่ใช่ค่าสัมบูรณ์ ดีเทอร์มิแนนต์ติดลบได้</li>
+      </ul>
+    </div>
+    <p>เทคนิคเสริม: ถ้าทุกแถวมีผลบวกเท่ากัน ให้บวกทุกหลักเข้าหลักแรกแล้วดึงผลบวกนั้นออกมา จะได้ตัวประกอบทันที เช่น เมทริกซ์ที่แนวทแยงเป็น \(a\) ตัวอื่นเป็น \(b\) มี \(\det = (a - b)^{n-1}(a + (n - 1)b)\)</p>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">อ่านต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/determinants/#exam-shortcuts">ดีเทอร์มิแนนต์ฉบับเต็ม: สูตรลัดออกสอบ D22–D25 และพิสูจน์</a></li>
+        <li><a href="/learn/linear-algebra/inverse/">อินเวอร์สของเมทริกซ์และแอดจอยต์</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-a">แนวข้อสอบชุด A: สมบัติดีเทอร์มิแนนต์ 18 ข้อ</a></li>
+        <li><a href="/blog/determinant-and-inverse-matrix/">บทความ: วิธีหา Determinant และ Inverse 2×2, 3×3</a></li>
+        <li><a href="/blog/cramers-rule/">บทความ: กฎของคราเมอร์ใช้อย่างไร</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,119 @@
+<!--meta
+{
+  "title": "What Is the Rank of a Matrix? How to Find It and What It Says About Linear Systems | Ajarn Mod",
+  "h1": "What Is the Rank of a Matrix? How to Find It and What It Tells You About a Linear System",
+  "description": "The rank of a matrix explained visually: finding it by row reduction and by minors, using rank to decide whether Ax = b has one, infinitely many or no solutions, parameter-k problems and circuit uses.",
+  "ogTitle": "What Is the Rank of a Matrix and How to Find It",
+  "lang": "en",
+  "blog": true,
+  "tag": "Linear algebra",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["rank of a matrix", "how to find the rank of a matrix", "matrix rank row echelon form", "rank by minors", "Rouché–Capelli theorem", "rank and solutions of linear systems", "rank with parameter k", "rank nullity"],
+  "about": ["Rank of a matrix", "Row echelon form", "Rouché–Capelli theorem", "System of linear equations"],
+  "og": {"title": "What Is the Rank of a Matrix?", "sub": "Count independent rows · row reduction · minors · one, infinitely many or no solutions", "eyebrow": "Article · Linear algebra", "sym": "r(A)"},
+  "faq": [
+    {"q": "What is the rank of a matrix in simple terms?", "a": "It is the number of linearly independent rows of the matrix, which always equals the number of independent columns. After row reduction to echelon form it is simply the number of non-zero rows (the number of pivots). For a system of equations it counts the equations that are not redundant."},
+    {"q": "What is the largest possible rank of a 3×4 matrix?", "a": "3, because the rank can exceed neither the number of rows nor the number of columns: rank A ≤ min(m, n). A 3×4 matrix can have rank 0, 1, 2 or 3."},
+    {"q": "Does det A = 0 mean the rank is n − 1?", "a": "Not necessarily. det A = 0 only says the rank is less than n; it may be n − 1 or smaller. The 3×3 matrix of all ones has det = 0 and rank 1. Row-reduce to find the actual rank."},
+    {"q": "How does rank decide whether a system has solutions?", "a": "Compare rank A with rank [A|b]. If rank A is smaller, there is no solution. If they are equal and equal the number of unknowns, the solution is unique. If they are equal but smaller than the number of unknowns, there are infinitely many solutions with (unknowns − rank) free variables."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Rank of a matrix</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// Article · Linear algebra</p>
+      <h1>What Is the Rank of a Matrix? How to Find It and What It Tells You About a Linear System</h1>
+      <p class="lede">The rank is a single number that tells you how many rows of a matrix carry genuinely new information. Once you know it, you know immediately whether a system of equations has one solution, infinitely many, or none, without solving it to the end. This article explains the meaning, two ways to compute it, and where it is used in practice.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="tldr">
+        <b>The 30-second summary</b>
+        <ul>
+          <li>Rank = number of linearly independent rows (or columns) = number of pivots after row reduction to echelon form</li>
+          <li>Two methods: row-reduce and count the non-zero rows, or find the largest non-zero minor (sub-determinant)</li>
+          <li>\(\operatorname{rank}A \lt \operatorname{rank}[A\mid\mathbf b]\): no solution · equal \(= n\): unique · equal \(\lt n\): infinitely many</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">Rank counts non-redundant information</h2>
+    <p>Look at the system \(x + 2y - z = 4,\ 2x + 3y + z = 9,\ 3x + 5y = 13\). The third equation is exactly the sum of the first two, so it adds nothing new. The system has three equations but only two pieces of real information. That number, 2, is the rank of the coefficient matrix.</p>
+    <p>There is also a geometric picture. Each column of the matrix is a vector, and the rank is the number of independent directions those vectors span. If they all lie on one line the rank is 1; if they all lie in one plane the rank is 2.</p>
+    <figure class="post-fig"><!--FIG:la-rank-idea-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 200" role="img" aria-label="Rank = number of independent directions spanned by the columns"><line class="mf-ax" x1="74" y1="92" x2="125.6" y2="104.4"/><text class="mf-k" x="128.6" y="108.4" text-anchor="start">x</text><line class="mf-ax" x1="74" y1="92" x2="110.1" y2="74.3"/><text class="mf-k" x="113.1" y="78.3" text-anchor="start">y</text><line class="mf-ax" x1="74" y1="92" x2="74" y2="32.8"/><text class="mf-k" x="77" y="36.8" text-anchor="start">z</text><line class="mf-dash" x1="12.6" y1="150.1" x2="141" y2="28.7"/><line class="mf-va" x1="74" y1="92" x2="108.9" y2="59"/><path class="mf-arrowh" d="M108.9 59L106.1 65.4L102.3 61.5Z"/><line class="mf-vb" x1="74" y1="92" x2="49.6" y2="115.1"/><path class="mf-arrowh" d="M49.6 115.1L52.4 108.7L56.1 112.6Z"/><line class="mf-vc" x1="74" y1="92" x2="129.8" y2="39.2"/><path class="mf-arrowh" d="M129.8 39.2L127 45.6L123.3 41.7Z"/><text class="mf-h" x="74" y="176" text-anchor="middle">rank 1</text><text class="mf-s" x="74" y="192" text-anchor="middle">all on one line</text><line class="mf-ax" x1="220" y1="92" x2="271.6" y2="104.4"/><text class="mf-k" x="274.6" y="108.4" text-anchor="start">x</text><line class="mf-ax" x1="220" y1="92" x2="256.1" y2="74.3"/><text class="mf-k" x="259.1" y="78.3" text-anchor="start">y</text><line class="mf-ax" x1="220" y1="92" x2="220" y2="32.8"/><text class="mf-k" x="223" y="36.8" text-anchor="start">z</text><path class="mf-fill2" d="M198.5 103.9L264.7 102.7L309.7 42.6L243.4 43.7Z"/><line class="mf-va" x1="220" y1="92" x2="262.8" y2="91.3"/><path class="mf-arrowh" d="M262.8 91.3L256.4 94.1L256.3 88.7Z"/><line class="mf-vb" x1="220" y1="92" x2="249" y2="53.2"/><path class="mf-arrowh" d="M249 53.2L247.3 60L243 56.7Z"/><line class="mf-vc" x1="220" y1="92" x2="291.8" y2="52.5"/><path class="mf-arrowh" d="M291.8 52.5L287.4 58L284.8 53.2Z"/><text class="mf-h" x="220" y="176" text-anchor="middle">rank 2</text><text class="mf-s" x="220" y="192" text-anchor="middle">all in one plane</text><line class="mf-ax" x1="366" y1="92" x2="417.6" y2="104.4"/><text class="mf-k" x="420.6" y="108.4" text-anchor="start">x</text><line class="mf-ax" x1="366" y1="92" x2="402.1" y2="74.3"/><text class="mf-k" x="405.1" y="78.3" text-anchor="start">y</text><line class="mf-ax" x1="366" y1="92" x2="366" y2="32.8"/><text class="mf-k" x="369" y="36.8" text-anchor="start">z</text><line class="mf-dash" x1="366" y1="92" x2="407" y2="100.6"/><line class="mf-dash" x1="366" y1="92" x2="394.3" y2="74.3"/><line class="mf-dash" x1="366" y1="92" x2="376.1" y2="45.6"/><line class="mf-dash" x1="407" y1="100.6" x2="435.3" y2="82.9"/><line class="mf-dash" x1="407" y1="100.6" x2="417.1" y2="54.1"/><line class="mf-dash" x1="394.3" y1="74.3" x2="435.3" y2="82.9"/><line class="mf-dash" x1="394.3" y1="74.3" x2="404.3" y2="27.9"/><line class="mf-dash" x1="435.3" y1="82.9" x2="445.4" y2="36.5"/><line class="mf-dash" x1="376.1" y1="45.6" x2="417.1" y2="54.1"/><line class="mf-dash" x1="376.1" y1="45.6" x2="404.3" y2="27.9"/><line class="mf-dash" x1="417.1" y1="54.1" x2="445.4" y2="36.5"/><line class="mf-dash" x1="404.3" y1="27.9" x2="445.4" y2="36.5"/><line class="mf-va" x1="366" y1="92" x2="407" y2="100.6"/><path class="mf-arrowh" d="M407 100.6L400.2 101.9L401.3 96.6Z"/><line class="mf-vb" x1="366" y1="92" x2="394.3" y2="74.3"/><path class="mf-arrowh" d="M394.3 74.3L390.2 80.1L387.4 75.4Z"/><line class="mf-vc" x1="366" y1="92" x2="376.1" y2="45.6"/><path class="mf-arrowh" d="M376.1 45.6L377.4 52.4L372 51.3Z"/><text class="mf-h" x="366" y="176" text-anchor="middle">rank 3</text><text class="mf-s" x="366" y="192" text-anchor="middle">fill 3-D space</text></svg><!--/FIG--><figcaption>Columns lying on one line, in one plane, or filling 3-D space give rank 1, 2 and 3.</figcaption></figure>
+    <p>A fact that looks surprising but is always true: the number of independent rows equals the number of independent columns. The rank therefore can exceed neither the number of rows nor the number of columns: \(\operatorname{rank}A \le \min(m, n)\).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="row-reduce">
+    <h2 id="row-reduce">Method 1: row-reduce and count</h2>
+    <p>Elementary row operations (swapping rows, scaling a row, adding a multiple of another row) do not change the rank, so reduce the matrix to row echelon form and count the non-zero rows.</p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>\(A = \begin{pmatrix} 1 & 2 & -1 \\ 2 & 3 & 1 \\ 3 & 5 & 0 \end{pmatrix}\)</h3></div>
+      <ol class="steps">
+        <li>\[ R_2 - 2R_1,\ R_3 - 3R_1:\quad \begin{pmatrix} 1 & 2 & -1 \\ 0 & -1 & 3 \\ 0 & -1 & 3 \end{pmatrix} \]</li>
+        <li>\[ R_3 - R_2:\quad \begin{pmatrix} 1 & 2 & -1 \\ 0 & -1 & 3 \\ 0 & 0 & 0 \end{pmatrix} \]</li>
+      </ol>
+      <p class="answer">Two non-zero rows, so \(\operatorname{rank}A = 2\)</p>
+    </div>
+    <p>This works for every size, including non-square matrices. Type your own matrix into the <a href="/learn/linear-algebra/rank/#lab">step-by-step rank lab</a> (in Thai), which shows every step with exact fractions.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="minors">
+    <h2 id="minors">Method 2: minors (sub-determinants)</h2>
+    <p>The rank is the order of the largest non-zero minor. For a square \(n\times n\) matrix this gives a short rule: \(\det A \ne 0 \iff \operatorname{rank}A = n\).</p>
+    <p>In the classic example \(\begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{pmatrix}\) the determinant is \(225 - 225 = 0\), so the rank is below 3, but the top-left minor \(\begin{vmatrix} 1 & 2 \\ 4 & 5 \end{vmatrix} = -3 \ne 0\), so the rank is 2.</p>
+    <div class="sr-trap"><b>Trap</b> \(\det A = 0\) only says the rank is not full; it does not say how far it drops. The 3×3 matrix of all ones has \(\det = 0\) and rank 1.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="systems">
+    <h2 id="systems">What rank tells you about a system of equations</h2>
+    <p>This is the main reason to learn rank. Compare the rank of the coefficient matrix \(A\) with that of the augmented matrix \([A\mid\mathbf b]\) (the <strong>Rouché–Capelli theorem</strong>):</p>
+    \[ \begin{cases} \operatorname{rank}A \lt \operatorname{rank}[A\mid\mathbf b] & \text{no solution} \\ \operatorname{rank}A = \operatorname{rank}[A\mid\mathbf b] = n & \text{unique solution} \\ \operatorname{rank}A = \operatorname{rank}[A\mid\mathbf b] = r \lt n & \text{infinitely many, } n - r \text{ free variables} \end{cases} \]
+    <figure class="post-fig"><!--FIG:la-rank-cases-en--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 206" role="img" aria-label="Three planes: unique point, a common line, or no common point"><path class="mf-g" d="M9.4 123.6L81.9 144.8"/><path class="mf-g" d="M9.4 123.6L66.1 96.5"/><path class="mf-g" d="M9.4 123.6L9.4 38.3"/><path class="mf-g" d="M81.9 144.8L138.6 117.7"/><path class="mf-g" d="M81.9 144.8L81.9 59.5"/><path class="mf-g" d="M66.1 96.5L138.6 117.7"/><path class="mf-g" d="M66.1 96.5L66.1 11.2"/><path class="mf-g" d="M138.6 117.7L138.6 32.4"/><path class="mf-g" d="M9.4 38.3L81.9 59.5"/><path class="mf-g" d="M9.4 38.3L66.1 11.2"/><path class="mf-g" d="M81.9 59.5L138.6 32.4"/><path class="mf-g" d="M66.1 11.2L138.6 32.4"/><path class="mf-pl1" d="M63.8 54.2L81.9 80.9L124.4 124.5L120.4 112.4L66.1 32.5L51.9 18Z"/><path class="mf-pl3" d="M99.6 51.1L81.9 112.9L54.7 136.9L27.1 115.1L55.5 16.3Z"/><path class="mf-pl2" d="M68.3 140.9L103.2 134.7L138.6 64.4L125 28.4L32.1 45Z"/><path class="mf-ix" d="M59.2 40.1L113.8 113.6"/><path class="mf-ix" d="M89 88.1L54.3 20.4"/><path class="mf-ix" d="M63.8 128.9L80.9 36.3"/><text class="mf-h" x="74" y="153.9" text-anchor="middle">one point</text><text class="mf-l" x="74" y="168.9" text-anchor="middle">rank 3 · 3</text><path class="mf-g" d="M155.4 123.6L227.9 144.8"/><path class="mf-g" d="M155.4 123.6L212.1 96.5"/><path class="mf-g" d="M155.4 123.6L155.4 38.3"/><path class="mf-g" d="M227.9 144.8L284.6 117.7"/><path class="mf-g" d="M227.9 144.8L227.9 59.5"/><path class="mf-g" d="M212.1 96.5L284.6 117.7"/><path class="mf-g" d="M212.1 96.5L212.1 11.2"/><path class="mf-g" d="M284.6 117.7L284.6 32.4"/><path class="mf-g" d="M155.4 38.3L227.9 59.5"/><path class="mf-g" d="M155.4 38.3L212.1 11.2"/><path class="mf-g" d="M227.9 59.5L284.6 32.4"/><path class="mf-g" d="M212.1 11.2L284.6 32.4"/><path class="mf-pl1" d="M200.7 51.6L227.9 91.5L263.3 127.9L257.4 109.7L212.1 43.1L190.8 21.3Z"/><path class="mf-pl3" d="M227.9 78.7L284.6 102.8L212.1 64.5L155.4 40.5Z"/><path class="mf-pl2" d="M227.9 80.9L284.6 110.6L212.1 60.9L162.5 34.9L173.6 43.6Z"/><path class="mf-ix" d="M234.7 76.4L214.3 71.6"/><path class="mf-ix" d="M234.7 76.4L214.3 71.6"/><path class="mf-ix" d="M234.7 76.4L214.3 71.6"/><text class="mf-h" x="220" y="153.9" text-anchor="middle">a whole line</text><text class="mf-l" x="220" y="168.9" text-anchor="middle">rank 2 · 2</text><path class="mf-g" d="M301.4 123.6L373.9 144.8"/><path class="mf-g" d="M301.4 123.6L358.1 96.5"/><path class="mf-g" d="M301.4 123.6L301.4 38.3"/><path class="mf-g" d="M373.9 144.8L430.6 117.7"/><path class="mf-g" d="M373.9 144.8L373.9 59.5"/><path class="mf-g" d="M358.1 96.5L430.6 117.7"/><path class="mf-g" d="M358.1 96.5L358.1 11.2"/><path class="mf-g" d="M430.6 117.7L430.6 32.4"/><path class="mf-g" d="M301.4 38.3L373.9 59.5"/><path class="mf-g" d="M301.4 38.3L358.1 11.2"/><path class="mf-g" d="M373.9 59.5L430.6 32.4"/><path class="mf-g" d="M358.1 11.2L430.6 32.4"/><path class="mf-pl1" d="M346.7 51.6L373.9 91.5L409.3 127.9L403.4 109.7L358.1 43.1L336.8 21.3Z"/><path class="mf-pl3" d="M373.9 76.6L430.6 100.6L358.1 62.3L301.4 38.3Z"/><path class="mf-pl2" d="M373.9 80.9L430.6 110.6L358.1 60.9L308.5 34.9L319.6 43.6Z"/><path class="mf-ix" d="M380.7 76.4L360.3 71.6"/><path class="mf-ix" d="M378.5 73.1L358.1 68.2"/><path class="mf-ix" d="M367.1 67.1L346.7 62.2"/><text class="mf-h" x="366" y="153.9" text-anchor="middle">no solution</text><text class="mf-l" x="366" y="168.9" text-anchor="middle">rank 2 · 3</text></svg><!--/FIG--><figcaption>Three equations in three unknowns are three planes; the two ranks tell you how they meet (rotate them in the <a href="/learn/linear-algebra/rank/#planes">3-D three-planes lab</a>, in Thai).</figcaption></figure>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">Example</span><h3>The system \(x + y + z = 1,\ x + 2y + 3z = 2,\ x + 3y + az = b\)</h3></div>
+      <ol class="steps">
+        <li><p>Row-reduce the augmented matrix until the last row is</p>\[ \left(\begin{array}{ccc|c} 0 & 0 & a - 5 & b - 3 \end{array}\right) \]</li>
+        <li><p>\(a \ne 5\): both ranks are 3, unique solution · \(a = 5,\ b = 3\): a zero row, ranks 2 = 2, infinitely many · \(a = 5,\ b \ne 3\): ranks 2 and 3, no solution</p></li>
+      </ol>
+      <p class="answer">In the infinite case \((x, y, z) = (t,\ 1 - 2t,\ t)\) with \(3 - 2 = 1\) free variable</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="parameter">
+    <h2 id="parameter">Rank problems with a parameter k</h2>
+    <p>Exams love “find the rank of \(A\) for every value of \(k\)”. Compute \(\det A(k)\) and factor it; values of \(k\) that keep \(\det \ne 0\) give full rank, and each value that makes \(\det = 0\) must be substituted and row-reduced to find the actual rank. For example</p>
+    \[ A = \begin{pmatrix} 1 & 1 & k \\ 1 & k & 1 \\ k & 1 & 1 \end{pmatrix},\quad \det A = -(k - 1)^2(k + 2) \]
+    <p>gives rank 3 for \(k \ne 1, -2\), rank 1 for \(k = 1\) (all rows equal) and rank 2 for \(k = -2\). Slide \(k\) yourself in the <a href="/learn/linear-algebra/rank/#parameter">rank-versus-k lab</a> (in Thai).</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">Rank in engineering</h2>
+    <ul>
+      <li><strong>Circuits:</strong> the incidence matrix of an \(n\)-node circuit always has rank \(n - 1\), so there are \(n - 1\) independent KCL equations and \(b - n + 1\) independent KVL equations (the number of meshes) — the reason nodal analysis picks one reference node.</li>
+      <li><strong>Control systems:</strong> a system is controllable exactly when \([B\ AB\ \cdots\ A^{n-1}B]\) has full rank \(n\) (Kalman's test).</li>
+      <li><strong>Measured data:</strong> real data contain errors, so the numerical rank from the singular values (SVD) counts only the values above the noise level.</li>
+    </ul>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">Continue in the library (in Thai)</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/rank/">Rank of a matrix in full: minors, null space, rank–nullity and the 3-D lab</a></li>
+        <li><a href="/learn/linear-algebra/linear-systems/">Systems of linear equations and Gaussian elimination</a></li>
+        <li><a href="/learn/linear-algebra/cramers-rule/">Cramer's rule: when Δ = 0, rank decides</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-b">Rank and linear-system exam problems with solutions</a></li>
+        <li><a href="/en/blog/matrix-determinant-roadmap/">Article: a roadmap for matrices and determinants</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

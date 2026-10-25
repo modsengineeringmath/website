@@ -1,0 +1,128 @@
+<!--meta
+{
+  "title": "แก้ระบบสมการเชิงเส้นด้วยวิธีเชิงตัวเลข: เกาส์ LU จาโคบี หรือเกาส์-ไซเดล เลือกวิธีไหน | อาจารย์มด",
+  "h1": "แก้ระบบสมการเชิงเส้นด้วยวิธีเชิงตัวเลข: เกาส์ LU จาโคบี หรือเกาส์-ไซเดล เลือกวิธีไหนดี",
+  "description": "เปรียบเทียบวิธีเชิงตัวเลขสำหรับระบบสมการเชิงเส้นแบบเห็นภาพรวม การกำจัดแบบเกาส์กับการสลับแถว LU โชเลสกี จาโคบี เกาส์-ไซเดล SOR เงื่อนไขการลู่เข้า และเลขเงื่อนไข พร้อมตัวอย่างตัวเลขและตารางเลือกวิธี",
+  "ogTitle": "เกาส์ LU จาโคบี เกาส์-ไซเดล เลือกวิธีไหน",
+  "blog": true,
+  "tag": "วิธีเชิงตัวเลข",
+  "series": ["linear-algebra"],
+  "published": "2026-10-25",
+  "updated": "2026-10-25",
+  "keywords": ["จาโคบี กับ เกาส์-ไซเดล", "jacobi vs gauss seidel", "วิธีเชิงตัวเลข ระบบสมการเชิงเส้น", "การแยก LU", "partial pivoting", "SOR", "เงื่อนไขการลู่เข้า", "ทแยงเด่น", "เลขเงื่อนไข", "numerical methods linear equations"],
+  "about": ["Jacobi method", "Gauss–Seidel method", "LU decomposition", "Gaussian elimination", "Condition number"],
+  "og": {"title": "เกาส์ LU จาโคบี เกาส์-ไซเดล เลือกวิธีไหน", "sub": "วิธีตรง vs วิธีทำซ้ำ · การสลับแถว · การลู่เข้า · เลขเงื่อนไข · ตารางเลือกวิธี", "eyebrow": "บทความ · วิธีเชิงตัวเลข", "sym": "x⁽ᵏ⁾"},
+  "faq": [
+    {"q": "จาโคบีกับเกาส์-ไซเดลต่างกันตรงไหน?", "a": "จาโคบีคำนวณทุกตัวแปรในรอบใหม่จากค่ารอบก่อนทั้งหมด ส่วนเกาส์-ไซเดลนำค่าที่เพิ่งได้ในรอบเดียวกันมาใช้ทันที เกาส์-ไซเดลจึงมักลู่เข้าเร็วกว่าราวสองเท่าและใช้หน่วยความจำน้อยกว่า ส่วนจาโคบีคำนวณแบบขนานได้ง่าย"},
+    {"q": "เมื่อไรควรใช้วิธีทำซ้ำแทนการแยก LU?", "a": "เมื่อระบบใหญ่มากและเมทริกซ์ส่วนใหญ่เป็นศูนย์ (เบาบาง) เช่น การจำลองความร้อน สนามไฟฟ้า หรือไฟไนต์เอลิเมนต์ ที่มีตัวแปรหลักหมื่นถึงหลักล้าน วิธีทำซ้ำไม่ต้องเก็บเมทริกซ์เต็มและไม่เกิดการเติมศูนย์ ส่วนระบบหนาแน่นขนาดกลางให้ใช้ LU กับการสลับแถว"},
+    {"q": "ทำไมต้องสลับแถวในการกำจัดแบบเกาส์?", "a": "เพื่อให้ตัวหลักเป็นค่าที่มีขนาดใหญ่ที่สุดในหลัก ตัวคูณจึงไม่เกิน 1 และความคลาดเคลื่อนจากการปัดเศษไม่ถูกขยาย ถ้าตัวหลักเล็กมาก เช่น 0.0001 เครื่องที่เก็บ 3 หลักจะได้คำตอบผิดทั้งหมด"},
+    {"q": "วิธีทำซ้ำจะลู่เข้าเมื่อไร?", "a": "ถ้าเมทริกซ์ทแยงเด่นแท้ จาโคบีและเกาส์-ไซเดลลู่เข้าแน่นอน เงื่อนไขที่แท้จริงคือรัศมีสเปกตรัมของเมทริกซ์การทำซ้ำน้อยกว่า 1 และจำนวนรอบที่ต้องใช้ประมาณได้จากจำนวนหลักที่ต้องการหารด้วย −log₁₀ ของรัศมีสเปกตรัม"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/blog/">บทความ</a></li><li>จาโคบีกับเกาส์-ไซเดล</li></ol>
+      <!--lang-switch-->
+      <p class="eyebrow">// บทความ · วิธีเชิงตัวเลข</p>
+      <h1>แก้ระบบสมการเชิงเส้นด้วยวิธีเชิงตัวเลข: เกาส์ LU จาโคบี หรือเกาส์-ไซเดล เลือกวิธีไหนดี</h1>
+      <p class="lede">โปรแกรมจำลองวงจร วิเคราะห์โครงสร้าง และคำนวณความร้อนต้องแก้ \(A\mathbf x = \mathbf b\) ที่มีตัวแปรนับพันถึงนับล้าน วิธีที่ใช้ในห้องเรียนจึงไม่พอ บทความนี้เปรียบเทียบวิธีหลักทั้งหมดแบบเห็นภาพรวม ว่าแต่ละวิธีทำงานอย่างไร เร็วแค่ไหน และควรเลือกเมื่อไร</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li><strong>วิธีตรง</strong> (เกาส์ LU โชเลสกี โทมัส) จบในจำนวนขั้นที่แน่นอน เหมาะกับระบบหนาแน่นขนาดกลาง ต้องสลับแถวเสมอ</li>
+          <li><strong>วิธีทำซ้ำ</strong> (จาโคบี เกาส์-ไซเดล SOR) ปรับค่าเดาทีละรอบ เหมาะกับระบบใหญ่และเบาบาง</li>
+          <li>เกาส์-ไซเดลมักเร็วกว่าจาโคบีราวสองเท่า SOR ที่ \(\omega\) เหมาะสมเร็วกว่าอีกหลายเท่า</li>
+          <li>ก่อนเชื่อคำตอบ ดู<strong>เลขเงื่อนไข</strong> \(\kappa(A)\) ซึ่งบอกว่าอาจเสียความแม่นยำราว \(\log_{10}\kappa\) หลัก</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="map">
+    <h2 id="map">ภาพรวม: วิธีตรงกับวิธีทำซ้ำ</h2>
+    <figure class="post-fig"><!--FIG:la-num-map--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 318" role="img" aria-label="แผนที่วิธีแก้ระบบสมการ Ax = b"><rect class="mf-box" x="160" y="8" width="120" height="34" rx="9"/><text class="mf-h" x="220" y="29" text-anchor="middle">A x = b</text><rect class="mf-boxa" x="16" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="81" text-anchor="middle">วิธีตรง (direct)</text><text class="mf-s" x="111" y="96" text-anchor="middle">จำนวนขั้นแน่นอน</text><rect class="mf-boxb" x="234" y="64" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="81" text-anchor="middle">วิธีทำซ้ำ (iterative)</text><text class="mf-s" x="329" y="96" text-anchor="middle">ปรับค่าเดาทีละรอบ</text><line class="mf-thin" x1="200" y1="42" x2="111" y2="63"/><path class="mf-arrowh" d="M111 63L116.6 58.9L117.9 64.2Z"/><line class="mf-thin" x1="240" y1="42" x2="329" y2="63"/><path class="mf-arrowh" d="M329 63L322.1 64.2L323.4 58.9Z"/><rect class="mf-box" x="16" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="137" text-anchor="middle">เกาส์ + สลับแถว / LU</text><text class="mf-s" x="111" y="152" text-anchor="middle">หนาแน่น ทั่วไป · ⅔n³</text><line class="mf-thin" x1="111" y1="104" x2="111" y2="120"/><rect class="mf-box" x="16" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="187" text-anchor="middle">โชเลสกี A = LLᵀ</text><text class="mf-s" x="111" y="202" text-anchor="middle">สมมาตรบวกแน่นอน</text><line class="mf-thin" x1="111" y1="160" x2="111" y2="170"/><rect class="mf-box" x="16" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="111" y="237" text-anchor="middle">โทมัส (TDMA)</text><text class="mf-s" x="111" y="252" text-anchor="middle">สามแนวทแยง · O(n)</text><line class="mf-thin" x1="111" y1="210" x2="111" y2="220"/><rect class="mf-box" x="234" y="120" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="137" text-anchor="middle">จาโคบี</text><text class="mf-s" x="329" y="152" text-anchor="middle">ใช้ค่าเก่า · ขนานได้</text><line class="mf-thin" x1="329" y1="104" x2="329" y2="120"/><rect class="mf-box" x="234" y="170" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="187" text-anchor="middle">เกาส์-ไซเดล</text><text class="mf-s" x="329" y="202" text-anchor="middle">ใช้ค่าใหม่ทันที</text><line class="mf-thin" x1="329" y1="160" x2="329" y2="170"/><rect class="mf-box" x="234" y="220" width="190" height="40" rx="9"/><text class="mf-h" x="329" y="237" text-anchor="middle">SOR (ω) · CG</text><text class="mf-s" x="329" y="252" text-anchor="middle">ระบบใหญ่และเบาบาง</text><line class="mf-thin" x1="329" y1="210" x2="329" y2="220"/><rect class="mf-fill2" x="16" y="274" width="408" height="36" rx="9"/><text class="mf-t" x="220" y="290" text-anchor="middle">ก่อนเชื่อคำตอบ: เลขเงื่อนไข κ(A) บอกหลักที่อาจเสีย</text><text class="mf-s" x="220" y="304" text-anchor="middle">วิธีทำซ้ำลู่เข้าเมื่อทแยงเด่น หรือ ρ(T) < 1</text></svg><!--/FIG--><figcaption>สองตระกูลของวิธีแก้ระบบสมการเชิงเส้น เลือกตามขนาด ความเบาบาง และโครงสร้างของเมทริกซ์</figcaption></figure>
+    <p>กฎของคราเมอร์ไม่อยู่ในแผนที่นี้ เพราะต้นทุนโตแบบแฟกทอเรียล ระบบ 20 ตัวแปรต้องคูณราว \(5\times10^{19}\) ครั้ง ขณะที่การกำจัดแบบเกาส์ใช้ราว 2,700 ครั้ง (ดูเหตุผลใน <a href="/blog/cramers-rule/">บทความกฎของคราเมอร์</a>)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="direct">
+    <h2 id="direct">วิธีตรง: เกาส์ LU โชเลสกี และโทมัส</h2>
+    <p><strong>การกำจัดแบบเกาส์</strong> ทำให้ใต้แนวทแยงเป็นศูนย์แล้วแทนค่าย้อนกลับ ใช้ราว \(\tfrac23n^3\) flops จุดสำคัญคือ<strong>การสลับแถว</strong> (partial pivoting) ให้ตัวหลักใหญ่ที่สุดในหลัก ตัวอย่างบนเครื่องที่เก็บ 3 หลักนัยสำคัญ</p>
+    \[ \begin{aligned} 0.0001x + y &= 1 \\ x + y &= 2 \end{aligned} \qquad \text{ไม่สลับ: } x = 0\ (\text{ผิด}),\qquad \text{สลับแถว: } x = 1.00\ (\text{ถูก}) \]
+    <p>เพราะตัวคูณ \(1/0.0001 = 10^4\) ทำให้ \(1 - 10^4\) ปัดเป็น \(-1.00\times10^4\) ข้อมูลของสมการแรกหายไปหมด ลองปรับจำนวนหลักเองได้ใน <a href="/learn/linear-algebra/numerical-methods/#pivoting">แล็บการสลับแถว</a></p>
+    <ul>
+      <li><strong>การแยก LU</strong> คือเกาส์ที่เก็บตัวคูณไว้ใน \(L\) แยกครั้งเดียวแล้วแก้ \(\mathbf b\) ใหม่ได้ด้วยต้นทุนแค่ \(\approx 2n^2\) เหมาะกับวงจรที่แหล่งจ่ายเปลี่ยนแต่โครงสร้างเดิม</li>
+      <li><strong>โชเลสกี</strong> \(A = LL^T\) สำหรับเมทริกซ์สมมาตรบวกแน่นอน เช่น เมทริกซ์ความนำของวงจรตัวต้านทาน เร็วกว่า LU สองเท่าและไม่ต้องสลับแถว</li>
+      <li><strong>โทมัส</strong> สำหรับเมทริกซ์สามแนวทแยง (แท่งความร้อน สายส่งแบบขั้นบันได) ใช้เวลา \(O(n)\) เช่น แท่งที่ปลาย 100 °C กับ 0 °C แบ่ง 4 โหนดได้ \(T = (80, 60, 40, 20)\) °C</li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="iterative">
+    <h2 id="iterative">วิธีทำซ้ำ: จาโคบีเทียบเกาส์-ไซเดล</h2>
+    <p>ทั้งสองวิธีแก้สมการที่ \(i\) หา \(x_i\) โดยใช้ค่าประมาณของตัวแปรอื่น ต่างกันแค่ว่าใช้ค่า “เก่า” หรือค่า “ใหม่”</p>
+    \[ \text{จาโคบี: } x_i^{(k+1)} = \frac{b_i - \sum_{j\ne i}a_{ij}x_j^{(k)}}{a_{ii}},\qquad \text{เกาส์-ไซเดล: ใช้ } x_j^{(k+1)} \text{ ทันทีสำหรับ } j \lt i \]
+    <p>ระบบ \(4x - y + z = 7,\ 4x - 8y + z = -21,\ -2x + y + 5z = 15\) มีคำตอบ \((2, 4, 3)\) เริ่มที่ \((1, 2, 2)\)</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รอบ</th><th>จาโคบี</th><th>เกาส์-ไซเดล</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>(1.750, 3.375, 3.000)</td><td>(1.750, 3.750, 2.950)</td></tr>
+          <tr><td>2</td><td>(1.844, 3.875, 3.025)</td><td>(1.950, 3.969, 2.986)</td></tr>
+          <tr><td>3</td><td>(1.963, 3.925, 2.963)</td><td>(1.996, 3.996, 2.999)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure class="post-fig"><!--FIG:la-iter-conv--><svg class="mf sr-fig lnf-fig" viewBox="0 0 440 250" role="img" aria-label="ความคลาดเคลื่อนแต่ละรอบ: จาโคบีเทียบเกาส์-ไซเดล (สเกล log)"><rect class="mf-bg" x="46" y="14" width="380" height="196" rx="8"/><line class="mf-g" x1="46" y1="14" x2="46" y2="210"/><text class="mf-k" x="46" y="223" text-anchor="middle">0</text><line class="mf-g" x1="100.3" y1="14" x2="100.3" y2="210"/><text class="mf-k" x="100.3" y="223" text-anchor="middle">2</text><line class="mf-g" x1="154.6" y1="14" x2="154.6" y2="210"/><text class="mf-k" x="154.6" y="223" text-anchor="middle">4</text><line class="mf-g" x1="208.9" y1="14" x2="208.9" y2="210"/><text class="mf-k" x="208.9" y="223" text-anchor="middle">6</text><line class="mf-g" x1="263.1" y1="14" x2="263.1" y2="210"/><text class="mf-k" x="263.1" y="223" text-anchor="middle">8</text><line class="mf-g" x1="317.4" y1="14" x2="317.4" y2="210"/><text class="mf-k" x="317.4" y="223" text-anchor="middle">10</text><line class="mf-g" x1="371.7" y1="14" x2="371.7" y2="210"/><text class="mf-k" x="371.7" y="223" text-anchor="middle">12</text><line class="mf-g" x1="426" y1="14" x2="426" y2="210"/><text class="mf-k" x="426" y="223" text-anchor="middle">14</text><line class="mf-g" x1="46" y1="210" x2="426" y2="210"/><text class="mf-k" x="41" y="214" text-anchor="end">-8</text><line class="mf-g" x1="46" y1="168.7" x2="426" y2="168.7"/><text class="mf-k" x="41" y="172.7" text-anchor="end">-6</text><line class="mf-g" x1="46" y1="127.5" x2="426" y2="127.5"/><text class="mf-k" x="41" y="131.5" text-anchor="end">-4</text><line class="mf-g" x1="46" y1="86.2" x2="426" y2="86.2"/><text class="mf-k" x="41" y="90.2" text-anchor="end">-2</text><line class="mf-g" x1="46" y1="44.9" x2="426" y2="44.9"/><text class="mf-k" x="41" y="48.9" text-anchor="end">0</text><line class="mf-ax" x1="46" y1="44.9" x2="426" y2="44.9"/><text class="mf-l" x="424" y="236" text-anchor="end">รอบที่ k</text><text class="mf-l" x="52" y="28" text-anchor="start">log₁₀ ความคลาดเคลื่อน</text><path class="mf-sigd" d="M46 38.7L73.1 49.2L100.3 61.6L127.4 68.2L154.6 78.6L181.7 91L208.9 97.6L236 108L263.1 120.4L290.3 127L317.4 137.4L344.6 149.8L371.7 156.4L398.9 166.8L426 179.3"/><path class="mf-sig" d="M46 38.7L73.1 57.4L100.3 71.8L127.4 93.6L154.6 109.6L181.7 130.3L208.9 147.2L236 167.2L263.1 184.8L290.3 204.2"/><circle class="mf-dot" cx="46" cy="38.7" r="2.6"/><circle class="mf-dot" cx="73.1" cy="57.4" r="2.6"/><circle class="mf-dot" cx="100.3" cy="71.8" r="2.6"/><circle class="mf-dot" cx="127.4" cy="93.6" r="2.6"/><circle class="mf-dot" cx="154.6" cy="109.6" r="2.6"/><circle class="mf-dot" cx="181.7" cy="130.3" r="2.6"/><circle class="mf-dot" cx="208.9" cy="147.2" r="2.6"/><circle class="mf-dot" cx="236" cy="167.2" r="2.6"/><circle class="mf-dot" cx="263.1" cy="184.8" r="2.6"/><circle class="mf-dot" cx="290.3" cy="204.2" r="2.6"/><line class="mf-sigd" x1="219.7" y1="30.5" x2="243.7" y2="30.5"/><text class="mf-t" x="249.7" y="34.5" text-anchor="start">จาโคบี ρ ≈ 0.335</text><line class="mf-sig" x1="219.7" y1="48.5" x2="243.7" y2="48.5"/><text class="mf-t" x="249.7" y="52.5" text-anchor="start">เกาส์-ไซเดล ρ = 0.125</text><line class="mf-dash" x1="46" y1="168.7" x2="426" y2="168.7"/><text class="mf-k" x="51.4" y="163.7" text-anchor="start">10⁻⁶</text></svg><!--/FIG--><figcaption>ความคลาดเคลื่อนของเกาส์-ไซเดลลดลงราว 8 เท่าต่อรอบ (\(\rho = 0.125\)) จาโคบีราว 3 เท่า (\(\rho \approx 0.335\))</figcaption></figure>
+    </section>
+
+    <section class="tsec" aria-labelledby="converge">
+    <h2 id="converge">ลู่เข้าเมื่อไร และ SOR เร่งได้อย่างไร</h2>
+    <ul>
+      <li><strong>ทแยงเด่นแท้</strong> \(|a_{ii}| \gt \sum_{j\ne i}|a_{ij}|\) ทุกแถว → ลู่เข้าแน่นอน ถ้าไม่ทแยงเด่นให้ลองสลับลำดับสมการก่อน</li>
+      <li>เงื่อนไขแท้คือ<strong>รัศมีสเปกตรัม</strong> \(\rho(T) \lt 1\) และต้องใช้ราว \(d/(-\log_{10}\rho)\) รอบเพื่อเพิ่มความแม่น \(d\) หลัก</li>
+      <li><strong>SOR</strong> ก้าวเลยค่าของเกาส์-ไซเดลด้วยตัวประกอบ \(1 \lt \omega \lt 2\) ระบบแท่งความร้อน 10 ตัวแปรต้องใช้ราว 334 รอบ (จาโคบี) 167 รอบ (เกาส์-ไซเดล) แต่ SOR ที่ \(\omega \approx 1.56\) ใช้เพียงราว 24 รอบ</li>
+    </ul>
+    <p>เปรียบเทียบทั้งสามวิธีพร้อมกันได้ใน <a href="/learn/linear-algebra/numerical-methods/#iter-lab">ซิมูเลเตอร์จาโคบี · เกาส์-ไซเดล · SOR</a> และดูความร้อนแผ่ในแผ่นโลหะทีละรอบใน <a href="/learn/linear-algebra/numerical-methods/#heat">แล็บแผ่นความร้อน</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="condition">
+    <h2 id="condition">เลขเงื่อนไข: คำตอบเชื่อได้แค่ไหน</h2>
+    <p>ระบบที่สมการเกือบขนานกัน ข้อมูลผิดนิดเดียวคำตอบเปลี่ยนมาก เช่น \(x + y = 2,\ x + 1.0001y = 2.0001\) มีคำตอบ \((1, 1)\) แต่ถ้าค่าทางขวาเป็น \(2.0002\) คำตอบกลายเป็น \((0, 2)\) เลขเงื่อนไข \(\kappa_\infty \approx 4\times10^4\) จึงอาจเสียความแม่นราว 4–5 หลัก</p>
+    \[ \frac{\lVert\delta\mathbf x\rVert}{\lVert\mathbf x\rVert} \le \kappa(A)\,\frac{\lVert\delta\mathbf b\rVert}{\lVert\mathbf b\rVert} \]
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">ตารางเลือกวิธี</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ระบบของคุณ</th><th>ใช้</th></tr></thead>
+        <tbody>
+          <tr><td>2–3 ตัวแปร ทำมือ</td><td>คราเมอร์หรือลดแถว</td></tr>
+          <tr><td>หนาแน่น ขนาดกลาง หลาย \(\mathbf b\)</td><td>LU + การสลับแถว (<code>numpy.linalg.solve</code>, MATLAB <code>A\b</code>)</td></tr>
+          <tr><td>สมมาตรบวกแน่นอน</td><td>โชเลสกี</td></tr>
+          <tr><td>สามแนวทแยง</td><td>โทมัส</td></tr>
+          <tr><td>ใหญ่ เบาบาง ทแยงเด่น</td><td>เกาส์-ไซเดล หรือ SOR</td></tr>
+          <tr><td>ใหญ่มาก สมมาตรบวกแน่นอน</td><td>Conjugate Gradient + preconditioner</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section class="post-next" aria-labelledby="next">
+      <h2 id="next">อ่านต่อในคลังความรู้</h2>
+      <ul>
+        <li><a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลขฉบับเต็ม: สูตร N1–N26 ตัวอย่าง และซิมูเลเตอร์ 5 ชุด</a></li>
+        <li><a href="/learn/linear-algebra/linear-systems/">ระบบสมการเชิงเส้นและการกำจัดแบบเกาส์ (ทำมือ)</a></li>
+        <li><a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ: ที่มาของรัศมีสเปกตรัม</a></li>
+        <li><a href="/learn/linear-algebra/exam-practice/#set-c">แนวข้อสอบวิธีเชิงตัวเลขพร้อมเฉลย</a></li>
+        <li><a href="/blog/matrix-rank/">บทความ: แรงก์ของเมทริกซ์และการมีคำตอบ</a></li>
+      </ul>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

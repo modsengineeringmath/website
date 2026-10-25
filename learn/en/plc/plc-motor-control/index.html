@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=34c266f8">
+<link rel="stylesheet" href="/assets/site.css?v=bf101792">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/en/plc/plc-motor-control/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/en/plc/plc-motor-control/#article","headline":"Motor Control with a PLC: DOL, Reversing, Star–Delta, I/O Lists, Wiring, Hard-Wired Interlocks and Contactor Feedback Monitoring","description":"Convert contactor circuits into PLC programs correctly and safely: what must stay in hardware (emergency stop, overload, K2/K3 interlocks), I/O lists, wiring the PLC to contactor coils, ladder and Structured Text for DOL, reversing and star–delta with a dead time, detecting welded contactors with feedback contacts, and a simulator to try it.","inLanguage":"en","url":"https://modsengineeringmath.com/learn/en/plc/plc-motor-control/","mainEntityOfPage":"https://modsengineeringmath.com/learn/en/plc/plc-motor-control/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Programmable logic controller","Motor controller","Wye-delta starter","Interlock (engineering)"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/en/plc/#article"},"image":["https://modsengineeringmath.com/images/og/learn-en-plc-plc-motor-control.jpg"],"educationalLevel":["Vocational","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Library","item":"https://modsengineeringmath.com/learn/en/"},{"@type":"ListItem","position":3,"name":"PLC Automation","item":"https://modsengineeringmath.com/learn/en/plc/"},{"@type":"ListItem","position":4,"name":"Motor control with a PLC: DOL, reversing, star–delta, I/O lists, wiring, hard-wired interlocks and contactor feedback monitoring","item":"https://modsengineeringmath.com/learn/en/plc/plc-motor-control/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"With a PLC, do I still need auxiliary-contact interlocks in the coil circuit?","acceptedAnswer":{"@type":"Answer","text":"Yes. The interlocks that prevent short circuits (K1/K2 for reversing, K2/K3 for star–delta) must work even if the PLC fails, a transistor output shorts on, or someone forces a bit. An NC contact of the opposing contactor in series with each coil, plus a mechanical interlock, is still required. The program is an additional layer, not the only one."}},{"@type":"Question","name":"Can I wire the overload relay only to the PLC?","acceptedAnswer":{"@type":"Answer","text":"Technically yes, but good practice is to put 95-96 in series with the contactor coil directly (so it trips even if the PLC hangs) and bring 97-98 or an auxiliary contact into the PLC for status display and event logging."}}]}]}</script>
@@ -212,12 +212,15 @@
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
           <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
           <span class="nav-h">เนื้อหา</span>
           <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
           <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
           <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
           <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
           <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
           <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
@@ -580,7 +583,8 @@ TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <s
       <a href="/">Home</a>
       <a href="/learn/">คลังความรู้</a>
       <a href="/updates/">Latest site updates (Thai)</a>
-      <a href="/en/blog/">Articles: series, Laplace, vectors, power factor &amp; more</a>
+      <a href="/blog/">บทความ: เมทริกซ์ แรงก์ คราเมอร์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
       <a href="/solutions/">Step-by-step worked solutions (Thai)</a>
       <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
       <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
@@ -602,6 +606,9 @@ TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <s
       <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
       <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
       <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
       <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
       <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
       <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
@@ -656,8 +663,8 @@ TChk(IN := (K1 <span class="k">XOR</span> FB_1) <span class="k">OR</span> (KY <s
   </div>
 </footer>
 
-<script src="/assets/site.js?v=34c266f8" defer></script>
-<script src="/assets/lesson.js?v=34c266f8" defer></script>
-<script src="/assets/plc-sim.js?v=34c266f8" defer></script>
+<script src="/assets/site.js?v=bf101792" defer></script>
+<script src="/assets/lesson.js?v=bf101792" defer></script>
+<script src="/assets/plc-sim.js?v=bf101792" defer></script>
 </body>
 </html>

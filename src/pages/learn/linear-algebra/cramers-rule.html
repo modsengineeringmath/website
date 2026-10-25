@@ -9,7 +9,7 @@
   "nav": "la",
   "katex": true,
   "published": "2026-10-12",
-  "updated": "2026-10-12",
+  "updated": "2026-10-25",
   "level": ["High school", "Undergraduate"],
   "about": ["Cramer's rule", "Determinant", "Mesh analysis", "Phasor", "Transfer function", "Characteristic equation"],
   "scripts": ["/assets/linalg.js"],
@@ -37,6 +37,7 @@
         <a class="btn btn-ghost btn-sm" href="#mesh">วงจรสามลูป</a>
         <a class="btn btn-ghost btn-sm" href="#ac">วงจร AC</a>
         <a class="btn btn-ghost btn-sm" href="#zero">เมื่อ Δ = 0</a>
+        <a class="btn btn-ghost btn-sm" href="#parameter">โจทย์พารามิเตอร์ k</a>
       </div>
       <div class="tldr">
         <b>สรุปใน 30 วินาที</b>
@@ -150,6 +151,31 @@
         <li><p>แต่สมการพูดว่า \(x + y + z\) เท่ากับ 1, 2 และ 3 พร้อมกัน ซึ่งเป็นไปไม่ได้</p></li>
       </ol>
       <p class="answer">ระบบไม่มีคำตอบ ทั้งที่ “\(0/0\)” ทุกตัว บทเรียนคือ \(\Delta = 0\) ให้หันไปลดแถวทันที</p>
+    </div>
+    </section>
+
+    <!-- ============ 4b (2026-10-25) ============ -->
+    <section class="tsec" aria-labelledby="parameter">
+    <h2 id="parameter">คราเมอร์กับพารามิเตอร์: โจทย์สอบเข้ามหาวิทยาลัย <span class="lv lv-b">พื้นฐาน</span> → <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อสัมประสิทธิ์มีตัวแปร \(k\) คราเมอร์ให้คำตอบเป็นสูตรของ \(k\) ทันที ค่า \(k\) ที่ทำให้ \(\Delta = 0\) คือจุดที่ต้องแยกพิจารณา ห้ามตัดตัวประกอบร่วมทิ้งก่อนตรวจกรณีนั้น</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C10" data-k="parameter k cramer cases delta zero unique none infinite simplify cancel พารามิเตอร์ แยกกรณี ตัดตัวร่วม">
+        <p class="tf-n"><b><span class="fid">C10</span> Cramer with a parameter</b> คราเมอร์เมื่อมีพารามิเตอร์</p>
+        \[ \Delta(k) \ne 0 \Rightarrow x_i = \frac{\Delta_i(k)}{\Delta(k)};\qquad \Delta(k_0) = 0 \Rightarrow \text{แทน } k_0 \text{ แล้วลดแถว (ไม่มีคำตอบหรือไม่จำกัด)} \]
+        <p class="tf-x">สำหรับ 2×2: \(\Delta = 0\) และ \(\Delta_x \ne 0\) หรือ \(\Delta_y \ne 0\) ⇒ ไม่มีคำตอบ · \(\Delta = \Delta_x = \Delta_y = 0\) ⇒ ไม่จำกัด (ถ้าไม่ใช่เมทริกซ์ศูนย์) · 3×3 ต้องลดแถวตรวจเสมอ ดู <a href="#C5">C5</a> และ <a href="/learn/linear-algebra/rank/#R7">ทฤษฎีบทรูเช-กาเปลลี R7</a></p>
+      </div>
+    </div>
+    <div class="wx" id="ex-c7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง C-7 · พารามิเตอร์ k</span><h3>ระบบ \(\begin{aligned} kx + y &= 1 \\ x + ky &= 1 \end{aligned}\) แยกกรณีตามค่า \(k\) และหาคำตอบเมื่อมีคำตอบเดียว</h3><button type="button" class="wx-btn calc-go" data-calc="mode=solve&amp;A=2,1;1,2&amp;b=1,1">ลองที่ k = 2</button></div>
+      <ol class="steps">
+        <li>\[ \Delta = \begin{vmatrix} k & 1 \\ 1 & k \end{vmatrix} = k^2 - 1,\qquad \Delta_x = \begin{vmatrix} \hlU{1} & 1 \\ \hlU{1} & k \end{vmatrix} = k - 1,\qquad \Delta_y = \begin{vmatrix} k & \hlU{1} \\ 1 & \hlU{1} \end{vmatrix} = k - 1 \]</li>
+        <li><p>\(k \ne \pm1\): <a class="tag tf" href="#C10">C10</a></p>
+          \[ x = y = \frac{k - 1}{(k - 1)(k + 1)} = \frac{1}{k + 1} \]</li>
+        <li><p>\(k = 1\): \(\Delta = \Delta_x = \Delta_y = 0\) สองสมการเป็น \(x + y = 1\) เส้นเดียวกัน → คำตอบไม่จำกัด \((t, 1 - t)\)</p></li>
+        <li><p>\(k = -1\): \(\Delta = 0\) แต่ \(\Delta_x = -2 \ne 0\) → \(-x + y = 1\) กับ \(x - y = 1\) ขนานกัน → ไม่มีคำตอบ</p></li>
+      </ol>
+      <p class="answer">\(k \ne \pm1\): \(x = y = \tfrac{1}{k + 1}\) · \(k = 1\): ไม่จำกัด · \(k = -1\): ไม่มีคำตอบ</p>
+      <p class="check">กับดัก: ถ้าตัด \((k - 1)\) ทิ้งตั้งแต่แรกจะได้สูตร \(\tfrac{1}{k + 1}\) ที่ดูเหมือนใช้ได้ที่ \(k = 1\) (ได้ \(\tfrac12\)) แต่จริง ๆ ที่ \(k = 1\) มีคำตอบไม่จำกัด \((\tfrac12, \tfrac12)\) เป็นเพียงหนึ่งในนั้น · ฝึกเพิ่มที่ <a href="/learn/linear-algebra/exam-practice/#set-a">ชุด A ข้อ A9–A10</a></p>
     </div>
     </section>
 
@@ -317,6 +343,7 @@
     <section class="tsec" aria-labelledby="next">
     <h2 id="next">ต่อยอดไปหน้าถัดไป</h2>
     <p>ตัวอย่าง C-6 แสดงว่า \(\Delta(s) = 0\) ให้ขั้วของวงจร คำถามเดียวกันในภาษาเมทริกซ์คือ “ค่า \(\lambda\) ใดทำให้ \(\det(A - \lambda I) = 0\)” นั่นคือ <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะและเวกเตอร์เฉพาะ</a> ซึ่งบอกว่าวงจรตอบสนองเร็ว ช้า หรือแกว่งแค่ไหน</p>
+    <p>ระบบที่ใหญ่กว่า 3×3 หรือต้องแก้ในโปรแกรม ให้ใช้ <a href="/learn/linear-algebra/numerical-methods/">วิธีเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a> แทนคราเมอร์ ส่วนการตัดสินว่ามีคำตอบหรือไม่เมื่อ \(\Delta = 0\) ใช้ <a href="/learn/linear-algebra/rank/#systems">แรงก์</a> · ฝึกโจทย์ที่ <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ</a> และอ่านบทความ <a href="/blog/cramers-rule/">กฎของคราเมอร์ใช้อย่างไร และเมื่อไรไม่ควรใช้</a> (<a href="/en/blog/cramers-rule/">English</a>)</p>
     </section>
 
     <!--faq-->
