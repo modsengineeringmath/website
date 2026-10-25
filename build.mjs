@@ -809,7 +809,10 @@ const EN_CHROME = [
   ['href="/learn/" data-nav="learn">คลังความรู้<', 'href="/learn/" data-nav="learn">Library (Thai)<'],
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
-  ['data-nav="tools">เครื่องมือ<', 'data-nav="tools">Tools<'],
+  ['aria-controls="navtools">เครื่องมือ<', 'aria-controls="navtools">Tools<'],
+  ['data-nav="tools">เขียนบทเรียน Markdown + LaTeX<', 'data-nav="tools">Math lesson editor (Thai)<'],
+  ['href="/tools/tarot/" data-nav="tarot">ดูดวงไพ่ทาโรต์ Celtic Cross<', 'href="/en/tools/tarot/" data-nav="tarot">Celtic Cross tarot reading<'],
+  ['<a href="/tools/tarot/">ดูดวงไพ่ทาโรต์ Celtic Cross</a>', '<a href="/en/tools/tarot/">Celtic Cross tarot reading</a>'],
   ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
   ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
   ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
@@ -2026,6 +2029,8 @@ for (const { rel, raw } of pageSources) {
 
   const headExtra = [
     meta.katex || /class="katex/.test(body) ? `<link rel="stylesheet" href="${KATEX_CSS}">` : "",
+    // page-specific stylesheets ("css": ["/assets/x.css"]) so site.css stays lean for every other page
+    ...(meta.css || []).map((h) => `<link rel="stylesheet" href="${h}?v=${ASSET_V}">`),
     meta.noindex ? '<meta name="robots" content="noindex">' : "",
     mdExport ? `<link rel="alternate" type="text/markdown" href="${url}index.html.md" title="Markdown">` : "",
     ...MD_GUIDES.filter((g) => g.page === route).map((g) => `<link rel="alternate" type="text/markdown" href="${SITE}/${g.out}" title="${esc(g.title)}">`),
@@ -2182,6 +2187,7 @@ ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SIT
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}
 - [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
+- [Celtic Cross tarot reader](${SITE}/tools/tarot/) ([English](${SITE}/en/tools/tarot/)): physical shuffle models (GSR riffle, overhand, table wash, three-pile cut), mixing meter, question-aware reading with Golden Dawn correspondences
 - Lab presets can be opened directly, e.g. ${SITE}/learn/function-generator/simulator/#preset=rc-square (RC low-pass with a square wave), #preset=probe-comp, #preset=lissajous, #preset=opamp-slew, #preset=aliasing
 - Inverse Laplace calculator links: ${SITE}/learn/laplace-transform/inverse-laplace-transform/#f=(s%2B3)%2F(s%5E2%2B3s%2B2)
 - Solar PV design calculators (string sizing, energy yield, battery, air conditioner, solar pump, voltage drop, payback/NPV/IRR/LCOE): ${SITE}/learn/solar-pv/design-lab/ ; MPPT switching-level simulation: ${SITE}/learn/power-electronics/converter-lab/#preset=solar-mppt

@@ -593,3 +593,25 @@ refreshes it live together with the box, so editing `data/updates.json` alone up
 { "date": "2026-10-25", "tag": "บทเรียน", "hero": "ข้อความสั้นสำหรับแถบใหม่", "text": "รายละเอียด", "link": "/learn/…", "linkText": "เปิดบทเรียน",
   "links": [{ "href": "/learn/…", "text": "หน้าย่อย" }] }
 ```
+
+## Tarot reader — Celtic Cross (added 2026-10-26)
+`/tools/tarot/` (Thai) and `/en/tools/tarot/` (English), sources `src/pages/tools/tarot.html` and `src/pages/en/tools/tarot.html`
+(stand-alone pages paired with `meta.alt`; menu: the "เครื่องมือ" group in `src/layout.html`, `data-nav="tarot"`; short URLs `/tarot`
+`/celtic-cross` `/en/tarot` in `_redirects`). Everything runs in the browser; nothing is sent anywhere.
+- **`assets/tarot-data.js`** — the 78 cards in Rider–Waite–Smith order with Thai and English names, keywords, upright/reversed
+  meanings, love / work-and-study / money lines and a valence −3…+3 per orientation, plus the Golden Dawn tables: elements and dignities,
+  signs, planets, Chaldean decans (pips 2–10), court spans (King = Fire of, Queen = Water of, Knight = Air of, Page = Earth of),
+  Hebrew letters and the 22 paths, the Sephiroth, Celtic Cross positions (weights and time-line places), question topics and numerology.
+- **`assets/tarot-engine.js`** (no DOM) — deck as `[{id, r}]` (index 0 = top, r = reversed), persisted in `localStorage`
+  `mem-tarot-deck` so the next reading starts from the last one; shuffles: GSR riffle (binomial cut, proportional drops, optional
+  180° turn of the bottom half for reversals), overhand (packet reversal, break probability 0.16), table wash (Gaussian drift
+  σ = 4t^0.85 and angle diffusion 0.9√t), three-pile cut and restack, gather after a reading. Randomness = `crypto.getRandomValues`
+  XOR an entropy pool fed by the user's pointer/key timings → sfc32 per action. Mixing meter = min of rising sequences, neighbour pairs
+  and Spearman ρ; `TV78` = exact Bayer–Diaconis distances for 78 cards. `analyze()` builds the reading (question classifier,
+  positions, axes, dignities, least-squares trend, verdict, astrology, quintessence, Tree of Life, birth date keys, timing from the
+  Sun's longitude) in either language; `toText()` is the copy-to-clipboard version.
+- **`assets/tarot.js`** — the UI (steps, animations, original SVG card faces drawn in code, results) rendered into `#tarotApp`;
+  `data-lang` picks the language. **`assets/tarot.css`** is loaded only on these pages through the new meta key
+  `"css": ["/assets/tarot.css"]` (build.mjs adds a `<link>` with the asset version).
+- Test: `node scripts/test-tarot.mjs` (card data, decans and court spans, shuffle invariants, rising sequences ≤ 2^k, binomial cut,
+  equinox longitude, numerology, question classifier, 800 random readings in both languages with no undefined/NaN and no Thai in English).
