@@ -454,7 +454,8 @@ ol,ul{padding-left:1.3em}li{margin:.3em 0}code{font-family:"IBM Plex Mono",monos
 <p>ที่อยู่นี้คือ MCP server ของ <a href="/">Mod's Engineering Mathematics</a> ให้ผู้ช่วย AI เช่น Claude ค้นบทเรียน บทความ และเฉลยโจทย์ แล้วอ่านเนื้อหาพร้อมสูตร LaTeX ได้โดยตรง ใช้ฟรี ไม่ต้องสมัครสมาชิก และอ่านได้อย่างเดียว</p>
 <div class="url"><code id="u">${SITE}/mcp</code><button type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('u').textContent).then(()=>{this.textContent='คัดลอกแล้ว'})">คัดลอก</button></div>
 <h2>วิธีเพิ่มใน Claude</h2>
-<ol><li>เปิด Claude แล้วไปที่ Settings › Connectors</li><li>เลือก Add custom connector</li><li>ตั้งชื่อ เช่น “อาจารย์มด” แล้ววางที่อยู่ด้านบนในช่อง URL</li><li>จากนั้นถามได้เลย เช่น “ค้นเว็บอาจารย์มดเรื่อง Inverse Laplace แล้วสรุปขั้นตอน”</li></ol>
+<ol><li>เปิด <a href="https://claude.ai" rel="noopener">claude.ai</a> แล้วไปที่ Customize › Connectors</li><li>กด + Add แล้วเลือก Add custom connector</li><li>ตั้งชื่อ เช่น “อาจารย์มด” วางที่อยู่ด้านบนในช่อง URL แล้วกด Continue</li><li>ที่ Authentication เลือก No sign in แล้วกด Add</li><li>จากนั้นถามได้เลย เช่น “ค้นเว็บอาจารย์มดเรื่อง Inverse Laplace แล้วสรุปขั้นตอน”</li></ol>
+<p class="note">แผน Free เพิ่ม custom connector ได้ 1 ตัว ส่วนแผนแบบเสียเงินเพิ่มได้หลายตัว รายละเอียดดูที่ <a href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" rel="noopener">Claude Help Center</a></p>
 <h2>เครื่องมือที่มี</h2>
 <ul>${tools}</ul>
 <p class="note">For AI developers: Streamable HTTP transport (stateless JSON responses, no SSE), protocol versions ${PROTOCOLS.join(", ")}. The same content is also at <a href="/llms.txt">/llms.txt</a>, <a href="/llms-full.txt">/llms-full.txt</a> and as a Markdown copy of every page (&lt;page URL&gt;index.html.md).</p>
