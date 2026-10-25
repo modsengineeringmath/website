@@ -3,10 +3,10 @@ title: "3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 
 url: https://modsengineeringmath.com/en/blog/3-phase-motor-delta-connection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-17
+updated: 2026-10-25
 ---
 
-> How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, line vs phase voltage and current, choosing from a 230/400 V or 400/690 V nameplate, and a 16-second video.
+> How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, what U1 V1 W1 U2 V2 W2 mean and which wire colours go where, line vs phase values, and choosing from the nameplate.
 
 Markdown copy of https://modsengineeringmath.com/en/blog/3-phase-motor-delta-connection/ for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.
 
@@ -47,6 +47,28 @@ Each phase winding has a start (number 1) and an end (number 2): U1–U2, V1–V
 
 Left: the delta circuit, three windings joined end to end in a closed loop · Right: the terminal box to IEC 60034-8 with three vertical links; terminal colours match each phase winding
 
+## What U1 V1 W1 U2 V2 W2 mean, and which wire colours go where
+
+Under IEC 60034-8 the letters U V W name the three phase windings and the number gives the end of the winding: 1 = start and 2 = end. A six-terminal motor therefore has U1 V1 W1 (the starts) and U2 V2 W2 (the ends). Older motors and American motors use other names, which map across as follows.
+
+| Winding | Start – end (IEC) | Older marking | NEMA (US) | Supply conductor (IEC 60445 colour) |
+
+| Phase U | U1 – U2 | U – X | T1 – T4 | L1 brown → U1 |
+
+| Phase V | V1 – V2 | V – Y | T2 – T5 | L2 black → V1 |
+
+| Phase W | W1 – W2 | W – Z | T3 – T6 | L3 grey → W1 |
+
+| Earth | earth terminal in the box ⏚ | – | – | PE green-yellow |
+
+- The leads inside the motor have no standard colour. IEC 60034-8 identifies terminals by letters and numbers, not by the colour of the winding leads. Many manufacturers use one colour for every lead and print the marking on a sleeve; others use colours, but the schemes differ between brands. Go by the printed marking and the diagram inside the terminal-box lid, not by colour.
+
+- The supply cable follows IEC 60445 (in Thailand, TIS 11-2553): L1 brown, L2 black, L3 grey, N blue, PE green-yellow. Connecting brown → U1, black → V1, grey → W1 makes the work easy to inspect, but colour does not guarantee phase sequence: older installations may follow an earlier colour code. Check with a phase-sequence meter or by a test run.
+
+- Direction of rotation under IEC 60034-8. With L1, L2, L3 connected to U1, V1, W1 in phase sequence, the motor turns clockwise seen from the shaft (drive) end. To reverse it, swap any two supply conductors.
+
+- Markings lost? An ohmmeter finds which leads are connected, giving three pairs (the three windings) of similar resistance. Telling the start (1) from the end (2) of each winding needs a polarity test, done the way a motor-rewind shop or the manufacturer's manual describes. If one winding is reversed in a delta, the voltages round the delta no longer cancel and a large current circulates in the loop even with no load.
+
 ## Why the bottom row of the terminal box reads W2 U2 V2
 
 In a six-terminal box the top row is U1 V1 W1, while the bottom row is shifted by one position to W2 U2 V2 (W2 sits under U1). The shift is deliberate: the same set of links serves both connections.
@@ -85,7 +107,7 @@ The common mistake is not placing the links but choosing the connection without 
 
 | 400/690 V (older plates: 380/660 V) | Delta (Δ) | In star each winding gets only 1/√3 of its voltage, torque falls to about 1/3, and under load it draws too much current and overheats |
 
-Rule of thumb: the Δ figure on the nameplate must equal the supply's line voltage before you connect in delta. A 400/690 V motor on a 400 V supply is exactly the kind that can use a star-delta starter: it starts in star, cutting the starting current to about 1/3, then switches to delta once it is up to speed.
+Rule of thumb: the Δ figure on the nameplate must equal the supply's line voltage before you connect in delta. A 400/690 V motor on a 400 V supply is exactly the kind that can use a star-delta starter: it starts in star, cutting the starting current to about 1/3, then switches to delta once it is up to speed. How many seconds to set on the timer is worked out numerically in star–delta timer: how many seconds?
 
 ## Steps to connect delta at the terminal box
 
@@ -109,9 +131,19 @@ Rule of thumb: the Δ figure on the nameplate must equal the supply's line volta
 
 - Motor starter simulator: wire it yourself on screen
 
+- Direction of rotation under IEC 60034-8, and reversing a star–delta starter
+
+- Read next: star–delta timer, how many seconds? A numerical study
+
 - Read next: what power factor is and why motors lower it
 
 ## Frequently asked questions
+
+What do U1 V1 W1 U2 V2 W2 mean on a motor?
+Under IEC 60034-8 the letters U, V and W are the three phase windings, the number 1 is the start of a winding and 2 is its end, so phase U has terminals U1 and U2. Older motors use U-X, V-Y, W-Z, and NEMA motors in the United States use T1-T4, T2-T5, T3-T6.
+
+What colour are the U1 V1 W1 wires?
+IEC 60034-8 identifies terminals by letters and numbers, not by colour, and many manufacturers use one colour for every lead with the marking printed on a sleeve, so go by the marking, not the colour. For the supply cable, the IEC 60445 colours (also used in Thailand under TIS 11-2553) are brown for L1 to U1, black for L2 to V1, grey for L3 to W1, and green-yellow for protective earth.
 
 Which terminals are linked for a delta connection?
 Three pairs: U1–W2, V1–U2 and W1–V2. In a standard IEC terminal box this means three vertical links, with L1 to U1, L2 to V1 and L3 to W1.
@@ -145,6 +177,12 @@ Power factor is the ratio of real power to apparent power. See the P Q S power t
 All 4 articles in Power Systems & Motors → · All articles
 
 ## Frequently asked questions
+
+**What do U1 V1 W1 U2 V2 W2 mean on a motor?**
+Under IEC 60034-8 the letters U, V and W are the three phase windings, the number 1 is the start of a winding and 2 is its end, so phase U has terminals U1 and U2. Older motors use U-X, V-Y, W-Z, and NEMA motors in the United States use T1-T4, T2-T5, T3-T6.
+
+**What colour are the U1 V1 W1 wires?**
+IEC 60034-8 identifies terminals by letters and numbers, not by colour, and many manufacturers use one colour for every lead with the marking printed on a sleeve, so go by the marking, not the colour. For the supply cable, the IEC 60445 colours (also used in Thailand under TIS 11-2553) are brown for L1 to U1, black for L2 to V1, grey for L3 to W1, and green-yellow for protective earth.
 
 **Which terminals are linked for a delta connection?**
 Three pairs: U1–W2, V1–U2 and W1–V2. In a standard IEC terminal box this means three vertical links, with L1 to U1, L2 to V1 and L3 to W1.

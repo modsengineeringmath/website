@@ -3,10 +3,10 @@ title: "What Is a Taylor Series, What Is It Used For, with Examples"
 url: https://modsengineeringmath.com/en/blog/what-is-taylor-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-17
+updated: 2026-10-25
 ---
 
-> What a Taylor series is: Maclaurin series of eˣ, sin, cos and ln, how to find the coefficients, approximation examples with error bounds, and engineering uses such as small angles and diodes.
+> What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many terms, integrals, limits and engineering uses.
 
 Markdown copy of https://modsengineeringmath.com/en/blog/what-is-taylor-series/ for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.
 
@@ -16,7 +16,7 @@ THภาษาไทยENEnglish
 // Article · Sequences & series
 
 
-A calculator does not know sin or eˣ directly; it only knows how to add and multiply. A Taylor series turns almost any function into a polynomial that can be computed with additions and multiplications, and it is the reason engineers can write $\sin\theta \approx \theta$ with confidence.
+A calculator does not know sin or eˣ directly; it only knows how to add and multiply. A Taylor series turns almost any function into a polynomial that can be computed with additions and multiplications, and it is the reason engineers can write $\sin\theta \approx \theta$ with confidence. This article gives the formula, the table of series worth memorising and 8 worked examples.
 
 30-second summary
 
@@ -50,9 +50,27 @@ Example 1
 
 $e^{0.5} \approx 1.6484$ from just 5 terms, and we know in advance that the error is below $4.3\times10^{-4}$.
 
-Doing the same for other functions gives the table worth remembering:
+### The Maclaurin series table to memorise
 
-$$\begin{aligned} e^x &= 1 + x + \tfrac{x^2}{2!} + \tfrac{x^3}{3!} + \cdots & (R = \infty) \\ \sin x &= x - \tfrac{x^3}{3!} + \tfrac{x^5}{5!} - \cdots & (R = \infty) \\ \cos x &= 1 - \tfrac{x^2}{2!} + \tfrac{x^4}{4!} - \cdots & (R = \infty) \\ \ln(1 + x) &= x - \tfrac{x^2}{2} + \tfrac{x^3}{3} - \cdots & (-1 < x \le 1) \\ (1 + x)^{\alpha} &= 1 + \alpha x + \tfrac{\alpha(\alpha - 1)}{2!}x^2 + \cdots & (|x| < 1) \end{aligned}$$
+Doing the same for other functions gives the table below. The right-hand column is where the series converges to the function; outside it the series cannot be used.
+
+| Function | Maclaurin series | Valid for |
+
+| $e^x$ | $1 + x + \dfrac{x^2}{2!} + \dfrac{x^3}{3!} + \cdots$ | all x |
+
+| $\sin x$ | $x - \dfrac{x^3}{3!} + \dfrac{x^5}{5!} - \cdots$ | all x |
+
+| $\cos x$ | $1 - \dfrac{x^2}{2!} + \dfrac{x^4}{4!} - \cdots$ | all x |
+
+| $\dfrac{1}{1 - x}$ | $1 + x + x^2 + x^3 + \cdots$ | $|x| < 1$ |
+
+| $\ln(1 + x)$ | $x - \dfrac{x^2}{2} + \dfrac{x^3}{3} - \cdots$ | $-1 < x \le 1$ |
+
+| $\tan^{-1} x$ | $x - \dfrac{x^3}{3} + \dfrac{x^5}{5} - \cdots$ | $|x| \le 1$ |
+
+| $(1 + x)^{\alpha}$ | $1 + \alpha x + \dfrac{\alpha(\alpha - 1)}{2!}x^2 + \cdots$ | $|x| < 1$ |
+
+Remember the first three rows and the geometric series $1/(1 - x)$, and you can build the rest: integrating $1/(1 + t)$ gives $\ln(1 + x)$, and integrating $1/(1 + t^2)$ gives $\tan^{-1} x$ (see the geometric series formula).
 
 ## Approximation examples
 
@@ -78,9 +96,69 @@ Example 3
 
 $\cos 0.2 \approx 0.98007$ · $\sqrt{1.02} \approx 1.00995$
 
+## Taylor series about a point other than 0
+
+If the x you need is far from 0, a Maclaurin series needs many terms. Choose instead an expansion point $a$ near x where the function is easy to evaluate; the terms are then powers of $(x - a)$, which is small.
+
+Example 4
+
+### Use the second-order Taylor polynomial of $\sqrt{x}$ about $a = 4$ to approximate $\sqrt{4.1}$, with an error bound.
+
+- $f(x) = x^{1/2},\ f'(x) = \tfrac12 x^{-1/2},\ f''(x) = -\tfrac14 x^{-3/2}$. At $a = 4$: $f = 2,\ f' = \tfrac14,\ f'' = -\tfrac{1}{32}$
+
+- $P_2(x) = 2 + \dfrac{x - 4}{4} - \dfrac{(x - 4)^2}{64}$ (the second-order coefficient is $f''(4)/2! = -1/64$)
+
+- $P_2(4.1) = 2 + 0.025 - 0.00015625 = 2.02484375$. The true value is $2.02484567$, an error of $1.92\times10^{-6}$
+
+- Lagrange bound: $f'''(x) = \tfrac38 x^{-5/2} \le \tfrac38\cdot\tfrac{1}{32}$ on $[4,\ 4.1]$, so $|R_2| \le \dfrac{3/256}{3!}(0.1)^3 \approx 1.95\times10^{-6}$ ✓
+
+$\sqrt{4.1} \approx 2.024844$, correct to 5 decimal places from a polynomial of degree two, because $x - a = 0.1$ is small.
+
+## How many terms? Computing e
+
+Example 5
+
+### How far must the series of $e^x$ go to guarantee that $e = e^1$ is within $5\times10^{-5}$ (correct to 4 decimal places)?
+
+- Lagrange bound at $x = 1$: $|R_n| \le \dfrac{M}{(n+1)!}$ with $M = \max e^c \le e < 3$ on $[0,\ 1]$
+
+- We need $\dfrac{3}{(n+1)!} < 5\times10^{-5}$, that is $(n+1)! > 60\,000$. Since $8! = 40\,320$ is not enough but $9! = 362\,880$ is, $n = 8$
+
+- $\sum_{k=0}^{8} \dfrac{1}{k!} = 2.7182788$. The true value is $2.7182818$, an error of $3.1\times10^{-6}$ ✓
+
+Going up to $x^8/8!$ (9 terms) guarantees it. In fact stopping at $x^7/7!$ already gives an error of only $2.8\times10^{-5}$: the Lagrange bound is a guarantee, so it is usually larger than the actual error.
+
+## New series from the table: integrals and limits
+
+You do not have to differentiate from scratch every time. Substitute, multiply, integrate or differentiate the series in the table term by term (inside the radius of convergence). This lets you evaluate integrals that have no antiderivative in terms of elementary functions.
+
+Example 6 · An integral with no elementary antiderivative
+
+### Approximate $\displaystyle\int_0^1 e^{-x^2}\,dx$.
+
+- Replace $x$ by $-x^2$ in the series of $e^x$: $e^{-x^2} = 1 - x^2 + \dfrac{x^4}{2!} - \dfrac{x^6}{3!} + \dfrac{x^8}{4!} - \cdots$
+
+- Integrate term by term from 0 to 1: $1 - \dfrac13 + \dfrac{1}{10} - \dfrac{1}{42} + \dfrac{1}{216} - \dfrac{1}{1320} + \cdots$
+
+- First five terms: $1 - 0.333333 + 0.1 - 0.023810 + 0.004630 = 0.747487$
+
+- This is an alternating series with decreasing terms, so the error is at most the next term, $1/1320 \approx 7.6\times10^{-4}$. The true value is $0.746824$, an error of $6.6\times10^{-4}$ ✓
+
+$\displaystyle\int_0^1 e^{-x^2}dx \approx 0.7475$. This function has no elementary antiderivative, yet it is at the heart of the normal distribution and the error function used in noise analysis.
+
+Example 7 · A 0/0 limit
+
+### Find $\displaystyle\lim_{x\to0}\frac{\sin x - x}{x^3}$.
+
+- Substitute the series: $\sin x - x = -\dfrac{x^3}{6} + \dfrac{x^5}{120} - \cdots$
+
+- Divide by $x^3$: $-\dfrac16 + \dfrac{x^2}{120} - \cdots \to -\dfrac16$ as $x \to 0$
+
+The limit is $-\tfrac16$. L'Hôpital's rule needs three rounds of differentiation; the Taylor series gives the answer in one line and also tells you that $\sin x$ differs from $x$ by about $x^3/6$.
+
 ## Engineering uses
 
-Example 4 · Small-signal diode model
+Example 8 · Small-signal diode model
 
 ### A diode obeys $i = I_S e^{v/V_T}$ and operates at $I_D = 1\ \text{mA}$, $V_T = 26\ \text{mV}$. If the voltage rises by $\Delta v = 2\ \text{mV}$, what is the current?
 
@@ -112,6 +190,10 @@ The full lessons are in Thai, with English technical terms and the same formulas
 
 - Finding the nth-derivative formula by induction, for use in Taylor series (in Thai)
 
+- Next article: 14 mathematical induction examples, including an nth-derivative formula
+
+- Next article: how to find the radius of convergence of a power series
+
 - Derivatives, the foundation of Taylor coefficients (in Thai)
 
 ## Frequently asked questions
@@ -141,8 +223,8 @@ Geometric series formula for the sum of n terms and the infinite sum a₁/(1 −
 17 Oct 2026Read the article →
 
 Sequences & series
-Mathematical Induction Examples with Step-by-Step Solutions
-Worked examples of proof by induction: summation formulas, divisibility and inequalities, using a four-step template with the base case, the…
+Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction
+14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction,…
 17 Oct 2026Read the article →
 
 All 7 articles in Sequences & Series → · All articles

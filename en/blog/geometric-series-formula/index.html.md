@@ -153,13 +153,13 @@ The whole sequences and series chapter on one page: what each topic answers, its
 24 Oct 2026Read the article →
 
 Sequences & series
-Mathematical Induction Examples with Step-by-Step Solutions
-Worked examples of proof by induction: summation formulas, divisibility and inequalities, using a four-step template with the base case, the…
+Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction
+14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction,…
 17 Oct 2026Read the article →
 
 Sequences & series
 What Is a Taylor Series, What Is It Used For, with Examples
-What a Taylor series is: Maclaurin series of eˣ, sin, cos and ln, how to find the coefficients, approximation examples with error bounds, and…
+What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many…
 17 Oct 2026Read the article →
 
 All 7 articles in Sequences & Series → · All articles

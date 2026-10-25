@@ -3,7 +3,7 @@ title: "Sequences & Series Articles: Convergence Tests, Taylor and Laurent Serie
 url: https://modsengineeringmath.com/en/blog/category/sequences-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 > Articles on sequences and series: a convergence-test flowchart, the geometric series formula, radius of convergence, Taylor and Laurent series and mathematical induction, with checked examples.
@@ -48,13 +48,13 @@ Geometric series formula for the sum of n terms and the infinite sum a₁/(1 −
 17 Oct 2026Read the article →
 
 Sequences & series
-Mathematical Induction Examples with Step-by-Step Solutions
-Worked examples of proof by induction: summation formulas, divisibility and inequalities, using a four-step template with the base case, the…
+Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction
+14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction,…
 17 Oct 2026Read the article →
 
 Sequences & series
 What Is a Taylor Series, What Is It Used For, with Examples
-What a Taylor series is: Maclaurin series of eˣ, sin, cos and ln, how to find the coefficients, approximation examples with error bounds, and…
+What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many…
 17 Oct 2026Read the article →
 
 // Keep reading

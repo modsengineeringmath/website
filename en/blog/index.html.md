@@ -70,13 +70,13 @@ Geometric series formula for the sum of n terms and the infinite sum a₁/(1 −
 17 Oct 2026Read the article →
 
 Sequences & series
-Mathematical Induction Examples with Step-by-Step Solutions
-Worked examples of proof by induction: summation formulas, divisibility and inequalities, using a four-step template with the base case, the…
+Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction
+14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction,…
 17 Oct 2026Read the article →
 
 Sequences & series
 What Is a Taylor Series, What Is It Used For, with Examples
-What a Taylor series is: Maclaurin series of eˣ, sin, cos and ln, how to find the coefficients, approximation examples with error bounds, and…
+What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many…
 17 Oct 2026Read the article →
 
 ## [A]Vectors & Linear Algebra
@@ -166,7 +166,7 @@ How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel
 
 3-phase motors
 3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate
-How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, line vs phase voltage and current, choosing from a 230/400 V or 400/690 V…
+How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, what U1 V1 W1 U2 V2 W2 mean and which wire colours go where, line vs phase…
 17 Oct 2026Read the article →
 
 Power factor

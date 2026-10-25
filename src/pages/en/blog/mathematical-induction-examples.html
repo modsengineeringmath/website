@@ -1,21 +1,23 @@
 <!--meta
 {
-  "title": "Mathematical Induction Examples with Solutions: Sums, Divisibility, Inequalities | Ajarn Mod",
-  "h1": "Mathematical Induction Examples with Step-by-Step Solutions",
-  "description": "Worked examples of proof by induction: summation formulas, divisibility and inequalities, using a four-step template with the base case, the inductive step and the mistakes that cost marks.",
-  "ogTitle": "Mathematical Induction Examples with Step-by-Step Solutions",
+  "title": "Mathematical Induction Examples: Sums, Divisibility, Inequalities, Strong Induction | Ajarn Mod",
+  "h1": "Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction",
+  "description": "14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction, with a four-step template and common mistakes.",
+  "ogTitle": "Mathematical Induction Examples, Including Strong Induction",
   "lang": "en",
   "blog": true,
   "tag": "Sequences & series",
   "category": "sequences-series",
   "series": ["limits"],
   "published": "2026-10-17",
-  "updated": "2026-10-17",
-  "keywords": ["mathematical induction examples", "proof by induction", "induction proof examples", "base case", "inductive step", "divisibility proof", "inequality proof by induction", "summation formula proof"],
-  "about": ["Mathematical induction", "Proof by induction", "Base case", "Inductive step"],
-  "og": {"title": "Mathematical Induction Examples", "sub": "Sums, divisibility and inequalities with a four-step template", "eyebrow": "Article · Sequences & series", "sym": "P(k)⇒"},
+  "updated": "2026-10-25",
+  "keywords": ["mathematical induction", "mathematical induction examples", "proof by induction", "induction proof examples", "induction statement", "strong induction examples", "strong induction example", "weak vs strong induction", "base case", "inductive step", "divisibility proof", "inequality proof by induction", "summation formula proof"],
+  "about": ["Mathematical induction", "Proof by induction", "Strong induction", "Base case", "Inductive step"],
+  "og": {"title": "Mathematical Induction Examples", "sub": "Sums, divisibility, inequalities and strong induction, step by step", "eyebrow": "Article · Sequences & series", "sym": "P(k)⇒"},
   "faq": [
     {"q": "How many steps does mathematical induction have?", "a": "Two main steps: the base case (show \\(P(n_0)\\) is true) and the inductive step (assume \\(P(k)\\) is true and show \\(P(k+1)\\) is true). In written answers it is usually laid out in four parts: define P(n), base case, inductive hypothesis, and inductive step with the conclusion."},
+    {"q": "What is the induction statement P(n)?", "a": "It is the sentence you want to prove, written so that it becomes true or false once a value of n is put in, for example \\(P(n)\\): \\(1 + 3 + \\cdots + (2n - 1) = n^2\\). It must be a statement, not an expression: “let \\(P(n) = n^2 + n\\)” is not an induction statement because it has no truth value."},
+    {"q": "What is the difference between ordinary (weak) induction and strong induction?", "a": "Ordinary induction assumes only \\(P(k)\\) to prove \\(P(k+1)\\). Strong induction assumes every case from \\(P(n_0)\\) up to \\(P(k)\\). Use strong induction when the step needs an earlier case such as \\(P(k-1)\\) or an unknown smaller case, for example recurrences with two previous terms, prime factorisation and coin or stamp problems. Strong induction needs as many base cases as the number of steps the argument reaches back."},
     {"q": "Must the base case always be n = 1?", "a": "No. Start at the first value where the statement is true and the inductive step keeps working. For example \\(2^n > n^2\\) must start at \\(n = 5\\), because it fails for \\(n = 2, 3, 4\\)."},
     {"q": "Why does checking many values not count as a proof?", "a": "Because there are infinitely many natural numbers. For example \\(n^2 + n + 41\\) is prime for every \\(n\\) from 0 to 39, but at \\(n = 40\\) it equals \\(1681 = 41^2\\). You need an inductive step that works for every k."},
     {"q": "Is it wrong if I prove the inductive step without using the hypothesis?", "a": "It is not logically wrong, but it means the statement could be proved directly without induction. In most exam questions, not using the hypothesis is a sign that something has gone wrong, so mark clearly the line where you use it."}
@@ -29,19 +31,39 @@
       <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/en/blog/">Articles</a></li><li>Induction examples</li></ol>
       <!--lang-switch-->
       <p class="eyebrow">// Article · Sequences &amp; series</p>
-      <h1>Mathematical Induction Examples with Step-by-Step Solutions</h1>
-      <p class="lede">Mathematical induction proves statements that must hold for every natural number n. This article collects the three kinds of example that appear most often in exams: summation formulas, divisibility and inequalities. Every one follows the same template, so you can see that only the algebra trick in the inductive step changes.</p>
+      <h1>Mathematical Induction Examples with Step-by-Step Solutions, Including Strong Induction</h1>
+      <p class="lede">Mathematical induction proves statements that must hold for every natural number n. This article starts with how to write the induction statement P(n), then works through 14 examples of the kinds that appear most often in exams: summation formulas, divisibility, inequalities, recurrences and derivatives, and strong induction. Every one follows the same template, so you can see that only the algebra trick in the inductive step changes.</p>
       <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
       <div class="tldr">
         <b>30-second summary</b>
         <ul>
+          <li><b>Induction statement</b>: write \(P(n)\) as a sentence that is true or false for each n</li>
           <li><b>Base case</b>: show \(P(n_0)\) is true by evaluating the two sides separately</li>
           <li><b>Inductive step</b>: assume \(P(k)\) is true, then show \(P(k+1)\) is true, visibly <b>using</b> the assumption</li>
-          <li>Both steps ⇒ \(P(n)\) is true for all \(n \ge n_0\), like dominoes where the first one is pushed and each one knocks over the next</li>
+          <li><b>Strong induction</b>: assume every case up to \(P(k)\) when the step needs an earlier case, and check one base case for each step you reach back</li>
         </ul>
       </div>
       <div class="toc-inline"><!--toc--></div>
     </header>
+
+    <section class="tsec" aria-labelledby="statement">
+    <h2 id="statement">The induction statement P(n): what to write first</h2>
+    <p>Every proof by induction starts by naming the statement to be proved. \(P(n)\) is a sentence about \(n\) that becomes <b>true or false</b> once a number is put in. Writing it out in full is not a formality: you substitute \(k\) and \(k+1\) into it in the next steps, and most algebra mistakes come from a careless P(k+1).</p>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th>The question says</th><th>Induction statement P(n)</th><th>Starts at</th></tr></thead>
+      <tbody>
+        <tr><td>The sum of the first n odd numbers is n²</td><td>\(1 + 3 + \cdots + (2n - 1) = n^2\)</td><td>\(n = 1\)</td></tr>
+        <tr><td>\(4^n - 1\) is a multiple of 3</td><td>there is an integer \(m\) with \(4^n - 1 = 3m\)</td><td>\(n = 1\)</td></tr>
+        <tr><td>\(2^n\) eventually beats \(n^2\)</td><td>\(2^n > n^2\)</td><td>\(n = 5\)</td></tr>
+        <tr><td>The sequence \(a_1 = 1,\ a_{n+1} = 2a_n + 1\) has a closed form</td><td>\(a_n = 2^n - 1\)</td><td>\(n = 1\)</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>A statement, not an expression.</b> “Let \(P(n) = n^2 + n\)” is not an induction statement because it has no truth value. Write “\(P(n)\): \(n^2 + n\) is even”.</li>
+      <li><b>Build P(k+1) by replacing every n with k+1</b>, including the last term of a sum: the last term of \(1 + 3 + \cdots + (2n - 1)\) becomes \(2(k+1) - 1 = 2k + 1\), and the right side becomes \((k+1)^2\).</li>
+      <li><b>Write the target P(k+1) before you start the algebra.</b> Knowing where you must end up tells you which factor to pull out or which term to add and subtract.</li>
+    </ul>
+    </section>
 
     <section class="tsec" aria-labelledby="template">
     <h2 id="template">A four-step template that works every time</h2>
@@ -56,7 +78,7 @@
     <section class="tsec" aria-labelledby="sums">
     <h2 id="sums">Type 1: summation formulas</h2>
     <p>Technique: split off the last term; what remains is exactly the left side of P(k).</p>
-    <div class="wx">
+    <div class="wx" id="ex-1">
       <div class="wx-head"><span class="mono">Example 1</span><h3>Prove that \(1 + 3 + 5 + \cdots + (2n - 1) = n^2\) for every natural number \(n\).</h3></div>
       <ol class="steps">
         <li><p>Let \(P(n)\): \(1 + 3 + \cdots + (2n - 1) = n^2\)</p></li>
@@ -66,7 +88,7 @@
       </ol>
       <p class="answer">By the principle of mathematical induction, \(P(n)\) is true for all \(n \ge 1\). ∎</p>
     </div>
-    <div class="wx">
+    <div class="wx" id="ex-2">
       <div class="wx-head"><span class="mono">Example 2</span><h3>Prove that \(1\cdot2 + 2\cdot3 + \cdots + n(n+1) = \dfrac{n(n+1)(n+2)}{3}\).</h3></div>
       <ol class="steps">
         <li><p>Base case \(n = 1\): left side \(= 1\cdot 2 = 2\), right side \(= \dfrac{1\cdot2\cdot3}{3} = 2\). True.</p></li>
@@ -75,13 +97,23 @@
       </ol>
       <p class="answer">True for all \(n \ge 1\). Tip: always write the target first, so you know which common factor to pull out.</p>
     </div>
+    <div class="wx" id="ex-3">
+      <div class="wx-head"><span class="mono">Example 3</span><h3>Prove that \(1^2 + 2^2 + \cdots + n^2 = \dfrac{n(n+1)(2n+1)}{6}\).</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 1\): left side \(= 1\), right side \(= \dfrac{1\cdot2\cdot3}{6} = 1\). True.</p></li>
+        <li><p>Assume \(1^2 + \cdots + k^2 = \dfrac{k(k+1)(2k+1)}{6}\). Target: \(1^2 + \cdots + (k+1)^2 = \dfrac{(k+1)(k+2)(2k+3)}{6}\).</p></li>
+        <li><p>\(\dfrac{k(k+1)(2k+1)}{6} + (k+1)^2 = \dfrac{(k+1)\big[k(2k+1) + 6(k+1)\big]}{6} = \dfrac{(k+1)(2k^2 + 7k + 6)}{6}\)</p></li>
+        <li><p>\(2k^2 + 7k + 6 = (k+2)(2k+3)\), so the sum equals \(\dfrac{(k+1)(k+2)(2k+3)}{6}\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\). The target told us to look for the factors \((k+2)\) and \((2k+3)\) in the bracket.</p>
+    </div>
     </section>
 
     <section class="tsec" aria-labelledby="divisibility">
     <h2 id="divisibility">Type 2: divisibility</h2>
     <p>Technique: write “3 divides b” as the equation \(b = 3m\), then split \(f(k+1)\) to expose \(f(k)\).</p>
-    <div class="wx">
-      <div class="wx-head"><span class="mono">Example 3</span><h3>Prove that \(4^n - 1\) is divisible by 3 for every natural number \(n\).</h3></div>
+    <div class="wx" id="ex-4">
+      <div class="wx-head"><span class="mono">Example 4</span><h3>Prove that \(4^n - 1\) is divisible by 3 for every natural number \(n\).</h3></div>
       <ol class="steps">
         <li><p>Base case \(n = 1\): \(4 - 1 = 3 = 3\cdot1\), divisible.</p></li>
         <li><p>Assume \(4^k - 1 = 3m\) for some integer \(m\).</p></li>
@@ -89,13 +121,32 @@
       </ol>
       <p class="answer">True for all \(n \ge 1\). The key trick: add and subtract to create \(4(4^k - 1)\), which is the hypothesis.</p>
     </div>
+    <div class="wx" id="ex-5">
+      <div class="wx-head"><span class="mono">Example 5</span><h3>Prove that \(7^n - 2^n\) is divisible by 5 for every natural number \(n\).</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 1\): \(7 - 2 = 5\), divisible.</p></li>
+        <li><p>Assume \(7^k - 2^k = 5m\) for some integer \(m\).</p></li>
+        <li><p>\(7^{k+1} - 2^{k+1} = 7\cdot7^k - 2\cdot2^k = 7(7^k - 2^k) + 7\cdot2^k - 2\cdot2^k = 7(5m) + 5\cdot2^k = 5(7m + 2^k)\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\). With two different bases, add and subtract \(7\cdot2^k\) so that one bracket is exactly \(f(k)\).</p>
+    </div>
+    <div class="wx" id="ex-6">
+      <div class="wx-head"><span class="mono">Example 6</span><h3>Prove that \(n^3 - n\) is divisible by 6 for every natural number \(n\).</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 1\): \(1 - 1 = 0 = 6\cdot0\), divisible.</p></li>
+        <li><p>Assume \(k^3 - k = 6m\).</p></li>
+        <li><p>\((k+1)^3 - (k+1) = k^3 + 3k^2 + 3k + 1 - k - 1 = (k^3 - k) + 3k(k+1) = 6m + 3k(k+1)\)</p></li>
+        <li><p>\(k(k+1)\) is a product of two consecutive integers, so it is even: \(k(k+1) = 2j\). Then \(3k(k+1) = 6j\) and the total is \(6(m + j)\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\). The step needs one extra fact (consecutive integers include an even number); state it clearly instead of hiding it.</p>
+    </div>
     </section>
 
     <section class="tsec" aria-labelledby="inequality">
     <h2 id="inequality">Type 3: inequalities</h2>
     <p>Technique: use the hypothesis to produce the &gt; sign, then finish with a helper inequality that needs a condition on k. That condition tells you where the base case must start.</p>
-    <div class="wx">
-      <div class="wx-head"><span class="mono">Example 4</span><h3>Prove that \(2^n > n^2\) for all \(n \ge 5\).</h3></div>
+    <div class="wx" id="ex-7">
+      <div class="wx-head"><span class="mono">Example 7</span><h3>Prove that \(2^n > n^2\) for all \(n \ge 5\).</h3></div>
       <ol class="steps">
         <li><p>Why start at 5: \(n = 2, 3, 4\) give \(4 = 4,\ 8 &lt; 9,\ 16 = 16\), which are false.</p></li>
         <li><p>Base case \(n = 5\): \(2^5 = 32 > 25\). True.</p></li>
@@ -104,6 +155,97 @@
       </ol>
       <p class="answer">True for all \(n \ge 5\).</p>
     </div>
+    <div class="wx" id="ex-8">
+      <div class="wx-head"><span class="mono">Example 8</span><h3>Prove that \(n! > 2^n\) for all \(n \ge 4\).</h3></div>
+      <ol class="steps">
+        <li><p>Why start at 4: \(1! = 1 &lt; 2,\ 2! = 2 &lt; 4,\ 3! = 6 &lt; 8\), but \(4! = 24 > 16\).</p></li>
+        <li><p>Base case \(n = 4\): \(24 > 16\). True.</p></li>
+        <li><p>Assume \(k! > 2^k\) (\(k \ge 4\)): \((k+1)! = (k+1)\cdot k! > (k+1)\cdot 2^k\)</p></li>
+        <li><p>Since \(k + 1 \ge 5 > 2\): \((k+1)\cdot2^k > 2\cdot 2^k = 2^{k+1}\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 4\). This is why the terms \(x^n/n!\) of the exponential series shrink so fast.</p>
+    </div>
+    <div class="wx" id="ex-9">
+      <div class="wx-head"><span class="mono">Example 9 · Bernoulli's inequality</span><h3>Prove that \((1 + x)^n \ge 1 + nx\) for every natural number \(n\) and every real \(x \ge -1\).</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 1\): \(1 + x \ge 1 + x\). True.</p></li>
+        <li><p>Assume \((1 + x)^k \ge 1 + kx\).</p></li>
+        <li><p>Multiply both sides by \(1 + x\), which is allowed without flipping the sign because \(1 + x \ge 0\): \((1 + x)^{k+1} \ge (1 + x)(1 + kx) = 1 + (k+1)x + kx^2\)</p></li>
+        <li><p>\(kx^2 \ge 0\), so \((1 + x)^{k+1} \ge 1 + (k+1)x\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\), \(x \ge -1\). The condition \(x \ge -1\) is used in exactly one line: multiplying an inequality by \(1 + x\).</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="sequences">
+    <h2 id="sequences">Type 4: recurrences and nth derivatives</h2>
+    <p>Technique: the definition of the sequence (or of the derivative) <i>is</i> the bridge from k to k+1. Guess the pattern from the first few terms, then prove it by induction.</p>
+    <div class="wx" id="ex-10">
+      <div class="wx-head"><span class="mono">Example 10</span><h3>\(a_1 = 1,\ a_{n+1} = 2a_n + 1\). Prove that \(a_n = 2^n - 1\).</h3></div>
+      <ol class="steps">
+        <li><p>First terms: \(1, 3, 7, 15, \dots\), one less than \(2, 4, 8, 16\), which suggests \(2^n - 1\).</p></li>
+        <li><p>Base case \(n = 1\): \(a_1 = 1 = 2^1 - 1\). True.</p></li>
+        <li><p>Assume \(a_k = 2^k - 1\): \(a_{k+1} = 2a_k + 1 = 2(2^k - 1) + 1 = 2^{k+1} - 1\) ✓</p></li>
+      </ol>
+      <p class="answer">\(a_n = 2^n - 1\) for all \(n \ge 1\). This is the number of moves in the Tower of Hanoi with n discs.</p>
+    </div>
+    <div class="wx" id="ex-11">
+      <div class="wx-head"><span class="mono">Example 11 · Calculus</span><h3>Prove that \(\dfrac{d^n}{dx^n}\big(xe^x\big) = (x + n)e^x\) for every natural number \(n\).</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 1\): product rule, \(\dfrac{d}{dx}(xe^x) = e^x + xe^x = (x + 1)e^x\). True.</p></li>
+        <li><p>Assume \(\dfrac{d^k}{dx^k}(xe^x) = (x + k)e^x\).</p></li>
+        <li><p>\(\dfrac{d^{k+1}}{dx^{k+1}}(xe^x) = \dfrac{d}{dx}\big[(x + k)e^x\big] = e^x + (x + k)e^x = (x + k + 1)e^x\) ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\). At \(x = 0\) the nth derivative is \(n\), which gives the Maclaurin series \(xe^x = \sum_{n\ge1} \dfrac{x^n}{(n-1)!}\); see <a href="/en/blog/what-is-taylor-series/">what the Taylor series is</a>.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="strong">
+    <h2 id="strong">Strong induction examples</h2>
+    <p>In <b>strong induction</b> (also called complete induction) the hypothesis is that <b>every</b> case \(P(n_0), P(n_0 + 1), \dots, P(k)\) is true, not only \(P(k)\). It proves exactly the same kind of result; it simply lets the step use an earlier case. Use it when getting to \(k+1\) needs \(P(k-1)\), \(P(k-3)\) or some smaller case you cannot name in advance.</p>
+    <div class="wx" id="ex-12">
+      <div class="wx-head"><span class="mono">Example 12 · Strong induction</span><h3>Prove that every integer \(n \ge 2\) is a prime or a product of primes.</h3></div>
+      <ol class="steps">
+        <li><p>Base case \(n = 2\): 2 is prime. True.</p></li>
+        <li><p>Strong hypothesis: assume every integer \(j\) with \(2 \le j \le k\) is a prime or a product of primes.</p></li>
+        <li><p>Consider \(k + 1\). If it is prime, we are done. If not, \(k + 1 = ab\) with \(2 \le a \le k\) and \(2 \le b \le k\).</p></li>
+        <li><p>By the hypothesis, \(a\) and \(b\) are each a prime or a product of primes, so \(ab = k + 1\) is a product of primes ✓</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 2\). Ordinary induction fails here: knowing about \(k\) tells you nothing about the factors of \(k + 1\), which can be any smaller numbers.</p>
+    </div>
+    <div class="wx" id="ex-13">
+      <div class="wx-head"><span class="mono">Example 13 · Strong induction</span><h3>Using only 3-cent and 5-cent stamps, show that every postage of \(n \ge 8\) cents can be made exactly.</h3></div>
+      <ol class="steps">
+        <li><p>Base cases (three of them): \(8 = 3 + 5,\ 9 = 3 + 3 + 3,\ 10 = 5 + 5\)</p></li>
+        <li><p>Strong hypothesis: let \(k \ge 10\) and assume every amount from 8 to \(k\) cents can be made.</p></li>
+        <li><p>\(k + 1 = (k - 2) + 3\), and \(8 \le k - 2 \le k\), so \(k - 2\) can be made by the hypothesis. Add one 3-cent stamp ✓</p></li>
+      </ol>
+      <p class="answer">Every amount from 8 cents up can be made (7 cents cannot). The step reaches back 3 places, so it needs 3 base cases; with only \(n = 8\) checked, the step from 8 to 9 would rely on \(9 - 3 = 6\), which was never shown.</p>
+    </div>
+    <div class="wx" id="ex-14">
+      <div class="wx-head"><span class="mono">Example 14 · Strong induction on a recurrence</span><h3>\(a_1 = 1,\ a_2 = 5,\ a_n = a_{n-1} + 2a_{n-2}\) for \(n \ge 3\). Prove that \(a_n = 2^n + (-1)^n\).</h3></div>
+      <ol class="steps">
+        <li><p>Base cases (two, because the recurrence uses two previous terms): \(a_1 = 2 - 1 = 1\) and \(a_2 = 4 + 1 = 5\). True.</p></li>
+        <li><p>Strong hypothesis: let \(k \ge 2\) and assume \(a_j = 2^j + (-1)^j\) for every \(j \le k\).</p></li>
+        <li><p>\(a_{k+1} = a_k + 2a_{k-1} = 2^k + (-1)^k + 2\big(2^{k-1} + (-1)^{k-1}\big) = 2^{k+1} + (-1)^{k-1}\big(-1 + 2\big)\)</p></li>
+        <li><p>\(= 2^{k+1} + (-1)^{k-1} = 2^{k+1} + (-1)^{k+1}\) ✓ (check: \(a_3 = 7,\ a_4 = 17,\ a_5 = 31\))</p></li>
+      </ol>
+      <p class="answer">True for all \(n \ge 1\). The same idea proves bounds on Fibonacci numbers and the closed forms of second-order difference equations used in digital control.</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="weak-vs-strong">
+    <h2 id="weak-vs-strong">Ordinary vs strong induction at a glance</h2>
+    <div class="post-table-wrap"><table class="post-table">
+      <thead><tr><th></th><th>Ordinary (weak) induction</th><th>Strong induction</th></tr></thead>
+      <tbody>
+        <tr><td>Hypothesis</td><td>\(P(k)\) is true</td><td>\(P(n_0), \dots, P(k)\) are all true</td></tr>
+        <tr><td>Use when the step needs</td><td>only the previous case</td><td>\(P(k-1)\), \(P(k-2)\) or an unknown smaller case</td></tr>
+        <tr><td>Base cases</td><td>usually one</td><td>one for each step reached back (2 for \(a_{k-1}\) and \(a_k\), 3 for “\(k - 2\) plus a 3-cent stamp”)</td></tr>
+        <tr><td>Typical questions</td><td>sums, divisibility, inequalities, simple recurrences</td><td>prime factorisation, stamps and coins, Fibonacci, two-term recurrences</td></tr>
+      </tbody>
+    </table></div>
+    <p>The two are equally powerful: anything provable by strong induction can be rewritten as ordinary induction on the statement “\(P(n_0), \dots, P(n)\) are all true”. Choose whichever makes the step easier to write.</p>
     </section>
 
     <section class="tsec" aria-labelledby="mistakes">
@@ -113,7 +255,18 @@
       <li><b>Generalising from examples</b>: \(n^2 + n + 41\) is prime up to \(n = 39\), but \(n = 40\) gives \(41^2\).</li>
       <li><b>Writing the equation P(k+1) and simplifying both sides to 0 = 0</b>: that assumes what you want to prove. Start from the left side only.</li>
       <li><b>An inductive step that fails for small k</b>: the “all horses are the same colour” puzzle breaks at the step from 1 to 2.</li>
+      <li><b>Strong induction with too few base cases</b>: if the step uses \(P(k-2)\), the cases it cannot reach from below must all be checked directly, as in Example 13.</li>
     </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Try these yourself</h2>
+    <ol>
+      <li>Prove \(1 + 2 + 4 + \cdots + 2^{n-1} = 2^n - 1\). <details><summary>Hint</summary><p>Split off \(2^k\): \((2^k - 1) + 2^k = 2^{k+1} - 1\).</p></details></li>
+      <li>Prove that \(5^n - 1\) is divisible by 4. <details><summary>Hint</summary><p>\(5^{k+1} - 1 = 5(5^k - 1) + 4\).</p></details></li>
+      <li>Prove that \(3^n > 2n + 1\) for all \(n \ge 2\). <details><summary>Hint</summary><p>Base case \(9 > 5\). Then \(3^{k+1} > 3(2k + 1) = 6k + 3 > 2k + 3\).</p></details></li>
+      <li>With 4-cent and 7-cent stamps, find the smallest \(N\) such that every amount \(n \ge N\) can be made, then prove it by strong induction. <details><summary>Answer</summary><p>\(N = 18\) (17 cannot be made). Base cases 18 to 21 (four of them, because the step is \(k + 1 = (k - 3) + 4\)).</p></details></li>
+    </ol>
     </section>
 
     <section class="post-next" aria-labelledby="next">
@@ -121,9 +274,11 @@
       <p>The full lessons are in Thai, with English technical terms and the same formulas.</p>
       <ul>
         <li><a href="/learn/limits/mathematical-induction/">The full mathematical induction lesson: strong induction, calculus, Laplace and engineering (in Thai)</a></li>
+        <li><a href="/learn/limits/mathematical-induction/#strong">More strong induction: 4- and 5-cent stamps, a Fibonacci bound and a bounded recurrence (in Thai)</a></li>
         <li><a href="/learn/limits/mathematical-induction/#checker">Induction checker: plug numbers into the inductive step and test your own summation formula (in Thai)</a></li>
         <li><a href="/learn/limits/mathematical-induction/#mistakes">Find the wrong line in five flawed proofs (in Thai)</a></li>
         <li><a href="/learn/limits/sequences-series/#sigma">Sigma notation and the summation formulas proved by induction (in Thai)</a></li>
+        <li><a href="/en/blog/geometric-series-formula/">Read next: the geometric series formula and when it converges</a></li>
       </ul>
     </section>
 

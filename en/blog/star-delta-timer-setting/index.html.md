@@ -203,7 +203,7 @@ Open the dynamic simulation lab on the Star–delta analysis page of the lesson 
 
 3-phase motors
 3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate
-How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, line vs phase voltage and current, choosing from a 230/400 V or 400/690 V…
+How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, what U1 V1 W1 U2 V2 W2 mean and which wire colours go where, line vs phase…
 17 Oct 2026Read the article →
 
 Power factor
