@@ -3,6 +3,25 @@
 Static site served by Cloudflare Pages straight from this repo (no build step on Cloudflare).
 The HTML in the repo root, `about/` and `learn/` is generated — edit `src/` and rebuild.
 
+## Checklist for every new page or article (Claude sessions: follow this without being asked)
+The owner should only have to say what to write. Every addition goes through these steps:
+1. **Write the source.** Lessons: `src/pages/learn/…` plus the entry in `TOPICS` (build.mjs). Articles: `src/pages/blog/<slug>.html`
+   and, when an English edition is wanted, `src/pages/en/blog/<same slug>.html`. Solutions: `node scripts/new-solution.mjs`.
+   The sections below give the details for each series.
+2. **Log it in `data/updates.json` every time** — the home page promises that every new lesson, lab, exam set, article and
+   solution is recorded. Newest first; `tag` is one of บทเรียน · แล็บ · แนวข้อสอบ · บทความ · เฉลยโจทย์ · เว็บไซต์; Thai `text`,
+   `link`, `linkText`, optional `links`. Give `"hero"` (a short Thai headline) only to the day's headline item: the first entry
+   with `hero` and `link` becomes the "ใหม่" banner at the top of the home page. Site-plumbing changes (tag เว็บไซต์) get no `hero`
+   and go after the day's content entries.
+3. **Build and test:** `npm install` (first time), `node build.mjs`, then the tests that apply — `node scripts/test-blog.mjs`
+   (articles, both languages), `node scripts/test-solutions.mjs` (solutions), and the series tests in `scripts/test-*.mjs`.
+4. **Share images** for new pages: `python3 scripts/og.py --prefix <key>` then `node build.mjs` again (needs Playwright and
+   Chromium; if they are missing, say so instead of skipping silently).
+5. **Commit sources and generated files together and push to `main`**; Cloudflare Pages deploys in about a minute.
+
+Automatic, nothing to edit by hand: sitemap.xml, llms.txt, llms-full.txt, the Markdown copy (`index.html.md`), search-index.json,
+mcp-index.json (so the `/mcp` connector in Claude finds the page), feed.xml, JSON-LD, prev/next, hub and category lists, `_headers`.
+
 ## Update the status feed (no build needed)
 Edit `data/updates.json` (on GitHub web or the GitHub app is fine) and commit.
 The home page box "มีอะไรใหม่บนเว็บไซต์" (`/#updates`, newest 6 entries), the changelog page `/updates/` and the profile page
