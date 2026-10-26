@@ -516,6 +516,17 @@ Two sub-pages appended to `sequences-and-series` in `TOPICS` (new part `tools`, 
 - `/privacy/` (`src/pages/privacy.html`, `noLlms`): factual privacy policy (no accounts, tools run in the browser, localStorage, Cloudflare,
   Google AdSense cookies, Google Fonts, youtube-nocookie); linked from the footer. Update it if a form, analytics or sign-in is ever added.
 
+## Cookie consent and self-hosted fonts (added 2026-10-26)
+- **AdSense loads only after consent.** The static `adsbygoogle.js` tag is gone from `src/layout.html`. A tiny inline script in `<head>`
+  injects it only when localStorage `mem-consent-v1` holds `{"ads": true}`; `assets/consent.js` (every page, deferred) shows the bottom
+  bar on the first visit (Thai or English by `<html lang>`), with equal “accept” / “decline” buttons, and reopens from any
+  `[data-consent-open]` element (footer “ตั้งค่าคุกกี้”, a button on `/privacy/`). Declining after accepting deletes AdSense's first-party
+  cookies (`__gads __gpi __eoi FCCDCF FCNEC`) and reloads. Site ownership for AdSense is kept by `<meta name="google-adsense-account">`.
+  Never add another tracking/ads script without routing it through the same consent check, and update `/privacy/` when you do.
+- **Fonts are self-hosted**: `assets/fonts.css` + `assets/fonts/*.woff2` (IBM Plex Sans Thai 400/500/600, IBM Plex Mono 400/500,
+  Trirong 500/700; thai, latin and latin-ext subsets from @fontsource 5.3.0). No request goes to fonts.googleapis.com; the first visit
+  makes no third-party request at all. Styles: "COOKIE CONSENT" at the end of site.css.
+
 ## Home page "what's new" box and /updates/ (added 2026-10-24)
 Before this change the home page had no list of updates — `data/updates.json` was only shown on `/about/` and in `feed.xml`, so edits
 never appeared on the home page. Now `<!--home-updates-->` (build.mjs `homeUpdatesHtml`, newest 6, icons per tag, "ใหม่" badge on the

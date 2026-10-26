@@ -2,7 +2,9 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683" crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-3139064301447683">
+<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
+<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>เครื่องกำเนิดสัญญาณ (Function Generator) คืออะไร ใช้อย่างไร: 50 Ω High-Z AM FM Sweep Burst DDS | อาจารย์มด</title>
 <meta name="description" content="คู่มือเครื่องกำเนิดสัญญาณภาษาไทยครบทุกปุ่ม: ตั้งความถี่ แอมพลิจูด ออฟเซต ดิวตี้ สมมาตร ความต้านทานขาออก 50 Ω ทำไมสโคปแสดงค่าเป็นสองเท่า การตั้ง Load High-Z กับ 50 Ω AM FM PWM Sweep Burst ขั้ว Sync และหลักการ DDS พร้อมสูตร ตัวอย่าง และเครื่องจำลองให้ลองหมุนเอง">
@@ -36,10 +38,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=bba1457b">
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css?v=23ea531d">
+<link rel="stylesheet" href="/assets/site.css?v=23ea531d">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/function-generator/generator/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/generator/#article","headline":"เครื่องกำเนิดสัญญาณ (Function Generator): ปุ่ม เอาต์พุต 50 Ω มอดูเลชัน และ DDS","description":"คู่มือเครื่องกำเนิดสัญญาณภาษาไทยครบทุกปุ่ม: ตั้งความถี่ แอมพลิจูด ออฟเซต ดิวตี้ สมมาตร ความต้านทานขาออก 50 Ω ทำไมสโคปแสดงค่าเป็นสองเท่า การตั้ง Load High-Z กับ 50 Ω AM FM PWM Sweep Burst ขั้ว Sync และหลักการ DDS พร้อมสูตร ตัวอย่าง และเครื่องจำลองให้ลองหมุนเอง","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/generator/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/generator/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Function generator","Arbitrary waveform generator","Output impedance","50 ohm termination","Amplitude modulation","Frequency modulation","Frequency sweep","Burst mode","Direct digital synthesis"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-generator.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"เครื่องกำเนิดสัญญาณ (Function Generator): ปุ่ม เอาต์พุต 50 Ω มอดูเลชัน และ DDS","item":"https://modsengineeringmath.com/learn/function-generator/generator/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมตั้งเครื่องกำเนิดสัญญาณ 1 Vpp แต่สโคปวัดได้ 2 Vpp?","acceptedAnswer":{"@type":"Answer","text":"เพราะตั้ง Load ในเครื่องไว้ที่ 50 Ω แต่ต่อเข้าสโคปที่มีอินพุต 1 MΩ เครื่องคิดว่าจะมีโหลด 50 Ω มาแบ่งแรงดันครึ่งหนึ่ง จึงสร้าง emf ภายในเป็นสองเท่า เมื่อไม่มีโหลดมาแบ่ง สโคปจึงเห็นสองเท่า แก้โดยตั้ง Load เป็น High-Z หรือต่อเทอร์มิเนเตอร์ 50 Ω ที่ปลายสาย"}},{"@type":"Question","name":"High-Z หมายถึงอะไร?","acceptedAnswer":{"@type":"Answer","text":"High-Z (high impedance) คือการบอกเครื่องว่าโหลดมีความต้านทานสูงมากเมื่อเทียบกับ 50 Ω เช่น อินพุตสโคป 1 MΩ หรืออินพุตออปแอมป์ เครื่องจะแสดงค่าเท่ากับแรงดันขณะเปิดวงจร ค่าที่ตั้งจึงตรงกับที่สโคปวัดได้"}},{"@type":"Question","name":"ขั้ว SYNC ใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"ขั้ว SYNC ให้พัลส์ลอจิกที่ตรงกับจุดเริ่มคาบ จุดเริ่มกวาด หรือจุดเริ่มเบิสต์ นำไปต่อเข้าขั้ว EXT TRIG ของสโคปเพื่อให้ภาพนิ่งแม้สัญญาณจะซับซ้อน เช่น AM หรือสัญญาณที่ผ่านวงจรที่มีนอยส์"}},{"@type":"Question","name":"เครื่องกำเนิดสัญญาณจ่ายกระแสได้เท่าไร?","acceptedAnswer":{"@type":"Answer","text":"ไม่มาก เพราะมีความต้านทานขาออก 50 Ω ภายใน ที่ 20 Vpp ลัดวงจรได้กระแสยอดประมาณ 10/50 = 0.2 A และกำลังบนโหลด 50 Ω สูงสุดราว 0.25 W ถ้าต้องขับลำโพงหรือขดลวด ให้ต่อผ่านภาคขยายกำลัง"}}]}]}</script>
@@ -814,17 +815,18 @@ c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v1200 v585 h43z"/></svg></span></span
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=bba1457b" defer></script>
-<script src="/assets/lesson.js?v=bba1457b" defer></script>
-<script src="/assets/fgcalc.js?v=bba1457b" defer></script>
-<script src="/assets/fgs-core.js?v=bba1457b" defer></script>
-<script src="/assets/fgs-scope.js?v=bba1457b" defer></script>
-<script src="/assets/fgs-ui.js?v=bba1457b" defer></script>
-<script src="/assets/fgs-app.js?v=bba1457b" defer></script>
+<script src="/assets/site.js?v=23ea531d" defer></script>
+<script src="/assets/consent.js?v=23ea531d" defer></script>
+<script src="/assets/lesson.js?v=23ea531d" defer></script>
+<script src="/assets/fgcalc.js?v=23ea531d" defer></script>
+<script src="/assets/fgs-core.js?v=23ea531d" defer></script>
+<script src="/assets/fgs-scope.js?v=23ea531d" defer></script>
+<script src="/assets/fgs-ui.js?v=23ea531d" defer></script>
+<script src="/assets/fgs-app.js?v=23ea531d" defer></script>
 </body>
 </html>
