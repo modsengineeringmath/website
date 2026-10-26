@@ -3,7 +3,7 @@ title: "Sequences & Series Articles: Convergence Tests, Taylor and Laurent Serie
 url: https://modsengineeringmath.com/en/blog/category/sequences-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 > Articles on sequences and series: a convergence-test flowchart, the geometric series formula, radius of convergence, Taylor and Laurent series and mathematical induction, with checked examples.
@@ -61,7 +61,7 @@ What a Taylor series is, the Maclaurin series table to memorise, and 8 worked ex
 
 ## Go deeper in the lessons
 
-Sequences & series, 10 pages (Thai) →
-Series lab (Thai)
-Mathematical induction (Thai)
+Sequences & series, 12 pages (Thai) →
+Sequence & series calculators with steps (Thai)
+Strong induction, 17 examples (Thai)
 All articles

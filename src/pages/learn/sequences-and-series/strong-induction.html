@@ -1,0 +1,358 @@
+<!--meta
+{
+  "title": "อุปนัยแบบเข้ม (Strong Induction) ตัวอย่างเข้มข้น 17 ข้อ พร้อมแล็บฝึกพิสูจน์: แสตมป์ ฟีโบนัชชี จำนวนเฉพาะ | อาจารย์มด",
+  "h1": "อุปนัยแบบเข้ม (Strong Induction): หลักการ จำนวนกรณีฐาน ตัวอย่างเข้มข้น 17 ข้อ และแล็บฝึกพิสูจน์",
+  "description": "อุปนัยเชิงคณิตศาสตร์แบบเข้ม (strong induction) ภาษาไทยแบบเจาะลึก: ต่างจากอุปนัยธรรมดาอย่างไร ต้องมีกรณีฐานกี่ตัว ตัวอย่าง 17 ข้อพร้อมวิธีทำ (แสตมป์ จำนวนเฉพาะ ฟีโบนัชชี ลำดับเวียนเกิด เกม merge sort ระบบควบคุม) และแล็บโต้ตอบ 11 ชุดให้ฝึกพิสูจน์บนมือถือ",
+  "ogTitle": "อุปนัยแบบเข้ม (Strong Induction): 17 ตัวอย่าง + แล็บฝึกพิสูจน์ 11 ชุด",
+  "lesson": "sequences-and-series",
+  "sub": "strong-induction",
+  "nav": "seq",
+  "katex": true,
+  "published": "2026-10-26",
+  "updated": "2026-10-26",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["อุปนัยแบบเข้ม", "อุปนัยเชิงคณิตศาสตร์แบบเข้ม", "อุปนัยเชิงคณิตศาสตร์", "strong induction", "complete induction", "strong induction examples", "proof by strong induction", "postage stamp problem", "Frobenius number", "Fibonacci induction", "fundamental theorem of arithmetic proof", "Zeckendorf theorem", "well-ordering principle", "กรณีฐาน", "พิสูจน์ลำดับเวียนเกิด"],
+  "about": ["Mathematical induction", "Strong induction", "Well-ordering principle", "Postage stamp problem", "Frobenius coin problem", "Fundamental theorem of arithmetic", "Fibonacci number", "Recurrence relation", "Zeckendorf's theorem", "Domino tiling", "Subtraction game", "Merge sort", "Bézout's identity"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/seq-lab.js", "/assets/seq-calc.js", "/assets/strong-ind.js"],
+  "og": {"title": "อุปนัยแบบเข้ม", "sub": "Strong induction: กรณีฐานกี่ตัว · แสตมป์ · จำนวนเฉพาะ · ฟีโบนัชชี · เกม · merge sort · 17 ตัวอย่าง + แล็บ 11 ชุด", "eyebrow": "บทที่ 26.12 · Strong Induction", "sym": "∀j<n"},
+  "faq": [
+    {"q": "อุปนัยแบบเข้ม (strong induction) ต่างจากอุปนัยธรรมดาอย่างไร?", "a": "อุปนัยธรรมดาสมมติเพียง \\(P(k)\\) แล้วพิสูจน์ \\(P(k+1)\\) ส่วนอุปนัยแบบเข้มสมมติว่า \\(P(j)\\) จริงทุก j ตั้งแต่กรณีฐานจนถึง \\(n-1\\) แล้วพิสูจน์ \\(P(n)\\) ใช้เมื่อการพิสูจน์ \\(P(n)\\) ต้องอาศัยกรณีที่ย้อนไปไกลกว่าหนึ่งขั้นหรือไม่รู้ล่วงหน้าว่าย้อนไปเท่าไร เช่น \\(P(n-2)\\), \\(P(\\lfloor n/2\\rfloor)\\) หรือตัวประกอบของ n ทั้งสองแบบมีพลังเท่ากันในทางตรรกะ"},
+    {"q": "ต้องมีกรณีฐานกี่ตัว?", "a": "เท่ากับจำนวนขั้นที่ขั้นอุปนัยย้อนกลับไกลที่สุด ถ้าใช้ \\(P(n-1)\\) และ \\(P(n-2)\\) ต้องมีกรณีฐานสองตัว (เช่น \\(F_1\\) และ \\(F_2\\)) ถ้าใช้ \\(P(n-4)\\) แบบโจทย์แสตมป์ 4 และ 5 บาทต้องมีสี่ตัว ถ้าขาดไปแม้ตัวเดียว ทั้งบทพิสูจน์ใช้ไม่ได้"},
+    {"q": "พิสูจน์ว่าทุกราคาตั้งแต่ 8 บาทขึ้นไปรวมได้ด้วยแสตมป์ 3 และ 5 บาทอย่างไร?", "a": "กรณีฐาน \\(8 = 3+5,\\ 9 = 3+3+3,\\ 10 = 5+5\\) ขั้นอุปนัยแบบเข้ม: ให้ \\(n \\ge 11\\) และสมมติว่าทุกราคา j ที่ \\(8 \\le j < n\\) รวมได้ เพราะ \\(n - 3 \\ge 8\\) จึงรวม \\(n-3\\) ได้ แล้วเติมแสตมป์ 3 บาทอีกดวง ต้องมีกรณีฐานสามตัวเพราะขั้นอุปนัยย้อนกลับ 3 ขั้น"},
+    {"q": "ทำไมการพิสูจน์ว่าทุกจำนวนเต็มเป็นผลคูณของจำนวนเฉพาะต้องใช้อุปนัยแบบเข้ม?", "a": "เพราะถ้า n ไม่เป็นจำนวนเฉพาะ n = ab โดย a และ b เล็กกว่า n แต่ไม่ใช่ n − 1 การรู้ว่า n − 1 เป็นผลคูณของจำนวนเฉพาะไม่ช่วยอะไรเลย ต้องสมมติว่าทุกจำนวนที่เล็กกว่า n เป็นผลคูณของจำนวนเฉพาะ จึงใช้สมมติฐานกับ a และ b ได้"},
+    {"q": "อุปนัยแบบเข้มใช้ในงานวิศวกรรมหรือวิทยาการคอมพิวเตอร์อย่างไร?", "a": "ใช้พิสูจน์ความถูกต้องและเวลาทำงานของอัลกอริทึมแบบแบ่งแล้วเอาชนะ (เช่น merge sort ใช้การเปรียบเทียบไม่เกิน \\(n\\lceil\\log_2 n\\rceil\\) ครั้ง binary search ใช้ \\(\\lfloor\\log_2 n\\rfloor + 1\\) รอบ) พิสูจน์สูตรปิดของลำดับเวียนเกิดในตัวกรองดิจิทัล และพิสูจน์ว่าค่าความคลาดในระบบควบคุมดิจิทัลลดลงแบบเรขาคณิต \\(|e_n| \\le Cr^n\\)"},
+    {"q": "มีที่ให้ฝึกเขียนพิสูจน์ด้วยอุปนัยแบบเข้มไหม?", "a": "หน้านี้มีแล็บโต้ตอบ 11 ชุด เช่น ตารางว่าแต่ละ P(n) อาศัยกรณีใด ทดลองลดกรณีฐานแล้วดูบทพิสูจน์พัง เกมเรียงบรรทัดบทพิสูจน์ที่มีบรรทัดหลอก เกมหาจุดผิด และเครื่องแก้ความสัมพันธ์เวียนเกิดที่สร้างบทพิสูจน์ด้วยอุปนัยแบบเข้มให้อัตโนมัติ พร้อมโจทย์ฝึกที่มีเฉลย"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page sc-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/sequences-and-series/">ลำดับและอนุกรม</a></li><li>อุปนัยแบบเข้ม</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 26.12 · ลำดับและอนุกรม · Strong Induction</p>
+      <h1>อุปนัยแบบเข้ม (Strong Induction): หลักการ จำนวนกรณีฐาน ตัวอย่างเข้มข้น 17 ข้อ และแล็บฝึกพิสูจน์</h1>
+      <p class="lede">อุปนัยธรรมดาบอกว่า “ถ้าตัวก่อนหน้าล้ม ตัวถัดไปล้ม” แต่โจทย์จริงจำนวนมากต้องการมากกว่านั้น: ฟีโบนัชชีต้องรู้สองตัวก่อนหน้า แสตมป์ 3 บาทย้อนกลับสามขั้น จำนวนเต็มแตกเป็นตัวประกอบที่เล็กกว่าเท่าไรก็ได้ อุปนัยแบบเข้มให้เราสมมติ<strong>ทุกกรณีที่เล็กกว่า</strong>พร้อมกัน หน้านี้พาฝึกตั้งแต่หลักการ การนับกรณีฐาน ไปจนถึงอัลกอริทึมและระบบควบคุม ด้วยตัวอย่าง 17 ข้อและแล็บที่ลองทำได้บนมือถือ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="lv-legend" aria-label="ระดับเนื้อหา"><b class="mono">ระดับ</b><span><span class="lv lv-b">พื้นฐาน</span> ม.ปลาย · โอลิมปิกเบื้องต้น</span><span><span class="lv lv-i">กลาง</span> คณิตศาสตร์ไม่ต่อเนื่อง · แคลคูลัส</span><span><span class="lv lv-a">ขั้นสูง</span> อัลกอริทึม · วิศวกรรม</span></div>
+      <div class="tldr"><b>สรุปสั้นที่สุด</b><ul>
+        <li><b>สมมติฐานแบบเข้ม</b>: \(P(j)\) จริงทุก \(n_0 \le j \le n - 1\) แล้วพิสูจน์ \(P(n)\)</li>
+        <li><b>จำนวนกรณีฐาน</b> = จำนวนขั้นที่ย้อนกลับไกลที่สุด (ย้อน 2 ขั้น ต้องมี 2 กรณีฐาน)</li>
+        <li><b>ใช้เมื่อ</b> P(n) อาศัย \(P(n-2)\), \(P(n-3)\), \(P(\lfloor n/2\rfloor)\), ตัวประกอบของ n หรือ “ชิ้นที่เล็กกว่า” ที่ไม่รู้ขนาดล่วงหน้า</li>
+        <li><b>แล็บ 11 ชุด</b>: กรณีฐาน · แสตมป์ · ต้นไม้ตัวประกอบ · ช็อกโกแลต · เกม · ฐานสอง/ฟีโบนัชชี · ปูกระเบื้อง · ขอบเขต · เวียนเกิด · เรียงบทพิสูจน์ · หาจุดผิด</li>
+      </ul></div>
+      <div class="trig-quick"><a class="btn btn-primary btn-sm" href="#base-cases">กรณีฐานกี่ตัว</a><a class="btn btn-ghost btn-sm" href="#stamps">แสตมป์</a><a class="btn btn-ghost btn-sm" href="#recurrence">ลำดับเวียนเกิด</a><a class="btn btn-ghost btn-sm" href="#practice">ฝึกพิสูจน์</a></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">อุปนัยแบบเข้มคืออะไร ต่างจากอุปนัยธรรมดาอย่างไร <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>นึกถึงแถวโดมิโน อุปนัยธรรมดา (weak / ordinary induction) รับประกันว่า “ตัวที่ k ล้มแล้วชนตัวที่ k + 1” ส่วนอุปนัยแบบเข้ม (strong / complete induction) รับประกันว่า “ถ้าตัวที่ \(n_0\) ถึง \(n - 1\) ล้มหมดแล้ว ตัวที่ n ก็ล้ม” เปรียบได้กับโดมิโนที่ต้องถูกชนจากหลายตัวพร้อมกัน หรือจากตัวที่อยู่ห่างออกไป</p>
+    <div class="tf-grid">
+      <div class="tf" id="N1" data-k="strong induction principle complete induction หลักอุปนัยแบบเข้ม">
+        <p class="tf-n"><b><span class="fid">N1</span> Principle of strong induction</b> หลักอุปนัยแบบเข้ม</p>
+        \[ \begin{gathered} P(n_0) \\ \wedge\ \Big[\forall n &gt; n_0:\ \big(P(n_0) \wedge \dots \wedge P(n-1)\big) \Rightarrow P(n)\Big] \\ \Longrightarrow\ \forall n \ge n_0:\ P(n) \end{gathered} \]
+        <p class="tf-x">ถ้าขั้นอุปนัยใช้ได้ตั้งแต่ \(n \ge n_0 + b\) เท่านั้น ต้องพิสูจน์ \(P(n_0), \dots, P(n_0 + b - 1)\) ตรง ๆ (กรณีฐาน b ตัว)</p>
+      </div>
+      <div class="tf" id="N2" data-k="weak strong induction equivalent well ordering principle หลักการจัดอันดับดี เทียบเท่า">
+        <p class="tf-n"><b><span class="fid">N2</span> Equivalence</b> อุปนัยธรรมดา ⇔ แบบเข้ม ⇔ หลักการจัดอันดับดี</p>
+        \[ \begin{gathered} Q(n) := P(n_0) \wedge P(n_0 + 1) \wedge \dots \wedge P(n) \\ \text{แบบเข้มบน } P \ \equiv\ \text{แบบธรรมดาบน } Q \end{gathered} \]
+        <p class="tf-x">หลักการจัดอันดับดี (well-ordering): เซตย่อยไม่ว่างของจำนวนนับมีสมาชิกน้อยที่สุดเสมอ ใช้พิสูจน์แบบ “สมมติมีตัวอย่างค้าน ให้ n เป็นตัวที่เล็กที่สุด”</p>
+      </div>
+      <div class="tf" id="N3" data-k="number of base cases look back rule จำนวนกรณีฐาน">
+        <p class="tf-n"><b><span class="fid">N3</span> How many base cases</b> กฎจำนวนกรณีฐาน</p>
+        \[ \begin{gathered} P(n) \Leftarrow P(n - s_1), \dots, P(n - s_m) \\ \Rightarrow\ \text{กรณีฐาน } \max_i s_i \text{ ตัวติดกัน} \end{gathered} \]
+        <p class="tf-x">ถ้าย้อนแบบ \(\lfloor n/2\rfloor\) หรือตัวประกอบ ต้องตรวจว่าทุกกรณีที่ย้อนไปยังอยู่ในโดเมน \(\ge n_0\)</p>
+      </div>
+    </div>
+    <div class="proof-tpl"><b>แม่แบบเขียนพิสูจน์ด้วยอุปนัยแบบเข้ม 5 ขั้น</b><ol>
+      <li><b class="k">ข้อความ</b> เขียน \(P(n)\) ให้ชัด และบอกโดเมน \(n \ge n_0\)</li>
+      <li><b class="k">ดูขั้นอุปนัยก่อน</b> ร่างว่าจะพิสูจน์ \(P(n)\) จากกรณีใด (\(n-1\)? \(n-2\)? \(n-3\)? ตัวประกอบ?) เพื่อรู้ว่าต้องมีกรณีฐานกี่ตัว</li>
+      <li><b class="k">กรณีฐาน</b> ตรวจ \(P(n_0), P(n_0+1), \dots\) ครบทุกตัวที่ขั้นอุปนัยยังใช้ไม่ได้</li>
+      <li><b class="k">สมมติฐานอุปนัยแบบเข้ม</b> “ให้ \(n \ge n_0 + b\) และสมมติว่า \(P(j)\) จริงทุก \(n_0 \le j &lt; n\)”</li>
+      <li><b class="k">ขั้นอุปนัย + สรุป</b> แสดง \(P(n)\) โดยชี้ว่าใช้ \(P(\cdot)\) ตัวใดและทำไมมันอยู่ในช่วงที่สมมติ แล้วสรุป “โดยหลักอุปนัยแบบเข้ม \(P(n)\) จริงทุก \(n \ge n_0\)”</li>
+    </ol></div>
+    <p>ภาษาอังกฤษที่ใช้ในข้อสอบ: <i>“Assume, as the strong inductive hypothesis, that \(P(j)\) holds for all \(n_0 \le j \le k\). We show \(P(k+1)\).”</i> · ทบทวนอุปนัยธรรมดาได้ที่ <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์ (3.2)</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="base-cases">
+    <h2 id="base-cases">ต้องมีกรณีฐานกี่ตัว: ทดลองให้บทพิสูจน์พังเอง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>แล็บนี้แสดง P(n) ตั้งแต่ \(n_0\) ถึง \(n_0 + 29\) แต่ละช่องจะ “ล้ม” (เขียว) ได้ก็ต่อเมื่อกรณีที่มันอาศัยล้มหมดแล้ว แตะตัวเลขเพื่อดูว่ามันอาศัยใคร แล้วลอง<b>ลดจำนวนกรณีฐาน</b>ทีละหนึ่ง จะเห็นทันทีว่าช่องแรกที่ขาดหลักยึดอยู่ตรงไหน ลองแบบแบ่งครึ่ง ⌊n/2⌋ และแยกตัวประกอบด้วย: ขั้นอุปนัยกระโดดไกลมากแต่กรณีฐานกลับน้อย เพราะสิ่งที่สำคัญคือ “กรณีที่อ้างถึงถูกพิสูจน์ไปก่อนแล้วหรือยัง” ไม่ใช่ระยะห่าง</p>
+    <div class="si-deps" id="lab-deps" data-preset="fib"></div>
+    <div class="lap-chips"><button type="button" class="lap-chip" data-si-target="lab-deps" data-si-set='{"preset":"fib","base":1}'>ฟีโบนัชชีที่มีกรณีฐานตัวเดียว</button><button type="button" class="lap-chip" data-si-target="lab-deps" data-si-set='{"preset":"stamp35","base":2}'>แสตมป์ 3, 5 กรณีฐาน 2 ตัว</button><button type="button" class="lap-chip" data-si-target="lab-deps" data-si-set='{"preset":"half"}'>⌊n/2⌋ กรณีฐานตัวเดียวพอ</button><button type="button" class="lap-chip" data-si-target="lab-deps" data-si-set='{"preset":"custom","custom":"2,5"}'>ย้อน 2 และ 5 ขั้น</button></div>
+    <div class="sr-exam"><b>กฎที่ใช้ในข้อสอบ</b>ก่อนเขียนกรณีฐาน ให้ร่างขั้นอุปนัยเสมอ ถ้าขั้นอุปนัยใช้ \(P(n-1)\) กับ \(P(n-2)\) ขั้นอุปนัยนั้นใช้ได้ตั้งแต่ \(n \ge n_0 + 2\) จึงต้องพิสูจน์ \(P(n_0)\) และ \(P(n_0+1)\) เอง ข้อสอบมักหักคะแนนเต็มขั้นถ้าขาดกรณีฐานตัวที่สอง</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="stamps">
+    <h2 id="stamps">กลุ่มที่ 1: แสตมป์และเหรียญ (ปัญหาโฟรเบเนียส) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>“มีแสตมป์ราคา a และ b บาท ราคาใดบ้างที่รวมได้พอดี” เป็นตัวอย่างคลาสสิกที่สุดของอุปนัยแบบเข้ม เพราะขั้นอุปนัย “เติมแสตมป์ดวงที่ถูกที่สุดอีกดวง” ย้อนกลับไปหลายขั้นพร้อมกัน</p>
+    <div class="tf-grid">
+      <div class="tf" id="N4" data-k="frobenius number postage stamp coin problem chicken mcnugget จำนวนโฟรเบเนียส แสตมป์ เหรียญ">
+        <p class="tf-n"><b><span class="fid">N4</span> Frobenius number</b> ราคาใหญ่สุดที่รวมไม่ได้ (สองชนิด)</p>
+        \[ \begin{gathered} \gcd(a, b) = 1 \ \Rightarrow\ g(a, b) = ab - a - b \\ \#\{\text{ราคาที่รวมไม่ได้}\} = \frac{(a-1)(b-1)}{2} \end{gathered} \]
+        <p class="tf-x">ทุกราคา \(n &gt; ab - a - b\) รวมได้ · ถ้า \(\gcd(a,b) = d &gt; 1\) จะรวมได้เฉพาะพหุคูณของ d</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-1 · กรณีฐานสามตัว</span><h3>แสดงว่าทุกราคา \(n \ge 8\) บาท รวมได้พอดีด้วยแสตมป์ 3 และ 5 บาท</h3></div>
+      <ol class="steps">
+        <li><p><b>ข้อความ</b> \(P(n)\): มีจำนวนเต็ม \(x, y \ge 0\) ที่ \(n = 3x + 5y\)</p></li>
+        <li><p><b>ดูขั้นอุปนัย</b>: จะได้ \(n\) จาก \(n - 3\) แล้วเติมแสตมป์ 3 บาท ⇒ ย้อน 3 ขั้น ⇒ ต้องมีกรณีฐาน 3 ตัว</p></li>
+        <li><p><b>กรณีฐาน</b>: \(8 = 3 + 5\), \(9 = 3 + 3 + 3\), \(10 = 5 + 5\)</p></li>
+        <li><p><b>สมมติฐานแบบเข้ม</b>: ให้ \(n \ge 11\) และ \(P(j)\) จริงทุก \(8 \le j &lt; n\) เพราะ \(8 \le n - 3 &lt; n\) จึงมี \(\hlP{n - 3 = 3x + 5y}\)</p></li>
+        <li><p>\(n = 3(x + 1) + 5y\) ⇒ \(P(n)\) จริง ∎</p></li>
+      </ol>
+      <p class="answer">ราคาที่รวมไม่ได้มีเพียง 1, 2, 4, 7 (สี่ค่า \(= \tfrac{2\cdot4}{2}\)) และ \(7 = 3\cdot5 - 3 - 5\)</p>
+    </div>
+    <div class="si-stamps" id="lab-stamps" data-a="3" data-b="5"></div>
+    <div class="wx" id="ex-n2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-2 · กรณีฐานสี่ตัว</span><h3>แสตมป์ 4 และ 7 บาท ราคาใดบ้างที่รวมไม่ได้ และพิสูจน์ว่าราคาตั้งแต่ 18 บาทขึ้นไปรวมได้หมด</h3></div>
+      <ol class="steps">
+        <li><p>\(g(4, 7) = 28 - 4 - 7 = 17\) ราคาที่รวมไม่ได้: 1, 2, 3, 5, 6, 9, 10, 13, 17 (เก้าค่า \(= \tfrac{3\cdot6}{2}\))</p></li>
+        <li><p>ขั้นอุปนัยเติมแสตมป์ 4 บาท ⇒ กรณีฐาน 4 ตัว: \(18 = 4 + 7 + 7\), \(19 = 4\cdot3 + 7\), \(20 = 4\cdot5\), \(21 = 7\cdot3\)</p></li>
+        <li><p>ให้ \(n \ge 22\) และสมมติ \(P(j)\) ทุก \(18 \le j &lt; n\) เพราะ \(n - 4 \ge 18\) จึงมี \(\hlP{P(n-4)}\) เติม 4 บาทได้ \(P(n)\) ∎</p></li>
+      </ol>
+      <p class="answer">รวมได้ทุก \(n \ge 18\) <button type="button" class="wx-btn" data-si-target="lab-stamps" data-si-set='{"a":4,"b":7,"c":0}'>เปิดในแล็บ</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="primes">
+    <h2 id="primes">กลุ่มที่ 2: จำนวนเฉพาะ การแยกตัวประกอบ และการเขียนเลขฐานสอง <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ตัวอย่างนี้แสดงเหตุผลที่อุปนัยธรรมดาไม่พอ: ถ้า \(n = 360\) ไม่ใช่จำนวนเฉพาะ เราแตกเป็น \(18 \times 20\) การรู้ว่า 359 เป็นผลคูณของจำนวนเฉพาะไม่ช่วยอะไร สิ่งที่ต้องการคือรู้เรื่องของ 18 และ 20</p>
+    <div class="tf-grid">
+      <div class="tf" id="N5" data-k="fundamental theorem of arithmetic prime factorization existence ทฤษฎีบทหลักมูลเลขคณิต แยกตัวประกอบ">
+        <p class="tf-n"><b><span class="fid">N5</span> Fundamental theorem of arithmetic</b> ทฤษฎีบทหลักมูลของเลขคณิต</p>
+        \[ n \ge 2\ \Rightarrow\ n = p_1^{e_1}p_2^{e_2}\cdots p_r^{e_r} \]
+        <p class="tf-x">มีอยู่จริงและเขียนได้แบบเดียว (ไม่นับลำดับ) · ส่วน “มีอยู่จริง” พิสูจน์ด้วยอุปนัยแบบเข้ม ส่วน “แบบเดียว” ใช้บทตั้งของยุคลิด \(p \mid ab \Rightarrow p \mid a \lor p \mid b\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-3 · ผลคูณจำนวนเฉพาะ</span><h3>พิสูจน์ว่าจำนวนเต็ม \(n \ge 2\) ทุกตัวเขียนเป็นผลคูณของจำนวนเฉพาะได้</h3></div>
+      <ol class="steps">
+        <li><p><b>กรณีฐาน</b> \(n = 2\) เป็นจำนวนเฉพาะ (ผลคูณของจำนวนเฉพาะหนึ่งตัว)</p></li>
+        <li><p><b>สมมติฐานแบบเข้ม</b>: ให้ \(n \ge 3\) และทุก \(2 \le j &lt; n\) เป็นผลคูณของจำนวนเฉพาะ</p></li>
+        <li><p>ถ้า n เป็นจำนวนเฉพาะ จบทันที ถ้าไม่ใช่ \(n = ab\) โดย \(2 \le a, b \le n/2 &lt; n\) จึงใช้ \(\hlP{P(a),\ P(b)}\) ได้</p></li>
+        <li><p>นำผลคูณจำนวนเฉพาะของ a กับ b มาต่อกันเป็นของ n ∎</p></li>
+      </ol>
+      <p class="answer">กรณีฐานมีตัวเดียว แม้ขั้นอุปนัยกระโดดไกล เพราะ a, b ≥ 2 อยู่ในโดเมนเสมอ</p>
+    </div>
+    <div class="si-fact" id="lab-fact" data-n="360"></div>
+    <div class="wx" id="ex-n4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-4 · เลขฐานสอง</span><h3>พิสูจน์ว่าจำนวนนับ n ทุกตัวเขียนเป็นผลบวกของกำลังของ 2 ที่ไม่ซ้ำกันได้ (มีเลขฐานสองเสมอ)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1 = 2^0\)</p></li>
+        <li><p>ให้ \(n \ge 2\) และสมมติ \(P(j)\) ทุก \(1 \le j &lt; n\) เขียน \(n = 2m + b\) โดย \(b \in \{0, 1\}\) และ \(1 \le m = \lfloor n/2\rfloor &lt; n\)</p></li>
+        <li><p>จาก \(\hlP{P(m)}\): \(m = \sum 2^{e_i}\) (e ต่างกัน) ⇒ \(2m = \sum 2^{e_i + 1}\) ไม่มีพจน์ \(2^0\) จึงบวก \(b\cdot 2^0\) ได้โดยไม่ซ้ำ ∎</p></li>
+      </ol>
+      <p class="answer">นี่คือการหารสองซ้ำ ๆ แปลงเลขฐานสิบเป็นฐานสอง <button type="button" class="wx-btn" data-si-target="lab-rep" data-si-set='{"mode":"bin","n":45}'>ดูในแล็บ (45)</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="recurrence">
+    <h2 id="recurrence">กลุ่มที่ 3: ลำดับเวียนเกิด สูตรปิด และขอบเขต <span class="lv lv-i">กลาง</span></h2>
+    <p>นี่คือกลุ่มที่พบบ่อยที่สุดในข้อสอบมหาวิทยาลัย ความสัมพันธ์ \(a_n = c_1a_{n-1} + c_2a_{n-2}\) ย้อนสองขั้น จึงต้องใช้อุปนัยแบบเข้ม (หรืออุปนัยธรรมดาบนคู่ \((a_{n-1}, a_n)\)) และกรณีฐานสองตัวเสมอ</p>
+    <div class="tf-grid">
+      <div class="tf" id="N6" data-k="fibonacci bounds golden ratio phi binet ขอบเขตฟีโบนัชชี อัตราส่วนทองคำ">
+        <p class="tf-n"><b><span class="fid">N6</span> Fibonacci bounds &amp; Binet</b> ขอบเขตและสูตรของบิเนต์</p>
+        \[ \begin{gathered} \varphi^{n-2} \le F_n \le \varphi^{n-1}\ (n \ge 1) \\ F_n = \frac{\varphi^n - \psi^n}{\sqrt5},\quad \varphi, \psi = \frac{1 \pm \sqrt5}{2} \end{gathered} \]
+        <p class="tf-x">กุญแจของทุกข้อคือ \(\varphi^2 = \varphi + 1\) (และ \(\psi^2 = \psi + 1\))</p>
+      </div>
+      <div class="tf" id="N7" data-k="bound recurrence a_n le C r^n dominant root ขอบเขต ลำดับเวียนเกิด รากเด่น">
+        <p class="tf-n"><b><span class="fid">N7</span> Geometric bound</b> ขอบเขต \(a_n \le Cr^n\) ของเวียนเกิดสัมประสิทธิ์ไม่ติดลบ</p>
+        \[ \begin{gathered} a_n = \sum_{i=1}^{k} c_i a_{n-i},\ c_i \ge 0 \\ \sum_{i=1}^{k} c_i r^{-i} \le 1,\quad a_{n_0+j} \le C r^{n_0+j}\ (j &lt; k) \\ \Longrightarrow\ a_n \le C r^n \end{gathered} \]
+        <p class="tf-x">r ที่เล็กที่สุดที่ใช้ได้คือรากบวกที่ใหญ่ที่สุดของสมการลักษณะเฉพาะ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-5 · ขอบเขตบน</span><h3>\(F_1 = F_2 = 1,\ F_n = F_{n-1} + F_{n-2}\) พิสูจน์ว่า \(F_n &lt; 2^n\) ทุก \(n \ge 1\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน (สองตัวเพราะย้อนสองขั้น): \(F_1 = 1 &lt; 2,\ F_2 = 1 &lt; 4\)</p></li>
+        <li><p>ให้ \(n \ge 3\) และ \(P(j)\) ทุก \(1 \le j &lt; n\): \(F_n = \hlP{F_{n-1}} + \hlP{F_{n-2}} &lt; 2^{n-1} + 2^{n-2} = 3\cdot2^{n-2} &lt; 4\cdot 2^{n-2} = 2^n\) ∎</p></li>
+      </ol>
+      <p class="answer">ฐาน 2 “หลวม” มาก ฐานที่เล็กที่สุดที่ใช้ได้คือ \(\varphi \approx 1.618\) ลองเลื่อนแถบในแล็บด้านล่างให้ r ต่ำกว่า φ แล้วดูขั้นอุปนัยพัง</p>
+    </div>
+    <div class="wx" id="ex-n6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-6 · ขอบเขตล่างด้วย φ</span><h3>พิสูจน์ว่า \(F_n \ge \varphi^{n-2}\) ทุก \(n \ge 1\) เมื่อ \(\varphi = \tfrac{1+\sqrt5}{2}\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน: \(F_1 = 1 \ge \varphi^{-1} \approx 0.618\) และ \(F_2 = 1 \ge \varphi^0 = 1\)</p></li>
+        <li><p>\(F_n = F_{n-1} + F_{n-2} \ge \varphi^{n-3} + \varphi^{n-4} = \varphi^{n-4}(\varphi + 1) = \varphi^{n-4}\cdot\varphi^2 = \varphi^{n-2}\) ∎</p></li>
+      </ol>
+      <p class="answer">ใช้ \(\varphi^2 = \varphi + 1\) เป็นกุญแจ ผลนี้ทำให้รู้ว่าอัลกอริทึมยุคลิดใช้จำนวนรอบเป็นลอการิทึม (ทฤษฎีบทของลาเม)</p>
+    </div>
+    <div class="si-bound" id="lab-bound" data-preset="fib"></div>
+    <div class="wx" id="ex-n7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-7 · สูตรปิด</span><h3>\(a_1 = 1,\ a_2 = 5,\ a_n = a_{n-1} + 2a_{n-2}\) พิสูจน์ว่า \(a_n = 2^n + (-1)^n\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน: \(2 - 1 = 1 = a_1\), \(4 + 1 = 5 = a_2\) ✓</p></li>
+        <li><p>ให้ \(n \ge 3\) และสมมติสูตรจริงสำหรับ \(n - 1\) และ \(n - 2\):</p><div class="lap-eq">\[ \begin{aligned} a_n &= \hlP{2^{n-1} + (-1)^{n-1}} + 2\big(\hlP{2^{n-2} + (-1)^{n-2}}\big) \\ &= 2^{n-1} + 2^{n-1} + (-1)^{n-2}(-1 + 2) \\ &= 2^n + (-1)^n \end{aligned} \]</div></li>
+      </ol>
+      <p class="answer">สูตรมาจากสมการลักษณะเฉพาะ \(t^2 = t + 2\) ราก 2 และ −1 <button type="button" class="wx-btn" data-sc-target="calc-rec" data-sc-set='{"rhs":"a(n-1) + 2a(n-2)","init":"1, 5","n0":"1"}'>ให้เครื่องแก้สร้างบทพิสูจน์</button></p>
+    </div>
+    <div class="wx" id="ex-n8">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-8 · กรณีฐานสามตัว</span><h3>\(T_1 = T_2 = T_3 = 1,\ T_n = T_{n-1} + T_{n-2} + T_{n-3}\) พิสูจน์ว่า \(T_n &lt; 2^n\)</h3></div>
+      <ol class="steps">
+        <li><p>ย้อน 3 ขั้น ⇒ กรณีฐาน 3 ตัว: \(1 &lt; 2,\ 1 &lt; 4,\ 1 &lt; 8\)</p></li>
+        <li><p>ให้ \(n \ge 4\): \(T_n &lt; 2^{n-1} + 2^{n-2} + 2^{n-3} = 7\cdot2^{n-3} &lt; 8\cdot 2^{n-3} = 2^n\) ∎</p></li>
+      </ol>
+      <p class="answer">ลำดับจริง 1, 1, 1, 3, 5, 9, 17, 31, 57, … โตด้วยฐานราว 1.839</p>
+    </div>
+    <div class="wx" id="ex-n9">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-9 · สูตรของบิเนต์</span><h3>\(F_0 = 0,\ F_1 = 1,\ F_n = F_{n-1} + F_{n-2}\) พิสูจน์ \(F_n = \dfrac{\varphi^n - \psi^n}{\sqrt5}\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน: \(n = 0\) ได้ \(0\) และ \(n = 1\) ได้ \(\tfrac{\varphi - \psi}{\sqrt5} = \tfrac{\sqrt5}{\sqrt5} = 1\)</p></li>
+        <li><p>ให้ \(n \ge 2\): \(F_n = \dfrac{\varphi^{n-1} - \psi^{n-1}}{\sqrt5} + \dfrac{\varphi^{n-2} - \psi^{n-2}}{\sqrt5} = \dfrac{\varphi^{n-2}(\varphi + 1) - \psi^{n-2}(\psi + 1)}{\sqrt5}\)</p></li>
+        <li><p>แทน \(\varphi + 1 = \varphi^2,\ \psi + 1 = \psi^2\) ได้ \(\dfrac{\varphi^n - \psi^n}{\sqrt5}\) ∎</p></li>
+      </ol>
+      <p class="answer">เพราะ \(|\psi| &lt; 1\) จึงได้ \(F_n\) = จำนวนเต็มที่ใกล้ \(\varphi^n/\sqrt5\) ที่สุด</p>
+    </div>
+    <h3 id="rec-lab">เครื่องแก้ความสัมพันธ์เวียนเกิดที่เขียนบทพิสูจน์ให้</h3>
+    <p>พิมพ์ความสัมพันธ์และค่าเริ่มต้น เครื่องมือหาสูตรปิดแบบแม่นตรง แล้วสร้างบทพิสูจน์ด้วยอุปนัยแบบเข้ม (กดเปิดส่วน “พิสูจน์สูตรด้วยอุปนัยแบบเข้ม” ท้ายผลลัพธ์) ใช้ตรวจว่าเราเขียนกรณีฐานครบและอ้างสมมติฐานถูกตัวหรือไม่ · รายละเอียดวิธีอยู่ที่ <a href="/learn/sequences-and-series/calculators/#rec">เครื่องคิดเลข 26.11</a></p>
+    <div class="sc-rec" id="calc-rec" data-rhs="a(n-1) + 2a(n-2)" data-init="1, 5" data-n0="1"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="counting">
+    <h2 id="counting">กลุ่มที่ 4: การนับและการแบ่งชิ้น <span class="lv lv-i">กลาง</span></h2>
+    <p>เมื่อสิ่งของ “แตกเป็นสองชิ้นที่เล็กกว่า” โดยไม่รู้ว่าแต่ละชิ้นใหญ่เท่าไร อุปนัยแบบเข้มคือเครื่องมือธรรมชาติ</p>
+    <div class="wx" id="ex-n10">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-10 · ช็อกโกแลต</span><h3>แท่งช็อกโกแลต \(m \times n\) หักได้ครั้งละหนึ่งชิ้นตามร่อง ต้องหักกี่ครั้งจึงได้ชิ้น \(1 \times 1\) ทั้งหมด</h3></div>
+      <ol class="steps">
+        <li><p>ให้ \(P(k)\): แท่งที่มี k ช่อง (รูปใดก็ได้) ต้องหัก \(k - 1\) ครั้งพอดี · กรณีฐาน \(k = 1\): หัก 0 ครั้ง</p></li>
+        <li><p>ให้ \(k \ge 2\) สมมติ \(P(j)\) ทุก \(j &lt; k\) การหักครั้งแรกให้สองชิ้นขนาด \(p, q\) โดย \(p + q = k\) และ \(1 \le p, q &lt; k\)</p></li>
+        <li><p>รวม \(1 + \hlP{(p - 1)} + \hlP{(q - 1)} = k - 1\) ∎ (มุมมองที่สั้นกว่า: หักหนึ่งครั้งเพิ่มชิ้นหนึ่งชิ้นเสมอ)</p></li>
+      </ol>
+      <p class="answer">\(mn - 1\) ครั้ง ไม่ว่าจะหักแบบไหน · แท่ง 3 × 4 ใช้ 11 ครั้ง</p>
+    </div>
+    <div class="si-choc" id="lab-choc" data-m="3" data-n="4"></div>
+    <div class="wx" id="ex-n11">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-11 · ปูกระเบื้องโดมิโน</span><h3>กระดาน \(2 \times n\) ปูด้วยโดมิโน \(1 \times 2\) ได้กี่แบบ</h3></div>
+      <ol class="steps">
+        <li><p>ดูชิ้นสุดท้ายทางขวา: เป็นโดมิโนตั้งหนึ่งชิ้น (เหลือ \(2 \times (n-1)\)) หรือโดมิโนนอนสองชิ้นซ้อนกัน (เหลือ \(2 \times (n-2)\)) ⇒ \(T(n) = T(n-1) + T(n-2)\)</p></li>
+        <li><p>กรณีฐาน \(T(1) = 1,\ T(2) = 2\) จากนั้นอุปนัยแบบเข้มแสดงว่า \(T(n) = F_{n+1}\) (เพราะทั้งสองข้างมีความสัมพันธ์และกรณีฐานเดียวกัน)</p></li>
+      </ol>
+      <p class="answer">\(T(5) = F_6 = 8\) แบบ ดูทั้งแปดแบบในแล็บ</p>
+    </div>
+    <div class="si-tile" id="lab-tile" data-n="5"></div>
+    <div class="wx" id="ex-n12">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-12 · ทฤษฎีบทเซกเคนดอร์ฟ</span><h3>พิสูจน์ว่าจำนวนนับทุกตัวเขียนเป็นผลบวกของเลขฟีโบนัชชี (1, 2, 3, 5, 8, …) ที่ไม่มีสองตัวใดติดกันในลำดับได้</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(n = 1 = F\) · ให้ \(n \ge 2\) และสมมติ \(P(j)\) ทุก \(j &lt; n\)</p></li>
+        <li><p>ถ้า n เป็นเลขฟีโบนัชชีจบทันที มิฉะนั้นให้ \(F_k\) ใหญ่สุดที่ \(F_k &lt; n &lt; F_{k+1}\) และ \(r = n - F_k\)</p></li>
+        <li><p>\(r &lt; F_{k+1} - F_k = F_{k-1}\) และ \(r &lt; n\) ⇒ \(\hlP{P(r)}\) ให้ผลบวกของเลขฟีโบนัชชีที่ไม่ติดกันซึ่งทุกตัวเล็กกว่า \(F_{k-1}\) จึงไม่ติดกับ \(F_k\) ∎</p></li>
+      </ol>
+      <p class="answer">\(100 = 89 + 8 + 3\) <button type="button" class="wx-btn" data-si-target="lab-rep" data-si-set='{"mode":"zeck","n":100}'>ดูในแล็บ</button></p>
+    </div>
+    <div class="si-rep" id="lab-rep" data-mode="zeck" data-n="100"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="algorithms">
+    <h2 id="algorithms">กลุ่มที่ 5: เกม อัลกอริทึม และระบบควบคุม <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>ในวิทยาการคอมพิวเตอร์ อุปนัยแบบเข้มคือวิธีมาตรฐานในการพิสูจน์อัลกอริทึมแบบเรียกตัวเอง (recursive) เพราะการเรียกซ้ำมักลดขนาดปัญหาเป็นครึ่งหรือเป็นชิ้นใด ๆ ที่เล็กกว่า</p>
+    <div class="tf-grid">
+      <div class="tf" id="N8" data-k="divide and conquer merge sort binary search complexity bound การวิเคราะห์อัลกอริทึม">
+        <p class="tf-n"><b><span class="fid">N8</span> Divide-and-conquer bounds</b> ขอบเขตอัลกอริทึมแบ่งครึ่ง</p>
+        \[ \begin{gathered} T(n) = T\big(\lfloor\tfrac n2\rfloor\big) + T\big(\lceil\tfrac n2\rceil\big) + n \\ \Rightarrow\ T(n) \le n\lceil\log_2 n\rceil \\ C(n) = 1 + C\big(\lfloor\tfrac n2\rfloor\big) \ \Rightarrow\ C(n) = \lfloor\log_2 n\rfloor + 1 \end{gathered} \]
+        <p class="tf-x">\(T(1) = 0,\ C(1) = 1\) · merge sort และ binary search ตามลำดับ</p>
+      </div>
+      <div class="tf" id="N9" data-k="subtraction game nim winning losing positions เกมหยิบเหรียญ ตำแหน่งแพ้ชนะ">
+        <p class="tf-n"><b><span class="fid">N9</span> Take-away games</b> เกมหยิบ (P/N positions)</p>
+        \[ \begin{gathered} n \text{ แพ้} \iff \text{ทุกการหยิบนำไปสู่ตำแหน่งชนะ} \\ \text{หยิบ } \{1, \dots, k\}:\ n \text{ แพ้} \iff (k+1) \mid n \end{gathered} \]
+        <p class="tf-x">ตำแหน่ง 0 เป็นกรณีฐาน (คนที่ต้องเดินแพ้) ทุกตำแหน่งตัดสินจากตำแหน่งที่เล็กกว่าหลายตัว</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-n13">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-13 · เกมหยิบเหรียญ</span><h3>มีเหรียญ n อัน ผลัดกันหยิบครั้งละ 1, 2 หรือ 3 อัน ผู้หยิบอันสุดท้ายชนะ พิสูจน์ว่าผู้เริ่มก่อนแพ้ก็ต่อเมื่อ \(4 \mid n\)</h3></div>
+      <ol class="steps">
+        <li><p>\(P(n)\): ตำแหน่ง n แพ้ (สำหรับคนที่ต้องเดิน) ⇔ \(4 \mid n\) · กรณีฐาน \(n = 0\): ไม่มีให้หยิบ แพ้ และ \(4 \mid 0\) ✓</p></li>
+        <li><p>ให้ \(n \ge 1\) และสมมติ \(P(j)\) ทุก \(j &lt; n\) ถ้า \(4 \mid n\): ทุกการหยิบได้ \(n - 1, n - 2, n - 3\) ซึ่งหาร 4 ไม่ลงตัว จึงเป็นตำแหน่งชนะตาม \(\hlP{P(n-1)}\), \(\hlP{P(n-2)}\), \(\hlP{P(n-3)}\) ⇒ n แพ้</p></li>
+        <li><p>ถ้า \(4 \nmid n\): หยิบ \(n \bmod 4\) อันไปที่พหุคูณของ 4 ซึ่งแพ้ตามสมมติฐาน ⇒ n ชนะ ∎</p></li>
+      </ol>
+      <p class="answer">กลยุทธ์: ทิ้งพหุคูณของ 4 ให้คู่แข่งเสมอ ลองชนะคอมพิวเตอร์ในแล็บ</p>
+    </div>
+    <div class="si-nim" id="lab-nim" data-moves="1,2,3" data-n="21"></div>
+    <div class="wx" id="ex-n14">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-14 · merge sort</span><h3>\(T(1) = 0,\ T(n) = T(\lfloor n/2\rfloor) + T(\lceil n/2\rceil) + n\) พิสูจน์ \(T(n) \le n\lceil\log_2 n\rceil\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(T(1) = 0 \le 1\cdot 0\) · ให้ \(n \ge 2\) และ \(c = \lceil\log_2 n\rceil\) จึงมี \(n \le 2^c\)</p></li>
+        <li><p>\(\lceil n/2\rceil \le 2^{c-1}\) ⇒ ทั้งสองครึ่งมี \(\lceil\log_2(\cdot)\rceil \le c - 1\) และเล็กกว่า n จึงใช้ \(\hlP{\text{สมมติฐานแบบเข้ม}}\) ได้</p></li>
+        <li><p>\(T(n) \le \lfloor\tfrac n2\rfloor(c-1) + \lceil\tfrac n2\rceil(c-1) + n = n(c - 1) + n = nc\) ∎</p></li>
+      </ol>
+      <p class="answer">merge sort ใช้การเปรียบเทียบ \(O(n\log n)\) · อุปนัยธรรมดาบน \(n - 1\) ใช้ไม่ได้เพราะการเรียกซ้ำกระโดดไปที่ \(n/2\)</p>
+    </div>
+    <div class="wx" id="ex-n15">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-15 · binary search</span><h3>\(C(1) = 1,\ C(n) = 1 + C(\lfloor n/2\rfloor)\) พิสูจน์ \(C(n) = \lfloor\log_2 n\rfloor + 1\)</h3></div>
+      <ol class="steps">
+        <li><p>กรณีฐาน \(C(1) = 1 = 0 + 1\) · ให้ \(n \ge 2\) สมมติสูตรจริงทุก \(j &lt; n\) โดยเฉพาะ \(j = \lfloor n/2\rfloor\)</p></li>
+        <li><p>ถ้า \(2^m \le n &lt; 2^{m+1}\) แล้ว \(2^{m-1} \le \lfloor n/2\rfloor &lt; 2^m\) ⇒ \(\lfloor\log_2\lfloor n/2\rfloor\rfloor = m - 1\)</p></li>
+        <li><p>\(C(n) = 1 + \hlP{(m - 1) + 1} = m + 1 = \lfloor\log_2 n\rfloor + 1\) ∎</p></li>
+      </ol>
+      <p class="answer">ค้นข้อมูลล้านรายการ (เรียงแล้ว) ใช้ไม่เกิน 20 รอบ</p>
+    </div>
+    <div class="wx" id="ex-n16">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-16 · เอกลักษณ์ของเบซู</span><h3>พิสูจน์ว่า \(\gcd(a, b) = ax + by\) สำหรับจำนวนเต็ม x, y บางค่า (ทุก \(a \ge 0,\ b \ge 0\) ไม่เป็นศูนย์พร้อมกัน) แล้วหา x, y ของ \(\gcd(252, 198)\)</h3></div>
+      <ol class="steps">
+        <li><p>อุปนัยแบบเข้มบน b · กรณีฐาน \(b = 0\): \(\gcd(a, 0) = a = a\cdot1 + 0\cdot0\)</p></li>
+        <li><p>ให้ \(b \ge 1\): \(a = qb + r\) โดย \(0 \le r &lt; b\) และ \(\gcd(a, b) = \gcd(b, r)\) จาก \(\hlP{P(r)}\) (เพราะ \(r &lt; b\)): \(\gcd(b, r) = bx' + ry'\)</p></li>
+        <li><p>แทน \(r = a - qb\): \(\gcd(a,b) = ay' + b(x' - qy')\) ∎ (นี่คืออัลกอริทึมยุคลิดแบบขยาย)</p></li>
+        <li><p>\(252 = 1\cdot198 + 54,\ 198 = 3\cdot54 + 36,\ 54 = 1\cdot36 + 18,\ 36 = 2\cdot18\) ย้อนกลับได้ \(18 = 252\cdot4 - 198\cdot5\)</p></li>
+      </ol>
+      <p class="answer">\(\gcd(252, 198) = 18 = 4(252) - 5(198)\) · r เป็นค่าใดก็ได้ที่น้อยกว่า b จึงต้องใช้อุปนัยแบบเข้ม</p>
+    </div>
+    <div class="wx" id="ex-n17">
+      <div class="wx-head"><span class="mono">ตัวอย่าง N-17 · ระบบควบคุมดิจิทัล</span><h3>ค่าความคลาดของลูปควบคุมแบบไม่ต่อเนื่องสอดคล้อง \(e_n = 0.5e_{n-1} + 0.3e_{n-2}\) โดย \(e_0 = e_1 = 1\) พิสูจน์ว่า \(e_n \le C(0.86)^n\) และหา C</h3></div>
+      <ol class="steps">
+        <li><p>สัมประสิทธิ์ไม่ติดลบ ใช้ N7 กับ \(r = 0.86\): \(\tfrac{0.5}{0.86} + \tfrac{0.3}{0.86^2} = 0.5814 + 0.4056 = 0.9870 \le 1\) ✓ (ราก \(t^2 = 0.5t + 0.3\) คือ 0.8521 จึงเลือก r ต่ำกว่า 0.8521 ไม่ได้)</p></li>
+        <li><p>กรณีฐานสองตัว: ต้องการ \(C \ge e_0 = 1\) และ \(C \ge e_1/0.86 = 1.1628\) ⇒ เลือก \(C = 1.1628\)</p></li>
+        <li><p>ขั้นอุปนัยแบบเข้ม: \(e_n \le 0.5\,\hlP{Cr^{n-1}} + 0.3\,\hlP{Cr^{n-2}} = Cr^n\left(\tfrac{0.5}{r} + \tfrac{0.3}{r^2}\right) \le Cr^n\) ∎</p></li>
+      </ol>
+      <p class="answer">ความคลาดลดลงอย่างน้อยแบบเรขาคณิตด้วยอัตรา 0.86 ต่อรอบ: หลัง 30 รอบเหลือไม่เกิน \(1.1628(0.86)^{30} \approx 0.013\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="compare">
+    <h2 id="compare">เปรียบเทียบ: อุปนัยธรรมดา อุปนัยแบบเข้ม และหลักการจัดอันดับดี</h2>
+    <div class="table-wrap"><table><thead><tr><th></th><th>อุปนัยธรรมดา</th><th>อุปนัยแบบเข้ม</th><th>หลักการจัดอันดับดี</th></tr></thead><tbody>
+      <tr><td>สมมติ</td><td>\(P(k)\)</td><td>\(P(n_0), \dots, P(n-1)\) ทั้งหมด</td><td>มีตัวอย่างค้านที่เล็กที่สุด n</td></tr>
+      <tr><td>พิสูจน์</td><td>\(P(k+1)\)</td><td>\(P(n)\)</td><td>ได้ตัวอย่างค้านที่เล็กกว่า n (ขัดแย้ง)</td></tr>
+      <tr><td>เหมาะกับ</td><td>สูตรผลบวก การหารลงตัว อสมการทีละขั้น</td><td>เวียนเกิดหลายขั้น ตัวประกอบ แบ่งครึ่ง แบ่งชิ้น</td><td>พิสูจน์การมีอยู่ ความเป็นอตรรกยะ การสิ้นสุดของอัลกอริทึม</td></tr>
+      <tr><td>กรณีฐาน</td><td>ส่วนใหญ่ 1 ตัว</td><td>เท่ากับจำนวนขั้นที่ย้อนไกลที่สุด</td><td>มักแฝงอยู่ในการแยกกรณี</td></tr>
+    </tbody></table></div>
+    <p>ทั้งสามแบบพิสูจน์สิ่งเดียวกันได้เสมอ (N2) การเลือกแบบเข้มไม่ได้ทำให้บทพิสูจน์ “แข็งแรงกว่า” แต่ทำให้เขียนง่ายและอ่านเข้าใจกว่าเมื่อขั้นอุปนัยต้องการหลายกรณี ถ้าใช้แค่ \(P(k)\) ก็เขียนแบบธรรมดาได้ ไม่ผิด</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">ข้อผิดพลาดที่พบบ่อย: เกมหาจุดผิด</h2>
+    <ul>
+      <li><b>กรณีฐานไม่พอ</b>: ย้อนสองขั้นแต่ตรวจแค่ตัวเดียว (ผิดบ่อยที่สุด)</li>
+      <li><b>อ้างกรณีที่อยู่นอกโดเมน</b>: ใช้ \(P(n-3)\) เมื่อ \(n - 3\) ยังต่ำกว่า \(n_0\) หรือใช้ \(a - 1 = 0\) ที่ไม่ใช่จำนวนนับ</li>
+      <li><b>อ้างสมมติฐานถูก แต่ตรรกะต่อจากนั้นผิด</b>: เช่น “ผลคูณของจำนวนเฉพาะเป็นจำนวนเฉพาะ”</li>
+      <li><b>เขียนสมมติฐานไม่ครบ</b>: ต้องบอกช่วง “ทุก \(n_0 \le j &lt; n\)” ไม่ใช่ “สมมติว่าจริง”</li>
+    </ul>
+    <div class="si-flaw" id="lab-flaw" data-preset="power"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ฝึกพิสูจน์แบบภาคปฏิบัติ</h2>
+    <h3 id="order">เรียงบรรทัดบทพิสูจน์ (มีบรรทัดหลอก)</h3>
+    <p>บทพิสูจน์ที่ได้คะแนนเต็มคือบทพิสูจน์ที่เรียงเหตุผลถูก แตะบรรทัดตามลำดับ ระวังบรรทัดหลอกที่ดูน่าเชื่อแต่ใช้ไม่ได้ เช่น “สมมติแค่ P(n − 1)” ในโจทย์ที่ต้องย้อนสามขั้น</p>
+    <div class="si-order" id="lab-order" data-preset="stamps"></div>
+    <h3 id="problems">โจทย์ฝึก 10 ข้อ (มีเฉลย)</h3>
+    <details class="sr-q"><summary><span class="mono">S1 <span class="lv lv-b">พื้นฐาน</span></span><span class="sr-qt">พิสูจน์ว่าทุกราคา \(n \ge 12\) บาทรวมได้ด้วยแสตมป์ 4 และ 5 บาท</span></summary><div><p>กรณีฐาน 4 ตัว: \(12 = 4\cdot3,\ 13 = 4\cdot2 + 5,\ 14 = 4 + 5\cdot2,\ 15 = 5\cdot3\) ขั้นอุปนัย: \(n \ge 16\) ⇒ \(n - 4 \ge 12\) ใช้ \(P(n-4)\) แล้วเติม 4 บาท</p><p class="answer">\(g(4,5) = 11\) <button type="button" class="wx-btn" data-si-target="lab-stamps" data-si-set='{"a":4,"b":5,"c":0}'>ดูในแล็บ</button></p></div></details>
+    <details class="sr-q"><summary><span class="mono">S2 <span class="lv lv-b">พื้นฐาน</span></span><span class="sr-qt">มีเหรียญ 6, 9, 20 (ชุดไก่ทอด) ราคาใดใหญ่สุดที่ซื้อพอดีไม่ได้</span></summary><div><p>ไล่ตารางพบว่า 44, 45, 46, 47, 48, 49 ทำได้ครบหกค่าติดกัน (เท่ากับเหรียญที่เล็กที่สุด) จึงทำได้ทุกค่าที่มากกว่าด้วยการเติม 6 ค่าที่ทำไม่ได้ใหญ่สุดคือ 43</p><p class="answer">43 <button type="button" class="wx-btn" data-si-target="lab-stamps" data-si-set='{"a":6,"b":9,"c":20}'>ดูในแล็บ</button></p></div></details>
+    <details class="sr-q"><summary><span class="mono">S3 <span class="lv lv-b">พื้นฐาน</span></span><span class="sr-qt">\(a_1 = 1,\ a_2 = 3,\ a_n = a_{n-1} + a_{n-2}\) พิสูจน์ \(a_n &lt; (7/4)^n\)</span></summary><div><p>กรณีฐาน \(1 &lt; 1.75,\ 3 &lt; 3.0625\) ขั้นอุปนัย: \(a_n &lt; (7/4)^{n-1} + (7/4)^{n-2} = (7/4)^{n-2}\cdot\tfrac{11}{4}\) และ \(\tfrac{11}{4} &lt; \tfrac{49}{16}\) ✓</p><p class="answer">ใช้ได้เพราะ \(\tfrac{4}{7} + \tfrac{16}{49} = \tfrac{44}{49} \le 1\) <button type="button" class="wx-btn" data-si-target="lab-deps" data-si-set='{"preset":"fib"}'>ดูโครงสร้างกรณีฐาน</button></p></div></details>
+    <details class="sr-q"><summary><span class="mono">S4 <span class="lv lv-i">กลาง</span></span><span class="sr-qt">\(a_0 = 1,\ a_1 = 4,\ a_n = 5a_{n-1} - 6a_{n-2}\) พิสูจน์ \(a_n = 2\cdot3^n - 2^n\)</span></summary><div><p>กรณีฐาน \(2 - 1 = 1,\ 6 - 2 = 4\) ขั้นอุปนัย: \(5(2\cdot3^{n-1} - 2^{n-1}) - 6(2\cdot3^{n-2} - 2^{n-2}) = 2\cdot3^{n-2}(15 - 6) - 2^{n-2}(10 - 6) = 2\cdot3^n - 2^n\)</p><p class="answer">✓ <button type="button" class="wx-btn" data-sc-target="calc-rec" data-sc-set='{"rhs":"5a(n-1) - 6a(n-2)","init":"1, 4","n0":"0"}'>ให้เครื่องแก้สร้างบทพิสูจน์</button></p></div></details>
+    <details class="sr-q"><summary><span class="mono">S5 <span class="lv lv-i">กลาง</span></span><span class="sr-qt">พิสูจน์ว่า \(F_1 + F_2 + \dots + F_n = F_{n+2} - 1\)</span></summary><div><p>อุปนัยธรรมดาพอ (ใช้แค่ P(n−1)): \(\sum_{k=1}^{n} F_k = (F_{n+1} - 1) + F_n = F_{n+2} - 1\) · ตัวอย่างนี้แสดงว่าไม่ต้องใช้แบบเข้มทุกครั้ง</p><p class="answer">กรณีฐาน \(F_1 = 1 = F_3 - 1\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">S6 <span class="lv lv-i">กลาง</span></span><span class="sr-qt">เกมหยิบครั้งละ 1, 3 หรือ 4 อัน ตำแหน่งใดแพ้</span></summary><div><p>ไล่ตาราง: 0 แพ้, 1 ชนะ, 2 แพ้, 3, 4, 5, 6 ชนะ, 7 แพ้, … ตำแหน่งแพ้คือ \(n \equiv 0, 2 \pmod 7\) พิสูจน์ด้วยอุปนัยแบบเข้มเพราะตำแหน่ง n ขึ้นกับ n−1, n−3, n−4</p><p class="answer">0, 2, 7, 9, 14, 16, … <button type="button" class="wx-btn" data-si-target="lab-nim" data-si-set='{}'>เปิดแล็บแล้วเลือก “หยิบ 1, 3 หรือ 4”</button></p></div></details>
+    <details class="sr-q"><summary><span class="mono">S7 <span class="lv lv-i">กลาง</span></span><span class="sr-qt">พิสูจน์ว่าต้นไม้ (tree) ที่มี n จุดยอดมีเส้นเชื่อม \(n - 1\) เส้น</span></summary><div><p>อุปนัยแบบเข้มบน n: ลบเส้นเชื่อมหนึ่งเส้นได้ต้นไม้สองต้นขนาด \(p + q = n\) จากสมมติฐานมีเส้น \((p-1) + (q-1)\) รวมเส้นที่ลบกลับคืน \(= n - 1\) (โครงสร้างเดียวกับช็อกโกแลต)</p><p class="answer">กรณีฐาน n = 1 มี 0 เส้น</p></div></details>
+    <details class="sr-q"><summary><span class="mono">S8 <span class="lv lv-a">ขั้นสูง</span></span><span class="sr-qt">\(a_1 = 1,\ a_n = a_{\lfloor n/2\rfloor} + a_{\lceil n/2\rceil}\) สำหรับ \(n \ge 2\) หาและพิสูจน์สูตร</span></summary><div><p>ลองค่า: 1, 2, 3, 4, … เดา \(a_n = n\) ขั้นอุปนัย \(a_n = \lfloor n/2\rfloor + \lceil n/2\rceil = n\) ใช้ \(P(\lfloor n/2\rfloor), P(\lceil n/2\rceil)\) ซึ่งทั้งคู่ \(&lt; n\) เมื่อ \(n \ge 2\)</p><p class="answer">\(a_n = n\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">S9 <span class="lv lv-a">ขั้นสูง</span></span><span class="sr-qt">พิสูจน์ว่า \(\sqrt2\) เป็นจำนวนอตรรกยะด้วยหลักการจัดอันดับดี</span></summary><div><p>สมมติ \(\sqrt2 = p/q\) และให้ q เป็นตัวส่วนบวกที่เล็กที่สุด ได้ \(p^2 = 2q^2\) ⇒ p คู่ ⇒ q คู่ ⇒ \(\sqrt2 = (p/2)/(q/2)\) มีตัวส่วนเล็กกว่า q ขัดแย้ง</p><p class="answer">เป็นรูป “ตัวอย่างค้านที่เล็กที่สุด” ของอุปนัยแบบเข้ม</p></div></details>
+    <details class="sr-q"><summary><span class="mono">S10 <span class="lv lv-a">ขั้นสูง</span></span><span class="sr-qt">\(e_n = 0.6e_{n-1} + 0.2e_{n-2},\ e_0 = 2,\ e_1 = 1\) หา r ที่เล็กที่สุดที่ \(e_n \le Cr^n\) พิสูจน์ได้ด้วยวิธี N7</span></summary><div><p>r ต้องสอดคล้อง \(0.6/r + 0.2/r^2 \le 1\) ⇔ \(r^2 - 0.6r - 0.2 \ge 0\) ⇒ \(r \ge 0.3 + \sqrt{0.29} \approx 0.8385\) เลือก r ใดก็ได้ที่ไม่น้อยกว่านี้ แล้วให้ \(C = \max(e_0, e_1/r)\)</p><p class="answer">\(r_{\min} = 0.3 + \sqrt{0.29} \approx 0.8385\)</p></div></details>
+    </section>
+
+    <h2 id="next">เรียนต่อ</h2>
+    <p>ทบทวนอุปนัยธรรมดาและแม่แบบ 4 ขั้นที่ <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์ (3.2)</a> อ่านตัวอย่างอีก 14 ข้อใน <a href="/blog/mathematical-induction-examples/">บทความอุปนัยเชิงคณิตศาสตร์</a> หาสูตรที่จะพิสูจน์ด้วย <a href="/learn/sequences-and-series/calculators/">เครื่องคิดเลขลำดับและอนุกรม (26.11)</a> และดูทฤษฎีลำดับเวียนเกิดที่ <a href="/learn/sequences-and-series/sequences/#recurrence">ลำดับ (26.1)</a></p>
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

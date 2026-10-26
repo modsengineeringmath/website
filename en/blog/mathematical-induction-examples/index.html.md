@@ -3,7 +3,7 @@ title: "Mathematical Induction Examples with Step-by-Step Solutions, Including S
 url: https://modsengineeringmath.com/en/blog/mathematical-induction-examples/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 > 14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction, with a four-step template and common mistakes.
@@ -221,6 +221,8 @@ True for all $n \ge 1$. At $x = 0$ the nth derivative is $n$, which gives the Ma
 ## Strong induction examples
 
 In strong induction (also called complete induction) the hypothesis is that every case $P(n_0), P(n_0 + 1), \dots, P(k)$ is true, not only $P(k)$. It proves exactly the same kind of result; it simply lets the step use an earlier case. Use it when getting to $k+1$ needs $P(k-1)$, $P(k-3)$ or some smaller case you cannot name in advance.
+
+Want more practice? See strong induction: 17 worked examples and 11 interactive proof labs (in Thai), and the recurrence solver that writes the strong-induction proof for you (in Thai).
 
 Example 12 · Strong induction
 

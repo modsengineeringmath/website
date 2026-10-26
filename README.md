@@ -471,7 +471,7 @@ permanent star running at light load, dynamic lab + sweep + worksheet, 8 simulat
   `/star-delta-saving`, `/star-delta-research`, `/star-delta-lab`, `/wye-delta`, `/en/star-delta-analysis`, `/en/star-delta-timer` (in `_redirects`).
 
 ## Sequences & series — chapter 26 (added 2026-10-24)
-`sequences-and-series` in `TOPICS` (build.mjs), 10 sub-pages under `src/pages/learn/sequences-and-series/`:
+`sequences-and-series` in `TOPICS` (build.mjs), 12 sub-pages since 2026-10-26 (see the 26.11–26.12 section below); originally 10 sub-pages under `src/pages/learn/sequences-and-series/`:
 sequences (Q1–Q22), infinite-series (S1–S16), convergence-tests (T1–T12), alternating-series (A1–A11), power-series (P1–P14),
 taylor-series (Y1–Y23), laurent-series (L1–L13), engineering-applications (E1–E11), exam-practice (60 problems, sets A/B/C) and
 series-lab (12 tools). The one-page overview `/learn/limits/sequences-series/` (3.1) stays as the short version and links here.
@@ -490,6 +490,31 @@ Markdown guide for AI tools: `src/md/sequences-and-series.md` → `/learn/sequen
 - Short URLs (`_redirects`): `/series` `/sequences` `/sequences-and-series` `/convergence-tests` `/ratio-test` `/power-series`
   `/taylor-series` `/maclaurin` now point to chapter 26, plus `/series-lab` `/series-exam` `/integral-test` `/comparison-test`
   `/root-test` `/alternating-series` `/radius-of-convergence` `/taylor-table` `/laurent` `/laurent-series` `/residues` `/z-transform-roc`.
+
+## Sequences & series 26.11 calculators · 26.12 strong induction (added 2026-10-26)
+Two sub-pages appended to `sequences-and-series` in `TOPICS` (new part `tools`, so no chapter number moved):
+`calculators` (26.11, formula prefix C, C1–C17) and `strong-induction` (26.12, prefix N, N1–N9). Both articles carry the class
+`sc-page` (long inline math scrolls inside its paragraph on phones). Every worked number was checked with sympy.
+- `assets/seq-calc.js` (`window.SC`, loads after `mathkit.js` and `seq-lab.js`): exact arithmetic with BigInt fractions, polynomials over Q,
+  rational roots, the fields Q(√D) (surds and complex roots), exact Gaussian elimination. Widgets, each with worked steps and a 🎯
+  practice mode (score in localStorage `sc-score-v1`):
+  `<div class="sc-ag" data-mode="arith|geo|two">` arithmetic/geometric solver (any 3 of a₁, d|r, n, aₙ, Sₙ, S∞, or two given terms),
+  `<div class="sc-sigma" data-f data-m data-n>` Σ with method detection (Faulhaber, P(k)rᵏ by discrete anti-difference, telescoping by
+  partial fractions, Euler–Maclaurin fallback), `<div class="sc-find" data-terms data-n0>` formula from terms (difference table/Newton,
+  geometric, hypergeometric ratio, Berlekamp–Massey), `<div class="sc-rec" data-rhs data-init data-n0>` linear recurrences up to order 3
+  with forcing P(n)sⁿ (roots, resonance, constants, check table, generating function, generated strong-induction proof),
+  `<div class="sc-em" data-mode="em|alt">` Euler–Maclaurin / Cohen–Villegas–Zagier, `<div class="sc-misc" data-mode="decimal|means|annuity">`.
+  Page buttons: `data-sc-set='{…}' data-sc-target="<id>"`. The calculators page reads `?q=` (`sum k^2, k=1..n`, `a(n)=…, a(0)=…`,
+  `2, 6, 12, 20`) — this is the MathSolver `SolveMathAction` target declared in its `"jsonld"` (usageInfo → `/privacy/`).
+- `assets/strong-ind.js` (`window.SI`): `si-deps` (which cases P(n) needs, base-case count), `si-stamps` (Frobenius + generated proof),
+  `si-fact`, `si-choc`, `si-nim`, `si-rep` (binary / Zeckendorf), `si-tile`, `si-bound` (aₙ ≤ Crⁿ slider), `si-order` (proof-line ordering
+  with a decoy), `si-flaw`. Page buttons: `data-si-set='{…}' data-si-target="<id>"`.
+- Styles: "SEQUENCE CALCULATORS … STRONG INDUCTION" at the end of site.css. Test: `node scripts/test-seq-calc.mjs` (engines vs sympy values).
+- Short URLs: `/series-calculator` (now → 26.11) `/sequence-calculator` `/sigma-calculator` `/summation-calculator` `/recurrence-solver`
+  `/arithmetic-sequence-calculator` `/geometric-sequence-calculator` `/finite-differences` `/euler-maclaurin` `/repeating-decimal`
+  `/strong-induction` (now → 26.12) `/frobenius` `/postage-stamp` `/zeckendorf` `/well-ordering` `/privacy-policy`.
+- `/privacy/` (`src/pages/privacy.html`, `noLlms`): factual privacy policy (no accounts, tools run in the browser, localStorage, Cloudflare,
+  Google AdSense cookies, Google Fonts, youtube-nocookie); linked from the footer. Update it if a form, analytics or sign-in is ever added.
 
 ## Home page "what's new" box and /updates/ (added 2026-10-24)
 Before this change the home page had no list of updates — `data/updates.json` was only shown on `/about/` and in `feed.xml`, so edits
