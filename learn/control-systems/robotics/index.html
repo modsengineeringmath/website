@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ระบบควบคุมโรโบติกส์: จลนศาสตร์ จาโคเบียน พลศาสตร์แขนกล computed torque วิถี และหุ่นยนต์ล้อ | อาจารย์มด</title>
 <meta name="description" content="ระบบควบคุมหุ่นยนต์สำหรับวิศวกรไฟฟ้า จลนศาสตร์ตรงและผกผันของแขนกลสองข้อต่อ จาโคเบียนและภาวะเอกฐาน สมการพลศาสตร์แขนกล ควบคุมข้อต่ออิสระด้วย PD/PID ชดเชยแรงโน้มถ่วง computed torque control การสร้างวิถีแบบพหุนามกำลังสามและห้า หุ่นยนต์ล้อแบบ differential drive การนำทางไปยังเป้าหมาย หุ่นยนต์ทรงตัวสองล้อ และไอเดียโปรเจกต์หุ่นยนต์">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/robotics/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/robotics/#article","headline":"ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ","description":"ระบบควบคุมหุ่นยนต์สำหรับวิศวกรไฟฟ้า จลนศาสตร์ตรงและผกผันของแขนกลสองข้อต่อ จาโคเบียนและภาวะเอกฐาน สมการพลศาสตร์แขนกล ควบคุมข้อต่ออิสระด้วย PD/PID ชดเชยแรงโน้มถ่วง computed torque control การสร้างวิถีแบบพหุนามกำลังสามและห้า หุ่นยนต์ล้อแบบ differential drive การนำทางไปยังเป้าหมาย หุ่นยนต์ทรงตัวสองล้อ และไอเดียโปรเจกต์หุ่นยนต์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/robotics/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/robotics/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Robotics","Robot control","Forward kinematics","Inverse kinematics","Jacobian matrix","Computed torque control","Trajectory planning","Differential drive robot","Self-balancing robot"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-robotics.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมโรโบติกส์: แขนกล หุ่นยนต์เคลื่อนที่ และการควบคุมข้อต่อ","item":"https://modsengineeringmath.com/learn/control-systems/robotics/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมควบคุมแขนกลด้วย PID แยกแต่ละข้อต่อได้?","acceptedAnswer":{"@type":"Answer","text":"เพราะข้อต่อส่วนใหญ่มีเกียร์ทดสูง ความเฉื่อยของโหลดที่สะท้อนมายังมอเตอร์ลดลงตามกำลังสองของอัตราทด ผลกระทบระหว่างข้อต่อ (coupling) จึงเล็กเมื่อเทียบกับความเฉื่อยของมอเตอร์เอง มองเป็นการรบกวนที่ PID จัดการได้ แต่หุ่นยนต์ที่ขับตรง (direct drive) หรือเคลื่อนที่เร็วมาก ต้องใช้ computed torque"}},{"@type":"Question","name":"ภาวะเอกฐาน (singularity) คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือท่าที่จาโคเบียนเสียแรงก์ (ดีเทอร์มิแนนต์เป็นศูนย์) เช่น แขนกลเหยียดตรงสุด ปลายแขนเคลื่อนในบางทิศไม่ได้ และการคำนวณความเร็วข้อต่อจากความเร็วปลายแขนจะได้ค่าอนันต์ ต้องวางแผนวิถีให้ห่างจากท่าเหล่านี้"}},{"@type":"Question","name":"หุ่นยนต์ทรงตัวสองล้อควบคุมอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เป็นลูกตุ้มกลับหัวบนล้อ พลานต์ไม่เสถียรวงเปิด นิยมใช้ LQR กับสถานะ มุมเอียง อัตราเอียง ตำแหน่ง และความเร็วล้อ หรือ PID สองลูป (ลูปในคุมมุมเอียง ลูปนอกคุมความเร็ว) มุมเอียงได้จากการหลอมรวมไจโรกับ accelerometer"}}]}]}</script>
@@ -734,15 +731,14 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
-<script src="/assets/cs-core.js?v=47c1483f" defer></script>
-<script src="/assets/cs-ui.js?v=47c1483f" defer></script>
-<script src="/assets/cs-pid.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
+<script src="/assets/cs-core.js?v=027d0845" defer></script>
+<script src="/assets/cs-ui.js?v=027d0845" defer></script>
+<script src="/assets/cs-pid.js?v=027d0845" defer></script>
 </body>
 </html>

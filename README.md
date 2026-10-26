@@ -513,19 +513,20 @@ Two sub-pages appended to `sequences-and-series` in `TOPICS` (new part `tools`, 
 - Short URLs: `/series-calculator` (now → 26.11) `/sequence-calculator` `/sigma-calculator` `/summation-calculator` `/recurrence-solver`
   `/arithmetic-sequence-calculator` `/geometric-sequence-calculator` `/finite-differences` `/euler-maclaurin` `/repeating-decimal`
   `/strong-induction` (now → 26.12) `/frobenius` `/postage-stamp` `/zeckendorf` `/well-ordering` `/privacy-policy`.
-- `/privacy/` (`src/pages/privacy.html`, `noLlms`): factual privacy policy (no accounts, tools run in the browser, localStorage, Cloudflare,
-  Google AdSense cookies, Google Fonts, youtube-nocookie); linked from the footer. Update it if a form, analytics or sign-in is ever added.
+- `/privacy/` (`src/pages/privacy.html`, `noLlms`): factual privacy policy (no ads, no analytics, no cookies, no accounts, tools run in the
+  browser, localStorage, Cloudflare, self-hosted fonts, youtube-nocookie); linked from the footer. Update it if a form, analytics or sign-in is ever added.
 
-## Cookie consent and self-hosted fonts (added 2026-10-26)
-- **AdSense loads only after consent.** The static `adsbygoogle.js` tag is gone from `src/layout.html`. A tiny inline script in `<head>`
-  injects it only when localStorage `mem-consent-v1` holds `{"ads": true}`; `assets/consent.js` (every page, deferred) shows the bottom
-  bar on the first visit (Thai or English by `<html lang>`), with equal “accept” / “decline” buttons, and reopens from any
-  `[data-consent-open]` element (footer “ตั้งค่าคุกกี้”, a button on `/privacy/`). Declining after accepting deletes AdSense's first-party
-  cookies (`__gads __gpi __eoi FCCDCF FCNEC`) and reloads. Site ownership for AdSense is kept by `<meta name="google-adsense-account">`.
-  Never add another tracking/ads script without routing it through the same consent check, and update `/privacy/` when you do.
+## No ads, no tracking, no cookies (2026-10-26)
+- **Google AdSense was removed completely on 2026-10-26** (the opt-in consent bar added earlier the same day went with it):
+  no `adsbygoogle.js`, no `google-adsense-account` meta, no `ads.txt`, no `assets/consent.js`, no "ตั้งค่าคุกกี้" footer button.
+  The site sets no cookies and loads no analytics or tracking scripts, so it needs no cookie banner under PDPA.
+- `assets/site.js` (top) deletes what the old setup may have left for visitors who had accepted: AdSense's first-party cookies
+  (`__gads __gpi __eoi FCCDCF FCNEC _gcl_au`) and localStorage `mem-consent-v1`. Harmless to keep; can be dropped after a few months.
+- **Keep it that way:** adding any ads, analytics, pixel or third-party embed that sets cookies brings back the need for opt-in
+  consent and a `/privacy/` update. Cookieless options (e.g. Cloudflare Web Analytics) don't need a banner.
 - **Fonts are self-hosted**: `assets/fonts.css` + `assets/fonts/*.woff2` (IBM Plex Sans Thai 400/500/600, IBM Plex Mono 400/500,
-  Trirong 500/700; thai, latin and latin-ext subsets from @fontsource 5.3.0). No request goes to fonts.googleapis.com; the first visit
-  makes no third-party request at all. Styles: "COOKIE CONSENT" at the end of site.css.
+  Trirong 500/700; thai, latin and latin-ext subsets from @fontsource 5.3.0). No request goes to fonts.googleapis.com; a page view
+  makes no third-party request at all (YouTube loads only after the visitor presses play, via youtube-nocookie.com).
 
 ## Home page "what's new" box and /updates/ (added 2026-10-24)
 Before this change the home page had no list of updates — `data/updates.json` was only shown on `/about/` and in `feed.xml`, so edits

@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ความสามารถควบคุมได้และสังเกตได้ (Controllability &amp; Observability): Kalman PBH และ realization | อาจารย์มด</title>
 <meta name="description" content="นิยามความสามารถควบคุมได้และสังเกตได้ของระบบปริภูมิสถานะ เมทริกซ์ควบคุมได้และเมทริกซ์สังเกตได้ของคาลมาน การทดสอบด้วยแรงก์ การทดสอบ PBH ความเป็นคู่ (duality) ความสัมพันธ์กับการหักล้างขั้ว-ศูนย์ การแยกส่วนของคาลมาน realization ที่น้อยที่สุด เสถียรภาพที่ซ่อนอยู่ และตัวอย่างจากวงจรและมอเตอร์">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/controllability-observability/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/#article","headline":"ความสามารถควบคุมได้และสังเกตได้ (Controllability & Observability)","description":"นิยามความสามารถควบคุมได้และสังเกตได้ของระบบปริภูมิสถานะ เมทริกซ์ควบคุมได้และเมทริกซ์สังเกตได้ของคาลมาน การทดสอบด้วยแรงก์ การทดสอบ PBH ความเป็นคู่ (duality) ความสัมพันธ์กับการหักล้างขั้ว-ศูนย์ การแยกส่วนของคาลมาน realization ที่น้อยที่สุด เสถียรภาพที่ซ่อนอยู่ และตัวอย่างจากวงจรและมอเตอร์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Controllability","Observability","Kalman rank condition","PBH test","Duality","Minimal realization","Kalman decomposition","Pole–zero cancellation"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-controllability-observability.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ความสามารถควบคุมได้และสังเกตได้ (Controllability & Observability)","item":"https://modsengineeringmath.com/learn/control-systems/controllability-observability/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ควบคุมได้ (controllable) หมายความว่าอะไรในทางปฏิบัติ?","acceptedAnswer":{"@type":"Answer","text":"หมายความว่าอินพุตที่มีอยู่สามารถพาสถานะทุกตัวไปยังค่าใดก็ได้ภายในเวลาจำกัด ถ้าไม่ควบคุมได้ จะมีโหมดบางโหมดที่ตัวขับเอื้อมไม่ถึง ไม่ว่าออกแบบตัวควบคุมอย่างไรก็เปลี่ยนขั้วของโหมดนั้นไม่ได้ ถ้าโหมดนั้นไม่เสถียรก็จบ"}},{"@type":"Question","name":"ถ้าไม่สังเกตได้ จะเกิดอะไร?","acceptedAnswer":{"@type":"Answer","text":"จะมีสถานะบางส่วนที่ไม่ส่งผลถึงเอาต์พุตที่วัด จึงประมาณค่าด้วยตัวสังเกตไม่ได้ ถ้าโหมดนั้นเสถียรก็พอยอมรับได้ (detectable) แต่ถ้าไม่เสถียร สถานะภายในจะโตขึ้นโดยที่เซนเซอร์มองไม่เห็นเลย"}},{"@type":"Question","name":"ทำไมการหักล้างขั้ว-ศูนย์เกี่ยวกับเรื่องนี้?","acceptedAnswer":{"@type":"Answer","text":"ฟังก์ชันถ่ายโอนแสดงเฉพาะส่วนที่ทั้งควบคุมได้และสังเกตได้ เมื่อมีการหักล้างขั้ว-ศูนย์ แบบจำลองปริภูมิสถานะที่มีอันดับเต็มจะสูญเสียความสามารถควบคุมได้หรือสังเกตได้อย่างน้อยหนึ่งอย่าง และโหมดที่ถูกหักล้างจะหายไปจากฟังก์ชันถ่ายโอน"}}]}]}</script>
@@ -681,13 +678,12 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
 
 </body>
 </html>

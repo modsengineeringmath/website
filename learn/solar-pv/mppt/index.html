@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MPPT คืออะไร: ติดตามจุดกำลังสูงสุดของโซลาร์เซลล์ P&amp;O Incremental Conductance เงาบังบางส่วน Global MPPT และโค้ดตัวอย่าง | อาจารย์มด</title>
 <meta name="description" content="MPPT ภาษาไทยแบบละเอียด: ทำไมต่อแผงตรงกับโหลดหรือแบตแล้วเสียกำลัง จุดทำงานบนเส้นโค้ง I-V คอนเวอร์เตอร์เปลี่ยนความต้านทานที่แผงมองเห็น เงื่อนไข dP/dV = 0 อัลกอริทึม Perturb &amp; Observe และ Incremental Conductance ขนาดก้าวและคาบ ประสิทธิภาพ MPPT ตาม EN 50530 ชาร์จคอนโทรลเลอร์ PWM กับ MPPT เงาบังบางส่วนกับหลายยอด global scan โค้ด C สำหรับไมโครคอนโทรลเลอร์ และแล็บจำลองคอนเวอร์เตอร์">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/mppt/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/mppt/#article","headline":"MPPT ติดตามจุดกำลังสูงสุด: P&O Incremental Conductance เงาบังบางส่วน และ Global MPPT","description":"MPPT ภาษาไทยแบบละเอียด: ทำไมต่อแผงตรงกับโหลดหรือแบตแล้วเสียกำลัง จุดทำงานบนเส้นโค้ง I-V คอนเวอร์เตอร์เปลี่ยนความต้านทานที่แผงมองเห็น เงื่อนไข dP/dV = 0 อัลกอริทึม Perturb & Observe และ Incremental Conductance ขนาดก้าวและคาบ ประสิทธิภาพ MPPT ตาม EN 50530 ชาร์จคอนโทรลเลอร์ PWM กับ MPPT เงาบังบางส่วนกับหลายยอด global scan โค้ด C สำหรับไมโครคอนโทรลเลอร์ และแล็บจำลองคอนเวอร์เตอร์","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/mppt/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/mppt/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Maximum power point tracking","Perturb and observe","Incremental conductance","Partial shading","Solar charge controller"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-mppt.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"MPPT ติดตามจุดกำลังสูงสุด: P&O Incremental Conductance เงาบังบางส่วน และ Global MPPT","item":"https://modsengineeringmath.com/learn/solar-pv/mppt/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"MPPT ทำงานอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"MPPT คือการควบคุมคอนเวอร์เตอร์ DC-DC ระหว่างแผงกับโหลดให้แผงทำงานที่แรงดันซึ่งให้กำลังสูงสุดเสมอ ตัวควบคุมวัดแรงดันและกระแสของแผง ขยับแรงดันอ้างอิงทีละน้อย ถ้ากำลังเพิ่มก็ขยับต่อในทิศเดิม ถ้ากำลังลดก็กลับทิศ (Perturb and Observe) หรือใช้เงื่อนไขความชัน dI/dV = −I/V (Incremental Conductance) จุดทำงานจึงวนอยู่รอบจุดกำลังสูงสุดเมื่อแสงและอุณหภูมิเปลี่ยน"}},{"@type":"Question","name":"ชาร์จคอนโทรลเลอร์ PWM กับ MPPT ต่างกันเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"แบบ PWM ต่อแผงกับแบตเตอรี่ผ่านสวิตช์ แผงจึงถูกบังคับให้ทำงานที่แรงดันแบตเตอรี่ซึ่งต่ำกว่า Vmp มาก เช่น แผง 580 W ที่ Vmp 43 V ต่อกับแบต 24 V ได้ไม่ถึง 400 W แบบ MPPT ใช้บั๊กคอนเวอร์เตอร์ให้แผงทำงานที่ Vmp แล้วแปลงลงมาเป็นแรงดันแบต ได้กำลังมากกว่า 20–40 % สำหรับแผงขนาดใหญ่ แบบ PWM เหมาะเฉพาะแผงเล็กที่ออกแบบมาคู่กับแบต 12 V"}},{"@type":"Question","name":"ทำไมอินเวอร์เตอร์ผลิตไฟน้อยเมื่อมีเงาบังแผงบางส่วน แม้เงาจะเล็ก?","acceptedAnswer":{"@type":"Answer","text":"เงาบังทำให้บายพาสไดโอดนำ เส้นกำลัง P-V ของสตริงมีหลายยอด อัลกอริทึม MPPT แบบไต่เขาอาจติดอยู่ที่ยอดเล็ก (local maximum) และไม่หาเจอยอดใหญ่ (global maximum) อินเวอร์เตอร์ที่มีฟังก์ชัน global MPPT หรือ shade scan จะกวาดแรงดันทั้งช่วงเป็นระยะเพื่อหายอดที่ดีที่สุด"}}]}]}</script>
@@ -739,16 +736,15 @@ void mppt_inc(float v, float i)                /* Incremental Conductance (T3) *
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
-<script src="/assets/lesson.js?v=47c1483f" defer></script>
-<script src="/assets/pv-calc.js?v=47c1483f" defer></script>
-<script src="/assets/pe-sim.js?v=47c1483f" defer></script>
-<script src="/assets/pe-lab.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
+<script src="/assets/lesson.js?v=027d0845" defer></script>
+<script src="/assets/pv-calc.js?v=027d0845" defer></script>
+<script src="/assets/pe-sim.js?v=027d0845" defer></script>
+<script src="/assets/pe-lab.js?v=027d0845" defer></script>
 </body>
 </html>

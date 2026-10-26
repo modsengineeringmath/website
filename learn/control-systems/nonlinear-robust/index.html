@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ระบบไม่เชิงเส้นและควบคุมแบบทนทาน: Describing Function ลียาปูนอฟ Robust | อาจารย์มด</title>
 <meta name="description" content="ความไม่เชิงเส้นที่พบในระบบควบคุมจริง การอิ่มตัว dead-zone backlash แรงเสียดทาน การควอนไทซ์ ฟังก์ชันพรรณนา (describing function) ทำนายลิมิตไซเคิล ระนาบเฟส เสถียรภาพแบบลียาปูนอฟ sliding mode control ความไม่แน่นอนของแบบจำลอง เงื่อนไขเสถียรภาพแบบทนทาน small-gain theorem และแนวคิด H-infinity">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/#article","headline":"ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน","description":"ความไม่เชิงเส้นที่พบในระบบควบคุมจริง การอิ่มตัว dead-zone backlash แรงเสียดทาน การควอนไทซ์ ฟังก์ชันพรรณนา (describing function) ทำนายลิมิตไซเคิล ระนาบเฟส เสถียรภาพแบบลียาปูนอฟ sliding mode control ความไม่แน่นอนของแบบจำลอง เงื่อนไขเสถียรภาพแบบทนทาน small-gain theorem และแนวคิด H-infinity","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Nonlinear control","Describing function","Limit cycle","Lyapunov stability","Sliding mode control","Robust control","Small-gain theorem","H-infinity"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-nonlinear-robust.jpg"],"educationalLevel":["Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน","item":"https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ลิมิตไซเคิลคืออะไร เกิดได้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"คือการแกว่งค้างที่มีแอมพลิจูดและความถี่คงที่ ไม่ขึ้นกับเงื่อนไขเริ่มต้น เกิดได้เฉพาะในระบบไม่เชิงเส้น เช่น ตัวควบคุมแบบ on–off ร่วมกับพลานต์ที่มีเฟสล่าช้ามาก หรือ backlash ในเกียร์ร่วมกับลูปตำแหน่งที่มีเกนสูง ฟังก์ชันพรรณนาใช้ทำนายแอมพลิจูดและความถี่ได้ล่วงหน้า"}},{"@type":"Question","name":"วิธีลียาปูนอฟใช้ทำอะไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้พิสูจน์เสถียรภาพของระบบไม่เชิงเส้นโดยไม่ต้องแก้สมการ หาฟังก์ชันคล้ายพลังงาน V(x) ที่เป็นบวก ถ้าอนุพันธ์ตามเวลาเป็นลบเสมอ ระบบจะลู่เข้าจุดสมดุล ใช้มากในการพิสูจน์ตัวควบคุมหุ่นยนต์ เช่น PD + ชดเชยแรงโน้มถ่วง"}},{"@type":"Question","name":"การควบคุมแบบทนทาน (robust control) ต่างจากการจูนธรรมดาอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"การออกแบบทั่วไปใช้แบบจำลองเดียว ส่วน robust control ระบุขอบเขตความไม่แน่นอนของพลานต์อย่างชัดเจน แล้วรับประกันว่าระบบเสถียรและได้สมรรถนะสำหรับพลานต์ทุกตัวในขอบเขตนั้น เกนมาร์จินและเฟสมาร์จินคือรูปแบบง่ายที่สุดของแนวคิดนี้"}}]}]}</script>
@@ -725,13 +722,12 @@ c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v1200 v585 h43z"/></svg></span></span
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
 
 </body>
 </html>

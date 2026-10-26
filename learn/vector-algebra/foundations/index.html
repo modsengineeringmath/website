@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>เวกเตอร์ 2 มิติและ 3 มิติ: ขนาด ทิศทาง เวกเตอร์หนึ่งหน่วย พร้อมตัวอย่าง | อาจารย์มด</title>
 <meta name="description" content="เข้าใจเวกเตอร์ตั้งแต่สเกลาร์กับเวกเตอร์ พิกัด 2D/3D เวกเตอร์จากสองจุด ความยาว มุม atan2 เวกเตอร์หนึ่งหน่วย และ direction cosines พร้อมภาพ ตัวอย่างแรงในสายเคเบิล สูตรอ้างอิง และแบบฝึกเฉลย">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/vector-algebra/foundations/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/vector-algebra/foundations/#article","headline":"พื้นฐานเวกเตอร์ 2D และ 3D: ขนาด ทิศทาง และเวกเตอร์หนึ่งหน่วย","description":"เข้าใจเวกเตอร์ตั้งแต่สเกลาร์กับเวกเตอร์ พิกัด 2D/3D เวกเตอร์จากสองจุด ความยาว มุม atan2 เวกเตอร์หนึ่งหน่วย และ direction cosines พร้อมภาพ ตัวอย่างแรงในสายเคเบิล สูตรอ้างอิง และแบบฝึกเฉลย","inLanguage":"th","url":"https://modsengineeringmath.com/learn/vector-algebra/foundations/","mainEntityOfPage":"https://modsengineeringmath.com/learn/vector-algebra/foundations/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Vector","Euclidean vector","Two-dimensional space","Three-dimensional space","Unit vector","Vector magnitude","Direction cosines","Displacement"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/vector-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-vector-algebra-foundations.jpg"],"educationalLevel":["High school","Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์: จากแรงลัพธ์ถึงเฟสเซอร์","item":"https://modsengineeringmath.com/learn/vector-algebra/"},{"@type":"ListItem","position":4,"name":"เวกเตอร์ ขนาด ทิศทาง และพิกัด 2D/3D","item":"https://modsengineeringmath.com/learn/vector-algebra/foundations/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"เวกเตอร์ต่างจากสเกลาร์อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"สเกลาร์ระบุด้วยตัวเลขและหน่วย เช่น มวล 5 kg ส่วนเวกเตอร์ต้องระบุขนาดและทิศทาง เช่น แรง 5 N ไปทางขวา ในระบบพิกัดฉากเขียนเวกเตอร์ด้วยองค์ประกอบ x, y และ z ได้"}},{"@type":"Question","name":"หาความยาวเวกเตอร์ 2D และ 3D อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ในแกนตั้งฉากที่มีเวกเตอร์ฐานหนึ่งหน่วย เวกเตอร์ 2D (ax, ay) มีความยาว sqrt(ax² + ay²) และเวกเตอร์ 3D (ax, ay, az) มีความยาว sqrt(ax² + ay² + az²)"}},{"@type":"Question","name":"เวกเตอร์หนึ่งหน่วยคืออะไร?","acceptedAnswer":{"@type":"Answer","text":"เวกเตอร์ที่มีความยาวเท่ากับ 1 ใช้ระบุทิศทาง ถ้าเวกเตอร์ a ไม่เป็นศูนย์ เวกเตอร์หนึ่งหน่วยในทิศเดียวกันคือ a หารด้วยความยาวของ a เวกเตอร์ศูนย์ไม่มีทิศทางจึงหาเวกเตอร์หนึ่งหน่วยจากการหารไม่ได้"}},{"@type":"Question","name":"ทำไมใช้ atan2 แทน arctan(ay/ax)?","acceptedAnswer":{"@type":"Answer","text":"atan2 ตรวจเครื่องหมายของทั้ง ax และ ay จึงเลือกควอดแรนต์ถูกต้องและรองรับ ax เท่ากับศูนย์ ส่วน arctan ของอัตราส่วนอย่างเดียวแยกทิศทางที่ต่างกัน 180 องศาไม่ได้ เวกเตอร์ศูนย์ยังไม่มีมุมทิศทาง"}}]}]}</script>
@@ -1135,15 +1132,14 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
-<script src="/assets/linalg.js?v=47c1483f" defer></script>
-<script src="/assets/vector-lab.js?v=47c1483f" defer></script>
-<script src="/assets/vec3d.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
+<script src="/assets/linalg.js?v=027d0845" defer></script>
+<script src="/assets/vector-lab.js?v=027d0845" defer></script>
+<script src="/assets/vec3d.js?v=027d0845" defer></script>
 </body>
 </html>

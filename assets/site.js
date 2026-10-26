@@ -2,6 +2,18 @@
 (function () {
   var root = document.documentElement, KEY = "mem-theme";
 
+  // The site no longer shows ads (removed 2026-10-26). Delete anything the old AdSense setup may have left
+  // on this domain for visitors who had accepted ad cookies: its first-party cookies and the old consent choice.
+  (function () {
+    try { localStorage.removeItem("mem-consent-v1"); } catch (e) {}
+    if (!/(?:^|;\s*)(?:__gads|__gpi|__eoi|FCCDCF|FCNEC|_gcl_au)=/.test(document.cookie)) return;
+    var host = location.hostname, domains = ["", host, "." + host], parts = host.split(".");
+    if (parts.length > 2) domains.push("." + parts.slice(-2).join("."));
+    ["__gads", "__gpi", "__eoi", "FCCDCF", "FCNEC", "_gcl_au"].forEach(function (n) {
+      domains.forEach(function (d) { document.cookie = n + "=; Max-Age=0; path=/" + (d ? "; domain=" + d : ""); });
+    });
+  })();
+
   // theme
   var themeBtn = document.getElementById("themeToggle");
   if (themeBtn) themeBtn.addEventListener("click", function () {

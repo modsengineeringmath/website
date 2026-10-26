@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>คาดการณ์พลังงานโซลาร์เซลล์: 1 kWp ผลิตไฟได้วันละกี่หน่วย Performance Ratio ห่วงโซ่การสูญเสีย P50 P90 และรายเดือน | อาจารย์มด</title>
 <meta name="description" content="วิธีคาดการณ์พลังงานไฟฟ้าจากโซลาร์เซลล์ก่อนติดตั้ง: สมการ E = P × H × PR final yield reference yield performance ratio ตาม IEC 61724 การสูญเสียทีละรายการ อุณหภูมิ ฝุ่น เงา mismatch สาย อินเวอร์เตอร์ clipping การเสื่อมรายปี capacity factor P50 P90 ความไม่แน่นอน ผลผลิตรายเดือนของไทย และการใช้ PVGIS PVsyst SAM pvlib พร้อมเครื่องคำนวณ">
@@ -39,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/solar-pv/energy-yield/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/solar-pv/energy-yield/#article","headline":"คาดการณ์พลังงานที่ผลิตได้: Performance Ratio ห่วงโซ่การสูญเสีย และ kWh/kWp ในไทย","description":"วิธีคาดการณ์พลังงานไฟฟ้าจากโซลาร์เซลล์ก่อนติดตั้ง: สมการ E = P × H × PR final yield reference yield performance ratio ตาม IEC 61724 การสูญเสียทีละรายการ อุณหภูมิ ฝุ่น เงา mismatch สาย อินเวอร์เตอร์ clipping การเสื่อมรายปี capacity factor P50 P90 ความไม่แน่นอน ผลผลิตรายเดือนของไทย และการใช้ PVGIS PVsyst SAM pvlib พร้อมเครื่องคำนวณ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/solar-pv/energy-yield/","mainEntityOfPage":"https://modsengineeringmath.com/learn/solar-pv/energy-yield/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Photovoltaic energy yield","Performance ratio","Specific yield","P50 and P90 energy estimates"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/solar-pv/#article"},"image":["https://modsengineeringmath.com/images/og/learn-solar-pv-energy-yield.jpg"],"educationalLevel":["Vocational","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ออกแบบระบบโซลาร์เซลล์","item":"https://modsengineeringmath.com/learn/solar-pv/"},{"@type":"ListItem","position":4,"name":"คาดการณ์พลังงานที่ผลิตได้: Performance Ratio ห่วงโซ่การสูญเสีย และ kWh/kWp ในไทย","item":"https://modsengineeringmath.com/learn/solar-pv/energy-yield/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Performance Ratio (PR) ของระบบโซลาร์ที่ดีควรเป็นเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"ระบบหลังคาในประเทศไทยที่ออกแบบดีมี PR รายปีประมาณ 0.75–0.82 โซลาร์ฟาร์มที่ดูแลดีได้ 0.80–0.85 PR ต่ำกว่า 0.7 บ่งชี้ปัญหา เช่น เงาบัง ฝุ่นมาก อินเวอร์เตอร์ตัดบ่อย หรือแผงเสื่อม PR ในไทยต่ำกว่าประเทศเขตหนาวเพราะอุณหภูมิเซลล์สูง"}},{"@type":"Question","name":"P50 กับ P90 ต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"P50 คือพลังงานรายปีที่มีโอกาสเกินครึ่งหนึ่ง (ค่ากลาง) P90 คือพลังงานที่มีโอกาส 90 % ที่จะผลิตได้มากกว่า ใช้เป็นฐานของสินเชื่อโครงการ ถ้าความไม่แน่นอนรวมประมาณ 7–8 % P90 หนึ่งปีจะต่ำกว่า P50 ประมาณ 10 %"}},{"@type":"Question","name":"ใช้โปรแกรมอะไรคาดการณ์พลังงานโซลาร์ได้ฟรี?","acceptedAnswer":{"@type":"Answer","text":"PVGIS ของ European Commission ใช้ผ่านเว็บได้ทันทีและมีข้อมูลประเทศไทย SAM ของ NREL เป็นโปรแกรมฟรีที่ละเอียดรวมการเงิน pvlib python เหมาะกับงานวิจัยและการคำนวณรายชั่วโมงเอง ส่วน PVsyst เป็นโปรแกรมเชิงพาณิชย์ที่ธนาคารและผู้พัฒนาโครงการใช้เป็นมาตรฐาน"}}]}]}</script>
@@ -749,14 +746,13 @@ PR = E_kwh / (P_stc / 1000 * poa.sum() / 1000)</pre>
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
-<script src="/assets/lesson.js?v=47c1483f" defer></script>
-<script src="/assets/pv-calc.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
+<script src="/assets/lesson.js?v=027d0845" defer></script>
+<script src="/assets/pv-calc.js?v=027d0845" defer></script>
 </body>
 </html>

@@ -2,9 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="google-adsense-account" content="ca-pub-3139064301447683">
-<!-- Ads load only after the visitor accepts advertising cookies (assets/consent.js, choice in localStorage "mem-consent-v1") -->
-<script>try{var mc=JSON.parse(localStorage.getItem("mem-consent-v1")||"null");if(mc&&mc.ads===true){var as=document.createElement("script");as.async=true;as.crossOrigin="anonymous";as.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3139064301447683";document.head.appendChild(as);window.__adsOn=1}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>แรงก์ของเมทริกซ์ (ค่าลำดับขั้น) คืออะไร หาอย่างไร และบอกอะไรเกี่ยวกับระบบสมการ | อาจารย์มด</title>
 <meta name="description" content="อธิบายแรงก์ (rank) หรือค่าลำดับขั้นของเมทริกซ์ให้เห็นภาพ วิธีหาด้วยการลดแถวและไมเนอร์ ใช้แรงก์ตัดสินว่าระบบสมการมีคำตอบเดียว ไม่จำกัด หรือไม่มี โจทย์พารามิเตอร์ k และการใช้ในวงจรไฟฟ้า">
@@ -42,8 +39,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=47c1483f">
-<link rel="stylesheet" href="/assets/site.css?v=47c1483f">
+<link rel="stylesheet" href="/assets/fonts.css?v=027d0845">
+<link rel="stylesheet" href="/assets/site.css?v=027d0845">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/blog/matrix-rank/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/matrix-rank/#article","headline":"แรงก์ของเมทริกซ์ (ค่าลำดับขั้น) คืออะไร หาอย่างไร และบอกอะไรเกี่ยวกับระบบสมการ","description":"อธิบายแรงก์ (rank) หรือค่าลำดับขั้นของเมทริกซ์ให้เห็นภาพ วิธีหาด้วยการลดแถวและไมเนอร์ ใช้แรงก์ตัดสินว่าระบบสมการมีคำตอบเดียว ไม่จำกัด หรือไม่มี โจทย์พารามิเตอร์ k และการใช้ในวงจรไฟฟ้า","inLanguage":"th","url":"https://modsengineeringmath.com/blog/matrix-rank/","mainEntityOfPage":"https://modsengineeringmath.com/blog/matrix-rank/","datePublished":"2026-10-25","dateModified":"2026-10-25","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Rank of a matrix","Row echelon form","Rouché–Capelli theorem","System of linear equations"],"articleSection":"เวกเตอร์และพีชคณิตเชิงเส้น","isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-matrix-rank.jpg"],"keywords":"แรงก์ของเมทริกซ์, ค่าลำดับขั้น, rank of a matrix, วิธีหาแรงก์, แรงก์คืออะไร, ลดแถวเป็นขั้นบันได, ไมเนอร์, rank เมทริกซ์ ระบบสมการ, Rouché–Capelli, แรงก์มีพารามิเตอร์ k"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์และพีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/blog/category/linear-algebra/"},{"@type":"ListItem","position":4,"name":"แรงก์ของเมทริกซ์ (ค่าลำดับขั้น) คืออะไร หาอย่างไร และบอกอะไรเกี่ยวกับระบบสมการ","item":"https://modsengineeringmath.com/blog/matrix-rank/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"แรงก์กับค่าลำดับขั้นคือสิ่งเดียวกันไหม?","acceptedAnswer":{"@type":"Answer","text":"ใช่ ค่าลำดับขั้น (บางตำราเรียกลำดับชั้น) คือคำแปลของ rank of a matrix หมายถึงจำนวนแถวหรือหลักที่อิสระเชิงเส้น ซึ่งเท่ากับจำนวนตัวหลักเมื่อลดแถวเป็นรูปขั้นบันได"}},{"@type":"Question","name":"แรงก์ของเมทริกซ์ 3×4 มีค่าได้มากที่สุดเท่าใด?","acceptedAnswer":{"@type":"Answer","text":"3 เพราะแรงก์ไม่เกินจำนวนแถวและไม่เกินจำนวนหลัก rank A ≤ min(m, n) เมทริกซ์ 3×4 จึงมีแรงก์ได้ 0, 1, 2 หรือ 3"}},{"@type":"Question","name":"det A = 0 แปลว่าแรงก์เท่ากับ n − 1 ใช่ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่เสมอไป det A = 0 บอกเพียงว่าแรงก์น้อยกว่า n อาจเป็น n − 1 หรือน้อยกว่านั้น เช่น เมทริกซ์ 3×3 ที่ทุกสมาชิกเป็น 1 มี det = 0 และแรงก์เพียง 1 ต้องลดแถวเพื่อนับแรงก์จริง"}},{"@type":"Question","name":"แรงก์ใช้ตัดสินว่าระบบสมการมีคำตอบได้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เทียบ rank A กับ rank [A|b] ถ้า rank A น้อยกว่า ระบบไม่มีคำตอบ ถ้าเท่ากันและเท่ากับจำนวนตัวแปร มีคำตอบเดียว ถ้าเท่ากันแต่น้อยกว่าจำนวนตัวแปร มีคำตอบไม่จำกัด โดยมีตัวแปรอิสระเท่ากับจำนวนตัวแปรลบแรงก์"}}]}]}</script>
@@ -760,13 +757,12 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
     </nav>
   </div>
   <div class="wrap footer-base">
-    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a> · <button type="button" class="consent-link" data-consent-open>ตั้งค่าคุกกี้</button></span>
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
     <a href="#top">กลับขึ้นด้านบน ↑</a>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=47c1483f" defer></script>
-<script src="/assets/consent.js?v=47c1483f" defer></script>
+<script src="/assets/site.js?v=027d0845" defer></script>
 
 </body>
 </html>
