@@ -819,6 +819,8 @@ const EN_CHROME = [
   ['data-nav="tools">เขียนบทเรียน Markdown + LaTeX<', 'data-nav="tools">Math lesson editor (Thai)<'],
   ['href="/tools/tarot/" data-nav="tarot">ดูดวงไพ่ทาโรต์ Celtic Cross<', 'href="/en/tools/tarot/" data-nav="tarot">Celtic Cross tarot reading<'],
   ['<a href="/tools/tarot/">ดูดวงไพ่ทาโรต์ Celtic Cross</a>', '<a href="/en/tools/tarot/">Celtic Cross tarot reading</a>'],
+  ['href="/tools/tarot-photo/" data-nav="tarot-photo">อ่านไพ่ทาโรต์จากภาพถ่าย<', 'href="/en/tools/tarot-photo/" data-nav="tarot-photo">Tarot reading from a photo<'],
+  ['<a href="/tools/tarot-photo/">อ่านไพ่ทาโรต์จากภาพถ่าย</a>', '<a href="/en/tools/tarot-photo/">Tarot reading from a photo</a>'],
   ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
   ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
   ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
@@ -2196,6 +2198,7 @@ ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SIT
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}
 - [Lesson editor](${SITE}/tools/lesson-editor/): online Markdown + LaTeX editor for writing math lessons; exports .md, HTML and PDF
 - [Celtic Cross tarot reader](${SITE}/tools/tarot/) ([English](${SITE}/en/tools/tarot/)): physical shuffle models (GSR riffle, overhand, table wash, three-pile cut), mixing meter, question-aware reading with Golden Dawn correspondences
+- [Celtic Cross tarot reading from a photo](${SITE}/tools/tarot-photo/) ([English](${SITE}/en/tools/tarot-photo/)): photograph a real spread, pin the ten positions with two taps (similarity transform), name each card and its direction with a reader-chosen rule for the crossing card, elemental-dignity links, same reading engine; the photo stays in the browser
 - Lab presets can be opened directly, e.g. ${SITE}/learn/function-generator/simulator/#preset=rc-square (RC low-pass with a square wave), #preset=probe-comp, #preset=lissajous, #preset=opamp-slew, #preset=aliasing
 - Inverse Laplace calculator links: ${SITE}/learn/laplace-transform/inverse-laplace-transform/#f=(s%2B3)%2F(s%5E2%2B3s%2B2)
 - Solar PV design calculators (string sizing, energy yield, battery, air conditioner, solar pump, voltage drop, payback/NPV/IRR/LCOE): ${SITE}/learn/solar-pv/design-lab/ ; MPPT switching-level simulation: ${SITE}/learn/power-electronics/converter-lab/#preset=solar-mppt

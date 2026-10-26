@@ -32,6 +32,8 @@ How this differs from a random card draw
 
 - Many layers. Elements and their dignities, signs, decans, planets, the energy trend, numbers, the Tree of Life and keys from your birth date.
 
+Already laid out real cards on the table? Photograph them and name the cards in Tarot reading from a photo.
+
 ## The 10 positions of the Celtic Cross
 
 The Celtic Cross is the most popular tarot spread, published by A. E. Waite in 1910. The first six cards form a cross that shows the situation and its time line; the four cards on the right form a staff for you, your surroundings, your hopes and fears, and the outcome.

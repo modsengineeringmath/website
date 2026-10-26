@@ -1,0 +1,94 @@
+/* Celtic Cross photo reader (/tools/tarot-photo/, /en/tools/tarot-photo/) — loaded after tarot.css through meta "css" */
+.tarot-photo{--tp-strong:var(--tc-gold);--tp-friend:var(--ok);--tp-neutral:var(--ink-3);--tp-enemy:#b03a52}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tarot-photo{--tp-enemy:#ef7b93}}
+:root[data-theme="dark"] .tarot-photo{--tp-enemy:#ef7b93}
+
+.tp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tp-between{justify-content:space-between;margin:0 0 6px}
+.tp-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+label.btn{cursor:pointer}
+.tp-file:focus-visible + label,label.btn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.tp-msg{min-height:1.4em;margin:10px 0 0;font-size:.92rem;color:var(--signal);font-weight:500}
+.tp-progress{margin:0;font:500 .88rem var(--mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* photo with pins */
+.tp-photo{position:relative;border-radius:12px;overflow:hidden;background:var(--paper-2);container-type:inline-size;user-select:none;-webkit-user-select:none}
+.tp-photo img{display:block;width:100%;height:auto;max-height:none}
+.tp-photo.is-cal{cursor:crosshair;outline:2px dashed var(--signal);outline-offset:-2px}
+.tp-calbar{position:absolute;left:10px;right:10px;top:10px;margin:0;padding:8px 12px;border-radius:9px;background:rgba(17,23,29,.82);color:#f4efe4;font-size:.92rem;font-weight:500;line-height:1.45;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.tp-nophoto{margin:0;padding:26px 18px;text-align:center;color:var(--ink-3);font-size:.92rem}
+.tp-pins{position:absolute;inset:0;pointer-events:none}
+.tp-anchor{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:3px solid var(--signal);background:color-mix(in srgb,var(--signal) 30%,transparent)}
+.tp-pin{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:3px;border:0;background:none;padding:0;pointer-events:auto;touch-action:none;cursor:grab;font:inherit}
+.tp-pin i{order:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font:600 .78rem var(--mono);font-style:normal;background:var(--tc-gold);color:#1b1408;box-shadow:0 1px 5px rgba(0,0,0,.45);border:2px solid #fff}
+.tp-pin.is-empty i{background:var(--paper);color:var(--ink)}
+.tp-pin.is-sel i{background:var(--accent);color:var(--accent-ink)}
+.tp-pin span{order:1;font-size:.74rem;line-height:1.3;white-space:nowrap;padding:1px 7px;border-radius:5px;background:rgba(17,23,29,.78);color:#f4efe4;max-width:40cqw;overflow:hidden;text-overflow:ellipsis}
+@container (max-width:520px){.tp-pin span{display:none}.tp-pin.is-sel span{display:block}}
+
+/* spread diagram + picker */
+#tpName{container-type:inline-size}
+.tp-work{display:grid;gap:18px;margin-top:8px}
+@container (min-width:860px){.tp-work{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:start}}
+.tp-stage{position:relative;width:100%;aspect-ratio:720/620;container-type:inline-size;border-radius:14px;background:radial-gradient(ellipse at 40% 45%,var(--tc-felt) 0,var(--tc-felt2) 100%);box-shadow:inset 0 2px 14px rgba(0,0,0,.35)}
+.tp-links{position:absolute;inset:0;width:100%;height:100%}
+.tp-links path,.tp-legend path{fill:none}
+.tp-l-strong{stroke:var(--tp-strong);stroke-width:3.2}
+.tp-l-friend{stroke:var(--tp-friend);stroke-width:2.4}
+.tp-l-neutral{stroke:var(--tp-neutral);stroke-width:1.8;stroke-dasharray:2 6;stroke-linecap:round}
+.tp-l-enemy{stroke:var(--tp-enemy);stroke-width:2.4;stroke-dasharray:9 6}
+/* the felt is dark in both themes, so the diagram keeps its own light strokes */
+.tp-links .tp-l-strong{stroke:#e8c46a;stroke-width:5}
+.tp-links .tp-l-friend{stroke:#86d39c;stroke-width:4}
+.tp-links .tp-l-neutral{stroke:#c9cfc8;stroke-width:3;stroke-dasharray:3 10}
+.tp-links .tp-l-enemy{stroke:#ff8aa0;stroke-width:4;stroke-dasharray:14 9}
+.tp-links .is-dim{opacity:.15}
+.tp-slot{position:absolute;transform:translate(-50%,-50%);width:11.11%;aspect-ratio:80/128;padding:0;border:0;background:none;cursor:pointer;border-radius:7%;transition:box-shadow .15s}
+.tp-slot.tp-h{width:17.78%;aspect-ratio:128/80;z-index:2}
+.tp-art{position:absolute;left:50%;top:50%;width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.tp-h .tp-art{width:62.5%;height:160%}
+.tp-art .tc-svg{width:100%;height:100%}
+.tp-slot.is-empty{border:2px dashed rgba(233,223,201,.55);background:rgba(233,223,201,.06)}
+.tp-num{display:grid;place-items:center;height:100%;font:600 3.2cqw var(--mono);color:#e9dfc9}
+.tp-slot.is-sel{box-shadow:0 0 0 3px var(--tc-gold),0 0 18px 2px color-mix(in srgb,var(--tc-gold) 60%,transparent);z-index:3}
+.tp-slot[data-pos="1"].is-sel{z-index:1} /* card 2 always lies on top of card 1 */
+.tp-slot:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.tp-lbl{position:absolute;font-size:1.75cqw;line-height:1.3;color:#e9dfc9;pointer-events:none;white-space:nowrap;padding:0 .6cqw;border-radius:4px;background:rgba(10,24,18,.55)}
+.tp-lbl b{color:var(--tc-gold);font-family:var(--mono)}
+.tp-lbl-c{transform:translate(-50%,-50%);text-align:center}
+.tp-lbl-l{transform:translate(0,-50%)}
+.tp-nm{display:block;color:#fff;font-weight:600}
+.tp-nm:empty{display:none}
+@container (max-width:520px){.tp-lbl{font-size:2.3cqw}.tp-nm{display:none}}
+.tp-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:10px 0 0;font-size:.8rem;color:var(--ink-2)}
+.tp-legend span{display:inline-flex;align-items:center;gap:6px}
+.tp-legend .tp-l-neutral{stroke:var(--ink-3)}
+
+.tp-picker{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:14px;display:grid;gap:10px;min-width:0}
+.tp-pk-k{margin:0;font:600 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.tarot-page .lesson .tp-pk-h{margin:0;font-size:1.08rem;font-family:var(--serif)}
+.tp-picker .tc-small{margin:0}
+.tp-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:9px;overflow:hidden;max-width:560px}
+.tp-seg button{border:0;background:var(--card);color:var(--ink-2);font:inherit;font-size:.86rem;line-height:1.35;padding:9px 12px;cursor:pointer;text-align:center}
+.tp-seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:600}
+.tp-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tp-tabs button{border:1px solid var(--rule);background:var(--card);color:var(--ink-2);border-radius:999px;padding:5px 12px;font:inherit;font-size:.84rem;cursor:pointer}
+.tp-tabs button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.tp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
+.tp-grid-m{grid-template-columns:repeat(auto-fill,minmax(118px,1fr))}
+.tp-grid button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 9px;font:inherit;font-size:.86rem;line-height:1.3;cursor:pointer;min-width:0}
+.tp-grid button small{font:600 .7rem var(--mono);color:var(--tc-gold)}
+.tp-grid button:hover:not(:disabled){border-color:var(--accent)}
+.tp-grid button.is-on{border-color:var(--tc-gold);background:color-mix(in srgb,var(--tc-gold) 14%,var(--card));font-weight:600}
+.tp-grid button:disabled{opacity:.42;cursor:not-allowed}
+.tp-grid button em{position:absolute;top:4px;right:6px;font:600 .68rem var(--mono);font-style:normal;color:var(--ink-3)}
+.tp-chosen{display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;align-items:center;padding-top:10px;border-top:1px solid var(--rule)}
+.tp-mini .tc-svg{width:100%;height:auto}
+.tp-mini.is-rev .tc-svg{transform:rotate(180deg)}
+.tp-chosen-n{margin:0;font-weight:600}
+.tp-chosen .tc-link{margin-top:4px}
+.tp-rule{margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)}
+.tp-rule .tc-small{max-width:68ch}
+.tp-rule .tc-check{padding:10px 0 0}
+@media (prefers-reduced-motion: reduce){.tp-slot{transition:none}}
+@media print{.tarot-photo .tp-picker,.tarot-photo .tp-rule{display:none!important}}
