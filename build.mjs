@@ -856,6 +856,16 @@ const esc = (s) =>
 const decode = (s) =>
   s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
 const stripTags = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+// the <!--meta {...} --> block is JSON: on a typo, stop with the file name and the line/column inside the block
+function parseMeta(text, file) {
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    const pos = Number((e.message.match(/position (\d+)/) || [])[1]);
+    const where = Number.isFinite(pos) ? (() => { const before = text.slice(0, pos).split("\n"); return ` (meta line ${before.length}, column ${before.at(-1).length + 1}: "${text.split("\n").at(before.length - 1).trim()}")`; })() : "";
+    throw new Error(`Meta block in ${file} is not valid JSON${where}: ${e.message}\n  Check commas between items, double quotes "…", and \\ for every backslash in LaTeX.`);
+  }
+}
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
@@ -1327,7 +1337,7 @@ const loadBlog = (dir, lang, base) => {
     .map((f) => {
       const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
       if (!m) throw new Error(`Missing <!--meta--> in ${base}/${f}`);
-      const meta = JSON.parse(m[1]);
+      const meta = parseMeta(m[1], `src/pages/${base.replace(/^\//, "")}${f}`);
       const slug = f.replace(/\.html$/, "");
       return { ...meta, lang, slug, route: `${base}${slug}/`, series: [].concat(meta.series || []), tags: [].concat(meta.tags || []) };
     })
@@ -1675,7 +1685,7 @@ const allSolutions = (() => {
   const list = fs.readdirSync(dir).filter((f) => f.endsWith(".html") && f !== "index.html").map((f) => {
     const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
     if (!m) throw new Error(`Missing <!--meta--> in solutions/${f}`);
-    const meta = JSON.parse(m[1]);
+    const meta = parseMeta(m[1], `src/pages/solutions/${f}`);
     if (!meta.solution) throw new Error(`solutions/${f}: add "solution": true to the meta block`);
     if (!solTopic(meta.topic)) throw new Error(`solutions/${f}: unknown topic "${meta.topic}" — use one of ${SOLUTION_TOPICS.map((t) => t.key).join(", ")} or add it to SOLUTION_TOPICS in build.mjs`);
     for (const k of ["no", "name", "problem", "answer", "published"]) if (meta[k] == null || meta[k] === "") throw new Error(`solutions/${f}: missing "${k}"`);
@@ -1830,7 +1840,7 @@ const allVideos = (() => {
   return fs.readdirSync(dir).filter((f) => f.endsWith(".html") && f !== "index.html").map((f) => {
     const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
     if (!m) throw new Error(`Missing <!--meta--> in videos/${f}`);
-    const meta = JSON.parse(m[1]);
+    const meta = parseMeta(m[1], `src/pages/videos/${f}`);
     const v = meta.video;
     if (!v) throw new Error(`videos/${f}: add a "video": {...} object to the meta block`);
     if (!/^[\w-]{11}$/.test(v.id || "")) throw new Error(`videos/${f}: "video.id" must be the 11-character YouTube id`);
@@ -1968,7 +1978,7 @@ const pageSources = [
 for (const { rel, raw } of pageSources) {
   const m = raw.match(/^<!--meta\s*([\s\S]*?)-->\s*/);
   if (!m) throw new Error(`Missing <!--meta {...} --> block in ${rel}`);
-  const meta = JSON.parse(m[1]);
+  const meta = parseMeta(m[1], `src/pages/${rel}`);
   if (meta.draft) meta.noindex = true;
   const isPost = !!meta.blog;
   const isSol = !!meta.solution;

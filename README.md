@@ -695,3 +695,13 @@ time zone on uploadDate, sitemap thumbnail/title/player = JSON-LD, canonical, no
 
 **Search Console (owner, once):** Sitemaps → add `video-sitemap.xml`; URL Inspection → each `/videos/…/` URL → Request indexing;
 then watch Indexing → Videos (takes days to weeks). "Video isn't on a watch page" on lesson/post URLs is expected and harmless.
+
+## Editing by hand — owner notes (added 2026-11-03)
+- Cloudflare Pages serves the repo as-is: after editing anything in `src/`, run `node build.mjs` and commit the generated files too.
+  Editing on github.com only works for `data/updates.json` (read live by the home page and /updates/).
+- A typo in a page's `<!--meta {...} -->` block stops the build with the file name and the line/column inside the block
+  (`parseMeta()` in build.mjs), e.g. `Meta block in src/pages/videos/x.html is not valid JSON (meta line 7, column 3: …)`.
+- Images in a page: `images/<section>/<name>-<width>.webp` inside `<figure class="post-fig"><img src alt width height loading="lazy"><figcaption>`;
+  `.post-fig img` scales to the column with `height:auto`. A replaced image gets a new file name (images are cached for a day).
+- Local preview: `npx http-server -p 8000 -c-1`, then `http://localhost:8000/<route>`.
+- The owner's step-by-step guide (Thai) is the Claude Doc "คู่มือแก้ไขเว็บ modsengineeringmath.com ด้วยตัวเอง".
