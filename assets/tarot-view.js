@@ -16,6 +16,11 @@
       disclaimer: "การอ่านไพ่ทาโรต์เป็นเครื่องมือทบทวนความคิดและเพื่อความบันเทิง ยังไม่มีหลักฐานทางวิทยาศาสตร์ว่าไพ่ทำนายอนาคตได้ ใช้ผลการอ่านเป็นมุมมองหนึ่งประกอบการตัดสินใจ และอย่าใช้แทนคำปรึกษาจากแพทย์ นักกฎหมาย หรือที่ปรึกษาการเงิน",
       up: "ตั้งตรง", revd: "กลับหัว", position: "ตำแหน่ง", score: "คะแนนรวม",
       count: (n) => `${n} ใบ`, none: "ไม่มี",
+      tmCard: (n, rev) => `อ่านความหมายเต็มของไพ่${n}${rev ? " กลับหัว" : ""} ที่ TarotMod`,
+      tmH: "อ่านต่อที่ TarotMod",
+      tmText: "อยากรู้จักไพ่แต่ละใบให้ลึกกว่านี้ TarotMod เป็นเว็บไซต์เรื่องไพ่ทาโรต์โดยเฉพาะ มีความหมายไพ่ครบ 78 ใบแบบละเอียด ทั้งตั้งตรงและกลับหัว แยกเรื่องความรัก การงาน การเงิน และสุขภาพ พร้อมเครื่องมือดูดวงแบบอื่น",
+      tmLinks: [["/cards/", "ความหมายไพ่ทาโรต์ครบ 78 ใบ"], ["/celtic-cross-4-rounds/", "ดูดวงชุดใหญ่ 4 รอบ (ดวงทั้งปี)"], ["/daily/", "ไพ่ประจำวัน"], ["/three-cards/", "ไพ่ 3 ใบ อดีต ปัจจุบัน อนาคต"], ["/dreams/", "ทำนายฝัน"]],
+      newTab: "เปิดในแท็บใหม่",
     },
     en: {
       readH: "Your reading", answer: "The answer in brief", yesno: "Yes/no lean", timing: "Timing", byPos: "Position by position", axes: "Reading the connections",
@@ -28,6 +33,11 @@
       disclaimer: "Tarot is a tool for reflection and entertainment; there is no scientific evidence that cards predict the future. Treat the reading as one perspective among others, and never as a substitute for a doctor, lawyer or financial adviser.",
       up: "upright", revd: "reversed", position: "Position", score: "Overall score",
       count: (n) => `${n} card${n === 1 ? "" : "s"}`, none: "none",
+      tmCard: (n, rev) => `Full meaning of ${n}${rev ? " reversed" : ""} on TarotMod`,
+      tmH: "Go deeper on TarotMod",
+      tmText: "Want to know each card in more depth? TarotMod is a site devoted to tarot, with full meanings of all 78 cards, upright and reversed, for love, work, money and health, plus other reading tools.",
+      tmLinks: [["/cards/", "All 78 card meanings"], ["/celtic-cross-4-rounds/", "Four-round yearly reading"], ["/daily/", "Card of the day"], ["/three-cards/", "Three cards: past, present, future"], ["/dreams/", "Dream interpretation"]],
+      newTab: "opens in a new tab",
     },
   };
 
@@ -36,6 +46,15 @@
     const en = lang === "en";
     U = U || STR[lang];
     const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+    // ===== links to TarotMod (tarotmod.com: full card meanings and more reading tools) ===============
+    // Card pages live at /cards/<slug>/ (Thai) and /en/cards/<slug>/; the slug is the English card name.
+    // Each meaning section has an anchor such as #upright-love or #reversed-general.
+    const TM = "https://tarotmod.com" + (en ? "/en" : "");
+    const TM_SEC = { love: "love", work: "work", money: "money", health: "health", family: "general", general: "general" };
+    const tmSlug = (id) => T.CARDS[id].name.en.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const tmCardUrl = (id, rev, topic) => `${TM}/cards/${tmSlug(id)}/#${rev ? "reversed" : "upright"}-${TM_SEC[topic] || "general"}`;
+    const tmA = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${esc(text)} ↗<span class="visually-hidden"> (${U.newTab})</span></a>`;
 
     // ===== card art (original designs drawn in SVG) ====================================================
     const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -128,6 +147,7 @@
       return `<svg class="tc-tree" viewBox="-14 0 228 352" role="img" aria-label="${esc(U.tree)}">${lines}${nodes}</svg>`;
     }
     function readingHtml(r, o = {}) {
+      const topic = r.question && r.question.topic;
       const posLi = r.positions.map((p) => {
         const tags = p.tags.map((t) => `<span class="tc-tag${t.k === "el" ? " tc-e-" + t.el : ""}">${esc(t.text)}</span>`).join("");
         return `<li id="tcPos${p.pos}" class="tc-pos"><div class="tc-pos-card${p.rev ? " is-rev" : ""}">${cardSVG(p.id)}</div><div class="tc-pos-body">
@@ -138,7 +158,8 @@
           <p>${esc(p.meaning)}</p>
           ${p.topic ? `<p class="tc-topic">${esc(p.topic)}</p>` : ""}
           ${p.notes.map((n) => `<p class="tc-note">${esc(n)}</p>`).join("")}
-          <p class="tc-tags">${tags}</p></div></li>`;
+          <p class="tc-tags">${tags}</p>
+          <p class="tc-tm-card no-print">${tmA(tmCardUrl(p.id, p.rev, topic), U.tmCard(T.CARDS[p.id].name[lang], p.rev))}</p></div></li>`;
       }).join("");
       const elRows = ["fire", "water", "air", "earth"].map((e) => `<div class="tc-elr tc-e-${e}"><span>${elName(e)}</span><i style="width:${r.elements.count[e] * 10}%"></i><b>${r.elements.count[e]}</b></div>`).join("");
       const digRows = r.dignities.map((d) => {
@@ -192,6 +213,7 @@
     <h3>${U.stats}</h3>
     <ul class="tc-list">${r.stats.map((s) => `<li>${esc(s)}</li>`).join("")}${(o.extraStats || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ul>
     <p class="tc-disclaimer">${U.disclaimer}</p>
+    <aside class="tc-tm no-print" aria-label="${esc(U.tmH)}"><p class="tc-pos-k">${U.tmH}</p><p>${esc(U.tmText)}</p><ul>${U.tmLinks.map(([path, text]) => `<li>${tmA(TM + path, text)}</li>`).join("")}</ul></aside>
     <div class="tc-row tc-end no-print">${(o.actions || ["copy", "print", "again"]).map((a, i) => `<button class="btn ${i ? "btn-ghost" : "btn-primary"}" type="button" data-act="${a}">${U[a]}</button>`).join("")}</div>`;
     }
 

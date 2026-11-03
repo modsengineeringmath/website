@@ -3,7 +3,7 @@ title: "Celtic Cross Tarot Reading (10 Cards)"
 url: https://modsengineeringmath.com/en/tools/tarot/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-26
+updated: 2026-11-03
 ---
 
 > A 10-card Celtic Cross tarot reading: type your question, shuffle with physical models (riffle, overhand, table wash, three-pile cut) and get a detailed reading with elements, zodiac, numbers and the Tree of Life. Free, in your browser.
@@ -147,6 +147,20 @@ Cards ruled by a planet take the planet's speed as their pace, and the suit sets
 - Tree of Life: Minor Arcana land on the Sephirah of their number and Major Arcana on their path; the weights add up to the Pillar of Mercy, the Pillar of Severity or the Middle Pillar, and to the upper, middle or lower level.
 
 - Birth date: your sun sign comes from the Sun's actual position (with a warning near a sign boundary); the Life Path number keeps the master numbers 11, 22 and 33; the birth cards follow Mary K. Greer (day + month + year reduced to 22 or less); the year card uses the current year in place of the birth year.
+
+## Learn more tarot on TarotMod
+
+This page focuses on real shuffling and an interpretation you can check at every step. To get to know each card in more depth, or to try other kinds of reading, TarotMod is a site devoted to tarot, in English and Thai.
+
+- All 78 tarot card meanings: history, symbols, upright and reversed meanings for love, work, money and health.
+
+- Four-round yearly Celtic Cross: a reading for the whole year, with step-by-step guidance.
+
+- Card of the day and three cards: past, present, future for short questions.
+
+- Dream interpretation: dream meanings from Thai tradition and psychology, each with its tarot card.
+
+After a reading on this page, every position links to the full meaning of its card on TarotMod, upright or reversed, matched to the topic of your question.
 
 ## Before you use it
 

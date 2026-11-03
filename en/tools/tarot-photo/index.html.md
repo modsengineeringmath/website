@@ -3,7 +3,7 @@ title: "Celtic Cross Tarot Reading from a Photo"
 url: https://modsengineeringmath.com/en/tools/tarot-photo/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-26
+updated: 2026-11-03
 ---
 
 > Photograph a real Celtic Cross tarot spread, pin all ten positions with two taps, name each card and its direction, including which way the sideways crossing card points, see elemental links and get a detailed reading. Your photo never leaves the browser.
@@ -75,6 +75,20 @@ The standard Celtic Cross diagram already gives every position a coordinate. A p
 $$w = A + a\,(z - z_A), \qquad a = \frac{B - A}{z_B - z_A}$$
 
 where $z_A$ is the centre of the cross, $z_B$ the centre of card 10, and $A$, $B$ the two points you tap. The modulus of $a$ is the scale and its argument is the angle the photo is turned by. Putting the other eight diagram coordinates through the same formula gives their pins on the photo.
+
+## Learn more tarot on TarotMod
+
+This page reads the real cards you lay out on the table. To get to know each card in more depth, or to try other kinds of reading, TarotMod is a site devoted to tarot, in English and Thai.
+
+- All 78 tarot card meanings: history, symbols, upright and reversed meanings for love, work, money and health.
+
+- Four-round yearly Celtic Cross: a reading for the whole year, with step-by-step guidance.
+
+- Card of the day and three cards: past, present, future for short questions.
+
+- Dream interpretation: dream meanings from Thai tradition and psychology, each with its tarot card.
+
+After a reading on this page, every position links to the full meaning of its card on TarotMod, upright or reversed, matched to the topic of your question.
 
 ## Before you use it
 
