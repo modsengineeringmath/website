@@ -1847,20 +1847,32 @@ const allVideos = (() => {
 })();
 const vidCard = (v) => `
   <a class="vid-card" href="${v.route}">
-    <span class="vc-thumb" aria-hidden="true"><span class="vc-sym">${esc(v.sym || "▶")}</span><span class="vc-play"></span></span>
-    <span class="vc-body"><span class="vc-tag mono">${esc(v.tag || "วิดีโอ")}</span><b>${esc(v.name)}</b><span class="vc-desc">${esc(v.cardText || v.description)}</span><span class="vc-meta mono">เผยแพร่ ${thaiDate(v.uploadDate.slice(0, 10))} · YouTube</span></span>
+    <span class="vc-thumb"><img src="${ytThumb(v.id)}" alt="" width="480" height="360" loading="lazy" decoding="async"><span class="vc-play" aria-hidden="true"></span></span>
+    <span class="vc-body"><b>${esc(v.name)}</b><span class="vc-ch">Mod's Engineering Mathematics</span><span class="vc-meta">เผยแพร่ ${thaiDate(v.uploadDate.slice(0, 10))} · ${esc(v.tag || "วิดีโอ")}</span></span>
   </a>`;
 const vidGrid = (list) => `<div class="vid-grid">${list.map(vidCard).join("")}\n</div>`;
-// the player: a real iframe in the HTML (no click needed), large and first in the main content, as Google's video guidelines ask.
-// youtube-nocookie.com is YouTube's privacy-enhanced player: no cookies until the visitor presses play.
+// The watch block is laid out like a YouTube watch page: player first, then the title exactly as on YouTube (h1), the channel
+// row with a subscribe link, and the description box. The player is a real iframe in the HTML (no click needed), large and
+// first in the main content, as Google's video guidelines ask. youtube-nocookie.com is YouTube's privacy-enhanced player:
+// no cookies until the visitor presses play.
+const YT_CHANNEL = "https://www.youtube.com/@modsengineeringmath";
 function videoPlayer(v) {
+  const d = v.uploadDate.slice(0, 10);
   return `
 <figure class="watch-player">
   <div class="screen watch-screen">
     <iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(v.name)}" width="1280" height="720" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
-  <figcaption class="below-screen mono"><span>สอนโดยอาจารย์มด · ภาษาไทย · เผยแพร่บน YouTube <time datetime="${v.uploadDate.slice(0, 10)}">${thaiDate(v.uploadDate.slice(0, 10))}</time></span><a href="${ytWatch(v.id)}" target="_blank" rel="noopener">เปิดใน YouTube ↗</a></figcaption>
-</figure>`;
+</figure>
+<h1 class="watch-title">${esc(v.name)}</h1>
+<div class="watch-channel">
+  <a class="wc-ch" href="${YT_CHANNEL}" target="_blank" rel="noopener"><img src="/apple-touch-icon.png" alt="" width="40" height="40"><span><b>Mod's Engineering Mathematics</b><small>อาจารย์มด · ธีรวุฒิ แสวงบุญ</small></span></a>
+  <span class="wc-acts"><a class="wc-sub" href="${YT_CHANNEL}?sub_confirmation=1" target="_blank" rel="noopener">ติดตาม</a><a class="wc-yt" href="${ytWatch(v.id)}" target="_blank" rel="noopener">ดูบน YouTube ↗</a></span>
+</div>
+<div class="watch-desc">
+  <p class="wd-meta">เผยแพร่ <time datetime="${d}">${thaiDate(d)}</time> · ภาษาไทย${(v.hashtags || []).map((h) => ` <span>#${esc(h)}</span>`).join("")}</p>
+  <p>${esc(v.description)}</p>
+</div>`;
 }
 // "ดูคลิปอธิบายหัวข้อนี้" box on every lesson/article page a video lists in "pages"
 const videosForPage = (route) => {
@@ -1993,8 +2005,10 @@ for (const { rel, raw } of pageSources) {
   const key = meta.out ? meta.out.replace(/\.html$/, "") : route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   const ogFile = `/images/og/${key}.jpg`;
   let ogImage = meta.ogImage || (fs.existsSync(path.join(ROOT, ogFile)) ? ogFile : "/images/cover.jpg");
+  if (vid && !meta.ogImage) ogImage = ytThumb(vid.id);
   // solution images change when a problem is edited; a content hash in the URL makes Facebook/LINE/X fetch the new one
   if (isSol && ogImage === ogFile) ogImage += "?v=" + crypto.createHash("sha1").update(fs.readFileSync(path.join(ROOT, ogFile))).digest("hex").slice(0, 8);
+  const ogAbs = /^https?:\/\//.test(ogImage) ? ogImage : SITE + ogImage;
   if (isSol && !meta.noindex) {
     const t = solTopic(sol.topic);
     const og = meta.og || {};
@@ -2016,7 +2030,7 @@ for (const { rel, raw } of pageSources) {
       short: sol.short ? `modsengineeringmath.com/s/${sol.short}` : "modsengineeringmath.com/solutions",
       post: `images/solutions/${sol.slug}.jpg`,
     });
-  } else if (!meta.noindex) {
+  } else if (!meta.noindex && !vid) {
     const og = meta.og || {};
     const n = topic ? tnum(topic) : 0;
     const k = sub ? topic.sub.indexOf(sub) + 1 : 0;
@@ -2207,7 +2221,9 @@ for (const { rel, raw } of pageSources) {
     ogTitle: esc(meta.ogTitle || meta.title),
     ogDescription: esc(meta.ogDescription || meta.description),
     ogType: topic || isPost || isSol ? "article" : meta.ogType || "website",
-    ogImage: SITE + ogImage,
+    ogImage: ogAbs,
+    ogImageW: vid ? "480" : "1200",
+    ogImageH: vid ? "360" : "630",
     ogImageAlt: esc(meta.ogTitle || meta.h1 || meta.title),
     headExtra,
     jsonld,

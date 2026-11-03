@@ -1,6 +1,6 @@
 // Checks the video watch pages against Google's video indexing rules (run after `node build.mjs`):
 //   node scripts/test-videos.mjs
-// One video per watch page, a real <iframe> in the HTML (no click needed) before the body text, a VideoObject with
+// One video per watch page, a real <iframe> in the HTML (no click needed) first in the article, a VideoObject with
 // name/description/thumbnailUrl/uploadDate/embedUrl, the same thumbnail and title in video-sitemap.xml, no noindex,
 // a canonical to itself, listed in sitemap.xml, robots.txt and the hub, and linked from every page in "pages".
 import fs from "node:fs";
@@ -32,7 +32,8 @@ for (const slug of slugs) {
   ok(iframes.length === 1, `exactly one iframe (found ${iframes.length})`);
   ok(iframes[0]?.includes(`/embed/${v.id}`), "iframe plays this video id");
   ok(!/loading="lazy"/.test(iframes[0] || "") && !/data-yt-id/.test(h), "player loads with the page (no lazy/facade)");
-  ok(h.indexOf("<iframe") < h.indexOf('class="lede"') && h.indexOf("<h1") < h.indexOf("<iframe"), "player sits right under the h1, before the text");
+  ok(h.indexOf("<iframe") < h.indexOf("<h1") && h.indexOf("<iframe") < h.indexOf('id="summary"'), "player comes first (YouTube layout: player, title, channel, description)");
+  ok(h.includes(`<meta property="og:image" content="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg">`) && h.includes('<meta property="og:image:width" content="480">'), "share image is the YouTube thumbnail (480×360)");
   ok(!/name="robots" content="[^"]*noindex/.test(h), "not noindex");
   ok(h.includes(`<link rel="canonical" href="${url}">`), "canonical to itself");
   ok((h.match(/<h1/g) || []).length === 1, "one h1");
