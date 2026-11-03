@@ -1808,6 +1808,127 @@ function solutionSchema(s, url, ogImageUrl) {
   fs.writeFileSync(rp, r.replace(/\n*$/, "\n\n") + [begin, ...lines.map(([a, b]) => `${a}  ${b}  301`), end].join("\n") + "\n");
 }
 
+// ---------------------------------------------------------------------------
+// Videos / วิดีโอ (added 2026-11-03): one watch page per YouTube video for Google video indexing.
+// src/pages/videos/<slug>.html with "video": { id, name, description, uploadDate, tag, sym, pages, order, duration? }.
+// Google only indexes a video on a page whose main content is that one video, embedded with a real <iframe> that loads
+// without a click, so a watch page gets: the player straight under the h1 (no facade), VideoObject + WebPage(mainEntity)
+// + BreadcrumbList JSON-LD, an entry in video-sitemap.xml with the same thumbnail URL, and links from the lessons in "pages".
+// The hub /videos/ lists the watch pages as cards (no player, no third-party images) — it is a list page, not a watch page.
+const VID_HUB = "/videos/";
+const ytThumb = (id) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`; // always exists for every public video (480×360)
+const ytEmbed = (id) => `https://www.youtube.com/embed/${id}`;
+const ytWatch = (id) => `https://www.youtube.com/watch?v=${id}`;
+const ytDate = (d) => (d.includes("T") ? d : `${d}T00:00:00+07:00`);
+const xmlEscV = (x) => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const isoSeconds = (d) => { const m = d.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/); return (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0); };
+const VID_PERSON = { "@type": "Person", "@id": PERSON_ID, name: "ธีรวุฒิ แสวงบุญ (อาจารย์มด)", alternateName: "Teerawut Savangboon", url: SITE + "/about/" };
+const allVideos = (() => {
+  const dir = path.join(pagesDir, "videos");
+  if (!fs.existsSync(dir)) return [];
+  const seen = new Map();
+  return fs.readdirSync(dir).filter((f) => f.endsWith(".html") && f !== "index.html").map((f) => {
+    const m = fs.readFileSync(path.join(dir, f), "utf8").match(/^<!--meta\s*([\s\S]*?)-->/);
+    if (!m) throw new Error(`Missing <!--meta--> in videos/${f}`);
+    const meta = JSON.parse(m[1]);
+    const v = meta.video;
+    if (!v) throw new Error(`videos/${f}: add a "video": {...} object to the meta block`);
+    if (!/^[\w-]{11}$/.test(v.id || "")) throw new Error(`videos/${f}: "video.id" must be the 11-character YouTube id`);
+    for (const k of ["name", "description", "uploadDate"]) if (!v[k]) throw new Error(`videos/${f}: missing "video.${k}" (Google requires name, thumbnail and uploadDate)`);
+    if (!/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z))?$/.test(v.uploadDate)) throw new Error(`videos/${f}: "video.uploadDate" must be YYYY-MM-DD or a full ISO 8601 time with offset`);
+    if (v.duration && !/^PT(\d+H)?(\d+M)?(\d+S)?$/.test(v.duration)) throw new Error(`videos/${f}: "video.duration" must be ISO 8601, e.g. PT12M30S`);
+    if (v.description.length > 2048) throw new Error(`videos/${f}: "video.description" is longer than 2,048 characters (video sitemap limit)`);
+    if (seen.has(v.id)) throw new Error(`YouTube id ${v.id} is on two watch pages: videos/${seen.get(v.id)} and videos/${f}`);
+    seen.set(v.id, f);
+    const slug = f.replace(/\.html$/, "");
+    return { ...meta, ...v, pageTitle: meta.title, slug, route: `${VID_HUB}${slug}/`, pages: [].concat(v.pages || []) };
+  }).filter((v) => !v.draft)
+    .sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || b.uploadDate.localeCompare(a.uploadDate));
+})();
+const vidCard = (v) => `
+  <a class="vid-card" href="${v.route}">
+    <span class="vc-thumb" aria-hidden="true"><span class="vc-sym">${esc(v.sym || "▶")}</span><span class="vc-play"></span></span>
+    <span class="vc-body"><span class="vc-tag mono">${esc(v.tag || "วิดีโอ")}</span><b>${esc(v.name)}</b><span class="vc-desc">${esc(v.cardText || v.description)}</span><span class="vc-meta mono">เผยแพร่ ${thaiDate(v.uploadDate.slice(0, 10))} · YouTube</span></span>
+  </a>`;
+const vidGrid = (list) => `<div class="vid-grid">${list.map(vidCard).join("")}\n</div>`;
+// the player: a real iframe in the HTML (no click needed), large and first in the main content, as Google's video guidelines ask.
+// youtube-nocookie.com is YouTube's privacy-enhanced player: no cookies until the visitor presses play.
+function videoPlayer(v) {
+  return `
+<figure class="watch-player">
+  <div class="screen watch-screen">
+    <iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(v.name)}" width="1280" height="720" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <figcaption class="below-screen mono"><span>สอนโดยอาจารย์มด · ภาษาไทย · เผยแพร่บน YouTube <time datetime="${v.uploadDate.slice(0, 10)}">${thaiDate(v.uploadDate.slice(0, 10))}</time></span><a href="${ytWatch(v.id)}" target="_blank" rel="noopener">เปิดใน YouTube ↗</a></figcaption>
+</figure>`;
+}
+// "ดูคลิปอธิบายหัวข้อนี้" box on every lesson/article page a video lists in "pages"
+const videosForPage = (route) => {
+  const list = allVideos.filter((v) => v.pages.includes(route));
+  if (!list.length) return "";
+  return `<aside class="post-box" aria-label="คลิปวิดีโอที่เกี่ยวข้อง"><p class="post-box-h">ดูคลิปอธิบายหัวข้อนี้</p><ul>${list.map((v) => `<li><a href="${v.route}">▶ ${esc(v.name)}</a></li>`).join("")}</ul><p><a href="${VID_HUB}">ดูวิดีโอทั้งหมด →</a></p></aside>`;
+};
+const vidPager = (v, url) => {
+  const others = allVideos.filter((x) => x.slug !== v.slug).slice(0, 3);
+  return shareHtml(url, v.h1 || v.name) +
+    (others.length ? `<section class="post-more" aria-labelledby="more-videos"><h2 id="more-videos">วิดีโออื่นที่น่าดู</h2>${vidGrid(others)}<p class="post-cat-link"><a href="${VID_HUB}">ดูวิดีโอทั้งหมด ${allVideos.length} คลิป →</a></p></section>` : "");
+};
+function videoSchema(v, meta, url) {
+  const thumb = ytThumb(v.id);
+  const graph = [
+    {
+      "@type": "VideoObject",
+      "@id": url + "#video",
+      name: v.name,
+      description: v.description,
+      thumbnailUrl: [thumb],
+      uploadDate: ytDate(v.uploadDate),
+      ...(v.duration ? { duration: v.duration } : {}),
+      embedUrl: ytEmbed(v.id),
+      inLanguage: "th",
+      isFamilyFriendly: true,
+      isAccessibleForFree: true,
+      author: VID_PERSON,
+      publisher: VID_PERSON,
+      ...(v.about ? { about: v.about } : {}),
+      ...(meta.keywords ? { keywords: meta.keywords.join(", ") } : {}),
+    },
+    {
+      "@type": "WebPage",
+      "@id": url + "#webpage",
+      url,
+      name: meta.title,
+      description: meta.description,
+      inLanguage: "th",
+      mainEntity: { "@id": url + "#video" },
+      primaryImageOfPage: { "@type": "ImageObject", url: thumb },
+      thumbnailUrl: thumb,
+      datePublished: meta.published,
+      dateModified: meta.updated || meta.published,
+      author: { "@id": PERSON_ID },
+      isPartOf: { "@id": SITE + VID_HUB + "#collection" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
+        { "@type": "ListItem", position: 2, name: "วิดีโอ", item: SITE + VID_HUB },
+        { "@type": "ListItem", position: 3, name: v.name, item: url },
+      ],
+    },
+  ];
+  if (meta.faq?.length)
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: meta.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: stripTags(f.a.replace(/\\\(|\\\)|\\\[|\\\]/g, "").replace(/\\,/g, " ").replace(/\\(\w+)/g, "$1")) },
+      })),
+    });
+  return graph;
+}
+
 // Clean Markdown copies (llmstxt.org convention: <page URL>index.html.md) for every indexable page, plus hand-written guides.
 // The /mcp endpoint (functions/mcp.js) serves these copies to AI assistants through its get_page tool.
 const MD_GUIDES = [
@@ -1840,6 +1961,8 @@ for (const { rel, raw } of pageSources) {
   const isPost = !!meta.blog;
   const isSol = !!meta.solution;
   const sol = isSol ? allSolutions.find((s) => s.slug === path.basename(rel, ".html")) : null;
+  const vid = meta.video ? allVideos.find((v) => v.slug === path.basename(rel, ".html")) || null : null;
+  const isVid = !!vid;
   let body = raw.slice(m[0].length);
   // a post's breadcrumbs gain its category: Home › Articles › <category> › post
   const postCat = isPost ? blogCat(meta.category) : null;
@@ -1914,12 +2037,17 @@ for (const { rel, raw } of pageSources) {
     "<!--video-->": () => videoFacade(topic),
     "<!--pager-->": () =>
       topic
-        ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + blogForTopic(topic) + solutionsForTopic(topic)
+        ? shareHtml(url, meta.h1 || meta.title, lang) + (sub ? seriesPager(topic, sub) : pager(topic.slug)) + videosForPage(route) + blogForTopic(topic) + solutionsForTopic(topic)
         : isPost
-          ? shareHtml(url, meta.h1 || meta.title, lang) + blogMore(blogByLang[lang].find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" }, lang)
+          ? shareHtml(url, meta.h1 || meta.title, lang) + videosForPage(route) + blogMore(blogByLang[lang].find((p) => p.slug === path.basename(rel, ".html")) || { slug: "", series: [], tag: "" }, lang)
           : isSol
             ? solPager(sol, url)
-            : "",
+            : isVid
+              ? vidPager(vid, url)
+              : "",
+    "<!--video-player-->": () => (isVid ? videoPlayer(vid) : ""),
+    "<!--video-list-->": () => vidGrid(allVideos),
+    "<!--video-count-->": () => String(allVideos.length),
     "<!--solution-head-->": () => (isSol ? solHead(sol, url) : ""),
     "<!--solution-list-->": () => solHub(),
     "<!--solution-chips-->": () => solChips(),
@@ -1977,6 +2105,31 @@ for (const { rel, raw } of pageSources) {
   if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
   else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage, lang));
   else if (isSol) graph = graph.concat(solutionSchema({ ...sol, description: meta.description }, url, SITE + ogImage));
+  else if (isVid) graph = graph.concat(videoSchema(vid, meta, url));
+  if (route === VID_HUB)
+    graph.push(
+      {
+        "@type": "CollectionPage",
+        "@id": SITE + VID_HUB + "#collection",
+        url,
+        name: meta.h1 || meta.title,
+        description: meta.description,
+        inLanguage: "th",
+        publisher: { "@id": PERSON_ID },
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: allVideos.length,
+          itemListElement: allVideos.map((v, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + v.route, name: v.name })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "หน้าแรก", item: SITE + "/" },
+          { "@type": "ListItem", position: 2, name: "วิดีโอ", item: url },
+        ],
+      },
+    );
   if (route === SOL_HUB)
     graph.push({
       "@type": "CollectionPage",
@@ -2081,7 +2234,7 @@ for (const { rel, raw } of pageSources) {
   const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
-  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost || isSol ? "0.8" : "0.9" });
+  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost || isSol || isVid ? "0.8" : "0.9" });
   console.log("built", route);
 }
 
@@ -2091,6 +2244,33 @@ fs.writeFileSync(
   path.join(ROOT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     sitemap.map((s) => `  <url>\n    <loc>${s.loc}</loc>\n    <lastmod>${s.lastmod}</lastmod>\n    <priority>${s.priority}</priority>\n  </url>`).join("\n") +
+    "\n</urlset>\n"
+);
+
+// video-sitemap.xml — one <url> per watch page (Google video sitemap 1.1); listed in robots.txt and submitted in Search Console.
+// Thumbnail and title are the same values as the page's VideoObject, as Google asks.
+fs.writeFileSync(
+  path.join(ROOT, "video-sitemap.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n` +
+    allVideos.map((v) => [
+      "  <url>",
+      `    <loc>${SITE}${v.route}</loc>`,
+      `    <lastmod>${v.updated || v.published || TODAY}</lastmod>`,
+      "    <video:video>",
+      `      <video:thumbnail_loc>${ytThumb(v.id)}</video:thumbnail_loc>`,
+      `      <video:title>${xmlEscV(v.name)}</video:title>`,
+      `      <video:description>${xmlEscV(v.description)}</video:description>`,
+      `      <video:player_loc>${ytEmbed(v.id)}</video:player_loc>`,
+      ...(v.duration ? [`      <video:duration>${isoSeconds(v.duration)}</video:duration>`] : []),
+      `      <video:publication_date>${ytDate(v.uploadDate)}</video:publication_date>`,
+      "      <video:family_friendly>yes</video:family_friendly>",
+      "      <video:requires_subscription>no</video:requires_subscription>",
+      `      <video:uploader info="${SITE}/about/">อาจารย์มด (Teerawut Savangboon)</video:uploader>`,
+      "      <video:live>no</video:live>",
+      ...(v.keywords || []).slice(0, 12).map((t) => `      <video:tag>${xmlEscV(t)}</video:tag>`),
+      "    </video:video>",
+      "  </url>",
+    ].join("\n")).join("\n") +
     "\n</urlset>\n"
 );
 
@@ -2193,6 +2373,10 @@ ${llmsBlog("en")}
 ## Worked solutions (one problem per page, full step-by-step working in Thai, math in LaTeX)
 - [All worked solutions](${SITE}${SOL_HUB})
 ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SITE}${s.route}): ${s.description}`).join("\n")}
+
+## Videos (one watch page per YouTube video, Thai, with a written summary and links to the lessons)
+- [All videos](${SITE}${VID_HUB})
+${allVideos.map((v) => `- [${v.name}](${SITE}${v.route}): ${v.description}`).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}

@@ -222,7 +222,7 @@ calculator engine in Node.
 `src/layout.html` groups the menu: `<div class="nav-grp"><button class="nav-tg" aria-controls>` + `<div class="nav-list [nav-list-r] [nav-list-wide]">`
 (links and `<span class="nav-h">` headings). Below 1600 px the hamburger panel shows the groups as an accordion (the group of the
 current page opens automatically, the current link is highlighted by `site.js` via `.nav-here`); from 1600 px they are dropdowns
-(hover, focus or click; Esc closes). `data-nav` keys: home learn fn trig lim der int vec la lap fos sos sig fg fs cs pe pv watch tools about.
+(hover, focus or click; Esc closes). `data-nav` keys: home learn fn trig lim der int vec la lap fos sos sig fg fs cs pe pv videos tools about.
 To add a page to the menu, add a link to the right group; to add a series, add a group.
 
 ## Vector algebra series (added 2026-10-13)
@@ -652,3 +652,40 @@ refreshes it live together with the box, so editing `data/updates.json` alone up
   `"css": ["/assets/tarot.css"]` (build.mjs adds a `<link>` with the asset version).
 - Test: `node scripts/test-tarot.mjs` (card data, decans and court spans, shuffle invariants, rising sequences ≤ 2^k, binomial cut,
   equinox longitude, numerology, question classifier, 800 random readings in both languages with no undefined/NaN and no Thai in English).
+
+## Videos / วิดีโอ — watch pages for Google video indexing (added 2026-11-03)
+One page per YouTube video at `/videos/<slug>/` (`src/pages/videos/<slug>.html`), hub `/videos/` (`src/pages/videos/index.html`),
+menu item "ดูคลิป" (`data-nav="videos"`). First four: `cramers-rule`, `inverse-matrix`, `minor-cofactor`, `buck-converter-duty-cycle`.
+
+**Why the pages look the way they do (Google's video rules — keep them):**
+- Google shows a video result only for a *watch page*: a page whose main content is **one** video. A post with a video inside,
+  or a list of videos, is not a watch page. So each video gets its own page, and the hub has cards only (no player).
+- The video must be in the HTML as an `<iframe>` that loads **without a click**. The click-to-load facade used in lessons and
+  posts (`data-yt-id`, `data-yt-list`) cannot be indexed as a video — never use it on a watch page.
+- The player sits straight under the h1, full column width (978 × 549 px on desktop, full width on phones), not hidden or lazy.
+- Thumbnail: `https://i.ytimg.com/vi/<id>/hqdefault.jpg` (exists for every public video), the same URL in the VideoObject and the video sitemap.
+- h1 = `video.name` = `<video:title>`; each page has its own title and description.
+- Privacy: the iframe uses `youtube-nocookie.com` (no cookies until play); the JSON-LD/sitemap player URL is `https://www.youtube.com/embed/<id>`.
+  `/privacy/` says the watch pages load the player with the page.
+
+**Add a video (3 steps):** copy a file in `src/pages/videos/`, fill the meta block, then
+`node build.mjs && python3 scripts/og.py --prefix videos && node build.mjs && node scripts/test-videos.mjs`, log it in `data/updates.json` (tag `วิดีโอ`), commit, push.
+
+| `"video"` field | meaning |
+|---|---|
+| `id` | 11-character YouTube id (`youtu.be/<id>`); each id may appear on one watch page only |
+| `name`, `description` | VideoObject name/description and video-sitemap title/description (≤ 2,048 chars). `name` must equal the page h1 |
+| `uploadDate` | date first published on YouTube, `YYYY-MM-DD` (written as `T00:00:00+07:00`) — required by Google |
+| `duration` | optional ISO 8601 (`PT12M30S`); only fill it from the real video length |
+| `cardText`, `tag`, `sym`, `order` | hub card text, label, drawn-thumbnail text, position |
+| `about` | schema.org `about` (English topic names) |
+| `pages` | routes of lessons/posts that get a "ดูคลิปอธิบายหัวข้อนี้" box linking here (internal links help Google find the page) |
+
+The build adds: the player (`<!--video-player-->`), share + "วิดีโออื่นที่น่าดู" (`<!--pager-->`), VideoObject + WebPage(`mainEntity` = the video)
++ BreadcrumbList + FAQPage JSON-LD, `video-sitemap.xml` (listed in `robots.txt`), sitemap.xml, llms.txt "Videos", Markdown copy, search index,
+the hub list (`<!--video-list-->`, `<!--video-count-->`) and CollectionPage + ItemList on the hub.
+`node scripts/test-videos.mjs` checks one iframe per page, no facade/lazy, player before the text, required VideoObject fields,
+time zone on uploadDate, sitemap thumbnail/title/player = JSON-LD, canonical, no noindex, hub and reverse links.
+
+**Search Console (owner, once):** Sitemaps → add `video-sitemap.xml`; URL Inspection → each `/videos/…/` URL → Request indexing;
+then watch Indexing → Videos (takes days to weeks). "Video isn't on a watch page" on lesson/post URLs is expected and harmless.
