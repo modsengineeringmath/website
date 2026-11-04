@@ -1,0 +1,33 @@
+# After each push to main that changes the sitemap, wait for Cloudflare to deploy it, then tell search engines
+# (IndexNow: Bing, Yandex, Naver, Seznam, Yep) which pages are new, updated or removed. Google reads the sitemap itself.
+# Run it by hand from the Actions tab ("Run workflow", tick "all") to resubmit every page.
+name: IndexNow
+on:
+  push:
+    branches: [main]
+    paths: ["sitemap.xml"]
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "Submit every URL in the sitemap"
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Submit changed pages
+        run: node scripts/indexnow.mjs --from "${{ github.event.before }}" --to "${{ github.sha }}" --wait ${{ inputs.all && '--all' || '' }}

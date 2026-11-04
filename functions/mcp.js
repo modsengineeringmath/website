@@ -222,6 +222,8 @@ async function fetchMarkdown(env, origin, target) {
   const html = await env.ASSETS.fetch(new Request(new URL(target.path.replace(/\/$/, "") || "/", origin), { redirect: "manual" }));
   const loc = html.status >= 300 && html.status < 400 ? html.headers.get("location") : null;
   if (loc) {
+    // a page that moved to another site (e.g. the tarot tools, now on tarotmod.com) has no copy here
+    if (new URL(loc, origin).host !== new URL(origin).host) return { moved: new URL(loc, origin).href };
     const next = parseUrl(new URL(loc, origin).pathname);
     const r2 = await env.ASSETS.fetch(new Request(new URL(next.md, origin)));
     if (r2.ok) return { text: await r2.text(), path: next.path };
@@ -236,6 +238,7 @@ async function getPage(args, env, origin) {
   const target = parseUrl(args.url);
   const page = await fetchMarkdown(env, origin, target);
   if (!page) return { error: `No page at ${SITE}${target.path}. Use search_site to find the right URL.` };
+  if (page.moved) return { error: `${SITE}${target.path} has moved to ${page.moved}, which is not part of this site.` };
   const md = page.text.replace(/\r\n/g, "\n");
   const url = SITE + page.path;
   const heads = headingsOf(md);
