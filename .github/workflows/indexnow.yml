@@ -12,6 +12,10 @@ on:
         description: "Submit every URL in the sitemap"
         type: boolean
         default: false
+      from:
+        description: "Optional: compare with this commit instead of the previous one (pages removed since then are sent too)"
+        type: string
+        default: ""
 permissions:
   contents: read
 concurrency:
@@ -20,14 +24,14 @@ concurrency:
 jobs:
   notify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 75
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           filter: blob:none
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
       - name: Submit changed pages
-        run: node scripts/indexnow.mjs --from "${{ github.event.before }}" --to "${{ github.sha }}" --wait ${{ inputs.all && '--all' || '' }}
+        run: node scripts/indexnow.mjs --from "${{ inputs.from || github.event.before }}" --to "${{ github.sha }}" --wait ${{ inputs.all && '--all' || '' }}

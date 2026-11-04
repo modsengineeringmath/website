@@ -80,13 +80,20 @@ const host = new URL(SITE).host;
 let failed = false;
 for (let i = 0; i < urls.length; i += 10000) {
   const urlList = urls.slice(i, i + 10000);
-  const res = await fetch(ENDPOINT, {
-    method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify({ host, key: KEY, keyLocation: `${SITE}/${KEY}.txt`, urlList }),
-  });
-  // 200 = accepted, 202 = accepted while the key is being verified; 4xx = rejected (bad key, wrong host, too many requests)
-  const ok = res.status === 200 || res.status === 202;
-  console.log(`IndexNow: ${res.status} ${res.statusText} for ${urlList.length} URL(s)${ok ? "" : " — " + (await res.text()).slice(0, 300)}`);
-  if (!ok) failed = true;
+  // 200 = accepted, 202 = accepted while the key is being verified; 4xx = rejected (bad key, wrong host, too many requests).
+  // A new key answers 403 SiteVerificationNotCompleted until the engine has fetched the key file: wait and try again.
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(ENDPOINT, {
+      method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ host, key: KEY, keyLocation: `${SITE}/${KEY}.txt`, urlList }),
+    });
+    const ok = res.status === 200 || res.status === 202;
+    const body = ok ? "" : (await res.text()).slice(0, 300);
+    console.log(`IndexNow: ${res.status} ${res.statusText} for ${urlList.length} URL(s)${ok ? "" : " — " + body}`);
+    if (ok) break;
+    if (!/SiteVerificationNotCompleted/.test(body) || attempt >= 10) { failed = true; break; }
+    console.log(`Key not verified yet; trying again in ${attempt} minute(s).`);
+    await new Promise((r) => setTimeout(r, attempt * 60000));
+  }
 }
 process.exit(failed ? 1 : 0);
