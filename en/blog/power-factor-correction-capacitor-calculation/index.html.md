@@ -122,7 +122,7 @@ How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel
 
 3-phase motors
 3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate
-How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, what U1 V1 W1 U2 V2 W2 mean and which wire colours go where, line vs phase…
+What U1 V1 W1 U2 V2 W2 mean on a 3-phase motor (IEC 60034-8), which wire colours go where, and how to link U1-W2, V1-U2, W1-V2 for delta, with line…
 17 Oct 2026Read the article →
 
 All 4 articles in Power Systems & Motors → · All articles

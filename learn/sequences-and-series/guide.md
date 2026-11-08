@@ -10,7 +10,7 @@ language: th
 audience: ["High school (ม.5–ม.6, TCAS / A-Level คณิตศาสตร์ 1)", "Undergraduate calculus II", "Engineering mathematics (electrical / electronics / computer / mechatronics)", "Self-learners and tutors"]
 license: "อ่าน ลิงก์ และอ้างอิงได้ฟรี โปรดระบุ Mod's Engineering Mathematics (อาจารย์มด) และลิงก์หน้าเว็บ"
 published: 2026-10-24
-updated: 2026-10-26
+updated: 2026-11-08
 keywords: [ลำดับ, อนุกรม, ลำดับและอนุกรม, ลำดับเลขคณิต, ลำดับเรขาคณิต, อนุกรมอนันต์, อนุกรมเรขาคณิต, อนุกรมกล้องส่องทางไกล, อนุกรมฮาร์มอนิก, อนุกรม p, การทดสอบการลู่เข้า, การทดสอบอัตราส่วน, การทดสอบราก, การทดสอบด้วยปริพันธ์, การทดสอบเปรียบเทียบ, อนุกรมสลับ, ลู่เข้าสัมบูรณ์, ลู่เข้ามีเงื่อนไข, อนุกรมกำลัง, รัศมีการลู่เข้า, ช่วงการลู่เข้า, อนุกรมเทย์เลอร์, อนุกรมแมคลอริน, เศษเหลือลากรองจ์, อนุกรมโลรองต์, เรซิดิว, จุดเอกฐาน, การแปลง Z, sequences, series, convergence tests, ratio test, root test, integral test, comparison test, alternating series test, power series, radius of convergence, Taylor series, Maclaurin series, Laurent series, residue, Z-transform, region of convergence]
 ---
 

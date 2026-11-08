@@ -6,7 +6,7 @@ language: en
 updated: 2026-10-25
 ---
 
-> How to connect a 3-phase motor in delta: links U1-W2, V1-U2, W1-V2, what U1 V1 W1 U2 V2 W2 mean and which wire colours go where, line vs phase values, and choosing from the nameplate.
+> What U1 V1 W1 U2 V2 W2 mean on a 3-phase motor (IEC 60034-8), which wire colours go where, and how to link U1-W2, V1-U2, W1-V2 for delta, with line vs phase values and the nameplate check.
 
 Markdown copy of https://modsengineeringmath.com/en/blog/3-phase-motor-delta-connection/ for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.
 
