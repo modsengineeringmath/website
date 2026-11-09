@@ -1,0 +1,253 @@
+<!--meta
+{
+  "title": "ฟังก์ชัน ม.4 (พรีแคลคูลัส): โดเมน เรนจ์ การดำเนินการ ฟังก์ชันประกอบ f∘g พร้อมแล็บพิมพ์ฟังก์ชัน | อาจารย์มด",
+  "h1": "ฟังก์ชันในพรีแคลคูลัส: ความสัมพันธ์ โดเมน เรนจ์ สัญกรณ์ f(x) การดำเนินการ และฟังก์ชันประกอบ",
+  "description": "ฟังก์ชันคืออะไรเมื่อเทียบกับความสัมพันธ์ การทดสอบเส้นแนวตั้ง วิธีหาโดเมนจากตัวส่วน รากที่สอง และลอการิทึม วิธีหาเรนจ์ ฟังก์ชันเป็นช่วง การบวก ลบ คูณ หารฟังก์ชัน ฟังก์ชันประกอบ f∘g และ g∘f ผลหารเชิงผลต่าง และอัตราการเปลี่ยนแปลงเฉลี่ย พร้อมแล็บที่พิมพ์ f และ g แล้วเห็นกราฟทันที",
+  "ogTitle": "ฟังก์ชัน: โดเมน เรนจ์ ฟังก์ชันประกอบ f∘g อัตราการเปลี่ยนแปลงเฉลี่ย + แล็บ",
+  "lesson": "precalculus",
+  "sub": "functions",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["ฟังก์ชัน ม.4", "ฟังก์ชันคืออะไร", "ความสัมพันธ์และฟังก์ชัน", "โดเมนและเรนจ์", "วิธีหาโดเมน", "วิธีหาเรนจ์", "ฟังก์ชันประกอบ", "fog gof", "ฟังก์ชันเป็นช่วง", "การดำเนินการของฟังก์ชัน", "ผลหารเชิงผลต่าง", "อัตราการเปลี่ยนแปลงเฉลี่ย", "domain and range", "composite function", "piecewise function", "difference quotient", "average rate of change", "vertical line test"],
+  "about": ["Function (mathematics)", "Domain of a function", "Range of a function", "Function composition", "Piecewise function", "Difference quotient", "Average rate of change"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "ฟังก์ชัน: โดเมน เรนจ์ f∘g", "sub": "ความสัมพันธ์ · เส้นแนวตั้ง · โดเมน · เรนจ์ · ฟังก์ชันเป็นช่วง · ฟังก์ชันประกอบ · อัตราการเปลี่ยนแปลง", "eyebrow": "บทที่ 27.2 · Functions", "sym": "f(x)"},
+  "faq": [
+    {"q": "ความสัมพันธ์กับฟังก์ชันต่างกันอย่างไร?", "a": "ความสัมพันธ์คือเซตของคู่อันดับใด ๆ ส่วนฟังก์ชันเป็นความสัมพันธ์ที่มีเงื่อนไขเพิ่มว่า x แต่ละตัวจับคู่กับ y ได้เพียงค่าเดียว ถ้ามี x ตัวเดียวกันคู่กับ y สองค่า เช่น (2, 3) และ (2, 5) จะไม่เป็นฟังก์ชัน บนกราฟตรวจด้วยการลากเส้นแนวตั้ง ถ้าเส้นใดตัดกราฟมากกว่าหนึ่งจุดแสดงว่าไม่เป็นฟังก์ชัน"},
+    {"q": "หาโดเมนของฟังก์ชันอย่างไรให้ครบ?", "a": "ไล่ดูสามจุดที่ทำให้ฟังก์ชันไม่นิยามในจำนวนจริง: ตัวส่วนต้องไม่เป็นศูนย์ สิ่งที่อยู่ในรากคู่ต้องไม่ติดลบ และสิ่งที่อยู่ใน log ต้องเป็นบวก แล้วนำเงื่อนไขทั้งหมดมาทำอินเตอร์เซกชัน ถ้าไม่มีสามกรณีนี้เลยโดเมนคือจำนวนจริงทั้งหมด"},
+    {"q": "f∘g กับ g∘f เท่ากันไหม?", "a": "โดยทั่วไปไม่เท่ากัน f∘g หมายถึงทำ g ก่อนแล้วนำผลไปเข้า f เช่น f(x) = √(x + 2), g(x) = x² − 1 ได้ f∘g = √(x² + 1) แต่ g∘f = x + 1 เมื่อ x ≥ −2 ทั้งสูตรและโดเมนต่างกัน โดเมนของ f∘g คือ x ที่อยู่ในโดเมนของ g และทำให้ g(x) อยู่ในโดเมนของ f"},
+    {"q": "อัตราการเปลี่ยนแปลงเฉลี่ยเกี่ยวกับแคลคูลัสอย่างไร?", "a": "อัตราการเปลี่ยนแปลงเฉลี่ย (f(b) − f(a))/(b − a) คือความชันของเส้นตัดโค้งที่ลากผ่านสองจุดบนกราฟ เมื่อให้ b เข้าใกล้ a เส้นตัดจะกลายเป็นเส้นสัมผัส และความชันนั้นคืออนุพันธ์ ผลหารเชิงผลต่าง (f(x + h) − f(x))/h ที่ฝึกในหน้านี้จึงเป็นนิยามของอนุพันธ์เมื่อ h → 0"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/precalculus/">พรีแคลคูลัส</a></li><li>ฟังก์ชัน</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 27.2 · พรีแคลคูลัส · Functions</p>
+      <h1>ฟังก์ชันในพรีแคลคูลัส: ความสัมพันธ์ โดเมน เรนจ์ สัญกรณ์ f(x) การดำเนินการ และฟังก์ชันประกอบ</h1>
+      <p class="lede">ฟังก์ชันคือกฎที่รับค่าเข้าหนึ่งค่าแล้วให้ค่าออกหนึ่งค่าเสมอ เหมือนตู้กดน้ำที่กดปุ่มเดิมกี่ครั้งก็ได้เครื่องดื่มเดิม ถ้าวันหนึ่งกดปุ่มเดียวกันแล้วได้สองแบบ ตู้นั้นจะไม่ใช่ฟังก์ชันอีกต่อไป หน้านี้วางรากฐานที่ทุกหน้าต่อจากนี้ใช้ ได้แก่ การอ่านสัญกรณ์ \(f(x)\) การหาว่าใส่ค่าอะไรเข้าไปได้บ้าง (โดเมน) และได้ค่าอะไรออกมาบ้าง (เรนจ์) การรวมฟังก์ชันเข้าด้วยกัน และการต่อฟังก์ชันเป็นสายด้วยฟังก์ชันประกอบ ท้ายหน้ามีอัตราการเปลี่ยนแปลงเฉลี่ยซึ่งเป็นประตูไปสู่อนุพันธ์</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บฟังก์ชัน</a>
+        <a class="btn btn-ghost btn-sm" href="#domain">หาโดเมน</a>
+        <a class="btn btn-ghost btn-sm" href="#range">หาเรนจ์</a>
+        <a class="btn btn-ghost btn-sm" href="#composition">ฟังก์ชันประกอบ</a>
+        <a class="btn btn-ghost btn-sm" href="#rate">อัตราการเปลี่ยนแปลง</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>ฟังก์ชัน: x หนึ่งค่าได้ y ค่าเดียว · กราฟผ่านการทดสอบเส้นแนวตั้ง</li>
+          <li>โดเมนตัดค่าที่ทำให้ตัวส่วนเป็นศูนย์ รากคู่ติดลบ และ log ไม่เป็นบวก</li>
+          <li>เรนจ์: แก้หา x ในรูปของ y หรือใช้จุดยอดและกราฟ</li>
+          <li>\((f \circ g)(x) = f(g(x))\) ทำ g ก่อน · โดยทั่วไป \(f \circ g \ne g \circ f\)</li>
+          <li>อัตราการเปลี่ยนแปลงเฉลี่ย = ความชันเส้นตัดโค้ง \(\dfrac{f(b) - f(a)}{b - a}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น domain, range, composition, piecewise, difference quotient" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">ฟังก์ชันคืออะไร: ความสัมพันธ์ที่ x หนึ่งค่าให้ y ค่าเดียว</h2>
+    <p>ในทางคณิตศาสตร์ ความสัมพันธ์คือเซตของคู่อันดับ \((x, y)\) เช่น {(1, 2), (2, 4), (3, 6)} ความสัมพันธ์จะเป็นฟังก์ชันก็ต่อเมื่อไม่มี x ตัวไหนจับคู่กับ y สองค่า บนกราฟ เงื่อนไขนี้ตรวจได้ด้วยการลากเส้นแนวตั้ง ถ้าเส้นแนวตั้งเส้นใดตัดกราฟมากกว่าหนึ่งจุด แสดงว่ามี x ค่าหนึ่งที่ให้ y มากกว่าหนึ่งค่า วงกลม \(x^2 + y^2 = 25\) จึงไม่เป็นฟังก์ชันของ x แต่ครึ่งบน \(y = \sqrt{25 - x^2}\) เป็นฟังก์ชัน สัญกรณ์ \(f(x)\) อ่านว่า “f ของ x” หมายถึงค่าที่ได้เมื่อใส่ x เข้าไปในกฎ f ไม่ใช่ f คูณ x</p>
+    <div class="tf-grid">
+      <div class="tf" id="F1" data-k="function definition relation vertical line test ฟังก์ชัน นิยาม เส้นแนวตั้ง">
+        <p class="tf-n"><b><span class="fid">F1</span> Function</b> นิยามฟังก์ชัน</p>
+        \[ f: A \to B,\qquad (x, y_1) \in f \ \text{และ}\ (x, y_2) \in f \ \Rightarrow\ y_1 = y_2 \]
+        <p class="tf-x">A คือโดเมน · ค่าที่ได้จริงทั้งหมด \(\{f(x) : x \in A\}\) คือเรนจ์</p>
+      </div>
+      <div class="tf" id="F2" data-k="function notation evaluate substitute สัญกรณ์ แทนค่า">
+        <p class="tf-n"><b><span class="fid">F2</span> Function notation</b> การแทนค่า</p>
+        \[ f(x) = x^2 - 3x \ \Rightarrow\ f(a + 1) = (a + 1)^2 - 3(a + 1) = a^2 - a - 2 \]
+        <p class="tf-x">แทนทั้งก้อนลงในทุกตำแหน่งของ x เสมอ และใส่วงเล็บไว้ก่อน</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="domain">
+    <h2 id="domain">วิธีหาโดเมน (Domain)</h2>
+    <p>ถ้าโจทย์ไม่ได้กำหนดโดเมนมาให้ ให้ถือว่าโดเมนคือจำนวนจริงทุกตัวที่ทำให้สูตรคำนวณได้เป็นจำนวนจริง ในระดับนี้มีเพียงสามสาเหตุที่ทำให้คำนวณไม่ได้ ไล่ตรวจทีละข้อแล้วนำเงื่อนไขมาซ้อนกัน คำตอบเขียนเป็นช่วง (interval) จะอ่านง่ายที่สุด</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="F3" data-k="domain rules denominator even root logarithm วิธีหาโดเมน ตัวส่วน ราก ลอการิทึม">
+        <p class="tf-n"><b><span class="fid">F3</span> Domain rules</b> กฎหาโดเมน</p>
+        \[ \frac{p(x)}{q(x)}:\ q(x) \ne 0,\qquad \sqrt{u(x)}:\ u(x) \ge 0,\qquad \log u(x):\ u(x) > 0 \]
+        <p class="tf-x">ถ้ามีหลายเงื่อนไข ให้หาอินเตอร์เซกชัน · \(\sqrt{u}\) อยู่ในตัวส่วน ต้องใช้ \(u > 0\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-1 · โดเมนที่มีรากและตัวส่วน</span><h3>หาโดเมนของ \(f(x) = \dfrac{\sqrt{x + 2}}{x - 3}\)</h3></div>
+      <ol class="steps">
+        <li><p>รากที่สอง: \(x + 2 \ge 0 \Rightarrow x \ge -2\)</p></li>
+        <li><p>ตัวส่วน: \(x - 3 \ne 0 \Rightarrow x \ne 3\)</p></li>
+        <li><p>รวมเงื่อนไข: ทุก \(x \ge -2\) ยกเว้น 3</p></li>
+      </ol>
+      <p class="answer">\(D_f = [-2,\ 3) \cup (3,\ \infty)\)</p>
+    </div>
+    <div class="wx" id="ex-f2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-2 · โดเมนของลอการิทึม</span><h3>หาโดเมนของ \(g(x) = \log\left(4 - x^2\right)\)</h3></div>
+      <ol class="steps">
+        <li><p>สิ่งที่อยู่ใน log ต้องเป็นบวก: \(4 - x^2 > 0 \Rightarrow x^2 < 4\)</p></li>
+        <li><p>\((2 - x)(2 + x) > 0\) เป็นจริงเมื่อ \(-2 < x < 2\) (ดู <a href="/learn/precalculus/algebra/#A11">A11</a>)</p></li>
+      </ol>
+      <p class="answer">\(D_g = (-2,\ 2)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="range">
+    <h2 id="range">วิธีหาเรนจ์ (Range)</h2>
+    <p>เรนจ์ยากกว่าโดเมนเพราะต้องถามย้อนกลับว่า “y ค่าไหนบ้างที่มี x มาส่งให้” วิธีที่ใช้บ่อยมีสามวิธี: (1) แก้สมการ \(y = f(x)\) หา x ในรูปของ y แล้วดูว่า y ใดทำให้ x หาได้ (2) สำหรับกำลังสอง ใช้จุดยอด (3) ใช้กราฟที่รู้จัก เช่น \(\sqrt{x} \ge 0\) และ \(b^x > 0\) แล้วแปลงตามการเลื่อนและยืด</p>
+    <div class="tf-grid">
+      <div class="tf" id="F4" data-k="range method solve for x vertex เรนจ์ แก้หา x จุดยอด">
+        <p class="tf-n"><b><span class="fid">F4</span> Finding the range</b> วิธีหาเรนจ์</p>
+        \[ y = f(x) \ \Rightarrow\ x = g(y) \ \Rightarrow\ R_f = \{\,y : g(y) \text{ นิยามและอยู่ใน } D_f\,\} \]
+        <p class="tf-x">กำลังสอง \(a(x - h)^2 + k\): \(a > 0\) ได้ \([k, \infty)\) · \(a < 0\) ได้ \((-\infty, k]\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-3 · เรนจ์สองแบบ</span><h3>หาเรนจ์ของ (ก) \(f(x) = x^2 - 4x + 7\) (ข) \(h(x) = \dfrac{2x}{x + 1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) ทำเป็นกำลังสองสมบูรณ์: \(x^2 - 4x + 4 + 3 = (x - 2)^2 + 3\) ค่าน้อยที่สุดคือ 3 ที่ x = 2</p></li>
+        <li><p>(ข) ให้ \(y = \dfrac{2x}{x + 1}\) คูณไขว้: \(y(x + 1) = 2x \Rightarrow x(y - 2) = -y \Rightarrow x = \dfrac{y}{2 - y}\)</p></li>
+        <li><p>x หาได้ทุกกรณียกเว้น \(y = 2\) (ตัวส่วนเป็นศูนย์) และไม่มี y ใดทำให้ x = −1 จึงไม่ต้องตัดเพิ่ม</p></li>
+      </ol>
+      <p class="answer">(ก) \([3,\ \infty)\) · (ข) \(\mathbb{R} \setminus \{2\}\) ซึ่งตรงกับเส้นกำกับแนวนอน \(y = 2\) ในหน้า <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="piecewise">
+    <h2 id="piecewise">ฟังก์ชันเป็นช่วง (Piecewise Functions)</h2>
+    <p>ฟังก์ชันเป็นช่วงใช้สูตรต่างกันในแต่ละช่วงของ x พบได้ในชีวิตจริงบ่อยมาก เช่น ค่าไฟฟ้าแบบขั้นบันได ค่าส่งพัสดุตามน้ำหนัก หรือภาษีเงินได้ เวลาแทนค่าต้องดูก่อนเสมอว่า x อยู่ช่วงไหน และระวังเครื่องหมาย &lt; กับ ≤ ที่จุดรอยต่อ ค่าสัมบูรณ์ \(|x|\) และฟังก์ชันจำนวนเต็มมากสุด \(\lfloor x \rfloor\) ก็เป็นฟังก์ชันเป็นช่วงเช่นกัน</p>
+    <div class="tf-grid">
+      <div class="tf" id="F5" data-k="piecewise function floor greatest integer ฟังก์ชันเป็นช่วง จำนวนเต็มมากสุด">
+        <p class="tf-n"><b><span class="fid">F5</span> Piecewise &amp; floor</b> ฟังก์ชันเป็นช่วง</p>
+        \[ f(x) = \begin{cases} f_1(x), & x < c \\ f_2(x), & x \ge c \end{cases}\qquad \lfloor x \rfloor = \max\{n \in \mathbb Z : n \le x\} \]
+        <p class="tf-x">\(\lfloor 2.7 \rfloor = 2\) · \(\lfloor -2.7 \rfloor = -3\) (ไม่ใช่ −2)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-4 · แทนค่าฟังก์ชันเป็นช่วง</span><h3>\(f(x) = \begin{cases} x^2, & x < 1 \\ 2x - 1, & 1 \le x \le 3 \\ 5, & x > 3 \end{cases}\) จงหา \(f(-2), f(1), f(3), f(4)\) และบอกว่ากราฟต่อกันที่รอยต่อหรือไม่</h3></div>
+      <ol class="steps">
+        <li><p>\(f(-2)\): −2 &lt; 1 ใช้ \(x^2\) ได้ 4 · \(f(1)\): ใช้บรรทัดที่สอง ได้ \(2(1) - 1 = 1\)</p></li>
+        <li><p>\(f(3) = 2(3) - 1 = 5\) · \(f(4) = 5\)</p></li>
+        <li><p>รอยต่อ x = 1: ด้านซ้ายเข้าใกล้ \(1^2 = 1\) เท่ากับ \(f(1)\) · รอยต่อ x = 3: ด้านขวาเป็น 5 เท่ากับ \(f(3)\) กราฟจึงต่อกันทั้งสองจุด</p></li>
+      </ol>
+      <p class="answer">\(4,\ 1,\ 5,\ 5\) และต่อเนื่องทั้งสองรอยต่อ (หัวข้อความต่อเนื่องอยู่ใน <a href="/learn/limits/#continuity">บทลิมิต</a>)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="operations">
+    <h2 id="operations">การบวก ลบ คูณ หารฟังก์ชัน (Operations)</h2>
+    <p>ฟังก์ชันสองตัวรวมกันได้ด้วยการบวก ลบ คูณ หารค่าที่จุดเดียวกัน ข้อที่ต้องระวังคือโดเมน เพราะผลลัพธ์จะคำนวณได้ก็ต่อเมื่อทั้ง f และ g คำนวณได้ที่ x นั้น ส่วนการหารต้องตัดจุดที่ g เป็นศูนย์ออกเพิ่ม แม้สูตรที่จัดรูปแล้วจะดูเหมือนไม่มีตัวส่วนก็ตาม</p>
+    <div class="tf-grid">
+      <div class="tf" id="F6" data-k="sum difference product quotient of functions domain intersection ผลบวก ผลคูณ ผลหาร ฟังก์ชัน">
+        <p class="tf-n"><b><span class="fid">F6</span> Operations</b> พีชคณิตของฟังก์ชัน</p>
+        \[ (f \pm g)(x) = f(x) \pm g(x),\quad (fg)(x) = f(x)g(x),\quad \left(\tfrac{f}{g}\right)(x) = \tfrac{f(x)}{g(x)} \]
+        <p class="tf-x">โดเมน \(= D_f \cap D_g\) และสำหรับ \(f/g\) ตัด \(\{x : g(x) = 0\}\) ออก</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="composition">
+    <h2 id="composition">ฟังก์ชันประกอบ (Composite Functions)</h2>
+    <p>ฟังก์ชันประกอบคือการต่อเครื่องจักรสองเครื่อง ผลผลิตของเครื่องแรกกลายเป็นวัตถุดิบของเครื่องที่สอง \((f \circ g)(x)\) อ่านว่า “f ประกอบ g” และหมายถึง \(f(g(x))\) คือทำ g ก่อนแล้วจึงทำ f แม้สัญลักษณ์จะเขียน f ไว้หน้า การหาโดเมนของฟังก์ชันประกอบต้องดูสองชั้น: x ต้องเข้า g ได้ และค่า g(x) ที่ออกมาต้องเข้า f ได้ การจัดรูปสูตรจนเรียบร้อยอาจทำให้เงื่อนไขชั้นแรกหายไปจากสายตา ซึ่งเป็นจุดที่ข้อสอบชอบหลอก</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="F7" data-k="composition composite fog gof domain ฟังก์ชันประกอบ โดเมน">
+        <p class="tf-n"><b><span class="fid">F7</span> Composition</b> ฟังก์ชันประกอบ</p>
+        \[ (f \circ g)(x) = f\big(g(x)\big),\qquad D_{f\circ g} = \{\,x \in D_g : g(x) \in D_f\,\} \]
+        <p class="tf-x">โดยทั่วไป \(f \circ g \ne g \circ f\) · แต่ \((f \circ g) \circ h = f \circ (g \circ h)\) เสมอ</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-5 · f∘g และ g∘f</span><h3>ให้ \(f(x) = \sqrt{x + 2}\) และ \(g(x) = x^2 - 1\) จงหา \(f \circ g\), \(g \circ f\) พร้อมโดเมน</h3></div>
+      <ol class="steps">
+        <li><p>\((f \circ g)(x) = f(x^2 - 1) = \sqrt{x^2 - 1 + 2} = \sqrt{x^2 + 1}\) ซึ่ง \(x^2 + 1 > 0\) เสมอ โดเมนจึงเป็น \(\mathbb R\)</p></li>
+        <li><p>\((g \circ f)(x) = g\big(\sqrt{x + 2}\big) = \left(\sqrt{x + 2}\right)^2 - 1 = x + 1\)</p></li>
+        <li><p>แต่ x ต้องเข้า f ได้ก่อน จึงต้องมี \(x \ge -2\) แม้สูตร \(x + 1\) จะคำนวณได้ทุก x</p></li>
+      </ol>
+      <p class="answer">\(f \circ g = \sqrt{x^2 + 1},\ x \in \mathbb R\) · \(g \circ f = x + 1,\ x \ge -2\) <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)","g":"x^2-1","op":"gof"}' data-pc-target="fnLab">ดูกราฟ g∘f ในแล็บ</button></p>
+    </div>
+    <div class="wx" id="ex-f6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-6 · แยกฟังก์ชันประกอบ</span><h3>เขียน \(H(x) = (3x - 1)^5\) ในรูป \(f(g(x))\)</h3></div>
+      <ol class="steps">
+        <li><p>มองหา “สิ่งที่ทำก่อน” คือ \(3x - 1\) ตั้งเป็น \(g(x) = 3x - 1\)</p></li>
+        <li><p>สิ่งที่ทำทีหลังคือยกกำลังห้า: \(f(x) = x^5\)</p></li>
+      </ol>
+      <p class="answer">\(g(x) = 3x - 1,\ f(x) = x^5\) — การมองแบบนี้คือหัวใจของกฎลูกโซ่ใน <a href="/learn/differential-calculus/">บทอนุพันธ์</a></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rate">
+    <h2 id="rate">อัตราการเปลี่ยนแปลงเฉลี่ยและผลหารเชิงผลต่าง</h2>
+    <p>อัตราการเปลี่ยนแปลงเฉลี่ยบอกว่าเมื่อ x เปลี่ยนไปหนึ่งหน่วย y เปลี่ยนไปโดยเฉลี่ยเท่าใด ถ้า f คือระยะทางตามเวลา ค่านี้ก็คือความเร็วเฉลี่ย ในเชิงกราฟคือความชันของเส้นตรงที่ลากผ่านสองจุด (เส้นตัดโค้ง) ผลหารเชิงผลต่างคือสูตรเดียวกันที่เขียนด้วยระยะห่าง h ซึ่งจะกลายเป็นนิยามของอนุพันธ์เมื่อให้ h เข้าใกล้ศูนย์</p>
+    <div class="tf-grid">
+      <div class="tf" id="F8" data-k="average rate of change secant slope อัตราการเปลี่ยนแปลงเฉลี่ย เส้นตัดโค้ง">
+        <p class="tf-n"><b><span class="fid">F8</span> Average rate of change</b> อัตราการเปลี่ยนแปลงเฉลี่ย</p>
+        \[ \frac{\Delta y}{\Delta x} = \frac{f(b) - f(a)}{b - a} \]
+      </div>
+      <div class="tf" id="F9" data-k="difference quotient derivative ผลหารเชิงผลต่าง อนุพันธ์">
+        <p class="tf-n"><b><span class="fid">F9</span> Difference quotient</b> ผลหารเชิงผลต่าง</p>
+        \[ \frac{f(x + h) - f(x)}{h},\quad h \ne 0 \ \xrightarrow{\ h \to 0\ }\ f'(x) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-f7">
+      <div class="wx-head"><span class="mono">ตัวอย่าง F-7 · ผลหารเชิงผลต่าง</span><h3>หาผลหารเชิงผลต่างของ \(f(x) = x^2 - 3x\) และอัตราการเปลี่ยนแปลงเฉลี่ยของ \(\sqrt{x + 2}\) จาก x = −1 ถึง x = 2</h3></div>
+      <ol class="steps">
+        <li><p>\(f(x + h) = x^2 + 2xh + h^2 - 3x - 3h\) ลบด้วย \(f(x)\) เหลือ \(2xh + h^2 - 3h\)</p></li>
+        <li><p>หารด้วย h: \(2x + h - 3\) (เมื่อ h → 0 จะได้ \(2x - 3\) ซึ่งคืออนุพันธ์)</p></li>
+        <li><p>\(\sqrt{-1 + 2} = 1\), \(\sqrt{2 + 2} = 2\) ได้ \(\dfrac{2 - 1}{2 - (-1)} = \dfrac13\)</p></li>
+      </ol>
+      <p class="answer">\(2x + h - 3\) · \(\tfrac13\) <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)","op":"f","x0":-1,"x1":2,"sec":true}' data-pc-target="fnLab">ดูเส้นตัดโค้ง</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บฟังก์ชัน: พิมพ์ f และ g แล้วดูผล</h2>
+    <p>พิมพ์ฟังก์ชันด้วยรูปแบบที่คุ้นเคย เช่น <code>2x^2-3</code>, <code>1/(x-1)</code>, <code>sqrt(4-x^2)</code>, <code>|x|</code> หรือ <code>log(x)</code> (ฐาน 10) แล้วเลือกว่าจะวาด f, g, ผลบวก ผลคูณ หรือฟังก์ชันประกอบ ช่วงที่ระบายสีเทาคือค่าของ x ที่ฟังก์ชันไม่นิยาม ซึ่งช่วยตรวจคำตอบเรื่องโดเมนได้ทันที เลื่อน x₁ และ x₂ เพื่อดูเส้นตัดโค้งและอัตราการเปลี่ยนแปลงเฉลี่ย</p>
+    <div class="pc-fn" id="fnLab" data-f="sqrt(x+2)" data-g="x^2-1" data-op="fog" data-x0="1" data-x1="3"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)/(x-3)","op":"f","xmin":-4,"xmax":8}' data-pc-target="fnLab">โดเมน F-1</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"log(4-x^2)","op":"f","xmin":-4,"xmax":4}' data-pc-target="fnLab">โดเมน F-2</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"2x/(x+1)","op":"f","xmin":-6,"xmax":6}' data-pc-target="fnLab">เรนจ์ F-3</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"floor(x)","op":"f","xmin":-4,"xmax":4}' data-pc-target="fnLab">⌊x⌋</button>
+    </div>
+    <div class="sr-trap"><b>กับดักที่พบบ่อย</b>หาโดเมนของ \(g \circ f\) จากสูตรสุดท้ายอย่างเดียว เช่นในตัวอย่าง F-5 ได้สูตร \(x + 1\) แล้วตอบว่าโดเมนคือจำนวนจริงทั้งหมด ซึ่งผิด เพราะ x ต้องผ่าน \(\sqrt{x + 2}\) ก่อน อีกข้อคือเขียน \(f(x + h) = f(x) + h\) ซึ่งจริงเฉพาะฟังก์ชันบางตัวเท่านั้น</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ฝึกทำ (มีเฉลย)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">{(1, 2), (2, 3), (1, 4)} เป็นฟังก์ชันหรือไม่</span></summary><div><p>x = 1 คู่กับทั้ง 2 และ 4</p><p class="answer">ไม่เป็นฟังก์ชัน</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">โดเมนของ \(f(x) = \dfrac{1}{\sqrt{5 - x}}\)</span></summary><div><p>รากอยู่ในตัวส่วน ต้องเป็นบวกแท้: \(5 - x > 0\)</p><p class="answer">\((-\infty,\ 5)\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">เรนจ์ของ \(f(x) = 3 - \sqrt{x - 1}\)</span></summary><div><p>\(\sqrt{x - 1} \ge 0\) จึง \(f(x) \le 3\)</p><p class="answer">\((-\infty,\ 3]\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">\(f(x) = 2x + 1,\ g(x) = x^2\) จงหา \((f \circ g)(3)\) และ \((g \circ f)(3)\)</span></summary><div><p>\(f(9) = 19\) · \(g(7) = 49\)</p><p class="answer">19 และ 49</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">ถ้า \(f(x) = 3x - 2\) และ \(f(g(x)) = 6x + 7\) จงหา \(g(x)\)</span></summary><div><p>\(3g(x) - 2 = 6x + 7 \Rightarrow g(x) = 2x + 3\)</p><p class="answer">\(g(x) = 2x + 3\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">ผลหารเชิงผลต่างของ \(f(x) = \dfrac1x\)</span></summary><div><p>\(\dfrac{\frac{1}{x+h} - \frac1x}{h} = \dfrac{x - (x + h)}{hx(x + h)} = \dfrac{-1}{x(x + h)}\)</p><p class="answer">\(-\dfrac{1}{x(x + h)}\)</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">อ่านต่อ</h2>
+    <ul>
+      <li><a href="/learn/precalculus/graphs/">27.3 กราฟและการแปลงกราฟ</a> — เห็นโดเมนและเรนจ์จากรูป และเลื่อนกราฟด้วย a, b, h, k</li>
+      <li><a href="/learn/precalculus/inverse-functions/">27.6 ฟังก์ชันผกผัน</a> — ฟังก์ชันประกอบที่ได้ x กลับคืน</li>
+      <li><a href="/learn/functions/">บทที่ 1 ฟังก์ชันในงานวิศวกรรม</a> — สัญญาณขั้นบันได u(t) แรมป์ และฟังก์ชันในวงจรไฟฟ้า</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

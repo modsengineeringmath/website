@@ -1,0 +1,224 @@
+<!--meta
+{
+  "title": "Exponential Functions: Graphs, Growth and Decay, Compound Interest, the Number e, Half-Life, Exponential Equations | Mod's Engineering Mathematics",
+  "h1": "Exponential Functions: Graphs, Growth and Decay, Compound Interest, the Number e, Half-Life and Exponential Equations",
+  "description": "Exponential functions f(x) = bˣ on one page: graphs for b > 1 and 0 < b < 1, the horizontal asymptote, transformations, growth and decay models, annual, monthly and continuous compound interest, where the number e comes from, half-life, doubling time, exponential equations and inequalities, with a lab for interest and radioactive decay.",
+  "ogTitle": "Exponential functions: graphs, compound interest, the number e, half-life + lab",
+  "lesson": "en/precalculus",
+  "sub": "exponential-functions",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["exponential functions", "graph of exponential function", "exponential growth and decay", "compound interest formula", "continuous compounding formula", "the number e", "half-life formula", "doubling time", "solving exponential equations", "exponential inequalities", "exponential function transformations"],
+  "about": ["Exponential function", "Exponential growth", "Exponential decay", "Compound interest", "E (mathematical constant)", "Half-life"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "Exponential Functions", "sub": "Graphs of bˣ · growth · decay · compound interest · the number e · half-life · exponential equations", "eyebrow": "Chapter 27.7 · Precalculus", "sym": "bˣ"},
+  "faq": [
+    {"q": "Why must the base of an exponential function be positive and not 1?", "a": "With a negative base, values such as (−2)^(1/2) are not real numbers, so the graph would break into scattered points. With base 1 you get 1^x = 1 for every x, a constant function with no inverse. The conditions b > 0 and b ≠ 1 make the graph continuous and one-to-one."},
+    {"q": "Where does the number e come from?", "a": "e ≈ 2.718 is the limit of (1 + 1/n)^n as n grows. You can read it as the value of 1 dollar at 100% annual interest compounded more and more often until it is continuous. e is also the only base for which the slope of the graph of e^x equals the value of the function, which is why it is the standard base in calculus and engineering."},
+    {"q": "How much difference does monthly versus annual compounding make?", "a": "Not much at low rates, but it adds up over time. 10,000 at 5% a year for 10 years grows to 16,288.95 with annual compounding, 16,470.09 with monthly compounding and 16,487.21 with continuous compounding. Compounding more often always helps, but it has a ceiling given by Pe^(rt)."},
+    {"q": "What is half-life and how is it calculated?", "a": "Half-life is the time it takes for a quantity to fall to half, whatever amount you start with. The amount left is N = N₀(1/2)^(t/T), where T is the half-life. Carbon-14 has a half-life of about 5,730 years, so after 10,000 years about 29.8% of the original remains."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Exponential functions</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.7 · Precalculus · Exponential Functions</p>
+      <h1>Exponential Functions: Graphs, Growth and Decay, Compound Interest, the Number e, Half-Life and Exponential Equations</h1>
+      <p class="lede">A linear function grows by adding the same amount again and again, while an exponential function grows by multiplying by the same factor again and again. At first the two can look close, but before long the multiplying one leaves the adding one far behind. This is the mathematics of compound interest, the spread of an infection, population growth and the discharge of a capacitor in an RC circuit. The page starts with the two shapes of the graph of \(b^x\), explains where the number e comes from, and then uses it to compute interest and half-lives and to solve equations in which the unknown sits in the exponent.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">Exponential lab</a>
+        <a class="btn btn-ghost btn-sm" href="#graph">Graphs of bˣ</a>
+        <a class="btn btn-ghost btn-sm" href="#interest">Compound interest</a>
+        <a class="btn btn-ghost btn-sm" href="#decay">Half-life</a>
+        <a class="btn btn-ghost btn-sm" href="#equations">Equations</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>\(f(x) = b^x\), \(b > 0,\ b \ne 1\) · domain \(\mathbb R\) · range \((0, \infty)\) · passes through (0, 1) and (1, b)</li>
+          <li>\(b > 1\) growth · \(0 < b < 1\) decay · horizontal asymptote \(y = 0\)</li>
+          <li>Compound interest \(A = P(1 + r/n)^{nt}\) · continuous \(A = Pe^{rt}\)</li>
+          <li>Half-life \(N = N_0(1/2)^{t/T}\) · doubling time \(t_2 = \ln 2 / \ln(1 + r)\)</li>
+          <li>\(b^u = b^v \iff u = v\) · inequalities: a base below 1 flips the sign</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try growth, decay, compound, continuous, half-life, e" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="graph">
+    <h2 id="graph">Definition and graphs of bˣ</h2>
+    <p>Each time x increases by one unit, \(b^x\) is multiplied by b, and that property is what separates exponential functions from polynomials. When b is greater than 1 the graph hugs the x-axis on the left and shoots up on the right; when b is between 0 and 1 the picture is reversed. Both kinds pass through (0, 1) because \(b^0 = 1\), and neither ever touches the x-axis, since a power of a positive base is always positive. Note that \(\left(\tfrac12\right)^x = 2^{-x}\), so the graph for base ½ is the reflection of the graph for base 2 in the y-axis.</p>
+    <div class="tf-grid">
+      <div class="tf" id="E1" data-k="exponential function definition domain range asymptote">
+        <p class="tf-n"><b><span class="fid">E1</span> Exponential function</b></p>
+        \[ f(x) = b^x,\ b > 0,\ b \ne 1:\quad D = \mathbb R,\ \ R = (0, \infty),\ \ \text{HA } y = 0 \]
+      </div>
+      <div class="tf" id="E2" data-k="growth decay base greater less than one">
+        <p class="tf-n"><b><span class="fid">E2</span> Growth vs decay</b></p>
+        \[ b > 1:\ \text{increasing},\qquad 0 < b < 1:\ \text{decreasing},\qquad b^{-x} = \left(\tfrac1b\right)^x \]
+      </div>
+      <div class="tf" id="E3" data-k="transformed exponential asymptote y=k shift stretch">
+        <p class="tf-n"><b><span class="fid">E3</span> Transformed</b></p>
+        \[ y = a\,b^{\,x - h} + k:\quad \text{HA } y = k,\ \ R = (k, \infty) \text{ if } a > 0 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-e1">
+      <div class="wx-head"><span class="mono">Example E-1 · Reading the graph from the equation</span><h3>Give the asymptote, y-intercept and range of \(y = 3\cdot2^{x+1} - 4\)</h3></div>
+      <ol class="steps">
+        <li><p>Compare with <a class="tag tf" href="#E3">E3</a>: \(a = 3,\ b = 2,\ h = -1,\ k = -4\)</p></li>
+        <li><p>Asymptote \(y = -4\), and because \(a > 0\) the graph lies above it</p></li>
+        <li><p>y-intercept: \(3\cdot2^{1} - 4 = 2\)</p></li>
+      </ol>
+      <p class="answer">HA \(y = -4\) · passes through (0, 2) · range \((-4, \infty)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="interest">
+    <h2 id="interest">Growth, compound interest and the number e</h2>
+    <p>If a quantity grows by r percent per period, after t periods it equals \(A_0(1 + r)^t\). Compound interest is the special case in which the annual rate is split into n periods a year. The more often interest is compounded, the sooner interest starts earning interest of its own, but the result does not grow without limit: it approaches \(Pe^{rt}\), and that is where the number e turns up in everyday life.</p>
+    <div class="tf-grid">
+      <div class="tf" id="E4" data-k="exponential growth decay model percent rate">
+        <p class="tf-n"><b><span class="fid">E4</span> Growth model</b></p>
+        \[ A(t) = A_0(1 + r)^t\ \ (\text{growth}),\qquad A(t) = A_0(1 - r)^t\ \ (\text{decay}) \]
+      </div>
+      <div class="tf" id="E5" data-k="compound interest formula periods per year">
+        <p class="tf-n"><b><span class="fid">E5</span> Compound interest</b></p>
+        \[ A = P\left(1 + \frac{r}{n}\right)^{nt} \]
+        <p class="tf-x">P principal · r annual rate (as a decimal) · n periods per year · t years</p>
+      </div>
+      <div class="tf" id="E6" data-k="number e limit continuous compounding euler">
+        <p class="tf-n"><b><span class="fid">E6</span> The number e</b></p>
+        \[ e = \lim_{n\to\infty}\left(1 + \frac1n\right)^n \approx 2.71828,\qquad A = Pe^{rt} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-e2">
+      <div class="wx-head"><span class="mono">Example E-2 · Three ways to compound</span><h3>Deposit 10,000 at 5% a year for 10 years and compare annual, monthly and continuous compounding</h3></div>
+      <ol class="steps">
+        <li><p>Annual: \(10000(1.05)^{10} \approx 16{,}288.95\)</p></li>
+        <li><p>Monthly: \(10000\left(1 + \tfrac{0.05}{12}\right)^{120} \approx 16{,}470.09\)</p></li>
+        <li><p>Continuous: \(10000e^{0.05\times10} = 10000e^{0.5} \approx 16{,}487.21\)</p></li>
+      </ol>
+      <p class="answer">16,288.95 · 16,470.09 · 16,487.21: more frequent compounding pays more, but it approaches the ceiling \(Pe^{rt}\) <button type="button" class="wx-btn" data-pc-set='{"mode":"interest","P":10000,"r":5,"t":10,"n":"12"}' data-pc-target="expLab">Compute in the lab</button></p>
+    </div>
+    <div class="wx" id="ex-e3">
+      <div class="wx-head"><span class="mono">Example E-3 · Doubling time</span><h3>A city of 1.2 million grows 3% a year. When will its population double?</h3></div>
+      <ol class="steps">
+        <li><p>\(1.2(1.03)^t = 2.4 \Rightarrow 1.03^t = 2\)</p></li>
+        <li><p>Use logarithms (page 27.8): \(t = \dfrac{\ln 2}{\ln 1.03} \approx 23.45\) years</p></li>
+        <li><p>Compare with the rule of 72: \(72/3 = 24\) years, very close</p></li>
+      </ol>
+      <p class="answer">About 23.4 years (the answer does not depend on the starting population)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="decay">
+    <h2 id="decay">Decay and half-life</h2>
+    <p>Exponential decay happens when the rate of decrease is proportional to the amount that remains: a radioactive isotope, a drug in the bloodstream, or the voltage of a capacitor discharging through a resistor. The half-life is the time needed to fall by half, and it is the same every time, whatever amount you start from. In electric circuits the time constant τ is used instead, and the half-life equals \(\tau\ln 2 \approx 0.693\tau\).</p>
+    <div class="tf-grid">
+      <div class="tf" id="E7" data-k="half-life decay constant radioactive">
+        <p class="tf-n"><b><span class="fid">E7</span> Half-life</b></p>
+        \[ N(t) = N_0\left(\tfrac12\right)^{t/T_{1/2}} = N_0 e^{-kt},\qquad k = \frac{\ln 2}{T_{1/2}} \]
+      </div>
+      <div class="tf" id="E8" data-k="RC circuit time constant capacitor discharge">
+        <p class="tf-n"><b><span class="fid">E8</span> RC discharge</b></p>
+        \[ v(t) = V_0 e^{-t/\tau},\quad \tau = RC,\quad v(\tau) \approx 0.368\,V_0 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-e4">
+      <div class="wx-head"><span class="mono">Example E-4 · Carbon-14</span><h3>Carbon-14 has a half-life of about 5,730 years. (a) What percentage is left after 10,000 years? (b) How old is a sample with 25% left?</h3></div>
+      <ol class="steps">
+        <li><p>(a) \(\left(\tfrac12\right)^{10000/5730} = 0.5^{1.7452} \approx 0.2983\)</p></li>
+        <li><p>(b) \(25\% = \left(\tfrac12\right)^2\), so two half-lives have passed: \(2 \times 5730\)</p></li>
+      </ol>
+      <p class="answer">(a) about 29.8% · (b) about 11,460 years <button type="button" class="wx-btn" data-pc-set='{"mode":"decay","N0":100,"half":5730,"tt":10000}' data-pc-target="expLab">See the decay curve</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="equations">
+    <h2 id="equations">Exponential equations and inequalities</h2>
+    <p>If both sides can be written with the same base, compare the exponents directly, because \(b^x\) is one-to-one. If they cannot, take logarithms of both sides as on page 27.8. Equations that mix \(b^{2x}\) and \(b^x\) become quadratics after the substitution \(u = b^x\). For inequalities, look at the base: a base greater than 1 keeps the direction, a base between 0 and 1 reverses it.</p>
+    <div class="tf-grid">
+      <div class="tf" id="E9" data-k="exponential equation same base one-to-one">
+        <p class="tf-n"><b><span class="fid">E9</span> Same base</b></p>
+        \[ b^u = b^v \iff u = v \]
+      </div>
+      <div class="tf" id="E10" data-k="exponential inequality reverse base less than one">
+        <p class="tf-n"><b><span class="fid">E10</span> Inequalities</b></p>
+        \[ b > 1:\ b^u > b^v \iff u > v,\qquad 0 < b < 1:\ b^u > b^v \iff u < v \]
+      </div>
+    </div>
+    <div class="wx" id="ex-e5">
+      <div class="wx-head"><span class="mono">Example E-5 · Matching the bases</span><h3>Solve \(4^{x+1} = 8^{2x-1}\)</h3></div>
+      <ol class="steps">
+        <li><p>Write both in base 2: \(2^{2(x+1)} = 2^{3(2x-1)}\)</p></li>
+        <li><p>\(2x + 2 = 6x - 3 \Rightarrow 4x = 5\)</p></li>
+      </ol>
+      <p class="answer">\(x = \tfrac54\)</p>
+    </div>
+    <div class="wx" id="ex-e6">
+      <div class="wx-head"><span class="mono">Example E-6 · Substitution</span><h3>Solve \(9^x - 4\cdot3^x + 3 = 0\)</h3></div>
+      <ol class="steps">
+        <li><p>\(9^x = (3^x)^2\); let \(u = 3^x > 0\): \(u^2 - 4u + 3 = 0 \Rightarrow (u - 1)(u - 3) = 0\)</p></li>
+        <li><p>\(3^x = 1 \Rightarrow x = 0\) · \(3^x = 3 \Rightarrow x = 1\)</p></li>
+      </ol>
+      <p class="answer">\(x = 0\) or \(x = 1\)</p>
+    </div>
+    <div class="wx" id="ex-e7">
+      <div class="wx-head"><span class="mono">Example E-7 · An inequality with base below 1</span><h3>Solve \(\left(\tfrac12\right)^{x-1} > 8\)</h3></div>
+      <ol class="steps">
+        <li><p>\(8 = \left(\tfrac12\right)^{-3}\), so \(\left(\tfrac12\right)^{x-1} > \left(\tfrac12\right)^{-3}\)</p></li>
+        <li><p>The base ½ is less than 1, so the direction flips: \(x - 1 < -3\)</p></li>
+      </ol>
+      <p class="answer">\(x < -2\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">Exponential lab: graph · interest · half-life</h2>
+    <p>In graph mode, drag a, b and k and compare with \(e^x\), drawn dashed; watch the graph switch from decay to growth as b crosses 1. Interest mode puts simple interest, compound interest for the period you choose and continuous compounding on one graph, together with the effective annual rate (EAR) and the doubling time. Half-life mode marks the points where ½, ¼, ⅛ and 1/16 remain.</p>
+    <div class="pc-exp" id="expLab" data-mode="graph" data-a="1" data-b="2" data-k="0"><noscript>JavaScript is needed for the lab</noscript></div>
+    <div class="sr-trap"><b>Common traps</b>Entering r = 5 instead of 0.05 in the interest formula · thinking \(2^{x+3} = 2^x + 2^3\) (it is \(2^x \cdot 2^3\)) · forgetting to flip an inequality when the base is below 1 · and keeping a negative value of \(u = 3^x\), which is impossible.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Solve \(27^{x} = 9^{x + 2}\)</span></summary><div><p>\(3^{3x} = 3^{2x + 4}\)</p><p class="answer">\(x = 4\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">Solve \(2^{2x} - 6\cdot2^x + 8 = 0\)</span></summary><div><p>\(u^2 - 6u + 8 = 0 \Rightarrow u = 2, 4\)</p><p class="answer">\(x = 1,\ 2\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">A car costs 800,000 and depreciates 15% a year. What is it worth after 4 years?</span></summary><div><p>\(800000(0.85)^4\)</p><p class="answer">About 417,605</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">Solve \(3^{x^2 - 2x} \le 27\)</span></summary><div><p>\(x^2 - 2x \le 3 \Rightarrow (x - 3)(x + 1) \le 0\)</p><p class="answer">\(-1 \le x \le 3\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">A substance falls to 1/8 of its amount in 30 days. What is its half-life?</span></summary><div><p>\(1/8 = (1/2)^3\), so three half-lives have passed</p><p class="answer">10 days</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/logarithmic-functions/">27.8 Logarithmic functions</a> — the tool for equations whose bases cannot be matched</li>
+      <li><a href="/learn/en/precalculus/series/#annuity">Savings plans and loan payments</a> — compound interest combined with a geometric series</li>
+      <li><a href="/en/blog/laplace-transform-table/">Laplace transform table</a> — where \(e^{-at}\) becomes \(1/(s + a)\) in circuit analysis</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

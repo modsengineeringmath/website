@@ -9,6 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { MC_PLC_TOPICS } from "./src/topics-mc-plc.mjs";
+import { PRECALC_TOPICS } from "./src/topics-precalc.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SITE = "https://modsengineeringmath.com";
@@ -788,6 +789,8 @@ export const TOPICS = [
         summary: "หลักอุปนัยแบบเข้มและความเท่าเทียมกับอุปนัยธรรมดาและหลักการจัดอันดับดี กฎจำนวนกรณีฐาน แสตมป์และจำนวนโฟรเบเนียส ทฤษฎีบทหลักมูลเลขคณิต ฟีโบนัชชีและสูตรบิเนต์ ขอบเขตเรขาคณิต ช็อกโกแลต ปูกระเบื้อง เซกเคนดอร์ฟ เกมหยิบ merge sort เบซู และระบบควบคุมดิจิทัล" },
     ],
   },
+  // Topic 27 (added 2026-11-09): precalculus, Thai + English edition — see src/topics-precalc.mjs
+  ...PRECALC_TOPICS,
 ];
 
 // ---------------------------------------------------------------------------
@@ -1082,14 +1085,18 @@ function faqHtml(faq, lang = "th") {
   );
 }
 
+// hub pager: previous / next chapter in the same language (Thai hubs never point to an English edition and vice versa)
 function pager(slug) {
-  const i = TOPICS.findIndex((t) => t.slug === slug);
-  const prev = TOPICS[i - 1], next = TOPICS[i + 1];
+  const cur = TOPICS.find((t) => t.slug === slug);
+  const lang = langOf(cur), U = UI[lang], en = lang === "en";
+  const list = TOPICS.filter((t) => langOf(t) === lang);
+  const i = list.indexOf(cur);
+  const prev = list[i - 1], next = list[i + 1];
   const link = (t, dir) =>
     t
-      ? `<a class="pager-${dir}" href="/learn/${t.slug}/"><span class="mono">${dir === "prev" ? "← บทก่อนหน้า" : "บทถัดไป →"}</span><b>${esc(t.title)}</b></a>`
-      : `<a class="pager-${dir}" href="/learn/"><span class="mono">${dir === "prev" ? "← กลับ" : "ไปต่อ →"}</span><b>คลังความรู้ทั้งหมด</b></a>`;
-  return `<nav class="pager" aria-label="บทเรียนถัดไป">${link(prev, "prev")}${link(next, "next")}</nav>`;
+      ? `<a class="pager-${dir}" href="/learn/${t.slug}/"><span class="mono">${dir === "prev" ? (en ? "← Previous chapter" : "← บทก่อนหน้า") : en ? "Next chapter →" : "บทถัดไป →"}</span><b>${esc(t.title)}</b></a>`
+      : `<a class="pager-${dir}" href="${U.libUrl}"><span class="mono">${dir === "prev" ? (en ? "← Back" : "← กลับ") : en ? "Continue →" : "ไปต่อ →"}</span><b>${U.lib}</b></a>`;
+  return `<nav class="pager" aria-label="${en ? "Next lesson" : "บทเรียนถัดไป"}">${link(prev, "prev")}${link(next, "next")}</nav>`;
 }
 
 function videoFacade(t) {
@@ -1312,6 +1319,30 @@ function htmlToText(html) {
 // Build
 // ---------------------------------------------------------------------------
 const layout = fs.readFileSync(path.join(ROOT, "src/layout.html"), "utf8");
+// English pages: the precalculus menu group (chapter 27) has a full English twin, so swap the whole list
+// for links to /learn/en/precalculus/… (other subject groups stay Thai, see EN_CHROME)
+{
+  const thPre = layout.match(/<div class="nav-list nav-list-wide" id="navpre">[\s\S]*?\n {8}<\/div>/);
+  if (thPre) {
+    const enPre = PRECALC_TOPICS.find((t) => t.lang === "en");
+    const link = (s) => `          <a href="/learn/en/precalculus/${s.slug}/">${esc(s.short)}</a>`;
+    const grp = (ids) => enPre.sub.filter((s) => ids.includes(s.part)).map(link).join("\n");
+    const html = [
+      `<div class="nav-list nav-list-wide" id="navpre">`,
+      `          <a href="/learn/en/precalculus/" data-nav="pre">Overview · course map</a>`,
+      `          <span class="nav-h">Algebra · functions · graphs</span>`,
+      grp(["algebra", "polynomial", "explog"]),
+      `          <span class="nav-h">Trigonometry</span>`,
+      grp(["trig"]),
+      `          <span class="nav-h">Sequences · probability · statistics</span>`,
+      grp(["discrete"]),
+      `          <span class="nav-h">ภาษาไทย</span>`,
+      `          <a href="/learn/precalculus/" lang="th">พรีแคลคูลัส ฉบับภาษาไทย</a>`,
+      `        </div>`,
+    ].join("\n");
+    EN_CHROME.push([thPre[0], html], ['aria-controls="navpre">พรีแคลคูลัส<', 'aria-controls="navpre">Precalculus<']);
+  }
+}
 const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
 const updates = updatesData();
@@ -1960,6 +1991,10 @@ const MD_GUIDES = [
     desc: "structure, learning path, key formulas with IDs, standards (IEEE 519-2022, IEC 61000-3-2, IEC 61000-4-7, PEA/MEA), lab features and presets, field problems, keywords and FAQ" },
   { src: "src/md/solar-pv.md", out: "learn/solar-pv/guide.md", page: "/learn/solar-pv/", title: "Solar PV system design — complete guide (Thai, Markdown)",
     desc: "19-chapter structure, 10-step design workflow, key formulas with IDs (cell, resource, modules, string sizing, wiring, batteries, yield, economics, forecasting, MPPT, inverters, air conditioning, solar farms, pumping), Thai solar data, worked-example numbers, calculators, standards (IEC 61215/61730/62548/62446/62109/62116, IEEE 1547, PEA/MEA) and FAQ" },
+  { src: "src/md/precalculus.md", out: "learn/precalculus/guide.md", page: "/learn/precalculus/", title: "Precalculus (grades 10–12): functions, graphs, trigonometry, logarithms, probability & statistics — complete guide (Thai, Markdown)",
+    desc: "16-chapter structure, 154 formulas with IDs (algebra, functions, transformations, polynomial, rational, inverse, exponential, logarithmic and trigonometric functions, triangles, sequences, series, counting, probability, statistics, z/t/χ²/F tables), verified example numbers, 21 interactive labs, short links and FAQ" },
+  { src: "src/md/precalculus-en.md", out: "learn/en/precalculus/guide.md", page: "/learn/en/precalculus/", title: "Precalculus: functions, graphs, trigonometry, logarithms, probability & statistics — complete guide (English, Markdown)",
+    desc: "English edition of chapter 27: 16 chapters, 154 formulas with IDs, verified example numbers, 21 interactive labs, the 0°–360° trig table and z, t, χ² and F tables, short links and FAQ" },
   { src: "src/md/sensors-transducers.md", out: "learn/sensors-transducers/guide.md", page: "/learn/sensors-transducers/", title: "Sensors, transducers & industrial instrumentation — complete guide (Thai, Markdown)",
     desc: "spelling decision (เซนเซอร์/ทรานส์ดิวเซอร์), 20-chapter structure, verified example numbers (Pt100, thermocouple CJC, ISO 5167 orifice, magmeter, radar level, 4–20 mA loop budget, NE 43, HART, Modbus frames and CRC, fieldbus segments, SIL), standards with countries of origin, interactive tools and FAQ" },
 ];

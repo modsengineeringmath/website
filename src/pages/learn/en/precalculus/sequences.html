@@ -1,0 +1,220 @@
+<!--meta
+{
+  "title": "Sequences in Precalculus: Arithmetic and Geometric Sequences, nth Term Formula, Recursive Sequences, Graphs of Sequences | Mod's Engineering Mathematics",
+  "h1": "Sequences in Precalculus: Arithmetic Sequences, Geometric Sequences, the nth Term Formula, Recursive Sequences and the Graph of a Sequence",
+  "description": "Sequences for precalculus seen as functions and graphs: a sequence is a function on the counting numbers, arithmetic sequences lie on a line, geometric sequences lie on an exponential curve, nth term formulas, finding terms from two known terms, arithmetic and geometric means, recursive sequences, Fibonacci and a first look at limits, with a lab that plots the points (n, aₙ).",
+  "ogTitle": "Arithmetic, geometric and recursive sequences: nth term formulas and graphs + lab",
+  "lesson": "en/precalculus",
+  "sub": "sequences",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["sequences precalculus", "arithmetic sequence", "geometric sequence", "nth term formula", "explicit formula sequence", "common difference", "common ratio", "arithmetic mean", "geometric mean", "recursive sequence", "fibonacci sequence golden ratio", "limit of a sequence", "graph of a sequence"],
+  "about": ["Sequence", "Arithmetic progression", "Geometric progression", "Recurrence relation", "Fibonacci sequence", "Limit of a sequence"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js", "/assets/precalc-data.js"],
+  "og": {"title": "Arithmetic & Geometric Sequences", "sub": "nth term formulas · common difference · common ratio · means · recursion · the graph (n, aₙ)", "eyebrow": "Chapter 27.12 · Precalculus", "sym": "aₙ"},
+  "faq": [
+    {"q": "What is the difference between an arithmetic and a geometric sequence?", "a": "An arithmetic sequence gets each next term by adding a constant d, for example 3, 7, 11, 15. A geometric sequence gets it by multiplying by a constant r, for example 2, 6, 18, 54. Plotting the points (n, aₙ), an arithmetic sequence lies on a line of slope d and a geometric sequence lies on an exponential curve."},
+    {"q": "How can I tell whether three numbers form an arithmetic or a geometric sequence?", "a": "a, b, c are arithmetic when 2b = a + c (the middle term is the arithmetic mean of its neighbours) and geometric when b² = ac (the middle term is the geometric mean). These tests are quicker than finding d or r."},
+    {"q": "What is a recursive sequence?", "a": "A recursive sequence gives the first term and a rule that builds each term from the previous ones, for example a₁ = 2, aₙ₊₁ = 3aₙ − 2. Arithmetic and geometric sequences can also be written recursively. The linear recurrence aₙ₊₁ = p·aₙ + q has the closed form aₙ = L + (a₁ − L)pⁿ⁻¹ with L = q/(1 − p)."},
+    {"q": "Where can I go deeper into sequences?", "a": "The sequences and series roadmap on this site continues from here to the ε–N definition of a limit, the squeeze theorem, bounded monotone sequences and second-order recurrences, and proofs by mathematical induction."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Sequences</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.12 · Precalculus · Sequences</p>
+      <h1>Sequences in Precalculus: Arithmetic Sequences, Geometric Sequences, the nth Term Formula, Recursive Sequences and the Graph of a Sequence</h1>
+      <p class="lede">A sequence is a special kind of function whose inputs are only the counting numbers 1, 2, 3 and so on, so its graph is a row of separate dots rather than a continuous curve. Seen this way, an arithmetic sequence is a linear function sampled at whole numbers, and a geometric sequence is an exponential function sampled the same way. This page uses that point of view to explain nth term formulas, how to find terms from partial information, means, recursive sequences and what happens when n becomes very large, which is the groundwork for series on the next page and for limits in calculus.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">Sequence lab</a>
+        <a class="btn btn-ghost btn-sm" href="#arithmetic">Arithmetic</a>
+        <a class="btn btn-ghost btn-sm" href="#geometric">Geometric</a>
+        <a class="btn btn-ghost btn-sm" href="#recursive">Recursive</a>
+        <a class="btn btn-ghost btn-sm" href="#limit">Limits</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Arithmetic \(a_n = a_1 + (n - 1)d\) · the points \((n, a_n)\) lie on a line of slope d</li>
+          <li>Geometric \(a_n = a_1 r^{n-1}\) · the points lie on an exponential curve (when r &gt; 0)</li>
+          <li>\(a_n = a_m + (n - m)d\) · \(a_n = a_m r^{n - m}\) find terms from two known terms</li>
+          <li>a, b, c arithmetic ⇔ \(2b = a + c\) · geometric ⇔ \(b^2 = ac\)</li>
+          <li>\(|r| < 1 \Rightarrow r^n \to 0\) · \(a_{n+1} = pa_n + q\) converges to \(\tfrac{q}{1 - p}\) when \(|p| < 1\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try arithmetic, geometric, mean, recursive, fibonacci, limit" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">A sequence is a function on the counting numbers</h2>
+    <p>A sequence \(a_1, a_2, a_3, \dots\) can be given in two ways. An explicit formula gives \(a_n\) directly from n, such as \(a_n = n^2\). A recursive rule gives the first term and a way to build the next one, such as \(a_1 = 1,\ a_{n+1} = a_n + 2n + 1\), which is in fact the same sequence. To find an explicit formula from the first few terms, look at the differences or ratios of neighbouring terms: constant differences mean arithmetic, constant ratios mean geometric, and constant second differences mean a quadratic.</p>
+    <div class="tf-grid">
+      <div class="tf" id="Q1" data-k="sequence definition function natural numbers explicit recursive">
+        <p class="tf-n"><b><span class="fid">Q1</span> Sequence</b></p>
+        \[ a: \{1, 2, 3, \dots\} \to \mathbb R,\quad n \mapsto a_n \]
+        <p class="tf-x">A finite sequence has a last term · an infinite sequence does not</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="arithmetic">
+    <h2 id="arithmetic">Arithmetic sequences</h2>
+    <p>An arithmetic sequence rises or falls by the same amount d at every step, like a salary that goes up by the same sum each year, or theatre rows in which each row has two more seats than the one in front. The formula \(a_n = a_1 + (n - 1)d\) can be rewritten as \(a_n = dn + (a_1 - d)\), which is the equation of a line of slope d. That is why the points of an arithmetic sequence line up in the lab.</p>
+    <div class="tf-grid">
+      <div class="tf" id="Q2" data-k="arithmetic sequence common difference nth term">
+        <p class="tf-n"><b><span class="fid">Q2</span> Arithmetic sequence</b></p>
+        \[ a_n = a_1 + (n - 1)d,\qquad d = a_{n+1} - a_n,\qquad a_n = a_m + (n - m)d \]
+      </div>
+      <div class="tf" id="Q3" data-k="arithmetic mean middle term insert means">
+        <p class="tf-n"><b><span class="fid">Q3</span> Arithmetic mean</b></p>
+        \[ a, b, c \text{ arithmetic} \iff b = \frac{a + c}{2} \]
+        <p class="tf-x">Inserting k numbers between a and b: \(d = \tfrac{b - a}{k + 1}\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-q1">
+      <div class="wx-head"><span class="mono">Example Q-1 · Terms from two known terms</span><h3>An arithmetic sequence has \(a_3 = 11\) and \(a_{10} = 39\). Find \(a_1,\ d\) and \(a_{25}\)</h3></div>
+      <ol class="steps">
+        <li><p>From \(a_{10} = a_3 + 7d\): \(39 = 11 + 7d \Rightarrow d = 4\)</p></li>
+        <li><p>\(a_1 = a_3 - 2d = 11 - 8 = 3\)</p></li>
+        <li><p>\(a_{25} = 3 + 24(4) = 99\)</p></li>
+      </ol>
+      <p class="answer">\(a_1 = 3,\ d = 4,\ a_{25} = 99\) <button type="button" class="wx-btn" data-pc-set='{"type":"arith","a1":3,"d":4,"n":25}' data-pc-target="seqLab">See it in the lab</button></p>
+    </div>
+    <div class="wx" id="ex-q2">
+      <div class="wx-head"><span class="mono">Example Q-2 · Counting terms</span><h3>How many terms does 7, 11, 15, …, 403 have?</h3></div>
+      <ol class="steps">
+        <li><p>\(a_1 = 7,\ d = 4\); set \(a_n = 403\): \(7 + (n - 1)4 = 403\)</p></li>
+        <li><p>\(n - 1 = 99 \Rightarrow n = 100\)</p></li>
+      </ol>
+      <p class="answer">100 terms</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="geometric">
+    <h2 id="geometric">Geometric sequences</h2>
+    <p>A geometric sequence multiplies by the same factor r at every step; a population growing 3% a year is multiplied by 1.03 each year. If r lies between −1 and 1 the terms shrink toward zero, and if r is negative the signs alternate. Seeing these behaviours on a dot plot helps a lot in deciding whether the infinite series on the next page converges.</p>
+    <div class="tf-grid">
+      <div class="tf" id="Q4" data-k="geometric sequence common ratio nth term">
+        <p class="tf-n"><b><span class="fid">Q4</span> Geometric sequence</b></p>
+        \[ a_n = a_1 r^{n-1},\qquad r = \frac{a_{n+1}}{a_n},\qquad a_n = a_m r^{n - m} \]
+      </div>
+      <div class="tf" id="Q5" data-k="geometric mean middle term AM GM inequality">
+        <p class="tf-n"><b><span class="fid">Q5</span> Geometric mean</b></p>
+        \[ a, b, c \text{ geometric} \iff b^2 = ac,\qquad \frac{a + c}{2} \ge \sqrt{ac}\ \ (a, c > 0) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-q3">
+      <div class="wx-head"><span class="mono">Example Q-3 · Geometric from two terms</span><h3>A geometric sequence has \(a_2 = 6\) and \(a_5 = 162\). Find \(a_1,\ r\) and \(a_8\)</h3></div>
+      <ol class="steps">
+        <li><p>\(a_5 = a_2 r^3 \Rightarrow r^3 = 27 \Rightarrow r = 3\)</p></li>
+        <li><p>\(a_1 = 6/3 = 2\) · \(a_8 = 2\cdot3^7 = 2\cdot2187\)</p></li>
+      </ol>
+      <p class="answer">\(a_1 = 2,\ r = 3,\ a_8 = 4{,}374\)</p>
+    </div>
+    <div class="wx" id="ex-q4">
+      <div class="wx-head"><span class="mono">Example Q-4 · Inserting geometric means</span><h3>Insert three geometric means between 2 and 162</h3></div>
+      <ol class="steps">
+        <li><p>The sequence has 5 terms \(2, \_, \_, \_, 162\), so \(162 = 2r^4 \Rightarrow r^4 = 81 \Rightarrow r = \pm3\)</p></li>
+      </ol>
+      <p class="answer">6, 18, 54 or −6, 18, −54 (both are correct)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="recursive">
+    <h2 id="recursive">Recursive sequences and Fibonacci</h2>
+    <p>The linear recurrence \(a_{n+1} = pa_n + q\) turns up constantly: a loan balance that is charged interest and then reduced by a payment every month, or the amount of a drug in the body when part of it is cleared and a new dose is added every day. Such a sequence has a fixed point L with \(L = pL + q\), and if \(|p| < 1\) every term flows toward L whatever the starting value. The Fibonacci sequence uses the two previous terms, and the ratio of neighbouring terms approaches the golden ratio.</p>
+    <div class="tf-grid">
+      <div class="tf" id="Q6" data-k="linear recurrence fixed point closed form">
+        <p class="tf-n"><b><span class="fid">Q6</span> Linear recurrence</b></p>
+        \[ a_{n+1} = pa_n + q\ (p \ne 1):\quad L = \frac{q}{1 - p},\qquad a_n = L + (a_1 - L)p^{\,n-1} \]
+      </div>
+      <div class="tf" id="Q7" data-k="fibonacci golden ratio">
+        <p class="tf-n"><b><span class="fid">Q7</span> Fibonacci</b></p>
+        \[ F_1 = F_2 = 1,\ F_{n+2} = F_{n+1} + F_n,\qquad \frac{F_{n+1}}{F_n} \to \varphi = \frac{1 + \sqrt5}{2} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-q5">
+      <div class="wx-head"><span class="mono">Example Q-5 · Closed form of a recurrence</span><h3>\(a_1 = 2,\ a_{n+1} = 3a_n - 2\). Find an explicit formula</h3></div>
+      <ol class="steps">
+        <li><p>Fixed point: \(L = 3L - 2 \Rightarrow L = 1\)</p></li>
+        <li><p>\(a_n = 1 + (2 - 1)3^{n-1} = 1 + 3^{n-1}\)</p></li>
+        <li><p>Check: \(a_2 = 3(2) - 2 = 4 = 1 + 3\) ✓ · \(a_3 = 3(4) - 2 = 10 = 1 + 9\) ✓</p></li>
+      </ol>
+      <p class="answer">\(a_n = 1 + 3^{n-1}\) (|p| = 3 &gt; 1, so the sequence runs away from its fixed point)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="limit">
+    <h2 id="limit">A first look at limits of sequences</h2>
+    <p>Asking which value a sequence approaches as n gets very large is where calculus begins. If it approaches a single value L, the sequence converges; otherwise it diverges. For a ratio of polynomials, divide by the highest power of n, just as you would to find the horizontal asymptote of a rational function, because a sequence is a function looked at only at whole numbers.</p>
+    <div class="tf-grid">
+      <div class="tf" id="Q8" data-k="limit of sequence convergence r^n 1/n">
+        <p class="tf-n"><b><span class="fid">Q8</span> Basic limits</b></p>
+        \[ \lim_{n\to\infty}\frac1n = 0,\qquad \lim_{n\to\infty} r^n = 0\ \ (|r| < 1),\qquad \lim_{n\to\infty}\left(1 + \frac1n\right)^n = e \]
+      </div>
+    </div>
+    <div class="wx" id="ex-q6">
+      <div class="wx-head"><span class="mono">Example Q-6 · Dividing by the highest power</span><h3>Find \(\lim\limits_{n\to\infty}\dfrac{3n^2 + 1}{2n^2 - n}\)</h3></div>
+      <ol class="steps">
+        <li><p>Divide top and bottom by \(n^2\): \(\dfrac{3 + 1/n^2}{2 - 1/n}\)</p></li>
+        <li><p>As \(n \to \infty\), every term with n in the denominator goes to 0</p></li>
+      </ol>
+      <p class="answer">\(\tfrac32\) (the sequence converges)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">Sequence lab: the points (n, aₙ)</h2>
+    <p>Choose a type of sequence, drag a₁ and d or r, and watch how the points line up. The dashed curve is the continuous function the points sit on (a line for arithmetic, an exponential for geometric when r &gt; 0). Try r = −0.8 to see alternating signs shrinking toward zero, and recursive mode to see the fixed-point line L that the points flow toward when |p| &lt; 1.</p>
+    <div class="pc-seq" id="seqLab" data-type="geo" data-a1="8" data-r="-0.8" data-n="16"><noscript>JavaScript is needed for the lab</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="wx-btn" data-pc-set='{"type":"arith","a1":15000,"d":500,"n":10}' data-pc-target="seqLab">Salary +500 a year</button>
+      <button type="button" class="wx-btn" data-pc-set='{"type":"geo","a1":1.2,"r":1.03,"n":30}' data-pc-target="seqLab">Population +3%/year</button>
+      <button type="button" class="wx-btn" data-pc-set='{"type":"rec","a1":0,"p":0.5,"q":100,"n":15}' data-pc-target="seqLab">Drug build-up: half cleared + 100 mg</button>
+    </div>
+    <div class="sr-trap"><b>Common traps</b>Using \(a_n = a_1 + nd\) (forgetting the −1) · computing r as \(a_1/a_2\) upside down · and giving a single value of r when \(r^4 = 81\) or \(r^2 = 9\), where both the positive and the negative value must be considered.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Explicit formula for 5, 2, −1, −4, …</span></summary><div><p>\(d = -3\)</p><p class="answer">\(a_n = 8 - 3n\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">Explicit formula for 3, −6, 12, −24, …</span></summary><div><p>\(r = -2\)</p><p class="answer">\(a_n = 3(-2)^{n-1}\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">x, x + 4, 3x is arithmetic. Find x</span></summary><div><p>\(2(x + 4) = x + 3x\)</p><p class="answer">\(x = 4\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">x, x + 3, x + 9 is geometric. Find x</span></summary><div><p>\((x + 3)^2 = x(x + 9) \Rightarrow 6x + 9 = 9x\)</p><p class="answer">\(x = 3\) (the sequence 3, 6, 12)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">A starting salary of 15,000 a month rises by 500 each year. What is the monthly salary in year 10?</span></summary><div><p>\(15000 + 9(500)\)</p><p class="answer">19,500</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">\(a_1 = 0,\ a_{n+1} = 0.5a_n + 100\). What does it converge to?</span></summary><div><p>\(L = \tfrac{100}{1 - 0.5}\)</p><p class="answer">200</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/series/">27.13 Series</a> — adding up the terms of a sequence</li>
+      <li><a href="/en/blog/sequences-and-series-roadmap/">Sequences and series roadmap</a> — ε–N limits, the squeeze theorem, monotone sequences and beyond</li>
+      <li><a href="/en/blog/mathematical-induction-examples/">Mathematical induction examples</a> — proving the explicit formula of a recursive sequence</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

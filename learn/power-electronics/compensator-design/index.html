@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=7995587d">
-<link rel="stylesheet" href="/assets/site.css?v=7995587d">
+<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/power-electronics/compensator-design/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/power-electronics/compensator-design/#article","headline":"ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation","description":"ออกแบบตัวชดเชย (compensator) ของคอนเวอร์เตอร์ DC-DC ด้วยออปแอมป์: เป้าหมายลูป phase margin gain margin ข้อจำกัดความถี่ครอสโอเวอร์ วิธี k-factor ของ Venable สูตรค่า R C ของ Type II และ Type III ตัวอย่างบั๊ก 24 V ได้ fc 5.4 kHz PM 62° ตรวจด้วย python-control และ peak current mode กับ slope compensation","inLanguage":"th","url":"https://modsengineeringmath.com/learn/power-electronics/compensator-design/","mainEntityOfPage":"https://modsengineeringmath.com/learn/power-electronics/compensator-design/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Compensator","Type III compensator","Phase margin","Peak current mode control","Slope compensation"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/power-electronics/#article"},"image":["https://modsengineeringmath.com/images/og/learn-power-electronics-compensator-design.jpg"],"educationalLevel":["Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"อิเล็กทรอนิกส์กำลัง","item":"https://modsengineeringmath.com/learn/power-electronics/"},{"@type":"ListItem","position":4,"name":"ออกแบบตัวชดเชย Type I II III ด้วยวิธี k-factor และ Peak Current Mode กับ Slope Compensation","item":"https://modsengineeringmath.com/learn/power-electronics/compensator-design/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"เลือก Type II หรือ Type III อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ดูเฟสที่ต้องเพิ่ม ถ้าน้อยกว่า 90° ใช้ Type II ได้ ซึ่งมักเป็นกรณี current mode หรือ DCM ถ้าพืชมีขั้วคู่ LC ที่ทำให้เฟสตกเกือบ 180° อย่าง voltage mode ใน CCM ต้องใช้ Type III ที่ให้เฟสได้ถึง 180°"}},{"@type":"Question","name":"subharmonic oscillation คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"ใน peak current mode เมื่อ duty เกิน 0.5 การรบกวนของกระแสตัวเหนี่ยวนำจะขยายขึ้นทุกคาบ เห็นเป็นกระแสคาบคู่คาบคี่ไม่เท่ากันที่ความถี่ fs/2 แก้ด้วยการเพิ่มความชันชดเชยอย่างน้อยครึ่งหนึ่งของความชันขาลงของกระแส"}}]}]}</script>
@@ -64,6 +64,33 @@
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
         <div class="nav-list" id="navfn">
@@ -769,9 +796,9 @@ gm,pm,wg,wc=ct.margin(T); print(f&quot;fc={wc/2/np.pi:.0f} Hz  PM={pm:.1f} deg  
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7995587d" defer></script>
-<script src="/assets/lesson.js?v=7995587d" defer></script>
-<script src="/assets/pe-sim.js?v=7995587d" defer></script>
-<script src="/assets/pe-lab.js?v=7995587d" defer></script>
+<script src="/assets/site.js?v=dc2c2d6b" defer></script>
+<script src="/assets/lesson.js?v=dc2c2d6b" defer></script>
+<script src="/assets/pe-sim.js?v=dc2c2d6b" defer></script>
+<script src="/assets/pe-lab.js?v=dc2c2d6b" defer></script>
 </body>
 </html>

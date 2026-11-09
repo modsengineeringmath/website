@@ -37,8 +37,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=7995587d">
-<link rel="stylesheet" href="/assets/site.css?v=7995587d">
+<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/linear-algebra/numerical-methods/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/linear-algebra/numerical-methods/#article","headline":"การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้นด้วยเมทริกซ์: เกาส์ การสลับแถว LU โชเลสกี โทมัส จาโคบี เกาส์-ไซเดล SOR และเลขเงื่อนไข","description":"วิธีเชิงตัวเลขแก้ระบบสมการเชิงเส้น Ax = b ครบทั้งวิธีตรงและวิธีทำซ้ำ จำนวนการคำนวณ การกำจัดแบบเกาส์กับการสลับแถว (partial pivoting) การแยก LU และ PA = LU โชเลสกี อัลกอริทึมโทมัส จาโคบี เกาส์-ไซเดล SOR เงื่อนไขการลู่เข้า รัศมีสเปกตรัม เลขเงื่อนไข พร้อมตัวอย่างที่ตรวจตัวเลขแล้วและซิมูเลเตอร์ 5 ชุดที่ใช้บนมือถือได้","inLanguage":"th","url":"https://modsengineeringmath.com/learn/linear-algebra/numerical-methods/","mainEntityOfPage":"https://modsengineeringmath.com/learn/linear-algebra/numerical-methods/","datePublished":"2026-10-25","dateModified":"2026-10-25","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Numerical linear algebra","Gaussian elimination","Pivot element","LU decomposition","Cholesky decomposition","Tridiagonal matrix algorithm","Jacobi method","Gauss–Seidel method","Successive over-relaxation","Spectral radius","Condition number"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/linear-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-linear-algebra-numerical-methods.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpJkUHNvACZSpBG2C7l7VJTO"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"พีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/learn/linear-algebra/"},{"@type":"ListItem","position":4,"name":"การหาผลเฉลยเชิงตัวเลขของระบบสมการเชิงเส้น: เกาส์ การสลับแถว LU โชเลสกี โทมัส จาโคบี เกาส์-ไซเดล SOR และเลขเงื่อนไข","item":"https://modsengineeringmath.com/learn/linear-algebra/numerical-methods/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมคอมพิวเตอร์ไม่ใช้กฎของคราเมอร์แก้ระบบสมการใหญ่?","acceptedAnswer":{"@type":"Answer","text":"เพราะต้นทุนโตแบบแฟกทอเรียล ถ้าหาดีเทอร์มิแนนต์ด้วยการกระจายโคแฟกเตอร์ ระบบ 20 ตัวแปรต้องคูณราว 21! ≈ 5 × 10¹⁹ ครั้ง เครื่องที่คูณได้พันล้านครั้งต่อวินาทีต้องใช้ราว 1,600 ปี ขณะที่การกำจัดแบบเกาส์ใช้ราว n³/3 ≈ 2,700 ครั้ง และยังแม่นยำเชิงตัวเลขกว่า"}},{"@type":"Question","name":"Partial pivoting คืออะไร และทำไมต้องทำ?","acceptedAnswer":{"@type":"Answer","text":"คือการสลับแถวในแต่ละหลักให้ตัวหลักเป็นตัวที่มีค่าสัมบูรณ์มากที่สุดในหลักนั้น ทำให้ตัวคูณ |m| ≤ 1 ความคลาดเคลื่อนจากการปัดเศษจึงไม่ถูกขยาย ถ้าไม่สลับและตัวหลักเล็กมาก เช่น 0.0001x + y = 1, x + y = 2 กับเครื่องที่เก็บ 3 หลัก จะได้ x = 0 แทนที่จะเป็น 1"}},{"@type":"Question","name":"จาโคบีกับเกาส์-ไซเดลต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"จาโคบีใช้ค่ารอบก่อนทั้งหมดในการคำนวณรอบใหม่ ส่วนเกาส์-ไซเดลนำค่าที่เพิ่งคำนวณได้ในรอบเดียวกันมาใช้ทันที เกาส์-ไซเดลจึงมักลู่เข้าเร็วกว่าราวสองเท่าและใช้หน่วยความจำน้อยกว่า แต่จาโคบีคำนวณแบบขนานได้ง่ายกว่า"}},{"@type":"Question","name":"จะรู้ได้อย่างไรว่าวิธีทำซ้ำจะลู่เข้า?","acceptedAnswer":{"@type":"Answer","text":"เงื่อนไขพอเพียงที่ตรวจง่ายคือเมทริกซ์ทแยงเด่นแท้ (ค่าสัมบูรณ์บนแนวทแยงมากกว่าผลรวมค่าสัมบูรณ์ของตัวอื่นในแถวเดียวกันทุกแถว) เงื่อนไขจำเป็นและพอเพียงคือรัศมีสเปกตรัมของเมทริกซ์การทำซ้ำ ρ(T) \u003c 1 ยิ่ง ρ เล็กยิ่งลู่เข้าเร็ว"}},{"@type":"Question","name":"เลขเงื่อนไข (condition number) บอกอะไร?","acceptedAnswer":{"@type":"Answer","text":"บอกว่าความคลาดเคลื่อนในข้อมูลถูกขยายในคำตอบได้มากสุดกี่เท่า ‖δx‖/‖x‖ ≤ κ(A)‖δb‖/‖b‖ โดยประมาณจะเสียความแม่นยำราว log₁₀ κ หลัก ถ้า κ ≈ 10¹² บนคอมพิวเตอร์ double ที่เก็บราว 16 หลัก จะเหลือหลักที่เชื่อได้เพียงราว 4 หลัก"}}]}]}</script>
@@ -65,6 +65,33 @@
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
         <div class="nav-list" id="navfn">
@@ -1263,10 +1290,10 @@ v = pcg(G, [10; 13; 17], 1e-10, 100);           % conjugate gradient สำห�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7995587d" defer></script>
-<script src="/assets/linalg.js?v=7995587d" defer></script>
-<script src="/assets/vendor/katex.min.js?v=7995587d" defer></script>
-<script src="/assets/mathkit.js?v=7995587d" defer></script>
-<script src="/assets/la-num.js?v=7995587d" defer></script>
+<script src="/assets/site.js?v=dc2c2d6b" defer></script>
+<script src="/assets/linalg.js?v=dc2c2d6b" defer></script>
+<script src="/assets/vendor/katex.min.js?v=dc2c2d6b" defer></script>
+<script src="/assets/mathkit.js?v=dc2c2d6b" defer></script>
+<script src="/assets/la-num.js?v=dc2c2d6b" defer></script>
 </body>
 </html>

@@ -516,6 +516,33 @@ Two sub-pages appended to `sequences-and-series` in `TOPICS` (new part `tools`, 
 - `/privacy/` (`src/pages/privacy.html`, `noLlms`): factual privacy policy (no ads, no analytics, no cookies, no accounts, tools run in the
   browser, localStorage, Cloudflare, self-hosted fonts, youtube-nocookie); linked from the footer. Update it if a form, analytics or sign-in is ever added.
 
+## Precalculus — chapter 27, Thai + English (added 2026-11-09)
+Two topics in `src/topics-precalc.mjs` (imported into `TOPICS` by build.mjs): Thai `precalculus` and English `en/precalculus`
+(`lang: "en"`, `thSlug`/`enSlug` pair → language switch + hreflang on every page). 16 sub-pages with the same slugs in both languages,
+`src/pages/learn/precalculus/*.html` and `src/pages/learn/en/precalculus/*.html`: algebra (A1–A14), functions (F), graphs (G),
+polynomial-functions (P), rational-functions (R), inverse-functions (I), exponential-functions (E), logarithmic-functions (L),
+trigonometric-functions (T), applications-of-trigonometry (K), trig-table (V), sequences (Q), series (S), probability (C),
+statistics (D), statistical-tables (Z); hub formulas H1–H8. 154 formula cards and 106 worked examples per language, same IDs in both.
+**Keep both languages in step**: an edit to a Thai page (numbers, IDs, widget keys, `data-pc-set` buttons) goes into the English twin too.
+- `assets/precalc.js` (`window.PC`; in Node `module.exports` = engine): parser (`log` = base 10, `ln`, `|x|`, `n!`, implicit ×), polynomials,
+  distributions (Φ, Φ⁻¹, t, χ², F, binomial; NR3 lgamma), statistics (quartiles at r(n+1)/4), SVG `plotIn` sized to the box, controls,
+  widgets `pc-quad pc-fn pc-tr pc-poly pc-rat pc-inv pc-exp pc-log`. `assets/precalc-trig.js`: `pc-uc` (draggable unit circle), `pc-sin`,
+  `pc-tri` (all five cases, both SSA triangles), `pc-trig` (angle ⇄ value lookup, links to table rows `#t-<deg>`), `pc-ttab` (table toolbar).
+  `assets/precalc-data.js`: `pc-seq pc-sum pc-count pc-sim pc-binom pc-stat pc-norm pc-reg pc-dist pc-tlook`. UI text switches on `<html lang>`.
+  Page buttons: `data-pc-set='{…}' data-pc-target="<id>"`. Data keys must not differ only by case (HTML attributes are case-insensitive):
+  hence `angA/angB`, `sa sb sk sc`, `half`.
+- Tables: `python3 scripts/pc_tables.py` fills every `<!--TABLE:pc-…-->…<!--/TABLE-->` block in both languages from NumPy/SciPy
+  (trig 0°–360° all six functions, exact values, z negative/positive/0-to-z/critical, t, χ², F 0.05 and 0.01); then `node build.mjs`.
+- Mobile: plots use the real box width, `touch-action: pan-y`; big tables sit in `.pc-scroll` with sticky header row and first column.
+- Menu: group "พรีแคลคูลัส" (`navpre`, data-nav `pre`) first in the maths menu; on English pages build.mjs swaps the whole list for
+  English links generated from the EN topic (`EN_CHROME`). Home card "00", `/learn/en/` card + `hasPart`.
+- Markdown guides (MD_GUIDES): `src/md/precalculus.md` → `/learn/precalculus/guide.md`, `src/md/precalculus-en.md` → `/learn/en/precalculus/guide.md`.
+- Test: `node scripts/test-precalc.mjs` (engine vs scipy values). Share images: `python3 scripts/og.py --prefix learn-precalculus` and
+  `--prefix learn-en-precalculus`, then `node build.mjs`.
+- Short URLs (`_redirects`): `/precalculus` `/precalc` `/trigonometric-table` `/unit-circle` `/triangle-solver` `/z-table` `/t-table`
+  `/chi-square-table` `/f-table` `/statistical-tables` `/p-value` `/compound-interest` `/logarithm` `/probability` `/statistics` … and
+  `/en/precalculus` `/en/trig-table` `/en/z-table` … (`/trig-table`, `/law-of-sines`, `/law-of-cosines`, `/arithmetic-sequence` keep older targets).
+
 ## No ads, no tracking, no cookies (2026-10-26)
 - **Google AdSense was removed completely on 2026-10-26** (the opt-in consent bar added earlier the same day went with it):
   no `adsbygoogle.js`, no `google-adsense-account` meta, no `ads.txt`, no `assets/consent.js`, no "ตั้งค่าคุกกี้" footer button.

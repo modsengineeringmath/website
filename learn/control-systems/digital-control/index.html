@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=7995587d">
-<link rel="stylesheet" href="/assets/site.css?v=7995587d">
+<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/digital-control/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/digital-control/#article","headline":"ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล","description":"ระบบควบคุมดิจิทัลบนไมโครคอนโทรลเลอร์ การสุ่มสัญญาณและ aliasing วงจรคงค่าอันดับศูนย์ (ZOH) การแปลง z ฟังก์ชันถ่ายโอนไม่ต่อเนื่อง การแมป z = e^{sT} เสถียรภาพในวงกลมหนึ่งหน่วย เกณฑ์ของจูรี แปลงตัวควบคุมด้วย Euler และ Tustin (bilinear) สมการผลต่างของ PID ดิจิทัล การเลือกคาบสุ่ม และผลของหน่วงเวลาครึ่งคาบต่อเฟสมาร์จิน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/digital-control/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/digital-control/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Digital control","Sampling","Zero-order hold","Z-transform","Bilinear transform","Jury stability criterion","Digital PID","Aliasing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-digital-control.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล","item":"https://modsengineeringmath.com/learn/control-systems/digital-control/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ควรเลือกความถี่สุ่มเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"กฎหัวแม่มือคือ 20 ถึง 30 เท่าของแบนด์วิดท์วงปิด (หรือของความถี่ครอสโอเวอร์) ต่ำกว่า 10 เท่าเฟสมาร์จินจะหายไปมากจากหน่วงเวลาของ ZOH และควรใส่ฟิลเตอร์แอนติแอลิแอสก่อน ADC ที่ตัดความถี่ต่ำกว่าครึ่งหนึ่งของความถี่สุ่ม"}},{"@type":"Question","name":"ทำไมระบบที่เสถียรแบบต่อเนื่อง จึงไม่เสถียรเมื่อทำเป็นดิจิทัล?","acceptedAnswer":{"@type":"Answer","text":"เพราะการสุ่มและคงค่าเพิ่มหน่วงเวลาเฉลี่ยครึ่งคาบสุ่ม ลดเฟสมาร์จิน ยิ่งเกนสูงและคาบสุ่มยาว ยิ่งแย่ ระบบอันดับหนึ่งที่ปิดวงด้วย P ซึ่งเสถียรทุกเกนแบบต่อเนื่อง จะมีเกนสูงสุดเมื่อทำเป็นดิจิทัล"}},{"@type":"Question","name":"Tustin ต่างจาก Euler อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"Euler แทนอนุพันธ์ด้วยผลต่างไปข้างหน้าหรือย้อนหลัง ง่ายแต่บิดเบี้ยวเมื่อคาบสุ่มยาว และ forward Euler อาจทำให้ระบบเสถียรกลายเป็นไม่เสถียร Tustin (bilinear) แมปฝั่งซ้ายของระนาบ s ไปภายในวงกลมหนึ่งหน่วยพอดี จึงรักษาเสถียรภาพเสมอ แม่นกว่าในช่วงความถี่ต่ำถึงกลาง นิยมที่สุดในการแปลงตัวควบคุม"}}]}]}</script>
@@ -64,6 +64,33 @@
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
         <div class="nav-list" id="navfn">
@@ -677,7 +704,7 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7995587d" defer></script>
+<script src="/assets/site.js?v=dc2c2d6b" defer></script>
 
 </body>
 </html>

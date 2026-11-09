@@ -3,20 +3,26 @@ title: "English lessons"
 url: https://modsengineeringmath.com/learn/en/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-11-09
 ---
 
-> English editions of Ajarn Mod's industrial electrical courses: AC motor control with magnetic contactors, star–delta starters, soft starters and VFDs, and PLC automation with ladder logic, timers, sequential control, analog PID and VFD control — written for the 230/400 V 50 Hz systems of Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore.
+> English editions of Ajarn Mod's courses: a 16-page precalculus course built around functions and graphs, with a 0°–360° trig table and z, t, chi-square and F tables, plus industrial electrical courses on AC motor control with magnetic contactors, star–delta starters, soft starters and VFDs, and PLC automation with ladder logic, timers, sequential control, analog PID and VFD control — written for the 230/400 V 50 Hz systems of Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore.
 
 Markdown copy of https://modsengineeringmath.com/learn/en/ for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.
 
 # English lessons
 
 THภาษาไทยENEnglish
-// English editions · industrial electrical engineering
+// English editions · precalculus · industrial electrical engineering
 
 
-Two complete courses translated from the Thai originals, with the same diagrams, formula IDs, calculators and simulators. Every example uses the 230/400 V 50 Hz low-voltage supply shared by Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore, so the device ratings and settings apply directly in all of these countries. Use the ไทย / EN switch at the top of any page to jump to the same page in the other language.
+Complete courses written alongside the Thai originals, with the same diagrams, formula IDs, calculators and simulators. The precalculus course prepares you for calculus and engineering mathematics, with labs that work on a phone. In the electrical courses, every example uses the 230/400 V 50 Hz low-voltage supply shared by Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore, so the device ratings and settings apply directly in all of these countries. Use the ไทย / EN switch at the top of any page to jump to the same page in the other language.
+
+Chapter 27 · 16 pages
+
+### Precalculus: Functions, Graphs, Trigonometry, Probability and Statistics
+Algebra review, functions and graph transformations, polynomial, rational and inverse functions, exponential and logarithmic functions, the unit circle and sinusoids, the laws of sines and cosines, sequences and series, counting and probability, and descriptive statistics, with a searchable 0°–360° trig table, z, t, chi-square and F tables, and 21 interactive labs.
+Open the course Trig table z · t · χ² · F tables Unit circle
 
 Chapter 21 · 15 pages
 

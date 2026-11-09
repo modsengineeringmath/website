@@ -1,0 +1,217 @@
+<!--meta
+{
+  "title": "Rational Functions: Vertical, Horizontal and Slant Asymptotes, Holes, Sign Charts and Graphing, with an Analyzer | Mod's Engineering Mathematics",
+  "h1": "Rational Functions: Vertical, Horizontal and Slant Asymptotes, Holes and How to Graph Them",
+  "description": "Rational functions p(x)/q(x) step by step: the reciprocal functions 1/x and 1/x², the domain, telling holes from vertical asymptotes, the degree rule for horizontal asymptotes, long division for slant (oblique) asymptotes, intercepts, crossing an asymptote, sign charts and rational inequalities, with an analyzer that graphs any rational function with its asymptotes.",
+  "ogTitle": "Rational functions: three kinds of asymptote, holes and a 7-step graphing method + analyzer",
+  "lesson": "en/precalculus",
+  "sub": "rational-functions",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["rational functions", "vertical asymptote", "horizontal asymptote", "slant asymptote", "oblique asymptote", "holes in rational functions", "removable discontinuity", "how to graph rational functions", "horizontal asymptote rules", "rational inequalities", "reciprocal function", "graph of 1/x"],
+  "about": ["Rational function", "Asymptote", "Vertical asymptote", "Horizontal asymptote", "Oblique asymptote", "Removable discontinuity", "Sign chart"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "Rational Functions", "sub": "Vertical · horizontal · slant asymptotes · holes · sign charts · inequalities", "eyebrow": "Chapter 27.5 · Precalculus", "sym": "p/q"},
+  "faq": [
+    {"q": "What is the difference between a hole and a vertical asymptote?", "a": "Both come from a value that makes the denominator zero. If that factor cancels completely with the numerator, the graph has a single missing point, a hole, because the function still approaches a finite value there. If the factor is still in the denominator after cancelling, the function blows up and there is a vertical asymptote."},
+    {"q": "What are the rules for horizontal asymptotes?", "a": "Compare the degree n of the numerator with the degree m of the denominator: n < m gives y = 0; n = m gives y = ratio of the leading coefficients; n > m gives no horizontal asymptote, and if n = m + 1 there is a slant asymptote equal to the quotient from long division."},
+    {"q": "Can a graph cross its horizontal asymptote?", "a": "Yes. A horizontal asymptote only describes what happens as x goes to plus or minus infinity; in the middle the graph may cross it. Solve f(x) = L to find out. A graph never crosses a vertical asymptote, because that x is not in the domain."},
+    {"q": "Why does cross-multiplying a rational inequality go wrong?", "a": "The denominator may be positive or negative depending on x, and multiplying by a negative reverses the inequality. Move everything to one side, combine into one fraction and use a sign chart. Zeros of the denominator are never solutions."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Rational functions</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.5 · Precalculus · Rational Functions</p>
+      <h1>Rational Functions: Vertical, Horizontal and Slant Asymptotes, Holes and How to Graph Them</h1>
+      <p class="lede">A rational function is a polynomial divided by a polynomial. It looks like an ordinary fraction, yet its graph has features polynomials never have: asymptotes that the graph approaches without end, and holes where a single point is missing. Such functions turn up often, in the average cost per item that falls as production grows, in intensity that weakens with distance, and in the transfer functions of control systems. This page gives a seven-step graphing method that works for every exercise, and an analyzer that checks your answer immediately.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">Analyzer</a>
+        <a class="btn btn-ghost btn-sm" href="#reciprocal">Graph of 1/x</a>
+        <a class="btn btn-ghost btn-sm" href="#asymptotes">Asymptotes</a>
+        <a class="btn btn-ghost btn-sm" href="#steps">7 steps</a>
+        <a class="btn btn-ghost btn-sm" href="#inequality">Inequalities</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Cancel common factors first: fully cancelled → hole · left in the denominator → vertical asymptote</li>
+          <li>Horizontal asymptote: deg top &lt; deg bottom → y = 0 · equal → ratio of leading coefficients</li>
+          <li>Top degree one more than bottom → slant asymptote = quotient of long division</li>
+          <li>\(y = \dfrac{a}{x - h} + k\) is \(1/x\) stretched and shifted, with asymptotes \(x = h,\ y = k\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try asymptote, hole, horizontal, slant, reciprocal, sign" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="reciprocal">
+    <h2 id="reciprocal">The reciprocal function and its transformations</h2>
+    <p>The graph of \(y = 1/x\) is a hyperbola with branches in the first and third quadrants. Near x = 0, \(1/x\) grows without bound; for large x it shrinks almost to zero, so both axes are asymptotes. Every rational function of degree one over degree one can be rewritten by division as a transformation of \(1/x\), which reveals its asymptotes and shape at once. \(1/x^2\) is positive on both sides of zero, so both of its branches lie above the x-axis.</p>
+    <div class="tf-grid">
+      <div class="tf" id="R1" data-k="rational function definition domain">
+        <p class="tf-n"><b><span class="fid">R1</span> Rational function</b></p>
+        \[ f(x) = \frac{p(x)}{q(x)},\qquad D_f = \{x : q(x) \ne 0\} \]
+      </div>
+      <div class="tf" id="R2" data-k="reciprocal function transformation 1/x hyperbola">
+        <p class="tf-n"><b><span class="fid">R2</span> Transformed reciprocal</b></p>
+        \[ y = \frac{a}{x - h} + k:\quad \text{VA } x = h,\ \ \text{HA } y = k \]
+        <p class="tf-x">\(\dfrac{ax + b}{cx + d} = \dfrac{a}{c} + \dfrac{b - ad/c}{cx + d}\), so HA \(y = a/c\), VA \(x = -d/c\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-r1">
+      <div class="wx-head"><span class="mono">Example R-1 · As a transformation of 1/x</span><h3>Write \(f(x) = \dfrac{2x - 3}{x + 1}\) as \(\dfrac{a}{x - h} + k\) and give its asymptotes</h3></div>
+      <ol class="steps">
+        <li><p>Make the numerator contain \(x + 1\): \(2x - 3 = 2(x + 1) - 5\)</p></li>
+        <li><p>\(f(x) = \dfrac{2(x + 1) - 5}{x + 1} = 2 - \dfrac{5}{x + 1}\)</p></li>
+        <li><p>That is \(1/x\) stretched by 5, reflected in the x-axis, shifted left 1 and up 2</p></li>
+      </ol>
+      <p class="answer">VA \(x = -1\), HA \(y = 2\); the branches sit upper-left and lower-right of where the asymptotes meet</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="asymptotes">
+    <h2 id="asymptotes">Holes and the three kinds of asymptote</h2>
+    <p>Before looking for asymptotes, always factor the numerator and denominator and cancel common factors. A factor that cancels completely leaves a hole, whose y-coordinate comes from the reduced formula; a factor that remains in the denominator gives a vertical asymptote. For the ends of the graph, compare degrees, just as with polynomials, because the leading terms take over.</p>
+    <div class="tf-grid">
+      <div class="tf" id="R3" data-k="hole removable discontinuity common factor">
+        <p class="tf-n"><b><span class="fid">R3</span> Hole</b></p>
+        \[ f(x) = \frac{(x - c)\,g(x)}{(x - c)\,h(x)},\ h(c) \ne 0 \ \Rightarrow\ \text{hole at } \left(c,\ \tfrac{g(c)}{h(c)}\right) \]
+      </div>
+      <div class="tf" id="R4" data-k="vertical asymptote denominator zero">
+        <p class="tf-n"><b><span class="fid">R4</span> Vertical asymptote</b></p>
+        \[ \text{after cancelling: } q(c) = 0,\ p(c) \ne 0 \ \Rightarrow\ x = c \]
+      </div>
+      <div class="tf" id="R5" data-k="horizontal asymptote degree rule leading coefficients">
+        <p class="tf-n"><b><span class="fid">R5</span> Horizontal asymptote</b></p>
+        \[ \deg p < \deg q:\ y = 0,\qquad \deg p = \deg q:\ y = \frac{a_n}{b_m} \]
+      </div>
+      <div class="tf" id="R6" data-k="slant oblique asymptote long division">
+        <p class="tf-n"><b><span class="fid">R6</span> Slant asymptote</b></p>
+        \[ \deg p = \deg q + 1:\ \frac{p}{q} = (mx + c) + \frac{r(x)}{q(x)} \Rightarrow y = mx + c \]
+      </div>
+    </div>
+    <div class="wx" id="ex-r2">
+      <div class="wx-head"><span class="mono">Example R-2 · A hole and asymptotes</span><h3>Analyse \(f(x) = \dfrac{x^2 - 4}{x^2 - x - 2}\)</h3></div>
+      <ol class="steps">
+        <li><p>Factor: \(\dfrac{(x - 2)(x + 2)}{(x - 2)(x + 1)}\); cancelling \(x - 2\) gives \(\dfrac{x + 2}{x + 1}\) for \(x \ne 2\)</p></li>
+        <li><p>Hole at x = 2: \(y = \dfrac{2 + 2}{2 + 1} = \dfrac43\) · VA from the remaining factor: \(x = -1\)</p></li>
+        <li><p>Equal degrees (2 and 2): HA \(y = \tfrac11 = 1\)</p></li>
+        <li><p>x-intercept from the reduced numerator: \(x = -2\) · y-intercept \(f(0) = \tfrac{-4}{-2} = 2\)</p></li>
+      </ol>
+      <p class="answer">Hole \((2, \tfrac43)\) · VA \(x = -1\) · HA \(y = 1\) · intercepts \((-2, 0)\), \((0, 2)\) <button type="button" class="wx-btn" data-pc-set='{"num":"x^2 - 4","den":"x^2 - x - 2"}' data-pc-target="ratLab">Open in the analyzer</button></p>
+    </div>
+    <div class="wx" id="ex-r3">
+      <div class="wx-head"><span class="mono">Example R-3 · A slant asymptote</span><h3>Find the asymptotes of \(f(x) = \dfrac{x^2 + 1}{x - 1}\)</h3></div>
+      <ol class="steps">
+        <li><p>The numerator degree 2 is one more than the denominator degree 1 ⇒ slant asymptote, no horizontal one</p></li>
+        <li><p>Long division: \(x^2 + 1 = (x - 1)(x + 1) + 2\), so \(f(x) = x + 1 + \dfrac{2}{x - 1}\)</p></li>
+        <li><p>For large \(|x|\), \(\tfrac{2}{x - 1} \to 0\) and the graph approaches \(y = x + 1\)</p></li>
+      </ol>
+      <p class="answer">VA \(x = 1\) · slant asymptote \(y = x + 1\) · no x-intercept · \(f(0) = -1\) <button type="button" class="wx-btn" data-pc-set='{"num":"x^2 + 1","den":"x - 1"}' data-pc-target="ratLab">Graph it</button></p>
+    </div>
+    <div class="wx" id="ex-r4">
+      <div class="wx-head"><span class="mono">Example R-4 · Crossing a horizontal asymptote</span><h3>Where does \(f(x) = \dfrac{2x^2 - 3x}{x^2 + 1}\) cross its horizontal asymptote?</h3></div>
+      <ol class="steps">
+        <li><p>HA: equal degrees, \(y = 2\) · the denominator is never zero, so there is no VA</p></li>
+        <li><p>Solve \(\dfrac{2x^2 - 3x}{x^2 + 1} = 2 \Rightarrow 2x^2 - 3x = 2x^2 + 2 \Rightarrow x = -\tfrac23\)</p></li>
+      </ol>
+      <p class="answer">At \(\left(-\tfrac23,\ 2\right)\); further left the graph approaches y = 2 from above</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="steps">
+    <h2 id="steps">Graphing a rational function in 7 steps</h2>
+    <ol>
+      <li>Factor numerator and denominator; write the domain</li>
+      <li>Cancel common factors and record each hole with its y-coordinate</li>
+      <li>Find vertical asymptotes from the zeros of the remaining denominator</li>
+      <li>Find the horizontal or slant asymptote by comparing degrees</li>
+      <li>Find the x-intercepts (zeros of the remaining numerator) and the y-intercept (if 0 is in the domain)</li>
+      <li>Make a sign chart from the zeros of the numerator and the denominator, to know where the graph is above or below the axis</li>
+      <li>Sketch along the asymptotes and draw an open circle at each hole</li>
+    </ol>
+    <div class="tf-grid">
+      <div class="tf" id="R7" data-k="sign chart rational intervals">
+        <p class="tf-n"><b><span class="fid">R7</span> Sign chart</b></p>
+        \[ \text{cut points} = \{p = 0\} \cup \{q = 0\},\ \text{constant sign on each interval} \]
+        <p class="tf-x">A factor with an even power does not change the sign, in the numerator or in the denominator</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">Rational function analyzer</h2>
+    <p>Type the numerator and denominator as polynomials or in factored form, for example <code>(x-1)(x+2)</code>, or as coefficients <code>1, 0, -4</code>. The analyzer cancels common factors, finds holes, all three kinds of asymptote, intercepts and the sign chart, and draws each branch separately at the vertical asymptotes, so there are no false vertical lines, a common fault of general graphing tools.</p>
+    <div class="pc-rat" id="ratLab" data-num="x^2 - 4" data-den="x^2 - x - 2"><noscript>JavaScript is needed for the analyzer</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="wx-btn" data-pc-set='{"num":"1","den":"x^2"}' data-pc-target="ratLab">1/x²</button>
+      <button type="button" class="wx-btn" data-pc-set='{"num":"2x - 3","den":"x + 1"}' data-pc-target="ratLab">R-1</button>
+      <button type="button" class="wx-btn" data-pc-set='{"num":"2x^2 - 3x","den":"x^2 + 1"}' data-pc-target="ratLab">R-4</button>
+      <button type="button" class="wx-btn" data-pc-set='{"num":"x^3","den":"(x-1)(x+2)"}' data-pc-target="ratLab">x³/((x − 1)(x + 2))</button>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inequality">
+    <h2 id="inequality">Rational inequalities and an application</h2>
+    <div class="wx" id="ex-r5">
+      <div class="wx-head"><span class="mono">Example R-5 · A rational inequality</span><h3>Solve \(\dfrac{x - 3}{x + 2} \le 1\)</h3></div>
+      <ol class="steps">
+        <li><p>Move everything left: \(\dfrac{x - 3 - (x + 2)}{x + 2} \le 0 \Rightarrow \dfrac{-5}{x + 2} \le 0\)</p></li>
+        <li><p>The numerator −5 is always negative, so the fraction is \(\le 0\) when the denominator is positive: \(x + 2 > 0\)</p></li>
+      </ol>
+      <p class="answer">\(x > -2\). Cross-multiplying at the start gives \(-3 \le 2\), always true, and the wrong answer “all x except −2”</p>
+    </div>
+    <div class="wx" id="ex-r6">
+      <div class="wx-head"><span class="mono">Example R-6 · Average cost</span><h3>A factory has fixed costs of 5,000 and a variable cost of 20 per item. What is the average cost per item when x items are made, and what value does it approach?</h3></div>
+      <ol class="steps">
+        <li><p>Total cost \(5000 + 20x\); average cost \(\bar C(x) = \dfrac{5000 + 20x}{x} = 20 + \dfrac{5000}{x}\)</p></li>
+        <li><p>The horizontal asymptote \(y = 20\) means that however many items are made, the average never drops below 20</p></li>
+        <li><p>At 1,000 items the average is \(20 + 5 = 25\)</p></li>
+      </ol>
+      <p class="answer">\(\bar C(x) = 20 + \tfrac{5000}{x}\), approaching 20 per item</p>
+    </div>
+    <div class="sr-trap"><b>Common traps</b>Finding vertical asymptotes before cancelling, so that a hole is counted as an asymptote, and answering “no horizontal asymptote” whenever the top degree is larger without checking for a slant asymptote.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Asymptotes of \(f(x) = \dfrac{3x + 1}{x - 4}\)</span></summary><div><p>VA from the denominator · equal degrees</p><p class="answer">\(x = 4\), \(y = 3\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">Hole of \(f(x) = \dfrac{x^2 - 9}{x - 3}\)</span></summary><div><p>\(f(x) = x + 3,\ x \ne 3\)</p><p class="answer">\((3, 6)\), and no asymptote: the graph is a line with one point missing</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">Horizontal asymptote of \(\dfrac{5x^2}{2x^3 + 1}\)</span></summary><div><p>Smaller degree on top</p><p class="answer">\(y = 0\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">Slant asymptote of \(\dfrac{2x^2 + 3x - 1}{x + 2}\)</span></summary><div><p>Synthetic division by c = −2: 2 | −1 | remainder 1 ⇒ \(2x - 1 + \tfrac{1}{x + 2}\)</p><p class="answer">\(y = 2x - 1\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">Solve \(\dfrac{x + 4}{x - 1} > 0\)</span></summary><div><p>Cut points −4, 1; the outer intervals are positive</p><p class="answer">\(x < -4\) or \(x > 1\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">A rational function with VA \(x = 2\), HA \(y = -1\), through the origin</span></summary><div><p>Form \(\tfrac{a}{x - 2} - 1\); through (0, 0): \(-\tfrac a2 - 1 = 0 \Rightarrow a = -2\)</p><p class="answer">\(f(x) = -\dfrac{2}{x - 2} - 1 = \dfrac{-x}{x - 2}\)</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/inverse-functions/">27.6 Inverse functions</a> — the inverse of \((ax + b)/(cx + d)\) is also rational</li>
+      <li><a href="/en/blog/inverse-laplace-transform-partial-fractions/">Inverse Laplace transform by partial fractions</a> — splitting rational functions in engineering</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

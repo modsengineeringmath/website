@@ -1,0 +1,243 @@
+<!--meta
+{
+  "title": "การแปลงกราฟ (Graph Transformations): เลื่อน ยืด หด สะท้อน ฟังก์ชันคู่-คี่ เส้นตรง วงกลม พร้อมแล็บ | อาจารย์มด",
+  "h1": "กราฟของฟังก์ชันและการแปลงกราฟ: เลื่อน ยืด หด สะท้อน สมมาตร ฟังก์ชันคู่-คี่ และเส้นตรง",
+  "description": "อ่านกราฟให้ได้โดเมน เรนจ์ จุดตัดแกน และช่วงเพิ่ม-ลด ความชันและสมการเส้นตรงทุกรูปแบบ เส้นขนาน-ตั้งฉาก วงกลม กราฟฟังก์ชันพื้นฐาน 10 แบบ การเลื่อน ยืด หด สะท้อน ลำดับการแปลง y = a·f(b(x − h)) + k ฟังก์ชันคู่-คี่ และแล็บแปลงกราฟแบบลากสไลเดอร์ที่ใช้บนมือถือได้",
+  "ogTitle": "การแปลงกราฟ y = a·f(b(x − h)) + k: เลื่อน ยืด สะท้อน ฟังก์ชันคู่-คี่ + แล็บ",
+  "lesson": "precalculus",
+  "sub": "graphs",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["การแปลงกราฟ", "การเลื่อนกราฟ", "การยืดหดกราฟ", "การสะท้อนกราฟ", "กราฟฟังก์ชันพื้นฐาน", "ฟังก์ชันคู่ ฟังก์ชันคี่", "สมการเส้นตรง", "ความชัน", "เส้นขนาน เส้นตั้งฉาก", "สมการวงกลม", "graph transformations", "parent functions", "horizontal shift", "vertical stretch", "reflection", "even and odd functions", "slope intercept form", "point slope form"],
+  "about": ["Graph of a function", "Transformation of graphs", "Parent function", "Even and odd functions", "Slope", "Linear equation", "Circle"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "การแปลงกราฟ", "sub": "y = a·f(b(x − h)) + k · เลื่อน · ยืด · สะท้อน · ฟังก์ชันคู่-คี่ · เส้นตรง · วงกลม", "eyebrow": "บทที่ 27.3 · Graphs & Transformations", "sym": "↔"},
+  "faq": [
+    {"q": "ทำไม f(x − 2) ถึงเลื่อนไปทางขวา ไม่ใช่ทางซ้าย?", "a": "เพราะ y = f(x − 2) จะให้ค่าเดิมของ f(0) ก็ต่อเมื่อ x − 2 = 0 คือ x = 2 ทุกจุดของกราฟเดิมจึงต้องไปเกิดช้ากว่าเดิม 2 หน่วย หรือเลื่อนไปทางขวา 2 หน่วย การเปลี่ยนที่ทำกับ x ภายในวงเล็บจะทำงาน “กลับด้าน” กับที่ตาเห็นเสมอ ทั้งการเลื่อนและการยืด"},
+    {"q": "ถ้ามีการแปลงหลายอย่าง ต้องทำอะไรก่อน?", "a": "สำหรับ y = a·f(b(x − h)) + k ให้ทำการเปลี่ยนแปลงแนวนอนจากในออกนอก (ยืด-หดด้วย b แล้วเลื่อนด้วย h) และแนวตั้งตามลำดับปกติ (ยืด-สะท้อนด้วย a แล้วเลื่อนด้วย k) วิธีที่ไม่มีวันผิดคือใช้สูตรย้ายจุด (x, y) ไปที่ (x/b + h, a·y + k) กับจุดสำคัญของกราฟต้นแบบ"},
+    {"q": "ฟังก์ชันคู่และฟังก์ชันคี่ดูอย่างไร?", "a": "ฟังก์ชันคู่มี f(−x) = f(x) กราฟสมมาตรกับแกน y เช่น x², cos x ฟังก์ชันคี่มี f(−x) = −f(x) กราฟสมมาตรรอบจุดกำเนิด เช่น x³, sin x ถ้าแทน −x แล้วไม่ได้ทั้งสองแบบ แสดงว่าไม่เป็นทั้งคู่และคี่ ฟังก์ชันส่วนใหญ่เป็นแบบหลังนี้"},
+    {"q": "เส้นตรงสองเส้นตั้งฉากกันเมื่อใด?", "a": "เมื่อผลคูณความชันเท่ากับ −1 หรือความชันหนึ่งเป็นส่วนกลับที่มีเครื่องหมายตรงข้ามของอีกเส้น เช่น ความชัน 3/4 ตั้งฉากกับ −4/3 ยกเว้นคู่เส้นแนวนอนกับแนวตั้งซึ่งตั้งฉากกันแต่เส้นแนวตั้งไม่มีความชัน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/precalculus/">พรีแคลคูลัส</a></li><li>กราฟและการแปลงกราฟ</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 27.3 · พรีแคลคูลัส · Graphs &amp; Transformations</p>
+      <h1>กราฟของฟังก์ชันและการแปลงกราฟ: เลื่อน ยืด หด สะท้อน สมมาตร ฟังก์ชันคู่-คี่ และเส้นตรง</h1>
+      <p class="lede">ถ้าจำหน้าตากราฟต้นแบบได้สิบแบบ และเข้าใจว่าตัวเลข a, b, h, k ในสมการ \(y = a\,f\big(b(x - h)\big) + k\) ทำอะไรกับกราฟ ก็จะวาดกราฟของฟังก์ชันได้อีกหลายร้อยแบบโดยไม่ต้องจุดจุดทีละจุด หน้านี้เริ่มจากการอ่านกราฟให้ได้ข้อมูลครบ ทบทวนเส้นตรงและวงกลมซึ่งเป็นกราฟที่ใช้บ่อยที่สุด แล้วจึงไล่การเลื่อน การยืด-หด และการสะท้อนทีละขั้น พร้อมแล็บที่ลากสไลเดอร์แล้วเห็นจุดบนกราฟย้ายที่จริง ๆ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บแปลงกราฟ</a>
+        <a class="btn btn-ghost btn-sm" href="#lines">เส้นตรง</a>
+        <a class="btn btn-ghost btn-sm" href="#parents">กราฟต้นแบบ</a>
+        <a class="btn btn-ghost btn-sm" href="#transform">การแปลง</a>
+        <a class="btn btn-ghost btn-sm" href="#symmetry">คู่ · คี่</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(f(x) + k\) ขึ้น k · \(f(x - h)\) ขวา h · \(a f(x)\) ยืดแนวตั้ง a เท่า · \(f(bx)\) หดแนวนอน 1/b เท่า</li>
+          <li>\(-f(x)\) สะท้อนแกน x · \(f(-x)\) สะท้อนแกน y</li>
+          <li>จุด \((x, y)\) ของกราฟต้นแบบไปอยู่ที่ \(\left(\tfrac{x}{b} + h,\ a y + k\right)\)</li>
+          <li>คู่: \(f(-x) = f(x)\) สมมาตรแกน y · คี่: \(f(-x) = -f(x)\) สมมาตรจุดกำเนิด</li>
+          <li>ขนาน: \(m_1 = m_2\) · ตั้งฉาก: \(m_1 m_2 = -1\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น slope, perpendicular, circle, shift, stretch, reflect, even, odd" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="reading">
+    <h2 id="reading">อ่านกราฟให้ได้ข้อมูลครบ</h2>
+    <p>กราฟหนึ่งรูปตอบคำถามได้หลายข้อพร้อมกัน: โดเมนคือเงาของกราฟที่ตกลงบนแกน x เรนจ์คือเงาบนแกน y จุดตัดแกน x คือคำตอบของสมการ \(f(x) = 0\) จุดตัดแกน y คือ \(f(0)\) ช่วงที่กราฟไต่ขึ้นเมื่ออ่านจากซ้ายไปขวาคือช่วงที่ฟังก์ชันเพิ่ม และจุดสูงสุดหรือต่ำสุดเฉพาะที่คือตำแหน่งที่กราฟเปลี่ยนจากขึ้นเป็นลงหรือลงเป็นขึ้น ทักษะนี้สำคัญกว่าการคำนวณ เพราะในแคลคูลัสเราจะใช้อนุพันธ์หาจุดเหล่านี้ และต้องรู้ก่อนว่ากำลังหาอะไรบนกราฟ</p>
+    <div class="tf-grid">
+      <div class="tf" id="G1" data-k="intercepts increasing decreasing graph reading จุดตัดแกน ฟังก์ชันเพิ่ม ลด">
+        <p class="tf-n"><b><span class="fid">G1</span> Reading a graph</b> อ่านกราฟ</p>
+        \[ x\text{-int}: f(x) = 0,\quad y\text{-int}: (0, f(0)),\quad x_1 < x_2 \Rightarrow f(x_1) < f(x_2)\ \text{(เพิ่ม)} \]
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lines">
+    <h2 id="lines">เส้นตรง ความชัน และวงกลม</h2>
+    <p>ความชัน (slope) คืออัตราส่วนระหว่างการขึ้นลงกับการเดินไปทางขวา \(m = \Delta y/\Delta x\) ซึ่งก็คืออัตราการเปลี่ยนแปลงเฉลี่ยที่คงที่ทุกช่วงของเส้นตรง สมการเส้นตรงมีหลายรูป แต่ละรูปเหมาะกับข้อมูลที่โจทย์ให้มาต่างกัน ถ้ารู้ความชันกับจุดหนึ่งจุดให้ใช้รูปจุด-ความชัน ถ้าต้องการอ่านจุดตัดแกน y ให้ใช้รูป \(y = mx + c\) วงกลมเป็นตัวอย่างของกราฟที่ไม่ใช่ฟังก์ชัน แต่ใช้บ่อยในเรขาคณิตวิเคราะห์และในวงกลมหนึ่งหน่วยของตรีโกณมิติ</p>
+    <div class="tf-grid">
+      <div class="tf" id="G2" data-k="slope line equation point slope intercept ความชัน สมการเส้นตรง">
+        <p class="tf-n"><b><span class="fid">G2</span> Lines</b> เส้นตรง</p>
+        \[ m = \frac{y_2 - y_1}{x_2 - x_1},\quad y - y_1 = m(x - x_1),\quad y = mx + c,\quad Ax + By = C \]
+      </div>
+      <div class="tf" id="G3" data-k="parallel perpendicular slopes เส้นขนาน ตั้งฉาก">
+        <p class="tf-n"><b><span class="fid">G3</span> Parallel &amp; perpendicular</b> ขนาน · ตั้งฉาก</p>
+        \[ \ell_1 \parallel \ell_2 \iff m_1 = m_2,\qquad \ell_1 \perp \ell_2 \iff m_1 m_2 = -1 \]
+      </div>
+      <div class="tf" id="G4" data-k="distance midpoint formula ระยะทาง จุดกึ่งกลาง">
+        <p class="tf-n"><b><span class="fid">G4</span> Distance &amp; midpoint</b> ระยะ · จุดกึ่งกลาง</p>
+        \[ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2},\quad M = \left(\tfrac{x_1 + x_2}{2},\ \tfrac{y_1 + y_2}{2}\right) \]
+      </div>
+      <div class="tf" id="G5" data-k="circle equation center radius completing square วงกลม จุดศูนย์กลาง รัศมี">
+        <p class="tf-n"><b><span class="fid">G5</span> Circle</b> วงกลม</p>
+        \[ (x - h)^2 + (y - k)^2 = r^2 \]
+        <p class="tf-x">รูปกระจาย \(x^2 + y^2 + Dx + Ey + F = 0\) ทำเป็นกำลังสองสมบูรณ์ทั้ง x และ y</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-g1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-1 · เส้นตั้งฉาก</span><h3>หาสมการเส้นตรงผ่าน \((2, -1)\) และตั้งฉากกับ \(3x - 4y = 12\)</h3></div>
+      <ol class="steps">
+        <li><p>เขียนเส้นที่ให้มาเป็น \(y = \tfrac34 x - 3\) ความชัน \(m_1 = \tfrac34\)</p></li>
+        <li><p>ตั้งฉาก: \(m_2 = -\tfrac43\) (<a class="tag tf" href="#G3">G3</a>)</p></li>
+        <li><p>รูปจุด-ความชัน: \(y + 1 = -\tfrac43(x - 2) \Rightarrow y = -\tfrac43 x + \tfrac53\)</p></li>
+      </ol>
+      <p class="answer">\(y = -\tfrac43x + \tfrac53\) หรือ \(4x + 3y = 5\) (ตรวจ: \(4(2) + 3(-1) = 5\))</p>
+    </div>
+    <div class="wx" id="ex-g2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-2 · วงกลมจากรูปกระจาย</span><h3>หาจุดศูนย์กลางและรัศมีของ \(x^2 + y^2 - 6x + 4y - 12 = 0\)</h3></div>
+      <ol class="steps">
+        <li><p>จัดกลุ่ม: \((x^2 - 6x) + (y^2 + 4y) = 12\)</p></li>
+        <li><p>เติมกำลังสองสมบูรณ์: \((x^2 - 6x + 9) + (y^2 + 4y + 4) = 12 + 9 + 4\)</p></li>
+        <li><p>ได้ \((x - 3)^2 + (y + 2)^2 = 25\)</p></li>
+      </ol>
+      <p class="answer">จุดศูนย์กลาง \((3, -2)\) รัศมี 5</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="parents">
+    <h2 id="parents">กราฟฟังก์ชันต้นแบบที่ต้องจำหน้าตาได้</h2>
+    <p>กราฟต้นแบบ (parent functions) คือรูปพื้นฐานที่ถูกนำไปเลื่อน ยืด และสะท้อน ให้จำสามอย่างของแต่ละตัว: รูปร่าง จุดสำคัญสองสามจุด และโดเมน-เรนจ์ เลือกดูทีละตัวได้ในแล็บด้านล่าง ตารางนี้สรุปไว้ให้เปรียบเทียบ</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ฟังก์ชัน</th><th>จุดสำคัญ</th><th>โดเมน</th><th>เรนจ์</th><th>สมมาตร</th></tr></thead>
+      <tbody>
+        <tr><td>\(x\)</td><td>(0, 0), (1, 1)</td><td>\(\mathbb R\)</td><td>\(\mathbb R\)</td><td>คี่</td></tr>
+        <tr><td>\(x^2\)</td><td>(0, 0), (±1, 1), (±2, 4)</td><td>\(\mathbb R\)</td><td>\([0, \infty)\)</td><td>คู่</td></tr>
+        <tr><td>\(x^3\)</td><td>(0, 0), (±1, ±1)</td><td>\(\mathbb R\)</td><td>\(\mathbb R\)</td><td>คี่</td></tr>
+        <tr><td>\(|x|\)</td><td>(0, 0), (±1, 1)</td><td>\(\mathbb R\)</td><td>\([0, \infty)\)</td><td>คู่</td></tr>
+        <tr><td>\(\sqrt{x}\)</td><td>(0, 0), (1, 1), (4, 2)</td><td>\([0, \infty)\)</td><td>\([0, \infty)\)</td><td>—</td></tr>
+        <tr><td>\(\sqrt[3]{x}\)</td><td>(0, 0), (±1, ±1), (8, 2)</td><td>\(\mathbb R\)</td><td>\(\mathbb R\)</td><td>คี่</td></tr>
+        <tr><td>\(\tfrac1x\)</td><td>(1, 1), (−1, −1)</td><td>\(x \ne 0\)</td><td>\(y \ne 0\)</td><td>คี่</td></tr>
+        <tr><td>\(2^x\)</td><td>(0, 1), (1, 2), (−1, ½)</td><td>\(\mathbb R\)</td><td>\((0, \infty)\)</td><td>—</td></tr>
+        <tr><td>\(\log_2 x\)</td><td>(1, 0), (2, 1), (½, −1)</td><td>\((0, \infty)\)</td><td>\(\mathbb R\)</td><td>—</td></tr>
+        <tr><td>\(\sin x\)</td><td>(0, 0), (π/2, 1), (π, 0)</td><td>\(\mathbb R\)</td><td>\([-1, 1]\)</td><td>คี่</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="transform">
+    <h2 id="transform">การเลื่อน ยืด หด และสะท้อน (Transformations)</h2>
+    <p>การแปลงแบ่งเป็นสองพวก พวกที่ทำ “นอกฟังก์ชัน” คือ a และ k ทำกับค่า y โดยตรงจึงเปลี่ยนกราฟในแนวตั้งตามที่ตาคาดไว้ ส่วนพวกที่ทำ “ในฟังก์ชัน” คือ b และ h ทำกับ x ก่อนส่งเข้า f จึงเปลี่ยนกราฟในแนวนอนแบบกลับด้าน: ลบ h แต่ไปทางขวา คูณ b แต่กราฟหดลง เหตุผลคือกราฟใหม่ต้องรอให้ \(b(x - h)\) มีค่าเท่ากับ x เดิมก่อนจึงจะได้ค่า y เดิม</p>
+    <div class="tf-grid">
+      <div class="tf" id="G6" data-k="vertical horizontal shift translation เลื่อนกราฟ ขึ้น ลง ซ้าย ขวา">
+        <p class="tf-n"><b><span class="fid">G6</span> Shifts</b> การเลื่อน</p>
+        \[ y = f(x) + k\ \ (\uparrow k),\qquad y = f(x - h)\ \ (\rightarrow h) \]
+      </div>
+      <div class="tf" id="G7" data-k="vertical horizontal stretch compression ยืด หด">
+        <p class="tf-n"><b><span class="fid">G7</span> Stretches</b> การยืด-หด</p>
+        \[ y = a f(x):\ \text{ยืดแนวตั้ง } |a| \text{ เท่า},\qquad y = f(bx):\ \text{หดแนวนอน } \tfrac{1}{|b|} \text{ เท่า} \]
+      </div>
+      <div class="tf" id="G8" data-k="reflection x-axis y-axis สะท้อน แกน x แกน y">
+        <p class="tf-n"><b><span class="fid">G8</span> Reflections</b> การสะท้อน</p>
+        \[ y = -f(x):\ \text{สะท้อนแกน } x,\qquad y = f(-x):\ \text{สะท้อนแกน } y \]
+      </div>
+      <div class="tf wide" id="G9" data-k="combined transformation point mapping order a b h k ลำดับการแปลง ย้ายจุด">
+        <p class="tf-n"><b><span class="fid">G9</span> Combined</b> รวมทุกการแปลง</p>
+        \[ y = a\,f\big(b(x - h)\big) + k:\qquad (x,\ y) \ \longmapsto\ \left(\frac{x}{b} + h,\ \ a y + k\right) \]
+        <p class="tf-x">ถ้าเจอ \(f(bx - c)\) ให้ดึง b ออกก่อน: \(f\big(b(x - \tfrac{c}{b})\big)\) จึงเลื่อน \(\tfrac{c}{b}\) ไม่ใช่ c</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-g3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-3 · บรรยายการแปลง</span><h3>บรรยายการแปลงจาก \(y = \sqrt x\) ไป \(y = -2\sqrt{x + 3} + 1\) พร้อมจุด โดเมน และเรนจ์</h3></div>
+      <ol class="steps">
+        <li><p>เทียบกับ <a class="tag tf" href="#G9">G9</a>: \(a = -2,\ b = 1,\ h = -3,\ k = 1\)</p></li>
+        <li><p>ลำดับ: เลื่อนซ้าย 3 → ยืดแนวตั้ง 2 เท่า → สะท้อนแกน x → เลื่อนขึ้น 1</p></li>
+        <li><p>ย้ายจุด \((x, y) \mapsto (x - 3,\ -2y + 1)\): \((0, 0) \mapsto (-3, 1)\), \((1, 1) \mapsto (-2, -1)\), \((4, 2) \mapsto (1, -3)\)</p></li>
+        <li><p>โดเมนเริ่มที่ −3 · เรนจ์กลับหัวจากจุดเริ่ม \(y = 1\) ลงไป</p></li>
+      </ol>
+      <p class="answer">โดเมน \([-3, \infty)\) เรนจ์ \((-\infty, 1]\) <button type="button" class="wx-btn" data-pc-set='{"parent":"sqrt","a":-2,"b":1,"h":-3,"k":1}' data-pc-target="trLab">ดูในแล็บ</button></p>
+    </div>
+    <div class="wx" id="ex-g4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-4 · กับดักการหดแนวนอน</span><h3>กราฟ \(y = |2x - 4|\) ได้จาก \(y = |x|\) อย่างไร จุดยอดอยู่ที่ใด</h3></div>
+      <ol class="steps">
+        <li><p>ดึง 2 ออก: \(|2x - 4| = |2(x - 2)|\) จึง \(b = 2,\ h = 2\)</p></li>
+        <li><p>หดแนวนอนเหลือครึ่งหนึ่ง แล้วเลื่อนขวา 2 (ไม่ใช่ 4)</p></li>
+        <li><p>จุดยอด \((0, 0) \mapsto (0/2 + 2,\ 0) = (2, 0)\) ตรวจ: \(|2(2) - 4| = 0\)</p></li>
+      </ol>
+      <p class="answer">จุดยอด \((2, 0)\) และกราฟชันขึ้นเป็นสองเท่า (เพราะ \(|2(x-2)| = 2|x - 2|\))</p>
+    </div>
+    <div class="wx" id="ex-g5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-5 · ย้ายจุดเดียว</span><h3>จุด \((4, 1)\) อยู่บนกราฟ \(y = f(x)\) จุดใดต้องอยู่บนกราฟ \(y = f(2x) - 3\)</h3></div>
+      <ol class="steps">
+        <li><p>\(b = 2,\ k = -3\): \((x, y) \mapsto (x/2,\ y - 3)\)</p></li>
+        <li><p>ตรวจ: ที่ \(x = 2\) ได้ \(f(2\cdot2) - 3 = f(4) - 3 = 1 - 3 = -2\)</p></li>
+      </ol>
+      <p class="answer">\((2, -2)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บแปลงกราฟ: ลากแล้วดูจุดย้ายที่</h2>
+    <p>จุดโปร่งสีเทาคือจุดสำคัญของกราฟต้นแบบ จุดทึบสีส้มคือตำแหน่งใหม่ของจุดเดียวกัน ตารางใต้กราฟบอกพิกัดก่อนและหลัง ลองตั้ง b เป็นลบเพื่อดูการสะท้อนแกน y และเลือกฟังก์ชัน 1/x, 2ˣ หรือ log₂x เพื่อดูว่าเส้นกำกับย้ายตาม h และ k อย่างไร</p>
+    <div class="pc-tr" id="trLab" data-parent="abs" data-a="1" data-b="2" data-h="2" data-k="0"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="sr-trap"><b>กับดักที่พบบ่อย</b>(1) อ่าน \(f(x + 3)\) ว่าเลื่อนขวา 3 · (2) อ่าน \(f(2x - 4)\) ว่าเลื่อน 4 ทั้งที่ต้องดึง 2 ออกก่อนจึงเลื่อน 2 · (3) ทำการเลื่อนแนวตั้งก่อนการยืด เช่นใน \(2f(x) + 1\) ถ้าเลื่อนก่อนแล้วค่อยยืดจะได้ \(2(f(x) + 1) = 2f(x) + 2\) ซึ่งเป็นคนละกราฟ</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="symmetry">
+    <h2 id="symmetry">สมมาตร ฟังก์ชันคู่ และฟังก์ชันคี่</h2>
+    <p>การรู้ว่ากราฟสมมาตรช่วยลดงานไปครึ่งหนึ่ง เพราะวาดครึ่งขวาแล้วสะท้อนได้เลย ในแคลคูลัส สมมาตรยังช่วยคำนวณอินทิกรัลบนช่วงสมมาตรได้ทันที เช่นอินทิกรัลของฟังก์ชันคี่จาก −a ถึง a เท่ากับศูนย์ การตรวจทำได้ด้วยการแทน x ด้วย −x แล้วเทียบกับสูตรเดิม</p>
+    <div class="tf-grid">
+      <div class="tf" id="G10" data-k="even odd function symmetry y-axis origin ฟังก์ชันคู่ คี่ สมมาตร">
+        <p class="tf-n"><b><span class="fid">G10</span> Even &amp; odd</b> ฟังก์ชันคู่-คี่</p>
+        \[ \text{คู่: } f(-x) = f(x)\ \ \text{(แกน } y\text{)},\qquad \text{คี่: } f(-x) = -f(x)\ \ \text{(จุดกำเนิด)} \]
+        <p class="tf-x">คู่ × คู่ = คู่ · คี่ × คี่ = คู่ · คู่ × คี่ = คี่ · ฟังก์ชันคี่ที่นิยามที่ 0 ต้องผ่าน (0, 0)</p>
+      </div>
+      <div class="tf" id="G11" data-k="symmetry test equation x-axis y-axis origin ทดสอบสมมาตร">
+        <p class="tf-n"><b><span class="fid">G11</span> Symmetry tests</b> ทดสอบสมมาตรของสมการ</p>
+        \[ y \to -y:\ \text{แกน } x,\quad x \to -x:\ \text{แกน } y,\quad (x, y) \to (-x, -y):\ \text{จุดกำเนิด} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-g6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง G-6 · คู่ คี่ หรือไม่ใช่ทั้งสอง</span><h3>ตรวจ \(f(x) = x^4 - 3x^2\), \(g(x) = x^3 + x\), \(h(x) = x^2 + x\)</h3></div>
+      <ol class="steps">
+        <li><p>\(f(-x) = x^4 - 3x^2 = f(x)\) จึงเป็นฟังก์ชันคู่</p></li>
+        <li><p>\(g(-x) = -x^3 - x = -g(x)\) จึงเป็นฟังก์ชันคี่</p></li>
+        <li><p>\(h(-x) = x^2 - x\) ไม่เท่ากับ \(h(x)\) และไม่เท่ากับ \(-h(x) = -x^2 - x\)</p></li>
+      </ol>
+      <p class="answer">f คู่ · g คี่ · h ไม่เป็นทั้งคู่และคี่</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ฝึกทำ (มีเฉลย)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">สมการเส้นตรงผ่าน (−1, 4) และ (3, −4)</span></summary><div><p>\(m = \tfrac{-8}{4} = -2\) · \(y - 4 = -2(x + 1)\)</p><p class="answer">\(y = -2x + 2\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">จุดยอดของ \(y = 3(x + 1)^2 - 5\) และกราฟเปิดทางใด</span></summary><div><p>\(h = -1,\ k = -5,\ a = 3 > 0\)</p><p class="answer">\((-1, -5)\) เปิดขึ้น แคบกว่า \(x^2\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">กราฟ \(y = \tfrac{1}{x - 2} + 3\) มีเส้นกำกับอะไรบ้าง</span></summary><div><p>เลื่อน \(\tfrac1x\) ไปขวา 2 ขึ้น 3</p><p class="answer">\(x = 2\) และ \(y = 3\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">\(f(x) = \dfrac{x}{x^2 + 1}\) เป็นฟังก์ชันคู่หรือคี่</span></summary><div><p>\(f(-x) = \dfrac{-x}{x^2 + 1} = -f(x)\)</p><p class="answer">คี่</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">เขียนสมการของกราฟที่ได้จาก \(y = x^2\) โดยสะท้อนแกน x เลื่อนขวา 1 และขึ้น 4</span></summary><div><p>\(a = -1,\ h = 1,\ k = 4\)</p><p class="answer">\(y = -(x - 1)^2 + 4\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">ระยะทางระหว่าง (1, −2) กับ (7, 6)</span></summary><div><p>\(\sqrt{36 + 64}\)</p><p class="answer">10</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">อ่านต่อ</h2>
+    <ul>
+      <li><a href="/learn/precalculus/polynomial-functions/">27.4 ฟังก์ชันพหุนาม</a> — กราฟที่ไม่ได้มาจากการแปลงอย่างเดียว ต้องอ่านจากรากและพฤติกรรมปลาย</li>
+      <li><a href="/learn/precalculus/rational-functions/">27.5 ฟังก์ชันตรรกยะ</a> — การแปลงของ \(1/x\) และเส้นกำกับ</li>
+      <li><a href="/learn/functions/#transform">บทที่ 1 การแปลงกราฟกับสัญญาณไฟฟ้า</a> — เลื่อนเวลาและสเกลเวลาของสัญญาณ</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

@@ -1,0 +1,255 @@
+<!--meta
+{
+  "title": "Functions in Precalculus: Domain and Range, Function Notation, Operations, Composition f∘g, Average Rate of Change | Mod's Engineering Mathematics",
+  "h1": "Functions in Precalculus: Relations, Domain, Range, Function Notation, Operations and Composition",
+  "description": "What makes a relation a function, the vertical line test, how to find the domain from denominators, square roots and logarithms, how to find the range, piecewise functions, sum, difference, product and quotient of functions, composition f∘g and g∘f, the difference quotient and average rate of change, with a lab where you type f and g and see the graph.",
+  "ogTitle": "Functions: domain, range, composition f∘g, average rate of change + lab",
+  "lesson": "en/precalculus",
+  "sub": "functions",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["functions precalculus", "domain and range", "how to find the domain of a function", "how to find the range of a function", "function notation", "composition of functions", "fog and gof", "domain of a composite function", "piecewise function", "operations on functions", "difference quotient", "average rate of change", "vertical line test"],
+  "about": ["Function (mathematics)", "Domain of a function", "Range of a function", "Function composition", "Piecewise function", "Difference quotient", "Average rate of change"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "Functions: Domain, Range, f∘g", "sub": "Relations · vertical line test · domain · range · piecewise · composition · rate of change", "eyebrow": "Chapter 27.2 · Precalculus", "sym": "f(x)"},
+  "faq": [
+    {"q": "What is the difference between a relation and a function?", "a": "A relation is any set of ordered pairs. A function is a relation in which each x is paired with exactly one y. If the same x appears with two different y-values, for example (2, 3) and (2, 5), it is not a function. On a graph, check with the vertical line test: if some vertical line meets the graph more than once, it is not a function."},
+    {"q": "How do I find the domain of a function?", "a": "Look for the three things that break a real-valued formula: a denominator that could be zero, an even root of a negative number, and a logarithm of a number that is not positive. Write a condition for each and intersect them. If none of the three appears, the domain is all real numbers."},
+    {"q": "Is f∘g the same as g∘f?", "a": "Usually not. f∘g means apply g first and feed the result into f. With f(x) = √(x + 2) and g(x) = x² − 1, f∘g = √(x² + 1) but g∘f = x + 1 for x ≥ −2: both the formula and the domain differ. The domain of f∘g is the set of x in the domain of g for which g(x) lies in the domain of f."},
+    {"q": "How is the average rate of change related to calculus?", "a": "The average rate of change (f(b) − f(a))/(b − a) is the slope of the secant line through two points of the graph. As b approaches a, the secant line turns into the tangent line and its slope is the derivative. The difference quotient (f(x + h) − f(x))/h practised here is exactly the definition of the derivative as h → 0."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Functions</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.2 · Precalculus · Functions</p>
+      <h1>Functions in Precalculus: Relations, Domain, Range, Function Notation, Operations and Composition</h1>
+      <p class="lede">A function is a rule that takes one input and always returns one output, like a vending machine that gives the same drink every time you press the same button. If one day the same button produced two different drinks, the machine would stop being a function. This page lays the foundation that every later page uses: reading \(f(x)\), deciding which inputs are allowed (the domain) and which outputs occur (the range), combining functions, and chaining them with composition. It ends with the average rate of change, the doorway to derivatives.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">Function lab</a>
+        <a class="btn btn-ghost btn-sm" href="#domain">Domain</a>
+        <a class="btn btn-ghost btn-sm" href="#range">Range</a>
+        <a class="btn btn-ghost btn-sm" href="#composition">Composition</a>
+        <a class="btn btn-ghost btn-sm" href="#rate">Rate of change</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Function: one x gives one y · the graph passes the vertical line test</li>
+          <li>Domain: exclude zero denominators, negative values under even roots and non-positive log arguments</li>
+          <li>Range: solve for x in terms of y, or use the vertex and the graph</li>
+          <li>\((f \circ g)(x) = f(g(x))\): g acts first · in general \(f \circ g \ne g \circ f\)</li>
+          <li>Average rate of change = secant slope \(\dfrac{f(b) - f(a)}{b - a}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try domain, range, composition, piecewise, difference quotient" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">What a function is: one input, one output</h2>
+    <p>A relation is a set of ordered pairs \((x, y)\) such as {(1, 2), (2, 4), (3, 6)}. It is a function when no x is paired with two different y-values. On a graph that is the vertical line test: if a vertical line hits the graph twice, some x has two outputs. The circle \(x^2 + y^2 = 25\) is therefore not a function of x, while its upper half \(y = \sqrt{25 - x^2}\) is. The notation \(f(x)\), read “f of x”, means the output of the rule f at the input x; it is not f times x.</p>
+    <div class="tf-grid">
+      <div class="tf" id="F1" data-k="function definition relation vertical line test">
+        <p class="tf-n"><b><span class="fid">F1</span> Function</b></p>
+        \[ f: A \to B,\qquad (x, y_1) \in f \ \text{and}\ (x, y_2) \in f \ \Rightarrow\ y_1 = y_2 \]
+        <p class="tf-x">A is the domain · the set of outputs \(\{f(x) : x \in A\}\) is the range</p>
+      </div>
+      <div class="tf" id="F2" data-k="function notation evaluate substitute">
+        <p class="tf-n"><b><span class="fid">F2</span> Function notation</b></p>
+        \[ f(x) = x^2 - 3x \ \Rightarrow\ f(a + 1) = (a + 1)^2 - 3(a + 1) = a^2 - a - 2 \]
+        <p class="tf-x">Substitute the whole input into every x, inside brackets</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="domain">
+    <h2 id="domain">Finding the domain</h2>
+    <p>Unless a problem gives the domain, take it to be every real number for which the formula produces a real number. At this level only three things can go wrong, so check each one and intersect the conditions. Interval notation keeps the answer readable.</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="F3" data-k="domain rules denominator even root logarithm">
+        <p class="tf-n"><b><span class="fid">F3</span> Domain rules</b></p>
+        \[ \frac{p(x)}{q(x)}:\ q(x) \ne 0,\qquad \sqrt{u(x)}:\ u(x) \ge 0,\qquad \log u(x):\ u(x) > 0 \]
+        <p class="tf-x">With several conditions, take the intersection · a root in a denominator needs \(u > 0\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f1">
+      <div class="wx-head"><span class="mono">Example F-1 · A root and a denominator</span><h3>Find the domain of \(f(x) = \dfrac{\sqrt{x + 2}}{x - 3}\)</h3></div>
+      <ol class="steps">
+        <li><p>Square root: \(x + 2 \ge 0 \Rightarrow x \ge -2\)</p></li>
+        <li><p>Denominator: \(x - 3 \ne 0 \Rightarrow x \ne 3\)</p></li>
+        <li><p>Together: every \(x \ge -2\) except 3</p></li>
+      </ol>
+      <p class="answer">\(D_f = [-2,\ 3) \cup (3,\ \infty)\)</p>
+    </div>
+    <div class="wx" id="ex-f2">
+      <div class="wx-head"><span class="mono">Example F-2 · Domain of a logarithm</span><h3>Find the domain of \(g(x) = \log\left(4 - x^2\right)\)</h3></div>
+      <ol class="steps">
+        <li><p>The argument must be positive: \(4 - x^2 > 0 \Rightarrow x^2 < 4\)</p></li>
+        <li><p>\((2 - x)(2 + x) > 0\) holds for \(-2 < x < 2\) (see <a href="/learn/en/precalculus/algebra/#A11">A11</a>)</p></li>
+      </ol>
+      <p class="answer">\(D_g = (-2,\ 2)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="range">
+    <h2 id="range">Finding the range</h2>
+    <p>The range is harder than the domain because the question runs backwards: which y-values are actually produced by some x? Three methods cover most cases: (1) solve \(y = f(x)\) for x and see which y allow a solution, (2) use the vertex for quadratics, (3) start from a known graph, for instance \(\sqrt{x} \ge 0\) or \(b^x > 0\), and apply the shifts and stretches.</p>
+    <div class="tf-grid">
+      <div class="tf" id="F4" data-k="range method solve for x vertex">
+        <p class="tf-n"><b><span class="fid">F4</span> Finding the range</b></p>
+        \[ y = f(x) \ \Rightarrow\ x = g(y) \ \Rightarrow\ R_f = \{\,y : g(y) \text{ is defined and lies in } D_f\,\} \]
+        <p class="tf-x">Quadratic \(a(x - h)^2 + k\): \(a > 0\) gives \([k, \infty)\) · \(a < 0\) gives \((-\infty, k]\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f3">
+      <div class="wx-head"><span class="mono">Example F-3 · Two ranges</span><h3>Find the range of (a) \(f(x) = x^2 - 4x + 7\) (b) \(h(x) = \dfrac{2x}{x + 1}\)</h3></div>
+      <ol class="steps">
+        <li><p>(a) Complete the square: \((x - 2)^2 + 3\); the smallest value is 3, at x = 2</p></li>
+        <li><p>(b) Let \(y = \dfrac{2x}{x + 1}\): \(y(x + 1) = 2x \Rightarrow x(y - 2) = -y \Rightarrow x = \dfrac{y}{2 - y}\)</p></li>
+        <li><p>x exists for every y except \(y = 2\), and no y produces x = −1, so nothing else is removed</p></li>
+      </ol>
+      <p class="answer">(a) \([3,\ \infty)\) · (b) \(\mathbb{R} \setminus \{2\}\), matching the horizontal asymptote \(y = 2\) on the <a href="/learn/en/precalculus/rational-functions/">rational functions</a> page</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="piecewise">
+    <h2 id="piecewise">Piecewise functions</h2>
+    <p>A piecewise function uses different formulas on different intervals of x. Real examples are everywhere: tiered electricity prices, postage by weight, income tax bands. When evaluating, decide which interval x is in first, and watch the &lt; and ≤ signs at each boundary. The absolute value \(|x|\) and the floor function \(\lfloor x \rfloor\) are piecewise functions too.</p>
+    <div class="tf-grid">
+      <div class="tf" id="F5" data-k="piecewise function floor greatest integer">
+        <p class="tf-n"><b><span class="fid">F5</span> Piecewise &amp; floor</b></p>
+        \[ f(x) = \begin{cases} f_1(x), & x < c \\ f_2(x), & x \ge c \end{cases}\qquad \lfloor x \rfloor = \max\{n \in \mathbb Z : n \le x\} \]
+        <p class="tf-x">\(\lfloor 2.7 \rfloor = 2\) · \(\lfloor -2.7 \rfloor = -3\) (not −2)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f4">
+      <div class="wx-head"><span class="mono">Example F-4 · Evaluating a piecewise function</span><h3>\(f(x) = \begin{cases} x^2, & x < 1 \\ 2x - 1, & 1 \le x \le 3 \\ 5, & x > 3 \end{cases}\) Find \(f(-2), f(1), f(3), f(4)\) and say whether the pieces join</h3></div>
+      <ol class="steps">
+        <li><p>\(f(-2)\): −2 &lt; 1, use \(x^2\): 4 · \(f(1)\): second line, \(2(1) - 1 = 1\)</p></li>
+        <li><p>\(f(3) = 2(3) - 1 = 5\) · \(f(4) = 5\)</p></li>
+        <li><p>At x = 1 the left piece approaches \(1^2 = 1 = f(1)\) · at x = 3 the right piece is 5 = f(3), so both joins are seamless</p></li>
+      </ol>
+      <p class="answer">\(4,\ 1,\ 5,\ 5\), continuous at both joins</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="operations">
+    <h2 id="operations">Sum, difference, product and quotient</h2>
+    <p>Two functions combine by adding, subtracting, multiplying or dividing their values at the same x. The catch is the domain: the result is defined only where both f and g are defined, and a quotient must also exclude the points where g is zero, even if the simplified formula hides the denominator.</p>
+    <div class="tf-grid">
+      <div class="tf" id="F6" data-k="sum difference product quotient of functions domain intersection">
+        <p class="tf-n"><b><span class="fid">F6</span> Operations</b></p>
+        \[ (f \pm g)(x) = f(x) \pm g(x),\quad (fg)(x) = f(x)g(x),\quad \left(\tfrac{f}{g}\right)(x) = \tfrac{f(x)}{g(x)} \]
+        <p class="tf-x">Domain \(= D_f \cap D_g\), and for \(f/g\) remove \(\{x : g(x) = 0\}\)</p>
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="composition">
+    <h2 id="composition">Composite functions</h2>
+    <p>Composition connects two machines so that the output of the first becomes the input of the second. \((f \circ g)(x)\), read “f composed with g”, means \(f(g(x))\): do g first, then f, even though f is written first. Its domain has two layers: x must be allowed in g, and g(x) must be allowed in f. Simplifying the final formula can hide the first layer, which is exactly where exam questions set their traps.</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="F7" data-k="composition composite fog gof domain">
+        <p class="tf-n"><b><span class="fid">F7</span> Composition</b></p>
+        \[ (f \circ g)(x) = f\big(g(x)\big),\qquad D_{f\circ g} = \{\,x \in D_g : g(x) \in D_f\,\} \]
+        <p class="tf-x">In general \(f \circ g \ne g \circ f\) · but always \((f \circ g) \circ h = f \circ (g \circ h)\)</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-f5">
+      <div class="wx-head"><span class="mono">Example F-5 · f∘g and g∘f</span><h3>With \(f(x) = \sqrt{x + 2}\) and \(g(x) = x^2 - 1\), find \(f \circ g\) and \(g \circ f\) with their domains</h3></div>
+      <ol class="steps">
+        <li><p>\((f \circ g)(x) = f(x^2 - 1) = \sqrt{x^2 + 1}\); since \(x^2 + 1 > 0\) always, the domain is \(\mathbb R\)</p></li>
+        <li><p>\((g \circ f)(x) = \left(\sqrt{x + 2}\right)^2 - 1 = x + 1\)</p></li>
+        <li><p>But x must go through f first, so \(x \ge -2\), even though \(x + 1\) makes sense for every x</p></li>
+      </ol>
+      <p class="answer">\(f \circ g = \sqrt{x^2 + 1},\ x \in \mathbb R\) · \(g \circ f = x + 1,\ x \ge -2\) <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)","g":"x^2-1","op":"gof"}' data-pc-target="fnLab">Plot g∘f in the lab</button></p>
+    </div>
+    <div class="wx" id="ex-f6">
+      <div class="wx-head"><span class="mono">Example F-6 · Decomposing a function</span><h3>Write \(H(x) = (3x - 1)^5\) as \(f(g(x))\)</h3></div>
+      <ol class="steps">
+        <li><p>The step done first is \(3x - 1\), so \(g(x) = 3x - 1\)</p></li>
+        <li><p>The step done last is raising to the fifth power: \(f(x) = x^5\)</p></li>
+      </ol>
+      <p class="answer">\(g(x) = 3x - 1,\ f(x) = x^5\) — seeing functions this way is the heart of the chain rule</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="rate">
+    <h2 id="rate">Average rate of change and the difference quotient</h2>
+    <p>The average rate of change says how much y changes, on average, per unit of x. If f is distance against time, it is the average speed. Graphically it is the slope of the line through two points of the graph, the secant line. The difference quotient is the same expression written with a step h, and it becomes the definition of the derivative when h shrinks to zero.</p>
+    <div class="tf-grid">
+      <div class="tf" id="F8" data-k="average rate of change secant slope">
+        <p class="tf-n"><b><span class="fid">F8</span> Average rate of change</b></p>
+        \[ \frac{\Delta y}{\Delta x} = \frac{f(b) - f(a)}{b - a} \]
+      </div>
+      <div class="tf" id="F9" data-k="difference quotient derivative">
+        <p class="tf-n"><b><span class="fid">F9</span> Difference quotient</b></p>
+        \[ \frac{f(x + h) - f(x)}{h},\quad h \ne 0 \ \xrightarrow{\ h \to 0\ }\ f'(x) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-f7">
+      <div class="wx-head"><span class="mono">Example F-7 · Difference quotient</span><h3>Find the difference quotient of \(f(x) = x^2 - 3x\), and the average rate of change of \(\sqrt{x + 2}\) from x = −1 to x = 2</h3></div>
+      <ol class="steps">
+        <li><p>\(f(x + h) = x^2 + 2xh + h^2 - 3x - 3h\); subtracting \(f(x)\) leaves \(2xh + h^2 - 3h\)</p></li>
+        <li><p>Divide by h: \(2x + h - 3\) (as h → 0 this becomes \(2x - 3\), the derivative)</p></li>
+        <li><p>\(\sqrt{-1 + 2} = 1\), \(\sqrt{2 + 2} = 2\), so \(\dfrac{2 - 1}{2 - (-1)} = \dfrac13\)</p></li>
+      </ol>
+      <p class="answer">\(2x + h - 3\) · \(\tfrac13\) <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)","op":"f","x0":-1,"x1":2,"sec":true}' data-pc-target="fnLab">Show the secant line</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">Function lab: type f and g</h2>
+    <p>Type functions the usual way, for example <code>2x^2-3</code>, <code>1/(x-1)</code>, <code>sqrt(4-x^2)</code>, <code>|x|</code> or <code>log(x)</code> (base 10), then choose to plot f, g, their sum, product, quotient or a composition. Grey bands mark the x-values where the function is undefined, which checks a domain answer instantly. Move x₁ and x₂ to see the secant line and the average rate of change.</p>
+    <div class="pc-fn" id="fnLab" data-f="sqrt(x+2)" data-g="x^2-1" data-op="fog" data-x0="1" data-x1="3"><noscript>JavaScript is needed for the lab</noscript></div>
+    <div class="pv-btns">
+      <button type="button" class="wx-btn" data-pc-set='{"f":"sqrt(x+2)/(x-3)","op":"f","xmin":-4,"xmax":8}' data-pc-target="fnLab">Domain F-1</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"log(4-x^2)","op":"f","xmin":-4,"xmax":4}' data-pc-target="fnLab">Domain F-2</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"2x/(x+1)","op":"f","xmin":-6,"xmax":6}' data-pc-target="fnLab">Range F-3</button>
+      <button type="button" class="wx-btn" data-pc-set='{"f":"floor(x)","op":"f","xmin":-4,"xmax":4}' data-pc-target="fnLab">⌊x⌋</button>
+    </div>
+    <div class="sr-trap"><b>Common traps</b>Reading the domain of \(g \circ f\) from the final formula alone: in Example F-5 the formula \(x + 1\) looks defined everywhere, but x must pass through \(\sqrt{x + 2}\) first. Another is writing \(f(x + h) = f(x) + h\), which is true only for special functions.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Is {(1, 2), (2, 3), (1, 4)} a function?</span></summary><div><p>x = 1 is paired with both 2 and 4</p><p class="answer">No</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">Domain of \(f(x) = \dfrac{1}{\sqrt{5 - x}}\)</span></summary><div><p>The root is in a denominator, so it must be strictly positive: \(5 - x > 0\)</p><p class="answer">\((-\infty,\ 5)\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">Range of \(f(x) = 3 - \sqrt{x - 1}\)</span></summary><div><p>\(\sqrt{x - 1} \ge 0\), so \(f(x) \le 3\)</p><p class="answer">\((-\infty,\ 3]\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">\(f(x) = 2x + 1,\ g(x) = x^2\): find \((f \circ g)(3)\) and \((g \circ f)(3)\)</span></summary><div><p>\(f(9) = 19\) · \(g(7) = 49\)</p><p class="answer">19 and 49</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">If \(f(x) = 3x - 2\) and \(f(g(x)) = 6x + 7\), find \(g(x)\)</span></summary><div><p>\(3g(x) - 2 = 6x + 7 \Rightarrow g(x) = 2x + 3\)</p><p class="answer">\(g(x) = 2x + 3\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">Difference quotient of \(f(x) = \dfrac1x\)</span></summary><div><p>\(\dfrac{\frac{1}{x+h} - \frac1x}{h} = \dfrac{-1}{x(x + h)}\)</p><p class="answer">\(-\dfrac{1}{x(x + h)}\)</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/graphs/">27.3 Graphs and transformations</a> — see the domain and range in a picture and move graphs with a, b, h, k</li>
+      <li><a href="/learn/en/precalculus/inverse-functions/">27.6 Inverse functions</a> — compositions that give back x</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

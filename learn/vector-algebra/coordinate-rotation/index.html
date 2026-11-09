@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=7995587d">
-<link rel="stylesheet" href="/assets/site.css?v=7995587d">
+<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/#article","headline":"การหมุนแกนพิกัด: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง","description":"เรียนการหมุนแกนภาษาไทย: เวกเตอร์เดียวกันมีองค์ประกอบต่างกันในสองกรอบ สูตร x′ = x cos θ + y sin θ หมุนแกนกับหมุนเวกเตอร์ เมทริกซ์หมุนตั้งฉาก RᵀR = I det R = 1 พื้นเอียง เมทริกซ์ Rx Ry Rz ลำดับการหมุน มุมออยเลอร์ Z-Y-X ของโดรนและ IMU หามุมเอียงจากแรงโน้มถ่วง สูตรโรดริเกส และการแปลง Clarke-Park ของมอเตอร์ พร้อมฉาก 3 มิติหมุนกรอบได้","inLanguage":"th","url":"https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/","mainEntityOfPage":"https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Rotation of axes","Rotation matrix","Euler angles","Rodrigues' rotation formula","Change of basis","Park transformation","Inertial measurement unit"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/vector-algebra/#article"},"image":["https://modsengineeringmath.com/images/og/learn-vector-algebra-coordinate-rotation.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์: จากแรงลัพธ์ถึงเฟสเซอร์","item":"https://modsengineeringmath.com/learn/vector-algebra/"},{"@type":"ListItem","position":4,"name":"การหมุนแกนพิกัด 2D/3D: เมทริกซ์หมุน มุมออยเลอร์ และการเปลี่ยนกรอบอ้างอิง","item":"https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"หมุนแกนกับหมุนเวกเตอร์ต่างกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"หมุนเวกเตอร์ (active) คือย้ายลูกศรไปชี้ทิศใหม่ในกรอบเดิม v_new = R v ส่วนหมุนแกน (passive) คือเวกเตอร์อยู่ที่เดิมแต่เราอ่านองค์ประกอบในแกนที่หมุนไป v′ = Rᵀ v การหมุนแกนไป +θ ให้องค์ประกอบเหมือนการหมุนเวกเตอร์ไป −θ"}},{"@type":"Question","name":"เมทริกซ์หมุนมีสมบัติอะไร?","acceptedAnswer":{"@type":"Answer","text":"คอลัมน์และแถวเป็นเวกเตอร์หนึ่งหน่วยที่ตั้งฉากกัน RᵀR = I จึงหาอินเวอร์สได้ง่าย R⁻¹ = Rᵀ และ det R = +1 การหมุนไม่เปลี่ยนความยาวและมุมระหว่างเวกเตอร์"}},{"@type":"Question","name":"ลำดับการหมุนสำคัญไหม?","acceptedAnswer":{"@type":"Answer","text":"สำคัญมากในสามมิติ การหมุนรอบ x แล้ว z ให้ผลต่างจาก z แล้ว x เพราะการคูณเมทริกซ์ไม่สลับที่ มุมออยเลอร์จึงต้องระบุลำดับเสมอ เช่น Z-Y-X (yaw-pitch-roll)"}},{"@type":"Question","name":"การหมุนแกนเกี่ยวกับมอเตอร์ไฟฟ้าอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"การแปลง Park ในการควบคุมมอเตอร์แบบ field oriented control คือการหมุนแกน αβ ไปตามมุมโรเตอร์ θ ทำให้กระแสสามเฟสที่เป็นไซน์กลายเป็นค่าคงที่ i_d และ i_q ซึ่งควบคุมด้วย PI ได้ง่าย"}}]}]}</script>
@@ -64,6 +64,33 @@
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
         <div class="nav-list" id="navfn">
@@ -889,9 +916,9 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7995587d" defer></script>
-<script src="/assets/lesson.js?v=7995587d" defer></script>
-<script src="/assets/vec3d.js?v=7995587d" defer></script>
-<script src="/assets/vec-mech.js?v=7995587d" defer></script>
+<script src="/assets/site.js?v=dc2c2d6b" defer></script>
+<script src="/assets/lesson.js?v=dc2c2d6b" defer></script>
+<script src="/assets/vec3d.js?v=dc2c2d6b" defer></script>
+<script src="/assets/vec-mech.js?v=dc2c2d6b" defer></script>
 </body>
 </html>

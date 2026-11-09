@@ -41,7 +41,7 @@ body{{background:#172029;color:#ece8df;font-family:Plex,sans-serif;position:rela
   background-image:linear-gradient(rgba(236,232,223,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(236,232,223,.05) 1px,transparent 1px);background-size:30px 30px}}
 .bar{{position:absolute;left:0;top:0;bottom:0;width:14px;background:#e8692c}}
 .wave{{position:absolute;right:-40px;bottom:-30px;width:760px;opacity:.9}}
-.sym{{position:absolute;right:70px;top:70px;font:700 230px/1 Trirong,serif;color:#f07a3e;opacity:.95}}
+.sym{{position:absolute;right:70px;top:70px;font:700 230px/1 Trirong,serif;color:#f07a3e;opacity:.95;white-space:nowrap}}
 .wrap{{position:absolute;left:84px;top:66px;right:340px;bottom:60px;display:flex;flex-direction:column}}
 .brand{{display:flex;align-items:center;gap:14px;font:600 26px Plex}}
 .mark{{width:46px;height:46px;border-radius:10px;background:#0d1318;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12)}}
@@ -204,7 +204,7 @@ def main():
                 size = 66 if len(t) <= 22 else 56 if len(t) <= 40 else 48
                 doc = TEMPLATE.format(fonts=fonts, sym=html.escape(e["sym"]), eyebrow=html.escape(e["eyebrow"]),
                                       title=html.escape(t), sub=html.escape(e["sub"]), size=size,
-                                      foot="Ajarn Mod · English edition" if e["key"].startswith("en-") else "สอนโดยอาจารย์มด · ภาษาไทย · ฟรี")
+                                      foot="Ajarn Mod · English edition" if e["key"].startswith(("en-", "learn-en")) else "สอนโดยอาจารย์มด · ภาษาไทย · ฟรี")
                 if e["key"].startswith("learn-vector-algebra"):
                     slug = e["key"].removeprefix("learn-vector-algebra").lstrip("-") or "overview"
                     artwork = ROOT / "images/vector-algebra" / f"{slug}.svg"
@@ -220,6 +220,8 @@ def main():
                 if pg.locator("h1").text_content() != t:
                     raise RuntimeError(f"Rendered title does not match {e['key']}")
                 pg.evaluate("document.fonts.ready")
+                # long symbols ("z t χ²", "f(x−h)") shrink until they fit the 270 px corner instead of running into the title
+                pg.evaluate("(() => { const s = document.querySelector('.sym'); let f = 230; while (s.getBoundingClientRect().width > 270 && f > 80) { f -= 10; s.style.fontSize = f + 'px'; } })()")
                 pg.wait_for_function("Array.from(document.images).every(i => i.complete && i.naturalWidth > 0)")
                 pg.screenshot(path=str(OUT / f"{e['key']}.jpg"), type="jpeg", quality=86)
                 print("og", e["key"])

@@ -1,0 +1,221 @@
+<!--meta
+{
+  "title": "ลอการิทึม (Logarithm): นิยาม สมบัติ การเปลี่ยนฐาน กราฟ สมการและอสมการลอการิทึม พร้อมเครื่องคิดเลข | อาจารย์มด",
+  "h1": "ฟังก์ชันลอการิทึม: นิยาม สมบัติ การเปลี่ยนฐาน กราฟ สมการและอสมการ และสเกลลอการิทึม",
+  "description": "ลอการิทึมครบในหน้าเดียว: log คือเลขชี้กำลัง กราฟ y = log_b x ที่สะท้อนจาก bˣ โดเมน x > 0 สมบัติผลคูณ ผลหาร เลขยกกำลัง การเปลี่ยนฐาน log ฐาน 10 และ ln แก้สมการเอกซ์โพเนนเชียลด้วย log ตรวจคำตอบเกิน อสมการลอการิทึม และสเกล pH เดซิเบล ริกเตอร์ พร้อมเครื่องคิดเลขแสดงวิธีทำ",
+  "ogTitle": "ลอการิทึม: สมบัติ เปลี่ยนฐาน สมการ อสมการ pH เดซิเบล + เครื่องคิดเลข",
+  "lesson": "precalculus",
+  "sub": "logarithmic-functions",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["ลอการิทึม", "ฟังก์ชันลอการิทึม", "สมบัติลอการิทึม", "สูตรลอการิทึม", "การเปลี่ยนฐานลอการิทึม", "สมการลอการิทึม", "อสมการลอการิทึม", "กราฟลอการิทึม", "ln", "log ฐาน 10", "logarithm", "laws of logarithms", "change of base formula", "logarithmic equations", "natural logarithm", "decibel", "pH scale"],
+  "about": ["Logarithm", "Natural logarithm", "Common logarithm", "Change of base", "Logarithmic scale", "Decibel", "pH"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js"],
+  "og": {"title": "ฟังก์ชันลอการิทึม", "sub": "log คือเลขชี้กำลัง · สมบัติ · เปลี่ยนฐาน · สมการ · อสมการ · pH · เดซิเบล", "eyebrow": "บทที่ 27.8 · Logarithmic Functions", "sym": "log"},
+  "faq": [
+    {"q": "log ฐาน 10 กับ ln ต่างกันอย่างไร?", "a": "log x (ไม่เขียนฐาน) ในหนังสือ ม.ปลายและเครื่องคิดเลขหมายถึงฐาน 10 ส่วน ln x คือลอการิทึมฐาน e ≈ 2.718 ซึ่งใช้ในแคลคูลัสเพราะอนุพันธ์ของ ln x คือ 1/x พอดี ทั้งสองแปลงไปมาด้วยการเปลี่ยนฐาน ln x = log x / log e ≈ 2.3026 log x"},
+    {"q": "ทำไมต้องตรวจคำตอบของสมการลอการิทึม?", "a": "เพราะการรวม log หลายตัวเป็นตัวเดียวทำให้โดเมนกว้างขึ้น เช่น log₂x + log₂(x − 2) = 3 กลายเป็น x(x − 2) = 8 ได้ x = 4 และ x = −2 แต่ x = −2 ทำให้ log₂x ไม่นิยาม จึงต้องตัดทิ้ง คำตอบที่ได้จากการคำนวณแต่ไม่อยู่ในโดเมนเรียกว่าคำตอบเกิน"},
+    {"q": "log(a + b) เท่ากับ log a + log b หรือไม่?", "a": "ไม่เท่า สมบัติที่ถูกต้องคือ log(ab) = log a + log b ผลคูณกลายเป็นผลบวก ส่วน log(a + b) ไม่มีสูตรแยก ตัวอย่าง log(1 + 1) = log 2 ≈ 0.301 แต่ log 1 + log 1 = 0"},
+    {"q": "สเกลลอการิทึมใช้ทำไม?", "a": "ใช้กับปริมาณที่มีช่วงกว้างมาก เช่นความเข้มเสียงที่ต่างกันเป็นล้านล้านเท่า ความเป็นกรดที่ความเข้มข้นไฮโดรเจนไอออนต่างกันหลายสิบเท่าตัว การใช้ log ทำให้ตัวเลขอยู่ในช่วงที่อ่านง่าย และการคูณกลายเป็นการบวก เช่นกำลังเพิ่ม 10 เท่าคือเพิ่ม 10 dB"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/precalculus/">พรีแคลคูลัส</a></li><li>ฟังก์ชันลอการิทึม</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 27.8 · พรีแคลคูลัส · Logarithmic Functions</p>
+      <h1>ฟังก์ชันลอการิทึม: นิยาม สมบัติ การเปลี่ยนฐาน กราฟ สมการและอสมการ และสเกลลอการิทึม</h1>
+      <p class="lede">ลอการิทึมตอบคำถามเดียวคือ “ต้องยกกำลังเท่าไร” เช่น \(\log_2 8 = 3\) เพราะต้องยก 2 กำลัง 3 จึงได้ 8 เมื่อมองแบบนี้ สมบัติของลอการิทึมทุกข้อก็คือกฎเลขยกกำลังที่เขียนกลับด้าน และกราฟของลอการิทึมก็คือกราฟเอกซ์โพเนนเชียลที่สะท้อนในเส้น \(y = x\) หน้านี้ใช้ความเข้าใจนั้นอธิบายสมบัติ การเปลี่ยนฐาน การแก้สมการที่ตัวแปรอยู่บนเลขชี้กำลัง การตรวจคำตอบเกิน และสเกลที่ใช้วัดเสียง ความเป็นกรด และขนาดแผ่นดินไหว</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">เครื่องคิดเลขลอการิทึม</a>
+        <a class="btn btn-ghost btn-sm" href="#laws">สมบัติ</a>
+        <a class="btn btn-ghost btn-sm" href="#equations">สมการ</a>
+        <a class="btn btn-ghost btn-sm" href="#inequalities">อสมการ</a>
+        <a class="btn btn-ghost btn-sm" href="#scales">pH · dB</a>
+      </div>
+      <div class="tldr">
+        <b>สรุปใน 30 วินาที</b>
+        <ul>
+          <li>\(\log_b x = y \iff b^y = x\) · ต้องมี \(b > 0,\ b \ne 1,\ x > 0\)</li>
+          <li>\(\log(MN) = \log M + \log N\) · \(\log\tfrac MN = \log M - \log N\) · \(\log M^p = p\log M\)</li>
+          <li>เปลี่ยนฐาน \(\log_b x = \dfrac{\ln x}{\ln b} = \dfrac{\log x}{\log b}\)</li>
+          <li>แก้สมการแล้วต้องตรวจว่าทุก log ในโจทย์เดิมยังนิยาม</li>
+          <li>อสมการ: ฐาน &gt; 1 ทิศเดิม · ฐานระหว่าง 0 กับ 1 กลับทิศ</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">ค้นหาสูตรในหน้านี้</label>
+      <input id="tfFilter" type="search" placeholder="พิมพ์ เช่น product, quotient, power, change of base, ln, ph, decibel" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">นิยามและกราฟของลอการิทึม</h2>
+    <p>เพราะ \(b^x\) เป็นฟังก์ชันหนึ่งต่อหนึ่ง จึงมีตัวผกผัน และตัวผกผันนั้นคือ \(\log_b x\) ทุกสมบัติของกราฟจึงได้จากการสลับ x กับ y ของเอกซ์โพเนนเชียล: โดเมนกลายเป็น \((0, \infty)\) เรนจ์กลายเป็นจำนวนจริงทั้งหมด จุด (0, 1) กลายเป็น (1, 0) และเส้นกำกับแนวนอน \(y = 0\) กลายเป็นเส้นกำกับแนวดิ่ง \(x = 0\) กราฟของลอการิทึมโตช้ามาก แม้ x จะเพิ่มเป็นล้าน \(\log_{10} x\) ก็มีค่าแค่ 6 ซึ่งเป็นเหตุผลที่ใช้มันทำสเกลวัดปริมาณที่มีช่วงกว้าง</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="L1" data-k="logarithm definition exponent inverse นิยามลอการิทึม เลขชี้กำลัง">
+        <p class="tf-n"><b><span class="fid">L1</span> Definition</b> นิยามลอการิทึม</p>
+        \[ \log_b x = y \iff b^y = x,\qquad b > 0,\ b \ne 1,\ x > 0 \]
+        <p class="tf-x">\(\log x = \log_{10} x\) · \(\ln x = \log_e x\) · \(\log_2\) ใช้ในวิทยาการคอมพิวเตอร์</p>
+      </div>
+      <div class="tf" id="L2" data-k="basic values log 1 log b inverse identities ค่าพื้นฐาน">
+        <p class="tf-n"><b><span class="fid">L2</span> Basic values</b> ค่าพื้นฐาน</p>
+        \[ \log_b 1 = 0,\quad \log_b b = 1,\quad \log_b b^x = x,\quad b^{\log_b x} = x \]
+      </div>
+      <div class="tf" id="L3" data-k="log graph domain range asymptote กราฟลอการิทึม โดเมน">
+        <p class="tf-n"><b><span class="fid">L3</span> Graph</b> กราฟ</p>
+        \[ y = \log_b x:\ D = (0, \infty),\ R = \mathbb R,\ \text{VA } x = 0,\ (1, 0),\ (b, 1) \]
+      </div>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="laws">
+    <h2 id="laws">สมบัติของลอการิทึม (Laws of Logarithms)</h2>
+    <p>สมบัติทั้งสามข้อแปลกฎเลขยกกำลังมาใช้กับ log: การคูณเลขที่ฐานเดียวกันคือการบวกเลขชี้กำลัง log ของผลคูณจึงเท่ากับผลบวกของ log ในยุคก่อนเครื่องคิดเลข วิศวกรใช้สมบัตินี้คูณเลขยาว ๆ ด้วยการบวก log จากตาราง ส่วนสูตรเปลี่ยนฐานทำให้คำนวณ log ฐานใดก็ได้ด้วยปุ่ม log หรือ ln บนเครื่องคิดเลข</p>
+    <div class="tf-grid">
+      <div class="tf" id="L4" data-k="product quotient power rule laws of logarithms สมบัติลอการิทึม ผลคูณ ผลหาร เลขยกกำลัง">
+        <p class="tf-n"><b><span class="fid">L4</span> Laws</b> สมบัติผลคูณ ผลหาร และกำลัง</p>
+        \[ \log_b(MN) = \log_b M + \log_b N,\quad \log_b\tfrac{M}{N} = \log_b M - \log_b N,\quad \log_b M^p = p\log_b M \]
+      </div>
+      <div class="tf" id="L5" data-k="change of base formula เปลี่ยนฐาน">
+        <p class="tf-n"><b><span class="fid">L5</span> Change of base</b> การเปลี่ยนฐาน</p>
+        \[ \log_b x = \frac{\log_a x}{\log_a b} = \frac{\ln x}{\ln b} \]
+      </div>
+      <div class="tf" id="L6" data-k="reciprocal base power base log_b a log_a b สมบัติเพิ่มเติม">
+        <p class="tf-n"><b><span class="fid">L6</span> Useful identities</b> สูตรลัด</p>
+        \[ \log_b a \cdot \log_a b = 1,\qquad \log_{b^n} a^m = \frac{m}{n}\log_b a,\qquad a^{\log_b c} = c^{\log_b a} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l1">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-1 · หาค่า log</span><h3>หาค่า (ก) \(\log_8 32\) (ข) \(\log_{1/3} 27\) (ค) \(\log_3 7\) เป็นทศนิยม</h3></div>
+      <ol class="steps">
+        <li><p>(ก) เขียนเป็นฐาน 2: \(\log_{2^3} 2^5 = \tfrac53\) (<a class="tag tf" href="#L6">L6</a>)</p></li>
+        <li><p>(ข) \(\left(\tfrac13\right)^y = 27 = 3^3 = \left(\tfrac13\right)^{-3}\) จึงได้ −3</p></li>
+        <li><p>(ค) เปลี่ยนฐาน: \(\dfrac{\ln 7}{\ln 3} = \dfrac{1.94591}{1.09861}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\tfrac53\) · (ข) \(-3\) · (ค) \(\approx 1.7712\) <button type="button" class="wx-btn" data-pc-set='{"mode":"calc","base":"8","x":"32"}' data-pc-target="logLab">ลองในเครื่องคิดเลข</button></p>
+    </div>
+    <div class="wx" id="ex-l2">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-2 · กระจายและรวม log</span><h3>(ก) กระจาย \(\log\dfrac{100x^3}{\sqrt y}\) (ข) รวม \(2\ln x - \ln(x + 1) + 3\ln 2\) เป็น ln ตัวเดียว</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(\log 100 + \log x^3 - \log y^{1/2} = 2 + 3\log x - \tfrac12\log y\)</p></li>
+        <li><p>(ข) \(\ln x^2 - \ln(x + 1) + \ln 2^3 = \ln\dfrac{8x^2}{x + 1}\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(2 + 3\log x - \tfrac12\log y\) · (ข) \(\ln\dfrac{8x^2}{x + 1}\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="equations">
+    <h2 id="equations">สมการเอกซ์โพเนนเชียลและสมการลอการิทึม</h2>
+    <p>สมการที่ x อยู่บนเลขชี้กำลังแก้ได้ด้วยการใส่ log ทั้งสองข้างแล้วใช้สมบัติกำลังดึง x ลงมา ส่วนสมการที่ x อยู่ใน log ให้รวม log ให้เหลือตัวเดียวแล้วแปลงเป็นเลขยกกำลังตามนิยาม ทุกครั้งที่รวม log ต้องกลับไปตรวจในโจทย์เดิมว่าค่าที่ได้ทำให้ทุก log นิยาม เพราะการรวมทำให้โดเมนกว้างขึ้นโดยไม่รู้ตัว</p>
+    <div class="tf-grid">
+      <div class="tf" id="L7" data-k="solve exponential equation take log สมการเอกซ์โพเนนเชียล ใส่ลอการิทึม">
+        <p class="tf-n"><b><span class="fid">L7</span> Solving with logs</b> ใส่ log ทั้งสองข้าง</p>
+        \[ A\,b^{kx} = C \ \Rightarrow\ x = \frac{\ln(C/A)}{k\ln b},\qquad \frac{C}{A} > 0 \]
+      </div>
+      <div class="tf" id="L8" data-k="log equation extraneous root domain check สมการลอการิทึม คำตอบเกิน">
+        <p class="tf-n"><b><span class="fid">L8</span> Log equations</b> สมการลอการิทึม</p>
+        \[ \log_b u = \log_b v \iff u = v\ \ (u, v > 0),\qquad \log_b u = c \iff u = b^c \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l3">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-3 · ตัดคำตอบเกิน</span><h3>แก้ \(\log_2 x + \log_2(x - 2) = 3\)</h3></div>
+      <ol class="steps">
+        <li><p>โดเมน: \(x > 0\) และ \(x > 2\) จึงต้อง \(x > 2\)</p></li>
+        <li><p>รวม: \(\log_2\big(x(x - 2)\big) = 3 \Rightarrow x^2 - 2x = 8\)</p></li>
+        <li><p>\((x - 4)(x + 2) = 0 \Rightarrow x = 4\) หรือ \(-2\) · ตัด −2 เพราะอยู่นอกโดเมน</p></li>
+      </ol>
+      <p class="answer">\(x = 4\) (ตรวจ: \(\log_2 4 + \log_2 2 = 2 + 1 = 3\))</p>
+    </div>
+    <div class="wx" id="ex-l4">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-4 · ฐานทำให้เท่ากันไม่ได้</span><h3>แก้ (ก) \(3^{2x} = 7\) (ข) \(3\cdot2^x = 48\)</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(2x\ln 3 = \ln 7 \Rightarrow x = \dfrac{\ln 7}{2\ln 3} \approx 0.8856\)</p></li>
+        <li><p>(ข) หาร 3 ก่อน: \(2^x = 16 = 2^4\)</p></li>
+      </ol>
+      <p class="answer">(ก) \(\approx 0.8856\) · (ข) \(x = 4\) <button type="button" class="wx-btn" data-pc-set='{"mode":"solve","sa":3,"sb":2,"sk":1,"sc":48}' data-pc-target="logLab">ดูวิธีทำในแล็บ</button></p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="inequalities">
+    <h2 id="inequalities">อสมการลอการิทึม</h2>
+    <p>อสมการลอการิทึมมีกับดักสองชั้น ชั้นแรกคือโดเมน ต้องให้ทุก log นิยามก่อน ชั้นที่สองคือฐาน ถ้าฐานน้อยกว่า 1 ฟังก์ชันลด ทิศของอสมการต้องกลับเมื่อถอด log คำตอบสุดท้ายคืออินเตอร์เซกชันของสองเงื่อนไขนี้</p>
+    <div class="tf-grid">
+      <div class="tf" id="L9" data-k="log inequality base reverse domain อสมการลอการิทึม กลับทิศ">
+        <p class="tf-n"><b><span class="fid">L9</span> Log inequalities</b> อสมการลอการิทึม</p>
+        \[ b > 1:\ \log_b u > \log_b v \iff u > v > 0,\qquad 0 < b < 1:\ \iff 0 < u < v \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l5">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-5 · ฐานน้อยกว่า 1</span><h3>แก้ \(\log_{1/2}(x - 1) > -2\)</h3></div>
+      <ol class="steps">
+        <li><p>โดเมน: \(x - 1 > 0 \Rightarrow x > 1\)</p></li>
+        <li><p>\(-2 = \log_{1/2} 4\) เพราะ \(\left(\tfrac12\right)^{-2} = 4\) · ฐาน ½ กลับทิศ: \(x - 1 < 4\)</p></li>
+        <li><p>รวมเงื่อนไข: \(1 < x < 5\)</p></li>
+      </ol>
+      <p class="answer">\((1,\ 5)\)</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="scales">
+    <h2 id="scales">สเกลลอการิทึม: pH เดซิเบล และริกเตอร์</h2>
+    <p>เมื่อปริมาณที่วัดมีช่วงกว้างหลายเท่าตัว การใช้ log ทำให้การคูณกลายเป็นการบวก เพิ่มหนึ่งหน่วยบนสเกลจึงหมายถึงคูณด้วยค่าคงที่ ในวิศวกรรมไฟฟ้าเดซิเบลใช้ทุกวันกับอัตราขยาย สัญญาณรบกวน และกราฟโบดของระบบควบคุม</p>
+    <div class="tf-grid">
+      <div class="tf" id="L10" data-k="ph decibel richter logarithmic scale สเกลลอการิทึม เดซิเบล">
+        <p class="tf-n"><b><span class="fid">L10</span> Log scales</b> สเกลลอการิทึม</p>
+        \[ \text{pH} = -\log[\text{H}^+],\qquad L_{\text{dB}} = 10\log\frac{P}{P_0} = 20\log\frac{V}{V_0},\qquad M = \log\frac{A}{A_0} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-l6">
+      <div class="wx-head"><span class="mono">ตัวอย่าง L-6 · pH และเดซิเบล</span><h3>(ก) สารละลายมี \([\text{H}^+] = 3.2\times10^{-4}\) mol/L มี pH เท่าใด (ข) กำลังเสียงเพิ่ม 2 เท่าและ 1,000 เท่า ระดับเพิ่มกี่ dB</h3></div>
+      <ol class="steps">
+        <li><p>(ก) \(-\log(3.2\times10^{-4}) = -(\log 3.2 - 4) = 4 - 0.505\)</p></li>
+        <li><p>(ข) \(10\log 2 \approx 3.01\) dB · \(10\log 1000 = 30\) dB</p></li>
+      </ol>
+      <p class="answer">(ก) pH ≈ 3.49 · (ข) ≈ 3 dB และ 30 dB</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บลอการิทึม: กราฟ · คำนวณ · แก้สมการ</h2>
+    <p>โหมดกราฟวาด \(\log_b x\) คู่กับ \(b^x\) ให้เห็นการสะท้อนในเส้น \(y = x\) ลอง b ระหว่าง 0 กับ 1 เพื่อดูกราฟที่ลดลง โหมดคำนวณรับค่าอย่าง <code>1/9</code>, <code>sqrt(2)</code> หรือ <code>e^3</code> และให้คำตอบแม่นตรงเมื่อเป็นเศษส่วน โหมดแก้สมการแสดงสามขั้นตามสูตร <a href="#L7">L7</a></p>
+    <div class="pc-log" id="logLab" data-mode="graph" data-b="2"><noscript>ต้องเปิด JavaScript เพื่อใช้แล็บ</noscript></div>
+    <div class="sr-trap"><b>กับดักที่พบบ่อย</b>\(\log(a + b) \ne \log a + \log b\) · \(\dfrac{\log a}{\log b} \ne \log\dfrac ab\) · \((\log x)^2 \ne 2\log x\) · และลืมว่าคำตอบต้องทำให้ทุก log ในโจทย์เดิมนิยาม</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">ฝึกทำ (มีเฉลย)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">\(\log_4 8 + \log_9 27\)</span></summary><div><p>\(\tfrac32 + \tfrac32\)</p><p class="answer">3</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">ถ้า \(\log 2 = a\) และ \(\log 3 = b\) จงเขียน \(\log 72\)</span></summary><div><p>\(72 = 2^3\cdot3^2\)</p><p class="answer">\(3a + 2b\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">แก้ \(\ln(x + 3) - \ln x = \ln 4\)</span></summary><div><p>\(\tfrac{x + 3}{x} = 4 \Rightarrow x = 1\) ซึ่งอยู่ในโดเมน</p><p class="answer">\(x = 1\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">แก้ \(5^{x} = 2^{x+1}\)</span></summary><div><p>\(x\ln5 = (x + 1)\ln 2 \Rightarrow x(\ln5 - \ln2) = \ln2\)</p><p class="answer">\(x = \dfrac{\ln 2}{\ln 2.5} \approx 0.7565\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">แก้ \(\log_3(2x - 1) \le 2\)</span></summary><div><p>โดเมน \(x > \tfrac12\) · \(2x - 1 \le 9\)</p><p class="answer">\(\tfrac12 < x \le 5\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">แอมพลิฟายเออร์ขยายแรงดัน 50 เท่า คิดเป็นกี่ dB</span></summary><div><p>\(20\log 50\)</p><p class="answer">≈ 33.98 dB</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">อ่านต่อ</h2>
+    <ul>
+      <li><a href="/learn/precalculus/trigonometric-functions/">27.9 ฟังก์ชันตรีโกณมิติ</a> — ตระกูลฟังก์ชันที่เป็นคาบ</li>
+      <li><a href="/learn/control-systems/bode-plot/">โบดไดอะแกรม</a> — กราฟขนาดเป็นเดซิเบลบนแกนความถี่ลอการิทึม</li>
+      <li><a href="/learn/differential-calculus/">อนุพันธ์</a> — \(\tfrac{d}{dx}\ln x = \tfrac1x\) และการหาอนุพันธ์โดยใส่ ln</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author"><div class="avatar" aria-hidden="true"><span>มด</span></div><p><b>อาจารย์มด · ธีรวุฒิ แสวงบุญ</b><br>อาจารย์สาขาวิชาวิศวกรรมไฟฟ้า มหาวิทยาลัยราชภัฏธนบุรี สมุทรปราการ · <a href="/about/">ดูโปรไฟล์</a></p></div>
+    <!--pager-->
+  </article>
+</div>

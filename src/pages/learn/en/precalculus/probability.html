@@ -1,0 +1,253 @@
+<!--meta
+{
+  "title": "Counting and Probability: Permutations, Combinations, Binomial Theorem, Conditional Probability, Bayes, Binomial Distribution | Mod's Engineering Mathematics",
+  "h1": "Counting and Probability: Permutations, Combinations, the Binomial Theorem, Conditional Probability and the Binomial Distribution",
+  "description": "Counting and probability for precalculus: the addition and multiplication principles, factorials, linear, circular and repeated permutations, combinations, the binomial theorem and Pascal's triangle, sample spaces, conditional probability, independent events, Bayes' theorem, expected value and the binomial distribution, with a counting calculator, a simulator and a binomial graph.",
+  "ogTitle": "Counting, permutations, combinations, binomial theorem, probability, Bayes + simulator",
+  "lesson": "en/precalculus",
+  "sub": "probability",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school"],
+  "keywords": ["counting and probability", "fundamental counting principle", "permutations and combinations", "nPr nCr calculator", "circular permutations", "permutations with repetition", "binomial theorem", "pascal's triangle", "conditional probability", "independent events", "Bayes theorem example", "expected value", "binomial distribution", "probability simulator"],
+  "about": ["Combinatorics", "Permutation", "Combination", "Binomial theorem", "Probability", "Conditional probability", "Bayes' theorem", "Expected value", "Binomial distribution"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js", "/assets/precalc-data.js"],
+  "og": {"title": "Counting & Probability", "sub": "nPr · nCr · binomial theorem · Pascal · conditional · Bayes · expected value · binomial distribution", "eyebrow": "Chapter 27.14 · Precalculus", "sym": "nCr"},
+  "faq": [
+    {"q": "What is the difference between a permutation and a combination?", "a": "Ask whether order matters. If swapping the order gives a different outcome, as when choosing a president and a secretary or setting a password, use permutations P(n, r). If swapping leaves the same group, as when choosing a committee of 3 or a hand of 5 cards, use combinations C(n, r), which equal P(n, r) divided by r!."},
+    {"q": "Why is 0! = 1?", "a": "Because there is exactly one way to arrange zero objects (do nothing), and because it makes the formulas work in every case: C(n, n) = n!/(n! 0!) = 1, and n! = n·(n − 1)! with n = 1 gives 1! = 1·0!."},
+    {"q": "What is the difference between independent and mutually exclusive events?", "a": "Mutually exclusive events cannot happen together: P(A ∩ B) = 0. Independent events do not affect each other's chances: P(A ∩ B) = P(A)P(B). The two ideas are almost opposites: if A and B both have positive probability and are mutually exclusive, knowing that A happened tells you B did not, so they are not independent."},
+    {"q": "When is the binomial distribution used?", "a": "When an experiment is repeated n times independently, each trial has two outcomes (success or failure), and the success probability p is the same every time, for example guessing on a multiple-choice test, tossing coins or counting defective items in a batch. The probability of k successes is C(n, k)pᵏ(1 − p)ⁿ⁻ᵏ and the expected value is np."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Counting and probability</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.14 · Precalculus · Counting &amp; Probability</p>
+      <h1>Counting and Probability: Permutations, Combinations, the Binomial Theorem, Conditional Probability and the Binomial Distribution</h1>
+      <p class="lede">Most high-school probability is counting done twice: counting how many outcomes there are in total, and counting how many of them you want. The hard part is counting everything exactly once, which is difficult without the right tools. This page starts with the multiplication principle, moves on to permutations and combinations together with a way to decide which one to use, and then covers the binomial theorem, conditional probability, Bayes' theorem, which explains why a positive medical test may not mean you are ill, and the binomial distribution, which leads into statistics on the next page.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#countLab">Counting calculator</a>
+        <a class="btn btn-ghost btn-sm" href="#permutations">Permutations</a>
+        <a class="btn btn-ghost btn-sm" href="#binomial-theorem">Binomial theorem</a>
+        <a class="btn btn-ghost btn-sm" href="#conditional">Conditional · Bayes</a>
+        <a class="btn btn-ghost btn-sm" href="#binomial">Binomial distribution</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>Order matters → \(P(n, r) = \tfrac{n!}{(n - r)!}\) · order doesn't → \(\binom nr = \tfrac{n!}{r!(n - r)!}\)</li>
+          <li>Around a circle \((n - 1)!\) · with repeated items \(\tfrac{n!}{n_1!n_2!\cdots}\)</li>
+          <li>\(P(A \cup B) = P(A) + P(B) - P(A \cap B)\) · \(P(A^c) = 1 - P(A)\)</li>
+          <li>\(P(A \mid B) = \tfrac{P(A \cap B)}{P(B)}\) · independent ⇔ \(P(A \cap B) = P(A)P(B)\)</li>
+          <li>Binomial \(P(X = k) = \binom nk p^k(1 - p)^{n-k}\), \(\mu = np\), \(\sigma^2 = np(1 - p)\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try permutation, combination, circular, binomial, conditional, bayes, expected" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="counting">
+    <h2 id="counting">The addition and multiplication principles and factorials</h2>
+    <p>The multiplication principle says that if a task is done in stages, the first with m ways and the next with n ways whatever was chosen first, the whole task can be done in m × n ways. The addition principle applies when you pick exactly one of several routes that do not overlap. Arranging all n objects uses the multiplication principle repeatedly, \(n \times (n - 1) \times \cdots \times 1 = n!\), which grows very fast: 10! is already more than three million.</p>
+    <div class="tf-grid">
+      <div class="tf" id="C1" data-k="multiplication addition principle counting factorial">
+        <p class="tf-n"><b><span class="fid">C1</span> Counting principles</b></p>
+        \[ n(A \text{ then } B) = n(A)\cdot n(B),\qquad n! = n(n - 1)\cdots 2\cdot 1,\quad 0! = 1 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c1">
+      <div class="wx-head"><span class="mono">Example C-1 · A 4-digit code</span><h3>How many 4-digit codes can be made from the digits 0–9 if (a) digits may repeat (b) digits may not repeat?</h3></div>
+      <ol class="steps">
+        <li><p>(a) Each digit has 10 choices: \(10^4\)</p></li>
+        <li><p>(b) First digit 10, second 9, …: \(10\cdot9\cdot8\cdot7 = P(10, 4)\)</p></li>
+      </ol>
+      <p class="answer">(a) 10,000 · (b) 5,040</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="permutations">
+    <h2 id="permutations">Permutations and combinations</h2>
+    <p>Permutations count arrangements in which order matters; combinations count selections in which it does not. Every group of r items can be arranged in r! ways, so the number of combinations is the number of permutations divided by r!. Arrangements around a round table are divided by n, because rotating everyone together creates no new arrangement, and arrangements with repeated items are divided by the number of ways to swap identical items.</p>
+    <div class="tf-grid">
+      <div class="tf" id="C2" data-k="permutation nPr order matters">
+        <p class="tf-n"><b><span class="fid">C2</span> Permutations</b></p>
+        \[ P(n, r) = {}_nP_r = \frac{n!}{(n - r)!} \]
+      </div>
+      <div class="tf" id="C3" data-k="circular permutation repeated identical objects multinomial">
+        <p class="tf-n"><b><span class="fid">C3</span> Circular &amp; repeated</b></p>
+        \[ \text{circle: } (n - 1)!,\qquad \text{repeated items: } \frac{n!}{n_1!\,n_2!\cdots n_k!} \]
+      </div>
+      <div class="tf" id="C4" data-k="combination nCr binomial coefficient choose">
+        <p class="tf-n"><b><span class="fid">C4</span> Combinations</b></p>
+        \[ \binom{n}{r} = {}_nC_r = \frac{n!}{r!\,(n - r)!},\qquad \binom nr = \binom n{n - r} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c2">
+      <div class="wx-head"><span class="mono">Example C-2 · Repeated letters</span><h3>How many arrangements of the letters of BANANA are there?</h3></div>
+      <ol class="steps">
+        <li><p>6 letters, with A repeated 3 times and N repeated 2 times</p></li>
+        <li><p>\(\dfrac{6!}{3!\,2!} = \dfrac{720}{12}\)</p></li>
+      </ol>
+      <p class="answer">60 arrangements <button type="button" class="wx-btn" data-pc-set='{"n":6,"r":2,"word":"BANANA"}' data-pc-target="countLab">Check in the calculator</button></p>
+    </div>
+    <div class="wx" id="ex-c3">
+      <div class="wx-head"><span class="mono">Example C-3 · A committee</span><h3>Choose 3 men from 6 and 2 women from 5. How many committees are possible?</h3></div>
+      <ol class="steps">
+        <li><p>Order does not matter: \(\binom63 = 20\), \(\binom52 = 10\)</p></li>
+        <li><p>Multiplication principle: \(20 \times 10\)</p></li>
+      </ol>
+      <p class="answer">200 committees</p>
+    </div>
+    <div class="wx" id="ex-c4">
+      <div class="wx-head"><span class="mono">Example C-4 · A round table</span><h3>In how many ways can 7 people sit around a round table? In how many if two particular people must sit together?</h3></div>
+      <ol class="steps">
+        <li><p>In total \((7 - 1)! = 720\)</p></li>
+        <li><p>Tie the two together as one block, leaving 6 units around the circle: \((6 - 1)! = 120\), and the pair can swap in 2 ways</p></li>
+      </ol>
+      <p class="answer">720 ways · 240 with the two together</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="binomial-theorem">
+    <h2 id="binomial-theorem">The binomial theorem and Pascal's triangle</h2>
+    <p>When you expand \((a + b)^n\), each term comes from choosing b from k of the brackets and a from the rest, and there are \(\binom nk\) ways to choose. So the binomial coefficients are the same numbers as in Pascal's triangle, where each entry is the sum of the two above it. The standard exam question asks for the coefficient of a particular term, found with the general term \(T_{k+1}\).</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="C5" data-k="binomial theorem expansion general term pascal triangle">
+        <p class="tf-n"><b><span class="fid">C5</span> Binomial theorem</b></p>
+        \[ (a + b)^n = \sum_{k=0}^{n}\binom nk a^{n-k}b^k,\qquad T_{k+1} = \binom nk a^{n-k}b^k,\qquad \binom nk = \binom{n-1}{k-1} + \binom{n-1}{k} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c5">
+      <div class="wx-head"><span class="mono">Example C-5 · The coefficient of a term</span><h3>Find the coefficient of \(x^4\) in the expansion of \((2x - 3)^6\)</h3></div>
+      <ol class="steps">
+        <li><p>\(T_{k+1} = \binom6k(2x)^{6-k}(-3)^k\); we need \(6 - k = 4 \Rightarrow k = 2\)</p></li>
+        <li><p>\(\binom62\cdot2^4\cdot(-3)^2 = 15\cdot16\cdot9\)</p></li>
+      </ol>
+      <p class="answer">2,160</p>
+    </div>
+    <div class="pc-count" id="countLab" data-n="8" data-r="3" data-word="BANANA"><noscript>JavaScript is needed for the counting calculator</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="probability">
+    <h2 id="probability">Basic probability</h2>
+    <p>When all outcomes are equally likely, the probability of an event is the number of favourable outcomes divided by the total number of outcomes, which is where the counting of the previous sections is used. Complicated events are often easier through the complement: “at least once” is 1 minus “never”. The addition rule subtracts the overlap once so that it is not counted twice.</p>
+    <div class="tf-grid">
+      <div class="tf" id="C6" data-k="probability sample space event equally likely complement">
+        <p class="tf-n"><b><span class="fid">C6</span> Classical probability</b></p>
+        \[ P(E) = \frac{n(E)}{n(S)},\quad 0 \le P(E) \le 1,\quad P(E^c) = 1 - P(E) \]
+      </div>
+      <div class="tf" id="C7" data-k="addition rule union intersection">
+        <p class="tf-n"><b><span class="fid">C7</span> Addition rule</b></p>
+        \[ P(A \cup B) = P(A) + P(B) - P(A \cap B) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c6">
+      <div class="wx-head"><span class="mono">Example C-6 · Dice and cards</span><h3>(a) Two dice are rolled. Find the probability that the sum is 7, and that the sum is at least 10 (b) One card is drawn from 52. Find the probability of a king or a heart</h3></div>
+      <ol class="steps">
+        <li><p>(a) 36 outcomes in all · a sum of 7 in 6 ways · sums of 10, 11, 12 in 3 + 2 + 1 = 6 ways</p></li>
+        <li><p>(b) \(\tfrac{4}{52} + \tfrac{13}{52} - \tfrac{1}{52}\) (the king of hearts would be counted twice)</p></li>
+      </ol>
+      <p class="answer">(a) \(\tfrac16\) and \(\tfrac16\) · (b) \(\tfrac{16}{52} = \tfrac{4}{13}\)</p>
+    </div>
+    <div class="pc-sim" id="simLab" data-exp="sum7"><noscript>JavaScript is needed for the simulator</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="conditional">
+    <h2 id="conditional">Conditional probability, independence and Bayes' theorem</h2>
+    <p>\(P(A \mid B)\) is the probability of A once you know that B has happened: cut the sample space down to B and see what part of it is also A. Bayes' theorem reverses a condition. For example, you may know the probability of a positive test given illness, but want the probability of illness given a positive test, and when the illness is rare the answer is usually much lower than people expect.</p>
+    <div class="tf-grid">
+      <div class="tf" id="C8" data-k="conditional probability independent events multiplication rule">
+        <p class="tf-n"><b><span class="fid">C8</span> Conditional</b></p>
+        \[ P(A \mid B) = \frac{P(A \cap B)}{P(B)},\qquad A, B \text{ independent} \iff P(A \cap B) = P(A)P(B) \]
+      </div>
+      <div class="tf" id="C9" data-k="bayes theorem total probability">
+        <p class="tf-n"><b><span class="fid">C9</span> Bayes' theorem</b></p>
+        \[ P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B \mid A)P(A) + P(B \mid A^c)P(A^c)} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c7">
+      <div class="wx-head"><span class="mono">Example C-7 · Positive but not ill</span><h3>A disease affects 1% of a population. A test is positive 95% of the time for people who have it and gives false positives 5% of the time for people who don't. If a test is positive, what is the probability that the person is ill?</h3></div>
+      <ol class="steps">
+        <li><p>Positive and ill: \(0.95 \times 0.01 = 0.0095\) · positive but well: \(0.05 \times 0.99 = 0.0495\)</p></li>
+        <li><p>\(P(\text{ill} \mid +) = \dfrac{0.0095}{0.0095 + 0.0495} = \dfrac{0.0095}{0.059}\)</p></li>
+      </ol>
+      <p class="answer">≈ 0.161, about 16% — most positives come from the large number of healthy people who test wrongly</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="binomial">
+    <h2 id="binomial">Random variables, expected value and the binomial distribution</h2>
+    <p>A random variable turns the outcome of an experiment into a number, such as the number of questions answered correctly. The expected value is the long-run average over many repetitions and tells you whether a game or an investment is worth it. The binomial distribution is the most common random variable at this level, and when n is large its shape approaches the normal curve; tick the box in the graph below to see the two overlap.</p>
+    <div class="tf-grid">
+      <div class="tf" id="C10" data-k="expected value variance random variable">
+        <p class="tf-n"><b><span class="fid">C10</span> Expected value</b></p>
+        \[ E(X) = \sum x\,P(X = x),\qquad \operatorname{Var}(X) = E(X^2) - \big(E(X)\big)^2 \]
+      </div>
+      <div class="tf" id="C11" data-k="binomial distribution mean variance np">
+        <p class="tf-n"><b><span class="fid">C11</span> Binomial distribution</b></p>
+        \[ P(X = k) = \binom nk p^k(1 - p)^{n-k},\qquad \mu = np,\quad \sigma^2 = np(1 - p) \]
+      </div>
+    </div>
+    <div class="wx" id="ex-c8">
+      <div class="wx-head"><span class="mono">Example C-8 · Guessing on a test</span><h3>A test has 10 multiple-choice questions with 4 options each, and every answer is a guess. What is the probability of getting at least 6 right, and how many are expected to be right?</h3></div>
+      <ol class="steps">
+        <li><p>\(X \sim B(10, 0.25)\) · \(P(X \ge 6) = \sum_{k=6}^{10}\binom{10}{k}(0.25)^k(0.75)^{10-k}\)</p></li>
+        <li><p>The largest term is k = 6: \(210(0.25)^6(0.75)^4 \approx 0.0162\); all terms together ≈ 0.0197</p></li>
+        <li><p>\(E(X) = np = 10(0.25)\)</p></li>
+      </ol>
+      <p class="answer">\(P(X \ge 6) \approx 0.0197\) (about 2%) · expected 2.5 correct <button type="button" class="wx-btn" data-pc-set='{"n":10,"p":0.25,"k":6,"rel":"ge"}' data-pc-target="binomLab">See the graph</button></p>
+    </div>
+    <div class="wx" id="ex-c9">
+      <div class="wx-head"><span class="mono">Example C-9 · Is the game worth it?</span><h3>You pay 20 to roll a die and receive 100 if it shows 6. What is the expected profit?</h3></div>
+      <ol class="steps">
+        <li><p>\(E(\text{payout}) = 100\cdot\tfrac16 + 0\cdot\tfrac56 \approx 16.67\)</p></li>
+        <li><p>Expected profit \(16.67 - 20\)</p></li>
+      </ol>
+      <p class="answer">≈ −3.33 per game; play long enough and you lose</p>
+    </div>
+    <div class="pc-binom" id="binomLab" data-n="10" data-p="0.25" data-k="6" data-rel="ge"><noscript>JavaScript is needed for the graph</noscript></div>
+    <div class="sr-trap"><b>Common traps</b>Using combinations when order matters (president versus secretary, for instance) · adding the probabilities of events that can happen together without subtracting the overlap · and confusing \(P(A \mid B)\) with \(P(B \mid A)\), which the Bayes example shows can be very different.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Choose a president, vice-president and secretary from 10 people. How many ways?</span></summary><div><p>Order matters: \(P(10, 3)\)</p><p class="answer">720</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">How many diagonals does a 10-sided polygon have?</span></summary><div><p>Choose 2 vertices \(\binom{10}{2} = 45\), minus the 10 sides</p><p class="answer">35</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">Three coins are tossed. Probability of at least one head</span></summary><div><p>\(1 - \left(\tfrac12\right)^3\)</p><p class="answer">\(\tfrac78\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">The constant term in the expansion of \(\left(x + \tfrac1x\right)^6\)</span></summary><div><p>\(x^{6-k}x^{-k} = x^0 \Rightarrow k = 3\)</p><p class="answer">\(\binom63 = 20\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">P(A) = 0.5, P(B) = 0.4, P(A ∩ B) = 0.2. Are A and B independent? Find P(A | B)</span></summary><div><p>\(0.5 \times 0.4 = 0.2\), equal</p><p class="answer">Independent · \(P(A \mid B) = 0.5\)</p></div></details>
+    <details class="sr-q"><summary><span class="mono">6</span><span class="sr-qt">5% of items are defective. In a random sample of 20, what is the probability of none defective?</span></summary><div><p>\(0.95^{20}\)</p><p class="answer">≈ 0.3585</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/statistics/">27.15 Statistics</a> — center, spread and the normal distribution</li>
+      <li><a href="/learn/en/precalculus/statistical-tables/">27.16 Statistical tables</a> — the z table approximates the binomial distribution when n is large</li>
+      <li><a href="/en/blog/mathematical-induction-examples/">Mathematical induction examples</a> — proving formulas such as the binomial theorem</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>

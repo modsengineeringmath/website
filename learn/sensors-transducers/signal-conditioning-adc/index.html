@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=7995587d">
-<link rel="stylesheet" href="/assets/site.css?v=7995587d">
+<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/#article","headline":"การปรับสภาพสัญญาณและ ADC: จากมิลลิโวลต์ถึงตัวเลขที่เชื่อได้","description":"ภาคปรับสภาพสัญญาณของเซนเซอร์: การกระตุ้นบริดจ์ อินสทรูเมนเทชันแอมป์และ CMRR ฟิลเตอร์กันรอยต่อ (anti-aliasing) ทฤษฎีการสุ่มของ Nyquist ความละเอียด ADC LSB SNR และ ENOB ADC แบบ SAR กับ sigma-delta สัญญาณรบกวนความร้อน การต่อกราวด์และชีลด์ การแยกโดดเดี่ยว และงบความคลาดเคลื่อนทั้งห่วงโซ่ พร้อมเครื่องคำนวณ ADC","inLanguage":"th","url":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/","mainEntityOfPage":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Signal conditioning","Instrumentation amplifier","CMRR","Anti-aliasing filter","Analog-to-digital converter","ENOB","Grounding and shielding"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/sensors-transducers/#article"},"image":["https://modsengineeringmath.com/images/og/learn-sensors-transducers-signal-conditioning-adc.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"เซนเซอร์และทรานส์ดิวเซอร์","item":"https://modsengineeringmath.com/learn/sensors-transducers/"},{"@type":"ListItem","position":4,"name":"การปรับสภาพสัญญาณและ ADC: บริดจ์ อินสทรูเมนเทชันแอมป์ ฟิลเตอร์ การแยกโดดเดี่ยว และการสุ่ม","item":"https://modsengineeringmath.com/learn/sensors-transducers/signal-conditioning-adc/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ทำไมต้องมีฟิลเตอร์ก่อน ADC?","acceptedAnswer":{"@type":"Answer","text":"เพราะสัญญาณที่มีความถี่สูงกว่าครึ่งหนึ่งของอัตราการสุ่ม (ความถี่ Nyquist) จะปรากฏหลังสุ่มเป็นความถี่ต่ำปลอม (aliasing) และแยกออกจากสัญญาณจริงไม่ได้อีกต่อไป เช่น สัญญาณรบกวน 50 Hz ที่ถูกสุ่มด้วย 60 ครั้งต่อวินาทีจะดูเหมือนสัญญาณ 10 Hz ฟิลเตอร์กันรอยต่อต้องลดสัญญาณเหล่านี้ก่อนการสุ่ม ไม่ใช่หลังการสุ่ม"}},{"@type":"Question","name":"ADC 24 บิตแม่นกว่า 16 บิตจริงหรือ?","acceptedAnswer":{"@type":"Answer","text":"ไม่เสมอไป จำนวนบิตบอกความละเอียดของรหัส แต่ความแม่นจริงขึ้นกับสัญญาณรบกวน (ENOB หรือ noise-free bits) ความคลาดของแรงดันอ้างอิง offset gain และ drift ตามอุณหภูมิ ADC 24 บิตหลายรุ่นมีบิตที่ใช้ได้จริงประมาณ 18–21 บิตเมื่อสุ่มช้า และต่ำกว่านั้นเมื่อสุ่มเร็ว ต้องดู ENOB ที่อัตราการสุ่มที่ใช้งานจริง"}}]}]}</script>
@@ -64,6 +64,33 @@
       <a href="/learn/en/"  lang="en">English</a>
       <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
       <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
         <div class="nav-list" id="navfn">
@@ -756,9 +783,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=7995587d" defer></script>
-<script src="/assets/lesson.js?v=7995587d" defer></script>
-<script src="/assets/ee-kit.js?v=7995587d" defer></script>
-<script src="/assets/sx-calc.js?v=7995587d" defer></script>
+<script src="/assets/site.js?v=dc2c2d6b" defer></script>
+<script src="/assets/lesson.js?v=dc2c2d6b" defer></script>
+<script src="/assets/ee-kit.js?v=dc2c2d6b" defer></script>
+<script src="/assets/sx-calc.js?v=dc2c2d6b" defer></script>
 </body>
 </html>

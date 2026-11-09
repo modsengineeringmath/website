@@ -1,0 +1,222 @@
+<!--meta
+{
+  "title": "Statistics: Mean, Median, Standard Deviation, Quartiles, Box Plots, z-Scores, Normal Distribution, Linear Regression, with Calculator | Mod's Engineering Mathematics",
+  "h1": "Statistics: Measures of Center and Spread, Quartiles, Box Plots, z-Scores, the Normal Distribution, Correlation and Linear Regression",
+  "description": "Statistics for high school and first-year university: frequency tables and histograms, mean, median and mode for raw and grouped data, range, population and sample variance and standard deviation, quartiles, percentiles, box plots and outliers, z-scores, the normal distribution and the 68–95–99.7 rule, correlation and the least-squares regression line, with a statistics calculator that draws the graphs.",
+  "ogTitle": "Statistics: mean, SD, quartiles, box plot, z-score, normal distribution, regression + calculator",
+  "lesson": "en/precalculus",
+  "sub": "statistics",
+  "nav": "pre",
+  "katex": true,
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["statistics", "descriptive statistics", "mean median mode", "standard deviation formula", "sample vs population standard deviation", "variance", "quartiles and interquartile range", "box plot", "outliers 1.5 IQR rule", "z-score", "normal distribution", "68-95-99.7 rule", "correlation coefficient", "least squares regression line", "grouped data mean median", "statistics calculator"],
+  "about": ["Descriptive statistics", "Mean", "Median", "Standard deviation", "Quartile", "Box plot", "Standard score", "Normal distribution", "Pearson correlation coefficient", "Simple linear regression"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/precalc.js", "/assets/precalc-data.js"],
+  "og": {"title": "Statistics", "sub": "Center · SD · quartiles · box plot · z-score · normal distribution · correlation · regression", "eyebrow": "Chapter 27.15 · Precalculus", "sym": "x̄"},
+  "faq": [
+    {"q": "What is the difference between population and sample standard deviation?", "a": "The population SD (σ) divides by N, the total number of values. The sample SD (s) divides by n − 1, because using the sample mean in place of the true mean makes the sum of squares slightly too small, and dividing by n − 1 corrects for that. Use σ when the data are everything you care about, and s when they are a sample used to estimate a larger group."},
+    {"q": "How do I find quartiles of raw data?", "a": "Sort the data in increasing order. The position of Q_r is r(n + 1)/4. If it is a whole number, read the value at that position; if not, interpolate between the two neighbouring positions. That is the method used in many textbooks and in the calculator on this page; some software uses other definitions and may give slightly different values."},
+    {"q": "What is a z-score used for?", "a": "A z-score tells you how many standard deviations a value lies from the mean. It lets you compare values from different data sets with different units or spreads, such as a math score and a physics score, and it is what you look up in a z table to find areas under the normal curve."},
+    {"q": "If r is close to 1, does x cause y?", "a": "No. Correlation only measures a linear relationship; it says nothing about cause and effect. Two variables may move together because a third variable drives both, or by chance. Also, r close to 0 does not mean there is no relationship: the relationship may simply not be linear."}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/learn/en/">English lessons</a></li><li><a href="/learn/en/precalculus/">Precalculus</a></li><li>Statistics</li></ol>
+      <!--lang-switch-->
+      <!--series-nav-->
+      <p class="eyebrow">// Chapter 27.15 · Precalculus · Statistics</p>
+      <h1>Statistics: Measures of Center and Spread, Quartiles, Box Plots, z-Scores, the Normal Distribution, Correlation and Linear Regression</h1>
+      <p class="lede">Descriptive statistics answers three questions about a data set: where most of the values lie (center), how widely they are spread (spread), and what shape they have (histogram, box plot). After that, the normal distribution tells you how unusual a value is, and linear regression lets you predict one variable from another. This page explains what each measure measures, how to compute it for raw and grouped data, and when to choose which. The statistics calculator below accepts data pasted straight from a spreadsheet.</p>
+      <div class="lesson-meta"><span>By <a href="/about/">Ajarn Mod</a></span><span>Updated <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#calculator">Statistics calculator</a>
+        <a class="btn btn-ghost btn-sm" href="#center">Center</a>
+        <a class="btn btn-ghost btn-sm" href="#spread">Spread</a>
+        <a class="btn btn-ghost btn-sm" href="#normal">Normal distribution</a>
+        <a class="btn btn-ghost btn-sm" href="#regression">Regression</a>
+      </div>
+      <div class="tldr">
+        <b>In 30 seconds</b>
+        <ul>
+          <li>\(\bar x = \tfrac{\sum x}{n}\) · median at position \(\tfrac{n+1}{2}\) · mode is the most frequent value</li>
+          <li>\(\sigma = \sqrt{\tfrac{\sum(x - \mu)^2}{N}}\) · \(s = \sqrt{\tfrac{\sum(x - \bar x)^2}{n - 1}}\)</li>
+          <li>\(Q_r\) at position \(\tfrac{r(n+1)}{4}\) · outliers lie outside \(Q_1 - 1.5\,IQR\) to \(Q_3 + 1.5\,IQR\)</li>
+          <li>\(z = \tfrac{x - \mu}{\sigma}\) · normal: 68% within ±1σ, 95% within ±2σ, 99.7% within ±3σ</li>
+          <li>\(\hat y = a + bx\), \(b = \tfrac{S_{xy}}{S_{xx}}\), \(r = \tfrac{S_{xy}}{\sqrt{S_{xx}S_{yy}}}\)</li>
+        </ul>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <div class="tf-filter" role="search">
+      <label for="tfFilter">Find a formula on this page</label>
+      <input id="tfFilter" type="search" placeholder="Try mean, median, standard deviation, quartile, z-score, normal, regression" autocomplete="off">
+      <span class="tf-count mono" id="tfCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">Practice mode: hide solutions</button>
+    </div>
+
+    <section class="tsec" aria-labelledby="center">
+    <h2 id="center">Measures of center</h2>
+    <p>The mean uses every value, so it is sensitive to extremes: if one of ten employees is an executive with an unusually large salary, the mean salary overstates what a typical employee earns, and the median, the middle value, gives a truer picture. The mode suits qualitative data, such as the best-selling shirt size. For data grouped into class intervals, the class midpoint stands in for every value in the class.</p>
+    <div class="tf-grid">
+      <div class="tf" id="D1" data-k="mean average weighted grouped data midpoint">
+        <p class="tf-n"><b><span class="fid">D1</span> Mean</b></p>
+        \[ \bar x = \frac{\sum x_i}{n},\qquad \bar x_w = \frac{\sum w_i x_i}{\sum w_i},\qquad \bar x \approx \frac{\sum f_i m_i}{\sum f_i}\ \ (\text{class midpoints } m_i) \]
+      </div>
+      <div class="tf" id="D2" data-k="median position grouped data formula">
+        <p class="tf-n"><b><span class="fid">D2</span> Median</b></p>
+        \[ \text{position } \frac{n + 1}{2},\qquad \text{grouped: } L + \left(\frac{N/2 - F}{f}\right)I \]
+        <p class="tf-x">L lower boundary of the median class · F cumulative frequency before it · f its frequency · I class width</p>
+      </div>
+    </div>
+    <div class="wx" id="ex-d1">
+      <div class="wx-head"><span class="mono">Example D-1 · Raw data</span><h3>For the data 12, 15, 11, 18, 15, 20, 14, find the mean, median, mode and standard deviation</h3></div>
+      <ol class="steps">
+        <li><p>Sorted: 11, 12, 14, 15, 15, 18, 20 · \(\bar x = \tfrac{105}{7} = 15\) · median at position 4 = 15 · mode 15</p></li>
+        <li><p>\(\sum(x - 15)^2 = 16 + 9 + 1 + 0 + 0 + 9 + 25 = 60\)</p></li>
+        <li><p>\(\sigma = \sqrt{60/7} \approx 2.928\) · \(s = \sqrt{60/6} = \sqrt{10} \approx 3.162\)</p></li>
+      </ol>
+      <p class="answer">15, 15, 15 · σ ≈ 2.928 · s ≈ 3.162 <button type="button" class="wx-btn" data-pc-set='{"data":"12 15 11 18 15 20 14"}' data-pc-target="statLab">Check in the calculator</button></p>
+    </div>
+    <div class="wx" id="ex-d2">
+      <div class="wx-head"><span class="mono">Example D-2 · Grouped data</span><h3>Scores of 40 students: 40–49 (3), 50–59 (7), 60–69 (12), 70–79 (10), 80–89 (6), 90–99 (2). Find the mean and the median</h3></div>
+      <ol class="steps">
+        <li><p>Midpoints 44.5, 54.5, …, 94.5 · \(\sum fm = 133.5 + 381.5 + 774 + 745 + 507 + 189 = 2730\) · \(\bar x = 2730/40\)</p></li>
+        <li><p>\(N/2 = 20\); cumulative frequencies 3, 10, 22 ⇒ median class 60–69 · \(L = 59.5,\ F = 10,\ f = 12,\ I = 10\)</p></li>
+        <li><p>Median \(= 59.5 + \tfrac{20 - 10}{12}(10) = 59.5 + 8.33\)</p></li>
+      </ol>
+      <p class="answer">\(\bar x = 68.25\) · median ≈ 67.83</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="spread">
+    <h2 id="spread">Spread, quartiles and box plots</h2>
+    <p>Two data sets with the same mean can be very different. Two machines may both make parts 50 mm long on average, but one is accurate to ±0.1 mm and the other only to ±2 mm. The standard deviation measures the typical distance from the center in the same units as the data. Quartiles split the sorted data into four equal parts, and a box plot shows five numbers (minimum, Q₁, median, Q₃, maximum) in one picture, so skewness and outliers are visible at a glance.</p>
+    <div class="tf-grid">
+      <div class="tf" id="D3" data-k="variance standard deviation population sample">
+        <p class="tf-n"><b><span class="fid">D3</span> Variance &amp; SD</b></p>
+        \[ \sigma^2 = \frac{\sum(x - \mu)^2}{N} = \frac{\sum x^2}{N} - \mu^2,\qquad s^2 = \frac{\sum(x - \bar x)^2}{n - 1} \]
+      </div>
+      <div class="tf" id="D4" data-k="quartile percentile position interquartile range IQR">
+        <p class="tf-n"><b><span class="fid">D4</span> Quartiles</b></p>
+        \[ Q_r:\ \frac{r(n + 1)}{4},\qquad P_r:\ \frac{r(n + 1)}{100},\qquad IQR = Q_3 - Q_1 \]
+      </div>
+      <div class="tf" id="D5" data-k="outlier fence box plot five number summary">
+        <p class="tf-n"><b><span class="fid">D5</span> Outliers &amp; box plot</b></p>
+        \[ x < Q_1 - 1.5\,IQR \quad\text{or}\quad x > Q_3 + 1.5\,IQR \]
+      </div>
+      <div class="tf" id="D6" data-k="coefficient of variation linear transformation">
+        <p class="tf-n"><b><span class="fid">D6</span> CV &amp; transforms</b></p>
+        \[ CV = \frac{s}{\bar x}\times100\%,\qquad y = ax + b \Rightarrow \bar y = a\bar x + b,\ s_y = |a|s_x \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d3">
+      <div class="wx-head"><span class="mono">Example D-3 · Quartiles</span><h3>Using the data of Example D-1, find Q₁, Q₃ and the IQR, and check for outliers</h3></div>
+      <ol class="steps">
+        <li><p>n = 7: Q₁ at position 8/4 = 2 → 12 · Q₃ at position 24/4 = 6 → 18</p></li>
+        <li><p>IQR = 6 · fences \(12 - 9 = 3\) and \(18 + 9 = 27\)</p></li>
+      </ol>
+      <p class="answer">Q₁ = 12, Q₃ = 18, IQR = 6 · no outliers</p>
+    </div>
+    <div class="wx" id="ex-d4">
+      <div class="wx-head"><span class="mono">Example D-4 · Changing units</span><h3>Temperatures have mean 30 °C and standard deviation 2 °C. What are they in Fahrenheit, \(F = 1.8C + 32\)?</h3></div>
+      <ol class="steps">
+        <li><p>The mean follows the whole formula: \(1.8(30) + 32 = 86\)</p></li>
+        <li><p>The SD is only multiplied, because adding 32 does not change the spread: \(1.8 \times 2\)</p></li>
+      </ol>
+      <p class="answer">Mean 86 °F · SD 3.6 °F</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="calculator">
+    <h2 id="calculator">Statistics calculator: histogram, box plot and frequency table</h2>
+    <p>Paste data separated by spaces, commas or new lines (a whole column copied from Excel or Google Sheets works). The calculator computes center, spread, quartiles by the r(n+1)/4 positions, outliers, and both σ and s, draws a histogram and a box plot on the same axis, and builds a frequency table. The green dot in the box is the mean; when it sits far from the median line, the data are skewed.</p>
+    <div class="pc-stat" id="statLab"><noscript>JavaScript is needed for the calculator</noscript></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="normal">
+    <h2 id="normal">z-scores and the normal distribution</h2>
+    <p>Many natural measurements, such as heights, measurement errors or the test scores of a large group, follow a symmetric bell shape around the mean, called the normal distribution. Every normal distribution can be converted to the standard normal (mean 0, standard deviation 1) with a z-score, so a single z table answers every normal-probability question. The area under the curve between two values is the proportion of data in that interval.</p>
+    <div class="tf-grid">
+      <div class="tf" id="D7" data-k="z score standard score standardize">
+        <p class="tf-n"><b><span class="fid">D7</span> z-score</b></p>
+        \[ z = \frac{x - \mu}{\sigma},\qquad x = \mu + z\sigma \]
+      </div>
+      <div class="tf" id="D8" data-k="normal distribution pdf bell curve empirical rule 68 95 99.7">
+        <p class="tf-n"><b><span class="fid">D8</span> Normal distribution</b></p>
+        \[ f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x - \mu)^2}{2\sigma^2}},\quad P(|Z| < 1, 2, 3) \approx 0.683,\ 0.954,\ 0.997 \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d5">
+      <div class="wx-head"><span class="mono">Example D-5 · Comparing with z</span><h3>A student scores 72 in math (mean 60, SD 8) and 80 in physics (mean 70, SD 10). In which subject did the student do better relative to the class?</h3></div>
+      <ol class="steps">
+        <li><p>\(z_{\text{math}} = \tfrac{72 - 60}{8} = 1.5\) · \(z_{\text{physics}} = \tfrac{80 - 70}{10} = 1.0\)</p></li>
+      </ol>
+      <p class="answer">Math is better relative to the group, even though the raw score is lower</p>
+    </div>
+    <div class="wx" id="ex-d6">
+      <div class="wx-head"><span class="mono">Example D-6 · Probabilities and percentiles</span><h3>Adult heights are normal with μ = 165 cm, σ = 6 cm. (a) What proportion are taller than 177 cm? (b) Between 159 and 171 cm? (c) Test scores have μ = 70, σ = 8. What score puts you in the top 10%?</h3></div>
+      <ol class="steps">
+        <li><p>(a) \(z = \tfrac{177 - 165}{6} = 2\) · \(P(Z > 2) = 1 - 0.9772\)</p></li>
+        <li><p>(b) \(z = \pm1\) · \(\Phi(1) - \Phi(-1) = 0.8413 - 0.1587\)</p></li>
+        <li><p>(c) \(\Phi(z) = 0.90 \Rightarrow z \approx 1.2816\) · \(x = 70 + 1.2816(8)\)</p></li>
+      </ol>
+      <p class="answer">(a) ≈ 0.0228 · (b) ≈ 0.6827 · (c) ≈ 80.25 <button type="button" class="wx-btn" data-pc-set='{"mu":70,"sigma":8,"mode":"inv","p":0.9}' data-pc-target="normLab">See the area</button></p>
+    </div>
+    <div class="pc-norm" id="normLab" data-mu="165" data-sigma="6" data-mode="bt" data-a="159" data-b="171"><noscript>JavaScript is needed for the lab</noscript></div>
+    <p>To look values up yourself, see the <a href="/learn/en/precalculus/statistical-tables/#z-table">z tables, both Φ(z) and the area from 0 to z</a>.</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="regression">
+    <h2 id="regression">Correlation and linear regression</h2>
+    <p>With paired data, such as hours of study and test scores, a scatter plot shows whether the two variables have a linear relationship. The correlation coefficient r lies between −1 and 1 and gives both the direction and the strength. The least-squares regression line is the line that makes the sum of the squared vertical distances from the points to the line as small as possible, and it is used to predict y from x within the range of the data.</p>
+    <div class="tf-grid">
+      <div class="tf wide" id="D9" data-k="least squares regression line slope intercept correlation r">
+        <p class="tf-n"><b><span class="fid">D9</span> Regression &amp; correlation</b></p>
+        \[ S_{xy} = \sum xy - \frac{\sum x\sum y}{n},\ \ b = \frac{S_{xy}}{S_{xx}},\ \ a = \bar y - b\bar x,\ \ r = \frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}} \]
+      </div>
+    </div>
+    <div class="wx" id="ex-d7">
+      <div class="wx-head"><span class="mono">Example D-7 · A regression line</span><h3>Review hours x = 1, 2, …, 8 give scores y = 52, 55, 61, 64, 70, 71, 78, 80. Find the regression line and r, and predict the score for 10 hours</h3></div>
+      <ol class="steps">
+        <li><p>\(\sum x = 36,\ \sum y = 531,\ \sum xy = 2563,\ \sum x^2 = 204\) · \(S_{xx} = 204 - 162 = 42\) · \(S_{xy} = 2563 - 2389.5 = 173.5\)</p></li>
+        <li><p>\(b = 173.5/42 \approx 4.131\) · \(a = 66.375 - 4.131(4.5) \approx 47.786\)</p></li>
+        <li><p>\(r \approx 0.994\) · \(\hat y(10) \approx 47.786 + 41.31\)</p></li>
+      </ol>
+      <p class="answer">\(\hat y \approx 47.79 + 4.13x\) · \(r \approx 0.994\) · prediction ≈ 89.1 (outside the data range, so treat with care)</p>
+    </div>
+    <div class="pc-reg" id="regLab"><noscript>JavaScript is needed for the lab</noscript></div>
+    <div class="sr-trap"><b>Common traps</b>Dividing by n instead of n − 1 when the problem says the data are a sample · finding the median without sorting first · using the mean for data with extreme outliers · and reading a high r as cause and effect.</div>
+    </section>
+
+    <section class="tsec" aria-labelledby="practice">
+    <h2 id="practice">Practice (with answers)</h2>
+    <details class="sr-q"><summary><span class="mono">1</span><span class="sr-qt">Median of 8, 3, 5, 12, 7, 10</span></summary><div><p>Sorted 3, 5, 7, 8, 10, 12, position 3.5</p><p class="answer">7.5</p></div></details>
+    <details class="sr-q"><summary><span class="mono">2</span><span class="sr-qt">The mean of 30 students is 64. A new student scores 95. What is the new mean?</span></summary><div><p>\(\tfrac{30(64) + 95}{31}\)</p><p class="answer">65</p></div></details>
+    <details class="sr-q"><summary><span class="mono">3</span><span class="sr-qt">Find σ for 2, 4, 4, 4, 5, 5, 7, 9</span></summary><div><p>\(\mu = 5\) · \(\sum(x - \mu)^2 = 32\) · \(\sigma^2 = 4\)</p><p class="answer">σ = 2</p></div></details>
+    <details class="sr-q"><summary><span class="mono">4</span><span class="sr-qt">If z = −1.5 with μ = 50 and σ = 4, what is the value?</span></summary><div><p>\(x = 50 + (-1.5)(4)\)</p><p class="answer">44</p></div></details>
+    <details class="sr-q"><summary><span class="mono">5</span><span class="sr-qt">Normal with μ = 100, σ = 15: what proportion is below 70?</span></summary><div><p>\(z = -2\) · \(\Phi(-2)\)</p><p class="answer">≈ 0.0228</p></div></details>
+    </section>
+
+    <section class="tsec" aria-labelledby="next">
+    <h2 id="next">Read next</h2>
+    <ul>
+      <li><a href="/learn/en/precalculus/statistical-tables/">27.16 Statistical tables: z, t, χ² and F</a> — full tables with a p-value calculator</li>
+      <li><a href="/learn/en/precalculus/probability/#binomial">The binomial distribution</a> — the basis of the normal approximation</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+    <div class="author">
+      <div class="avatar" aria-hidden="true"><span>Mod</span></div>
+      <p><b>Ajarn Mod · Teerawut Savangboon</b><br>Lecturer in Electrical Engineering, Dhonburi Rajabhat University, Samut Prakan · <a href="/about/">Profile</a></p>
+    </div>
+    <!--pager-->
+  </article>
+</div>
