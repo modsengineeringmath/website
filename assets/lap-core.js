@@ -435,8 +435,8 @@
       var body = joinTerms(b.ttex);
       if (!b.T) return { tex: body, T: 0 };
       var arg = "t - " + nice(b.T);
-      var sh = body.split("(t)").join("(\u0001)").replace(/(^|[^a-z])t(?![a-z])/g, function (m0, pre) { return pre + "(\u0001)"; }).split("\u0001").join(arg);
-      var single = !/[^{(\[]\s[+-]\s?/.test(body.replace(/\{[^{}]*\}/g, "{}").replace(/\\left\([^]*?\\right\)/g, "()").slice(1));
+      var sh = body.split("(t)").join("(\u0001)").replace(/(^|[^a-z\\])t(?![a-df-z])/g, function (m0, pre) { return pre + "(\u0001)"; }).split("\u0001").join(arg);
+      var single = !/[^{(\[]\s[+-]\s?/.test(body.replace(/\{[^{}]*\}/g, "{}").replace(/\\left\([^]*?\\right\)/g, "()").replace(/^\s*-\s*/, "x"));
       return { tex: (single ? sh : "\\left[" + sh + "\\right]") + "u(t - " + nice(b.T) + ")", T: b.T };
     });
     var hasDelay = blocks.some(function (b) { return b.T > 0; });

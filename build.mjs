@@ -30,6 +30,8 @@ for (const [src, name] of [
   ["katex/dist/contrib/auto-render.min.js", "katex-auto-render.min.js"],
   ["marked/marked.min.js", "marked.min.js"],
   ["dompurify/dist/purify.min.js", "purify.min.js"],
+  ["nerdamer-prime/all.min.js", "nerdamer.min.js"], // /tools/integral-calculator/ fallback (loaded on demand)
+  ["mathjax/es5/tex-svg.js", "mathjax-tex-svg.js"], // /tools/latex-equation-editor/ SVG/PNG export (loaded on demand)
 ]) fs.copyFileSync(path.join(ROOT, "node_modules", src), path.join(VENDOR_DST, name));
 const PERSON_ID = `${SITE}/#mod`;
 import crypto from "node:crypto";
@@ -819,7 +821,25 @@ const EN_CHROME = [
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
   ['aria-controls="navtools">เครื่องมือ<', 'aria-controls="navtools">Tools<'],
-  ['data-nav="tools">เขียนบทเรียน Markdown + LaTeX<', 'data-nav="tools">Math lesson editor (Thai)<'],
+  ['<a href="/tools/" data-nav="tools">เครื่องมือคำนวณทั้งหมด<', '<a href="/en/tools/" data-nav="tools">All calculators<'],
+  ['<span class="nav-h">คณิตศาสตร์</span>\n          <a href="/tools/derivative', '<span class="nav-h">Mathematics</span>\n          <a href="/tools/derivative'],
+  ['<span class="nav-h">วิศวกรรมไฟฟ้า</span>\n          <a href="/tools/power', '<span class="nav-h">Electrical engineering</span>\n          <a href="/tools/power'],
+  ['<span class="nav-h">งานเขียนและงานสอน</span>', '<span class="nav-h">Writing and teaching</span>'],
+  ['<a href="/tools/derivative-calculator/">คำนวณอนุพันธ์ พร้อมวิธีทำ<', '<a href="/en/tools/derivative-calculator/">Derivative calculator<'],
+  ['<a href="/tools/integral-calculator/">คำนวณปริพันธ์ (อินทิเกรต)<', '<a href="/en/tools/integral-calculator/">Integral calculator<'],
+  ['<a href="/tools/area-calculator/">คำนวณพื้นที่ · ไร่ งาน ตารางวา<', '<a href="/en/tools/area-calculator/">Area calculator · Thai land units<'],
+  ['<a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ<', '<a href="/en/tools/laplace-transform-calculator/">Laplace transform calculator<'],
+  ['<a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน<', '<a href="/en/tools/inverse-laplace-transform-calculator/">Inverse Laplace calculator<'],
+  ['<a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ<', '<a href="/en/tools/fourier-series-calculator/">Fourier series calculator<'],
+  ['<a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์<', '<a href="/en/tools/power-factor-calculator/">Power factor calculator<'],
+  ['<a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569<', '<a href="/en/tools/electricity-bill-calculator/">Thailand electricity bill calculator<'],
+  ['<a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX → PNG / SVG<', '<a href="/en/tools/latex-equation-editor/">LaTeX equation editor → PNG / SVG<'],
+  ['<a href="/tools/lesson-editor/">เขียนบทเรียน Markdown + LaTeX<', '<a href="/tools/lesson-editor/">Math lesson editor (Thai)<'],
+  ['<a href="/tools/">เครื่องมือคำนวณ: อนุพันธ์ ปริพันธ์ ลาปลาซ ฟูเรียร์ พื้นที่</a>', '<a href="/en/tools/">Calculators: derivative, integral, Laplace, Fourier, area</a>'],
+  ['<a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ.</a>', '<a href="/en/tools/electricity-bill-calculator/">Thailand electricity bill calculator</a>'],
+  ['<a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์</a>', '<a href="/en/tools/power-factor-calculator/">Power factor calculator</a>'],
+  ['<a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX เป็นรูป PNG / SVG</a>', '<a href="/en/tools/latex-equation-editor/">LaTeX equation editor (PNG / SVG)</a>'],
+  ['<a href="/en/tools/" lang="en">Calculators in English</a>', '<a href="/tools/" lang="th">เครื่องมือคำนวณ (ภาษาไทย)</a>'],
   ['href="/blog/" data-nav="blog">บทความ<', 'href="/en/blog/" data-nav="blog">Articles<'],
   ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
   ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
@@ -1998,6 +2018,7 @@ const MD_GUIDES = [
   { src: "src/md/sensors-transducers.md", out: "learn/sensors-transducers/guide.md", page: "/learn/sensors-transducers/", title: "Sensors, transducers & industrial instrumentation — complete guide (Thai, Markdown)",
     desc: "spelling decision (เซนเซอร์/ทรานส์ดิวเซอร์), 20-chapter structure, verified example numbers (Pt100, thermocouple CJC, ISO 5167 orifice, magmeter, radar level, 4–20 mA loop budget, NE 43, HART, Modbus frames and CRC, fieldbus segments, SIL), standards with countries of origin, interactive tools and FAQ" },
 ];
+const toolPages = []; // calculators under /tools/ and /en/tools/ → their own section in llms.txt
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
 
@@ -2151,6 +2172,7 @@ for (const { rel, raw } of pageSources) {
       mdFiles.push({ path: "/" + mdRel, canonical: url });
     }
   }
+  if (!meta.noindex && /^\/(en\/)?tools\/[\w-]+\/$/.test(route)) toolPages.push({ route, lang, name: meta.h1 || meta.title, description: meta.description });
   if (!meta.noindex) searchIndex.push(searchEntry(meta, route, lang, body, topic, sub, isPost));
   const tocHtml = toc(body, lang);
   body = body.split("<!--toc-->").join(tocHtml);
@@ -2434,6 +2456,12 @@ ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SIT
 ## Videos (one watch page per YouTube video, Thai, with a written summary and links to the lessons)
 - [All videos](${SITE}${VID_HUB})
 ${allVideos.map((v) => `- [${v.name}](${SITE}${v.route}): ${v.description}`).join("\n")}
+
+## Calculators (free, in the browser; each answer is checked numerically and shown with its working; Thai and English editions at separate URLs)
+- [All calculators (Thai)](${SITE}/tools/) · [All calculators (English)](${SITE}/en/tools/)
+${toolPages.sort((a, b) => a.route.replace("/en", "").localeCompare(b.route.replace("/en", "")) || a.lang.localeCompare(b.lang)).reverse().map((t) => `- [${t.name}](${SITE}${t.route}) (${t.lang}): ${t.description}`).join("\n")}
+- Calculator inputs can be linked: ${SITE}/en/tools/derivative-calculator/?f=x^3*sin(2x) · ${SITE}/en/tools/integral-calculator/?f=x*cos(x)&a=0&b=pi · ${SITE}/en/tools/laplace-transform-calculator/?f=e^(-2t)*sin(3t) · ${SITE}/en/tools/inverse-laplace-transform-calculator/?f=(s%2B3)/((s%2B1)(s%2B2)^2) · ${SITE}/en/tools/latex-equation-editor/?tex=E%3Dmc^2 · ${SITE}/en/tools/electricity-bill-calculator/?c=1.2&units=350
+- Thai electricity tariff used by the bill calculator (MEA/PEA, bills from September 2026; Ft Sep–Dec 2026 = 16.23 satang/unit; residential: first 200 units 3.0000, 201–400 4.1584, 401+ 4.3583 baht/unit) is kept in ${SITE}/assets/thai-tariff.js
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}

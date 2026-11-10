@@ -22,6 +22,31 @@ The owner should only have to say what to write. Every addition goes through the
 Automatic, nothing to edit by hand: sitemap.xml, llms.txt, llms-full.txt, the Markdown copy (`index.html.md`), search-index.json,
 mcp-index.json (so the `/mcp` connector in Claude finds the page), feed.xml, JSON-LD, prev/next, hub and category lists, `_headers`.
 
+## Calculators: /tools/ and /en/tools/ (added 2026-11-10)
+Hub `src/pages/tools/index.html` + 9 tool pages, each with an English twin of the same slug in `src/pages/en/tools/` (paired by
+`"alt"` in the meta block → reciprocal hreflang, TH/EN switch, og:locale): `latex-equation-editor`, `laplace-transform-calculator`,
+`inverse-laplace-transform-calculator`, `fourier-series-calculator`, `derivative-calculator`, `integral-calculator`, `area-calculator`,
+`power-factor-calculator`, `electricity-bill-calculator`. The pages are ordinary hand-edited sources: explanations, tables, FAQ and
+`"keywords"` are written per language; the widget is one line, `<div class="mt-tool" data-tool="…">`, and takes its language from `<html lang>`.
+- `assets/mt-core.js` (`window.MTCore`, no DOM): expression parser → tree, simplifier, TeX/plain printers, exact differentiation,
+  rule-based integration (table, linear and u-substitution, by parts, partial fractions, trig powers), Gauss–Kronrod quadrature,
+  Laplace transform of exponential-polynomials with steps/unit step/delta, Fourier coefficients of piecewise functions, `niceTex`
+  (recognises fractions and multiples of π, 1/π, √2 …).
+- `assets/mt-ui.js`: the nine widgets, Thai and English texts side by side in `L("ไทย", "English")`. Inputs come from the query string, so
+  results are linkable (`/tools/derivative-calculator/?f=x^2*sin(x)`). **Rule: a symbolic answer is shown only after an independent
+  numerical check** (derivative vs finite differences, antiderivative differentiated back, Laplace vs ∫f(t)e^{-st}dt, inverse Laplace
+  transformed forward). Keep that rule when adding a tool.
+- Inverse Laplace reuses `lap-core.js`; integrals the rule table cannot do fall back to `assets/vendor/nerdamer.min.js` (loaded on demand,
+  result goes through the same check); image export uses `assets/vendor/mathjax-tex-svg.js` (loaded on demand). Both are copied from
+  `node_modules` by build.mjs like the other vendor files.
+- **Electricity tariff: `assets/thai-tariff.js` is the only file to edit** when the ERC announces a new Ft (every 4 months) or MEA/PEA
+  change the schedule; instructions and sources are at the top of that file. Then update the rate tables and the worked example in
+  the two `electricity-bill-calculator.html` pages, run the test, and log the change in `data/updates.json`.
+- Check: `node build.mjs && node scripts/test-tools.mjs` (engine cases, the bill examples printed on the pages, TH⇄EN pairing, JSON-LD,
+  sitemap/llms.txt, internal links, no Thai text in the English pages). Social images: `python3 scripts/og.py --prefix tools` and `--prefix en-tools`.
+- The nav "เครื่องมือ" list is in `src/layout.html`; its English labels and `/en/tools/` links are the `EN_CHROME` pairs in build.mjs.
+  Short URLs (`/calculators`, `/bill`, `/latex`, `/rai`, `/pf-calculator` …) are in `_redirects`.
+
 ## Update the status feed (no build needed)
 Edit `data/updates.json` (on GitHub web or the GitHub app is fine) and commit.
 The home page box "มีอะไรใหม่บนเว็บไซต์" (`/#updates`, newest 6 entries), the changelog page `/updates/` and the profile page

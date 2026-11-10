@@ -39,8 +39,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=dc2c2d6b">
-<link rel="stylesheet" href="/assets/site.css?v=dc2c2d6b">
+<link rel="stylesheet" href="/assets/fonts.css?v=8461c705">
+<link rel="stylesheet" href="/assets/site.css?v=8461c705">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/#article","headline":"วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง","description":"สอนหาดีเทอร์มิแนนต์ 2×2 และ 3×3 ด้วยโคแฟกเตอร์ และหาอินเวอร์สเมทริกซ์ด้วยสูตร adjugate พร้อมตัวอย่างตัวเลขที่ตรวจคำตอบด้วยการคูณกลับ และเงื่อนไขเมทริกซ์เอกฐาน","inLanguage":"th","url":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/","mainEntityOfPage":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Determinant","Inverse matrix","Linear algebra"],"articleSection":"เวกเตอร์และพีชคณิตเชิงเส้น","isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-determinant-and-inverse-matrix.jpg"],"keywords":"determinant, ดีเทอร์มิแนนต์, inverse matrix, อินเวอร์สเมทริกซ์, เมทริกซ์ผกผัน, โคแฟกเตอร์, adjugate"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์และพีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/blog/category/linear-algebra/"},{"@type":"ListItem","position":4,"name":"วิธีหา Determinant และ Inverse Matrix (2×2 และ 3×3) พร้อมตัวอย่าง","item":"https://modsengineeringmath.com/blog/determinant-and-inverse-matrix/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Determinant เป็นศูนย์หมายความว่าอะไร?","acceptedAnswer":{"@type":"Answer","text":"เมทริกซ์เป็นเมทริกซ์เอกฐาน (singular) ไม่มีอินเวอร์ส และระบบสมการ Amathbf{x}=mathbf{b} ไม่มีคำตอบเดียว คือไม่มีคำตอบหรือมีคำตอบมากมาย แถวหรือหลักของเมทริกซ์ขึ้นต่อกันเชิงเส้น"}},{"@type":"Question","name":"ใช้วิธี Sarrus กับเมทริกซ์ 4×4 ได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ไม่ได้ วิธี Sarrus (ลากเส้นทแยง) ใช้ได้กับ 3×3 เท่านั้น เมทริกซ์ขนาดใหญ่กว่านั้นใช้การกระจายโคแฟกเตอร์ หรือการดำเนินการแถวจนเป็นเมทริกซ์สามเหลี่ยม"}},{"@type":"Question","name":"ทำไมหารด้วย determinant ตอนหาอินเวอร์ส?","acceptedAnswer":{"@type":"Answer","text":"เพราะ A operatorname{adj}(A)=det(A) I จึงต้องหารด้วย det(A) เพื่อให้ได้เมทริกซ์เอกลักษณ์ ซึ่งทำไม่ได้เมื่อ det(A)=0"}},{"@type":"Question","name":"นิยมหาอินเวอร์สด้วยวิธีไหนในทางปฏิบัติ?","acceptedAnswer":{"@type":"Answer","text":"ในมือเขียนสำหรับ 2×2 ใช้สูตรลัด สำหรับ 3×3 ใช้ adjugate หรือการดำเนินการแถว (เกาส์–จอร์แดน) ในโปรแกรมคอมพิวเตอร์มักแก้ Amathbf{x}=mathbf{b} ด้วยการแยกตัวประกอบโดยไม่คำนวณอินเวอร์สตรง ๆ เพื่อความแม่นยำ"}}]}]}</script>
@@ -458,8 +458,21 @@
       <a href="/videos/" >ดูคลิป</a>
       <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtools">เครื่องมือ</button>
-        <div class="nav-list nav-list-r" id="navtools">
-          <a href="/tools/lesson-editor/" >เขียนบทเรียน Markdown + LaTeX</a>
+        <div class="nav-list nav-list-r nav-list-wide" id="navtools">
+          <a href="/tools/" >เครื่องมือคำนวณทั้งหมด</a>
+          <span class="nav-h">คณิตศาสตร์</span>
+          <a href="/tools/derivative-calculator/">คำนวณอนุพันธ์ พร้อมวิธีทำ</a>
+          <a href="/tools/integral-calculator/">คำนวณปริพันธ์ (อินทิเกรต)</a>
+          <a href="/tools/area-calculator/">คำนวณพื้นที่ · ไร่ งาน ตารางวา</a>
+          <a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ</a>
+          <a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน</a>
+          <a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ</a>
+          <span class="nav-h">วิศวกรรมไฟฟ้า</span>
+          <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์</a>
+          <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569</a>
+          <span class="nav-h">งานเขียนและงานสอน</span>
+          <a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX → PNG / SVG</a>
+          <a href="/tools/lesson-editor/">เขียนบทเรียน Markdown + LaTeX</a>
         </div>
       </div>
       <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
@@ -760,6 +773,11 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
       <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
       <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
       <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/">เครื่องมือคำนวณ: อนุพันธ์ ปริพันธ์ ลาปลาซ ฟูเรียร์ พื้นที่</a>
+      <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ.</a>
+      <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์</a>
+      <a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX เป็นรูป PNG / SVG</a>
+      <a href="/en/tools/" lang="en">Calculators in English</a>
       <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
       <a href="/about/">เกี่ยวกับอาจารย์มด</a>
     </nav>
@@ -775,7 +793,7 @@ l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
   </div>
 </footer>
 
-<script src="/assets/site.js?v=dc2c2d6b" defer></script>
+<script src="/assets/site.js?v=8461c705" defer></script>
 
 </body>
 </html>
