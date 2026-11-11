@@ -1,0 +1,53 @@
+# Build the site on GitHub whenever a source file changes, and commit the generated pages back to main.
+# This is what lets the owner post from github.com (or the GitHub phone app) without installing anything:
+# edit or add a file under content/, src/ or data/ → this workflow runs `node build.mjs` → Cloudflare Pages deploys.
+# When sources and generated files were pushed together (a Claude session, or a local build) nothing is left to commit
+# and the workflow ends without a commit. A commit made here does not start other workflows, so IndexNow runs as a step.
+name: Build site
+on:
+  push:
+    branches: [main]
+    paths: ["content/**", "src/**", "data/**", "files/**", "build.mjs", "package.json", "package-lock.json"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: build-site
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: node build.mjs
+      - name: Check the course pages
+        run: node scripts/test-courses.mjs
+      - name: Commit generated pages
+        id: commit
+        run: |
+          # feed.xml, llms-full.txt and sitemap.xml carry today's date; alone they are not a reason to commit
+          if git diff --quiet -- . ':!feed.xml' ':!llms-full.txt' ':!sitemap.xml' && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Nothing to publish: generated pages already match the sources."
+            exit 0
+          fi
+          echo "before=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Build: generated pages for $(git log -1 --format=%h)"
+          git push origin HEAD:main
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+      - name: Tell search engines (IndexNow)
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        run: node scripts/indexnow.mjs --from "${{ steps.commit.outputs.before }}" --to "$(git rev-parse HEAD)" --wait

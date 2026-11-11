@@ -5,7 +5,7 @@ The HTML in the repo root, `about/` and `learn/` is generated — edit `src/` an
 
 ## Checklist for every new page or article (Claude sessions: follow this without being asked)
 The owner should only have to say what to write. Every addition goes through these steps:
-1. **Write the source.** Lessons: `src/pages/learn/…` plus the entry in `TOPICS` (build.mjs). Articles: `src/pages/blog/<slug>.html`
+1. **Write the source.** Course units: `content/courses/<course>/NN-<slug>.md` (see "Courses"). Lessons: `src/pages/learn/…` plus the entry in `TOPICS` (build.mjs). Articles: `src/pages/blog/<slug>.html`
    and, when an English edition is wanted, `src/pages/en/blog/<same slug>.html`. Solutions: `node scripts/new-solution.mjs`.
    The sections below give the details for each series.
 2. **Log it in `data/updates.json` every time** — the home page promises that every new lesson, lab, exam set, article and
@@ -21,6 +21,32 @@ The owner should only have to say what to write. Every addition goes through the
 
 Automatic, nothing to edit by hand: sitemap.xml, llms.txt, llms-full.txt, the Markdown copy (`index.html.md`), search-index.json,
 mcp-index.json (so the `/mcp` connector in Claude finds the page), feed.xml, JSON-LD, prev/next, hub and category lists, `_headers`.
+
+## Courses / ห้องเรียนออนไลน์: /courses/ (added 2026-11-11)
+E-learning style classrooms, separate from the reference library under `/learn/`: units in teaching order with outcomes, worked
+examples, exercises with folded answers, the unit's YouTube video and handouts. First course: `/courses/control-engineering/`
+(15-unit plan; units 1–2 written). **Written in Markdown so the owner can post without Claude** — his step-by-step guide (Thai) is
+`content/courses/README.md`; keep it in step with the code.
+- Sources: `content/courses/<course>/course.md` (front matter: title, en, description, parts, plan, playlist, files … + hub text),
+  `NN-<slug>.md` (unit NN → `/courses/<course>/<slug>/`), `<slug>.md` (extra post), `_*.md` ignored. Handouts in `files/courses/<course>/`,
+  figures in `images/courses/<course>/` (`python3 scripts/course_figs.py` draws the control-engineering ones).
+- `src/courses.mjs` (`loadCourses`) parses the front matter, converts Markdown with `marked` (math `$…$`, `$$…$$`, `\(…\)`, `\[…\]`;
+  boxes `:::note|warn|key|example|activity|exercise|answer`; `::youtube ID title`; `::file label | url`; `## Heading {#id}`), and returns
+  page sources with a normal `<!--meta-->` block that build.mjs appends to `pageSources`. So layout, KaTeX, sitemap, search index,
+  Markdown copies, MCP index and the OG manifest need nothing extra; llms.txt has a "Courses" section. Errors are thrown in Thai with the file name.
+- JSON-LD: hub = `Course` (+ `CourseInstance`, free `Offer`, `Syllabus` per part) + `ItemList` + `BreadcrumbList`; unit = `Article`/`LearningResource`
+  + `BreadcrumbList`, and `VideoObject` only when both `youtube:` and `video_date:` are given. Units use the click-to-load facade, so they are
+  not watch pages; a clip that should rank as a video still gets its own `/videos/<slug>/` page.
+- `assets/course.css` + `assets/course.js` (loaded only on these pages): "learned" marks and hub progress in localStorage
+  (`course-done:<course>`, this browser only), classroom mode (`body.c-classroom`, fullscreen, Esc), print with answers open.
+- **`.github/workflows/build.yml`** runs `node build.mjs` + `scripts/test-courses.mjs` on every push that touches `content/`, `src/`, `data/`,
+  `files/` or build.mjs and commits the generated pages (then runs IndexNow itself, because a commit by the workflow does not start other
+  workflows). When sources and output are pushed together it finds nothing to commit. This also makes edits to `src/pages/**` on github.com work.
+  A failed build leaves the live site unchanged.
+- Menu: "ห้องเรียน" (`data-nav="courses"`, English label in `EN_CHROME`) and a link in the ระบบควบคุม group. `/courses` no longer redirects to
+  `/learn/`; short URLs `/control-engineering`, `/control-course`, `/classroom`, `/elearning`.
+- Check: `node build.mjs && node scripts/test-courses.mjs`. Social images: `python3 scripts/og.py --prefix courses`.
+- A deleted unit's output folder (`courses/<course>/<slug>/`) must be deleted by hand.
 
 ## Calculators: /tools/ and /en/tools/ (added 2026-11-10)
 Hub `src/pages/tools/index.html` + 9 tool pages, each with an English twin of the same slug in `src/pages/en/tools/` (paired by
@@ -742,7 +768,7 @@ then watch Indexing → Videos (takes days to weeks). "Video isn't on a watch pa
 
 ## Editing by hand — owner notes (added 2026-11-03)
 - Cloudflare Pages serves the repo as-is: after editing anything in `src/`, run `node build.mjs` and commit the generated files too.
-  Editing on github.com only works for `data/updates.json` (read live by the home page and /updates/).
+  Since 2026-11-11 `.github/workflows/build.yml` does that on GitHub, so editing sources on github.com works too (about 3–5 minutes to go live).
 - A typo in a page's `<!--meta {...} -->` block stops the build with the file name and the line/column inside the block
   (`parseMeta()` in build.mjs), e.g. `Meta block in src/pages/videos/x.html is not valid JSON (meta line 7, column 3: …)`.
 - Images in a page: `images/<section>/<name>-<width>.webp` inside `<figure class="post-fig"><img src alt width height loading="lazy"><figcaption>`;

@@ -39,8 +39,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=04fadd26">
-<link rel="stylesheet" href="/assets/site.css?v=04fadd26">
+<link rel="stylesheet" href="/assets/fonts.css?v=6a8bd457">
+<link rel="stylesheet" href="/assets/site.css?v=6a8bd457">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/#article","headline":"แก้ระบบสมการเชิงเส้นด้วยวิธีเชิงตัวเลข: เกาส์ LU จาโคบี หรือเกาส์-ไซเดล เลือกวิธีไหนดี","description":"เปรียบเทียบวิธีเชิงตัวเลขสำหรับระบบสมการเชิงเส้นแบบเห็นภาพรวม การกำจัดแบบเกาส์กับการสลับแถว LU โชเลสกี จาโคบี เกาส์-ไซเดล SOR เงื่อนไขการลู่เข้า และเลขเงื่อนไข พร้อมตัวอย่างตัวเลขและตารางเลือกวิธี","inLanguage":"th","url":"https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/","mainEntityOfPage":"https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/","datePublished":"2026-10-25","dateModified":"2026-10-25","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Jacobi method","Gauss–Seidel method","LU decomposition","Gaussian elimination","Condition number"],"articleSection":"เวกเตอร์และพีชคณิตเชิงเส้น","isPartOf":{"@id":"https://modsengineeringmath.com/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/blog-jacobi-vs-gauss-seidel.jpg"],"keywords":"จาโคบี กับ เกาส์-ไซเดล, jacobi vs gauss seidel, วิธีเชิงตัวเลข ระบบสมการเชิงเส้น, การแยก LU, partial pivoting, SOR, เงื่อนไขการลู่เข้า, ทแยงเด่น, เลขเงื่อนไข, numerical methods linear equations"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"บทความ","item":"https://modsengineeringmath.com/blog/"},{"@type":"ListItem","position":3,"name":"เวกเตอร์และพีชคณิตเชิงเส้น","item":"https://modsengineeringmath.com/blog/category/linear-algebra/"},{"@type":"ListItem","position":4,"name":"แก้ระบบสมการเชิงเส้นด้วยวิธีเชิงตัวเลข: เกาส์ LU จาโคบี หรือเกาส์-ไซเดล เลือกวิธีไหนดี","item":"https://modsengineeringmath.com/blog/jacobi-vs-gauss-seidel/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"จาโคบีกับเกาส์-ไซเดลต่างกันตรงไหน?","acceptedAnswer":{"@type":"Answer","text":"จาโคบีคำนวณทุกตัวแปรในรอบใหม่จากค่ารอบก่อนทั้งหมด ส่วนเกาส์-ไซเดลนำค่าที่เพิ่งได้ในรอบเดียวกันมาใช้ทันที เกาส์-ไซเดลจึงมักลู่เข้าเร็วกว่าราวสองเท่าและใช้หน่วยความจำน้อยกว่า ส่วนจาโคบีคำนวณแบบขนานได้ง่าย"}},{"@type":"Question","name":"เมื่อไรควรใช้วิธีทำซ้ำแทนการแยก LU?","acceptedAnswer":{"@type":"Answer","text":"เมื่อระบบใหญ่มากและเมทริกซ์ส่วนใหญ่เป็นศูนย์ (เบาบาง) เช่น การจำลองความร้อน สนามไฟฟ้า หรือไฟไนต์เอลิเมนต์ ที่มีตัวแปรหลักหมื่นถึงหลักล้าน วิธีทำซ้ำไม่ต้องเก็บเมทริกซ์เต็มและไม่เกิดการเติมศูนย์ ส่วนระบบหนาแน่นขนาดกลางให้ใช้ LU กับการสลับแถว"}},{"@type":"Question","name":"ทำไมต้องสลับแถวในการกำจัดแบบเกาส์?","acceptedAnswer":{"@type":"Answer","text":"เพื่อให้ตัวหลักเป็นค่าที่มีขนาดใหญ่ที่สุดในหลัก ตัวคูณจึงไม่เกิน 1 และความคลาดเคลื่อนจากการปัดเศษไม่ถูกขยาย ถ้าตัวหลักเล็กมาก เช่น 0.0001 เครื่องที่เก็บ 3 หลักจะได้คำตอบผิดทั้งหมด"}},{"@type":"Question","name":"วิธีทำซ้ำจะลู่เข้าเมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"ถ้าเมทริกซ์ทแยงเด่นแท้ จาโคบีและเกาส์-ไซเดลลู่เข้าแน่นอน เงื่อนไขที่แท้จริงคือรัศมีสเปกตรัมของเมทริกซ์การทำซ้ำน้อยกว่า 1 และจำนวนรอบที่ต้องใช้ประมาณได้จากจำนวนหลักที่ต้องการหารด้วย −log₁₀ ของรัศมีสเปกตรัม"}}]}]}</script>
@@ -61,6 +61,7 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
+      <a href="/courses/" >ห้องเรียน</a>
       <a href="/blog/" >บทความ</a>
       <a href="/solutions/" >เฉลยโจทย์</a>
       <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
@@ -301,6 +302,7 @@
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
         <div class="nav-list" id="navg4">
           <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/courses/control-engineering/">ห้องเรียนวิศวกรรมระบบควบคุม · เรียนเป็นหน่วย</a>
           <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
           <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
           <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
@@ -646,6 +648,7 @@
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
+      <a href="/courses/">ห้องเรียนออนไลน์ · วิศวกรรมระบบควบคุม</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
       <a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>
       <a href="/en/blog/">Articles in English</a>
@@ -734,7 +737,7 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=04fadd26" defer></script>
+<script src="/assets/site.js?v=6a8bd457" defer></script>
 
 </body>
 </html>
