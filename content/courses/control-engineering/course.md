@@ -10,7 +10,7 @@ level: Undergraduate
 level_th: ระดับปริญญาตรี วิศวกรรมไฟฟ้า
 workload: PT45H
 playlist: PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka
-keywords: วิศวกรรมระบบควบคุม, ระบบควบคุม, control engineering, control systems, feedback control, ฟังก์ชันถ่ายโอน, transfer function, เรียนระบบควบคุมออนไลน์, เอกสารประกอบการสอน ระบบควบคุม, ตำราระบบควบคุม
+keywords: วิศวกรรมระบบควบคุม, ระบบควบคุม, ระบบควบคุมป้อนกลับ, control engineering, control systems, feedback control, ฟังก์ชันถ่ายโอน, transfer function, เรียนระบบควบคุมออนไลน์, เอกสารประกอบการสอน ระบบควบคุม, ตำราระบบควบคุม
 about: Control engineering, Control theory, Feedback, Transfer function, PID controller
 parts:
   - 1-4 | ภาคที่ 1 · แบบจำลองทางคณิตศาสตร์ของระบบ
