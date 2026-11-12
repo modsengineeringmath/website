@@ -25,7 +25,7 @@ mcp-index.json (so the `/mcp` connector in Claude finds the page), feed.xml, JSO
 ## Courses / ห้องเรียนออนไลน์: /courses/ (added 2026-11-11)
 E-learning style classrooms, separate from the reference library under `/learn/`: units in teaching order with outcomes, worked
 examples, exercises with folded answers, the unit's YouTube video and handouts. First course: `/courses/control-engineering/`
-(15-unit plan; units 1–2 written). **Written in Markdown so the owner can post without Claude** — his step-by-step guide (Thai) is
+(17 units, all written, Thai and English). **Written in Markdown so the owner can post without Claude** — his step-by-step guide (Thai) is
 `content/courses/README.md`; keep it in step with the code.
 - Sources: `content/courses/<course>/course.md` (front matter: title, en, description, parts, plan, playlist, files … + hub text),
   `NN-<slug>.md` (unit NN → `/courses/<course>/<slug>/`), `<slug>.md` (extra post), `_*.md` ignored. Handouts in `files/courses/<course>/`,
@@ -45,7 +45,18 @@ examples, exercises with folded answers, the unit's YouTube video and handouts. 
   A failed build leaves the live site unchanged.
 - Menu: "ห้องเรียน" (`data-nav="courses"`, English label in `EN_CHROME`) and a link in the ระบบควบคุม group. `/courses` no longer redirects to
   `/learn/`; short URLs `/control-engineering`, `/control-course`, `/classroom`, `/elearning`.
-- Check: `node build.mjs && node scripts/test-courses.mjs`. Social images: `python3 scripts/og.py --prefix courses`.
+- **English edition (added 2026-11-12): `content/courses/<course>/en/`** holds `course.md` and unit files with the *same file names* as the Thai ones
+  → `/en/courses/<course>/<slug>/` and the hub `/en/courses/`. Thai is the source. A unit and its translation pair up by file name: reciprocal
+  hreflang, the TH/EN switch, a link in the lesson header, `workTranslation`/`translationOfWork` in JSON-LD, one merged hit in `/mcp` search.
+  All interface words of both editions are in `STR` at the top of `src/courses.mjs`; course.js picks its texts from `<html lang>`.
+  **Rule for Claude sessions: whenever a Thai unit is added or its content changes, update `en/<same file>.md` in the same commit**
+  (full translation: same numbers, examples, exercises, headings ids; `deeper:` labels end with "(Thai)" when the target page is Thai;
+  use the `-en.svg` figure when a figure has Thai labels; no Thai text may remain, the test checks it). If the owner edits a Thai file
+  by hand on github.com, the English file is not changed automatically: translate it the next time he asks, comparing `git log` dates.
+- Syllabus: 17 units in 5 parts (unit 16 fuzzy logic, unit 17 AI/ML). Examples are taken from electrical engineering on purpose (the table
+  in `course.md` lists which unit uses which equipment); keep that when editing. Every unit opens with a "ภาพในใจก่อนเริ่ม" section for beginners.
+- Figures for units 5–16 are drawn by `scripts/course_figs.py` (needs numpy and scipy) with symbol-only labels, so both editions share them.
+- Check: `node build.mjs && node scripts/test-courses.mjs` (both editions). Social images: `python3 scripts/og.py --prefix courses` and `--prefix en-courses`.
 - A deleted unit's output folder (`courses/<course>/<slug>/`) must be deleted by hand.
 
 ## Calculators: /tools/ and /en/tools/ (added 2026-11-10)

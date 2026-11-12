@@ -6,10 +6,11 @@
 
 ```
 content/courses/control-engineering/
-  course.md                  ข้อมูลรายวิชา + แผนการเรียน 15 หน่วย + ข้อความบนหน้ารายวิชา
+  course.md                  ข้อมูลรายวิชา + แผนการเรียน 17 หน่วย + ข้อความบนหน้ารายวิชา
   01-introduction.md         หน่วยที่ 1  →  /courses/control-engineering/introduction/
   02-transfer-function.md    หน่วยที่ 2  →  /courses/control-engineering/transfer-function/
   _template.md               แม่แบบ (ไฟล์ที่ขึ้นต้นด้วย _ ไม่ขึ้นเว็บ)
+  en/                        ฉบับภาษาอังกฤษ ชื่อไฟล์เหมือนฉบับไทยทุกไฟล์  →  /en/courses/control-engineering/…
 files/courses/control-engineering/     ไฟล์แจก: PDF สไลด์ ตำรา
 images/courses/control-engineering/    รูปประกอบ
 ```
@@ -150,3 +151,11 @@ node build.mjs && node scripts/test-courses.mjs
 npx http-server -p 8000 -c-1        # ดูตัวอย่างที่ http://localhost:8000/courses/control-engineering/
 git add -A && git commit -m "หน่วยที่ 3" && git push
 ```
+
+## ฉบับภาษาอังกฤษ (โฟลเดอร์ en/)
+
+- ฉบับภาษาไทยเป็นต้นฉบับ ฉบับภาษาอังกฤษอยู่ในโฟลเดอร์ `en/` ของรายวิชา ใช้**ชื่อไฟล์เดียวกัน** เช่น `13-pid-control.md` กับ `en/13-pid-control.md`
+  ระบบจับคู่สองหน้าให้เอง: มีปุ่มสลับภาษา และแจ้ง Google ว่าเป็นหน้าเดียวกันคนละภาษา (hreflang)
+- **เมื่อแก้เนื้อหาภาษาไทยเอง ฉบับภาษาอังกฤษจะยังไม่เปลี่ยน** ให้แจ้ง Claude ว่า "แปลหน่วยที่ … ที่แก้ล่าสุดเป็นภาษาอังกฤษ" Claude จะปรับไฟล์ใน `en/` ให้ตรงกัน
+- ถ้าเพิ่มหน่วยใหม่เฉพาะภาษาไทย หน้าภาษาไทยขึ้นเว็บได้ตามปกติ แผนการเรียนฉบับอังกฤษจะแสดงหน่วยนั้นเมื่อมีไฟล์ใน `en/` แล้วเท่านั้น
+- ในไฟล์ภาษาอังกฤษห้ามมีข้อความภาษาไทยเหลืออยู่ (ระบบตรวจให้ ถ้ามีจะขึ้น ✗ ในแท็บ Actions)
