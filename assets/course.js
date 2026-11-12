@@ -1,6 +1,7 @@
 // Courses (/courses/): "learned" marks and progress (kept only in this browser's localStorage), classroom mode, print.
 (function () {
   var art = document.querySelector("[data-course]");
+  var EN = document.documentElement.lang === "en";
   var KEY = art ? "course-done:" + art.dataset.course : "";
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } }
   function save(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
@@ -12,7 +13,7 @@
     var paint = function () {
       var on = load().indexOf(slug) >= 0;
       done.setAttribute("aria-pressed", on);
-      done.textContent = on ? "เรียนแล้ว (กดเพื่อยกเลิก)" : "ทำเครื่องหมายว่าเรียนแล้ว";
+      done.textContent = EN ? (on ? "Learned (click to undo)" : "Mark as learned") : on ? "เรียนแล้ว (กดเพื่อยกเลิก)" : "ทำเครื่องหมายว่าเรียนแล้ว";
     };
     done.addEventListener("click", function () {
       var list = load(), i = list.indexOf(slug);
@@ -23,7 +24,7 @@
     var setClass = function (on) {
       document.body.classList.toggle("c-classroom", on);
       cls.setAttribute("aria-pressed", on);
-      cls.textContent = on ? "ออกจากโหมดสอนในห้อง (Esc)" : "โหมดสอนในห้อง";
+      cls.textContent = EN ? (on ? "Leave classroom mode (Esc)" : "Classroom mode") : on ? "ออกจากโหมดสอนในห้อง (Esc)" : "โหมดสอนในห้อง";
       // answers stay folded; the teacher opens them on the projector when ready
       if (on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function () {});
       if (!on && document.fullscreenElement) document.exitFullscreen().catch(function () {});
@@ -53,7 +54,7 @@
       });
       prog.hidden = n === 0;
       prog.querySelector("i").style.width = (links.length ? (100 * n) / links.length : 0) + "%";
-      prog.querySelector(".c-prog-t").textContent = "เรียนแล้ว " + n + " จาก " + links.length + " หน่วยที่เปิด (บันทึกในเบราว์เซอร์นี้เท่านั้น)";
+      prog.querySelector(".c-prog-t").textContent = EN ? "Learned " + n + " of " + links.length + " open units (saved in this browser only)" : "เรียนแล้ว " + n + " จาก " + links.length + " หน่วยที่เปิด (บันทึกในเบราว์เซอร์นี้เท่านั้น)";
     };
     prog.querySelector(".c-prog-reset").addEventListener("click", function () { save([]); paintHub(); });
     paintHub();

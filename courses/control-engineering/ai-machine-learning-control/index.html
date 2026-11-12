@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม | วิศวกรรมระบบควบคุม หน่วยที่ 17 · อาจารย์มด</title>
+<meta name="description" content="machine learning คืออะไรในภาษาของวิศวกรควบคุม การระบุระบบจากข้อมูลด้วยกำลังสองน้อยที่สุด การลดตามเกรเดียนต์ โครงข่ายประสาทเทียม การเรียนรู้แบบเสริมกำลัง ดัชนีสมรรถนะ IAE ISE ITAE สำหรับวิเคราะห์ลูป และข้อจำกัดด้านเสถียรภาพและความปลอดภัย">
+<meta name="keywords" content="AI ระบบควบคุม, machine learning control, การระบุระบบ, system identification, กำลังสองน้อยที่สุด, least squares, โครงข่ายประสาทเทียม, neural network, reinforcement learning, IAE ISE ITAE, predictive maintenance, การบำรุงรักษาเชิงพยากรณ์">
+<meta name="author" content="Teerawut Savangboon">
+<link rel="canonical" href="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/">
+<meta name="theme-color" content="#f5f2ea">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mod's Engineering Mathematics">
+<meta property="og:url" content="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/">
+<meta property="og:title" content="หน่วยที่ 17: พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม">
+<meta property="og:description" content="machine learning คืออะไรในภาษาของวิศวกรควบคุม การระบุระบบจากข้อมูลด้วยกำลังสองน้อยที่สุด การลดตามเกรเดียนต์ โครงข่ายประสาทเทียม การเรียนรู้แบบเสริมกำลัง ดัชนีสมรรถนะ IAE ISE ITAE สำหรับวิเคราะห์ลูป และข้อจำกัดด้านเสถียรภาพและความปลอดภัย">
+<meta property="og:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="หน่วยที่ 17: พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="หน่วยที่ 17: พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม">
+<meta name="twitter:description" content="machine learning คืออะไรในภาษาของวิศวกรควบคุม การระบุระบบจากข้อมูลด้วยกำลังสองน้อยที่สุด การลดตามเกรเดียนต์ โครงข่ายประสาทเทียม การเรียนรู้แบบเสริมกำลัง ดัชนีสมรรถนะ IAE ISE ITAE สำหรับวิเคราะห์ลูป และข้อจำกัดด้านเสถียรภาพและความปลอดภัย">
+<meta name="twitter:image" content="https://modsengineeringmath.com/images/cover.jpg">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1">
+<link rel="alternate" hreflang="th" href="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/">
+<link rel="alternate" hreflang="x-default" href="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/">
+<link rel="alternate" type="application/rss+xml" title="Mod's Engineering Mathematics — อัปเดตล่าสุด" href="/feed.xml">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css?v=b6e800f4">
+<link rel="stylesheet" href="/assets/site.css?v=b6e800f4">
+<link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
+<link rel="stylesheet" href="/assets/course.css?v=b6e800f4">
+<link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/index.html.md" title="Markdown">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Article","LearningResource"],"@id":"https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/#lesson","headline":"พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม","name":"วิศวกรรมระบบควบคุม หน่วยที่ 17: พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม","description":"machine learning คืออะไรในภาษาของวิศวกรควบคุม การระบุระบบจากข้อมูลด้วยกำลังสองน้อยที่สุด การลดตามเกรเดียนต์ โครงข่ายประสาทเทียม การเรียนรู้แบบเสริมกำลัง ดัชนีสมรรถนะ IAE ISE ITAE สำหรับวิเคราะห์ลูป และข้อจำกัดด้านเสถียรภาพและความปลอดภัย","inLanguage":"th","url":"https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/","mainEntityOfPage":"https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/","datePublished":"2026-11-12","dateModified":"2026-11-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"learningResourceType":"Lecture notes","educationalLevel":"Undergraduate","isAccessibleForFree":true,"isPartOf":{"@id":"https://modsengineeringmath.com/courses/control-engineering/#course"},"position":17,"teaches":["อธิบาย machine learning ว่าเป็นการหาฟังก์ชันจากข้อมูล และจำแนกการเรียนรู้สามแบบได้","หาแบบจำลองอันดับหนึ่งของพลานต์จากข้อมูลที่บันทึกไว้ด้วยวิธีกำลังสองน้อยที่สุดได้","อธิบายการลดตามเกรเดียนต์และโครงสร้างของนิวรอนโดยเทียบกับลูปป้อนกลับและวงจรออปแอมป์ได้","คำนวณดัชนีสมรรถนะ IAE และ ISE และบอกได้ว่า AI ช่วยวิเคราะห์สมรรถนะของลูปและสภาพเครื่องจักรอย่างไร","ระบุข้อจำกัดของตัวควบคุมที่เรียนรู้จากข้อมูลในด้านเสถียรภาพและความปลอดภัยได้"],"keywords":"AI ระบบควบคุม, machine learning control, การระบุระบบ, system identification, กำลังสองน้อยที่สุด, least squares, โครงข่ายประสาทเทียม, neural network, reinforcement learning, IAE ISE ITAE, predictive maintenance, การบำรุงรักษาเชิงพยากรณ์"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"ห้องเรียน","item":"https://modsengineeringmath.com/courses/"},{"@type":"ListItem","position":3,"name":"วิศวกรรมระบบควบคุม","item":"https://modsengineeringmath.com/courses/control-engineering/"},{"@type":"ListItem","position":4,"name":"หน่วยที่ 17 พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม","item":"https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/"}]}]}</script>
+<script>try{var t=localStorage.getItem("mem-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="">
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<div id="top"></div>
+
+<header class="nav" id="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Mod's Engineering Mathematics หน้าแรก">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
+      <span>Mod's Engineering Math<small>อาจารย์มด · คณิตศาสตร์วิศวกรรม</small></span>
+    </a>
+    <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
+      <a class="nav-home" href="/" >หน้าแรก</a>
+      <a href="/learn/" >คลังความรู้</a>
+      <a href="/courses/" aria-current="page">ห้องเรียน</a>
+      <a href="/blog/" >บทความ</a>
+      <a href="/solutions/" >เฉลยโจทย์</a>
+      <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
+      <a href="/learn/en/"  lang="en">English</a>
+      <div class="nav-math" role="group" aria-label="วิชาคณิตศาสตร์">
+      <span class="nav-sec mono" aria-hidden="true">คณิตศาสตร์</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navpre">พรีแคลคูลัส</button>
+        <div class="nav-list nav-list-wide" id="navpre">
+          <a href="/learn/precalculus/" >ภาพรวม · แผนที่หลักสูตร ม.4–ม.6</a>
+          <span class="nav-h">พีชคณิต · ฟังก์ชัน · กราฟ</span>
+          <a href="/learn/precalculus/algebra/">พีชคณิต · สมการ · อสมการ</a>
+          <a href="/learn/precalculus/functions/">ฟังก์ชัน · โดเมน · ฟังก์ชันประกอบ</a>
+          <a href="/learn/precalculus/graphs/">กราฟ · การแปลงกราฟ</a>
+          <a href="/learn/precalculus/polynomial-functions/">ฟังก์ชันพหุนาม · หารสังเคราะห์</a>
+          <a href="/learn/precalculus/rational-functions/">ฟังก์ชันตรรกยะ · เส้นกำกับ</a>
+          <a href="/learn/precalculus/inverse-functions/">ฟังก์ชันผกผัน</a>
+          <a href="/learn/precalculus/exponential-functions/">เอกซ์โพเนนเชียล · ดอกเบี้ยทบต้น</a>
+          <a href="/learn/precalculus/logarithmic-functions/">ลอการิทึม</a>
+          <span class="nav-h">ตรีโกณมิติ</span>
+          <a href="/learn/precalculus/trigonometric-functions/">ฟังก์ชันตรีโกณ · วงกลมหนึ่งหน่วย</a>
+          <a href="/learn/precalculus/applications-of-trigonometry/">กฎไซน์ · โคไซน์ · เครื่องแก้สามเหลี่ยม</a>
+          <a href="/learn/precalculus/trig-table/">ตารางตรีโกณมิติ 0°–360°</a>
+          <span class="nav-h">ลำดับ · ความน่าจะเป็น · สถิติ</span>
+          <a href="/learn/precalculus/sequences/">ลำดับเลขคณิต · เรขาคณิต</a>
+          <a href="/learn/precalculus/series/">อนุกรม · ซิกมา · เงินผ่อน</a>
+          <a href="/learn/precalculus/probability/">การนับ · ความน่าจะเป็น</a>
+          <a href="/learn/precalculus/statistics/">สถิติ · การแจกแจงปกติ</a>
+          <a href="/learn/precalculus/statistical-tables/">ตารางสถิติ z · t · χ² · F</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/precalculus/" lang="en">Precalculus in English</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navfn">ฟังก์ชัน</button>
+        <div class="nav-list" id="navfn">
+          <a href="/learn/functions/" >ฟังก์ชัน · โดเมน · เรนจ์</a>
+          <a href="/learn/functions/#graph-lab">แล็บกราฟ: เลื่อน ยืด สะท้อน</a>
+          <a href="/learn/functions/#library">กราฟฟังก์ชันพื้นฐาน</a>
+          <a href="/learn/functions/#composition">ฟังก์ชันประกอบ f∘g</a>
+          <a href="/learn/functions/#inverse">ฟังก์ชันผกผัน f⁻¹</a>
+          <a href="/learn/functions/#engineering">u(t) r(t) e^(−t/τ) ในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtrig">ตรีโกณมิติ</button>
+        <div class="nav-list" id="navtrig">
+          <a href="/learn/trigonometry/" >สูตรตรีโกณมิติทั้งหมด</a>
+          <a href="/learn/trigonometry/#unit-circle">วงกลมหนึ่งหน่วย (ลากมุมได้)</a>
+          <a href="/learn/trigonometry/#special-angles">ค่าของมุมพิเศษ</a>
+          <a href="/learn/trigonometry/#sum-difference">ผลบวก-ผลต่าง · มุมสองเท่า</a>
+          <a href="/learn/trigonometry/#euler">ออยเลอร์ · จำนวนเชิงซ้อน</a>
+          <a href="/learn/trigonometry/#triangles">กฎไซน์ · กฎโคไซน์</a>
+          <a href="/learn/trigonometry/#table">ตาราง sin cos tan 0°–90°</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlim">ลิมิต</button>
+        <div class="nav-list" id="navlim">
+          <a href="/learn/limits/" >ลิมิตและความต่อเนื่อง</a>
+          <a href="/learn/limits/#epsilon-delta">แล็บนิยาม ε–δ</a>
+          <a href="/learn/limits/#one-sided">ลิมิตซ้าย · ลิมิตขวา</a>
+          <a href="/learn/limits/#indeterminate">รูปแบบ 0/0 · แยกตัวประกอบ · คอนจูเกต</a>
+          <a href="/learn/limits/#infinity">ลิมิตที่อนันต์ · เส้นกำกับ</a>
+          <a href="/learn/limits/#continuity">ความต่อเนื่อง · IVT</a>
+          <a href="/learn/limits/#lhopital">กฎของโลปิตาล</a>
+          <span class="nav-h">ลำดับ · อนุกรม · พิสูจน์</span>
+          <a href="/learn/limits/sequences-series/">ลำดับและอนุกรมฉบับสรุป (หน้าเดียว)</a>
+          <a href="/learn/sequences-and-series/#pages">ลำดับและอนุกรมครบชุด 10 หน้า →</a>
+          <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navseq">ลำดับ · อนุกรม</button>
+        <div class="nav-list nav-list-wide" id="navseq">
+          <a href="/learn/sequences-and-series/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/sequences-and-series/series-lab/">แล็บรวม 12 ชุด</a>
+          <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบ · โจทย์สุ่ม</a>
+          <span class="nav-h">ลำดับ</span>
+          <a href="/learn/sequences-and-series/sequences/">ลำดับ · ลิมิตของลำดับ · เวียนเกิด</a>
+          <span class="nav-h">อนุกรมและการทดสอบ</span>
+          <a href="/learn/sequences-and-series/infinite-series/">อนุกรมอนันต์ · เรขาคณิต · อนุกรม p</a>
+          <a href="/learn/sequences-and-series/convergence-tests/">การทดสอบการลู่เข้า · ผังเลือกใช้</a>
+          <a href="/learn/sequences-and-series/alternating-series/">อนุกรมสลับ · ลู่เข้าสัมบูรณ์</a>
+          <span class="nav-h">อนุกรมกำลัง · เทย์เลอร์ · โลรองต์</span>
+          <a href="/learn/sequences-and-series/power-series/">อนุกรมกำลัง · รัศมีการลู่เข้า</a>
+          <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์ · แมคลอริน</a>
+          <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์ · เรซิดิว</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/sequences-and-series/engineering-applications/">อนุกรมในงานวิศวกรรม</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navder">อนุพันธ์</button>
+        <div class="nav-list" id="navder">
+          <a href="/learn/differential-calculus/" >อนุพันธ์ · สูตรและวิธีทำ</a>
+          <a href="/learn/differential-calculus/#tangent-lab">แล็บเส้นตัด → เส้นสัมผัส</a>
+          <a href="/learn/differential-calculus/#rules">สูตรอนุพันธ์ครบ</a>
+          <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
+          <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
+          <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navint">อินทิกรัล</button>
+        <div class="nav-list" id="navint">
+          <a href="/learn/integral-calculus/" >อินทิกรัล · สูตรและวิธีทำ</a>
+          <a href="/learn/integral-calculus/#u-substitution">เปลี่ยนตัวแปร u</a>
+          <a href="/learn/integral-calculus/#partial-fractions">เศษส่วนย่อย</a>
+          <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
+          <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
+          <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
+          <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+          <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navvec">เวกเตอร์</button>
+          <div class="nav-list nav-list-wide" id="navvec">
+            <a href="/learn/vector-algebra/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+            <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3D</a>
+            <span class="nav-h">พื้นฐาน 2D / 3D</span>
+            <a href="/learn/vector-algebra/foundations/">ขนาด ทิศทาง พิกัด</a>
+            <a href="/learn/vector-algebra/operations/">บวก ลบ คูณสเกลาร์</a>
+            <a href="/learn/vector-algebra/components-projection/">Component · Projection</a>
+            <a href="/learn/vector-algebra/direction-cosines/">ทิศทางโคไซน์ α β γ</a>
+            <a href="/learn/vector-algebra/dot-product/">Dot product · มุม · งาน</a>
+            <a href="/learn/vector-algebra/cross-product/">Cross product · มือขวา</a>
+            <span class="nav-h">แรงและกลศาสตร์</span>
+            <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ · กฎไซน์-โคไซน์</a>
+            <a href="/learn/vector-algebra/force-systems/">ระบบแรง · โมเมนต์ · สมดุล</a>
+            <a href="/learn/vector-algebra/coordinate-rotation/">หมุนแกนพิกัด 2D / 3D</a>
+            <a href="/learn/vector-algebra/robot-arm/">เวกเตอร์ในแขนกล</a>
+            <a href="/learn/vector-algebra/engineering-applications/">งานวิศวกรรมรวม</a>
+            <span class="nav-h">ไฟฟ้า: สนาม · เฟสเซอร์</span>
+            <a href="/learn/vector-algebra/em-fields/">สนามไฟฟ้า-แม่เหล็ก</a>
+            <a href="/learn/vector-algebra/sinusoids/">sin · cos ไฟฟ้า AC</a>
+            <a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a>
+            <a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a>
+            <span class="nav-h">ห้องแล็บ</span>
+            <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์ (ฟิสิกส์ 1)</a>
+            <a href="/learn/vector-algebra/field-lab/">แล็บสนาม (ฟิสิกส์ 2)</a>
+            <a href="/learn/vector-algebra/ac-lab/">แล็บวงจร AC</a>
+            <a href="/learn/vector-algebra/vector-tools/">เครื่องมือระดับโลก</a>
+          </div>
+        </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navmvc">หลายตัวแปร</button>
+        <div class="nav-list nav-list-wide" id="navmvc">
+          <a href="/learn/multivariable-calculus/" >ภาพรวม · เส้นทางเรียน · ค้นหาสูตร</a>
+          <a href="/learn/multivariable-calculus/multivariable-lab/">แล็บรวม 19 ชุด</a>
+          <span class="nav-h">ฟังก์ชันและอนุพันธ์</span>
+          <a href="/learn/multivariable-calculus/functions-of-several-variables/">ฟังก์ชันหลายตัวแปร · contour</a>
+          <a href="/learn/multivariable-calculus/partial-derivatives/">อนุพันธ์ย่อย · ระนาบสัมผัส</a>
+          <a href="/learn/multivariable-calculus/gradient-directional-derivative/">Gradient · อนุพันธ์ตามทิศ</a>
+          <a href="/learn/multivariable-calculus/optimization/">ค่าสุดขีด · Lagrange · LSQ</a>
+          <span class="nav-h">อินทิกรัลหลายชั้น</span>
+          <a href="/learn/multivariable-calculus/multiple-integrals/">สองชั้น · สามชั้น · Jacobian</a>
+          <span class="nav-h">ฟังก์ชันเวกเตอร์ · แคลคูลัสเวกเตอร์</span>
+          <a href="/learn/multivariable-calculus/vector-functions/">เส้นโค้งในอวกาศ · ความโค้ง</a>
+          <a href="/learn/multivariable-calculus/vector-fields/">Divergence · Curl</a>
+          <a href="/learn/multivariable-calculus/line-integrals/">อินทิกรัลตามเส้น · Green</a>
+          <a href="/learn/multivariable-calculus/surface-integrals/">ฟลักซ์ · Gauss · Stokes</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/multivariable-calculus/electrical-engineering/">วิศวกรรมไฟฟ้า</a>
+          <a href="/learn/multivariable-calculus/mechanical-engineering/">วิศวกรรมเครื่องกล</a>
+          <a href="/learn/multivariable-calculus/civil-engineering/">วิศวกรรมโยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
+        <div class="nav-list nav-list-r" id="navla">
+          <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
+          <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์ · เครื่องคิดเลข</a>
+          <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบ 45 ข้อ + โจทย์สุ่ม</a>
+          <span class="nav-h">เนื้อหา</span>
+          <a href="/learn/linear-algebra/matrices/">เมทริกซ์และการดำเนินการ</a>
+          <a href="/learn/linear-algebra/determinants/">ดีเทอร์มิแนนต์</a>
+          <a href="/learn/linear-algebra/linear-systems/">ระบบสมการ · เกาส์</a>
+          <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น)</a>
+          <a href="/learn/linear-algebra/inverse/">อินเวอร์ส</a>
+          <a href="/learn/linear-algebra/cramers-rule/">กฎของคราเมอร์</a>
+          <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข · LU · จาโคบี</a>
+          <a href="/learn/linear-algebra/eigenvalues/">ค่าเฉพาะ · เวกเตอร์เฉพาะ</a>
+          <span class="nav-h">การประยุกต์</span>
+          <a href="/learn/linear-algebra/ee-applications/">วงจรไฟฟ้า · ระบบไฟฟ้ากำลัง</a>
+          <a href="/learn/linear-algebra/engineering-applications/">ไฟฟ้า · เครื่องกล · โยธา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navlap">ลาปลาซ</button>
+        <div class="nav-list nav-list-r" id="navlap">
+          <a href="/learn/laplace-transform/" >ภาพรวม · นิยาม · ตาราง</a>
+          <a href="/learn/laplace-transform/complex-analysis/">จำนวนเชิงซ้อน · ฟังก์ชันวิเคราะห์ · เรซิดิว</a>
+          <a href="/learn/laplace-transform/pole-zero-roc/">โพล-ซีโร่ · ROC</a>
+          <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงครบ</a>
+          <a href="/learn/laplace-transform/differential-equations/">แก้สมการเชิงอนุพันธ์</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/">Inverse Laplace Transform</a>
+          <a href="/learn/laplace-transform/inverse-laplace-transform/#calculator">เครื่องคิดเลขเศษส่วนย่อย</a>
+        </div>
+      </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">วิศวกรรมไฟฟ้า</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg1">วงจรไฟฟ้า</button>
+        <div class="nav-list" id="navg1">
+          <a href="/learn/dc-circuits/" >วงจรไฟฟ้ากระแสตรง</a>
+          <a href="/learn/dc-circuits/#lab">แล็บต่อวงจรจำลอง</a>
+          <a href="/learn/dc-circuits/#problems">โจทย์วงจร 4 ระดับ</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg2">ระบบ · สัญญาณ</button>
+        <div class="nav-list" id="navg2">
+          <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
+          <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
+          <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
+          <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg3">อนุกรมฟูเรียร์</button>
+        <div class="nav-list" id="navg3">
+          <a href="/learn/fourier-series/" >ภาพรวมอนุกรมฟูเรียร์</a>
+          <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก</a>
+          <a href="/learn/fourier-series/waveform-table/">ตารางฟูเรียร์ของรูปคลื่น</a>
+          <a href="/learn/fourier-series/power-harmonics/">THD · PF · IEEE 519</a>
+          <a href="/learn/fourier-series/rectifiers/">เรกติไฟเออร์ · อินเวอร์เตอร์ · PWM</a>
+          <a href="/learn/fourier-series/mitigation/">แก้ปัญหาฮาร์มอนิก</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
+        <div class="nav-list" id="navg4">
+          <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
+          <a href="/courses/control-engineering/">ห้องเรียนวิศวกรรมระบบควบคุม · เรียนเป็นหน่วย</a>
+          <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
+          <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+          <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
+          <a href="/learn/control-systems/pid/">ตัวควบคุม P · PI · PD · PID</a>
+          <a href="/learn/control-systems/mechatronics/">เมคาทรอนิกส์</a>
+          <a href="/learn/control-systems/robotics/">โรโบติกส์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg5">อิเล็กทรอนิกส์กำลัง</button>
+        <div class="nav-list nav-list-r" id="navg5">
+          <a href="/learn/power-electronics/" >ภาพรวมอิเล็กทรอนิกส์กำลัง</a>
+          <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC</a>
+          <a href="/learn/power-electronics/buck-converter/">บั๊ก · บูสต์ · บั๊ก-บูสต์ · ชุค</a>
+          <a href="/learn/power-electronics/buck-ccm-analysis/">บั๊ก CCM: ไล่วงจรหาดิวตี้ไซเคิล</a>
+          <a href="/learn/power-electronics/buck-dcm-analysis/">บั๊ก DCM: ดิวตี้ตามโหลด</a>
+          <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ย · สเตตสเปซ</a>
+          <a href="/learn/power-electronics/buck-transfer-functions/">ฟังก์ชันถ่ายโอนบั๊กทุกแบบ</a>
+          <a href="/learn/power-electronics/buck-design-lab/">ออกแบบบั๊ก + โปรแกรมโหลด</a>
+          <a href="/learn/power-electronics/compensator-design/">ออกแบบตัวชดเชย Type II/III</a>
+          <a href="/learn/power-electronics/controller-selection/">เลือกชิปควบคุมและ MCU</a>
+          <a href="/learn/power-electronics/troubleshooting/">วิเคราะห์อาการเสีย</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg6">โซลาร์เซลล์</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg6">
+          <a href="/learn/solar-pv/" >ภาพรวม · ขั้นตอนออกแบบ 10 ขั้น</a>
+          <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบออนไลน์</a>
+          <span class="nav-h">พื้นฐาน</span>
+          <a href="/learn/solar-pv/pv-cell/">เซลล์และเส้นโค้ง I-V</a>
+          <a href="/learn/solar-pv/solar-resource/">แสงอาทิตย์ · มุมเอียง · เงา</a>
+          <a href="/learn/solar-pv/panel-selection/">เลือกแผงโซลาร์</a>
+          <span class="nav-h">ออกแบบระบบ</span>
+          <a href="/learn/solar-pv/system-types/">On-grid · Off-grid · Hybrid · ขนานไฟ</a>
+          <a href="/learn/solar-pv/string-sizing/">ออกแบบสตริง · จับคู่อินเวอร์เตอร์</a>
+          <a href="/learn/solar-pv/wiring-protection/">สายไฟ · ฟิวส์ · SPD · กราวด์</a>
+          <a href="/learn/solar-pv/battery-storage/">แบตเตอรี่ LiFePO4</a>
+          <span class="nav-h">คาดการณ์ · ความคุ้มค่า</span>
+          <a href="/learn/solar-pv/energy-yield/">คาดการณ์พลังงาน · PR</a>
+          <a href="/learn/solar-pv/load-sizing/">เลือกขนาดจากบิลค่าไฟ</a>
+          <a href="/learn/solar-pv/economics/">คืนทุน · NPV · IRR · LCOE</a>
+          <a href="/learn/solar-pv/forecasting-monitoring/">พยากรณ์ล่วงหน้า · เฝ้าติดตาม</a>
+          <span class="nav-h">อิเล็กทรอนิกส์กำลัง</span>
+          <a href="/learn/solar-pv/mppt/">MPPT</a>
+          <a href="/learn/solar-pv/pv-inverter/">อินเวอร์เตอร์ · PLL · Anti-islanding</a>
+          <a href="/learn/solar-pv/controller-selection/">เลือกตัวควบคุม ชิป MCU</a>
+          <span class="nav-h">งานประยุกต์</span>
+          <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์จ่ายแอร์</a>
+          <a href="/learn/solar-pv/solar-farm/">โซลาร์ฟาร์ม</a>
+          <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำ · เกษตร · Agrivoltaics</a>
+          <a href="/learn/solar-pv/installation-maintenance/">ติดตั้ง · ทดสอบ · บำรุงรักษา</a>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg7">ไฟฟ้ากำลัง</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg7">
+          <span class="nav-h">ชาร์จรถ EV ที่บ้าน</span>
+          <a href="/learn/ev-charging/" >ภาพรวม · ชาร์จช้า vs ชาร์จเร็ว</a>
+          <a href="/learn/ev-charging/ev-lab/">เครื่องมือ · ซิมูเลเตอร์พลังงานบ้าน</a>
+          <a href="/learn/ev-charging/charging-basics/">kW kWh · Mode 1–4 · AC/DC</a>
+          <a href="/learn/ev-charging/battery-charging/">แบตเตอรี่ · เวลาชาร์จ</a>
+          <a href="/learn/ev-charging/portable-charger/">ชาร์จช้าด้วยไฟบ้าน (Mode 2)</a>
+          <a href="/learn/ev-charging/wallbox/">วอลล์บ็อกซ์ · Control Pilot</a>
+          <a href="/learn/ev-charging/home-electrical/">มิเตอร์ · สายไฟ · เบรกเกอร์</a>
+          <a href="/learn/ev-charging/safety-standards/">RCD Type B · กราวด์</a>
+          <a href="/learn/ev-charging/charging-cost/">ค่าไฟ · TOU · ต่อกิโลเมตร</a>
+          <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์ + แอร์ + รถ EV</a>
+          <span class="nav-h">ระบบไฟฟ้ากำลัง · ระบบป้องกัน</span>
+          <a href="/learn/power-systems/" >ภาพรวม · ตรวจความพร้อม</a>
+          <a href="/learn/power-systems/power-lab/">แล็บคำนวณ</a>
+          <a href="/learn/power-systems/power-system-overview/">ผลิต · ส่ง · จำหน่าย</a>
+          <a href="/learn/power-systems/phasors-three-phase/">เฟสเซอร์ · สามเฟส</a>
+          <a href="/learn/power-systems/per-unit/">ระบบต่อหน่วย (pu)</a>
+          <a href="/learn/power-systems/transformers-lines/">หม้อแปลง · สายส่ง · P-δ</a>
+          <a href="/learn/power-systems/fault-analysis/">คำนวณกระแสลัดวงจร</a>
+          <a href="/learn/power-systems/symmetrical-components/">องค์ประกอบสมมาตร</a>
+          <a href="/learn/power-systems/protection-principles/">หลักการป้องกัน · CT</a>
+          <a href="/learn/power-systems/overcurrent-coordination/">รีเลย์กระแสเกิน · ประสาน TCC</a>
+          <a href="/learn/power-systems/earthing-safety/">การต่อลงดิน</a>
+          <a href="/learn/power-systems/differential-distance/">รีเลย์ผลต่าง 87 · ระยะทาง 21</a>
+          <span class="nav-h">เพาเวอร์แฟกเตอร์</span>
+          <a href="/learn/power-factor/" >ภาพรวม · เข้าใจทุกระดับ</a>
+          <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์ · ตู้คาปาซิเตอร์จำลอง</a>
+          <a href="/learn/power-factor/pf-basics/">PF คืออะไร · P Q S</a>
+          <a href="/learn/power-factor/waveforms-power/">รูปคลื่น v · i · p</a>
+          <a href="/learn/power-factor/pf-correction/">คำนวณคาปาซิเตอร์</a>
+          <a href="/learn/power-factor/capacitor-bank/">ตู้คาปาซิเตอร์อัตโนมัติ</a>
+          <a href="/learn/power-factor/pf-billing/">ค่าปรับ kvar ในบิล</a>
+          <a href="/learn/power-factor/harmonics-true-pf/">PF จริง · ฮาร์มอนิก</a>
+          <a href="/learn/power-factor/pf-measurement/">การวัด PF</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">ควบคุมมอเตอร์ · อัตโนมัติ</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg9">มอเตอร์ · PLC</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg9">
+          <span class="nav-h">ควบคุมมอเตอร์ไฟฟ้ากระแสสลับ</span>
+          <a href="/learn/ac-induction-motor/" >คู่มือมอเตอร์ AC ฉบับสมบูรณ์ · กราฟ T–n</a>
+          <a href="/learn/motor-control/" >ภาพรวม · 400 V 50 Hz</a>
+          <a href="/learn/motor-control/motor-lab/">ซิมูเลเตอร์สตาร์ทมอเตอร์</a>
+          <a href="/learn/motor-control/induction-motor/">มอเตอร์เหนี่ยวนำ · เนมเพลต</a>
+          <a href="/learn/motor-control/motor-connections/">ต่อสตาร์ · เดลต้า</a>
+          <a href="/learn/motor-control/control-devices/">คอนแทคเตอร์ · โอเวอร์โหลด</a>
+          <a href="/learn/motor-control/dol-starter/">สตาร์ทตรง DOL</a>
+          <a href="/learn/motor-control/forward-reverse/">กลับทางหมุน</a>
+          <a href="/learn/motor-control/star-delta/">สตาร์–เดลต้า แบบละเอียด</a>
+          <a href="/learn/motor-control/soft-starters/">ซอฟต์สตาร์ท</a>
+          <a href="/learn/motor-control/vfd/">อินเวอร์เตอร์ VFD</a>
+          <a href="/learn/motor-control/design-installation/">ออกแบบ · ติดตั้ง · แก้ปัญหา</a>
+          <span class="nav-h">ควบคุมอัตโนมัติด้วย PLC</span>
+          <a href="/learn/plc/" >ภาพรวม PLC</a>
+          <a href="/learn/plc/plc-lab/">ซิมูเลเตอร์แลดเดอร์</a>
+          <a href="/learn/plc/io-wiring/">ต่อสาย I/O · Sink/Source</a>
+          <a href="/learn/plc/ladder-basics/">แลดเดอร์พื้นฐาน</a>
+          <a href="/learn/plc/timers-counters/">ไทเมอร์ · เคาน์เตอร์</a>
+          <a href="/learn/plc/plc-motor-control/">PLC คุมมอเตอร์ · สตาร์–เดลต้า</a>
+          <a href="/learn/plc/sequential-control/">ควบคุมแบบลำดับ · SFC</a>
+          <a href="/learn/plc/analog-pid-vfd/">อนาล็อก · PID · VFD</a>
+          <span class="nav-h">English</span>
+          <a href="/learn/en/" >English lessons · Motor control · PLC</a>
+        </div>
+      </div>
+      <span class="nav-sec mono" aria-hidden="true">เครื่องมือวัด · วัดคุม</span>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg8">เซนเซอร์ · วัดคุม</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navg8">
+          <span class="nav-h">ภาพรวม · รากฐาน</span>
+          <a href="/learn/sensors-transducers/" >ภาพรวม · เส้นทางเรียน</a>
+          <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน</a>
+          <a href="/learn/sensors-transducers/fundamentals/">หลักการเบื้องต้น</a>
+          <a href="/learn/sensors-transducers/history-technology/">ประวัติ · วิวัฒนาการ</a>
+          <a href="/learn/sensors-transducers/units/">หน่วยและระบบหน่วย</a>
+          <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+          <a href="/learn/sensors-transducers/measurement-standards/">มาตรวิทยา · การสอบกลับ</a>
+          <a href="/learn/sensors-transducers/electrical-standards/">มาตรฐาน · ประเทศต้นแบบ</a>
+          <span class="nav-h">เครื่องมือวัดตามปริมาณ</span>
+          <a href="/learn/sensors-transducers/temperature-sensors/">อุณหภูมิ · Pt100 · เทอร์โมคัปเปิล</a>
+          <a href="/learn/sensors-transducers/pressure-sensors/">ความดัน · ทรานสมิตเตอร์ DP</a>
+          <a href="/learn/sensors-transducers/flow-measurement/">อัตราการไหล · ISO 5167</a>
+          <a href="/learn/sensors-transducers/level-measurement/">ระดับ · เรดาร์</a>
+          <a href="/learn/sensors-transducers/force-position/">แรง · โหลดเซลล์ · เอนโค้ดเดอร์</a>
+          <a href="/learn/sensors-transducers/current-voltage-sensing/">กระแส · CT · ฮอลล์</a>
+          <span class="nav-h">สัญญาณ · เครือข่าย</span>
+          <a href="/learn/sensors-transducers/signal-conditioning-adc/">ปรับสภาพสัญญาณ · ADC</a>
+          <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA · NE 43 · HART</a>
+          <a href="/learn/sensors-transducers/modbus/">Modbus RTU · TCP</a>
+          <a href="/learn/sensors-transducers/fieldbus/">PROFIBUS · ฟิลด์บัส · APL</a>
+          <a href="/learn/sensors-transducers/smart-sensors-iiot/">เซนเซอร์อัจฉริยะ · IIoT</a>
+          <span class="nav-h">งานจริงในโรงงาน</span>
+          <a href="/learn/sensors-transducers/pid-symbols/">P&amp;ID · แท็ก ISA-5.1</a>
+          <a href="/learn/sensors-transducers/installation-calibration/">ติดตั้ง · สอบเทียบ · Ex · SIL</a>
+        </div>
+      </div>
+      <a href="/videos/" >ดูคลิป</a>
+      <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navtools">เครื่องมือ</button>
+        <div class="nav-list nav-list-r nav-list-wide" id="navtools">
+          <a href="/tools/" >เครื่องมือคำนวณทั้งหมด</a>
+          <span class="nav-h">คณิตศาสตร์</span>
+          <a href="/tools/derivative-calculator/">คำนวณอนุพันธ์ พร้อมวิธีทำ</a>
+          <a href="/tools/integral-calculator/">คำนวณปริพันธ์ (อินทิเกรต)</a>
+          <a href="/tools/area-calculator/">คำนวณพื้นที่ · ไร่ งาน ตารางวา</a>
+          <a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ</a>
+          <a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน</a>
+          <a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ</a>
+          <span class="nav-h">วิศวกรรมไฟฟ้า</span>
+          <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์</a>
+          <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569</a>
+          <span class="nav-h">งานเขียนและงานสอน</span>
+          <a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX → PNG / SVG</a>
+          <a href="/tools/lesson-editor/">เขียนบทเรียน Markdown + LaTeX</a>
+        </div>
+      </div>
+      <a href="/about/" >เกี่ยวกับอาจารย์มด</a>
+      <a class="nav-yt-panel" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    </nav>
+    <a class="btn btn-primary btn-sm nav-yt" href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+    <button class="icon-btn search-btn" id="searchBtn" type="button" aria-label="ค้นหาในเว็บไซต์" aria-haspopup="dialog" aria-controls="searchDlg" title="ค้นหา (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    </button>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="siteNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<dialog class="search-dlg" id="searchDlg" aria-label="ค้นหาในเว็บไซต์">
+  <form class="search-bar" method="dialog" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="ค้นหาบทเรียน สูตร บทความ เช่น ลาปลาซ, PID, ratio test" autocomplete="off" spellcheck="false" aria-label="คำค้นหา" aria-controls="searchResults" aria-autocomplete="list">
+    <button class="search-close" type="submit" value="close" aria-label="ปิดการค้นหา">Esc</button>
+  </form>
+  <ul class="search-results" id="searchResults" role="listbox" aria-label="ผลการค้นหา"></ul>
+  <p class="search-status" id="searchStatus" aria-live="polite">พิมพ์คำที่ต้องการค้นหา ทั้งภาษาไทยและอังกฤษ</p>
+</dialog>
+
+<main id="main">
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><nav class="toc" aria-label="สารบัญ"><details open><summary>สารบัญ</summary><ol><li><a href="#outcomes">เรียนจบหน่วยนี้แล้วทำอะไรได้</a></li><li><a href="#idea">ภาพในใจก่อนเริ่ม: จากเขียนกฎเอง สู่ให้ข้อมูลเขียนกฎ</a></li><li><a href="#types">การเรียนรู้สามแบบ</a></li><li><a href="#identification">ระบุแบบจำลองของพลานต์จากข้อมูล</a></li><li><a href="#gradient-descent">การลดตามเกรเดียนต์</a></li><li><a href="#neural-network">โครงข่ายประสาทเทียม</a></li><li><a href="#rl">การเรียนรู้แบบเสริมกำลัง</a></li><li><a href="#performance">ใช้ AI วิเคราะห์สมรรถนะ</a></li><li><a href="#limits">ข้อจำกัดและความรับผิดชอบทางวิศวกรรม</a></li><li><a href="#exercises">แบบฝึกหัด</a></li><li><a href="#summary">สรุปหน่วยที่ 17 และสรุปรายวิชา</a></li></ol></details></nav></aside>
+  <article class="lesson course-lesson" data-course="control-engineering" data-lesson="ai-machine-learning-control">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/courses/">ห้องเรียน</a></li><li><a href="/courses/control-engineering/">วิศวกรรมระบบควบคุม</a></li><li>หน่วยที่ 17</li></ol>
+      <p class="eyebrow">// หน่วยที่ 17 · Control Engineering · AI and Machine Learning Fundamentals for Control Engineers</p>
+      <h1>พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม</h1>
+      <p class="lede">machine learning คืออะไรในภาษาของวิศวกรควบคุม การระบุระบบจากข้อมูลด้วยกำลังสองน้อยที่สุด การลดตามเกรเดียนต์ โครงข่ายประสาทเทียม การเรียนรู้แบบเสริมกำลัง ดัชนีสมรรถนะ IAE ISE ITAE สำหรับวิเคราะห์ลูป และข้อจำกัดด้านเสถียรภาพและความปลอดภัย</p>
+      <div class="lesson-meta"><span>สอนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="2026-11-12">12 พ.ย. 2569</time></span><span>อ่านประมาณ 50 นาที</span></div>
+      <div class="c-tools" role="group" aria-label="เครื่องมือของบทเรียน">
+        <button type="button" class="c-btn c-done" aria-pressed="false">ทำเครื่องหมายว่าเรียนแล้ว</button>
+        <button type="button" class="c-btn c-class" aria-pressed="false" title="ขยายตัวอักษรและซ่อนเมนู สำหรับฉายในห้องเรียน (กด Esc เพื่อออก)">โหมดสอนในห้อง</button>
+        <button type="button" class="c-btn c-print">พิมพ์ / บันทึกเป็น PDF</button>
+      </div>
+    </header>
+    <section class="c-sec c-out" aria-labelledby="outcomes"><h2 id="outcomes">เรียนจบหน่วยนี้แล้วทำอะไรได้</h2><ul><li>อธิบาย machine learning ว่าเป็นการหาฟังก์ชันจากข้อมูล และจำแนกการเรียนรู้สามแบบได้</li><li>หาแบบจำลองอันดับหนึ่งของพลานต์จากข้อมูลที่บันทึกไว้ด้วยวิธีกำลังสองน้อยที่สุดได้</li><li>อธิบายการลดตามเกรเดียนต์และโครงสร้างของนิวรอนโดยเทียบกับลูปป้อนกลับและวงจรออปแอมป์ได้</li><li>คำนวณดัชนีสมรรถนะ IAE และ ISE และบอกได้ว่า AI ช่วยวิเคราะห์สมรรถนะของลูปและสภาพเครื่องจักรอย่างไร</li><li>ระบุข้อจำกัดของตัวควบคุมที่เรียนรู้จากข้อมูลในด้านเสถียรภาพและความปลอดภัยได้</li></ul></section>
+    <div class="c-body">
+<h2 id="idea">ภาพในใจก่อนเริ่ม: จากเขียนกฎเอง สู่ให้ข้อมูลเขียนกฎ</h2>
+<p>ตลอด 15 หน่วยแรก เราสร้างแบบจำลองจาก<strong>กฎทางฟิสิกส์</strong> (เคอร์ชอฟฟ์ นิวตัน) แล้วออกแบบตัวควบคุมจากแบบจำลองนั้น หน่วยที่ 16 ใช้<strong>กฎของผู้เชี่ยวชาญ</strong> หน่วยนี้แนะนำแหล่งความรู้ที่สาม คือ<strong>ข้อมูล</strong></p>
+<p><strong>Machine learning (ML)</strong> คือการให้คอมพิวเตอร์หาฟังก์ชัน <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y = f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span> จากตัวอย่างของ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> จำนวนมาก แทนที่มนุษย์จะเขียนฟังก์ชันนั้นเอง <strong>ปัญญาประดิษฐ์ (AI)</strong> เป็นคำที่กว้างกว่า หมายถึงระบบที่ทำงานซึ่งปกติต้องใช้สติปัญญาของมนุษย์ และ ML เป็นวิธีหลักที่ใช้สร้าง AI ในปัจจุบัน</p>
+<p>ข่าวดีสำหรับผู้เรียนวิชานี้: แนวคิดหลักของ ML หลายข้อเป็นสิ่งที่วิศวกรควบคุมรู้จักอยู่แล้วในชื่ออื่น</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>คำของ ML</th>
+<th>คำของวิศวกรควบคุม</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>การฝึก (training) แบบจำลองจากข้อมูล</td>
+<td>การระบุระบบ (system identification)</td>
+</tr>
+<tr>
+<td>ฟังก์ชันสูญเสีย (loss function)</td>
+<td>ดัชนีสมรรถนะ เช่น ISE</td>
+</tr>
+<tr>
+<td>การลดตามเกรเดียนต์ (gradient descent)</td>
+<td>ลูปป้อนกลับที่ปรับพารามิเตอร์ตามค่าผิดพลาด</td>
+</tr>
+<tr>
+<td>อัตราการเรียนรู้ (learning rate)</td>
+<td>เกนของลูป</td>
+</tr>
+<tr>
+<td>การเรียนรู้แบบเสริมกำลัง</td>
+<td>การควบคุมแบบเหมาะที่สุดที่เรียนจากการลองผิดลองถูก</td>
+</tr>
+</tbody></table></div>
+<h2 id="types">การเรียนรู้สามแบบ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>แบบ</th>
+<th>ข้อมูลที่ใช้</th>
+<th>ตัวอย่างในงานไฟฟ้าและควบคุม</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>มีผู้สอน (supervised)</td>
+<td>อินพุตพร้อมคำตอบที่ถูก</td>
+<td>ระบุแบบจำลองของพลานต์ พยากรณ์โหลดไฟฟ้า จำแนกชนิดของฟอลต์จากรูปคลื่นกระแส</td>
+</tr>
+<tr>
+<td>ไม่มีผู้สอน (unsupervised)</td>
+<td>อินพุตอย่างเดียว</td>
+<td>ตรวจจับความผิดปกติของการสั่นสะเทือนมอเตอร์ จัดกลุ่มรูปแบบการใช้ไฟฟ้า</td>
+</tr>
+<tr>
+<td>แบบเสริมกำลัง (reinforcement)</td>
+<td>รางวัลจากการลงมือทำ</td>
+<td>เรียนรู้นโยบายควบคุม จัดการพลังงานของแบตเตอรี่และไมโครกริด</td>
+</tr>
+</tbody></table></div>
+<h2 id="identification">ระบุแบบจำลองของพลานต์จากข้อมูล</h2>
+<p>หน่วยที่ 5 หา <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> จากกราฟด้วยการอ่านจุด 63.2 % วิธีนั้นใช้ข้อมูลเพียงจุดเดียวและไวต่อสัญญาณรบกวน วิธี<strong>กำลังสองน้อยที่สุด (least squares)</strong> ใช้ข้อมูลทุกจุด</p>
+<p>จากหน่วยที่ 15 พลานต์อันดับหนึ่งที่ชักตัวอย่างแล้วเป็นไปตาม</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo stretchy="false">[</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">]</mo><mo>=</mo><mi>a</mi><mtext> </mtext><mi>y</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo>+</mo><mi>b</mi><mtext> </mtext><mi>u</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">y[k+1] = a\,y[k] + b\,u[k]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span></span></p>
+<p>สมการนี้เป็น<strong>เชิงเส้นในพารามิเตอร์</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> เมื่อมีข้อมูล <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> คู่ เขียนเป็นเมทริกซ์ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">y</mi><mo>=</mo><mi mathvariant="normal">Φ</mi><mi mathvariant="bold-italic">θ</mi></mrow><annotation encoding="application/x-tex">\mathbf{y} = \Phi\boldsymbol{\theta}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.1944em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">Φ</span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03194em;">θ</span></span></span></span></span></span> โดยแต่ละแถวของ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi></mrow><annotation encoding="application/x-tex">\Phi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Φ</span></span></span></span> คือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>u</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix}y[k] &amp; u[k]\end{bmatrix}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">u</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">]</span></span></span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">θ</mi><mo>=</mo><msup><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">\boldsymbol{\theta} = \begin{bmatrix}a &amp; b\end{bmatrix}^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03194em;">θ</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.4312em;vertical-align:-0.35em;"></span><span class="minner"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">]</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0812em;"><span style="top:-3.3029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span> ค่าที่ทำให้ผลรวมกำลังสองของค่าผิดพลาดน้อยที่สุดคือ</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi mathvariant="bold-italic">θ</mi><mo>^</mo></mover><mo>=</mo><mo stretchy="false">(</mo><msup><mi mathvariant="normal">Φ</mi><mi>T</mi></msup><mi mathvariant="normal">Φ</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi mathvariant="normal">Φ</mi><mi>T</mi></msup><mi mathvariant="bold">y</mi></mrow><annotation encoding="application/x-tex">\hat{\boldsymbol{\theta}} = (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9579em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03194em;">θ</span></span></span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">^</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord">Φ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord">Φ</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord">Φ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathbf" style="margin-right:0.01597em;">y</span></span></span></span></span></p>
+<p>จากนั้นแปลงกลับเป็นพารามิเตอร์ทางกายภาพด้วยสูตรของหน่วยที่ 15</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>τ</mi><mo>=</mo><mo>−</mo><mfrac><mi>T</mi><mrow><mi>ln</mi><mo>⁡</mo><mi>a</mi></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"/><mi>K</mi><mo>=</mo><mfrac><mi>b</mi><mrow><mn>1</mn><mo>−</mo><mi>a</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\tau = -\frac{T}{\ln a}, \qquad K = \frac{b}{1 - a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1408em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">a</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<div class="c-ex c-box"><p class="c-box-h">ตัวอย่างที่ 17.1 หาแบบจำลองจากข้อมูลที่บันทึก</p>
+<p>ป้อนอินพุตขั้นบันได <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">u = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> ให้พลานต์ บันทึกเอาต์พุตทุก <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">T = 0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.1</span></span></span></span> s ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mtext> </mtext><mn>0.200</mn><mo separator="true">,</mo><mtext> </mtext><mn>0.360</mn><mo separator="true">,</mo><mtext> </mtext><mn>0.488</mn></mrow><annotation encoding="application/x-tex">y = 0,\ 0.200,\ 0.360,\ 0.488</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.200</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.360</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.488</span></span></span></span> จงหา <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span></p>
+<p><strong>ขั้นที่ 1</strong> เขียนสมการจากข้อมูลแต่ละคู่</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo stretchy="false">[</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">]</mo><mo>=</mo><mi>a</mi><mtext> </mtext><mi>y</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo>+</mo><mi>b</mi><mtext> </mtext><mi>u</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">y[k+1] = a\,y[k] + b\,u[k]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.200</mn><mo>=</mo><mi>a</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">0.200 = a(0) + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.200</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></td>
+</tr>
+<tr>
+<td>1</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.360</mn><mo>=</mo><mi>a</mi><mo stretchy="false">(</mo><mn>0.200</mn><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">0.360 = a(0.200) + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.360</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">(</span><span class="mord">0.200</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.488</mn><mo>=</mo><mi>a</mi><mo stretchy="false">(</mo><mn>0.360</mn><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">0.488 = a(0.360) + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.488</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">(</span><span class="mord">0.360</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></td>
+</tr>
+</tbody></table></div>
+<p><strong>ขั้นที่ 2</strong> จากแถวแรก <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>0.200</mn></mrow><annotation encoding="application/x-tex">b = 0.200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.200</span></span></span></span> แทนในแถวที่สอง <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><mn>0.360</mn><mo>−</mo><mn>0.200</mn></mrow><mn>0.200</mn></mfrac></mstyle><mo>=</mo><mn>0.800</mn></mrow><annotation encoding="application/x-tex">a = \dfrac{0.360 - 0.200}{0.200} = 0.800</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.200</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.360</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.200</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.800</span></span></span></span></p>
+<p><strong>ขั้นที่ 3</strong> ตรวจกับแถวที่สาม: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.800</mn><mo>×</mo><mn>0.360</mn><mo>+</mo><mn>0.200</mn><mo>=</mo><mn>0.488</mn></mrow><annotation encoding="application/x-tex">0.800 \times 0.360 + 0.200 = 0.488</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.800</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.360</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.200</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.488</span></span></span></span> ตรงพอดี ข้อมูลชุดนี้ไม่มีสัญญาณรบกวน สมการทั้งสามจึงให้คำตอบเดียวกัน กับข้อมูลจริงซึ่งมีสัญญาณรบกวน สมการจะขัดกันเล็กน้อย และสูตรกำลังสองน้อยที่สุดจะให้ค่าที่ประนีประนอมดีที่สุด</p>
+<p><strong>ขั้นที่ 4</strong> แปลงเป็นพารามิเตอร์ทางกายภาพ</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>τ</mi><mo>=</mo><mo>−</mo><mfrac><mn>0.1</mn><mrow><mi>ln</mi><mo>⁡</mo><mn>0.8</mn></mrow></mfrac><mo>=</mo><mn>0.448</mn><mtext> s</mtext><mo separator="true">,</mo><mspace width="2em"/><mi>K</mi><mo>=</mo><mfrac><mn>0.200</mn><mrow><mn>1</mn><mo>−</mo><mn>0.800</mn></mrow></mfrac><mo>=</mo><mn>1.00</mn></mrow><annotation encoding="application/x-tex">\tau = -\frac{0.1}{\ln 0.8} = 0.448\ \text{s}, \qquad K = \frac{0.200}{1 - 0.800} = 1.00</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.8</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">0.448</span><span class="mspace"> </span><span class="mord text"><span class="mord">s</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.800</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.200</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.00</span></span></span></span></span></p>
+<p>แบบจำลองคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mn>1</mn><mrow><mn>0.448</mn><mi>s</mi><mo>+</mo><mn>1</mn></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">G(s) = \dfrac{1}{0.448s + 1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">G</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.448</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> ซึ่งนำไปจูน PI ด้วยวิธีในหน่วยที่ 13 ได้ทันที</p>
+</div>
+<p>นี่คือ machine learning ในรูปที่ง่ายที่สุด: เลือกโครงสร้างของแบบจำลอง เก็บข้อมูล แล้วหาพารามิเตอร์ที่ทำให้ค่าผิดพลาดของการทำนายน้อยที่สุด ฟังก์ชันจูนอัตโนมัติของไดรฟ์และตัวควบคุมอุณหภูมิทำขั้นตอนนี้อยู่เบื้องหลัง</p>
+<div class="note warn c-box"><p class="c-box-h">ข้อมูลต้องมีการกระตุ้นเพียงพอ</p>
+<p>ถ้าบันทึกข้อมูลขณะที่พลานต์อยู่นิ่งที่จุดทำงานเดียว ข้อมูลจะไม่บอกอะไรเกี่ยวกับพลวัตของพลานต์เลย ไม่ว่าจะมีกี่ล้านจุดก็ตาม อินพุตต้องเปลี่ยนแปลงมากพอให้พลานต์แสดงพฤติกรรมออกมา (persistent excitation) หลักข้อนี้ใช้กับ ML ทุกแบบ: แบบจำลองรู้ได้เฉพาะสิ่งที่ข้อมูลครอบคลุม</p>
+</div>
+<h2 id="gradient-descent">การลดตามเกรเดียนต์</h2>
+<p>เมื่อแบบจำลองไม่เป็นเชิงเส้นในพารามิเตอร์ จะไม่มีสูตรสำเร็จ ต้องปรับพารามิเตอร์ทีละน้อยในทิศที่ทำให้ฟังก์ชันสูญเสีย <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span></span></span></span> ลดลง</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>w</mi><mo>←</mo><mi>w</mi><mo>−</mo><mi>η</mi><mtext> </mtext><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>J</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>w</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">w \leftarrow w - \eta\,\frac{\partial J}{\partial w}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>โดย <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi></mrow><annotation encoding="application/x-tex">\eta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span></span></span></span> คืออัตราการเรียนรู้ มองเป็นลูปป้อนกลับได้: วัดค่าผิดพลาด แล้วปรับพารามิเตอร์สวนทางกับค่าผิดพลาดซ้ำไปเรื่อย ๆ เหมือนตัวควบคุมแบบอินทิกรัล และมีปัญหาเดียวกัน คือถ้า <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi></mrow><annotation encoding="application/x-tex">\eta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span></span></span></span> (เกน) สูงเกินไป การปรับจะแกว่งและลู่ออก</p>
+<div class="c-ex c-box"><p class="c-box-h">ตัวอย่างที่ 17.2 ลดตามเกรเดียนต์ด้วยมือ</p>
+<p>ต้องการหา <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> ของแบบจำลอง <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>w</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">y = wx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">x</span></span></span></span> จากข้อมูลสองจุด <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y) = (1, 2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mo separator="true">,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2, 4)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mclose">)</span></span></span></span> ใช้ฟังก์ชันสูญเสีย <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo>∑</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mi>w</mi><msub><mi>x</mi><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">J = \dfrac{1}{2}\sum (y_i - wx_i)^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> เริ่มที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">w = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">\eta = 0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.1</span></span></span></span></p>
+<p>เกรเดียนต์คือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>J</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>w</mi></mrow></mfrac></mstyle><mo>=</mo><mo>−</mo><mo>∑</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mi>w</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\dfrac{\partial J}{\partial w} = -\sum x_i(y_i - wx_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>รอบ</th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> ก่อนปรับ</th>
+<th>ค่าผิดพลาด <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><mi>w</mi><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i - wx_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></th>
+<th>เกรเดียนต์</th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> หลังปรับ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0</td>
+<td>2, 4</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>4</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">-(1 \cdot 2 + 2 \cdot 4) = -10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">10</span></span></span></span></td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>+</mo><mn>0.1</mn><mo stretchy="false">(</mo><mn>10</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1.0</mn></mrow><annotation encoding="application/x-tex">0 + 0.1(10) = 1.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.1</span><span class="mopen">(</span><span class="mord">10</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>1.0</td>
+<td>1, 2</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>2</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">-(1 \cdot 1 + 2 \cdot 2) = -5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">5</span></span></span></span></td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.0</mn><mo>+</mo><mn>0.5</mn><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">1.0 + 0.5 = 1.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.5</span></span></span></span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>1.5</td>
+<td>0.5, 1</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">-2.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">2.5</span></span></span></span></td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.75</mn></mrow><annotation encoding="application/x-tex">1.75</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.75</span></span></span></span></td>
+</tr>
+</tbody></table></div>
+<p>ค่าผิดพลาดลดลงครึ่งหนึ่งทุกรอบ และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> ลู่เข้าหา 2 ซึ่งเป็นคำตอบที่ถูก รูปแบบนี้คือระบบอันดับหนึ่งแบบเวลาไม่ต่อเนื่องที่มีขั้วที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>η</mi><mo>∑</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">z = 1 - \eta\sum x_i^2 = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0728em;vertical-align:-0.2587em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span> ถ้าเลือก <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>&gt;</mo><mn>0.4</mn></mrow><annotation encoding="application/x-tex">\eta &gt; 0.4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.4</span></span></span></span> ขั้วจะออกนอกวงกลมหนึ่งหน่วยและการเรียนรู้จะลู่ออก ทฤษฎีเสถียรภาพในหน่วยที่ 15 จึงอธิบายการเลือกอัตราการเรียนรู้ได้โดยตรง</p>
+</div>
+<h2 id="neural-network">โครงข่ายประสาทเทียม</h2>
+<p><strong>นิวรอน</strong>หนึ่งตัวคำนวณผลรวมถ่วงน้ำหนักของอินพุต แล้วส่งผ่านฟังก์ชันไม่เชิงเส้น</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>σ</mi><mtext> ⁣</mtext><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>w</mi><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub><mo>+</mo><mi>b</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">y = \sigma\!\left(\sum_i w_ix_i + b\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.0277em;vertical-align:-1.2777em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">b</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></p>
+<p>นักศึกษาไฟฟ้าเคยต่อวงจรนี้แล้ว: <strong>วงจรรวมสัญญาณด้วยออปแอมป์ (summing amplifier)</strong> ให้ผลรวมถ่วงน้ำหนักโดยน้ำหนักกำหนดด้วยอัตราส่วนตัวต้านทาน และเมื่อเอาต์พุตชนแรงดันของแหล่งจ่าย ออปแอมป์จะอิ่มตัว ซึ่งเป็นฟังก์ชันไม่เชิงเส้นแบบเดียวกับฟังก์ชันกระตุ้น (activation function) นิวรอนจึงเป็นวงจรรวมสัญญาณที่มีการอิ่มตัว ซึ่งน้ำหนักถูกปรับด้วยการลดตามเกรเดียนต์แทนการเลือกตัวต้านทาน</p>
+<p>เมื่อนำนิวรอนจำนวนมากมาต่อเป็นชั้น ๆ โครงข่ายจะประมาณฟังก์ชันไม่เชิงเส้นได้แทบทุกรูปแบบ การใช้ในงานควบคุมมีหลักสามทาง</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>การใช้งาน</th>
+<th>โครงข่ายเรียนรู้อะไร</th>
+<th>ตัวอย่าง</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>แบบจำลองของพลานต์</td>
+<td>ความสัมพันธ์ไม่เชิงเส้นจากอินพุตถึงเอาต์พุต</td>
+<td>แบบจำลองแบตเตอรี่ ลักษณะของเซลล์แสงอาทิตย์</td>
+</tr>
+<tr>
+<td>ตัวประมาณค่า (soft sensor)</td>
+<td>ปริมาณที่วัดตรงไม่ได้ จากปริมาณที่วัดได้</td>
+<td>ประมาณอุณหภูมิโรเตอร์ สถานะประจุของแบตเตอรี่</td>
+</tr>
+<tr>
+<td>ตัวควบคุม</td>
+<td>การสั่งงานจากสถานะ</td>
+<td>ใช้ร่วมกับ MPC หรือการเรียนรู้แบบเสริมกำลัง</td>
+</tr>
+</tbody></table></div>
+<h2 id="rl">การเรียนรู้แบบเสริมกำลัง</h2>
+<p>ใน<strong>การเรียนรู้แบบเสริมกำลัง (reinforcement learning, RL)</strong> ตัวแทน (agent) สังเกต<strong>สถานะ</strong>ของสภาพแวดล้อม เลือก<strong>การกระทำ</strong> แล้วได้รับ<strong>รางวัล</strong> เป้าหมายคือหานโยบายที่ให้รางวัลสะสมมากที่สุด เทียบกับลูปควบคุมได้ตรงตัว</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>RL</th>
+<th>ระบบควบคุม</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ตัวแทน</td>
+<td>ตัวควบคุม</td>
+</tr>
+<tr>
+<td>สภาพแวดล้อม</td>
+<td>พลานต์</td>
+</tr>
+<tr>
+<td>สถานะ</td>
+<td>เวกเตอร์สถานะ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">x</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em;"></span><span class="mord mathbf">x</span></span></span></span> (หน่วยที่ 14)</td>
+</tr>
+<tr>
+<td>การกระทำ</td>
+<td>สัญญาณสั่ง <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></td>
+</tr>
+<tr>
+<td>รางวัล</td>
+<td>ค่าลบของดัชนีสมรรถนะ</td>
+</tr>
+<tr>
+<td>นโยบาย</td>
+<td>กฎการควบคุม <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>π</mi><mo stretchy="false">(</mo><mi mathvariant="bold">x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">u = \pi(\mathbf{x})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="mopen">(</span><span class="mord mathbf">x</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody></table></div>
+<p>ความต่างสำคัญคือ RL ไม่ต้องใช้แบบจำลองของพลานต์ แต่เรียนรู้จากการลองทำนับพันนับล้านครั้ง จึงต้องฝึกในโปรแกรมจำลองก่อน เพราะการลองผิดลองถูกกับหม้อแปลงหรือเครื่องจักรจริงมีราคาแพงและอันตราย</p>
+<h2 id="performance">ใช้ AI วิเคราะห์สมรรถนะ</h2>
+<p>ก่อนให้คอมพิวเตอร์ตัดสินว่าลูปใดทำงานดีหรือไม่ดี ต้องนิยาม &quot;ดี&quot; เป็นตัวเลขก่อน ดัชนีมาตรฐานคำนวณจากค่าผิดพลาด <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">e(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> หลังการเปลี่ยนค่าอ้างอิงหรือการรบกวน</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ดัชนี</th>
+<th>นิยาม</th>
+<th>ลักษณะ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IAE</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><mo stretchy="false">∣</mo><mi>e</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">∣</mo><mtext> </mtext><mi>d</mi><mi>t</mi></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle\int_0^\infty \lvert e(t)\rvert\,dt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mopen">∣</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)∣</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span></span></td>
+<td>นับค่าผิดพลาดทุกขนาดเท่ากัน</td>
+</tr>
+<tr>
+<td>ISE</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mn>2</mn></msup><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mi>d</mi><mi>t</mi></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle\int_0^\infty e^2(t)\,dt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span></span></td>
+<td>ลงโทษค่าผิดพลาดขนาดใหญ่หนักกว่า</td>
+</tr>
+<tr>
+<td>ITAE</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><mi>t</mi><mtext> </mtext><mo stretchy="false">∣</mo><mi>e</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">∣</mo><mtext> </mtext><mi>d</mi><mi>t</mi></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle\int_0^\infty t\,\lvert e(t)\rvert\,dt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">∣</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)∣</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span></span></td>
+<td>ลงโทษค่าผิดพลาดที่ค้างนาน</td>
+</tr>
+</tbody></table></div>
+<div class="c-ex c-box"><p class="c-box-h">ตัวอย่างที่ 17.3 ดัชนีของลูปอันดับหนึ่ง</p>
+<p>วงปิดในตัวอย่างที่ 13.1 เป็นระบบอันดับหนึ่งที่มี <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mi>c</mi></msub><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\tau_c = 20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">20</span></span></span></span> ms ค่าผิดพลาดหลังอินพุตขั้นบันไดหนึ่งหน่วยคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>t</mi><mi mathvariant="normal">/</mi><msub><mi>τ</mi><mi>c</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">e(t) = e^{-t/\tau_c}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span><span class="mord mtight">/</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.1132em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span> จงหา IAE และ ISE</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>IAE</mtext><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mo>−</mo><mi>t</mi><mi mathvariant="normal">/</mi><msub><mi>τ</mi><mi>c</mi></msub></mrow></msup><mtext> </mtext><mi>d</mi><mi>t</mi><mo>=</mo><msub><mi>τ</mi><mi>c</mi></msub><mo>=</mo><mn>0.020</mn><mo separator="true">,</mo><mspace width="2em"/><mtext>ISE</mtext><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mo>−</mo><mn>2</mn><mi>t</mi><mi mathvariant="normal">/</mi><msub><mi>τ</mi><mi>c</mi></msub></mrow></msup><mtext> </mtext><mi>d</mi><mi>t</mi><mo>=</mo><mfrac><msub><mi>τ</mi><mi>c</mi></msub><mn>2</mn></mfrac><mo>=</mo><mn>0.010</mn></mrow><annotation encoding="application/x-tex">\text{IAE} = \int_0^\infty e^{-t/\tau_c}\,dt = \tau_c = 0.020, \qquad \text{ISE} = \int_0^\infty e^{-2t/\tau_c}\,dt = \frac{\tau_c}{2} = 0.010</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">IAE</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span><span class="mord mtight">/</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.1132em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">0.020</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">ISE</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">2</span><span class="mord mathnormal mtight">t</span><span class="mord mtight">/</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.1132em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.7936em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.010</span></span></span></span></span></p>
+<p>ทั้งสองดัชนีแปรตาม <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">\tau_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> โดยตรง ลูปที่เร็วขึ้นเท่าตัวมีดัชนีลดลงครึ่งหนึ่ง ถ้าค่าที่คำนวณจากข้อมูลจริงสูงกว่านี้มาก แปลว่าลูปไม่ได้ทำงานตามที่ออกแบบ</p>
+</div>
+<p>เมื่อมีตัวเลขแล้ว AI เข้ามาช่วยในสามระดับ</p>
+<ol>
+<li><strong>เฝ้าติดตามสมรรถนะของลูป (control loop performance monitoring)</strong> โรงงานกระบวนการมีลูป PID หลายพันลูป ซอฟต์แวร์คำนวณดัชนีจากข้อมูลใน DCS ต่อเนื่อง และใช้การจำแนกรูปแบบระบุสาเหตุ เช่น จูนไม่เหมาะ วาล์วฝืด (stiction) หรือเซนเซอร์เสื่อม วิศวกรจึงรู้ว่าต้องไปดูลูปใดก่อน</li>
+<li><strong>การบำรุงรักษาเชิงพยากรณ์ (predictive maintenance)</strong> แบบจำลองเรียนรู้รูปแบบปกติของการสั่นสะเทือน อุณหภูมิ และสเปกตรัมของกระแสมอเตอร์ (motor current signature analysis) แล้วแจ้งเตือนเมื่อข้อมูลเริ่มเบี่ยงออก ซึ่งชี้ถึงตลับลูกปืนสึก โรเตอร์บาร์แตก หรือฉนวนเสื่อม ก่อนที่เครื่องจะหยุด</li>
+<li><strong>การหาค่าเหมาะที่สุด</strong> ใช้อัลกอริทึมค้นหา เช่น ขั้นตอนวิธีเชิงพันธุกรรม หาค่า PID ที่ทำให้ ITAE ต่ำสุดบนแบบจำลอง หรือพยากรณ์โหลดและกำลังผลิตจากแสงอาทิตย์เพื่อวางแผนการเดินเครื่องในระบบไฟฟ้ากำลัง</li>
+</ol>
+<h2 id="limits">ข้อจำกัดและความรับผิดชอบทางวิศวกรรม</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ประเด็น</th>
+<th>ตัวควบคุมแบบดั้งเดิม</th>
+<th>ตัวควบคุมที่เรียนรู้จากข้อมูล</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>การรับประกันเสถียรภาพ</td>
+<td>พิสูจน์ได้ด้วยเกณฑ์เราท์ ไนควิสต์ มาร์จิน</td>
+<td>โดยทั่วไปพิสูจน์ไม่ได้ ต้องพึ่งการทดสอบ</td>
+</tr>
+<tr>
+<td>พฤติกรรมนอกช่วงข้อมูลที่ฝึก</td>
+<td>ทำนายได้จากแบบจำลอง</td>
+<td>ทำนายไม่ได้ อาจผิดอย่างมาก</td>
+</tr>
+<tr>
+<td>การอธิบายเหตุผล</td>
+<td>อ่านจากสมการได้</td>
+<td>มักเป็นกล่องดำ</td>
+</tr>
+<tr>
+<td>ทรัพยากรการคำนวณ</td>
+<td>น้อยมาก</td>
+<td>มากกว่า โดยเฉพาะขณะฝึก</td>
+</tr>
+</tbody></table></div>
+<p>ด้วยเหตุนี้ สถาปัตยกรรมที่ใช้ในอุตสาหกรรมจึงวาง AI ไว้<strong>ชั้นบน</strong> ทำหน้าที่แนะนำค่าที่ตั้ง จูนพารามิเตอร์ หรือแจ้งเตือน ส่วนลูปปิดที่ทำงานแบบเรียลไทม์ยังเป็น PID หรือตัวควบคุมที่วิเคราะห์เสถียรภาพได้ และระบบป้องกัน เช่น รีเลย์ อินเตอร์ล็อก และวงจรหยุดฉุกเฉิน เป็นชั้นอิสระที่ไม่ขึ้นกับ AI เลย</p>
+<div class="tldr c-box"><p class="c-box-h">AI ไม่ได้แทนพื้นฐาน แต่ทำให้พื้นฐานสำคัญขึ้น</p>
+<p>ผู้ที่เข้าใจฟังก์ชันถ่ายโอน เสถียรภาพ และมาร์จิน จะรู้ว่าควรป้อนข้อมูลใดให้แบบจำลอง ควรเชื่อผลลัพธ์เมื่อใด และควรวางขอบเขตความปลอดภัยไว้ตรงไหน ผู้ที่ใช้เครื่องมือ AI โดยไม่มีพื้นฐานจะแยกไม่ออกระหว่างคำตอบที่ถูกกับคำตอบที่ดูน่าเชื่อ รวมถึงเมื่อใช้ผู้ช่วย AI ช่วยคำนวณหรือเขียนโปรแกรมควบคุม ต้องตรวจผลด้วยการคำนวณมือหรือการจำลองเสมอ เหมือนที่ตรวจงานของเพื่อนร่วมทีม</p>
+</div>
+<h2 id="exercises">แบบฝึกหัด</h2>
+<div class="c-exr c-box"><p class="c-box-h">แบบฝึกหัด 17.1</p>
+<p>ข้อมูลจากการทดสอบขั้นบันได <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">u = 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> ที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">T = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span> s คือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mtext> </mtext><mn>3.0</mn><mo separator="true">,</mo><mtext> </mtext><mn>4.5</mn><mo separator="true">,</mo><mtext> </mtext><mn>5.25</mn></mrow><annotation encoding="application/x-tex">y = 0,\ 3.0,\ 4.5,\ 5.25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3.0</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4.5</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5.25</span></span></span></span> จงหา <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span></p>
+<details class="c-ans"><summary>ดูเฉลย</summary><div class="c-ans-b">
+<p>แถวแรก: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3.0</mn><mo>=</mo><mn>2</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">3.0 = 2b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3.0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">2</span><span class="mord mathnormal">b</span></span></span></span> ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">b = 1.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.5</span></span></span></span> แถวที่สอง: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4.5</mn><mo>=</mo><mn>3.0</mn><mi>a</mi><mo>+</mo><mn>3.0</mn></mrow><annotation encoding="application/x-tex">4.5 = 3.0a + 3.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4.5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3.0</span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3.0</span></span></span></span> ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">a = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span> ตรวจ: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mo>×</mo><mn>4.5</mn><mo>+</mo><mn>3.0</mn><mo>=</mo><mn>5.25</mn></mrow><annotation encoding="application/x-tex">0.5 \times 4.5 + 3.0 = 5.25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3.0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5.25</span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mo>−</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mn>0.5</mn><mrow><mi>ln</mi><mo>⁡</mo><mn>0.5</mn></mrow></mfrac></mstyle><mo>=</mo><mn>0.721</mn></mrow><annotation encoding="application/x-tex">\tau = -\dfrac{0.5}{\ln 0.5} = 0.721</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.5</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.5</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.721</span></span></span></span> s และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mn>1.5</mn><mrow><mn>1</mn><mo>−</mo><mn>0.5</mn></mrow></mfrac></mstyle><mo>=</mo><mn>3.0</mn></mrow><annotation encoding="application/x-tex">K = \dfrac{1.5}{1 - 0.5} = 3.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.5</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1.5</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3.0</span></span></span></span> (ค่าสุดท้ายคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3 \times 2 = 6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">6</span></span></span></span>)</p>
+</div></details>
+</div>
+<div class="c-exr c-box"><p class="c-box-h">แบบฝึกหัด 17.2</p>
+<p>ในตัวอย่างที่ 17.2 ถ้าใช้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\eta = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span> จงคำนวณ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> สามรอบแรก แล้วอธิบายผล</p>
+<details class="c-ans"><summary>ดูเฉลย</summary><div class="c-ans-b">
+<p>รอบ 1: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>0</mn><mo>+</mo><mn>0.5</mn><mo stretchy="false">(</mo><mn>10</mn><mo stretchy="false">)</mo><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">w = 0 + 0.5(10) = 5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.5</span><span class="mopen">(</span><span class="mord">10</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span></span></span></span> รอบ 2: ค่าผิดพลาดคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>3</mn><mo separator="true">,</mo><mo>−</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">-3, -6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">−</span><span class="mord">6</span></span></span></span> เกรเดียนต์ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>⋅</mo><mo stretchy="false">(</mo><mo>−</mo><mn>3</mn><mo stretchy="false">)</mo><mo>+</mo><mn>2</mn><mo>⋅</mo><mo stretchy="false">(</mo><mo>−</mo><mn>6</mn><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">= -(1 \cdot (-3) + 2 \cdot (-6)) = 15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">3</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">6</span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span> ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>5</mn><mo>−</mo><mn>7.5</mn><mo>=</mo><mo>−</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">w = 5 - 7.5 = -2.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">7.5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">2.5</span></span></span></span> รอบ 3: ค่าผิดพลาดคือ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4.5</mn><mo separator="true">,</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">4.5, 9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">4.5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">9</span></span></span></span> เกรเดียนต์ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mo>−</mo><mn>22.5</mn></mrow><annotation encoding="application/x-tex">= -22.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">22.5</span></span></span></span> ได้ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>8.75</mn></mrow><annotation encoding="application/x-tex">w = 8.75</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8.75</span></span></span></span></p>
+<p>ค่า <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> แกว่งรอบ 2 ด้วยขนาดที่โตขึ้น (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo separator="true">,</mo><mo>−</mo><mn>4.5</mn><mo separator="true">,</mo><mn>6.75</mn></mrow><annotation encoding="application/x-tex">3, -4.5, 6.75</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">−</span><span class="mord">4.5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6.75</span></span></span></span>) เพราะขั้วอยู่ที่ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1</mn><mo>−</mo><mn>0.5</mn><mo>×</mo><mn>5</mn><mo>=</mo><mo>−</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">z = 1 - 0.5 \times 5 = -1.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1.5</span></span></span></span> นอกวงกลมหนึ่งหน่วย การเรียนรู้ไม่เสถียร</p>
+</div></details>
+</div>
+<div class="c-exr c-box"><p class="c-box-h">แบบฝึกหัด 17.3</p>
+<p>ลูปสองลูปมีค่าผิดพลาดหลังอินพุตขั้นบันไดเป็น <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e_1(t) = e^{-t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span> และ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mn>2</mn></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mn>4</mn><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e_2(t) = e^{-4t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">4</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span> จงเทียบ IAE และ ISE</p>
+<details class="c-ans"><summary>ดูเฉลย</summary><div class="c-ans-b">
+<p>ลูปที่ 1 (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\tau = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>): IAE = 1, ISE = 0.5 ลูปที่ 2 (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mn>0.25</mn></mrow><annotation encoding="application/x-tex">\tau = 0.25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.25</span></span></span></span>): IAE = 0.25, ISE = 0.125</p>
+<p>ลูปที่ 2 ดีกว่า 4 เท่าในทั้งสองดัชนี</p>
+</div></details>
+</div>
+<h2 id="summary">สรุปหน่วยที่ 17 และสรุปรายวิชา</h2>
+<ul>
+<li>Machine learning คือการหาฟังก์ชันจากข้อมูล การระบุระบบด้วยกำลังสองน้อยที่สุดคือรูปที่ง่ายที่สุดและใช้งานได้ทันที</li>
+<li>การลดตามเกรเดียนต์เป็นลูปป้อนกลับในปริภูมิของพารามิเตอร์ อัตราการเรียนรู้คือเกน และมีขีดจำกัดเสถียรภาพเช่นเดียวกัน</li>
+<li>นิวรอนคือผลรวมถ่วงน้ำหนักตามด้วยฟังก์ชันไม่เชิงเส้น เทียบได้กับวงจรรวมสัญญาณที่มีการอิ่มตัว</li>
+<li>ดัชนี IAE, ISE, ITAE ทำให้สมรรถนะของลูปเป็นตัวเลข ซึ่งเป็นฐานของการเฝ้าติดตามลูปและการบำรุงรักษาเชิงพยากรณ์ด้วย AI</li>
+<li>ในระบบจริง AI ทำงานชั้นบน ส่วนลูปเรียลไทม์และระบบป้องกันยังต้องวิเคราะห์เสถียรภาพและความปลอดภัยได้</li>
+</ul>
+<p>ทั้งรายวิชาเดินตามคำถามสามข้อจากหน่วยที่ 1: ระบบมีพฤติกรรมอย่างไร (ภาคที่ 1) เอาต์พุตเปลี่ยนอย่างไรและเสถียรหรือไม่ (ภาคที่ 2) และจะออกแบบตัวควบคุมอย่างไร (ภาคที่ 3–5) เครื่องมือเปลี่ยนจากออปแอมป์เป็นไมโครคอนโทรลเลอร์ และจากสมการเป็นข้อมูล แต่คำถามสามข้อนี้ยังเป็นคำถามเดิม</p>
+
+    </div>
+    <aside class="post-box" aria-label="อ่านเชิงลึกในคลังความรู้"><p class="post-box-h">อ่านเชิงลึกในคลังความรู้</p><ul><li><a href="/blog/learn-programming-ai-era-python/">บทความ: เรียนเขียนโปรแกรมในยุค AI ด้วย Python</a></li><li><a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น</a></li><li><a href="/learn/control-systems/nonlinear-robust/">ระบบไม่เชิงเส้นและการควบคุมแบบทนทาน</a></li></ul></aside>
+    <div class="share" aria-label="แชร์หน้านี้">
+  <span class="mono">แชร์ให้เพื่อน</span>
+  <a href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fmodsengineeringmath.com%2Fcourses%2Fcontrol-engineering%2Fai-machine-learning-control%2F" target="_blank" rel="noopener">LINE</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmodsengineeringmath.com%2Fcourses%2Fcontrol-engineering%2Fai-machine-learning-control%2F" target="_blank" rel="noopener">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmodsengineeringmath.com%2Fcourses%2Fcontrol-engineering%2Fai-machine-learning-control%2F&amp;text=%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%90%E0%B8%B2%E0%B8%99%20AI%20%E0%B9%81%E0%B8%A5%E0%B8%B0%20Machine%20Learning%20%E0%B8%AA%E0%B8%B3%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%A7%E0%B8%B4%E0%B8%A8%E0%B8%A7%E0%B8%81%E0%B8%A3%E0%B8%84%E0%B8%A7%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%A1" target="_blank" rel="noopener">X</a>
+  <button type="button" data-share-url="https://modsengineeringmath.com/courses/control-engineering/ai-machine-learning-control/" data-share-title="พื้นฐาน AI และ Machine Learning สำหรับวิศวกรควบคุม">คัดลอกลิงก์</button>
+</div>
+    <nav class="pager" aria-label="หน่วยก่อนหน้าและถัดไป"><a class="pager-prev" href="/courses/control-engineering/fuzzy-logic-control/"><span class="mono">← หน่วยที่ 16</span><b>การควบคุมด้วยฟัซซีลอจิก</b></a><a class="pager-next" href="/courses/control-engineering/"><span class="mono">ดูแผนการเรียนทั้งหมด →</span><b>วิศวกรรมระบบควบคุม</b></a></nav>
+  </article>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M8 46 C16 46 18 14 27 14 S35 40 42 34 S50 30 56 30" fill="none" stroke="#e8692c" stroke-width="6" stroke-linecap="round"/></svg></span><span>Mod's Engineering Math</span></a>
+      <p>คณิตศาสตร์วิศวกรรมที่เข้าใจจริง ไม่ใช่ท่องสูตร</p>
+    </div>
+    <nav aria-label="ลิงก์ในเว็บ">
+      <b class="mono">เว็บไซต์</b>
+      <a href="/">หน้าแรก</a>
+      <a href="/learn/">คลังความรู้</a>
+      <a href="/courses/">ห้องเรียนออนไลน์ · วิศวกรรมระบบควบคุม</a>
+      <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
+      <a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>
+      <a href="/en/blog/">Articles in English</a>
+      <a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>
+      <a href="/learn/functions/">ฟังก์ชันและกราฟ</a>
+      <a href="/learn/trigonometry/">สูตรและตารางตรีโกณมิติ</a>
+      <a href="/learn/limits/">ลิมิตและความต่อเนื่อง</a>
+      <a href="/learn/sequences-and-series/">ลำดับและอนุกรม (ครบชุด)</a>
+      <a href="/learn/sequences-and-series/taylor-series/">อนุกรมเทย์เลอร์และแมคลอริน</a>
+      <a href="/learn/sequences-and-series/laurent-series/">อนุกรมโลรองต์และเรซิดิว</a>
+      <a href="/learn/sequences-and-series/exam-practice/">แนวข้อสอบลำดับและอนุกรม</a>
+      <a href="/learn/sequences-and-series/calculators/">เครื่องคิดเลขลำดับและอนุกรม พร้อมวิธีทำ</a>
+      <a href="/learn/limits/mathematical-induction/">อุปนัยเชิงคณิตศาสตร์</a>
+      <a href="/learn/sequences-and-series/strong-induction/">อุปนัยแบบเข้ม (Strong Induction)</a>
+      <a href="/learn/differential-calculus/">อนุพันธ์: สูตรและวิธีทำ</a>
+      <a href="/learn/differential-calculus/engineering-applications/">การประยุกต์อนุพันธ์ทางวิศวกรรม</a>
+      <a href="/learn/integral-calculus/">สูตรอินทิเกรตและวิธีทำ</a>
+      <a href="/learn/integral-calculus/engineering-applications/">การประยุกต์อินทิกรัลทางวิศวกรรม</a>
+      <a href="/learn/vector-algebra/">เวกเตอร์: แรงลัพธ์ สนาม เฟสเซอร์</a>
+      <a href="/learn/vector-algebra/vector-lab/">สตูดิโอเวกเตอร์ 3 มิติ</a>
+      <a href="/learn/vector-algebra/resultant-forces/">แรงลัพธ์ด้วยกฎไซน์-โคไซน์</a>
+      <a href="/learn/vector-algebra/phasors/">เฟสเซอร์และวงจรไฟฟ้ากระแสสลับ</a>
+      <a href="/learn/vector-algebra/mechanics-lab/">แล็บกลศาสตร์เสมือน (ฟิสิกส์ 1)</a>
+      <a href="/learn/vector-algebra/field-lab/">แล็บสนามไฟฟ้า-แม่เหล็ก (ฟิสิกส์ 2)</a>
+      <a href="/learn/linear-algebra/">พีชคณิตเชิงเส้น: เมทริกซ์ ดีเทอร์มิแนนต์ ค่าเฉพาะ</a>
+      <a href="/learn/linear-algebra/matrix-lab/">แล็บเมทริกซ์: เครื่องคิดเลขแสดงวิธีทำ</a>
+      <a href="/learn/linear-algebra/rank/">แรงก์ (ค่าลำดับขั้น) ของเมทริกซ์</a>
+      <a href="/learn/linear-algebra/numerical-methods/">ผลเฉลยเชิงตัวเลข: LU จาโคบี เกาส์-ไซเดล</a>
+      <a href="/learn/linear-algebra/exam-practice/">แนวข้อสอบเมทริกซ์ ดีเทอร์มิแนนต์ คราเมอร์</a>
+      <a href="/learn/linear-algebra/engineering-applications/">การประยุกต์พีชคณิตเชิงเส้นทางวิศวกรรม</a>
+      <a href="/learn/laplace-transform/">การแปลงลาปลาซ: ตารางและ ROC</a>
+      <a href="/learn/laplace-transform/pole-zero-roc/">แผนภาพโพล-ซีโร่และ ROC</a>
+      <a href="/learn/laplace-transform/properties/">คุณสมบัติการแปลงลาปลาซ</a>
+      <a href="/learn/laplace-transform/inverse-laplace-transform/">การแปลงลาปลาซผกผัน (Inverse Laplace)</a>
+      <a href="/learn/first-order-system/">แล็บระบบอันดับหนึ่ง</a>
+      <a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a>
+      <a href="/learn/signals/">แล็บสัญญาณเบื้องต้น</a>
+      <a href="/learn/fourier-series/">อนุกรมฟูเรียร์และการวิเคราะห์ฮาร์มอนิก</a>
+      <a href="/learn/fourier-series/analyzer-lab/">แล็บวิเคราะห์ฮาร์มอนิก: สโคป + เครื่องวิเคราะห์กำลังไฟฟ้า</a>
+      <a href="/learn/fourier-series/waveform-table/">ตารางอนุกรมฟูเรียร์ของรูปคลื่น</a>
+      <a href="/learn/fourier-series/power-harmonics/">THD เพาเวอร์แฟกเตอร์ และ IEEE 519</a>
+      <a href="/learn/power-electronics/">อิเล็กทรอนิกส์กำลัง: บั๊ก บูสต์ ชุค ตัวชดเชย</a>
+      <a href="/learn/power-electronics/converter-lab/">แล็บจำลองคอนเวอร์เตอร์ DC-DC ออนไลน์</a>
+      <a href="/learn/power-electronics/buck-averaged-model/">แบบจำลองเฉลี่ยและสเตตสเปซของบั๊กคอนเวอร์เตอร์</a>
+      <a href="/learn/power-electronics/buck-design-lab/">แล็บออกแบบบั๊ก: เลือกชิ้นส่วนและโปรแกรมโหลด</a>
+      <a href="/learn/solar-pv/">ออกแบบระบบโซลาร์เซลล์: แผง สตริง แบตเตอรี่ MPPT อินเวอร์เตอร์</a>
+      <a href="/learn/solar-pv/design-lab/">เครื่องมือออกแบบโซลาร์เซลล์ออนไลน์</a>
+      <a href="/learn/solar-pv/solar-air-conditioner/">โซลาร์เซลล์จ่ายแอร์</a>
+      <a href="/learn/solar-pv/solar-agriculture/">ปั๊มน้ำโซลาร์และโซลาร์เพื่อการเกษตร</a>
+      <a href="/learn/ev-charging/">ระบบชาร์จรถยนต์ไฟฟ้าที่บ้าน: ชาร์จช้า ชาร์จเร็ว ไฟบ้าน</a>
+      <a href="/learn/ev-charging/solar-ac-ev/">โซลาร์เซลล์ แอร์ และรถ EV ในบ้านเดียว</a>
+      <a href="/learn/power-systems/">ระบบไฟฟ้ากำลังและระบบป้องกัน (ปูพื้น)</a>
+      <a href="/learn/power-systems/overcurrent-coordination/">ประสานรีเลย์กระแสเกิน TCC</a>
+      <a href="/learn/power-factor/">เพาเวอร์แฟกเตอร์ เข้าใจได้ทุกระดับ</a>
+      <a href="/learn/power-factor/pf-lab/">ซิมูเลเตอร์เพาเวอร์แฟกเตอร์</a>
+      <a href="/learn/sensors-transducers/">เซนเซอร์และทรานส์ดิวเซอร์: เครื่องมือวัดคุมอุตสาหกรรม</a>
+      <a href="/learn/sensors-transducers/instrumentation-lab/">แล็บวัดคุมเสมือน 4–20 mA PID</a>
+      <a href="/learn/sensors-transducers/industrial-signals/">4–20 mA และ HART</a>
+      <a href="/learn/sensors-transducers/modbus/">Modbus RTU และ TCP</a>
+      <a href="/learn/sensors-transducers/unit-lab/">เครื่องมือแปลงหน่วย</a>
+      <a href="/learn/function-generator/">แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป</a>
+      <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลองออนไลน์</a>
+      <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
+      <a href="/learn/control-systems/">ระบบควบคุม: ป้อนกลับ เสถียรภาพ รูทโลคัส โบด PID</a>
+      <a href="/learn/control-systems/routh-hurwitz/">เกณฑ์เสถียรภาพของเราท์–เฮอร์วิตซ์</a>
+      <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
+      <a href="/learn/control-systems/pid/">ตัวควบคุม PID และการจูน</a>
+      <a href="/learn/control-systems/robotics/">เมคาทรอนิกส์และโรโบติกส์</a>
+      <a href="/tools/">เครื่องมือคำนวณ: อนุพันธ์ ปริพันธ์ ลาปลาซ ฟูเรียร์ พื้นที่</a>
+      <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ.</a>
+      <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์</a>
+      <a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX เป็นรูป PNG / SVG</a>
+      <a href="/en/tools/" lang="en">Calculators in English</a>
+      <a href="/tools/lesson-editor/">เครื่องมือเขียนบทเรียน</a>
+      <a href="/about/">เกี่ยวกับอาจารย์มด</a>
+    </nav>
+    <nav aria-label="ช่องทางติดตาม">
+      <b class="mono">ติดตาม</b>
+      <a href="https://www.youtube.com/@modsengineeringmath" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://www.facebook.com/modsengineeringmath" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© <span id="yr">2026</span> Teerawut Savangboon · modsengineeringmath.com · <a href="/privacy/">นโยบายความเป็นส่วนตัว</a></span>
+    <a href="#top">กลับขึ้นด้านบน ↑</a>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=b6e800f4" defer></script>
+<script src="/assets/course.js?v=b6e800f4" defer></script>
+</body>
+</html>

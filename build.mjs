@@ -821,7 +821,7 @@ const EN_CHROME = [
   ['href="/learn/" data-nav="learn">คลังความรู้<', 'href="/learn/" data-nav="learn">Library (Thai)<'],
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
-  ['data-nav="courses">ห้องเรียน<', 'data-nav="courses">Courses (Thai)<'],
+  ['href="/courses/" data-nav="courses">ห้องเรียน<', 'href="/en/courses/" data-nav="courses">Courses<'],
   ['aria-controls="navtools">เครื่องมือ<', 'aria-controls="navtools">Tools<'],
   ['<a href="/tools/" data-nav="tools">เครื่องมือคำนวณทั้งหมด<', '<a href="/en/tools/" data-nav="tools">All calculators<'],
   ['<span class="nav-h">คณิตศาสตร์</span>\n          <a href="/tools/derivative', '<span class="nav-h">Mathematics</span>\n          <a href="/tools/derivative'],
@@ -2030,7 +2030,7 @@ const pageSources = [
   ...["th", "en"].flatMap((lang) => liveCats(lang).map((c) => ({ rel: catRel(c, lang), raw: blogCatPage(c, lang) }))),
 ];
 // Courses (/courses/): Markdown files under content/courses/ → page sources (see src/courses.mjs and content/courses/README.md)
-const { pages: coursePages, courses: allCourses } = loadCourses(ROOT, { SITE, PERSON_ID, shareHtml, thaiDate, TODAY });
+const { pages: coursePages, courses: allCourses, coursesEn: allCoursesEn } = loadCourses(ROOT, { SITE, PERSON_ID, shareHtml, thaiDate, enDate, TODAY });
 for (const p of coursePages) {
   if (pageSources.some((x) => x.rel.replace(/\\/g, "/") === p.rel)) throw new Error(`${p.rel} exists both in src/pages/ and in content/courses/`);
   pageSources.push(p);
@@ -2464,6 +2464,10 @@ ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SIT
 ## Courses (e-learning classrooms: units in teaching order with lecture notes, worked examples, exercises with answers, videos and handouts; Thai)
 - [All courses](${SITE}/courses/)
 ${allCourses.map((c) => `- [${c.en ? c.en + " — " : ""}${c.title}](${SITE}${c.route}): ${c.description}\n` + c.units.map((u) => `  - [Unit ${u.no}: ${u.en ? u.en + " — " : ""}${u.title}](${SITE}${u.route}): ${u.description}`).join("\n")).join("\n")}
+
+## Courses in English (full translations of the Thai units above: same theory, worked examples and exercises with answers)
+- [All English courses](${SITE}/en/courses/)
+${allCoursesEn.map((c) => `- [${c.title}](${SITE}${c.route}): ${c.description}\n` + c.units.map((u) => `  - [Unit ${u.no}: ${u.title}](${SITE}${u.route}): ${u.description}`).join("\n")).join("\n")}
 
 ## Videos (one watch page per YouTube video, Thai, with a written summary and links to the lessons)
 - [All videos](${SITE}${VID_HUB})
