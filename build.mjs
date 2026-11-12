@@ -846,6 +846,16 @@ const EN_CHROME = [
   ['href="/solutions/" data-nav="solutions">เฉลยโจทย์<', 'href="/solutions/" data-nav="solutions">Solutions (Thai)<'],
   ['<a href="/solutions/">เฉลยโจทย์ทีละขั้น: อินทิเกรต อนุพันธ์ ลาปลาซ ฯลฯ</a>', '<a href="/solutions/">Step-by-step worked solutions (Thai)</a>'],
   [">เกี่ยวกับอาจารย์มด<", ">About Ajarn Mod<"],
+  ['<a href="/history/">ประวัติศาสตร์คณิตศาสตร์และวิศวกรรม: นักคณิตศาสตร์ วิศวกร ผู้คิดค้น</a>\n      <a href="/en/history/">History of mathematics &amp; engineering</a>', '<a href="/en/history/">History of mathematics &amp; engineering</a>\n      <a href="/history/" lang="th">ประวัติศาสตร์คณิตศาสตร์และวิศวกรรม (ภาษาไทย)</a>'],
+  ['aria-controls="navhist">ประวัติศาสตร์<', 'aria-controls="navhist">History<'],
+  ['<a href="/history/" data-nav="history">ประวัติศาสตร์คณิตศาสตร์และวิศวกรรม<', '<a href="/en/history/" data-nav="history">History of mathematics &amp; engineering<'],
+  ['<a href="/history/mathematics/">คณิตศาสตร์ · นักคณิตศาสตร์<', '<a href="/en/history/mathematics/">Mathematics · mathematicians<'],
+  ['<a href="/history/electrical-engineering/">วิศวกรรมไฟฟ้า<', '<a href="/en/history/electrical-engineering/">Electrical engineering<'],
+  ['<a href="/history/civil-engineering/">วิศวกรรมโยธา<', '<a href="/en/history/civil-engineering/">Civil engineering<'],
+  ['<a href="/history/mechanical-engineering/">วิศวกรรมเครื่องกล<', '<a href="/en/history/mechanical-engineering/">Mechanical engineering<'],
+  ['<a href="/history/chemical-engineering/">วิศวกรรมเคมี<', '<a href="/en/history/chemical-engineering/">Chemical engineering<'],
+  ['<a href="/history/industrial-engineering/">วิศวกรรมอุตสาหการ<', '<a href="/en/history/industrial-engineering/">Industrial engineering<'],
+  ['<a href="/en/history/" lang="en">History in English</a>', '<a href="/history/" lang="th">ประวัติศาสตร์ (ภาษาไทย)</a>'],
   ['<a href="/blog/">บทความแยกหมวด: Python ยุค AI เมทริกซ์ ลำดับและอนุกรม Laplace ฯลฯ</a>', '<a href="/en/blog/">Articles by category: Python, matrices, series, Laplace &amp; more</a>'],
   ['<a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>', '<a href="/updates/">Latest site updates (Thai)</a>'],
   ['aria-label="สลับโหมดสว่าง/มืด"', 'aria-label="Toggle light/dark mode"'],
@@ -2021,6 +2031,7 @@ const MD_GUIDES = [
     desc: "spelling decision (เซนเซอร์/ทรานส์ดิวเซอร์), 20-chapter structure, verified example numbers (Pt100, thermocouple CJC, ISO 5167 orifice, magmeter, radar level, 4–20 mA loop budget, NE 43, HART, Modbus frames and CRC, fieldbus segments, SIL), standards with countries of origin, interactive tools and FAQ" },
 ];
 const toolPages = []; // calculators under /tools/ and /en/tools/ → their own section in llms.txt
+const histPages = []; // history of mathematics & engineering (/history/, /en/history/) → own section in llms.txt
 const mdFiles = []; // [{ path, canonical }] → generated block in _headers
 const ogManifest = []; // for scripts/og.py (social share images)
 
@@ -2128,7 +2139,9 @@ for (const { rel, raw } of pageSources) {
             ? solPager(sol, url)
             : isVid
               ? vidPager(vid, url)
-              : "",
+              : /^\/(en\/)?history\//.test(route)
+                ? shareHtml(url, meta.h1 || meta.title, lang)
+                : "",
     "<!--video-player-->": () => (isVid ? videoPlayer(vid) : ""),
     "<!--video-list-->": () => vidGrid(allVideos),
     "<!--video-count-->": () => String(allVideos.length),
@@ -2180,6 +2193,7 @@ for (const { rel, raw } of pageSources) {
       mdFiles.push({ path: "/" + mdRel, canonical: url });
     }
   }
+  if (!meta.noindex && /^\/(en\/)?history\//.test(route)) histPages.push({ route, lang, name: meta.h1 || meta.title, description: meta.description });
   if (!meta.noindex && /^\/(en\/)?tools\/[\w-]+\/$/.test(route)) toolPages.push({ route, lang, name: meta.h1 || meta.title, description: meta.description });
   if (!meta.noindex) searchIndex.push(searchEntry(meta, route, lang, body, topic, sub, isPost));
   const tocHtml = toc(body, lang);
@@ -2478,6 +2492,10 @@ ${allVideos.map((v) => `- [${v.name}](${SITE}${v.route}): ${v.description}`).joi
 ${toolPages.sort((a, b) => a.route.replace("/en", "").localeCompare(b.route.replace("/en", "")) || a.lang.localeCompare(b.lang)).reverse().map((t) => `- [${t.name}](${SITE}${t.route}) (${t.lang}): ${t.description}`).join("\n")}
 - Calculator inputs can be linked: ${SITE}/en/tools/derivative-calculator/?f=x^3*sin(2x) · ${SITE}/en/tools/integral-calculator/?f=x*cos(x)&a=0&b=pi · ${SITE}/en/tools/laplace-transform-calculator/?f=e^(-2t)*sin(3t) · ${SITE}/en/tools/inverse-laplace-transform-calculator/?f=(s%2B3)/((s%2B1)(s%2B2)^2) · ${SITE}/en/tools/latex-equation-editor/?tex=E%3Dmc^2 · ${SITE}/en/tools/electricity-bill-calculator/?c=1.2&units=350
 - Thai electricity tariff used by the bill calculator (MEA/PEA, bills from September 2026; Ft Sep–Dec 2026 = 16.23 satang/unit; residential: first 200 units 3.0000, 201–400 4.1584, 401+ 4.3583 baht/unit) is kept in ${SITE}/assets/thai-tariff.js
+
+## History of mathematics and engineering (Thai and English editions at separate URLs; timelines, biographies and sources)
+- [History hub (Thai)](${SITE}/history/) · [History hub (English)](${SITE}/en/history/)
+${histPages.filter((h) => h.lang === "en").sort((a, b) => a.route.localeCompare(b.route)).map((h) => `- [${h.name}](${SITE}${h.route}) · [Thai](${SITE}${h.route.replace(/^\/en/, "")}): ${h.description}`).join("\n")}
 
 ## Interactive labs and references
 ${LABS.map(([n, slug, d]) => `- [${n}](${SITE}/learn/${slug.includes("#") ? slug.replace("#", "/#") : slug + "/"}): ${d}`).join("\n")}

@@ -84,6 +84,30 @@ Hub `src/pages/tools/index.html` + 9 tool pages, each with an English twin of th
 - The nav "เครื่องมือ" list is in `src/layout.html`; its English labels and `/en/tools/` links are the `EN_CHROME` pairs in build.mjs.
   Short URLs (`/calculators`, `/bill`, `/latex`, `/rai`, `/pf-calculator` …) are in `_redirects`.
 
+## History of mathematics & engineering: /history/ and /en/history/ (added 2026-11-12)
+Hub `src/pages/history/index.html` + 6 discipline hubs (`mathematics`, `electrical-engineering`, `civil-engineering`,
+`mechanical-engineering`, `chemical-engineering`, `industrial-engineering`, each `src/pages/history/<discipline>/index.html`) +
+28 branch pages (`src/pages/history/<discipline>/<branch>.html`). Every file has an English twin with the same path under
+`src/pages/en/history/`, paired by `"alt"` in the meta block (reciprocal hreflang, TH/EN switch, og:locale). 68 pages in all.
+- **The HTML files are the source** (hand-editable like `/tools/`); they were scaffolded once by a script that is not in the repo.
+  To add a branch page, copy a sibling in both languages, change the meta block and the content, add the page to the
+  `hx-strip` nav and the prev/next `hx-next` links of its siblings and to the cards and `ItemList` of the discipline hub (both languages).
+- Page anatomy: header (crumbs, `<!--lang-switch-->`, eyebrow, h1, lede) → `nav.hx-strip` (pages of the discipline, current one has
+  `aria-current`) → narrative `section.tsec` blocks → `ol.hx-tl` timeline (`<li><time>year</time><p>…</p></li>`) →
+  `div.hx-people` cards (`article.hx-person` with `h3[id]`, `.hx-yr`) → links into lessons → `<!--faq-->` → `ul.hx-refs` sources →
+  `nav.hx-next` → `<!--pager-->` (build.mjs puts the share bar there for every `/history/` route). Styles: `assets/history.css`
+  (loaded through `"css"` in the meta block).
+- JSON-LD is written in each meta block: branch pages `Article` (with `about`, `mentions` → `Person` + Wikipedia `sameAs`,
+  `workTranslation`/`translationOfWork`) + `BreadcrumbList` + `FAQPage`; hubs `CollectionPage` + `ItemList`. Keep the `faq` in the
+  meta block and the `FAQPage` in sync when editing a question.
+- Writing rules used: Thai and English are full parallel texts (no Thai left in English pages; Thai government sources get an
+  English description in the English edition). Years in Common Era; Thai events also carry B.E. in the Thai text. Every factual
+  page lists its sources. In English pages, links to Thai-only lessons carry `hreflang="th"` and "(in Thai)".
+- Menu group "ประวัติศาสตร์" (`aria-controls="navhist"`, English labels in `EN_CHROME`), footer link, home section `#history`,
+  llms.txt section "History of mathematics and engineering". Short URLs (`/history-of-mathematics`, `/war-of-the-currents`,
+  `/history-of-calculus`, `/mathematicians` …) are in `_redirects`.
+- Social images: `python3 scripts/og.py --prefix history` and `--prefix en-history`, then `node build.mjs`.
+
 ## Update the status feed (no build needed)
 Edit `data/updates.json` (on GitHub web or the GitHub app is fine) and commit.
 The home page box "มีอะไรใหม่บนเว็บไซต์" (`/#updates`, newest 6 entries), the changelog page `/updates/` and the profile page
