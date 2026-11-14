@@ -1,0 +1,170 @@
+<!--meta
+{
+  "title": "สมการเชิงอนุพันธ์อันดับหนึ่ง: แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี พร้อมวงจร RC RL | อาจารย์มด",
+  "h1": "สมการเชิงอนุพันธ์อันดับหนึ่ง (First-Order ODEs): แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี และงานจริง",
+  "description": "วิธีแก้สมการเชิงอนุพันธ์อันดับหนึ่งครบทุกแบบที่ออกสอบ: แยกตัวแปร สมการเชิงเส้นด้วยตัวประกอบอินทิเกรต (integrating factor) สมการแม่นตรง เอกพันธ์แบบ y/x และเบอร์นูลลี พร้อมวงจร RC RL ไฟ AC การเย็นตัวของนิวตัน ถังผสม และแล็บแก้สมการแสดงวิธีทำ",
+  "ogTitle": "สมการเชิงอนุพันธ์อันดับหนึ่ง: 5 วิธีที่ต้องรู้ + วงจร RC RL",
+  "lesson": "differential-equations",
+  "sub": "first-order",
+  "nav": "ode",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["สมการเชิงอนุพันธ์อันดับหนึ่ง", "สมการเชิงอนุพันธ์แยกตัวแปร", "ตัวประกอบอินทิเกรต", "integrating factor", "สมการเชิงอนุพันธ์เชิงเส้นอันดับหนึ่ง", "สมการแม่นตรง", "exact differential equation", "สมการเบอร์นูลลี", "Bernoulli equation", "วงจร RC สมการเชิงอนุพันธ์", "กฎการเย็นตัวของนิวตัน", "first order differential equation"],
+  "about": ["First-order differential equation", "Separation of variables", "Integrating factor", "Exact differential equation", "Bernoulli differential equation", "RC circuit", "Newton's law of cooling"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "สมการเชิงอนุพันธ์อันดับหนึ่ง", "sub": "แยกตัวแปร · ตัวประกอบอินทิเกรต · แม่นตรง · เบอร์นูลลี · วงจร RC RL · การเย็นตัว", "eyebrow": "บทที่ 28.1 · First-Order ODEs", "sym": "μ(t)"},
+  "faq": [
+    {"q": "ตัวประกอบอินทิเกรต (integrating factor) คืออะไร?", "a": "สำหรับสมการ y′ + p(t)y = q(t) ตัวประกอบอินทิเกรตคือ μ(t) = e^{∫p dt} เมื่อคูณทั้งสมการด้วย μ ด้านซ้ายจะกลายเป็นอนุพันธ์ของผลคูณ (μy)′ พอดี จึงอินทิเกรตได้ทันทีเป็น μy = ∫μq dt + C"},
+    {"q": "จะรู้ได้อย่างไรว่าสมการแยกตัวแปรได้?", "a": "ถ้าจัดให้อยู่ในรูป dy/dx = g(x)h(y) ได้ คือด้านขวาเป็นผลคูณของฟังก์ชัน x ล้วนกับฟังก์ชัน y ล้วน ก็แยกได้ เช่น y′ = xy แยกได้ แต่ y′ = x + y แยกไม่ได้ ต้องใช้ตัวประกอบอินทิเกรต"},
+    {"q": "ค่าคงที่เวลา τ ของวงจร RC คืออะไร?", "a": "τ = RC เป็นเวลาที่แรงดันตัวเก็บประจุชาร์จได้ 63.2% ของค่าสุดท้าย มาจากคำตอบ v = Vs(1 − e^{−t/RC}) ที่ t = τ ได้ 1 − e^{−1} ≈ 0.632 หลัง 5τ ถือว่าชาร์จเต็มในทางปฏิบัติ (99.3%)"},
+    {"q": "สมการแม่นตรงตรวจอย่างไร?", "a": "เขียนเป็น M(x, y)dx + N(x, y)dy = 0 แล้วเทียบ ∂M/∂y กับ ∂N/∂x ถ้าเท่ากันเป็นสมการแม่นตรง คำตอบคือ F(x, y) = C โดย ∂F/∂x = M และ ∂F/∂y = N"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-equations/">สมการเชิงอนุพันธ์</a></li><li>อันดับหนึ่ง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 28.1 · สมการเชิงอนุพันธ์ · First-Order ODEs</p>
+      <h1>สมการเชิงอนุพันธ์อันดับหนึ่ง (First-Order ODEs): แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี และงานจริง</h1>
+      <p class="lede">สมการอันดับหนึ่งมีหน้าตาทั่วไปเป็น \(y' = f(t, y)\) ไม่มีวิธีเดียวที่แก้ได้ทุกตัว แต่มีห้ารูปแบบที่พบบ่อยจนครอบคลุมเกือบทุกโจทย์ในห้องเรียนและงานวงจร หน้านี้เรียงจากวิธีที่ใช้บ่อยที่สุด ท้ายแต่ละวิธีมีตัวอย่างจริงทางไฟฟ้าหรือฟิสิกส์ และมีแล็บที่แก้สมการแสดงวิธีทำให้ดูทุกขั้น</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#separable">แยกตัวแปร</a>
+        <a class="btn btn-ghost btn-sm" href="#linear">ตัวประกอบอินทิเกรต</a>
+        <a class="btn btn-ghost btn-sm" href="#exact">แม่นตรง</a>
+        <a class="btn btn-ghost btn-sm" href="#bernoulli">เบอร์นูลลี</a>
+        <a class="btn btn-ghost btn-sm" href="#circuits">วงจร RC RL</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="separable">
+    <h2 id="separable">1. แยกตัวแปร (Separable equations) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ถ้าด้านขวาเขียนเป็นผลคูณ \(g(t)\,h(y)\) ได้ ให้ย้าย y ทั้งหมดไปอยู่กับ dy และ t ทั้งหมดไปอยู่กับ dt แล้วอินทิเกรตแยกกัน</p>
+    \[ \frac{dy}{dt} = g(t)\,h(y) \quad\Longrightarrow\quad \int\frac{dy}{h(y)} = \int g(t)\,dt + C \]
+    <p>การ “ย้าย dt ข้ามฝั่ง” ดูเหมือนเล่นกลกับสัญลักษณ์ แต่ที่จริงคือกฎลูกโซ่ย้อนกลับ <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a> ถ้า \(H(y) = \int dy/h(y)\) แล้ว \(\tfrac{d}{dt}H(y(t)) = \tfrac{1}{h(y)}\,y'\) ซึ่งเท่ากับ \(g(t)\) พอดี</p>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>\(y' = ty,\ y(0) = 1\)</h3></div><ol class="steps">
+      <li><p>แยก: \(\dfrac{dy}{y} = t\,dt\)</p></li>
+      <li><p>อินทิเกรต: \(\ln|y| = \dfrac{t^2}{2} + C\)</p></li>
+      <li><p>ถอด ln: \(y = Ae^{t^2/2}\) และ \(y(0) = 1\) ได้ \(A = 1\)</p></li>
+    </ol><p class="answer">\(y = e^{t^2/2}\)</p><p class="check">ตรวจ: \(y' = t\,e^{t^2/2} = ty\) ✓</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2 · คำตอบเป็น tan</span><h3>\(y' = 1 + y^2,\ y(0) = 0\)</h3></div><ol class="steps">
+      <li><p>แยก: \(\dfrac{dy}{1 + y^2} = dt\)</p></li>
+      <li><p>อินทิเกรตฝั่งซ้ายได้ arctan <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p>\[ \tan^{-1}y = t + C,\quad y(0) = 0 \Rightarrow C = 0 \]</li>
+      <li><p>กลับด้วย tan: \(y = \tan t\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + tan²θ = sec²θ">พีทาโกรัสแบบ tan</a></p></li>
+    </ol><p class="answer">\(y = \tan t\) · ตรวจ: \((\tan t)' = \sec^2t = 1 + \tan^2t = 1 + y^2\) ✓ คำตอบพุ่งไปอนันต์ที่ \(t = \pi/2\) ทั้งที่สมการดูเรียบร้อยดี นี่คือตัวอย่างว่าสมการไม่เชิงเส้นมีคำตอบที่ “ระเบิด” ในเวลาจำกัดได้</p></div>
+
+    <h3 id="cooling">การเย็นตัวของนิวตัน</h3>
+    <p>อุณหภูมิวัตถุ T เปลี่ยนด้วยอัตราที่แปรผันตามผลต่างกับอุณหภูมิห้อง \(T_a\): \(\;T' = -k(T - T_a)\) แยกตัวแปรได้ \(T = T_a + (T_0 - T_a)e^{-kt}\)</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>กาแฟ 90°C ในห้อง 30°C ผ่านไป 10 นาทีเหลือ 70°C อีกนานเท่าไรจึงเหลือ 40°C</h3></div><ol class="steps">
+      <li><p>\(70 = 30 + 60e^{-10k} \Rightarrow e^{-10k} = \tfrac23 \Rightarrow k = \tfrac{\ln 1.5}{10} \approx 0.04055\ \text{min}^{-1}\)</p></li>
+      <li><p>\(40 = 30 + 60e^{-kt} \Rightarrow t = \tfrac{\ln 6}{k} \approx 44.2\) นาที</p></li>
+    </ol><p class="answer">ประมาณ 44 นาทีนับจากเริ่ม (อีกราว 34 นาทีหลังจากวัดได้ 70°C)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="linear">
+    <h2 id="linear">2. สมการเชิงเส้นและตัวประกอบอินทิเกรต (Integrating factor) <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>รูปมาตรฐานคือ</p>
+    \[ y' + p(t)\,y = q(t) \]
+    <p>ด้านซ้ายเกือบจะเป็นอนุพันธ์ของผลคูณอยู่แล้ว ขาดแค่ตัวคูณที่เหมาะ ถ้าคูณทั้งสมการด้วย \(\mu(t)\) แล้วอยากให้ด้านซ้ายเป็น \((\mu y)' = \mu y' + \mu'y\) <a class="tg calc" href="/learn/differential-calculus/#rules" title="(uv)′ = u′v + uv′">กฎผลคูณ</a> ต้องมี \(\mu' = p\,\mu\) ซึ่งเป็นสมการแยกตัวแปรได้ทันที</p>
+    \[ \mu(t) = e^{\int p(t)\,dt} \quad\Longrightarrow\quad (\mu y)' = \mu q \quad\Longrightarrow\quad y = \frac{1}{\mu}\left(\int\mu q\,dt + C\right) \]
+    <p>ขั้นตอนจำง่าย: (1) จัดให้สัมประสิทธิ์ของ y′ เป็น 1 (2) หา μ (3) เขียน \((\mu y)' = \mu q\) (4) อินทิเกรต (5) หารด้วย μ</p>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4</span><h3>\(y' + 2y = 4,\ y(0) = 0\)</h3></div><ol class="steps">
+      <li><p>\(p = 2\) ได้ \(\mu = e^{2t}\)</p></li>
+      <li><p>\((e^{2t}y)' = 4e^{2t} \Rightarrow e^{2t}y = 2e^{2t} + C\)</p></li>
+      <li><p>\(y = 2 + Ce^{-2t}\) และ \(y(0) = 0\) ได้ \(C = -2\)</p></li>
+    </ol><p class="answer">\(y = 2\big(1 - e^{-2t}\big)\) ขึ้นจาก 0 ไปหา 2 แบบเดียวกับตัวเก็บประจุที่กำลังชาร์จ</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5 · สัมประสิทธิ์ไม่คงที่</span><h3>\(y' + \dfrac{y}{x} = x^2,\ x &gt; 0\)</h3></div><ol class="steps">
+      <li><p>\(\mu = e^{\int dx/x} = e^{\ln x} = x\)</p></li>
+      <li><p>\((xy)' = x^3 \Rightarrow xy = \dfrac{x^4}{4} + C\)</p></li>
+    </ol><p class="answer">\(y = \dfrac{x^3}{4} + \dfrac{C}{x}\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 6 · แรงขับเป็น sin</span><h3>\(y' + y = \sin t,\ y(0) = 0\)</h3></div><ol class="steps">
+      <li><p>\(\mu = e^t\) ได้ \((e^ty)' = e^t\sin t\) อินทิกรัลนี้ทำด้วยทีละส่วนแบบวนกลับ (ดู<a href="/solutions/integral-ex-sin-x-cyclic-by-parts/">เฉลยอินทิเกรต #007</a>)</p>\[ e^ty = \tfrac{e^t}{2}(\sin t - \cos t) + C \]</li>
+      <li><p>\(y = \tfrac12(\sin t - \cos t) + Ce^{-t}\) และ \(y(0) = 0\) ได้ \(C = \tfrac12\)</p></li>
+      <li><p>รวมสองพจน์ตรีโกณเป็นคลื่นเดียว \(R = \sqrt{(\tfrac12)^2 + (\tfrac12)^2} = \tfrac{\sqrt2}{2}\) <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></p>\[ \tfrac12(\sin t - \cos t) = \tfrac{\sqrt2}{2}\sin\!\Big(t - \frac{\pi}{4}\Big) \]
+      <span class="tg-row"><a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> <a class="tg" href="/learn/trigonometry/#sum-difference" title="sin(A + B) = sin A cos B + cos A sin B">สูตรผลบวกมุมของ sin</a> <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a></span></li>
+    </ol><p class="answer">\(y = \tfrac{\sqrt2}{2}\sin\!\big(t - \tfrac{\pi}{4}\big) + \tfrac12e^{-t}\) · ส่วน \(e^{-t}\) คือช่วงชั่วครู่ (transient) ที่หายไป ส่วน sin คือสภาวะอยู่ตัว (steady state) ที่ตามหลังแรงขับ 45° และเล็กลงเหลือ 0.707 เท่า</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab1">
+    <h2 id="lab1">แล็บ: แก้ \(ay' + by = f(t)\) พร้อมวิธีทำ</h2>
+    <p>ค่าเริ่มต้นคือวงจร RC ที่ \(RC = 0.5\) วินาที ชาร์จจากแหล่งจ่าย 12 V (\(a = 0.5,\ b = 1\)) ลองเปลี่ยนแรงขับเป็น cos หรือ sin แล้วดูว่าขั้นตอนเปลี่ยนไปอย่างไร คำตอบจะแสดงหลังจากตรวจเทียบกับวิธีเชิงตัวเลขแล้วเท่านั้น</p>
+    <div class="cl-lab ms-ode2" data-order="1" data-a="0.5" data-b="1" data-ft="K" data-p1="12" data-y0="0"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="circuits">
+    <h2 id="circuits">วงจร RC และ RL: สมการอันดับหนึ่งที่วิศวกรไฟฟ้าเจอทุกวัน</h2>
+    <h3 id="rc">RC ชาร์จ</h3>
+    <p>KVL รอบวง: \(V_s = Ri + v\) และ \(i = C\,v'\) จึงได้</p>
+    \[ RC\,v' + v = V_s \quad\Longrightarrow\quad v(t) = V_s\big(1 - e^{-t/\tau}\big),\quad \tau = RC \]
+    <div class="table-wrap"><table><thead><tr><th>เวลา</th><th>τ</th><th>2τ</th><th>3τ</th><th>4τ</th><th>5τ</th></tr></thead><tbody>
+      <tr><td>% ของค่าสุดท้าย</td><td>63.2</td><td>86.5</td><td>95.0</td><td>98.2</td><td>99.3</td></tr>
+    </tbody></table></div>
+    <p>ตัวอย่างตัวเลข: R = 10 kΩ, C = 10 µF ได้ τ = 0.1 s ชาร์จเต็มในทางปฏิบัติที่ 0.5 s ที่ t = 0.1 s แรงดันเป็น 63.2% ของแหล่งจ่าย</p>
+    <h3 id="rl-ac">RL ป้อนไฟ AC: เฟสตามหลังมาจากไหน</h3>
+    <p>\(L\,i' + Ri = V_m\sin\omega t\) แก้ด้วยตัวประกอบอินทิเกรตหรือเดาสัมประสิทธิ์ จะได้ส่วนสภาวะอยู่ตัว</p>
+    \[ i_{ss}(t) = \frac{V_m}{\sqrt{R^2 + (\omega L)^2}}\sin(\omega t - \varphi),\qquad \tan\varphi = \frac{\omega L}{R} \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> <a class="tg" href="/learn/trigonometry/#sum-difference" title="sin(A + B) = sin A cos B + cos A sin B">สูตรผลบวกมุมของ sin</a></span>
+    <p>ตัวหาร \(\sqrt{R^2 + (\omega L)^2}\) คือขนาดอิมพีแดนซ์ และมุม φ คือมุมที่กระแสตามหลังแรงดัน ทั้งสองค่าโผล่ออกมาจากการรวม \(A\sin\omega t + B\cos\omega t\) เป็นคลื่นเดียว ตัวอย่าง R = 10 Ω, L = 0.1 H, 50 Hz, \(V_m = 325\) V ได้ \(\omega L = 31.42\ \Omega\), \(|Z| = 32.97\ \Omega\), \(I_m \approx 9.87\) A และ \(\varphi \approx 72.3^\circ\) เทียบกับวิธีเฟสเซอร์ใน<a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a> ได้ผลเดียวกัน</p>
+    <h3 id="mixing">ถังผสม</h3>
+    <p>ถังน้ำ 100 L รับน้ำเกลือเข้มข้น 10 g/L ด้วยอัตรา 5 L/min ปล่อยออกด้วยอัตราเดียวกัน ถ้าตอนแรกเป็นน้ำจืด ให้ A(t) เป็นมวลเกลือ (g)</p>
+    \[ A' = \underbrace{10\times5}_{\text{เข้า}} - \underbrace{\frac{A}{100}\times5}_{\text{ออก}} = 50 - \frac{A}{20} \;\Longrightarrow\; A(t) = 1000\big(1 - e^{-t/20}\big) \]
+    <p>หน้าตาเหมือนวงจร RC ทุกประการ τ = 20 นาที และค่าสุดท้ายคือ 1000 g ซึ่งก็คือความเข้มข้นขาเข้าคูณปริมาตร</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="exact">
+    <h2 id="exact">3. สมการแม่นตรง (Exact equations) <span class="lv lv-i">กลาง</span></h2>
+    <p>เขียนสมการเป็น \(M(x,y)\,dx + N(x,y)\,dy = 0\) ถ้ามีฟังก์ชัน \(F(x, y)\) ที่ \(F_x = M\) และ \(F_y = N\) ด้านซ้ายคือ \(dF\) สมการจึงบอกว่า \(F = C\) ตรวจได้ง่ายเพราะอนุพันธ์ย่อยผสมต้องเท่ากัน</p>
+    \[ \frac{\partial M}{\partial y} = \frac{\partial N}{\partial x} \]
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 7</span><h3>\((2xy + 3)\,dx + (x^2 - 1)\,dy = 0\)</h3></div><ol class="steps">
+      <li><p>\(M_y = 2x,\ N_x = 2x\) เท่ากัน เป็นสมการแม่นตรง</p></li>
+      <li><p>อินทิเกรต M เทียบ x: \(F = x^2y + 3x + g(y)\)</p></li>
+      <li><p>ดิฟเทียบ y ต้องได้ N: \(x^2 + g'(y) = x^2 - 1 \Rightarrow g = -y\)</p></li>
+    </ol><p class="answer">\(x^2y + 3x - y = C\) หรือ \(y = \dfrac{C - 3x}{x^2 - 1}\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="homogeneous-sub">
+    <h2 id="homogeneous-sub">4. สมการเอกพันธ์แบบ y/x <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้า \(y' = F\!\left(\tfrac{y}{x}\right)\) ให้ \(v = \tfrac yx\) หรือ \(y = vx\) จะได้ \(y' = v + xv'\) สมการกลายเป็น \(xv' = F(v) - v\) ซึ่งแยกตัวแปรได้</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 8</span><h3>\(y' = \dfrac{x + y}{x},\ x &gt; 0\)</h3></div><ol class="steps">
+      <li><p>\(F(v) = 1 + v\) ได้ \(v + xv' = 1 + v \Rightarrow v' = \tfrac1x\)</p></li>
+      <li><p>\(v = \ln x + C\)</p></li>
+    </ol><p class="answer">\(y = x\ln x + Cx\) · ตรวจ: \(y' = \ln x + 1 + C = \tfrac{x + y}{x}\) ✓</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="bernoulli">
+    <h2 id="bernoulli">5. สมการเบอร์นูลลี (Bernoulli) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>รูป \(y' + p\,y = q\,y^n\) ไม่เชิงเส้นเพราะมี \(y^n\) แต่ถ้าแทน \(v = y^{1-n}\) จะกลายเป็นสมการเชิงเส้นในตัวแปร v</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 9</span><h3>\(y' + y = y^2\)</h3></div><ol class="steps">
+      <li><p>\(n = 2\) แทน \(v = y^{-1}\) ได้ \(v' = -y^{-2}y'\)</p></li>
+      <li><p>หารสมการด้วย \(-y^2\): \(v' - v = -1\) เป็นเชิงเส้น <a class="tg calc" href="/learn/differential-equations/first-order/#linear" title="μ(t) = e^{∫p(t)dt}">ตัวประกอบอินทิเกรต</a></p></li>
+      <li><p>\(\mu = e^{-x}\) ได้ \(v = 1 + Ce^{x}\)</p></li>
+    </ol><p class="answer">\(y = \dfrac{1}{1 + Ce^{x}}\) · รูปแบบเดียวกับสมการโลจิสติกของประชากร</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>ลืมทำสัมประสิทธิ์ของ y′ ให้เป็น 1 ก่อนหา μ</b> เช่น \(2y' + 4y = 8\) ต้องหารสองก่อน p จึงเป็น 2 ไม่ใช่ 4</li>
+      <li><b>เติม +C ผิดที่</b> ต้องเติมตอนอินทิเกรต \(\int\mu q\,dt\) ไม่ใช่หลังหารด้วย μ เพราะ C ต้องถูกหารด้วย μ ด้วย</li>
+      <li><b>ทิ้งคำตอบคงที่ตอนแยกตัวแปร</b> การหารด้วย h(y) ทำให้คำตอบ \(h(y) = 0\) หายไป เช่น \(y' = y^2\) มี \(y = 0\) เป็นคำตอบด้วย</li>
+      <li><b>ใช้องศาใน sin, cos ของแรงขับ</b> ω ต้องเป็นเรเดียนต่อวินาที <a class="tg" href="/learn/trigonometry/#angles" title="180° = π rad · ความยาวส่วนโค้ง s = rθ">มุมเป็นเรเดียน</a></li>
+    </ul>
+    <p>ต่อไป: <a href="/learn/differential-equations/second-order/">สมการอันดับสอง</a> ที่คำตอบแกว่งเป็นคลื่นได้ และฝึกโจทย์ที่<a href="/learn/differential-equations/exam-practice/#set-a">ชุด A</a></p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

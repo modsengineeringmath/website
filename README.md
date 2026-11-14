@@ -750,6 +750,15 @@ site with their scripts, styles, tests, share images and changelog entries. Perm
 (including `index.html`, `index.html.md` and the short links `/tarot`, `/celtic-cross` …) to the matching TarotMod page. Keep
 those lines; don't add tarot content back here. The MCP `get_page` tool answers "moved" for them.
 
+## Derivative table · differential equations (ch. 28) · Signals and Systems series (ch. 11) · ms-lab.js (added 2026-11-14)
+
+- **Pages**: `learn/differential-calculus/{derivative-table,trig-derivatives,exam-practice}`, the new topic `learn/differential-equations/` (hub + 6 subpages), and `learn/signals/` turned into a series (hub = the old lab page, now `src/pages/learn/signals/index.html`, plus `lti-convolution`, `fourier-transform`, `sampling-aliasing`, `z-transform`, `exam-practice`). All are registered in `TOPICS` in `build.mjs`.
+- **Tools**: `/tools/ode-solver/` and `/tools/convolution-calculator/` (TH + EN twins). They use the `ms-ode2` and `ms-dconv` widgets with `data-tool`, which adds presets and writes the inputs to the URL query so results can be shared. `scripts/test-tools.mjs` accepts either an `mt-tool` widget or a `cl-lab ms-*` widget.
+- **`assets/ms-lab.js`**: one file, no dependencies besides `mathkit.js` + KaTeX. A widget is a `<div class="cl-lab ms-NAME" data-...>`: `ms-trigd`, `ms-sinlim`, `ms-field`, `ms-ode2`, `ms-conv`, `ms-dconv`, `ms-ft`, `ms-alias`, `ms-zpz`. Language follows `<html lang>`. Rule kept from the other calculators: a closed-form answer is shown only after it passes an independent numerical check (RK4 for ODEs, float re-check for exact fractions, numerical integration for Fourier pairs).
+- **Trig chips** (`.tg` in `site.css`): small pills next to a step that name the identity used, link to its section in `/learn/trigonometry/`, and show the formula on hover. In page sources they are plain `<a class="tg" href="/learn/trigonometry/#..." title="formula">name</a>`; the widget steps create the same markup through `tg(key)` in `ms-lab.js`.
+- **Checks**: every worked number and every exam answer was verified with sympy or numerics before being written (ODE exam 32 problems, signals exam 27, derivative exam, z-transform table by summing the series).
+- **OG images**: `python3 scripts/og.py --prefix learn-signals` (or `learn-differential-equations`, `tools-ode`, `en-tools-conv`, …) then `node build.mjs`.
+
 ## `_redirects`: splat rules go last (fixed 2026-11-14)
 Cloudflare Pages counts every rule that comes after the first rule with a splat (`*`) or placeholder (`:name`) as dynamic,
 allows only 100 dynamic rules, and skips the rest of the file with only a line in the deploy log ("Maximum number of dynamic

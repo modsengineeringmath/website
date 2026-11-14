@@ -1,0 +1,240 @@
+<!--meta
+{
+  "title": "อนุพันธ์ฟังก์ชันตรีโกณมิติ: ทำไมดิฟ sin ได้ cos พิสูจน์ทุกสูตร sin cos tan sec arcsin พร้อมแล็บ | อาจารย์มด",
+  "h1": "อนุพันธ์ของฟังก์ชันตรีโกณมิติ (Derivatives of Trigonometric Functions): ที่มาของทุกสูตร ตั้งแต่ลิมิต sin h/h ถึง arcsin",
+  "description": "ดิฟ sin ได้ cos เพราะอะไร อธิบายจากวงกลมหนึ่งหน่วย ลิมิต sin h/h = 1 ด้วยการบีบพื้นที่ สูตรผลบวกมุม พิสูจน์อนุพันธ์ sin cos tan cot sec csc และตรีโกณผกผัน ทำไมต้องใช้เรเดียน ตัวอย่าง 10 ข้อพร้อมป้ายบอกเอกลักษณ์ที่ใช้ และแล็บโต้ตอบ",
+  "ogTitle": "ทำไมดิฟ sin ได้ cos? อนุพันธ์ตรีโกณครบทุกสูตรพร้อมที่มา",
+  "lesson": "differential-calculus",
+  "sub": "trig-derivatives",
+  "nav": "der",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["High school", "Undergraduate"],
+  "keywords": ["อนุพันธ์ตรีโกณมิติ", "อนุพันธ์ฟังก์ชันตรีโกณมิติ", "ดิฟตรีโกณ", "ดิฟ sin ได้อะไร", "ดิฟ cos ได้อะไร", "ดิฟ tan ได้อะไร", "ดิฟ sec", "ดิฟ sin^2", "ดิฟ sin2x", "ดิฟ arcsin", "ลิมิต sin x / x", "อนุพันธ์ตรีโกณผกผัน", "derivative of sin x", "derivatives of trigonometric functions"],
+  "about": ["Derivatives of trigonometric functions", "Limit of sin x over x", "Squeeze theorem", "Unit circle", "Radian", "Inverse trigonometric functions", "Implicit differentiation"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "ทำไมดิฟ sin ได้ cos?", "sub": "อนุพันธ์ตรีโกณครบทุกสูตร · ลิมิต sin h/h · เรเดียน · arcsin arctan · พร้อมแล็บ", "eyebrow": "บทที่ 4.3 · Trigonometric Derivatives", "sym": "sin′"},
+  "faq": [
+    {"q": "ทำไมดิฟ sin x ได้ cos x?", "a": "ถ้ามองจุด (cos x, sin x) ที่วิ่งบนวงกลมหนึ่งหน่วยด้วยความเร็ว 1 (เพราะ x เป็นเรเดียน คือความยาวส่วนโค้ง) ทิศที่จุดวิ่งตั้งฉากกับรัศมี คือ (−sin x, cos x) ส่วนประกอบแนวตั้งของความเร็วนี้คืออัตราที่ sin x เปลี่ยน จึงได้ cos x พิสูจน์แบบพีชคณิตใช้สูตรผลบวกมุมกับลิมิต sin h / h = 1"},
+    {"q": "ทำไมสูตรดิฟตรีโกณต้องใช้เรเดียน?", "a": "เพราะลิมิต sin h / h = 1 เป็นจริงเฉพาะเมื่อ h เป็นเรเดียน ถ้าวัดเป็นองศา ลิมิตจะเป็น π/180 และได้ d/dx sin x° = (π/180) cos x° ทุกสูตรจะมีตัวคูณนี้ติดมา"},
+    {"q": "ดิฟ sin²x ได้อะไร?", "a": "ได้ 2 sin x cos x ซึ่งเท่ากับ sin 2x ตามสูตรมุมสองเท่า ใช้กฎลูกโซ่โดยมองว่าเป็น (sin x)² ดิฟชั้นนอกได้ 2 sin x แล้วคูณดิฟชั้นในคือ cos x"},
+    {"q": "ดิฟ arcsin x ได้อะไร?", "a": "ได้ 1/√(1 − x²) สำหรับ −1 < x < 1 ได้จากการเขียน sin y = x ดิฟทั้งสองข้างได้ cos y · y′ = 1 แล้วใช้ cos y = √(1 − sin²y) = √(1 − x²)"},
+    {"q": "ดิฟ sin x ไป 100 ครั้งได้อะไร?", "a": "ได้ sin x เพราะอนุพันธ์ของ sin วนรอบทุก 4 ครั้ง sin → cos → −sin → −cos → sin และ 100 หารด้วย 4 ลงตัว สูตรทั่วไปคือ dⁿ/dxⁿ sin x = sin(x + nπ/2)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-calculus/">อนุพันธ์</a></li><li>อนุพันธ์ตรีโกณ</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 4.3 · อนุพันธ์ · Trigonometric Derivatives</p>
+      <h1>อนุพันธ์ของฟังก์ชันตรีโกณมิติ (Derivatives of Trigonometric Functions): ที่มาของทุกสูตร ตั้งแต่ลิมิต sin h/h ถึง arcsin</h1>
+      <p class="lede">“ทำไมดิฟ sin ได้ cos” เป็นคำถามที่ตอบสั้น ๆ ว่า “เพราะสูตรเขียนไว้แบบนั้น” ได้ แต่คำตอบแบบนั้นไม่ช่วยตอนเจอโจทย์ที่ไม่เคยเห็น หน้านี้จึงตอบให้หมด ตั้งแต่ภาพจุดที่วิ่งบนวงกลม ไปจนถึงการพิสูจน์ทีละบรรทัด ทุกครั้งที่ใช้เอกลักษณ์ตรีโกณ จะมีป้ายเล็กสีน้ำเงินกำกับไว้ข้าง ๆ บอกชื่อสูตร ชี้ค้างหรือแตะเพื่อดูสูตรเต็ม ถ้าลืมเอกลักษณ์ตัวไหน กดป้ายแล้วจะไปถึงหัวข้อนั้นในบทตรีโกณมิติทันที</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#lab">แล็บความชันของ sin</a>
+        <a class="btn btn-ghost btn-sm" href="#limit">ลิมิต sin h / h</a>
+        <a class="btn btn-ghost btn-sm" href="#proofs">พิสูจน์ทั้ง 6 สูตร</a>
+        <a class="btn btn-ghost btn-sm" href="#inverse">arcsin arctan</a>
+        <a class="btn btn-ghost btn-sm" href="#examples">ตัวอย่าง 10 ข้อ</a>
+      </div>
+      <div class="tldr"><b>สรุปก่อนอ่าน</b><ul>
+        <li>\((\sin x)' = \cos x\) และ \((\cos x)' = -\sin x\) สองบรรทัดนี้คือแกน อีกสี่สูตรได้จากกฎผลหารกับเอกลักษณ์พีทาโกรัส</li>
+        <li>ทุกสูตรใช้ได้เฉพาะเมื่อมุมเป็น<b>เรเดียน</b> <a class="tg" href="/learn/trigonometry/#angles" title="180° = π rad · ความยาวส่วนโค้ง s = rθ">มุมเป็นเรเดียน</a></li>
+        <li>ดิฟ sin หนึ่งครั้ง เท่ากับเลื่อนกราฟไปทางซ้าย 90° (π/2) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></li>
+        <li>ดิฟตรีโกณผกผันได้ฟังก์ชันพีชคณิต เพราะใช้สามเหลี่ยมอ้างอิงแปลงกลับ <a class="tg" href="/learn/trigonometry/#inverse" title="sin θ = ข้าม/ฉาก · cos θ = ชิด/ฉาก · tan θ = ข้าม/ชิด">สามเหลี่ยมอ้างอิง</a></li>
+      </ul></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="picture">
+    <h2 id="picture">ภาพก่อนสูตร: จุดที่วิ่งบนวงกลมหนึ่งหน่วย</h2>
+    <p>นึกถึงจุดหนึ่งบนวงกลมรัศมี 1 ที่มุม \(x\) พิกัดของมันคือ \((\cos x, \sin x)\) <a class="tg" href="/learn/trigonometry/#unit-circle" title="จุดบนวงกลม = (cos θ, sin θ)">วงกลมหนึ่งหน่วย</a> ถ้า \(x\) วัดเป็นเรเดียน ค่า \(x\) ก็คือความยาวส่วนโค้งที่จุดเดินมาได้พอดี <a class="tg" href="/learn/trigonometry/#angles" title="180° = π rad · ความยาวส่วนโค้ง s = rθ">มุมเป็นเรเดียน</a> แปลว่าเมื่อ \(x\) เพิ่มขึ้นหนึ่งหน่วย จุดก็เดินบนวงกลมได้ระยะหนึ่งหน่วย จุดนี้จึงวิ่งด้วย<b>อัตราเร็วคงที่เท่ากับ 1</b></p>
+    <p>ทิศที่จุดวิ่งตั้งฉากกับรัศมีเสมอ รัศมีชี้ไปทาง \((\cos x, \sin x)\) เวกเตอร์ที่ตั้งฉากและยาว 1 คือ \((-\sin x, \cos x)\) ลองตรวจด้วย dot product: \(\cos x\cdot(-\sin x) + \sin x\cdot\cos x = 0\) ตั้งฉากจริง และ \(\sin^2x + \cos^2x = 1\) จึงยาว 1 จริง <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a></p>
+    <p>ความเร็วนี้แยกได้สองส่วน ส่วนแนวนอนคือ “พิกัด x ของจุด” เปลี่ยนเร็วแค่ไหน และส่วนแนวตั้งคือ “พิกัด y” เปลี่ยนเร็วแค่ไหน เขียนเป็นภาษาแคลคูลัสได้ทันที</p>
+    \[ \frac{d}{dx}\cos x = -\sin x, \qquad \frac{d}{dx}\sin x = \cos x \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#unit-circle" title="จุดบนวงกลม = (cos θ, sin θ)">วงกลมหนึ่งหน่วย</a> <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a></span>
+    <p>สองสูตรหลักออกมาพร้อมกันจากภาพเดียว ที่เหลือในหน้านี้เป็นการยืนยันด้วยพีชคณิต และต่อยอดไปยังสูตรอื่น ภาพนี้ยังบอกอีกอย่างหนึ่งที่สำคัญมาก ถ้าวัดมุมเป็นองศา จุดจะวิ่งด้วยอัตรา \(\pi/180\) หน่วยต่อองศา ไม่ใช่ 1 ทุกสูตรจะมีตัวคูณ \(\pi/180\) ติดมา ลองสลับในแล็บข้างล่างดู</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab">
+    <h2 id="lab">แล็บ: ความชันของกราฟ sin กลายเป็นกราฟ cos</h2>
+    <p>เลื่อน x₀ หรือกดเล่น เส้นสีน้ำเงินคือเส้นสัมผัสที่ x₀ ความชันของมันถูกวาดเป็นจุดสีเขียวบนกราฟล่าง ลากไปเรื่อย ๆ จุดสีเขียวจะวาดกราฟ cos ออกมาเอง ลองเปลี่ยนเป็น tan หรือ sec และกดสลับเป็นองศาเพื่อดูว่าความชันหดลงเหลือราว 0.017 เท่า</p>
+    <div class="cl-lab ms-trigd" data-f="sin" data-x0="0.9"></div>
+    <p>สังเกตตอน x₀ = π/2 (ยอดของ sin) เส้นสัมผัสนอนราบ ความชันเป็นศูนย์ และ cos(π/2) = 0 พอดี ส่วนตอน x₀ = 0 กราฟ sin ชันที่สุด ความชันเป็น 1 ตรงกับ cos 0 = 1 <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="limit">
+    <h2 id="limit">ลิมิตพื้นฐาน: sin h / h → 1 เมื่อ h → 0</h2>
+    <p>การพิสูจน์ด้วยนิยามอนุพันธ์ต้องอาศัยลิมิตสองตัวนี้ ตัวแรกสำคัญที่สุด</p>
+    \[ \lim_{h\to0}\frac{\sin h}{h} = 1, \qquad \lim_{h\to0}\frac{\cos h - 1}{h} = 0 \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (sin h)/h = 1 (h เป็นเรเดียน)">ลิมิต sin h / h</a> <a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (cos h − 1)/h = 0">ลิมิต (cos h − 1)/h</a></span>
+    <h3 id="squeeze">พิสูจน์ด้วยการบีบพื้นที่สามรูป</h3>
+    <p>วาดวงกลมหนึ่งหน่วย ทำมุม \(h\) (เรเดียน ระหว่าง 0 กับ π/2) แล้วเทียบพื้นที่สามรูปที่ซ้อนกันอยู่ สามเหลี่ยมเล็กอยู่ในเซกเตอร์ เซกเตอร์อยู่ในสามเหลี่ยมใหญ่</p>
+    \[ \underbrace{\tfrac12\sin h}_{\text{สามเหลี่ยมเล็ก}} \;\le\; \underbrace{\tfrac12 h}_{\text{เซกเตอร์}} \;\le\; \underbrace{\tfrac12\tan h}_{\text{สามเหลี่ยมใหญ่}} \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#unit-circle" title="จุดบนวงกลม = (cos θ, sin θ)">วงกลมหนึ่งหน่วย</a> <a class="tg" href="/learn/trigonometry/#angles" title="180° = π rad · ความยาวส่วนโค้ง s = rθ">มุมเป็นเรเดียน</a> <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a></span>
+    <p>พื้นที่เซกเตอร์ \(\tfrac12 r^2\theta\) ใช้ได้เฉพาะเรเดียน นี่คือจุดที่เรเดียนเข้ามาในสูตรอนุพันธ์ ต่อไปหารทุกข้างด้วย \(\tfrac12\sin h\) (เป็นบวก) แล้วกลับเศษส่วน เครื่องหมายอสมการจะกลับด้านด้วย</p>
+    \[ 1 \le \frac{h}{\sin h} \le \frac{1}{\cos h} \quad\Longrightarrow\quad \cos h \le \frac{\sin h}{h} \le 1 \]
+    <p>เมื่อ \(h\to0\) ฝั่งซ้าย \(\cos h \to 1\) ฝั่งขวาเป็น 1 อยู่แล้ว ตัวกลางถูกบีบให้เป็น 1 ด้วยทฤษฎีบทแซนด์วิช ฝั่ง \(h\) ติดลบได้ผลเดียวกันเพราะ \(\tfrac{\sin(-h)}{-h} = \tfrac{\sin h}{h}\) <a class="tg" href="/learn/trigonometry/#symmetry" title="cos(−θ) = cos θ · sin(−θ) = −sin θ">ฟังก์ชันคู่-คี่</a></p>
+    <div class="cl-lab ms-sinlim"></div>
+    <h3 id="cos-limit">ลิมิตตัวที่สอง (cos h − 1)/h</h3>
+    <p>ใช้สูตรมุมสองเท่าแปลง \(1 - \cos h = 2\sin^2\tfrac h2\) <a class="tg" href="/learn/trigonometry/#double-angle" title="cos 2θ = cos²θ − sin²θ = 1 − 2sin²θ = 2cos²θ − 1">มุมสองเท่า cos</a> แล้วจัดให้เห็นลิมิตตัวแรก</p>
+    \[ \frac{\cos h - 1}{h} = -\frac{2\sin^2\frac h2}{h} = -\sin\tfrac h2\cdot\frac{\sin\frac h2}{\frac h2} \;\longrightarrow\; -0\cdot1 = 0 \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#double-angle" title="cos 2θ = cos²θ − sin²θ = 1 − 2sin²θ = 2cos²θ − 1">มุมสองเท่า cos</a> <a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (sin h)/h = 1 (h เป็นเรเดียน)">ลิมิต sin h / h</a></span>
+    <p>ความหมายเชิงภาพ: กราฟ cos ที่ \(x = 0\) อยู่ตรงยอดพอดี ความชันจึงเป็นศูนย์ ลิมิตตัวนี้ก็คือความชันของ cos ที่ศูนย์นั่นเอง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="proofs">
+    <h2 id="proofs">พิสูจน์อนุพันธ์ทั้งหกฟังก์ชัน</h2>
+    <h3 id="proof-sin">(sin x)′ = cos x จากนิยาม</h3>
+    <div class="wx"><ol class="steps">
+      <li><p>เริ่มจากนิยามอนุพันธ์ <a class="tg calc" href="/learn/differential-calculus/#definition" title="f′(x) = lim_{h→0} [f(x+h) − f(x)]/h">นิยามอนุพันธ์</a></p>\[ (\sin x)' = \lim_{h\to0}\frac{\sin(x+h) - \sin x}{h} \]</li>
+      <li><p>กระจาย \(\sin(x+h)\) ด้วยสูตรผลบวกมุม <a class="tg" href="/learn/trigonometry/#sum-difference" title="sin(A + B) = sin A cos B + cos A sin B">สูตรผลบวกมุมของ sin</a></p>\[ = \lim_{h\to0}\frac{\sin x\cos h + \cos x\sin h - \sin x}{h} \]</li>
+      <li><p>จัดกลุ่มให้เห็นลิมิตพื้นฐานสองตัว</p>\[ = \sin x\cdot\lim_{h\to0}\frac{\cos h - 1}{h} + \cos x\cdot\lim_{h\to0}\frac{\sin h}{h} = \sin x\cdot 0 + \cos x\cdot1 \]
+      <span class="tg-row"><a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (cos h − 1)/h = 0">ลิมิต (cos h − 1)/h</a> <a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (sin h)/h = 1 (h เป็นเรเดียน)">ลิมิต sin h / h</a></span></li>
+    </ol><p class="answer">\((\sin x)' = \cos x\)</p></div>
+    <p><b>อีกทางหนึ่ง</b> ใช้ผลต่างเป็นผลคูณ <a class="tg" href="/learn/trigonometry/#sum-to-product" title="sin A − sin B = 2 cos((A+B)/2) sin((A−B)/2)">ผลบวกเป็นผลคูณ</a> ได้ \(\sin(x+h) - \sin x = 2\cos\!\left(x + \tfrac h2\right)\sin\tfrac h2\) หารด้วย \(h\) จะเหลือ \(\cos\!\left(x+\tfrac h2\right)\cdot\tfrac{\sin(h/2)}{h/2} \to \cos x\) วิธีนี้ใช้ลิมิตแค่ตัวเดียว</p>
+
+    <h3 id="proof-cos">(cos x)′ = −sin x</h3>
+    <p>ทำแบบเดียวกันด้วย \(\cos(x+h) = \cos x\cos h - \sin x\sin h\) <a class="tg" href="/learn/trigonometry/#sum-difference" title="cos(A + B) = cos A cos B − sin A sin B">สูตรผลบวกมุมของ cos</a> จะได้ \(\cos x\cdot0 - \sin x\cdot1\) หรือใช้ทางลัดที่สวยกว่า: \(\cos x = \sin\!\left(x + \tfrac{\pi}{2}\right)\) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> ดิฟด้วยลูกโซ่ได้ \(\cos\!\left(x + \tfrac{\pi}{2}\right) = -\sin x\) <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>
+    \[ (\cos x)' = \frac{d}{dx}\sin\!\Big(x + \frac{\pi}{2}\Big) = \cos\!\Big(x + \frac{\pi}{2}\Big) = -\sin x \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></span>
+
+    <h3 id="proof-tan">(tan x)′ = sec²x</h3>
+    <div class="wx"><ol class="steps">
+      <li><p>เขียนเป็นผลหาร <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a> แล้วใช้กฎผลหาร <a class="tg calc" href="/learn/differential-calculus/#rules" title="(u/v)′ = (u′v − uv′)/v²">กฎผลหาร</a></p>\[ (\tan x)' = \left(\frac{\sin x}{\cos x}\right)' = \frac{\cos x\cdot\cos x - \sin x\cdot(-\sin x)}{\cos^2x} \]</li>
+      <li><p>ตัวเศษคือ \(\cos^2x + \sin^2x = 1\) พอดี <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a></p>\[ = \frac{1}{\cos^2x} = \sec^2x \]</li>
+      <li><p>หรือแยกเศษส่วนก่อนรวม จะได้อีกรูป <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + tan²θ = sec²θ">พีทาโกรัสแบบ tan</a></p>\[ \frac{\cos^2x + \sin^2x}{\cos^2x} = 1 + \tan^2x \]</li>
+    </ol><p class="answer">\((\tan x)' = \sec^2x = 1 + \tan^2x\) · ค่านี้ไม่น้อยกว่า 1 เสมอ กราฟ tan จึงขึ้นอย่างเดียว</p></div>
+
+    <h3 id="proof-sec">(sec x)′ = sec x tan x</h3>
+    <p>\(\sec x = (\cos x)^{-1}\) <a class="tg" href="/learn/trigonometry/#definitions" title="sec θ = 1/cos θ · csc θ = 1/sin θ · cot θ = 1/tan θ">ส่วนกลับ</a> ใช้ลูกโซ่ <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a> ได้ \(-(\cos x)^{-2}\cdot(-\sin x) = \dfrac{\sin x}{\cos^2x} = \dfrac{1}{\cos x}\cdot\dfrac{\sin x}{\cos x} = \sec x\tan x\) <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a></p>
+
+    <h3 id="proof-co">cot และ csc: ภาพสะท้อนที่มีเครื่องหมายลบ</h3>
+    <p>ทำซ้ำสองหัวข้อข้างบนโดยสลับ sin กับ cos จะได้ \((\cot x)' = -\csc^2x = -(1+\cot^2x)\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + cot²θ = csc²θ">พีทาโกรัสแบบ cot</a> และ \((\csc x)' = -\csc x\cot x\) <a class="tg" href="/learn/trigonometry/#definitions" title="sec θ = 1/cos θ · csc θ = 1/sin θ · cot θ = 1/tan θ">ส่วนกลับ</a> เครื่องหมายลบมาจากที่เดียวกับของ cos คือทุกฟังก์ชัน “โค” เป็นฟังก์ชันเดิมที่มุม \(\tfrac{\pi}{2} - x\) ดิฟข้างในได้ \(-1\) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>คู่หลัก</th><th>อนุพันธ์</th><th>คู่ “โค”</th><th>อนุพันธ์</th></tr></thead>
+      <tbody>
+        <tr><td>\(\sin x\)</td><td>\(\cos x\)</td><td>\(\cos x\)</td><td>\(-\sin x\)</td></tr>
+        <tr><td>\(\tan x\)</td><td>\(\sec^2 x\)</td><td>\(\cot x\)</td><td>\(-\csc^2 x\)</td></tr>
+        <tr><td>\(\sec x\)</td><td>\(\sec x\tan x\)</td><td>\(\csc x\)</td><td>\(-\csc x\cot x\)</td></tr>
+      </tbody>
+    </table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="higher">
+    <h2 id="higher">ดิฟซ้ำ ๆ: วงจรสี่จังหวะและการเลื่อนเฟส</h2>
+    <p>ดิฟ sin ไปเรื่อย ๆ จะวนกลับมาที่เดิมทุกสี่ครั้ง</p>
+    \[ \sin x \xrightarrow{d/dx} \cos x \xrightarrow{d/dx} -\sin x \xrightarrow{d/dx} -\cos x \xrightarrow{d/dx} \sin x \]
+    <p>เพราะดิฟหนึ่งครั้งเท่ากับเลื่อนเฟสไป 90° <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> ดิฟ n ครั้งจึงเลื่อนไป n × 90° เขียนเป็นสูตรเดียวได้ว่า</p>
+    \[ \frac{d^n}{dx^n}\sin x = \sin\!\Big(x + \frac{n\pi}{2}\Big), \qquad \frac{d^n}{dx^n}\cos x = \cos\!\Big(x + \frac{n\pi}{2}\Big) \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + 2π) = sin θ · cos(θ + 2π) = cos θ">คาบ 2π</a></span>
+    <p>ดิฟ sin x ไป 100 ครั้งจึงได้ sin x กลับมา (100 หาร 4 ลงตัว) ส่วน 101 ครั้งได้ cos x ข้อสังเกตที่สำคัญกว่าคือ \((\sin x)'' = -\sin x\) ฟังก์ชันที่ดิฟสองครั้งแล้วได้ตัวเองติดลบคือหัวใจของการสั่นทุกชนิด ทั้งลูกตุ้ม สปริง และวงจร LC ซึ่งต่อยอดเป็น<a href="/learn/differential-equations/second-order/">สมการเชิงอนุพันธ์อันดับสอง</a> \(y'' + \omega^2y = 0\) <a class="tg calc" href="/learn/differential-calculus/#higher" title="f″ = (f′)′">อนุพันธ์อันดับสูง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inverse">
+    <h2 id="inverse">อนุพันธ์ของตรีโกณผกผัน: arcsin, arccos, arctan, arcsec</h2>
+    <p>ความคิดเดียวใช้ได้ทั้งหมด: เปลี่ยนจาก “y คือมุมที่ sin เท่ากับ x” เป็นสมการ \(\sin y = x\) แล้วดิฟโดยปริยาย <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="ดิฟทั้งสองข้างเทียบ x แล้วคูณ dy/dx ทุกครั้งที่ดิฟ y">ดิฟโดยปริยาย</a> <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p>
+    <figure class="post-fig">
+      <svg class="xf" viewBox="0 0 300 190" role="img" aria-label="สามเหลี่ยมอ้างอิงของ y = arcsin x: ด้านตรงข้าม x ด้านตรงข้ามมุมฉาก 1 ด้านประชิด รากที่สองของ 1 − x²" style="max-width:340px">
+        <path class="xf-box" d="M40 160 L250 160 L250 40 Z" fill="none"/>
+        <path d="M232 160 L232 142 L250 142" fill="none" stroke="var(--ink-3)"/>
+        <path d="M80 160 A40 40 0 0 0 76.6 143.5" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <text class="xf-lbl xf-ta" x="88" y="152">y</text>
+        <text class="xf-lbl" x="258" y="105">x</text>
+        <text class="xf-lbl" x="128" y="92" text-anchor="middle">1</text>
+        <text class="xf-lbl" x="145" y="180" text-anchor="middle">√(1 − x²)</text>
+      </svg>
+      <figcaption>สามเหลี่ยมอ้างอิงของ y = arcsin x: sin y = x/1 จึงวาดด้านตรงข้ามเป็น x ด้านตรงข้ามมุมฉากเป็น 1 ด้านที่เหลือได้จากพีทาโกรัส</figcaption>
+    </figure>
+    <div class="wx"><ol class="steps">
+      <li><p>ให้ \(y = \sin^{-1}x\) ซึ่งแปลว่า \(\sin y = x\) โดย \(-\tfrac{\pi}{2} \le y \le \tfrac{\pi}{2}\) <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p></li>
+      <li><p>ดิฟทั้งสองข้างเทียบ x ฝั่งซ้ายต้องใช้ลูกโซ่เพราะ y เป็นฟังก์ชันของ x <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="ดิฟทั้งสองข้างเทียบ x แล้วคูณ dy/dx ทุกครั้งที่ดิฟ y">ดิฟโดยปริยาย</a></p>\[ \cos y\cdot\frac{dy}{dx} = 1 \;\Rightarrow\; \frac{dy}{dx} = \frac{1}{\cos y} \]</li>
+      <li><p>แปลง \(\cos y\) กลับเป็น x ด้วยพีทาโกรัส ในช่วงของ y นี้ \(\cos y \ge 0\) จึงเลือกรากบวก <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a> <a class="tg" href="/learn/trigonometry/#inverse" title="sin θ = ข้าม/ฉาก · cos θ = ชิด/ฉาก · tan θ = ข้าม/ชิด">สามเหลี่ยมอ้างอิง</a></p>\[ \cos y = \sqrt{1 - \sin^2y} = \sqrt{1 - x^2} \]</li>
+    </ol><p class="answer">\(\dfrac{d}{dx}\sin^{-1}x = \dfrac{1}{\sqrt{1-x^2}},\quad -1 &lt; x &lt; 1\)</p></div>
+    <p><b>arctan</b>: \(\tan y = x\) ดิฟได้ \(\sec^2y\cdot y' = 1\) แล้ว \(\sec^2y = 1 + \tan^2y = 1 + x^2\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + tan²θ = sec²θ">พีทาโกรัสแบบ tan</a> จึงได้ \(\dfrac{d}{dx}\tan^{-1}x = \dfrac{1}{1+x^2}\) สังเกตว่าคำตอบนิยามได้ทุก x เพราะ tan รับค่าได้ทุกจำนวนจริง</p>
+    <p><b>arccos</b>: เพราะ \(\sin^{-1}x + \cos^{-1}x = \tfrac{\pi}{2}\) เสมอ <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> ผลรวมคงที่ อนุพันธ์จึงต้องหักล้างกัน \(\dfrac{d}{dx}\cos^{-1}x = -\dfrac{1}{\sqrt{1-x^2}}\)</p>
+    <p><b>arcsec</b>: \(\sec y = x\) ได้ \(\sec y\tan y\cdot y' = 1\) และ \(\tan y = \pm\sqrt{x^2-1}\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + tan²θ = sec²θ">พีทาโกรัสแบบ tan</a> เมื่อรวมเครื่องหมายทั้งสองกิ่งจะได้ \(\dfrac{d}{dx}\sec^{-1}x = \dfrac{1}{|x|\sqrt{x^2-1}}\) ค่าสัมบูรณ์มาจากการเลือกช่วงของ arcsec</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="examples">
+    <h2 id="examples">ตัวอย่าง 10 ข้อ พร้อมป้ายบอกสูตรที่ใช้</h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>\(\dfrac{d}{dx}\sin^2x\)</h3></div><ol class="steps">
+      <li><p>มองเป็น \((\sin x)^2\) ชั้นนอกคือยกกำลังสอง ชั้นในคือ sin <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>\[ 2\sin x\cdot\cos x \]</li>
+      <li><p>ย่อด้วยมุมสองเท่า <a class="tg" href="/learn/trigonometry/#double-angle" title="sin 2θ = 2 sin θ cos θ">มุมสองเท่า sin</a></p>\[ = \sin 2x \]</li>
+    </ol><p class="answer">\(\sin 2x\) · ตรวจอีกทาง: \(\sin^2x = \tfrac{1-\cos2x}{2}\) <a class="tg" href="/learn/trigonometry/#power-reduction" title="sin²θ = (1 − cos 2θ)/2">ลดกำลัง sin²</a> ดิฟได้ \(\tfrac{2\sin2x}{2} = \sin 2x\) ตรงกัน</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2</span><h3>\(\dfrac{d}{dx}\cos^3(4x)\)</h3></div><ol class="steps">
+      <li><p>มีสามชั้น: ยกกำลังสาม → cos → 4x ดิฟทีละชั้นแล้วคูณกัน <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>\[ 3\cos^2(4x)\cdot\big(-\sin 4x\big)\cdot 4 \]</li>
+    </ol><p class="answer">\(-12\cos^2(4x)\sin(4x)\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>\(\dfrac{d}{dx}\tan(x^2)\) เทียบกับ \(\dfrac{d}{dx}\tan^2x\)</h3></div><ol class="steps">
+      <li><p>\(\tan(x^2)\): ข้างในคือ \(x^2\) <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>\[ \sec^2(x^2)\cdot 2x \]</li>
+      <li><p>\(\tan^2x = (\tan x)^2\): ข้างนอกคือยกกำลังสอง</p>\[ 2\tan x\sec^2x \]</li>
+    </ol><p class="answer">สองข้อนี้หน้าตาคล้ายกันแต่คำตอบคนละเรื่อง ดูให้ดีว่ายกกำลังอยู่กับมุมหรืออยู่กับฟังก์ชัน</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4</span><h3>\(\dfrac{d}{dx}\big(x\sin x\big)\)</h3></div><ol class="steps">
+      <li><p>กฎผลคูณ <a class="tg calc" href="/learn/differential-calculus/#rules" title="(uv)′ = u′v + uv′">กฎผลคูณ</a></p>\[ 1\cdot\sin x + x\cos x \]</li>
+    </ol><p class="answer">\(\sin x + x\cos x\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5</span><h3>\(\dfrac{d}{dx}\dfrac{\sin x}{x}\) (ฟังก์ชัน sinc ในวิชาสัญญาณ)</h3></div><ol class="steps">
+      <li><p>กฎผลหาร <a class="tg calc" href="/learn/differential-calculus/#rules" title="(u/v)′ = (u′v − uv′)/v²">กฎผลหาร</a></p>\[ \frac{\cos x\cdot x - \sin x\cdot1}{x^2} \]</li>
+    </ol><p class="answer">\(\dfrac{x\cos x - \sin x}{x^2}\) · ฟังก์ชันนี้คือหน้าตาของสเปกตรัมพัลส์สี่เหลี่ยมใน<a href="/learn/signals/fourier-transform/">การแปลงฟูริเยร์</a></p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 6</span><h3>\(\dfrac{d}{dt}\Big(e^{-2t}\sin 3t\Big)\) คลื่นหน่วง</h3></div><ol class="steps">
+      <li><p>กฎผลคูณ และลูกโซ่ในแต่ละตัว <a class="tg calc" href="/learn/differential-calculus/#rules" title="(uv)′ = u′v + uv′">กฎผลคูณ</a> <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>\[ -2e^{-2t}\sin3t + e^{-2t}\cdot3\cos3t = e^{-2t}\big(3\cos3t - 2\sin3t\big) \]</li>
+      <li><p>รวม cos กับ sin เป็นคลื่นเดียว \(R = \sqrt{3^2+2^2} = \sqrt{13}\) <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></p>\[ = \sqrt{13}\,e^{-2t}\cos(3t + 33.69^\circ) \]</li>
+    </ol><p class="answer">อัตราการเปลี่ยนของคลื่นหน่วงยังเป็นคลื่นหน่วงความถี่เดิม แค่แอมพลิจูดคูณ √13 และเฟสเลื่อน เหตุผลเดียวกับที่ทำให้วงจร RLC แก้ได้ด้วยเฟสเซอร์</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 7</span><h3>\(\dfrac{d}{dx}\ln\left|\sec x + \tan x\right|\)</h3></div><ol class="steps">
+      <li><p>\((\ln u)' = u'/u\) <a class="tg calc" href="/learn/differential-calculus/#rules" title="d/dx ln x = 1/x">ดิฟ ln</a></p>\[ \frac{\sec x\tan x + \sec^2x}{\sec x + \tan x} = \frac{\sec x\,(\tan x + \sec x)}{\sec x + \tan x} \]</li>
+    </ol><p class="answer">\(\sec x\) · นี่คือที่มาของ \(\int\sec x\,dx = \ln|\sec x+\tan x| + C\) อ่านเฉลยเต็มได้ที่<a href="/solutions/integral-sec-x/">โจทย์อินทิเกรต #005</a></p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 8</span><h3>\(\dfrac{d}{dx}\tan^{-1}\dfrac{x}{2}\)</h3></div><ol class="steps">
+      <li><p>สูตร arctan กับลูกโซ่ ข้างในดิฟได้ \(\tfrac12\) <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a> <a class="tg" href="/learn/trigonometry/#pythagorean" title="1 + tan²θ = sec²θ">พีทาโกรัสแบบ tan</a></p>\[ \frac{1}{1 + (x/2)^2}\cdot\frac12 = \frac{1}{2}\cdot\frac{4}{4 + x^2} \]</li>
+    </ol><p class="answer">\(\dfrac{2}{4 + x^2}\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 9</span><h3>\(\dfrac{d}{dx}\sin^{-1}(2x)\)</h3></div><ol class="steps">
+      <li><p>สูตร arcsin กับลูกโซ่ <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a> <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p>\[ \frac{1}{\sqrt{1 - (2x)^2}}\cdot 2 \]</li>
+    </ol><p class="answer">\(\dfrac{2}{\sqrt{1 - 4x^2}},\ |x| &lt; \tfrac12\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 10</span><h3>\(\dfrac{d}{dt}\sin(\omega t + \varphi)\) ไฟฟ้ากระแสสลับ</h3></div><ol class="steps">
+      <li><p>ลูกโซ่ ข้างในดิฟได้ \(\omega\) <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></p>\[ \omega\cos(\omega t + \varphi) \]</li>
+      <li><p>เขียนกลับเป็น sin เพื่อเทียบเฟส <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></p>\[ = \omega\sin\!\Big(\omega t + \varphi + \frac{\pi}{2}\Big) \]</li>
+    </ol><p class="answer">ดิฟคลื่นไซน์แล้วแอมพลิจูดคูณ ω และเฟสนำหน้า 90° ทุกครั้ง</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">ใช้จริงในงานไฟฟ้า: ทำไมกระแสในตัวเก็บประจุนำหน้าแรงดัน 90°</h2>
+    <p>ตัวเก็บประจุมีความสัมพันธ์ \(i = C\dfrac{dv}{dt}\) ถ้าป้อนแรงดันไฟบ้าน \(v = V_m\sin\omega t\)</p>
+    \[ i = C\frac{d}{dt}\big(V_m\sin\omega t\big) = \omega CV_m\cos\omega t = \omega CV_m\sin\!\Big(\omega t + \frac{\pi}{2}\Big) \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></span>
+    <p>บรรทัดเดียวนี้ตอบสองเรื่อง หนึ่ง กระแสนำหน้าแรงดัน 90° เพราะการดิฟเลื่อนเฟส 90° สอง ขนาดกระแสคือ \(\omega CV_m\) อัตราส่วน \(V_m/I_m = 1/(\omega C)\) จึงเป็นรีแอกแตนซ์ของตัวเก็บประจุ</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่างตัวเลข</span><h3>ตัวเก็บประจุ 10 µF ต่อกับไฟบ้าน 230 V 50 Hz</h3></div><ol class="steps">
+      <li><p>\(V_m = 230\sqrt2 \approx 325.3\) V และ \(\omega = 2\pi\cdot50 \approx 314.16\) rad/s</p></li>
+      <li><p>\(I_m = \omega CV_m = 314.16\times10\times10^{-6}\times325.3 \approx 1.022\) A คิดเป็นค่า RMS ราว 0.723 A</p></li>
+      <li><p>\(X_C = \dfrac{1}{\omega C} \approx 318.3\ \Omega\)</p></li>
+    </ol></div>
+    <p>ตัวเหนี่ยวนำเป็นภาพกลับด้าน \(v = L\dfrac{di}{dt}\) แรงดันจึงนำหน้ากระแส 90° รายละเอียดเชิงเฟสเซอร์อยู่ใน<a href="/learn/vector-algebra/phasors/">พื้นฐานเฟสเซอร์</a> และ<a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC</a></p>
+    <p><b>ลูกตุ้มกับการประมาณมุมเล็ก</b> ความชันของ sin ที่ 0 เท่ากับ cos 0 = 1 เส้นสัมผัสที่ 0 จึงคือ \(y = x\) ใกล้ศูนย์ \(\sin\theta\approx\theta\) <a class="tg calc" href="/learn/differential-calculus/#mvt" title="f(a + h) ≈ f(a) + f′(a)h">ประมาณเชิงเส้น</a> <a class="tg" href="/learn/trigonometry/#series" title="sin x = x − x³/3! + … · cos x = 1 − x²/2! + …">อนุกรมของ sin cos</a> สมการลูกตุ้ม \(\theta'' + \tfrac gL\sin\theta = 0\) จึงกลายเป็น \(\theta'' + \tfrac gL\theta = 0\) ซึ่งแก้ได้เป็นคลื่นไซน์ ที่มุม 10° (0.1745 rad) ค่า sin คือ 0.1736 คลาดเคลื่อนเพียง 0.5%</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่เสียคะแนนบ่อย</h2>
+    <ul>
+      <li><b>ใช้องศาในสูตรดิฟ</b> ถ้าโจทย์ให้มุมเป็นองศา ต้องแปลงเป็นเรเดียนก่อน หรือคูณ \(\pi/180\) <a class="tg" href="/learn/trigonometry/#angles" title="180° = π rad · ความยาวส่วนโค้ง s = rθ">มุมเป็นเรเดียน</a></li>
+      <li><b>ลืมเครื่องหมายลบของ cos, cot, csc</b> จำว่าตัวที่ขึ้นต้นด้วย c ติดลบทุกตัว</li>
+      <li><b>สับสน \(\sin^2x\) กับ \(\sin(x^2)\) และ \(\sin 2x\)</b> สามตัวนี้ดิฟได้ \(\sin2x\), \(2x\cos(x^2)\) และ \(2\cos2x\) ตามลำดับ</li>
+      <li><b>ลืมคูณดิฟข้างใน</b> ดิฟ \(\sin 5x\) ต้องได้ \(5\cos5x\) <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a></li>
+      <li><b>เขียน \(\sin^{-1}x\) เป็น \(\tfrac{1}{\sin x}\)</b> สองตัวนี้ไม่เหมือนกัน \(\tfrac1{\sin x} = \csc x\) ส่วน \(\sin^{-1}x = \arcsin x\) <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></li>
+    </ul>
+    <p>ฝึกต่อได้ที่<a href="/learn/differential-calculus/exam-practice/#set-b">โจทย์ดิฟพร้อมเฉลย ชุด B</a> และดูสูตรทั้งหมดในตารางเดียวที่<a href="/learn/differential-calculus/derivative-table/#trig">สูตรดิฟตรีโกณ</a></p>
+    </section>
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

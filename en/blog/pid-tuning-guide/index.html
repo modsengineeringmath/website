@@ -39,8 +39,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=b9c85cce">
-<link rel="stylesheet" href="/assets/site.css?v=b9c85cce">
+<link rel="stylesheet" href="/assets/fonts.css?v=deb9a6e9">
+<link rel="stylesheet" href="/assets/site.css?v=deb9a6e9">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/en/blog/pid-tuning-guide/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/#article","headline":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","description":"A full PID tuning course in one article: identify the process with a step test, tune with Ziegler–Nichols, Cohen–Coon, SIMC or relay, compare the results by simulation, then fix windup and noise.","inLanguage":"en","url":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","mainEntityOfPage":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/","datePublished":"2026-10-16","dateModified":"2026-10-16","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID tuning","Ziegler-Nichols method","Cohen-Coon method","SIMC tuning","Relay feedback","Integrator windup","First-order plus dead time"],"articleSection":"Control Systems & PID","isPartOf":{"@id":"https://modsengineeringmath.com/en/blog/#blog"},"image":["https://modsengineeringmath.com/images/og/en-blog-pid-tuning-guide.jpg"],"keywords":"PID tuning, PID tuning guide, how to tune a PID controller, Ziegler-Nichols method, Cohen-Coon, SIMC tuning, lambda tuning, relay auto-tuning, step test FOPDT, anti-windup, Kp Ki Kd, control systems"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://modsengineeringmath.com/en/blog/"},{"@type":"ListItem","position":3,"name":"Control Systems & PID","item":"https://modsengineeringmath.com/en/blog/category/control-systems/"},{"@type":"ListItem","position":4,"name":"PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Anti-Windup","item":"https://modsengineeringmath.com/en/blog/pid-tuning-guide/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the fastest reliable way to tune a PID loop?","acceptedAnswer":{"@type":"Answer","text":"Run one open-loop step test, read the gain K, dead time L and time constant T from the recording, then apply the SIMC rule K_p=T/(K(tau_c+L)), T_i=min(T,4(tau_c+L)) with tau_c=L. It needs one experiment, has one knob, and gives a smooth response with a gain margin near 3."}},{"@type":"Question","name":"Should I use Ziegler–Nichols?","acceptedAnswer":{"@type":"Answer","text":"Use it as a starting point when you have nothing else, and expect 40–80% overshoot and thin stability margins, because it was designed for a quarter-amplitude decay ratio. Most engineers detune it (lower K_p, larger T_i) or use SIMC or Tyreus–Luyben instead."}},{"@type":"Question","name":"Do I always need the D term?","acceptedAnswer":{"@type":"Answer","text":"No. Most industrial loops run PI. Derivative action helps lag-dominant processes with clean measurements (temperature, some position and speed loops) and is of little use when dead time dominates or the signal is noisy. If you use it, always filter it."}},{"@type":"Question","name":"How do I choose the integral time \\(T_i\\)?","acceptedAnswer":{"@type":"Answer","text":"For a self-regulating process a good first value is T_iapprox T (the process time constant), limited to 4(tau_c+L) when that is smaller. A T_i that is too short gives slow, rolling oscillation; too long leaves the error hanging around. The load-disturbance error area is about Delta d/K_i with K_i=K_p/T_i."}},{"@type":"Question","name":"What sample time should the controller use?","acceptedAnswer":{"@type":"Answer","text":"Roughly one tenth of the process time constant or smaller, and no more than about half the dead time when the dead time is small. Sampling adds about T_s/2 of extra delay, so slow sampling forces lower gains."}},{"@type":"Question","name":"Why does my loop oscillate even with small gains?","acceptedAnswer":{"@type":"Answer","text":"Suspect the hardware first: valve stiction, backlash or a dead band produces a limit cycle that no gain setting removes, and a noisy or badly filtered measurement can do the same. Look at the controller output: a sawtooth in the measurement with a square-wave output is the classic sign of stiction."}},{"@type":"Question","name":"What is integral windup and how do I stop it?","acceptedAnswer":{"@type":"Answer","text":"Windup is the integral term growing while the actuator is saturated, which causes large overshoot afterwards. Stop it with anti-windup: clamp the integrator, or use back-calculation dot I=K_ie+(u_{sat}-u)/T_t. In the simulation in this guide, back-calculation cut the overshoot from 19% to 0.5%."}},{"@type":"Question","name":"How can I tell whether a tuning is robust enough?","acceptedAnswer":{"@type":"Answer","text":"Aim for a gain margin of at least 2, a phase margin of 45–60° and a peak sensitivity M_s of 1.4–2. A quick field check is to raise K_p by 50% (or let the process gain double) and confirm that the response stays damped."}}]}]}</script>
@@ -163,6 +163,9 @@
           <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
           <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
           <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <a href="/learn/differential-calculus/derivative-table/">สูตรดิฟทั้งหมด (ตาราง)</a>
+          <a href="/learn/differential-calculus/trig-derivatives/">อนุพันธ์ตรีโกณ · ทำไมดิฟ sin ได้ cos</a>
+          <a href="/learn/differential-calculus/exam-practice/">โจทย์ดิฟพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
@@ -176,6 +179,8 @@
           <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
           <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
           <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <a href="/learn/integral-calculus/integral-table/">ตารางสูตรอินทิเกรต 64 สูตร</a>
+          <a href="/learn/integral-calculus/exam-practice/">โจทย์อินทิเกรตพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
           <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
@@ -235,6 +240,19 @@
         </div>
       </div>
       <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navode">สมการเชิงอนุพันธ์</button>
+        <div class="nav-list" id="navode">
+          <a href="/learn/differential-equations/" >ภาพรวม · การจำแนก · เลือกวิธีแก้</a>
+          <a href="/learn/differential-equations/first-order/">อันดับหนึ่ง · ตัวประกอบอินทิเกรต · RC RL</a>
+          <a href="/learn/differential-equations/second-order/">อันดับสอง · สมการลักษณะเฉพาะ</a>
+          <a href="/learn/differential-equations/nonhomogeneous/">ไม่เอกพันธ์ · เรโซแนนซ์ · บีต</a>
+          <a href="/learn/differential-equations/applications/">สปริง · RLC · ζ · ไฟ AC</a>
+          <a href="/learn/differential-equations/numerical-methods/">Euler · RK4 · แล็บสนามความชัน</a>
+          <a href="/learn/differential-equations/exam-practice/">โจทย์พร้อมเฉลย</a>
+          <a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
@@ -281,7 +299,11 @@
         <div class="nav-list" id="navg2">
           <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
           <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
-          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณและระบบ · แล็บสัญญาณ</a>
+          <a href="/learn/signals/lti-convolution/">ระบบ LTI · คอนโวลูชัน</a>
+          <a href="/learn/signals/fourier-transform/">การแปลงฟูริเยร์</a>
+          <a href="/learn/signals/sampling-aliasing/">การสุ่ม · อเลียสซิง</a>
+          <a href="/learn/signals/z-transform/">การแปลง Z</a>
           <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
           <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
           <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -469,6 +491,8 @@
           <a href="/en/tools/laplace-transform-calculator/">Laplace transform calculator</a>
           <a href="/en/tools/inverse-laplace-transform-calculator/">Inverse Laplace calculator</a>
           <a href="/en/tools/fourier-series-calculator/">Fourier series calculator</a>
+          <a href="/en/tools/ode-solver/">Differential equation solver</a>
+          <a href="/en/tools/convolution-calculator/">Convolution calculator</a>
           <span class="nav-h">Electrical engineering</span>
           <a href="/en/tools/power-factor-calculator/">Power factor calculator</a>
           <a href="/en/tools/electricity-bill-calculator/">Thailand electricity bill calculator</a>
@@ -1109,7 +1133,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=b9c85cce" defer></script>
+<script src="/assets/site.js?v=deb9a6e9" defer></script>
 
 </body>
 </html>

@@ -1,0 +1,113 @@
+<!--meta
+{
+  "title": "การประยุกต์สมการเชิงอนุพันธ์: มวล-สปริง-ตัวหน่วง วงจร RLC อัตราส่วนการหน่วง ผลตอบสนองขั้นบันได ไฟ AC ลูกตุ้ม | อาจารย์มด",
+  "h1": "การประยุกต์สมการเชิงอนุพันธ์ (ODE Applications): มวล-สปริง วงจร RLC การหน่วง ไฟ AC และลูกตุ้ม",
+  "description": "สมการเชิงอนุพันธ์ในงานวิศวกรรมจริง: เทียบมวล-สปริง-ตัวหน่วงกับวงจร RLC ตัวต่อตัว ความถี่ธรรมชาติ ωn อัตราส่วนการหน่วง ζ ผลตอบสนองขั้นบันไดและเปอร์เซ็นต์โอเวอร์ชูต สภาวะอยู่ตัว AC ด้วยเฟสเซอร์ ลูกตุ้มและการประมาณมุมเล็ก พร้อมตัวเลขจริงและแล็บ",
+  "ogTitle": "สปริงกับวงจร RLC คือสมการเดียวกัน: ζ, ωn, โอเวอร์ชูต และไฟ AC",
+  "lesson": "differential-equations",
+  "sub": "applications",
+  "nav": "ode",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["การประยุกต์สมการเชิงอนุพันธ์", "สมการเชิงอนุพันธ์ วงจร RLC", "มวล สปริง ตัวหน่วง", "อัตราส่วนการหน่วง", "damping ratio", "ความถี่ธรรมชาติ", "เปอร์เซ็นต์โอเวอร์ชูต", "ผลตอบสนองขั้นบันได", "ลูกตุ้ม สมการเชิงอนุพันธ์", "mass spring damper", "RLC circuit differential equation"],
+  "about": ["Mass-spring-damper model", "RLC circuit", "Damping ratio", "Natural frequency", "Step response", "Phasor", "Pendulum"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "สปริงกับวงจร RLC คือสมการเดียวกัน", "sub": "ωn · ζ · โอเวอร์ชูต · ผลตอบสนองขั้นบันได · ไฟ AC · ลูกตุ้ม · พร้อมตัวเลขจริง", "eyebrow": "บทที่ 28.4 · ODE Applications", "sym": "ζ"},
+  "faq": [
+    {"q": "อัตราส่วนการหน่วง ζ คืออะไร?", "a": "เป็นตัวเลขไร้หน่วยที่บอกว่าระบบอันดับสองหน่วงมากแค่ไหน จากสมการ ay″ + by′ + cy = 0 ได้ ζ = b/(2√(ac)) ถ้า ζ < 1 ระบบแกว่ง (หน่วงน้อย) ζ = 1 หน่วงวิกฤต เข้าเร็วที่สุดโดยไม่แกว่ง ζ > 1 หน่วงเกิน เข้าช้าโดยไม่แกว่ง"},
+    {"q": "ทำไมวงจร RLC กับระบบมวล-สปริงจึงเหมือนกัน?", "a": "เพราะสมการมีรูปเดียวกัน Lq″ + Rq′ + q/C = v(t) กับ mx″ + cx′ + kx = F(t) ตัวเหนี่ยวนำเก็บพลังงานแบบเดียวกับมวล (พลังงานจลน์) ตัวเก็บประจุเหมือนสปริง (พลังงานศักย์) และตัวต้านทานเหมือนตัวหน่วงที่เปลี่ยนพลังงานเป็นความร้อน"},
+    {"q": "เปอร์เซ็นต์โอเวอร์ชูตคำนวณอย่างไร?", "a": "สำหรับระบบอันดับสองที่หน่วงน้อยและรับอินพุตขั้นบันได %OS = 100·e^{−πζ/√(1−ζ²)} ขึ้นกับ ζ อย่างเดียว เช่น ζ = 0.2 ได้ประมาณ 52.7% ζ = 0.7 ได้ราว 4.6%"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-equations/">สมการเชิงอนุพันธ์</a></li><li>การประยุกต์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 28.4 · สมการเชิงอนุพันธ์ · Applications</p>
+      <h1>การประยุกต์สมการเชิงอนุพันธ์ (ODE Applications): มวล-สปริง วงจร RLC การหน่วง ไฟ AC และลูกตุ้ม</h1>
+      <p class="lede">สองหน้าที่ผ่านมาเป็นเครื่องมือ หน้านี้คืองานจริง ผมเลือกระบบที่วิศวกรไฟฟ้าและเครื่องกลเจอบ่อยที่สุด ใส่ตัวเลขจริง และให้ดูว่าตัวเลขที่ออกมาจากสมการ (ราก, ζ, ωn) บอกอะไรเกี่ยวกับพฤติกรรมของระบบ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#analogy">สปริง = RLC</a>
+        <a class="btn btn-ghost btn-sm" href="#zeta">ζ และ ωn</a>
+        <a class="btn btn-ghost btn-sm" href="#step">ผลตอบสนองขั้นบันได</a>
+        <a class="btn btn-ghost btn-sm" href="#ac">ไฟ AC</a>
+        <a class="btn btn-ghost btn-sm" href="#pendulum">ลูกตุ้ม</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="analogy">
+    <h2 id="analogy">มวล-สปริง-ตัวหน่วง กับวงจร RLC อนุกรม: สมการเดียวกัน</h2>
+    \[ m\,x'' + c\,x' + k\,x = F(t) \qquad\longleftrightarrow\qquad L\,q'' + R\,q' + \frac1C\,q = v(t) \]
+    <div class="table-wrap"><table><thead><tr><th>เครื่องกล</th><th>ไฟฟ้า</th><th>บทบาท</th></tr></thead><tbody>
+      <tr><td>ตำแหน่ง x</td><td>ประจุ q</td><td>ตัวแปรสถานะ</td></tr>
+      <tr><td>ความเร็ว x′</td><td>กระแส i = q′</td><td>อัตราการเปลี่ยน</td></tr>
+      <tr><td>มวล m</td><td>ความเหนี่ยวนำ L</td><td>เก็บพลังงานจลน์ ½mv² ↔ ½Li²</td></tr>
+      <tr><td>ค่าคงที่สปริง k</td><td>1/C</td><td>เก็บพลังงานศักย์ ½kx² ↔ q²/2C</td></tr>
+      <tr><td>ตัวหน่วง c</td><td>ความต้านทาน R</td><td>เปลี่ยนพลังงานเป็นความร้อน</td></tr>
+      <tr><td>แรง F</td><td>แรงดันแหล่งจ่าย v</td><td>แรงขับจากภายนอก</td></tr>
+    </tbody></table></div>
+    <p>เพราะฉะนั้นทุกผลที่ได้จากฝั่งหนึ่งใช้กับอีกฝั่งได้ทันที วิศวกรเครื่องกลที่เข้าใจการสั่นของแท่นเครื่องจะเข้าใจวงจรกรองความถี่ และกลับกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="zeta">
+    <h2 id="zeta">ความถี่ธรรมชาติ ωn และอัตราส่วนการหน่วง ζ</h2>
+    <p>หารสมการด้วยตัวหน้าแล้วเขียนในรูปมาตรฐาน</p>
+    \[ x'' + 2\zeta\omega_n\,x' + \omega_n^2\,x = \frac{F(t)}{m},\qquad \omega_n = \sqrt{\frac km},\qquad \zeta = \frac{c}{2\sqrt{mk}} \]
+    <p>ฝั่งไฟฟ้าคือ \(\omega_n = \dfrac{1}{\sqrt{LC}}\) และ \(\zeta = \dfrac R2\sqrt{\dfrac CL}\) สมการลักษณะเฉพาะกลายเป็น \(r^2 + 2\zeta\omega_nr + \omega_n^2 = 0\) รากคือ</p>
+    \[ r = -\zeta\omega_n \pm \omega_n\sqrt{\zeta^2 - 1} \]
+    <p>เมื่อ \(\zeta &lt; 1\) รากเป็น \(-\zeta\omega_n \pm j\omega_d\) โดย \(\omega_d = \omega_n\sqrt{1 - \zeta^2}\) คือ<b>ความถี่ที่ระบบแกว่งจริง</b> ซึ่งต่ำกว่า ωn เล็กน้อย คำตอบเป็น \(e^{-\zeta\omega_nt}\cos(\omega_dt - \varphi)\) <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></p>
+    <div class="table-wrap"><table><thead><tr><th>ζ</th><th>ราก</th><th>ชื่อ</th><th>พฤติกรรม</th></tr></thead><tbody>
+      <tr><td>0</td><td>\(\pm j\omega_n\)</td><td>ไม่หน่วง</td><td>แกว่งค้างตลอดไป</td></tr>
+      <tr><td>0 &lt; ζ &lt; 1</td><td>เชิงซ้อนคู่สังยุค</td><td>หน่วงน้อย (underdamped)</td><td>แกว่งแล้วหยุด</td></tr>
+      <tr><td>1</td><td>จริงซ้ำ</td><td>หน่วงวิกฤต (critically damped)</td><td>เข้าเร็วที่สุดโดยไม่เกิน</td></tr>
+      <tr><td>&gt; 1</td><td>จริงสองค่า</td><td>หน่วงเกิน (overdamped)</td><td>ค่อย ๆ เข้า ไม่แกว่ง</td></tr>
+    </tbody></table></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>วงจร RLC: L = 0.5 H, C = 0.02 F ต้องใช้ R เท่าไรจึงหน่วงวิกฤต</h3></div><ol class="steps">
+      <li><p>\(\omega_n = 1/\sqrt{0.5\times0.02} = 10\) rad/s</p></li>
+      <li><p>\(\zeta = \tfrac R2\sqrt{C/L} = \tfrac R2\times0.2 = 0.1R\) ตั้ง ζ = 1 ได้ R = 10 Ω</p></li>
+    </ol><p class="answer">R = 2 Ω → ζ = 0.2 (แกว่ง) · R = 10 Ω → ζ = 1 (วิกฤต) · R = 20 Ω → ζ = 2 (หน่วงเกิน)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="step">
+    <h2 id="step">ผลตอบสนองขั้นบันได: เปิดสวิตช์แล้วเกิดอะไรขึ้น</h2>
+    <p>วงจรเดิมที่ R = 2 Ω ป้อนแรงดัน 12 V ที่ t = 0 แรงดันตัวเก็บประจุ v เป็นไปตาม \(LC\,v'' + RC\,v' + v = 12\) หรือ \(0.01v'' + 0.04v' + v = 12\) แล็บข้างล่างตั้งค่านี้ไว้แล้ว</p>
+    <div class="cl-lab ms-ode2" data-a="0.01" data-b="0.04" data-c="1" data-ft="K" data-p1="12" data-y0="0" data-v0="0"></div>
+    <p>สูตรเปอร์เซ็นต์โอเวอร์ชูต (percent overshoot) ของระบบอันดับสองขึ้นกับ ζ ตัวเดียว</p>
+    \[ \%OS = 100\,e^{-\pi\zeta/\sqrt{1-\zeta^2}} \]
+    <p>ที่ ζ = 0.2 ได้ \(e^{-0.6413} \approx 0.527\) แรงดันพุ่งไปถึง \(12\times1.527 \approx 18.3\) V ก่อนกลับมาที่ 12 V ตัวเก็บประจุที่ทนได้ 16 V จึงเสียหายได้ทั้งที่แหล่งจ่ายมีแค่ 12 V ลองเปลี่ยน b เป็น 0.2 (R = 10 Ω) ในแล็บ จะไม่มีโอเวอร์ชูตเลย ความหมายของ ζ ในระบบควบคุมอ่านต่อที่<a href="/learn/second-order-system/">แล็บระบบอันดับสอง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="ac">
+    <h2 id="ac">สภาวะอยู่ตัวกับไฟ AC: ทำไมเฟสเซอร์ใช้ได้</h2>
+    <p>ป้อน \(v(t) = V_m\cos\omega t\) ให้วงจร RLC อนุกรม สนใจกระแสหลังผ่านช่วงชั่วครู่ไปแล้ว ใช้ทางลัดเลขเชิงซ้อนจาก<a href="/learn/differential-equations/nonhomogeneous/#trig-forcing">หน้าก่อน</a> แทน \(\cos\omega t\) ด้วย \(e^{j\omega t}\) <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> แล้วเดา \(i = Ie^{j\omega t}\) ทุกการดิฟกลายเป็นการคูณ \(j\omega\) ทุกการอินทิเกรตกลายเป็นการหาร \(j\omega\)</p>
+    \[ \Big(R + j\omega L + \frac{1}{j\omega C}\Big)I = V_m \;\Longrightarrow\; I = \frac{V_m}{Z},\quad Z = R + j\Big(\omega L - \frac{1}{\omega C}\Big) \]
+    <p>Z คืออิมพีแดนซ์ นี่คือเหตุผลทางคณิตศาสตร์ที่วิธีเฟสเซอร์ใช้ได้: มันคือวิธีเดาสัมประสิทธิ์ของสมการเชิงอนุพันธ์ที่เขียนให้สั้นลง เมื่อ \(\omega L = 1/(\omega C)\) ส่วนจินตภาพหาย Z เหลือ R น้อยที่สุด กระแสสูงสุด เรียกว่าเรโซแนนซ์อนุกรมที่ \(\omega = 1/\sqrt{LC} = \omega_n\) อ่านต่อใน<a href="/learn/vector-algebra/ac-circuits/">วิเคราะห์วงจร AC ด้วยเฟสเซอร์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pendulum">
+    <h2 id="pendulum">ลูกตุ้ม: สมการไม่เชิงเส้นที่กลายเป็นเชิงเส้นเมื่อมุมเล็ก</h2>
+    <p>โมเมนต์รอบจุดหมุนให้ \(\theta'' + \dfrac gL\sin\theta = 0\) สมการนี้ไม่เชิงเส้นเพราะ θ อยู่ใน sin แต่ถ้ามุมเล็ก ใช้ \(\sin\theta\approx\theta\) ซึ่งมาจากความชันของ sin ที่ศูนย์เท่ากับ 1 <a class="tg calc" href="/learn/differential-calculus/#mvt" title="f(a + h) ≈ f(a) + f′(a)h">ประมาณเชิงเส้น</a> <a class="tg" href="/learn/trigonometry/#series" title="sin x = x − x³/3! + … · cos x = 1 − x²/2! + …">อนุกรมของ sin cos</a></p>
+    \[ \theta'' + \frac gL\,\theta = 0 \;\Longrightarrow\; \theta = \theta_0\cos\!\Big(\sqrt{\tfrac gL}\,t\Big),\qquad T = 2\pi\sqrt{\frac Lg} \]
+    <p>ลูกตุ้มยาว 1 m มีคาบ \(2\pi\sqrt{1/9.81} \approx 2.006\) วินาที ไม่ขึ้นกับมวลและไม่ขึ้นกับมุมแกว่ง (เมื่อมุมเล็ก) ที่มุม 10° ค่า sin ต่างจากมุมไม่ถึง 0.5% แต่ที่มุม 45° ต่างกันราว 10% คาบจริงจะยาวกว่าสูตรราว 4% ต้องใช้วิธีเชิงตัวเลขหรืออินทิกรัลวงรี ลองใส่ \(y' = \ldots\) ไม่ได้เพราะเป็นอันดับสอง แต่ดู<a href="/learn/differential-equations/numerical-methods/#systems">การแปลงเป็นระบบอันดับหนึ่ง</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="growth">
+    <h2 id="growth">การเติบโตและการสลาย</h2>
+    <ul>
+      <li><b>สลายตัวแบบเลขชี้กำลัง</b> \(N' = -\lambda N\) ได้ \(N = N_0e^{-\lambda t}\) ครึ่งชีวิต \(t_{1/2} = \tfrac{\ln2}{\lambda}\) ใช้กับสารกัมมันตรังสี ยาในกระแสเลือด และการคายประจุของตัวเก็บประจุผ่านตัวต้านทาน</li>
+      <li><b>ลอจิสติก</b> \(P' = rP(1 - P/K)\) โตแบบเลขชี้กำลังตอนแรก แล้วช้าลงเมื่อเข้าใกล้ K ได้ \(P = \dfrac{K}{1 + Ae^{-rt}}\) ซึ่งเป็นสมการเบอร์นูลลี (ดู<a href="/learn/differential-equations/first-order/#bernoulli">28.1</a>) ลองในแล็บสนามความชันด้วยตัวอย่าง “โลจิสติก y(1 − y)”</li>
+    </ul>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

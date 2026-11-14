@@ -1,0 +1,176 @@
+<!--meta
+{
+  "title": "การแปลงฟูริเยร์ (Fourier Transform): ตารางคู่การแปลง คุณสมบัติ การมอดูเลต ตัวกรอง และพาร์เซวาล อธิบายตรีโกณละเอียด | อาจารย์มด",
+  "h1": "การแปลงฟูริเยร์ (Fourier Transform): จากอนุกรมฟูริเยร์สู่สเปกตรัมต่อเนื่อง",
+  "description": "การแปลงฟูริเยร์ภาษาไทยแบบละเอียด ที่มาจากอนุกรมฟูริเยร์ ทำไม e^{−j2πft} คือ cos ลบ j sin ตารางคู่การแปลง (rect sinc เอกซ์โพเนนเชียล เกาส์ cos sin) คุณสมบัติการเลื่อน สเกล ดูอัล คอนโวลูชัน การมอดูเลต AM พาร์เซวาล และแล็บสเปกตรัม",
+  "ogTitle": "การแปลงฟูริเยร์: ทำไมพัลส์สั้นมีสเปกตรัมกว้าง",
+  "lesson": "signals",
+  "sub": "fourier-transform",
+  "nav": "sig",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["การแปลงฟูริเยร์", "การแปลงฟูเรียร์", "fourier transform", "ตารางการแปลงฟูริเยร์", "fourier transform table", "คุณสมบัติการแปลงฟูริเยร์", "สเปกตรัม", "sinc function", "การมอดูเลต", "AM modulation", "ทฤษฎีบทพาร์เซวาล", "ฟังก์ชัน sinc", "การแปลงฟูริเยร์ ตัวอย่าง"],
+  "about": ["Fourier transform", "Fourier transform pairs", "Sinc function", "Modulation theorem", "Convolution theorem", "Parseval's theorem", "Duality"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "การแปลงฟูริเยร์", "sub": "ตารางคู่การแปลง · คุณสมบัติ · มอดูเลต AM · ตัวกรอง · พาร์เซวาล · แล็บสเปกตรัม", "eyebrow": "บทที่ 11.2 · Fourier Transform", "sym": "X(f)"},
+  "faq": [
+    {"q": "การแปลงฟูริเยร์ต่างจากอนุกรมฟูริเยร์อย่างไร?", "a": "อนุกรมฟูริเยร์ใช้กับสัญญาณที่มีคาบ ได้สเปกตรัมเป็นเส้น ๆ ที่ความถี่ฮาร์มอนิก n/T การแปลงฟูริเยร์ใช้กับสัญญาณไม่มีคาบ ซึ่งมองได้ว่ามีคาบยาวเป็นอนันต์ ระยะห่างระหว่างเส้น 1/T จึงหดเป็นศูนย์ เส้นเรียงชิดกันจนเป็นสเปกตรัมต่อเนื่อง X(f)"},
+    {"q": "ทำไมการแปลงฟูริเยร์ของพัลส์สี่เหลี่ยมคือ sinc?", "a": "อินทิเกรต e^{−j2πft} จาก −T/2 ถึง T/2 ได้ (e^{jπfT} − e^{−jπfT})/(j2πf) ตัวเศษตามสูตรออยเลอร์คือ 2j sin(πfT) จึงเหลือ sin(πfT)/(πf) = T sinc(fT) ศูนย์ตัวแรกอยู่ที่ f = 1/T พัลส์ยิ่งแคบ สเปกตรัมยิ่งกว้าง"},
+    {"q": "การมอดูเลต AM ทำอะไรกับสเปกตรัม?", "a": "คูณสัญญาณด้วย cos 2πf₀t เขียน cos ในรูป (e^{j2πf₀t} + e^{−j2πf₀t})/2 แต่ละก้อนเลื่อนสเปกตรัมไป ±f₀ จึงได้ ½[X(f − f₀) + X(f + f₀)] สเปกตรัมเดิมถูกยกไปวางรอบความถี่พาหะ แบนด์วิดท์เป็นสองเท่าของแบนด์วิดท์สัญญาณเดิม"},
+    {"q": "ใช้ f (Hz) หรือ ω (rad/s) ดี?", "a": "ได้ทั้งคู่ ความสัมพันธ์คือ ω = 2πf ถ้าใช้ f สูตรแปลงไปและกลับสมมาตรกันไม่มี 2π ข้างหน้า ถ้าใช้ ω สูตรผกผันมี 1/2π หน้าเล่มนี้ใช้ f เป็นหลักเพราะอ่านเป็นเฮิรตซ์ได้ตรง ๆ และบอกรูปแบบ ω ไว้ในตาราง"},
+    {"q": "ทฤษฎีบทพาร์เซวาลบอกอะไร?", "a": "พลังงานของสัญญาณคิดในเวลาหรือในความถี่ได้เท่ากัน ∫|x(t)|²dt = ∫|X(f)|²df เช่น e^{−t}u(t) มีพลังงาน 1/2 และ ∫ df/(1 + 4π²f²) ก็ได้ 1/2 เช่นกัน |X(f)|² จึงเรียกว่าความหนาแน่นสเปกตรัมพลังงาน"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/signals/">สัญญาณและระบบ</a></li><li>การแปลงฟูริเยร์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.2 · สัญญาณและระบบ · Fourier Transform</p>
+      <h1>การแปลงฟูริเยร์ (Fourier Transform): จากอนุกรมฟูริเยร์สู่สเปกตรัมต่อเนื่อง</h1>
+      <p class="lede">การแปลงฟูริเยร์ (หลายตำราสะกดว่า ฟูเรียร์) ตอบคำถามเดียว: <b>สัญญาณนี้ประกอบด้วยไซน์ความถี่ไหนบ้าง และแต่ละความถี่หนักเท่าไร</b> ทุกอย่างในหน้านี้ ตั้งแต่ตารางคู่การแปลง ไปจนถึงวิทยุ AM สร้างขึ้นจากสูตรออยเลอร์ตัวเดียว ผมจึงติดป้ายตรีโกณไว้ทุกครั้งที่มันถูกใช้ ชี้เมาส์ที่ป้ายจะเห็นสูตร คลิกจะไปที่คำอธิบายเต็มในบทตรีโกณมิติ</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#table">ตารางคู่การแปลง</a>
+        <a class="btn btn-ghost btn-sm" href="#properties">คุณสมบัติ</a>
+        <a class="btn btn-ghost btn-sm" href="#modulation">การมอดูเลต AM</a>
+        <a class="btn btn-ghost btn-sm" href="#lab-ft">แล็บสเปกตรัม</a>
+      </div>
+      <div class="tldr"><b>สูตรหลัก (ใช้ f เป็นเฮิรตซ์)</b>
+      \[ X(f) = \int_{-\infty}^{\infty} x(t)\,e^{-j2\pi ft}\,dt \qquad\qquad x(t) = \int_{-\infty}^{\infty} X(f)\,e^{j2\pi ft}\,df \]
+      <p>ถ้าใช้ \(\omega = 2\pi f\): \(X(\omega) = \int x(t)e^{-j\omega t}dt\) และ \(x(t) = \tfrac{1}{2\pi}\int X(\omega)e^{j\omega t}d\omega\)</p></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="from-series">
+    <h2 id="from-series">จากอนุกรมฟูริเยร์สู่การแปลงฟูริเยร์</h2>
+    <p>ใน<a href="/learn/fourier-series/">อนุกรมฟูริเยร์</a> สัญญาณคาบ T เขียนเป็นผลรวมของ \(e^{j2\pi nt/T}\) ความถี่ \(n/T\) ห่างกันทีละ \(1/T\) เฮิรตซ์</p>
+    \[ x_T(t) = \sum_{n} c_n e^{j2\pi (n/T) t},\qquad c_n = \frac1T\int_{-T/2}^{T/2} x_T(t)\,e^{-j2\pi(n/T)t}\,dt \]
+    <p>ทีนี้ลองให้คาบยาวขึ้นเรื่อย ๆ จนสัญญาณไม่ซ้ำเลย (T → ∞) สามอย่างจะเกิดพร้อมกัน ระยะห่างของเส้น 1/T หดเป็น df ความถี่ n/T กลายเป็นตัวแปรต่อเนื่อง f และ \(c_n\) เล็กลงจนเป็นศูนย์ แต่ \(T c_n\) ไม่เป็นศูนย์ เราตั้งชื่อ \(T c_n\) ใหม่ว่า X(f) ผลรวมจึงกลายเป็นอินทิกรัลในสูตรด้านบน</p>
+    <p>อ่านความหมาย: \(|X(f)|\,df\) คือ "ปริมาณ" ของไซน์ความถี่ f ที่อยู่ในสัญญาณ ส่วน \(\angle X(f)\) บอกเฟสของไซน์ตัวนั้น</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="kernel">
+    <h2 id="kernel">\(e^{-j2\pi ft}\) คือ cos กับ sin ที่หมุนอยู่ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>ทุกครั้งที่เห็นเคอร์เนล \(e^{-j2\pi ft}\) ให้แตกด้วยสูตรออยเลอร์ <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> และฟังก์ชันคู่-คี่ <a class="tg" href="/learn/trigonometry/#symmetry" title="cos(−θ) = cos θ · sin(−θ) = −sin θ">ฟังก์ชันคู่-คี่</a></p>
+    \[ e^{-j2\pi ft} = \cos(2\pi ft) - j\sin(2\pi ft) \quad\Longrightarrow\quad X(f) = \underbrace{\int x(t)\cos 2\pi ft\,dt}_{\text{ส่วนจริง}} \;-\; j\underbrace{\int x(t)\sin 2\pi ft\,dt}_{\text{ส่วนจินตภาพ}} \]
+    <p>การแปลงจึงคือการวัดว่า x "คล้าย" cos และ sin ความถี่ f แค่ไหน (อินทิกรัลของผลคูณคือการวัดความคล้าย เหมือนผลคูณจุดของเวกเตอร์) ผลที่ตามมาทันทีมีสามข้อ</p>
+    <ol>
+      <li><b>x จริงและคู่</b> (เช่น พัลส์สี่เหลี่ยมที่อยู่ตรงกลาง): ผลคูณกับ sin ซึ่งเป็นฟังก์ชันคี่ ได้ฟังก์ชันคี่ อินทิเกรตสมมาตรได้ศูนย์ X จึงเป็นจำนวนจริงล้วน</li>
+      <li><b>x จริงและคี่</b>: ส่วน cos หายแทน X เป็นจินตภาพล้วน</li>
+      <li><b>x จริงใด ๆ</b>: \(X(-f) = \overline{X(f)}\) เพราะ \(\cos(-\theta) = \cos\theta\) แต่ \(\sin(-\theta) = -\sin\theta\) ขนาด |X| จึงสมมาตร และเฟสเป็นฟังก์ชันคี่ นี่คือเหตุผลที่ดูสเปกตรัมแค่ฝั่ง f ≥ 0 ก็พอ</li>
+    </ol>
+    </section>
+
+    <section class="tsec" aria-labelledby="derivations">
+    <h2 id="derivations">หาคู่การแปลงด้วยมือ <span class="lv lv-i">กลาง</span></h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>พัลส์สี่เหลี่ยมกว้าง T: \(x(t) = 1\) เมื่อ \(|t| &lt; T/2\)</h3></div><ol class="steps">
+      <li><p>\(X(f) = \displaystyle\int_{-T/2}^{T/2} e^{-j2\pi ft}\,dt = \frac{e^{-j2\pi ft}}{-j2\pi f}\Big|_{-T/2}^{T/2} = \frac{e^{j\pi fT} - e^{-j\pi fT}}{j2\pi f}\)</p></li>
+      <li><p>ตัวเศษคือ \(2j\sin(\pi fT)\) <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></p></li>
+      <li><p>\(X(f) = \dfrac{2j\sin\pi fT}{j2\pi f} = \dfrac{\sin\pi fT}{\pi f} = T\,\dfrac{\sin\pi fT}{\pi fT}\)</p></li>
+    </ol><p class="answer">\(X(f) = T\,\mathrm{sinc}(fT)\) โดย \(\mathrm{sinc}(u) = \dfrac{\sin\pi u}{\pi u}\) · ที่ f = 0 ใช้ลิมิต <a class="tg" href="/learn/trigonometry/#calculus" title="lim_{h→0} (sin h)/h = 1 (h เป็นเรเดียน)">ลิมิต sin h / h</a> ได้ X(0) = T คือพื้นที่ของพัลส์</p></div>
+    <p>ศูนย์ของ sinc อยู่ที่ \(\sin\pi fT = 0\) คือ \(f = \pm\tfrac1T, \pm\tfrac2T, \dots\) พัลส์กว้าง 1 ms จึงมีศูนย์แรกที่ 1 kHz ถ้าแคบลงเหลือ 1 µs ศูนย์แรกขยับไปที่ 1 MHz นี่คือ<b>หลักความไม่แน่นอนของสัญญาณ</b> ความกว้างในเวลาคูณแถบความถี่มีค่าคงที่ เหตุผลที่สายสัญญาณความเร็วสูงต้องมีแบนด์วิดท์กว้าง ก็เพราะขอบพัลส์ที่คมต้องใช้ความถี่สูง</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2</span><h3>\(x(t) = e^{-at}u(t),\ a &gt; 0\)</h3></div><ol class="steps">
+      <li><p>\(X(f) = \displaystyle\int_0^\infty e^{-(a + j2\pi f)t}\,dt = \frac{1}{a + j2\pi f}\) (ส่วนจริงของเลขชี้กำลังเป็นลบ จึงลู่เข้า)</p></li>
+      <li><p>ขนาด \(|X| = \dfrac{1}{\sqrt{a^2 + 4\pi^2f^2}}\) · เฟส \(\angle X = -\tan^{-1}\dfrac{2\pi f}{a}\) <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p></li>
+    </ol><p class="answer">ที่ \(f = \tfrac{a}{2\pi}\) ขนาดลดเหลือ \(\tfrac{1}{a\sqrt2}\) (−3 dB) และเฟส −45° <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a> · เฟสวิ่งจาก +90° (f → −∞) ถึง −90° (f → +∞)</p></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>\(x(t) = e^{-a|t|}\)</h3></div><ol class="steps">
+      <li><p>เป็น \(e^{-at}u(t)\) บวกภาพสะท้อน \(e^{at}u(-t)\) ซึ่งแปลงได้ \(\tfrac{1}{a - j2\pi f}\)</p></li>
+      <li><p>\(\dfrac{1}{a + j2\pi f} + \dfrac{1}{a - j2\pi f} = \dfrac{2a}{a^2 + 4\pi^2f^2}\)</p></li>
+    </ol><p class="answer">\(X(f) = \dfrac{2a}{a^2 + 4\pi^2f^2}\) เป็นจริงล้วนตามข้อ 1 ของหัวข้อก่อน (x จริงและคู่)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางคู่การแปลงฟูริเยร์</h2>
+    <div class="table-wrap"><table><thead><tr><th>\(x(t)\)</th><th>\(X(f)\)</th><th>รูปแบบ ω</th><th>หมายเหตุ</th></tr></thead><tbody>
+      <tr><td>\(\delta(t)\)</td><td>\(1\)</td><td>\(1\)</td><td>อิมพัลส์มีทุกความถี่เท่ากัน</td></tr>
+      <tr><td>\(1\)</td><td>\(\delta(f)\)</td><td>\(2\pi\delta(\omega)\)</td><td>DC มีแค่ f = 0</td></tr>
+      <tr><td>\(e^{j2\pi f_0t}\)</td><td>\(\delta(f - f_0)\)</td><td>\(2\pi\delta(\omega - \omega_0)\)</td><td>เฟสเซอร์หมุนหนึ่งตัว</td></tr>
+      <tr><td>\(\cos 2\pi f_0t\)</td><td>\(\tfrac12[\delta(f - f_0) + \delta(f + f_0)]\)</td><td>\(\pi[\delta(\omega - \omega_0) + \delta(\omega + \omega_0)]\)</td><td><a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></td></tr>
+      <tr><td>\(\sin 2\pi f_0t\)</td><td>\(\tfrac{1}{2j}[\delta(f - f_0) - \delta(f + f_0)]\)</td><td>\(\tfrac{\pi}{j}[\delta(\omega - \omega_0) - \delta(\omega + \omega_0)]\)</td><td><a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></td></tr>
+      <tr><td>พัลส์กว้าง T</td><td>\(T\,\mathrm{sinc}(fT)\)</td><td>\(\dfrac{2\sin(\omega T/2)}{\omega}\)</td><td>ตัวอย่าง 1</td></tr>
+      <tr><td>\(\mathrm{sinc}(t)\)</td><td>พัลส์กว้าง 1 ใน f</td><td></td><td>ดูอัลของแถวบน</td></tr>
+      <tr><td>สามเหลี่ยมฐาน 2T</td><td>\(T\,\mathrm{sinc}^2(fT)\)</td><td>\(T\,\dfrac{\sin^2(\omega T/2)}{(\omega T/2)^2}\)</td><td>= พัลส์ * พัลส์</td></tr>
+      <tr><td>\(e^{-at}u(t)\)</td><td>\(\dfrac{1}{a + j2\pi f}\)</td><td>\(\dfrac{1}{a + j\omega}\)</td><td>ตัวอย่าง 2</td></tr>
+      <tr><td>\(te^{-at}u(t)\)</td><td>\(\dfrac{1}{(a + j2\pi f)^2}\)</td><td>\(\dfrac{1}{(a + j\omega)^2}\)</td><td>โพลซ้ำ</td></tr>
+      <tr><td>\(e^{-a|t|}\)</td><td>\(\dfrac{2a}{a^2 + 4\pi^2f^2}\)</td><td>\(\dfrac{2a}{a^2 + \omega^2}\)</td><td>ตัวอย่าง 3</td></tr>
+      <tr><td>\(e^{-\pi t^2}\)</td><td>\(e^{-\pi f^2}\)</td><td>\(e^{-\omega^2/4\pi}\)</td><td>เกาส์แปลงเป็นเกาส์</td></tr>
+      <tr><td>\(u(t)\)</td><td>\(\dfrac{1}{j2\pi f} + \tfrac12\delta(f)\)</td><td>\(\dfrac{1}{j\omega} + \pi\delta(\omega)\)</td><td>ครึ่งหนึ่งคือ DC</td></tr>
+      <tr><td>\(\mathrm{sgn}(t)\)</td><td>\(\dfrac{1}{j\pi f}\)</td><td>\(\dfrac{2}{j\omega}\)</td><td></td></tr>
+    </tbody></table></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">คุณสมบัติที่ใช้บ่อย และตรีโกณที่ซ่อนอยู่</h2>
+    <div class="table-wrap"><table><thead><tr><th>คุณสมบัติ</th><th>เวลา</th><th>ความถี่</th><th>ความหมาย</th></tr></thead><tbody>
+      <tr><td>เชิงเส้น</td><td>\(ax + by\)</td><td>\(aX + bY\)</td><td></td></tr>
+      <tr><td>เลื่อนเวลา</td><td>\(x(t - t_0)\)</td><td>\(X(f)\,e^{-j2\pi ft_0}\)</td><td>ขนาดเท่าเดิม เฟสลดเป็นเส้นตรงตาม f</td></tr>
+      <tr><td>เลื่อนความถี่</td><td>\(x(t)\,e^{j2\pi f_0t}\)</td><td>\(X(f - f_0)\)</td><td>หัวใจของการมอดูเลต</td></tr>
+      <tr><td>สเกลเวลา</td><td>\(x(at)\)</td><td>\(\tfrac{1}{|a|}X\big(\tfrac fa\big)\)</td><td>บีบเวลา ขยายความถี่</td></tr>
+      <tr><td>ดูอัล</td><td>\(X(t)\)</td><td>\(x(-f)\)</td><td>ได้คู่ใหม่ฟรี</td></tr>
+      <tr><td>คอนโวลูชัน</td><td>\(x * h\)</td><td>\(X(f)H(f)\)</td><td>ระบบ LTI คือการคูณในความถี่</td></tr>
+      <tr><td>คูณ</td><td>\(x(t)\,w(t)\)</td><td>\(X * W\)</td><td>ตัดหน้าต่าง ทำให้สเปกตรัมเบลอ</td></tr>
+      <tr><td>อนุพันธ์</td><td>\(\tfrac{dx}{dt}\)</td><td>\(j2\pi f\,X(f)\)</td><td>ดิฟเพิ่มความถี่สูง</td></tr>
+      <tr><td>พาร์เซวาล</td><td>\(\int|x|^2dt\)</td><td>\(\int|X|^2df\)</td><td>พลังงานเท่ากันสองโดเมน</td></tr>
+    </tbody></table></div>
+    <h3>การเลื่อนเวลาคือการหมุนเฟส</h3>
+    <p>\(e^{-j2\pi ft_0}\) มีขนาด 1 เสมอ <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a> (\(\cos^2 + \sin^2 = 1\)) จึงไม่เปลี่ยนขนาดสเปกตรัม แค่หมุนเฟสไป \(-2\pi ft_0\) เรเดียน ความถี่สูงถูกหมุนมากกว่าความถี่ต่ำ เพราะการหน่วงเวลา \(t_0\) เท่ากันคิดเป็นจำนวนรอบได้มากกว่า ตัวกรองที่มี "เฟสเชิงเส้น" จึงหน่วงทุกความถี่เท่ากันและไม่ทำให้รูปคลื่นเพี้ยน</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4</span><h3>พัลส์กว้าง 2 อยู่ช่วง \(0 &lt; t &lt; 2\)</h3></div><ol class="steps">
+      <li><p>คือพัลส์กว้าง 2 ที่อยู่ตรงกลาง แล้วเลื่อนไป 1 → \(2\,\mathrm{sinc}(2f)\,e^{-j2\pi f}\)</p></li>
+    </ol><p class="answer">\(X(f) = 2\,\mathrm{sinc}(2f)\,e^{-j2\pi f}\) ขนาดเหมือนเดิม ส่วนเฟสลดลงเป็นเส้นตรง</p></div>
+    <h3>อนุพันธ์คูณด้วย j2πf: ตรีโกณยืนยันได้</h3>
+    <p>\(\tfrac{d}{dt}\cos 2\pi ft = -2\pi f\sin 2\pi ft = 2\pi f\cos(2\pi ft + 90^\circ)\) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> <a class="tg calc" href="/learn/differential-calculus/#chain-rule" title="d/dx f(g(x)) = f′(g(x)) · g′(x)">กฎลูกโซ่</a> ขนาดคูณ 2πf และเฟสเลื่อน 90° ซึ่งก็คือการคูณด้วย \(j2\pi f\) เพราะ \(j = e^{j\pi/2}\) ตัวเหนี่ยวนำที่มี \(v = L\,di/dt\) จึงมีอิมพีแดนซ์ \(j\omega L\) ด้วยเหตุผลเดียวกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="modulation">
+    <h2 id="modulation">การมอดูเลต AM: สูตรผลคูณเป็นผลบวกในโลกจริง <span class="lv lv-a">ประยุกต์</span></h2>
+    <p>สัญญาณเสียงมีความถี่ไม่กี่กิโลเฮิรตซ์ ส่งออกเสาอากาศโดยตรงไม่ได้ (เสาต้องยาวเป็นกิโลเมตร) วิธีแก้คือคูณกับพาหะ \(\cos 2\pi f_0t\) แตก cos ด้วยสูตรออยเลอร์ <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a> แล้วใช้การเลื่อนความถี่ทีละก้อน</p>
+    \[ x(t)\cos 2\pi f_0t = \tfrac12x(t)e^{j2\pi f_0t} + \tfrac12x(t)e^{-j2\pi f_0t} \;\longleftrightarrow\; \tfrac12X(f - f_0) + \tfrac12X(f + f_0) \]
+    <p>ถ้า x เองเป็นไซน์ \(\cos 2\pi f_mt\) ก็เห็นผลเดียวกันด้วยสูตรผลคูณเป็นผลบวก <a class="tg" href="/learn/trigonometry/#product-to-sum" title="2 cos A cos B = cos(A − B) + cos(A + B)">ผลคูณ cos·cos</a></p>
+    \[ \cos 2\pi f_mt\,\cos 2\pi f_0t = \tfrac12\cos 2\pi(f_0 - f_m)t + \tfrac12\cos 2\pi(f_0 + f_m)t \]
+    <p>เกิดสองความถี่ใหม่คือ \(f_0 \pm f_m\) เรียกว่าแถบข้างล่างและแถบข้างบน (lower/upper sideband)</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5</span><h3>เสียงแบนด์วิดท์ 5 kHz บนพาหะ 1 MHz</h3></div><ol class="steps">
+      <li><p>สเปกตรัมถูกยกไปวางรอบ ±1 MHz กินช่วง 995 ถึง 1005 kHz</p></li>
+    </ol><p class="answer">แบนด์วิดท์ที่ส่ง 10 kHz คือสองเท่าของเสียง นี่คือเหตุผลที่สถานี AM ต้องอยู่ห่างกันอย่างน้อยราว 10 kHz</p></div>
+    <h3>ฝั่งรับ: คูณซ้ำแล้วกรอง</h3>
+    <p>คูณสัญญาณที่รับได้ด้วย \(\cos 2\pi f_0t\) อีกครั้ง แล้วลดกำลังสองด้วยสูตร <a class="tg" href="/learn/trigonometry/#power-reduction" title="cos²θ = (1 + cos 2θ)/2">ลดกำลัง cos²</a> \(\cos^2\theta = \tfrac12(1 + \cos 2\theta)\)</p>
+    \[ x(t)\cos^2 2\pi f_0t = \tfrac12x(t) + \tfrac12x(t)\cos 4\pi f_0t \]
+    <p>ก้อนแรกคือเสียงเดิม ก้อนที่สองอยู่รอบ \(2f_0\) ซึ่งตัวกรองโลว์พาสตัดทิ้งได้ง่าย ถ้าออสซิลเลเตอร์ฝั่งรับเพี้ยนเฟสไป φ จะได้ \(\tfrac12x(t)\cos\varphi\) แทน <a class="tg" href="/learn/trigonometry/#product-to-sum" title="2 cos A cos B = cos(A − B) + cos(A + B)">ผลคูณ cos·cos</a> ถ้า φ = 90° เสียงหายหมด นี่คือเหตุผลที่เครื่องรับแบบซิงโครนัสต้องล็อกเฟส</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="filters">
+    <h2 id="filters">ตัวกรองและคอนโวลูชัน: ในความถี่เป็นแค่การคูณ</h2>
+    <p>คุณสมบัติคอนโวลูชันบอกว่า \(Y(f) = H(f)X(f)\) ตัวกรองโลว์พาสอุดมคติ \(H(f) = 1\) เมื่อ \(|f| &lt; B\) คือพัลส์ในโดเมนความถี่ ตามดูอัล h(t) จึงเป็น \(2B\,\mathrm{sinc}(2Bt)\) ซึ่งเริ่มก่อน t = 0 คือไม่คอซัล สร้างจริงไม่ได้ ตัวกรองจริงอย่าง RC จึงประนีประนอม</p>
+    \[ H(f) = \frac{1}{1 + j2\pi fRC},\qquad |H| = \frac{1}{\sqrt{1 + (2\pi fRC)^2}},\qquad f_c = \frac{1}{2\pi RC} \]
+    <p>R = 1 kΩ, C = 0.1 µF ได้ \(f_c = 1591.5\) Hz ถ้าอยากเห็นผลกับไซน์ทีละความถี่ ดู<a href="/learn/signals/lti-convolution/#sinusoid">ไซน์เข้า ไซน์ออก</a> หรือแล็บ Bode ใน<a href="/learn/first-order-system/">ระบบอันดับหนึ่ง</a></p>
+    <h3>พาร์เซวาล: ตรวจพลังงานสองทาง</h3>
+    <p>\(x = e^{-t}u(t)\): ในเวลา \(\int_0^\infty e^{-2t}dt = \tfrac12\) ในความถี่ \(\int_{-\infty}^{\infty}\dfrac{df}{1 + 4\pi^2f^2}\) แทน \(u = 2\pi f\) ได้ \(\tfrac{1}{2\pi}\int\dfrac{du}{1 + u^2} = \tfrac{1}{2\pi}\cdot\pi = \tfrac12\) <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a> ตรงกัน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab-ft">
+    <h2 id="lab-ft">แล็บ: คู่การแปลงฟูริเยร์</h2>
+    <p>เลือกสัญญาณแล้วปรับความกว้าง T หรือค่า a ดูว่าสเปกตรัมกว้างขึ้นเมื่อสัญญาณแคบลง ลองโหมดพัลส์มอดูเลต แล้วเพิ่ม f₀ จะเห็นก้อน sinc แยกไปอยู่ที่ ±f₀ ป้ายสีเขียวท้ายกราฟยืนยันว่าสูตรในตารางตรงกับการอินทิเกรตเชิงตัวเลขจริง</p>
+    <div class="cl-lab ms-ft" data-sig="rect"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>ปน f กับ ω</b> ตารางที่ใช้ ω มี 2π อยู่หน้าเดลตา ตารางที่ใช้ f ไม่มี เลือกแบบเดียวทั้งข้อ</li>
+      <li><b>sinc สองนิยาม</b> หน้านี้ใช้ \(\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)\) บางตำราใช้ \(\sin u/u\) ตรวจก่อนเปิดตาราง</li>
+      <li><b>สเกลเวลาลืม 1/|a|</b> บีบสัญญาณให้สั้นลงครึ่งหนึ่ง สเปกตรัมกว้างขึ้นสองเท่าแต่สูงลดลงครึ่งหนึ่ง</li>
+      <li><b>มอดูเลตแล้วลืม ½</b> cos แตกเป็นสองก้อน ก้อนละครึ่ง</li>
+      <li><b>คิดว่าเลื่อนเวลาแล้วสเปกตรัมเปลี่ยนรูป</b> เปลี่ยนแค่เฟส ขนาดเหมือนเดิมทุกประการ</li>
+    </ul>
+    <p>ต่อไป: <a href="/learn/signals/sampling-aliasing/">การสุ่มสัญญาณ</a> ซึ่งใช้ทุกอย่างในหน้านี้อธิบายว่าทำไมต้องสุ่มเร็วกว่าสองเท่าของความถี่สูงสุด</p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

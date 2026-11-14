@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=b9c85cce">
-<link rel="stylesheet" href="/assets/site.css?v=b9c85cce">
+<link rel="stylesheet" href="/assets/fonts.css?v=deb9a6e9">
+<link rel="stylesheet" href="/assets/site.css?v=deb9a6e9">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/pid/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/pid/#article","headline":"ตัวควบคุม P, PI, PD และ PID","description":"ตัวควบคุม PID ครบทุกมุม รูปแบบขนาน มาตรฐาน (ISA) และอนุกรม ผลของ Kp Ki Kd ต่อ rise time overshoot settling time และความผิดพลาดอยู่ตัว ออกแบบ P PI PD PID ด้วยการวางขั้ว ความสัมพันธ์กับตัวชดเชย lead lag derivative kick setpoint weighting integral windup และ anti-windup วงจร PID ด้วยออปแอมป์ พร้อมแล็บจำลอง PID ที่ปรับเกนได้ มีการอิ่มตัวและสัญญาณรบกวน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/pid/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/pid/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["PID controller","Proportional control","Integral control","Derivative control","Integral windup","Anti-windup","Setpoint weighting","Derivative filter","Pole placement","Operational amplifier"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-pid.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ตัวควบคุม P, PI, PD และ PID: โครงสร้าง ผลของแต่ละเทอม และการออกแบบ","item":"https://modsengineeringmath.com/learn/control-systems/pid/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kp Ki Kd แต่ละตัวทำอะไร พูดสั้น ๆ?","acceptedAnswer":{"@type":"Answer","text":"Kp ตอบสนองต่อความผิดพลาดตอนนี้ ยิ่งมากยิ่งเร็วแต่แกว่งมากขึ้น Ki สะสมความผิดพลาดในอดีต ทำให้ความผิดพลาดอยู่ตัวเป็นศูนย์แต่เพิ่มความล่าช้าและ overshoot Kd ดูแนวโน้มอนาคต (อัตราการเปลี่ยน) ช่วยหน่วงการแกว่งและเพิ่มเฟสมาร์จิน แต่ขยายสัญญาณรบกวนความถี่สูง"}},{"@type":"Question","name":"ทำไม PI จึงทำให้ความผิดพลาดอยู่ตัวเป็นศูนย์?","acceptedAnswer":{"@type":"Answer","text":"เทอม I เพิ่มขั้วที่ s = 0 ทำให้ชนิดของระบบเพิ่มขึ้นหนึ่ง ในเชิงกายภาพ ถ้ายังมีความผิดพลาดค้างอยู่แม้นิดเดียว อินทิกรัลจะโตไปเรื่อย ๆ จนสัญญาณควบคุมเปลี่ยนพอที่จะกำจัดความผิดพลาดนั้น สภาวะอยู่ตัวจึงเกิดได้เฉพาะเมื่อความผิดพลาดเป็นศูนย์"}},{"@type":"Question","name":"ทำไมงานจริงส่วนใหญ่ใช้ PI ไม่ค่อยใช้ D?","acceptedAnswer":{"@type":"Answer","text":"เพราะกระบวนการส่วนใหญ่ (อุณหภูมิ การไหล ความดัน ลูปความเร็วมอเตอร์) ช้าและสัญญาณวัดมีสัญญาณรบกวน เทอม D ขยายสัญญาณรบกวนและทำให้ตัวขับทำงานหนัก PI จึงพอ ส่วนระบบที่ต้องการหน่วงเพิ่ม เช่น ลูปตำแหน่งของเซอร์โว โดรน หรือพาวเวอร์ซัพพลาย ใช้ D (หรือ lead) พร้อมฟิลเตอร์"}},{"@type":"Question","name":"Integral windup คืออะไร แก้อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"เมื่อตัวขับอิ่มตัว (เช่น PWM เต็ม 100%) ความผิดพลาดยังค้าง อินทิกรัลจึงสะสมเกินจริง เมื่อเอาต์พุตถึงเป้าแล้วต้องใช้เวลานานกว่าจะคายค่าที่สะสม ทำให้ overshoot มาก แก้ด้วย anti-windup เช่น หยุดอินทิเกรตเมื่ออิ่มตัว (clamping) หรือป้อนกลับส่วนต่างระหว่างค่าที่สั่งกับค่าที่อิ่มตัวมาลดอินทิกรัล (back-calculation)"}},{"@type":"Question","name":"PID กับตัวชดเชย lead lag เกี่ยวกันอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"PI คือ lag ที่ขั้วอยู่ที่ศูนย์พอดี PD คือ lead ที่ขั้วอยู่ไกลมาก (อนันต์) ส่วน PD ที่มีฟิลเตอร์อนุพันธ์คือ lead ทุกประการ ดังนั้น PID ที่มีฟิลเตอร์ก็คือ lag-lead และ Type III compensator ของพาวเวอร์ซัพพลายก็คือ PID บวกขั้วเพิ่มหนึ่งตัว"}}]}]}</script>
@@ -160,6 +160,9 @@
           <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
           <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
           <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <a href="/learn/differential-calculus/derivative-table/">สูตรดิฟทั้งหมด (ตาราง)</a>
+          <a href="/learn/differential-calculus/trig-derivatives/">อนุพันธ์ตรีโกณ · ทำไมดิฟ sin ได้ cos</a>
+          <a href="/learn/differential-calculus/exam-practice/">โจทย์ดิฟพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
@@ -173,6 +176,8 @@
           <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
           <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
           <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <a href="/learn/integral-calculus/integral-table/">ตารางสูตรอินทิเกรต 64 สูตร</a>
+          <a href="/learn/integral-calculus/exam-practice/">โจทย์อินทิเกรตพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
           <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
@@ -232,6 +237,19 @@
         </div>
       </div>
       <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navode">สมการเชิงอนุพันธ์</button>
+        <div class="nav-list" id="navode">
+          <a href="/learn/differential-equations/" >ภาพรวม · การจำแนก · เลือกวิธีแก้</a>
+          <a href="/learn/differential-equations/first-order/">อันดับหนึ่ง · ตัวประกอบอินทิเกรต · RC RL</a>
+          <a href="/learn/differential-equations/second-order/">อันดับสอง · สมการลักษณะเฉพาะ</a>
+          <a href="/learn/differential-equations/nonhomogeneous/">ไม่เอกพันธ์ · เรโซแนนซ์ · บีต</a>
+          <a href="/learn/differential-equations/applications/">สปริง · RLC · ζ · ไฟ AC</a>
+          <a href="/learn/differential-equations/numerical-methods/">Euler · RK4 · แล็บสนามความชัน</a>
+          <a href="/learn/differential-equations/exam-practice/">โจทย์พร้อมเฉลย</a>
+          <a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
@@ -278,7 +296,11 @@
         <div class="nav-list" id="navg2">
           <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
           <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
-          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณและระบบ · แล็บสัญญาณ</a>
+          <a href="/learn/signals/lti-convolution/">ระบบ LTI · คอนโวลูชัน</a>
+          <a href="/learn/signals/fourier-transform/">การแปลงฟูริเยร์</a>
+          <a href="/learn/signals/sampling-aliasing/">การสุ่ม · อเลียสซิง</a>
+          <a href="/learn/signals/z-transform/">การแปลง Z</a>
           <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
           <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
           <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -466,6 +488,8 @@
           <a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ</a>
           <a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน</a>
           <a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ</a>
+          <a href="/tools/ode-solver/">แก้สมการเชิงอนุพันธ์ พร้อมวิธีทำ</a>
+          <a href="/tools/convolution-calculator/">คอนโวลูชันไม่ต่อเนื่อง</a>
           <span class="nav-h">วิศวกรรมไฟฟ้า</span>
           <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์</a>
           <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569</a>
@@ -920,9 +944,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=b9c85cce" defer></script>
-<script src="/assets/cs-core.js?v=b9c85cce" defer></script>
-<script src="/assets/cs-ui.js?v=b9c85cce" defer></script>
-<script src="/assets/cs-pid.js?v=b9c85cce" defer></script>
+<script src="/assets/site.js?v=deb9a6e9" defer></script>
+<script src="/assets/cs-core.js?v=deb9a6e9" defer></script>
+<script src="/assets/cs-ui.js?v=deb9a6e9" defer></script>
+<script src="/assets/cs-pid.js?v=deb9a6e9" defer></script>
 </body>
 </html>

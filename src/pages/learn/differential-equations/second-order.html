@@ -1,0 +1,150 @@
+<!--meta
+{
+  "title": "สมการเชิงอนุพันธ์อันดับสอง: สมการลักษณะเฉพาะ รากจริง รากซ้ำ รากเชิงซ้อน สูตรออยเลอร์ และยูเลอร์–โคชี | อาจารย์มด",
+  "h1": "สมการเชิงอนุพันธ์อันดับสองแบบเอกพันธ์ (Second-Order Linear ODEs): สมการลักษณะเฉพาะและสามกรณีของราก",
+  "description": "แก้ ay″ + by′ + cy = 0 ด้วยสมการลักษณะเฉพาะ รากจริงสองค่า รากซ้ำ (ที่มาของ te^{rt}) รากเชิงซ้อนและทำไมได้ cos sin จากสูตรออยเลอร์ การเขียนเป็น R cos(ωt − φ) วรอนสเกียน สมการยูเลอร์–โคชี และแล็บแก้สมการแสดงวิธีทำ",
+  "ogTitle": "สมการอันดับสอง: ทำไมรากเชิงซ้อนให้คำตอบเป็น cos กับ sin",
+  "lesson": "differential-equations",
+  "sub": "second-order",
+  "nav": "ode",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["สมการเชิงอนุพันธ์อันดับสอง", "สมการลักษณะเฉพาะ", "characteristic equation", "รากเชิงซ้อน สมการเชิงอนุพันธ์", "รากซ้ำ", "สมการเชิงอนุพันธ์เชิงเส้นสัมประสิทธิ์คงที่", "สมการยูเลอร์โคชี", "Cauchy-Euler equation", "วรอนสเกียน", "second order differential equation"],
+  "about": ["Second-order linear differential equation", "Characteristic equation", "Euler's formula", "Wronskian", "Reduction of order", "Cauchy–Euler equation"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "สมการเชิงอนุพันธ์อันดับสอง", "sub": "สมการลักษณะเฉพาะ · รากจริง ซ้ำ เชิงซ้อน · สูตรออยเลอร์ · R cos(ωt − φ) · ยูเลอร์–โคชี", "eyebrow": "บทที่ 28.2 · Second-Order ODEs", "sym": "r²"},
+  "faq": [
+    {"q": "สมการลักษณะเฉพาะ (characteristic equation) มาจากไหน?", "a": "ลองแทน y = e^{rt} ลงใน ay″ + by′ + cy = 0 จะได้ e^{rt}(ar² + br + c) = 0 เนื่องจาก e^{rt} ไม่เคยเป็นศูนย์ จึงต้องมี ar² + br + c = 0 สมการพีชคณิตนี้คือสมการลักษณะเฉพาะ รากของมันบอกรูปของคำตอบทั้งหมด"},
+    {"q": "ทำไมรากเชิงซ้อนให้คำตอบเป็น cos และ sin?", "a": "รากเชิงซ้อน α ± jβ ให้ e^{(α+jβ)t} = e^{αt}(cos βt + j sin βt) ตามสูตรออยเลอร์ เนื่องจากสมการมีสัมประสิทธิ์จริง ส่วนจริงและส่วนจินตภาพแยกกันเป็นคำตอบได้ จึงได้คำตอบจริง e^{αt}(C₁ cos βt + C₂ sin βt)"},
+    {"q": "ทำไมรากซ้ำต้องคูณ t?", "a": "รากซ้ำ r ให้ e^{rt} มาเพียงตัวเดียว แต่สมการอันดับสองต้องมีคำตอบอิสระสองตัว การลดอันดับ (reduction of order) โดยลอง y = v(t)e^{rt} จะได้ v″ = 0 ดังนั้น v = C₁ + C₂t คำตอบตัวที่สองจึงเป็น te^{rt}"},
+    {"q": "จะเขียน C₁ cos ωt + C₂ sin ωt เป็นคลื่นเดียวอย่างไร?", "a": "เขียนเป็น R cos(ωt − φ) โดย R = √(C₁² + C₂²) และ tan φ = C₂/C₁ (เลือก φ ให้อยู่ในจตุภาคเดียวกับจุด (C₁, C₂)) มาจากสูตรผลบวกมุม cos(A − B) = cos A cos B + sin A sin B"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-equations/">สมการเชิงอนุพันธ์</a></li><li>อันดับสอง</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 28.2 · สมการเชิงอนุพันธ์ · Second-Order Linear ODEs</p>
+      <h1>สมการเชิงอนุพันธ์อันดับสองแบบเอกพันธ์ (Second-Order Linear ODEs): สมการลักษณะเฉพาะและสามกรณีของราก</h1>
+      <p class="lede">หน้านี้คือหัวใจของการสั่นทุกชนิด ทั้งสปริง ลูกตุ้ม วงจร LC และวงจร RLC สมการที่จะแก้คือ \(ay'' + by' + cy = 0\) เมื่อ a, b, c เป็นค่าคงที่ ทั้งหมดลดเหลือการแก้สมการกำลังสองหนึ่งตัว แล้วอ่านคำตอบจากชนิดของราก ส่วนที่ยากที่สุดคือรากเชิงซ้อน ซึ่งต้องใช้ตรีโกณมิติเยอะ ผมจึงอธิบายช้า ๆ และติดป้ายบอกเอกลักษณ์ทุกตัวที่ใช้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#char">สมการลักษณะเฉพาะ</a>
+        <a class="btn btn-ghost btn-sm" href="#complex">รากเชิงซ้อน</a>
+        <a class="btn btn-ghost btn-sm" href="#amp-phase">R cos(ωt − φ)</a>
+        <a class="btn btn-ghost btn-sm" href="#lab2">แล็บแก้สมการ</a>
+        <a class="btn btn-ghost btn-sm" href="#euler-cauchy">ยูเลอร์–โคชี</a>
+      </div>
+      <div class="tldr"><b>สรุปทั้งหน้าในตารางเดียว</b>
+      <div class="table-wrap"><table><thead><tr><th>ราก \(ar^2 + br + c = 0\)</th><th>เงื่อนไข</th><th>คำตอบทั่วไป</th><th>พฤติกรรม</th></tr></thead><tbody>
+        <tr><td>จริงสองค่า \(r_1 \ne r_2\)</td><td>\(b^2 - 4ac &gt; 0\)</td><td>\(C_1e^{r_1t} + C_2e^{r_2t}\)</td><td>ไม่แกว่ง (หน่วงเกิน)</td></tr>
+        <tr><td>ซ้ำ \(r\)</td><td>\(b^2 - 4ac = 0\)</td><td>\((C_1 + C_2t)e^{rt}\)</td><td>ไม่แกว่ง (หน่วงวิกฤต)</td></tr>
+        <tr><td>เชิงซ้อน \(\alpha \pm j\beta\)</td><td>\(b^2 - 4ac &lt; 0\)</td><td>\(e^{\alpha t}(C_1\cos\beta t + C_2\sin\beta t)\)</td><td>แกว่ง (หน่วงน้อย)</td></tr>
+      </tbody></table></div></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="char">
+    <h2 id="char">สมการลักษณะเฉพาะ: เดา \(e^{rt}\) แล้วสมการจะบอกค่า r</h2>
+    <p>ต้องการฟังก์ชันที่เมื่อนำตัวมันเอง อนุพันธ์อันดับหนึ่ง และอันดับสองมาบวกกันด้วยค่าคงที่ แล้วได้ศูนย์ ฟังก์ชันที่ดิฟแล้วหน้าตาเหมือนเดิมมีแค่เลขชี้กำลัง จึงลอง \(y = e^{rt}\) <a class="tg calc" href="/learn/differential-calculus/#rules" title="d/dx eˣ = eˣ · d/dx aˣ = aˣ ln a">ดิฟ eˣ</a></p>
+    \[ a\,r^2e^{rt} + b\,re^{rt} + c\,e^{rt} = e^{rt}\big(ar^2 + br + c\big) = 0 \]
+    <p>\(e^{rt}\) ไม่เป็นศูนย์ที่ไหนเลย สมการจึงเหลือ \(ar^2 + br + c = 0\) เรียกว่า<b>สมการลักษณะเฉพาะ</b> (characteristic equation) แก้ด้วยสูตรกำลังสอง</p>
+    \[ r = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \]
+    <p>ดิสคริมิแนนต์ \(b^2 - 4ac\) แบ่งเรื่องทั้งหมดเป็นสามกรณี ในงานจริงสามกรณีนี้ตรงกับระบบที่หน่วงมาก หน่วงพอดี และหน่วงน้อยจนแกว่ง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="real">
+    <h2 id="real">กรณีที่ 1: รากจริงสองค่าไม่ซ้ำ <span class="lv lv-b">พื้นฐาน</span></h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>\(y'' - 5y' + 6y = 0\)</h3></div><ol class="steps">
+      <li><p>\(r^2 - 5r + 6 = (r - 2)(r - 3) = 0\)</p></li>
+    </ol><p class="answer">\(y = C_1e^{2t} + C_2e^{3t}\)</p></div>
+    <p>ทำไมผลรวมก็เป็นคำตอบด้วย เพราะสมการเป็นเชิงเส้น ถ้าแทน \(C_1y_1 + C_2y_2\) ลงไป แต่ละก้อนให้ศูนย์ของมันเอง ผลรวมจึงเป็นศูนย์ (หลักการซ้อนทับ) และเพราะสมการเป็นอันดับสอง จึงต้องการคำตอบที่<b>เป็นอิสระต่อกัน</b>สองตัวพอดี ตรวจความเป็นอิสระด้วยวรอนสเกียน (Wronskian)</p>
+    \[ W = \begin{vmatrix} y_1 & y_2 \\ y_1' & y_2' \end{vmatrix} = \begin{vmatrix} e^{2t} & e^{3t} \\ 2e^{2t} & 3e^{3t}\end{vmatrix} = e^{5t} \neq 0 \]
+    </section>
+
+    <section class="tsec" aria-labelledby="repeated">
+    <h2 id="repeated">กรณีที่ 2: รากซ้ำ และที่มาของ \(t\,e^{rt}\) <span class="lv lv-i">กลาง</span></h2>
+    <p>ถ้า \(b^2 = 4ac\) จะได้รากเดียว \(r = -\tfrac{b}{2a}\) และคำตอบ \(e^{rt}\) แค่ตัวเดียว ขาดอีกหนึ่งตัว วิธีหาคือ<b>ลดอันดับ</b> (reduction of order) ลอง \(y = v(t)\,e^{rt}\) แทนลงไป</p>
+    \[ y' = (v' + rv)e^{rt},\qquad y'' = (v'' + 2rv' + r^2v)e^{rt} \]
+    <p>แทนแล้วจัดกลุ่ม พจน์ที่มี v หายเพราะ \(ar^2 + br + c = 0\) พจน์ที่มี v′ หายเพราะ \(2ar + b = 0\) (นี่คือเงื่อนไขรากซ้ำ) เหลือเพียง \(a\,v'' = 0\) จึงได้ \(v = C_1 + C_2t\)</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2</span><h3>\(y'' + 4y' + 4y = 0\)</h3></div><ol class="steps">
+      <li><p>\(r^2 + 4r + 4 = (r + 2)^2 = 0\) รากซ้ำ \(r = -2\)</p></li>
+    </ol><p class="answer">\(y = (C_1 + C_2t)e^{-2t}\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">กรณีที่ 3: รากเชิงซ้อน ทำไมได้ cos และ sin <span class="lv lv-a">หัวใจของบท</span></h2>
+    <p>ถ้า \(b^2 &lt; 4ac\) รากเป็นคู่สังยุค \(r = \alpha \pm j\beta\) โดย</p>
+    \[ \alpha = -\frac{b}{2a},\qquad \beta = \frac{\sqrt{4ac - b^2}}{2a} \]
+    <p>คำตอบเชิงซ้อนตัวหนึ่งคือ \(e^{(\alpha + j\beta)t}\) แต่ระบบจริงต้องการคำตอบจริง ทางแปลงอยู่ในขั้นตอนต่อไปนี้ ค่อย ๆ อ่านทีละบรรทัด</p>
+    <div class="wx"><ol class="steps">
+      <li><p>แยกเลขชี้กำลังด้วยกฎ \(e^{u + v} = e^ue^v\)</p>\[ e^{(\alpha + j\beta)t} = e^{\alpha t}\cdot e^{j\beta t} \]</li>
+      <li><p>ใช้สูตรออยเลอร์กับก้อนจินตภาพ <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a></p>\[ e^{j\beta t} = \cos\beta t + j\sin\beta t \]
+      <span class="tg-row"><a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> <a class="tg" href="/learn/trigonometry/#unit-circle" title="จุดบนวงกลม = (cos θ, sin θ)">วงกลมหนึ่งหน่วย</a></span></li>
+      <li><p>ได้คำตอบเชิงซ้อนที่มีทั้งส่วนจริงและส่วนจินตภาพ</p>\[ e^{(\alpha + j\beta)t} = e^{\alpha t}\cos\beta t + j\,e^{\alpha t}\sin\beta t \]</li>
+      <li><p>สมการมีสัมประสิทธิ์จริง ถ้า \(u + jv\) เป็นคำตอบ แทนลงไปแล้วแยกส่วนจริงกับจินตภาพ จะได้ว่า u และ v ต่างก็เป็นคำตอบเอง จึงเก็บสองตัวนี้มาใช้</p>\[ y_1 = e^{\alpha t}\cos\beta t,\qquad y_2 = e^{\alpha t}\sin\beta t \]</li>
+      <li><p>อีกทางหนึ่งที่ให้ผลเดียวกัน: รวมรากทั้งคู่ \(Ke^{j\beta t} + \bar Ke^{-j\beta t}\) โดยเลือกค่าคงที่เป็นคู่สังยุค ผลรวมเป็นจริงเสมอ เพราะ \(\cos\beta t = \tfrac{e^{j\beta t} + e^{-j\beta t}}{2}\) <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></p></li>
+    </ol><p class="answer">\(y = e^{\alpha t}\big(C_1\cos\beta t + C_2\sin\beta t\big)\)</p></div>
+    <p>อ่านความหมายของตัวเลขสองตัวนี้ให้ออก: \(\alpha\) (ส่วนจริง) คุมว่าแอมพลิจูดหดเร็วแค่ไหน เป็นลบเมื่อระบบมีการหน่วง ส่วน \(\beta\) (ส่วนจินตภาพ) คือความถี่เชิงมุมของการแกว่ง คาบของการแกว่งคือ \(2\pi/\beta\) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + 2π) = sin θ · cos(θ + 2π) = cos θ">คาบ 2π</a></p>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>\(y'' + 2y' + 5y = 0,\ y(0) = 1,\ y'(0) = 0\)</h3></div><ol class="steps">
+      <li><p>\(r = \dfrac{-2 \pm \sqrt{4 - 20}}{2} = -1 \pm 2j\) ได้ \(\alpha = -1,\ \beta = 2\)</p></li>
+      <li><p>\(y = e^{-t}(C_1\cos2t + C_2\sin2t)\) และ \(y(0) = 1\) ได้ \(C_1 = 1\) <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a></p></li>
+      <li><p>ดิฟด้วยกฎผลคูณ <a class="tg calc" href="/learn/differential-calculus/#rules" title="(uv)′ = u′v + uv′">กฎผลคูณ</a> ที่ \(t = 0\): \(y'(0) = -C_1 + 2C_2 = 0\) ได้ \(C_2 = \tfrac12\)</p></li>
+    </ol><p class="answer">\(y = e^{-t}\big(\cos2t + \tfrac12\sin2t\big)\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="amp-phase">
+    <h2 id="amp-phase">อ่านคำตอบให้เป็นคลื่น: \(C_1\cos\beta t + C_2\sin\beta t = R\cos(\beta t - \varphi)\)</h2>
+    <p>คำตอบรูป cos บวก sin อ่านยาก บอกไม่ได้ทันทีว่าแกว่งแรงแค่ไหน ถ้ารวมเป็นคลื่นเดียวจะเห็นแอมพลิจูดกับเฟสชัดเจน เริ่มจากสูตรผลต่างของมุม <a class="tg" href="/learn/trigonometry/#sum-difference" title="cos(A + B) = cos A cos B − sin A sin B">สูตรผลบวกมุมของ cos</a></p>
+    \[ R\cos(\beta t - \varphi) = R\cos\varphi\cos\beta t + R\sin\varphi\sin\beta t \]
+    <p>เทียบกับ \(C_1\cos\beta t + C_2\sin\beta t\) จะได้ \(R\cos\varphi = C_1\) และ \(R\sin\varphi = C_2\) ยกกำลังสองแล้วบวกกัน <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a> และหารกัน <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a></p>
+    \[ R = \sqrt{C_1^2 + C_2^2},\qquad \tan\varphi = \frac{C_2}{C_1} \]
+    <span class="tg-row"><a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a> <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a></span>
+    <p>ระวังจตุภาคของ φ: \(\tan^{-1}\) ในเครื่องคิดเลขให้มุมระหว่าง −90° ถึง 90° เท่านั้น ถ้า \(C_1 &lt; 0\) ต้องบวก 180° เพิ่ม ใช้ฟังก์ชัน atan2(C₂, C₁) จะได้มุมที่ถูกเสมอ <a class="tg" href="/learn/trigonometry/#inverse" title="y = arcsin x ⇔ sin y = x, −π/2 ≤ y ≤ π/2">ฟังก์ชันตรีโกณผกผัน</a></p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3 ต่อ</span><h3>เขียน \(\cos2t + \tfrac12\sin2t\) เป็นคลื่นเดียว</h3></div><ol class="steps">
+      <li><p>\(R = \sqrt{1 + \tfrac14} = \tfrac{\sqrt5}{2} \approx 1.118\) และ \(\tan\varphi = \tfrac12 \Rightarrow \varphi \approx 26.57^\circ\)</p></li>
+    </ol><p class="answer">\(y = \tfrac{\sqrt5}{2}\,e^{-t}\cos(2t - 26.57^\circ)\) · เห็นทันทีว่าเป็นคลื่นความถี่ 2 rad/s แอมพลิจูดเริ่ม 1.118 ที่หดลงตามเปลือก \(e^{-t}\)</p></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4 · ไม่มีการหน่วง</span><h3>\(y'' + 9y = 0,\ y(0) = 1,\ y'(0) = 6\)</h3></div><ol class="steps">
+      <li><p>\(r^2 + 9 = 0 \Rightarrow r = \pm3j\) ได้ \(\alpha = 0\)</p></li>
+      <li><p>\(y = C_1\cos3t + C_2\sin3t\) ได้ \(C_1 = 1\) และ \(3C_2 = 6 \Rightarrow C_2 = 2\)</p></li>
+      <li><p>\(R = \sqrt5\) และ \(\varphi = \tan^{-1}2 \approx 63.43^\circ\) <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></p></li>
+    </ol><p class="answer">\(y = \cos3t + 2\sin3t = \sqrt5\cos(3t - 63.43^\circ)\) แกว่งด้วยแอมพลิจูดคงที่ √5 ตลอดไป เพราะไม่มีอะไรดูดพลังงานออก</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab2">
+    <h2 id="lab2">แล็บ: แก้ \(ay'' + by' + cy = f(t)\) แสดงทุกขั้น</h2>
+    <p>ค่าเริ่มต้นคือตัวอย่าง 3 ลองเพิ่ม b ทีละน้อยจาก 0 ถึง 6 แล้วดูว่ารากเปลี่ยนจากเชิงซ้อน (แกว่ง) เป็นรากซ้ำที่ b = 2√5 ≈ 4.47 แล้วเป็นรากจริงสองค่า (ไม่แกว่ง) อัตราส่วนการหน่วง ζ จะบอกกรณีให้ทุกครั้ง</p>
+    <div class="cl-lab ms-ode2" data-a="1" data-b="2" data-c="5" data-ft="0" data-y0="1" data-v0="0" data-choose=""></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="euler-cauchy">
+    <h2 id="euler-cauchy">สมการยูเลอร์–โคชี: เมื่อสัมประสิทธิ์เป็นกำลังของ x <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>รูป \(x^2y'' + bxy' + cy = 0\) (\(x &gt; 0\)) ไม่มีสัมประสิทธิ์คงที่ แต่ลอง \(y = x^m\) จะได้ \(m(m-1) + bm + c = 0\) เป็นสมการกำลังสองอีกครั้ง ถ้าได้รากเชิงซ้อน \(m = \alpha \pm j\beta\) ใช้ \(x^{j\beta} = e^{j\beta\ln x}\) แล้วสูตรออยเลอร์ <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a></p>
+    \[ x^{j\beta} = \cos(\beta\ln x) + j\sin(\beta\ln x) \;\Longrightarrow\; y = x^{\alpha}\big(C_1\cos(\beta\ln x) + C_2\sin(\beta\ln x)\big) \]
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5</span><h3>\(x^2y'' + xy' + 4y = 0\)</h3></div><ol class="steps">
+      <li><p>\(m(m-1) + m + 4 = m^2 + 4 = 0 \Rightarrow m = \pm2j\)</p></li>
+    </ol><p class="answer">\(y = C_1\cos(2\ln x) + C_2\sin(2\ln x)\) · แกว่งแบบที่ระยะห่างระหว่างยอดยืดออกเรื่อย ๆ ตามสเกล log</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>รากเชิงซ้อนแล้วเขียน \(\cos(-1 \pm 2j)t\)</b> ส่วนจริงต้องไปอยู่ที่ \(e^{\alpha t}\) ส่วนจินตภาพเท่านั้นที่เข้าไปอยู่ใน cos sin</li>
+      <li><b>ใช้ β ติดลบ</b> เลือก β เป็นบวกเสมอ เครื่องหมาย ± ถูกดูดเข้าไปใน C₂ แล้ว <a class="tg" href="/learn/trigonometry/#symmetry" title="cos(−θ) = cos θ · sin(−θ) = −sin θ">ฟังก์ชันคู่-คี่</a></li>
+      <li><b>รากซ้ำแล้วตอบ \(C_1e^{rt} + C_2e^{rt}\)</b> สองพจน์นี้เป็นพจน์เดียวกัน ต้องเป็น \(C_2te^{rt}\)</li>
+      <li><b>หา φ จาก \(\tan^{-1}(C_2/C_1)\) โดยไม่ดูจตุภาค</b> ใช้ atan2 หรือดูเครื่องหมายของ C₁ C₂</li>
+    </ul>
+    <p>ต่อไป: <a href="/learn/differential-equations/nonhomogeneous/">เมื่อด้านขวาไม่เป็นศูนย์</a> ซึ่งมีเรโซแนนซ์และบีต และ<a href="/learn/differential-equations/applications/">การประยุกต์กับ RLC และมวล-สปริง</a></p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

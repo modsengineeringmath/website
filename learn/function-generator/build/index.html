@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=b9c85cce">
-<link rel="stylesheet" href="/assets/site.css?v=b9c85cce">
+<link rel="stylesheet" href="/assets/fonts.css?v=deb9a6e9">
+<link rel="stylesheet" href="/assets/site.css?v=deb9a6e9">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/function-generator/build/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/function-generator/build/#article","headline":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","description":"สร้างเครื่องกำเนิดสัญญาณและสโคปทำเองตั้งแต่ระดับ ม.ปลาย ถึง ป.โท: ออสซิลเลเตอร์ผ่อนคลายด้วยออปแอมป์ เครื่องกำเนิดสี่เหลี่ยม-สามเหลี่ยม ไอซี 555 แบบ astable Wien bridge และ RC phase-shift XR2206 DAC R-2R กับตารางค่าไซน์ DDS AD9833 พร้อมโค้ด Arduino และ ESP32 ภาคขาออกปรับแอมพลิจูดและออฟเซต วงจรขาเข้าสโคปทำเอง พร้อมตัวจำลองตัวสะสมเฟส DDS เครื่องคิดเลข และสูตรรหัส K","inLanguage":"th","url":"https://modsengineeringmath.com/learn/function-generator/build/","mainEntityOfPage":"https://modsengineeringmath.com/learn/function-generator/build/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Relaxation oscillator","555 timer","Wien bridge oscillator","Phase-shift oscillator","Barkhausen stability criterion","R-2R ladder","Digital-to-analog converter","Direct digital synthesis","AD9833","Arduino","ESP32"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/function-generator/#article"},"image":["https://modsengineeringmath.com/images/og/learn-function-generator-build.jpg"],"educationalLevel":["High school","Undergraduate","Graduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"แล็บเครื่องกำเนิดสัญญาณและออสซิลโลสโคป","item":"https://modsengineeringmath.com/learn/function-generator/"},{"@type":"ListItem","position":4,"name":"สร้างเครื่องกำเนิดสัญญาณเอง: 555 ออสซิลเลเตอร์ Wien และ DDS AD9833","item":"https://modsengineeringmath.com/learn/function-generator/build/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"สร้างเครื่องกำเนิดสัญญาณเองแบบไหนง่ายและคุ้มที่สุด?","acceptedAnswer":{"@type":"Answer","text":"ถ้าต้องการแค่คลื่นสี่เหลี่ยม ใช้ไอซี 555 หรือขา PWM ของไมโครคอนโทรลเลอร์ ถ้าต้องการไซน์ สามเหลี่ยม และสี่เหลี่ยมที่ตั้งความถี่ได้แม่นจาก 0.1 Hz ถึงหลาย MHz ใช้โมดูล DDS AD9833 คุมด้วย Arduino หรือ ESP32 ผ่าน SPI สามสาย แล้วเพิ่มภาคขยายด้วยออปแอมป์สำหรับปรับแอมพลิจูดและออฟเซต"}},{"@type":"Question","name":"AD9833 ตั้งค่าความถี่อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"คำนวณเลข 28 บิต M = round(f_out × 2²⁸ / f_MCLK) เช่น 1 kHz กับนาฬิกา 25 MHz ได้ M = 10737 แล้วเขียนเป็นสองคำ 14 บิตลงรีจิสเตอร์ FREQ0 โดยตั้งบิตบนเป็น 01 (0x4000 | ค่า) ลำดับคือ 0x2100 (รีเซ็ต) คำล่าง คำบน 0xC000 (เฟส) แล้ว 0x2000 สำหรับไซน์ 0x2002 สามเหลี่ยม หรือ 0x2028 สี่เหลี่ยม"}},{"@type":"Question","name":"Arduino ใช้เป็นออสซิลโลสโคปได้ไหม?","acceptedAnswer":{"@type":"Answer","text":"ได้สำหรับสัญญาณช้า Arduino Uno อ่าน ADC ได้ราว 9.6 kSa/s ด้วย analogRead จึงดูได้แค่ไม่กี่ร้อย Hz ถึงราว 1 kHz และรับได้เฉพาะ 0–5 V ต้องมีวงจรแบ่งแรงดันและยกระดับก่อนวัดสัญญาณที่มีค่าลบ ESP32 และการ์ดเสียงคอมพิวเตอร์เร็วกว่า แต่ยังห่างจากสโคปจริงมาก เหมาะกับการเรียนรู้หลักการสุ่มสัญญาณ"}},{"@type":"Question","name":"ทำไมออสซิลเลเตอร์ Wien bridge ต้องมีวงจรคุมแอมพลิจูด?","acceptedAnswer":{"@type":"Answer","text":"เงื่อนไข Barkhausen ต้องการเกนวงรอบเท่ากับ 1 พอดี ถ้าเกนน้อยกว่า 3 นิดเดียวการแกว่งจะหยุด ถ้ามากกว่านิดเดียวแอมพลิจูดจะโตจนออปแอมป์อิ่มตัวและไซน์ถูกตัดยอด จึงต้องมีชิ้นส่วนที่ลดเกนเมื่อแอมพลิจูดสูง เช่น ไดโอดคู่ขนานกับตัวต้านทานป้อนกลับบางส่วน หลอดไฟ หรือ JFET"}}]}]}</script>
@@ -160,6 +160,9 @@
           <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
           <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
           <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <a href="/learn/differential-calculus/derivative-table/">สูตรดิฟทั้งหมด (ตาราง)</a>
+          <a href="/learn/differential-calculus/trig-derivatives/">อนุพันธ์ตรีโกณ · ทำไมดิฟ sin ได้ cos</a>
+          <a href="/learn/differential-calculus/exam-practice/">โจทย์ดิฟพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
@@ -173,6 +176,8 @@
           <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
           <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
           <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <a href="/learn/integral-calculus/integral-table/">ตารางสูตรอินทิเกรต 64 สูตร</a>
+          <a href="/learn/integral-calculus/exam-practice/">โจทย์อินทิเกรตพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
           <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
@@ -232,6 +237,19 @@
         </div>
       </div>
       <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navode">สมการเชิงอนุพันธ์</button>
+        <div class="nav-list" id="navode">
+          <a href="/learn/differential-equations/" >ภาพรวม · การจำแนก · เลือกวิธีแก้</a>
+          <a href="/learn/differential-equations/first-order/">อันดับหนึ่ง · ตัวประกอบอินทิเกรต · RC RL</a>
+          <a href="/learn/differential-equations/second-order/">อันดับสอง · สมการลักษณะเฉพาะ</a>
+          <a href="/learn/differential-equations/nonhomogeneous/">ไม่เอกพันธ์ · เรโซแนนซ์ · บีต</a>
+          <a href="/learn/differential-equations/applications/">สปริง · RLC · ζ · ไฟ AC</a>
+          <a href="/learn/differential-equations/numerical-methods/">Euler · RK4 · แล็บสนามความชัน</a>
+          <a href="/learn/differential-equations/exam-practice/">โจทย์พร้อมเฉลย</a>
+          <a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
@@ -278,7 +296,11 @@
         <div class="nav-list" id="navg2">
           <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
           <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
-          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณและระบบ · แล็บสัญญาณ</a>
+          <a href="/learn/signals/lti-convolution/">ระบบ LTI · คอนโวลูชัน</a>
+          <a href="/learn/signals/fourier-transform/">การแปลงฟูริเยร์</a>
+          <a href="/learn/signals/sampling-aliasing/">การสุ่ม · อเลียสซิง</a>
+          <a href="/learn/signals/z-transform/">การแปลง Z</a>
           <a href="/learn/function-generator/" aria-current="page">แล็บ FG + ออสซิลโลสโคป</a>
           <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
           <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -466,6 +488,8 @@
           <a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ</a>
           <a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน</a>
           <a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ</a>
+          <a href="/tools/ode-solver/">แก้สมการเชิงอนุพันธ์ พร้อมวิธีทำ</a>
+          <a href="/tools/convolution-calculator/">คอนโวลูชันไม่ต่อเนื่อง</a>
           <span class="nav-h">วิศวกรรมไฟฟ้า</span>
           <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์</a>
           <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569</a>
@@ -999,9 +1023,9 @@ void loop() {
   </div>
 </footer>
 
-<script src="/assets/site.js?v=b9c85cce" defer></script>
-<script src="/assets/lesson.js?v=b9c85cce" defer></script>
-<script src="/assets/fgcalc.js?v=b9c85cce" defer></script>
-<script src="/assets/fgdds.js?v=b9c85cce" defer></script>
+<script src="/assets/site.js?v=deb9a6e9" defer></script>
+<script src="/assets/lesson.js?v=deb9a6e9" defer></script>
+<script src="/assets/fgcalc.js?v=deb9a6e9" defer></script>
+<script src="/assets/fgdds.js?v=deb9a6e9" defer></script>
 </body>
 </html>

@@ -87,6 +87,13 @@ export const TOPICS = [
     sub: [
       { slug: "engineering-applications", short: "การประยุกต์ ไฟฟ้า · เครื่องกล · โยธา", title: "การประยุกต์อนุพันธ์ทางวิศวกรรมไฟฟ้า เครื่องกล และโยธา", en: "Applications of Derivatives in Electrical, Mechanical & Civil Engineering", sym: "d/dt", prefix: "A",
         summary: "i = C dv/dt, v = L di/dt ถ่ายโอนกำลังสูงสุด ความไว ความเร็ว-ความเร่ง กลไกข้อเหวี่ยง ออกแบบภาชนะต้นทุนต่ำสุด ความชันและความโค้งของคาน แรงเฉือน dM/dx และการหาค่าเหมาะสมที่สุด" },
+      // 4.2–4.4 (added 2026-11-14): derivative table (S1–S40, sympy-checked), trig derivatives in depth (ms-lab.js), exam practice
+      { slug: "derivative-table", short: "สูตรดิฟทั้งหมด", title: "สูตรดิฟทั้งหมด (Table of Derivatives): ดิฟอะไรได้อะไร พร้อมที่มา", en: "Table of Derivatives", sym: "f′", tag: "40 สูตร · ตรีโกณครบ",
+        summary: "ตารางสูตรดิฟ 40 แถว ดิฟ sin cos tan sec ln eˣ √x arcsin ได้อะไร พร้อมกฎผลคูณ ผลหาร ลูกโซ่ และป้ายบอกเอกลักษณ์ตรีโกณที่ใช้ในแต่ละแถว" },
+      { slug: "trig-derivatives", short: "อนุพันธ์ตรีโกณ", title: "อนุพันธ์ของฟังก์ชันตรีโกณมิติ: ทำไมดิฟ sin ได้ cos ถึง arcsin", en: "Derivatives of Trigonometric Functions", sym: "sin′", tag: "พิสูจน์ครบ + แล็บ 2 ชุด",
+        summary: "จุดบนวงกลมหนึ่งหน่วย ลิมิต sin h/h ด้วยการบีบพื้นที่ ทำไมต้องเรเดียน พิสูจน์อนุพันธ์ทั้งหกฟังก์ชันและตรีโกณผกผัน วงจรสี่จังหวะของการดิฟ ตัวอย่าง 10 ข้อ และกระแสตัวเก็บประจุนำหน้า 90°" },
+      { slug: "exam-practice", short: "โจทย์ดิฟพร้อมเฉลย", title: "โจทย์ดิฟพร้อมเฉลย 36 ข้อ: ผลคูณ ผลหาร ลูกโซ่ ตรีโกณ โดยปริยาย", en: "Derivative Exam Practice", sym: "✓", tag: "36 ข้อ 3 ระดับ",
+        summary: "ชุด A พื้นฐาน ม.6 ชุด B ผลคูณ ผลหาร ลูกโซ่ และตรีโกณ ชุด C ดิฟโดยปริยาย ลอการิทึม ผกผัน อันดับสูง อัตราสัมพัทธ์ และงานไฟฟ้า ทุกข้อมีเฉลยและป้ายบอกสูตร" },
     ],
   },
   {
@@ -236,11 +243,24 @@ export const TOPICS = [
     summary: "แล็บโต้ตอบ: ζ กำหนดรูปร่าง ωn กำหนดความเร็ว ลากขั้วบนระนาบ s แล้วดูผลตอบสนองเวลา เปลือก %OS และ Bode เปลี่ยนพร้อมกัน",
   },
   {
+    // Series: hub (lab) at src/pages/learn/signals/index.html
     slug: "signals",
-    title: "สัญญาณเบื้องต้น",
-    en: "Signals · Lab",
+    title: "สัญญาณและระบบ (Signals and Systems)",
+    en: "Signals and Systems",
     sym: "∿",
-    summary: "แล็บโต้ตอบ: พิมพ์สมการสัญญาณเอง ทั้ง x(t) และ x[n] ดูอนุพันธ์ ส่วนคู่คี่ พลังงาน สเปกตรัม การแปลงเวลา และคอนโวลูชัน",
+    summary: "แล็บโต้ตอบ: พิมพ์สมการสัญญาณเอง ทั้ง x(t) และ x[n] แล้วต่อด้วยระบบ LTI คอนโวลูชัน การแปลงฟูริเยร์ การสุ่มและอเลียสซิง การแปลง Z และโจทย์ 27 ข้อ",
+    sub: [
+      { slug: "lti-convolution", short: "LTI · คอนโวลูชัน", title: "ระบบ LTI และคอนโวลูชัน: ผลตอบสนองอิมพัลส์ กลับ-เลื่อน-คูณ-อินทิเกรต", en: "LTI Systems & Convolution", sym: "x∗h", tag: "ไซน์เข้า ไซน์ออก",
+        summary: "คุณสมบัติของระบบ ทำไม h(t) บอกทุกอย่าง อินทิกรัลคอนโวลูชัน ตารางคูณคอนโวลูชันไม่ต่อเนื่อง คอซัล เสถียรภาพ และพิสูจน์ด้วยสูตรผลบวกมุมว่าไซน์เข้าแล้วไซน์ออก" },
+      { slug: "fourier-transform", short: "การแปลงฟูริเยร์", title: "การแปลงฟูริเยร์: ตารางคู่การแปลง คุณสมบัติ มอดูเลต AM และพาร์เซวาล", en: "Fourier Transform", sym: "X(f)", tag: "ตาราง + แล็บสเปกตรัม",
+        summary: "จากอนุกรมสู่การแปลง ทำไม e^{−j2πft} คือ cos ลบ j sin หาคู่การแปลงด้วยมือ ตารางคู่การแปลง คุณสมบัติ การมอดูเลตและดีมอดูเลต ตัวกรอง และพาร์เซวาล" },
+      { slug: "sampling-aliasing", short: "การสุ่ม · อเลียสซิง", title: "การสุ่มสัญญาณและอเลียสซิง: ทฤษฎีบทการสุ่ม อัตรา Nyquist ความถี่ปลอม", en: "Sampling & Aliasing", sym: "fₛ", tag: "แล็บอเลียสซิง",
+        summary: "ความถี่ดิจิทัล พิสูจน์อเลียสซิงด้วยคาบและความเป็นฟังก์ชันคู่ของ cos สเปกตรัมซ้ำทุก fₛ ทฤษฎีบทการสุ่ม สูตรความถี่ปลอม ตัวกรองกันอเลียส การสร้างกลับ และ ADC" },
+      { slug: "z-transform", short: "การแปลง Z", title: "การแปลง Z: ตารางคู่การแปลง ROC สมการผลต่าง โพล-ซีโร และตัวกรองดิจิทัล", en: "Z-Transform", sym: "z⁻¹", tag: "แล็บโพล-ซีโร",
+        summary: "นิยามและ ROC ตารางคู่การแปลงพร้อมที่มาของคู่ cos ผกผันด้วยเศษส่วนย่อยของ X(z)/z แก้สมการผลต่าง เสถียรภาพ ผลตอบสนองบนวงกลมหนึ่งหน่วย และตัวกรองนอตช์" },
+      { slug: "exam-practice", short: "โจทย์พร้อมเฉลย", title: "โจทย์สัญญาณและระบบพร้อมเฉลย 27 ข้อ", en: "Signals & Systems Exam Practice", sym: "✓", tag: "27 ข้อ ตรวจทุกข้อ",
+        summary: "ชุด A ระบบและคอนโวลูชัน ชุด B การแปลงฟูริเยร์ ชุด C การสุ่ม ชุด D การแปลง Z เฉลยทีละขั้นพร้อมป้ายเอกลักษณ์ตรีโกณ" },
+    ],
   },
   {
     // A series with a full virtual bench: hub at src/pages/learn/function-generator/index.html
@@ -802,6 +822,29 @@ export const TOPICS = [
   },
   // Topic 27 (added 2026-11-09): precalculus, Thai + English edition — see src/topics-precalc.mjs
   ...PRECALC_TOPICS,
+  {
+    // Topic 28 (added 2026-11-14): ordinary differential equations — appended so no chapter number moved (menu group "สมการเชิงอนุพันธ์").
+    // Labs: assets/ms-lab.js (ms-field slope field + Euler/Heun/RK4, ms-ode2 solver with steps and an RK4 check). Tool: /tools/ode-solver/.
+    slug: "differential-equations",
+    title: "สมการเชิงอนุพันธ์ (Differential Equations)",
+    en: "Differential Equations",
+    sym: "y′",
+    summary: "สมการเชิงอนุพันธ์สามัญครบบท: การจำแนก อันดับหนึ่ง (แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี) อันดับสอง (สามกรณีของราก สูตรออยเลอร์) ไม่เอกพันธ์ (เดาสัมประสิทธิ์ เรโซแนนซ์ บีต แปรผันพารามิเตอร์) สปริง RLC ไฟ AC วิธีเชิงตัวเลข และโจทย์ 32 ข้อ พร้อมแล็บแก้สมการแสดงวิธีทำ",
+    sub: [
+      { slug: "first-order", short: "อันดับหนึ่ง", title: "สมการเชิงอนุพันธ์อันดับหนึ่ง: แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี", en: "First-Order ODEs", sym: "μ(t)", tag: "5 วิธี + RC RL",
+        summary: "แยกตัวแปร สมการเชิงเส้นด้วยตัวประกอบอินทิเกรต สมการแม่นตรง เอกพันธ์แบบ y/x เบอร์นูลลี วงจร RC RL ไฟ AC การเย็นตัวของนิวตัน และถังผสม" },
+      { slug: "second-order", short: "อันดับสอง", title: "สมการเชิงอนุพันธ์อันดับสอง: สมการลักษณะเฉพาะและสามกรณีของราก", en: "Second-Order Linear ODEs", sym: "r²", tag: "รากเชิงซ้อน → cos sin",
+        summary: "สมการลักษณะเฉพาะ รากจริง รากซ้ำและที่มาของ te^{rt} รากเชิงซ้อนกับสูตรออยเลอร์ การเขียนเป็น R cos(ωt − φ) วรอนสเกียน และสมการยูเลอร์–โคชี" },
+      { slug: "nonhomogeneous", short: "ไม่เอกพันธ์", title: "สมการไม่เอกพันธ์: เดาสัมประสิทธิ์ เรโซแนนซ์ บีต แปรผันพารามิเตอร์", en: "Nonhomogeneous ODEs", sym: "y_p", tag: "ตารางรูปเดา",
+        summary: "ตารางรูปเดาและกฎคูณ t แรงขับ sin cos ทางลัดเลขเชิงซ้อน เรโซแนนซ์ บีตด้วยสูตรผลบวกเป็นผลคูณ และการแปรผันพารามิเตอร์กับ y″ + y = sec t" },
+      { slug: "applications", short: "การประยุกต์", title: "การประยุกต์: มวล-สปริง วงจร RLC การหน่วง ไฟ AC ลูกตุ้ม", en: "ODE Applications", sym: "ζ", tag: "ตัวเลขจริง + แล็บ",
+        summary: "เทียบมวล-สปริงกับ RLC ความถี่ธรรมชาติ อัตราส่วนการหน่วง ผลตอบสนองขั้นบันไดและ %OS สภาวะอยู่ตัว AC ทำไมเฟสเซอร์ใช้ได้ ลูกตุ้มมุมเล็ก และการเติบโต-สลาย" },
+      { slug: "numerical-methods", short: "วิธีเชิงตัวเลข", title: "วิธีเชิงตัวเลข: Euler, Heun, RK4 ความแม่น เสถียรภาพ และระบบสมการ", en: "Numerical Methods for ODEs", sym: "RK4", tag: "แล็บสนามความชัน",
+        summary: "ออยเลอร์จากเส้นสัมผัส ฮอยน์ รุงเงอ-คุตตาอันดับ 4 ตารางความคลาดเคลื่อนจริง เสถียรภาพของขนาดก้าว การแปลงอันดับสองเป็นระบบ และโค้ด Python" },
+      { slug: "exam-practice", short: "โจทย์พร้อมเฉลย", title: "โจทย์สมการเชิงอนุพันธ์พร้อมเฉลย 32 ข้อ", en: "ODE Exam Practice", sym: "✓", tag: "32 ข้อ 3 ชุด",
+        summary: "ชุด A อันดับหนึ่ง ชุด B อันดับสองและไม่เอกพันธ์ ชุด C สปริง RLC ยูเลอร์–โคชี และวิธีเชิงตัวเลข ทุกข้อตรวจด้วยการแทนกลับแล้ว" },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -841,6 +884,8 @@ const EN_CHROME = [
   ['<a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ<', '<a href="/en/tools/laplace-transform-calculator/">Laplace transform calculator<'],
   ['<a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน<', '<a href="/en/tools/inverse-laplace-transform-calculator/">Inverse Laplace calculator<'],
   ['<a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ<', '<a href="/en/tools/fourier-series-calculator/">Fourier series calculator<'],
+  ['<a href="/tools/ode-solver/">แก้สมการเชิงอนุพันธ์ พร้อมวิธีทำ<', '<a href="/en/tools/ode-solver/">Differential equation solver<'],
+  ['<a href="/tools/convolution-calculator/">คอนโวลูชันไม่ต่อเนื่อง<', '<a href="/en/tools/convolution-calculator/">Convolution calculator<'],
   ['<a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์<', '<a href="/en/tools/power-factor-calculator/">Power factor calculator<'],
   ['<a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569<', '<a href="/en/tools/electricity-bill-calculator/">Thailand electricity bill calculator<'],
   ['<a href="/tools/latex-equation-editor/">เขียนสมการ LaTeX → PNG / SVG<', '<a href="/en/tools/latex-equation-editor/">LaTeX equation editor → PNG / SVG<'],

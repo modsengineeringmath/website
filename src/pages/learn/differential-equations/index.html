@@ -1,0 +1,138 @@
+<!--meta
+{
+  "title": "สมการเชิงอนุพันธ์ (Differential Equations) คืออะไร: สามัญ ย่อย อันดับ เชิงเส้น เอกพันธ์ และวิธีเลือกวิธีแก้ | อาจารย์มด",
+  "h1": "สมการเชิงอนุพันธ์ (Differential Equations): ภาพรวม การจำแนก และวิธีเลือกวิธีแก้",
+  "description": "สมการเชิงอนุพันธ์คืออะไร ต่างจากสมการธรรมดาอย่างไร สมการเชิงอนุพันธ์สามัญกับย่อย อันดับ เชิงเส้น แบบเอกพันธ์ (สองความหมาย) ปัญหาค่าเริ่มต้น ผังเลือกวิธีแก้ แล็บสนามความชัน และเส้นทางเรียนทั้งบทจากอันดับหนึ่งถึงวิธีเชิงตัวเลข",
+  "ogTitle": "สมการเชิงอนุพันธ์คืออะไร: เริ่มจากศูนย์ถึงเลือกวิธีแก้ได้เอง",
+  "lesson": "differential-equations",
+  "nav": "ode",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["สมการเชิงอนุพันธ์", "สมการเชิงอนุพันธ์ คือ", "สมการเชิงอนุพันธ์สามัญ", "สมการเชิงอนุพันธ์ย่อย", "สมการเชิงอนุพันธ์แบบเอกพันธ์", "สมการเชิงอนุพันธ์เชิงเส้น", "อันดับของสมการเชิงอนุพันธ์", "ปัญหาค่าเริ่มต้น", "differential equation", "ordinary differential equation", "ODE"],
+  "about": ["Differential equation", "Ordinary differential equation", "Partial differential equation", "Initial value problem", "Slope field", "Linear differential equation"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "สมการเชิงอนุพันธ์", "sub": "คืออะไร · สามัญ/ย่อย · อันดับ · เชิงเส้น · เอกพันธ์ · เลือกวิธีแก้ · แล็บสนามความชัน", "eyebrow": "บทที่ 28 · Differential Equations", "sym": "y′"},
+  "faq": [
+    {"q": "สมการเชิงอนุพันธ์คืออะไร?", "a": "สมการที่มีอนุพันธ์ของฟังก์ชันที่ไม่รู้อยู่ในสมการ เช่น y′ = 2y คำตอบไม่ใช่ตัวเลขแต่เป็นฟังก์ชัน ในตัวอย่างนี้คือ y = Ce^{2t} สมการแบบนี้บอกว่าปริมาณหนึ่งเปลี่ยนแปลงอย่างไร แล้วให้เราหาว่าปริมาณนั้นเป็นเท่าไรในแต่ละเวลา"},
+    {"q": "สมการเชิงอนุพันธ์สามัญกับสมการเชิงอนุพันธ์ย่อยต่างกันอย่างไร?", "a": "สามัญ (ODE) มีตัวแปรอิสระตัวเดียว เช่นเวลา t จึงมีแต่อนุพันธ์ธรรมดา ส่วนย่อย (PDE) มีตัวแปรอิสระหลายตัว เช่นตำแหน่งและเวลา จึงมีอนุพันธ์ย่อย ∂u/∂x ∂u/∂t เช่นสมการความร้อนและสมการคลื่น"},
+    {"q": "สมการเชิงอนุพันธ์แบบเอกพันธ์หมายถึงอะไร?", "a": "มีสองความหมายที่ตำราใช้ปนกัน ความหมายที่ใช้มากในวิศวกรรมคือสมการเชิงเส้นที่ด้านขวาเป็นศูนย์ เช่น y″ + 3y′ + 2y = 0 อีกความหมายหนึ่งคือสมการอันดับหนึ่งที่เขียนได้เป็น y′ = F(y/x) ซึ่งแก้โดยแทน v = y/x ต้องดูบริบทว่าตำราหมายถึงแบบไหน"},
+    {"q": "อันดับของสมการเชิงอนุพันธ์ดูอย่างไร?", "a": "ดูจากอนุพันธ์ที่สูงที่สุดในสมการ y″ + y = 0 เป็นอันดับสอง ส่วนระดับขั้น (degree) คือเลขยกกำลังของอนุพันธ์อันดับสูงสุดนั้น ซึ่งใช้น้อยกว่ามากในงานวิศวกรรม"},
+    {"q": "ทำไมคำตอบของสมการเชิงอนุพันธ์จึงมีค่าคงที่ C?", "a": "เพราะการแก้สมการคือการอินทิเกรต และทุกการอินทิเกรตมีค่าคงที่หนึ่งตัว สมการอันดับ n จึงมีค่าคงที่ n ตัว เราหาค่าเหล่านี้ได้จากเงื่อนไขเริ่มต้น เช่น y(0) และ y′(0)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li>สมการเชิงอนุพันธ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 28 · คณิตศาสตร์วิศวกรรม · Differential Equations</p>
+      <h1>สมการเชิงอนุพันธ์ (Differential Equations): ภาพรวม การจำแนก และวิธีเลือกวิธีแก้</h1>
+      <p class="lede">กฎทางฟิสิกส์ส่วนใหญ่ไม่ได้บอกตรง ๆ ว่าปริมาณหนึ่งมีค่าเท่าไร แต่บอกว่ามัน<b>เปลี่ยนแปลงอย่างไร</b> ตัวเก็บประจุบอกว่า \(i = C\,dv/dt\) สปริงบอกว่าแรงเป็นสัดส่วนกับระยะยืด กาแฟร้อนบอกว่ายิ่งร้อนกว่าห้องยิ่งเย็นลงเร็ว พอนำความสัมพันธ์เหล่านี้มาเขียนเป็นสมการ เราได้สมการที่มีอนุพันธ์อยู่ข้างใน งานของบทนี้คือย้อนกลับจาก “อัตราการเปลี่ยน” ไปหา “ตัวปริมาณ” ให้ได้</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#what">คืออะไร</a>
+        <a class="btn btn-ghost btn-sm" href="#classify">การจำแนก</a>
+        <a class="btn btn-ghost btn-sm" href="#choose">เลือกวิธีแก้</a>
+        <a class="btn btn-ghost btn-sm" href="#field">แล็บสนามความชัน</a>
+        <a class="btn btn-ghost btn-sm" href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="what">
+    <h2 id="what">สมการเชิงอนุพันธ์คืออะไร</h2>
+    <p><b>สมการเชิงอนุพันธ์</b> (differential equation) คือสมการที่ตัวไม่รู้เป็น<b>ฟังก์ชัน</b> และมีอนุพันธ์ของฟังก์ชันนั้นอยู่ในสมการ ต่างจากสมการที่เรียนมาตั้งแต่ ม.ต้น ที่ตัวไม่รู้เป็นตัวเลข ลองเทียบดู</p>
+    <div class="table-wrap"><table><thead><tr><th></th><th>สมการพีชคณิต</th><th>สมการเชิงอนุพันธ์</th></tr></thead><tbody>
+      <tr><td>ตัวอย่าง</td><td>\(x^2 - 5x + 6 = 0\)</td><td>\(y' = 2y\)</td></tr>
+      <tr><td>หาอะไร</td><td>ตัวเลข x</td><td>ฟังก์ชัน y(t)</td></tr>
+      <tr><td>คำตอบ</td><td>\(x = 2\) หรือ \(3\)</td><td>\(y = Ce^{2t}\) ทุกค่า C</td></tr>
+      <tr><td>ตรวจคำตอบ</td><td>แทนค่า x</td><td>ดิฟ y แล้วแทนทั้ง y และ y′</td></tr>
+    </tbody></table></div>
+    <p>ลองตรวจ \(y = Ce^{2t}\) ดิฟได้ \(y' = 2Ce^{2t} = 2y\) จริงทุกค่า C คำตอบจึงเป็น<b>ตระกูลของฟังก์ชัน</b> ไม่ใช่ตัวเดียว ค่า C ที่เหลืออยู่มาจากการอินทิเกรตหนึ่งครั้ง ถ้ารู้เพิ่มว่า \(y(0) = 3\) จะได้ \(C = 3\) คำตอบเดียวคือ \(y = 3e^{2t}\) โจทย์ที่ให้สมการพร้อมค่าเริ่มต้นแบบนี้เรียกว่า<b>ปัญหาค่าเริ่มต้น</b> (initial value problem)</p>
+    <h3 id="where">พบที่ไหนบ้าง</h3>
+    <div class="table-wrap"><table><thead><tr><th>ระบบ</th><th>กฎที่ใช้</th><th>สมการ</th><th>อันดับ</th></tr></thead><tbody>
+      <tr><td>วงจร RC ชาร์จ</td><td>KVL + \(i = C\,dv/dt\)</td><td>\(RC\,v' + v = V_s\)</td><td>1</td></tr>
+      <tr><td>วงจร RL</td><td>KVL + \(v = L\,di/dt\)</td><td>\(L\,i' + Ri = v(t)\)</td><td>1</td></tr>
+      <tr><td>กาแฟเย็นลง</td><td>กฎการเย็นตัวของนิวตัน</td><td>\(T' = -k(T - T_a)\)</td><td>1</td></tr>
+      <tr><td>ประชากร</td><td>อัตราเกิดเป็นสัดส่วนกับจำนวน</td><td>\(P' = rP\left(1 - \tfrac{P}{K}\right)\)</td><td>1</td></tr>
+      <tr><td>มวล-สปริง-ตัวหน่วง</td><td>\(F = ma\)</td><td>\(mx'' + cx' + kx = F(t)\)</td><td>2</td></tr>
+      <tr><td>วงจร RLC อนุกรม</td><td>KVL</td><td>\(Lq'' + Rq' + q/C = v(t)\)</td><td>2</td></tr>
+      <tr><td>ลูกตุ้ม</td><td>โมเมนต์ = ความเร่งเชิงมุม</td><td>\(\theta'' + \tfrac{g}{L}\sin\theta = 0\)</td><td>2 (ไม่เชิงเส้น)</td></tr>
+    </tbody></table></div>
+    <p>สังเกตว่าวงจร RLC กับมวล-สปริงมีหน้าตาเหมือนกันทุกตัวอักษร นี่ไม่ใช่เรื่องบังเอิญ และเป็นเหตุผลที่วิศวกรไฟฟ้ากับวิศวกรเครื่องกลเรียนบทนี้ร่วมกันได้ รายละเอียดอยู่ใน<a href="/learn/differential-equations/applications/">การประยุกต์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="classify">
+    <h2 id="classify">การจำแนกสมการเชิงอนุพันธ์</h2>
+    <p>ก่อนแก้ ต้องรู้ว่าสมการตรงหน้าเป็นชนิดไหน เพราะแต่ละชนิดมีวิธีของมัน ถามสี่ข้อนี้ตามลำดับ</p>
+    <h3 id="ode-pde">1. สามัญหรือย่อย (ODE / PDE)</h3>
+    <p><b>สมการเชิงอนุพันธ์สามัญ</b> (ordinary differential equation, ODE) มีตัวแปรอิสระตัวเดียว ส่วน<b>สมการเชิงอนุพันธ์ย่อย</b> (partial differential equation, PDE) มีตัวแปรอิสระหลายตัวและมีอนุพันธ์ย่อย เช่นสมการความร้อน \(\dfrac{\partial u}{\partial t} = \alpha\dfrac{\partial^2u}{\partial x^2}\) บทนี้ทั้งบทเป็น ODE</p>
+    <h3 id="order">2. อันดับ (order)</h3>
+    <p>ดูอนุพันธ์ตัวที่สูงที่สุด \(y' = 2y\) อันดับหนึ่ง \(y'' + 4y = 0\) อันดับสอง อันดับบอกจำนวนค่าคงที่ในคำตอบทั่วไป และจำนวนเงื่อนไขเริ่มต้นที่ต้องใช้ ระบบไฟฟ้าและเครื่องกลส่วนใหญ่เป็นอันดับหนึ่งหรือสอง เพราะมีตัวเก็บพลังงานหนึ่งหรือสองตัว</p>
+    <h3 id="linear">3. เชิงเส้นหรือไม่เชิงเส้น</h3>
+    <p>สมการเป็นเชิงเส้นเมื่อ y และอนุพันธ์ทุกตัวปรากฏแบบ “ยกกำลังหนึ่ง ไม่คูณกันเอง และไม่อยู่ในฟังก์ชันอื่น” รูปทั่วไปของอันดับสองคือ</p>
+    \[ a_2(t)\,y'' + a_1(t)\,y' + a_0(t)\,y = f(t) \]
+    <div class="table-wrap"><table><thead><tr><th>สมการ</th><th>เชิงเส้น?</th><th>เหตุผล</th></tr></thead><tbody>
+      <tr><td>\(y'' + 3ty' + y = \sin t\)</td><td>ใช่</td><td>สัมประสิทธิ์เป็นฟังก์ชันของ t ได้ ไม่ผิดกติกา</td></tr>
+      <tr><td>\(y' = y^2\)</td><td>ไม่</td><td>มี \(y^2\)</td></tr>
+      <tr><td>\(yy'' = 1\)</td><td>ไม่</td><td>y คูณกับ y″</td></tr>
+      <tr><td>\(\theta'' + \sin\theta = 0\)</td><td>ไม่</td><td>θ อยู่ใน sin <a class="tg" href="/learn/trigonometry/#series" title="sin x = x − x³/3! + … · cos x = 1 − x²/2! + …">อนุกรมของ sin cos</a> แต่ถ้ามุมเล็ก \(\sin\theta \approx \theta\) จะกลายเป็นเชิงเส้น</td></tr>
+    </tbody></table></div>
+    <p>ความเป็นเชิงเส้นสำคัญมาก เพราะทำให้ใช้<b>หลักการซ้อนทับ</b> (superposition) ได้ ถ้า \(y_1\) กับ \(y_2\) เป็นคำตอบของสมการเชิงเส้นเอกพันธ์ ผลรวม \(C_1y_1 + C_2y_2\) ก็เป็นคำตอบด้วย วิศวกรไฟฟ้าใช้หลักนี้ทุกครั้งที่วิเคราะห์วงจรด้วยการซ้อนทับแหล่งจ่าย</p>
+    <h3 id="homogeneous">4. เอกพันธ์ (homogeneous) สองความหมายที่ต้องระวัง</h3>
+    <p>คำว่าเอกพันธ์ในตำราภาษาไทยและอังกฤษใช้สองความหมาย ทำให้สับสนบ่อย</p>
+    <ul>
+      <li><b>ความหมายที่ใช้กับสมการเชิงเส้น</b> (ใช้มากที่สุดในวิศวกรรม): ด้านขวาเป็นศูนย์ เช่น \(y'' + 3y' + 2y = 0\) คำตอบคือการตอบสนองของระบบเมื่อไม่มีแรงหรือแหล่งจ่ายภายนอก ถ้าด้านขวาไม่เป็นศูนย์เรียกว่า<b>ไม่เอกพันธ์</b> (nonhomogeneous)</li>
+      <li><b>ความหมายที่ใช้กับสมการอันดับหนึ่ง</b>: เขียนได้เป็น \(y' = F(y/x)\) เช่น \(y' = \dfrac{x + y}{x}\) แก้โดยแทน \(v = y/x\) ดู<a href="/learn/differential-equations/first-order/#homogeneous-sub">อันดับหนึ่ง: สมการเอกพันธ์แบบ y/x</a></li>
+    </ul>
+    </section>
+
+    <section class="tsec" aria-labelledby="field">
+    <h2 id="field">มองสมการเป็นภาพ: สนามความชัน (slope field)</h2>
+    <p>สมการ \(y' = f(t, y)\) บอกความชันของคำตอบที่ทุกจุด ถ้าวาดขีดสั้น ๆ ตามความชันนั้นทั่วระนาบ จะได้ภาพที่เหมือนเศษเหล็กเรียงตัวในสนามแม่เหล็ก คำตอบทุกเส้นต้องวิ่งตามขีดเหล่านี้ ภาพนี้ช่วยให้เห็นพฤติกรรมของคำตอบก่อนแก้สมการด้วยซ้ำ เช่น ทุกเส้นวิ่งเข้าหาเส้นเดียวกันไหม หรือแยกออกจากกัน</p>
+    <div class="cl-lab ms-field" data-f="t - y" data-y0="1" data-tmax="4" data-ymin="-2" data-ymax="3" data-h="0.5"></div>
+    <p>ลองกดตัวอย่าง “y” จะเห็นว่าคำตอบโตแบบเลขชี้กำลังและแยกจากกันเรื่อย ๆ ส่วน “t − y” ทุกเส้นวิ่งเข้าหาเส้นตรง \(y = t - 1\) ไม่ว่าจะเริ่มที่ไหน นั่นคือคำตอบเฉพาะที่ชนะในระยะยาว ส่วนที่เหลือ \(Ce^{-t}\) ค่อย ๆ หายไป เส้นสามสีคือวิธีเชิงตัวเลขสามแบบ อธิบายเต็มใน<a href="/learn/differential-equations/numerical-methods/">วิธีเชิงตัวเลข</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="choose">
+    <h2 id="choose">เลือกวิธีแก้จากหน้าตาสมการ</h2>
+    <div class="table-wrap"><table><thead><tr><th>หน้าตาสมการ</th><th>วิธี</th><th>อ่านต่อ</th></tr></thead><tbody>
+      <tr><td>\(y' = g(t)\,h(y)\) แยก t กับ y ออกจากกันได้</td><td>แยกตัวแปร (separable)</td><td><a href="/learn/differential-equations/first-order/#separable">28.1</a></td></tr>
+      <tr><td>\(y' + p(t)\,y = q(t)\)</td><td>ตัวประกอบอินทิเกรต (integrating factor)</td><td><a href="/learn/differential-equations/first-order/#linear">28.1</a></td></tr>
+      <tr><td>\(M\,dx + N\,dy = 0\) และ \(M_y = N_x\)</td><td>สมการแม่นตรง (exact)</td><td><a href="/learn/differential-equations/first-order/#exact">28.1</a></td></tr>
+      <tr><td>\(y' + p\,y = q\,y^n\)</td><td>เบอร์นูลลี แทน \(v = y^{1-n}\)</td><td><a href="/learn/differential-equations/first-order/#bernoulli">28.1</a></td></tr>
+      <tr><td>\(ay'' + by' + cy = 0\) สัมประสิทธิ์คงที่</td><td>สมการลักษณะเฉพาะ</td><td><a href="/learn/differential-equations/second-order/">28.2</a></td></tr>
+      <tr><td>\(ay'' + by' + cy = f(t)\), f เป็นพหุนาม \(e^{kt}\) sin cos</td><td>เดาสัมประสิทธิ์ (undetermined coefficients)</td><td><a href="/learn/differential-equations/nonhomogeneous/">28.3</a></td></tr>
+      <tr><td>f(t) เป็นรูปอื่น เช่น \(\sec t\), \(\ln t\)</td><td>แปรผันพารามิเตอร์ (variation of parameters)</td><td><a href="/learn/differential-equations/nonhomogeneous/#variation">28.3</a></td></tr>
+      <tr><td>f(t) เป็นช่วง ๆ มีหน่วงเวลา หรือเป็นอิมพัลส์</td><td>การแปลงลาปลาซ</td><td><a href="/learn/laplace-transform/differential-equations/">8.4</a></td></tr>
+      <tr><td>ไม่เชิงเส้นและไม่เข้ารูปใดเลย</td><td>วิธีเชิงตัวเลข (Euler, RK4)</td><td><a href="/learn/differential-equations/numerical-methods/">28.5</a></td></tr>
+    </tbody></table></div>
+    <p>ทุกครั้งที่แก้เสร็จ ให้ตรวจคำตอบด้วยการแทนกลับลงในสมการ ใช้เวลาไม่ถึงนาทีแต่จับข้อผิดพลาดได้เกือบทั้งหมด หรือใช้<a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>ที่แสดงวิธีทำทุกขั้นและตรวจเชิงตัวเลขให้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="trig-link">
+    <h2 id="trig-link">ทำไมบทนี้มีตรีโกณมิติเต็มไปหมด</h2>
+    <p>ตั้งแต่อันดับสองเป็นต้นไป คำตอบของระบบที่สั่นได้จะออกมาเป็น sin และ cos เสมอ เหตุผลมีบรรทัดเดียว: \((\sin\omega t)'' = -\omega^2\sin\omega t\) <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> ฟังก์ชันที่ดิฟสองครั้งแล้วได้ตัวเองติดลบคือคำตอบของ \(y'' + \omega^2y = 0\) พอดี แล้วเมื่อรากของสมการลักษณะเฉพาะเป็นจำนวนเชิงซ้อน สูตรออยเลอร์ \(e^{j\theta} = \cos\theta + j\sin\theta\) <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> จะพาเลขชี้กำลังเชิงซ้อนกลับมาเป็น cos กับ sin ส่วนการรวม \(A\cos\omega t + B\sin\omega t\) เป็นคลื่นเดียว \(R\cos(\omega t - \varphi)\) <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> ใช้ตลอดบทเพื่ออ่านแอมพลิจูดกับเฟส ทุกครั้งที่ใช้เอกลักษณ์เหล่านี้จะมีป้ายสีน้ำเงินกำกับไว้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="pages">
+    <h2 id="pages">เส้นทางเรียนในบทนี้</h2>
+    <ol>
+      <li><a href="/learn/differential-equations/first-order/">อันดับหนึ่ง</a>: แยกตัวแปร ตัวประกอบอินทิเกรต แม่นตรง เบอร์นูลลี วงจร RC RL การเย็นตัว ถังผสม</li>
+      <li><a href="/learn/differential-equations/second-order/">อันดับสองเอกพันธ์</a>: สมการลักษณะเฉพาะ สามกรณีของราก สูตรออยเลอร์ ยูเลอร์–โคชี</li>
+      <li><a href="/learn/differential-equations/nonhomogeneous/">อันดับสองไม่เอกพันธ์</a>: ตารางเดาคำตอบ เรโซแนนซ์ บีต แปรผันพารามิเตอร์</li>
+      <li><a href="/learn/differential-equations/applications/">การประยุกต์</a>: มวล-สปริง RLC อัตราส่วนการหน่วง ผลตอบสนองขั้นบันได ไฟ AC ลูกตุ้ม</li>
+      <li><a href="/learn/differential-equations/numerical-methods/">วิธีเชิงตัวเลข</a>: Euler, Heun, RK4 ความแม่นและเสถียรภาพ ระบบสมการ</li>
+      <li><a href="/learn/differential-equations/exam-practice/">โจทย์พร้อมเฉลย</a>: 32 ข้อ ทุกข้อตรวจด้วยการแทนกลับแล้ว</li>
+    </ol>
+    <p>พื้นฐานที่ควรมีก่อนเริ่ม: <a href="/learn/differential-calculus/derivative-table/">สูตรดิฟ</a> <a href="/learn/integral-calculus/integral-table/">สูตรอินทิเกรต</a> และ<a href="/learn/differential-calculus/trig-derivatives/">อนุพันธ์ตรีโกณ</a></p>
+    </section>
+
+    <!--faq-->
+    <!--pager-->
+  </article>
+</div>

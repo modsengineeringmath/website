@@ -1,0 +1,168 @@
+<!--meta
+{
+  "title": "การแปลง Z (Z-Transform): ตารางคู่การแปลง ROC สมการผลต่าง ฟังก์ชันถ่ายโอนดิจิทัล โพล-ซีโร และเสถียรภาพ | อาจารย์มด",
+  "h1": "การแปลง Z (Z-Transform): เครื่องมือหลักของสัญญาณและระบบเวลาไม่ต่อเนื่อง",
+  "description": "การแปลง Z ภาษาไทยแบบละเอียด นิยาม ROC ตารางคู่การแปลงพร้อมที่มาของคู่ cos sin ด้วยสูตรออยเลอร์ คุณสมบัติการเลื่อนเวลา คอนโวลูชัน การแปลงผกผันด้วยเศษส่วนย่อย แก้สมการผลต่าง โพล-ซีโร เสถียรภาพ ผลตอบสนองเชิงความถี่บนวงกลมหนึ่งหน่วย และแล็บตัวกรองดิจิทัล",
+  "ogTitle": "การแปลง Z: ตาราง ROC สมการผลต่าง และโพลในวงกลมหนึ่งหน่วย",
+  "lesson": "signals",
+  "sub": "z-transform",
+  "nav": "sig",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["การแปลง Z", "z-transform", "ตารางการแปลง z", "z transform table", "การแปลง z ผกผัน", "inverse z transform", "สมการผลต่าง", "difference equation", "ROC", "โพลซีโร", "ตัวกรองดิจิทัล", "ฟังก์ชันถ่ายโอนดิจิทัล"],
+  "about": ["Z-transform", "Region of convergence", "Inverse Z-transform", "Difference equation", "Poles and zeros", "Digital filter", "Discrete-time Fourier transform"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "การแปลง Z", "sub": "ตารางคู่การแปลง · ROC · สมการผลต่าง · โพล-ซีโร · เสถียรภาพ · ตัวกรองดิจิทัล", "eyebrow": "บทที่ 11.4 · Z-Transform", "sym": "z⁻¹"},
+  "faq": [
+    {"q": "การแปลง Z คืออะไร ต่างจากลาปลาซอย่างไร?", "a": "การแปลง Z คือ X(z) = Σ x[n] z^{−n} ใช้กับสัญญาณไม่ต่อเนื่อง เทียบได้กับการแปลงลาปลาซที่ใช้กับสัญญาณต่อเนื่อง ทั้งสองเปลี่ยนสมการ (ผลต่างหรืออนุพันธ์) เป็นพีชคณิต และเชื่อมกันด้วย z = e^{sT} ซีกซ้ายของระนาบ s ถูกส่งไปอยู่ในวงกลมหนึ่งหน่วยของระนาบ z"},
+    {"q": "ROC (region of convergence) สำคัญอย่างไร?", "a": "X(z) สูตรเดียวกันมาจากสัญญาณต่างกันได้ เช่น z/(z − a) มาจาก aⁿu[n] ถ้า ROC คือ |z| > |a| แต่มาจาก −aⁿu[−n−1] ถ้า ROC คือ |z| < |a| ROC จึงเป็นส่วนหนึ่งของคำตอบ และบอกความเป็นคอซัลกับเสถียรภาพด้วย"},
+    {"q": "ระบบดิจิทัลเสถียรเมื่อไร?", "a": "ระบบคอซัลเสถียรก็ต่อเมื่อโพลทุกตัวของ H(z) อยู่ในวงกลมหนึ่งหน่วย |z| < 1 เพราะโพลที่ z = p ให้พจน์ pⁿ ใน h[n] ซึ่งลดลงเป็นศูนย์ได้ก็ต่อเมื่อ |p| < 1"},
+    {"q": "หาการแปลง Z ผกผันอย่างไร?", "a": "วิธีที่ใช้บ่อยที่สุดคือแยกเศษส่วนย่อยของ X(z)/z (หารด้วย z ก่อน) แล้วคูณ z กลับ จะได้พจน์ Az/(z − p) ซึ่งเปิดตารางได้ A pⁿ u[n] ทันที วิธีอื่นคือหารยาวเพื่อได้ทีละค่า หรือใช้อินทิกรัลเชิงซ้อนกับเรซิดิว"},
+    {"q": "ทำไมผลตอบสนองเชิงความถี่ของระบบดิจิทัลอยู่บนวงกลมหนึ่งหน่วย?", "a": "เพราะอินพุตไซน์ความถี่ดิจิทัล Ω เขียนเป็น e^{jΩn} ซึ่งก็คือ zⁿ ที่ z = e^{jΩ} จุดนี้มีขนาด 1 เสมอ (cos²Ω + sin²Ω = 1) จึงอยู่บนวงกลมหนึ่งหน่วย เดินรอบวงกลมจาก Ω = 0 ถึง π คือกวาดจาก DC ถึงความถี่ Nyquist"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/signals/">สัญญาณและระบบ</a></li><li>การแปลง Z</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 11.4 · สัญญาณและระบบ · Z-Transform</p>
+      <h1>การแปลง Z (Z-Transform): เครื่องมือหลักของสัญญาณและระบบเวลาไม่ต่อเนื่อง</h1>
+      <p class="lede">โปรแกรมกรองสัญญาณในไมโครคอนโทรลเลอร์ ตัวควบคุม PID แบบดิจิทัล หรือเครื่องปรับเสียงในมือถือ ทั้งหมดคือสมการผลต่าง (difference equation) การแปลง Z เปลี่ยนสมการพวกนี้เป็นพีชคณิต แบบเดียวกับที่<a href="/learn/laplace-transform/">ลาปลาซ</a>ทำกับสมการเชิงอนุพันธ์ ผมจะเล่าเป็นลำดับ นิยาม ตาราง คุณสมบัติ ผกผัน แล้วจบที่โพล-ซีโรกับตัวกรอง ส่วนที่ใช้ตรีโกณ (คู่ cos sin และผลตอบสนองเชิงความถี่) ผมแสดงทุกบรรทัด</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#table">ตารางคู่การแปลง</a>
+        <a class="btn btn-ghost btn-sm" href="#inverse">การแปลงผกผัน</a>
+        <a class="btn btn-ghost btn-sm" href="#difference">สมการผลต่าง</a>
+        <a class="btn btn-ghost btn-sm" href="#lab-z">แล็บโพล-ซีโร</a>
+      </div>
+      <div class="tldr"><b>สามบรรทัดที่ต้องจำ</b>
+      \[ X(z) = \sum_{n=-\infty}^{\infty} x[n]\,z^{-n},\qquad x[n-k] \leftrightarrow z^{-k}X(z),\qquad x * h \leftrightarrow X(z)H(z) \]
+      <p>ระบบคอซัลเสถียร ⇔ โพลทุกตัวอยู่ใน \(|z| &lt; 1\) · ผลตอบสนองเชิงความถี่ = \(H(z)\) ที่ \(z = e^{j\Omega}\)</p></div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="definition">
+    <h2 id="definition">นิยามและ ROC <span class="lv lv-b">พื้นฐาน</span></h2>
+    <p>การแปลง Z ของลำดับ x[n] คืออนุกรมกำลังของ \(z^{-1}\) ที่มี x[n] เป็นสัมประสิทธิ์ ลองตัวที่สำคัญที่สุดก่อน \(x[n] = a^nu[n]\)</p>
+    \[ X(z) = \sum_{n=0}^{\infty} a^n z^{-n} = \sum_{n=0}^{\infty}\big(az^{-1}\big)^n = \frac{1}{1 - az^{-1}} = \frac{z}{z - a},\qquad |z| &gt; |a| \]
+    <p>ขั้นนี้คือ<a href="/learn/sequences-and-series/">อนุกรมเรขาคณิต</a>ตรง ๆ ลู่เข้าก็ต่อเมื่ออัตราส่วน \(|az^{-1}| &lt; 1\) เงื่อนไขนี้คือ <b>ROC</b> (region of convergence) ซึ่งเป็นบริเวณนอกวงกลมรัศมี |a|</p>
+    <p>ทำไม ROC สำคัญ ลองลำดับที่อยู่ฝั่งลบ \(x[n] = -a^nu[-n-1]\) คิดแบบเดียวกันจะได้ \(\dfrac{z}{z - a}\) เหมือนกันทุกตัวอักษร แต่ ROC เป็น \(|z| &lt; |a|\) คือ<b>สูตรเดียวกันมาจากสองสัญญาณ</b> ROC เท่านั้นที่บอกว่าเป็นตัวไหน ในวิชานี้ถ้าไม่บอก ให้ถือว่าสัญญาณเป็นคอซัล ROC อยู่นอกโพลตัวที่ไกลที่สุด</p>
+    <h3>z คืออะไรในทางกายภาพ</h3>
+    <p>เขียน \(z = re^{j\Omega}\) แล้ว \(z^n = r^ne^{j\Omega n} = r^n(\cos\Omega n + j\sin\Omega n)\) <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> ฟังก์ชันพื้นฐานของการแปลง Z จึงเป็น<b>ไซน์ที่ขนาดโตหรือหดตาม rⁿ</b> r บอกการโตหรือหด Ω บอกความเร็วการหมุน เทียบกับลาปลาซที่ \(e^{st} = e^{\sigma t}(\cos\omega t + j\sin\omega t)\) จะเห็นว่าเป็นเรื่องเดียวกัน เชื่อมกันด้วย \(z = e^{sT_s}\) ได้ \(r = e^{\sigma T_s}\) และ \(\Omega = \omega T_s\) ดังนั้น σ &lt; 0 (ซีกซ้ายของระนาบ s) ไปอยู่ที่ r &lt; 1 (ในวงกลมหนึ่งหน่วย)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางคู่การแปลง Z (สัญญาณคอซัล)</h2>
+    <div class="table-wrap"><table><thead><tr><th>\(x[n]\)</th><th>\(X(z)\)</th><th>ROC</th></tr></thead><tbody>
+      <tr><td>\(\delta[n]\)</td><td>\(1\)</td><td>ทุก z</td></tr>
+      <tr><td>\(\delta[n - k]\)</td><td>\(z^{-k}\)</td><td>\(z \ne 0\)</td></tr>
+      <tr><td>\(u[n]\)</td><td>\(\dfrac{z}{z - 1}\)</td><td>\(|z| &gt; 1\)</td></tr>
+      <tr><td>\(a^nu[n]\)</td><td>\(\dfrac{z}{z - a}\)</td><td>\(|z| &gt; |a|\)</td></tr>
+      <tr><td>\(n\,u[n]\)</td><td>\(\dfrac{z}{(z - 1)^2}\)</td><td>\(|z| &gt; 1\)</td></tr>
+      <tr><td>\(n\,a^nu[n]\)</td><td>\(\dfrac{az}{(z - a)^2}\)</td><td>\(|z| &gt; |a|\)</td></tr>
+      <tr><td>\(\cos(\Omega_0n)\,u[n]\)</td><td>\(\dfrac{z(z - \cos\Omega_0)}{z^2 - 2z\cos\Omega_0 + 1}\)</td><td>\(|z| &gt; 1\)</td></tr>
+      <tr><td>\(\sin(\Omega_0n)\,u[n]\)</td><td>\(\dfrac{z\sin\Omega_0}{z^2 - 2z\cos\Omega_0 + 1}\)</td><td>\(|z| &gt; 1\)</td></tr>
+      <tr><td>\(r^n\cos(\Omega_0n)\,u[n]\)</td><td>\(\dfrac{z(z - r\cos\Omega_0)}{z^2 - 2rz\cos\Omega_0 + r^2}\)</td><td>\(|z| &gt; r\)</td></tr>
+      <tr><td>\(r^n\sin(\Omega_0n)\,u[n]\)</td><td>\(\dfrac{zr\sin\Omega_0}{z^2 - 2rz\cos\Omega_0 + r^2}\)</td><td>\(|z| &gt; r\)</td></tr>
+    </tbody></table></div>
+    <p>ทุกแถวในตารางนี้ผมตรวจด้วยการบวกอนุกรมเชิงตัวเลข 400 พจน์ที่ z เชิงซ้อนค่าหนึ่ง ได้ผลต่างระดับ 10⁻¹⁶</p>
+    <h3>ที่มาของคู่ cos: สูตรออยเลอร์สามครั้ง <span class="lv lv-i">กลาง</span></h3>
+    <p>คู่ cos กับ sin ดูยาก แต่จริง ๆ มาจากแถว \(a^nu[n]\) แถวเดียว แค่ใช้ a เป็นจำนวนเชิงซ้อน</p>
+    <ol>
+      <li>แตก cos เป็นเลขชี้กำลัง <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a> \(\cos\Omega_0n = \tfrac12\big(e^{j\Omega_0n} + e^{-j\Omega_0n}\big)\) แต่ละก้อนคือ \(a^n\) ที่ \(a = e^{\pm j\Omega_0}\)</li>
+      <li>เปิดตาราง: \(X(z) = \tfrac12\Big(\dfrac{z}{z - e^{j\Omega_0}} + \dfrac{z}{z - e^{-j\Omega_0}}\Big)\)</li>
+      <li>ตัวส่วนร่วม: \((z - e^{j\Omega_0})(z - e^{-j\Omega_0}) = z^2 - z\big(e^{j\Omega_0} + e^{-j\Omega_0}\big) + e^{0} = z^2 - 2z\cos\Omega_0 + 1\) <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></li>
+      <li>ตัวเศษ: \(\tfrac12 z\big[(z - e^{-j\Omega_0}) + (z - e^{j\Omega_0})\big] = \tfrac12 z\big[2z - 2\cos\Omega_0\big] = z(z - \cos\Omega_0)\)</li>
+    </ol>
+    <p>ทำแบบเดียวกันกับ sin <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a> ตัวเศษจะเป็น \(\tfrac{1}{2j}z\big(e^{j\Omega_0} - e^{-j\Omega_0}\big) = z\sin\Omega_0\) ส่วนแถว \(r^n\cos\) ได้จากการแทน z ด้วย z/r (คุณสมบัติการคูณด้วย \(r^n\)) สังเกตว่าตัวส่วนคือ \(|z - re^{j\Omega_0}|\) คูณกับสังยุค โพลคู่จึงอยู่ที่ \(re^{\pm j\Omega_0}\) รัศมี r มุม ±Ω₀</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="properties">
+    <h2 id="properties">คุณสมบัติที่ใช้บ่อย</h2>
+    <div class="table-wrap"><table><thead><tr><th>คุณสมบัติ</th><th>เวลา</th><th>Z</th></tr></thead><tbody>
+      <tr><td>เชิงเส้น</td><td>\(ax_1 + bx_2\)</td><td>\(aX_1 + bX_2\)</td></tr>
+      <tr><td>หน่วงเวลา (เงื่อนไขเริ่มต้นเป็นศูนย์)</td><td>\(x[n - k]\)</td><td>\(z^{-k}X(z)\)</td></tr>
+      <tr><td>หน่วงหนึ่งก้าว (มีค่าเริ่มต้น)</td><td>\(x[n - 1]u[n]\)</td><td>\(z^{-1}X(z) + x[-1]\)</td></tr>
+      <tr><td>คอนโวลูชัน</td><td>\(x * h\)</td><td>\(X(z)H(z)\)</td></tr>
+      <tr><td>คูณด้วย \(a^n\)</td><td>\(a^nx[n]\)</td><td>\(X(z/a)\)</td></tr>
+      <tr><td>คูณด้วย n</td><td>\(n\,x[n]\)</td><td>\(-z\,\dfrac{dX}{dz}\)</td></tr>
+      <tr><td>ค่าเริ่มต้น</td><td>\(x[0]\)</td><td>\(\lim_{z\to\infty}X(z)\)</td></tr>
+      <tr><td>ค่าสุดท้าย (ถ้ามี)</td><td>\(\lim_{n\to\infty}x[n]\)</td><td>\(\lim_{z\to1}(z - 1)X(z)\)</td></tr>
+    </tbody></table></div>
+    <p>\(z^{-1}\) คือ "หน่วงหนึ่งจุด" ในแผนภาพบล็อกตัวกรองดิจิทัลจึงเห็นกล่อง \(z^{-1}\) อยู่ทุกที่ ในโปรแกรมมันคือตัวแปรที่จำค่ารอบที่แล้ว และเพราะคอนโวลูชันกลายเป็นการคูณ <a href="/learn/signals/lti-convolution/#discrete">ตารางคูณคอนโวลูชัน</a>จึงเหมือนการคูณพหุนามใน \(z^{-1}\) ทุกประการ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="inverse">
+    <h2 id="inverse">การแปลง Z ผกผัน: เศษส่วนย่อยของ X(z)/z <span class="lv lv-i">กลาง</span></h2>
+    <p>ตารางมีแต่รูป \(\dfrac{z}{z - a}\) ซึ่งมี z อยู่ข้างบน เคล็ดลับคือ<b>หารด้วย z ก่อน</b> แยกเศษส่วนย่อยของ X(z)/z ด้วยวิธีปิดตัวประกอบ (cover-up) แล้วคูณ z กลับ ทุกพจน์จะอยู่ในรูปที่เปิดตารางได้ทันที ขั้นตอนเหมือน<a href="/learn/laplace-transform/inverse-laplace-transform/">ลาปลาซผกผัน</a>ทุกอย่าง</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1</span><h3>\(X(z) = \dfrac{z}{(z - 0.5)(z - 1)}\), คอซัล</h3></div><ol class="steps">
+      <li><p>\(\dfrac{X(z)}{z} = \dfrac{1}{(z - 0.5)(z - 1)} = \dfrac{A}{z - 0.5} + \dfrac{B}{z - 1}\)</p></li>
+      <li><p>ปิดตัวประกอบ: \(A = \dfrac{1}{0.5 - 1} = -2\), \(B = \dfrac{1}{1 - 0.5} = 2\)</p></li>
+      <li><p>\(X(z) = -2\dfrac{z}{z - 0.5} + 2\dfrac{z}{z - 1}\)</p></li>
+    </ol><p class="answer">\(x[n] = 2\big(1 - 0.5^n\big)u[n]\) · ตรวจ: x[0] = 0 ตรงกับ \(\lim_{z\to\infty}X = 0\) และค่าสุดท้าย \(\lim_{z\to1}(z - 1)X = \tfrac{1}{0.5} = 2\) ตรงกัน</p></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2</span><h3>\(X(z) = \dfrac{z}{(z - \tfrac12)(z + \tfrac14)}\)</h3></div><ol class="steps">
+      <li><p>\(A = \dfrac{1}{\tfrac12 + \tfrac14} = \tfrac43\), \(B = \dfrac{1}{-\tfrac14 - \tfrac12} = -\tfrac43\)</p></li>
+    </ol><p class="answer">\(x[n] = \tfrac43\Big[\big(\tfrac12\big)^n - \big(-\tfrac14\big)^n\Big]u[n]\) · โพลลบให้พจน์ที่สลับเครื่องหมายทุกก้าว (แกว่งที่ความถี่ Nyquist Ω = π)</p></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>โพลเชิงซ้อน: \(H(z) = \dfrac{z^2}{z^2 - z + \tfrac12}\)</h3></div><ol class="steps">
+      <li><p>โพล \(z = \tfrac12 \pm \tfrac12j = \tfrac{1}{\sqrt2}e^{\pm j\pi/4}\) ได้ \(r = \tfrac{1}{\sqrt2}\), \(\Omega_0 = \tfrac\pi4\) <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a></p></li>
+      <li><p>เทียบกับตาราง: \(2r\cos\Omega_0 = 1\) และ \(r^2 = \tfrac12\) ตรง แยกตัวเศษ \(z^2 = z\big(z - \tfrac12\big) + \tfrac12z\) โดย \(r\cos\Omega_0 = r\sin\Omega_0 = \tfrac12\)</p></li>
+      <li><p>ได้ \(h[n] = r^n\cos\tfrac{\pi n}{4} + r^n\sin\tfrac{\pi n}{4}\)</p></li>
+      <li><p>รวมคลื่น <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> \(\cos\theta + \sin\theta = \sqrt2\cos(\theta - \tfrac\pi4)\)</p></li>
+    </ol><p class="answer">\(h[n] = \big(\tfrac{1}{\sqrt2}\big)^{n}\sqrt2\cos\!\big(\tfrac{\pi n}{4} - \tfrac{\pi}{4}\big)u[n]\) = \(\{1, 1, \tfrac12, 0, -\tfrac14, -\tfrac14, -\tfrac18, 0, \dots\}\) แกว่งด้วยคาบ 8 จุดและหดลงตาม rⁿ</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="difference">
+    <h2 id="difference">แก้สมการผลต่างและหาฟังก์ชันถ่ายโอน</h2>
+    <p>สมการผลต่างเชิงเส้นสัมประสิทธิ์คงที่แปลง Z ได้ทีละพจน์ด้วยคุณสมบัติหน่วงเวลา แล้วแยก Y(z) ออกมา</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4</span><h3>\(y[n] = 0.9\,y[n-1] + x[n]\) ป้อน \(x = u[n]\)</h3></div><ol class="steps">
+      <li><p>\(Y = 0.9z^{-1}Y + X \Rightarrow H(z) = \dfrac{Y}{X} = \dfrac{1}{1 - 0.9z^{-1}} = \dfrac{z}{z - 0.9}\)</p></li>
+      <li><p>\(Y(z) = \dfrac{z}{z - 0.9}\cdot\dfrac{z}{z - 1}\) · \(\dfrac{Y}{z} = \dfrac{-9}{z - 0.9} + \dfrac{10}{z - 1}\)</p></li>
+    </ol><p class="answer">\(y[n] = \big(10 - 9(0.9)^n\big)u[n] = 10\big(1 - 0.9^{n+1}\big)u[n]\) · ตรวจ y[0] = 1, y[1] = 1.9 ตรงกับการแทนค่าวนซ้ำ ค่าสุดท้าย 10 = อัตราขยาย DC \(H(1)\)</p></div>
+    <p>ระบบในตัวอย่าง 4 คือตัวกรองโลว์พาสอันดับหนึ่งที่ใช้กันมากที่สุดในเฟิร์มแวร์ (exponential smoothing) ถ้าอยากได้อัตราขยาย DC เท่ากับ 1 ให้เขียน \(y[n] = 0.9y[n-1] + 0.1x[n]\) ระบบนี้เป็นคู่แฝดดิจิทัลของวงจร RC ใน<a href="/learn/differential-equations/first-order/">สมการอันดับหนึ่ง</a> เทียบได้ด้วย \(0.9 = e^{-T_s/RC}\)</p>
+    <p>เทียบกับ<a href="/learn/differential-equations/second-order/">สมการเชิงอนุพันธ์อันดับสอง</a>: สมการลักษณะเฉพาะของสมการผลต่างได้จากการลอง \(y = z^n\) (เหมือนลอง \(e^{rt}\)) โพลเชิงซ้อนให้คำตอบ \(r^n\cos\) และ \(r^n\sin\) เหมือนรากเชิงซ้อนที่ให้ \(e^{\alpha t}\cos\) และ \(e^{\alpha t}\sin\) ทุกประการ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="freq">
+    <h2 id="freq">โพล-ซีโร เสถียรภาพ และผลตอบสนองเชิงความถี่ <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p><b>เสถียรภาพ</b>: โพลที่ \(z = p\) ให้พจน์ \(p^n\) ใน h[n] ถ้า \(|p| &lt; 1\) พจน์นี้หดเป็นศูนย์ ถ้า \(|p| = 1\) ไม่หด (แกว่งค้างหรือคงที่) ถ้า \(|p| &gt; 1\) ระเบิด ระบบคอซัลจึงเสถียรก็ต่อเมื่อโพลทุกตัวอยู่ในวงกลมหนึ่งหน่วย ส่วนซีโรอยู่ที่ไหนก็ได้</p>
+    <p><b>ผลตอบสนองเชิงความถี่</b>: ป้อน \(x[n] = e^{j\Omega n}\) เหมือนที่ทำใน<a href="/learn/signals/lti-convolution/#sinusoid">หน้า LTI</a> จะได้ \(y[n] = H(e^{j\Omega})e^{j\Omega n}\) จุด \(e^{j\Omega}\) อยู่บนวงกลมหนึ่งหน่วยเสมอ เพราะ \(|e^{j\Omega}|^2 = \cos^2\Omega + \sin^2\Omega = 1\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a> เดินจาก Ω = 0 (z = 1, DC) ทวนเข็มถึง Ω = π (z = −1, ความถี่ Nyquist) คือกวาดความถี่ทั้งหมดที่ระบบดิจิทัลมองเห็น</p>
+    <p>อ่านด้วยตาจากรูป: \(|H(e^{j\Omega})|\) เท่ากับผลคูณระยะจากจุดบนวงกลมไปยังซีโรทุกตัว หารด้วยผลคูณระยะไปยังโพลทุกตัว เดินเข้าใกล้โพลแล้วขนาดพุ่ง (ยอด) เดินผ่านซีโรแล้วขนาดตก (ร่อง)</p>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5</span><h3>ค่าเฉลี่ยสองจุด \(y[n] = \tfrac12\big(x[n] + x[n-1]\big)\)</h3></div><ol class="steps">
+      <li><p>\(H(e^{j\Omega}) = \tfrac12\big(1 + e^{-j\Omega}\big)\)</p></li>
+      <li><p>ดึงครึ่งมุมออก: \(= e^{-j\Omega/2}\cdot\tfrac12\big(e^{j\Omega/2} + e^{-j\Omega/2}\big) = e^{-j\Omega/2}\cos\tfrac\Omega2\) <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></p></li>
+    </ol><p class="answer">\(|H| = \big|\cos\tfrac\Omega2\big|\) และเฟส \(-\tfrac\Omega2\) (เฟสเชิงเส้น หน่วงครึ่งจุด) · DC ผ่านเต็ม ที่ Ω = π/2 เหลือ \(\cos\tfrac\pi4 = 0.707\) <a class="tg" href="/learn/trigonometry/#special-angles" title="sin 30° = 1/2 · cos 60° = 1/2 · sin 45° = √2/2">มุมพิเศษ</a> ที่ Nyquist เป็นศูนย์ เพราะซีโรอยู่ที่ z = −1</p></div>
+    <p>เทคนิคดึงครึ่งมุมในตัวอย่าง 5 ใช้ได้กับตัวกรอง FIR สมมาตรทุกตัว และเป็นเหตุผลที่ FIR สมมาตรมีเฟสเชิงเส้นเสมอ</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="lab-z">
+    <h2 id="lab-z">แล็บ: ลากโพล ดูตัวกรองเปลี่ยน</h2>
+    <p>เลือกตัวกรองแบบหนึ่ง แล้วปรับรัศมีโพล r และมุม θ ดูว่ายอดของ |H| เลื่อนตาม θ และคมขึ้นเมื่อ r เข้าใกล้ 1 ลองดัน r เกิน 1 ป้ายจะเปลี่ยนเป็นไม่เสถียรและ h[n] จะไม่หดลง โหมดนอตช์วางซีโรบนวงกลมพอดี จึงตัดความถี่ θ ได้หมด ใช้ตัดสัญญาณรบกวน 50 Hz จากสายไฟได้</p>
+    <div class="cl-lab ms-zpz" data-preset="res"></div>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 6</span><h3>ตั้งนอตช์ตัด 50 Hz ที่ fₛ = 1 kHz</h3></div><ol class="steps">
+      <li><p>\(\theta = 2\pi\cdot\tfrac{50}{1000} = 0.1\pi = 0.3142\) rad</p></li>
+      <li><p>ซีโรที่ \(e^{\pm j0.1\pi}\): ตัวเศษ \(1 - 2\cos(0.1\pi)z^{-1} + z^{-2} = 1 - 1.902z^{-1} + z^{-2}\) <a class="tg" href="/learn/trigonometry/#euler" title="cos θ = (e^{jθ} + e^{−jθ})/2 · sin θ = (e^{jθ} − e^{−jθ})/(2j)">cos, sin ในรูปเลขชี้กำลัง</a></p></li>
+      <li><p>โพลที่ \(0.95e^{\pm j0.1\pi}\) ทำให้ร่องแคบ ตัวส่วน \(1 - 1.807z^{-1} + 0.9025z^{-2}\)</p></li>
+    </ol><p class="answer">ร่องตกตรง 50 Hz ส่วนความถี่ที่ห่างออกไปผ่านเกือบเต็ม ยิ่ง r ใกล้ 1 ร่องยิ่งแคบ แต่ใช้เวลาตั้งตัวนานขึ้น</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>แยกเศษส่วนย่อยของ X(z) ตรง ๆ</b> ได้พจน์ \(\tfrac{A}{z - a}\) ซึ่งคือ \(a^{n-1}u[n-1]\) ไม่ใช่ \(a^nu[n]\) หารด้วย z ก่อนจะง่ายกว่า</li>
+      <li><b>ลืม ROC</b> ถ้าโจทย์ไม่ได้บอกว่าคอซัล ต้องดู ROC ก่อนเปิดตาราง</li>
+      <li><b>ใช้ทฤษฎีบทค่าสุดท้ายกับระบบไม่เสถียร</b> ใช้ได้เมื่อโพลของ \((z - 1)X(z)\) อยู่ในวงกลมหนึ่งหน่วยเท่านั้น</li>
+      <li><b>สับสน z⁻¹ กับ z</b> ตัวกรองมักเขียนด้วย \(z^{-1}\) ก่อนหาโพลให้คูณตัวเศษตัวส่วนด้วยกำลังของ z ให้เป็นพหุนามใน z</li>
+    </ul>
+    <p>ต่อไป: <a href="/learn/signals/exam-practice/">โจทย์สัญญาณและระบบพร้อมเฉลย</a> ครบทั้งสี่เรื่องในบทนี้</p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

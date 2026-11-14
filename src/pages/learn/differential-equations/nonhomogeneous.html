@@ -1,0 +1,137 @@
+<!--meta
+{
+  "title": "สมการเชิงอนุพันธ์ไม่เอกพันธ์: ตารางเดาคำตอบ (Undetermined Coefficients) เรโซแนนซ์ บีต แปรผันพารามิเตอร์ | อาจารย์มด",
+  "h1": "สมการเชิงอนุพันธ์อันดับสองแบบไม่เอกพันธ์ (Nonhomogeneous ODEs): เดาสัมประสิทธิ์ เรโซแนนซ์ บีต และการแปรผันพารามิเตอร์",
+  "description": "แก้ ay″ + by′ + cy = f(t) ด้วยวิธีเดาสัมประสิทธิ์ (method of undetermined coefficients) พร้อมตารางรูปเดา กฎคูณ t เมื่อซ้ำกับคำตอบเอกพันธ์ แรงขับ sin cos และทำไมต้องเดาทั้งคู่ เรโซแนนซ์ บีตด้วยสูตรผลบวกเป็นผลคูณ และการแปรผันพารามิเตอร์กับตัวอย่าง y″ + y = sec t",
+  "ogTitle": "เดาคำตอบสมการเชิงอนุพันธ์อย่างมีหลัก: ตาราง + เรโซแนนซ์ + บีต",
+  "lesson": "differential-equations",
+  "sub": "nonhomogeneous",
+  "nav": "ode",
+  "katex": true,
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "level": ["Undergraduate"],
+  "keywords": ["สมการเชิงอนุพันธ์ไม่เอกพันธ์", "วิธีเดาสัมประสิทธิ์", "method of undetermined coefficients", "undetermined coefficients table", "variation of parameters", "การแปรผันพารามิเตอร์", "เรโซแนนซ์ สมการเชิงอนุพันธ์", "บีต beats", "คำตอบเฉพาะ particular solution", "nonhomogeneous differential equation"],
+  "about": ["Nonhomogeneous linear differential equation", "Method of undetermined coefficients", "Resonance", "Beat (acoustics)", "Variation of parameters", "Wronskian"],
+  "scripts": ["/assets/lesson.js", "/assets/vendor/katex.min.js", "/assets/mathkit.js", "/assets/ms-lab.js"],
+  "og": {"title": "เดาคำตอบสมการไม่เอกพันธ์", "sub": "ตารางรูปเดา · กฎคูณ t · sin cos · เรโซแนนซ์ · บีต · แปรผันพารามิเตอร์", "eyebrow": "บทที่ 28.3 · Nonhomogeneous ODEs", "sym": "y_p"},
+  "faq": [
+    {"q": "วิธีเดาสัมประสิทธิ์ (undetermined coefficients) ใช้เมื่อไร?", "a": "ใช้เมื่อสมการมีสัมประสิทธิ์คงที่ และด้านขวา f(t) เป็นพหุนาม เลขชี้กำลัง e^{kt} sin cos หรือผลคูณของพวกนี้ เพราะฟังก์ชันกลุ่มนี้ดิฟแล้วยังอยู่ในกลุ่มเดิม จึงเดารูปคำตอบเฉพาะได้ล่วงหน้า ถ้า f(t) เป็นรูปอื่น เช่น sec t หรือ ln t ต้องใช้การแปรผันพารามิเตอร์"},
+    {"q": "ทำไมแรงขับเป็น cos แต่ต้องเดาทั้ง cos และ sin?", "a": "เพราะการดิฟ cos ให้ sin ออกมา ด้านซ้ายของสมการจะมี sin โผล่เสมอถ้ามีพจน์ y′ ถ้าเดาแค่ A cos ωt จะไม่มีอะไรไปหักล้าง sin นั้น ต้องมี B sin ωt ด้วย แล้วเทียบสัมประสิทธิ์ของ cos และ sin แยกกัน"},
+    {"q": "เรโซแนนซ์ในสมการเชิงอนุพันธ์คืออะไร?", "a": "คือเมื่อความถี่ของแรงขับตรงกับความถี่ธรรมชาติของระบบที่ไม่มีการหน่วง เช่น y″ + 4y = cos 2t รูปเดาปกติกลายเป็นคำตอบเอกพันธ์ จึงต้องคูณ t ได้ y_p = (t/4) sin 2t แอมพลิจูดโตตามเวลาไม่มีขีดจำกัด"},
+    {"q": "บีต (beats) เกิดจากอะไร?", "a": "เกิดเมื่อแรงขับมีความถี่ใกล้แต่ไม่เท่ากับความถี่ธรรมชาติ คำตอบเป็นผลต่างของ cos สองความถี่ ซึ่งสูตรผลบวกเป็นผลคูณแปลงเป็น sin ความถี่ต่ำคูณ sin ความถี่สูง ได้เป็นคลื่นที่ดังและเบาสลับกันเป็นจังหวะ"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson int-page la-page">
+    <header>
+      <ol class="crumbs"><li><a href="/">หน้าแรก</a></li><li><a href="/learn/">คลังความรู้</a></li><li><a href="/learn/differential-equations/">สมการเชิงอนุพันธ์</a></li><li>ไม่เอกพันธ์</li></ol>
+      <!--series-nav-->
+      <p class="eyebrow">// บทที่ 28.3 · สมการเชิงอนุพันธ์ · Nonhomogeneous ODEs</p>
+      <h1>สมการเชิงอนุพันธ์อันดับสองแบบไม่เอกพันธ์ (Nonhomogeneous ODEs): เดาสัมประสิทธิ์ เรโซแนนซ์ บีต และการแปรผันพารามิเตอร์</h1>
+      <p class="lede">เมื่อระบบถูกขับจากภายนอก เช่นสปริงที่มีแรงดึงเป็นจังหวะ หรือวงจร RLC ที่ต่อกับแหล่งจ่าย ด้านขวาของสมการจะไม่เป็นศูนย์ คำตอบมีสองส่วนเสมอ ส่วนแรกคือคำตอบเอกพันธ์ที่หาได้จาก<a href="/learn/differential-equations/second-order/">หน้าก่อน</a> ส่วนที่สองคือ<b>คำตอบเฉพาะ</b> \(y_p\) ตัวไหนก็ได้หนึ่งตัวที่ทำให้สมการเป็นจริง หน้านี้คือวิธีหา \(y_p\)</p>
+      <div class="lesson-meta"><span>เขียนโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
+      <div class="trig-quick">
+        <a class="btn btn-primary btn-sm" href="#table">ตารางรูปเดา</a>
+        <a class="btn btn-ghost btn-sm" href="#trig-forcing">แรงขับ sin cos</a>
+        <a class="btn btn-ghost btn-sm" href="#resonance">เรโซแนนซ์</a>
+        <a class="btn btn-ghost btn-sm" href="#beats">บีต</a>
+        <a class="btn btn-ghost btn-sm" href="#variation">แปรผันพารามิเตอร์</a>
+      </div>
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="structure">
+    <h2 id="structure">โครงของคำตอบ: \(y = y_h + y_p\)</h2>
+    <p>ถ้า \(y_p\) ทำให้ \(ay'' + by' + cy = f\) เป็นจริง และ \(y_h\) ทำให้ด้านซ้ายเป็นศูนย์ ผลรวมก็ยังให้ f เพราะสมการเป็นเชิงเส้น ทุกคำตอบของสมการไม่เอกพันธ์จึงเขียนได้เป็น</p>
+    \[ y(t) = \underbrace{C_1y_1 + C_2y_2}_{y_h\ \text{(ช่วงชั่วครู่ / ธรรมชาติของระบบ)}} + \underbrace{y_p}_{\text{ตามแรงขับ}} \]
+    <p>ลำดับการทำงานที่ไม่ควรสลับ: (1) หา \(y_h\) (2) หา \(y_p\) (3) รวมกัน (4) แล้วจึงใช้เงื่อนไขเริ่มต้นหา \(C_1, C_2\) ข้อผิดพลาดที่พบบ่อยคือใช้เงื่อนไขเริ่มต้นกับ \(y_h\) ก่อนบวก \(y_p\)</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="table">
+    <h2 id="table">ตารางรูปเดา (Undetermined coefficients table)</h2>
+    <p>ความคิดหลัก: เดารูปที่หน้าตาเหมือนด้านขวา แต่ใส่สัมประสิทธิ์ที่ยังไม่รู้ แทนลงสมการ แล้วเทียบสัมประสิทธิ์ ใช้ได้เพราะฟังก์ชันในตารางนี้ดิฟกี่ครั้งก็ยังเป็นตระกูลเดิม</p>
+    <div class="table-wrap"><table><thead><tr><th>ด้านขวา f(t)</th><th>รูปเดา \(y_p\)</th><th>หมายเหตุ</th></tr></thead><tbody>
+      <tr><td>ค่าคงที่ \(K\)</td><td>\(A\)</td><td></td></tr>
+      <tr><td>พหุนามดีกรี n</td><td>\(A_nt^n + \dots + A_1t + A_0\)</td><td>ต้องครบทุกดีกรีจนถึง n</td></tr>
+      <tr><td>\(Ke^{kt}\)</td><td>\(Ae^{kt}\)</td><td>ได้ \(A = K/P(k)\) เมื่อ \(P(r) = ar^2 + br + c\)</td></tr>
+      <tr><td>\(K\cos\omega t\) หรือ \(K\sin\omega t\)</td><td>\(A\cos\omega t + B\sin\omega t\)</td><td>ต้องมีทั้งคู่ <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></td></tr>
+      <tr><td>\(e^{kt}\cos\omega t\)</td><td>\(e^{kt}(A\cos\omega t + B\sin\omega t)\)</td><td></td></tr>
+      <tr><td>\(t^n e^{kt}\)</td><td>\((A_nt^n + \dots + A_0)e^{kt}\)</td><td></td></tr>
+      <tr><td>ผลบวกของหลายแบบ</td><td>เดาแยกแต่ละก้อนแล้วบวก</td><td>หลักการซ้อนทับ</td></tr>
+    </tbody></table></div>
+    <p><b>กฎคูณ t</b> (modification rule): ถ้ารูปเดาซ้ำกับพจน์ใดใน \(y_h\) ต้องคูณ t ถ้ายังซ้ำอีกให้คูณ \(t^2\) เหตุผลคือพจน์ที่ซ้ำกับ \(y_h\) แทนลงไปแล้วด้านซ้ายเป็นศูนย์ ไม่มีทางได้ f ออกมา</p>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 1 · ค่าคงที่</span><h3>\(y'' - 3y' + 2y = 4\)</h3></div><ol class="steps">
+      <li><p>\(y_h\): \(r^2 - 3r + 2 = 0 \Rightarrow r = 1, 2\)</p></li>
+      <li><p>เดา \(y_p = A\) แทนได้ \(2A = 4\)</p></li>
+    </ol><p class="answer">\(y = C_1e^t + C_2e^{2t} + 2\)</p></div>
+
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 2 · เลขชี้กำลังที่ซ้ำ</span><h3>\(y'' - 3y' + 2y = e^{t}\)</h3></div><ol class="steps">
+      <li><p>\(e^t\) อยู่ใน \(y_h\) แล้ว (r = 1 เป็นราก) เดา \(Ae^t\) จะได้ \(0 = e^t\) ใช้ไม่ได้</p></li>
+      <li><p>คูณ t: \(y_p = Ate^t\) แทนแล้วได้ \(A\cdot P'(1) = 1\) โดย \(P'(r) = 2r - 3\) ได้ \(A = -1\)</p></li>
+    </ol><p class="answer">\(y = C_1e^t + C_2e^{2t} - te^t\)</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="trig-forcing">
+    <h2 id="trig-forcing">แรงขับ sin cos: ตรีโกณมิติทำงานอย่างไรในการเทียบสัมประสิทธิ์</h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 3</span><h3>\(y'' + 2y' + 5y = 10\cos t\)</h3></div><ol class="steps">
+      <li><p>เดา \(y_p = A\cos t + B\sin t\) ทั้งคู่ เพราะ \(y'\) จะสร้าง sin ออกมา <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></p>\[ y_p' = -A\sin t + B\cos t,\qquad y_p'' = -A\cos t - B\sin t \]</li>
+      <li><p>แทนแล้วจัดกลุ่มตาม cos และ sin</p>\[ \underbrace{(-A + 2B + 5A)}_{\cos t}\cos t + \underbrace{(-B - 2A + 5B)}_{\sin t}\sin t = 10\cos t \]</li>
+      <li><p>cos กับ sin เป็นอิสระต่อกัน <a class="tg" href="/learn/trigonometry/#orthogonality" title="∫₀^{2π} sin mx sin nx dx = 0 เมื่อ m ≠ n">ความตั้งฉาก</a> เทียบสัมประสิทธิ์แยกได้สองสมการ</p>\[ 4A + 2B = 10,\qquad -2A + 4B = 0 \;\Rightarrow\; A = 2,\ B = 1 \]</li>
+      <li><p>รวมเป็นคลื่นเดียว <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></p>\[ y_p = 2\cos t + \sin t = \sqrt5\cos(t - 26.57^\circ) \]
+      <span class="tg-row"><a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a> <a class="tg" href="/learn/trigonometry/#sum-difference" title="cos(A + B) = cos A cos B − sin A sin B">สูตรผลบวกมุมของ cos</a> <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a></span></li>
+    </ol><p class="answer">\(y = e^{-t}(C_1\cos2t + C_2\sin2t) + \sqrt5\cos(t - 26.57^\circ)\) · ส่วนแรกหายไปตามเวลา เหลือแต่คลื่นความถี่เดียวกับแรงขับที่ตามหลัง 26.57°</p></div>
+    <p><b>ทางลัดด้วยเลขเชิงซ้อน</b> แทน \(\cos t\) ด้วย \(e^{jt}\) <a class="tg" href="/learn/trigonometry/#euler" title="e^{jθ} = cos θ + j sin θ">สูตรออยเลอร์</a> เดา \(y_p = Ke^{jt}\) แทนได้ \(K(-1 + 2j + 5) = 10\) ดังนั้น \(K = \tfrac{10}{4 + 2j} = 2 - j\) เอาส่วนจริงของ \((2 - j)(\cos t + j\sin t)\) ได้ \(2\cos t + \sin t\) ตรงกัน นี่คือที่มาของวิธีเฟสเซอร์ในวงจรไฟฟ้า ค่า \(4 + 2j\) ทำหน้าที่เหมือนอิมพีแดนซ์</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="resonance">
+    <h2 id="resonance">เรโซแนนซ์: เมื่อแรงขับตรงกับความถี่ธรรมชาติ</h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 4</span><h3>\(y'' + 4y = \cos2t,\ y(0) = 0,\ y'(0) = 0\)</h3></div><ol class="steps">
+      <li><p>\(y_h = C_1\cos2t + C_2\sin2t\) ความถี่ธรรมชาติคือ 2 rad/s ตรงกับแรงขับพอดี</p></li>
+      <li><p>รูปเดาปกติซ้ำกับ \(y_h\) ต้องคูณ t: \(y_p = t(A\cos2t + B\sin2t)\)</p></li>
+      <li><p>แทนลงไป พจน์ที่ไม่มี t หักล้างกันหมด <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a> เหลือ \(-4A\sin2t + 4B\cos2t = \cos2t\) ได้ \(A = 0,\ B = \tfrac14\)</p></li>
+    </ol><p class="answer">\(y = \tfrac14t\sin2t\) · แอมพลิจูด \(t/4\) โตเป็นเส้นตรงไม่หยุด ในระบบจริงจะมีการหน่วงหรือวัสดุพังก่อน</p></div>
+    <p>ลองในแล็บ: ใส่ a = 1, b = 0, c = 4 แรงขับ cos ω = 2 จะเห็นกราฟบานออกแบบเปลือกตรง ถ้าเพิ่ม b เป็น 0.2 แอมพลิจูดจะหยุดโตที่ค่าหนึ่ง ซึ่งคือยอดเรโซแนนซ์ของระบบที่มีการหน่วง</p>
+    <div class="cl-lab ms-ode2" data-a="1" data-b="0" data-c="4" data-ft="cos" data-p1="1" data-p2="2" data-y0="0" data-v0="0"></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="beats">
+    <h2 id="beats">บีต: ความถี่ใกล้กันแต่ไม่เท่ากัน</h2>
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 5</span><h3>\(y'' + 9y = \cos2t,\ y(0) = 0,\ y'(0) = 0\)</h3></div><ol class="steps">
+      <li><p>\(y_p = \dfrac{\cos2t}{9 - 4} = \tfrac15\cos2t\) ไม่ซ้ำกับ \(y_h\) (ความถี่ธรรมชาติ 3)</p></li>
+      <li><p>ใช้เงื่อนไขเริ่มต้นได้ \(y = \tfrac15(\cos2t - \cos3t)\)</p></li>
+      <li><p>แปลงผลต่างเป็นผลคูณ <a class="tg" href="/learn/trigonometry/#sum-to-product" title="cos A − cos B = −2 sin((A+B)/2) sin((A−B)/2)">ผลต่าง cos เป็นผลคูณ</a> \(\cos A - \cos B = -2\sin\tfrac{A+B}{2}\sin\tfrac{A-B}{2}\) และ sin เป็นฟังก์ชันคี่ <a class="tg" href="/learn/trigonometry/#symmetry" title="cos(−θ) = cos θ · sin(−θ) = −sin θ">ฟังก์ชันคู่-คี่</a></p>\[ \cos2t - \cos3t = -2\sin\tfrac{5t}{2}\sin\!\Big(-\tfrac t2\Big) = 2\sin\tfrac t2\,\sin\tfrac{5t}{2} \]
+      <span class="tg-row"><a class="tg" href="/learn/trigonometry/#sum-to-product" title="cos A − cos B = −2 sin((A+B)/2) sin((A−B)/2)">ผลต่าง cos เป็นผลคูณ</a> <a class="tg" href="/learn/trigonometry/#symmetry" title="cos(−θ) = cos θ · sin(−θ) = −sin θ">ฟังก์ชันคู่-คี่</a></span></li>
+    </ol><p class="answer">\(y = \tfrac25\sin\tfrac t2\,\sin\tfrac{5t}{2}\) · คลื่นเร็ว (5/2 rad/s) ที่แอมพลิจูดขึ้นลงช้า ๆ ตาม \(\sin\tfrac t2\) ได้ยินเป็นเสียงดัง-เบาสลับกัน เวลาตั้งสายกีตาร์สองเส้นที่เพี้ยนกันเล็กน้อย</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="variation">
+    <h2 id="variation">การแปรผันพารามิเตอร์ (Variation of parameters) <span class="lv lv-a">ขั้นสูง</span></h2>
+    <p>เมื่อด้านขวาไม่อยู่ในตาราง เช่น \(\sec t\) หรือ \(\tan t\) ให้นำคำตอบเอกพันธ์ \(y_1, y_2\) มาเปลี่ยนค่าคงที่เป็นฟังก์ชัน \(y_p = u_1y_1 + u_2y_2\) (สำหรับสมการที่ทำให้ a = 1 แล้ว และด้านขวาเป็น g)</p>
+    \[ u_1' = -\frac{y_2\,g}{W},\qquad u_2' = \frac{y_1\,g}{W},\qquad W = y_1y_2' - y_2y_1' \]
+    <div class="wx"><div class="wx-head"><span class="mono">ตัวอย่าง 6</span><h3>\(y'' + y = \sec t,\ \ -\tfrac{\pi}{2} &lt; t &lt; \tfrac{\pi}{2}\)</h3></div><ol class="steps">
+      <li><p>\(y_1 = \cos t,\ y_2 = \sin t\) วรอนสเกียน \(W = \cos t\cdot\cos t - \sin t\cdot(-\sin t) = 1\) <a class="tg" href="/learn/trigonometry/#pythagorean" title="sin²θ + cos²θ = 1">เอกลักษณ์พีทาโกรัส</a></p></li>
+      <li><p>\(u_1' = -\sin t\sec t = -\tan t\) <a class="tg" href="/learn/trigonometry/#definitions" title="sec θ = 1/cos θ · csc θ = 1/sin θ · cot θ = 1/tan θ">ส่วนกลับ</a> <a class="tg" href="/learn/trigonometry/#definitions" title="tan θ = sin θ / cos θ">นิยาม tan = sin/cos</a> อินทิเกรตได้ \(u_1 = \ln|\cos t|\)</p></li>
+      <li><p>\(u_2' = \cos t\sec t = 1\) ได้ \(u_2 = t\)</p></li>
+    </ol><p class="answer">\(y_p = \cos t\,\ln|\cos t| + t\sin t\) และ \(y = C_1\cos t + C_2\sin t + y_p\) · ตรวจด้วยการแทนกลับแล้วเป็นจริง (หรือให้ sympy ตรวจ) ข้อนี้วิธีเดาใช้ไม่ได้เลย</p></div>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>เดาแค่ cos เมื่อแรงขับเป็น cos</b> ต้องมี sin ด้วยทุกครั้งที่สมการมี y′ <a class="tg" href="/learn/trigonometry/#symmetry" title="sin(θ + π/2) = cos θ · cos(θ + π/2) = −sin θ">เลื่อนเฟส 90° (โคฟังก์ชัน)</a></li>
+      <li><b>ลืมกฎคูณ t</b> ตรวจรูปเดากับ \(y_h\) ทุกครั้งก่อนแทน</li>
+      <li><b>ใช้เงื่อนไขเริ่มต้นก่อนบวก \(y_p\)</b> ค่าคงที่จะผิดทั้งชุด</li>
+      <li><b>หา φ ผิดจตุภาค</b> ใช้ atan2 <a class="tg" href="/learn/trigonometry/#harmonic" title="a cos θ + b sin θ = R cos(θ − φ), R = √(a² + b²), tan φ = b/a">รวมเป็นคลื่นเดียว</a></li>
+    </ul>
+    <p>ทั้งหมดนี้ทำในแล็บได้ทันที หรือเปิด<a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a> แบบเต็มหน้าที่แชร์ลิงก์คำตอบได้</p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

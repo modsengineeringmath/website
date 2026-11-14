@@ -227,6 +227,20 @@ updated: 2026-11-14
 
 ฝึกทำโจทย์จริงต่อได้ที่แนวข้อสอบลำดับและอนุกรม 60 ข้อ และอ่านบทความภาษาอังกฤษ Arithmetic Series Formula · Geometric Series Formula
 
+## คำถามที่พบบ่อย
+
+ลำดับและอนุกรม ภาษาอังกฤษคืออะไร?
+ลำดับคือ sequence อนุกรมคือ series ชื่อบทเรียนรวมกันว่า sequences and series ระวังว่า series เป็นได้ทั้งเอกพจน์และพหูพจน์ (a series, two series)
+
+อนุกรมเลขคณิตและอนุกรมเรขาคณิต ภาษาอังกฤษเรียกว่าอะไร?
+อนุกรมเลขคณิตคือ arithmetic series อนุกรมเรขาคณิตคือ geometric series ส่วนลำดับคือ arithmetic sequence และ geometric sequence ในตำราอังกฤษเก่าหรือบางประเทศเรียกว่า arithmetic progression (AP) และ geometric progression (GP)
+
+ลู่เข้าและลู่ออก ภาษาอังกฤษคืออะไร?
+ลู่เข้าคือ converge (กริยา) convergent (คุณศัพท์) convergence (คำนาม) ลู่ออกคือ diverge, divergent, divergence เช่น the series converges, a convergent series, the convergence of the series
+
+sequence กับ series ต่างกันอย่างไร?
+sequence คือรายการตัวเลขที่เรียงกัน $a_1, a_2, a_3, \dots$ ส่วน series คือผลบวกของตัวเลขเหล่านั้น $a_1 + a_2 + a_3 + \cdots$ ภาษาไทยแยกเป็นลำดับกับอนุกรมตรงกัน
+
 ## คำถามที่พบบ่อย (FAQ)
 
 **ลำดับและอนุกรม ภาษาอังกฤษคืออะไร?**

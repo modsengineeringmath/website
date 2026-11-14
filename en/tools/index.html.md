@@ -26,6 +26,8 @@ A = ?Area calculator13 shapes, area under curves, polygon by coordinates, Thai l
 ℒ{f}Laplace transform calculatorF(s) from f(t) with steps, poles and region of convergenceOpen →
 ℒ⁻¹{F}Inverse Laplace transform calculatorf(t) from F(s) by partial fractions, step by step, with a graphOpen →
 aₙ bₙFourier series calculatora₀, aₙ, bₙ of a periodic function, harmonic table, THD and graphOpen →
+y″ + by′Differential equation solverFirst and second order with steps: roots, particular solution, graph, RK4-checkedOpen →
+x ∗ hConvolution calculatorDiscrete convolution in exact fractions, multiplication table, z⁻¹ polynomials, stem plotsOpen →
 
 ## Electrical engineering
 

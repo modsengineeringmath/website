@@ -36,8 +36,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=b9c85cce">
-<link rel="stylesheet" href="/assets/site.css?v=b9c85cce">
+<link rel="stylesheet" href="/assets/fonts.css?v=deb9a6e9">
+<link rel="stylesheet" href="/assets/site.css?v=deb9a6e9">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/control-systems/digital-control/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/control-systems/digital-control/#article","headline":"ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล","description":"ระบบควบคุมดิจิทัลบนไมโครคอนโทรลเลอร์ การสุ่มสัญญาณและ aliasing วงจรคงค่าอันดับศูนย์ (ZOH) การแปลง z ฟังก์ชันถ่ายโอนไม่ต่อเนื่อง การแมป z = e^{sT} เสถียรภาพในวงกลมหนึ่งหน่วย เกณฑ์ของจูรี แปลงตัวควบคุมด้วย Euler และ Tustin (bilinear) สมการผลต่างของ PID ดิจิทัล การเลือกคาบสุ่ม และผลของหน่วงเวลาครึ่งคาบต่อเฟสมาร์จิน","inLanguage":"th","url":"https://modsengineeringmath.com/learn/control-systems/digital-control/","mainEntityOfPage":"https://modsengineeringmath.com/learn/control-systems/digital-control/","datePublished":"2026-10-12","dateModified":"2026-10-12","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Digital control","Sampling","Zero-order hold","Z-transform","Bilinear transform","Jury stability criterion","Digital PID","Aliasing"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/control-systems/#article"},"image":["https://modsengineeringmath.com/images/og/learn-control-systems-digital-control.jpg"],"educationalLevel":["Undergraduate","Graduate"],"citation":"https://www.youtube.com/playlist?list=PLAJhR5azwWpK04F2C2Vp6h3v82Wvqn9ka"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"ระบบควบคุม (Control Systems Engineering)","item":"https://modsengineeringmath.com/learn/control-systems/"},{"@type":"ListItem","position":4,"name":"ระบบควบคุมดิจิทัล: การสุ่ม z-transform และ PID ดิจิทัล","item":"https://modsengineeringmath.com/learn/control-systems/digital-control/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ควรเลือกความถี่สุ่มเท่าไร?","acceptedAnswer":{"@type":"Answer","text":"กฎหัวแม่มือคือ 20 ถึง 30 เท่าของแบนด์วิดท์วงปิด (หรือของความถี่ครอสโอเวอร์) ต่ำกว่า 10 เท่าเฟสมาร์จินจะหายไปมากจากหน่วงเวลาของ ZOH และควรใส่ฟิลเตอร์แอนติแอลิแอสก่อน ADC ที่ตัดความถี่ต่ำกว่าครึ่งหนึ่งของความถี่สุ่ม"}},{"@type":"Question","name":"ทำไมระบบที่เสถียรแบบต่อเนื่อง จึงไม่เสถียรเมื่อทำเป็นดิจิทัล?","acceptedAnswer":{"@type":"Answer","text":"เพราะการสุ่มและคงค่าเพิ่มหน่วงเวลาเฉลี่ยครึ่งคาบสุ่ม ลดเฟสมาร์จิน ยิ่งเกนสูงและคาบสุ่มยาว ยิ่งแย่ ระบบอันดับหนึ่งที่ปิดวงด้วย P ซึ่งเสถียรทุกเกนแบบต่อเนื่อง จะมีเกนสูงสุดเมื่อทำเป็นดิจิทัล"}},{"@type":"Question","name":"Tustin ต่างจาก Euler อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"Euler แทนอนุพันธ์ด้วยผลต่างไปข้างหน้าหรือย้อนหลัง ง่ายแต่บิดเบี้ยวเมื่อคาบสุ่มยาว และ forward Euler อาจทำให้ระบบเสถียรกลายเป็นไม่เสถียร Tustin (bilinear) แมปฝั่งซ้ายของระนาบ s ไปภายในวงกลมหนึ่งหน่วยพอดี จึงรักษาเสถียรภาพเสมอ แม่นกว่าในช่วงความถี่ต่ำถึงกลาง นิยมที่สุดในการแปลงตัวควบคุม"}}]}]}</script>
@@ -160,6 +160,9 @@
           <a href="/learn/differential-calculus/#chain-rule">กฎลูกโซ่ · โดยปริยาย</a>
           <a href="/learn/differential-calculus/#extrema">ค่าสูงสุด-ต่ำสุด</a>
           <a href="/learn/differential-calculus/#newton">นิวตัน-ราฟสัน</a>
+          <a href="/learn/differential-calculus/derivative-table/">สูตรดิฟทั้งหมด (ตาราง)</a>
+          <a href="/learn/differential-calculus/trig-derivatives/">อนุพันธ์ตรีโกณ · ทำไมดิฟ sin ได้ cos</a>
+          <a href="/learn/differential-calculus/exam-practice/">โจทย์ดิฟพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/differential-calculus/engineering-applications/">อนุพันธ์ในงานไฟฟ้า · เครื่องกล · โยธา</a>
         </div>
@@ -173,6 +176,8 @@
           <a href="/learn/integral-calculus/#by-parts">อินทิเกรตทีละส่วน</a>
           <a href="/learn/integral-calculus/#definite">อินทิกรัลจำกัดเขต</a>
           <a href="/learn/integral-calculus/calculus-basics/">แคลคูลัสเบื้องต้น (ทบทวน)</a>
+          <a href="/learn/integral-calculus/integral-table/">ตารางสูตรอินทิเกรต 64 สูตร</a>
+          <a href="/learn/integral-calculus/exam-practice/">โจทย์อินทิเกรตพร้อมเฉลย</a>
           <span class="nav-h">การประยุกต์</span>
           <a href="/learn/integral-calculus/engineering-applications/">อินทิกรัลในงานไฟฟ้า · เครื่องกล · โยธา</a>
           <a href="/learn/integral-calculus/engineering-applications/#beam-lab">แล็บคาน: เฉือน · โมเมนต์ · โก่ง</a>
@@ -232,6 +237,19 @@
         </div>
       </div>
       <div class="nav-grp">
+        <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navode">สมการเชิงอนุพันธ์</button>
+        <div class="nav-list" id="navode">
+          <a href="/learn/differential-equations/" >ภาพรวม · การจำแนก · เลือกวิธีแก้</a>
+          <a href="/learn/differential-equations/first-order/">อันดับหนึ่ง · ตัวประกอบอินทิเกรต · RC RL</a>
+          <a href="/learn/differential-equations/second-order/">อันดับสอง · สมการลักษณะเฉพาะ</a>
+          <a href="/learn/differential-equations/nonhomogeneous/">ไม่เอกพันธ์ · เรโซแนนซ์ · บีต</a>
+          <a href="/learn/differential-equations/applications/">สปริง · RLC · ζ · ไฟ AC</a>
+          <a href="/learn/differential-equations/numerical-methods/">Euler · RK4 · แล็บสนามความชัน</a>
+          <a href="/learn/differential-equations/exam-practice/">โจทย์พร้อมเฉลย</a>
+          <a href="/tools/ode-solver/">เครื่องแก้สมการเชิงอนุพันธ์</a>
+        </div>
+      </div>
+      <div class="nav-grp">
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navla">พีชคณิตเชิงเส้น</button>
         <div class="nav-list nav-list-r" id="navla">
           <a href="/learn/linear-algebra/" >ภาพรวม · ค้นหาสูตร</a>
@@ -278,7 +296,11 @@
         <div class="nav-list" id="navg2">
           <a href="/learn/first-order-system/" >ระบบอันดับ 1 · แล็บ</a>
           <a href="/learn/second-order-system/" >ระบบอันดับ 2 · แล็บ</a>
-          <a href="/learn/signals/" >สัญญาณเบื้องต้น · แล็บ</a>
+          <a href="/learn/signals/" >สัญญาณและระบบ · แล็บสัญญาณ</a>
+          <a href="/learn/signals/lti-convolution/">ระบบ LTI · คอนโวลูชัน</a>
+          <a href="/learn/signals/fourier-transform/">การแปลงฟูริเยร์</a>
+          <a href="/learn/signals/sampling-aliasing/">การสุ่ม · อเลียสซิง</a>
+          <a href="/learn/signals/z-transform/">การแปลง Z</a>
           <a href="/learn/function-generator/" >แล็บ FG + ออสซิลโลสโคป</a>
           <a href="/learn/function-generator/simulator/">ออสซิลโลสโคปจำลอง</a>
           <a href="/learn/function-generator/op-amp/">แล็บออปแอมป์</a>
@@ -466,6 +488,8 @@
           <a href="/tools/laplace-transform-calculator/">การแปลงลาปลาซ</a>
           <a href="/tools/inverse-laplace-transform-calculator/">การแปลงลาปลาซผกผัน</a>
           <a href="/tools/fourier-series-calculator/">อนุกรมฟูเรียร์ a₀ aₙ bₙ</a>
+          <a href="/tools/ode-solver/">แก้สมการเชิงอนุพันธ์ พร้อมวิธีทำ</a>
+          <a href="/tools/convolution-calculator/">คอนโวลูชันไม่ต่อเนื่อง</a>
           <span class="nav-h">วิศวกรรมไฟฟ้า</span>
           <a href="/tools/power-factor-calculator/">คำนวณเพาเวอร์แฟกเตอร์ · คาปาซิเตอร์</a>
           <a href="/tools/electricity-bill-calculator/">คำนวณค่าไฟฟ้า กฟน. กฟภ. 2569</a>
@@ -740,7 +764,7 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=b9c85cce" defer></script>
+<script src="/assets/site.js?v=deb9a6e9" defer></script>
 
 </body>
 </html>

@@ -44,7 +44,7 @@ ok(TT.bill({ cat: "1.1", volt: "lv", units: 40, free: true }).total === 0, "free
 for (const c of TT.cats) for (const v of ["hv", "mv", "lv"]) if (c[v]) ok(isFinite(TT.bill({ cat: c.id, volt: v, units: 500, on: 200, off: 300, kw: 50, kwPeak: 50, kwPartial: 60 }).total), `bill ${c.id} ${v}`);
 
 // pages
-const SLUGS = ["", "latex-equation-editor", "laplace-transform-calculator", "inverse-laplace-transform-calculator", "fourier-series-calculator", "derivative-calculator", "integral-calculator", "area-calculator", "power-factor-calculator", "electricity-bill-calculator"];
+const SLUGS = ["", "latex-equation-editor", "laplace-transform-calculator", "inverse-laplace-transform-calculator", "fourier-series-calculator", "derivative-calculator", "integral-calculator", "area-calculator", "power-factor-calculator", "electricity-bill-calculator", "ode-solver", "convolution-calculator"];
 const SITE = "https://modsengineeringmath.com", sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8"), llms = fs.readFileSync(path.join(ROOT, "llms.txt"), "utf8");
 const exists = (href) => { const p = href.split(/[?#]/)[0]; if (!p.startsWith("/")) return true; return fs.existsSync(path.join(ROOT, p, p.endsWith("/") ? "index.html" : "")); };
 for (const lang of ["th", "en"]) for (const s of SLUGS) {
@@ -58,7 +58,7 @@ for (const lang of ["th", "en"]) for (const s of SLUGS) {
   ok((h.match(/<h1[\s>]/g) || []).length === 1, route + " one h1");
   ok(title.length >= 30 && desc.length >= 110 && desc.length <= 330, `${route} title ${title.length} / description ${desc.length}`);
   ok(/<meta name="keywords"/.test(h) && /application\/ld\+json/.test(h) && /BreadcrumbList/.test(h), route + " keywords + JSON-LD");
-  if (s) ok(/"WebApplication"/.test(h) && /"FAQPage"/.test(h) && h.includes('class="mt-tool"') && h.includes("/assets/mt-ui.js"), route + " app schema + widget");
+  if (s) ok(/"WebApplication"/.test(h) && /"FAQPage"/.test(h) && ((h.includes('class="mt-tool"') && h.includes("/assets/mt-ui.js")) || (/class="cl-lab ms-/.test(h) && h.includes("/assets/ms-lab.js"))), route + " app schema + widget");
   ok(!/katex-error|ParseError/.test(h), route + " KaTeX");
   ok(sitemap.includes(`<loc>${SITE}${route}</loc>`) && llms.includes(SITE + route), route + " in sitemap + llms.txt");
   ok(fs.existsSync(path.join(ROOT, route, "index.html.md")), route + " markdown copy");
