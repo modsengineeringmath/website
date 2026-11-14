@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 Now that AI can write code in any language, the skills that still matter are thinking in steps, reading code and checking results against engineering knowledge. This category starts with Python and connects it to circuits, numerical computing and PLCs.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Programming & AI
 

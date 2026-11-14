@@ -115,17 +115,17 @@ What Is Power Factor? The cos φ Formula and the Relationship between kW, kVA an
 Power factor is the ratio of real power to apparent power. See the P Q S power triangle, a worked current calculation at PF 0.8 versus 1.0, lagging…
 16 Oct 2026Read the article →
 
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
+
 Motors · research
 How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy
 How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel-cage motor: t = c·τm, a c table by load, dead time, KM3 phase order,…
 19 Oct 2026Read the article →
 
-3-phase motors
-3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate
-What U1 V1 W1 U2 V2 W2 mean on a 3-phase motor (IEC 60034-8), which wire colours go where, and how to link U1-W2, V1-U2, W1-V2 for delta, with line…
-17 Oct 2026Read the article →
-
-All 4 articles in Power Systems & Motors → · All articles
+All 5 articles in Power Systems & Motors → · All articles
 
 ## Frequently asked questions
 

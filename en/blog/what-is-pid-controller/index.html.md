@@ -123,15 +123,15 @@ PID Tuning: The Complete Guide from Step Test to Ziegler–Nichols, SIMC and Ant
 A full PID tuning course in one article: identify the process with a step test, tune with Ziegler–Nichols, Cohen–Coon, SIMC or relay, compare the…
 16 Oct 2026Read the article →
 
-Python · AI
-Learning to Program in the AI Era: Why Start with Python
-AI writes code in any language, but if you cannot read code you cannot tell whether it is right. Why Python is the best first language, six core…
-25 Oct 2026Read the article →
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
 
-Linear algebra
-Cramer's Rule: How to Use It, Why It Works, and When Not to Use It
-Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0…
-25 Oct 2026Read the article →
+Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
 
 All 2 articles in Control Systems & PID → · All articles
 

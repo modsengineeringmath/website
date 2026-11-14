@@ -116,6 +116,11 @@ The sequences and series chapter on this site (in Thai) has 60 exam-style proble
 ## More articles worth reading
 
 Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
+
+Sequences & series
 How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step
 Pick the right convergence test the first time: an 8-step flowchart (n-th term, geometric, p-series, telescoping, limit comparison, ratio, root,…
 24 Oct 2026Read the article →
@@ -125,12 +130,7 @@ What Is a Laurent Series and How Is It Different from a Taylor Series? (Explaine
 Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to…
 24 Oct 2026Read the article →
 
-Sequences & series
-How to Find the Radius of Convergence: 3 Methods, Endpoint Checks and the Complex-Plane Reason
-Three ways to find the radius of convergence of a power series (ratio test, root test, nearest complex singularity), plus the endpoint checks for…
-24 Oct 2026Read the article →
-
-All 7 articles in Sequences & Series → · All articles
+All 8 articles in Sequences & Series → · All articles
 
 ## Frequently asked questions
 

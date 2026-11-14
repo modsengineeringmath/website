@@ -13,36 +13,41 @@ Markdown copy of https://modsengineeringmath.com/en/blog/ for AI assistants and 
 # Engineering Math, Power & Programming Articles: PID, Laplace, Matrices, Python | Ajarn Mod
 
 THภาษาไทยENEnglish
-// Articles · 24 in English · 6 categories
+// Articles · 26 in English · 6 categories
 
 
 Each short article answers one question that students and engineers search for again and again: what the Laplace transform is, how to invert it, how to correct a low power factor, or which programming language to start with in the AI era. Read one through and you can do the work yourself. The complete PID tuning guide is the long one, a full PID Academy lesson. Every article links to the full lessons, interactive labs and reference formulas in the library. Pick a category below.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## Latest articles
+
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
+
+Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
 
 Python · AI
 Learning to Program in the AI Era: Why Start with Python
 AI writes code in any language, but if you cannot read code you cannot tell whether it is right. Why Python is the best first language, six core…
 25 Oct 2026Read the article →
 
-Linear algebra
-Cramer's Rule: How to Use It, Why It Works, and When Not to Use It
-Cramer's rule explained: replace a column by the constants and divide determinants, 2×2 and 3×3 examples, one unknown, a two-line proof, the Δ = 0…
-25 Oct 2026Read the article →
-
-Linear algebra
-12 Determinant Properties That Appear on Every Exam: det(kA), det(A⁻¹), det(adj A) and the Traps
-The 12 determinant properties used in entrance exams and engineering mathematics: row operations, det(kA) = kⁿ det A, products, inverses and the…
-25 Oct 2026Read the article →
-
 ## Articles by category
 
 ## ΣSequences & Series
-7 articles · Open the category →
+8 articles · Open the category →
 
 Short articles that answer one question about sequences and series at a time, from the geometric series formula and a flowchart for choosing a convergence test to the Taylor and Laurent series used in engineering. Each has worked numbers and links to the full lessons.
+
+Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
 
 Sequences & series
 How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step
@@ -155,9 +160,14 @@ A PID controller adds proportional, integral and derivative action on the error.
 16 Oct 2026Read the article →
 
 ## 3φPower Systems & Motors
-4 articles · Open the category →
+5 articles · Open the category →
 
 Electrical work in factories and buildings, from power factor and the penalty on the bill to choosing a capacitor and connecting and starting three-phase motors. Every article uses the numbers of a 230/400 V 50 Hz system.
+
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
 
 Motors · research
 How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy

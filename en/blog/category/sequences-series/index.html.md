@@ -3,7 +3,7 @@ title: "Sequences & Series Articles: Convergence Tests, Taylor and Laurent Serie
 url: https://modsengineeringmath.com/en/blog/category/sequences-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-26
+updated: 2026-11-14
 ---
 
 > Articles on sequences and series: a convergence-test flowchart, the geometric series formula, radius of convergence, Taylor and Laurent series and mathematical induction, with checked examples.
@@ -13,14 +13,19 @@ Markdown copy of https://modsengineeringmath.com/en/blog/category/sequences-seri
 # Sequences & Series Articles: Convergence Tests, Taylor and Laurent Series
 
 THภาษาไทยENEnglish
-// Article category · 7 articles
+// Article category · 8 articles
 
 
 Short articles that answer one question about sequences and series at a time, from the geometric series formula and a flowchart for choosing a convergence test to the Taylor and Laurent series used in engineering. Each has worked numbers and links to the full lessons.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Sequences & Series
+
+Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
 
 Sequences & series
 How to Choose a Convergence Test: an 8-Step Flowchart with an Example at Every Step

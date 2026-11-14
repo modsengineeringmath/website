@@ -3,7 +3,7 @@ title: "3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 
 url: https://modsengineeringmath.com/en/blog/3-phase-motor-delta-connection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > What U1 V1 W1 U2 V2 W2 mean on a 3-phase motor (IEC 60034-8), which wire colours go where, and how to link U1-W2, V1-U2, W1-V2 for delta, with line vs phase values and the nameplate check.
@@ -68,6 +68,8 @@ Under IEC 60034-8 the letters U V W name the three phase windings and the number
 - Direction of rotation under IEC 60034-8. With L1, L2, L3 connected to U1, V1, W1 in phase sequence, the motor turns clockwise seen from the shaft (drive) end. To reverse it, swap any two supply conductors.
 
 - Markings lost? An ohmmeter finds which leads are connected, giving three pairs (the three windings) of similar resistance. Telling the start (1) from the end (2) of each winding needs a polarity test, done the way a motor-rewind shop or the manufacturer's manual describes. If one winding is reversed in a delta, the voltages round the delta no longer cancel and a large current circulates in the loop even with no load.
+
+A complete guide to the six terminals, star wiring, single-phase U1 U2 Z1 Z2 and identifying unmarked leads is in Motor Terminals U1 V1 W1 U2 V2 W2.
 
 ## Why the bottom row of the terminal box reads W2 U2 V2
 
@@ -159,6 +161,11 @@ Switch off and swap any two supply lines, for example L1 and L2. The links in th
 
 ## More articles worth reading
 
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
+
 Motors · research
 How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy
 How many seconds for a star–delta timer? Research simulating a 7.5 kW squirrel-cage motor: t = c·τm, a c table by load, dead time, KM3 phase order,…
@@ -169,12 +176,7 @@ How to Calculate the Size of a Power Factor Correction Capacitor (kvar) with an 
 The formula Qc = P(tan φ1 − tan φ2) with a 100 kW, 400 V load corrected from PF 0.75 to 0.95 giving 55.3 kvar, microfarads per phase, a multiplier…
 16 Oct 2026Read the article →
 
-Power factor
-What Is Power Factor? The cos φ Formula and the Relationship between kW, kVA and kvar
-Power factor is the ratio of real power to apparent power. See the P Q S power triangle, a worked current calculation at PF 0.8 versus 1.0, lagging…
-16 Oct 2026Read the article →
-
-All 4 articles in Power Systems & Motors → · All articles
+All 5 articles in Power Systems & Motors → · All articles
 
 ## Frequently asked questions
 

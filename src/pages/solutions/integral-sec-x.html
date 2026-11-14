@@ -1,0 +1,126 @@
+<!--meta
+{
+  "title": "เฉลย ∫sec x dx ทีละขั้น: ทำไมต้องคูณด้วย sec x + tan x และวิธีที่ไม่ต้องจำเทคนิค | อาจารย์มด",
+  "h1": "เฉลยอินทิเกรต ∫sec x dx: ที่มาของ ln|sec x + tan x| สองวิธี",
+  "description": "เฉลย ∫sec x dx = ln|sec x + tan x| + C สองวิธี: คูณด้วย sec x + tan x ให้ตัวเศษเป็นอนุพันธ์ของตัวส่วน และเปลี่ยนตัวแปร u = sin x ที่ไม่ต้องจำเทคนิค พร้อมตรวจคำตอบ ตัวอย่างตัวเลข และแผนที่เมอร์เคเตอร์",
+  "ogTitle": "โจทย์อินทิเกรต #005: ∫sec x dx ทำไมต้องคูณด้วย sec x + tan x?",
+  "ogDescription": "เทคนิคที่ดูเหมือนเดาสุ่มมีที่มาชัดเจน เฉลยสองวิธีพร้อมเหตุผล และเรื่องจริงของแผนที่โลกที่ต้องใช้อินทิกรัลนี้",
+  "solution": true,
+  "topic": "integral",
+  "no": 5,
+  "name": "∫sec x dx สองวิธี",
+  "statement": "จงหาอินทิกรัลไม่จำกัดเขต \\(\\int \\sec x\\,dx\\) และอธิบายที่มาของคำตอบ \\(\\ln|\\sec x + \\tan x| + C\\)",
+  "problem": "\\int \\sec x\\,dx",
+  "answer": "\\int \\sec x\\,dx = \\ln|\\sec x + \\tan x| + C",
+  "technique": "Multiply by a clever one / u-substitution",
+  "level": 2,
+  "hook": "ทำไมต้องคูณด้วย \\(\\sec x + \\tan x\\) ? มีวิธีที่ไม่ต้องจำด้วย",
+  "short": "int5",
+  "series": ["integral-calculus"],
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "keywords": ["อินทิเกรต sec x", "อินทิเกรต secx", "∫sec x dx", "integral of sec x", "อินทิเกรตตรีโกณ", "ln|sec x + tan x|", "อินทิเกรต 1/cos x", "เฉลยโจทย์อินทิเกรต"],
+  "about": ["Integral of the secant function", "Integration by substitution", "Trigonometric integrals", "Mercator projection"],
+  "og": {"title": "∫sec x dx|ทำไมต้องคูณ sec + tan"},
+  "faq": [
+    {"q": "∫sec x dx เท่ากับเท่าไร?", "a": "เท่ากับ \\(\\ln|\\sec x + \\tan x| + C\\) เขียนอีกแบบได้ว่า \\(\\tfrac12\\ln\\left|\\tfrac{1+\\sin x}{1-\\sin x}\\right| + C\\) หรือ \\(\\ln\\left|\\tan\\left(\\tfrac{x}{2}+\\tfrac{\\pi}{4}\\right)\\right| + C\\) ทุกแบบเท่ากัน"},
+    {"q": "ทำไมต้องคูณด้วย sec x + tan x?", "a": "เพราะอนุพันธ์ของ \\(\\sec x + \\tan x\\) คือ \\(\\sec x\\tan x + \\sec^2 x = \\sec x(\\sec x + \\tan x)\\) เมื่อคูณเข้าไปตัวเศษจะเป็นอนุพันธ์ของตัวส่วนพอดี อินทิกรัลจึงเป็น \\(\\ln|\\text{ตัวส่วน}|\\)"},
+    {"q": "∫csc x dx เท่ากับเท่าไร?", "a": "ใช้วิธีเดียวกันโดยคูณด้วย \\(\\csc x + \\cot x\\) ได้ \\(-\\ln|\\csc x + \\cot x| + C\\) หรือ \\(\\ln\\left|\\tan\\tfrac{x}{2}\\right| + C\\)"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout sol-page">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <!--solution-head-->
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">มองโจทย์ก่อน: อะไรทำให้ข้อนี้ยาก</h2>
+    <p>\(\sec x = \tfrac{1}{\cos x}\) ดูเหมือนง่าย แต่ไม่มีฟังก์ชันพื้นฐานตัวไหนที่ดิฟแล้วได้ \(\sec x\) ตรง ๆ คู่สูตรที่จำกันได้คือ \(\int\sec^2x\,dx = \tan x\) และ \(\int\sec x\tan x\,dx = \sec x\) ไม่มี \(\sec x\) ตัวเดียว</p>
+    <p>ตำราส่วนใหญ่สอนให้ “คูณด้วย \(\tfrac{\sec x+\tan x}{\sec x+\tan x}\)” ซึ่งได้คำตอบเร็ว แต่ดูเหมือนเดาสุ่ม หน้านี้จึงแสดง<b>สองวิธี</b>: วิธีลัดที่ใช้ในห้องสอบ และวิธีที่คิดเองได้โดยไม่ต้องจำเทคนิค ซึ่งอธิบายด้วยว่าเทคนิคลัดมาจากไหน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="origin">
+    <h2 id="origin">ที่มาของการคูณด้วย sec x + tan x</h2>
+    <p>เป้าหมายคือทำให้อินทิกรัลอยู่ในรูป <a class="tag tf" href="/learn/integral-calculus/#H2">H2</a> \(\int\tfrac{f'(x)}{f(x)}\,dx = \ln|f(x)|\) เราจึงต้องหาฟังก์ชัน \(f\) ที่ \(f'/f = \sec x\) หรือ \(f' = \sec x\cdot f\)</p>
+    <p>ลองดิฟคู่สูตรที่มี sec อยู่แล้ว</p>
+    \[ \frac{d}{dx}\sec x = \sec x\tan x, \qquad \frac{d}{dx}\tan x = \sec^2 x \]
+    <p>ทั้งสองตัวมีตัวประกอบ \(\sec x\) อยู่ ลองรวมกัน</p>
+    \[ \frac{d}{dx}(\sec x + \tan x) = \sec x\tan x + \sec^2 x = \sec x\,(\tan x + \sec x) \]
+    <p>ได้ \(f' = \sec x\cdot f\) พอดีเมื่อ \(f = \sec x + \tan x\) นี่คือเหตุผลของการคูณ ไม่ใช่การเดา ใครสังเกตเห็นตรงนี้ก็คิดเทคนิคเองได้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="solution">
+    <h2 id="solution">วิธีที่ 1 · คูณด้วย sec x + tan x</h2>
+    <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ">
+      <b class="mono">อ่านวิธีทำ</b>
+      <span><i class="lg-u"></i>ตัวแปรใหม่ u</span>
+      <span><i class="lg-f"></i>สูตรที่ใช้</span>
+      <span><i class="lg-p"></i>คุณสมบัติที่ใช้</span>
+      <span><i class="lg-c"></i>ค่าคงที่ C</span>
+      <span><i class="lg-x"></i>เส้นแดง = ตัดกัน</span>
+    </div>
+    <div class="wx" id="ex-main">
+      <div class="wx-head"><span class="mono">วิธีทำ · คูณด้วยหนึ่งที่เลือกมา</span><h3>หา \(\displaystyle \int \sec x\,dx\)</h3></div>
+      <ol class="steps">
+        <li><p>คูณทั้งเศษและส่วนด้วย \(\sec x + \tan x\) (เท่ากับคูณด้วย 1)</p>
+          \[ \int \sec x\,dx = \int \frac{\sec x\,(\sec x + \tan x)}{\sec x + \tan x}\,dx = \int \frac{\sec^2 x + \sec x\tan x}{\sec x + \tan x}\,dx \]</li>
+        <li><p>ให้ตัวส่วนเป็นตัวแปรใหม่ ตัวเศษคืออนุพันธ์ของมันพอดี <a class="tag tf" href="/learn/integral-calculus/#T1">T1 Substitution</a></p>
+          \[ \hlU{u = \sec x + \tan x} \;\Rightarrow\; \hlU{du = (\sec x\tan x + \sec^2 x)\,dx} \]</li>
+        <li><p>อินทิกรัลเหลือ \(\int du/u\) <a class="tag tf" href="/learn/integral-calculus/#F3">F3 Reciprocal rule</a></p>
+          \[ \int \frac{\hlU{du}}{\hlU{u}} = \hlF{\ln|u|} + C = \ln|\sec x + \tan x| + \hlC{C} \]</li>
+      </ol>
+      <p class="answer" id="answer">\(\displaystyle \int \sec x\,dx = \ln|\sec x + \tan x| + \hlC{C}\)</p>
+      <p class="check">ตรวจคำตอบ: \(\tfrac{d}{dx}\ln|\sec x+\tan x| = \tfrac{\sec x\tan x + \sec^2x}{\sec x + \tan x} = \tfrac{\sec x\,\rc{(\tan x+\sec x)}}{\rc{\sec x+\tan x}} = \sec x\) ✓</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="method2">
+    <h2 id="method2">วิธีที่ 2 · ไม่ต้องจำเทคนิค: เปลี่ยนตัวแปร u = sin x</h2>
+    <p>ถ้าลืมเทคนิคในห้องสอบ ใช้หลักทั่วไปของอินทิกรัลตรีโกณ: <b>กำลังของ cos เป็นคี่ (กำลัง −1) ให้ดึง cos ออกหนึ่งตัวแล้วเปลี่ยนเป็น sin</b></p>
+    <div class="wx">
+      <div class="wx-head"><span class="mono">วิธีทำ · u = sin x</span><h3>หา \(\displaystyle \int \sec x\,dx\) อีกทาง</h3></div>
+      <ol class="steps">
+        <li><p>คูณเศษและส่วนด้วย \(\cos x\) แล้วใช้ \(\cos^2x = 1 - \sin^2x\)</p>
+          \[ \int \frac{dx}{\cos x} = \int \frac{\cos x\,dx}{\cos^2 x} = \int \frac{\cos x\,dx}{1 - \sin^2 x} \]</li>
+        <li><p>ให้ \(\hlU{u = \sin x}\), \(\hlU{du = \cos x\,dx}\) ได้รูปผลต่างกำลังสอง <a class="tag tf" href="/learn/integral-calculus/#S3">S3</a></p>
+          \[ \int \frac{\hlU{du}}{1 - \hlU{u}^2} = \frac12\ln\left|\frac{1+u}{1-u}\right| + C = \frac12\ln\left|\frac{1+\sin x}{1-\sin x}\right| + C \]</li>
+        <li><p>คูณเศษและส่วนข้างใน ln ด้วย \(1+\sin x\) ตัวส่วนกลายเป็น \(1-\sin^2x = \cos^2x\)</p>
+          \[ \frac12\ln\frac{(1+\sin x)^2}{\cos^2 x} = \ln\left|\frac{1+\sin x}{\cos x}\right| = \ln|\sec x + \tan x| \]</li>
+      </ol>
+      <p class="answer">ได้คำตอบเดียวกัน และเห็นว่า \(\sec x + \tan x\) คือ \(\tfrac{1+\sin x}{\cos x}\) ที่โผล่มาเองจากวิธีทั่วไป</p>
+    </div>
+    </section>
+
+    <section class="tsec" aria-labelledby="numeric">
+    <h2 id="numeric">ตัวอย่างตัวเลข: ∫ sec x จาก 0 ถึง π/4</h2>
+    \[ \int_0^{\pi/4}\sec x\,dx = \Big[\ln|\sec x + \tan x|\Big]_0^{\pi/4} = \ln\left(\sqrt2 + 1\right) - \ln(1 + 0) = \ln\left(1+\sqrt2\right) \approx 0.8814 \]
+    <p>ตรวจขนาด: บนช่วงนี้ \(\sec x\) อยู่ระหว่าง 1 กับ \(\sqrt2 \approx 1.41\) ช่วงยาว \(\pi/4 \approx 0.785\) พื้นที่จึงต้องอยู่ระหว่าง 0.785 กับ 1.11 ✓ ค่า \(\ln(1+\sqrt2)\) เท่ากับ \(\sinh^{-1}1\) ซึ่งเชื่อมกับ<a href="/solutions/integral-euler-substitution-sqrt-x2-a2/">เฉลยอินทิเกรต #001</a> เพราะแทน \(x = \tan\theta\) ใน \(\int\tfrac{dx}{\sqrt{x^2+1}}\) จะได้ \(\int\sec\theta\,d\theta\) พอดี</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">อินทิกรัลที่ช่วยวาดแผนที่โลก</h2>
+    <p>แผนที่เมอร์เคเตอร์ (Mercator projection) ที่ใช้ในการเดินเรือและใน Google Maps ต้องยืดแนวตั้งที่ละติจูด \(\varphi\) ด้วยตัวประกอบ \(\sec\varphi\) เพื่อให้ทิศเข็มทิศเป็นเส้นตรงบนแผนที่ ระยะจากเส้นศูนย์สูตรบนแผนที่จึงเป็น</p>
+    \[ y(\varphi) = R\int_0^{\varphi}\sec\theta\,d\theta = R\ln\left|\sec\varphi + \tan\varphi\right| \]
+    <p>ในยุคนั้นยังไม่มีแคลคูลัส นักทำแผนที่ต้องบวกค่า sec ทีละช่วงเล็ก ๆ เป็นตาราง (ก็คือผลบวกรีมันน์) และต่อมามีผู้สังเกตว่าตารางนั้นตรงกับค่าลอการิทึมของ \(\tan\left(\tfrac{\varphi}{2}+\tfrac{\pi}{4}\right)\) ก่อนที่จะพิสูจน์ได้ด้วยแคลคูลัสในภายหลัง ที่ละติจูด 60° ได้ \(y \approx 1.317R\) แต่ที่ 85° พุ่งไปถึง \(\approx 3.13R\) นี่คือเหตุผลที่กรีนแลนด์บนแผนที่ดูใหญ่เกินจริง</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>ตอบ \(\tan x\) หรือ \(\sec x\tan x\)</b> สับสนกับ \(\int\sec^2x\,dx = \tan x\) และอนุพันธ์ของ \(\sec x\)</li>
+      <li><b>ตอบ \(\ln|\cos x|\) หรือ \(\tfrac{1}{\sin x}\)</b> อินทิเกรตเศษส่วนแบบ “กลับเศษส่วน” ไม่มีกฎนี้ ดู <a class="tag tf" href="/learn/integral-calculus/#P6">P6</a></li>
+      <li><b>ลืมค่าสัมบูรณ์</b> \(\sec x + \tan x\) ติดลบได้ เช่นช่วง \(\tfrac{\pi}{2} < x < \pi\)</li>
+      <li><b>คิดว่าคำตอบรูปอื่นผิด</b> \(\tfrac12\ln\left|\tfrac{1+\sin x}{1-\sin x}\right|\) และ \(\ln\left|\tan\left(\tfrac x2+\tfrac\pi4\right)\right|\) ถูกเหมือนกัน</li>
+    </ul>
+    <p>ทบทวนได้ที่<a href="/learn/integral-calculus/#trig-integrals">อินทิกรัลตรีโกณมิติ</a> และ<a href="/learn/integral-calculus/integral-table/#trig">ตารางสูตรอินทิเกรตตรีโกณ (R14 sec, R15 csc)</a></p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

@@ -132,6 +132,8 @@ The full lessons are in Thai, with English technical terms and the same formulas
 
 - Proving the geometric series formula by mathematical induction (in Thai)
 
+- Companion article: arithmetic series formula
+
 ## Frequently asked questions
 
 When does an infinite geometric series converge?
@@ -148,6 +150,11 @@ In the response of digital filters, the present value of projects such as roofto
 ## More articles worth reading
 
 Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
+
+Sequences & series
 What Do You Learn in Sequences and Series? A Roadmap from Sequences to Laurent Series
 The whole sequences and series chapter on one page: what each topic answers, its key formula and typical exam questions, from sequences and…
 24 Oct 2026Read the article →
@@ -157,12 +164,7 @@ Mathematical Induction Examples with Step-by-Step Solutions, Including Strong In
 14 worked proof-by-induction examples: writing the induction statement P(n), sums, divisibility, inequalities, recurrences and strong induction,…
 17 Oct 2026Read the article →
 
-Sequences & series
-What Is a Taylor Series, What Is It Used For, with Examples
-What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many…
-17 Oct 2026Read the article →
-
-All 7 articles in Sequences & Series → · All articles
+All 8 articles in Sequences & Series → · All articles
 
 ## Frequently asked questions
 

@@ -223,6 +223,32 @@ $$V = \frac{\lambda}{4\pi\varepsilon_0}\int_{-L/2}^{L/2} \frac{dx}{\sqrt{x^2+d^2
 Euler's substitution ต่างจากการแทนค่าตรีโกณ x = a tan θ อย่างไร?
 การแทนค่าตรีโกณได้ $\int\sec\theta\,d\theta$ ซึ่งต้องใช้เทคนิคคูณด้วย $\sec\theta+\tan\theta$ อีกชั้น ส่วนการแทนค่าแบบออยเลอร์ได้ฟังก์ชันตรรกยะของ u ทันที และ $\sec\theta+\tan\theta$ ก็คือ $u/a$ นั่นเอง คำตอบจึงตรงกัน
 
+## ลองทำโจทย์ข้ออื่นต่อ
+
+อินทิเกรต #007●●○ ปานกลาง
+
+$$\int e^{x}\sin x\,dx$$
+
+∫eˣ sin x dx ด้วยทีละส่วนแบบวนกลับ
+Cyclic integration by parts
+14 พ.ย. 2569ดูเฉลยทีละขั้น →
+
+อินทิเกรต #006●●○ ปานกลาง
+
+$$\int \sqrt{a^2-x^2}\,dx$$
+
+∫√(a² − x²) dx ด้วยการแทนค่าตรีโกณ
+Trigonometric substitution
+14 พ.ย. 2569ดูเฉลยทีละขั้น →
+
+อินทิเกรต #005●●○ ปานกลาง
+
+$$\int \sec x\,dx$$
+
+∫sec x dx สองวิธี
+Multiply by a clever one / u-substitution
+14 พ.ย. 2569ดูเฉลยทีละขั้น →
+
 ## คำถามที่พบบ่อย (FAQ)
 
 **∫dx/√(x²+a²) เท่ากับเท่าไร?**

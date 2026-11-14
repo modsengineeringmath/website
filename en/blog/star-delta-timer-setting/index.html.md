@@ -202,6 +202,11 @@ Open the dynamic simulation lab on the Star–delta analysis page of the lesson 
 ## More articles worth reading
 
 3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
+
+3-phase motors
 3-Phase Motor Delta (Δ) Connection: Remember U1–W2, V1–U2, W1–V2 and Choose from the Nameplate
 What U1 V1 W1 U2 V2 W2 mean on a 3-phase motor (IEC 60034-8), which wire colours go where, and how to link U1-W2, V1-U2, W1-V2 for delta, with line…
 17 Oct 2026Read the article →
@@ -211,12 +216,7 @@ How to Calculate the Size of a Power Factor Correction Capacitor (kvar) with an 
 The formula Qc = P(tan φ1 − tan φ2) with a 100 kW, 400 V load corrected from PF 0.75 to 0.95 giving 55.3 kvar, microfarads per phase, a multiplier…
 16 Oct 2026Read the article →
 
-Power factor
-What Is Power Factor? The cos φ Formula and the Relationship between kW, kVA and kvar
-Power factor is the ratio of real power to apparent power. See the P Q S power triangle, a worked current calculation at PF 0.8 versus 1.0, lagging…
-16 Oct 2026Read the article →
-
-All 4 articles in Power Systems & Motors → · All articles
+All 5 articles in Power Systems & Motors → · All articles
 
 ## Frequently asked questions
 

@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 A PID controller sits inside almost every machine. This category explains what the P, I and D terms do and teaches real tuning step by step on a checked plant model.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Control Systems & PID
 

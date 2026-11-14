@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 The Laplace transform turns the differential equations of circuits and control systems into algebra. This category starts with what the transform means and the table of pairs, and goes on to inverting it with partial fractions.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Laplace Transform
 

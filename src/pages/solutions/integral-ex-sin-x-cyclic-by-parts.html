@@ -1,0 +1,119 @@
+<!--meta
+{
+  "title": "เฉลย ∫eˣ sin x dx ทีละขั้น: อินทิเกรตทีละส่วนแบบวนกลับ (ย้ายข้างหา I) | อาจารย์มด",
+  "h1": "เฉลยอินทิเกรต ∫eˣ sin x dx ด้วยการอินทิเกรตทีละส่วนแบบวนกลับ",
+  "description": "เฉลยละเอียด ∫eˣ sin x dx = eˣ(sin x − cos x)/2 + C ด้วยทีละส่วนสองรอบแล้วย้ายข้าง อธิบายกับดักที่ทำให้ได้ 0 = 0 วิธีเลขเชิงซ้อนที่สั้นกว่า และที่มาของการแปลงลาปลาซของ sin ωt",
+  "ogTitle": "โจทย์อินทิเกรต #007: ∫eˣ sin x dx ทำทีละส่วนแล้ววนกลับมาที่เดิม ทำไมยังได้คำตอบ?",
+  "ogDescription": "ทีละส่วนสองรอบแล้วอินทิกรัลเดิมโผล่กลับมา ย้ายข้างก็จบ เฉลยทีละขั้นพร้อมกับดัก 0 = 0 และวิธีเลขเชิงซ้อน",
+  "solution": true,
+  "topic": "integral",
+  "no": 7,
+  "name": "∫eˣ sin x dx ด้วยทีละส่วนแบบวนกลับ",
+  "statement": "จงหาอินทิกรัลไม่จำกัดเขต \\(\\int e^{x}\\sin x\\,dx\\)",
+  "problem": "\\int e^{x}\\sin x\\,dx",
+  "answer": "\\int e^{x}\\sin x\\,dx = \\frac{e^{x}}{2}(\\sin x - \\cos x) + C",
+  "technique": "Cyclic integration by parts",
+  "level": 2,
+  "hook": "ทีละส่วนสองรอบแล้วอินทิกรัลเดิมโผล่กลับมา ย้ายข้างก็จบ",
+  "short": "int7",
+  "series": ["integral-calculus", "laplace-transform"],
+  "published": "2026-11-14",
+  "updated": "2026-11-14",
+  "keywords": ["อินทิเกรต e^x sin x", "อินทิเกรต exsinx", "∫e^x sin x dx", "อินทิเกรตทีละส่วนสองครั้ง", "อินทิเกรตแบบวนกลับ", "integral of e^x sin x", "cyclic integration by parts", "เฉลยโจทย์อินทิเกรต"],
+  "about": ["Integration by parts", "Exponential function", "Sine function", "Euler's formula", "Laplace transform"],
+  "og": {"title": "∫eˣ sin x dx|ทีละส่วนแบบวนกลับ"},
+  "faq": [
+    {"q": "∫eˣ sin x dx เท่ากับเท่าไร?", "a": "เท่ากับ \\(\\tfrac{e^{x}}{2}(\\sin x - \\cos x) + C\\)"},
+    {"q": "ทำไมทำทีละส่วนสองรอบแล้วได้ 0 = 0?", "a": "เพราะรอบที่สองเลือก u สลับชนิดกับรอบแรก (รอบแรกให้ u เป็นตรีโกณ รอบสองให้ u เป็น eˣ) การทำแบบนั้นเท่ากับย้อนขั้นแรกกลับ ต้องให้ u เป็นชนิดเดียวกันทั้งสองรอบ"},
+    {"q": "∫e^(ax) sin bx dx ทั่วไปเท่ากับเท่าไร?", "a": "เท่ากับ \\(\\tfrac{e^{ax}}{a^2+b^2}(a\\sin bx - b\\cos bx) + C\\) กรณี \\(a = b = 1\\) คือข้อนี้"}
+  ]
+}
+-->
+<div class="wrap lesson-wrap lesson-layout sol-page">
+  <aside class="lesson-side"><!--toc--></aside>
+  <article class="lesson">
+    <header>
+      <!--solution-head-->
+      <div class="toc-inline"><!--toc--></div>
+    </header>
+
+    <section class="tsec" aria-labelledby="idea">
+    <h2 id="idea">มองโจทย์ก่อน: อะไรทำให้ข้อนี้ยาก</h2>
+    <p>เป็นผลคูณของฟังก์ชันต่างชนิด จึงนึกถึงการอินทิเกรตทีละส่วน แต่ต่างจาก \(\int xe^x\,dx\) ตรงที่<b>ไม่มีตัวไหนดิฟแล้วหายไป</b> ดิฟ \(e^x\) ก็ยังเป็น \(e^x\) ดิฟ \(\sin x\) ได้ \(\cos x\) ดิฟอีกครั้งได้ \(-\sin x\) วนกลับมาเหมือนเดิม</p>
+    <p>ทำทีละส่วนกี่รอบก็ไม่จบ แต่การ “วนกลับมาเหมือนเดิม” นี่เองคือทางออก ถ้าหลังสองรอบอินทิกรัลเดิมโผล่กลับมาพร้อมเครื่องหมายลบ เราจะได้<b>สมการที่มีอินทิกรัลที่ต้องการเป็นตัวไม่ทราบค่า</b> แล้วแก้หาเหมือนพีชคณิตธรรมดา</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="origin">
+    <h2 id="origin">ที่มาของวิธีวนกลับ และกับดัก 0 = 0</h2>
+    <p>ตั้งชื่อ \(I = \int e^x\sin x\,dx\) แล้วทำทีละส่วนสองรอบ โดยมีกติกาเดียวที่ต้องรักษา: <b>ให้ u เป็นฟังก์ชันชนิดเดียวกันทั้งสองรอบ</b> ในหน้านี้ให้ u เป็นตรีโกณทั้งคู่ (เลือก eˣ ทั้งคู่ก็ได้ผลเหมือนกัน)</p>
+    <p>ถ้ารอบแรกให้ \(u = \sin x\) แต่รอบสองเปลี่ยนไปให้ \(u = e^x\) รอบสองจะย้อนสิ่งที่รอบแรกทำทุกขั้น สุดท้ายได้</p>
+    \[ I = e^x\sin x - \big(e^x\sin x - I\big) \quad\Longrightarrow\quad I = I \]
+    <p>ซึ่งจริงแต่ไม่บอกอะไร นี่คือกับดักที่นักศึกษาเจอบ่อยที่สุดในข้อนี้</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="solution">
+    <h2 id="solution">วิธีทำอย่างละเอียด</h2>
+    <div class="int-legend" aria-label="ความหมายของสีในวิธีทำ">
+      <b class="mono">อ่านวิธีทำ</b>
+      <span><i class="lg-u"></i>ตัวแปรใหม่ u</span>
+      <span><i class="lg-f"></i>สูตรที่ใช้</span>
+      <span><i class="lg-p"></i>คุณสมบัติที่ใช้</span>
+      <span><i class="lg-c"></i>ค่าคงที่ C</span>
+      <span><i class="lg-x"></i>เส้นแดง = ตัดกัน</span>
+    </div>
+    <div class="wx" id="ex-main">
+      <div class="wx-head"><span class="mono">วิธีทำ · Cyclic integration by parts</span><h3>หา \(\displaystyle I = \int e^{x}\sin x\,dx\)</h3></div>
+      <ol class="steps">
+        <li><p>รอบที่ 1: ให้ u เป็นตรีโกณ <a class="tag tf" href="/learn/integral-calculus/#T3">T3 Integration by parts</a></p>
+          \[ \hlU{u = \sin x},\ \hlU{du = \cos x\,dx},\quad dv = e^x dx,\ v = e^x \]
+          \[ I = e^x\sin x - \int e^x\cos x\,dx \]</li>
+        <li><p>รอบที่ 2: กับอินทิกรัลใหม่ ให้ u เป็นตรีโกณอีก (ชนิดเดิม)</p>
+          \[ \hlU{u = \cos x},\ \hlU{du = -\sin x\,dx},\quad dv = e^x dx,\ v = e^x \]
+          \[ \int e^x\cos x\,dx = e^x\cos x - \int e^x(-\sin x)\,dx = e^x\cos x + \hlP{I} \]</li>
+        <li><p>แทนกลับในรอบที่ 1 อินทิกรัลเดิม \(I\) โผล่มาพร้อมเครื่องหมายลบ</p>
+          \[ I = e^x\sin x - \big(e^x\cos x + \hlP{I}\big) = e^x\sin x - e^x\cos x - \hlP{I} \]</li>
+        <li><p>ย้ายข้างแก้สมการหา \(I\) แล้วเติมค่าคงที่</p>
+          \[ 2I = e^x(\sin x - \cos x) \quad\Longrightarrow\quad I = \frac{e^x}{2}(\sin x - \cos x) + \hlC{C} \]</li>
+      </ol>
+      <p class="answer" id="answer">\(\displaystyle \int e^{x}\sin x\,dx = \frac{e^{x}}{2}(\sin x - \cos x) + \hlC{C}\)</p>
+      <p class="check">ตรวจคำตอบ: \(\tfrac{d}{dx}\Big[\tfrac{e^x}{2}(\sin x-\cos x)\Big] = \tfrac{e^x}{2}(\sin x-\cos x) + \tfrac{e^x}{2}(\cos x+\sin x) = e^x\sin x\) ✓</p>
+    </div>
+    <p>ค่าคงที่ C เติมหลังย้ายข้าง เพราะสมการในขั้น 3 เป็นความสัมพันธ์ระหว่างปฏิยานุพันธ์ที่ยังไม่ได้กำหนดค่าคงที่</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="complex">
+    <h2 id="complex">วิธีที่สั้นกว่า: ใช้เลขเชิงซ้อน</h2>
+    <p>จากสูตรออยเลอร์ \(e^{ix} = \cos x + i\sin x\) จะได้ \(e^x\sin x = \operatorname{Im}\big(e^{(1+i)x}\big)\) และอินทิเกรตเลขชี้กำลังได้ทันที</p>
+    \[ \int e^{(1+i)x}\,dx = \frac{e^{(1+i)x}}{1+i} = \frac{(1-i)}{2}\,e^x(\cos x + i\sin x) \]
+    <p>กระจายแล้วเก็บเฉพาะส่วนจินตภาพ: \(\tfrac{e^x}{2}(\sin x - \cos x)\) ตรงกับวิธีทีละส่วน ส่วนจริงเป็นของแถม \(\int e^x\cos x\,dx = \tfrac{e^x}{2}(\sin x + \cos x)\) ซึ่งเป็นข้อ <a href="/learn/integral-calculus/exam-practice/#b7">B7 ในแนวข้อสอบ</a> วิศวกรไฟฟ้าใช้ความคิดนี้ทุกวันในรูปของ<a href="/learn/vector-algebra/phasors/">เฟสเซอร์</a></p>
+    </section>
+
+    <section class="tsec" aria-labelledby="numeric">
+    <h2 id="numeric">ตัวอย่างตัวเลข: อินทิกรัลจำกัดเขต</h2>
+    \[ \int_0^{\pi}e^x\sin x\,dx = \left[\frac{e^x}{2}(\sin x - \cos x)\right]_0^{\pi} = \frac{e^{\pi}(0+1)}{2} - \frac{1\cdot(0-1)}{2} = \frac{e^{\pi}+1}{2} \approx 12.07 \]
+    <p>ตรวจขนาด: \(\sin x \ge 0\) ตลอดช่วงจึงต้องได้ค่าบวก และ \(e^x\) โตถึง \(e^\pi \approx 23\) ที่ปลายช่วง พื้นที่ราว 12 สมเหตุสมผล</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="engineering">
+    <h2 id="engineering">ที่มาของการแปลงลาปลาซของ sin ωt</h2>
+    <p>ถ้าเปลี่ยน \(e^x\) เป็น \(e^{-st}\) และ \(\sin x\) เป็น \(\sin\omega t\) วิธีวนกลับเดียวกันให้สูตรทั่วไป \(\int e^{at}\sin bt\,dt = \tfrac{e^{at}}{a^2+b^2}(a\sin bt - b\cos bt)\) เมื่อแทนขอบเขต 0 ถึง ∞ (โดย \(s > 0\)) จะได้</p>
+    \[ \mathcal{L}\{\sin\omega t\} = \int_0^{\infty}e^{-st}\sin\omega t\,dt = \frac{\omega}{s^2+\omega^2} \]
+    <p>ซึ่งเป็นหนึ่งในบรรทัดที่ใช้บ่อยที่สุดของ<a href="/blog/laplace-transform-table/">ตารางการแปลงลาปลาซ</a> และรูป \(e^{-at}\sin\omega t\) ก็คือแรงดันหรือกระแสของวงจร RLC แบบหน่วงน้อย (underdamped) ซึ่งต้องอินทิเกรตเพื่อหาประจุหรือพลังงานที่ส่งผ่าน</p>
+    </section>
+
+    <section class="tsec" aria-labelledby="mistakes">
+    <h2 id="mistakes">จุดที่มักพลาด</h2>
+    <ul>
+      <li><b>สลับชนิดของ u ในรอบที่สอง</b> ได้ \(I = I\) ไม่ได้คำตอบ ต้องเลือกชนิดเดิม</li>
+      <li><b>เครื่องหมายของ \(\tfrac{d}{dx}\cos x = -\sin x\)</b> ถ้าพลาดตรงนี้จะได้ \(I = \ldots + I\) ซึ่งย้ายข้างไม่ได้ ให้ตรวจเครื่องหมายใหม่</li>
+      <li><b>ลืมหารด้วย 2</b> หลังย้ายข้าง</li>
+      <li><b>ทำต่อเป็นรอบที่ 3, 4</b> ไม่จำเป็น เห็น \(I\) โผล่กลับมาเมื่อไรให้หยุดแล้วย้ายข้าง</li>
+    </ul>
+    <p>ทบทวนได้ที่<a href="/learn/integral-calculus/#by-parts">การอินทิเกรตทีละส่วน</a> และ<a href="/learn/integral-calculus/integral-table/#R45">ตารางสูตรอินทิเกรต R45–R46</a></p>
+    </section>
+
+    <!--faq-->
+
+    <!--pager-->
+  </article>
+</div>

@@ -347,6 +347,11 @@ It is not logically wrong, but it means the statement could be proved directly w
 ## More articles worth reading
 
 Sequences & series
+Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
+Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
+14 Nov 2026Read the article →
+
+Sequences & series
 What Do You Learn in Sequences and Series? A Roadmap from Sequences to Laurent Series
 The whole sequences and series chapter on one page: what each topic answers, its key formula and typical exam questions, from sequences and…
 24 Oct 2026Read the article →
@@ -356,12 +361,7 @@ Geometric Series: Formula, Examples and How to Find the Sum
 Geometric series formula for the sum of n terms and the infinite sum a₁/(1 − r) when |r| < 1, with the derivation, step-by-step examples, common…
 17 Oct 2026Read the article →
 
-Sequences & series
-What Is a Taylor Series, What Is It Used For, with Examples
-What a Taylor series is, the Maclaurin series table to memorise, and 8 worked examples: approximation, expanding about other points, how many…
-17 Oct 2026Read the article →
-
-All 7 articles in Sequences & Series → · All articles
+All 8 articles in Sequences & Series → · All articles
 
 ## Frequently asked questions
 

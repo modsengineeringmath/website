@@ -3,7 +3,7 @@ title: "Power Systems & Motors Articles: Power Factor, Delta Connection and Star
 url: https://modsengineeringmath.com/en/blog/category/power-motors/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > Articles on power systems and motors: what power factor is, sizing a correction capacitor, connecting a three-phase motor in delta, and setting a star–delta timer, with real 400 V 50 Hz numbers.
@@ -13,14 +13,19 @@ Markdown copy of https://modsengineeringmath.com/en/blog/category/power-motors/ 
 # Power Systems & Motors Articles: Power Factor, Delta Connection and Star–Delta
 
 THภาษาไทยENEnglish
-// Article category · 4 articles
+// Article category · 5 articles
 
 
 Electrical work in factories and buildings, from power factor and the penalty on the bill to choosing a capacitor and connecting and starting three-phase motors. Every article uses the numbers of a 230/400 V 50 Hz system.
 
-✎All 24ΣSequences & Series 7[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 4</>Programming & AI 1
+✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Power Systems & Motors
+
+3-phase motors
+Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
+U1 V1 W1 U2 V2 W2 name the 3-phase motor windings (IEC 60034-8): letter = phase, 1 = start, 2 = end. Star and delta box layouts, wire colours,…
+14 Nov 2026Read the article →
 
 Motors · research
 How Many Seconds Should a Star–Delta Timer Be Set To? Numerical Experiments on a Squirrel-Cage Induction Motor: Changeover Time, Dead Time, Current and Energy
