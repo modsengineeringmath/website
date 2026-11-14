@@ -750,6 +750,15 @@ site with their scripts, styles, tests, share images and changelog entries. Perm
 (including `index.html`, `index.html.md` and the short links `/tarot`, `/celtic-cross` …) to the matching TarotMod page. Keep
 those lines; don't add tarot content back here. The MCP `get_page` tool answers "moved" for them.
 
+## `_redirects`: splat rules go last (fixed 2026-11-14)
+Cloudflare Pages counts every rule that comes after the first rule with a splat (`*`) or placeholder (`:name`) as dynamic,
+allows only 100 dynamic rules, and skips the rest of the file with only a line in the deploy log ("Maximum number of dynamic
+rules supported is 100. Skipping remaining … lines"). The tarot splats added on 2026-11-04 sat near the top, so from then on
+only the first 141 rules worked and ~530 short URLs (`/series`, `/laplace`, `/s/int1` …) returned 404. `node build.mjs` now
+moves every splat/placeholder rule below the generated short-link block and throws if there are more than 100 of them.
+Write new rules anywhere; after a deploy, the Cloudflare deployment's build log should say "Parsed N valid redirect rules"
+with N equal to the number of rules in the file.
+
 ## Search engines: sitemap + IndexNow (added 2026-11-04)
 - Google reads `sitemap.xml` (listed in robots.txt) and Search Console; `lastmod` comes from each page's `updated`, so keep it honest.
 - IndexNow (Bing, Yandex, Naver, Seznam, Yep): the key file `b8dd506014d1a0e9decb6b4e56fe3748.txt` sits in the repo root (keep it).

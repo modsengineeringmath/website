@@ -1882,7 +1882,17 @@ function solutionSchema(s, url, ogImageUrl) {
   if (i >= 0 && j > i) r = r.slice(0, i).replace(/\n+$/, "\n") + r.slice(j + end.length).replace(/^\n+/, "");
   const lines = [["/solution", SOL_HUB], ["/solution/", SOL_HUB], ["/answers", SOL_HUB], ["/answers/", SOL_HUB], ["/s", SOL_HUB], ["/s/", SOL_HUB],
     ...solutions.filter((s) => s.short).flatMap((s) => [[`/s/${s.short}`, s.route], [`/s/${s.short}/`, s.route]])];
-  fs.writeFileSync(rp, r.replace(/\n*$/, "\n\n") + [begin, ...lines.map(([a, b]) => `${a}  ${b}  301`), end].join("\n") + "\n");
+  // Rules with a splat or placeholder must come after every static rule (fixed 2026-11-14): Cloudflare Pages counts
+  // every rule after the first splat as dynamic, allows only 100 dynamic rules and silently skips the rest of the
+  // file, which had disabled ~530 short URLs (/series, /laplace, /s/int1 …) since the tarot splats were added.
+  const dynHead = "# Rules with splats or placeholders (moved here by build.mjs; keep them last, see README)";
+  const isDyn = (line) => { const t = line.trim(); if (!t || t.startsWith("#")) return false; const src = t.split(/\s+/)[0]; return src.includes("*") || /\/:[A-Za-z]/.test(src); };
+  const kept = r.split("\n").filter((l) => l.trim() !== dynHead);
+  const dyn = kept.filter(isDyn);
+  if (dyn.length > 100) throw new Error(`_redirects: ${dyn.length} rules with splats/placeholders (Cloudflare Pages allows 100)`);
+  const stat = kept.filter((l) => !isDyn(l)).join("\n");
+  fs.writeFileSync(rp, stat.replace(/\n*$/, "\n\n") + [begin, ...lines.map(([a, b]) => `${a}  ${b}  301`), end].join("\n") + "\n"
+    + (dyn.length ? "\n" + [dynHead, ...dyn].join("\n") + "\n" : ""));
 }
 
 // ---------------------------------------------------------------------------
