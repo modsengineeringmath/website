@@ -3,7 +3,7 @@ title: "Online classrooms"
 url: https://modsengineeringmath.com/en/courses/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-12
+updated: 2026-11-18
 ---
 
 > Ajarn Mod's online classrooms: engineering courses taught unit by unit in teaching order, with worked examples, exercises with answers and lecture notes. Free for self-study or classroom use.
@@ -19,4 +19,4 @@ Courses arranged as units in the order they are taught in class. Each unit has t
 
 ## Open courses
 
-G(s)Control EngineeringA complete 17-unit control engineering course in teaching order: transfer functions, time response, stability, root locus, Bode, PID, state space, digital control, fuzzy logic and AI. Every unit uses electrical engineering examples and has exercises with answers.17 units · updated 12 Nov 2026
+G(s)Control EngineeringAn online control engineering classroom for advanced undergraduate and graduate study. It starts with complex variables and the s-plane and goes through root locus, frequency response, PID, state space and digital control, with interactive labs, exercises and answers.2 units · updated 18 Nov 2026
