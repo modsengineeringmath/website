@@ -17,7 +17,7 @@ Markdown copy of https://modsengineeringmath.com/en/courses/control-engineering/
 
 This classroom follows the order of the standard international control textbooks, from complex variables and the Laplace transform through physical models, response, stability, root locus, frequency response, PID and state space. Every unit is written from scratch with its own examples and interactive labs, deep enough for a master's course without leaving beginners behind.
 
-- 2 units open of 26 planned
+- 3 units open of 26 planned
 - Undergraduate and graduate
 - English edition
 - Free, no sign-up
@@ -32,7 +32,7 @@ Start Unit 1Textbook and handouts
 
 - 01Feedback Control in DepthLearned ✓
 - 02Complex Variables, Complex Functions, Mapping and the s-PlaneLearned ✓
-- 03The Laplace TransformComing soon
+- 03The Laplace TransformLearned ✓
 - 04The Inverse Laplace Transform, Partial Fractions and ResiduesComing soon
 
 ### Part 2 · Mathematical models
