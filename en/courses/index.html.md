@@ -19,4 +19,4 @@ Courses arranged as units in the order they are taught in class. Each unit has t
 
 ## Open courses
 
-G(s)Control EngineeringAn online control engineering classroom for advanced undergraduate and graduate study. It starts with complex variables and the s-plane and goes through root locus, frequency response, PID, state space and digital control, with interactive labs, exercises and answers.3 units · updated 18 Nov 2026
+G(s)Control EngineeringAn online control engineering classroom for advanced undergraduate and graduate study. Unit 1 is open: open and closed loop, system types, terminology, links to other engineering fields and high-paying careers, with an interactive lab, exercises and answers.1 units · updated 18 Nov 2026

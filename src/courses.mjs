@@ -306,6 +306,8 @@ ${l.deeper.length ? `    <aside class="post-box" aria-label="${S.deeper}"><p cla
         },
         crumbsLd([[S.home, "/"], [S.room, HUB], [c.short || c.title, route], [`${unitLabel(l)} ${l.title}`, l.route]]),
       ];
+      // FAQPage: front matter "faq:" lines of the form  question | answer
+      if (asList(l.faq).length) ld.push({ "@type": "FAQPage", "@id": url + "#faq", inLanguage: lang, mainEntity: asList(l.faq).map((x) => { const [q, a] = pipe(x); return { "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } }; }) });
       // Google needs name, thumbnail and upload date for a video; without "video_date:" the player is shown but no VideoObject is claimed
       if (l.youtube && l.video_date)
         ld.push({ "@type": "VideoObject", name: l.video_title || h1, description: l.description, thumbnailUrl: [`https://i.ytimg.com/vi/${l.youtube}/hqdefault.jpg`], uploadDate: `${l.video_date}T00:00:00+07:00`,
