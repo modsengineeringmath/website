@@ -25,15 +25,21 @@ updated: 2026-10-12
 
 - วงปิดอันดับสอง: $M_r = \frac{1}{2\zeta\sqrt{1-\zeta^2}}$, แบนด์วิดท์ $\approx \omega_n$ (×1.27 ที่ ζ = 0.5)
 
-- แบนด์วิดท์กว้าง = เร็ว · ยอดเรโซแนนซ์สูง = แกว่งมาก
+- แบนด์วิดท์กว้าง = เร็ว
+ยอดเรโซแนนซ์สูง = แกว่งมาก
 
 ## ป้อนไซน์ ได้ไซน์ พื้นฐาน
 
 Q1 Sinusoidal steady state ผลตอบสนองต่อไซน์ในสถานะอยู่ตัว
 
-$$u(t) = A\sin\omega t \ \Rightarrow\ y_{ss}(t) = A\,|G(j\omega)|\sin\big(\omega t + \angle G(j\omega)\big)$$
+$$u(t) = A\sin\omega t$$
 
-ใช้ได้เมื่อ $G$ เสถียร (พจน์ชั่วครู่หายไปแล้ว) · $|G(j\omega)|$ = อัตราขยาย · $\angle G(j\omega)$ = เฟส (ลบ = ล้าหลัง) · คือแนวคิดเฟสเซอร์ในวงจร AC นั่นเอง
+$$\Rightarrow\ y_{ss}(t) = A\,|G(j\omega)|\sin\big(\omega t + \angle G(j\omega)\big)$$
+
+ใช้ได้เมื่อ $G$ เสถียร (พจน์ชั่วครู่หายไปแล้ว)
+$|G(j\omega)|$ = อัตราขยาย
+$\angle G(j\omega)$ = เฟส (ลบ = ล้าหลัง)
+คือแนวคิดเฟสเซอร์ในวงจร AC นั่นเอง
 
 ตัวอย่าง Q-1 · วงจร RC กับสโคป
 
@@ -43,7 +49,9 @@ $$u(t) = A\sin\omega t \ \Rightarrow\ y_{ss}(t) = A\,|G(j\omega)|\sin\big(\omega
 
 - $\omega = 6283$ rad/s: $G(j\omega) = \dfrac{1}{1 + j6.283}$ Q1
 
-$$|G| = \frac{1}{\sqrt{1 + 6.283^2}} = 0.157 \ (-16.1\ \text{dB}), \qquad \angle G = -\tan^{-1}6.283 = -81^\circ$$
+$$|G| = \frac{1}{\sqrt{1 + 6.283^2}} = 0.157 \ (-16.1\ \text{dB})$$
+
+$$\angle G = -\tan^{-1}6.283 = -81^\circ$$
 
 เอาต์พุต $0.314\sin(\omega t - 81^\circ)$ V: แอมพลิจูด 0.31 V ล้าหลังเกือบ 90° (เลื่อนไปทางขวา 0.225 ms บนสโคป) · ลองวัดจริงในออสซิลโลสโคปจำลอง
 
@@ -51,29 +59,45 @@ $$|G| = \frac{1}{\sqrt{1 + 6.283^2}} = 0.157 \ (-16.1\ \text{dB}), \qquad \angle
 
 Q2 Resonant peak ยอดเรโซแนนซ์ของวงปิดอันดับสอง
 
-$$M_r = \frac{1}{2\zeta\sqrt{1 - \zeta^2}}, \qquad \omega_r = \omega_n\sqrt{1 - 2\zeta^2} \qquad (\zeta \lt 0.707)$$
+$$M_r = \frac{1}{2\zeta\sqrt{1 - \zeta^2}}$$
 
-$M_r$ สูง ↔ overshoot มาก · ค่าที่นิยมในการออกแบบ $1.1 \lt M_r \lt 1.5$ (0.8–3.5 dB)
+$$\omega_r = \omega_n\sqrt{1 - 2\zeta^2}$$
+
+$$(\zeta \lt 0.707)$$
+
+$M_r$ สูง ↔ overshoot มาก
+ค่าที่นิยมในการออกแบบ $1.1 \lt M_r \lt 1.5$ (0.8–3.5 dB)
 
 Q3 Bandwidth แบนด์วิดท์วงปิด (−3 dB)
 
-$$\omega_{BW} = \omega_n\sqrt{1 - 2\zeta^2 + \sqrt{4\zeta^4 - 4\zeta^2 + 2}}, \qquad t_r\,\omega_{BW} \approx 1.8 \text{ ถึง } 2.2$$
+$$\omega_{BW} = \omega_n\sqrt{1 - 2\zeta^2 + \sqrt{4\zeta^4 - 4\zeta^2 + 2}}$$
 
-ζ = 0.5 → $1.27\omega_n$ · ζ = 0.707 → $\omega_n$ · ζ = 1 → $0.64\omega_n$ · ใช้ $\omega_{BW} \approx \omega_{gc}$ ถึง $2\omega_{gc}$ จากโบดวงเปิด (G5)
+$$t_r\,\omega_{BW} \approx 1.8 \text{ ถึง } 2.2$$
+
+ζ = 0.5 → $1.27\omega_n$
+ζ = 0.707 → $\omega_n$
+ζ = 1 → $0.64\omega_n$
+ใช้ $\omega_{BW} \approx \omega_{gc}$ ถึง $2\omega_{gc}$ จากโบดวงเปิด (G5)
 
 Q4 Closed loop from open loop อ่านวงปิดจากวงเปิด
 
-$$|L| \gg 1:\ T \approx 1,\ S \approx \frac1L \qquad\qquad |L| \ll 1:\ T \approx L,\ S \approx 1$$
+$$|L| \gg 1:\ T \approx 1,\ S \approx \frac1L$$
 
-ความถี่ต่ำที่ลูปเกนสูง วงปิดติดตามดี · ความถี่สูงที่ลูปเกนต่ำ วงปิดเท่ากับวงเปิด (ลดสัญญาณรบกวน) · ช่วงรอยต่อที่ $|L| \approx 1$ คือจุดที่เสถียรภาพตัดสิน (มาร์จิน)
+$$|L| \ll 1:\ T \approx L,\ S \approx 1$$
+
+ความถี่ต่ำที่ลูปเกนสูง วงปิดติดตามดี
+ความถี่สูงที่ลูปเกนต่ำ วงปิดเท่ากับวงเปิด (ลดสัญญาณรบกวน)
+ช่วงรอยต่อที่ $|L| \approx 1$ คือจุดที่เสถียรภาพตัดสิน (มาร์จิน)
 
 ตัวอย่าง Q-2 · ระบบ ζ = 0.5
 
 ### วงปิด $T(s) = \dfrac{16}{s^2 + 4s + 16}$ หา $M_r,\ \omega_r$ และแบนด์วิดท์
 
-- $\omega_n = 4,\ \zeta = 0.5$ · $M_r = \dfrac{1}{2(0.5)(0.866)} = 1.155$ (1.25 dB) Q2
+- $\omega_n = 4,\ \zeta = 0.5$
+$M_r = \dfrac{1}{2(0.5)(0.866)} = 1.155$ (1.25 dB) Q2
 
-- $\omega_r = 4\sqrt{0.5} = 2.83$ rad/s · $\omega_{BW} = 4 \times 1.272 = 5.09$ rad/s Q3
+- $\omega_r = 4\sqrt{0.5} = 2.83$ rad/s
+$\omega_{BW} = 4 \times 1.272 = 5.09$ rad/s Q3
 
 $M_r = 1.155$ ที่ 2.83 rad/s · แบนด์วิดท์ 5.09 rad/s · ทำนายเวลาขึ้น $\approx 1.8/5.09 = 0.35$ s ถึง $2.2/5.09 = 0.43$ s (ค่าจริง 10–90% คือ 0.42 s)
 

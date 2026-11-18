@@ -19,40 +19,58 @@ updated: 2026-10-12
 
 สรุปใน 30 วินาที
 
-- $z = e^{sT}$: ฝั่งซ้ายของระนาบ s → ภายในวงกลมหนึ่งหน่วย · เสถียร $\iff |z_i| \lt 1$
+- $z = e^{sT}$: ฝั่งซ้ายของระนาบ s → ภายในวงกลมหนึ่งหน่วย
+เสถียร $\iff |z_i| \lt 1$
 
 - พลานต์ + ZOH: $G(z) = (1 - z^{-1})\mathcal Z\{G(s)/s\}$
 
 - ตัวควบคุม: แทน $s \approx \frac2T\frac{z - 1}{z + 1}$ (Tustin) แล้วเขียนเป็นสมการผลต่าง
 
-- ความถี่สุ่ม 20–30 เท่าของแบนด์วิดท์ · ZOH หน่วงครึ่งคาบ เสียเฟส $\omega_cT/2$
+- ความถี่สุ่ม 20–30 เท่าของแบนด์วิดท์
+ZOH หน่วงครึ่งคาบ เสียเฟส $\omega_cT/2$
 
 ## การสุ่มและวงจรคงค่า กลาง
 
 2 wmax การสุ่ม แอลิแอส">
 Y1 Sampling and aliasing การสุ่มและแอลิแอส
 
-$$\omega_s = \frac{2\pi}{T} \gt 2\omega_{max} \qquad (\text{ความถี่ไนควิสต์ } \omega_s/2)$$
+$$\omega_s = \frac{2\pi}{T} \gt 2\omega_{max}$$
 
-ความถี่เหนือ $\omega_s/2$ จะปรากฏเป็นความถี่ต่ำปลอม (alias) ต้องกรองด้วยฟิลเตอร์แอนติแอลิแอส RC ก่อน ADC · ดูภาพการสุ่มในแล็บสัญญาณ
+$$(\text{ความถี่ไนควิสต์ } \omega_s/2)$$
+
+ความถี่เหนือ $\omega_s/2$ จะปรากฏเป็นความถี่ต่ำปลอม (alias) ต้องกรองด้วยฟิลเตอร์แอนติแอลิแอส RC ก่อน ADC
+ดูภาพการสุ่มในแล็บสัญญาณ
 
 Y2 ZOH equivalent of the plant พลานต์มองจากคอมพิวเตอร์
 
-$$G(z) = (1 - z^{-1})\,\mathcal Z\left\{\frac{G(s)}{s}\right\} \qquad \text{เช่น } \frac{a}{s + a} \to \frac{1 - e^{-aT}}{z - e^{-aT}}$$
+$$G(z) = (1 - z^{-1})\,\mathcal Z\left\{\frac{G(s)}{s}\right\}$$
 
-แม่นตรงที่จังหวะสุ่ม (step invariant) · ปริภูมิสถานะ: $A_d = e^{AT}$, $B_d = \int_0^Te^{A\tau}d\tau\,B$ (X6)
+$$\text{เช่น } \frac{a}{s + a} \to \frac{1 - e^{-aT}}{z - e^{-aT}}$$
+
+แม่นตรงที่จังหวะสุ่ม (step invariant)
+ปริภูมิสถานะ: $A_d = e^{AT}$, $B_d = \int_0^Te^{A\tau}d\tau\,B$ (X6)
 
 Y3 s-to-z mapping and stability การแมปและเสถียรภาพ
 
-$$z = e^{sT}: \ \ s = -\sigma \pm j\omega_d \ \mapsto\ |z| = e^{-\sigma T},\ \angle z = \pm\omega_dT, \qquad \text{เสถียร} \iff |z_i| \lt 1$$
+$$z = e^{sT}$$
 
-แกน $j\omega$ → วงกลมหนึ่งหน่วย · $s = 0$ → $z = 1$ · ขั้วใกล้ $z = 1$ = ช้า · ขั้วบนแกนจริงลบ ($z \lt 0$) = แกว่งสลับทุกคาบ ไม่มีคู่เทียบในโลกต่อเนื่อง
+$$s = -\sigma \pm j\omega_d \ \mapsto\ |z| = e^{-\sigma T},\ \angle z = \pm\omega_dT$$
+
+$$\text{เสถียร}$$
+
+$$\iff |z_i| \lt 1$$
+
+แกน $j\omega$ → วงกลมหนึ่งหน่วย
+$s = 0$ → $z = 1$
+ขั้วใกล้ $z = 1$ = ช้า
+ขั้วบนแกนจริงลบ ($z \lt 0$) = แกว่งสลับทุกคาบ ไม่มีคู่เทียบในโลกต่อเนื่อง
 
 Y4 Jury test (2nd order) เกณฑ์จูรีสำหรับ $P(z) = a_2z^2 + a_1z + a_0,\ a_2 \gt 0$
 
 $$P(1) \gt 0, \qquad P(-1) \gt 0, \qquad |a_0| \lt a_2$$
 
-เทียบเท่าเราท์ในโลก z · อันดับสูงกว่าใช้ตารางของจูรี หรือแปลง $z = \frac{1 + w}{1 - w}$ แล้วใช้เราท์
+เทียบเท่าเราท์ในโลก z
+อันดับสูงกว่าใช้ตารางของจูรี หรือแปลง $z = \frac{1 + w}{1 - w}$ แล้วใช้เราท์
 
 ตัวอย่าง Y-1 · P ที่เสถียรเสมอ กลายเป็นมีเกนสูงสุด
 
@@ -70,21 +88,34 @@ $$P(1) \gt 0, \qquad P(-1) \gt 0, \qquad |a_0| \lt a_2$$
 
 Y5 Discretization methods วิธีแปลง $C(s) \to C(z)$
 
-$$\text{Forward Euler: } s \approx \frac{z - 1}{T}, \qquad \text{Backward Euler: } s \approx \frac{z - 1}{Tz}, \qquad \text{Tustin: } s \approx \frac{2}{T}\cdot\frac{z - 1}{z + 1}$$
+$$\text{Forward Euler: } s \approx \frac{z - 1}{T}$$
 
-Tustin รักษาเสถียรภาพเสมอ · ถ้าต้องการให้ความถี่หนึ่ง (เช่น notch ที่ $\omega_0$) ตรงพอดี ใช้ prewarping: แทน $\frac2T$ ด้วย $\frac{\omega_0}{\tan(\omega_0T/2)}$
+$$\text{Backward Euler: } s \approx \frac{z - 1}{Tz}$$
+
+$$\text{Tustin: } s \approx \frac{2}{T}\cdot\frac{z - 1}{z + 1}$$
+
+Tustin รักษาเสถียรภาพเสมอ
+ถ้าต้องการให้ความถี่หนึ่ง (เช่น notch ที่ $\omega_0$) ตรงพอดี ใช้ prewarping: แทน $\frac2T$ ด้วย $\frac{\omega_0}{\tan(\omega_0T/2)}$
 
 Y6 Digital PID PID ดิจิทัล (I แบบ Tustin, D แบบ backward + ฟิลเตอร์)
 
-$$I_k = I_{k-1} + \frac{K_IT}{2}(e_k + e_{k-1}), \qquad D_k = \frac{T_f}{T_f + T}D_{k-1} + \frac{K_D}{T_f + T}(e_k - e_{k-1}), \qquad u_k = K_Pe_k + I_k + D_k$$
+$$I_k = I_{k-1} + \frac{K_IT}{2}(e_k + e_{k-1})$$
 
-รูปแบบความเร็ว (incremental): $\Delta u_k = u_k - u_{k-1}$ ไม่ต้องเก็บอินทิกรัล สลับ manual/auto ไม่กระตุก · ใส่ D จากเอาต์พุตและ anti-windup ตามโค้ดในหน้า PID
+$$D_k = \frac{T_f}{T_f + T}D_{k-1} + \frac{K_D}{T_f + T}(e_k - e_{k-1})$$
+
+$$u_k = K_Pe_k + I_k + D_k$$
+
+รูปแบบความเร็ว (incremental): $\Delta u_k = u_k - u_{k-1}$ ไม่ต้องเก็บอินทิกรัล สลับ manual/auto ไม่กระตุก
+ใส่ D จากเอาต์พุตและ anti-windup ตามโค้ดในหน้า PID
 
 Y7 Choosing the sample rate เลือกความถี่สุ่ม
 
-$$\omega_s \approx (20 \text{ ถึง } 30)\,\omega_{BW}, \qquad \Delta\text{PM} \approx \frac{\omega_cT}{2}\ \text{rad} = 28.6\,\omega_cT \ \text{องศา} \ (\text{จาก ZOH})$$
+$$\omega_s \approx (20 \text{ ถึง } 30)\,\omega_{BW}$$
 
-บวกหน่วงจากการคำนวณอีก (มักเป็นหนึ่งคาบเต็มถ้าเขียน PWM คาบถัดไป) · ลูปกระแสของไดรฟ์มอเตอร์มักสุ่ม 10–20 kHz พร้อม PWM
+$$\Delta\text{PM} \approx \frac{\omega_cT}{2}\ \text{rad} = 28.6\,\omega_cT \ \text{องศา} \ (\text{จาก ZOH})$$
+
+บวกหน่วงจากการคำนวณอีก (มักเป็นหนึ่งคาบเต็มถ้าเขียน PWM คาบถัดไป)
+ลูปกระแสของไดรฟ์มอเตอร์มักสุ่ม 10–20 kHz พร้อม PWM
 
 ตัวอย่าง Y-2 · PI ลงชิป
 

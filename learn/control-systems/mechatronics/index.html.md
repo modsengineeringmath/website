@@ -23,7 +23,8 @@ updated: 2026-10-12
 
 - ลูปกระแส PI: $K_P = L\omega_{ci},\ K_I = R\omega_{ci}$ (ศูนย์หักล้างขั้วไฟฟ้า)
 
-- ลูปความเร็ว PI: $K_P = J\omega_{cs}/K_t$ ศูนย์ที่ $\omega_{cs}/5$ · ลูปตำแหน่ง P: $K_P = \omega_{cp}$
+- ลูปความเร็ว PI: $K_P = J\omega_{cs}/K_t$ ศูนย์ที่ $\omega_{cs}/5$
+ลูปตำแหน่ง P: $K_P = \omega_{cp}$
 
 - Feedforward ความเร็ว/ความเร่ง ลดความผิดพลาดขณะเคลื่อนที่ได้มากกว่าเพิ่มเกน
 
@@ -45,9 +46,12 @@ updated: 2026-10-12
 
 K1 Encoder resolution ความละเอียดเอนโค้ดเดอร์
 
-$$\Delta\theta = \frac{360^\circ}{4N_{PPR}}, \qquad \Delta\omega_{\min} = \frac{2\pi}{4N_{PPR}\,T_s} \ \text{rad/s (วิธีนับพัลส์ต่อคาบ)}$$
+$$\Delta\theta = \frac{360^\circ}{4N_{PPR}}$$
 
-ตัวคูณ 4 จาก quadrature (นับทุกขอบของ A และ B) · ความเร็วต่ำใช้วิธีจับเวลาระหว่างพัลส์ (T-method) หรือผสม (M/T method)
+$$\Delta\omega_{\min} = \frac{2\pi}{4N_{PPR}\,T_s} \ \text{rad/s (วิธีนับพัลส์ต่อคาบ)}$$
+
+ตัวคูณ 4 จาก quadrature (นับทุกขอบของ A และ B)
+ความเร็วต่ำใช้วิธีจับเวลาระหว่างพัลส์ (T-method) หรือผสม (M/T method)
 
 ตัวอย่าง K-1 · เอนโค้ดเดอร์ 1000 PPR
 
@@ -65,21 +69,42 @@ $$\Delta\theta = \frac{360^\circ}{4N_{PPR}}, \qquad \Delta\omega_{\min} = \frac{
 
 K2 Current (torque) loop ลูปกระแส
 
-$$\frac{I}{V} \approx \frac{1}{Ls + R}, \qquad C_i(s) = K_{P}\frac{s + R/L}{s}:\ \ K_P = L\,\omega_{ci},\ \ K_I = R\,\omega_{ci} \ \Rightarrow\ \frac{I}{I^*} = \frac{\omega_{ci}}{s + \omega_{ci}}$$
+$$\frac{I}{V} \approx \frac{1}{Ls + R}$$
 
-ศูนย์ของ PI หักล้างขั้วไฟฟ้า $-R/L$ วงปิดเป็นอันดับหนึ่งที่แบนด์วิดท์ $\omega_{ci}$ · แรง EMF ต้านช้ามากเทียบกับลูปนี้ (มองเป็นการรบกวน)
+$$C_i(s) = K_{P}\frac{s + R/L}{s}$$
+
+$$K_P = L\,\omega_{ci}$$
+
+$$K_I = R\,\omega_{ci}$$
+
+$$\Rightarrow\ \frac{I}{I^*} = \frac{\omega_{ci}}{s + \omega_{ci}}$$
+
+ศูนย์ของ PI หักล้างขั้วไฟฟ้า $-R/L$ วงปิดเป็นอันดับหนึ่งที่แบนด์วิดท์ $\omega_{ci}$
+แรง EMF ต้านช้ามากเทียบกับลูปนี้ (มองเป็นการรบกวน)
 
 K3 Speed loop ลูปความเร็ว
 
-$$\frac{\Omega}{I^*} \approx \frac{K_t}{Js}, \qquad C_\omega(s) = K_P + \frac{K_I}{s}:\ \ K_P = \frac{J\omega_{cs}}{K_t},\ \ K_I = K_P\frac{\omega_{cs}}{5}$$
+$$\frac{\Omega}{I^*} \approx \frac{K_t}{Js}$$
 
-ครอสโอเวอร์ที่ $\omega_{cs}$ ศูนย์ PI ต่ำกว่า 5 เท่า (PM ≈ 70°) · $J$ ต้องรวมโหลดที่สะท้อนผ่านเกียร์ (M10) ไม่อย่างนั้นแบนด์วิดท์จริงจะต่ำกว่าที่ออกแบบ
+$$C_\omega(s) = K_P + \frac{K_I}{s}$$
+
+$$K_P = \frac{J\omega_{cs}}{K_t}$$
+
+$$K_I = K_P\frac{\omega_{cs}}{5}$$
+
+ครอสโอเวอร์ที่ $\omega_{cs}$ ศูนย์ PI ต่ำกว่า 5 เท่า (PM ≈ 70°)
+$J$ ต้องรวมโหลดที่สะท้อนผ่านเกียร์ (M10) ไม่อย่างนั้นแบนด์วิดท์จริงจะต่ำกว่าที่ออกแบบ
 
 K4 Position loop + feedforward ลูปตำแหน่งและป้อนไปข้างหน้า
 
-$$\omega^* = K_{P\theta}(\theta^* - \theta) + \dot\theta^*, \qquad i^* = C_\omega(\omega^* - \omega) + \frac{J}{K_t}\ddot\theta^*, \qquad K_{P\theta} = \omega_{cp}$$
+$$\omega^* = K_{P\theta}(\theta^* - \theta) + \dot\theta^*$$
 
-ลูปตำแหน่ง P พอ เพราะพลานต์มีอินทิเกรเตอร์อยู่แล้ว (ชนิด 1) · feedforward ความเร็วและความเร่งจากวิถีที่วางแผนไว้ ทำให้ following error เกือบเป็นศูนย์ขณะเคลื่อนที่ โดยไม่ต้องเพิ่มเกน (ไม่เสียเสถียรภาพ)
+$$i^* = C_\omega(\omega^* - \omega) + \frac{J}{K_t}\ddot\theta^*$$
+
+$$K_{P\theta} = \omega_{cp}$$
+
+ลูปตำแหน่ง P พอ เพราะพลานต์มีอินทิเกรเตอร์อยู่แล้ว (ชนิด 1)
+feedforward ความเร็วและความเร่งจากวิถีที่วางแผนไว้ ทำให้ following error เกือบเป็นศูนย์ขณะเคลื่อนที่ โดยไม่ต้องเพิ่มเกน (ไม่เสียเสถียรภาพ)
 
 ตัวอย่าง K-2 · ตั้งเกนเซอร์โวทั้งสามชั้น
 
@@ -99,15 +124,23 @@ python-control ✓ · ในงานจริงจำกัด $i^*$ ไม่
 
 K5 Mechanical resonance and notch filter เรโซแนนซ์ทางกลและฟิลเตอร์ notch
 
-$$\omega_r = \sqrt{k\left(\frac{1}{J_m} + \frac{1}{J_L}\right)}, \qquad N(s) = \frac{s^2 + 2\zeta_z\omega_0s + \omega_0^2}{s^2 + 2\zeta_p\omega_0s + \omega_0^2},\ \ \zeta_z \ll \zeta_p$$
+$$\omega_r = \sqrt{k\left(\frac{1}{J_m} + \frac{1}{J_L}\right)}$$
 
-เพลาหรือสายพานยืดหยุ่น ($k$) ทำให้มอเตอร์กับโหลดเป็นสองมวลที่สั่นใส่กัน ยอดเรโซแนนซ์บนโบดทำให้ GM หาย · วาง notch ที่ $\omega_0 = \omega_r$ หรือจำกัดแบนด์วิดท์ลูปความเร็วให้ต่ำกว่า $\omega_r/3$
+$$N(s) = \frac{s^2 + 2\zeta_z\omega_0s + \omega_0^2}{s^2 + 2\zeta_p\omega_0s + \omega_0^2}$$
+
+$$\zeta_z \ll \zeta_p$$
+
+เพลาหรือสายพานยืดหยุ่น ($k$) ทำให้มอเตอร์กับโหลดเป็นสองมวลที่สั่นใส่กัน ยอดเรโซแนนซ์บนโบดทำให้ GM หาย
+วาง notch ที่ $\omega_0 = \omega_r$ หรือจำกัดแบนด์วิดท์ลูปความเร็วให้ต่ำกว่า $\omega_r/3$
 
 K6 Friction compensation ชดเชยแรงเสียดทาน
 
-$$T_f = T_c\operatorname{sign}(\omega) + b\,\omega, \qquad i_{ff} = \frac{\hat T_c\operatorname{sign}(\omega^*) + \hat b\,\omega^*}{K_t}$$
+$$T_f = T_c\operatorname{sign}(\omega) + b\,\omega$$
 
-ใช้ $\omega^*$ (ค่าสั่ง) แทน $\omega$ วัด เพื่อไม่ให้สั่นรอบความเร็วศูนย์ · ชดเชยไม่ครบ ปล่อยให้เทอม I จัดการส่วนที่เหลือ
+$$i_{ff} = \frac{\hat T_c\operatorname{sign}(\omega^*) + \hat b\,\omega^*}{K_t}$$
+
+ใช้ $\omega^*$ (ค่าสั่ง) แทน $\omega$ วัด เพื่อไม่ให้สั่นรอบความเร็วศูนย์
+ชดเชยไม่ครบ ปล่อยให้เทอม I จัดการส่วนที่เหลือ
 
 ## แล็บ: ลูปความเร็วของมอเตอร์
 

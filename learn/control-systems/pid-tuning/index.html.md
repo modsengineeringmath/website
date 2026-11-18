@@ -23,7 +23,8 @@ updated: 2026-10-12
 
 - ZN กราฟขั้นบันได: วัด $K, L, T$ ของแบบจำลอง FOPDT → PID: $1.2T/(KL),\ 2L,\ 0.5L$
 
-- ZN และ Cohen–Coon ดุดัน (overshoot 40–80%) · SIMC/IMC นุ่มและทนทาน (PM ~60°) เหมาะเป็นค่าเริ่มต้นในงานจริง
+- ZN และ Cohen–Coon ดุดัน (overshoot 40–80%)
+SIMC/IMC นุ่มและทนทาน (PM ~60°) เหมาะเป็นค่าเริ่มต้นในงานจริง
 
 - Relay test หา $K_u = 4d/(\pi a)$ ได้ปลอดภัยและอัตโนมัติ
 
@@ -37,13 +38,15 @@ Z1 Ziegler–Nichols (ultimate-gain method) ตาราง ZN แบบเก�
 
 $$\begin{array}{l|ccc} & K_P & T_i & T_d \\ \hline \text{P} & 0.5K_u & - & - \\ \text{PI} & 0.45K_u & T_u/1.2 & - \\ \text{PID} & 0.6K_u & T_u/2 & T_u/8 \\ \text{PID (Tyreus–Luyben)} & K_u/2.2 & 2.2T_u & T_u/6.3 \end{array}$$
 
-ZN ออกแบบให้การแกว่งลดลงเหลือ 1/4 ทุกรอบ (quarter-amplitude decay) ค่อนข้างดุ · Tyreus–Luyben นุ่มกว่ามาก นิยมในกระบวนการเคมี
+ZN ออกแบบให้การแกว่งลดลงเหลือ 1/4 ทุกรอบ (quarter-amplitude decay) ค่อนข้างดุ
+Tyreus–Luyben นุ่มกว่ามาก นิยมในกระบวนการเคมี
 
 ตัวอย่าง Z-1 · ZN เกนวิกฤต
 
 ### จูน PID ให้ $G(s) = \dfrac{1}{(s+1)^3}$ ด้วย ZN และ Tyreus–Luyben
 
-- $s^3 + 3s^2 + 3s + 1 + K = 0$ สูตรลัด: $9 \gt 1 + K \Rightarrow K_u = 8$ · $3\omega^2 = 9 \Rightarrow \omega_u = \sqrt3$, $T_u = 2\pi/\sqrt3 = 3.63$ s
+- $s^3 + 3s^2 + 3s + 1 + K = 0$ สูตรลัด: $9 \gt 1 + K \Rightarrow K_u = 8$
+$3\omega^2 = 9 \Rightarrow \omega_u = \sqrt3$, $T_u = 2\pi/\sqrt3 = 3.63$ s
 
 - ZN-PID Z1: $K_P = 4.8,\ T_i = 1.81,\ T_d = 0.453$ → $K_I = 2.65,\ K_D = 2.18$
 
@@ -67,7 +70,13 @@ ZN ออกแบบให้การแกว่งลดลงเหลื�
 
 Z2 FOPDT model from a step test แบบจำลอง FOPDT จากการทดลองขั้นบันได
 
-$$G(s) \approx \frac{Ke^{-Ls}}{Ts + 1}, \qquad K = \frac{\Delta y_\infty}{\Delta u}, \quad L = \text{จุดที่เส้นสัมผัสตัดระดับเริ่มต้น}, \quad T = \text{ช่วงจาก } L \text{ ถึงจุดตัดระดับสุดท้าย}$$
+$$G(s) \approx \frac{Ke^{-Ls}}{Ts + 1}$$
+
+$$K = \frac{\Delta y_\infty}{\Delta u}$$
+
+$$L = \text{จุดที่เส้นสัมผัสตัดระดับเริ่มต้น}$$
+
+$$T = \text{ช่วงจาก } L \text{ ถึงจุดตัดระดับสุดท้าย}$$
 
 วิธีสองจุด (แม่นกว่าเส้นสัมผัส): หาเวลา $t_{28}$ และ $t_{63}$ ที่เอาต์พุตขึ้น 28.3% และ 63.2% ได้ $T = 1.5(t_{63} - t_{28})$, $L = t_{63} - T$
 
@@ -75,11 +84,16 @@ Z3 Ziegler–Nichols (reaction-curve method) ตาราง ZN แบบกร�
 
 $$\begin{array}{l|ccc} & K_P & T_i & T_d \\ \hline \text{P} & \dfrac{T}{KL} & - & - \\ \text{PI} & \dfrac{0.9T}{KL} & \dfrac{L}{0.3} & - \\ \text{PID} & \dfrac{1.2T}{KL} & 2L & 0.5L \end{array}$$
 
-ใช้ได้ดีเมื่อ $0.1 \lt L/T \lt 1$ · ถ้า $L/T$ เล็กมาก เกนจะสูงเกิน ถ้าใหญ่ (หน่วงเวลาครอบงำ) ใช้ SIMC หรือ Smith predictor
+ใช้ได้ดีเมื่อ $0.1 \lt L/T \lt 1$
+ถ้า $L/T$ เล็กมาก เกนจะสูงเกิน ถ้าใหญ่ (หน่วงเวลาครอบงำ) ใช้ SIMC หรือ Smith predictor
 
 Z4 Cohen–Coon (PID) กฎของโคเฮน–คูน
 
-$$K_P = \frac{T}{KL}\left(\frac43 + \frac{L}{4T}\right), \qquad T_i = L\,\frac{32 + 6L/T}{13 + 8L/T}, \qquad T_d = \frac{4L}{11 + 2L/T}$$
+$$K_P = \frac{T}{KL}\left(\frac43 + \frac{L}{4T}\right)$$
+
+$$T_i = L\,\frac{32 + 6L/T}{13 + 8L/T}$$
+
+$$T_d = \frac{4L}{11 + 2L/T}$$
 
 ปรับปรุงจาก ZN ให้ดีขึ้นเมื่อหน่วงเวลามาก แต่ยังดุดันพอกัน
 
@@ -89,9 +103,16 @@ $$K_P = \frac{T}{KL}\left(\frac43 + \frac{L}{4T}\right), \qquad T_i = L\,\frac{3
 
 Z5 SIMC PI rule (Skogestad) กฎ SIMC สำหรับ PI
 
-$$K_P = \frac{1}{K}\cdot\frac{T}{\tau_c + L}, \qquad T_i = \min\{T,\ 4(\tau_c + L)\}, \qquad \tau_c = L \text{ (ค่าแนะนำ)}$$
+$$K_P = \frac{1}{K}\cdot\frac{T}{\tau_c + L}$$
 
-$\tau_c$ เล็ก = เร็วแต่ทนทานน้อย · $\tau_c$ ใหญ่ = ช้าแต่ทนทาน · IMC/Lambda tuning ใช้ $K_P = \frac{T}{K(\lambda + L)}$, $T_i = T$ (เหมือนกันเมื่อ $T$ ไม่ใหญ่มาก) · ใช้ $T_i = 4(\tau_c + L)$ เมื่อ $T$ ใหญ่มาก (พลานต์เกือบเป็นอินทิเกรเตอร์) เพื่อต้านการรบกวนที่โหลดได้เร็ว
+$$T_i = \min\{T,\ 4(\tau_c + L)\}$$
+
+$$\tau_c = L \text{ (ค่าแนะนำ)}$$
+
+$\tau_c$ เล็ก = เร็วแต่ทนทานน้อย
+$\tau_c$ ใหญ่ = ช้าแต่ทนทาน
+IMC/Lambda tuning ใช้ $K_P = \frac{T}{K(\lambda + L)}$, $T_i = T$ (เหมือนกันเมื่อ $T$ ไม่ใหญ่มาก)
+ใช้ $T_i = 4(\tau_c + L)$ เมื่อ $T$ ใหญ่มาก (พลานต์เกือบเป็นอินทิเกรเตอร์) เพื่อต้านการรบกวนที่โหลดได้เร็ว
 
 ตัวอย่าง Z-2 · เทียบกฎกับฮีตเตอร์
 
@@ -125,9 +146,14 @@ $\tau_c$ เล็ก = เร็วแต่ทนทานน้อย · $\ta
 
 Z6 Relay feedback test การทดลองรีเลย์
 
-$$K_u \approx \frac{4d}{\pi a}, \qquad T_u = \text{คาบการแกว่งที่วัดได้}$$
+$$K_u \approx \frac{4d}{\pi a}$$
 
-$d$ = ขนาดเอาต์พุตรีเลย์ · $a$ = แอมพลิจูดของเอาต์พุตระบบ · มาจากฟังก์ชันพรรณนา (describing function) ของรีเลย์ $N(a) = 4d/(\pi a)$ · ได้ $K_u, T_u$ แล้วใช้ตาราง Z1
+$$T_u = \text{คาบการแกว่งที่วัดได้}$$
+
+$d$ = ขนาดเอาต์พุตรีเลย์
+$a$ = แอมพลิจูดของเอาต์พุตระบบ
+มาจากฟังก์ชันพรรณนา (describing function) ของรีเลย์ $N(a) = 4d/(\pi a)$
+ได้ $K_u, T_u$ แล้วใช้ตาราง Z1
 
 ตัวอย่าง Z-3 · ออโต้จูนเตาอบ
 
@@ -149,7 +175,10 @@ Z7 Field tuning checklist เช็กลิสต์จูนหน้างา
 
 - ทดสอบด้วยการเปลี่ยนค่าอ้างอิงเล็ก ๆ และการรบกวน (ถ้าทำได้) ทีละครั้ง
 
-- แกว่งมาก → ลด $K_P$ หรือเพิ่ม $T_i$ · ช้าเกิน → เพิ่ม $K_P$ · ค้างนาน → ลด $T_i$ · overshoot ต่อค่าอ้างอิงมากแต่ต้านการรบกวนดี → ใช้ setpoint weighting $b \lt 1$
+- แกว่งมาก → ลด $K_P$ หรือเพิ่ม $T_i$
+ช้าเกิน → เพิ่ม $K_P$
+ค้างนาน → ลด $T_i$
+overshoot ต่อค่าอ้างอิงมากแต่ต้านการรบกวนดี → ใช้ setpoint weighting $b \lt 1$
 
 - เพิ่ม $T_d$ ทีละน้อย (เริ่ม $T_i/6$ ถึง $T_i/4$) ถ้าสัญญาณวัดสะอาด พร้อมฟิลเตอร์ $N = 8$ ถึง 10
 

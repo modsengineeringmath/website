@@ -37,8 +37,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=d6d8c2a6">
-<link rel="stylesheet" href="/assets/site.css?v=d6d8c2a6">
+<link rel="stylesheet" href="/assets/fonts.css?v=0f8b7248">
+<link rel="stylesheet" href="/assets/site.css?v=0f8b7248">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/signals/sampling-aliasing/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/signals/sampling-aliasing/#article","headline":"การสุ่มสัญญาณและอเลียสซิง (Sampling and Aliasing): ทฤษฎีบทการสุ่มของไนควิสต์–แชนนอน","description":"การสุ่มสัญญาณ (sampling) ภาษาไทย ทฤษฎีบทการสุ่ม อัตรา Nyquist และความถี่ Nyquist พิสูจน์อเลียสซิงด้วยคาบของ cos และฟังก์ชันคู่ สูตรหาความถี่ปลอม สเปกตรัมซ้ำทุก fs ตัวกรองกันอเลียส การสร้างกลับด้วย sinc ความถี่ดิจิทัล ADC และแล็บโต้ตอบ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/signals/sampling-aliasing/","mainEntityOfPage":"https://modsengineeringmath.com/learn/signals/sampling-aliasing/","datePublished":"2026-11-14","dateModified":"2026-11-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Nyquist–Shannon sampling theorem","Aliasing","Nyquist rate","Anti-aliasing filter","Sinc interpolation","Analog-to-digital conversion"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/signals/#article"},"image":["https://modsengineeringmath.com/images/og/learn-signals-sampling-aliasing.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"สัญญาณและระบบ (Signals and Systems)","item":"https://modsengineeringmath.com/learn/signals/"},{"@type":"ListItem","position":4,"name":"การสุ่มสัญญาณและอเลียสซิง: ทฤษฎีบทการสุ่ม อัตรา Nyquist ความถี่ปลอม","item":"https://modsengineeringmath.com/learn/signals/sampling-aliasing/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"อเลียสซิง (aliasing) คืออะไร?","acceptedAnswer":{"@type":"Answer","text":"คือปรากฏการณ์ที่สัญญาณความถี่สูงถูกสุ่มช้าเกินไป จุดที่สุ่มได้จึงไปตรงกับไซน์ความถี่ต่ำกว่า ระบบแยกไม่ออกว่าจุดชุดนั้นมาจากความถี่ไหน เช่น ไซน์ 7 Hz สุ่มด้วย 10 Hz ได้จุดเหมือนไซน์ 3 Hz ทุกจุด"}},{"@type":"Question","name":"ต้องสุ่มเร็วเท่าไรจึงไม่เกิดอเลียสซิง?","acceptedAnswer":{"@type":"Answer","text":"ตามทฤษฎีบทการสุ่ม อัตราสุ่ม fₛ ต้องมากกว่าสองเท่าของความถี่สูงสุดในสัญญาณ (fₛ > 2B) ค่า 2B เรียกว่าอัตรา Nyquist ส่วน fₛ/2 เรียกว่าความถี่ Nyquist ในทางปฏิบัติต้องเผื่อมากกว่านี้ เพราะตัวกรองกันอเลียสตัดไม่ได้คมทันที"}},{"@type":"Question","name":"หาความถี่ปลอม (alias frequency) อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ใช้ f_a = |f − k·fₛ| โดยเลือกจำนวนเต็ม k ที่ทำให้ผลลัพธ์อยู่ในช่วง 0 ถึง fₛ/2 เช่น 50 Hz สุ่มด้วย 60 Hz ได้ |50 − 60| = 10 Hz และ 60 Hz สุ่มด้วย 50 Hz ได้ |60 − 50| = 10 Hz เช่นกัน"}},{"@type":"Question","name":"ทำไมต้องมากกว่าสองเท่า ไม่ใช่เท่ากับสองเท่า?","acceptedAnswer":{"@type":"Answer","text":"ถ้าสุ่มไซน์ที่ fₛ = 2f พอดี จุดสุ่มอยู่ห่างกันครึ่งคาบ ถ้าบังเอิญสุ่มตรงจุดตัดศูนย์ sin(πn) = 0 ทุกจุด สัญญาณหายไปทั้งหมด ที่ขอบพอดีจึงไม่รับประกันว่าสร้างกลับได้"}},{"@type":"Question","name":"ทำไมล้อรถในวิดีโอดูเหมือนหมุนถอยหลัง?","acceptedAnswer":{"@type":"Answer","text":"กล้องถ่ายวิดีโอคือการสุ่ม เช่น 24 ภาพต่อวินาที ถ้าล้อหมุน 23 รอบต่อวินาที ทุกภาพล้อหมุนไปเกือบครบรอบ ขาดไปนิดเดียว ตาจึงเห็นว่าถอยหลัง 1 รอบต่อวินาที ซึ่งคือ 23 − 24 = −1 ความถี่ปลอมที่ติดลบแปลว่าทิศกลับ"}}]}]}</script>
@@ -809,10 +809,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=d6d8c2a6" defer></script>
-<script src="/assets/lesson.js?v=d6d8c2a6" defer></script>
-<script src="/assets/vendor/katex.min.js?v=d6d8c2a6" defer></script>
-<script src="/assets/mathkit.js?v=d6d8c2a6" defer></script>
-<script src="/assets/ms-lab.js?v=d6d8c2a6" defer></script>
+<script src="/assets/site.js?v=0f8b7248" defer></script>
+<script src="/assets/lesson.js?v=0f8b7248" defer></script>
+<script src="/assets/vendor/katex.min.js?v=0f8b7248" defer></script>
+<script src="/assets/mathkit.js?v=0f8b7248" defer></script>
+<script src="/assets/ms-lab.js?v=0f8b7248" defer></script>
 </body>
 </html>

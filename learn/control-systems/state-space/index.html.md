@@ -19,11 +19,14 @@ updated: 2026-10-12
 
 สรุปใน 30 วินาที
 
-- $\dot{\mathbf x} = A\mathbf x + B\mathbf u,\ \ \mathbf y = C\mathbf x + D\mathbf u$ · สถานะ = ตัวเก็บพลังงาน ($i_L,\ v_C$, ตำแหน่ง, ความเร็ว)
+- $\dot{\mathbf x} = A\mathbf x + B\mathbf u,\ \ \mathbf y = C\mathbf x + D\mathbf u$
+สถานะ = ตัวเก็บพลังงาน ($i_L,\ v_C$, ตำแหน่ง, ความเร็ว)
 
-- $G(s) = C(sI - A)^{-1}B + D$ · ขั้ว = ค่าเฉพาะของ $A$
+- $G(s) = C(sI - A)^{-1}B + D$
+ขั้ว = ค่าเฉพาะของ $A$
 
-- $\mathbf x(t) = e^{At}\mathbf x(0) + \int_0^te^{A(t-\tau)}B\mathbf u(\tau)\,d\tau$ · $e^{At} = \mathcal L^{-1}\{(sI - A)^{-1}\}$
+- $\mathbf x(t) = e^{At}\mathbf x(0) + \int_0^te^{A(t-\tau)}B\mathbf u(\tau)\,d\tau$
+$e^{At} = \mathcal L^{-1}\{(sI - A)^{-1}\}$
 
 - ฟังก์ชันเดียวมีได้หลายแบบจำลอง (รูปแบบควบคุมได้ สังเกตได้ โมดัล) เชื่อมกันด้วย $T$
 
@@ -31,21 +34,34 @@ updated: 2026-10-12
 
 X1 State-space model แบบจำลองปริภูมิสถานะ
 
-$$\dot{\mathbf x}(t) = A\mathbf x(t) + B\mathbf u(t), \qquad \mathbf y(t) = C\mathbf x(t) + D\mathbf u(t)$$
+$$\dot{\mathbf x}(t) = A\mathbf x(t) + B\mathbf u(t)$$
 
-$\mathbf x \in \mathbb R^n$ สถานะ · $\mathbf u \in \mathbb R^m$ อินพุต · $\mathbf y \in \mathbb R^p$ เอาต์พุต · $A_{n\times n}$ (พลวัต) $B_{n\times m}$ $C_{p\times n}$ $D_{p\times m}$ (มักเป็นศูนย์)
+$$\mathbf y(t) = C\mathbf x(t) + D\mathbf u(t)$$
+
+$\mathbf x \in \mathbb R^n$ สถานะ
+$\mathbf u \in \mathbb R^m$ อินพุต
+$\mathbf y \in \mathbb R^p$ เอาต์พุต
+$A_{n\times n}$ (พลวัต) $B_{n\times m}$ $C_{p\times n}$ $D_{p\times m}$ (มักเป็นศูนย์)
 
 X2 Controllable canonical form รูปแบบมาตรฐานควบคุมได้
 
-$$G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_0}{s^n + a_{n-1}s^{n-1} + \cdots + a_0}:\quad A = \begin{pmatrix} 0 & 1 & & \\ & \ddots & \ddots & \\ & & 0 & 1 \\ -a_0 & -a_1 & \cdots & -a_{n-1} \end{pmatrix},\ B = \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 1 \end{pmatrix},\ C = (b_0\ \ b_1\ \cdots\ b_{n-1})$$
+$$G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_0}{s^n + a_{n-1}s^{n-1} + \cdots + a_0}$$
 
-เขียนได้ทันทีจากสัมประสิทธิ์ · ใช้ในการวางขั้ว (ป้อนกลับสถานะ) · รูปแบบสังเกตได้ (observable) คือทรานสโพส: $A^T, C^T, B^T$
+$$A = \begin{pmatrix} 0 & 1 & & \\ & \ddots & \ddots & \\ & & 0 & 1 \\ -a_0 & -a_1 & \cdots & -a_{n-1} \end{pmatrix},\ B = \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 1 \end{pmatrix},\ C = (b_0$$
+
+$$b_1\ \cdots\ b_{n-1})$$
+
+เขียนได้ทันทีจากสัมประสิทธิ์
+ใช้ในการวางขั้ว (ป้อนกลับสถานะ)
+รูปแบบสังเกตได้ (observable) คือทรานสโพส: $A^T, C^T, B^T$
 
 ตัวอย่าง X-1 · วงจร RLC
 
 ### เขียนแบบจำลองปริภูมิสถานะของวงจร RLC อนุกรม $R = 10\ \Omega,\ L = 10$ mH, $C = 100\ \mu$F เอาต์พุตคือ $v_C$
 
-- สถานะ $x_1 = i_L,\ x_2 = v_C$ · KVL: $L\dot i = v_{in} - Ri - v_C$ · ตัวเก็บประจุ: $C\dot v_C = i$
+- สถานะ $x_1 = i_L,\ x_2 = v_C$
+KVL: $L\dot i = v_{in} - Ri - v_C$
+ตัวเก็บประจุ: $C\dot v_C = i$
 
 - เขียนเป็นเมทริกซ์ X1
 
@@ -63,7 +79,8 @@ X3 Transfer function ฟังก์ชันถ่ายโอน
 
 $$G(s) = C(sI - A)^{-1}B + D = \frac{C\,\operatorname{adj}(sI - A)\,B}{\det(sI - A)} + D$$
 
-ใช้อินเวอร์สแบบแอดจอยต์ (อินเวอร์ส) · ตัวส่วน $\det(sI - A)$ = พหุนามลักษณะเฉพาะ
+ใช้อินเวอร์สแบบแอดจอยต์ (อินเวอร์ส)
+ตัวส่วน $\det(sI - A)$ = พหุนามลักษณะเฉพาะ
 
 X4 Poles = eigenvalues ขั้ว = ค่าเฉพาะของ A
 
@@ -73,9 +90,12 @@ $$\det(sI - A) = 0$$
 
 X5 Similarity transformation เปลี่ยนตัวแปรสถานะ
 
-$$\mathbf x = T\mathbf z:\ \ \hat A = T^{-1}AT,\ \hat B = T^{-1}B,\ \hat C = CT$$
+$$\mathbf x = T\mathbf z$$
 
-ค่าเฉพาะและฟังก์ชันถ่ายโอนไม่เปลี่ยน · $T$ = เวกเตอร์เฉพาะ ได้รูปแบบโมดัล (ทแยงมุม)
+$$\hat A = T^{-1}AT,\ \hat B = T^{-1}B,\ \hat C = CT$$
+
+ค่าเฉพาะและฟังก์ชันถ่ายโอนไม่เปลี่ยน
+$T$ = เวกเตอร์เฉพาะ ได้รูปแบบโมดัล (ทแยงมุม)
 
 ตัวอย่าง X-2 · ไปและกลับ
 
@@ -93,9 +113,13 @@ $$C(sI - A)^{-1}B = \frac{3 + s}{s^2 + 3s + 2} \ \checkmark$$
 
 X6 State solution คำตอบของสมการสถานะ
 
-$$\mathbf x(t) = \underbrace{e^{At}\mathbf x(0)}_{\text{ผลตอบสนองอิสระ}} + \underbrace{\int_0^te^{A(t - \tau)}B\mathbf u(\tau)\,d\tau}_{\text{ผลตอบสนองบังคับ}}, \qquad e^{At} = \mathcal L^{-1}\big\{(sI - A)^{-1}\big\} = Pe^{\Lambda t}P^{-1}$$
+$$\mathbf x(t) = \underbrace{e^{At}\mathbf x(0)}_{\text{ผลตอบสนองอิสระ}} + \underbrace{\int_0^te^{A(t - \tau)}B\mathbf u(\tau)\,d\tau}_{\text{ผลตอบสนองบังคับ}}$$
 
-$e^{At}$ เรียกว่าเมทริกซ์ทรานซิชันสถานะ $\Phi(t)$ · คำนวณได้ทั้งด้วยลาปลาซและด้วยการทำเป็นทแยงมุม (ค่าเฉพาะ) · คือแกนของการแปลงเป็นดิจิทัลแบบ ZOH $A_d = e^{AT}$
+$$e^{At} = \mathcal L^{-1}\big\{(sI - A)^{-1}\big\} = Pe^{\Lambda t}P^{-1}$$
+
+$e^{At}$ เรียกว่าเมทริกซ์ทรานซิชันสถานะ $\Phi(t)$
+คำนวณได้ทั้งด้วยลาปลาซและด้วยการทำเป็นทแยงมุม (ค่าเฉพาะ)
+คือแกนของการแปลงเป็นดิจิทัลแบบ ZOH $A_d = e^{AT}$
 
 ตัวอย่าง X-3 · หา e^{At}
 

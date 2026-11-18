@@ -19,11 +19,14 @@ updated: 2026-10-12
 
 สรุปใน 30 วินาที
 
-- จลนศาสตร์ตรง $\mathbf x = f(\mathbf q)$ · ผกผัน $\mathbf q = f^{-1}(\mathbf x)$ · ความเร็ว $\dot{\mathbf x} = J(\mathbf q)\dot{\mathbf q}$
+- จลนศาสตร์ตรง $\mathbf x = f(\mathbf q)$
+ผกผัน $\mathbf q = f^{-1}(\mathbf x)$
+ความเร็ว $\dot{\mathbf x} = J(\mathbf q)\dot{\mathbf q}$
 
 - พลศาสตร์: $M(\mathbf q)\ddot{\mathbf q} + C(\mathbf q, \dot{\mathbf q})\dot{\mathbf q} + \mathbf g(\mathbf q) = \boldsymbol\tau$
 
-- PD + ชดเชยแรงโน้มถ่วง → เสถียรเสมอ (ลียาปูนอฟ) · computed torque → ทุกข้อต่อเป็นระบบอันดับสองเชิงเส้นที่เลือก $\zeta, \omega_n$ ได้
+- PD + ชดเชยแรงโน้มถ่วง → เสถียรเสมอ (ลียาปูนอฟ)
+computed torque → ทุกข้อต่อเป็นระบบอันดับสองเชิงเส้นที่เลือก $\zeta, \omega_n$ ได้
 
 - หุ่นยนต์ล้อ: $v = \frac r2(\omega_R + \omega_L)$, $\omega = \frac rb(\omega_R - \omega_L)$
 
@@ -31,29 +34,44 @@ updated: 2026-10-12
 
 A1 Forward kinematics (2-link planar) จลนศาสตร์ตรง
 
-$$x = l_1\cos\theta_1 + l_2\cos(\theta_1 + \theta_2), \qquad y = l_1\sin\theta_1 + l_2\sin(\theta_1 + \theta_2)$$
+$$x = l_1\cos\theta_1 + l_2\cos(\theta_1 + \theta_2)$$
 
-ใช้ตรีโกณมิติล้วน ๆ · แขนหลายข้อต่อใช้เมทริกซ์แปลงพิกัด (Denavit–Hartenberg) คูณต่อกัน
+$$y = l_1\sin\theta_1 + l_2\sin(\theta_1 + \theta_2)$$
+
+ใช้ตรีโกณมิติล้วน ๆ
+แขนหลายข้อต่อใช้เมทริกซ์แปลงพิกัด (Denavit–Hartenberg) คูณต่อกัน
 
 A2 Inverse kinematics จลนศาสตร์ผกผัน
 
-$$\cos\theta_2 = \frac{x^2 + y^2 - l_1^2 - l_2^2}{2l_1l_2}, \qquad \theta_1 = \operatorname{atan2}(y, x) - \operatorname{atan2}(l_2\sin\theta_2,\ l_1 + l_2\cos\theta_2)$$
+$$\cos\theta_2 = \frac{x^2 + y^2 - l_1^2 - l_2^2}{2l_1l_2}$$
 
-$\theta_2 = \pm\cos^{-1}(\cdot)$ ให้สองคำตอบ (ข้อศอกขึ้น/ลง) · ถ้า $|\cos\theta_2| \gt 1$ ปลายแขนเอื้อมไม่ถึง
+$$\theta_1 = \operatorname{atan2}(y, x) - \operatorname{atan2}(l_2\sin\theta_2,\ l_1 + l_2\cos\theta_2)$$
+
+$\theta_2 = \pm\cos^{-1}(\cdot)$ ให้สองคำตอบ (ข้อศอกขึ้น/ลง)
+ถ้า $|\cos\theta_2| \gt 1$ ปลายแขนเอื้อมไม่ถึง
 
 A3 Jacobian จาโคเบียนและภาวะเอกฐาน
 
-$$\begin{pmatrix} \dot x \\ \dot y \end{pmatrix} = \underbrace{\begin{pmatrix} -l_1s_1 - l_2s_{12} & -l_2s_{12} \\ l_1c_1 + l_2c_{12} & l_2c_{12} \end{pmatrix}}_{J(\boldsymbol\theta)}\begin{pmatrix} \dot\theta_1 \\ \dot\theta_2 \end{pmatrix}, \qquad \det J = l_1l_2\sin\theta_2, \qquad \boldsymbol\tau = J^T\mathbf F$$
+$$\begin{pmatrix} \dot x \\ \dot y \end{pmatrix} = \underbrace{\begin{pmatrix} -l_1s_1 - l_2s_{12} & -l_2s_{12} \\ l_1c_1 + l_2c_{12} & l_2c_{12} \end{pmatrix}}_{J(\boldsymbol\theta)}\begin{pmatrix} \dot\theta_1 \\ \dot\theta_2 \end{pmatrix}$$
 
-$s_{12} = \sin(\theta_1 + \theta_2)$ · $\theta_2 = 0, \pi$ (แขนเหยียดตรงหรือพับสุด) เป็นภาวะเอกฐาน · $J^T$ แปลงแรงที่ปลายแขนเป็นแรงบิดข้อต่อ (ใช้ใน force control) · ดูอินเวอร์สและดีเทอร์มิแนนต์
+$$\det J = l_1l_2\sin\theta_2$$
+
+$$\boldsymbol\tau = J^T\mathbf F$$
+
+$s_{12} = \sin(\theta_1 + \theta_2)$
+$\theta_2 = 0, \pi$ (แขนเหยียดตรงหรือพับสุด) เป็นภาวะเอกฐาน
+$J^T$ แปลงแรงที่ปลายแขนเป็นแรงบิดข้อต่อ (ใช้ใน force control)
+ดูอินเวอร์สและดีเทอร์มิแนนต์
 
 ตัวอย่าง A-1 · ไปและกลับ
 
 ### แขนกล $l_1 = l_2 = 0.5$ m ที่ $\theta_1 = 30^\circ,\ \theta_2 = 60^\circ$ ปลายแขนอยู่ที่ไหน แล้วคำนวณย้อนกลับ
 
-- A1: $x = 0.5\cos30^\circ + 0.5\cos90^\circ = 0.433$ m · $y = 0.5\sin30^\circ + 0.5\sin90^\circ = 0.75$ m
+- A1: $x = 0.5\cos30^\circ + 0.5\cos90^\circ = 0.433$ m
+$y = 0.5\sin30^\circ + 0.5\sin90^\circ = 0.75$ m
 
-- A2: $\cos\theta_2 = \dfrac{0.1875 + 0.5625 - 0.25 - 0.25}{0.5} = 0.5 \Rightarrow \theta_2 = 60^\circ$ · $\theta_1 = \operatorname{atan2}(0.75, 0.433) - \operatorname{atan2}(0.433, 0.75) = 60^\circ - 30^\circ = 30^\circ$ ✓
+- A2: $\cos\theta_2 = \dfrac{0.1875 + 0.5625 - 0.25 - 0.25}{0.5} = 0.5 \Rightarrow \theta_2 = 60^\circ$
+$\theta_1 = \operatorname{atan2}(0.75, 0.433) - \operatorname{atan2}(0.433, 0.75) = 60^\circ - 30^\circ = 30^\circ$ ✓
 
 - A3: $\det J = 0.25\sin60^\circ = 0.217$ ห่างจากเอกฐาน ✓
 
@@ -65,19 +83,29 @@ A4 Manipulator dynamics สมการพลศาสตร์แขนกล
 
 $$M(\mathbf q)\ddot{\mathbf q} + C(\mathbf q, \dot{\mathbf q})\dot{\mathbf q} + \mathbf g(\mathbf q) + \mathbf f(\dot{\mathbf q}) = \boldsymbol\tau$$
 
-$M$ เมทริกซ์ความเฉื่อย (สมมาตร บวกแน่นอน เปลี่ยนตามท่า) · $C$ แรงโคริโอลิสและหนีศูนย์ · $\mathbf g$ แรงโน้มถ่วง · $\mathbf f$ แรงเสียดทาน · ได้จากสมการออยเลอร์–ลากรานจ์ $\frac{d}{dt}\frac{\partial\mathcal L}{\partial\dot q} - \frac{\partial\mathcal L}{\partial q} = \tau$
+$M$ เมทริกซ์ความเฉื่อย (สมมาตร บวกแน่นอน เปลี่ยนตามท่า)
+$C$ แรงโคริโอลิสและหนีศูนย์
+$\mathbf g$ แรงโน้มถ่วง
+$\mathbf f$ แรงเสียดทาน
+ได้จากสมการออยเลอร์–ลากรานจ์ $\frac{d}{dt}\frac{\partial\mathcal L}{\partial\dot q} - \frac{\partial\mathcal L}{\partial q} = \tau$
 
 A5 PD + gravity compensation PD + ชดเชยแรงโน้มถ่วง
 
 $$\boldsymbol\tau = K_P(\mathbf q_d - \mathbf q) - K_D\dot{\mathbf q} + \mathbf g(\mathbf q)$$
 
-ลู่เข้า $\mathbf q_d$ คงที่เสมอสำหรับ $K_P, K_D \succ 0$ ใดก็ได้ (พิสูจน์ด้วยลียาปูนอฟ $V = \tfrac12\dot{\mathbf q}^TM\dot{\mathbf q} + \tfrac12\mathbf e^TK_P\mathbf e$) · ไม่ต้องรู้ $M$ และ $C$ เลย · ไม่มีเทอม I จึงไม่ต้องกลัว windup
+ลู่เข้า $\mathbf q_d$ คงที่เสมอสำหรับ $K_P, K_D \succ 0$ ใดก็ได้ (พิสูจน์ด้วยลียาปูนอฟ $V = \tfrac12\dot{\mathbf q}^TM\dot{\mathbf q} + \tfrac12\mathbf e^TK_P\mathbf e$)
+ไม่ต้องรู้ $M$ และ $C$ เลย
+ไม่มีเทอม I จึงไม่ต้องกลัว windup
 
 A6 Computed torque (inverse dynamics) คอมพิวเต็ดทอร์ก
 
-$$\boldsymbol\tau = M(\mathbf q)\big[\ddot{\mathbf q}_d + K_D\dot{\mathbf e} + K_P\mathbf e\big] + C\dot{\mathbf q} + \mathbf g \ \Rightarrow\ \ddot{\mathbf e} + K_D\dot{\mathbf e} + K_P\mathbf e = \mathbf 0$$
+$$\boldsymbol\tau = M(\mathbf q)\big[\ddot{\mathbf q}_d + K_D\dot{\mathbf e} + K_P\mathbf e\big] + C\dot{\mathbf q} + \mathbf g$$
 
-ความผิดพลาดทุกข้อต่อกลายเป็นระบบอันดับสองเชิงเส้นอิสระ เลือก $K_P = \omega_n^2,\ K_D = 2\zeta\omega_n$ · ต้องรู้แบบจำลองแม่น · คือ feedback linearization
+$$\Rightarrow\ \ddot{\mathbf e} + K_D\dot{\mathbf e} + K_P\mathbf e = \mathbf 0$$
+
+ความผิดพลาดทุกข้อต่อกลายเป็นระบบอันดับสองเชิงเส้นอิสระ เลือก $K_P = \omega_n^2,\ K_D = 2\zeta\omega_n$
+ต้องรู้แบบจำลองแม่น
+คือ feedback linearization
 
 ตัวอย่าง A-2 · ตั้งเกน computed torque
 
@@ -93,9 +121,15 @@ $K_P = 100I,\ K_D = 20I$ ทุกข้อต่อตอบสนองเห�
 
 A7 Cubic and quintic trajectories วิถีพหุนาม (จากหยุดนิ่งถึงหยุดนิ่ง)
 
-$$q(t) = q_0 + \Delta\left[3\left(\tfrac tT\right)^2 - 2\left(\tfrac tT\right)^3\right], \qquad \dot q_{max} = \frac{3\Delta}{2T}, \qquad \ddot q_{max} = \frac{6\Delta}{T^2}$$
+$$q(t) = q_0 + \Delta\left[3\left(\tfrac tT\right)^2 - 2\left(\tfrac tT\right)^3\right]$$
 
-ความเร็วต่อเนื่อง ความเร่งกระโดดที่ต้นและปลาย · พหุนามกำลังห้า $\Delta[10\tau^3 - 15\tau^4 + 6\tau^5]$ ให้ความเร่งต่อเนื่องด้วย (นุ่มกว่า กระตุ้นเรโซแนนซ์น้อยกว่า) · ส่ง $q, \dot q, \ddot q$ ไปเป็น feedforward (K4)
+$$\dot q_{max} = \frac{3\Delta}{2T}$$
+
+$$\ddot q_{max} = \frac{6\Delta}{T^2}$$
+
+ความเร็วต่อเนื่อง ความเร่งกระโดดที่ต้นและปลาย
+พหุนามกำลังห้า $\Delta[10\tau^3 - 15\tau^4 + 6\tau^5]$ ให้ความเร่งต่อเนื่องด้วย (นุ่มกว่า กระตุ้นเรโซแนนซ์น้อยกว่า)
+ส่ง $q, \dot q, \ddot q$ ไปเป็น feedforward (K4)
 
 ตัวอย่าง A-3 · หมุนข้อต่อ 90° ใน 2 วินาที
 
@@ -103,7 +137,8 @@ $$q(t) = q_0 + \Delta\left[3\left(\tfrac tT\right)^2 - 2\left(\tfrac tT\right)^3
 
 - $\Delta = \pi/2,\ T = 2$: $q(t) = 1.178t^2 - 0.393t^3$ rad A7
 
-- $\dot q_{max} = \dfrac{3(\pi/2)}{4} = 1.178$ rad/s ที่ $t = 1$ s · $\ddot q_{max} = \dfrac{6(\pi/2)}{4} = 2.356$ rad/s² ที่ $t = 0$
+- $\dot q_{max} = \dfrac{3(\pi/2)}{4} = 1.178$ rad/s ที่ $t = 1$ s
+$\ddot q_{max} = \dfrac{6(\pi/2)}{4} = 2.356$ rad/s² ที่ $t = 0$
 
 $q(t) = 1.178t^2 - 0.393t^3$ · ความเร็วสูงสุด 67.5°/s · ใช้ตรวจว่ามอเตอร์และเกียร์รับไหว (แรงบิดสูงสุด $\approx J_{eq}\ddot q_{max}$ + แรงโน้มถ่วง)
 
@@ -111,21 +146,33 @@ $q(t) = 1.178t^2 - 0.393t^3$ · ความเร็วสูงสุด 67.5�
 
 A8 Differential-drive kinematics จลนศาสตร์หุ่นยนต์สองล้อขับ
 
-$$v = \frac r2(\omega_R + \omega_L), \quad \omega = \frac rb(\omega_R - \omega_L), \quad \dot x = v\cos\phi,\ \dot y = v\sin\phi,\ \dot\phi = \omega$$
+$$v = \frac r2(\omega_R + \omega_L)$$
 
-$r$ รัศมีล้อ $b$ ระยะห่างล้อ · ผกผัน: $\omega_{R,L} = \dfrac{v \pm \omega b/2}{r}$ แล้วใช้ PI คุมความเร็วล้อแต่ละข้าง
+$$\omega = \frac rb(\omega_R - \omega_L)$$
+
+$$\dot x = v\cos\phi,\ \dot y = v\sin\phi,\ \dot\phi = \omega$$
+
+$r$ รัศมีล้อ $b$ ระยะห่างล้อ
+ผกผัน: $\omega_{R,L} = \dfrac{v \pm \omega b/2}{r}$ แล้วใช้ PI คุมความเร็วล้อแต่ละข้าง
 
 A9 Go-to-goal / heading control นำทางไปเป้าหมาย
 
-$$\phi_d = \operatorname{atan2}(y_g - y,\ x_g - x), \qquad \omega = K_\phi\,\operatorname{wrap}(\phi_d - \phi), \qquad v = \min\big(v_{max},\ K_\rho\rho\big)$$
+$$\phi_d = \operatorname{atan2}(y_g - y,\ x_g - x)$$
 
-$\rho$ = ระยะถึงเป้า · wrap มุมให้อยู่ใน $(-\pi, \pi]$ · หุ่นเดินตามเส้นใช้ PD กับความคลาดจากเส้นแทน $\phi_d - \phi$
+$$\omega = K_\phi\,\operatorname{wrap}(\phi_d - \phi)$$
+
+$$v = \min\big(v_{max},\ K_\rho\rho\big)$$
+
+$\rho$ = ระยะถึงเป้า
+wrap มุมให้อยู่ใน $(-\pi, \pi]$
+หุ่นเดินตามเส้นใช้ PD กับความคลาดจากเส้นแทน $\phi_d - \phi$
 
 ตัวอย่าง A-4 · สั่งล้อ
 
 ### หุ่นยนต์ล้อรัศมี 5 cm ระยะห่างล้อ 30 cm ต้องการ $v = 0.5$ m/s และเลี้ยวด้วย $\omega = 1$ rad/s
 
-- A8: $\omega_R = \dfrac{0.5 + 1(0.15)}{0.05} = 13$ rad/s · $\omega_L = \dfrac{0.5 - 0.15}{0.05} = 7$ rad/s
+- A8: $\omega_R = \dfrac{0.5 + 1(0.15)}{0.05} = 13$ rad/s
+$\omega_L = \dfrac{0.5 - 0.15}{0.05} = 7$ rad/s
 
 ล้อขวา 13 rad/s (124 rpm) ล้อซ้าย 7 rad/s (67 rpm) รัศมีวงเลี้ยว $v/\omega = 0.5$ m · ส่งเป็นค่าอ้างอิงให้ลูปความเร็วล้อแต่ละข้าง
 
@@ -139,11 +186,18 @@ $\rho$ = ระยะถึงเป้า · wrap มุมให้อยู�
 
 ## ไอเดียโปรเจกต์หุ่นยนต์
 
-- พื้นฐาน หุ่นเดินตามเส้น PD · หุ่นหลบสิ่งกีดขวางด้วยอัลตราโซนิก · แขนกลเซอร์โว RC 3 แกนพร้อมจลนศาสตร์ผกผัน
+- พื้นฐาน หุ่นเดินตามเส้น PD
+หุ่นหลบสิ่งกีดขวางด้วยอัลตราโซนิก
+แขนกลเซอร์โว RC 3 แกนพร้อมจลนศาสตร์ผกผัน
 
-- กลาง หุ่นยนต์ล้อนำทางด้วยเอนโค้ดเดอร์ (odometry) ไปยังพิกัด · หุ่นทรงตัวสองล้อ · พล็อตเตอร์วาดรูป SCARA สองข้อต่อ
+- กลาง หุ่นยนต์ล้อนำทางด้วยเอนโค้ดเดอร์ (odometry) ไปยังพิกัด
+หุ่นทรงตัวสองล้อ
+พล็อตเตอร์วาดรูป SCARA สองข้อต่อ
 
-- ขั้นสูง แขนกล 6 แกนด้วย computed torque · โดรนสี่ใบพัด (PID คาสเคดมุม–อัตรา) · หุ่นยนต์ทำแผนที่ด้วย LiDAR + ตัวกรองคาลมาน · หุ่นยนต์ขาเดิน
+- ขั้นสูง แขนกล 6 แกนด้วย computed torque
+โดรนสี่ใบพัด (PID คาสเคดมุม–อัตรา)
+หุ่นยนต์ทำแผนที่ด้วย LiDAR + ตัวกรองคาลมาน
+หุ่นยนต์ขาเดิน
 
 ไอเดียเพิ่มเติมอยู่ในคลังไอเดียระบบควบคุม
 

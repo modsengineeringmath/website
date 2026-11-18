@@ -23,29 +23,50 @@ updated: 2026-10-12
 
 - สังเกตได้ $\iff \operatorname{rank}\begin{bmatrix} C \\ CA \\ \vdots \\ CA^{n-1}\end{bmatrix} = n$
 
-- ระบบเดียว: เช็กด้วย $\det \ne 0$ ได้เลย · หักล้างขั้ว-ศูนย์ = เสียอย่างใดอย่างหนึ่ง
+- ระบบเดียว: เช็กด้วย $\det \ne 0$ ได้เลย
+หักล้างขั้ว-ศูนย์ = เสียอย่างใดอย่างหนึ่ง
 
-- ควบคุมได้ → วางขั้วได้ทุกตำแหน่ง · สังเกตได้ → ออกแบบตัวสังเกตได้
+- ควบคุมได้ → วางขั้วได้ทุกตำแหน่ง
+สังเกตได้ → ออกแบบตัวสังเกตได้
 
 ## การทดสอบของคาลมานและ PBH กลาง
 
 O1 Controllability (Kalman) ความสามารถควบคุมได้
 
-$$\mathcal C = \begin{bmatrix} B & AB & A^2B & \cdots & A^{n-1}B \end{bmatrix}, \qquad \text{ควบคุมได้} \iff \operatorname{rank}\mathcal C = n$$
+$$\mathcal C = \begin{bmatrix} B & AB & A^2B & \cdots & A^{n-1}B \end{bmatrix}$$
+
+$$\text{ควบคุมได้}$$
+
+$$\iff \operatorname{rank}\mathcal C = n$$
 
 อินพุตเดียว: $\mathcal C$ เป็นจัตุรัส ตรวจ $\det\mathcal C \ne 0$ (ดีเทอร์มิแนนต์)
 
 O2 Observability (Kalman) ความสามารถสังเกตได้
 
-$$\mathcal O = \begin{bmatrix} C \\ CA \\ \vdots \\ CA^{n-1} \end{bmatrix}, \qquad \text{สังเกตได้} \iff \operatorname{rank}\mathcal O = n$$
+$$\mathcal O = \begin{bmatrix} C \\ CA \\ \vdots \\ CA^{n-1} \end{bmatrix}$$
+
+$$\text{สังเกตได้}$$
+
+$$\iff \operatorname{rank}\mathcal O = n$$
 
 ความเป็นคู่ (duality): $(A, C)$ สังเกตได้ $\iff (A^T, C^T)$ ควบคุมได้ จึงใช้เครื่องมือเดียวกันออกแบบตัวสังเกต
 
 O3 PBH test การทดสอบ Popov–Belevitch–Hautus
 
-$$\text{ควบคุมได้} \iff \operatorname{rank}\big[\lambda I - A\ \ \ B\big] = n \ \ \forall\lambda \in \operatorname{eig}(A), \qquad \text{สังเกตได้} \iff \operatorname{rank}\begin{bmatrix} \lambda I - A \\ C \end{bmatrix} = n$$
+$$\text{ควบคุมได้}$$
 
-บอกว่าโหมดไหน (ค่าเฉพาะตัวไหน) ที่ควบคุมไม่ได้หรือสังเกตไม่ได้ · ถ้าโหมดที่มีปัญหาเสถียร เรียกว่า stabilizable / detectable ซึ่งยังพอใช้งานได้
+$$\iff \operatorname{rank}\big[\lambda I - A$$
+
+$$B\big] = n$$
+
+$$\forall\lambda \in \operatorname{eig}(A)$$
+
+$$\text{สังเกตได้}$$
+
+$$\iff \operatorname{rank}\begin{bmatrix} \lambda I - A \\ C \end{bmatrix} = n$$
+
+บอกว่าโหมดไหน (ค่าเฉพาะตัวไหน) ที่ควบคุมไม่ได้หรือสังเกตไม่ได้
+ถ้าโหมดที่มีปัญหาเสถียร เรียกว่า stabilizable / detectable ซึ่งยังพอใช้งานได้
 
 ตัวอย่าง O-1 · ระบบปกติ
 
@@ -73,7 +94,8 @@ $$\text{ควบคุมได้} \iff \operatorname{rank}\big[\lambda I - A\
 
 ### มอเตอร์สองตัวที่เหมือนกันทุกประการ $\dot\omega_i = -\omega_i + u$ ขับด้วยสัญญาณเดียวกัน ควบคุมความเร็วแยกกันได้ไหม
 
-- $A = \begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix},\ B = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$ · $AB = \begin{pmatrix} -1 \\ -1 \end{pmatrix}$
+- $A = \begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix},\ B = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$
+$AB = \begin{pmatrix} -1 \\ -1 \end{pmatrix}$
 
 - $\mathcal C = \begin{pmatrix} 1 & -1 \\ 1 & -1 \end{pmatrix}$, $\det = 0$ ✗
 
@@ -83,7 +105,11 @@ $$\text{ควบคุมได้} \iff \operatorname{rank}\big[\lambda I - A\
 
 O4 Minimal realization แบบจำลองที่น้อยที่สุด
 
-$$(A, B, C) \text{ น้อยที่สุด} \iff \text{ควบคุมได้และสังเกตได้} \iff n = \text{ดีกรีตัวส่วนของ } G(s) \text{ หลังตัดทอน}$$
+$$(A, B, C) \text{ น้อยที่สุด}$$
+
+$$\iff \text{ควบคุมได้และสังเกตได้}$$
+
+$$\iff n = \text{ดีกรีตัวส่วนของ } G(s) \text{ หลังตัดทอน}$$
 
 การแยกส่วนของคาลมานแบ่งสถานะเป็นสี่กลุ่ม (ควบคุมได้/ไม่ได้ × สังเกตได้/ไม่ได้) ฟังก์ชันถ่ายโอนแสดงเฉพาะกลุ่มที่ควบคุมได้และสังเกตได้
 

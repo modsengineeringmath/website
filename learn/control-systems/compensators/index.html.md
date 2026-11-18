@@ -23,9 +23,12 @@ updated: 2026-10-12
 
 - Lag: $\dfrac{Ts + 1}{\beta Ts + 1},\ \beta \gt 1$ วางศูนย์ต่ำกว่าครอสโอเวอร์ 1 เดคาด เพิ่มเกนความถี่ต่ำ $\beta$ เท่า
 
-- รูทโลคัส: lead ชดเชย “มุมที่ขาด” ให้โลคัสผ่านจุดที่ต้องการ · lag คู่ขั้ว-ศูนย์ใกล้ 0 เพิ่ม $K_v$ โดยไม่ย้ายโลคัส
+- รูทโลคัส: lead ชดเชย “มุมที่ขาด” ให้โลคัสผ่านจุดที่ต้องการ
+lag คู่ขั้ว-ศูนย์ใกล้ 0 เพิ่ม $K_v$ โดยไม่ย้ายโลคัส
 
-- Lead ≈ PD + ฟิลเตอร์ · Lag ≈ PI · Lag-lead ≈ PID
+- Lead ≈ PD + ฟิลเตอร์
+Lag ≈ PI
+Lag-lead ≈ PID
 
 ระดับพื้นฐาน แนวคิดกลาง ออกแบบขั้นสูง งานจริง
 
@@ -35,15 +38,29 @@ updated: 2026-10-12
 
 C1 Lead compensator ตัวชดเชยเฟสนำ
 
-$$G_c(s) = K_c\frac{Ts + 1}{\alpha Ts + 1} = K_c\alpha\,\frac{s + 1/T}{s + 1/(\alpha T)}, \qquad 0 \lt \alpha \lt 1$$
+$$G_c(s) = K_c\frac{Ts + 1}{\alpha Ts + 1} = K_c\alpha\,\frac{s + 1/T}{s + 1/(\alpha T)}$$
 
-ศูนย์ที่ $-1/T$ ขั้วที่ $-1/(\alpha T)$ (ไกลกว่า $1/\alpha$ เท่า) · รูปแบบนี้ไม่เปลี่ยนเกน DC ($G_c(0) = K_c$) ทำให้ใช้ $K_c$ ตั้งความผิดพลาดอยู่ตัวแยกจากเรื่องเฟสได้
+$$0 \lt \alpha \lt 1$$
+
+ศูนย์ที่ $-1/T$ ขั้วที่ $-1/(\alpha T)$ (ไกลกว่า $1/\alpha$ เท่า)
+รูปแบบนี้ไม่เปลี่ยนเกน DC ($G_c(0) = K_c$) ทำให้ใช้ $K_c$ ตั้งความผิดพลาดอยู่ตัวแยกจากเรื่องเฟสได้
 
 C2 Maximum phase lead เฟสนำสูงสุดและตำแหน่ง
 
-$$\sin\phi_m = \frac{1 - \alpha}{1 + \alpha} \iff \alpha = \frac{1 - \sin\phi_m}{1 + \sin\phi_m}, \qquad \omega_m = \frac{1}{T\sqrt\alpha}, \qquad \left|\frac{j\omega_mT + 1}{j\omega_m\alpha T + 1}\right| = \frac{1}{\sqrt\alpha}$$
+$$\sin\phi_m = \frac{1 - \alpha}{1 + \alpha}$$
 
-$\omega_m$ คือค่าเฉลี่ยเรขาคณิตของศูนย์และขั้ว (กึ่งกลางบนแกน log) · เกนที่ $\omega_m$ เพิ่ม $10\log(1/\alpha)$ dB · ตาราง: $\phi_m$ = 30° → α = 0.333 · 40° → 0.217 · 50° → 0.132 · 60° → 0.072
+$$\iff \alpha = \frac{1 - \sin\phi_m}{1 + \sin\phi_m}$$
+
+$$\omega_m = \frac{1}{T\sqrt\alpha}$$
+
+$$\left|\frac{j\omega_mT + 1}{j\omega_m\alpha T + 1}\right| = \frac{1}{\sqrt\alpha}$$
+
+$\omega_m$ คือค่าเฉลี่ยเรขาคณิตของศูนย์และขั้ว (กึ่งกลางบนแกน log)
+เกนที่ $\omega_m$ เพิ่ม $10\log(1/\alpha)$ dB
+ตาราง: $\phi_m$ = 30° → α = 0.333
+40° → 0.217
+50° → 0.132
+60° → 0.072
 
 ## ออกแบบ Lead ด้วยโบด ทีละขั้น กลาง
 
@@ -55,7 +72,8 @@ C3 Lead design procedure (Bode) ขั้นตอนออกแบบ lead ด
 
 - ครอสโอเวอร์ใหม่ $\omega_m$ คือความถี่ที่ $|K_cG(j\omega)| = -10\log(1/\alpha)$ dB (lead จะยกขึ้นมาเป็น 0 dB พอดี)
 
-- $T = \dfrac{1}{\omega_m\sqrt\alpha}$ · ศูนย์ $1/T$ ขั้ว $1/(\alpha T)$
+- $T = \dfrac{1}{\omega_m\sqrt\alpha}$
+ศูนย์ $1/T$ ขั้ว $1/(\alpha T)$
 
 - ตรวจ PM, GM และผลตอบสนองจริง ถ้าไม่ถึงให้เพิ่มค่าเผื่อแล้วทำซ้ำ
 
@@ -69,11 +87,14 @@ C3 Lead design procedure (Bode) ขั้นตอนออกแบบ lead ด
 
 - เฟสที่ต้องเติม: $50^\circ - 18^\circ + 6^\circ = 38^\circ$ C2
 
-$$\alpha = \frac{1 - \sin38^\circ}{1 + \sin38^\circ} = \frac{0.384}{1.616} = 0.2375 \quad (\text{lead เพิ่มเกน } 10\log\tfrac{1}{0.2375} = 6.24 \text{ dB})$$
+$$\alpha = \frac{1 - \sin38^\circ}{1 + \sin38^\circ} = \frac{0.384}{1.616} = 0.2375$$
+
+$$(\text{lead เพิ่มเกน } 10\log\tfrac{1}{0.2375} = 6.24 \text{ dB})$$
 
 - หาความถี่ที่ $|K_cG| = -6.24$ dB: $\dfrac{40}{\omega\sqrt{\omega^2 + 4}} = 0.488 \Rightarrow \omega_m = 8.95$ rad/s
 
-- $T = \dfrac{1}{8.95\sqrt{0.2375}} = 0.229$ · ศูนย์ $-4.36$ ขั้ว $-18.4$
+- $T = \dfrac{1}{8.95\sqrt{0.2375}} = 0.229$
+ศูนย์ $-4.36$ ขั้ว $-18.4$
 
 $$G_c(s) = 10\,\frac{0.229s + 1}{0.0545s + 1} = {42.1\,\frac{s + 4.36}{s + 18.4}}$$
 
@@ -87,9 +108,12 @@ PM = 50.6° ที่ $\omega_{gc} = 8.95$ rad/s, GM = ∞ · overshoot ลด�
 
 C4 Lag compensator ตัวชดเชยเฟสล้าหลัง
 
-$$G_c(s) = K_c\frac{Ts + 1}{\beta Ts + 1} = \frac{K_c}{\beta}\cdot\frac{s + 1/T}{s + 1/(\beta T)}, \qquad \beta \gt 1$$
+$$G_c(s) = K_c\frac{Ts + 1}{\beta Ts + 1} = \frac{K_c}{\beta}\cdot\frac{s + 1/T}{s + 1/(\beta T)}$$
 
-ที่ความถี่สูง เกนลดลง $\beta$ เท่า ($-20\log\beta$ dB) · วางศูนย์ $1/T \approx \omega_{gc}/10$ เพื่อให้เฟสล้าหลังที่ครอสโอเวอร์เหลือแค่ประมาณ 5°
+$$\beta \gt 1$$
+
+ที่ความถี่สูง เกนลดลง $\beta$ เท่า ($-20\log\beta$ dB)
+วางศูนย์ $1/T \approx \omega_{gc}/10$ เพื่อให้เฟสล้าหลังที่ครอสโอเวอร์เหลือแค่ประมาณ 5°
 
 C5 Lag design procedure (Bode) ขั้นตอนออกแบบ lag ด้วยโบด
 
@@ -99,7 +123,8 @@ C5 Lag design procedure (Bode) ขั้นตอนออกแบบ lag ด�
 
 - $\beta = |K_cG(j\omega_{gc}')|$ (ลดให้เหลือ 0 dB ที่ความถี่นั้น)
 
-- ศูนย์ $1/T = \omega_{gc}'/10$ · ขั้ว $1/(\beta T)$
+- ศูนย์ $1/T = \omega_{gc}'/10$
+ขั้ว $1/(\beta T)$
 
 ## ออกแบบ Lag ด้วยโบด กลาง
 
@@ -107,13 +132,15 @@ C5 Lag design procedure (Bode) ขั้นตอนออกแบบ lag ด�
 
 ### พลานต์ $G(s) = \dfrac{1}{s(s+1)(0.5s+1)}$ ต้องการ $K_v = 5\ \text{s}^{-1}$, PM ≥ 40°, GM ≥ 10 dB
 
-- $K_v = K_c = 5$ · ปิดวงด้วยเกนนี้: GM = −4.4 dB, PM = −13° ไม่เสถียร (lead ไม่ช่วย เพราะเฟสลงเร็วมาก ต้องใช้ lag)
+- $K_v = K_c = 5$
+ปิดวงด้วยเกนนี้: GM = −4.4 dB, PM = −13° ไม่เสถียร (lead ไม่ช่วย เพราะเฟสลงเร็วมาก ต้องใช้ lag)
 
 - ต้องการเฟส $-180^\circ + 40^\circ + 12^\circ = -128^\circ$: $-90^\circ - \tan^{-1}\omega - \tan^{-1}0.5\omega = -128^\circ \Rightarrow \omega_{gc}' = 0.465$ rad/s
 
 - $|K_cG(j0.465)| = 9.5$ (19.6 dB) ได้ $\beta \approx 10$ C5
 
-- ศูนย์ $\approx 0.465/10 \approx 0.05$ · ขั้ว $0.05/10 = 0.005$
+- ศูนย์ $\approx 0.465/10 \approx 0.05$
+ขั้ว $0.05/10 = 0.005$
 
 $$G_c(s) = 5\,\frac{20s + 1}{200s + 1} = {0.5\,\frac{s + 0.05}{s + 0.005}}$$
 
@@ -127,7 +154,11 @@ python-control: PM 47.5°, GM 14.96 dB ✓ · เลือกปัดศูน�
 
 C6 Angle deficiency มุมที่ตัวชดเชยต้องเติม
 
-$$\phi_c = -180^\circ - \angle G(s_d), \qquad \angle(s_d + z_c) - \angle(s_d + p_c) = \phi_c, \qquad K = \frac{1}{|G_c(s_d)G(s_d)|}$$
+$$\phi_c = -180^\circ - \angle G(s_d)$$
+
+$$\angle(s_d + z_c) - \angle(s_d + p_c) = \phi_c$$
+
+$$K = \frac{1}{|G_c(s_d)G(s_d)|}$$
 
 มีศูนย์-ขั้วหลายคู่ที่ให้ $\phi_c$ เท่ากัน วิธีที่นิยม: (1) วางศูนย์ใต้ $s_d$ หรือหักล้างขั้วพลานต์ที่สองแล้วหาขั้ว (2) วิธีเส้นแบ่งครึ่งมุม (bisector) ของ Ogata ซึ่งให้ $\alpha$ ใหญ่ที่สุด
 
@@ -135,7 +166,8 @@ $$\phi_c = -180^\circ - \angle G(s_d), \qquad \angle(s_d + z_c) - \angle(s_d + p
 
 ### พลานต์ $G(s) = \dfrac{1}{s(s+2)}$ ต้องการขั้ววงปิดที่ $\zeta = 0.5,\ \omega_n = 4$ rad/s
 
-- $s_d = -\zeta\omega_n \pm j\omega_n\sqrt{1 - \zeta^2} = -2 \pm j3.464$ · โลคัสเดิมเป็นเส้นดิ่ง $\sigma = -1$ ไม่ผ่าน
+- $s_d = -\zeta\omega_n \pm j\omega_n\sqrt{1 - \zeta^2} = -2 \pm j3.464$
+โลคัสเดิมเป็นเส้นดิ่ง $\sigma = -1$ ไม่ผ่าน
 
 - มุมของพลานต์ที่ $s_d$: จาก 0 คือ $120^\circ$ จาก −2 คือ $90^\circ$ ได้ $\angle G = -210^\circ$ มุมที่ขาด $\phi_c = -180^\circ + 210^\circ = 30^\circ$ C6
 
@@ -157,7 +189,9 @@ python-control: ขั้ววงปิด $-2 \pm j3.464$ ✓ · การห�
 
 - วางคู่ศูนย์-ขั้วใกล้จุดกำเนิดมาก ๆ เทียบกับ $|s_d| = 4$: ศูนย์ −0.1 ขั้ว −0.02 (มุมที่เสียที่ $s_d$ ไม่ถึง 1.2°)
 
-$$L(s) = \frac{16}{s(s+4)}\cdot\frac{s + 0.1}{s + 0.02}, \qquad K_v = \frac{16}{4}\cdot\frac{0.1}{0.02} = 20$$
+$$L(s) = \frac{16}{s(s+4)}\cdot\frac{s + 0.1}{s + 0.02}$$
+
+$$K_v = \frac{16}{4}\cdot\frac{0.1}{0.02} = 20$$
 
 ขั้ววงปิด $-1.96 \pm j3.44$ (แทบไม่ขยับ) และขั้วช้า $-0.102$ ที่เกือบหักล้างกับศูนย์ $-0.1$ · ความผิดพลาดต่อแรมป์ลดจาก 0.25 เหลือ 0.05
 
@@ -167,9 +201,16 @@ $$L(s) = \frac{16}{s(s+4)}\cdot\frac{s + 0.1}{s + 0.02}, \qquad K_v = \frac{16}{
 
 C7 Lag-lead and PID lag-lead กับ PID
 
-$$G_c(s) = K_c\underbrace{\frac{T_1s + 1}{\beta T_1s + 1}}_{\text{lag}}\ \underbrace{\frac{T_2s + 1}{\alpha T_2s + 1}}_{\text{lead}}, \qquad \beta \to \infty,\ \alpha \to 0:\ \ \text{PID แบบอนุกรม}$$
+$$G_c(s) = K_c\underbrace{\frac{T_1s + 1}{\beta T_1s + 1}}_{\text{lag}}\ \underbrace{\frac{T_2s + 1}{\alpha T_2s + 1}}_{\text{lead}}$$
 
-ออกแบบทีละส่วน: lead ก่อนเพื่อเฟสมาร์จินและความเร็ว แล้ว lag เพื่อความแม่นยำ · lag ที่ขั้วอยู่ที่ 0 พอดีคือ PI · lead ที่ขั้วอยู่อนันต์คือ PD · ใช้ใน Type III compensator ของพาวเวอร์ซัพพลาย
+$$\beta \to \infty,\ \alpha \to 0$$
+
+$$\text{PID แบบอนุกรม}$$
+
+ออกแบบทีละส่วน: lead ก่อนเพื่อเฟสมาร์จินและความเร็ว แล้ว lag เพื่อความแม่นยำ
+lag ที่ขั้วอยู่ที่ 0 พอดีคือ PI
+lead ที่ขั้วอยู่อนันต์คือ PD
+ใช้ใน Type III compensator ของพาวเวอร์ซัพพลาย
 
 | | Lead | Lag | Lag-lead / PID |
 
@@ -187,21 +228,31 @@ $$G_c(s) = K_c\underbrace{\frac{T_1s + 1}{\beta T_1s + 1}}_{\text{lag}}\ \underb
 
 C8 Op-amp lead/lag วงจรออปแอมป์ตัวเดียว ($Z_i = R_1 \parallel C_1$, $Z_f = R_2 \parallel C_2$)
 
-$$\frac{V_o}{V_i} = -\frac{R_2}{R_1}\cdot\frac{R_1C_1s + 1}{R_2C_2s + 1} \qquad \begin{cases} R_1C_1 \gt R_2C_2 & \text{lead} \\ R_1C_1 \lt R_2C_2 & \text{lag} \end{cases}$$
+$$\frac{V_o}{V_i} = -\frac{R_2}{R_1}\cdot\frac{R_1C_1s + 1}{R_2C_2s + 1}$$
 
-$T = R_1C_1$, $\alpha T$ (หรือ $\beta T$) $= R_2C_2$ · เกน DC $= R_2/R_1$ · ต่อออปแอมป์อินเวอร์เตอร์อีกตัวเพื่อกลับเครื่องหมายและปรับเกน · ทดลองในแล็บออปแอมป์
+$$\begin{cases} R_1C_1 \gt R_2C_2 & \text{lead} \\ R_1C_1 \lt R_2C_2 & \text{lag} \end{cases}$$
+
+$T = R_1C_1$, $\alpha T$ (หรือ $\beta T$) $= R_2C_2$
+เกน DC $= R_2/R_1$
+ต่อออปแอมป์อินเวอร์เตอร์อีกตัวเพื่อกลับเครื่องหมายและปรับเกน
+ทดลองในแล็บออปแอมป์
 
 C9 Passive RC lead network วงจร RC แบบพาสซีฟ
 
-$$\frac{V_o}{V_i} = \alpha\,\frac{R_1Cs + 1}{\alpha R_1Cs + 1}, \qquad \alpha = \frac{R_2}{R_1 + R_2}$$
+$$\frac{V_o}{V_i} = \alpha\,\frac{R_1Cs + 1}{\alpha R_1Cs + 1}$$
 
-$R_1 \parallel C$ อนุกรม แล้ว $R_2$ ลงกราวด์ · ลดทอน $\alpha$ เท่า ต้องชดเชยด้วยแอมป์ · ต้องการโหลดอิมพีแดนซ์สูงตามหลัง
+$$\alpha = \frac{R_2}{R_1 + R_2}$$
+
+$R_1 \parallel C$ อนุกรม แล้ว $R_2$ ลงกราวด์
+ลดทอน $\alpha$ เท่า ต้องชดเชยด้วยแอมป์
+ต้องการโหลดอิมพีแดนซ์สูงตามหลัง
 
 ตัวอย่าง C-5 · ทำ C-3 ด้วยออปแอมป์
 
 ### สร้าง $G_c(s) = 16\dfrac{s + 2}{s + 4} = 8\dfrac{0.5s + 1}{0.25s + 1}$ โดยใช้ $C_1 = C_2 = 10\ \mu\text{F}$
 
-- $R_1C_1 = 0.5 \Rightarrow R_1 = 50\ \text{k}\Omega$ · $R_2C_2 = 0.25 \Rightarrow R_2 = 25\ \text{k}\Omega$ C8
+- $R_1C_1 = 0.5 \Rightarrow R_1 = 50\ \text{k}\Omega$
+$R_2C_2 = 0.25 \Rightarrow R_2 = 25\ \text{k}\Omega$ C8
 
 - เกน DC ของวงจร $R_2/R_1 = 0.5$ ต้องการ 8 ใช้อินเวอร์เตอร์เกน $-16$ (เช่น $R_f = 160\ \text{k}\Omega,\ R_i = 10\ \text{k}\Omega$)
 

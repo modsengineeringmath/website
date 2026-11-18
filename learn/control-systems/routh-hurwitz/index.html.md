@@ -25,7 +25,8 @@ updated: 2026-10-12
 
 - จำนวนครั้งที่หลักแรกเปลี่ยนเครื่องหมาย = จำนวนรากฝั่งขวา
 
-- มี $K$: ให้หลักแรกเป็นบวกทุกตัว ได้ช่วง $K$ · ขอบช่วงคือเกนวิกฤต แถว $s^2$ ให้ความถี่การแกว่ง
+- มี $K$: ให้หลักแรกเป็นบวกทุกตัว ได้ช่วง $K$
+ขอบช่วงคือเกนวิกฤต แถว $s^2$ ให้ความถี่การแกว่ง
 
 ระดับพื้นฐาน เริ่มเรียนควบคุมกลาง ป.ตรี วิศวกรรมขั้นสูง ป.โท · งานวิจัย
 
@@ -39,9 +40,13 @@ $$a_0s^n + a_1s^{n-1} + a_2s^{n-2} + \cdots + a_{n-1}s + a_n = 0$$
 
 R1 Necessary condition เงื่อนไขจำเป็น (ตรวจก่อนสร้างตาราง)
 
-$$\text{เสถียร} \ \Rightarrow\ a_0, a_1, \dots, a_n \ \text{มีเครื่องหมายเดียวกัน และไม่มีตัวใดเป็นศูนย์}$$
+$$\text{เสถียร}$$
 
-ที่มา: ถ้ารากทุกตัวอยู่ทางซ้าย ตัวประกอบคือ $(s + a)$ และ $(s^2 + bs + c)$ ที่ $a, b, c \gt 0$ คูณกันแล้วสัมประสิทธิ์ต้องเป็นบวกหมด · เป็นเงื่อนไขจำเป็นแต่ไม่พอ: $s^3 + s^2 + 2s + 3$ บวกหมดแต่ไม่เสถียร · สำหรับดีกรี 1 และ 2 เงื่อนไขนี้พอดี
+$$\Rightarrow\ a_0, a_1, \dots, a_n \ \text{มีเครื่องหมายเดียวกัน และไม่มีตัวใดเป็นศูนย์}$$
+
+ที่มา: ถ้ารากทุกตัวอยู่ทางซ้าย ตัวประกอบคือ $(s + a)$ และ $(s^2 + bs + c)$ ที่ $a, b, c \gt 0$ คูณกันแล้วสัมประสิทธิ์ต้องเป็นบวกหมด
+เป็นเงื่อนไขจำเป็นแต่ไม่พอ: $s^3 + s^2 + 2s + 3$ บวกหมดแต่ไม่เสถียร
+สำหรับดีกรี 1 และ 2 เงื่อนไขนี้พอดี
 
 ## สร้างตารางเราท์ทีละขั้น พื้นฐาน
 
@@ -51,11 +56,17 @@ R2 Routh array โครงตารางเราท์
 
 $$\begin{array}{c|cccc} s^n & a_0 & a_2 & a_4 & \cdots \\ s^{n-1} & a_1 & a_3 & a_5 & \cdots \\ s^{n-2} & b_1 & b_2 & b_3 & \cdots \\ s^{n-3} & c_1 & c_2 & \cdots & \\ \vdots & \vdots & & & \\ s^0 & \ast & & & \end{array}$$
 
-ช่องที่ไม่มีสัมประสิทธิ์ให้ใส่ 0 · แถวจะสั้นลงเรื่อย ๆ จนแถว $s^1$ และ $s^0$ เหลือตัวเดียว · แถว $s^0$ จะเท่ากับ $a_n$ เสมอ (ใช้ตรวจการคำนวณ)
+ช่องที่ไม่มีสัมประสิทธิ์ให้ใส่ 0
+แถวจะสั้นลงเรื่อย ๆ จนแถว $s^1$ และ $s^0$ เหลือตัวเดียว
+แถว $s^0$ จะเท่ากับ $a_n$ เสมอ (ใช้ตรวจการคำนวณ)
 
 R3 Element formula สูตรคำนวณแต่ละช่อง
 
-$$b_1 = \frac{a_1a_2 - a_0a_3}{a_1} = \frac{-1}{a_1}\begin{vmatrix} a_0 & a_2 \\ a_1 & a_3 \end{vmatrix}, \qquad b_2 = \frac{a_1a_4 - a_0a_5}{a_1}, \qquad c_1 = \frac{b_1a_3 - a_1b_2}{b_1}$$
+$$b_1 = \frac{a_1a_2 - a_0a_3}{a_1} = \frac{-1}{a_1}\begin{vmatrix} a_0 & a_2 \\ a_1 & a_3 \end{vmatrix}$$
+
+$$b_2 = \frac{a_1a_4 - a_0a_5}{a_1}$$
+
+$$c_1 = \frac{b_1a_3 - a_1b_2}{b_1}$$
 
 จำง่าย: หลักแรกของสองแถวบนเป็นหลักตายตัวเสมอ คู่ที่สองเลื่อนไปทางขวาทีละหลัก แล้ว “คูณไขว้ ล่างซ้าย × บนขวา ลบ บนซ้าย × ล่างขวา หารด้วยล่างซ้าย”
 
@@ -63,20 +74,37 @@ R4 Routh–Hurwitz criterion เกณฑ์ของเราท์–เฮอ
 
 $$\#\{\text{รากที่ } \operatorname{Re}s \gt 0\} = \#\{\text{ครั้งที่เครื่องหมายในหลักแรกเปลี่ยน}\}$$
 
-ระบบเสถียร $\iff$ ทุกตัวในหลักแรกมีเครื่องหมายเดียวกัน (ปกติคือบวก) และไม่มีศูนย์ · เกณฑ์บอกจำนวนรากฝั่งขวา ไม่ได้บอกว่ารากอยู่ตรงไหน
+ระบบเสถียร $\iff$ ทุกตัวในหลักแรกมีเครื่องหมายเดียวกัน (ปกติคือบวก) และไม่มีศูนย์
+เกณฑ์บอกจำนวนรากฝั่งขวา ไม่ได้บอกว่ารากอยู่ตรงไหน
 
 R5 Row scaling คูณหรือหารทั้งแถวด้วยจำนวนบวก
 
-$$[\,b_1\ \ b_2\ \ b_3\,] \ \to\ [\,kb_1\ \ kb_2\ \ kb_3\,], \quad k \gt 0$$
+$$[\,b_1$$
 
-เครื่องหมายหลักแรกไม่เปลี่ยน คำตอบไม่เปลี่ยน ช่วยกำจัดเศษส่วน · ห้ามใช้ $k \lt 0$
+$$b_2$$
+
+$$b_3\,] \ \to\ [\,kb_1$$
+
+$$kb_2$$
+
+$$kb_3\,]$$
+
+$$k \gt 0$$
+
+เครื่องหมายหลักแรกไม่เปลี่ยน คำตอบไม่เปลี่ยน ช่วยกำจัดเศษส่วน
+ห้ามใช้ $k \lt 0$
 
 a3 a0 สูตรลัดอันดับสาม กำลังสาม">
 R6 Third-order shortcut สูตรลัดอันดับสาม
 
-$$a_3s^3 + a_2s^2 + a_1s + a_0:\quad \text{เสถียร} \iff a_i \gt 0 \ \text{และ} \ a_2a_1 \gt a_3a_0$$
+$$a_3s^3 + a_2s^2 + a_1s + a_0$$
 
-“ผลคูณตัวกลางมากกว่าผลคูณตัวริม” ได้จากหลักแรกแถว $s^1$ ของตาราง · ใช้บ่อยที่สุดในข้อสอบ
+$$\text{เสถียร}$$
+
+$$\iff a_i \gt 0 \ \text{และ} \ a_2a_1 \gt a_3a_0$$
+
+“ผลคูณตัวกลางมากกว่าผลคูณตัวริม” ได้จากหลักแรกแถว $s^1$ ของตาราง
+ใช้บ่อยที่สุดในข้อสอบ
 
 ตัวอย่าง R-1 · อันดับสี่ ครบทุกขั้น
 
@@ -88,7 +116,9 @@ $$a_3s^3 + a_2s^2 + a_1s + a_0:\quad \text{เสถียร} \iff a_i \gt 0 \ 
 
 - แถว $s^2$ R3
 
-$$b_1 = \frac{2\cdot3 - 1\cdot4}{2} = {1}, \qquad b_2 = \frac{2\cdot5 - 1\cdot0}{2} = 5$$
+$$b_1 = \frac{2\cdot3 - 1\cdot4}{2} = {1}$$
+
+$$b_2 = \frac{2\cdot5 - 1\cdot0}{2} = 5$$
 
 - แถว $s^1$ ใช้แถว $s^3$ และ $s^2$
 
@@ -139,7 +169,8 @@ R7 Zero in the first column (ε method) หลักแรกเป็นศู�
 
 $$[\,0\ \ a\ \ b\,] \ \to\ [\,\varepsilon\ \ a\ \ b\,], \qquad \text{นับเครื่องหมายของหลักแรกเมื่อ } \varepsilon \to 0^+$$
 
-พจน์ที่มี $\varepsilon$ ให้ดูพจน์ที่โดดเด่นเมื่อ $\varepsilon$ เล็ก เช่น $\dfrac{4\varepsilon - 12}{\varepsilon} \approx -\dfrac{12}{\varepsilon} \to -\infty$ (ลบ) · ใช้ $\varepsilon \lt 0$ ได้ผลเท่ากัน
+พจน์ที่มี $\varepsilon$ ให้ดูพจน์ที่โดดเด่นเมื่อ $\varepsilon$ เล็ก เช่น $\dfrac{4\varepsilon - 12}{\varepsilon} \approx -\dfrac{12}{\varepsilon} \to -\infty$ (ลบ)
+ใช้ $\varepsilon \lt 0$ ได้ผลเท่ากัน
 
 R8 Reversed-coefficient method ทางเลือก: กลับลำดับสัมประสิทธิ์
 
@@ -157,7 +188,9 @@ $$a_0s^n + \cdots + a_n \ \to\ a_ns^n + a_{n-1}s^{n-1} + \cdots + a_0$$
 
 - แถว $s^2$
 
-$$\frac{\varepsilon\cdot4 - 2\cdot6}{\varepsilon} = \frac{4\varepsilon - 12}{\varepsilon} \xrightarrow{\ \varepsilon \to 0^+\ } -\infty \ (\text{ลบ}), \qquad \frac{\varepsilon\cdot10 - 2\cdot0}{\varepsilon} = 10$$
+$$\frac{\varepsilon\cdot4 - 2\cdot6}{\varepsilon} = \frac{4\varepsilon - 12}{\varepsilon} \xrightarrow{\ \varepsilon \to 0^+\ } -\infty \ (\text{ลบ})$$
+
+$$\frac{\varepsilon\cdot10 - 2\cdot0}{\varepsilon} = 10$$
 
 - แถว $s^1$: ให้ $c_1 = \frac{4\varepsilon - 12}{\varepsilon}$ ได้ $\dfrac{c_1\cdot6 - \varepsilon\cdot10}{c_1} = 6 - \dfrac{10\varepsilon^2}{4\varepsilon - 12} \to 6$ (บวก) และแถว $s^0$ = 10
 
@@ -184,9 +217,13 @@ $$\frac{\varepsilon\cdot4 - 2\cdot6}{\varepsilon} = \frac{4\varepsilon - 12}{\va
 
 R9 Row of zeros: auxiliary polynomial แถวศูนย์ทั้งแถว
 
-$$A(s) = \alpha_1s^{k} + \alpha_2s^{k-2} + \alpha_3s^{k-4} + \cdots \ (\text{จากแถว } s^k), \qquad \text{แถวศูนย์} \ \leftarrow\ \frac{dA}{ds} = k\alpha_1s^{k-1} + (k-2)\alpha_2s^{k-3} + \cdots$$
+$$A(s) = \alpha_1s^{k} + \alpha_2s^{k-2} + \alpha_3s^{k-4} + \cdots \ (\text{จากแถว } s^k)$$
 
-รากของ $A(s) = 0$ เป็นรากของพหุนามเดิมด้วย · หลังแทนแถวแล้วทำต่อตามปกติ การเปลี่ยนเครื่องหมายตั้งแต่แถว $A(s)$ ลงไปบอกรากของ $A$ ที่อยู่ฝั่งขวา · ถ้าไม่มีการเปลี่ยนเครื่องหมายเลย รากของ $A$ อยู่บนแกน $j\omega$ ทั้งหมด: เสถียรวิกฤต (ถ้าไม่ซ้ำ)
+$$\text{แถวศูนย์} \ \leftarrow\ \frac{dA}{ds} = k\alpha_1s^{k-1} + (k-2)\alpha_2s^{k-3} + \cdots$$
+
+รากของ $A(s) = 0$ เป็นรากของพหุนามเดิมด้วย
+หลังแทนแถวแล้วทำต่อตามปกติ การเปลี่ยนเครื่องหมายตั้งแต่แถว $A(s)$ ลงไปบอกรากของ $A$ ที่อยู่ฝั่งขวา
+ถ้าไม่มีการเปลี่ยนเครื่องหมายเลย รากของ $A$ อยู่บนแกน $j\omega$ ทั้งหมด: เสถียรวิกฤต (ถ้าไม่ซ้ำ)
 
 ตัวอย่าง R-4 · แถวศูนย์
 
@@ -198,9 +235,15 @@ $$A(s) = \alpha_1s^{k} + \alpha_2s^{k-2} + \alpha_3s^{k-4} + \cdots \ (\text{จ
 
 - สร้างพหุนามช่วยจากแถว $s^4$ (1, 6, 8) แล้วหาอนุพันธ์ R9
 
-$$A(s) = s^4 + 6s^2 + 8, \qquad \frac{dA}{ds} = {4}s^3 + 12s \ \Rightarrow\ \text{แถว } s^3 = 4,\ 12 \ (\text{หารด้วย 4 ได้ } 1,\ 3)$$
+$$A(s) = s^4 + 6s^2 + 8$$
 
-- ทำต่อ แถว $s^2$: $\dfrac{1\cdot6 - 1\cdot3}{1} = 3$, $8$ · แถว $s^1$: $\dfrac{3\cdot3 - 1\cdot8}{3} = \tfrac13$ · แถว $s^0$: 8
+$$\frac{dA}{ds} = {4}s^3 + 12s$$
+
+$$\Rightarrow\ \text{แถว } s^3 = 4,\ 12 \ (\text{หารด้วย 4 ได้ } 1,\ 3)$$
+
+- ทำต่อ แถว $s^2$: $\dfrac{1\cdot6 - 1\cdot3}{1} = 3$, $8$
+แถว $s^1$: $\dfrac{3\cdot3 - 1\cdot8}{3} = \tfrac13$
+แถว $s^0$: 8
 
 | s⁵ | 1 | 6 | 8 |
 
@@ -213,7 +256,8 @@ $$A(s) = s^4 + 6s^2 + 8, \qquad \frac{dA}{ds} = {4}s^3 + 12s \ \Rightarrow\ \tex
 | s¹ | 1/3 | | |
 
 | s⁰ | 8 | | |
-แถว s⁴ ถูกหารด้วย 7 · แถว s³ มาจาก dA/ds (หารด้วย 4)
+แถว s⁴ ถูกหารด้วย 7
+แถว s³ มาจาก dA/ds (หารด้วย 4)
 
 - ไม่มีการเปลี่ยนเครื่องหมาย รากทั้ง 4 ของ $A(s)$ จึงอยู่บนแกน $j\omega$ แยกตัวประกอบได้
 
@@ -229,9 +273,17 @@ $$A(s) = (s^2 + 2)(s^2 + 4) \ \Rightarrow\ s = \pm j\sqrt2,\ \pm j2$$
 
 R10 Critical gain and oscillation frequency เกนวิกฤตและความถี่การแกว่ง
 
-$$\text{แถว } s^1 = 0 \ \Rightarrow\ K = K_{cr}, \qquad \text{แถว } s^2:\ \alpha s^2 + \beta\big|_{K_{cr}} = 0 \ \Rightarrow\ \omega_{cr} = \sqrt{\beta/\alpha}$$
+$$\text{แถว } s^1 = 0$$
 
-$K_{cr}$ และ $\omega_{cr}$ คือจุดที่รูทโลคัสตัดแกน $j\omega$ · ใช้ตั้งค่า PID แบบ Ziegler–Nichols ($T_{cr} = 2\pi/\omega_{cr}$) · เกนมาร์จินที่เกน $K$ ใด ๆ คือ $20\log(K_{cr}/K)$
+$$\Rightarrow\ K = K_{cr}$$
+
+$$\text{แถว } s^2:\ \alpha s^2 + \beta\big|_{K_{cr}} = 0$$
+
+$$\Rightarrow\ \omega_{cr} = \sqrt{\beta/\alpha}$$
+
+$K_{cr}$ และ $\omega_{cr}$ คือจุดที่รูทโลคัสตัดแกน $j\omega$
+ใช้ตั้งค่า PID แบบ Ziegler–Nichols ($T_{cr} = 2\pi/\omega_{cr}$)
+เกนมาร์จินที่เกน $K$ ใด ๆ คือ $20\log(K_{cr}/K)$
 
 ตัวอย่าง R-5 · โจทย์คลาสสิก
 
@@ -255,7 +307,11 @@ $$s^3 + 3s^2 + 2s + K = 0$$
 
 - ที่ $K_{cr} = 6$ แถว $s^1$ เป็นศูนย์ ใช้แถว $s^2$ เป็นพหุนามช่วย R10
 
-$$3s^2 + 6 = 0 \ \Rightarrow\ s = \pm j\sqrt2 \ \Rightarrow\ {\omega_{cr} = \sqrt2 = 1.414\ \text{rad/s}}$$
+$$3s^2 + 6 = 0$$
+
+$$\Rightarrow\ s = \pm j\sqrt2$$
+
+$$\Rightarrow\ {\omega_{cr} = \sqrt2 = 1.414\ \text{rad/s}}$$
 
 เสถียรเมื่อ $0 \lt K \lt 6$ · ที่ $K = 6$ ระบบแกว่งค้างที่ $\omega = \sqrt2$ rad/s (คาบ $T_{cr} = 2\pi/\sqrt2 = 4.44$ s)
 
@@ -269,7 +325,10 @@ $$3s^2 + 6 = 0 \ \Rightarrow\ s = \pm j\sqrt2 \ \Rightarrow\ {\omega_{cr} = \sqr
 
 $$s^3 + 5s^2 + (K - 6)s + K = 0$$
 
-- ตาราง: $s^3$: 1, $K - 6$ · $s^2$: 5, $K$ · $s^1$: $\dfrac{5(K - 6) - K}{5} = \dfrac{4K - 30}{5}$ · $s^0$: $K$
+- ตาราง: $s^3$: 1, $K - 6$
+$s^2$: 5, $K$
+$s^1$: $\dfrac{5(K - 6) - K}{5} = \dfrac{4K - 30}{5}$
+$s^0$: $K$
 
 - เงื่อนไข: $4K - 30 \gt 0 \Rightarrow K \gt 7.5$ และ $K \gt 0$
 
@@ -283,9 +342,12 @@ $$s^3 + 5s^2 + (K - 6)s + K = 0$$
 
 ### หาช่วง $K$ ของ $s^4 + 3s^3 + 3s^2 + 2s + K = 0$ และความถี่การแกว่งที่ขอบ
 
-- $s^4$: 1, 3, $K$ · $s^3$: 3, 2 · $s^2$: $\dfrac{3\cdot3 - 1\cdot2}{3} = \dfrac73$, $\dfrac{3K - 0}{3} = K$
+- $s^4$: 1, 3, $K$
+$s^3$: 3, 2
+$s^2$: $\dfrac{3\cdot3 - 1\cdot2}{3} = \dfrac73$, $\dfrac{3K - 0}{3} = K$
 
-- $s^1$: $\dfrac{\frac73\cdot2 - 3K}{\frac73} = 2 - \dfrac{9K}{7}$ · $s^0$: $K$
+- $s^1$: $\dfrac{\frac73\cdot2 - 3K}{\frac73} = 2 - \dfrac{9K}{7}$
+$s^0$: $K$
 
 - $2 - \dfrac{9K}{7} \gt 0 \Rightarrow K \lt \dfrac{14}{9}$ และ $K \gt 0$
 
@@ -313,9 +375,14 @@ ${K_P \gt -2,\quad 0 \lt K_I \lt 3(2 + K_P)}$ เป็นบริเวณส�
 
 R11 Relative stability (axis shift) เสถียรภาพสัมพัทธ์
 
-$$\operatorname{Re}(s_i) \lt -\sigma \ \ \forall i \iff p(z - \sigma) \ \text{เป็นพหุนามเฮอร์วิตซ์ในตัวแปร } z$$
+$$\operatorname{Re}(s_i) \lt -\sigma$$
 
-จำนวนการเปลี่ยนเครื่องหมายในตารางของ $z$ = จำนวนขั้วที่อยู่ขวาของเส้น $s = -\sigma$ · $t_s \approx 4/\sigma$
+$$\forall i$$
+
+$$\iff p(z - \sigma) \ \text{เป็นพหุนามเฮอร์วิตซ์ในตัวแปร } z$$
+
+จำนวนการเปลี่ยนเครื่องหมายในตารางของ $z$ = จำนวนขั้วที่อยู่ขวาของเส้น $s = -\sigma$
+$t_s \approx 4/\sigma$
 
 ตัวอย่าง R-9 · ต้องการ ts ไม่เกิน 16 s
 
@@ -339,9 +406,15 @@ ${21/64 \lt K \lt 15/8}$ ขั้วทุกตัวอยู่ซ้าย�
 
 R12 Hurwitz determinants ดีเทอร์มิแนนต์เฮอร์วิตซ์
 
-$$H = \begin{pmatrix} a_1 & a_3 & a_5 & \cdots \\ a_0 & a_2 & a_4 & \cdots \\ 0 & a_1 & a_3 & \cdots \\ 0 & a_0 & a_2 & \cdots \\ \vdots & & & \ddots \end{pmatrix}_{n\times n}, \qquad \text{เสถียร} \iff \Delta_1, \Delta_2, \dots, \Delta_n \gt 0 \ (a_0 \gt 0)$$
+$$H = \begin{pmatrix} a_1 & a_3 & a_5 & \cdots \\ a_0 & a_2 & a_4 & \cdots \\ 0 & a_1 & a_3 & \cdots \\ 0 & a_0 & a_2 & \cdots \\ \vdots & & & \ddots \end{pmatrix}_{n\times n}$$
 
-$\Delta_k$ คือไมเนอร์หลักนำ $k \times k$ · หลักแรกของเราท์: $a_0,\ \Delta_1,\ \tfrac{\Delta_2}{\Delta_1},\ \tfrac{\Delta_3}{\Delta_2},\ \dots$ · ลีนาร์–ชีพาร์ต (Liénard–Chipart) แสดงว่าเมื่อสัมประสิทธิ์บวกหมด ตรวจแค่ $\Delta$ ลำดับคี่ (หรือคู่) ก็พอ
+$$\text{เสถียร}$$
+
+$$\iff \Delta_1, \Delta_2, \dots, \Delta_n \gt 0 \ (a_0 \gt 0)$$
+
+$\Delta_k$ คือไมเนอร์หลักนำ $k \times k$
+หลักแรกของเราท์: $a_0,\ \Delta_1,\ \tfrac{\Delta_2}{\Delta_1},\ \tfrac{\Delta_3}{\Delta_2},\ \dots$
+ลีนาร์–ชีพาร์ต (Liénard–Chipart) แสดงว่าเมื่อสัมประสิทธิ์บวกหมด ตรวจแค่ $\Delta$ ลำดับคี่ (หรือคู่) ก็พอ
 
 ตัวอย่าง R-10 · เทียบกับ R-1
 
@@ -349,7 +422,9 @@ $\Delta_k$ คือไมเนอร์หลักนำ $k \times k$ · ห�
 
 - $a_0 = 1,\ a_1 = 2,\ a_2 = 3,\ a_3 = 4,\ a_4 = 5$ R12
 
-$$H = \begin{pmatrix} 2 & 4 & 0 & 0 \\ 1 & 3 & 5 & 0 \\ 0 & 2 & 4 & 0 \\ 0 & 1 & 3 & 5 \end{pmatrix} \Rightarrow \Delta_1 = 2,\ \Delta_2 = 2,\ \Delta_3 = -12,\ \Delta_4 = -60$$
+$$H = \begin{pmatrix} 2 & 4 & 0 & 0 \\ 1 & 3 & 5 & 0 \\ 0 & 2 & 4 & 0 \\ 0 & 1 & 3 & 5 \end{pmatrix}$$
+
+$$\Rightarrow \Delta_1 = 2,\ \Delta_2 = 2,\ \Delta_3 = -12,\ \Delta_4 = -60$$
 
 - อัตราส่วน: $1,\ 2,\ \tfrac22 = 1,\ \tfrac{-12}{2} = -6,\ \tfrac{-60}{-12} = 5$
 

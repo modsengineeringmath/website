@@ -25,7 +25,9 @@ updated: 2026-10-12
 
 - วงเปิดเสถียร: วงปิดเสถียร $\iff$ GM > 0 dB และ PM > 0°
 
-- $\zeta \approx \text{PM}/100$ · $\omega_{gc}$ ≈ ความเร็วของวงปิด · ค่าแนะนำ PM 45°–60°, GM ≥ 6–10 dB
+- $\zeta \approx \text{PM}/100$
+$\omega_{gc}$ ≈ ความเร็วของวงปิด
+ค่าแนะนำ PM 45°–60°, GM ≥ 6–10 dB
 
 ระดับพื้นฐาน เริ่มเรียนกลาง ป.ตรี วิศวกรรมขั้นสูง งานออกแบบ
 
@@ -37,19 +39,34 @@ updated: 2026-10-12
 
 G1 Phase margin เฟสมาร์จิน
 
-$$|L(j\omega_{gc})| = 1 \ (0 \text{ dB}), \qquad \text{PM} = 180^\circ + \angle L(j\omega_{gc})$$
+$$|L(j\omega_{gc})| = 1 \ (0 \text{ dB})$$
 
-เฟสที่ล่าช้าเพิ่มได้อีกเท่าไร (ที่ $\omega_{gc}$) ก่อนจะไม่เสถียร · บนโบด: ลากเส้นดิ่งจากจุดที่ขนาดตัด 0 dB ลงไปกราฟเฟส วัดระยะเหนือเส้น −180°
+$$\text{PM} = 180^\circ + \angle L(j\omega_{gc})$$
+
+เฟสที่ล่าช้าเพิ่มได้อีกเท่าไร (ที่ $\omega_{gc}$) ก่อนจะไม่เสถียร
+บนโบด: ลากเส้นดิ่งจากจุดที่ขนาดตัด 0 dB ลงไปกราฟเฟส วัดระยะเหนือเส้น −180°
 
 G2 Gain margin เกนมาร์จิน
 
-$$\angle L(j\omega_{pc}) = -180^\circ, \qquad \text{GM} = \frac{1}{|L(j\omega_{pc})|} \quad \text{หรือ} \quad \text{GM}_{\text{dB}} = -20\log|L(j\omega_{pc})|$$
+$$\angle L(j\omega_{pc}) = -180^\circ$$
 
-คูณเกนเพิ่มได้อีกกี่เท่าก่อนจะไม่เสถียร · บนโบด: จากจุดที่เฟสตัด −180° ลากขึ้นไปกราฟขนาด วัดระยะใต้เส้น 0 dB · GM เป็นเท่า = $K_{cr}/K$ จากเราท์
+$$\text{GM} = \frac{1}{|L(j\omega_{pc})|}$$
+
+$$\text{หรือ}$$
+
+$$\text{GM}_{\text{dB}} = -20\log|L(j\omega_{pc})|$$
+
+คูณเกนเพิ่มได้อีกกี่เท่าก่อนจะไม่เสถียร
+บนโบด: จากจุดที่เฟสตัด −180° ลากขึ้นไปกราฟขนาด วัดระยะใต้เส้น 0 dB
+GM เป็นเท่า = $K_{cr}/K$ จากเราท์
 
 G3 Bode stability criterion เกณฑ์เสถียรภาพจากโบด
 
-$$L(s) \text{ เสถียร, ตัด 0 dB และ −180° อย่างละครั้ง}: \quad \text{วงปิดเสถียร} \iff \text{GM}_{\text{dB}} \gt 0 \ \text{และ} \ \text{PM} \gt 0^\circ \ (\omega_{gc} \lt \omega_{pc})$$
+$$L(s) \text{ เสถียร, ตัด 0 dB และ −180° อย่างละครั้ง}$$
+
+$$\text{วงปิดเสถียร}$$
+
+$$\iff \text{GM}_{\text{dB}} \gt 0 \ \text{และ} \ \text{PM} \gt 0^\circ \ (\omega_{gc} \lt \omega_{pc})$$
 
 นอกเงื่อนไขนี้ (วงเปิดไม่เสถียร ตัดหลายครั้ง เสถียรแบบมีเงื่อนไข) ต้องใช้ไนควิสต์ ซึ่งเป็นรากฐานของเกณฑ์นี้
 
@@ -59,7 +76,9 @@ $$L(s) \text{ เสถียร, ตัด 0 dB และ −180° อย่า
 
 - หา $\omega_{pc}$: $\angle L = -90^\circ - \tan^{-1}\omega - \tan^{-1}\tfrac{\omega}{2} = -180^\circ \Rightarrow \tan^{-1}\omega + \tan^{-1}\tfrac{\omega}{2} = 90^\circ$
 
-$$\Rightarrow\ \omega \cdot \tfrac{\omega}{2} = 1 \ \Rightarrow\ \omega_{pc} = \sqrt2 = 1.414$$
+$$\Rightarrow\ \omega \cdot \tfrac{\omega}{2} = 1$$
+
+$$\Rightarrow\ \omega_{pc} = \sqrt2 = 1.414$$
 
 - $|L(j\sqrt2)| = \dfrac{2}{\sqrt2\cdot\sqrt3\cdot\sqrt6} = \dfrac{2}{6} = \dfrac13$ ได้ GM $= 3$ เท่า $= 20\log3 = {9.54\ \text{dB}}$ G2
 
@@ -77,21 +96,30 @@ python-control: GM = 9.54 dB ที่ 1.414 rad/s, PM = 32.6° ที่ 0.749 
 
 G4 Phase margin vs damping ratio เฟสมาร์จินกับ ζ
 
-$$\text{PM} = \tan^{-1}\frac{2\zeta}{\sqrt{\sqrt{1 + 4\zeta^4} - 2\zeta^2}} \ \approx\ 100\zeta \ \ (\zeta \le 0.7)$$
+$$\text{PM} = \tan^{-1}\frac{2\zeta}{\sqrt{\sqrt{1 + 4\zeta^4} - 2\zeta^2}} \ \approx\ 100\zeta$$
 
-ζ = 0.3 → 33° (Mp 37%) · ζ = 0.5 → 52° (Mp 16%) · ζ = 0.6 → 59° (Mp 9.5%) · ζ = 0.7 → 65° (Mp 4.6%)
+$$(\zeta \le 0.7)$$
+
+ζ = 0.3 → 33° (Mp 37%)
+ζ = 0.5 → 52° (Mp 16%)
+ζ = 0.6 → 59° (Mp 9.5%)
+ζ = 0.7 → 65° (Mp 4.6%)
 
 G5 Crossover and speed ครอสโอเวอร์กับความเร็ว
 
-$$\omega_{gc} = \omega_n\sqrt{\sqrt{1 + 4\zeta^4} - 2\zeta^2}, \qquad \omega_{gc} \lt \omega_{BW} \lt 2\omega_{gc}$$
+$$\omega_{gc} = \omega_n\sqrt{\sqrt{1 + 4\zeta^4} - 2\zeta^2}$$
 
-กฎหัวแม่มือ: $t_r \approx 1.5/\omega_{gc}$ ถึง $2/\omega_{gc}$ · ครอสโอเวอร์สูง = เร็ว แต่ไวต่อสัญญาณรบกวน
+$$\omega_{gc} \lt \omega_{BW} \lt 2\omega_{gc}$$
+
+กฎหัวแม่มือ: $t_r \approx 1.5/\omega_{gc}$ ถึง $2/\omega_{gc}$
+ครอสโอเวอร์สูง = เร็ว แต่ไวต่อสัญญาณรบกวน
 
 G6 Delay margin ดีเลย์มาร์จิน
 
 $$T_{max} = \frac{\text{PM (rad)}}{\omega_{gc}} = \frac{\text{PM}^\circ \cdot \pi/180}{\omega_{gc}}$$
 
-หน่วงเวลาสูงสุดที่ลูปทนได้ก่อนไม่เสถียร · สำคัญมากกับตัวควบคุมดิจิทัลและระบบผ่านเครือข่าย
+หน่วงเวลาสูงสุดที่ลูปทนได้ก่อนไม่เสถียร
+สำคัญมากกับตัวควบคุมดิจิทัลและระบบผ่านเครือข่าย
 
 ตัวอย่าง G-2 · ดีเลย์มาร์จิน
 

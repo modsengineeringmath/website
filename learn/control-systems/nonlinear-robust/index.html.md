@@ -19,13 +19,16 @@ updated: 2026-10-12
 
 สรุปใน 30 วินาที
 
-- ความไม่เชิงเส้นทั่วไป: อิ่มตัว dead-zone backlash แรงเสียดทาน ควอนไทซ์ · ทำให้เกิด windup และลิมิตไซเคิล
+- ความไม่เชิงเส้นทั่วไป: อิ่มตัว dead-zone backlash แรงเสียดทาน ควอนไทซ์
+ทำให้เกิด windup และลิมิตไซเคิล
 
-- ฟังก์ชันพรรณนา: ลิมิตไซเคิลที่ $G(j\omega) = -1/N(a)$ · รีเลย์ $N = 4d/(\pi a)$
+- ฟังก์ชันพรรณนา: ลิมิตไซเคิลที่ $G(j\omega) = -1/N(a)$
+รีเลย์ $N = 4d/(\pi a)$
 
 - ลียาปูนอฟ: $V \gt 0,\ \dot V \lt 0 \Rightarrow$ เสถียร
 
-- ทนทาน: $\|W\,T\|_\infty \lt 1$ (ความไม่แน่นอนแบบคูณ) · small gain: $\|G_1\|\,\|G_2\| \lt 1$
+- ทนทาน: $\|W\,T\|_\infty \lt 1$ (ความไม่แน่นอนแบบคูณ)
+small gain: $\|G_1\|\,\|G_2\| \lt 1$
 
 ## ความไม่เชิงเส้นที่เจอทุกวัน กลาง
 
@@ -47,15 +50,20 @@ updated: 2026-10-12
 
 U1 Describing functions ฟังก์ชันพรรณนา (เกนสมมูลต่อไซน์แอมพลิจูด $a$)
 
-$$\text{รีเลย์ } \pm d:\ N(a) = \frac{4d}{\pi a}, \qquad \text{อิ่มตัว (ชัน } k, \text{ ขีด } \delta):\ N(a) = \frac{2k}{\pi}\left[\sin^{-1}\frac{\delta}{a} + \frac{\delta}{a}\sqrt{1 - \frac{\delta^2}{a^2}}\right]\ (a \gt \delta)$$
+$$\text{รีเลย์ } \pm d:\ N(a) = \frac{4d}{\pi a}$$
 
-ประมาณเฉพาะฮาร์มอนิกหลัก ใช้ได้ดีเมื่อพลานต์กรองฮาร์มอนิกสูง (low-pass) · อิ่มตัว: $N$ ลดลงเมื่อ $a$ เพิ่ม (เกนประสิทธิผลลดลง) · $N(a)$ คือ $b_1/a$ ของอนุกรมฟูเรียร์ของขาออก (รีเลย์ = สี่เหลี่ยม W1, อิ่มตัว = ไซน์ตัดยอด W16)
+$$\text{อิ่มตัว (ชัน } k, \text{ ขีด } \delta):\ N(a) = \frac{2k}{\pi}\left[\sin^{-1}\frac{\delta}{a} + \frac{\delta}{a}\sqrt{1 - \frac{\delta^2}{a^2}}\right]\ (a \gt \delta)$$
+
+ประมาณเฉพาะฮาร์มอนิกหลัก ใช้ได้ดีเมื่อพลานต์กรองฮาร์มอนิกสูง (low-pass)
+อิ่มตัว: $N$ ลดลงเมื่อ $a$ เพิ่ม (เกนประสิทธิผลลดลง)
+$N(a)$ คือ $b_1/a$ ของอนุกรมฟูเรียร์ของขาออก (รีเลย์ = สี่เหลี่ยม W1, อิ่มตัว = ไซน์ตัดยอด W16)
 
 U2 Limit-cycle prediction ทำนายลิมิตไซเคิล
 
 $$1 + N(a)G(j\omega) = 0 \iff G(j\omega) = -\frac{1}{N(a)}$$
 
-วาด $-1/N(a)$ บนกราฟไนควิสต์ จุดตัดให้ทั้งแอมพลิจูดและความถี่ของการแกว่ง · เป็นหลักการของ relay auto-tune
+วาด $-1/N(a)$ บนกราฟไนควิสต์ จุดตัดให้ทั้งแอมพลิจูดและความถี่ของการแกว่ง
+เป็นหลักการของ relay auto-tune
 
 ตัวอย่าง U-1 · ตัวควบคุม on–off
 
@@ -73,15 +81,31 @@ $$1 + N(a)G(j\omega) = 0 \iff G(j\omega) = -\frac{1}{N(a)}$$
 
 U3 Lyapunov's direct method วิธีตรงของลียาปูนอฟ
 
-$$V(\mathbf 0) = 0,\ \ V(\mathbf x) \gt 0 \ (\mathbf x \ne \mathbf 0),\ \ \dot V = \nabla V\cdot f(\mathbf x) \lt 0 \ \Rightarrow\ \text{เสถียรเชิงอาการ}$$
+$$V(\mathbf 0) = 0$$
 
-ถ้า $V \to \infty$ เมื่อ $\|\mathbf x\| \to \infty$ ด้วย จะเสถียรแบบทั่วทั้งปริภูมิ (global) · ระบบเชิงเส้น: $V = \mathbf x^TP\mathbf x$ กับ $A^TP + PA = -Q$
+$$V(\mathbf x) \gt 0 \ (\mathbf x \ne \mathbf 0)$$
+
+$$\dot V = \nabla V\cdot f(\mathbf x) \lt 0$$
+
+$$\Rightarrow\ \text{เสถียรเชิงอาการ}$$
+
+ถ้า $V \to \infty$ เมื่อ $\|\mathbf x\| \to \infty$ ด้วย จะเสถียรแบบทั่วทั้งปริภูมิ (global)
+ระบบเชิงเส้น: $V = \mathbf x^TP\mathbf x$ กับ $A^TP + PA = -Q$
 
 U4 Lyapunov's indirect method วิธีอ้อม (ทำให้เป็นเชิงเส้น)
 
-$$J = \left.\frac{\partial f}{\partial\mathbf x}\right|_{\mathbf x_0}:\ \ \operatorname{Re}\lambda_i(J) \lt 0 \Rightarrow \text{เสถียรเฉพาะที่}, \quad \operatorname{Re}\lambda_i \gt 0 \text{ บางตัว} \Rightarrow \text{ไม่เสถียร}$$
+$$J = \left.\frac{\partial f}{\partial\mathbf x}\right|_{\mathbf x_0}$$
 
-ถ้ามี $\operatorname{Re}\lambda = 0$ สรุปไม่ได้ ต้องใช้วิธีตรง · เป็นเหตุผลที่การทำให้เป็นเชิงเส้นใช้ได้
+$$\operatorname{Re}\lambda_i(J) \lt 0$$
+
+$$\Rightarrow \text{เสถียรเฉพาะที่}$$
+
+$$\operatorname{Re}\lambda_i \gt 0 \text{ บางตัว}$$
+
+$$\Rightarrow \text{ไม่เสถียร}$$
+
+ถ้ามี $\operatorname{Re}\lambda = 0$ สรุปไม่ได้ ต้องใช้วิธีตรง
+เป็นเหตุผลที่การทำให้เป็นเชิงเส้นใช้ได้
 
 ตัวอย่าง U-2 · เมื่อทำเป็นเชิงเส้นแล้วตอบไม่ได้
 
@@ -95,29 +119,48 @@ $$J = \left.\frac{\partial f}{\partial\mathbf x}\right|_{\mathbf x_0}:\ \ \opera
 
 U5 Sliding mode control ควบคุมแบบโหมดเลื่อน
 
-$$\sigma = \dot e + \lambda e, \qquad u = u_{eq} - k\,\operatorname{sign}(\sigma), \quad k \gt |\text{ความไม่แน่นอน}|$$
+$$\sigma = \dot e + \lambda e$$
 
-บังคับให้สถานะเลื่อนบนผิว $\sigma = 0$ ซึ่ง $e \to 0$ แบบ $e^{-\lambda t}$ ทนต่อการรบกวนที่จำกัดขอบเขตได้สมบูรณ์ · ข้อเสีย: chattering แก้ด้วย $\operatorname{sat}(\sigma/\phi)$ แทน sign · ใช้ในไดรฟ์มอเตอร์และตัวแปลงกำลัง
+$$u = u_{eq} - k\,\operatorname{sign}(\sigma)$$
+
+$$k \gt |\text{ความไม่แน่นอน}|$$
+
+บังคับให้สถานะเลื่อนบนผิว $\sigma = 0$ ซึ่ง $e \to 0$ แบบ $e^{-\lambda t}$ ทนต่อการรบกวนที่จำกัดขอบเขตได้สมบูรณ์
+ข้อเสีย: chattering แก้ด้วย $\operatorname{sat}(\sigma/\phi)$ แทน sign
+ใช้ในไดรฟ์มอเตอร์และตัวแปลงกำลัง
 
 ## การควบคุมแบบทนทาน ขั้นสูง
 
 U6 Robust stability (multiplicative uncertainty) เสถียรภาพทนทาน
 
-$$G_{\text{จริง}} = G(1 + W\Delta),\ |\Delta| \le 1 \quad\Rightarrow\quad \text{เสถียรทุกพลานต์} \iff |W(j\omega)T(j\omega)| \lt 1 \ \ \forall\omega$$
+$$G_{\text{จริง}} = G(1 + W\Delta),\ |\Delta| \le 1$$
 
-$|W(j\omega)|$ = ขนาดความไม่แน่นอนสัมพัทธ์ที่แต่ละความถี่ (มักเล็กที่ความถี่ต่ำ โตที่ความถี่สูง) · จึงต้องให้ $|T|$ เล็กที่ความถี่สูง: แบนด์วิดท์ถูกจำกัดด้วยความรู้เรื่องพลานต์
+$$\Rightarrow$$
+
+$$\text{เสถียรทุกพลานต์}$$
+
+$$\iff |W(j\omega)T(j\omega)| \lt 1$$
+
+$$\forall\omega$$
+
+$|W(j\omega)|$ = ขนาดความไม่แน่นอนสัมพัทธ์ที่แต่ละความถี่ (มักเล็กที่ความถี่ต่ำ โตที่ความถี่สูง)
+จึงต้องให้ $|T|$ เล็กที่ความถี่สูง: แบนด์วิดท์ถูกจำกัดด้วยความรู้เรื่องพลานต์
 
 U7 Small-gain theorem ทฤษฎีบทเกนเล็ก
 
-$$\|G_1\|_\infty\,\|G_2\|_\infty \lt 1 \ \Rightarrow\ \text{ระบบป้อนกลับของ } G_1, G_2 \text{ เสถียร}$$
+$$\|G_1\|_\infty\,\|G_2\|_\infty \lt 1$$
 
-ใช้ได้แม้ $G_2$ ไม่เชิงเส้นหรือแปรตามเวลา (ใช้เกนแบบ $L_2$) · เป็นฐานของ H∞ control ซึ่งออกแบบตัวควบคุมให้ $\|W_1S\|_\infty$ และ $\|W_2T\|_\infty$ เล็กที่สุดพร้อมกัน
+$$\Rightarrow\ \text{ระบบป้อนกลับของ } G_1, G_2 \text{ เสถียร}$$
+
+ใช้ได้แม้ $G_2$ ไม่เชิงเส้นหรือแปรตามเวลา (ใช้เกนแบบ $L_2$)
+เป็นฐานของ H∞ control ซึ่งออกแบบตัวควบคุมให้ $\|W_1S\|_\infty$ และ $\|W_2T\|_\infty$ เล็กที่สุดพร้อมกัน
 
 ตัวอย่าง U-3 · เกนพลานต์ไม่แน่นอน
 
 ### $L = \dfrac{K}{s(s+1)(s+2)}$ ออกแบบที่ $K = 2$ แต่พลานต์จริงมีเกนตั้งแต่ 0.5 ถึง 1.5 เท่าของค่าที่ออกแบบ ยังเสถียรไหม
 
-- $K$ จริงอยู่ในช่วง 1 ถึง 3 · เสถียรเมื่อ $K \lt 6$ (R-5)
+- $K$ จริงอยู่ในช่วง 1 ถึง 3
+เสถียรเมื่อ $K \lt 6$ (R-5)
 
 - มองด้วยมาร์จิน: GM = 3 เท่า (9.54 dB) ครอบความไม่แน่นอน 1.5 เท่า เหลือที่ว่างอีก 2 เท่า
 

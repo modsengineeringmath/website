@@ -976,6 +976,48 @@ const KATEX_MACROS = {
   "\\rc": "\\htmlClass{rc}{\\cancel{#1}}",
   "\\carry": "\\overset{\\htmlClass{carry}{#1}}{\\htmlClass{rc}{\\cancel{#2}}}",
 };
+
+// ---- Phone readability for the control-systems library (added 2026-11-18) ----
+// KaTeX display equations cannot wrap, so a long line is cut off on a phone. Split a long display equation at its
+// top-level separators (\quad, \qquad, "\ \ ", \iff) into one \[ \] line per part, and put each " · " note on its own line.
+function splitTopLevel(t) {
+  const parts = []; let depth = 0, start = 0, i = 0;
+  const flush = (end) => { const piece = t.slice(start, end).replace(/(?:\\[ ,;:!]|[,:]|\s)+$/, "").trim(); if (piece) parts.push(piece); start = end; };
+  while (i < t.length) {
+    if (t.startsWith("\\left", i)) { depth++; i += 5; continue; }
+    if (t.startsWith("\\right", i)) { depth--; i += 6; continue; }
+    if (t.startsWith("\\begin{", i)) { const e = t.indexOf("\\end{", i); if (e < 0) return [t]; i = t.indexOf("}", e) + 1; continue; }
+    const c = t[i];
+    if (c === "{") depth++;
+    else if (c === "}") depth--;
+    else if (c === "\\" && depth === 0) {
+      let m = /^\\(?:qquad|quad)(?![a-zA-Z])(?:\s*\\(?:qquad|quad)(?![a-zA-Z]))*/.exec(t.slice(i)) || /^\\ \\ (?:\\ )*/.exec(t.slice(i));
+      if (m) { flush(i); i += m[0].length; start = i; continue; }
+      const ar = /^\\(?:iff|Longrightarrow|Rightarrow)(?![a-zA-Z])/.exec(t.slice(i));
+      if (ar) { flush(i); start = i; i += ar[0].length; continue; }
+    }
+    i++;
+  }
+  flush(t.length);
+  return parts;
+}
+function splitLongDisplays(html) {
+  return html.replace(/\\\[([\s\S]+?)\\\]/g, (all, tex) => {
+    const t = tex.trim();
+    if (t.length < 70) return all;
+    const parts = splitTopLevel(t);
+    if (parts.length < 2 || parts.some((x) => x.length < 3)) return all;
+    return parts.map((x) => `\\[ ${x} \\]`).join("\n        ");
+  });
+}
+function splitDotNotes(html) {
+  const dot = (inner) => inner.split(/(\\\([\s\S]*?\\\))/).map((seg) => (seg.startsWith("\\(") ? seg : seg.replace(/\s·\s/g, "<br>"))).join("");
+  return html
+    .replace(/(<p class="tf-x">)([\s\S]*?)(<\/p>)/g, (_, a, b, c) => a + dot(b) + c)
+    .replace(/(<li>)([\s\S]*?)(<\/li>)/g, (_, a, b, c) => (b.includes(" · ") ? a + dot(b) + c : _));
+}
+function phoneReadable(html) { return splitDotNotes(splitLongDisplays(html)); }
+
 function renderMath(html, file) {
   const render = (tex, displayMode) => {
     try {
@@ -2120,6 +2162,7 @@ for (const { rel, raw } of pageSources) {
   const vid = meta.video ? allVideos.find((v) => v.slug === path.basename(rel, ".html")) || null : null;
   const isVid = !!vid;
   let body = raw.slice(m[0].length);
+  if (meta.lesson === "control-systems") body = phoneReadable(body);
   // a post's breadcrumbs gain its category: Home › Articles › <category> › post
   const postCat = isPost ? blogCat(meta.category) : null;
   if (postCat) {

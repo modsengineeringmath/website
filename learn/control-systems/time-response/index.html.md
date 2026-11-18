@@ -25,7 +25,9 @@ updated: 2026-10-12
 
 - มุมจากแกนจริงลบ $\cos^{-1}\zeta$ → overshoot $M_p = e^{-\pi\zeta/\sqrt{1-\zeta^2}}$
 
-- ขั้วอื่นห่างไป 5 เท่าขึ้นไป ใช้คู่เด่นประมาณได้ · ศูนย์ใกล้ ๆ เพิ่ม overshoot · ศูนย์ฝั่งขวาทำให้กลับทิศก่อน
+- ขั้วอื่นห่างไป 5 เท่าขึ้นไป ใช้คู่เด่นประมาณได้
+ศูนย์ใกล้ ๆ เพิ่ม overshoot
+ศูนย์ฝั่งขวาทำให้กลับทิศก่อน
 
 ## ขั้วบนระนาบ s บอกรูปร่างของผลตอบสนอง พื้นฐาน
 
@@ -35,17 +37,36 @@ updated: 2026-10-12
 
 T1 First-order step response ระบบอันดับหนึ่ง
 
-$$G(s) = \frac{K}{\tau s + 1}:\quad y(t) = K\left(1 - e^{-t/\tau}\right), \quad t_r = 2.2\tau,\ \ t_s = 4\tau$$
+$$G(s) = \frac{K}{\tau s + 1}$$
 
-ที่ $t = \tau$ ได้ 63.2% · $t_r$ แบบ 10–90% · ไม่มี overshoot เลย
+$$y(t) = K\left(1 - e^{-t/\tau}\right)$$
+
+$$t_r = 2.2\tau$$
+
+$$t_s = 4\tau$$
+
+ที่ $t = \tau$ ได้ 63.2%
+$t_r$ แบบ 10–90%
+ไม่มี overshoot เลย
 
 T2 Second-order standard form ระบบอันดับสองมาตรฐาน
 
-$$G(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_ns + \omega_n^2}, \quad s = -\zeta\omega_n \pm j\omega_d,\ \ \omega_d = \omega_n\sqrt{1 - \zeta^2}$$
+$$G(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_ns + \omega_n^2}$$
 
-$$y(t) = 1 - \frac{e^{-\zeta\omega_nt}}{\sqrt{1 - \zeta^2}}\sin(\omega_dt + \beta), \qquad \beta = \cos^{-1}\zeta \quad (0 \lt \zeta \lt 1)$$
+$$s = -\zeta\omega_n \pm j\omega_d$$
 
-$\zeta = 0$: แกว่งไม่หยุด · $0 \lt \zeta \lt 1$: หน่วงน้อย · $\zeta = 1$: หน่วงวิกฤต · $\zeta \gt 1$: หน่วงเกิน (ขั้วจริงสองตัว)
+$$\omega_d = \omega_n\sqrt{1 - \zeta^2}$$
+
+$$y(t) = 1 - \frac{e^{-\zeta\omega_nt}}{\sqrt{1 - \zeta^2}}\sin(\omega_dt + \beta)$$
+
+$$\beta = \cos^{-1}\zeta$$
+
+$$(0 \lt \zeta \lt 1)$$
+
+$\zeta = 0$: แกว่งไม่หยุด
+$0 \lt \zeta \lt 1$: หน่วงน้อย
+$\zeta = 1$: หน่วงวิกฤต
+$\zeta \gt 1$: หน่วงเกิน (ขั้วจริงสองตัว)
 
 ผลของ ζ เมื่อ $\omega_n = 1$: ζ น้อยเร็วแต่แกว่ง ζ = 0.7 ใกล้เคียงอุดมคติ ζ = 1 ไม่พุ่งเกินแต่ช้ากว่า
 
@@ -53,9 +74,16 @@ $\zeta = 0$: แกว่งไม่หยุด · $0 \lt \zeta \lt 1$: หน
 
 T3 Percent overshoot เปอร์เซ็นต์พุ่งเกิน
 
-$$\%M_p = 100\,e^{-\pi\zeta/\sqrt{1 - \zeta^2}} \iff \zeta = \frac{-\ln(\%M_p/100)}{\sqrt{\pi^2 + \ln^2(\%M_p/100)}}$$
+$$\%M_p = 100\,e^{-\pi\zeta/\sqrt{1 - \zeta^2}}$$
 
-ขึ้นกับ $\zeta$ อย่างเดียว · ζ = 0.5 → 16.3% · 0.6 → 9.5% · 0.7 → 4.6% · 0.8 → 1.5% · $M_p$ ≤ 10% ต้อง $\zeta \ge 0.591$
+$$\iff \zeta = \frac{-\ln(\%M_p/100)}{\sqrt{\pi^2 + \ln^2(\%M_p/100)}}$$
+
+ขึ้นกับ $\zeta$ อย่างเดียว
+ζ = 0.5 → 16.3%
+0.6 → 9.5%
+0.7 → 4.6%
+0.8 → 1.5%
+$M_p$ ≤ 10% ต้อง $\zeta \ge 0.591$
 
 T4 Peak time เวลายอด
 
@@ -65,15 +93,23 @@ $$t_p = \frac{\pi}{\omega_d} = \frac{\pi}{\omega_n\sqrt{1 - \zeta^2}}$$
 
 T5 Settling time เวลาเข้าที่
 
-$$t_s \approx \frac{4}{\zeta\omega_n}\ (2\%), \qquad \frac{3}{\zeta\omega_n}\ (5\%)$$
+$$t_s \approx \frac{4}{\zeta\omega_n}\ (2\%)$$
+
+$$\frac{3}{\zeta\omega_n}\ (5\%)$$
 
 ขึ้นกับส่วนจริงของขั้วอย่างเดียว
 
 T6 Rise time เวลาขึ้น
 
-$$t_r^{0\text{–}100\%} = \frac{\pi - \beta}{\omega_d},\ \ \beta = \cos^{-1}\zeta, \qquad t_r^{10\text{–}90\%} \approx \frac{1 - 0.4167\zeta + 2.917\zeta^2}{\omega_n}$$
+$$t_r^{0\text{–}100\%} = \frac{\pi - \beta}{\omega_d}$$
 
-ระบบหน่วงน้อยใช้นิยาม 0–100% · หน่วงเกินใช้ 10–90% · ประมาณคร่าว ๆ $t_r \approx 1.8/\omega_n$
+$$\beta = \cos^{-1}\zeta$$
+
+$$t_r^{10\text{–}90\%} \approx \frac{1 - 0.4167\zeta + 2.917\zeta^2}{\omega_n}$$
+
+ระบบหน่วงน้อยใช้นิยาม 0–100%
+หน่วงเกินใช้ 10–90%
+ประมาณคร่าว ๆ $t_r \approx 1.8/\omega_n$
 
 ตัวอย่าง T-1 · อ่านสเปกจากฟังก์ชัน
 
@@ -81,9 +117,11 @@ $$t_r^{0\text{–}100\%} = \frac{\pi - \beta}{\omega_d},\ \ \beta = \cos^{-1}\ze
 
 - $\omega_n = 5$, $2\zeta\omega_n = 6 \Rightarrow \zeta = 0.6$, $\omega_d = 5(0.8) = 4$, ขั้ว $-3 \pm j4$
 
-- $M_p = e^{-0.6\pi/0.8} = 9.48\%$ T3 · $t_p = \pi/4 = 0.785$ s T4
+- $M_p = e^{-0.6\pi/0.8} = 9.48\%$ T3
+$t_p = \pi/4 = 0.785$ s T4
 
-- $t_s \approx 4/3 = 1.33$ s T5 · $t_r^{0-100} = \dfrac{\pi - 0.927}{4} = 0.554$ s T6
+- $t_s \approx 4/3 = 1.33$ s T5
+$t_r^{0-100} = \dfrac{\pi - 0.927}{4} = 0.554$ s T6
 
 $M_p = 9.5\%,\ t_p = 0.785$ s, $t_r = 0.554$ s, $t_s \approx 1.33$ s
 
@@ -93,9 +131,20 @@ python-control: overshoot 9.47%, peak 0.791 s, rise (0–100%) 0.558 s, $t_s$ �
 
 T7 Admissible region บริเวณที่ขั้วเด่นต้องอยู่
 
-$$M_p \le M \Rightarrow \theta \le \cos^{-1}\zeta_{min}, \qquad t_s \le T_s \Rightarrow \sigma \ge \frac{4}{T_s}, \qquad t_p \le T_p \Rightarrow \omega_d \ge \frac{\pi}{T_p}$$
+$$M_p \le M$$
 
-ได้บริเวณรูปกรวยที่ถูกตัดด้วยเส้นดิ่งและเส้นนอน · ใช้คู่กับรูทโลคัสเพื่อดูว่าเกน $K$ ทำได้ไหม
+$$\Rightarrow \theta \le \cos^{-1}\zeta_{min}$$
+
+$$t_s \le T_s$$
+
+$$\Rightarrow \sigma \ge \frac{4}{T_s}$$
+
+$$t_p \le T_p$$
+
+$$\Rightarrow \omega_d \ge \frac{\pi}{T_p}$$
+
+ได้บริเวณรูปกรวยที่ถูกตัดด้วยเส้นดิ่งและเส้นนอน
+ใช้คู่กับรูทโลคัสเพื่อดูว่าเกน $K$ ทำได้ไหม
 
 ตัวอย่าง T-2 · สเปกเป็นตำแหน่งขั้ว
 
@@ -111,21 +160,29 @@ $$M_p \le M \Rightarrow \theta \le \cos^{-1}\zeta_{min}, \qquad t_s \le T_s \Rig
 
 T8 Dominant-pole approximation การประมาณด้วยขั้วเด่น
 
-$$|\operatorname{Re}\,p_{\text{อื่น}}| \ge 5\,|\operatorname{Re}\,p_{\text{เด่น}}| \ \Rightarrow\ G(s) \approx \frac{G(0)\,\omega_n^2}{s^2 + 2\zeta\omega_ns + \omega_n^2}$$
+$$|\operatorname{Re}\,p_{\text{อื่น}}| \ge 5\,|\operatorname{Re}\,p_{\text{เด่น}}|$$
 
-ต้องรักษาเกน DC $G(0)$ ให้เท่าเดิมเสมอ · ศูนย์ที่อยู่ใกล้ขั้วเด่นทำลายการประมาณนี้ · ขั้วกับศูนย์ที่อยู่ใกล้กันมาก (dipole) หักล้างกันเกือบหมด
+$$\Rightarrow\ G(s) \approx \frac{G(0)\,\omega_n^2}{s^2 + 2\zeta\omega_ns + \omega_n^2}$$
+
+ต้องรักษาเกน DC $G(0)$ ให้เท่าเดิมเสมอ
+ศูนย์ที่อยู่ใกล้ขั้วเด่นทำลายการประมาณนี้
+ขั้วกับศูนย์ที่อยู่ใกล้กันมาก (dipole) หักล้างกันเกือบหมด
 
 T9 Effect of a zero ผลของศูนย์
 
-$$G_z(s) = \left(1 + \frac{s}{a}\right)G(s) \ \Rightarrow\ y_z(t) = y(t) + \frac1a\dot y(t)$$
+$$G_z(s) = \left(1 + \frac{s}{a}\right)G(s)$$
 
-ศูนย์บวกอนุพันธ์ของผลตอบสนองเข้าไป ยิ่ง $a$ เล็ก (ศูนย์ใกล้จุดกำเนิด) ยิ่งพุ่งเกินมาก · $a \lt 0$ (ศูนย์ฝั่งขวา) ลบอนุพันธ์ออก จึงเริ่มไปผิดทิศ (undershoot)
+$$\Rightarrow\ y_z(t) = y(t) + \frac1a\dot y(t)$$
+
+ศูนย์บวกอนุพันธ์ของผลตอบสนองเข้าไป ยิ่ง $a$ เล็ก (ศูนย์ใกล้จุดกำเนิด) ยิ่งพุ่งเกินมาก
+$a \lt 0$ (ศูนย์ฝั่งขวา) ลบอนุพันธ์ออก จึงเริ่มไปผิดทิศ (undershoot)
 
 ตัวอย่าง T-3 · ขั้วที่สาม
 
 ### เทียบ $\dfrac{50}{(s+10)(s^2 + 2s + 5)}$ กับระบบอันดับสองที่ใช้ขั้วเด่น
 
-- ขั้วเด่น $-1 \pm j2$ ขั้วที่สาม $-10$ ห่าง 10 เท่า T8 · เกน DC $= 50/50 = 1$
+- ขั้วเด่น $-1 \pm j2$ ขั้วที่สาม $-10$ ห่าง 10 เท่า T8
+เกน DC $= 50/50 = 1$
 
 - ประมาณเป็น $\dfrac{5}{s^2 + 2s + 5}$ ($\zeta = 0.447$)
 
