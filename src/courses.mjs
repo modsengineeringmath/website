@@ -408,6 +408,7 @@ ${c.playlist ? `    <section class="lesson-video" aria-labelledby="playlist"><h2
   <article class="lesson course-hub">
     <header>
       <ol class="crumbs"><li><a href="/">${S.home}</a></li><li>${S.room}</li></ol>
+      <!--lang-switch-->
       <p class="eyebrow">${S.allEyebrow}</p>
       <h1>${S.allH1}</h1>
       <p class="lede">${S.allLede}</p>

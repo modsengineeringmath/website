@@ -12,6 +12,7 @@ Markdown copy of https://modsengineeringmath.com/en/courses/ for AI assistants a
 
 # Online classrooms
 
+THภาษาไทยENEnglish
 // Courses · Online classrooms
 
 

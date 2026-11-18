@@ -37,8 +37,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=0f8b7248">
-<link rel="stylesheet" href="/assets/site.css?v=0f8b7248">
+<link rel="stylesheet" href="/assets/fonts.css?v=133bd840">
+<link rel="stylesheet" href="/assets/site.css?v=133bd840">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/signals/lti-convolution/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/signals/lti-convolution/#article","headline":"ระบบ LTI และคอนโวลูชัน (LTI Systems and Convolution): จากผลตอบสนองอิมพัลส์ถึงผลตอบสนองเชิงความถี่","description":"คุณสมบัติของระบบ เชิงเส้น ไม่แปรตามเวลา คอซัล เสถียร ผลตอบสนองอิมพัลส์ h(t) อินทิกรัลคอนโวลูชันแบบกลับ-เลื่อน คอนโวลูชันไม่ต่อเนื่องด้วยตารางคูณ และพิสูจน์ด้วยสูตรผลบวกมุมว่าทำไมไซน์เข้าระบบ LTI แล้วออกมาเป็นไซน์ พร้อมแล็บ","inLanguage":"th","url":"https://modsengineeringmath.com/learn/signals/lti-convolution/","mainEntityOfPage":"https://modsengineeringmath.com/learn/signals/lti-convolution/","datePublished":"2026-11-14","dateModified":"2026-11-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Linear time-invariant system","Convolution","Impulse response","BIBO stability","Causality","Eigenfunction of LTI systems","Frequency response"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/signals/#article"},"image":["https://modsengineeringmath.com/images/og/learn-signals-lti-convolution.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"สัญญาณและระบบ (Signals and Systems)","item":"https://modsengineeringmath.com/learn/signals/"},{"@type":"ListItem","position":4,"name":"ระบบ LTI และคอนโวลูชัน: ผลตอบสนองอิมพัลส์ กลับ-เลื่อน-คูณ-อินทิเกรต","item":"https://modsengineeringmath.com/learn/signals/lti-convolution/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"คอนโวลูชัน (convolution) คืออะไรในภาษาง่าย ๆ?","acceptedAnswer":{"@type":"Answer","text":"คือการหาเอาต์พุตของระบบ LTI จากอินพุตกับผลตอบสนองอิมพัลส์ h(t) ทำโดยกลับ h ซ้ายขวา เลื่อนไปที่เวลา t คูณกับอินพุตทีละจุด แล้วหาพื้นที่ใต้ผลคูณ ทำซ้ำทุกค่า t จะได้ y(t) = ∫x(τ)h(t − τ)dτ ทั้งหมด"}},{"@type":"Question","name":"ทำไมรู้แค่ผลตอบสนองอิมพัลส์ก็รู้ทุกอย่างของระบบ LTI?","acceptedAnswer":{"@type":"Answer","text":"เพราะสัญญาณใดก็เขียนเป็นผลรวมของอิมพัลส์ที่เลื่อนและมีน้ำหนัก ความเป็นเชิงเส้นทำให้เอาต์พุตเป็นผลรวมของผลตอบสนองแต่ละก้อน ความไม่แปรตามเวลาทำให้ผลตอบสนองของอิมพัลส์ที่เลื่อนไปคือ h ที่เลื่อนไปเท่ากัน รวมกันแล้วได้อินทิกรัลคอนโวลูชันพอดี"}},{"@type":"Question","name":"ระบบ LTI เสถียรเมื่อไร?","acceptedAnswer":{"@type":"Answer","text":"เสถียรแบบ BIBO (อินพุตจำกัด เอาต์พุตจำกัด) ก็ต่อเมื่อ ∫|h(t)|dt มีค่าจำกัด หรือ Σ|h[n]| จำกัดสำหรับระบบไม่ต่อเนื่อง เช่น h(t) = e^{−t}u(t) เสถียร แต่ตัวอินทิเกรต h(t) = u(t) ไม่เสถียร"}},{"@type":"Question","name":"ทำไมป้อนไซน์เข้าระบบ LTI แล้วได้ไซน์ความถี่เดิม?","acceptedAnswer":{"@type":"Answer","text":"แทน x(t) = cos ωt ในอินทิกรัลคอนโวลูชัน แล้วกระจาย cos(ω(t − τ)) ด้วยสูตรผลบวกมุมเป็น cos ωt cos ωτ + sin ωt sin ωτ ตัว cos ωt และ sin ωt ออกมานอกอินทิกรัลได้ จึงเหลือ a cos ωt + b sin ωt ซึ่งรวมเป็นคลื่นเดียว R cos(ωt − φ) ได้เสมอ ความถี่ไม่เปลี่ยน เปลี่ยนแค่ขนาดและเฟส"}},{"@type":"Question","name":"คอนโวลูชันไม่ต่อเนื่องคิดเร็วที่สุดอย่างไร?","acceptedAnswer":{"@type":"Answer","text":"ทำตารางคูณ เอา x[n] เป็นหัวคอลัมน์ h[n] เป็นหัวแถว คูณทุกช่อง แล้วบวกตามแนวทแยง ผลลัพธ์เริ่มที่ n = จุดเริ่มของ x บวกจุดเริ่มของ h และยาว N + M − 1 ค่า วิธีนี้เหมือนการคูณพหุนามทุกประการ"}}]}]}</script>
@@ -872,10 +872,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=0f8b7248" defer></script>
-<script src="/assets/lesson.js?v=0f8b7248" defer></script>
-<script src="/assets/vendor/katex.min.js?v=0f8b7248" defer></script>
-<script src="/assets/mathkit.js?v=0f8b7248" defer></script>
-<script src="/assets/ms-lab.js?v=0f8b7248" defer></script>
+<script src="/assets/site.js?v=133bd840" defer></script>
+<script src="/assets/lesson.js?v=133bd840" defer></script>
+<script src="/assets/vendor/katex.min.js?v=133bd840" defer></script>
+<script src="/assets/mathkit.js?v=133bd840" defer></script>
+<script src="/assets/ms-lab.js?v=133bd840" defer></script>
 </body>
 </html>
