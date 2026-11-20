@@ -196,7 +196,7 @@ In the left half of the $s$-plane, $\lvert 1 + s\rvert < \lvert 1 - s\rvert$ (th
 :::note The link to digital systems
 The Tustin transform used to turn a continuous controller into a digital one is $z = \dfrac{1 + sT/2}{1 - sT/2}$, which is this same bilinear map.
 
-It sends the left half of the $s$-plane inside the unit circle of the $z$-plane and so preserves stability. We come back to it in Unit 26.
+It sends the left half of the $s$-plane inside the unit circle of the $z$-plane and so preserves stability. We come back to it when we study digital control.
 :::
 
 **4) The exponential $w = e^s$.** It maps the vertical line $\operatorname{Re}\,s = c$ to a circle of radius $e^c$, and the horizontal line $\operatorname{Im}\,s = y$ to a ray at angle $y$. It is the map behind sampling, $z = e^{sT}$.
@@ -295,9 +295,9 @@ The poles at $s = -2$ and $s = +1$ are inside, and $s = -5$ is outside $(P = 2)$
 $N = Z - P = -1$. The image encircles the origin once **clockwise**. A numerical check gives $-1.00$, in agreement.
 :::
 
-When $\Gamma$ is chosen as the boundary of the whole right half of the $s$-plane, the principle counts unstable poles. That is the Nyquist criterion in Unit 18.
+When $\Gamma$ is chosen as the boundary of the whole right half of the $s$-plane, the principle counts unstable poles. That is the Nyquist criterion, which comes in a later unit.
 
-The same idea underlies the residue theorem, $\oint F\,ds = 2\pi j\sum \text{Res}$, which is how the inverse Laplace transform is computed in Unit 4.
+The same idea underlies the residue theorem, $\oint F\,ds = 2\pi j\sum \text{Res}$, which is how the inverse Laplace transform is computed in a coming unit.
 
 ## Exercises {#exercises}
 

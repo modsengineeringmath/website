@@ -175,7 +175,7 @@ $$\frac{Y(s)}{U(s)} = \frac{1}{s^2 + 3s + 2}$$
 
 This is the **transfer function**: the ratio of the Laplace transform of the output to that of the input, with zero initial conditions.
 
-It depends only on the system, not on the input. The roots of the denominator are the poles and they set the form of the whole response. Unit 5 takes this further.
+It depends only on the system, not on the input. The roots of the denominator are the poles and they set the form of the whole response. Later units take this further.
 
 :::example Example 3.4: an RC circuit
 A series RC circuit has input voltage $v_i$ and output voltage $v_o$ across the capacitor. Kirchhoff's law gives $RC\,\dot v_o + v_o = v_i$.

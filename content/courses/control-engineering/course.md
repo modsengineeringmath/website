@@ -12,8 +12,11 @@ keywords: วิศวกรรมระบบควบคุม, ระบบ�
 about: Control engineering, Control theory, Feedback, Complex analysis, Laplace transform, Transfer function, PID controller, State-space representation
 parts:
   - 1-1 | ภาคที่ 1 · บทนำ
+  - 2-3 | ภาคที่ 2 · เครื่องมือคณิตศาสตร์
 plan:
   - 1 | บทนำเข้าสู่วิศวกรรมระบบควบคุม | Introduction to Control Engineering
+  - 2 | ตัวแปรเชิงซ้อนและระนาบ s | Complex Variables and the s-Plane
+  - 3 | การแปลงลาปลาซ | The Laplace Transform
 ---
 
 ## ฉบับภาษาอังกฤษ · English edition {#english}
@@ -39,7 +42,8 @@ plan:
 2. [คลังไอเดียระบบควบคุม 70 ระบบ: ตั้งแต่ชักโครกถึงจรวด](/learn/control-systems/examples/) อ่านเล่น ๆ ให้เห็นว่าระบบควบคุมอยู่รอบตัว
 
 **ขั้นที่ 2 · เครื่องมือคณิตศาสตร์** (ภาษาที่วิศวกรควบคุมใช้คุยกัน)
-1. [การแปลงลาปลาซ](/learn/laplace-transform/) เปลี่ยนสมการเชิงอนุพันธ์ให้เป็นพีชคณิต
+1. [หน่วยที่ 2 ตัวแปรเชิงซ้อนและระนาบ s](/courses/control-engineering/complex-s-plane/) ทำไมวิชาควบคุมต้องใช้จำนวนเชิงซ้อน
+1. [หน่วยที่ 3 การแปลงลาปลาซ](/courses/control-engineering/laplace-transform/) เปลี่ยนสมการเชิงอนุพันธ์ให้เป็นพีชคณิต
 2. [แบบจำลองทางคณิตศาสตร์: วงจรไฟฟ้า มอเตอร์ กลไก ความร้อน](/learn/control-systems/modeling/)
 3. [บล็อกไดอะแกรมและฟังก์ชันถ่ายโอนวงปิด](/learn/control-systems/block-diagrams/)
 

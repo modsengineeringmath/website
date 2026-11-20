@@ -20,4 +20,4 @@ Courses arranged as units in the order they are taught in class. Each unit has t
 
 ## Open courses
 
-G(s)Control EngineeringLearn control engineering free, from zero, step by step, with examples from real electrical work. A six-stage study path from the basics to PID and state space, with interactive labs, exercises and answers. No sign-up.1 units · updated 20 Nov 2026
+G(s)Control EngineeringLearn control engineering free, from zero, step by step, with examples from real electrical work. A six-stage study path from the basics to PID and state space, with interactive labs, exercises and answers. No sign-up.3 units · updated 20 Nov 2026

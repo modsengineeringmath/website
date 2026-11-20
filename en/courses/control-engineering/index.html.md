@@ -17,7 +17,7 @@ Markdown copy of https://modsengineeringmath.com/en/courses/control-engineering/
 
 Control looks frightening because of all the equations, but its core idea is simple: measure, compare with the target, correct. Your fridge, an inverter air conditioner and the motors in a factory do this every second. This classroom walks you step by step from things you see every day to designing a controller yourself. Free, no sign-up, and one page a day is enough to get there.
 
-- 1 units open
+- 3 units open
 - Undergraduate and graduate
 - English edition
 - Free, no sign-up
@@ -31,6 +31,11 @@ Start Unit 1Textbook and handouts
 ### Part 1 · Introduction
 
 - 01Introduction to Control EngineeringLearned ✓
+
+### Part 2 · Mathematical tools
+
+- 02Complex Variables, Complex Functions, Mapping and the s-PlaneLearned ✓
+- 03The Laplace TransformLearned ✓
 
 ## Textbook and handouts
 
@@ -64,7 +69,9 @@ Stage 1 · Meet control systems (see the picture first, no calculations yet)
 
 Stage 2 · The mathematical tools (the language control engineers speak)
 
-- The Laplace transform (Thai): differential equations become algebra
+- Unit 2: Complex Variables and the s-Plane: why control needs complex numbers
+
+- Unit 3: The Laplace Transform: differential equations become algebra
 
 - Mathematical models: circuits, motors, mechanics, heat (Thai)
 

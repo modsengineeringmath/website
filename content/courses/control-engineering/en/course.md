@@ -12,8 +12,11 @@ keywords: control engineering course, feedback control, complex variables, s-pla
 about: Control engineering, Control theory, Feedback, Complex analysis, Laplace transform, Transfer function, PID controller, State-space representation
 parts:
   - 1-1 | Part 1 · Introduction
+  - 2-3 | Part 2 · Mathematical tools
 plan:
   - 1 | Introduction to Control Engineering | Introduction to Control Engineering
+  - 2 | Complex Variables and the s-Plane | Complex Variables and the s-Plane
+  - 3 | The Laplace Transform | The Laplace Transform
 ---
 
 ## Thai edition {#thai}
@@ -39,7 +42,8 @@ Units in this classroom open one at a time. Meanwhile you can follow this map: e
 2. [70 control system ideas, from a toilet cistern to a rocket](/learn/control-systems/examples/) (Thai)
 
 **Stage 2 · The mathematical tools** (the language control engineers speak)
-1. [The Laplace transform](/learn/laplace-transform/) (Thai): differential equations become algebra
+1. [Unit 2: Complex Variables and the s-Plane](/en/courses/control-engineering/complex-s-plane/): why control needs complex numbers
+1. [Unit 3: The Laplace Transform](/en/courses/control-engineering/laplace-transform/): differential equations become algebra
 2. [Mathematical models: circuits, motors, mechanics, heat](/learn/control-systems/modeling/) (Thai)
 3. [Block diagrams and closed-loop transfer functions](/learn/control-systems/block-diagrams/) (Thai)
 
