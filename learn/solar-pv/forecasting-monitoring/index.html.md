@@ -3,7 +3,7 @@ title: "พยากรณ์กำลังผลิตโซลาร์ล่
 url: https://modsengineeringmath.com/learn/solar-pv/forecasting-monitoring/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > การคาดการณ์ล่วงหน้าของระบบโซลาร์: ระยะพยากรณ์ตั้งแต่นาทีถึงวัน แบบจำลองท้องฟ้าแจ่มใส clear-sky index persistence การพยากรณ์จากภาพดาวเทียม กล้องท้องฟ้า และแบบจำลองอากาศเชิงตัวเลข (NWP) machine learning และการพยากรณ์เชิงความน่าจะเป็น ตัวชี้วัด MAE RMSE skill score ระบบเฝ้าติดตาม KPI PR availability performance index และการตรวจจับความผิดปกติอัตโนมัติ พร้อมตัวอย่างและโค้ด

@@ -3,7 +3,7 @@ title: "Control Systems & PID Articles: How PID Works and How to Tune It"
 url: https://modsengineeringmath.com/en/blog/category/control-systems/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-16
+updated: 2026-11-14
 ---
 
 > Articles on control systems: what a PID controller is and how it works, and a complete PID tuning guide from the step test and Ziegler–Nichols to anti-windup, with checked simulations.

@@ -3,7 +3,7 @@ title: "อินเวอร์เตอร์โซลาร์: โครง�
 url: https://modsengineeringmath.com/learn/solar-pv/pv-inverter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > อิเล็กทรอนิกส์กำลังของอินเวอร์เตอร์โซลาร์แบบละเอียด: string micro optimizer central โครงสร้างสองขั้น boost + full-bridge แรงดัน DC-link ตัวเก็บประจุ 100 Hz SPWM unipolar ฟิลเตอร์ L และ LCL วงจรไร้หม้อแปลง H5 HERIC กระแสรั่ว PLL ควบคุมกระแสแบบ PR และ dq กำลังจริงและกำลังรีแอกทีฟ Volt-VAR anti-islanding IEC 62116 IEEE 1547 ride-through ฮาร์มอนิก และ grid-forming พร้อมตัวอย่างออกแบบ 5 kW

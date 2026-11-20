@@ -3,7 +3,7 @@ title: "ระบบไม่เชิงเส้นและการควบ
 url: https://modsengineeringmath.com/learn/control-systems/nonlinear-robust/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ความไม่เชิงเส้นที่พบในระบบควบคุมจริง การอิ่มตัว dead-zone backlash แรงเสียดทาน การควอนไทซ์ ฟังก์ชันพรรณนา (describing function) ทำนายลิมิตไซเคิล ระนาบเฟส เสถียรภาพแบบลียาปูนอฟ sliding mode control ความไม่แน่นอนของแบบจำลอง เงื่อนไขเสถียรภาพแบบทนทาน small-gain theorem และแนวคิด H-infinity

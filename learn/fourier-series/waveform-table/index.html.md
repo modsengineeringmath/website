@@ -3,7 +3,7 @@ title: "ตารางอนุกรมฟูเรียร์ของรู
 url: https://modsengineeringmath.com/learn/fourier-series/waveform-table/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > ตารางสูตรอนุกรมฟูเรียร์สำเร็จรูป 18 รูปคลื่นพร้อมค่า RMS THD และ crest factor: คลื่นสี่เหลี่ยม พัลส์ดิวตี้ D สามเหลี่ยม ฟันเลื่อย ไซน์เรียงกระแสครึ่งคลื่นและเต็มคลื่น quasi-square อินเวอร์เตอร์ six-step กระแสเรกติไฟเออร์ 6 พัลส์ SPWM พัลส์คางหมู ไตรแอกตัดเฟส ไซน์ตัดยอด กระแส SMPS และริปเปิลตัวเหนี่ยวนำ ทุกสูตรตรวจด้วยการคำนวณแบบปิด ใช้อ้างอิงได้ด้วยรหัส W1–W18

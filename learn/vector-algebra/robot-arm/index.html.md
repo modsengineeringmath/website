@@ -3,7 +3,7 @@ title: "เวกเตอร์ในแขนกล: จลนศาสตร�
 url: https://modsengineeringmath.com/learn/vector-algebra/robot-arm/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียนแขนกลด้วยเวกเตอร์ภาษาไทย: ตำแหน่งปลายแขนเป็นผลบวกเวกเตอร์ของข้อแขน forward kinematics และ inverse kinematics ของแขน 2 ข้อต่อ (elbow-up/down) พื้นที่ทำงาน แขน 3 มิติ 3 ข้อต่อ Jacobian จาก ω × r ความเร็วปลายแขน ภาวะเอกฐาน แรงบิดข้อต่อ τ = JᵀF จากงานเสมือน และการเลือกมอเตอร์พร้อมเกียร์ มีแล็บแขนกลลากเป้าหมายได้และฉาก 3 มิติ

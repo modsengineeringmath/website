@@ -3,7 +3,7 @@ title: "อินเวอร์เตอร์ (VFD) สำหรับมอ�
 url: https://modsengineeringmath.com/learn/motor-control/vfd/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > หลักการอินเวอร์เตอร์ปรับความเร็วรอบ (Variable Frequency Drive) สำหรับมอเตอร์ 400 V 50 Hz: วงจรเรียงกระแสหกไดโอด บัส DC 540–565 V อินเวอร์เตอร์ IGBT PWM ควบคุม V/f คงที่ บูสต์แรงดัน ย่านฟลักซ์ลด sensorless vector การต่อสายไฟเข้า-ไฟออก สายชีลด์และ EMC ความยาวสายและ dv/dt RCD Type B ตัวต้านทานเบรก อินเวอร์เตอร์ 1 เฟสเข้า 3 เฟสออก และข้อห้ามด้านออก

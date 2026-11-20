@@ -3,7 +3,7 @@ title: "อัปเดตล่าสุด: บันทึกการปร�
 url: https://modsengineeringmath.com/updates/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-24
+updated: 2026-11-20
 ---
 
 > บันทึกการปรับปรุงเว็บไซต์ Mod's Engineering Mathematics ทั้งหมด เรียงจากล่าสุด: บทเรียนใหม่ แล็บโต้ตอบ แนวข้อสอบ บทความไทยและอังกฤษ และการปรับปรุงหน้าเว็บ กรองตามหมวดได้ และติดตามผ่าน RSS

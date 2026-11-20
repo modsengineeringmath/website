@@ -3,7 +3,7 @@ title: "ฟังก์ชันเวกเตอร์ (Vector-Valued Function
 url: https://modsengineeringmath.com/learn/multivariable-calculus/vector-functions/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > ฟังก์ชันเวกเตอร์ r(t) (vector function) คืออะไร เส้นโค้งในอวกาศ (space curve) อนุพันธ์และอินทิกรัลของ r(t) เวกเตอร์สัมผัส ความเร็ว ความเร่ง ความยาวส่วนโค้ง (arc length) ความโค้ง κ (curvature) กรอบ Frenet–Serret T N B torsion และ a_T a_N พร้อมตัวอย่างลูกกระสุน ทางโค้งถนน ทางลาดเกลียว อนุภาคในสนามแม่เหล็ก และแล็บเส้นโค้ง 3 มิติ

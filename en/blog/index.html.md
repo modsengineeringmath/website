@@ -3,7 +3,7 @@ title: "Engineering Math, Power & Programming Articles: PID, Laplace, Matrices, 
 url: https://modsengineeringmath.com/en/blog/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > English articles from Ajarn Mod in six categories: sequences and series, vectors and linear algebra, the Laplace transform, control and PID, power and motors, and programming in the AI era.

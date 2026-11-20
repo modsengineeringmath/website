@@ -3,7 +3,7 @@ title: "ผลคูณจุด (Dot Product): มุม การฉาย ง
 url: https://modsengineeringmath.com/learn/vector-algebra/dot-product/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียน dot product อย่างละเอียด ตั้งแต่คูณ component แล้วบวก นิยามเชิงเรขาคณิต เครื่องหมาย มุม ความตั้งฉาก Cauchy–Schwarz การฉายแรง งาน กำลัง และ cosine similarity พร้อมตัวอย่าง 2D–3D สรุปสูตรและเฉลย

@@ -3,7 +3,7 @@ title: "แบตเตอรี่สำหรับโซลาร์: LiFePO4
 url: https://modsengineeringmath.com/learn/solar-pv/battery-storage/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เลือกและคำนวณแบตเตอรี่สำหรับระบบโซลาร์ hybrid และ off-grid: เคมี LiFePO4 NMC ตะกั่วกรด โซเดียมไอออน สูตรความจุจากพลังงานกลางคืนและวันสำรอง DoD ประสิทธิภาพ Ah C-rate อายุรอบและอายุปฏิทิน ต้นทุนต่อหน่วยที่ผ่านแบต (LCOS) BMS ระบบ 48 V กับ high voltage การตั้งค่าชาร์จ ความปลอดภัย IEC 62619 UL 9540A พร้อมเครื่องคำนวณและตัวอย่าง

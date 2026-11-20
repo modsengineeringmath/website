@@ -3,7 +3,7 @@ title: "อนุกรมเทย์เลอร์ (อนุกรมเท�
 url: https://modsengineeringmath.com/blog/what-is-taylor-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-25
+updated: 2026-11-08
 ---
 
 > อนุกรมเทย์เลอร์ (อนุกรมเทเลอร์) คืออะไร สูตรและตารางอนุกรมแมคลอรินที่ต้องจำ ตัวอย่าง 8 ข้อ: ประมาณค่า กระจายรอบจุดอื่น ใช้กี่พจน์ หาอินทิกรัลและลิมิต พร้อมการใช้ในงานวิศวกรรม

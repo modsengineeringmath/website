@@ -3,7 +3,7 @@ title: "Star–Delta Starter in Detail: Power Circuit, Control Circuit, 0.58 In 
 url: https://modsengineeringmath.com/learn/en/motor-control/star-delta/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > Design and wire a star–delta (Y-Δ) starter for 400/690 V motors on a 400 V 50 Hz supply, step by step: why current and torque fall to 1/3, the KM1 KM2 KM3 power circuit, overload position and the 0.58 In setting, contactor sizing, the control circuit with interlocks, timer and dead time, the current surge at changeover, the delta-side phase sequence, six-lead cabling, closed-transition star–delta and a troubleshooting table.

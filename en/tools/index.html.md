@@ -3,7 +3,7 @@ title: "Calculators for Engineering Mathematics and Electrical Engineering"
 url: https://modsengineeringmath.com/en/tools/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-10
+updated: 2026-11-14
 ---
 
 > Free online calculators from Mod's Engineering Mathematics: derivative, integral, Laplace and inverse Laplace transform, Fourier series, area, power factor, the Thailand electricity bill (MEA, PEA), and a LaTeX equation editor that exports images. Answers come with working and a check.

@@ -3,7 +3,7 @@ title: "พื้นฐานเวกเตอร์ 2D และ 3D: ขนา
 url: https://modsengineeringmath.com/learn/vector-algebra/foundations/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เข้าใจเวกเตอร์ตั้งแต่สเกลาร์กับเวกเตอร์ พิกัด 2D/3D เวกเตอร์จากสองจุด ความยาว มุม atan2 เวกเตอร์หนึ่งหน่วย และ direction cosines พร้อมภาพ ตัวอย่างแรงในสายเคเบิล สูตรอ้างอิง และแบบฝึกเฉลย

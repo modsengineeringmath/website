@@ -3,7 +3,7 @@ title: "แคลคูลัสหลายตัวแปรในวิศว
 url: https://modsengineeringmath.com/learn/multivariable-calculus/electrical-engineering/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > การประยุกต์แคลคูลัสหลายตัวแปรในวิศวกรรมไฟฟ้า (electrical engineering): สนามไฟฟ้า E = −∇V ศักย์ไฟฟ้า (electric potential) ประจุจุดและสนามซ้อนทับ กฎของเกาส์ (Gauss's law) ความจุของตัวเก็บประจุและสายโคแอกเชียล หลักดินและแรงดันก้าว สมการลาปลาซ-พัวซอง สมการแมกซ์เวลล์ เวกเตอร์พอยน์ติง พร้อมแล็บลากประจุและตรวจกฎของเกาส์

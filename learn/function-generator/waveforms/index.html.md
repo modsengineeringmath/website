@@ -3,7 +3,7 @@ title: "สัญญาณพื้นฐานและการอ่านค
 url: https://modsengineeringmath.com/learn/function-generator/waveforms/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > อธิบายค่าที่อ่านจากออสซิลโลสโคปและตั้งบนเครื่องกำเนิดสัญญาณ: ค่ายอด Vp ค่ายอดถึงยอด Vpp ค่า RMS ค่าเฉลี่ย ออฟเซต DC คาบ ความถี่ ดิวตี้ไซเคิล เฟส crest factor เดซิเบล dBV dBm และอนุกรมฟูริเยร์ พร้อมตารางสูตร RMS ทุกรูปคลื่น ตัวอย่างวิธีทำ และสโคปจำลองให้ลองเอง

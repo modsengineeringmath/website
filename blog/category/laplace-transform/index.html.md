@@ -3,7 +3,7 @@ title: "บทความการแปลงลาปลาซ: ความ�
 url: https://modsengineeringmath.com/blog/category/laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-16
+updated: 2026-11-14
 ---
 
 > รวมบทความการแปลงลาปลาซภาษาไทย Laplace transform คืออะไรและใช้ทำอะไรในวงจรไฟฟ้า ตารางสูตรที่ใช้บ่อย และการหา Inverse Laplace ด้วยเศษส่วนย่อย พร้อมตัวอย่างทีละขั้น

@@ -3,7 +3,7 @@ title: "บทความการเขียนโปรแกรมและ
 url: https://modsengineeringmath.com/blog/category/programming-ai/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > รวมบทความการเขียนโปรแกรมสำหรับนักศึกษาและวิศวกรในยุค AI เริ่มต้นด้วย Python เข้าใจแนวคิดแกนกลาง สั่งงาน AI ให้ชัด และตรวจโค้ดด้วยความรู้วิศวกรรม พร้อมตัวอย่างวงจรจริง

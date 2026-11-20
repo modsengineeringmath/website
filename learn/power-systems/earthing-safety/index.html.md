@@ -3,7 +3,7 @@ title: "การต่อลงดินและการป้องกัน
 url: https://modsengineeringmath.com/learn/power-systems/earthing-safety/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ปูพื้นการต่อลงดินสำหรับวิชาการป้องกันและการออกแบบระบบไฟฟ้า: ระบบ TN-S TN-C TN-C-S TT IT ความแตกต่างของสายดินกับสายนิวทรัล วงรอบความผิดพร่อง Zs = Ze + R1 + R2 เงื่อนไขตัดวงจรอัตโนมัติ 0.4 s ความยาวสายสูงสุด แรงดันสัมผัส RCD 30 mA ระบบ TT R_A × IΔn ≤ 50 V ความต้านทานหลักดิน การวัดแบบ fall-of-potential และการต่อประสานศักย์ พร้อมเครื่องคำนวณ

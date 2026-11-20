@@ -3,7 +3,7 @@ title: "ออกแบบสตริงและจับคู่อินเ
 url: https://modsengineeringmath.com/learn/solar-pv/string-sizing/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิธีคำนวณจำนวนแผงโซลาร์ต่อสตริงและจำนวนสตริงต่อ MPPT แบบละเอียด: แรงดัน Voc ที่อุณหภูมิต่ำสุด Vmp ที่เซลล์ร้อนสุด ช่วง MPPT และ full-load MPPT กระแส Imp และ Isc ต่อ MPPT DC/AC ratio และ clipping สตริงหลายทิศ พร้อมเครื่องคำนวณออนไลน์และตัวอย่างระบบ 5 kW 10 kW 100 kW

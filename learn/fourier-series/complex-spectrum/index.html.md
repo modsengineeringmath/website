@@ -3,7 +3,7 @@ title: "รูปเชิงซ้อน สเปกตรัมขนาด�
 url: https://modsengineeringmath.com/learn/fourier-series/complex-spectrum/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > อนุกรมฟูเรียร์รูปเชิงซ้อน (exponential Fourier series) จากสูตรออยเลอร์: cn = (an − jbn)/2 รูปแอมพลิจูด–เฟส สเปกตรัมด้านเดียวและสองด้าน ค่า RMS ของแต่ละฮาร์มอนิก พัลส์ดิวตี้ D กับเอนเวโลป sinc ศูนย์ของสเปกตรัม สมบัติการเลื่อนเวลา อนุพันธ์ ปริพันธ์ ออปแอมป์อินทิเกรเตอร์ และเฟเซอร์ของแต่ละฮาร์มอนิกสำหรับวิเคราะห์วงจร

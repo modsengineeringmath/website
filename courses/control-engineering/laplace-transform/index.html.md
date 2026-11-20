@@ -3,7 +3,7 @@ title: "การแปลงลาปลาซ"
 url: https://modsengineeringmath.com/courses/control-engineering/laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
 > นิยามการแปลงลาปลาซ เงื่อนไขการมีอยู่และบริเวณลู่เข้า คู่การแปลงพื้นฐานที่พิสูจน์จากนิยาม สมบัติสำคัญทุกข้อ ทฤษฎีบทค่าเริ่มต้นและค่าสุดท้าย และการแก้สมการเชิงอนุพันธ์ พร้อมแล็บและแบบฝึกหัด

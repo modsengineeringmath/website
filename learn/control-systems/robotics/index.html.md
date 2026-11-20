@@ -3,7 +3,7 @@ title: "ระบบควบคุมโรโบติกส์: แขนก�
 url: https://modsengineeringmath.com/learn/control-systems/robotics/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ระบบควบคุมหุ่นยนต์สำหรับวิศวกรไฟฟ้า จลนศาสตร์ตรงและผกผันของแขนกลสองข้อต่อ จาโคเบียนและภาวะเอกฐาน สมการพลศาสตร์แขนกล ควบคุมข้อต่ออิสระด้วย PD/PID ชดเชยแรงโน้มถ่วง computed torque control การสร้างวิถีแบบพหุนามกำลังสามและห้า หุ่นยนต์ล้อแบบ differential drive การนำทางไปยังเป้าหมาย หุ่นยนต์ทรงตัวสองล้อ และไอเดียโปรเจกต์หุ่นยนต์

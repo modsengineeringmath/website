@@ -3,7 +3,7 @@ title: "สเปกตรัมของอินเวอร์เตอร์
 url: https://modsengineeringmath.com/learn/fourier-series/inverters-pwm/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิเคราะห์แรงดันขาออกของอินเวอร์เตอร์ด้วยอนุกรมฟูเรียร์: อินเวอร์เตอร์คลื่นสี่เหลี่ยม 4Vdc/π กำจัดฮาร์มอนิกด้วยมุม α ของ quasi-square อินเวอร์เตอร์ 3 เฟส six-step ไม่มีฮาร์มอนิกที่ 3 selective harmonic elimination (SHE) พร้อมมุมที่แก้แล้ว Sinusoidal PWM ดัชนีมอดูเลชัน ma อัตราส่วนความถี่ mf ตารางไซด์แบนด์แบบไบโพลาร์และยูนิโพลาร์ โอเวอร์มอดูเลชัน WTHD ฟิลเตอร์ LC และผลต่อมอเตอร์

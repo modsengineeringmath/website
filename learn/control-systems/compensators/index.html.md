@@ -3,7 +3,7 @@ title: "ตัวชดเชย Lead, Lag และ Lag-Lead"
 url: https://modsengineeringmath.com/learn/control-systems/compensators/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ออกแบบตัวชดเชยเฟสนำ (lead) เฟสล้าหลัง (lag) และ lag-lead ทีละขั้น ด้วยโบดไดอะแกรม (เฟสมาร์จิน ค่าคงตัวความผิดพลาด) และด้วยรูทโลคัส (เงื่อนไขมุม การชดเชยมุม) สูตร α φmax ωm การวางศูนย์และขั้ว ตัวอย่างที่ตรวจด้วยการจำลองแล้ว เปรียบเทียบกับ PD PI PID วงจร RC และออปแอมป์ที่สร้างได้จริง

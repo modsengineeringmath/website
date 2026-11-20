@@ -3,7 +3,7 @@ title: "Variable-Frequency Drives (VFDs) for Motors: Rectifier, DC Bus, IGBT PWM
 url: https://modsengineeringmath.com/learn/en/motor-control/vfd/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > How a variable-frequency drive works for 400 V 50 Hz motors: six-diode rectifier, 540–565 V DC bus, IGBT PWM inverter, constant V/f control, voltage boost, field weakening, sensorless vector control, input and output wiring, shielded cable and EMC, cable length and dv/dt, Type B RCDs, braking resistors, single-phase-in three-phase-out drives, and what must never be connected on the output.

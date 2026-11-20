@@ -3,7 +3,7 @@ title: "ตัวสังเกตกระแสและสถานะ (Obse
 url: https://modsengineeringmath.com/learn/power-electronics/observers/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ประมาณกระแสตัวเหนี่ยวนำและกระแสโหลดโดยไม่ใช้เซนเซอร์: Luenberger observer ของบั๊ก extended-state/disturbance observer สำหรับ load-current feedforward Kalman filter ข้อจำกัด และการเฝ้าสังเกตเหตุการณ์แวดล้อม เช่น input voltage feedforward อุณหภูมิ ESR ของตัวเก็บประจุ การอิ่มตัวของแกน และ event log

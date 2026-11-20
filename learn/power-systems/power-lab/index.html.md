@@ -3,7 +3,7 @@ title: "แล็บคำนวณระบบไฟฟ้ากำลังแ
 url: https://modsengineeringmath.com/learn/power-systems/power-lab/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > รวมเครื่องคำนวณระบบไฟฟ้ากำลังฟรีในหน้าเดียว: ค่าฐานและ per-unit เปลี่ยนฐาน regulation หม้อแปลง กราฟ P-δ กระแสลัดวงจรระบบแรงต่ำแบบ IEC 60909 ฟอลต์ SLG LL DLG แยกองค์ประกอบสมมาตรพร้อมแผนภาพเฟสเซอร์ รีเลย์ IDMT แล็บประสานรีเลย์ 3 ระดับบนกราฟ TCC log-log การตัดวงจรอัตโนมัติ TN TT และรีเลย์ผลต่าง พร้อมใบงาน 10 ชุด

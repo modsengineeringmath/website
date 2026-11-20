@@ -3,7 +3,7 @@ title: "ระบบอันดับสอง อัตราส่วนก�
 url: https://modsengineeringmath.com/learn/second-order-system/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > แล็บโต้ตอบระบบอันดับสอง G(s) = ωn²/(s² + 2ζωn s + ωn²) ปรับ ζ และ ωn หรือค่า R, L, C แล้วดูผลตอบสนองเวลา เปลือกเอกซ์โพเนนเชียล ตำแหน่งขั้วที่ลากได้ Bode plot ระนาบเฟส และ %OS พร้อมกันทุกมุม

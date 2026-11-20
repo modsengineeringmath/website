@@ -3,7 +3,7 @@ title: "Vectors & Linear Algebra Articles: Matrices, Determinants, Rank and Nume
 url: https://modsengineeringmath.com/en/blog/category/linear-algebra/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > Articles on vectors and linear algebra: dot and cross products, determinants, the inverse matrix, rank, Cramer's rule and Jacobi vs Gauss–Seidel, each with step-by-step worked examples.

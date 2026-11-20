@@ -3,7 +3,7 @@ title: "การหมุนแกนพิกัด: เมทริกซ์�
 url: https://modsengineeringmath.com/learn/vector-algebra/coordinate-rotation/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียนการหมุนแกนภาษาไทย: เวกเตอร์เดียวกันมีองค์ประกอบต่างกันในสองกรอบ สูตร x′ = x cos θ + y sin θ หมุนแกนกับหมุนเวกเตอร์ เมทริกซ์หมุนตั้งฉาก RᵀR = I det R = 1 พื้นเอียง เมทริกซ์ Rx Ry Rz ลำดับการหมุน มุมออยเลอร์ Z-Y-X ของโดรนและ IMU หามุมเอียงจากแรงโน้มถ่วง สูตรโรดริเกส และการแปลง Clarke-Park ของมอเตอร์ พร้อมฉาก 3 มิติหมุนกรอบได้

@@ -3,7 +3,7 @@ title: "Applied Motor Control Circuits in Practice: Sequence Starting, Float-Swi
 url: https://modsengineeringmath.com/learn/en/motor-control/applied-circuits/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > Contactor circuits used in real buildings and factories: timed sequence starting of conveyors, automatic water pumps with float switches or electrodes, Hand-Off-Auto selector switches, duty/standby pump alternation, air compressors with pressure switches, Dahlander two-speed motors, phase-failure, phase-reversal and voltage relays, and the formula for a pump's starts per hour.

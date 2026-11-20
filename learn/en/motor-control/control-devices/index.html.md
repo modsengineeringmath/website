@@ -3,7 +3,7 @@ title: "Magnetic Contactors, Overload Relays, Motor Protection Breakers and Cont
 url: https://modsengineeringmath.com/learn/en/motor-control/control-devices/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 > Every device in a motor control panel: how a magnetic contactor is built (coil, main and auxiliary contacts), utilization categories AC-1, AC-3, AC-3e and AC-4 to IEC 60947-4-1, a kW-at-400 V sizing table, overload relays and trip classes 10, 20 and 30, motor protection circuit breakers (MPCB), aM fuses, Type 1 and Type 2 coordination, timers, push-button and pilot-light colours to IEC 60204-1, and control transformers.

@@ -3,7 +3,7 @@ title: "การจูน PID: Ziegler–Nichols, Cohen–Coon, IMC และ�
 url: https://modsengineeringmath.com/learn/control-systems/pid-tuning/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > วิธีจูน PID เมื่อไม่มีแบบจำลอง Ziegler–Nichols แบบเกนวิกฤต (ultimate gain) และแบบกราฟตอบสนองขั้นบันได (reaction curve) Tyreus–Luyben Cohen–Coon การจูนแบบ IMC/Lambda และ SIMC ของ Skogestad relay auto-tune ของ Åström–Hägglund ระบุแบบจำลอง FOPDT จากกราฟ เปรียบเทียบผลจำลองจริง และขั้นตอนจูนด้วยมือหน้างาน

@@ -769,7 +769,14 @@ Write new rules anywhere; after a deploy, the Cloudflare deployment's build log 
 with N equal to the number of rules in the file.
 
 ## Search engines: sitemap + IndexNow (added 2026-11-04)
-- Google reads `sitemap.xml` (listed in robots.txt) and Search Console; `lastmod` comes from each page's `updated`, so keep it honest.
+- Google reads `sitemap.xml` (listed in robots.txt) and Search Console. **`lastmod` is automatic (since 2026-11-20): `src/lastmod.mjs`**
+  fingerprints what a reader gets (title, description, text and images in `<main>`, without breadcrumbs, sub-page menu, TH/EN switch,
+  share bar/prev-next/related links and `<time>` dates) and keeps the date of the last real change in `data/lastmod.json`
+  (`"/route/": ["date", "fingerprint"]`). Changed fingerprint → today (Bangkok); unchanged → the stored date; new page → today.
+  Layout, CSS, JS, menu and markup-only edits do not move it. The same date is used for the visible "อัปเดต/Updated", JSON-LD
+  `dateModified`, the Markdown copy and `video-sitemap.xml`. A hand-written `"updated"` in a meta block only counts when it is newer.
+  Commit `data/lastmod.json` with the pages (the GitHub build does). Never edit it by hand; to rebuild it from git history:
+  `git fetch --unshallow; node scripts/lastmod-seed.mjs; node build.mjs`.
 - IndexNow (Bing, Yandex, Naver, Seznam, Yep): the key file `b8dd506014d1a0e9decb6b4e56fe3748.txt` sits in the repo root (keep it).
   `.github/workflows/indexnow.yml` runs after every push to `main` that changes `sitemap.xml`: it waits until the live sitemap
   matches the commit, then `scripts/indexnow.mjs` sends the URLs that are new, have a new `lastmod`, or left the sitemap (moved

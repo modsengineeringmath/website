@@ -3,7 +3,7 @@ title: "ระบบอันดับหนึ่งและค่าคงต
 url: https://modsengineeringmath.com/learn/first-order-system/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > แล็บโต้ตอบระบบอันดับหนึ่ง G(s) = K/(τs+1) ปรับค่าคงตัวเวลา τ หรือค่า R, C, L แล้วดูผลตอบสนองขั้นบันได อิมพัลส์ แรมป์ และไซน์ พร้อมเส้นแบ่งทุกช่วง τ เส้นสัมผัส สเกลลอการิทึม ระนาบ s และ Bode plot

@@ -3,7 +3,7 @@ title: "แบตเตอรี่รถ EV กับเวลาชาร์�
 url: https://modsengineeringmath.com/learn/ev-charging/battery-charging/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > คำนวณเวลาชาร์จรถยนต์ไฟฟ้าให้ใกล้ความจริง: ความจุ kWh กับ Ah แรงดันแพ็ก สถานะการประจุ SOC การชาร์จ CC-CV ทำไมกำลังชาร์จลดลงหลัง 80 % การสูญเสียในเครื่องชาร์จ C-rate อุณหภูมิ ตัวอย่างชาร์จ 20–80 % และ 20–100 % ด้วยสายชาร์จพกพาและวอลล์บ็อกซ์ และวิธีชาร์จให้แบตอายุยาว

@@ -3,7 +3,7 @@ title: "ฝึกวาดรูทโลคัสด้วยมือ: ที�
 url: https://modsengineeringmath.com/learn/control-systems/root-locus-sketching/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ฝึกวาดรูทโลคัส (root locus sketching) ด้วยมือแทน MATLAB สูตรการวาด 8 ขั้นตอน ตัวอย่างวาดทีละขั้น 7 แบบ ขั้วจริงสองตัว วงกลมจากศูนย์ ขั้วเชิงซ้อนกับมุมออก มุมเข้าศูนย์ จุดแยกเชิงซ้อน สามกิ่งพบกัน สี่ขั้วจริง ผลของการเพิ่มศูนย์ แกลเลอรีรูปแบบมาตรฐาน และแล็บโหมดฝึกวาดที่ซ่อนเฉลยได้

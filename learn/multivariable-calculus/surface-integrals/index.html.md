@@ -3,7 +3,7 @@ title: "อินทิกรัลบนผิว (Surface Integrals) ฟลั
 url: https://modsengineeringmath.com/learn/multivariable-calculus/surface-integrals/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > อินทิกรัลบนผิว (surface integral) ผิวพารามิเตอร์ พื้นที่ผิว dS = |r_u × r_v| du dv ฟลักซ์ (flux) ∬F·n dS ทฤษฎีบทดีเวอร์เจนซ์ของเกาส์ (divergence theorem / Gauss) ทฤษฎีบทสโตกส์ (Stokes' theorem) กฎของเกาส์ กฎของฟาราเดย์ กฎของแอมแปร์และสมการแมกซ์เวลล์ พร้อมตัวอย่างจานรับสัญญาณ ท่อน้ำ และตัวตรวจ Gauss–Stokes ที่คำนวณทั้งสองฝั่ง

@@ -3,7 +3,7 @@ title: "สตูดิโอเวกเตอร์ 2D / 3D: วาด หม�
 url: https://modsengineeringmath.com/learn/vector-algebra/vector-lab/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เครื่องมือเวกเตอร์ออนไลน์ฟรีภาษาไทย: วาดเวกเตอร์ได้ 8 ตัวใน 2D/3D ลากหมุนมุมมองสามมิติ มุมมอง xy xz yz perspective ผลรวมแรง ต่อหัวต่อหาง กล่ององค์ประกอบ มุม α β γ ทิศทางโคไซน์ projection cross product พื้นที่ triple product กรอบหมุนมุมออยเลอร์ ตารางมุมทุกคู่ แชร์ลิงก์ และส่งออกเป็นคำสั่ง GeoGebra MATLAB Python CSV พร้อมเครื่องคิดเลขเวกเตอร์แบบแสดงวิธีทำและแกลเลอรีฉาก 3 มิติ

@@ -3,7 +3,7 @@ title: "บั๊ก-บูสต์คอนเวอร์เตอร์: แ
 url: https://modsengineeringmath.com/learn/power-electronics/buck-boost-converter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > บั๊ก-บูสต์คอนเวอร์เตอร์แบบกลับขั้ว (inverting) และแบบ 4 สวิตช์ไม่กลับขั้ว: อัตราส่วน −D/(1−D) ความเค้นแรงดันและกระแส ขอบ DCM ฟังก์ชันถ่ายโอนและ RHP zero การป้อนกลับเมื่อขาออกเป็นลบ และตารางเลือกโทโพโลยีเทียบ SEPIC Ćuk flyback

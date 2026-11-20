@@ -3,7 +3,7 @@ title: "ควบคุมคอนเวอร์เตอร์ DC-DC แบ�
 url: https://modsengineeringmath.com/learn/power-electronics/digital-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ควบคุมคอนเวอร์เตอร์ DC-DC ด้วยไมโครคอนโทรลเลอร์: สุ่ม ADC ให้ตรงจังหวะ PWM ดีเลย์และเฟสที่เสีย ความละเอียด DPWM และ limit cycle high-resolution PWM แปลงตัวชดเชยด้วย Tustin เป็น 2P2Z/3P3Z โค้ด PI ภาษา C พร้อม anti-windup และขั้นตอน bring-up

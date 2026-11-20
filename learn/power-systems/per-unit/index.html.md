@@ -3,7 +3,7 @@ title: "ระบบต่อหน่วย (Per-Unit System): ค่าฐา�
 url: https://modsengineeringmath.com/learn/power-systems/per-unit/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียนระบบต่อหน่วยให้เข้าใจจริง: ทำไมวิศวกรระบบไฟฟ้าใช้ pu เลือก S_base V_base คำนวณ Z_base = V²/S และ I_base = S/(√3V) การเปลี่ยนฐานอิมพีแดนซ์จากดาต้าชีต %Z หม้อแปลงมีค่า pu เท่ากันทั้งสองด้าน ตัวอย่างระบบเครื่องกำเนิด หม้อแปลง สายส่ง 138 kV และการหากระแสลัดวงจรด้วย pu พร้อมเครื่องคำนวณ

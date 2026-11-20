@@ -3,7 +3,7 @@ title: "PF จริงกับฮาร์มอนิก: Displacement PF, Di
 url: https://modsengineeringmath.com/learn/power-factor/harmonics-true-pf/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ทำไมโหลดอิเล็กทรอนิกส์อย่างคอมพิวเตอร์ ไดรเวอร์ LED และไดรฟ์มอเตอร์มี cos φ เกือบ 1 แต่ PF จริงแค่ 0.6–0.7: กระแสยอดแหลม ฮาร์มอนิก THD PF จริง = DPF × distortion factor = DPF/√(1+THD²) กำลังบิดเบือน D คาปาซิเตอร์แก้ส่วนนี้ไม่ได้ เรโซแนนซ์ขนาน h = √(S_sc/Q_c) ตู้ detuned 7 % (189 Hz) 14 % (134 Hz) ฮาร์มอนิกที่ 3 ในสายนิวทรัล PFC แอกทีฟฟิลเตอร์ พร้อมซิมูเลเตอร์และเครื่องคำนวณ

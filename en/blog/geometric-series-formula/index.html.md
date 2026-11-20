@@ -3,7 +3,7 @@ title: "Geometric Series: Formula, Examples and How to Find the Sum"
 url: https://modsengineeringmath.com/en/blog/geometric-series-formula/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-17
+updated: 2026-11-14
 ---
 
 > Geometric series formula for the sum of n terms and the infinite sum a₁/(1 − r) when |r| < 1, with the derivation, step-by-step examples, common mistakes and engineering uses.

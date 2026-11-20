@@ -3,7 +3,7 @@ title: "AI ช่วยควบคุมและวินิจฉัยคอ
 url: https://modsengineeringmath.com/learn/power-electronics/ai-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ใช้ AI และ machine learning กับคอนเวอร์เตอร์ DC-DC อย่างปลอดภัย: สถาปัตยกรรมแบ่งชั้น ปรับจูนอัตโนมัติด้วย Bayesian optimization reinforcement learning neural-network observer MPPT ใต้เงาบางส่วน วินิจฉัยความผิดพลาดจากคุณลักษณะรูปคลื่น บำรุงรักษาเชิงพยากรณ์ และการใช้ LLM เป็นผู้ช่วยวิศวกรพร้อมตัวอย่าง prompt

@@ -3,7 +3,7 @@ title: "อินเวอร์สของเมทริกซ์ (Matrix Inv
 url: https://modsengineeringmath.com/learn/linear-algebra/inverse/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > วิธีหาอินเวอร์สของเมทริกซ์ครบทุกวิธี สูตรลัด 2×2 วิธีเมทริกซ์ผูกพัน (adjoint/adjugate) จากโคแฟกเตอร์ วิธีเกาส์-จอร์แดน [A | I] สมบัติของอินเวอร์ส ทฤษฎีบทเมทริกซ์หาอินเวอร์สได้ การแก้ x = A⁻¹b สมการเมทริกซ์ AX = B และสูตรขั้นสูง Sherman–Morrison อินเวอร์สเทียม พร้อมตัวอย่างวงจร

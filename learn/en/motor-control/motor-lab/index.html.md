@@ -3,7 +3,7 @@ title: "Motor Starter Simulator: DOL, Reversing, Star–Delta, Soft Starter and 
 url: https://modsengineeringmath.com/learn/en/motor-control/motor-lab/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > A free in-browser starting simulator for a 7.5 kW 400 V 50 Hz induction motor: press START and STOP and watch contactors pull in, timers count down, the control-circuit state and real-time plots of current, speed and torque, all from a double-cage equivalent-circuit model and the equation of motion. Change between pump, conveyor and fan loads, set timers and dead time, inject phase-loss and overload faults, and work through 6 worksheets.

@@ -3,7 +3,7 @@ title: "เซลล์แสงอาทิตย์ทำงานอย่า
 url: https://modsengineeringmath.com/learn/solar-pv/pv-cell/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > หลักการโซลาร์เซลล์ภาษาไทยแบบละเอียด: รอยต่อ p-n กับโฟตอน แบบจำลองไดโอดเดี่ยว เส้นโค้ง I-V และ P-V Isc Voc MPP fill factor ประสิทธิภาพ STC NOCT สัมประสิทธิ์อุณหภูมิ ผลของแสงน้อย การต่ออนุกรมขนาน บายพาสไดโอด hot spot พร้อมแล็บเส้นโค้ง I-V และเงาบังแบบโต้ตอบ

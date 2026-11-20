@@ -3,7 +3,7 @@ title: "หม้อแปลงและสายส่งในระบบไ
 url: https://modsengineeringmath.com/learn/power-systems/transformers-lines/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ปูพื้นหม้อแปลงและสายส่งสำหรับวิชาระบบไฟฟ้ากำลัง: วงจรสมมูลหม้อแปลง %Z %R %X จากการทดสอบลัดวงจร voltage regulation การสูญเสียทองแดงตามภาระ ประสิทธิภาพ กลุ่มเวกเตอร์ Dyn11 แบบจำลองสายสั้น ปานกลาง (π) ยาว แรงดันตก ΔV ≈ (RP + XQ)/V ปรากฏการณ์เฟอร์รันติ สมการส่งกำลัง P = V₁V₂ sin δ / X กำลังรีแอกทีฟกับแรงดัน และเสถียรภาพสถิต พร้อมเครื่องคำนวณ

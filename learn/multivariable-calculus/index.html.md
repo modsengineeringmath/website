@@ -3,7 +3,7 @@ title: "แคลคูลัสหลายตัวแปรและแคล
 url: https://modsengineeringmath.com/learn/multivariable-calculus/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > เรียนแคลคูลัสหลายตัวแปร (multivariable calculus) และแคลคูลัสเวกเตอร์ (vector calculus) ภาษาไทย: ฟังก์ชันหลายตัวแปร อนุพันธ์ย่อย gradient จุดวิกฤต Lagrange อินทิกรัลสองชั้นสามชั้น ฟังก์ชันเวกเตอร์ divergence curl ทฤษฎีบทกรีน Gauss Stokes พร้อมสูตร ตัวอย่างวิธีทำ แล็บออนไลน์ 19 ชุด และงานวิศวกรรมไฟฟ้า เครื่องกล โยธา

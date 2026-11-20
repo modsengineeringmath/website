@@ -3,7 +3,7 @@ title: "ผลตอบสนองความถี่: G(jω) ขนาด �
 url: https://modsengineeringmath.com/learn/control-systems/frequency-response/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ผลตอบสนองความถี่ของระบบเชิงเส้น ป้อนไซน์ได้ไซน์ ที่มาของ G(jω) ขนาดและเฟส วัดด้วยฟังก์ชันเจเนอเรเตอร์และออสซิลโลสโคป ยอดเรโซแนนซ์ Mr ความถี่เรโซแนนซ์ แบนด์วิดท์ ความสัมพันธ์กับ ζ ωn rise time และ overshoot การมองวงปิดจากวงเปิด และเหตุผลที่วิศวกรใช้โดเมนความถี่ในการออกแบบ

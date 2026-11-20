@@ -3,7 +3,7 @@ title: "ออสซิลโลสโคป: V/div Time/div ทริกเก�
 url: https://modsengineeringmath.com/learn/function-generator/oscilloscope/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > วิธีใช้ออสซิลโลสโคปตั้งแต่อ่านกราติคูล ตั้ง V/div และ Time/div ทริกเกอร์ให้ภาพนิ่ง โพรบ 1× 10× และการชดเชยโพรบ คัปปลิง AC DC แบนด์วิดท์กับเวลาขาขึ้น อัตราสุ่มและอเลียสซิง FFT การวัดอัตโนมัติ และความปลอดภัยเรื่องกราวด์ พร้อมสูตรรหัส O ตัวอย่างวิธีทำ และสโคปจำลองให้ลองหมุนเอง

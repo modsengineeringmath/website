@@ -3,7 +3,7 @@ title: "Direct-On-Line (DOL) Motor Starter: Power Circuit, Self-Holding Control 
 url: https://modsengineeringmath.com/learn/en/motor-control/dol-starter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 > The direct-on-line circuit for 400 V three-phase motors: power circuit with MPCB, contactor and overload relay; the self-holding (seal-in) control circuit; why the STOP button must be NC and wired in series; multi-location control; jog buttons; pilot lights; the sequence of operation; panel wiring; and a complete device-selection example for a 7.5 kW motor.

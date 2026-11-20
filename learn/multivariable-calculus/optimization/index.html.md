@@ -3,7 +3,7 @@ title: "ค่าสูงสุด-ต่ำสุดของฟังก์�
 url: https://modsengineeringmath.com/learn/multivariable-calculus/optimization/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > การหาค่าสูงสุด-ต่ำสุดของฟังก์ชันหลายตัวแปร (optimization): จุดวิกฤต (critical point) การทดสอบอนุพันธ์อันดับสอง D = fxx fyy − fxy² (second derivative test) Hessian ค่าสุดขีดสัมบูรณ์บนบริเวณปิด ตัวคูณลากรองจ์ (Lagrange multiplier) ความหมายของ λ และการถดถอยเชิงเส้นด้วยกำลังสองน้อยสุด (least squares) พร้อมตัวอย่างออกแบบไฟฟ้า เครื่องกล โยธา และแล็บโต้ตอบ

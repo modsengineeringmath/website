@@ -3,7 +3,7 @@ title: "คำนวณกระแสลัดวงจร: ลัดวงจ�
 url: https://modsengineeringmath.com/learn/power-systems/fault-analysis/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิธีคำนวณกระแสลัดวงจรระบบแรงต่ำที่ใช้เลือกเบรกเกอร์จริง: กระแสลัดวงจรสามเฟสตาม IEC 60909 ตัวคูณแรงดัน c อิมพีแดนซ์ต้นทางจาก MVA ลัดวงจร หม้อแปลงจาก %Z สายเคเบิล วิธี %Z กับวิธี MVA อัตรา X/R DC offset ค่ายอด i_p = κ√2 I_k ตัวอย่างหม้อแปลง 1,000 kVA 6 % ที่ตู้ MDB และปลายสาย กระแสลัดลงดิน และการเลือก Icu Ics ของเบรกเกอร์ พร้อมเครื่องคำนวณ

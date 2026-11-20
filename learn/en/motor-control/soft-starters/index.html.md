@@ -3,7 +3,7 @@ title: "Soft Starters, Autotransformers and Motor Starting Methods Compared: Cur
 url: https://modsengineeringmath.com/learn/en/motor-control/soft-starters/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > How a soft starter works: anti-parallel thyristors, firing-angle control, voltage ramp, current limit, torque control, bypass contactor and soft stop against water hammer in pumps. Autotransformer starting, the current and torque formula for each method, and a comparison of DOL, star–delta, soft starter and VFD with a voltage-dip calculator.

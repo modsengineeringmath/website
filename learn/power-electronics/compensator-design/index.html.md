@@ -3,7 +3,7 @@ title: "ออกแบบตัวชดเชย Type I II III ด้วยว
 url: https://modsengineeringmath.com/learn/power-electronics/compensator-design/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ออกแบบตัวชดเชย (compensator) ของคอนเวอร์เตอร์ DC-DC ด้วยออปแอมป์: เป้าหมายลูป phase margin gain margin ข้อจำกัดความถี่ครอสโอเวอร์ วิธี k-factor ของ Venable สูตรค่า R C ของ Type II และ Type III ตัวอย่างบั๊ก 24 V ได้ fc 5.4 kHz PM 62° ตรวจด้วย python-control และ peak current mode กับ slope compensation

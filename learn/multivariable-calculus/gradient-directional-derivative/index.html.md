@@ -3,7 +3,7 @@ title: "เกรเดียนต์ (Gradient) และอนุพันธ
 url: https://modsengineeringmath.com/learn/multivariable-calculus/gradient-directional-derivative/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > เกรเดียนต์ (gradient, ∇f) คืออะไร ชี้ทางขึ้นชันที่สุด อนุพันธ์ตามทิศ (directional derivative) D_u f = ∇f · u ทำไม gradient ตั้งฉากกับเส้นชั้นความสูง เวกเตอร์ปกติและระนาบสัมผัสของผิวระดับ gradient descent พร้อมตัวอย่างไฟฟ้า เครื่องกล โยธา และแล็บกราฟขั้วที่หมุนทิศได้

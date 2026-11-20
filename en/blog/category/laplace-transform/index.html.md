@@ -3,7 +3,7 @@ title: "Laplace Transform Articles: Meaning, Table and Inverse Laplace"
 url: https://modsengineeringmath.com/en/blog/category/laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-16
+updated: 2026-11-14
 ---
 
 > Articles on the Laplace transform: what it is and why circuits and control use it, a table of the most used pairs, and the inverse Laplace transform by partial fractions, step by step.

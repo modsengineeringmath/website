@@ -3,7 +3,7 @@ title: "องค์ประกอบและการฉายเวกเต
 url: https://modsengineeringmath.com/learn/vector-algebra/components-projection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > อธิบาย component และ projection ตั้งแต่แกน x y z เวกเตอร์หน่วย direction cosines ถึง scalar projection ที่มีเครื่องหมาย vector projection การแยกขนาน–ตั้งฉาก แรงสามมิติและระยะถึงเส้น พร้อมวิธีทำ สูตรและแบบฝึกหัด

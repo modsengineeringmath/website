@@ -3,7 +3,7 @@ title: "เครื่องมือคำนวณคณิตศาสตร
 url: https://modsengineeringmath.com/tools/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-10
+updated: 2026-11-14
 ---
 
 > รวมเครื่องมือคำนวณออนไลน์ฟรีของ Mod's Engineering Mathematics: อนุพันธ์ ปริพันธ์ การแปลงลาปลาซและลาปลาซผกผัน อนุกรมฟูเรียร์ พื้นที่ เพาเวอร์แฟกเตอร์ ค่าไฟฟ้า กฟน. กฟภ. และเครื่องมือเขียนสมการ LaTeX เป็นรูป ทุกคำตอบมีวิธีทำและการตรวจสอบ

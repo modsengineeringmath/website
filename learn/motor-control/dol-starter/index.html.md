@@ -3,7 +3,7 @@ title: "วงจรสตาร์ทมอเตอร์โดยตรง (D
 url: https://modsengineeringmath.com/learn/motor-control/dol-starter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 > วงจร Direct-On-Line สำหรับมอเตอร์สามเฟส 400 V: วงจรกำลัง MPCB คอนแทกเตอร์ โอเวอร์โหลด วงจรควบคุมล็อกตัวเอง (self-holding) ทำไมปุ่ม STOP ต้องเป็น NC ต่ออนุกรม ควบคุมหลายจุด ปุ่มจ็อก ไฟแสดงสถานะ ลำดับการทำงาน การเดินสาย และตัวอย่างเลือกอุปกรณ์ครบชุดสำหรับมอเตอร์ 7.5 kW

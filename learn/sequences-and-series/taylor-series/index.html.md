@@ -3,7 +3,7 @@ title: "อนุกรมเทย์เลอร์และแมคลอร
 url: https://modsengineeringmath.com/learn/sequences-and-series/taylor-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-24
+updated: 2026-11-08
 ---
 
 > ตารางอนุกรมเทย์เลอร์และแมคลอรินที่ต้องจำ (eˣ, sin, cos, ln(1+x), arctan, (1+x)^α) สูตร f⁽ⁿ⁾(a)/n! เศษเหลือลากรองจ์ จำนวนพจน์ที่ต้องใช้ ตัวอย่างพร้อมวิธีทำทีละขั้น และแล็บพหุนามเทย์เลอร์

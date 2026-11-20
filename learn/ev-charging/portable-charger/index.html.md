@@ -3,7 +3,7 @@ title: "ชาร์จช้าด้วยไฟบ้าน (Mode 2): สา�
 url: https://modsengineeringmath.com/learn/ev-charging/portable-charger/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ใช้สายชาร์จพกพา (Portable EV charger, Mode 2, ICCB) เสียบเต้ารับบ้านอย่างปลอดภัย: กล่องควบคุมทำอะไร เลือกกระแส 8 10 13 16 A ให้เหมาะกับเต้ารับและสาย กฎ 80 % ของโหลดต่อเนื่อง ความร้อนที่หน้าสัมผัส I²R ทำไมปลั๊กไหม้ แรงดันตก เต้ารับ IEC 60309 ข้อห้ามสายพ่วง และเวลาชาร์จ พร้อมเครื่องคำนวณ

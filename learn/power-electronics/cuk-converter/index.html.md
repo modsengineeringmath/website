@@ -3,7 +3,7 @@ title: "ชุคคอนเวอร์เตอร์ (Ćuk Converter): ต�
 url: https://modsengineeringmath.com/learn/power-electronics/cuk-converter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ชุคคอนเวอร์เตอร์ (Ćuk converter) ละเอียด: การทำงานผ่านตัวเก็บประจุคัปปลิ้ง VC1 = Vin + |Vo| อัตราส่วน −D/(1−D) สมการออกแบบ L1 L2 C1 C2 กระแส RMS ของ C1 ไดนามิกอันดับสี่ การหน่วงด้วย RC coupled inductor และ ripple steering พร้อมซิมูเลชัน

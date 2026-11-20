@@ -3,7 +3,7 @@ title: "แคลคูลัสหลายตัวแปรในวิศว
 url: https://modsengineeringmath.com/learn/multivariable-calculus/mechanical-engineering/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > การประยุกต์แคลคูลัสหลายตัวแปรในวิศวกรรมเครื่องกล (mechanical engineering): กฎของฟูริเยร์ q = −k∇T สมการความร้อนและลาปลาซ การนำความร้อนในผนังและท่อกลม ความต่อเนื่อง ∇·v = 0 ความหมุนวน (vorticity) ของของไหล การไหลรอบทรงกระบอกและ Bernoulli จุดศูนย์กลางมวลและโมเมนต์ความเฉื่อยของล้อช่วยแรง การขยายตัวทางความร้อนและจาโคเบียนแขนกล พร้อมแล็บความร้อนและสนามการไหล

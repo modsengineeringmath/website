@@ -3,7 +3,7 @@ title: "ฟังก์ชันหลายตัวแปร (Functions of Sev
 url: https://modsengineeringmath.com/learn/multivariable-calculus/functions-of-several-variables/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > ฟังก์ชันหลายตัวแปร (multivariable function) คืออะไร: โดเมน (domain) และเรนจ์ (range) กราฟ z = f(x, y) เป็นผิว เส้นชั้นความสูง (contour / level curve) ผิวกำลังสอง (quadric surfaces) ลิมิตสองตัวแปรด้วย path test และพิกัดขั้ว ความต่อเนื่อง ตัวอย่างวิศวกรรมไฟฟ้า เครื่องกล โยธา พร้อมแล็บพื้นผิว 3 มิติและแล็บทดสอบลิมิต

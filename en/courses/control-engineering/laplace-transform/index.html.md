@@ -3,7 +3,7 @@ title: "The Laplace Transform"
 url: https://modsengineeringmath.com/en/courses/control-engineering/laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
 > The definition of the Laplace transform, existence and the region of convergence, basic pairs proved from the definition, every key property, the initial and final value theorems and solving differential equations, with a lab and exercises.

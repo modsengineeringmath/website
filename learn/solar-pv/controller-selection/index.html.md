@@ -3,7 +3,7 @@ title: "เลือกตัวควบคุมโซลาร์: ชาร�
 url: https://modsengineeringmath.com/learn/solar-pv/controller-selection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > คู่มือเลือกตัวควบคุมสำหรับระบบโซลาร์ทั้งผู้ใช้และผู้ออกแบบวงจร: ชาร์จคอนโทรลเลอร์ PWM กับ MPPT การคำนวณกระแสและแรงดัน เกณฑ์เลือกอินเวอร์เตอร์ on-grid hybrid off-grid ชิปชาร์จ MPPT BQ24650 BQ25798 LT8490 SPV1040 gate driver แยกฉนวน UCC21520 ADuM4135 เซนเซอร์กระแส AMC1301 MCU TI C2000 STM32G474 dsPIC33 ESP32 โปรโตคอล Modbus SunSpec CAN และวิธีเลือกให้ไม่ตกยุค พร้อมตารางเทียบรุ่นแข็งแกร่งกับรุ่นปัจจุบัน

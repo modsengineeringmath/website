@@ -3,7 +3,7 @@ title: "เครื่องมือระดับโลกสำหรับ
 url: https://modsengineeringmath.com/learn/vector-algebra/vector-tools/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > รวมเครื่องมือระดับโลกที่มีอยู่จริงสำหรับเรียนเวกเตอร์และไฟฟ้า เปิดใช้ได้ในหน้าเดียว: PhET Vector Addition, Charges and Fields, Faraday's Electromagnetic Lab, Circuit Construction Kit: AC และ Trig Tour จากมหาวิทยาลัยโคโลราโด, Falstad Circuit Simulator, GeoGebra 3D Calculator, Desmos 3D, MATLAB/Octave และ Python (NumPy, Matplotlib) พร้อมวิธีใช้ให้ตรงกับบทเรียน ส่งออกเวกเตอร์จากสตูดิโอไปยังเครื่องมือเหล่านี้ และตารางเลือกเครื่องมือ

@@ -3,7 +3,7 @@ title: "ความสามารถควบคุมได้และสั
 url: https://modsengineeringmath.com/learn/control-systems/controllability-observability/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > นิยามความสามารถควบคุมได้และสังเกตได้ของระบบปริภูมิสถานะ เมทริกซ์ควบคุมได้และเมทริกซ์สังเกตได้ของคาลมาน การทดสอบด้วยแรงก์ การทดสอบ PBH ความเป็นคู่ (duality) ความสัมพันธ์กับการหักล้างขั้ว-ศูนย์ การแยกส่วนของคาลมาน realization ที่น้อยที่สุด เสถียรภาพที่ซ่อนอยู่ และตัวอย่างจากวงจรและมอเตอร์

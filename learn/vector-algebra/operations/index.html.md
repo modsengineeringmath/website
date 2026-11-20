@@ -3,7 +3,7 @@ title: "การบวก ลบเวกเตอร์ และการค�
 url: https://modsengineeringmath.com/learn/vector-algebra/operations/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียนการบวกเวกเตอร์แบบหัวต่อหาง กฎสี่เหลี่ยมด้านขนาน การลบและคูณสเกลาร์จาก 2D ถึง 3D พร้อมตัวอย่างแรงลัพธ์ แรงสมดุล ความเร็วสัมพัทธ์ การเคลื่อนที่ และสรุปสูตรพร้อมแบบฝึกเฉลย

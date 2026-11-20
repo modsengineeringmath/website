@@ -3,7 +3,7 @@ title: "แล็บแคลคูลัสหลายตัวแปร (Mult
 url: https://modsengineeringmath.com/learn/multivariable-calculus/multivariable-lab/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > เครื่องมือแล็บแคลคูลัสหลายตัวแปร (multivariable calculus lab) ภาษาไทยใช้ฟรี 19 ชุด: กราฟผิว 3 มิติและระนาบสัมผัส gradient จุดวิกฤต ตัวคูณลากรองจ์ (Lagrange multiplier) อินทิกรัลสองชั้นสามชั้น Jacobian เส้นโค้งในอวกาศ สนามเวกเตอร์ divergence curl ทฤษฎีบท Gauss และ Stokes พร้อมแล็บไฟฟ้า เครื่องกล โยธา พิมพ์สมการเองได้ ไม่ต้องติดตั้ง

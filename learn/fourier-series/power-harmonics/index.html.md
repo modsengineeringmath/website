@@ -3,7 +3,7 @@ title: "กำลังไฟฟ้าเมื่อมีฮาร์มอน
 url: https://modsengineeringmath.com/learn/fourier-series/power-harmonics/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > คุณภาพไฟฟ้าด้วยอนุกรมฟูเรียร์: ค่า True RMS THD THD-R TDD crest factor กำลังจริงที่มาจากฮาร์มอนิกความถี่เดียวกัน กำลังรีแอกทีฟ Q1 กำลังความเพี้ยน D และ S² = P² + Q² + D² เพาเวอร์แฟกเตอร์ = DPF × distortion factor ทำไมคาปาซิเตอร์แก้ PF ช่วยไม่ได้ K-factor หม้อแปลง ลำดับเฟสของฮาร์มอนิกและกระแสนิวทรัลสามเท่า แรงดันเพี้ยนที่ PCC ขีดจำกัด IEEE 519-2022 ข้อกำหนด กฟภ. กฟน. และ IEC 61000-3-2 พร้อมตัวอย่างวิธีทำและแล็บเครื่องวิเคราะห์กำลังไฟฟ้า

@@ -3,7 +3,7 @@ title: "เครื่องมือเขียนบทเรียนคณ
 url: https://modsengineeringmath.com/tools/lesson-editor/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-09
+updated: 2026-11-14
 ---
 
 > เขียนบทเรียนคณิตศาสตร์ด้วย Markdown และสูตร LaTeX เห็นผลทันที บันทึกเป็นไฟล์ .md ส่งออก HTML หรือพิมพ์เป็น PDF ใช้ฟรีในเบราว์เซอร์ ไม่ต้องติดตั้ง โดยอาจารย์มด

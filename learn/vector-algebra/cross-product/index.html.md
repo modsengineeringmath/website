@@ -3,7 +3,7 @@ title: "Cross Product — ครอสโปรดักต์และทิศ
 url: https://modsengineeringmath.com/learn/vector-algebra/cross-product/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เรียน Cross Product ตั้งแต่ภาพเรขาคณิต กฎมือขวา ดีเทอร์มิแนนต์และเครื่องหมายองค์ประกอบ เวกเตอร์ 2 มิติฝังใน 3 มิติ พื้นที่ เวกเตอร์ปกติ Scalar และ Vector Triple Product พร้อมตัวอย่างทีละขั้น สูตรอ้างอิง และแบบฝึกหัดมีเฉลย

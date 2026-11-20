@@ -3,7 +3,7 @@ title: "เลือกชิปควบคุมและไมโครคอ
 url: https://modsengineeringmath.com/learn/power-electronics/controller-selection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > แนวทางเลือกตัวควบคุมคอนเวอร์เตอร์ DC-DC: ชิปอนาล็อกที่แข็งแกร่งไม่ตกยุค TL494 SG3525 UC3843 TL431 ชิปรุ่นปัจจุบัน LM5146 LTC3891 LM5122 LT8390 LM5175 LT3757 ไมโครคอนโทรลเลอร์ TI C2000 STM32G474 HRTIM dsPIC33 gate driver และสถาปัตยกรรมอนาล็อก + MCU

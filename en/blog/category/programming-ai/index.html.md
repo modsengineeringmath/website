@@ -3,7 +3,7 @@ title: "Programming & AI Articles for Engineering Students and Engineers"
 url: https://modsengineeringmath.com/en/blog/category/programming-ai/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > Articles on programming for engineering students and engineers in the AI era: start with Python, master the core concepts, give AI clear instructions and verify its code with engineering knowledge.

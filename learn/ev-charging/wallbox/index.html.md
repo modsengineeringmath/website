@@ -3,7 +3,7 @@ title: "ชาร์จเร็วที่บ้านด้วยวอลล
 url: https://modsengineeringmath.com/learn/ev-charging/wallbox/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วอลล์บ็อกซ์ทำงานอย่างไร: ไม่ได้แปลงไฟแต่เป็นสวิตช์อัจฉริยะ สัญญาณ Control Pilot ±12 V PWM 1 kHz duty cycle บอกกระแส I = 0.6 × D สถานะ A B C D E F วงจรตัวต้านทานฝั่งรถ 2.74 kΩ 1.3 kΩ ตัวต้านทาน Proximity บอกพิกัดสาย 1 เฟส 32 A กับ 3 เฟส ขีดจำกัด OBC dynamic load balancing OCPP และเกณฑ์เลือกซื้อ พร้อมแล็บสัญญาณ CP

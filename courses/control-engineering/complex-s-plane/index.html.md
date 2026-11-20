@@ -3,7 +3,7 @@ title: "ตัวแปรเชิงซ้อน ฟังก์ชันเ�
 url: https://modsengineeringmath.com/courses/control-engineering/complex-s-plane/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
 > ปูพื้นตัวแปรเชิงซ้อนสำหรับระบบควบคุม ฟังก์ชันวิเคราะห์ เงื่อนไขโคชี–รีมันน์ การส่งภาพแบบคอนฟอร์มัล ระนาบ s ขั้วและศูนย์ และหลักการของมุม พร้อมแล็บ mapping โต้ตอบและแบบฝึกหัด

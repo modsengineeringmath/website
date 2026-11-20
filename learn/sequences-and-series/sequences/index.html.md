@@ -3,7 +3,7 @@ title: "ลำดับ (Sequences): เลขคณิต เรขาคณิ
 url: https://modsengineeringmath.com/learn/sequences-and-series/sequences/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-24
+updated: 2026-11-08
 ---
 
 > ลำดับ (sequence) คือจำนวนที่เรียงตามตำแหน่ง หน้านี้สรุปสูตรพจน์ทั่วไปของลำดับเลขคณิต เรขาคณิต และฮาร์มอนิก วิธีหาพจน์ของลำดับเวียนเกิด และลิมิตของลำดับ พร้อมตัวอย่างแสดงวิธีทำและแล็บดูพจน์แบบโต้ตอบ

@@ -3,7 +3,7 @@ title: "วิเคราะห์อาการเสียของคอน
 url: https://modsengineeringmath.com/learn/power-electronics/troubleshooting/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ตารางวิเคราะห์อาการเสียของบั๊ก บูสต์ บั๊ก-บูสต์ และ SMPS: ไม่มีเอาต์พุต hiccup แรงดันต่ำหรือสูงเกิน แกว่ง subharmonic เสียงหอน MOSFET ระเบิดหรือร้อน ไดโอดร้อน แกนอิ่มตัว ริปเปิลสูง ตัวเก็บประจุบวม ประสิทธิภาพตก EMI พร้อมวิธีตรวจและวิธีแก้

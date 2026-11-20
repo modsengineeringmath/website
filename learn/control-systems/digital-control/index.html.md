@@ -3,7 +3,7 @@ title: "ระบบควบคุมดิจิทัล: การสุ่�
 url: https://modsengineeringmath.com/learn/control-systems/digital-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ระบบควบคุมดิจิทัลบนไมโครคอนโทรลเลอร์ การสุ่มสัญญาณและ aliasing วงจรคงค่าอันดับศูนย์ (ZOH) การแปลง z ฟังก์ชันถ่ายโอนไม่ต่อเนื่อง การแมป z = e^{sT} เสถียรภาพในวงกลมหนึ่งหน่วย เกณฑ์ของจูรี แปลงตัวควบคุมด้วย Euler และ Tustin (bilinear) สมการผลต่างของ PID ดิจิทัล การเลือกคาบสุ่ม และผลของหน่วงเวลาครึ่งคาบต่อเฟสมาร์จิน

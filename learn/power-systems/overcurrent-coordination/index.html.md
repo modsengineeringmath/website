@@ -3,7 +3,7 @@ title: "รีเลย์กระแสเกินและการประ
 url: https://modsengineeringmath.com/learn/power-systems/overcurrent-coordination/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ตั้งค่ารีเลย์กระแสเกิน 50/51 และประสานการป้องกันแบบที่วิศวกรทำจริง: กราฟ IEC 60255 Standard Inverse Very Inverse Extremely Inverse Long-time Inverse และ Definite Time การตั้ง pickup จากกระแสโหลดและกระแสฟอลต์ต่ำสุด plug setting multiplier TMS ช่วงเวลาประสาน CTI ส่วนประกอบของ CTI ค่าทันที 50 การประสานรีเลย์–ฟิวส์–เบรกเกอร์ MCB กราฟ B C D ตัวอย่างประสาน 3 ระดับ พร้อมแล็บกราฟ TCC log-log

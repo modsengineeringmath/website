@@ -3,7 +3,7 @@ title: "อนุกรมฟูเรียร์คืออะไร: ทุ�
 url: https://modsengineeringmath.com/learn/fourier-series/introduction/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > อนุกรมฟูเรียร์ (ฟูริเยร์, Fourier series) อธิบายจากศูนย์: สัญญาณคาบ ความถี่มูลฐาน ฮาร์มอนิกที่ 3 5 7 สเปกตรัมขนาด การสังเคราะห์คลื่นสี่เหลี่ยมจากไซน์ อ่านสัมประสิทธิ์จากสมการ sin³ และ cos² ทำไมไฟบ้าน 50 Hz มี 150 Hz 250 Hz และใช้ฟูเรียร์ในอิเล็กทรอนิกส์กำลัง พร้อมแล็บสังเคราะห์ฟรี

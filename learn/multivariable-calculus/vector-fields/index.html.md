@@ -3,7 +3,7 @@ title: "สนามเวกเตอร์ (Vector Fields): Gradient, Divergen
 url: https://modsengineeringmath.com/learn/multivariable-calculus/vector-fields/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > สนามเวกเตอร์ (vector field) คืออะไร ตัวดำเนินการ ∇ (del) ดีเวอร์เจนซ์ (divergence) แสดงการแผ่ออก เคิร์ล (curl) แสดงการหมุน ลาปลาเซียน เอกลักษณ์ curl(grad f) = 0 และ div(curl F) = 0 สนามอนุรักษ์และฟังก์ชันศักย์ (potential function) เส้นกระแส พร้อมตัวอย่างไฟฟ้า ของไหล ความร้อน และแล็บสนามเวกเตอร์ที่วัด div curl บนวงกลม

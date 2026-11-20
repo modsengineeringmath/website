@@ -3,7 +3,7 @@ title: "แสงอาทิตย์ในประเทศไทย: คว�
 url: https://modsengineeringmath.com/learn/solar-pv/solar-resource/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ทรัพยากรแสงอาทิตย์สำหรับออกแบบโซลาร์เซลล์ในไทย: GHI DNI DHI POA ชั่วโมงแดดสูงสุด PSH ค่าเฉลี่ย 18.2 MJ/m²/วัน ตำแหน่งดวงอาทิตย์ มุมเงย มุมทิศ มุมเอียงและทิศที่เหมาะสม ตะวันออก-ตะวันตก ระยะห่างแถวกันเงา GCR การประเมินเงาบัง พร้อมตัวอย่างคำนวณกรุงเทพฯ

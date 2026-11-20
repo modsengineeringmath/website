@@ -3,7 +3,7 @@ title: "จากอนุกรมฟูเรียร์สู่ DFT แล�
 url: https://modsengineeringmath.com/learn/fourier-series/dft-fft/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > เชื่อมอนุกรมฟูเรียร์กับ DFT/FFT ที่เครื่องวัดใช้จริง: สุ่มสัญญาณ N จุดต่อคาบได้สัมประสิทธิ์ cn = X[k]/N ความละเอียดความถี่ fs/N อเลียสซิงของฮาร์มอนิกสูง การรั่วของสเปกตรัม (leakage) เมื่อความถี่ไม่ตรง หน้าต่าง Hann และ flat-top มาตรฐาน IEC 61000-4-7 หน้าต่าง 10 คาบ 200 ms ช่องละ 5 Hz การรวมกลุ่มฮาร์มอนิก การอ่าน dBV จาก FFT บนออสซิลโลสโคป และอัลกอริทึม Goertzel พร้อมโค้ดสำหรับไมโครคอนโทรลเลอร์ ESP32

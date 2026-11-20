@@ -3,7 +3,7 @@ title: "วงจรกลับทางหมุนมอเตอร์สา
 url: https://modsengineeringmath.com/learn/motor-control/forward-reverse/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 > วงจร forward-reverse สำหรับมอเตอร์สามเฟส 400 V: ทำไมสลับ L1 กับ L3 แล้วมอเตอร์หมุนกลับ วงจรกำลังคอนแทกเตอร์สองตัว อินเตอร์ล็อกสามชั้น (หน้าสัมผัส NC ปุ่มกดคู่ และอินเตอร์ล็อกทางกล) กลับทางผ่าน STOP กับกลับทันที plugging AC-4 งานประตูม้วน รอกไฟฟ้า สายพาน และลิมิตสวิตช์

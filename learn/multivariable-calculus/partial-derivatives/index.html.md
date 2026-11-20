@@ -3,7 +3,7 @@ title: "อนุพันธ์ย่อย (Partial Derivatives): สูตร
 url: https://modsengineeringmath.com/learn/multivariable-calculus/partial-derivatives/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > อนุพันธ์ย่อย (partial derivative) คืออะไร วิธีหา ∂f/∂x และ ∂f/∂y ความหมายเป็นความชันของรอยตัด อนุพันธ์อันดับสูงและทฤษฎีบทของแคลโร (Clairaut) ระนาบสัมผัส (tangent plane) การประมาณเชิงเส้น ผลต่างรวม (total differential) กฎลูกโซ่ (chain rule) อนุพันธ์โดยปริยาย และการแพร่ความคลาดเคลื่อนในงานไฟฟ้า เครื่องกล โยธา พร้อมแล็บ

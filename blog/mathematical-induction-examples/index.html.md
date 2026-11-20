@@ -3,7 +3,7 @@ title: "อุปนัยเชิงคณิตศาสตร์ (Mathematic
 url: https://modsengineeringmath.com/blog/mathematical-induction-examples/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-26
+updated: 2026-11-08
 ---
 
 > ตัวอย่างพิสูจน์ด้วยอุปนัยเชิงคณิตศาสตร์ 14 ข้อพร้อมวิธีทำ: เขียนข้อความ P(n) สูตรผลบวก การหารลงตัว อสมการ ลำดับเวียนเกิด และอุปนัยแบบเข้ม (strong induction) พร้อมแม่แบบ 4 ขั้นและข้อผิดพลาดที่เสียคะแนน

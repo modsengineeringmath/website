@@ -3,7 +3,7 @@ title: "VFD Setup and Applications: Basic Parameters, Multi-Step Speeds, 0–10 
 url: https://modsengineeringmath.com/learn/en/motor-control/vfd-applications/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > A 12-step VFD commissioning procedure that works for any brand: nameplate data, auto-tune, acceleration and deceleration times, command sources, preset speeds from digital inputs, 0–10 V and 4–20 mA analog inputs, constant-pressure water pumps with the drive's built-in PID, conveyors, fans, the affinity laws Q ∝ n, H ∝ n², P ∝ n³, calculating energy savings and payback, temperature derating in hot and humid climates, bypass, and common fault codes.

@@ -35,8 +35,9 @@ jobs:
       - name: Commit generated pages
         id: commit
         run: |
-          # feed.xml, llms-full.txt and sitemap.xml carry today's date; alone they are not a reason to commit
-          if git diff --quiet -- . ':!feed.xml' ':!llms-full.txt' ':!sitemap.xml' && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+          # feed.xml and llms-full.txt carry today's date; alone they are not a reason to commit.
+          # sitemap.xml and data/lastmod.json change only when a page's content really changed (src/lastmod.mjs).
+          if git diff --quiet -- . ':!feed.xml' ':!llms-full.txt' && [ -z "$(git ls-files --others --exclude-standard)" ]; then
             echo "Nothing to publish: generated pages already match the sources."
             exit 0
           fi

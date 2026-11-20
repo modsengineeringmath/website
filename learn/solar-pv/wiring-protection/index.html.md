@@ -3,7 +3,7 @@ title: "สายไฟ ฟิวส์ เบรกเกอร์ SPD กร�
 url: https://modsengineeringmath.com/learn/solar-pv/wiring-protection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ออกแบบฝั่ง DC และ AC ของระบบโซลาร์เซลล์ให้ปลอดภัย: ทำไมไฟ DC อันตรายกว่า AC สาย PV1-F H1Z2Z2-K ขั้วต่อ MC4 คำนวณแรงดันตกและขนาดสาย ฟิวส์สตริง gPV เมื่อไรต้องใช้ DC isolator DC-PV2 SPD Type 1 Type 2 RCD Type A Type B เบรกเกอร์ AC กราวด์ equipotential bonding ล่อฟ้า การต่อเข้าตู้ไฟบ้าน AFCI และ rapid shutdown พร้อมเครื่องคำนวณและตัวอย่าง

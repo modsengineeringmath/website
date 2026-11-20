@@ -3,7 +3,7 @@ title: "ระบบควบคุมเมคาทรอนิกส์: เ�
 url: https://modsengineeringmath.com/learn/control-systems/mechatronics/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ระบบควบคุมในงานเมคาทรอนิกส์ องค์ประกอบ เซนเซอร์ (เอนโค้ดเดอร์ Hall IMU วัดกระแส) แอคชูเอเตอร์ (มอเตอร์ DC BLDC สเต็ปเปอร์ เซอร์โว) ไดรเวอร์ H-bridge และ PWM ออกแบบลูปคาสเคดกระแส ความเร็ว ตำแหน่งทีละขั้นพร้อมตัวเลขจริง feedforward แรงเสียดทาน backlash เรโซแนนซ์และฟิลเตอร์ notch ความละเอียดเอนโค้ดเดอร์ และไอเดียโปรเจกต์เมคาทรอนิกส์มากมาย

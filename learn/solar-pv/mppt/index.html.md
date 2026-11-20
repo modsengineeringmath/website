@@ -3,7 +3,7 @@ title: "MPPT ติดตามจุดกำลังสูงสุด: P&O I
 url: https://modsengineeringmath.com/learn/solar-pv/mppt/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > MPPT ภาษาไทยแบบละเอียด: ทำไมต่อแผงตรงกับโหลดหรือแบตแล้วเสียกำลัง จุดทำงานบนเส้นโค้ง I-V คอนเวอร์เตอร์เปลี่ยนความต้านทานที่แผงมองเห็น เงื่อนไข dP/dV = 0 อัลกอริทึม Perturb & Observe และ Incremental Conductance ขนาดก้าวและคาบ ประสิทธิภาพ MPPT ตาม EN 50530 ชาร์จคอนโทรลเลอร์ PWM กับ MPPT เงาบังบางส่วนกับหลายยอด global scan โค้ด C สำหรับไมโครคอนโทรลเลอร์ และแล็บจำลองคอนเวอร์เตอร์

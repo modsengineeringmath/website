@@ -3,7 +3,7 @@ title: "ระบบโซลาร์ On-grid Off-grid Hybrid และกา�
 url: https://modsengineeringmath.com/learn/solar-pv/system-types/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เปรียบเทียบระบบโซลาร์เซลล์ on-grid (grid-tie) off-grid hybrid และ DC ตรง DC-coupled กับ AC-coupled micro-inverter และ optimizer zero export กันไฟย้อน net billing สมดุลพลังงาน self-consumption self-sufficiency ขั้นตอนขออนุญาตขนานไฟ กฟภ. กฟน. แจ้ง กกพ. และท้องถิ่น และวิธีเลือกระบบให้ตรงกับการใช้ไฟ

@@ -3,7 +3,7 @@ title: "อินทิกรัลตามเส้น (Line Integrals) งา
 url: https://modsengineeringmath.com/learn/multivariable-calculus/line-integrals/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > อินทิกรัลตามเส้น (line integral) ของสนามสเกลาร์ ∫f ds และสนามเวกเตอร์ ∫F·dr คืองานของแรง ทฤษฎีบทมูลฐานของอินทิกรัลตามเส้น ความไม่ขึ้นกับเส้นทาง (path independence) ทฤษฎีบทกรีน (Green's theorem) ทั้งรูปการหมุนและฟลักซ์ การหาพื้นที่ด้วยอินทิกรัลเส้น สูตร shoelace พร้อมตัวอย่างไฟฟ้า เครื่องกล โยธา และแล็บเปรียบเทียบเส้นทาง

@@ -3,7 +3,7 @@ title: "บทความเวกเตอร์และพีชคณิต
 url: https://modsengineeringmath.com/blog/category/linear-algebra/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-25
+updated: 2026-11-14
 ---
 
 > รวมบทความเวกเตอร์และพีชคณิตเชิงเส้นภาษาไทย dot product cross product ดีเทอร์มิแนนต์ เมทริกซ์ผกผัน แรงก์ กฎของคราเมอร์ และจาโคบีกับเกาส์-ไซเดล พร้อมตัวอย่างคำนวณทีละขั้น

@@ -3,7 +3,7 @@ title: "ลำดับและอนุกรม (Sequences & Series): จา�
 url: https://modsengineeringmath.com/learn/sequences-and-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-08
+updated: 2026-11-14
 ---
 
 > ลำดับและอนุกรม ภาษาอังกฤษคือ sequence and series สรุปครบทั้งบทเป็นภาษาไทยพร้อมศัพท์อังกฤษ: ลำดับเลขคณิต เรขาคณิต อนุกรมอนันต์ การทดสอบการลู่เข้า อนุกรมกำลัง เทย์เลอร์ พร้อมเครื่องคิดเลขแสดงวิธีทำ แล็บ 23 ชุด และแนวข้อสอบ 60 ข้อ

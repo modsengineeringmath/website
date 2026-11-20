@@ -3,7 +3,7 @@ title: "เลือกแผงโซลาร์เซลล์: PERC TOPCon H
 url: https://modsengineeringmath.com/learn/solar-pv/panel-selection/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิธีเลือกแผงโซลาร์เซลล์แบบวิศวกร: เปรียบเทียบเทคโนโลยี PERC TOPCon HJT back-contact และฟิล์มบาง ขนาดเวเฟอร์ 182 210R half-cut multi-busbar glass-glass bifacial อ่านดาต้าชีตทุกบรรทัด สัมประสิทธิ์อุณหภูมิ การเสื่อมรายปี ประกันสินค้าและกำลัง มาตรฐาน IEC 61215 61730 61701 62716 มอก. PID และเช็กลิสต์ก่อนซื้อ

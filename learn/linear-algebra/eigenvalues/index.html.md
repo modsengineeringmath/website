@@ -3,7 +3,7 @@ title: "ค่าเฉพาะและเวกเตอร์เฉพาะ
 url: https://modsengineeringmath.com/learn/linear-algebra/eigenvalues/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > วิธีหาค่าเฉพาะ (eigenvalue) และเวกเตอร์เฉพาะ (eigenvector) ทีละขั้น สมการลักษณะเฉพาะ det(A − λI) = 0 สูตรลัด 2×2 ตัวอย่าง 3×3 ค่าซ้ำ ภาวะไม่ครบ (defective) ค่าเชิงซ้อน การทำให้เป็นเมทริกซ์ทแยงมุม Aⁿ เมทริกซ์สมมาตร เคย์ลีย์-แฮมิลตัน e^{At} และเสถียรภาพของวงจร พร้อมแล็บ 2×2 แบบลากได้

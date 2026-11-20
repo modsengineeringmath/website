@@ -3,7 +3,7 @@ title: "ออกแบบและพันตัวเหนี่ยวนำ
 url: https://modsengineeringmath.com/learn/power-electronics/inductor-design/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ออกแบบตัวเหนี่ยวนำสำหรับคอนเวอร์เตอร์ DC-DC ทีละขั้น: L = N²·AL ตรวจ Bpk กับ Bsat area product เลือกขนาดแกน ช่องอากาศ ขนาดลวดและ skin depth การสูญเสียแกนแบบ Steinmetz เปรียบเทียบเฟอร์ไรต์ ผงเหล็ก sendust MPP และวิธีวัดค่า L และกระแสอิ่มตัวด้วย pulse test

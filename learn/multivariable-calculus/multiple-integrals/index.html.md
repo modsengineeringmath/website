@@ -3,7 +3,7 @@ title: "อินทิกรัลสองชั้นและสามชั
 url: https://modsengineeringmath.com/learn/multivariable-calculus/multiple-integrals/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 > อินทิกรัลสองชั้น (double integral) และสามชั้น (triple integral) คืออะไร ผลรวมรีมันน์ ทฤษฎีบทฟูบินี บริเวณ type I type II สลับลำดับ พิกัดขั้ว (polar) ทรงกระบอก (cylindrical) ทรงกลม (spherical) จาโคเบียน (Jacobian) มวล จุดศูนย์กลางมวล โมเมนต์ความเฉื่อย พร้อมตัวอย่างวิศวกรรมและแล็บคำนวณพร้อมภาพ

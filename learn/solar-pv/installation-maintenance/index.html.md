@@ -3,7 +3,7 @@ title: "ติดตั้ง ทดสอบ ส่งมอบ และบำ
 url: https://modsengineeringmath.com/learn/solar-pv/installation-maintenance/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > งานภาคสนามของระบบโซลาร์เซลล์: เตรียมหลังคาและโครงยึด แรงลม ความปลอดภัยการทำงานบนที่สูงและไฟ DC ขั้นตอนติดตั้ง การทดสอบก่อนจ่ายไฟตาม IEC 62446-1 ขั้ว Voc Isc ความต้านทานฉนวน I-V curve tracer ภาพถ่ายความร้อน IEC 62446-3 EL เอกสารส่งมอบ ตารางบำรุงรักษา คำนวณรอบล้างแผงที่คุ้มที่สุด และตารางวิเคราะห์อาการเสีย 20 แบบ

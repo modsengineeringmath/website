@@ -3,7 +3,7 @@ title: "Three-Phase Motor Reversing Circuit: Swapping Two Phases, Electrical, Me
 url: https://modsengineeringmath.com/learn/en/motor-control/forward-reverse/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 > The forward–reverse circuit for a 400 V three-phase motor: why swapping L1 and L3 reverses the motor, the two-contactor power circuit, three layers of interlocking (NC contacts, double push-buttons and a mechanical interlock), reversing through STOP versus instant reversal, plugging and AC-4 duty, roller shutters, electric hoists, conveyors and limit switches.

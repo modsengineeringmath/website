@@ -3,7 +3,7 @@ title: "โซลาร์เพื่อการเกษตร: ปั๊ม�
 url: https://modsengineeringmath.com/learn/solar-pv/solar-agriculture/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ออกแบบโซลาร์เซลล์สำหรับการทำฟาร์มและการเกษตรในไทย: ความต้องการน้ำของพืช ET₀ Kc หัวสูบรวม TDH การสูญเสียในท่อ Hazen-Williams กำลังปั๊ม ρgQH ขนาดแผงจากพลังงานไฮดรอลิก ปั๊ม DC บัสเลส ปั๊มบาดาล ปั๊ม AC ผ่าน VFD ถังเก็บน้ำแทนแบตเตอรี่ บ่อปลาและเครื่องเติมอากาศ ฟาร์มปศุสัตว์ ห้องเย็น agrivoltaics Land Equivalent Ratio และ IoT สมาร์ตฟาร์ม พร้อมเครื่องคำนวณ

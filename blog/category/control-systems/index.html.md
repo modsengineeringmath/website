@@ -3,7 +3,7 @@ title: "บทความระบบควบคุมและ PID: หลั
 url: https://modsengineeringmath.com/blog/category/control-systems/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-16
+updated: 2026-11-14
 ---
 
 > รวมบทความระบบควบคุมภาษาไทย PID controller คืออะไร ทำงานอย่างไร และคู่มือจูน PID ฉบับเต็มตั้งแต่ step test และ Ziegler–Nichols ไปจนถึง anti-windup พร้อมผลจำลองที่ตรวจแล้ว

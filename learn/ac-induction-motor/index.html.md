@@ -3,7 +3,7 @@ title: "มอเตอร์ไฟฟ้ากระแสสลับ (AC Indu
 url: https://modsengineeringmath.com/learn/ac-induction-motor/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-19
 ---
 
 > มอเตอร์ไฟฟ้ากระแสสลับแบบเหนี่ยวนำ (AC induction motor) ละเอียดครบ: ระบบไฟไทย 500/230/115 kV ถึง 230/400 V มอเตอร์ 1 เฟส (capacitor start, PSC) และ 3 เฟส squirrel cage, double cage, wound rotor กราฟ speed-torque กับเส้นโหลด จุดทำงาน การต่อ star-delta เชิงลึก ทรานเซียนต์ตอนสตาร์ท สูตรเลือกสายไฟและเบรกเกอร์ (125 %, 250 %) พร้อมแล็บจำลอง

@@ -3,7 +3,7 @@ title: "ควบคุมตัวแปลงกำลัง: จากบั�
 url: https://modsengineeringmath.com/learn/control-systems/power-electronics-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > สะพานจากระบบควบคุมสู่อิเล็กทรอนิกส์กำลัง แบบจำลองเฉลี่ยและสัญญาณเล็กของบั๊กคอนเวอร์เตอร์ ฟังก์ชันถ่ายโอน Gvd(s) ที่มี LC และ ESR zero เกนของ PWM ลูปควบคุมโหมดแรงดัน การเลือกความถี่ครอสโอเวอร์ ตัวชดเชย Type I Type II Type III ด้วยออปแอมป์พร้อมสูตรคำนวณค่าอุปกรณ์ ตัวอย่างออกแบบ 12 V → 5 V ที่ตรวจด้วยการจำลอง โหมดกระแส RHP zero ของบูสต์ และการวัดลูปเกนจริง

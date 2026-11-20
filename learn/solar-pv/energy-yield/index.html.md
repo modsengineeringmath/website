@@ -3,7 +3,7 @@ title: "คาดการณ์พลังงานที่ผลิตได
 url: https://modsengineeringmath.com/learn/solar-pv/energy-yield/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิธีคาดการณ์พลังงานไฟฟ้าจากโซลาร์เซลล์ก่อนติดตั้ง: สมการ E = P × H × PR final yield reference yield performance ratio ตาม IEC 61724 การสูญเสียทีละรายการ อุณหภูมิ ฝุ่น เงา mismatch สาย อินเวอร์เตอร์ clipping การเสื่อมรายปี capacity factor P50 P90 ความไม่แน่นอน ผลผลิตรายเดือนของไทย และการใช้ PVGIS PVsyst SAM pvlib พร้อมเครื่องคำนวณ

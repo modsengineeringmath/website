@@ -3,7 +3,7 @@ title: "Motor Circuit Design and Installation: Device Selection, Cable Size, Sta
 url: https://modsengineeringmath.com/learn/en/motor-control/design-installation/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > A 10-step motor circuit design procedure for 400 V 50 Hz systems: deriving power from the load, choosing the motor and starting method, contactor, overload relay, circuit-breaker and breaking capacity, cable size by current and voltage drop (EIT wiring code of Thailand and IEC 60364), earth-fault current at the cable end, IEC 61439 control panels, IP ratings, panel heat and fans, insulation resistance testing, commissioning, maintenance, and a table of fault symptoms with causes.

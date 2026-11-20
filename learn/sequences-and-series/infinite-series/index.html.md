@@ -3,7 +3,7 @@ title: "อนุกรมอนันต์ (Infinite Series): ผลบวก�
 url: https://modsengineeringmath.com/learn/sequences-and-series/infinite-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-24
+updated: 2026-11-08
 ---
 
 > อนุกรมอนันต์คืออะไร ลู่เข้าเมื่อไร ทำไมอนุกรมฮาร์มอนิกลู่ออก อนุกรม p ลู่เข้าเมื่อไร อนุกรมกล้องส่องทางไกล และผลบวกอนุกรมเรขาคณิตอนันต์ พร้อมตัวอย่างแสดงวิธีทำและแล็บดูผลบวกย่อยแบบโต้ตอบ

@@ -3,7 +3,7 @@ title: "ค่าชาร์จรถ EV ที่บ้าน: ค่าไฟ
 url: https://modsengineeringmath.com/learn/ev-charging/charging-cost/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > คำนวณค่าชาร์จรถยนต์ไฟฟ้าที่บ้านในประเทศไทย: โครงสร้างค่าไฟบ้านประเภท 1.2 อัตราก้าวหน้า ค่า Ft VAT ค่าบริการ อัตรา TOU On-Peak 5.7982 Off-Peak 2.6369 บาท ช่วงเวลา On-Peak พลังงานต่อ 100 km ค่าใช้จ่ายต่อกิโลเมตรเทียบรถน้ำมัน ตัวอย่างบ้านใช้ไฟ 400 หน่วยวิ่ง 1,500 km และเครื่องคำนวณว่ามิเตอร์ TOU คุ้มหรือไม่

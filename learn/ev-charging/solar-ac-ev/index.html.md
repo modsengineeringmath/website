@@ -3,7 +3,7 @@ title: "โซลาร์เซลล์ แอร์ และรถ EV ใน
 url: https://modsengineeringmath.com/learn/ev-charging/solar-ac-ev/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > หลักการที่เชื่อมโซลาร์เซลล์ แอร์บ้าน และการชาร์จรถยนต์ไฟฟ้าเข้าด้วยกัน (Home Energy Management): สมการสมดุลกำลังทุกขณะ ไฟไหลไปทางไหน โปรไฟล์โหลด 24 ชั่วโมง self-consumption self-sufficiency การชาร์จรถจากโซลาร์ส่วนเกิน dynamic load balancing ลำดับความสำคัญของโหลด แบตเตอรี่บ้าน V2L V2H pre-cooling แอร์ และเลือกขนาดแผงสำหรับแอร์ + รถ พร้อมซิมูเลเตอร์ 24 ชั่วโมง

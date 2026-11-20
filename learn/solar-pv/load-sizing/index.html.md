@@ -3,7 +3,7 @@ title: "เลือกขนาดระบบจากบิลค่าไฟ
 url: https://modsengineeringmath.com/learn/solar-pv/load-sizing/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > วิธีเลือกขนาดโซลาร์เซลล์ให้คุ้มที่สุด: อ่านบิลค่าไฟ อัตราก้าวหน้าและ TOU แยกโหลดกลางวันกลางคืน วิธีสำรวจเครื่องใช้ไฟฟ้า self-consumption self-sufficiency โปรไฟล์โหลดบ้าน ร้านค้า สำนักงาน โรงงาน ห้องเย็น zero export ช่วงวันหยุด และตัวอย่างเลือกขนาด 3 กรณีพร้อมเครื่องคำนวณ

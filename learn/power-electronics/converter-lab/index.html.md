@@ -3,7 +3,7 @@ title: "แล็บจำลองคอนเวอร์เตอร์ DC-DC
 url: https://modsengineeringmath.com/learn/power-electronics/converter-lab/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > แล็บเสมือนคอนเวอร์เตอร์ DC-DC ฟรีบนเว็บ: จำลองทุกจังหวะการสวิตช์ของบั๊ก บูสต์ บั๊ก-บูสต์ ชุค เลือกแหล่งจ่ายแบตเตอรี่ ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์ หรือแผงโซลาร์ โหลดตัวต้านทาน กระแสคงที่ step load ตัวควบคุม open loop PI peak current mode MPPT ออสซิลโลสโคป 2 ช่อง ฟังก์ชันเจนเนอเรเตอร์ เครื่องคำนวณตัวเหนี่ยวนำ และใบงาน 10 ชุด

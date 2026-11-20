@@ -3,7 +3,7 @@ title: "สร้างเครื่องกำเนิดสัญญาณ
 url: https://modsengineeringmath.com/learn/function-generator/build/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > สร้างเครื่องกำเนิดสัญญาณและสโคปทำเองตั้งแต่ระดับ ม.ปลาย ถึง ป.โท: ออสซิลเลเตอร์ผ่อนคลายด้วยออปแอมป์ เครื่องกำเนิดสี่เหลี่ยม-สามเหลี่ยม ไอซี 555 แบบ astable Wien bridge และ RC phase-shift XR2206 DAC R-2R กับตารางค่าไซน์ DDS AD9833 พร้อมโค้ด Arduino และ ESP32 ภาคขาออกปรับแอมพลิจูดและออฟเซต วงจรขาเข้าสโคปทำเอง พร้อมตัวจำลองตัวสะสมเฟส DDS เครื่องคิดเลข และสูตรรหัส K

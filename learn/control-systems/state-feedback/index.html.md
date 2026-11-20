@@ -3,7 +3,7 @@ title: "ป้อนกลับสถานะ: วางขั้ว ตัว
 url: https://modsengineeringmath.com/learn/control-systems/state-feedback/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ออกแบบตัวควบคุมป้อนกลับสถานะ u = −Kx + N̄r วางขั้ววงปิดด้วยการเทียบสัมประสิทธิ์และสูตร Ackermann เกนอ้างอิง N̄ เพิ่มอินทิเกรเตอร์เพื่อกำจัดความผิดพลาดค้าง ตัวสังเกตสถานะแบบ Luenberger หลักการแยกส่วน ตัวควบคุมที่เหมาะสมที่สุดแบบ LQR สมการริคคาติ และแนวคิดตัวกรองคาลมาน พร้อมตัวอย่างเซอร์โวมอเตอร์ที่ตรวจด้วย python-control

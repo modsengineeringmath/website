@@ -3,7 +3,7 @@ title: "แหล่งจ่ายไฟสำหรับทดสอบวง
 url: https://modsengineeringmath.com/learn/power-electronics/test-power-sources/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > เลือกแหล่งจ่ายทดสอบคอนเวอร์เตอร์อย่างปลอดภัย: แหล่งจ่ายจำกัดกระแส แบตเตอรี่ตะกั่วกรด Li-ion LiFePO4 ไฟบ้าน 220 V 50 Hz ผ่านหม้อแปลงและบริดจ์พร้อมสูตรคำนวณตัวเก็บประจุ ripple 100 Hz inrush NTC ฟิวส์ isolation transformer แบบจำลองไดโอดของแผงโซลาร์และ MPPT

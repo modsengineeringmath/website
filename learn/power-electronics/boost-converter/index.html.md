@@ -3,7 +3,7 @@ title: "บูสต์คอนเวอร์เตอร์ (Boost Converter)
 url: https://modsengineeringmath.com/learn/power-electronics/boost-converter/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > บูสต์คอนเวอร์เตอร์ละเอียด: อัตราส่วน Vo/Vin = 1/(1−D) ผลของ DCR ที่จำกัดอัตราขยายสูงสุด ริปเปิลและผลของ ESR ขอบ CCM/DCM ความเค้น ทำไมบูสต์ไร้โหลดอันตราย ฟังก์ชันถ่ายโอนกับ right-half-plane zero และข้อจำกัดความถี่ครอสโอเวอร์ ตัวอย่างออกแบบ 24 V → 48 V 1 A พร้อมซิมูเลชัน

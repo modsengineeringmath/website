@@ -3,7 +3,7 @@ title: "เครื่องกำเนิดสัญญาณ (Function Gene
 url: https://modsengineeringmath.com/learn/function-generator/generator/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 > คู่มือเครื่องกำเนิดสัญญาณภาษาไทยครบทุกปุ่ม: ตั้งความถี่ แอมพลิจูด ออฟเซต ดิวตี้ สมมาตร ความต้านทานขาออก 50 Ω ทำไมสโคปแสดงค่าเป็นสองเท่า การตั้ง Load High-Z กับ 50 Ω AM FM PWM Sweep Burst ขั้ว Sync และหลักการ DDS พร้อมสูตร ตัวอย่าง และเครื่องจำลองให้ลองหมุนเอง

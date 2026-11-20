@@ -3,7 +3,7 @@ title: "โซลาร์เซลล์จ่ายแอร์: คำนว�
 url: https://modsengineeringmath.com/learn/solar-pv/solar-air-conditioner/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > ออกแบบระบบโซลาร์เซลล์สำหรับเครื่องปรับอากาศในประเทศไทย: เลือก BTU ตามขนาดห้อง แปลง BTU เป็น kW COP EER SEER ฉลากเบอร์ 5 กำลังไฟจริงของแอร์อินเวอร์เตอร์ตลอดวัน ทำไมแอร์กับโซลาร์เข้ากันดี วิธีต่อแบบ on-grid hybrid off-grid และแอร์โซลาร์ DC/AC กระแสกระชากของคอมเพรสเซอร์ ขนาดแผงและแบตเตอรี่ ตัวอย่างบ้านและสำนักงาน และเครื่องคำนวณ

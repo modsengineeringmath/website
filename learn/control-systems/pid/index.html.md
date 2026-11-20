@@ -3,7 +3,7 @@ title: "ตัวควบคุม P, PI, PD และ PID"
 url: https://modsengineeringmath.com/learn/control-systems/pid/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > ตัวควบคุม PID ครบทุกมุม รูปแบบขนาน มาตรฐาน (ISA) และอนุกรม ผลของ Kp Ki Kd ต่อ rise time overshoot settling time และความผิดพลาดอยู่ตัว ออกแบบ P PI PD PID ด้วยการวางขั้ว ความสัมพันธ์กับตัวชดเชย lead lag derivative kick setpoint weighting integral windup และ anti-windup วงจร PID ด้วยออปแอมป์ พร้อมแล็บจำลอง PID ที่ปรับเกนได้ มีการอิ่มตัวและสัญญาณรบกวน

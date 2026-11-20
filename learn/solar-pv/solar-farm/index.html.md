@@ -3,7 +3,7 @@ title: "ออกแบบโซลาร์ฟาร์ม: ผังแผง 
 url: https://modsengineeringmath.com/learn/solar-pv/solar-farm/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > การออกแบบโรงไฟฟ้าพลังงานแสงอาทิตย์ (โซลาร์ฟาร์ม) ภาษาไทย: ขั้นตอนพัฒนาโครงการ เลือกที่ดินและจุดเชื่อมต่อ พื้นที่ต่อ MW ประมาณ 5 ไร่ GCR fixed tilt กับ single-axis tracker แผงสองหน้า ระบบ DC 1,500 V string กับ central inverter หม้อแปลงและระบบ 22/33 kV SCADA สถานีตรวจวัดอากาศ ระบบป้องกัน grid code ฟาร์มลอยน้ำ พลังงานต่อไร่ การบำรุงรักษา และตัวอย่างฟาร์ม 5 MWp

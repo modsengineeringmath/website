@@ -3,7 +3,7 @@ title: "แหล่งจ่ายไฟสวิตชิ่ง (SMPS): Flybac
 url: https://modsengineeringmath.com/learn/power-electronics/switching-power-supply/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > ภาพรวมแหล่งจ่ายไฟสวิตชิ่งที่ต่อไฟบ้าน: EMI filter PFC boost ตัวแปลงแยกฉนวน flyback forward push-pull half/full-bridge LLC พร้อมอัตราส่วนแปลงผัน ขั้นตอนออกแบบ flyback แรงดันสะท้อน RCD clamp และมาตรฐาน IEC 62368-1 CISPR 32 IEC 61000-3-2

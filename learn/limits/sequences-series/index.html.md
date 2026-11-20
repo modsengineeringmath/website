@@ -3,7 +3,7 @@ title: "ลำดับและอนุกรม (Sequences and Series): ส�
 url: https://modsengineeringmath.com/learn/limits/sequences-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-17
+updated: 2026-10-24
 ---
 
 > ลำดับและอนุกรมคืออะไร สรุปสูตรครบ: ลำดับเลขคณิต (arithmetic sequence) ลำดับเรขาคณิต (geometric sequence) ซิกมา ลิมิตของลำดับ ε–N อนุกรมอนันต์ (infinite series) การทดสอบการลู่เข้า ratio test, comparison test, integral test อนุกรมกำลัง (power series) และอนุกรมเทย์เลอร์ (Taylor series) พร้อมตัวอย่างและแล็บโต้ตอบ

@@ -3,7 +3,7 @@ title: "ปรับปรุงเพาเวอร์แฟกเตอร์
 url: https://modsengineeringmath.com/learn/power-factor/pf-correction/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > คำนวณคาปาซิเตอร์แก้เพาเวอร์แฟกเตอร์ทีละขั้น: สูตร Qc = P(tan φ₁ − tan φ₂) ตารางตัวคูณ kvar/kW แปลง kvar เป็นไมโครฟารัดทั้ง 1 เฟส และ 3 เฟสแบบเดลต้าและสตาร์ กระแสสายลดลงตาม PF₁/PF₂ การสูญเสียลด 1 − (PF₁/PF₂)² kVA หม้อแปลงที่ได้คืน แรงดันเพิ่ม การชดเชยมอเตอร์รายตัวไม่เกิน 0.9 √3 V I₀ และตำแหน่งติดตั้ง พร้อมเครื่องคำนวณ

@@ -3,7 +3,7 @@ title: "เทคนิคเชิงช่างและวิศวกรร
 url: https://modsengineeringmath.com/learn/power-electronics/engineering-techniques/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > เทคนิคหน้างานสำหรับคอนเวอร์เตอร์ DC-DC: วาง PCB ให้ hot loop เล็ก Kelvin sense ออกแบบ RC snubber จากความถี่ ringing วิธีวัดด้วยออสซิลโลสโคปที่ถูกต้อง วัดลูปเกนด้วยตัวต้านทานฉีด ขั้นตอน bring-up ตารางงานประจำและบำรุงรักษา และ derating

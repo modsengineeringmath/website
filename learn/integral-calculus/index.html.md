@@ -3,7 +3,7 @@ title: "อินทิกรัล (Integral Calculus): สูตร คุณ�
 url: https://modsengineeringmath.com/learn/integral-calculus/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-14
 ---
 
 > รวมสูตรอินทิเกรตพร้อมชื่อสากล คุณสมบัติของอินทิกรัล สูตรสำเร็จ และตัวอย่างวิธีทำทีละขั้นแบบจดเลกเชอร์ การเปลี่ยนตัวแปร u การหารยาวพหุนาม เศษส่วนย่อย การอินทิเกรตทีละส่วน และอินทิกรัลจำกัดเขตจากนิยามผลบวกรีมันน์

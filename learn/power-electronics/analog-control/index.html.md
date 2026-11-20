@@ -3,7 +3,7 @@ title: "ควบคุมคอนเวอร์เตอร์แบบอน
 url: https://modsengineeringmath.com/learn/power-electronics/analog-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-15
 ---
 
 > สร้างตัวควบคุมคอนเวอร์เตอร์ DC-DC แบบอนาล็อก: วงจรสร้างคลื่นสามเหลี่ยมด้วยออปแอมป์ comparator PWM error amplifier Type II/III การเลือกออปแอมป์ตาม GBW การวัดกระแสด้วย shunt DCR Hall CT leading-edge blanking และการใช้ TL494 UC3843 TL431 กับ optocoupler

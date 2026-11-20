@@ -3,7 +3,7 @@ title: "บล็อกไดอะแกรม แผนภาพสัญญ�
 url: https://modsengineeringmath.com/learn/control-systems/block-diagrams/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-12
+updated: 2026-11-18
 ---
 
 > วิธีลดรูปบล็อกไดอะแกรมทีละขั้น บล็อกอนุกรม ขนาน วงป้อนกลับ การย้ายจุดรวมสัญญาณและจุดแยกสัญญาณ แผนภาพการไหลของสัญญาณ (signal-flow graph) กฎของเมสัน (Mason's gain formula) ลูปที่ไม่สัมผัสกัน ระบบหลายอินพุต และลูปซ้อนแบบแทโคมิเตอร์ของเซอร์โวมอเตอร์ พร้อมตัวอย่างที่ตรวจด้วยพีชคณิตเชิงสัญลักษณ์

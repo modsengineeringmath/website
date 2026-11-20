@@ -12,6 +12,7 @@ import { MC_PLC_TOPICS } from "./src/topics-mc-plc.mjs";
 import { PRECALC_TOPICS } from "./src/topics-precalc.mjs";
 
 import { loadCourses } from "./src/courses.mjs";
+import { openLedger } from "./src/lastmod.mjs";
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SITE = "https://modsengineeringmath.com";
 const TODAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok" }).format(new Date());
@@ -1472,6 +1473,8 @@ const layout = fs.readFileSync(path.join(ROOT, "src/layout.html"), "utf8");
 }
 const pagesDir = path.join(ROOT, "src/pages");
 const sitemap = [];
+// real "last changed" dates of every indexable page (data/lastmod.json, see src/lastmod.mjs)
+const lastmod = openLedger(path.join(ROOT, "data/lastmod.json"), TODAY);
 const updates = updatesData();
 const fullText = []; // for llms-full.txt
 const searchIndex = []; // for search-index.json (header search dialog in assets/site.js)
@@ -1887,7 +1890,7 @@ function solHead(s, url) {
         ${s.statement ? `<p class="sp-text">${s.statement}</p>` : ""}
         <div class="sp-math">\\[ ${s.problem} \\]</div>
         <details class="sp-ans"><summary>แตะเพื่อดูคำตอบสุดท้าย <small>(ลองคิดเองก่อนนะ)</small></summary><div>\\[ ${s.answer} \\]</div></details>
-        <div class="sp-meta"><span>ระดับ ${solLevel(s)}</span>${s.technique ? `<span>เทคนิค: ${esc(s.technique)}</span>` : ""}<span>เฉลยโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <time datetime="${s.updated || s.published}">${thaiDate(s.updated || s.published)}</time></span></div>
+        <div class="sp-meta"><span>ระดับ ${solLevel(s)}</span>${s.technique ? `<span>เทคนิค: ${esc(s.technique)}</span>` : ""}<span>เฉลยโดย <a href="/about/">อาจารย์มด</a></span><span>อัปเดต <!--updated--></span></div>
         <div class="sp-actions"><button type="button" class="btn btn-ghost btn-sm" id="practiceBtn" aria-pressed="false">โหมดฝึกทำ: ซ่อนวิธีทำ</button><a class="btn btn-ghost btn-sm" href="#solution">ไปที่วิธีทำ ↓</a>${s.fb ? `<a class="btn btn-ghost btn-sm" href="${esc(s.fb)}" target="_blank" rel="noopener">คุยกันในโพสต์ Facebook ↗</a>` : ""}</div>
       </div>
       ${shareHtml(url, `${solLabel(s)}: ${s.name}`).replace('class="share"', 'class="share share-top"')}`;
@@ -2270,13 +2273,18 @@ for (const { rel, raw } of pageSources) {
     "<!--updates-count-->": () => String((updates.updates || []).length),
     "<!--hero-new-->": () => heroNewHtml(updates),
     "<!--updates-date-->": () => { const d = [...(updates.updates || [])].map((u) => u.date).sort().pop(); return d ? thaiDate(d) : ""; },
-    "<!--updated-->": () => (meta.updated ? `<time datetime="${meta.updated}">${lang === "en" ? enDate(meta.updated) : thaiDate(meta.updated)}</time>` : ""),
   };
   for (const [marker, fn] of Object.entries(fragments)) body = body.split(marker).join(fn());
   // <!--series-cards:slug--> and <!--formula-index:slug--> can be used on any page (hub, home)
   body = body.replace(/<!--series-cards:([\w/-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--formula-index:([\w/-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
+  // the page's real last-change date: from its content fingerprint (title, description, <main> text) — see src/lastmod.mjs.
+  // Everything below (visible date, JSON-LD dateModified, Markdown copy, sitemap) uses this one value.
+  if (!meta.noindex)
+    meta.updated = lastmod.resolve(route, `<title>${esc(meta.title)}</title>\n<meta name="description" content="${esc(meta.description)}">\n<main id="main">\n${body}\n</main>`, meta.updated);
+  const shownDate = meta.updated || (sol ? sol.updated || sol.published : "");
+  body = body.split("<!--updated-->").join(shownDate ? `<time datetime="${shownDate}">${lang === "en" ? enDate(shownDate) : thaiDate(shownDate)}</time>` : "");
   const mdExport = !meta.noindex && !meta.noLlms;
   if (!meta.noindex && !meta.noLlms) {
     const text = htmlToText(body);
@@ -2306,10 +2314,11 @@ for (const { rel, raw } of pageSources) {
   body = body.split("<!--toc-->").join(tocHtml);
   body = renderMath(body, rel);
 
-  let graph = [...(meta.jsonld || [])];
+  // hand-written or course JSON-LD carries its own dateModified: align it with the real date
+  let graph = (meta.jsonld || []).map((n) => (n && n.dateModified && meta.updated ? { ...n, dateModified: meta.updated } : n));
   if (topic) graph = graph.concat(lessonSchema(meta, url, topic, SITE + ogImage, sub));
   else if (isPost) graph = graph.concat(postSchema(meta, url, SITE + ogImage, lang));
-  else if (isSol) graph = graph.concat(solutionSchema({ ...sol, description: meta.description }, url, SITE + ogImage));
+  else if (isSol) graph = graph.concat(solutionSchema({ ...sol, updated: meta.updated, description: meta.description }, url, SITE + ogImage));
   else if (isVid) graph = graph.concat(videoSchema(vid, meta, url));
   if (route === VID_HUB)
     graph.push(
@@ -2441,9 +2450,11 @@ for (const { rel, raw } of pageSources) {
   const outPath = meta.out ? path.join(ROOT, meta.out) : route === "/" ? path.join(ROOT, "index.html") : path.join(ROOT, route, "index.html");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
-  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated || TODAY, priority: route === "/" ? "1.0" : topic || isPost || isSol || isVid ? "0.8" : "0.9" });
+  if (!meta.noindex) sitemap.push({ loc: url, lastmod: meta.updated, priority: route === "/" ? "1.0" : topic || isPost || isSol || isVid ? "0.8" : "0.9" });
   console.log("built", route);
 }
+
+lastmod.save();
 
 // sitemap.xml
 sitemap.sort((a, b) => a.loc.localeCompare(b.loc));
@@ -2462,7 +2473,7 @@ fs.writeFileSync(
     allVideos.map((v) => [
       "  <url>",
       `    <loc>${SITE}${v.route}</loc>`,
-      `    <lastmod>${v.updated || v.published || TODAY}</lastmod>`,
+      `    <lastmod>${sitemap.find((s) => s.loc === SITE + v.route)?.lastmod || v.updated || v.published || TODAY}</lastmod>`,
       "    <video:video>",
       `      <video:thumbnail_loc>${ytThumb(v.id)}</video:thumbnail_loc>`,
       `      <video:title>${xmlEscV(v.name)}</video:title>`,

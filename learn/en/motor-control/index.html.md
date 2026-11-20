@@ -3,7 +3,7 @@ title: "AC Motor Control with Magnetic Contactors and VFDs"
 url: https://modsengineeringmath.com/learn/en/motor-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 > A complete course on industrial three-phase motor control for 230/400 V 50 Hz systems in Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore: induction motor principles, nameplates, star and delta connections, magnetic contactors and overload relays, IEC symbols and drawings, DOL, reversing, a detailed star–delta starter, soft starters, VFDs, design, installation and troubleshooting, with diagrams, calculators and a simulator.

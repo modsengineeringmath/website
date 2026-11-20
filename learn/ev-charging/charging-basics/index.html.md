@@ -3,7 +3,7 @@ title: "พื้นฐานการชาร์จรถยนต์ไฟฟ
 url: https://modsengineeringmath.com/learn/ev-charging/charging-basics/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 
 > เข้าใจการชาร์จรถ EV ตั้งแต่ศูนย์: กำลัง kW กับพลังงาน kWh ชาร์จช้าด้วยไฟบ้าน ชาร์จเร็วที่บ้านด้วยวอลล์บ็อกซ์ และชาร์จด่วน DC ต่างกันอย่างไร โหมดการชาร์จ Mode 1–4 ตาม IEC 61851 เครื่องชาร์จในรถ (OBC) กำลังชาร์จจริงถูกจำกัดด้วยอะไร หัวชาร์จ Type 2 CCS2 CHAdeMO GB/T พร้อมตัวอย่างคำนวณ

@@ -3,7 +3,7 @@ title: "Complex Variables, Complex Functions, Mapping and the s-Plane"
 url: https://modsengineeringmath.com/en/courses/control-engineering/complex-s-plane/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
 > The complex-variable foundation for control engineering: analytic functions, the Cauchy-Riemann conditions, conformal mapping, the s-plane, poles and zeros and the argument principle, with an interactive mapping lab and exercises.
