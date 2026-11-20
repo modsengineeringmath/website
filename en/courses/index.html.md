@@ -3,7 +3,7 @@ title: "Online classrooms"
 url: https://modsengineeringmath.com/en/courses/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
 > Ajarn Mod's online classrooms: engineering courses taught unit by unit in teaching order, with worked examples, exercises with answers and lecture notes. Free for self-study or classroom use.
@@ -20,4 +20,4 @@ Courses arranged as units in the order they are taught in class. Each unit has t
 
 ## Open courses
 
-G(s)Control EngineeringAn online control engineering classroom for advanced undergraduate and graduate study. Unit 1 is open: open and closed loop, system types, terminology, links to other engineering fields and high-paying careers, with an interactive lab, exercises and answers.1 units · updated 18 Nov 2026
+G(s)Control EngineeringLearn control engineering free, from zero, step by step, with examples from real electrical work. A six-stage study path from the basics to PID and state space, with interactive labs, exercises and answers. No sign-up.1 units · updated 20 Nov 2026

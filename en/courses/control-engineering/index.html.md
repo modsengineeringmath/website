@@ -3,10 +3,10 @@ title: "Control Engineering: From Complex Variables and Laplace Transforms to St
 url: https://modsengineeringmath.com/en/courses/control-engineering/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-18
+updated: 2026-11-20
 ---
 
-> An online control engineering classroom for advanced undergraduate and graduate study. Unit 1 is open: open and closed loop, system types, terminology, links to other engineering fields and high-paying careers, with an interactive lab, exercises and answers.
+> Learn control engineering free, from zero, step by step, with examples from real electrical work. A six-stage study path from the basics to PID and state space, with interactive labs, exercises and answers. No sign-up.
 
 Markdown copy of https://modsengineeringmath.com/en/courses/control-engineering/ for AI assistants and search tools. Math is LaTeX ($…$ and $$…$$); interactive labs and figures are only on the web page.
 
@@ -15,13 +15,13 @@ Markdown copy of https://modsengineeringmath.com/en/courses/control-engineering/
 // Online classroom · Control Engineering
 
 
-This classroom follows the order of the standard international control textbooks, from complex variables and the Laplace transform through physical models, response, stability, root locus, frequency response, PID and state space. Every unit is written from scratch with its own examples and interactive labs, deep enough for a master's course without leaving beginners behind.
+Control looks frightening because of all the equations, but its core idea is simple: measure, compare with the target, correct. Your fridge, an inverter air conditioner and the motors in a factory do this every second. This classroom walks you step by step from things you see every day to designing a controller yourself. Free, no sign-up, and one page a day is enough to get there.
 
 - 1 units open
 - Undergraduate and graduate
 - English edition
 - Free, no sign-up
-- Updated 18 Nov 2026
+- Updated 20 Nov 2026
 - ฉบับภาษาไทย →
 
 Start Unit 1Textbook and handouts
@@ -38,38 +38,102 @@ The textbook and handout files for this course are in preparation. Download butt
 
 ## Thai edition
 
-This classroom is a separate English edition with its own links. The Thai edition, with the same units, is at the Thai edition of this classroom.
+The Thai edition of this classroom is at the Thai edition. Most of the reference pages linked below are in Thai.
 
-## How this classroom differs from the reference library
+## If it feels hard, read this first
 
-The control systems library is a reference for looking up formulas and using single-topic labs. This classroom is a continuous path, one unit at a time, with theory, step-by-step examples, an interactive lab, exercises and answers. Units that are not open yet show a "coming soon" tag and open one by one in order.
+Many students give up on control in the first week because they meet Laplace transforms and differential equations before they know why. This classroom turns that order around: real systems first, mathematics after. Every equation comes with a picture or a graph that shows what it means.
 
-## Using it with the standard textbooks
+- You do not need to be good at it already. Basic calculus is enough to start; where something is missing there is a link back to exactly that topic.
 
-The order of topics and the notation follow the standard control textbooks, such as K. Ogata's Modern Control Engineering and System Dynamics, so you can read them side by side. The explanations, examples, problems and figures here are all written from scratch and are not copied or translated from any book. The exercises are of the same kinds you meet at the end of textbook chapters, but they use our own systems and numbers.
+- You do not need to do it all at once. 20–30 minutes a day is enough. Mark a unit as learned and come back to where you left off.
 
-## How to use each unit
+- Mistakes are private. Answers are folded away, so try first and then check.
 
-- Read the outcomes at the top to know what you will be able to do.
+By the end of this path you will read response graphs, tell whether a system is stable, and set up a PID controller for a motor or an oven for a reason, not by guessing.
 
-- Work the examples step by step with pencil and paper.
+## A six-stage study path
 
-- Play with the lab: change a value and watch what follows.
+Units in this classroom open one at a time. Meanwhile you can follow this map: every link is a lesson that already exists in the reference library (Thai), in the order of the standard control textbooks.
 
-- Try the exercises before opening the answers, which are folded away.
+Stage 1 · Meet control systems (see the picture first, no calculations yet)
 
-- Press Mark as learned. Progress is kept only in your own browser.
+- Unit 1: Introduction to Control Engineering ← start here
 
-## Prerequisites
+- 70 control system ideas, from a toilet cistern to a rocket (Thai)
 
-- Calculus and ordinary differential equations
+Stage 2 · The mathematical tools (the language control engineers speak)
 
-- Basic linear algebra (for Part 7)
+- The Laplace transform (Thai): differential equations become algebra
 
-- Basic circuit analysis (see the DC circuits lessons)
+- Mathematical models: circuits, motors, mechanics, heat (Thai)
 
-Later units build the complex variables you need from the start, so no prior course in complex analysis is required.
+- Block diagrams and closed-loop transfer functions (Thai)
 
-## Roadmap
+Stage 3 · How systems respond (learn to read the graphs)
 
-Only Unit 1 is open now. More units will be added one at a time. Check back here for new units.
+- First-order systems (Thai), such as a charging capacitor or motor speed
+
+- Second-order systems (Thai): where overshoot and ringing come from
+
+- Time response: poles, zeros and design specifications (Thai)
+
+- Steady-state error and system type (Thai)
+
+Stage 4 · Will it blow up? (stability)
+
+- Stability: poles in the s-plane (Thai)
+
+- The Routh–Hurwitz criterion (Thai)
+
+- Root locus: definition and rules (Thai), then sketching by hand step by step (Thai)
+
+Stage 5 · Designing controllers (the part you use at work)
+
+- P, PI, PD and PID controllers (Thai)
+
+- PID tuning in practice (Thai)
+
+- Frequency response (Thai) → Bode plots (Thai) → gain and phase margins (Thai)
+
+- Root-locus design (Thai) and lead and lag compensators (Thai)
+
+Stage 6 · Going further (final year and master's level)
+
+- State space (Thai) → controllability and observability (Thai) → state feedback and LQR (Thai)
+
+- Digital control (Thai) and the Nyquist criterion (Thai)
+
+- Real electrical work: power converter control (Thai) · mechatronics and servos (Thai) · robotics (Thai)
+
+You do not have to finish every link in one go. If you are taking a class, open just the stage that matches this week.
+
+## How to study well
+
+- Read the outcomes first so you know what you should be able to do at the end.
+
+- Work the examples with pen and paper. Skimming does not make it stick.
+
+- Play with the interactive labs. Change a value, but guess first how the graph will move.
+
+- Try the exercises before opening the answers. Finding out where you went wrong is when you learn most.
+
+- Mark the unit as learned. Progress is kept in your browser only.
+
+## What you should know first
+
+- Basic calculus and differential equations (Thai)
+
+- Basic DC circuits (Thai)
+
+- Linear algebra (Thai) (from stage 6)
+
+If these are not solid yet, that is fine. Start anyway, and follow the links back whenever something is unclear.
+
+## Read it alongside a textbook
+
+The order of topics and the notation follow the standard control textbooks, such as K. Ogata's Modern Control Engineering and System Dynamics, so you can read them side by side. All explanations, examples, problems and figures here are written from scratch, not copied or translated from any book.
+
+## Next units
+
+New units open one at a time in the order of the path above. Follow What's new or the YouTube channel, and ask questions on the Facebook page.
