@@ -11,7 +11,6 @@ import katex from "katex";
 import { MC_PLC_TOPICS } from "./src/topics-mc-plc.mjs";
 import { PRECALC_TOPICS } from "./src/topics-precalc.mjs";
 
-import { loadCourses } from "./src/courses.mjs";
 import { openLedger } from "./src/lastmod.mjs";
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SITE = "https://modsengineeringmath.com";
@@ -873,7 +872,6 @@ const EN_CHROME = [
   ['href="/learn/" data-nav="learn">คลังความรู้<', 'href="/learn/" data-nav="learn">Library (Thai)<'],
   ['href="/learn/" aria-current="page">คลังความรู้<', 'href="/learn/" aria-current="page">Library (Thai)<'],
   [">ดูคลิป<", ">Videos<"],
-  ['href="/courses/" data-nav="courses">ห้องเรียน<', 'href="/en/courses/" data-nav="courses">Courses<'],
   ['aria-controls="navtools">เครื่องมือ<', 'aria-controls="navtools">Tools<'],
   ['<a href="/tools/" data-nav="tools">เครื่องมือคำนวณทั้งหมด<', '<a href="/en/tools/" data-nav="tools">All calculators<'],
   ['<span class="nav-h">คณิตศาสตร์</span>\n          <a href="/tools/derivative', '<span class="nav-h">Mathematics</span>\n          <a href="/tools/derivative'],
@@ -2148,12 +2146,6 @@ const pageSources = [
   ...walk(pagesDir).map((file) => ({ rel: path.relative(pagesDir, file), raw: fs.readFileSync(file, "utf8") })),
   ...["th", "en"].flatMap((lang) => liveCats(lang).map((c) => ({ rel: catRel(c, lang), raw: blogCatPage(c, lang) }))),
 ];
-// Courses (/courses/): Markdown files under content/courses/ → page sources (see src/courses.mjs and content/courses/README.md)
-const { pages: coursePages, courses: allCourses, coursesEn: allCoursesEn } = loadCourses(ROOT, { SITE, PERSON_ID, shareHtml, thaiDate, enDate, TODAY });
-for (const p of coursePages) {
-  if (pageSources.some((x) => x.rel.replace(/\\/g, "/") === p.rel)) throw new Error(`${p.rel} exists both in src/pages/ and in content/courses/`);
-  pageSources.push(p);
-}
 for (const { rel, raw } of pageSources) {
   const m = raw.match(/^<!--meta\s*([\s\S]*?)-->\s*/);
   if (!m) throw new Error(`Missing <!--meta {...} --> block in ${rel}`);
@@ -2279,6 +2271,12 @@ for (const { rel, raw } of pageSources) {
   body = body.replace(/<!--series-cards:([\w/-]+)-->/g, (_, s) => seriesCards(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--formula-index:([\w/-]+)-->/g, (_, s) => formulaIndex(TOPICS.find((t) => t.slug === s)));
   body = body.replace(/<!--(formula|example)-count:([\w-]+)-->/g, (_, kind, s) => String(seriesCount(TOPICS.find((t) => t.slug === s), kind)));
+  // <!--chapter:slug--> = the topic's chapter number (its place in TOPICS, the same number as on the topic cards);
+  // <!--page-count:slug--> = how many of its sub-pages are live. Use these instead of typing numbers, so they never drift.
+  const thTopics = TOPICS.filter((t) => !t.lang); // same list and order as topicCards()
+  const topicOf = (s) => { const i = thTopics.findIndex((t) => t.slug === s); if (i < 0) throw new Error(`Unknown topic "${s}" in ${rel}`); return i; };
+  body = body.replace(/<!--chapter:([\w-]+)-->/g, (_, s) => String(topicOf(s) + 1));
+  body = body.replace(/<!--page-count:([\w-]+)-->/g, (_, s) => String(live(thTopics[topicOf(s)]).length));
   // the page's real last-change date: from its content fingerprint (title, description, <main> text) — see src/lastmod.mjs.
   // Everything below (visible date, JSON-LD dateModified, Markdown copy, sitemap) uses this one value.
   if (!meta.noindex)
@@ -2591,14 +2589,6 @@ ${llmsBlog("en")}
 ## Worked solutions (one problem per page, full step-by-step working in Thai, math in LaTeX)
 - [All worked solutions](${SITE}${SOL_HUB})
 ${solutions.map((s) => `- [${solTopic(s.topic).en} ${solNo(s)}: ${s.name}](${SITE}${s.route}): ${s.description}`).join("\n")}
-
-## Courses (e-learning classrooms: units in teaching order with lecture notes, worked examples, exercises with answers, videos and handouts; Thai)
-- [All courses](${SITE}/courses/)
-${allCourses.map((c) => `- [${c.en ? c.en + " — " : ""}${c.title}](${SITE}${c.route}): ${c.description}\n` + c.units.map((u) => `  - [Unit ${u.no}: ${u.en ? u.en + " — " : ""}${u.title}](${SITE}${u.route}): ${u.description}`).join("\n")).join("\n")}
-
-## Courses in English (full translations of the Thai units above: same theory, worked examples and exercises with answers)
-- [All English courses](${SITE}/en/courses/)
-${allCoursesEn.map((c) => `- [${c.title}](${SITE}${c.route}): ${c.description}\n` + c.units.map((u) => `  - [Unit ${u.no}: ${u.title}](${SITE}${u.route}): ${u.description}`).join("\n")).join("\n")}
 
 ## Videos (one watch page per YouTube video, Thai, with a written summary and links to the lessons)
 - [All videos](${SITE}${VID_HUB})

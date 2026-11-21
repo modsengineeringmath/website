@@ -3,7 +3,7 @@ title: "History of communications, signals and control: from the telegraph to th
 url: https://modsengineeringmath.com/en/history/electrical-engineering/communications-control/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-12
+updated: 2026-11-21
 ---
 
 > The history of the telegraph, telephone, radio and Shannon's information theory, and of control from Watt's governor and Maxwell's On Governors to Routh–Hurwitz, Nyquist, Bode, PID, Ziegler–Nichols, the root locus and Kalman.
@@ -109,8 +109,6 @@ A Cambridge mathematics coach who trained more Senior Wranglers than anyone else
 - PID tuning guide, from Ziegler–Nichols onwards
 
 - Signals and systems, sampling (in Thai)
-
-- Control engineering online course, 17 units
 
 ## Frequently asked questions
 

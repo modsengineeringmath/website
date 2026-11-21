@@ -37,8 +37,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=133bd840">
-<link rel="stylesheet" href="/assets/site.css?v=133bd840">
+<link rel="stylesheet" href="/assets/fonts.css?v=9a5a4819">
+<link rel="stylesheet" href="/assets/site.css?v=9a5a4819">
 <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.22">
 <link rel="alternate" type="text/markdown" href="https://modsengineeringmath.com/learn/signals/fourier-transform/index.html.md" title="Markdown">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://modsengineeringmath.com/learn/signals/fourier-transform/#article","headline":"การแปลงฟูริเยร์ (Fourier Transform): จากอนุกรมฟูริเยร์สู่สเปกตรัมต่อเนื่อง","description":"การแปลงฟูริเยร์ภาษาไทยแบบละเอียด ที่มาจากอนุกรมฟูริเยร์ ทำไม e^{−j2πft} คือ cos ลบ j sin ตารางคู่การแปลง (rect sinc เอกซ์โพเนนเชียล เกาส์ cos sin) คุณสมบัติการเลื่อน สเกล ดูอัล คอนโวลูชัน การมอดูเลต AM พาร์เซวาล และแล็บสเปกตรัม","inLanguage":"th","url":"https://modsengineeringmath.com/learn/signals/fourier-transform/","mainEntityOfPage":"https://modsengineeringmath.com/learn/signals/fourier-transform/","datePublished":"2026-11-14","dateModified":"2026-11-14","author":{"@id":"https://modsengineeringmath.com/#mod"},"publisher":{"@id":"https://modsengineeringmath.com/#mod"},"about":["Fourier transform","Fourier transform pairs","Sinc function","Modulation theorem","Convolution theorem","Parseval's theorem","Duality"],"isPartOf":{"@id":"https://modsengineeringmath.com/learn/signals/#article"},"image":["https://modsengineeringmath.com/images/og/learn-signals-fourier-transform.jpg"],"educationalLevel":["Undergraduate"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://modsengineeringmath.com/"},{"@type":"ListItem","position":2,"name":"คลังความรู้","item":"https://modsengineeringmath.com/learn/"},{"@type":"ListItem","position":3,"name":"สัญญาณและระบบ (Signals and Systems)","item":"https://modsengineeringmath.com/learn/signals/"},{"@type":"ListItem","position":4,"name":"การแปลงฟูริเยร์: ตารางคู่การแปลง คุณสมบัติ มอดูเลต AM และพาร์เซวาล","item":"https://modsengineeringmath.com/learn/signals/fourier-transform/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"การแปลงฟูริเยร์ต่างจากอนุกรมฟูริเยร์อย่างไร?","acceptedAnswer":{"@type":"Answer","text":"อนุกรมฟูริเยร์ใช้กับสัญญาณที่มีคาบ ได้สเปกตรัมเป็นเส้น ๆ ที่ความถี่ฮาร์มอนิก n/T การแปลงฟูริเยร์ใช้กับสัญญาณไม่มีคาบ ซึ่งมองได้ว่ามีคาบยาวเป็นอนันต์ ระยะห่างระหว่างเส้น 1/T จึงหดเป็นศูนย์ เส้นเรียงชิดกันจนเป็นสเปกตรัมต่อเนื่อง X(f)"}},{"@type":"Question","name":"ทำไมการแปลงฟูริเยร์ของพัลส์สี่เหลี่ยมคือ sinc?","acceptedAnswer":{"@type":"Answer","text":"อินทิเกรต e^{−j2πft} จาก −T/2 ถึง T/2 ได้ (e^{jπfT} − e^{−jπfT})/(j2πf) ตัวเศษตามสูตรออยเลอร์คือ 2j sin(πfT) จึงเหลือ sin(πfT)/(πf) = T sinc(fT) ศูนย์ตัวแรกอยู่ที่ f = 1/T พัลส์ยิ่งแคบ สเปกตรัมยิ่งกว้าง"}},{"@type":"Question","name":"การมอดูเลต AM ทำอะไรกับสเปกตรัม?","acceptedAnswer":{"@type":"Answer","text":"คูณสัญญาณด้วย cos 2πf₀t เขียน cos ในรูป (e^{j2πf₀t} + e^{−j2πf₀t})/2 แต่ละก้อนเลื่อนสเปกตรัมไป ±f₀ จึงได้ ½[X(f − f₀) + X(f + f₀)] สเปกตรัมเดิมถูกยกไปวางรอบความถี่พาหะ แบนด์วิดท์เป็นสองเท่าของแบนด์วิดท์สัญญาณเดิม"}},{"@type":"Question","name":"ใช้ f (Hz) หรือ ω (rad/s) ดี?","acceptedAnswer":{"@type":"Answer","text":"ได้ทั้งคู่ ความสัมพันธ์คือ ω = 2πf ถ้าใช้ f สูตรแปลงไปและกลับสมมาตรกันไม่มี 2π ข้างหน้า ถ้าใช้ ω สูตรผกผันมี 1/2π หน้าเล่มนี้ใช้ f เป็นหลักเพราะอ่านเป็นเฮิรตซ์ได้ตรง ๆ และบอกรูปแบบ ω ไว้ในตาราง"}},{"@type":"Question","name":"ทฤษฎีบทพาร์เซวาลบอกอะไร?","acceptedAnswer":{"@type":"Answer","text":"พลังงานของสัญญาณคิดในเวลาหรือในความถี่ได้เท่ากัน ∫|x(t)|²dt = ∫|X(f)|²df เช่น e^{−t}u(t) มีพลังงาน 1/2 และ ∫ df/(1 + 4π²f²) ก็ได้ 1/2 เช่นกัน |X(f)|² จึงเรียกว่าความหนาแน่นสเปกตรัมพลังงาน"}}]}]}</script>
@@ -59,7 +59,6 @@
     <nav class="nav-links" id="siteNav" aria-label="เมนูหลัก">
       <a class="nav-home" href="/" >หน้าแรก</a>
       <a href="/learn/" >คลังความรู้</a>
-      <a href="/courses/" >ห้องเรียน</a>
       <a href="/blog/" >บทความ</a>
       <a href="/solutions/" >เฉลยโจทย์</a>
       <a class="nav-upd" href="/updates/" >มีอะไรใหม่</a>
@@ -322,7 +321,6 @@
         <button class="nav-tg" type="button" aria-expanded="false" aria-controls="navg4">ระบบควบคุม</button>
         <div class="nav-list" id="navg4">
           <a href="/learn/control-systems/" >ภาพรวมระบบควบคุม</a>
-          <a href="/courses/control-engineering/">ห้องเรียนวิศวกรรมระบบควบคุม · เรียนเป็นหน่วย</a>
           <a href="/learn/control-systems/routh-hurwitz/">เสถียรภาพ · เราท์–เฮอร์วิตซ์</a>
           <a href="/learn/control-systems/root-locus-sketching/">วาดรูทโลคัสด้วยมือ</a>
           <a href="/learn/control-systems/bode-plot/">โบดไดอะแกรมและมาร์จิน</a>
@@ -759,7 +757,6 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       <b class="mono">เว็บไซต์</b>
       <a href="/">หน้าแรก</a>
       <a href="/learn/">คลังความรู้</a>
-      <a href="/courses/">ห้องเรียนออนไลน์ · วิศวกรรมระบบควบคุม</a>
       <a href="/updates/">อัปเดตล่าสุด · บันทึกการปรับปรุง</a>
       <a href="/history/">ประวัติศาสตร์คณิตศาสตร์และวิศวกรรม: นักคณิตศาสตร์ วิศวกร ผู้คิดค้น</a>
       <a href="/en/history/">History of mathematics &amp; engineering</a>
@@ -850,10 +847,10 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </div>
 </footer>
 
-<script src="/assets/site.js?v=133bd840" defer></script>
-<script src="/assets/lesson.js?v=133bd840" defer></script>
-<script src="/assets/vendor/katex.min.js?v=133bd840" defer></script>
-<script src="/assets/mathkit.js?v=133bd840" defer></script>
-<script src="/assets/ms-lab.js?v=133bd840" defer></script>
+<script src="/assets/site.js?v=9a5a4819" defer></script>
+<script src="/assets/lesson.js?v=9a5a4819" defer></script>
+<script src="/assets/vendor/katex.min.js?v=9a5a4819" defer></script>
+<script src="/assets/mathkit.js?v=9a5a4819" defer></script>
+<script src="/assets/ms-lab.js?v=9a5a4819" defer></script>
 </body>
 </html>

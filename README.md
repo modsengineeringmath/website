@@ -3,9 +3,23 @@
 Static site served by Cloudflare Pages straight from this repo (no build step on Cloudflare).
 The HTML in the repo root, `about/` and `learn/` is generated — edit `src/` and rebuild.
 
+## Site structure rules (added 2026-11-21) — every new page must fit one of these; do not invent new top-level paths
+The site was getting cluttered; the online classroom `/courses/` was removed on 2026-11-21 (all its URLs 301 to
+`/learn/control-systems/` or `/learn/en/`, see `_redirects`). From now on:
+- **Lessons** live only under `/learn/<topic>/<page>/` (one topic = one entry in `TOPICS`). Never start a second copy of a subject
+  elsewhere (no new "course", "classroom" or "e-learning" trees); a teaching sequence is a hub page inside the topic.
+- **Calculators** live only under `/tools/<name>/` (English `/en/tools/<name>/`). A lesson that needs one embeds it or links to it.
+- **Articles** `/blog/<slug>/`, **solutions** `/solutions/<slug>/`, **videos** `/videos/<slug>/`, **history** `/history/…`.
+- **English pages**: new English sections go under `/en/…` mirroring the Thai path. The existing `/learn/en/…` lessons stay where
+  they are (they already rank); do not move them.
+- **Never change or delete a live URL** without adding a 301 line to `_redirects` in the same commit.
+- **Never type counts or chapter numbers by hand** on hub/home pages: use `<!--page-count:<topic>-->`, `<!--chapter:<topic>-->`,
+  `<!--formula-count:<topic>-->`, `<!--solution-count-->`, `<!--blog-count-->`, `<!--video-count-->` (build.mjs fills them in).
+- A new top-level menu item needs the owner's explicit approval.
+
 ## Checklist for every new page or article (Claude sessions: follow this without being asked)
 The owner should only have to say what to write. Every addition goes through these steps:
-1. **Write the source.** Course units: `content/courses/<course>/NN-<slug>.md` (see "Courses"). Lessons: `src/pages/learn/…` plus the entry in `TOPICS` (build.mjs). Articles: `src/pages/blog/<slug>.html`
+1. **Write the source.** Lessons: `src/pages/learn/…` plus the entry in `TOPICS` (build.mjs). Articles: `src/pages/blog/<slug>.html`
    and, when an English edition is wanted, `src/pages/en/blog/<same slug>.html`. Solutions: `node scripts/new-solution.mjs`.
    The sections below give the details for each series.
 2. **Log it in `data/updates.json` every time** — the home page promises that every new lesson, lab, exam set, article and
@@ -21,43 +35,6 @@ The owner should only have to say what to write. Every addition goes through the
 
 Automatic, nothing to edit by hand: sitemap.xml, llms.txt, llms-full.txt, the Markdown copy (`index.html.md`), search-index.json,
 mcp-index.json (so the `/mcp` connector in Claude finds the page), feed.xml, JSON-LD, prev/next, hub and category lists, `_headers`.
-
-## Courses / ห้องเรียนออนไลน์: /courses/ (added 2026-11-11)
-E-learning style classrooms, separate from the reference library under `/learn/`: units in teaching order with outcomes, worked
-examples, exercises with folded answers, the unit's YouTube video and handouts. First course: `/courses/control-engineering/`
-(17 units, all written, Thai and English). **Written in Markdown so the owner can post without Claude** — his step-by-step guide (Thai) is
-`content/courses/README.md`; keep it in step with the code.
-- Sources: `content/courses/<course>/course.md` (front matter: title, en, description, parts, plan, playlist, files … + hub text),
-  `NN-<slug>.md` (unit NN → `/courses/<course>/<slug>/`), `<slug>.md` (extra post), `_*.md` ignored. Handouts in `files/courses/<course>/`,
-  figures in `images/courses/<course>/` (`python3 scripts/course_figs.py` draws the control-engineering ones).
-- `src/courses.mjs` (`loadCourses`) parses the front matter, converts Markdown with `marked` (math `$…$`, `$$…$$`, `\(…\)`, `\[…\]`;
-  boxes `:::note|warn|key|example|activity|exercise|answer`; `::youtube ID title`; `::file label | url`; `## Heading {#id}`), and returns
-  page sources with a normal `<!--meta-->` block that build.mjs appends to `pageSources`. So layout, KaTeX, sitemap, search index,
-  Markdown copies, MCP index and the OG manifest need nothing extra; llms.txt has a "Courses" section. Errors are thrown in Thai with the file name.
-- JSON-LD: hub = `Course` (+ `CourseInstance`, free `Offer`, `Syllabus` per part) + `ItemList` + `BreadcrumbList`; unit = `Article`/`LearningResource`
-  + `BreadcrumbList`, and `VideoObject` only when both `youtube:` and `video_date:` are given. Units use the click-to-load facade, so they are
-  not watch pages; a clip that should rank as a video still gets its own `/videos/<slug>/` page.
-- `assets/course.css` + `assets/course.js` (loaded only on these pages): "learned" marks and hub progress in localStorage
-  (`course-done:<course>`, this browser only), classroom mode (`body.c-classroom`, fullscreen, Esc), print with answers open.
-- **`.github/workflows/build.yml`** runs `node build.mjs` + `scripts/test-courses.mjs` on every push that touches `content/`, `src/`, `data/`,
-  `files/` or build.mjs and commits the generated pages (then runs IndexNow itself, because a commit by the workflow does not start other
-  workflows). When sources and output are pushed together it finds nothing to commit. This also makes edits to `src/pages/**` on github.com work.
-  A failed build leaves the live site unchanged.
-- Menu: "ห้องเรียน" (`data-nav="courses"`, English label in `EN_CHROME`) and a link in the ระบบควบคุม group. `/courses` no longer redirects to
-  `/learn/`; short URLs `/control-engineering`, `/control-course`, `/classroom`, `/elearning`.
-- **English edition (added 2026-11-12): `content/courses/<course>/en/`** holds `course.md` and unit files with the *same file names* as the Thai ones
-  → `/en/courses/<course>/<slug>/` and the hub `/en/courses/`. Thai is the source. A unit and its translation pair up by file name: reciprocal
-  hreflang, the TH/EN switch, a link in the lesson header, `workTranslation`/`translationOfWork` in JSON-LD, one merged hit in `/mcp` search.
-  All interface words of both editions are in `STR` at the top of `src/courses.mjs`; course.js picks its texts from `<html lang>`.
-  **Rule for Claude sessions: whenever a Thai unit is added or its content changes, update `en/<same file>.md` in the same commit**
-  (full translation: same numbers, examples, exercises, headings ids; `deeper:` labels end with "(Thai)" when the target page is Thai;
-  use the `-en.svg` figure when a figure has Thai labels; no Thai text may remain, the test checks it). If the owner edits a Thai file
-  by hand on github.com, the English file is not changed automatically: translate it the next time he asks, comparing `git log` dates.
-- Syllabus: 17 units in 5 parts (unit 16 fuzzy logic, unit 17 AI/ML). Examples are taken from electrical engineering on purpose (the table
-  in `course.md` lists which unit uses which equipment); keep that when editing. Every unit opens with a "ภาพในใจก่อนเริ่ม" section for beginners.
-- Figures for units 5–16 are drawn by `scripts/course_figs.py` (needs numpy and scipy) with symbol-only labels, so both editions share them.
-- Check: `node build.mjs && node scripts/test-courses.mjs` (both editions). Social images: `python3 scripts/og.py --prefix courses` and `--prefix en-courses`.
-- A deleted unit's output folder (`courses/<course>/<slug>/`) must be deleted by hand.
 
 ## Calculators: /tools/ and /en/tools/ (added 2026-11-10)
 Hub `src/pages/tools/index.html` + 9 tool pages, each with an English twin of the same slug in `src/pages/en/tools/` (paired by
