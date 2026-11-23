@@ -62,13 +62,13 @@ $$T_s = \frac{1}{50\ \text{kHz}} = 20\ \mu\text{s}, \qquad t_{on} = D\,T_s \appr
 
 ## วิดีโออื่นที่น่าดู
 
+ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 
-ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
-
-ดูวิดีโอทั้งหมด 4 คลิป →
+ดูวิดีโอทั้งหมด 5 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

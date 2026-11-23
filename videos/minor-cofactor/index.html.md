@@ -64,13 +64,13 @@ $$\begin{aligned} \det A &= a_{11}C_{11} + a_{12}C_{12} + a_{13}C_{13} \\ &= 1(2
 
 ## วิดีโออื่นที่น่าดู
 
+ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 
-Dc to dc converter Buck converter วงจรบั๊กคอนเวอร์เตอร์ การคำนวณหาค่าดิวตี้ไซเคิ้ล duty cycleMod's Engineering Mathematicsเผยแพร่ 30 ส.ค. 2566 · อิเล็กทรอนิกส์กำลัง
-
-ดูวิดีโอทั้งหมด 4 คลิป →
+ดูวิดีโอทั้งหมด 5 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

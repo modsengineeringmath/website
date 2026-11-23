@@ -70,13 +70,13 @@ $$x = \frac{-5}{-5} = 1, \qquad y = \frac{-10}{-5} = 2$$
 
 ## วิดีโออื่นที่น่าดู
 
+ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 
 ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
-Dc to dc converter Buck converter วงจรบั๊กคอนเวอร์เตอร์ การคำนวณหาค่าดิวตี้ไซเคิ้ล duty cycleMod's Engineering Mathematicsเผยแพร่ 30 ส.ค. 2566 · อิเล็กทรอนิกส์กำลัง
-
-ดูวิดีโอทั้งหมด 4 คลิป →
+ดูวิดีโอทั้งหมด 5 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

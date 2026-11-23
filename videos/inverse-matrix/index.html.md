@@ -70,13 +70,13 @@ $$A^{-1} = \frac{1}{1}\begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix} = \begin{bm
 
 ## วิดีโออื่นที่น่าดู
 
+ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
 ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
-Dc to dc converter Buck converter วงจรบั๊กคอนเวอร์เตอร์ การคำนวณหาค่าดิวตี้ไซเคิ้ล duty cycleMod's Engineering Mathematicsเผยแพร่ 30 ส.ค. 2566 · อิเล็กทรอนิกส์กำลัง
-
-ดูวิดีโอทั้งหมด 4 คลิป →
+ดูวิดีโอทั้งหมด 5 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 
