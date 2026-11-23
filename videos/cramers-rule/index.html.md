@@ -70,7 +70,7 @@ $$x = \frac{-5}{-5} = 1, \qquad y = \frac{-10}{-5} = 2$$
 
 ## วิดีโออื่นที่น่าดู
 
-ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 

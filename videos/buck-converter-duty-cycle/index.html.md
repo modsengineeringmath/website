@@ -62,7 +62,7 @@ $$T_s = \frac{1}{50\ \text{kHz}} = 20\ \mu\text{s}, \qquad t_{on} = D\,T_s \appr
 
 ## วิดีโออื่นที่น่าดู
 
-ระบบควบคุม สัปดาห์ที่ 1: บทนำวิชาวิศวกรรมระบบควบคุม (Introduction to Control Systems)Mod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
+Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
