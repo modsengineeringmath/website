@@ -64,13 +64,13 @@ $$\begin{aligned} \det A &= a_{11}C_{11} + a_{12}C_{12} + a_{13}C_{13} \\ &= 1(2
 
 ## วิดีโออื่นที่น่าดู
 
+Laplace transforms constant function การแปลงลาปลาซของฟังก์ชันค่าคงที cMod's Engineering Mathematicsเผยแพร่ 24 พ.ย. 2569 · ระบบควบคุม · ลาปลาซ
+
 Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
-อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
-
-ดูวิดีโอทั้งหมด 5 คลิป →
+ดูวิดีโอทั้งหมด 6 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

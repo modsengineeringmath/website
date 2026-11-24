@@ -3,7 +3,7 @@ title: "Introduction to control systems อาจารย์มดแนะน�
 url: https://modsengineeringmath.com/videos/control-systems-week-1-introduction/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-23
+updated: 2026-11-24
 ---
 
 > คลิปแนะนำการเรียนวิชาระบบควบคุม (control systems) สัปดาห์แรก ภาษาไทย โดยอาจารย์มด: ทำไมวิชานี้สำคัญในหลักสูตรวิศวกรรมไฟฟ้า แบบจำลองทางคณิตศาสตร์ (mathematical model) และการจำลองด้วย MATLAB และ Python พร้อมบันทึกอ่านประกอบ
@@ -100,6 +100,8 @@ $$\frac{C(s)}{R(s)} = \frac{G(s)}{1 + G(s)\,H(s)}$$
 
 ## เรียนต่อจากคลิปนี้
 
+- คลิปถัดไปการแปลงลาปลาซของฟังก์ชันค่าคงที่ c ด้วยนิยาม
+
 - บทเรียน · ทั้งชุดวิศวกรรมระบบควบคุม: สารบัญบทเรียน แล็บโต้ตอบ และสูตรทั้งหมด
 
 - บทเรียน · บทนำระบบควบคุมคืออะไร: วงเปิด วงปิด ลูปป้อนกลับ และฟังก์ชันความไว
@@ -128,13 +130,13 @@ $$\frac{C(s)}{R(s)} = \frac{G(s)}{1 + G(s)\,H(s)}$$
 
 ## วิดีโออื่นที่น่าดู
 
+Laplace transforms constant function การแปลงลาปลาซของฟังก์ชันค่าคงที cMod's Engineering Mathematicsเผยแพร่ 24 พ.ย. 2569 · ระบบควบคุม · ลาปลาซ
+
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 
-ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
-
-ดูวิดีโอทั้งหมด 5 คลิป →
+ดูวิดีโอทั้งหมด 6 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

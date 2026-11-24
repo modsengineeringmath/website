@@ -70,13 +70,13 @@ $$x = \frac{-5}{-5} = 1, \qquad y = \frac{-10}{-5} = 2$$
 
 ## วิดีโออื่นที่น่าดู
 
+Laplace transforms constant function การแปลงลาปลาซของฟังก์ชันค่าคงที cMod's Engineering Mathematicsเผยแพร่ 24 พ.ย. 2569 · ระบบควบคุม · ลาปลาซ
+
 Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
 อินเวอร์สของเมทริกซ์ Inverse of a matrixMod's Engineering Mathematicsเผยแพร่ 2 ม.ค. 2565 · เมทริกซ์ · อินเวอร์ส
 
-ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
-
-ดูวิดีโอทั้งหมด 5 คลิป →
+ดูวิดีโอทั้งหมด 6 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

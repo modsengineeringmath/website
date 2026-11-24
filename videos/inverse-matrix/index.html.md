@@ -70,13 +70,13 @@ $$A^{-1} = \frac{1}{1}\begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix} = \begin{bm
 
 ## วิดีโออื่นที่น่าดู
 
+Laplace transforms constant function การแปลงลาปลาซของฟังก์ชันค่าคงที cMod's Engineering Mathematicsเผยแพร่ 24 พ.ย. 2569 · ระบบควบคุม · ลาปลาซ
+
 Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
 กฎของคราเมอร์ Cramer's rule เมทริกซ์ ดีเทอร์มิแนนต์ การแก้ระบบสมการเชิงเส้น การหาดีเทอร์มิแนนท์Mod's Engineering Mathematicsเผยแพร่ 9 ส.ค. 2563 · เมทริกซ์ · ดีเทอร์มิแนนต์
 
-ไมเนอร์ โคแฟกเตอร์ Minor cofactorMod's Engineering Mathematicsเผยแพร่ 22 ก.ย. 2565 · เมทริกซ์ · ดีเทอร์มิแนนต์
-
-ดูวิดีโอทั้งหมด 5 คลิป →
+ดูวิดีโอทั้งหมด 6 คลิป →
 
 ## คำถามที่พบบ่อย (FAQ)
 

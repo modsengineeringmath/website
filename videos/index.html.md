@@ -3,7 +3,7 @@ title: "วิดีโอสอนคณิตศาสตร์วิศวก
 url: https://modsengineeringmath.com/videos/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-11-23
+updated: 2026-11-24
 ---
 
 > รวมคลิปสอนยอดนิยมจากช่อง YouTube Mod's Engineering Mathematics ภาษาไทย คลิปละหน้า พร้อมสรุปสูตรและลิงก์บทเรียน: กฎของคราเมอร์ อินเวอร์สของเมทริกซ์ ไมเนอร์ โคแฟกเตอร์ และบั๊กคอนเวอร์เตอร์
@@ -12,10 +12,12 @@ updated: 2026-11-23
 
 # วิดีโอสอนคณิตศาสตร์วิศวกรรมและวิศวกรรมไฟฟ้า
 
-// วิดีโอ · 5 คลิป
+// วิดีโอ · 6 คลิป
 
 
 คลิปที่มีคนดูมากที่สุดจากช่อง Mod's Engineering Mathematics แยกไว้คลิปละหน้า แต่ละหน้าเปิดดูคลิปได้ทันที พร้อมสรุปสูตร ตัวอย่างที่ตรวจตัวเลขแล้ว และลิงก์ไปบทเรียนที่ลงรายละเอียดต่อ
+
+Laplace transforms constant function การแปลงลาปลาซของฟังก์ชันค่าคงที cMod's Engineering Mathematicsเผยแพร่ 24 พ.ย. 2569 · ระบบควบคุม · ลาปลาซ
 
 Introduction to control systems อาจารย์มดแนะนำการเรียนวิชาระบบควบคุม สัปดาห์แรกMod's Engineering Mathematicsเผยแพร่ 23 พ.ย. 2569 · ระบบควบคุม
 
