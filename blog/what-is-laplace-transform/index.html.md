@@ -3,7 +3,7 @@ title: "การแปลงลาปลาซ (Laplace Transform) คืออ
 url: https://modsengineeringmath.com/blog/what-is-laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: th
-updated: 2026-10-16
+updated: 2026-11-25
 ---
 
 > การแปลงลาปลาซเปลี่ยนสมการเชิงอนุพันธ์ให้เป็นสมการพีชคณิต อธิบายนิยาม ขั้นตอน 3 ขั้น ตัวอย่าง y′ + 3y = 6 และวงจร RC ที่คำนวณทีละบรรทัด
@@ -44,7 +44,7 @@ $$F(s) = \mathcal{L}\{f(t)\} = \int_0^{\infty} f(t)\,e^{-st}\,dt, \qquad s = \si
 
 $$\mathcal{L}\{e^{-at}\} = \int_0^{\infty} e^{-(s+a)t}\,dt = \frac{1}{s+a}, \qquad \operatorname{Re}(s) > -a$$
 
-จากสูตรนี้ ถ้า $a=0$ จะได้ $\mathcal{L}\{u(t)\}=1/s$ ส่วนสูตรอื่นที่ใช้บ่อยรวมไว้ใน ตารางการแปลงลาปลาซ แล้ว
+จากสูตรนี้ ถ้า $a=0$ จะได้ $\mathcal{L}\{u(t)\}=1/s$ ส่วนสูตรอื่นที่ใช้บ่อยรวมไว้ใน ตารางการแปลงลาปลาซ แล้ว (ใช้ได้เมื่อ $\operatorname{Re}s > 0$ ทำไมต้องเป็นเช่นนั้น)
 
 ## กุญแจสำคัญ: อนุพันธ์กลายเป็นการคูณ
 

@@ -812,3 +812,18 @@ then watch Indexing → Videos (takes days to weeks). "Video isn't on a watch pa
   `.post-fig img` scales to the column with `height:auto`. A replaced image gets a new file name (images are cached for a day).
 - Local preview: `npx http-server -p 8000 -c-1`, then `http://localhost:8000/<route>`.
 - The owner's step-by-step guide (Thai) is the Claude Doc "คู่มือแก้ไขเว็บ modsengineeringmath.com ด้วยตัวเอง".
+
+## Laplace 8.6 — why Re{s} > 0 for c/s and 1/s (added 2026-11-25)
+Sub-page `why-re-s-positive` appended to the `laplace-transform` series (8.6, formula prefix U, U1–U19), source
+`src/pages/learn/laplace-transform/why-re-s-positive.html`. Appended rather than inserted so no chapter number moved; the hub says to read it right after 8.1.
+Sections: the question · improper integral · real s (s > 0) · Euler split |e^(−st)| = e^(−σt) · complex s step by step · real/imaginary integrals by parts ·
+the boundary Re s = 0 (s = 0 grows, s = jω circles) · lab · absolute convergence / exponential order · 1/s as an analytic function (Cauchy–Riemann, continuation,
+w = 1/s mapping) · bilateral (u(t) vs −u(−t), constant for all t has no transform) · Bromwich line · Fourier of u(t) · control systems (step input, final value theorem) · mistakes · 10 exercises.
+- `assets/lap-roc.js` (`window.LapROC`; `module.exports` in Node): engine `partial`, `limit`, `simpson`, `state`; widgets `<div class="roc-real" data-s data-c data-t>` (real s,
+  area under c·e^(−st)) and `<div class="roc-euler" data-sig data-om data-c data-a data-tmax>` (s-plane picker, Euler spiral, time plot that switches to a narrow layout
+  under 520 px, path of I(T) towards c/(s − a)). `<button data-roc-set='{"sig":0,"om":3}' data-roc-target="id">` reloads a lab. Styles: "WHY Re{s} > 0" block in site.css.
+  The page also reuses `lap-map` (fn inv), `lap-surf` (1/s) and `lap-pz` (pole at 0, bilateral).
+- Figures: `python3 scripts/roc_figs.py` fills empty `<!--FIG:roc-…-->` blocks (`--all` redraws); multi-panel figures are separate SVGs in `.roc-figrow` so they wrap on phones.
+- Check: `node scripts/test-lap-roc.mjs` (closed forms vs Simpson, every printed number, page has no KaTeX errors or empty figures).
+- Linked from the Laplace hub (ex. L-1), 8.1 `#s-plane`, 8.2 `#roc`, control-systems `modeling` and `steady-state-error #fvt`, the blog post what-is-laplace-transform
+  and the watch page `laplace-transform-constant-function` (`pages`). Short URLs `/why-re-s`, `/re-s-positive`, `/laplace-of-constant`, `/laplace-unit-step`, `/laplace-1-over-s`, `/euler-laplace`.
