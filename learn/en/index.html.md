@@ -3,7 +3,7 @@ title: "English lessons"
 url: https://modsengineeringmath.com/learn/en/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-09
+updated: 2026-11-25
 ---
 
 > English editions of Ajarn Mod's courses: a 16-page precalculus course built around functions and graphs, with a 0°–360° trig table and z, t, chi-square and F tables, plus industrial electrical courses on AC motor control with magnetic contactors, star–delta starters, soft starters and VFDs, and PLC automation with ladder logic, timers, sequential control, analog PID and VFD control — written for the 230/400 V 50 Hz systems of Thailand, Laos, Cambodia, Vietnam, Myanmar, Malaysia and Singapore.
@@ -23,6 +23,12 @@ Chapter 27 · 16 pages
 ### Precalculus: Functions, Graphs, Trigonometry, Probability and Statistics
 Algebra review, functions and graph transformations, polynomial, rational and inverse functions, exponential and logarithmic functions, the unit circle and sinusoids, the laws of sines and cosines, sequences and series, counting and probability, and descriptive statistics, with a searchable 0°–360° trig table, z, t, chi-square and F tables, and 21 interactive labs.
 Open the course Trig table z · t · χ² · F tables Unit circle
+
+Lesson 8.6 · Laplace transform
+
+### Why s > 0 and Re{s} > 0? The Laplace Transform of a Constant and of the Unit Step
+Where the condition after $\mathcal{L}\{c\} = c/s$ and $\mathcal{L}\{u(t)\} = 1/s$ comes from: a step-by-step proof with Euler's formula, why ω plays no part, what happens on the jω axis, 1/s as a complex function, the two-sided transform, the Bromwich line and the final value theorem, with an interactive s-plane lab.
+Open the lesson s-plane lab Short version
 
 Chapter 21 · 15 pages
 

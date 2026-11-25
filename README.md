@@ -827,3 +827,9 @@ w = 1/s mapping) · bilateral (u(t) vs −u(−t), constant for all t has no tra
 - Check: `node scripts/test-lap-roc.mjs` (closed forms vs Simpson, every printed number, page has no KaTeX errors or empty figures).
 - Linked from the Laplace hub (ex. L-1), 8.1 `#s-plane`, 8.2 `#roc`, control-systems `modeling` and `steady-state-error #fvt`, the blog post what-is-laplace-transform
   and the watch page `laplace-transform-constant-function` (`pages`). Short URLs `/why-re-s`, `/re-s-positive`, `/laplace-of-constant`, `/laplace-unit-step`, `/laplace-1-over-s`, `/euler-laplace`.
+- **English edition (2026-11-25):** `src/pages/en/learn/laplace-transform/why-re-s-positive.html` → `/en/learn/laplace-transform/why-re-s-positive/`, a stand-alone page
+  paired with the Thai lesson by `"alt"` in both meta blocks (the Laplace series has no English topic). Its JSON-LD (Article + LearningResource, BreadcrumbList, FAQPage)
+  is written in the meta block: keep the FAQPage in step with `"faq"`. Figures use the `-en` keys of `roc_figs.py` (the `EN` table; the script stops if Thai is left).
+  The Thai-only reused labs (lap-map, lap-surf, lap-pz) are linked "(in Thai)" instead of embedded. Card on `/learn/en/`.
+- **Short articles:** `why-laplace-transform-needs-re-s-greater-than-zero` (TH `/blog/…`, EN `/en/blog/…`), category laplace-transform. Short URLs `/why-1-over-s`,
+  `/en/why-1-over-s`, `/en/why-re-s`, `/en/laplace-unit-step`, `/en/laplace-of-constant`.

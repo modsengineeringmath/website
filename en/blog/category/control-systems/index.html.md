@@ -3,7 +3,7 @@ title: "Control Systems & PID Articles: How PID Works and How to Tune It"
 url: https://modsengineeringmath.com/en/blog/category/control-systems/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on control systems: what a PID controller is and how it works, and a complete PID tuning guide from the step test and Ziegler–Nichols to anti-windup, with checked simulations.
@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 A PID controller sits inside almost every machine. This category explains what the P, I and D terms do and teaches real tuning step by step on a checked plant model.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Control Systems & PID
 

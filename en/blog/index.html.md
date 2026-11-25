@@ -3,7 +3,7 @@ title: "Engineering Math, Power & Programming Articles: PID, Laplace, Matrices, 
 url: https://modsengineeringmath.com/en/blog/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > English articles from Ajarn Mod in six categories: sequences and series, vectors and linear algebra, the Laplace transform, control and PID, power and motors, and programming in the AI era.
@@ -13,14 +13,19 @@ Markdown copy of https://modsengineeringmath.com/en/blog/ for AI assistants and 
 # Engineering Math, Power & Programming Articles: PID, Laplace, Matrices, Python | Ajarn Mod
 
 THภาษาไทยENEnglish
-// Articles · 26 in English · 6 categories
+// Articles · 27 in English · 6 categories
 
 
 Each short article answers one question that students and engineers search for again and again: what the Laplace transform is, how to invert it, how to correct a low power factor, or which programming language to start with in the AI era. Read one through and you can do the work yourself. The complete PID tuning guide is the long one, a full PID Academy lesson. Every article links to the full lessons, interactive labs and reference formulas in the library. Pick a category below.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## Latest articles
+
+Laplace
+Why Does ℒ{1} = 1/s Come With the Condition Re(s) > 0?
+Why do the Laplace transforms c/s and 1/s only hold for Re(s) > 0? Why ω doesn't matter and why the jω axis fails, explained briefly with Euler's…
+25 Nov 2026Read the article →
 
 3-phase motors
 Motor Terminals U1 V1 W1 U2 V2 W2: Meaning, Star and Delta Wiring, Wire Colours and Identifying Leads
@@ -31,11 +36,6 @@ Sequences & series
 Arithmetic Series: Sum of n Terms, General Term, Derivation and Examples
 Arithmetic series formula Sₙ = n/2 (a₁ + aₙ) = n/2 [2a₁ + (n − 1)d] and general term aₙ = a₁ + (n − 1)d, with Gauss's pairing derivation, five…
 14 Nov 2026Read the article →
-
-Python · AI
-Learning to Program in the AI Era: Why Start with Python
-AI writes code in any language, but if you cannot read code you cannot tell whether it is right. Why Python is the best first language, six core…
-25 Oct 2026Read the article →
 
 ## Articles by category
 
@@ -125,9 +125,14 @@ Compare the dot product (scalar product) and cross product (vector product): for
 16 Oct 2026Read the article →
 
 ## ℒLaplace Transform
-3 articles · Open the category →
+4 articles · Open the category →
 
 The Laplace transform turns the differential equations of circuits and control systems into algebra. This category starts with what the transform means and the table of pairs, and goes on to inverting it with partial fractions.
+
+Laplace
+Why Does ℒ{1} = 1/s Come With the Condition Re(s) > 0?
+Why do the Laplace transforms c/s and 1/s only hold for Re(s) > 0? Why ω doesn't matter and why the jω axis fails, explained briefly with Euler's…
+25 Nov 2026Read the article →
 
 Laplace
 How to Find the Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples

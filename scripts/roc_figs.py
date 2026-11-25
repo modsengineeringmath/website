@@ -245,6 +245,63 @@ def bromwich():
     return c.svg()
 
 
+# ---------------------------------------------------------------- English editions (key + "-en")
+EN = [
+    ("e^(−st) เมื่อ s = 0.25 + 2j บนระนาบเชิงซ้อนเป็นเกลียวหมุนตามเข็มนาฬิกาและหดเข้าหาศูนย์", "e^(−st) for s = 0.25 + 2j in the complex plane: a clockwise spiral shrinking towards zero"),
+    ("ส่วนจริง e^(−0.25t)cos 2t และส่วนจินตภาพ −e^(−0.25t)sin 2t เทียบเวลา ถูกบีบด้วยเส้นห่อ ±e^(−0.25t)", "Real part e^(−0.25t)cos 2t and imaginary part −e^(−0.25t)sin 2t against time, squeezed by the envelope ±e^(−0.25t)"),
+    ("เส้นบรอมวิช Re s = γ > 0 สำหรับ 1/s อยู่ใน ROC ทางขวาของโพลที่ 0 เมื่อ t > 0 ปิดเส้นทางด้วยครึ่งวงกลมทางซ้ายซึ่งล้อมโพล ได้เรซิดิว 1", "The Bromwich line Re s = γ > 0 for 1/s lies in the ROC, right of the pole at 0; for t > 0 the path is closed on the left around the pole, giving residue 1"),
+    ("ระนาบ s: ROC ของ ℒ{1} และ ℒ{u(t)} คือครึ่งระนาบขวา Re s > 0 โพลอยู่ที่ s = 0", "s-plane: the ROC of ℒ{1} and ℒ{u(t)} is the right half-plane Re s > 0, with the pole at s = 0"),
+    ("ระนาบ s: เส้นตั้ง Re s = 0.5, 1, 2 ใน ROC ของ 1/s", "s-plane: vertical lines Re s = 0.5, 1, 2 inside the ROC of 1/s"),
+    ("ระนาบ w = 1/s: เส้นตั้งแต่ละเส้นกลายเป็นวงกลมผ่านจุดกำเนิด จุดศูนย์กลาง 1/(2σ₀)", "w = 1/s plane: each vertical line becomes a circle through the origin, centre 1/(2σ₀)"),
+    ("e^(−st) เมื่อ s = 1 หดลง พื้นที่จำกัดเท่ากับ 1", "e^(−st) for s = 1 decays; the area is finite and equals 1"),
+    ("e^(−st) เมื่อ s = 0 เป็นค่าคงที่ 1 พื้นที่โตไม่สิ้นสุด", "e^(−st) for s = 0 is the constant 1; the area grows without bound"),
+    ("e^(−st) เมื่อ s = −0.5 โตแบบเอกซ์โพเนนเชียล พื้นที่โตไม่สิ้นสุด", "e^(−st) for s = −0.5 grows exponentially; the area grows without bound"),
+    ("I(T) เมื่อ s = 0.3 + 2j เกลียวเข้าหา 1/s", "I(T) for s = 0.3 + 2j spirals into 1/s"),
+    ("I(T) เมื่อ s = 2j วนบนวงกลมไม่หยุด", "I(T) for s = 2j keeps going round a circle"),
+    ("I(T) เมื่อ s = −0.1 + 2j เกลียวออกไม่สิ้นสุด", "I(T) for s = −0.1 + 2j spirals outwards for ever"),
+    ("เส้นบรอมวิชต้องอยู่ใน ROC (γ > 0)", "The Bromwich line must lie in the ROC (γ > 0)"),
+    ("ระนาบ s : เส้น Re s = 0.5, 1, 2", "s-plane: lines Re s = 0.5, 1, 2"),
+    ("ระนาบ w = 1/s : กลายเป็นวงกลม", "w = 1/s plane: they become circles"),
+    ("เส้นประ ±e^(−σt) = ขอบเขต (envelope)", "dashed ±e^(−σt) = envelope"),
+    ("e^(−σt)cos ωt (ส่วนจริง)", "e^(−σt)cos ωt (real part)"),
+    ("−e^(−σt)sin ωt (ส่วนจินตภาพ)", "−e^(−σt)sin ωt (imaginary part)"),
+    ("เทียบเวลา (s = 0.25 + 2j)", "Against time (s = 0.25 + 2j)"),
+    ("วงประ = วงกลมหนึ่งหน่วย", "dashed = unit circle"),
+    ("ความยาว e^(−σt)", "length e^(−σt)"),
+    ("ROC ของ 1/s : Re s > 0", "ROC of 1/s : Re s > 0"),
+    ("1.5 + 2j ✓ ลู่เข้า", "1.5 + 2j ✓ converges"),
+    ("1.5j ✗ บนขอบ", "1.5j ✗ on the edge"),
+    ("ทุก ω ได้หมด", "any ω works"),
+    ("ขอให้ σ > 0", "as long as σ > 0"),
+    ("t > 0 ปิดทางซ้าย", "t > 0: close on the left"),
+    ("e⁻ᵗ หดลง", "e⁻ᵗ decays"),
+    ("e⁰ = 1 คงที่", "e⁰ = 1, constant"),
+    ("e⁰·⁵ᵗ โต", "e⁰·⁵ᵗ grows"),
+    ("พื้นที่ = 1/s = 1 (จำกัด)", "area = 1/s = 1 (finite)"),
+    ("พื้นที่ = T → ∞", "area = T → ∞"),
+    ("พื้นที่ → ∞ (เร็วกว่าเดิม)", "area → ∞ (even faster)"),
+    ("เกลียวเข้า ★", "spirals in to ★"),
+    ("วงกลมไม่รู้จบ", "an endless circle"),
+    ("เกลียวออก", "spirals out"),
+    ("ลู่เข้าหา ★ = 1/s", "converges to ★ = 1/s"),
+    ("วนรอบจุด 1/(jω) = −0.5j", "circles the point 1/(jω) = −0.5j"),
+    ("รัศมี 1/|ω| ไม่มีลิมิต", "radius 1/|ω|, no limit"),
+    ("ระยะจากจุดเริ่มโตแบบ", "distance from the start grows like"),
+]
+
+
+def english(svg):
+    for th, en in EN:
+        svg = svg.replace(th, en)
+    if re.search("[\u0e00-\u0e7f]", svg):
+        raise SystemExit("Thai text left in an English figure: " + ", ".join(sorted(set(re.findall("[^<>\"]*[\u0e00-\u0e7f][^<>\"]*", svg)))))
+    return svg
+
+
+for _k in list(FIGS):
+    FIGS[_k + "-en"] = (lambda k: lambda: english(FIGS[k]()))(_k)
+
+
 def main():
     force = "--all" in sys.argv
     files = [a for a in sys.argv[1:] if not a.startswith("--")] or sorted(

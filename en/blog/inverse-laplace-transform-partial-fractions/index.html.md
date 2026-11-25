@@ -146,6 +146,11 @@ No. For a quadratic with complex roots, complete the square so the denominator h
 ## More articles worth reading
 
 Laplace
+Why Does ℒ{1} = 1/s Come With the Condition Re(s) > 0?
+Why do the Laplace transforms c/s and 1/s only hold for Re(s) > 0? Why ω doesn't matter and why the jω axis fails, explained briefly with Euler's…
+25 Nov 2026Read the article →
+
+Laplace
 Laplace Transform Table: The Most Commonly Used Pairs
 The 15 most common Laplace transform pairs and a table of properties (time shift, frequency shift, derivative, integral, convolution, initial and…
 16 Oct 2026Read the article →
@@ -155,12 +160,7 @@ What Is the Laplace Transform and What Is It Used For?
 The Laplace transform turns differential equations into algebraic equations. See the definition, the 3-step method, a worked y′ + 3y = 6 example…
 16 Oct 2026Read the article →
 
-Sequences & series
-What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)
-Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to…
-24 Oct 2026Read the article →
-
-All 3 articles in Laplace Transform → · All articles
+All 4 articles in Laplace Transform → · All articles
 
 ## Frequently asked questions
 

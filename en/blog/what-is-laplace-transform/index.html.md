@@ -3,7 +3,7 @@ title: "What Is the Laplace Transform and What Is It Used For?"
 url: https://modsengineeringmath.com/en/blog/what-is-laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-10-16
+updated: 2026-11-25
 ---
 
 > The Laplace transform turns differential equations into algebraic equations. See the definition, the 3-step method, a worked y′ + 3y = 6 example and an RC circuit calculated line by line.
@@ -44,7 +44,7 @@ The factor $e^{-st}$ acts like a filter: an $f(t)$ that grows more slowly than a
 
 $$\mathcal{L}\{e^{-at}\} = \int_0^{\infty} e^{-(s+a)t}\,dt = \frac{1}{s+a}, \qquad \operatorname{Re}(s) > -a$$
 
-From this, $a=0$ gives $\mathcal{L}\{u(t)\}=1/s$. Other commonly used formulas are collected in the Laplace transform table.
+From this, $a=0$ gives $\mathcal{L}\{u(t)\}=1/s$, valid for $\operatorname{Re}s > 0$ (here is why). Other commonly used formulas are collected in the Laplace transform table.
 
 ## The key: derivatives become multiplication
 
@@ -147,6 +147,11 @@ $s$ has units of frequency (1/second). The real part $\sigma$ gives the exponent
 ## More articles worth reading
 
 Laplace
+Why Does ℒ{1} = 1/s Come With the Condition Re(s) > 0?
+Why do the Laplace transforms c/s and 1/s only hold for Re(s) > 0? Why ω doesn't matter and why the jω axis fails, explained briefly with Euler's…
+25 Nov 2026Read the article →
+
+Laplace
 How to Find the Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples
 Invert the Laplace transform with partial fractions for distinct, repeated and complex poles, with checked examples and what to do when the…
 16 Oct 2026Read the article →
@@ -156,12 +161,7 @@ Laplace Transform Table: The Most Commonly Used Pairs
 The 15 most common Laplace transform pairs and a table of properties (time shift, frequency shift, derivative, integral, convolution, initial and…
 16 Oct 2026Read the article →
 
-Sequences & series
-What Is a Laurent Series and How Is It Different from a Taylor Series? (Explained with Pictures)
-Laurent series vs Taylor series: negative powers, the principal part, the annulus of convergence, types of singularity, residues and the link to…
-24 Oct 2026Read the article →
-
-All 3 articles in Laplace Transform → · All articles
+All 4 articles in Laplace Transform → · All articles
 
 ## Frequently asked questions
 

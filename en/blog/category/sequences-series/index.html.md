@@ -3,7 +3,7 @@ title: "Sequences & Series Articles: Convergence Tests, Taylor and Laurent Serie
 url: https://modsengineeringmath.com/en/blog/category/sequences-series/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on sequences and series: a convergence-test flowchart, the geometric series formula, radius of convergence, Taylor and Laurent series and mathematical induction, with checked examples.
@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 Short articles that answer one question about sequences and series at a time, from the geometric series formula and a flowchart for choosing a convergence test to the Taylor and Laurent series used in engineering. Each has worked numbers and links to the full lessons.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Sequences & Series
 

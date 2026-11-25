@@ -3,7 +3,7 @@ title: "Power Systems & Motors Articles: Power Factor, Delta Connection and Star
 url: https://modsengineeringmath.com/en/blog/category/power-motors/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on power systems and motors: what power factor is, sizing a correction capacitor, connecting a three-phase motor in delta, and setting a star–delta timer, with real 400 V 50 Hz numbers.
@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 Electrical work in factories and buildings, from power factor and the penalty on the bill to choosing a capacitor and connecting and starting three-phase motors. Every article uses the numbers of a 230/400 V 50 Hz system.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Power Systems & Motors
 

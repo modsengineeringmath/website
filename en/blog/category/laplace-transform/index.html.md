@@ -3,7 +3,7 @@ title: "Laplace Transform Articles: Meaning, Table and Inverse Laplace"
 url: https://modsengineeringmath.com/en/blog/category/laplace-transform/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on the Laplace transform: what it is and why circuits and control use it, a table of the most used pairs, and the inverse Laplace transform by partial fractions, step by step.
@@ -13,14 +13,19 @@ Markdown copy of https://modsengineeringmath.com/en/blog/category/laplace-transf
 # Laplace Transform Articles: Meaning, Table and Inverse Laplace
 
 THภาษาไทยENEnglish
-// Article category · 3 articles
+// Article category · 4 articles
 
 
 The Laplace transform turns the differential equations of circuits and control systems into algebra. This category starts with what the transform means and the table of pairs, and goes on to inverting it with partial fractions.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Laplace Transform
+
+Laplace
+Why Does ℒ{1} = 1/s Come With the Condition Re(s) > 0?
+Why do the Laplace transforms c/s and 1/s only hold for Re(s) > 0? Why ω doesn't matter and why the jω axis fails, explained briefly with Euler's…
+25 Nov 2026Read the article →
 
 Laplace
 How to Find the Inverse Laplace Transform: 3 Partial-Fraction Cases with Examples

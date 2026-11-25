@@ -3,7 +3,7 @@ title: "Vectors & Linear Algebra Articles: Matrices, Determinants, Rank and Nume
 url: https://modsengineeringmath.com/en/blog/category/linear-algebra/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on vectors and linear algebra: dot and cross products, determinants, the inverse matrix, rank, Cramer's rule and Jacobi vs Gauss–Seidel, each with step-by-step worked examples.
@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 Vectors and matrices are the common language of circuits, forces and control systems. The articles in this category answer the questions people search for most: how to find a determinant and an inverse, what rank tells you, and which method to use for a large linear system.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Vectors & Linear Algebra
 

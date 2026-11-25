@@ -3,7 +3,7 @@ title: "Programming & AI Articles for Engineering Students and Engineers"
 url: https://modsengineeringmath.com/en/blog/category/programming-ai/
 site: "Mod's Engineering Mathematics (อาจารย์มด)"
 language: en
-updated: 2026-11-14
+updated: 2026-11-25
 ---
 
 > Articles on programming for engineering students and engineers in the AI era: start with Python, master the core concepts, give AI clear instructions and verify its code with engineering knowledge.
@@ -18,7 +18,7 @@ THภาษาไทยENEnglish
 
 Now that AI can write code in any language, the skills that still matter are thinking in steps, reading code and checking results against engineering knowledge. This category starts with Python and connects it to circuits, numerical computing and PLCs.
 
-✎All 26ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 3PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
+✎All 27ΣSequences & Series 8[A]Vectors & Linear Algebra 7ℒLaplace Transform 4PIDControl Systems & PID 23φPower Systems & Motors 5</>Programming & AI 1
 
 ## All articles in Programming & AI
 
